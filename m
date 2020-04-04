@@ -2,118 +2,89 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B670CC2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1CAC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9180E206F8
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48509206C3
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 18:52:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eEawZWJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbgDDSrf (ORCPT
+        id S1726334AbgDDSwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 14:47:35 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:38826 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726207AbgDDSrf (ORCPT
+        Sat, 4 Apr 2020 14:52:40 -0400
+Received: from mail-lj1-f171.google.com ([209.85.208.171]:33427 "EHLO
+        mail-lj1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726207AbgDDSwj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 14:47:35 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7115C1C3C15; Sat,  4 Apr 2020 20:47:33 +0200 (CEST)
-Date:   Sat, 4 Apr 2020 20:47:32 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>, hverkuil@xs4all.nl,
-        linux-media@vger.kernel.org
-Cc:     linux@rainbow-software.org, kilgota@auburn.edu, moinejf@free.fr
-Subject: gspca webcam: need to plug it 5 times before it works
-Message-ID: <20200404184732.GA17534@duo.ucw.cz>
+        Sat, 4 Apr 2020 14:52:39 -0400
+Received: by mail-lj1-f171.google.com with SMTP id f20so10431289ljm.0
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 11:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=hBMXqhkR3Bd5JwVi0rinAAJBGM9rUC/9TzS2AavdsaE=;
+        b=eEawZWJ2ayk08oPbswgZWuozx6Ijh+Ywg9oScIkGbDjhxGyhf1oVbDqIqrcTpJA988
+         a1q6xo0g9jvs8M6iIEvzHndqLyuf7sQN8764oNTZJK8P+OPFviBgefcAKYHY8JAmq2zV
+         SpxyQ1rpaZK0RZUGG1neWz9nlbgANMmhF/ns9775kmnWxwzWpE0GA76KeatKo1UgD45o
+         AXo9A2vijGJ8uCiaUrPZ/DPZoBO6y3xTWQvtTpzioRnl7ZGSZMqHQIgjSChGb2xIkAtK
+         suUFx3iJG+ohi+AkhWjqQ+LmLNq7yYGaJ952fAUgiWDKq/6F6JgaxHQflI37oeFP1/I9
+         PoXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hBMXqhkR3Bd5JwVi0rinAAJBGM9rUC/9TzS2AavdsaE=;
+        b=KFkA6pyTD1LAqXNSdeUaAEdKVHZSIFnlNyPMB55JnzurK020qvJjM1xy8HHkwFmReK
+         0RUlPthVbkNmGI0iNAyE5OHZ/wpUY5fJLmzyoIv4hiWF1wGkLqTrGr43aOfi8UvCIq55
+         mU8uBL92RKOD3S1gWtgOWxlfhEkrArsSPuxia2jiaLAQMj3145MMPOnc6usttfmjITOU
+         gRVv8wPBKC9ZC4tGj+FZTbiN92nZW4X/nqMmz9WuDYvfkiNMUr5sAvF1Ts92sBMYnqKJ
+         K+XcqSY+cXlBg5r91FLK2eIx/2OMz370zeluYiqeNpf0AJD8X/svWKHCmKpyy0l8B+p2
+         Knqw==
+X-Gm-Message-State: AGi0PuaJ4r3jBDi+e4auCQJ8aejyGddLSWXOi8ELpLYAkF+WGdEouUBi
+        wCho7weRp5im0uPRXZzvagA=
+X-Google-Smtp-Source: APiQypJY7Z0bBl4GHlSA43yOpOdCsc++txL/kR5eOW2aOEE1Yew08Ncwu2teYb1M97/7lyo5CFz26Q==
+X-Received: by 2002:a2e:998c:: with SMTP id w12mr8197378lji.57.1586026357027;
+        Sat, 04 Apr 2020 11:52:37 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id o2sm7293546ljm.2.2020.04.04.11.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Apr 2020 11:52:36 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Sat, 4 Apr 2020 20:52:29 +0200
+To:     William Kucharski <william.kucharski@oracle.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jroedel@suse.de,
+        vbabka@suse.cz, urezki@gmail.com,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] mm/vmalloc: Sanitize __get_vm_area() arguments
+Message-ID: <20200404185229.GA424@pc636>
+References: <D25C4027-6EF9-44C2-AD4D-DDC785288B9A@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D25C4027-6EF9-44C2-AD4D-DDC785288B9A@oracle.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>
+> ﻿Is there any need to similarly sanitize “size” to assure start + size doesn’t go past “end?”
+> 
+Why is that double check needed if all such tests are done deeper on stack?
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-=2E.but if I'm patient enough, it eventually starts working... somehow.
-
-Incoming data seems to go in reliably. Outgoing commands (such as
-change gain) don't seem to be unreliable.
-
-Any idea how to debug / what could be wrong?
-
-Thanks,
-								Pavel
-
-
-[36790.733135] usb 2-1.1: USB disconnect, device number 30
-[39686.814093] usb 2-1.1: new high-speed USB device number 33 using ehci-pci
-[39686.853138] usb 2-1.1: New USB device found, idVendor=3D2770, idProduct=
-=3D930c, bcdDevice=3D 1.00
-[39686.853162] usb 2-1.1: New USB device strings: Mfr=3D1, Product=3D2, Ser=
-ialNumber=3D0
-[39686.853178] usb 2-1.1: Product: USB 2.0 PC camera=20
-[39686.853193] usb 2-1.1: Manufacturer: SQ Tech CO., LTD.
-[39686.859210] gspca_main: sq930x-2.14.0 probing 2770:930c
-[39688.769984] gspca_sq930x: Unknown sensor
-[39688.770037] sq930x: probe of 2-1.1:1.0 failed with error -22
-[39748.021772] usb 2-1.1: USB disconnect, device number 33
-[39754.901755] usb 2-1.1: new high-speed USB device number 34 using ehci-pci
-[39754.940668] usb 2-1.1: New USB device found, idVendor=3D2770, idProduct=
-=3D930c, bcdDevice=3D 1.00
-[39754.940688] usb 2-1.1: New USB device strings: Mfr=3D1, Product=3D2, Ser=
-ialNumber=3D0
-[39754.940700] usb 2-1.1: Product: USB 2.0 PC camera=20
-[39754.940710] usb 2-1.1: Manufacturer: SQ Tech CO., LTD.
-[39754.944401] gspca_main: sq930x-2.14.0 probing 2770:930c
-[39756.845672] gspca_sq930x: Unknown sensor
-[39756.845750] sq930x: probe of 2-1.1:1.0 failed with error -22
-[39759.797800] usb 2-1.1: USB disconnect, device number 34
-[39763.349750] usb 2-1.1: new high-speed USB device number 35 using ehci-pci
-[39763.389838] usb 2-1.1: New USB device found, idVendor=3D2770, idProduct=
-=3D930c, bcdDevice=3D 1.00
-[39763.389859] usb 2-1.1: New USB device strings: Mfr=3D1, Product=3D2, Ser=
-ialNumber=3D0
-[39763.389871] usb 2-1.1: Product: USB 2.0 PC camera=20
-[39763.389882] usb 2-1.1: Manufacturer: SQ Tech CO., LTD.
-[39763.391369] gspca_main: sq930x-2.14.0 probing 2770:930c
-[39765.297703] gspca_sq930x: Unknown sensor
-[39765.297787] sq930x: probe of 2-1.1:1.0 failed with error -22
-[39775.669563] usb 2-1.1: USB disconnect, device number 35
-[39779.477651] usb 2-1.1: new high-speed USB device number 36 using ehci-pci
-[39779.517205] usb 2-1.1: New USB device found, idVendor=3D2770, idProduct=
-=3D930c, bcdDevice=3D 1.00
-[39779.517227] usb 2-1.1: New USB device strings: Mfr=3D1, Product=3D2, Ser=
-ialNumber=3D0
-[39779.517239] usb 2-1.1: Product: USB 2.0 PC camera=20
-[39779.517250] usb 2-1.1: Manufacturer: SQ Tech CO., LTD.
-[39779.519033] gspca_main: sq930x-2.14.0 probing 2770:930c
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXojWRAAKCRAw5/Bqldv6
-8knuAJ9SVived2HfGdraT8vKHgIh3RiOtACgq3je1WDkSUk2wWjhg9/rirKWrl8=
-=/iKo
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
+--
+Vlad Rezki
