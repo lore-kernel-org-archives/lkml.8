@@ -2,202 +2,146 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BD3C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABFAC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4D1206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:26:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586010412;
-	bh=egczPPyNSD8HotLbj+TT/i75T2plBn3TUuu2sN6zS3k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WSqPI+tv6xjtSHhuKOIUl/iX6kUtvFkLyXb6i7DIad+VBIhPMv19zQMu8dJASAx2O
-	 tri6dyfMQ8ch2/Se9xiozdpzSdKRB6iI31rHJ5l/a80i2JEQ+2cGAQW1p+GMtRQuOM
-	 FeGtoG4w6SOb6bHY/p9TB4o7O9eiAuCBqCAIaPis=
+	by mail.kernel.org (Postfix) with ESMTP id 0A07E20659
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:32:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zuv5E7Nj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgDDO0v (ORCPT
+        id S1726294AbgDDOcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgDDO0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:26:51 -0400
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6418D206F5;
-        Sat,  4 Apr 2020 14:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586010410;
-        bh=egczPPyNSD8HotLbj+TT/i75T2plBn3TUuu2sN6zS3k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0gPEeJ+XZvMo8ohcfXsCnVrjc4mLfTuhLWVb9JY8KT6HBybsFj3GDEzTgReIqyPlg
-         bGjgamuimp50/9wk1xP/X0Io6aaRIP9n6iFGdicL5C1fKPc+uLS9eq/YLs2Cv9w3XD
-         xqlObbAW63zaaqihKH2BAx8FtT8qBv3lF0xWqQpA=
-Received: by mail-ed1-f44.google.com with SMTP id cf14so12862200edb.13;
-        Sat, 04 Apr 2020 07:26:50 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaL4/Xscua32N/ZRx++HfyVnA9dBaAMcyrPxZLZHQx36hE4oEDM
-        PLXsyUc70sxfVdX1e4w3WNDtRZPmHTqHLqYZrw==
-X-Google-Smtp-Source: APiQypLrvRpYNmxtUseQvy0si5lavrNAXp1+yfoZDCiBxoEPrLj81XDyy9SSoVjVq3f/kN0bZ2YxSrzoA/tO5bkDhYc=
-X-Received: by 2002:a50:9f07:: with SMTP id b7mr12066158edf.148.1586010408816;
- Sat, 04 Apr 2020 07:26:48 -0700 (PDT)
+        Sat, 4 Apr 2020 10:32:48 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43314 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgDDOcr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 10:32:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dBfBsCmH+Eo1IEVIov38NE0cr2dP5E/BRHhdQtoIDak=; b=zuv5E7NjreiQ5XBFzn1PjCMVNV
+        5jlV9xfeyuYdiFQDdIRKMCVcHcR7OrMF8OAi/cb5kWg2eHOLySIleDucXovsfjveBE5dBEfeOnEJ5
+        xsf/mpIZYKRsNwcAOBoysY7X4sjUDDX9+F1Drp9vz/ft02QfFO3C9Ava5WHPWQtbN1a2u6VWKpHh+
+        IOUVxvbxQkUagwelFrXW1GOjQ8vB6FFg+A7tRCvITwxk0ajpOTFj7oBMN6LBb8gEL8901GSrdKqD9
+        tR8vLwcHLqSSFTZCIFQDgCsmVr9OAeBqyoB/7oykglpseUcht3wj4PGhIdxS5Q/elLYDQJmY0t62n
+        ACn+msaA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jKjqV-0000fy-P3; Sat, 04 Apr 2020 14:32:28 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5AE919834EB; Sat,  4 Apr 2020 16:32:24 +0200 (CEST)
+Date:   Sat, 4 Apr 2020 16:32:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Jann Horn <jannh@google.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: AMD DC graphics display code enables -mhard-float, -msse, -msse2
+ without any visible FPU state protection
+Message-ID: <20200404143224.GL2452@worktop.programming.kicks-ass.net>
+References: <CAG48ez2Sx4ELkM94aD_h_J7K7KBOeuGmvZLKRkg3n_f2WoZ_cg@mail.gmail.com>
+ <4c5fe55d-9db9-2f61-59b2-1fb2e1b45ed0@amd.com>
+ <20200402141308.GB20730@hirez.programming.kicks-ass.net>
+ <20200403142837.f61a18d7bd32fd73777479ad@kernel.org>
+ <20200403112113.GN20730@hirez.programming.kicks-ass.net>
+ <20200404120808.05e9aa61500265be2e031bd6@kernel.org>
 MIME-Version: 1.0
-References: <20200331082725.81048-1-jitao.shi@mediatek.com> <20200331082725.81048-5-jitao.shi@mediatek.com>
-In-Reply-To: <20200331082725.81048-5-jitao.shi@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Sat, 4 Apr 2020 22:26:37 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8vpzfKeyxVxXOVC7mDpw+QGGOX+8fJaQg5WduvndEmoA@mail.gmail.com>
-Message-ID: <CAAOTY_8vpzfKeyxVxXOVC7mDpw+QGGOX+8fJaQg5WduvndEmoA@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] drm/mediatek: config mipitx impedance with
- calibration data
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        srv_heupstream@mediatek.com, huijuan.xie@mediatek.com,
-        stonea168@163.com, cawa.cheng@mediatek.com,
-        linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200404120808.05e9aa61500265be2e031bd6@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Jitao:
+On Sat, Apr 04, 2020 at 12:08:08PM +0900, Masami Hiramatsu wrote:
+> From c609be0b6403245612503fca1087628655bab96c Mon Sep 17 00:00:00 2001
+> From: Masami Hiramatsu <mhiramat@kernel.org>
+> Date: Fri, 3 Apr 2020 16:58:22 +0900
+> Subject: [PATCH] x86: insn: Add insn_is_fpu()
+> 
+> Add insn_is_fpu(insn) which tells that the insn is
+> whether touch the MMX/XMM/YMM register or the instruction
+> of FP coprocessor.
 
-Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=8831=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=884:28=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Read calibration data from nvmem, and config mipitx impedance with
-> calibration data to make sure their impedance are 100ohm.
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c b/drivers/gpu/=
-drm/mediatek/mtk_mt8183_mipi_tx.c
-> index e4cc967750cb..0f87cd3d1d7d 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mt8183_mipi_tx.c
-> @@ -5,6 +5,8 @@
->   */
->
->  #include "mtk_mipi_tx.h"
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/slab.h>
->
->  #define MIPITX_LANE_CON                0x000c
->  #define RG_DSI_CPHY_T1DRV_EN           BIT(0)
-> @@ -28,6 +30,7 @@
->  #define MIPITX_PLL_CON4                0x003c
->  #define RG_DSI_PLL_IBIAS               (3 << 10)
->
-> +#define MIPITX_D2P_RTCODE      0x0100
->  #define MIPITX_D2_SW_CTL_EN    0x0144
->  #define MIPITX_D0_SW_CTL_EN    0x0244
->  #define MIPITX_CK_CKMODE_EN    0x0328
-> @@ -108,6 +111,58 @@ static const struct clk_ops mtk_mipi_tx_pll_ops =3D =
-{
->         .recalc_rate =3D mtk_mipi_tx_pll_recalc_rate,
->  };
->
-> +static void mtk_mipi_tx_config_calibration_data(struct mtk_mipi_tx *mipi=
-_tx)
-> +{
-> +       u32 *buf;
-> +       u32 rt_code[5];
-> +       int i, j;
-> +       struct nvmem_cell *cell;
-> +       struct device *dev =3D mipi_tx->dev;
-> +       size_t len;
-> +
-> +       cell =3D nvmem_cell_get(dev, "calibration-data");
-> +       if (IS_ERR(cell)) {
-> +               dev_info(dev, "nvmem_cell_get fail\n");
-> +               return;
-> +       }
-> +
-> +       buf =3D (u32 *)nvmem_cell_read(cell, &len);
-> +
-> +       nvmem_cell_put(cell);
-> +
-> +       if (IS_ERR(buf)) {
-> +               dev_info(dev, "can't get data\n");
-> +               return;
-> +       }
-> +
-> +       if (len < 3 * sizeof(u32)) {
-> +               dev_info(dev, "invalid calibration data\n");
-> +               kfree(buf);
-> +               return;
-> +       }
-> +
-> +       rt_code[0] =3D ((buf[0] >> 6 & 0x1f) << 5) | (buf[0] >> 11 & 0x1f=
-);
-> +       rt_code[1] =3D ((buf[1] >> 27 & 0x1f) << 5) | (buf[0] >> 1 & 0x1f=
-);
-> +       rt_code[2] =3D ((buf[1] >> 17 & 0x1f) << 5) | (buf[1] >> 22 & 0x1=
-f);
-> +       rt_code[3] =3D ((buf[1] >> 7 & 0x1f) << 5) | (buf[1] >> 12 & 0x1f=
-);
-> +       rt_code[4] =3D ((buf[2] >> 27 & 0x1f) << 5) | (buf[1] >> 2 & 0x1f=
-);
+Looks good, although I changed it a little like so:
 
-Why not just save rt_code in nvmem and you don't need to translate here?
-If you need to do so, please add description for this.
+--- a/arch/x86/include/asm/insn.h
++++ b/arch/x86/include/asm/insn.h
+@@ -133,11 +133,12 @@ static inline int insn_is_fpu(struct ins
+ {
+ 	if (!insn->opcode.got)
+ 		insn_get_opcode(insn);
+-	if (inat_is_fpu(insn->attr)) {
++	if (inat_is_fpu(insn->attr)) {
+ 		if (insn->attr & INAT_FPUIFVEX)
+ 			return insn_is_avx(insn);
+ 		return 1;
+ 	}
++	return 0;
+ }
+ 
+ static inline int insn_has_emulate_prefix(struct insn *insn)
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -269,14 +269,14 @@ d4: AAM Ib (i64)
+ d5: AAD Ib (i64)
+ d6:
+ d7: XLAT/XLATB
+-d8: ESC
+-d9: ESC
+-da: ESC
+-db: ESC
+-dc: ESC
+-dd: ESC
+-de: ESC
+-df: ESC
++d8: FPU
++d9: FPU
++da: FPU
++db: FPU
++dc: FPU
++dd: FPU
++de: FPU
++df: FPU
+ # 0xe0 - 0xef
+ # Note: "forced64" is Intel CPU behavior: they ignore 0x66 prefix
+ # in 64-bit mode. AMD CPUs accept 0x66 prefix, it causes RIP truncation
+--- a/arch/x86/tools/gen-insn-attr-x86.awk
++++ b/arch/x86/tools/gen-insn-attr-x86.awk
+@@ -65,10 +65,11 @@ BEGIN {
+ 	modrm_expr = "^([CDEGMNPQRSUVW/][a-z]+|NTA|T[012])"
+ 	force64_expr = "\\([df]64\\)"
+ 	rex_expr = "^REX(\\.[XRWB]+)*"
+-	mmxreg_expr = "^[HLNPQUVW][a-z]+"
+-	mmx_expr = "^\\((emms|fxsave|fxrstor|ldmxcsr|stmxcsr)\\)"
+-	mmxifvex_expr = "^CMOV" # CMOV is non-vex non-mmx
+-	fpu_expr = "^ESC"
++
++	mmxreg_expr = "^[HLNPQUVW][a-z]+" # MMX/SSE register operands
++	mmx_expr = "^\\(emms\\)"	  # MMX/SSE nmemonics lacking operands
++	mmxifvex_expr = "^CMOV"		  # nmemonics NOT an AVX
++	fpu_expr = "^FPU"
+ 
+ 	lprefix1_expr = "\\((66|!F3)\\)"
+ 	lprefix2_expr = "\\(F3\\)"
 
-Regards,
-Chun-Kuang.
-
-
-> +
-> +       for (i =3D 0; i < 5; i++) {
-> +               if ((rt_code[i] & 0x1f) =3D=3D 0)
-> +                       rt_code[i] |=3D 0x10;
-> +
-> +               if ((rt_code[i] >> 5 & 0x1f) =3D=3D 0)
-> +                       rt_code[i] |=3D 0x10 << 5;
-> +
-> +               for (j =3D 0; j < 10; j++)
-> +                       mtk_mipi_tx_update_bits(mipi_tx,
-> +                               MIPITX_D2P_RTCODE * (i + 1) + j * 4,
-> +                               1, rt_code[i] >> j & 1);
-> +       }
-> +
-> +       kfree(buf);
-> +}
-> +
->  static void mtk_mipi_tx_power_on_signal(struct phy *phy)
->  {
->         struct mtk_mipi_tx *mipi_tx =3D phy_get_drvdata(phy);
-> @@ -130,6 +185,8 @@ static void mtk_mipi_tx_power_on_signal(struct phy *p=
-hy)
->                                 RG_DSI_HSTX_LDO_REF_SEL,
->                                 (mipi_tx->mipitx_drive - 3000) / 200 << 6=
-);
->
-> +       mtk_mipi_tx_config_calibration_data(mipi_tx);
-> +
->         mtk_mipi_tx_set_bits(mipi_tx, MIPITX_CK_CKMODE_EN, DSI_CK_CKMODE_=
-EN);
->  }
->
-> --
-> 2.21.0
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
