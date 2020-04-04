@@ -2,159 +2,143 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA150C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 20:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C75C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88259206F7
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 20:49:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODYtdzl4"
+	by mail.kernel.org (Postfix) with ESMTP id A1D02206CC
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 21:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586034808;
+	bh=3g0H/QTlacQZtGXY2JZE6CQauQOGtqwLYZyjVORgHGM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qG+n1GKamu9PAHGaWk7xeTi88x8StnUp4hWr6EbnFSrf8CN0bsJO45AT4BKxdNEKY
+	 1UIwBcwoW5VUn7EyGa+d0Zjp0rJcNswZilqyqpMOCuUzaBMEjCUFBYyXxwPT3sY/89
+	 kjvoQTVO+z6kGtTFIElqs/3J56b8ZZTCLzqHkUd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgDDUtL (ORCPT
+        id S1726408AbgDDVN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 16:49:11 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:38670 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgDDUtJ (ORCPT
+        Sat, 4 Apr 2020 17:13:27 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45684 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgDDVN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 16:49:09 -0400
-Received: by mail-qv1-f65.google.com with SMTP id p60so5502945qva.5;
-        Sat, 04 Apr 2020 13:49:08 -0700 (PDT)
+        Sat, 4 Apr 2020 17:13:27 -0400
+Received: by mail-lf1-f65.google.com with SMTP id f8so7310355lfe.12
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 14:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V17USKSZGK1zq8OMwgNRwDUSyCQr1dytgVBE6IBVxs0=;
-        b=ODYtdzl4M0o5uInqF4kh1UpT2WiPKrQD/6QJPNgk8vwiwdEKSByoI+eU2phHyAK7gu
-         eXEdFRmBe9XGHrz8DZerkEyYxHCXjOnzXyCFj56/O6wE1cpSuxZcWLnWIoJv2k9M3UIF
-         aLntSTRSLweCYcH+WzI9PSlY16yMbPfv9XoqtneNWZSWIerRyrpWOJpN2Q94MFTPy8Sn
-         d6sBl9mXIFa/Mo/PTPpi/aZyy6nRYingcrlnbufVia7hdiz/UPZxdJCqxuo3skOZCeq6
-         rLnr59URH1RtTpB/xXTqYgda8TjcWxQ29cRcXkaL2B7X0ujB7bJFk/i2Fmk4enyJA/YR
-         of8A==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=whlD+FJJxUSsYgQJmOoyKhMr6jBMYuvqobVL83EC0Y8=;
+        b=WRre38NwVB2LmEnC98i41YGU/UMX2qymyekgtMqnchU1KqX89ceYbyw3xRKr1XhGy4
+         6HgJuVbiSVOqVXwon/QrA0T4sEgUgGPNmPqffIx0/mv+mHKaU0PjbaaEewmpvuro9DfU
+         JDnC7tAkfLyumK5mtIm39aTZYSgWEHmXopyGE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=V17USKSZGK1zq8OMwgNRwDUSyCQr1dytgVBE6IBVxs0=;
-        b=APCYw/QG53tH/XKI/faaX+ARCKXzLI7+LA/guH9MX5z4uKTk7cIkyd+s9wTLk3YD1Q
-         ynvbBK0pHGjuhuX2iWXYwdCzcl7XRIcWBZXzbeKvPgUWXicY0gOMLOo/MPgQyfW64uTc
-         qVJQ9fSgHxNVk7jFEj8Vd55Rs25cAJ2txTtHxMRoLOLfLNevwoe+2RFHi7SNCF7tMUM/
-         ybVEtxqDOhpz+2s7o55M/7ic3NZAx0hlG3k7+3tn1ofbxEv/xUInrUUxBg2NgGL4W0NF
-         ba9g2ZFqsmI/ZH7oj4Z6KA0hu/hEfnHbVLcuSMcUqn2obnwDDfV5KLDiGQMScAfLro9j
-         K46g==
-X-Gm-Message-State: AGi0PubqPXAo+9aa2GzxmrMP92j4uaQo6Kuiwj9w7bJoTvwhoOyFF2B3
-        kGYq2nS7J/EBew+hFKAjBS7cmRD8DG7l1g==
-X-Google-Smtp-Source: APiQypJYde4aVYODjdOw9wXEMq5i7V7wiB0jpnIYLb5PUKK1v/Me46IjlIFec6vYp30qzKz3mWWXww==
-X-Received: by 2002:a0c:ba08:: with SMTP id w8mr13846632qvf.77.1586033348084;
-        Sat, 04 Apr 2020 13:49:08 -0700 (PDT)
-Received: from stingray.lan (pool-173-76-255-234.bstnma.fios.verizon.net. [173.76.255.234])
-        by smtp.gmail.com with ESMTPSA id 128sm10263906qki.103.2020.04.04.13.49.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 13:49:07 -0700 (PDT)
-From:   Thomas Hebb <tommyhebb@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Thomas Hebb <tommyhebb@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        linux-hwmon@vger.kernel.org
-Subject: [PATCH v2] hwmon: (dell-smm) Use one DMI match for all XPS models
-Date:   Sat,  4 Apr 2020 16:49:00 -0400
-Message-Id: <5d7e498b83e89ce7c41a449b61919c65d0770b73.1586033337.git.tommyhebb@gmail.com>
-X-Mailer: git-send-email 2.25.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=whlD+FJJxUSsYgQJmOoyKhMr6jBMYuvqobVL83EC0Y8=;
+        b=bXVXw/5lqs8ZS6w9ukwpDCK7eQdnKPji7TCq2YLeLkbXMGxJ9YdAjgQP/VMaA3XpJG
+         YXcysw972SIw1TA3qxSAll0gx/kRIo1VdLM3lLKMMPiZLWV4SzQl6aquadQElsK9wpCk
+         /gF8YFaUG5ghZct5Dl8PSfOcKk1Ni0NbsR0EWKw7CQpIQENIOP9PNwYee0ofzpGZSJkz
+         8Pl8Z83gyRI6WtbdfgY0ogEwtgTGIkHC0kvm1bSmFfLkkvMogFsqV6Of5L774tq/sWP8
+         i8527JN1S8ZjFJgKY6rLLn6n8sREvJ9b1L1OUZpmvdgZb+wGxLIWMJ5MFcQP9BA39DHb
+         SyCQ==
+X-Gm-Message-State: AGi0PuYOENCf0sCzfGr2aWpWLKHszAbSaqr8YcAqOyZNnRKjnw77ePli
+        kDruKaeYrOIveakxoupfr8zMXfqO+DM=
+X-Google-Smtp-Source: APiQypLe/RJKVlC+rcRh8JxJ21dS+v+9+y+l/wmJCtmRmKBAi0tZNBeeBUF1Y2h3ubQ9nGh6kxlmMQ==
+X-Received: by 2002:a19:c607:: with SMTP id w7mr8561315lff.32.1586034801995;
+        Sat, 04 Apr 2020 14:13:21 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id q9sm8898159ljm.9.2020.04.04.14.13.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Apr 2020 14:13:20 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id p10so10639612ljn.1
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 14:13:20 -0700 (PDT)
+X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr8233548lji.150.1586034799883;
+ Sat, 04 Apr 2020 14:13:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1445647.1585576702@warthog.procyon.org.uk> <1449543.1585579014@warthog.procyon.org.uk>
+In-Reply-To: <1449543.1585579014@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 4 Apr 2020 14:13:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wghjTM+z_oAATqWOvPa8Lh6BKRtTVMi7hLxo6pbqc+kVg@mail.gmail.com>
+Message-ID: <CAHk-=wghjTM+z_oAATqWOvPa8Lh6BKRtTVMi7hLxo6pbqc+kVg@mail.gmail.com>
+Subject: Re: [GIT PULL] Mount and superblock notifications
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>, jlayton@redhat.com,
+        Ian Kent <raven@themaw.net>, andres@anarazel.de,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        keyrings@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, each new XPS has to be added manually for module autoloading
-to work. Since fan multiplier autodetection should work fine on all XPS
-models, just match them all with one block like is done for Precision
-and Studio.
+On Mon, Mar 30, 2020 at 7:37 AM David Howells <dhowells@redhat.com> wrote:
+>
+> If you could consider pulling this - or would you prefer it to go through
+> Al?  It adds a couple of VFS-related event sources for the general
+> notification mechanism:
 
-The only match we replace that doesn't already use autodetection is
-"XPS13" which, according to Google, only matches the XPS 13 9333. (All
-other XPS 13 models have "XPS" as its own word, surrounded by spaces.)
-According to the thread at [1], autodetection works for the XPS 13 9333,
-meaning this shouldn't regress it. I do not own one to confirm with,
-though.
+<y issue with these remains the same it was last time, so I'll just
+quote what I said back then:
 
-Tested on an XPS 13 9350 and confirmed the module now autoloads and
-reports reasonable-looking data. I am using BIOS 1.12.2 and do not see
-any freezes when querying fan speed.
+ "So I no longer hate the implementation, but I do want to see the
+  actual user space users come out of the woodwork and try this out for
+  their use cases.
 
-[1] https://lore.kernel.org/patchwork/patch/525367/
+  I'd hate to see a new event queue interface that people then can't
+  really use due to it not fulfilling their needs, or can't use for some
+  other reason."
 
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
----
+I want to see somebody step up enough to say "yes, I actually use
+this, and have the patches for the user space side, and it helps my
+load by 3000%, and here are the numbers, and the event overflow case
+isn't an issue because Y"
 
-Changes in v2:
-- Remove another now-redundant XPS entry that I'd missed.
+Or whatever. It doesn't have to be performance, but the separate
+discussion I've seen has been about that being the reason for it.
 
- drivers/hwmon/dell-smm-hwmon.c | 26 ++------------------------
- 1 file changed, 2 insertions(+), 24 deletions(-)
+I just don't want it to be a _hypothetical_ reason. I want it to be a
+tested reason where people said "yeah, this is easy to use and
+actually fixes the problems".
 
-diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
-index d4c83009d625..ca30bf903ec7 100644
---- a/drivers/hwmon/dell-smm-hwmon.c
-+++ b/drivers/hwmon/dell-smm-hwmon.c
-@@ -1072,13 +1072,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro"),
- 		},
- 	},
--	{
--		.ident = "Dell XPS421",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "XPS L421X"),
--		},
--	},
- 	{
- 		.ident = "Dell Studio",
- 		.matches = {
-@@ -1087,14 +1080,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
- 		},
- 		.driver_data = (void *)&i8k_config_data[DELL_STUDIO],
- 	},
--	{
--		.ident = "Dell XPS 13",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "XPS13"),
--		},
--		.driver_data = (void *)&i8k_config_data[DELL_XPS],
--	},
- 	{
- 		.ident = "Dell XPS M140",
- 		.matches = {
-@@ -1104,17 +1089,10 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
- 		.driver_data = (void *)&i8k_config_data[DELL_XPS],
- 	},
- 	{
--		.ident = "Dell XPS 15 9560",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9560"),
--		},
--	},
--	{
--		.ident = "Dell XPS 15 9570",
-+		.ident = "Dell XPS",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9570"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "XPS"),
- 		},
- 	},
- 	{ }
--- 
-2.25.2
+Because if what happens is that when the events overflow, and maybe
+people fall back on the old model (or whatever) then that probably
+just means that you do better up until a point where you start doing
+_worse_ than we used to.
 
+Or people find out that they needed more information anyway, and the
+event model doesn't work when you restart your special server because
+you've lost the original state. Or any other number of "cool feature,
+but I can't really use it".
+
+IOW, I really want to know that yes, the design is what people will
+then use and it actually fixes real-world issues.
+
+And it needs to be interesting and pressing enough that those people
+actually at least do a working prototype on top of a patch-set that
+hasn't made it into the kernel yet.
+
+Now, I realize that other projects won't _upstream_ their support
+before the kernel has the infrastructure, so I'm not looking for
+_that_ kind of "yeah, look, project XYZ already does this and Red Hat
+ships it". No, I'm looking for those outside developers who say more
+than "this is a pet peeve of mine with the existing interface". I want
+to see some actual use - even if it's just in a development
+environment - that shows that it's (a) sufficient and (b) actually
+fixes problems.
+
+             Linus
