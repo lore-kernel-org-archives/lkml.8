@@ -2,112 +2,109 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE98C43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 02:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079C6C2BA17
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 02:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB7220737
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 02:11:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dzUzA4z4"
+	by mail.kernel.org (Postfix) with ESMTP id D1E142074B
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 02:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585966695;
+	bh=njNMvkZSwli/XJkxlAL53ySvEgIh59jJQ3Da06ltvek=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lDOjKAVcC6B7omm/ySmUIneFImF28GRyTfXCIlBYcUm7rw+JrMUbZrPVS6xw8CS3I
+	 72VFTMI4+isqPClYYw0hJ0sUO5upQlyZskERICms8cmQ6m7gvju2BfzhfMExTI7DB/
+	 B7ZLh5oNc6J+eWrN8uU97Q64++ubB0mD3Qs9viAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726328AbgDDCCU (ORCPT
+        id S1726297AbgDDCSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 22:02:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33960 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726186AbgDDCCT (ORCPT
+        Fri, 3 Apr 2020 22:18:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45200 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgDDCSO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 22:02:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585965738;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SEySp0igGGDaXwATMDuOfmSBnZ6a+w2LGLwT++JWohM=;
-        b=dzUzA4z4/azREAQtCMyj04AVnyqw6hRKWK5HbLySvy7rvPTKO8yn6qFp8YM0k+ErbwJuDW
-        jFkeGl1yK8DPxWeZ+V/gBzyjKRYBJPLTUmZFKcZZBeP81cGQcoK1Epp+0HrEqGs7bJ3Q1G
-        EfXfYJNJSTXkj9lXwUtulIELDoDidWk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-62-YclbKtIJPh2hNF82t5852Q-1; Fri, 03 Apr 2020 22:02:14 -0400
-X-MC-Unique: YclbKtIJPh2hNF82t5852Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 160CC13F6;
-        Sat,  4 Apr 2020 02:02:13 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-118-94.rdu2.redhat.com [10.10.118.94])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F71999E1D;
-        Sat,  4 Apr 2020 02:02:12 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
- <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
- <328f5ad3-f8b3-09b9-f2f7-b6dae0137542@redhat.com>
- <CAHk-=wgww8LFqUenUtNV7hzYSxAemjbOVYfZMXqOxK7DGRrZaw@mail.gmail.com>
- <c7c770c9-2c5c-4878-a224-d115720068f3@redhat.com>
- <86aa9fc6-6ac9-a0c2-3e1d-a602ef16d873@redhat.com>
- <CAHk-=wgOykL7cM34NraiNGsjJC5Uq6H0ybYHWhdXDSn-wzVXDQ@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <5c04cc6d-ec44-b840-071d-248ac81a0f91@redhat.com>
-Date:   Fri, 3 Apr 2020 22:02:11 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 3 Apr 2020 22:18:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t7so10674736wrw.12;
+        Fri, 03 Apr 2020 19:18:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=njNMvkZSwli/XJkxlAL53ySvEgIh59jJQ3Da06ltvek=;
+        b=gv9D3JLkR70KFj803XPuYbGbgbQUTnF2FrnoTRCbbyCT1noB0z+FIf+evrwabohIRE
+         Xs7DmBRIK5YH65XgsD/wfj8UOijueV0y8ldaSbEbVXMSFomtUjE7eMwH67LkQifUZ2O+
+         HbFIhdzp/d05b5U0Z4MdwG2ALUoX2pHasMVACM3WZmjWl87i4in4XF6ehNiX/H5A44Yp
+         QXeMbzwQre3qKxS1vFmV3tH5+nH1EMsJWTFFPkZ5RdxwNmBkvfWuKIY096LQ0UD82DUv
+         Qwt9FX7rMCWNGjv+0hFq7ku6M2RmERk3YYwauJIeE125Wr9B7tWHWnQXeNKW2jcXvwY6
+         /rLg==
+X-Gm-Message-State: AGi0PuYXXSS1gplkz101/0uZWKZvBpSsWcphwzB8LqxcPm2IRusv8xWU
+        7lHP2S3iL9x9gSFal2VkovtWFkmTi14gPY6vGx4=
+X-Google-Smtp-Source: APiQypITt+t9SHGiW3VBj3kiVR4I11z137wBPJZ4Q7W9GsJPRGwRvzLCZ0lCixu8k2odpcKExmR8YBOh7LpnxfMyanc=
+X-Received: by 2002:a5d:474b:: with SMTP id o11mr11926654wrs.391.1585966692198;
+ Fri, 03 Apr 2020 19:18:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgOykL7cM34NraiNGsjJC5Uq6H0ybYHWhdXDSn-wzVXDQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com> <a66d5648-2b8e-577e-e1f2-1d56c017ab5e@linux.intel.com>
+In-Reply-To: <a66d5648-2b8e-577e-e1f2-1d56c017ab5e@linux.intel.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Sat, 4 Apr 2020 11:18:01 +0900
+Message-ID: <CAM9d7cgRczLcyUi1y96a=87Hh3BhFgRUS8Kw=DBg4C0hVYj2HQ@mail.gmail.com>
+Subject: Re: [PATCH v8 04/12] perf tool: extend Perf tool with CAP_PERFMON
+ capability support
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/20 9:30 PM, Linus Torvalds wrote:
-> On Fri, Apr 3, 2020 at 4:23 PM Waiman Long <longman@redhat.com> wrote:
->> Alternatively, we could assert that only one reader can do the upgrade
->> and do a WARN_ON_ONCE() if multiple concurrent upgrade attempts is det=
-ected.
-> Ack, that would be best.
+Hello,
+
+On Thu, Apr 2, 2020 at 5:47 PM Alexey Budankov
+<alexey.budankov@linux.intel.com> wrote:
 >
-> [ And since I'm not on mobile any more, and my html email got thrown
-> out by the list, I'll just repeat that by "static choice" I mean "no
-> runtime decisions or flags": code that needs the unfair behavior would
-> use a special unfair function ]
 >
->               Linus
+> Extend error messages to mention CAP_PERFMON capability as an option
+> to substitute CAP_SYS_ADMIN capability for secure system performance
+> monitoring and observability operations. Make perf_event_paranoid_check()
+> and __cmd_ftrace() to be aware of CAP_PERFMON capability.
 >
-Got it.
+> CAP_PERFMON implements the principal of least privilege for performance
+> monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
+> principle of least privilege: A security design principle that states
+> that a process or program be granted only those privileges (e.g.,
+> capabilities) necessary to accomplish its legitimate function, and only
+> for the time that such privileges are actually required)
+>
+> For backward compatibility reasons access to perf_events subsystem remains
+> open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
+> secure perf_events monitoring is discouraged with respect to CAP_PERFMON
+> capability.
+>
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Reviewed-by: James Morris <jamorris@linux.microsoft.com>
 
-So in term of priority, my current thinking is
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-=C2=A0=C2=A0=C2=A0 upgrading unfair reader > unfair reader > reader/write=
-r
-
-A higher priority locker will block other lockers from acquiring the lock=
-.
-
-Thought?
-
-Cheers,
-Longman
-
+Thanks
+Namhyung
