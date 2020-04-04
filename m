@@ -2,103 +2,92 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6E9C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B12EC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBCE206C3
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:15:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CgtrrvdW"
+	by mail.kernel.org (Postfix) with ESMTP id 085A9206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 14:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586009796;
+	bh=jYh8ojEfBjWhcionJm7bLgdtcMaLtTKw3IPbO1FXFv4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xC75UH3ZeaD+LaqBDsfhPOuXNvjqkX7gLSWwmb/REnEx2PsC/mO01gK0Z3g8CIapr
+	 /D1Ki/0ktR5dD+rooLV9diTb3eqFC+4hi5EqTUlCRLfLgokWy7pPyv5+zi1noLdbKS
+	 2jPYeFRnhxHz8M4yFpNF2jzyN4/SEIYxw+7h14Tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgDDOPH (ORCPT
+        id S1726373AbgDDOQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 10:15:07 -0400
-Received: from mout.gmx.net ([212.227.17.20]:43257 "EHLO mout.gmx.net"
+        Sat, 4 Apr 2020 10:16:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726039AbgDDOPG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 10:15:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586009702;
-        bh=lbbBWv1jwPbMkYTCVBcrHbtiC2lvaDdvG3tFhSrWSyQ=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=CgtrrvdWs3Mq9ZeXwaIb+wNGuu4dFG8pIXd1w2tOWcNvagN0J/hwES+OINqlbuVHA
-         ibT+h+6kTu6jDPxqIjicwAtxPodL8lAtfRS/EVuV2RYNwkR7oZUfEugHKd8goxXWYF
-         pUwf0RyYKPhdCJxRBFpW/GTK7Iwq+2JS6+Ul+jNY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1M4Jqb-1jL0gm3qHh-000HBY; Sat, 04 Apr 2020 16:15:02 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] staging: vt6656: Remove unnecessary local variable initialization
-Date:   Sat,  4 Apr 2020 16:14:00 +0200
-Message-Id: <20200404141400.3772-4-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200404141400.3772-1-oscar.carter@gmx.com>
-References: <20200404141400.3772-1-oscar.carter@gmx.com>
+        id S1725730AbgDDOQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 10:16:34 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C91A0206C3;
+        Sat,  4 Apr 2020 14:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586009794;
+        bh=jYh8ojEfBjWhcionJm7bLgdtcMaLtTKw3IPbO1FXFv4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RqPr8qa75t3W6KS03U5hHpDlF4XP2X6lqAjJCAFU6vIZPD1LrQ++H9BcAGdjGxrPr
+         DUkJVaLa15/fM9zucspy/AP1uQhw2WVq2t6qELZKy1M8Dge7qhAnEHiD845ewQntin
+         poTmrHUrLuGuNa17buSgeJ0Jyk7IBoylskKvq704=
+Date:   Sat, 4 Apr 2020 15:16:28 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>, robh+dt@kernel.org,
+        alexandre.torgue@st.com, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de,
+        pmeerw@pmeerw.net, olivier.moysan@st.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: iio: dac: stm32-dac: convert bindings
+ to json-schema
+Message-ID: <20200404151628.52576e43@archlinux>
+In-Reply-To: <20200330232040.GA16570@bogus>
+References: <1584639983-31098-1-git-send-email-fabrice.gasnier@st.com>
+        <20200330232040.GA16570@bogus>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:nAfqjazem6z6y/TYc4YVW8HXnrU+5qkGZv6K0hwpbX56hkTo0gk
- rvX56M1E7K2nl2TqTVP43YAKDJIz9q00BxYhJSqwX3wXbhpL7AVpRNYo+H3Tbt4PGqmmKLm
- n9MHrB8go4cxKCHd/YD4liiUEf0sS/RYkHR73KW1WbVUytjy+Bds172D6f9LsGBe8DNfL+6
- vSP7vRZnk36c0I807aOjw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V9S1WR/bcOA=:nrF5eOGjFx6DaaLTOR5Jex
- +WtFRJNf9RKBJxorTX2Kmw6bvRO00cuCRfe7gvFj5TB5Ci4cQhDG9SdvozNufiw8rvdohCoKY
- C+B+TzNlVRcurL6/sBCPg/UV2IiagnJXm2edPACgBw3t2a+REE1PAjVjNFJD/KmzPQxknS6IZ
- EkDPkFaOy9Og9+fqocpidtuhldAf9+KueZr7X1OBjU7R3bclgsCBd9DgKgTV6H1HEyOyuHpRk
- ckfkpAJkPA77fElx0dfTE/STnDDDXaiuXtT7GT2Hhl4aJaIXdgZBjwhNVtHCRZCycIfgNd2BF
- Vi1DXxPI+em/9EyYuMS8FoQDZm/TLswz0CJQXxtEB9IhW+HG7EjDbznywoXeWAWbrlvrBdgS6
- 3JR5jqdWb0SEZb+v+7WM+3SIkx/5NJMZojPfCvsnSokWfPWNWjQqFP9Om0X3M8YCQHi50TuU8
- kD4nJTeO4DOG/YJqhiO6p8kKkI8kQDQaYiNxEyZwBuqSg9OAuKfY94oZpX7oWpAreiW7AVhMO
- sGfz1wMnadxkqsExm2PUy3lp6Rm6+Ei3Fx8hM+cXIev9wMH421sO8D5XntFz/SUU/SSpjhfQj
- dZvDWtuZf8JUKXsBZXVbB+WCIguXjemslkFA7qH7G4FIiC3wzdPImsMzTTlVsT6gzjrmLp9RE
- DPbSRXYHzF/kJrFaKYfffz79c8+F+3Tg9/O4m14ooltoe4xDf+ygPprJ78m0c4Zb0w/m12ByR
- kd4KGAc4hOUKTXdAdnpg96qE1rMxNapgNq3L8kfj/mHUlsozx5u/1FULOWVuaI/155cvuGTDP
- HwxElkaRJONE5bQr5uMXjGc8ezLwMv3h5UPP9v4d7jkWU+I/nD44cnAHknrp+GLagiN8heO1B
- /LV/8xAq+MK+4ioSiOPgzbzcA50X817Ru0g9rCoQh2GLbfwAcPlhCgEOHu/jmKlhDIoTrDCJo
- 3l2nZtRkrVdQM9ijhp3nuAidzdmSRZuewwkqIrYqpHAIx3gnM40upueOFPgPELz3lgW/YdYKP
- 4ZjK+ClHG7PZ8Nf0yneMdClQzNueVYjZoi+rbDPnK0TVbSj1V4deL7fPTZVlkJXQM3X8av+D9
- UTLJ2+lxkhTbAmodql4RmEFIb2yEVRYPvf+xVupbn7GawADs1kxrNK5TIAD3PFHvKXNGm08j7
- 0WCsZDyPZ+3xcEu7++k3yMu5zQkUl2f78eleragrGKs1KVwEA24HRBSMc1PQnx3fNOPL//CIx
- Gt1aUYR35Py1VpTnz
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't initialize the rate variable as it is set a few lines later.
+On Mon, 30 Mar 2020 17:20:40 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/baseband.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Thu, 19 Mar 2020 18:46:23 +0100, Fabrice Gasnier wrote:
+> > Convert the STM32 DAC binding to DT schema format using json-schema
+> > 
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> > ---
+> > Changes in v2:
+> > - Fix id relative path/filename as detected by Rob's bot
+> > ---
+> >  .../devicetree/bindings/iio/dac/st,stm32-dac.txt   |  63 ------------
+> >  .../devicetree/bindings/iio/dac/st,stm32-dac.yaml  | 110 +++++++++++++++++++++
+> >  2 files changed, 110 insertions(+), 63 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/dac/st,stm32-dac.yaml
+> >   
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to poke at it.
 
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
-seband.c
-index a785f91c1566..04393ea6287d 100644
-=2D-- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -135,7 +135,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 p=
-kt_type,
- {
- 	unsigned int frame_time;
- 	unsigned int preamble;
--	unsigned int rate =3D 0;
-+	unsigned int rate;
+Thanks,
 
- 	if (tx_rate >=3D ARRAY_SIZE(vnt_frame_time))
- 		return 0;
-=2D-
-2.20.1
+Jonathan
+
 
