@@ -2,93 +2,105 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8EBC43331
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 03:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92D2C43331
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 03:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58B6F206F6
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 03:37:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3YeCMAF"
+	by mail.kernel.org (Postfix) with ESMTP id B50E2206F6
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 03:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgDDDhm (ORCPT
+        id S1726315AbgDDDmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 3 Apr 2020 23:37:42 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35298 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgDDDhm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 3 Apr 2020 23:37:42 -0400
-Received: by mail-ot1-f68.google.com with SMTP id v2so9567437oto.2;
-        Fri, 03 Apr 2020 20:37:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4WbluZDhw2UVjup7ga4DOtaPANEI0o4JCWjagoCmgy8=;
-        b=W3YeCMAF9MApJBdYEFhU9WsZL11NUkjdvzGUS1f5iLxFQzYg1glMKciGmHzRkrgiig
-         XS9a2TvTBLi69fV799tgOqiWowIg0UZWX4LgIy5YzskVoSr5YwPO4ty9hFxyTjexG0vd
-         z9AaXdon2RpwUukaf1JCnOl/mbITMlZdWHNiPo06XwCzDy64aeO9uXx83shizIKEYxG4
-         4pr5vOtVIK1+y8DXlynJXCcXSrQ++70A60vUXdCYljk/+HfcjP5TxzcmMsmxvrzA3XbN
-         QsHelQ9GJ6O53g/Svw1kEHnRYhaZ58f5tJRGuaV9pdREYNiqSyXVq+9nAj8ddc8KbCD8
-         UMBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4WbluZDhw2UVjup7ga4DOtaPANEI0o4JCWjagoCmgy8=;
-        b=YtX1Aac5ALYe6/68AzqeXkkGc90WdWqTUBBp//UGGkcI9eW6ygoBBiAc/LYKI/E8pE
-         3kRszgWEOu8v2DkRZlG9XsL1PKeLWAJR6Ke2QYtxV/i5T7Oby+DcZTvGi4UMaw6pUmFm
-         9kNByanEYD00c5sPvB1ZA7vuD9m27d8aWjQkieanJBBkJGJgMy0AiLb6CKEr6JtyO2OC
-         jpqoIPqJBvnbuehojPFs+llG2ggCI/f3XngR5IYl1RB8DOVuszqLWZVz1tf8+uCLsQe7
-         kqF/P9avz9/KfChXkK/0XslzPi2CzHpBmMECojcjYlWT8PrJWn+AO9Tk/Ld3g6FAM98F
-         WaMg==
-X-Gm-Message-State: AGi0PuYyTKYvMigrFPll8sfQSVejgEzI90wHEbKfaJuJpKteYDbpc1JK
-        zZxCSMLMxJHuQ6YMNZ5Agny5c4wGBredQaNpyrc=
-X-Google-Smtp-Source: APiQypKyHxYIf+5TXgFLUWui2aNL0tjRUUYrTHIDbSYafaUkC7PU2HOOf4l4UI+ukKt8ZQLbURBm/vE4UafQw2ZP9Is=
-X-Received: by 2002:a9d:1b6d:: with SMTP id l100mr8477327otl.70.1585971461014;
- Fri, 03 Apr 2020 20:37:41 -0700 (PDT)
+        Fri, 3 Apr 2020 23:42:33 -0400
+Received: from mga17.intel.com ([192.55.52.151]:34405 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbgDDDmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 3 Apr 2020 23:42:32 -0400
+IronPort-SDR: dtTkQjel8BR1IisXZncZBk7vQiFbfDJZeKBGzVtMeLowmGoJ6DpQdi+GEfOpmGYEGRH7VY8opa
+ DVgun0XxuwUg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2020 20:42:32 -0700
+IronPort-SDR: eQ4pMiG3vrAyt3GlXMyRLzuUgeo2Qnpn6FIq+amfFYpxNUUXdeBVeK9kyxENP23oia6JtQZT87
+ tuufOSX84G6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,342,1580803200"; 
+   d="scan'208";a="296159522"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Apr 2020 20:42:31 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jKZhW-0007iz-Az; Sat, 04 Apr 2020 11:42:30 +0800
+Date:   Sat, 4 Apr 2020 11:41:35 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     kbuild-all@lists.01.org, Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 03/14] power: supply: bq25890: make property table const
+Message-ID: <202004041132.2chDDZzP%lkp@intel.com>
+References: <3d647e5c2f69c0cef461ef19004ec40b14e799ca.1585838678.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-References: <20200403112830.505720-1-gch981213@gmail.com> <20200403.161139.2115986079787627095.davem@davemloft.net>
-In-Reply-To: <20200403.161139.2115986079787627095.davem@davemloft.net>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Sat, 4 Apr 2020 11:37:29 +0800
-Message-ID: <CAJsYDVLGi3xczRqDC-d9q8=jHK=kfYh886erUxULoMNidSX8JA@mail.gmail.com>
-Subject: Re: [PATCH] net: dsa: mt7530: fix null pointer dereferencing in port5 setup
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, stable@vger.kernel.org,
-        Sean Wang <sean.wang@mediatek.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?Q?Ren=C3=A9_van_Dorst?= <opensource@vdorst.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3d647e5c2f69c0cef461ef19004ec40b14e799ca.1585838678.git.mirq-linux@rere.qmqm.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Hi "Michał,
 
-On Sat, Apr 4, 2020 at 7:11 AM David Miller <davem@davemloft.net> wrote:
-> > Cc: stable@vger.kernel.org
->
-> Please do not CC: stable for networking changes, as per:
->
->         Documentation/networking/netdev-FAQ.rstq
+I love your patch! Perhaps something to improve:
 
-Oh! I'm not aware of this doc. Thanks for pointing it out.
+[auto build test WARNING on power-supply/for-next]
+[also build test WARNING on linus/master v5.6 next-20200403]
+[cannot apply to linux/master]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
--- 
-Regards,
-Chuanhong Guo
+url:    https://github.com/0day-ci/linux/commits/Micha-Miros-aw/power-supply-bq25890-fix-and-extend/20200404-010738
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-188-g79f7ac98-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/power/supply/bq25890_charger.c:692:23: sparse: sparse: incorrect type in initializer (different modifiers) @@    expected unsigned int enum power_supply_property *properties @@    got unsignunsigned int enum power_supply_property *properties @@
+>> drivers/power/supply/bq25890_charger.c:692:23: sparse:    expected unsigned int enum power_supply_property *properties
+>> drivers/power/supply/bq25890_charger.c:692:23: sparse:    got unsigned int enum power_supply_property const *
+
+vim +692 drivers/power/supply/bq25890_charger.c
+
+4aeae9cb0dad11 drivers/power/bq25890_charger.c Laurentiu Palcu 2015-05-19  688  
+4aeae9cb0dad11 drivers/power/bq25890_charger.c Laurentiu Palcu 2015-05-19  689  static const struct power_supply_desc bq25890_power_supply_desc = {
+4aeae9cb0dad11 drivers/power/bq25890_charger.c Laurentiu Palcu 2015-05-19  690  	.name = "bq25890-charger",
+4aeae9cb0dad11 drivers/power/bq25890_charger.c Laurentiu Palcu 2015-05-19  691  	.type = POWER_SUPPLY_TYPE_USB,
+4aeae9cb0dad11 drivers/power/bq25890_charger.c Laurentiu Palcu 2015-05-19 @692  	.properties = bq25890_power_supply_props,
+4aeae9cb0dad11 drivers/power/bq25890_charger.c Laurentiu Palcu 2015-05-19  693  	.num_properties = ARRAY_SIZE(bq25890_power_supply_props),
+4aeae9cb0dad11 drivers/power/bq25890_charger.c Laurentiu Palcu 2015-05-19  694  	.get_property = bq25890_power_supply_get_property,
+4aeae9cb0dad11 drivers/power/bq25890_charger.c Laurentiu Palcu 2015-05-19  695  };
+4aeae9cb0dad11 drivers/power/bq25890_charger.c Laurentiu Palcu 2015-05-19  696  
+
+:::::: The code at line 692 was first introduced by commit
+:::::: 4aeae9cb0dad117f055add68c48decaf489aecf3 power_supply: Add support for TI BQ25890 charger chip
+
+:::::: TO: Laurentiu Palcu <laurentiu.palcu@intel.com>
+:::::: CC: Sebastian Reichel <sre@kernel.org>
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
