@@ -2,372 +2,164 @@ Return-Path: <SRS0=bQGS=5U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851ABC2BA15
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10A5C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBC2206CC
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C463E206E6
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 19:58:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kks2rrNp"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="KVr7ugD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgDDTve (ORCPT
+        id S1726328AbgDDT57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 15:51:34 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45467 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgDDTve (ORCPT
+        Sat, 4 Apr 2020 15:57:59 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41735 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgDDT56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 15:51:34 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 71so2704762qtc.12
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 12:51:31 -0700 (PDT)
+        Sat, 4 Apr 2020 15:57:58 -0400
+Received: by mail-qt1-f193.google.com with SMTP id i3so9519939qtv.8
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 12:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=JnH2YdzKei6/i4FAonkrjq4wGGtTFL+OPicU7RFsfDY=;
-        b=kks2rrNp4B8vC42ruxIC+b0Hdo81tksjcDRn8BoHO7XDoK1XLqkvpQX9S67CbbUYK4
-         wjrr2ZE5QRXKmXsPkPxVhuQAvi77cjCecx0elDwRtEFRLLYmd1TLBZ9dT+cmlvdTNSEl
-         DDDqgRh9zTc9R1SSxvZpC8gpr/8rPL5T8kqnQ=
+        bh=9CbVDZTIMk5DedKHwOhqZguosZYkuF+efmzxSvwSHmA=;
+        b=KVr7ugD1uCChONGUAtH0ZrG1JFeu24vOGuBSUCXWE9Hd/QJ6QGr2dmamlEzvoswCpj
+         8o9wKR62qOm72sk7VVi5b8MpjFHEnicmKJh86KHMgBuj5wQLnq/P6MlDkNo8xrERB2eD
+         Xg8Y3KzC7dxU+ioN1VAr8OUON4n7JstpkEL6w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=JnH2YdzKei6/i4FAonkrjq4wGGtTFL+OPicU7RFsfDY=;
-        b=WeQaW0HSfQp2R01ggB1xosJYQZp2CXec6pUulfdgnp0pO5xm9KOnjl+cwwkx724Eit
-         tbijky8G9X6utOig+OA21OzXAO9FdCa3OXtXn2L0By+QKUcXA9KGoz7/XCCuTUnthQdV
-         Xy4GhK/QhKbTGdHA9KzxRO+tj22YWxlKesTEwN1hPb7Hmv51xE3B/FdRwvlIGCFxUBqu
-         fQeB0auW091hNYMOylo86B8z9Zh7X+mC+blUIptLLX3ZiqKcc/quZoi86yA1gbhsbAvD
-         zHXbr5xBHsKJOZ17lxg6ib+DIn7w4Ag1W0JqHFo2Ibv8dD1qz2QPy03oNFggUpeFWdZ0
-         THkA==
-X-Gm-Message-State: AGi0Pub9IiBPFEKYk8SuNsDCzOrvZ1qeEeA0rXSTVATbjkYyBZF+7HHU
-        1r6egU3zNJqlAQ3FsbWePk0klA==
-X-Google-Smtp-Source: APiQypIiIBO6WsMnuLAP7nJvxIVmqVxHuINgTlpfFL/ItQVMd6KuF3//Knsl4k4tTcBqtt+9qg+OWA==
-X-Received: by 2002:ac8:40da:: with SMTP id f26mr380755qtm.391.1586029890360;
-        Sat, 04 Apr 2020 12:51:30 -0700 (PDT)
+        bh=9CbVDZTIMk5DedKHwOhqZguosZYkuF+efmzxSvwSHmA=;
+        b=D3dW6yvUfvVY+6kBIeYTmt7QeGCAx+5vkT5zQmzx3jJmo6yB1Eqe+D6yEuLIp9FqVm
+         elyV1jFG3l5ZJLd3393qc3z+zBoq+cKphqvgrlv5G9j6VHwfzeCfrxextx6YsFoNplSG
+         p2C2HL61i9TqL3hO1yIMQxSRJp9q0ljALbertPZf28tZHM1vqjIU1uAvPKxrwvm7BHvQ
+         +ppv+8t2enYZ8UJTGff/A1eDCfLyytxEPv5y2h1m93mzm9lGtmXG7PQQ4WX4lDeZj1hz
+         sgWbKtSA99zBiMM9WENoB9hNsRaiuaXHqjKUrAIQ6YBkRnhw6F2vnN1PozDcLyjgAHzw
+         bZ0w==
+X-Gm-Message-State: AGi0PuZsPuF9yFvVKIXz9uvoB12M/ec/VOZaETiLj6BMNGy5E4vFhy2Z
+        Cfxs0m+6E7fdOqUxhN4eOe8q9Q==
+X-Google-Smtp-Source: APiQypLKG/hPeALBgzrGmT3BqaE9y/Jr3Gs9BPj6JbRbIsn3Qc3jFF/ApsTcSf//hZQhFM/LuuyVsg==
+X-Received: by 2002:ac8:f4a:: with SMTP id l10mr14435539qtk.146.1586030276074;
+        Sat, 04 Apr 2020 12:57:56 -0700 (PDT)
 Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id y27sm9843253qky.50.2020.04.04.12.51.29
+        by smtp.gmail.com with ESMTPSA id w17sm1403373qkb.11.2020.04.04.12.57.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 12:51:29 -0700 (PDT)
-Date:   Sat, 4 Apr 2020 15:51:29 -0400
+        Sat, 04 Apr 2020 12:57:55 -0700 (PDT)
+Date:   Sat, 4 Apr 2020 15:57:55 -0400
 From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        RCU <rcu@vger.kernel.org>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: add emergency pool for headless case
-Message-ID: <20200404195129.GA83565@google.com>
-References: <20200403173051.4081-1-urezki@gmail.com>
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] Documentation/litmus-tests: Add litmus tests for
+ atomic APIs
+Message-ID: <20200404195755.GB83565@google.com>
+References: <20200326024022.7566-1-boqun.feng@gmail.com>
+ <20200327221843.GA226939@google.com>
+ <20200331014037.GB59159@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+ <20200402035816.GA46686@google.com>
+ <20200402080358.GC59159@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403173051.4081-1-urezki@gmail.com>
+In-Reply-To: <20200402080358.GC59159@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 07:30:51PM +0200, Uladzislau Rezki (Sony) wrote:
-> Maintain an emergency pool for each CPU with some
-> extra objects. There is read-only sysfs attribute,
-> the name is "rcu_nr_emergency_objs". It reflects
-> the size of the pool. As for now the default value
-> is 3.
+On Thu, Apr 02, 2020 at 04:03:58PM +0800, Boqun Feng wrote:
+> On Wed, Apr 01, 2020 at 11:58:16PM -0400, Joel Fernandes wrote:
+> > On Tue, Mar 31, 2020 at 09:40:37AM +0800, Boqun Feng wrote:
+> > > On Fri, Mar 27, 2020 at 06:18:43PM -0400, Joel Fernandes wrote:
+> > > > On Thu, Mar 26, 2020 at 10:40:18AM +0800, Boqun Feng wrote:
+> > > > > A recent discussion raises up the requirement for having test cases for
+> > > > > atomic APIs:
+> > > > > 
+> > > > > 	https://lore.kernel.org/lkml/20200213085849.GL14897@hirez.programming.kicks-ass.net/
+> > > > > 
+> > > > > , and since we already have a way to generate a test module from a
+> > > > > litmus test with klitmus[1]. It makes sense that we add more litmus
+> > > > > tests for atomic APIs. And based on the previous discussion, I create a
+> > > > > new directory Documentation/atomic-tests and put these litmus tests
+> > > > > here.
+> > > > > 
+> > > > > This patchset starts the work by adding the litmus tests which are
+> > > > > already used in atomic_t.txt, and also improve the atomic_t.txt to make
+> > > > > it consistent with the litmus tests.
+> > > > > 
+> > > > > Previous version:
+> > > > > v1: https://lore.kernel.org/linux-doc/20200214040132.91934-1-boqun.feng@gmail.com/
+> > > > > v2: https://lore.kernel.org/lkml/20200219062627.104736-1-boqun.feng@gmail.com/
+> > > > > v3: https://lore.kernel.org/linux-doc/20200227004049.6853-1-boqun.feng@gmail.com/
+> > > > 
+> > > > For full series:
+> > > > 
+> > > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > > 
+> > > > One question I had was in the existing atomic_set() documentation, it talks
+> > > > about atomic_add_unless() implementation based on locking could have issues.
+> > > > It says the way to fix such cases is:
+> > > > 
+> > > > Quote:
+> > > >     the typical solution is to then implement atomic_set{}() with
+> > > >     atomic_xchg().
+> > > > 
+> > > > I didn't get how using atomic_xchg() fixes it. Is the assumption there that
+> > > > atomic_xchg() would be implemented using locking to avoid atomic_set() having
+> > > 
+> > > Right, I think that's the intent of the sentence.
+> > > 
+> > > > issues? If so, we could clarify that in the document.
+> > > > 
+> > > 
+> > > Patches are welcome ;-)
+> > 
+> > 
+> > ---8<-----------------------
+> > 
+> > Like this? I'll add it to my tree and send it to Paul during my next
+> > series, unless you disagree ;-)
+> > 
+> > Subject: [PATCH] doc: atomic_t: Document better about the locking within
+> >  atomic_xchg()
+> > 
+> > It is not fully clear how the atomic_set() would not cause an issue with
+> > preservation of the atomicity of RMW in this example. Make it clear that
+> > locking within atomic_xchg() would save the day.
+> > 
+> > Suggested-by: Boqun Feng <boqun.feng@gmail.com>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > 
-> The pool is populated when low memory condition is
-> detected. Please note it is only for headless case
-> it means when the regular SLAB is not able to serve
-> any request, the pool is used.
+> Thanks!
 > 
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> Acked-by: Boqun Feng <boqun.feng@gmail.com>
 
-Hi Vlad,
+Thanks for the Ack, will send it to Paul during next series with your tag.
 
-One concern I have is this moves the problem a bit further down. My belief is
-we should avoid the likelihood of even needing an rcu_head allocated for the
-headless case, to begin with - than trying to do damage-control when it does
-happen. The only way we would end up needing an rcu_head is if we could not
-allocate an array.
-
-So instead of adding a pool for rcu_head allocations, how do you feel about
-pre-allocation of the per-cpu cache array instead, which has the same effect
-as you are intending?
-
-This has 3 benefits:
-1. It scales with number of CPUs, no configuration needed.
-2. It makes the first kfree_rcu() faster and less dependent on an allocation
-   succeeding.
-3. Much simpler code, no new structures or special handling.
-4. In the future we can extend it to allocate more than 2 pages per CPU using
-   the same caching mechanism.
-
-The obvious drawback being its 2 pages per CPU but at least it scales by
-number of CPUs. Something like the following (just lightly tested):
-
----8<-----------------------
-
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH] rcu/tree: Preallocate the per-cpu cache for kfree_rcu()
-
-In recent changes, we have made it possible to use kfree_rcu() without
-embedding an rcu_head in the object being free'd. This requires dynamic
-allocation. In case dynamic allocation fails due to memory pressure, we
-would end up synchronously waiting for an RCU grace period thus hurting
-kfree_rcu() latency.
-
-To make this less probable, let us pre-allocate the per-cpu cache so we
-depend less on the dynamic allocation succeeding. This also has the
-effect of making kfree_rcu() slightly faster at run time.
-
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- kernel/rcu/tree.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 6172e6296dd7d..9fbdeb4048425 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -4251,6 +4251,11 @@ static void __init kfree_rcu_batch_init(void)
- 			krcp->krw_arr[i].krcp = krcp;
- 		}
- 
-+		krcp->bkvcache[0] =  (struct kvfree_rcu_bulk_data *)
-+					__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-+		krcp->bkvcache[1] =  (struct kvfree_rcu_bulk_data *)
-+					__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-+
- 		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
- 		krcp->initialized = true;
- 	}
--- 
-2.26.0.292.g33ef6b2f38-goog
-
-
-> ---
->  kernel/rcu/tree.c | 133 +++++++++++++++++++++++++++++++++-------------
->  1 file changed, 97 insertions(+), 36 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 5e26145e9ead..f9f1f935ab0b 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -114,6 +114,14 @@ int rcu_num_lvls __read_mostly = RCU_NUM_LVLS;
->  int rcu_kfree_nowarn;
->  module_param(rcu_kfree_nowarn, int, 0444);
->  
-> +/*
-> + * For headless variant. Under memory pressure an
-> + * emergency pool can be used if the regular SLAB
-> + * is not able to serve some memory for us.
-> + */
-> +int rcu_nr_emergency_objs = 3;
-> +module_param(rcu_nr_emergency_objs, int, 0444);
-> +
->  /* Number of rcu_nodes at specified level. */
->  int num_rcu_lvl[] = NUM_RCU_LVL_INIT;
->  int rcu_num_nodes __read_mostly = NUM_RCU_NODES; /* Total # rcu_nodes in use. */
-> @@ -2877,6 +2885,12 @@ struct kfree_rcu_cpu {
->  	bool initialized;
->  	// Number of objects for which GP not started
->  	int count;
-> +
-> +	/*
-> +	 * Reserved emergency pool for headless variant.
-> +	 */
-> +	int nr_emergency;
-> +	void **emergency;
->  };
->  
->  static DEFINE_PER_CPU(struct kfree_rcu_cpu, krc);
-> @@ -2892,6 +2906,27 @@ debug_rcu_bhead_unqueue(struct kvfree_rcu_bulk_data *bhead)
->  #endif
->  }
->  
-> +static inline struct kfree_rcu_cpu *
-> +krc_this_cpu_lock(unsigned long *flags)
-> +{
-> +	struct kfree_rcu_cpu *krcp;
-> +
-> +	local_irq_save(*flags);	// For safely calling this_cpu_ptr().
-> +	krcp = this_cpu_ptr(&krc);
-> +	if (likely(krcp->initialized))
-> +		spin_lock(&krcp->lock);
-> +
-> +	return krcp;
-> +}
-> +
-> +static inline void
-> +krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, unsigned long flags)
-> +{
-> +	if (likely(krcp->initialized))
-> +		spin_unlock(&krcp->lock);
-> +	local_irq_restore(flags);
-> +}
-> +
->  /*
->   * This function is invoked in workqueue context after a grace period.
->   * It frees all the objects queued on ->bhead_free or ->head_free.
-> @@ -2974,6 +3009,7 @@ static void kfree_rcu_work(struct work_struct *work)
->  	 */
->  	for (; head; head = next) {
->  		unsigned long offset = (unsigned long)head->func;
-> +		unsigned long flags;
->  		bool headless;
->  		void *ptr;
->  
-> @@ -2991,10 +3027,23 @@ static void kfree_rcu_work(struct work_struct *work)
->  		trace_rcu_invoke_kvfree_callback(rcu_state.name, head, offset);
->  
->  		if (!WARN_ON_ONCE(!__is_kvfree_rcu_offset(offset))) {
-> -			if (headless)
-> +			if (headless) {
->  				kvfree((void *) *((unsigned long *) ptr));
->  
-> -			kvfree(ptr);
-> +				krcp = krc_this_cpu_lock(&flags);
-> +				if (krcp->emergency) {
-> +					if (krcp->nr_emergency < rcu_nr_emergency_objs) {
-> +						krcp->emergency[krcp->nr_emergency++] = ptr;
-> +
-> +						/* Bypass freeing of it, it is in emergency pool. */
-> +						ptr = NULL;
-> +					}
-> +				}
-> +				krc_this_cpu_unlock(krcp, flags);
-> +			}
-> +
-> +			if (ptr)
-> +				kvfree(ptr);
->  		}
->  
->  		rcu_lock_release(&rcu_callback_map);
-> @@ -3144,40 +3193,26 @@ kvfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
->  	return true;
->  }
->  
-> -static inline struct rcu_head *attach_rcu_head_to_object(void *obj)
-> +static inline struct rcu_head *
-> +set_ptr_in_rcu_head_obj(void *ptr, unsigned long *rho)
-> +{
-> +	rho[0] = (unsigned long) ptr;
-> +	return ((struct rcu_head *) ++rho);
-> +}
-> +
-> +static inline struct rcu_head *
-> +alloc_rcu_head_obj(void *ptr)
->  {
-> -	unsigned long *ptr;
-> +	unsigned long *rho;
->  
->  	/* Try hard to get the memory. */
-> -	ptr = kmalloc(sizeof(unsigned long *) +
-> +	rho = kmalloc(sizeof(unsigned long *) +
->  		sizeof(struct rcu_head), GFP_KERNEL |
->  			__GFP_ATOMIC | __GFP_HIGH | __GFP_RETRY_MAYFAIL);
-> -	if (!ptr)
-> +	if (!rho)
->  		return NULL;
->  
-> -	ptr[0] = (unsigned long) obj;
-> -	return ((struct rcu_head *) ++ptr);
-> -}
-> -
-> -static inline struct kfree_rcu_cpu *
-> -krc_this_cpu_lock(unsigned long *flags)
-> -{
-> -	struct kfree_rcu_cpu *krcp;
-> -
-> -	local_irq_save(*flags);	// For safely calling this_cpu_ptr().
-> -	krcp = this_cpu_ptr(&krc);
-> -	if (likely(krcp->initialized))
-> -		spin_lock(&krcp->lock);
-> -
-> -	return krcp;
-> -}
-> -
-> -static inline void
-> -krc_this_cpu_unlock(struct kfree_rcu_cpu *krcp, unsigned long flags)
-> -{
-> -	if (likely(krcp->initialized))
-> -		spin_unlock(&krcp->lock);
-> -	local_irq_restore(flags);
-> +	return set_ptr_in_rcu_head_obj(ptr, rho);
->  }
->  
->  /*
-> @@ -3237,15 +3272,31 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
->  	if (!success) {
->  		/* Is headless object? */
->  		if (head == NULL) {
-> -			/* Drop the lock. */
-> +			/*
-> +			 * Drop the lock to use more permissive
-> +			 * parameters, after that take it back.
-> +			 */
->  			krc_this_cpu_unlock(krcp, flags);
-> +			head = alloc_rcu_head_obj(ptr);
-> +			krcp = krc_this_cpu_lock(&flags);
->  
-> -			head = attach_rcu_head_to_object(ptr);
-> -			if (head == NULL)
-> -				goto inline_return;
-> +			/*
-> +			 * Use emergency pool if still fails.
-> +			 */
-> +			if (head == NULL) {
-> +				if (!krcp->nr_emergency)
-> +					goto unlock_return;
->  
-> -			/* Take it back. */
-> -			krcp = krc_this_cpu_lock(&flags);
-> +				head = set_ptr_in_rcu_head_obj(ptr,
-> +					krcp->emergency[--krcp->nr_emergency]);
-> +
-> +				/*
-> +				 * We do not need to do it. But just in case
-> +				 * let's set the pulled slot to NULL to avoid
-> +				 * magic issues.
-> +				 */
-> +				krcp->emergency[krcp->nr_emergency] = NULL;
-> +			}
->  
->  			/*
->  			 * Tag the headless object. Such objects have a back-pointer
-> @@ -3282,7 +3333,6 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
->  unlock_return:
->  	krc_this_cpu_unlock(krcp, flags);
->  
-> -inline_return:
->  	/*
->  	 * High memory pressure, so inline kvfree() after
->  	 * synchronize_rcu(). We can do it from might_sleep()
-> @@ -4272,6 +4322,17 @@ static void __init kfree_rcu_batch_init(void)
->  		}
->  
->  		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
-> +
-> +		/*
-> +		 * The poll will be populated when low memory condition
-> +		 * is detected. Therefore we do not fill it in here.
-> +		 */
-> +		krcp->emergency = kmalloc_array(rcu_nr_emergency_objs,
-> +			sizeof(void *), GFP_NOWAIT);
-> +
-> +		if (!krcp->emergency)
-> +			pr_err("Failed to create emergency pool for %d CPU!\n", cpu);
-> +
->  		krcp->initialized = true;
->  	}
->  	if (register_shrinker(&kfree_rcu_shrinker))
-> -- 
-> 2.20.1
-> 
+ - Joel
 
