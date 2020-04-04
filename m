@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C56DC2BA16
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20285C2BA16
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E956D206E9
-	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA111206E9
+	for <linux-kernel@archiver.kernel.org>; Sat,  4 Apr 2020 09:21:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nprn8Ox4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoxYQ38P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgDDJTh (ORCPT
+        id S1726132AbgDDJVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 05:19:37 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44045 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgDDJTh (ORCPT
+        Sat, 4 Apr 2020 05:21:52 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36160 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgDDJVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 05:19:37 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b72so4873998pfb.11;
-        Sat, 04 Apr 2020 02:19:36 -0700 (PDT)
+        Sat, 4 Apr 2020 05:21:52 -0400
+Received: by mail-pj1-f65.google.com with SMTP id nu11so4166257pjb.1;
+        Sat, 04 Apr 2020 02:21:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:mime-version:content-disposition
          :user-agent;
         bh=NGWjop58dXG4vxvIdRNaBQN9RGU+nV2F4sGHS4krjUo=;
-        b=Nprn8Ox4v6ELxRx0uvCCnpujI8wwKNUsM+6HRs7+1Lye6LpbA17bgc65vM72VA6nIY
-         2BpFPqOzXpFBEp2SUgiYnh9l4z/sERklNKhOb+sYqX30nbOkZ0sBnf7EVpFcRSUfvYq9
-         iQqLEG0iI6YFiGJEBQxDMoOy0pN6VcoMPVKCU0lrhBPukCkHI+e2tDH1232xxaFNVenx
-         XIRY48YU2a74hyzAGGz0lFULb8MYSfm+Df3kXdtMrd8t7LOQnYRrztDV8dZTkW/YfeRO
-         G6A7SLbEJNC5lApPyQuV1RXGs80URygT0Bz3DMLbe7HEonbTpHKr97+4oEssnL2cB7Eq
-         uYXA==
+        b=aoxYQ38PiYhTd+Dz1M1BjQDqvxcAfcndhj7HICuNEpV9z4uSvebaYJ5wAW/b/9YgAx
+         49+GSxdhFfaR2oLyCt83fpzwsuZT1EPmUDLfC2LdAdAJsu0AfL/HAHH1LFdspdtJBgf6
+         O9BT9reeHvTpZDIdPF7ba08EMb8Tu+M+Cy8ZoPavS/9ghMlxCR8bhTxRdiSpbaHlNit8
+         ZUkbxO69Azcqf+y8PXIZ/SJ+u0ZgOJ0mShekcuf3hn/mb56ktAyXhZSn/uYj560rIlC8
+         R1l1tblnVxeNfGd5nYY9fk3PQwbXJiB0j5ZB2frsIa65FyUnQRBqDZHTUXL7KixjqB8Z
+         i6Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
          :content-disposition:user-agent;
         bh=NGWjop58dXG4vxvIdRNaBQN9RGU+nV2F4sGHS4krjUo=;
-        b=g8hNf48gXaZSxR9tMhwap9Of7+SU7qKqUmotOUD9LDvdOYxQgSYjKjPMmaKb7p4A7e
-         69x8V9RjB66VVa4o38XMkWS7TbNkKuOgK8NceB7XqsUU826DJ07hwuMKx9G0jcJ6Uv7W
-         eVcoKkeVIifQlsM13/DWA8dSshtKyxq1Ye0V5kgQPnSAA2BDBJ5G4oU2cjtwNOD+gqtT
-         o1eYzDV4RYkihRfa5ZOi5ZYyy1VyB5PoEEu08Z80nrHMqEWV8tUr0zMEJP1eWO+X49DG
-         BVfI/HcvlcStItGB0Q6yzpnIZnJvHV3WCxsOvPQxegROYvQA1OFwolFQ+Y27o8mXcLKm
-         YoEA==
-X-Gm-Message-State: AGi0PubVFqxwarenVf4N2WpOFT6BOlJrnThUTmd5t7cOPd70RjWjFqb+
-        yp5ONJFHGUGuf4SKcNzMglY=
-X-Google-Smtp-Source: APiQypKCYCka40/AuhMUFmyg+se9cHrBZC6b2n6BbAgRxBMoLZzUIJhfIT34BWH+s+H9QjCcVF1Kxg==
-X-Received: by 2002:a63:4b53:: with SMTP id k19mr11878880pgl.91.1585991975371;
-        Sat, 04 Apr 2020 02:19:35 -0700 (PDT)
+        b=dZVA/gNF6hVMGIz/9oMw1pJ3I7gfJIWVTIXJMi7TWwaJ9Axk0PFx80Gbrs5h7D71GP
+         JAQDtCK6vkdDXuKq7/73C9XhbTOKIRRu8nEne/jzT/aJsqGGFMUBJ3ODHedhwrVJALsN
+         6CVQRPE7mBksge5QPhefKCiIexXuOr9oQY7scjQTob36a2p8dx5lTM7aqFNdwo56EPm/
+         SOnAkkKb0dkifVFdSlMZRSFrWimVlctu/TsYN7Fand5BXa3NuP9s27EWLnsIdCQQceOP
+         e7Jt+q7/WoPhnvm3pOC9AkKiAK5Rs0VWiPgvAQo6bt9PCuVt/amfR95nHGPBHo1Vd5d7
+         mixw==
+X-Gm-Message-State: AGi0PuZmFSr2sOKf2VngxBqwFXSLmTskGxbD54atQ7vnXdWhgKM3DVU3
+        Ogk0VyCgRaBaHfTd6EZS20s=
+X-Google-Smtp-Source: APiQypIh6/tBvi/I+KrSy5FN/7eVkcMYHZrfKkGYY0tvSU7vJ/rf7VYnpdxdwhHlE47Fga+c5RJHsQ==
+X-Received: by 2002:a17:902:c595:: with SMTP id p21mr11756123plx.17.1585992110608;
+        Sat, 04 Apr 2020 02:21:50 -0700 (PDT)
 Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id y15sm7331482pfc.206.2020.04.04.02.19.29
+        by smtp.gmail.com with ESMTPSA id a2sm7550506pja.44.2020.04.04.02.21.44
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Apr 2020 02:19:34 -0700 (PDT)
-Date:   Sat, 4 Apr 2020 14:49:25 +0530
+        Sat, 04 Apr 2020 02:21:50 -0700 (PDT)
+Date:   Sat, 4 Apr 2020 14:51:40 +0530
 From:   Nishad Kamdar <nishadkamdar@gmail.com>
 To:     Alan Stern <stern@rowland.harvard.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -70,11 +70,11 @@ To:     Alan Stern <stern@rowland.harvard.edu>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>, Joe Perches <joe@perches.com>
-Cc:     inux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
 Subject: [PATCH] USB: host: Use the correct style for SPDX License Identifier
-Message-ID: <20200404091921.GA4485@nishad>
+Message-ID: <20200404092135.GA4522@nishad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
