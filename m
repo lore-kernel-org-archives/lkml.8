@@ -2,121 +2,105 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E06C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3D9C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5918720659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:36:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586115392;
-	bh=wwwU7AKjQhJuMCN/DMQpCeuXbMLGbJ7GdVZ5T69Ztfo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1ych+MGbKoomMfZiVOn6BqJ2wi3g5kxNvgb22n6DfwzViWLTmMzhZHOzDYE/TA0rj
-	 rMrpS6/DLV0YhtQkF+GCZwU1QIRLTZBaIO4rJcSwdNWSRVyMHFGxurX9+sQuUvgMJg
-	 7eKR7YiALrKdJ4L/4Dlyl20IMpGwQQbtbfrp0wOM=
+	by mail.kernel.org (Postfix) with ESMTP id BECB420780
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+LYUFcU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgDETgO (ORCPT
+        id S1727738AbgDEThy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 15:36:14 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40667 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbgDETgO (ORCPT
+        Sun, 5 Apr 2020 15:37:54 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46352 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727356AbgDEThy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 15:36:14 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 19so12350911ljj.7
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 12:36:13 -0700 (PDT)
+        Sun, 5 Apr 2020 15:37:54 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r7so12320265ljg.13;
+        Sun, 05 Apr 2020 12:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=McxNvBKCZ6JPN08OgrptO9lPEWVuANGL5JPQo1cYmzU=;
-        b=cWkloafk1u9C1dM2sB8E6IvHCliy8gXmxKWFFWXfSHYohaUGzpNRNlEVHifOqRDSvo
-         OosYIkcsU9H/hl2tIwQEUOs+onByylg6uy1RPOA/u2zjbBFMk3dVPXtThJGR/ixUcaqh
-         wMTmGospwPYmk9dn16WwABooWdUc/ALk9Sdcg=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/2/BZYY6tziL1rowFqv/WZjJQ1bVo6WtxgyQ+EB6IhI=;
+        b=P+LYUFcU1CdNqGk1ZFGww7kPsFxv289pMKA+OGBQ8mWmub9FhsWGIP2TPoeFI9Xyaz
+         n67YyDPR4osdklykNePsTyH/GfctlRzMcUFq51vu1Nr/V5/ABrITAh6tzgET/Ej3ai5z
+         +Fy4yyGzFVs6LqtSc+yzcaPqN7iw3/EhbC1C7EYNBh6L9KZ7Wu9z0QU1C1BsOKlLy5d/
+         CgSzZPccT/bSRNvSU1L8DhsrWIhVZ++2FI3qHq/ub4EWLkdpLo51X1AGCl+EyRaLXXe8
+         tEkUxsXuj4nyYYBnaXazzdThA0a1qYOOBcmh8YgoBssCGF8PZixqzScMWk0Sc20mrylW
+         dXag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=McxNvBKCZ6JPN08OgrptO9lPEWVuANGL5JPQo1cYmzU=;
-        b=rrO4Fv1c62EHpDY45WY26msKWV5HDyR1IOeburD6WI6e6t4zU+LS53AOQOmJwtj7j0
-         oiI4Hq0+BvLsObcyxZ9ucTCao7+ZRQ39QasBd0q2Xyu3IK+cAFYB/USiOTmB0qkzkN3y
-         y3KbXSMoJvKwgF89Noq5FnrXH9CBiMfhtVvqo7B/iCASO+lY2tQB7YrVTiO9k8+PA4Yn
-         hd7Xiu5bneQATRjbuTrHPG2N/zIEsnRzp1CmN/0RtNnUrKOm5PXLun5NaerKUm+YhSyE
-         pyV+YRFipC6TDr30CczRaGu5zwnZilo8QztlQ/ZXREN5i2SE7Cs/j6LNwAJSaurBnd3D
-         6W2Q==
-X-Gm-Message-State: AGi0Pua4LE5HOV3LbUVpFuZedX/NfMybcNP9YSxKmLaM/tbNjhmhybtI
-        wQDYVXct5fSEs8wM88MlXVcHIkorKp0=
-X-Google-Smtp-Source: APiQypJfyAYqRb7K3rw++QRKIqmL9mdhnQdEuqoKwLi8izd2ABEZozLpJssZp3cHM4t+fifipdD2Yg==
-X-Received: by 2002:a2e:a554:: with SMTP id e20mr9801566ljn.88.1586115371530;
-        Sun, 05 Apr 2020 12:36:11 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id q6sm8945664ljp.21.2020.04.05.12.36.09
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/2/BZYY6tziL1rowFqv/WZjJQ1bVo6WtxgyQ+EB6IhI=;
+        b=f1FPS1zo/FjvuGW7O8kD2v4bRCoGrsfLBYsBGtVFx3ikKgRAO/TQdxCAmTzxk8Irts
+         EqZX8M+Nvi91mKMQ9uhnUc1SzX3VIayxQvQeSvmMBBF54XDugvLfOBw5LetVMFR8evea
+         utrNcx2zQcjry74ZYFYWzQsv50N1b4B8NQlplwdZob0ANNS0V1OM1CMqE9I1rGraUqxD
+         DSp3cQiw6e3IbViHz+zNW0uudHle7S59dpfJxmD868NRr54Nh1WCXC0+Qs0iIUVduwKI
+         J9wJAnkxTyXrcqTo5ft9djzOz7T3lfvC43qgM9UEPr+fQoYZd9DjwXpAKHfbYIWvQOiv
+         3IAA==
+X-Gm-Message-State: AGi0PubgpLMSoGlfMSXN2vvifXROsbZWeBhSDo/V/A+B8Uymz6/PnQNX
+        /IjS4pHODCjJmndtxSAzDek5E/7H
+X-Google-Smtp-Source: APiQypKM/1MzWi2j3tW5sVbf8l7ahjvkA6YmnT2KiVpjwF3GCanIAqK8rWUmndSdp2djevnlKdxIEg==
+X-Received: by 2002:a2e:9b55:: with SMTP id o21mr9853233ljj.74.1586115469896;
+        Sun, 05 Apr 2020 12:37:49 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id q1sm10159991lfc.92.2020.04.05.12.37.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Apr 2020 12:36:10 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id 131so9998218lfh.11
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 12:36:09 -0700 (PDT)
-X-Received: by 2002:a19:9109:: with SMTP id t9mr7701604lfd.10.1586115369481;
- Sun, 05 Apr 2020 12:36:09 -0700 (PDT)
+        Sun, 05 Apr 2020 12:37:49 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ca9a792f-ff5e-c82b-c2bc-32c4875e558d@gmail.com>
+Date:   Sun, 5 Apr 2020 22:37:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <87blobnq02.fsf@x220.int.ebiederm.org> <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org> <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
- <328f5ad3-f8b3-09b9-f2f7-b6dae0137542@redhat.com> <CAHk-=wgww8LFqUenUtNV7hzYSxAemjbOVYfZMXqOxK7DGRrZaw@mail.gmail.com>
- <c7c770c9-2c5c-4878-a224-d115720068f3@redhat.com> <86aa9fc6-6ac9-a0c2-3e1d-a602ef16d873@redhat.com>
- <CAHk-=wgOykL7cM34NraiNGsjJC5Uq6H0ybYHWhdXDSn-wzVXDQ@mail.gmail.com>
- <5c04cc6d-ec44-b840-071d-248ac81a0f91@redhat.com> <CAHk-=wgkE=qT6CSUJHfXNsyhW+=j4SVgxh2jEc8nWY_n3SFZ=w@mail.gmail.com>
- <AM6PR03MB517044AE8D005BB0BBB1EC98E4C40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <AM6PR03MB5170135E51DBF9093346E1DDE4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-In-Reply-To: <AM6PR03MB5170135E51DBF9093346E1DDE4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 5 Apr 2020 12:35:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgbxavbe82MTKYn8_qasqw-9kC346Azo0bGy062w0bWGg@mail.gmail.com>
-Message-ID: <CAHk-=wgbxavbe82MTKYn8_qasqw-9kC346Azo0bGy062w0bWGg@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Waiman Long <longman@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 4, 2020 at 11:34 PM Bernd Edlinger
-<bernd.edlinger@hotmail.de> wrote:
->
-> What really makes it impossible to write a multi-threaded strace program,
-> is that *only* the tread that made PTRACE_ATTACH can do all the other
-> PTRACE-APIs, but for a multi-treaded strace, any thread should be able
-> to call PTRACE-APIs as long as we are in the same process.
+04.04.2020 04:25, Sowjanya Komatineni пишет:
+...
+> +static int tegra_csi_init(struct host1x_client *client)
+> +{
+> +	struct tegra_csi *csi = host1x_client_to_csi(client);
+> +	struct tegra_video_device *vid = dev_get_drvdata(client->host);
+> +	int ret;
+> +
+> +	vid->csi = csi;
+> +
+> +	INIT_LIST_HEAD(&csi->csi_chans);
+> +
+> +	if (pm_runtime_enabled(csi->dev)) {
+> +		ret = pm_runtime_get_sync(csi->dev);
+> +		if (ret < 0) {
+> +			dev_err(csi->dev,
+> +				"failed to get runtime PM: %d\n", ret);
+> +			pm_runtime_put_noidle(csi->dev);
+> +			return ret;
+> +		}
+> +	} else {
 
-I agree that the ptrace model is broken, and no, you can't do a
-threaded ptrace the way things are now.
-
-Some of that is really fundamental to how we do things (ie the ptracer
-is the parent), and our data structures really make that be
-per-thread.
-
-I'm not sure how easy it would be to fix. Some of it is probably
-really painful. For example, right now we know we can't race between
-different pthread operations, because only the thread that did
-PTRACE_ATTACH is allowed to do most of them.
-
-So it could be very painful indeed to try to fix it so that you can do
-threaded tracing. It woudl probably be a good thing to have, but it
-might not be worth the pain.
-
-Some daring person could try...
-
-               Linus
+RPM is supposed to be always available on Tegra nowadays.
