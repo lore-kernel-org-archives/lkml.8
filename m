@@ -2,258 +2,280 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FED9C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACB5C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8A220672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD229206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDEM2e (ORCPT
+        id S1726717AbgDEMpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 08:28:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:39040 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgDEM2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 08:28:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8481F31B;
-        Sun,  5 Apr 2020 05:28:32 -0700 (PDT)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD9653F68F;
-        Sun,  5 Apr 2020 05:28:22 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
- <20200331143059.29fca8fa@thinkpad>
-Message-ID: <e3e35885-6852-16aa-3889-e22750a0cc87@arm.com>
-Date:   Sun, 5 Apr 2020 17:58:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 5 Apr 2020 08:45:40 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:57861 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgDEMpk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 08:45:40 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MBE3k-1jTMui06wA-00Cgnw; Sun, 05 Apr 2020 14:45:38 +0200
+Received: by mail-qk1-f172.google.com with SMTP id z15so7047259qki.7;
+        Sun, 05 Apr 2020 05:45:37 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ5IZCoyThY5s83+oahcdvmia0m0BSubcfrQbetgf7YnVbPqct9
+        0i0nWFMLQUmbOHdk6iBNOYn2BUkensAh8E+kCB0=
+X-Google-Smtp-Source: APiQypKlKm5u3myZf/GwFpSyF6fIiqJOxT5moUwM4gaZfAI+KUBEWYbYQYwZh31yY3jPs9ZHIBimRXzXSm0vY+Q4Zqk=
+X-Received: by 2002:a37:6455:: with SMTP id y82mr17373098qkb.286.1586090736480;
+ Sun, 05 Apr 2020 05:45:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200331143059.29fca8fa@thinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200405025123.154688-1-sboyd@kernel.org> <20200405025123.154688-7-sboyd@kernel.org>
+In-Reply-To: <20200405025123.154688-7-sboyd@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Sun, 5 Apr 2020 14:45:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2M54quhRNK4xvwjz9O9oZwgrobc_wtkGaeA2PMYwOUdg@mail.gmail.com>
+Message-ID: <CAK8P3a2M54quhRNK4xvwjz9O9oZwgrobc_wtkGaeA2PMYwOUdg@mail.gmail.com>
+Subject: Re: [PATCH 6/9] clk: Allow the common clk framework to be selectable
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Russell King <linux@armlinux.org.uk>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:s9GIWuPh2wPqFIdt+bFrY/z0h262eHWTOJr4HxpC6mH2widZvOo
+ rjc2behki1TOKtNu7+cOZx+b9RaxnELswNCEo4qAp+F7KAN1GhYapNjlN0P4jDJW8acqgJ7
+ P+KWx0cmF/5ATm94HRo6q25sSzDRzrZEFuoonfY42fU55WRjI8oS0jaMFoHPB6Ifc/1jcEV
+ plF/foFLtweZnvhC3ODuQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:spf/WT7vaD4=:lTLw/iCYFbB0EQzxRHNJrH
+ LFidJEvQe2rrqpAPwTnoDv2HeiFr29b2tCiUJRPXNLRNeiI9FR4BudlSqLv4KNw4CvPQ+OiJn
+ 9LYJF6rIu1HLnhor89I24KIGCEvwEiSOao11fiIbWXouCW4s7ARVYwuthPR24Qq4/YSpI7/M5
+ l3zwg0mZqxIh52aI13eRHwP9YW4etB8KDYdoPQZquVxbPAU/klp9t3CFgFKCIT1CPpa5+WAMI
+ IYDnC5scuo90gbIac26uFHO1ob21A/4GcO3CnbikW8t88mBCh65BXfdOFWCBZ57sUqauXzHcG
+ qAz8KoLXDc31bx4dJTju30AN2G0cNFI4tE0S9cab47wyaJXHiI7pYmRSGScg2SIjr38R6/n9y
+ uN0LiUPkpDy6Vmf+cYp4GbPk/y9wT2u0xRjq1i1NaAVQS5UvbKtrYGq08WBjbDU4S9t2jczZL
+ 7VmKZtT2mwPLsM7R8Web/m5Wm+zxLqj4/AsHvhNkW5z9wfyGdm6aYK864LWV+Onh7d7e5uoUO
+ eYn6aVhsToXleJO1Y0hMULnqMg6xBsjuoUpmxCdh11a7O+QYokYoKGJ2VxmTx1D+P1ydtv+bp
+ t1gWlmILrvQ6YAx4Z4M/zuvNZ9mR8TJYWEqQDHl+pc8uVQiHktUHFqk0MfIU3eUI7aYQodHZ7
+ cQnv/SXeg23xjNWcacgzBDGJYCdFfvcHpbqz/dQz9bm6baODNNesyXHiLzuRPauh1g7arX/0r
+ 1Ggsv1GiGUdRysZC/jSLRC38/DHatFJTjkuGiut0PGQDFx6Q7U2gqj1hF+Ry2i6TWDOLEQtXo
+ ANm5T2CNRfl5xBTh1yX4fMTyOODA9aHcomfSuZA6qK00cnzQZU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/31/2020 06:00 PM, Gerald Schaefer wrote:
-> On Tue, 24 Mar 2020 10:52:52 +0530
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> 
->> This series adds more arch page table helper tests. The new tests here are
->> either related to core memory functions and advanced arch pgtable helpers.
->> This also creates a documentation file enlisting all expected semantics as
->> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
->>
->> This series has been tested on arm64 and x86 platforms. There is just one
->> expected failure on arm64 that will be fixed when we enable THP migration.
->>
->> [   21.741634] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:782
->>
->> which corresponds to
->>
->> WARN_ON(!pmd_present(pmd_mknotpresent(pmd_mkhuge(pmd))))
->>
->> There are many TRANSPARENT_HUGEPAGE and ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD
->> ifdefs scattered across the test. But consolidating all the fallback stubs
->> is not very straight forward because ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD is
->> not explicitly dependent on ARCH_HAS_TRANSPARENT_HUGEPAGE.
->>
->> This series has been build tested on many platforms including the ones that
->> subscribe the test through ARCH_HAS_DEBUG_VM_PGTABLE.
->>
-> 
-> Hi Anshuman,
-> 
-> thanks for the update. There are a couple of issues on s390, some might
-> also affect other archs.
+On Sun, Apr 5, 2020 at 4:51 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> There's one snag with doing this, and that's making sure that randconfig
+> builds don't select this option when some architecture or platform
+> implements 'struct clk' outside of the common clk framework. Introduce a
+> new config option 'HAVE_LEGACY_CLK' to indicate those platforms that
+> haven't migrated to the common clk framework and therefore shouldn't be
+> allowed to select this new config option. Also add a note that we hope
+> one day to remove this config entirely.
 
-Sure, thanks for taking a look and giving it a spin on s390.
+Good idea!
 
-> 
-> 1) The pxd_huge_tests are using pxd_set/clear_huge, which defaults to
-> returning 0 if !CONFIG_HAVE_ARCH_HUGE_VMAP. As result, the checks for
-> !pxd_test/clear_huge in the pxd_huge_tests will always trigger the
-> warning. This should affect all archs w/o CONFIG_HAVE_ARCH_HUGE_VMAP.
-> Could be fixed like this:
-> 
-> @@ -923,8 +923,10 @@ void __init debug_vm_pgtable(void)
->         pmd_leaf_tests(pmd_aligned, prot);
->         pud_leaf_tests(pud_aligned, prot);
->  
-> -       pmd_huge_tests(pmdp, pmd_aligned, prot);
-> -       pud_huge_tests(pudp, pud_aligned, prot);
-> +       if (IS_ENABLED(CONFIG_HAVE_ARCH_HUGE_VMAP)) {
-> +               pmd_huge_tests(pmdp, pmd_aligned, prot);
-> +               pud_huge_tests(pudp, pud_aligned, prot);
-> +       }
+I've looked through the individual ones and commented a bit on
+what I think may or may not happen with them.
 
-That is correct. It was an omission on my part and will fix it.
+ralink SOC_MT7621 is the only one that I think you got wrong,
+as it already has common-clk support.
 
->  
->         pte_savedwrite_tests(pte_aligned, prot);
->         pmd_savedwrite_tests(pmd_aligned, prot);
-> 
-> BTW, please add some comments to the various #ifdef/#else stuff, especially
-> when the different parts are far away and/or nested.
+>  arch/arm/Kconfig              |  2 ++
+>  arch/c6x/Kconfig              |  1 +
+>  arch/m68k/Kconfig.cpu         |  2 +-
+>  arch/mips/Kconfig             |  6 ++++--
+>  arch/mips/loongson2ef/Kconfig |  2 +-
+>  arch/sh/boards/Kconfig        |  5 +++++
+>  arch/unicore32/Kconfig        |  2 +-
+>  drivers/clk/Kconfig           | 17 +++++++++++++----
+>  8 files changed, 28 insertions(+), 9 deletions(-)
+>
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index eeabdc5a3dd2..0606e1bbd7b6 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -364,6 +364,7 @@ config ARCH_EP93XX
+>         select CPU_ARM920T
+>         select GENERIC_CLOCKEVENTS
+>         select GPIOLIB
+> +       select HAVE_LEGACY_CLK
+>         help
+>           This enables support for the Cirrus EP93xx series of CPUs.
+>
+> @@ -522,6 +523,7 @@ config ARCH_OMAP1
+>         select GENERIC_IRQ_MULTI_HANDLER
+>         select GPIOLIB
+>         select HAVE_IDE
+> +       select HAVE_LEGACY_CLK
+>         select IRQ_DOMAIN
+>         select NEED_MACH_IO_H if PCCARD
+>         select NEED_MACH_MEMORY_H
 
-Sure, will do.
+Ah nice, I thought there were more than two implementations
+left. I need to refresh the series for OMAP1 that I did last year
+and debug the regression that caused. I think Linus Walleij
+has looked into the ep93xx one at some point.
 
-> 
-> 2) The hugetlb_advanced_test will fail because it directly de-references
-> huge *ptep pointers instead of using huge_ptep_get() for this. We have
-> very different pagetable entry layout for pte and (large) pmd on s390,
-> and unfortunately the whole hugetlbfs code is using pte_t instead of pmd_t
-> like THP. For this reason, huge_ptep_get() was introduced, which will
-> return a "converted" pte, because directly reading from a *ptep (pointing
-> to a large pmd) will not return a proper pte. Only ARM has also an
-> implementation of huge_ptep_get(), so they could be affected, depending
-> on what exactly they need it for.
+> diff --git a/arch/c6x/Kconfig b/arch/c6x/Kconfig
+> index e65e8d82442a..6444ebfd06a6 100644
+> --- a/arch/c6x/Kconfig
+> +++ b/arch/c6x/Kconfig
+> @@ -11,6 +11,7 @@ config C6X
+>         select ARCH_HAS_SYNC_DMA_FOR_CPU
+>         select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+>         select CLKDEV_LOOKUP
+> +       select HAVE_LEGACY_CLK
+>         select GENERIC_ATOMIC64
+>         select GENERIC_IRQ_SHOW
+>         select HAVE_ARCH_TRACEHOOK
 
-Currently, we dont support ARM (32). But as huge_ptep_get() already got a
-fallback, its better to use that than a direct READ_ONCE().
+This was last touched in 2012 when TMS320C6678 support
+was added. It seems to be based on the original same code
+as omap1 and omap2 that eventually turned into the common
+clock subsystem, so it would clearly be possible to do a
+step-by-step conversion like I did for omap1, but I suspect
+we can wait for all of c6x-linux to become obsolete enough.
 
-> 
-> Could be fixed like this (the first de-reference is a bit special,
-> because at that point *ptep does not really point to a large (pmd) entry
-> yet, it is initially an invalid pte entry, which breaks our huge_ptep_get()
+> diff --git a/arch/m68k/Kconfig.cpu b/arch/m68k/Kconfig.cpu
+> index 60ac1cd8b96f..bd2d29c22a10 100644
+> --- a/arch/m68k/Kconfig.cpu
+> +++ b/arch/m68k/Kconfig.cpu
+> @@ -28,7 +28,7 @@ config COLDFIRE
+>         select CPU_HAS_NO_MULDIV64
+>         select GENERIC_CSUM
+>         select GPIOLIB
+> -       select HAVE_CLK
+> +       select HAVE_LEGACY_CLK
+>
+>  endchoice
 
-There seems to be an inconsistency on s390 platform. Even though it defines
-a huge_ptep_get() override, it does not subscribe __HAVE_ARCH_HUGE_PTEP_GET
-which should have forced it fallback on generic huge_ptep_get() but it does
-not :) Then I realized that __HAVE_ARCH_HUGE_PTEP_GET only makes sense when
-an arch uses <asm-generic/hugetlb.h>. s390 does not use that and hence gets
-away with it's own huge_ptep_get() without __HAVE_ARCH_HUGE_PTEP_GET. Sounds
-confusing ? But I might not have the entire context here.
+The coldfire clock implementation looks rather simple compared
+to chips from the 2010s: most chips have only fixed clocks,
+and three of them have one of two registers of clock gates.
 
-> conversion logic. I also added PMD_MASK alignment for RANDOM_ORVALUE,
-> because we do have some special bits there in our large pmds. It seems
-> to also work w/o that alignment, but it feels a bit wrong):
+It shouldn't be hard to convert, but enabling common-clk will
+cause a noticeable kernel size increase on the fairly limited
+hardware.
 
-Sure, we can accommodate that.
+Simply enabling COMMON_CLK in m5475evb_defconfig
+results in a 1.7% or 40KB growth in kernel size, plus there
+would be additional dynamic memory usage:
 
-> 
-> @@ -731,26 +731,26 @@ static void __init hugetlb_advanced_test
->                                           unsigned long vaddr, pgprot_t prot)
->  {
->         struct page *page = pfn_to_page(pfn);
-> -       pte_t pte = READ_ONCE(*ptep);
-> +       pte_t pte;
-> 
-> -       pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
-> +       pte = pte_mkhuge(mk_pte_phys(RANDOM_ORVALUE & PMD_MASK, prot));
+   text    data     bss     dec     hex filename
+1934726 263616   83284 2281626 22d09a obj/vmlinux-before
+1971989 266192   83308 2321489 236c51 obj/vmlinux-after
 
-So that keeps the existing value in 'ptep' pointer at bay and instead
-construct a PTE from scratch. I would rather have READ_ONCE(*ptep) at
-least provide the seed that can be ORed with RANDOM_ORVALUE before
-being masked with PMD_MASK. Do you see any problem ?
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index e53a8dd5c19b..fa02c715ab25 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -181,7 +181,7 @@ config AR7
+>         select SYS_SUPPORTS_ZBOOT_UART16550
+>         select GPIOLIB
+>         select VLYNQ
+> -       select HAVE_CLK
+> +       select HAVE_LEGACY_CLK
+>         help
+>           Support for the Texas Instruments AR7 System-on-a-Chip
+>           family: TNETD7100, 7200 and 7300.
 
-Some thing like this instead.
+I suspect this platform is fairly dead, OpenWRT dropped support for it,
+and the known machines have at most 16MB of RAM, which limits
+the number of use cases that also want to build recent kernels.
 
-pte_t pte = READ_ONCE(*ptep);
-pte = pte_mkhuge(__pte((pte_val(pte) | RANDOM_ORVALUE) & PMD_MASK));
+> @@ -296,9 +296,9 @@ config BCM63XX
+>         select SYS_HAS_EARLY_PRINTK
+>         select SWAP_IO_SPACE
+>         select GPIOLIB
+> -       select HAVE_CLK
+>         select MIPS_L1_CACHE_SHIFT_4
+>         select CLKDEV_LOOKUP
+> +       select HAVE_LEGACY_CLK
+>         help
+>           Support for BCM63XX based boards
+>
+> @@ -419,6 +419,7 @@ config LANTIQ
+>         select SWAP_IO_SPACE
+>         select BOOT_RAW
+>         select CLKDEV_LOOKUP
+> +       select HAVE_LEGACY_CLK
+>         select USE_OF
+>         select PINCTRL
+>         select PINCTRL_LANTIQ
+> @@ -656,6 +657,7 @@ config RALINK
+>         select SYS_SUPPORTS_MIPS16
+>         select SYS_HAS_EARLY_PRINTK
+>         select CLKDEV_LOOKUP
+> +       select HAVE_LEGACY_CLK
+>         select ARCH_HAS_RESET_CONTROLLER
+>         select RESET_CONTROLLER
 
-We cannot use mk_pte_phys() as it is defined only on some platforms
-without any generic fallback for others.
+All three of these are older platforms that still have a number of machines
+supported in OpenWRT, so there is hope that someone would do the work
+to add common-clk support. Both Lantiq and Ralink have been converted
+to device tree not too long ago.
 
->         set_huge_pte_at(mm, vaddr, ptep, pte);
->         barrier();
->         WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
->         huge_pte_clear(mm, vaddr, ptep, PMD_SIZE);
-> -       pte = READ_ONCE(*ptep);
-> +       pte = huge_ptep_get(ptep);
->         WARN_ON(!huge_pte_none(pte));
->  
->         pte = mk_huge_pte(page, prot);
->         set_huge_pte_at(mm, vaddr, ptep, pte);
->         huge_ptep_set_wrprotect(mm, vaddr, ptep);
-> -       pte = READ_ONCE(*ptep);
-> +       pte = huge_ptep_get(ptep);
->         WARN_ON(huge_pte_write(pte));
->  
->         pte = mk_huge_pte(page, prot);
->         set_huge_pte_at(mm, vaddr, ptep, pte);
->         huge_ptep_get_and_clear(mm, vaddr, ptep);
-> -       pte = READ_ONCE(*ptep);
-> +       pte = huge_ptep_get(ptep);
->         WARN_ON(!huge_pte_none(pte));
->  
->         pte = mk_huge_pte(page, prot);
-> @@ -759,7 +759,7 @@ static void __init hugetlb_advanced_test
->         pte = huge_pte_mkwrite(pte);
->         pte = huge_pte_mkdirty(pte);
->         huge_ptep_set_access_flags(vma, vaddr, ptep, pte, 1);
-> -       pte = READ_ONCE(*ptep);
-> +       pte = huge_ptep_get(ptep);
->         WARN_ON(!(huge_pte_write(pte) && huge_pte_dirty(pte)));
->  }
->  #else
-> 
-> 3) The pmd_protnone_tests() has an issue, because it passes a pmd to
-> pmd_protnone() which has not been marked as large. We check for large
-> pmd in the s390 implementation of pmd_protnone(), and will fail if a
-> pmd is not large. We had similar issues before, in other helpers, where
-> I changed the logic on s390 to not require the pmd large check, but I'm
-> not so sure in this case. Is there a valid use case for doing
-> pmd_protnone() on "normal" pmds? Or could this be changed like this:
+I think the RALINK entry needs to be changed, as this includes
+SOC_MT7621, which already uses COMMON_CLK.
 
-That is a valid question. IIUC, all existing callers for pmd_protnone()
-ensure that it is indeed a huge PMD. But even assuming otherwise should
-not the huge PMD requirement get checked in the caller itself rather than
-in the arch helper which is just supposed to check the existence of the
-dedicated PTE bit(s) for this purpose. Purely from a helper perspective
-pmd_protnone() should not really care about being large even though it
-might never get used without one.
+> diff --git a/arch/mips/loongson2ef/Kconfig b/arch/mips/loongson2ef/Kconfig
+> index 595dd48e1e4d..c9ec43afde73 100644
+> --- a/arch/mips/loongson2ef/Kconfig
+> +++ b/arch/mips/loongson2ef/Kconfig
+> @@ -46,7 +46,7 @@ config LEMOTE_MACH2F
+>         select CSRC_R4K if ! MIPS_EXTERNAL_TIMER
+>         select DMA_NONCOHERENT
+>         select GENERIC_ISA_DMA_SUPPORT_BROKEN
+> -       select HAVE_CLK
+> +       select HAVE_LEGACY_CLK
+>         select FORCE_PCI
+>         select I8259
+>         select IRQ_MIPS_CPU
 
-Also all platforms (except s390) derive the pmd_protnone() from their
-respective pte_protnone(). I wonder why should s390 be any different
-unless it is absolutely necessary.
+For all I can tell, this driver only uses the clock interface for
+its cpufreq driver, and the actual API definition looks bogus.
 
-> 
-> @@ -537,7 +537,7 @@ static void __init pte_protnone_tests(un
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  static void __init pmd_protnone_tests(unsigned long pfn, pgprot_t prot)
->  {
-> -       pmd_t pmd = pfn_pmd(pfn, prot);
-> +       pmd_t pmd = mk_huge_pmd(pfn_to_page(pfn), prot);
-> 
->         if (!IS_ENABLED(CONFIG_NUMA_BALANCING))
->                 return;
-> 
-> Regards,
-> Gerald
-> 
-> 
+Half of it could be folded into the cpufreq driver, and the rest
+of it removed, along with arch/mips/include/asm/clock.h
+
+> diff --git a/arch/sh/boards/Kconfig b/arch/sh/boards/Kconfig
+> index cee24c308337..fb0ca0c1efe1 100644
+> --- a/arch/sh/boards/Kconfig
+> +++ b/arch/sh/boards/Kconfig
+> @@ -7,6 +7,11 @@ config SOLUTION_ENGINE
+>  config SH_ALPHA_BOARD
+>         bool
+>
+> +config SH_CUSTOM_CLK
+> +       def_bool y
+> +       depends on !SH_DEVICE_TREE
+> +       select HAVE_LEGACY_CLK
+> +
+>  config SH_DEVICE_TREE
+>         bool
+>         select OF
+
+It's going to be hard to find anyone willing to touch this, as the code
+is very large but has few users these days.
+
+drivers/sh/clk/ is basically a generic clk subsystem on its own, and
+there are at least 28 different arch/sh SoCs with drivers for it.
+
+       Arnd
