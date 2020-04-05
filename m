@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EF3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2427C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D361620659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BF220659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgDELa2 (ORCPT
+        id S1726826AbgDELad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 07:30:28 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:5756 "EHLO
+        Sun, 5 Apr 2020 07:30:33 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:52995 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726626AbgDELaJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726622AbgDELaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 07:30:09 -0400
+        Sun, 5 Apr 2020 07:30:08 -0400
 Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
   by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Apr 2020 04:30:07 -0700
 Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 05 Apr 2020 04:30:03 -0700
+  by ironmsg02-sd.qualcomm.com with ESMTP; 05 Apr 2020 04:30:04 -0700
 Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 8112621641; Sun,  5 Apr 2020 17:00:02 +0530 (IST)
+        id B01FF21657; Sun,  5 Apr 2020 17:00:02 +0530 (IST)
 From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org,
         mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, sivaprak@codeaurora.org
-Subject: [PATCH V2 3/8] clk: qcom: Add A53 PLL support for ipq6018 devices
-Date:   Sun,  5 Apr 2020 16:59:20 +0530
-Message-Id: <1586086165-19426-4-git-send-email-sivaprak@codeaurora.org>
+Subject: [PATCH V2 5/8] clk: qcom: Add ipq apss clock controller
+Date:   Sun,  5 Apr 2020 16:59:22 +0530
+Message-Id: <1586086165-19426-6-git-send-email-sivaprak@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586086165-19426-1-git-send-email-sivaprak@codeaurora.org>
 References: <1586086165-19426-1-git-send-email-sivaprak@codeaurora.org>
@@ -44,203 +44,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CPUs on Qualcomm IPQ6018 platform is primarily clocked by A53 PLL.
-This patch adds support for the A53 PLL on IPQ6018 devices which can
-support CPU frequencies above 1Ghz.
+The CPU on Qualcomm's IPQ platform devices are clocked primarily by a
+PLL and xo which are connected to a mux and enable block, This patch adds
+support for the mux and the enable.
 
 Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- drivers/clk/qcom/a53-pll.c | 136 ++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 111 insertions(+), 25 deletions(-)
+ [V2]
+  * Addressed review comments from Stephen.
+  * Moved the PLL to separate patch
+ drivers/clk/qcom/Kconfig    |  10 +++++
+ drivers/clk/qcom/Makefile   |   1 +
+ drivers/clk/qcom/apss-ipq.c | 107 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 118 insertions(+)
+ create mode 100644 drivers/clk/qcom/apss-ipq.c
 
-diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
-index 45cfc57..a95351c 100644
---- a/drivers/clk/qcom/a53-pll.c
-+++ b/drivers/clk/qcom/a53-pll.c
-@@ -11,11 +11,40 @@
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 15cdcdc..8573f2e 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -89,6 +89,16 @@ config APQ_MMCC_8084
+ 	  Say Y if you want to support multimedia devices such as display,
+ 	  graphics, video encode/decode, camera, etc.
  
- #include "clk-pll.h"
- #include "clk-regmap.h"
++config IPQ_APSS
++	tristate "IPQ APSS Clock Controller"
++	default N
++	help
++	  Support for APSS clock controller on ipq platform devices. The
++	  APSS clock controller manages the Mux and enable block that feeds the
++	  CPUs.
++	  Say Y if you want to support CPU frequency scaling on
++	  ipq based devices.
++
+ config IPQ_GCC_4019
+ 	tristate "IPQ4019 Global Clock Controller"
+ 	help
+diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
+index 656a87e..1e4b296 100644
+--- a/drivers/clk/qcom/Makefile
++++ b/drivers/clk/qcom/Makefile
+@@ -19,6 +19,7 @@ clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
+ # Keep alphabetically sorted by config
+ obj-$(CONFIG_APQ_GCC_8084) += gcc-apq8084.o
+ obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
++obj-$(CONFIG_IPQ_APSS) += apss-ipq.o
+ obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
+ obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
+ obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
+diff --git a/drivers/clk/qcom/apss-ipq.c b/drivers/clk/qcom/apss-ipq.c
+new file mode 100644
+index 0000000..a37cd98
+--- /dev/null
++++ b/drivers/clk/qcom/apss-ipq.c
+@@ -0,0 +1,107 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/kernel.h>
++#include <linux/err.h>
++#include <linux/platform_device.h>
++#include <linux/clk-provider.h>
++#include <linux/regmap.h>
++#include <linux/module.h>
++
++#include <dt-bindings/clock/qcom,apss-ipq.h>
++
++#include "common.h"
++#include "clk-regmap.h"
++#include "clk-branch.h"
 +#include "clk-alpha-pll.h"
- 
--static const struct pll_freq_tbl a53pll_freq[] = {
-+struct a53_alpha_pll {
-+	struct alpha_pll_config *pll_config;
-+	struct clk_alpha_pll *pll;
++#include "clk-regmap-mux.h"
++
++enum {
++	P_XO,
++	P_APSS_PLL_EARLY,
 +};
 +
-+union a53pll {
-+	struct clk_pll *pll;
-+	struct a53_alpha_pll alpha_pll;
++static const struct clk_parent_data parents_apcs_alias0_clk_src[] = {
++	{ .fw_name = "xo" },
++	{ .fw_name = "pll" },
 +};
 +
-+struct a53pll_data {
-+#define PLL_IS_ALPHA BIT(0)
-+	u8 flags;
-+	union a53pll a53pll;
++static const struct parent_map parents_apcs_alias0_clk_src_map[] = {
++	{ P_XO, 0 },
++	{ P_APSS_PLL_EARLY, 5 },
 +};
 +
-+static const u8 ipq_pll_offsets[] = {
-+	[PLL_OFF_L_VAL] = 0x08,
-+	[PLL_OFF_ALPHA_VAL] = 0x10,
-+	[PLL_OFF_USER_CTL] = 0x18,
-+	[PLL_OFF_CONFIG_CTL] = 0x20,
-+	[PLL_OFF_CONFIG_CTL_U] = 0x24,
-+	[PLL_OFF_STATUS] = 0x28,
-+	[PLL_OFF_TEST_CTL] = 0x30,
-+	[PLL_OFF_TEST_CTL_U] = 0x34,
-+};
-+
-+static const struct pll_freq_tbl msm8996_a53pll_freq[] = {
- 	{  998400000, 52, 0x0, 0x1, 0 },
- 	{ 1094400000, 57, 0x0, 0x1, 0 },
- 	{ 1152000000, 62, 0x0, 0x1, 0 },
-@@ -26,6 +55,64 @@ static const struct pll_freq_tbl a53pll_freq[] = {
- 	{ }
- };
- 
-+static struct clk_pll msm8996_pll = {
-+	.mode_reg = 0x0,
-+	.l_reg = 0x04,
-+	.m_reg = 0x08,
-+	.n_reg = 0x0c,
-+	.config_reg = 0x14,
-+	.status_reg = 0x1c,
-+	.status_bit = 16,
-+	.freq_tbl = msm8996_a53pll_freq,
++static struct clk_regmap_mux apcs_alias0_clk_src = {
++	.reg = 0x0050,
++	.width = 3,
++	.shift = 7,
++	.parent_map = parents_apcs_alias0_clk_src_map,
 +	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "a53pll",
-+		.flags = CLK_IS_CRITICAL,
-+		.parent_data = &(const struct clk_parent_data){
-+			.fw_name = "xo",
-+			.name = "xo",
-+		},
-+		.num_parents = 1,
-+		.ops = &clk_pll_sr2_ops,
++		.name = "apcs_alias0_clk_src",
++		.parent_data = parents_apcs_alias0_clk_src,
++		.num_parents = 2,
++		.ops = &clk_regmap_mux_closest_ops,
++		.flags = CLK_SET_RATE_PARENT,
 +	},
 +};
 +
-+static struct clk_alpha_pll ipq6018_pll = {
-+	.offset = 0x0,
-+	.regs = ipq_pll_offsets,
-+	.flags = SUPPORTS_DYNAMIC_UPDATE,
++/*required for cpufreq*/
++static struct clk_branch apcs_alias0_core_clk = {
++	.halt_reg = 0x0058,
 +	.clkr = {
-+		.enable_reg = 0x0,
++		.enable_reg = 0x0058,
 +		.enable_mask = BIT(0),
 +		.hw.init = &(struct clk_init_data){
-+			.name = "a53pll",
-+			.flags = CLK_IS_CRITICAL,
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "xo",
-+			},
++			.name = "apcs_alias0_core_clk",
++			.parent_hws = (const struct clk_hw *[]){
++				&apcs_alias0_clk_src.clkr.hw },
 +			.num_parents = 1,
-+			.ops = &clk_alpha_pll_huayra_ops,
++			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
++			.ops = &clk_branch2_ops,
 +		},
 +	},
 +};
 +
-+static struct alpha_pll_config ipq6018_pll_config = {
-+	.l = 0x37,
-+	.config_ctl_val = 0x04141200,
-+	.config_ctl_hi_val = 0x0,
-+	.early_output_mask = BIT(3),
-+	.main_output_mask = BIT(0),
++static const struct regmap_config apss_ipq_regmap_config = {
++	.reg_bits       = 32,
++	.reg_stride     = 4,
++	.val_bits       = 32,
++	.max_register   = 0x1000,
++	.fast_io        = true,
 +};
 +
-+static struct a53pll_data msm8996pll_data = {
-+	.a53pll.pll = &msm8996_pll,
++static struct clk_regmap *apss_ipq_clks[] = {
++	[APCS_ALIAS0_CLK_SRC] = &apcs_alias0_clk_src.clkr,
++	[APCS_ALIAS0_CORE_CLK] = &apcs_alias0_core_clk.clkr,
 +};
 +
-+static struct a53pll_data ipq6018pll_data = {
-+	.flags = PLL_IS_ALPHA,
-+	.a53pll.alpha_pll.pll = &ipq6018_pll,
-+	.a53pll.alpha_pll.pll_config = &ipq6018_pll_config,
++static const struct qcom_cc_desc apss_ipq_desc = {
++	.config = &apss_ipq_regmap_config,
++	.clks = apss_ipq_clks,
++	.num_clks = ARRAY_SIZE(apss_ipq_clks),
 +};
 +
- static const struct regmap_config a53pll_regmap_config = {
- 	.reg_bits		= 32,
- 	.reg_stride		= 4,
-@@ -39,14 +126,16 @@ static int qcom_a53pll_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct regmap *regmap;
- 	struct resource *res;
--	struct clk_pll *pll;
-+	const struct a53pll_data *pll_data;
-+	struct clk_regmap *clkr;
- 	void __iomem *base;
--	struct clk_init_data init = { };
- 	int ret;
- 
--	pll = devm_kzalloc(dev, sizeof(*pll), GFP_KERNEL);
--	if (!pll)
--		return -ENOMEM;
-+	pll_data = of_device_get_match_data(dev);
-+	if (!pll_data) {
-+		dev_err(dev, "failed to get platform data\n");
-+		return -ENODEV;
-+	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(dev, res);
-@@ -57,30 +146,26 @@ static int qcom_a53pll_probe(struct platform_device *pdev)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	pll->l_reg = 0x04;
--	pll->m_reg = 0x08;
--	pll->n_reg = 0x0c;
--	pll->config_reg = 0x14;
--	pll->mode_reg = 0x00;
--	pll->status_reg = 0x1c;
--	pll->status_bit = 16;
--	pll->freq_tbl = a53pll_freq;
--
--	init.name = "a53pll";
--	init.parent_names = (const char *[]){ "xo" };
--	init.num_parents = 1;
--	init.ops = &clk_pll_sr2_ops;
--	init.flags = CLK_IS_CRITICAL;
--	pll->clkr.hw.init = &init;
--
--	ret = devm_clk_register_regmap(dev, &pll->clkr);
-+	if (pll_data->flags & PLL_IS_ALPHA) {
-+		struct clk_alpha_pll *alpha_pll =
-+			pll_data->a53pll.alpha_pll.pll;
-+		struct alpha_pll_config *alpha_pll_config =
-+			pll_data->a53pll.alpha_pll.pll_config;
++static int apss_ipq_probe(struct platform_device *pdev)
++{
++	struct regmap *regmap;
 +
-+		clk_alpha_pll_configure(alpha_pll, regmap, alpha_pll_config);
-+		clkr = &pll_data->a53pll.alpha_pll.pll->clkr;
-+	} else {
-+		clkr = &pll_data->a53pll.pll->clkr;
-+	}
++	regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
 +
-+	ret = devm_clk_register_regmap(dev, clkr);
- 	if (ret) {
- 		dev_err(dev, "failed to register regmap clock: %d\n", ret);
- 		return ret;
- 	}
- 
- 	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
--					  &pll->clkr.hw);
-+					  &clkr->hw);
- 	if (ret) {
- 		dev_err(dev, "failed to add clock provider: %d\n", ret);
- 		return ret;
-@@ -90,7 +175,8 @@ static int qcom_a53pll_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id qcom_a53pll_match_table[] = {
--	{ .compatible = "qcom,msm8916-a53pll" },
-+	{ .compatible = "qcom,msm8916-a53pll", .data = &msm8996pll_data},
-+	{ .compatible = "qcom,ipq6018-a53pll", .data = &ipq6018pll_data},
- 	{ }
- };
- 
++	return qcom_cc_really_probe(pdev, &apss_ipq_desc, regmap);
++}
++
++static struct platform_driver apss_ipq_driver = {
++	.probe = apss_ipq_probe,
++	.driver = {
++		.name   = "qcom,apss-ipq-clk",
++	},
++};
++
++module_platform_driver(apss_ipq_driver);
++
++MODULE_DESCRIPTION("QCOM APSS IPQ CLK Driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
 
