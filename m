@@ -2,177 +2,129 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89184C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9518DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F80D20659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E36720678
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CLSoNEy6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiBbl3Jg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgDEIas (ORCPT
+        id S1726452AbgDEIhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 04:30:48 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:56355 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726408AbgDEIas (ORCPT
+        Sun, 5 Apr 2020 04:37:00 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34881 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726308AbgDEIhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 04:30:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586075447; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=boJiaV3EccHj3kSwD3JA7pnnQAJZ7j95LcXsC2qfwdk=; b=CLSoNEy6U3jxtVg1sV6U6mYUUJWWMoeIiWESy3bcxzLS95sITeBHh3sap1MPHdoEa3MK0Z8O
- MPrMLHc5tbRal9BaRkDabZeHdMoYxoft9r6tBRe2rbHn58v8HX7mmijrn75frezIQ2xlTU9o
- gcXMFRKF6WO8v52RqRgAwVLTgUA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e899727.7f860ad8f180-smtp-out-n01;
- Sun, 05 Apr 2020 08:30:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 73276C433D2; Sun,  5 Apr 2020 08:30:30 +0000 (UTC)
-Received: from [192.168.0.100] (unknown [49.206.125.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5564BC433F2;
-        Sun,  5 Apr 2020 08:30:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5564BC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
- controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
- <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
- <20200309211349.GA10752@bogus>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <a8248eb8-ed65-7d80-7824-08aef22a963b@codeaurora.org>
-Date:   Sun, 5 Apr 2020 14:00:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200309211349.GA10752@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Sun, 5 Apr 2020 04:37:00 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a13so6007474pfa.2;
+        Sun, 05 Apr 2020 01:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ncl8XXtzp8goItvEp2ww15C1VisVJr6bKa4zYnBNmX0=;
+        b=UiBbl3JgXB+WXPn0PDlm6JGE4zUA0Lk+w2SyBVnGyw+dtI3fMZAwpQvxLQLp1zocmc
+         cbZAjRELnDckLbIDej8cQ9TYieSow+wb5wXbORwlZevebns6eo8/z0JWd8gu9J6eQvcw
+         hazEBqpkdC/xBC+YGvNdp/RryMhQ/PVr5bSPI/hnLNMKTMSs9uJrrKbom6qKwt53EDl6
+         DcRcqE9SMUU8sMl3p5awrJZf2xuCdUStIN8IFN3vUpYauz/B1Me3zUaDSTYiU1K/RbSb
+         fzUtxc7jlXr99CrDzjo6H1+wCRql+6stLwwjt9iiefUmyJqE7D+H6jnjoPQcAsxrXOVl
+         ZGFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ncl8XXtzp8goItvEp2ww15C1VisVJr6bKa4zYnBNmX0=;
+        b=IVIxM5N2nZf2mFqVHJknxklv6Tozfk8SMDwcv9j956+LEdk+pKN7R3QArlfYX6WWvg
+         Hk0R2ouoazFK1irysfp3DtVp8nF3r0m6Rx+MqAsq+qWxGo1R9Qp9OsEfvK5pV49vUdXQ
+         H8s+7o1gJmwji70hX4O6cM1qrrFtveq6YAaIaCITm6t0Ah80kLiqohz8hGcCT9nLeEG6
+         kJeZhhmMnEbzcrejqXtHfpiD7cyQG5ieBHzO1tnAcJKgScDgfvYF1fcCGFJZGznowZCN
+         a/0yUSIXgsyvaElOOrbln2fSu5eXDkHTkYbV5CU5KuL5iajctvrJre1oQ6YaHuGcmR69
+         0aPg==
+X-Gm-Message-State: AGi0Pubx71WSMvGnvlOUz0g1uNenb3YTfEEyjkoi0x2LLW65VR0tjzwj
+        Vb6pdicLoN57msxlyAfC2OM=
+X-Google-Smtp-Source: APiQypLwjpQ8/2K2EhOZmMPEwHuHozeHT2LsHn3MvCuDvbg8478/A6s7FGnWlBvSyPQ5EeyjF7JA+w==
+X-Received: by 2002:a63:602:: with SMTP id 2mr15774896pgg.356.1586075818769;
+        Sun, 05 Apr 2020 01:36:58 -0700 (PDT)
+Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
+        by smtp.gmail.com with ESMTPSA id y3sm8991405pfy.158.2020.04.05.01.36.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 05 Apr 2020 01:36:58 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com
+Cc:     ast@kernel.org, daniel@iogearbox.net, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] um: delete an unnecessary check before the kfree
+Date:   Sun,  5 Apr 2020 16:36:52 +0800
+Message-Id: <20200405083652.29462-1-hqjagain@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+NULL check before kfree is unnecessary so remove it.
 
-Thanks for the review.
+This issue was detected by using the Coccinelle software.
 
-On 3/10/2020 2:43 AM, Rob Herring wrote:
-> On Thu, Feb 27, 2020 at 03:25:17PM +0530, Sivaprakash Murugesan wrote:
->> add dt-binding for ipq6018 apss clock controller
->>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 ++++++++++++++++++++++
->>   include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
->>   2 files changed, 84 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->>   create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->> new file mode 100644
->> index 0000000..7433721
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
->> @@ -0,0 +1,58 @@
->> +# SPDX-License-Identifier: GPL-2.0-only
-> Dual license new bindings please:
->
-> (GPL-2.0-only OR BSD-2-Clause)
-ok.
->
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bindings/clock/qcom,apsscc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm IPQ6018 APSS Clock Controller Binding
->> +
->> +maintainers:
->> +  - Stephen Boyd <sboyd@kernel.org>
-> I'd expect this to be a QCom person, not who is applying patches.
->
->> +
->> +description: |
-> You can drop '|'.
-ok.
->> +  Qualcomm IPQ6018 APSS clock control module which supports the clocks with
->> +  frequencies above 800Mhz.
->> +
->> +properties:
->> +  compatible :
->> +    const: qcom,apss-ipq6018
-> Normal ordering is: qcom,ipq6018-apss
-ok.
->> +
->> +  clocks:
->> +    description: clocks required for this controller.
->> +    maxItems: 4
-> Need to define what each clock is.
-ok.
->> +
->> +  clock-names:
->> +    description: clock output names of required clocks.
->> +    maxItems: 4
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +  '#reset-cells':
->> +    const: 1
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#clock-cells'
->> +  - '#reset-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +      #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
->> +      apss_clk: qcom,apss_clk@b111000 {
-> I thought I'd finally seen the last of these Qcom node names...
->
-> clock-controller@...
-ok.
->> +            compatible = "qcom,apss-ipq6018";
->> +            clocks = <&xo>, <&gcc GPLL0>,
->> +                        <&gcc GPLL2>, <&gcc GPLL4>;
->> +            clock-names = "xo", "gpll0",
->> +                         "gpll2", "gpll4";
->> +            reg = <0xb11100c 0x5ff4>;
->> +            #clock-cells = <1>;
->> +            #reset-cells = <1>;
->> +      };
->> +...
->> diff --git a/include/dt-bindings/clock/qcom,apss-ipq6018.h b/include/dt-bindings/clock/qcom,apss-ipq6018.h
->> new file mode 100644
->> index 0000000..ed9d7d8
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/qcom,apss-ipq6018.h
->> @@ -0,0 +1,26 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
-> I'm pretty sure your employer would like an additional license here.
-my bad. will correct it.
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ arch/um/drivers/vector_user.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
+
+diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
+index ddcd917be0af..aa28e9eecb7b 100644
+--- a/arch/um/drivers/vector_user.c
++++ b/arch/um/drivers/vector_user.c
+@@ -221,8 +221,7 @@ static struct vector_fds *user_init_tap_fds(struct arglist *ifspec)
+ 	return result;
+ tap_cleanup:
+ 	printk(UM_KERN_ERR "user_init_tap: init failed, error %d", fd);
+-	if (result != NULL)
+-		kfree(result);
++	kfree(result);
+ 	return NULL;
+ }
+ 
+@@ -266,8 +265,7 @@ static struct vector_fds *user_init_hybrid_fds(struct arglist *ifspec)
+ 	return result;
+ hybrid_cleanup:
+ 	printk(UM_KERN_ERR "user_init_hybrid: init failed");
+-	if (result != NULL)
+-		kfree(result);
++	kfree(result);
+ 	return NULL;
+ }
+ 
+@@ -344,10 +342,8 @@ static struct vector_fds *user_init_unix_fds(struct arglist *ifspec, int id)
+ unix_cleanup:
+ 	if (fd >= 0)
+ 		os_close_file(fd);
+-	if (remote_addr != NULL)
+-		kfree(remote_addr);
+-	if (result != NULL)
+-		kfree(result);
++	kfree(remote_addr);
++	kfree(result);
+ 	return NULL;
+ }
+ 
+@@ -382,8 +378,7 @@ static struct vector_fds *user_init_raw_fds(struct arglist *ifspec)
+ 	return result;
+ raw_cleanup:
+ 	printk(UM_KERN_ERR "user_init_raw: init failed, error %d", err);
+-	if (result != NULL)
+-		kfree(result);
++	kfree(result);
+ 	return NULL;
+ }
+ 
+-- 
+2.17.1
+
