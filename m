@@ -2,232 +2,121 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B979CC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FF2C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 912D320738
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1ECC206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="H6dpbL4N"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="SlSKdlzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgDEQvj (ORCPT
+        id S1727719AbgDEQyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 12:51:39 -0400
-Received: from mout.web.de ([212.227.17.12]:47043 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgDEQvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 12:51:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586105441;
-        bh=0YkSt5BcPX9ZJY8/TNdXEE7Js5ClyUIYnLeTWxyJu/Y=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=H6dpbL4NJlpbw1+XZb+6L/eGOman52ihDO/AIarLK0MtETnB8q5WFWzHHImwj0WSk
-         Ih26agawpGTRQFDoKCZ14NYfjK4xK31f+jaGdkWOuettOhLJYYi7gA2eRt1EfHaKqU
-         pNeq29ypL2mvTSX/Jbtos5WFq/+ela1HeknA6nbA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.131.99.70]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MPHKO-1jPYKf28rg-004Vck; Sun, 05
- Apr 2020 18:50:41 +0200
-To:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-omap@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Allison Randal <allison@lohutok.net>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Clark Williams <williams@redhat.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Keerthy <j-keerthy@ti.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Pascal Paillet <p.paillet@st.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhang Rui <rui.zhang@intel.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] thermal: Delete an error message in four functions
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <05f49ae7-5cc7-d6a0-fc3d-abaf2a0b373c@web.de>
-Date:   Sun, 5 Apr 2020 18:50:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 5 Apr 2020 12:54:08 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17894 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726780AbgDEQyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 12:54:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586105613;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=zHEN/jVViDwhN/xS47rLkq7lWrl+CjuvEXt5Z0Hb3w8=;
+        b=SlSKdlzVn+A57bLZRDrxzpQE/KOoZZzDMxxLmcE4zDiO+TRF2EFjFaSPVJg4ZXDO
+        rlRX+wk4JybOWYybG3bBg+nm7WG9zjlgtU4Dlr2k04D+Bsb64gR3PyQnhmSsGqditxi
+        l02eMTvoqYYF1CDJ2LOUjE9GlXgRfSNsx37LBvd4=
+Received: from [10.233.233.252] (115.193.87.168 [115.193.87.168]) by mx.zoho.com.cn
+        with SMTPS id 1586105610504458.5867584432443; Mon, 6 Apr 2020 00:53:30 +0800 (CST)
+Date:   Mon, 06 Apr 2020 00:53:26 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <alpine.LFD.2.21.2004051738000.4156324@eddie.linux-mips.org>
+References: <20200405082451.694910-1-jiaxun.yang@flygoat.com> <alpine.LFD.2.21.2004051738000.4156324@eddie.linux-mips.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9ZhlZktT91pfbtbXRm+mTr0dzyW0rFCf8ipUz74Hg6LrC70wyT3
- lgjget/+5B+v9e+XtCQhsiEWa3oYKGUxLwy/+16UFw9QBT7VDwPxyM6dCiB1jioWi3d4Dun
- ML0SUPIN7MIt4nv1gt3EZ8XCxPkEg46lkgVeLOb6MWzJTeAhBrn8nYSpEZW5GnakmEhF5Yp
- huyo983s7iSI3UbIrdpJw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:m0U7kNMqr14=:dv3CgYtVpGQVFYuC0r/Vx5
- YNeBV5WDA756pnx2kjt5nIWU8boJcoOjypBLmzLgJTpy9mXm4PEJRAG4QN6/pxXQyRnTbZSbI
- A0NSZmwTFCfOnYC5iYQSnZWrbaEpzfjZhgUf/SZ0mDMXS4ftkKTTuatf2RSzQCZFoejdz9Hw8
- cm6OaB28hgMvLG4tUDaMEMutfixS6P/ohSg7ugLasRdUx8kzm/Qrg3soCoPVwSTIXgo2iKwHi
- F8VRVy11ZkhsPDlAjl0ERPVu/YuAcvrs3kT9PbnJ7lyeHyuc9vOwXoEbAR0fgA429xEpM7pT3
- oTRQbKPsbkhQzwj0k7dsk9Wz16j4qoG9QbkEiMg/h9WuP16Nm4j852KFaCSCKia4GdEbwVbeE
- 7N6ZUupaAuDHaFevdBcdsg8tJviighjDxUA96PREW8pypalaTO1nUACHvnnpDdHH1W6POTp+o
- r6Cjyqc9Twwm58iRfnlhU366rzje1enGS4siPXJszpwIlNry/qatNplAW+2evmNgtQBSIOT9B
- B4uqQ11pfJMX/1ROnA93I247aT/Kdktt9Vc2DJG3CK9yGV0kfvkeDCKjfdmR7cfpglWmysTKv
- xeIaEVjFjvXRdVtRRkEl4Riqh24X01nSyLTFfmklc6e6JeE0qAe9wzNHxZbFKG8UJk9wLDc0R
- dMO/hDizFjqHSLvI19DJhyuxEpP83mXnL78A92I26CE4vNimkhLgN+8tfJUyGpYA8TPxU08bH
- bHlenCrSNcdXdsKJxb/stLj7AX5SW17uIGmUY3ItFgPtX/2STeKclMhWil+oPbWNVQqtJPpwJ
- guIxLqK89gBeAOme1CdIksGr5p96h8EBBJh0KKLhfu7MhwRaodqgMW3hluCGas/J+aTEE3ktM
- G1acyNfb7eYn7tA6M56GOEVNqLaelktdgauk+cioS9P84pnjpI1YvktbcWUk9h8ke6izj+3RU
- SmAc4OCmJXgIy0fLtxrJQ2Nr/TTJnV2sTWTLV6XJwpxtpbKGwmP2I+65/T+OLVteWFzOqFTaP
- JnrI6EoSiuyIQvefCzps9lmScsgMoYBfJ/S206lHv+yGItg20lsqCBlN1h+neJANSlWNdlwug
- ALnBiWq29KkDZZkosMSV2GIdN/k45SSWZ96K7cj+JNsF0+WJHI1nVzHAKHdkL3TSPejo6s9Ig
- RdWFZvEaXDMhGoiYr9Xt7O0bDcrkWglBcPV/Em/29BmGbYm+uRs25qy3T7eW1nZQfz3lUYmMg
- EuHOTflLBO5PdtXHm
+Subject: Re: [PATCH] MIPS: malta: Set load address for 32bit kernel correctly
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+CC:     linux-mips@vger.kernel.org, Fangrui Song <maskray@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-kernel@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <96C9B1A0-2F89-4650-B0A4-6A6242A2AA0A@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sun, 5 Apr 2020 18:35:16 +0200
 
-The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
-Thus omit redundant messages for the exception handling in the
-calling functions.
 
-This issue was detected by using the Coccinelle software.
+=E4=BA=8E 2020=E5=B9=B44=E6=9C=886=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8812=
+:47:29, "Maciej W=2E Rozycki" <macro@linux-mips=2Eorg> =E5=86=99=E5=88=B0:
+>On Sun, 5 Apr 2020, Jiaxun Yang wrote:
+>
+>> LLD failed to link vmlinux with 64bit load address for 32bit ELF
+>> while bfd will strip 64bit address into 32bit silently=2E
+>> To fix LLD build, we should supply a 32bit load address for 32bit
+>> kernel=2E
+>[=2E=2E=2E]
+>> diff --git a/arch/mips/mti-malta/Platform
+>b/arch/mips/mti-malta/Platform
+>> index 2cc72c9b38e3=2E=2Ef9b49cba1764 100644
+>> --- a/arch/mips/mti-malta/Platform
+>> +++ b/arch/mips/mti-malta/Platform
+>> @@ -6,6 +6,10 @@ cflags-$(CONFIG_MIPS_MALTA)	+=3D
+>-I$(srctree)/arch/mips/include/asm/mach-malta
+>>  ifdef CONFIG_KVM_GUEST
+>>      load-$(CONFIG_MIPS_MALTA)	+=3D 0x0000000040100000
+>>  else
+>> +ifdef CONFIG_64BIT
+>>      load-$(CONFIG_MIPS_MALTA)	+=3D 0xffffffff80100000
+>> +else
+>> +    load-$(CONFIG_MIPS_MALTA)	+=3D 0x80100000
+>
+> Given the description above I think it should be done uniformly and=20
+>automatically across all platforms by trimming the address supplied
+>with=20
+>$(load-y) to low 8 digits in a single place, that is at the place where
+>
+>the variable is consumed=2E  This will reduce clutter across Makefile=20
+>fragments, avoid inconsistencies and extra work to handle individual=20
+>platforms as the problem is triggered over and over again, and limit
+>the=20
+>risk of mistakes=2E
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/thermal/rockchip_thermal.c          | 4 +---
- drivers/thermal/st/st_thermal_memmap.c      | 4 +---
- drivers/thermal/st/stm_thermal.c            | 4 +---
- drivers/thermal/ti-soc-thermal/ti-bandgap.c | 5 ++---
- 4 files changed, 5 insertions(+), 12 deletions(-)
+I was intended to do like this but failed to find a proper way=2E
 
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip=
-_thermal.c
-index 7c1a8bccdcba..15a71ecc916c 100644
-=2D-- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -1241,10 +1241,8 @@ static int rockchip_thermal_probe(struct platform_d=
-evice *pdev)
- 		return -ENXIO;
+Makefile isn't designed for any kind of calculation=2E
+And shell variables are 64-bit signed so it can't hold such a huge variabl=
+e=2E
 
- 	irq =3D platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(&pdev->dev, "no irq resource?\n");
-+	if (irq < 0)
- 		return -EINVAL;
--	}
+Just wish somebody can give me a way to do like:
 
- 	thermal =3D devm_kzalloc(&pdev->dev, sizeof(struct rockchip_thermal_data=
-),
- 			       GFP_KERNEL);
-diff --git a/drivers/thermal/st/st_thermal_memmap.c b/drivers/thermal/st/s=
-t_thermal_memmap.c
-index a824b78dabf8..a0114452d11f 100644
-=2D-- a/drivers/thermal/st/st_thermal_memmap.c
-+++ b/drivers/thermal/st/st_thermal_memmap.c
-@@ -94,10 +94,8 @@ static int st_mmap_register_enable_irq(struct st_therma=
-l_sensor *sensor)
- 	int ret;
+ifndef CONFIG_64BIT
+load-y =3D $(load-y) & 0xffffffff
+endif
 
- 	sensor->irq =3D platform_get_irq(pdev, 0);
--	if (sensor->irq < 0) {
--		dev_err(dev, "failed to register IRQ\n");
-+	if (sensor->irq < 0)
- 		return sensor->irq;
--	}
+In makefiles=2E
 
- 	ret =3D devm_request_threaded_irq(dev, sensor->irq,
- 					NULL, st_mmap_thermal_trip_handler,
-diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_the=
-rmal.c
-index 9314e3df6a42..331e2b768df5 100644
-=2D-- a/drivers/thermal/st/stm_thermal.c
-+++ b/drivers/thermal/st/stm_thermal.c
-@@ -385,10 +385,8 @@ static int stm_register_irq(struct stm_thermal_sensor=
- *sensor)
- 	int ret;
+Thanks=2E
+>
+>Some error checking might be doable for verifying that the 64-bit
+>address=20
+>truncated is a sign-extended 32-bit value, but that perhaps would be an
+>
+>overkill as certainly any 64-bit system that sets the load address to
+>be=20
+>outside the sign-extended 32-bit address range does not support a
+>!64BIT=20
+>configuration anyway=2E
+>
+>  Maciej
 
- 	sensor->irq =3D platform_get_irq(pdev, 0);
--	if (sensor->irq < 0) {
--		dev_err(dev, "%s: Unable to find IRQ\n", __func__);
-+	if (sensor->irq < 0)
- 		return sensor->irq;
--	}
-
- 	ret =3D devm_request_threaded_irq(dev, sensor->irq,
- 					NULL,
-diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal=
-/ti-soc-thermal/ti-bandgap.c
-index 263b0420fbe4..ab19ceff6e2a 100644
-=2D-- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-@@ -772,10 +772,9 @@ static int ti_bandgap_talert_init(struct ti_bandgap *=
-bgp,
- 	int ret;
-
- 	bgp->irq =3D platform_get_irq(pdev, 0);
--	if (bgp->irq < 0) {
--		dev_err(&pdev->dev, "get_irq failed\n");
-+	if (bgp->irq < 0)
- 		return bgp->irq;
--	}
-+
- 	ret =3D request_threaded_irq(bgp->irq, NULL,
- 				   ti_bandgap_talert_irq_handler,
- 				   IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-=2D-
-2.26.0
-
+--=20
+Jiaxun Yang
