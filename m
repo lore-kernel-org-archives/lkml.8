@@ -2,215 +2,161 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB6BC2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 20:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8043EC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 20:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7FB2072F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 20:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538E520731
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 20:35:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p7WSfNvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgDEUPV (ORCPT
+        id S1727796AbgDEUfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 16:15:21 -0400
-Received: from mga01.intel.com ([192.55.52.88]:62225 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727612AbgDEUPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 16:15:20 -0400
-IronPort-SDR: PXZ8KCEteAetootYes+dYhlB86PExdcB5lC41vGYrtipyhgERwWooGRsd9wNflPaJru/KitBrp
- lUhHDQBA535g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 13:15:18 -0700
-IronPort-SDR: dBXRgQldgR9pIeoVjT6ODwhazChjNxVoS965VypPWhsbDT9oV6mAAgxjkaM2IPcMmWUGs4Tg7N
- 96U3GT0TYfTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,348,1580803200"; 
-   d="scan'208";a="329688521"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.87])
-  by orsmga001.jf.intel.com with ESMTP; 05 Apr 2020 13:15:15 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH V6 15/15] perf script: Show text poke address symbol
-Date:   Sun,  5 Apr 2020 23:13:27 +0300
-Message-Id: <20200405201327.7332-16-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200405201327.7332-1-adrian.hunter@intel.com>
-References: <20200405201327.7332-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Sun, 5 Apr 2020 16:35:47 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:47079 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgDEUfr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 16:35:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r7so12415335ljg.13;
+        Sun, 05 Apr 2020 13:35:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TYj3+piE/UAROa6yTF6va+D/lbusT9K2oVQZrG1pkaE=;
+        b=p7WSfNvVEr21OKR2Vwi7/YyqmoWABh3RCnOgxOmLDu8YvKoliyIXJECGHFSjT6k0su
+         SZDoPjEvKBj1wSGUF7CSaUtEErPYbshXwjHEFLhOfo1DQVOx3k4mkwlm7LVTb0pVDzhs
+         MNfYmxokNZ9Ug2ulUrAQlo7pdlGoMree74fBes9DSJ6X7amBHhfcAOzDFbYTNa/Dc3iU
+         hHoux1al+ala12Xu8e/b9LYYrzXBucPXBwvYumNCCPRKVFweGdyE/kThbXsSAp74LO35
+         wDcGFI9m2OXXSiSyYDJwGSWNwjISL5PK+zbRS1tqtyjKiAd3IWBJ59uus9+jnz1qUvBq
+         lkbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TYj3+piE/UAROa6yTF6va+D/lbusT9K2oVQZrG1pkaE=;
+        b=Zz4OWPWJeRKuf7xlJmHazYrKTXOAdPoQfJcYYoRFn4rZDjrl13d6zE+3tmcqdAxZmI
+         7OntSZaKpk1Pt5MKqLsGhwib7fSQgZteaQ7IrUqPlzmA7dWjeepvWH89xD/H6doUG5Q6
+         1l66VUYeqPg0PqMEYLEKGDpQRtoAWicHR0zMzoF726v8bMY1K/VifWVkm3eFx2u3+82B
+         DYMjPJcR6eUdNwOS045iNgcovktgdxN5pd/Ls8+ZRbUTkmobW6GixCmEl76lqXpfGgpL
+         BuWp2qnc8YEmIlud/712DF9HuTbPnaT2ljcwBKdJWLjU9gD2xjk1hiHWIAIGqcsEZwQg
+         fwdQ==
+X-Gm-Message-State: AGi0Pub2j0Pf8JjUO+zQLhlRDfUSGN38epwWXz93qATxLbCw0iqFhDl0
+        +AzQK4jNJEiF3Ttqljd2soJeknyq
+X-Google-Smtp-Source: APiQypKKUtpUiTpuV3h9pfmygV8lu3USP8vFclc/FNcjwFw68mOjNKAAhM1Hu3VI/3NNbNOrXBGOYg==
+X-Received: by 2002:a2e:7513:: with SMTP id q19mr10530807ljc.221.1586118942298;
+        Sun, 05 Apr 2020 13:35:42 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id a4sm11152222ljb.27.2020.04.05.13.35.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Apr 2020 13:35:41 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
+Date:   Sun, 5 Apr 2020 23:35:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is generally more useful to show the symbol with an address. In this
-case, the print function requires the 'machine' which means changing
-callers to provide it as a parameter. It is optional because most events
-do not need it and the callers that matter can provide it.
+04.04.2020 04:25, Sowjanya Komatineni пишет:
+...
+> +static int tegra_channel_capture_frame(struct tegra_vi_channel *chan,
+> +				       struct tegra_channel_buffer *buf)
+> +{
+> +	int err = 0;
+> +	u32 thresh, value, frame_start, mw_ack_done;
+> +	int bytes_per_line = chan->format.bytesperline;
+> +
+> +	/* program buffer address by using surface 0 */
+> +	vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_OFFSET_MSB,
+> +		     (u64)buf->addr >> 32);
+> +	vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_OFFSET_LSB, buf->addr);
+> +	vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_STRIDE, bytes_per_line);
+> +
+> +	/*
+> +	 * Tegra VI block interacts with host1x syncpt for synchronizing
+> +	 * programmed condition of capture state and hardware operation.
+> +	 * Frame start and Memory write acknowledge syncpts has their own
+> +	 * FIFO of depth 2.
+> +	 *
+> +	 * Syncpoint trigger conditions set through VI_INCR_SYNCPT register
+> +	 * are added to HW syncpt FIFO and when the HW triggers, syncpt
+> +	 * condition is removed from the FIFO and counter at syncpoint index
+> +	 * will be incremented by the hardware and software can wait for
+> +	 * counter to reach threshold to synchronize capturing frame with the
+> +	 * hardware capture events.
+> +	 */
+> +
+> +	/* increase channel syncpoint threshold for FRAME_START */
+> +	thresh = host1x_syncpt_incr_max(chan->frame_start_sp, 1);
+> +
+> +	/* Program FRAME_START trigger condition syncpt request */
+> +	frame_start = VI_CSI_PP_FRAME_START(chan->portno);
+> +	value = VI_CFG_VI_INCR_SYNCPT_COND(frame_start) |
+> +		host1x_syncpt_id(chan->frame_start_sp);
+> +	tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYNCPT, value);
+> +
+> +	/* increase channel syncpoint threshold for MW_ACK_DONE */
+> +	buf->mw_ack_sp_thresh = host1x_syncpt_incr_max(chan->mw_ack_sp, 1);
+> +
+> +	/* Program MW_ACK_DONE trigger condition syncpt request */
+> +	mw_ack_done = VI_CSI_MW_ACK_DONE(chan->portno);
+> +	value = VI_CFG_VI_INCR_SYNCPT_COND(mw_ack_done) |
+> +		host1x_syncpt_id(chan->mw_ack_sp);
+> +	tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYNCPT, value);
+> +
+> +	/* enable single shot capture */
+> +	vi_csi_write(chan, TEGRA_VI_CSI_SINGLE_SHOT, SINGLE_SHOT_CAPTURE);
+> +	chan->capture_reqs++;
+> +
+> +	/* wait for syncpt counter to reach frame start event threshold */
+> +	err = host1x_syncpt_wait(chan->frame_start_sp, thresh,
+> +				 TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
+> +	if (err) {
+> +		dev_err(&chan->video.dev,
+> +			"frame start syncpt timeout: %d\n", err);
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/builtin-script.c    |  4 ++--
- tools/perf/tests/perf-record.c |  4 ++--
- tools/perf/util/event.c        | 23 ++++++++++++++++++-----
- tools/perf/util/event.h        |  6 ++++--
- tools/perf/util/intel-pt.c     |  2 +-
- tools/perf/util/machine.c      |  2 +-
- 6 files changed, 28 insertions(+), 13 deletions(-)
+> +		/* increment syncpoint counter for timedout events */
+> +		host1x_syncpt_incr(chan->frame_start_sp);
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index e934bf46269d..f06470e8f07b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2168,7 +2168,7 @@ static int print_event_with_time(struct perf_tool *tool,
- 					   event->header.type, stdout);
- 	}
- 
--	perf_event__fprintf(event, stdout);
-+	perf_event__fprintf(machine, event, stdout);
- 
- 	thread__put(thread);
- 
-@@ -2303,7 +2303,7 @@ process_finished_round_event(struct perf_tool *tool __maybe_unused,
- 			     struct ordered_events *oe __maybe_unused)
- 
- {
--	perf_event__fprintf(event, stdout);
-+	perf_event__fprintf(NULL, event, stdout);
- 	return 0;
- }
- 
-diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
-index 2195fc205e72..a187a70b4a98 100644
---- a/tools/perf/tests/perf-record.c
-+++ b/tools/perf/tests/perf-record.c
-@@ -185,14 +185,14 @@ int test__PERF_RECORD(struct test *test __maybe_unused, int subtest __maybe_unus
- 				err = perf_evlist__parse_sample(evlist, event, &sample);
- 				if (err < 0) {
- 					if (verbose > 0)
--						perf_event__fprintf(event, stderr);
-+						perf_event__fprintf(NULL, event, stderr);
- 					pr_debug("Couldn't parse sample\n");
- 					goto out_delete_evlist;
- 				}
- 
- 				if (verbose > 0) {
- 					pr_info("%" PRIu64" %d ", sample.time, sample.cpu);
--					perf_event__fprintf(event, stderr);
-+					perf_event__fprintf(NULL, event, stderr);
- 				}
- 
- 				if (prev_time > sample.time) {
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index cdaf58734254..e151df9b28d7 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -440,14 +440,26 @@ static int text_poke_printer(enum binary_printer_ops op, unsigned int val,
- 	}
- }
- 
--size_t perf_event__fprintf_text_poke(union perf_event *event, FILE *fp)
-+size_t perf_event__fprintf_text_poke(struct machine *machine,
-+				     union perf_event *event, FILE *fp)
- {
- 	struct perf_record_text_poke_event *tp = &event->text_poke;
- 	size_t ret;
- 	bool old;
- 
--	ret = fprintf(fp, " %" PRI_lx64 " old len %u new len %u\n",
--		      tp->addr, tp->old_len, tp->new_len);
-+	ret = fprintf(fp, " %" PRI_lx64 " ", tp->addr);
-+	if (machine) {
-+		struct addr_location al;
-+
-+		al.map = maps__find(&machine->kmaps, tp->addr);
-+		if (al.map && map__load(al.map) >= 0) {
-+			al.addr = al.map->map_ip(al.map, tp->addr);
-+			al.sym = map__find_symbol(al.map, al.addr);
-+			if (al.sym)
-+				ret += symbol__fprintf_symname_offs(al.sym, &al, fp);
-+		}
-+	}
-+	ret += fprintf(fp, " old len %u new len %u\n", tp->old_len, tp->new_len);
- 	old = true;
- 	ret += binary__fprintf(tp->bytes, tp->old_len, 16, text_poke_printer,
- 			       &old, fp);
-@@ -457,7 +469,8 @@ size_t perf_event__fprintf_text_poke(union perf_event *event, FILE *fp)
- 	return ret;
- }
- 
--size_t perf_event__fprintf(union perf_event *event, FILE *fp)
-+size_t perf_event__fprintf(struct machine *machine, union perf_event *event,
-+			   FILE *fp)
- {
- 	size_t ret = fprintf(fp, "PERF_RECORD_%s",
- 			     perf_event__name(event->header.type));
-@@ -502,7 +515,7 @@ size_t perf_event__fprintf(union perf_event *event, FILE *fp)
- 		ret += perf_event__fprintf_bpf(event, fp);
- 		break;
- 	case PERF_RECORD_TEXT_POKE:
--		ret += perf_event__fprintf_text_poke(event, fp);
-+		ret += perf_event__fprintf_text_poke(machine, event, fp);
- 		break;
- 	default:
- 		ret += fprintf(fp, "\n");
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index dbbba6dea51d..611c8e5ad9d9 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -389,8 +389,10 @@ size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_cgroup(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp);
--size_t perf_event__fprintf_text_poke(union perf_event *event, FILE *fp);
--size_t perf_event__fprintf(union perf_event *event, FILE *fp);
-+size_t perf_event__fprintf_text_poke(struct machine *machine,
-+				     union perf_event *event, FILE *fp);
-+size_t perf_event__fprintf(struct machine *machine, union perf_event *event,
-+			   FILE *fp);
- 
- int kallsyms__get_function_start(const char *kallsyms_filename,
- 				 const char *symbol_name, u64 *addr);
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 470a3b413869..902f85ded944 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -230,7 +230,7 @@ static void intel_pt_log_event(union perf_event *event)
- 	if (!intel_pt_enable_logging || !f)
- 		return;
- 
--	perf_event__fprintf(event, f);
-+	perf_event__fprintf(NULL, event, f);
- }
- 
- static void intel_pt_dump_sample(struct perf_session *session,
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 8447334ac056..4c023667a073 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -809,7 +809,7 @@ int machine__process_text_poke(struct machine *machine, union perf_event *event,
- 	u8 cpumode = event->header.misc & PERF_RECORD_MISC_CPUMODE_MASK;
- 
- 	if (dump_trace)
--		perf_event__fprintf_text_poke(event, stdout);
-+		perf_event__fprintf_text_poke(machine, event, stdout);
- 
- 	if (!event->text_poke.new_len)
- 		return 0;
--- 
-2.17.1
+Why incrementing is done while hardware is still active?
 
+The sync point's state needs to be completely reset after resetting
+hardware. But I don't think that the current upstream host1x driver
+supports doing that, it's one of the known-long-standing problems of the
+host1x driver.
+
+At least the sp->max_val incrementing should be done based on the actual
+syncpoint value and this should be done after resetting hardware.
+
+> +		spin_lock(&chan->sp_incr_lock);
+> +		host1x_syncpt_incr(chan->mw_ack_sp);
+> +		spin_unlock(&chan->sp_incr_lock);
+> +		/* clear errors and recover */
+> +		tegra_channel_capture_error_recover(chan);
+> +		release_buffer(chan, buf, VB2_BUF_STATE_ERROR);
+> +		return err;
+> +	}
