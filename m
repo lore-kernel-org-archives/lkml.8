@@ -2,235 +2,88 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C50C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 02:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61375C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 02:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8E62071C
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 02:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343932070E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 02:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586052592;
-	bh=qLQNJ3mFpgXqbKBKnIiMGtL8wAOhGmCZvB0KGY6dhnw=;
+	s=default; t=1586052642;
+	bh=+eBLU6dbzegIasK4eav0hKmN+wv2L8OLOi9lZsufu+4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZZSHXt4dJYUDauIk/gOt/z+Z2LgGFy2LiHJIBtHIC84cB02qL1o04Jl1/MpAYenTA
-	 Tu4dk8Jp6G35gybJy6c+KQcX+2vKbaDp7xXYsebJI6Xy90GW61NmMj32PAOJTS72St
-	 CBC4219kryBZB6uVnY1WyGJY4JgEZYzH12E528pg=
+	b=UTq2Kkin7O+npNlAs0mIMF7Q06Qo13gFYRhW/bB8OBgva//d0OGt21oYtsabzfj7e
+	 q5XI8XwKKmy+k5fsrdW3A+7NCHkptrYuYug5RJ0tLg8lAz/R6lXQjZz5KXMGyq709a
+	 dXiIBhc9l7Gr2zrXl/YPHCFLzOAcrj+Nrqktx8ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgDECJv (ORCPT
+        id S1726437AbgDECKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 22:09:51 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35559 "EHLO
+        Sat, 4 Apr 2020 22:10:41 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35609 "EHLO
         mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgDECJv (ORCPT
+        with ESMTP id S1726283AbgDECKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 22:09:51 -0400
-Received: by mail-io1-f67.google.com with SMTP id o3so12036033ioh.2;
-        Sat, 04 Apr 2020 19:09:50 -0700 (PDT)
+        Sat, 4 Apr 2020 22:10:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id o3so12036902ioh.2;
+        Sat, 04 Apr 2020 19:10:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HGvGldYqzcPwlD+W1QgZLducQvHDHG5zRE8/3hy9qmE=;
-        b=ZGiWJcKk5rA0RoQ9U4nQaFTbO/P84py6g8caDWaiK3W6urNUEKd44N0aZbaVt80AsY
-         aAqSZVzAZT7vROPohdF3K5YkZmfYjT0PuawPgXGa9M+MdHveUW5X2Z/6LR0Ad/cm3Wjj
-         nnJDl6npYLFfQJIKQM76y0BmSayv/LEBuP1XtHLU8Af2G8FA1zd0wOWjjTpbQUlbbygd
-         0+efNSCOseJznNB/OViPMONEPGT0e3XdrZSi+iuAbrMCXXoXST/X6d6sBmOw7shohKOj
-         1HVCQMf2eEjufXsbKJQhAVy3sGyRauZRQWhwTbSpuMZ9XOjOE1gj9fyJB6oDa+xUDLn3
-         Ukmw==
-X-Gm-Message-State: AGi0PuYcTzOB+aByDcGLXblKjkJDcBhOnQh7PwF7/g/B2btUmpdSA1/p
-        9mLYXBLWi0GVF2odDoYdVg==
-X-Google-Smtp-Source: APiQypLR+L4TyzsQ18uH/T8q5XIdKfhiVKmP6auhisbFB8B7HRQkYCMpG4OowZonWrf8jyvc8VdSIQ==
-X-Received: by 2002:a02:2a47:: with SMTP id w68mr3890967jaw.76.1586052589693;
-        Sat, 04 Apr 2020 19:09:49 -0700 (PDT)
+        bh=cE/liTALpMqdfLbgPQ+OMKvNPX/1bH463lnIhirz1sI=;
+        b=bsRoT5ovDavx0tMF6zKvf8vMUT2uEZ0RR8V+d4o0nkFSumSUsQnHd3ISqdsd6QN3KD
+         Cq0rzch7sdJ/icIsjLt71BEldG3AjCUQdJkRao4AUWYb4xWs/vpOZV5e+RvGr3Iffzlu
+         imXGUeNFg6Z2Qdi9gO4e5EpgwgnXZmypp2wG5+843Ym3orUFPLDsUjBY6Y+Hnv51zFnV
+         6UBNPa/wJgGedVny+KtxbmNW0WObINY6SMjyyluT4dq36U732md9iqN9HTstKYK2GsAH
+         quIxcZk454FKXRwha/BTadu6S/QyYj4UiqdKm3pWCbjFd27kVwRfDlZjvW8y6UkwFu/P
+         JtHw==
+X-Gm-Message-State: AGi0Pua6CFXMy2MLpUFcnulugbNlT95xV7Y2nTpgaM2M7pyRlDrpMluj
+        GXcFr3qc0Yo5miaBqSmAzQ==
+X-Google-Smtp-Source: APiQypJ4Bii0h2zVuvjzC9xTfN/pXAliQtZWN2YXolG58HYB/LUmgfHgAwhVGMXf9l9WEMGwZS1vug==
+X-Received: by 2002:a5e:9901:: with SMTP id t1mr13990159ioj.176.1586052638133;
+        Sat, 04 Apr 2020 19:10:38 -0700 (PDT)
 Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id b6sm3770146iok.19.2020.04.04.19.09.47
+        by smtp.gmail.com with ESMTPSA id a5sm3803374ioa.14.2020.04.04.19.10.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Apr 2020 19:09:48 -0700 (PDT)
-Received: (nullmailer pid 11718 invoked by uid 1000);
-        Sun, 05 Apr 2020 02:09:46 -0000
-Date:   Sat, 4 Apr 2020 20:09:46 -0600
+        Sat, 04 Apr 2020 19:10:37 -0700 (PDT)
+Received: (nullmailer pid 12991 invoked by uid 1000);
+        Sun, 05 Apr 2020 02:10:34 -0000
+Date:   Sat, 4 Apr 2020 20:10:34 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 2/4] dt-bindings: clock: Add YAML schemas for LPASS
- clocks on SC7180
-Message-ID: <20200405020946.GA6110@bogus>
-References: <1585338485-31820-1-git-send-email-tdas@codeaurora.org>
- <1585338485-31820-3-git-send-email-tdas@codeaurora.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
+        michael@walle.cc, rjones@gateworks.com,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        jon@solid-run.com, cosmin.stoica@nxp.com, l.stach@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
+Subject: Re: [PATCH 3/3] dt-bindings: arm: imx: Add the i.MX8DXL EVK board
+Message-ID: <20200405021034.GA12944@bogus>
+References: <1585394015-27825-1-git-send-email-Anson.Huang@nxp.com>
+ <1585394015-27825-3-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1585338485-31820-3-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <1585394015-27825-3-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 28, 2020 at 01:18:03AM +0530, Taniya Das wrote:
-> The LPASS(Low Power Audio Subsystem) clock provider have a bunch of generic
-> properties that are needed in a device tree. Also add clock ids for GCC
-> LPASS and LPASS Core clock IDs for LPASS client to request for the clocks.
+On Sat, 28 Mar 2020 19:13:35 +0800, Anson Huang wrote:
+> Add board binding for i.MX8DXL EVK board.
 > 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../bindings/clock/qcom,sc7180-lpasscorecc.yaml    | 81 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-sc7180.h        |  1 +
->  .../dt-bindings/clock/qcom,lpasscorecc-sc7180.h    | 28 ++++++++
->  3 files changed, 110 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
->  create mode 100644 include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-> new file mode 100644
-> index 0000000..d040bd1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-> @@ -0,0 +1,81 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm LPASS Core Clock Controller Binding for SC7180
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm LPASS core clock control module which supports the clocks and
-> +  power domains on SC7180.
-> +
-> +  See also:
-> +  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,sc7180-lpasshm
-> +      - qcom,sc7180-lpasscorecc
-> +
-> +  clocks:
-> +    items:
-> +      - description: gcc_lpass_sway clock from GCC
-> +
-> +  clock-names:
-> +    items:
-> +      - const: gcc_lpass_sway
-> +
-> +  power-domains:
-> +    items:
-> +      - description: LPASS CORE HM GSDCR
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  '#power-domain-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
 
-Need to define what each one is when there are 2.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +  - '#power-domain-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-> +    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
-> +    clock-controller@63000000 {
-> +      compatible = "qcom,sc7180-lpasshm";
-> +        reg = <0 0x63000000 0 0x28>;
-> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-> +        clock-names = "gcc_lpass_sway";
-> +        #clock-cells = <1>;
-> +        #power-domain-cells = <1>;
-> +    };
-> +
-> +  - |
-> +    clock-controller@62d00000 {
-> +        compatible = "qcom,sc7180-lpasscorecc";
-> +        reg = <0 0x62d00000 0 0x50000>,
-> +            <0 0x62780000 0 0x30000>;
-> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-> +        clock-names = "gcc_lpass_sway";
-> +        power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-> +        #clock-cells = <1>;
-> +        #power-domain-cells = <1>;
-> +    };
-> +...
-> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> index 1258fd0..439476c 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> @@ -137,6 +137,7 @@
->  #define GCC_MSS_NAV_AXI_CLK					127
->  #define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
->  #define GCC_MSS_SNOC_AXI_CLK					129
-> +#define GCC_LPASS_CFG_NOC_SWAY_CLK				130
-> 
->  /* GCC resets */
->  #define GCC_QUSB2PHY_PRIM_BCR					0
-> diff --git a/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-> new file mode 100644
-> index 0000000..9466d5e
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
-> +#define _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
-> +
-> +/* LPASS_CORE_CC clocks */
-> +#define LPASS_LPAAUDIO_DIG_PLL				0
-> +#define LPASS_LPAAUDIO_DIG_PLL_OUT_ODD			1
-> +#define CORE_CLK_SRC					2
-> +#define EXT_MCLK0_CLK_SRC				3
-> +#define LPAIF_PRI_CLK_SRC				4
-> +#define LPAIF_SEC_CLK_SRC				5
-> +#define LPASS_AUDIO_CORE_CORE_CLK			6
-> +#define LPASS_AUDIO_CORE_EXT_MCLK0_CLK			7
-> +#define LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK		8
-> +#define LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK		9
-> +#define LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK		10
-> +
-> +/* LPASS power domains */
-> +#define LPASS_CORE_HM_GDSCR				0
-> +
-> +#define LPASS_AUDIO_HM_GDSCR				0
-
-Kind of odd that 2 are the same value.
-
-> +#define LPASS_PDC_HM_GDSCR				1
-> +
-> +#endif
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
-> 
+Acked-by: Rob Herring <robh@kernel.org>
