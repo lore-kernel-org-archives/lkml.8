@@ -2,184 +2,156 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0960C2BA17
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A60C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D42B206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:12:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586103134;
-	bh=mtSXkX7OOB0aOyV/m8pkSsqMvTiDnQoPwSOoeeK5Mfc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=UdwXeKBUTzc6FMDb7LAjkI0y+MfBxDdRcMyrkMwkK4OkhtWrW2h2WvPfsIFKEe8+5
-	 1W0i2b3i+9cqOKverSHxMwpxZB+TC8UsSBWgCHcvq4DNsm4S9kGGvHBRxQ98aoGHsh
-	 p4k0dvUeruOfNvbh66yvDPBS+OThE8R20suOZQGk=
+	by mail.kernel.org (Postfix) with ESMTP id 3CB6020644
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:12:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="dN9ttVVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgDEQMN (ORCPT
+        id S1727417AbgDEQMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 12:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47260 "EHLO mail.kernel.org"
+        Sun, 5 Apr 2020 12:12:33 -0400
+Received: from mout.web.de ([212.227.17.11]:51917 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbgDEQMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 12:12:13 -0400
-Received: from earth.universe (dyndsl-091-096-057-090.ewe-ip-backbone.de [91.96.57.90])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C51AD20644;
-        Sun,  5 Apr 2020 16:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586103132;
-        bh=mtSXkX7OOB0aOyV/m8pkSsqMvTiDnQoPwSOoeeK5Mfc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=L6zOIPHYUyQ/9PgesvbXhZHxdpUbq4P1l5H2lpLEXJtNUsbKpsXdLNm0777e5w27o
-         QesDW5OeRd79E9VPsXsxfPNWdQhwYf5vg18LOWF+TIP6IinMd1RUXuTaK0+RrS5hSt
-         V3nVduI0LJex0oDz7H/SMNq8bQtp2Stp4BWs/Am0=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 4D68A3C082A; Sun,  5 Apr 2020 18:12:09 +0200 (CEST)
-Date:   Sun, 5 Apr 2020 18:12:09 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [GIT PULL] power-supply changes for 5.7
-Message-ID: <20200405161209.4e3z23eyvp2wsrus@earth.universe>
+        id S1726909AbgDEQMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 12:12:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586103135;
+        bh=vSeyjKaG/fKVCjCROHOr96NvZleJyDqBvTnh2s4chtc=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=dN9ttVVahdLRvOb5gsJhEykEvX4Pq+Vscua7qWoZ2FiVZWyNuib6FvQBktGzJzesM
+         KpSi2CY5lpCoNdXsgHB79NXRvofzLGF7XnbR9meW0YAoo7yPnbxiU4CZUaUGTbJExl
+         fC/uw5Qn7oS3NhM8eO2JL0mdmdDfceQDO1t6xPpg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.131.99.70]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LbrZ2-1iw0LL2mf6-00jK6l; Sun, 05
+ Apr 2020 18:12:15 +0200
+To:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] soc: qcom: smp2p: Delete an error message in
+ qcom_smp2p_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <eb92fcfb-6181-1f9d-2601-61e5231bd892@web.de>
+Date:   Sun, 5 Apr 2020 18:12:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="iuo7vvzt7573duva"
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:gI8Ey2IDq140zqcfjpYaX4b1omLSKuRKfL/uzZTEKRW4wn+FnwO
+ GQfg3NS8HVhmVIc7KL2DoI7jyR9D7SFXL2SWr3S9apPujA8eYhAI2MGZ5gBHyyjzfR0esk3
+ 6zyPOHhyNZDAss6IvSe/XH48h0FPMgJQPp3JHmjhPCzLptVUMrEH8jIKWGAMR0VXlV0WqM7
+ OsZ0mk6ksuaPZO0L/Yx2w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ysiE22kY/Yk=:+KRZtLFnD2IGbqaQthXkOP
+ texO0GfHHp4VpDb8ygBuRO+7l8bFcoXNZbcULfnDerki21voxeb+PAwI8650Q3uel3Ql7VpPe
+ f8UPKxvmEcYICorSejCp4tiiPmwc/E5rsO/7AadmsMot5uRxmlVq2thqI8qGl+K09fFCsBK/K
+ Sh6QFCtG8pJcwxbpBuuf7X8pntkkc+DHb+Vakf1MBjeC+FmXQPgG1WiI8CJ29DUyENZzCQJUr
+ l3+PI+BJSl3HOrkFuYTPkgAcBkq6+PLJH7Qvq3Anw6NhULTso3QHRDRq5OmxrVz42OYNEtaN/
+ AhswGq9Koef5lZaQq6TC9xC9qlgie3c2jc7n8OVhTNxsH6bSYHOxZW9Y0CttRYmTO5CyWjLfL
+ SlWOooyX0YX6iexRzOngukqCPhC6Qk9EqVH2cSBhLTE939WHH39PBeYK1vA3mOcr9xoH+KQ0x
+ Cndv6vOHlDTocl60YZLNbN6XsOUj6hOR9NF+0LiUEQSwG+xsAwNkU+qRg9hO/ghg8HqEGnfZW
+ zHaCZLzm527khzb48so6/TZufv58lH/EndMKMYfvVfPBzfhluU+BYlwlLw61PqCvuoiKSyxJr
+ pXhqUbyOyhNuSVt1VwMMVMuxBGXVNUiZ0kwV28JU9BXXN2k+/rIzbun65sJfqTvCiUcI/eYng
+ +gybAGMJTgV3Dga6pukkmNdHQnztCCFFakR7tb6GmHZmBE6VGE87wXvRxHV7aq4sQh8sH/0Fw
+ uWHQpfGqOPbuSabe89pCCqkOZxugtaAxWSKEzdlWDBwvEYJ5JTnh+vB1yI39gSHrAGR6CkjP3
+ Iln5Q56OXk5gHas+frAQo8M90BLI527iwx5fvxDcxhNZvClGXg+4XqctLAkC4IZipKMNmzA11
+ f8PcYmFZb7dzNa55yt4tmp47FfV4XLsRbxPd7+ZfW1nQabdJ4ysiwdxdgcN9WUt99fDR2qbxA
+ jxPHZdh+U/QBU20cH8YN00U3+8sPYfBwjOCfjdfXFkTkCOG3NwpDepy/n+pFNt8qsa1ee4U+g
+ qCxJwtG4+OA5zzeTEYXe2Xq/1A4R+DEmVLMYYDOUvPkpH9FFapd5keJ8yEnDYFOUVQzYcSPB5
+ 0oSvWlnYxZhHc77cnbGHh4Zo23Mehrc55G36YZEaOMJ3CJi/Jz51rwA7PzFMOanv+sztOOZo6
+ mb+JJzaRjTAQ1KnUKzPL+NoGLQxAmCyd8Bwfc9vN+r0j8TNNnQfW8pBZYcHmXLVJD5XEhaqk4
+ qIixYKXLD3ov/P/Id
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sun, 5 Apr 2020 18:08:13 +0200
 
---iuo7vvzt7573duva
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
+Thus omit a redundant message for the exception handling in the
+calling function.
 
-Hi Linus,
+This issue was detected by using the Coccinelle software.
 
-A bit less than normal due to a hardware fault on my side. Getting
-spare parts took more time than normal due to Covid-19. Other than
-that Stephen found a merge conflict in linux-next between the (already
-merged) tip tree and power-supply and provided correct solution:
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/soc/qcom/smp2p.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-s/cpu_down/remove_cpu
+diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
+index c7300d54e444..07183d731d74 100644
+=2D-- a/drivers/soc/qcom/smp2p.c
++++ b/drivers/soc/qcom/smp2p.c
+@@ -474,10 +474,8 @@ static int qcom_smp2p_probe(struct platform_device *p=
+dev)
+ 		goto report_read_failure;
 
-You can find the thread about that here:
+ 	irq =3D platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(&pdev->dev, "unable to acquire smp2p interrupt\n");
++	if (irq < 0)
+ 		return irq;
+-	}
 
-https://lore.kernel.org/linux-next/20200326135258.2764f0de@canb.auug.org.au/
+ 	smp2p->mbox_client.dev =3D &pdev->dev;
+ 	smp2p->mbox_client.knows_txdone =3D true;
+=2D-
+2.26.0
 
-Thanks,
-
--- Sebastian
-
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
-
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.7
-
-for you to fetch changes up to f78c55e3b4806974f7d590b2aab8683232b7bd25:
-
-  power: reset: sc27xx: Allow the SC27XX poweroff driver building into a module (2020-03-11 23:32:09 +0100)
-
-----------------------------------------------------------------
-power supply and reset changes for the v5.7 series
-
-Core:
- * Nothing
-
-Drivers:
- * at91-reset: cleanups, proper handling for sam9x60
- * sc27xx, charger-manager: allow building as module
- * sc27xx: add support to read current charge capacity
- * axp288: more quirks for weird hardware
- * misc. fixes
-
-----------------------------------------------------------------
-Ashish Chavan (1):
-      power: supply: ab8500_charger: Fix typos in commit messages
-
-Baolin Wang (4):
-      power: supply: sc27xx: Add POWER_SUPPLY_PROP_CHARGE_NOW attribute
-      power: supply: Allow charger manager can be built as a module
-      power: reset: sc27xx: Change to use cpu_down()
-      power: reset: sc27xx: Allow the SC27XX poweroff driver building into a module
-
-Claudiu.Beznea@microchip.com (15):
-      power: reset: at91-reset: introduce struct at91_reset
-      power: reset: at91-reset: add ramc_base[] to struct at91_reset
-      power: reset: at91-reset: add sclk to struct at91_reset
-      power: reset: at91-reset: add notifier block to struct at91_reset
-      power: reset: at91-reset: convert reset in pointer to struct at91_reset
-      power: reset: at91-reset: pass rstc base address to at91_reset_status()
-      power: reset: at91-reset: devm_kzalloc() for at91_reset data structure
-      power: reset: at91-reset: introduce struct at91_reset_data
-      power: reset: at91-reset: introduce args member in at91_reset_data
-      power: reset: at91-reset: use r4 as tmp argument
-      power: reset: at91-reset: introduce ramc_lpr to struct at91_reset
-      power: reset: at91-reset: make at91sam9g45_restart() generic
-      power: reset: at91-reset: keep only one reset function
-      power: reset: at91-reset: get rid of at91_reset_data
-      power: reset: at91-reset: handle nrst async for sam9x60
-
-Dmitry Osipenko (1):
-      power: supply: bq27xxx_battery: Silence deferred-probe error
-
-Hans de Goede (1):
-      power: supply: axp288_charger: Add special handling for HP Pavilion x2 10
-
-Jeffery Miller (1):
-      power: supply: axp288_fuel_gauge: Broaden vendor check for Intel Compute Sticks.
-
-Paul Cercueil (1):
-      power/supply: ingenic-battery: Don't print error on -EPROBE_DEFER
-
-Sherry Zong (1):
-      power: reset: sc27xx: Power off the external subsystems' connection
-
-Takashi Iwai (1):
-      power: twl4030: Use scnprintf() for avoiding potential buffer overflow
-
- drivers/power/reset/Kconfig              |   2 +-
- drivers/power/reset/at91-reset.c         | 190 +++++++++++++++----------------
- drivers/power/reset/sc27xx-poweroff.c    |  21 +++-
- drivers/power/supply/Kconfig             |   2 +-
- drivers/power/supply/ab8500_charger.c    |  35 +++---
- drivers/power/supply/axp288_charger.c    |  57 +++++++++-
- drivers/power/supply/axp288_fuel_gauge.c |   4 +-
- drivers/power/supply/bq27xxx_battery.c   |   5 +-
- drivers/power/supply/ingenic-battery.c   |   3 +-
- drivers/power/supply/sc27xx_fuel_gauge.c |  12 ++
- drivers/power/supply/twl4030_charger.c   |   4 +-
- include/linux/power/charger-manager.h    |   2 +-
- 12 files changed, 211 insertions(+), 126 deletions(-)
-
---iuo7vvzt7573duva
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6KA1QACgkQ2O7X88g7
-+preORAAhzkOm9+wv0vX6fGJ7I/tKHxk9OytmQBWG+D4Y09KtNwdxDcJt8JGWnPU
-TkaNO0A/JSEkFbu1htOqzsZohAyd+W2O7CbDMGFkns3o9/HFPWHivik0RQtqrZ2I
-pZaXlsG5nhDjj42KjxnlusSZM2xmp2lPYHS47QsEeEHhiDWTyHBgrVvDF8Em4yvJ
-eiVhwgaz+zShqWn9hxfoYJGBI4dxwoFsXrODy9fxVPUGKTPNe7Bbhra0rHYB5L8I
-2JOYUJvf8pqH+IXCvJ0zww+bodb4GQ3J4UrFycEBogmuLVvtcre33YwLaE3y0G+/
-hFrWgQGJvt3kWoBD7+X2Rmop/2CmRRLtGSnWC1qgOFyDbpbR/SxHYzrC7kiH81en
-DHQIUqCwy1sernZJI9MN/LvLSVTkv69KKy4MnTiyoFdjGH7jVMs4pDyFMAap2Woz
-+nABIuwJ1z473PrPzPEEcpdPzK+wJEGv7nIvhe2lD9idjQvhQfkzSG7KglPq5oOf
-CqOUL7q8rY0uanZiXU/HrXzGbS7j8h3VaFf2PPryHHuQXct64Mjmb2pdKc61Q8fY
-k6KPSKZDdklVtTFATGqyC5LRgnZAYMY79PNvgwxx43atuhsKGXSfLAIn24UaIN5r
-+gqNXd5MK9D0EjaoCv6nFLJYjoCsoPPY/JsBJrqhWmVYZvOoz2o=
-=rVDI
------END PGP SIGNATURE-----
-
---iuo7vvzt7573duva--
