@@ -2,111 +2,213 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E979C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98F5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1202E20644
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B1020659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TF4MhJ8i"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vKYz6jbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgDEIOI (ORCPT
+        id S1726436AbgDEITu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 04:14:08 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:60130 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726308AbgDEIOI (ORCPT
+        Sun, 5 Apr 2020 04:19:50 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:14453 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726364AbgDEITu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 04:14:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586074446;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=ouQfW90npHD033GMDM+a2FinSD7SQ9pCB41aFB2pv8M=;
-        b=TF4MhJ8ilZ3z80sTnRyU8vqcXjxl5/ufWgK9Q9ebcq65MmGWE/zHOGqO81+0J9+uBQWPuw
-        SmQsFhEBY0DjroWq0UQWiXhVch+tIZVeMlkAZqmS/gFJ74AsalcKVHQSzmeqUcYAYOx66g
-        NKB7KBrTumYAJIPGUaJdvSl5UoeoOT4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-VLUgp2LhMPSsOfxsZ1fNng-1; Sun, 05 Apr 2020 04:14:04 -0400
-X-MC-Unique: VLUgp2LhMPSsOfxsZ1fNng-1
-Received: by mail-wr1-f71.google.com with SMTP id h95so6090983wrh.11
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 01:14:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=ouQfW90npHD033GMDM+a2FinSD7SQ9pCB41aFB2pv8M=;
-        b=diVRUM0SfIts6UbIFPs0jUOSpyli/4u24BjePXtGTLGALMKVEhP9t7wzRjTwvQk4Zk
-         70YoNptBssfpzZNgR1JFtEZwtSLhX98+/7jR7Lrguqh9mNFsgWrxWnLAJQ/o5mHkULOW
-         cc76G8eDu3VEFm1r2T9mrzuChRMzlVHdMtWLltfLQvN+CRn27uqKW6FcR0v5PDbOTxmv
-         RSeAl+qb9N87w9T1fzxg+uFzqDrbAdYcgbOpIrLmLgYaso3ooc1uqIfBVDelpinnozYs
-         eXJsoBc2pZ39iC87SetVDgN/jbRb5ai6Rhp4VnUK3bCUw7RSdzogw1WpXa+cSEwfR7El
-         jq9g==
-X-Gm-Message-State: AGi0PuZ1JhdFdc8E/Sr1+KGhdM0Mnqc3DJbC+igIBLjkcuq+BTPGZ+2e
-        xJRQL4Q5Y9wsy+lwInzJdNsQE95T7gavg4jvMn+f21ewoc4XbTpY1YIb05YSo++p/XD+8FqYWR/
-        74EbBJrpgPJcB7nME3hlWbrbn
-X-Received: by 2002:a1c:96cf:: with SMTP id y198mr16757529wmd.186.1586074443074;
-        Sun, 05 Apr 2020 01:14:03 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLsqstklH0xgI1XJZTMg34Svue6TUFMK2IJ5TbkAsLUDmWLphQPBmK7xc/ECUJgj3fwvYDLwg==
-X-Received: by 2002:a1c:96cf:: with SMTP id y198mr16757512wmd.186.1586074442920;
-        Sun, 05 Apr 2020 01:14:02 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id h188sm5491054wme.8.2020.04.05.01.14.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 01:14:02 -0700 (PDT)
-Date:   Sun, 5 Apr 2020 04:14:00 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH] vdpa-sim: depend on HAS_DMA
-Message-ID: <20200405081355.2870-1-mst@redhat.com>
+        Sun, 5 Apr 2020 04:19:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586074789; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=KyBwcU84B4N0unkwU2I9YtySGgP2/DWULK5tSFWSoOI=; b=vKYz6jblR6Vwv727ttwpclFcDPpQUSzyk2/I6eNtNsZHO91Uo1+/uSODGDKPADuHIkuahJ0V
+ nWmJuUJIudoD7ycQowjYE/tdMoWYzHWIcnFEbM+ukcYHAalYosIjoQvrYpq5lKHC6jMAqH0n
+ ZeAe0veBBlEpkAG6IEAraYps3RU=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e899499.7f9e5f610ca8-smtp-out-n02;
+ Sun, 05 Apr 2020 08:19:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 770DDC433D2; Sun,  5 Apr 2020 08:19:37 +0000 (UTC)
+Received: from [192.168.0.100] (unknown [49.206.125.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AED5CC433F2;
+        Sun,  5 Apr 2020 08:19:33 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AED5CC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
+ controller
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
+ <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
+ <e94805e32d1264ca9a162891db26730e@codeaurora.org>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <5388bacc-217c-d14a-1e7e-26c72588a035@codeaurora.org>
+Date:   Sun, 5 Apr 2020 13:49:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+In-Reply-To: <e94805e32d1264ca9a162891db26730e@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-set_dma_ops isn't available on all architectures:
+Hi Sibi,
 
-        make ARCH=um
-...
+Thanks for the review.
 
-   drivers/vdpa/vdpa_sim/vdpa_sim.c: In function 'vdpasim_create':
->> drivers/vdpa/vdpa_sim/vdpa_sim.c:324:2: error: implicit declaration of function 'set_dma_ops'; did you mean 'set_groups'?
-+[-Werror=implicit-function-declaration]
-     set_dma_ops(dev, &vdpasim_dma_ops);
-     ^~~~~~~~~~~
-     set_groups
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/vdpa/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
-index 08b615f2da39..d0cb0e583a5d 100644
---- a/drivers/vdpa/Kconfig
-+++ b/drivers/vdpa/Kconfig
-@@ -14,7 +14,7 @@ if VDPA_MENU
- 
- config VDPA_SIM
- 	tristate "vDPA device simulator"
--	depends on RUNTIME_TESTING_MENU
-+	depends on RUNTIME_TESTING_MENU && HAS_DMA
- 	select VDPA
- 	select VHOST_RING
- 	select VHOST_IOTLB
--- 
-MST
-
+On 2/27/2020 4:08 PM, Sibi Sankar wrote:
+> Hey Sivaprakash,
+>
+> On 2020-02-27 15:25, Sivaprakash Murugesan wrote:
+>> add dt-binding for ipq6018 apss clock controller
+>>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 
+>> ++++++++++++++++++++++
+>>  include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
+>>  2 files changed, 84 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>>  create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>> b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>> new file mode 100644
+>> index 0000000..7433721
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>> @@ -0,0 +1,58 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>
+> Dual license
+ok.
+>
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/bindings/clock/qcom,apsscc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm IPQ6018 APSS Clock Controller Binding
+>> +
+>> +maintainers:
+>> +  - Stephen Boyd <sboyd@kernel.org>
+>> +
+>> +description: |
+>> +  Qualcomm IPQ6018 APSS clock control module which supports the 
+>> clocks with
+>> +  frequencies above 800Mhz.
+>> +
+>> +properties:
+>> +  compatible :
+>> +    const: qcom,apss-ipq6018
+>
+> Please use qcom,<chip>-<device>
+> instead.
+>
+ok.
+>> +
+>> +  clocks:
+>> +    description: clocks required for this controller.
+>> +    maxItems: 4
+>> +
+>> +  clock-names:
+>> +    description: clock output names of required clocks.
+>> +    maxItems: 4
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +  '#reset-cells':
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - '#clock-cells'
+>> +  - '#reset-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +      #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+>> +      apss_clk: qcom,apss_clk@b111000 {
+>> +            compatible = "qcom,apss-ipq6018";
+>> +            clocks = <&xo>, <&gcc GPLL0>,
+>> +                        <&gcc GPLL2>, <&gcc GPLL4>;
+>> +            clock-names = "xo", "gpll0",
+>> +                         "gpll2", "gpll4";
+>> +            reg = <0xb11100c 0x5ff4>;
+>> +            #clock-cells = <1>;
+>> +            #reset-cells = <1>;
+>> +      };
+>> +...
+>> diff --git a/include/dt-bindings/clock/qcom,apss-ipq6018.h
+>> b/include/dt-bindings/clock/qcom,apss-ipq6018.h
+>> new file mode 100644
+>> index 0000000..ed9d7d8
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/qcom,apss-ipq6018.h
+>> @@ -0,0 +1,26 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+>> + *
+>> + * Permission to use, copy, modify, and/or distribute this software 
+>> for any
+>> + * purpose with or without fee is hereby granted, provided that the 
+>> above
+>> + * copyright notice and this permission notice appear in all copies.
+>> + *
+>> + * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL 
+>> WARRANTIES
+>> + * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+>> + * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE 
+>> LIABLE FOR
+>> + * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY 
+>> DAMAGES
+>> + * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER 
+>> IN AN
+>> + * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING 
+>> OUT OF
+>> + * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+>
+> ^^ is not needed just the SPDX
+> license identifier is enough.
+ok.
+>
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
+>> +#define _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
+>> +
+>> +#define APSS_PLL_EARLY                0
+>> +#define APSS_PLL                1
+>> +#define APCS_ALIAS0_CLK_SRC            2
+>> +#define APCS_ALIAS0_CORE_CLK            3
+>> +
+>> +#endif
+>
