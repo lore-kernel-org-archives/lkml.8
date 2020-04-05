@@ -2,142 +2,85 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49BBC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FA9C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2C70206B8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7BA206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgDENiA (ORCPT
+        id S1726780AbgDENjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 09:38:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726678AbgDENiA (ORCPT
+        Sun, 5 Apr 2020 09:39:14 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56850 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbgDENjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 09:38:00 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 035DYWwI049732;
-        Sun, 5 Apr 2020 09:37:49 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 306k5u52wk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 05 Apr 2020 09:37:49 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 035Dbmp2054527;
-        Sun, 5 Apr 2020 09:37:48 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 306k5u52wa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 05 Apr 2020 09:37:48 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 035DapGJ011301;
-        Sun, 5 Apr 2020 13:37:48 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma01wdc.us.ibm.com with ESMTP id 306hv5hes2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 05 Apr 2020 13:37:48 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 035DbkTV34275678
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 5 Apr 2020 13:37:46 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BFF79BE053;
-        Sun,  5 Apr 2020 13:37:46 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D67DDBE054;
-        Sun,  5 Apr 2020 13:37:42 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.199.46.157])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Sun,  5 Apr 2020 13:37:42 +0000 (GMT)
-X-Mailer: emacs 27.0.90 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Ram Pai <linuxram@us.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, npiggin@gmail.com, paulus@ozlabs.org,
-        leonardo@linux.ibm.com, kirill@shutemov.name,
-        Ram Pai <linuxram@linux.ibm.com>
-Subject: Re: [PATCH v2 01/22] powerpc/pkeys: Avoid using lockless page table
- walk
-In-Reply-To: <20200403002649.GB22412@oc0525413822.ibm.com>
-References: <20200319035609.158654-1-aneesh.kumar@linux.ibm.com>
- <20200319035609.158654-2-aneesh.kumar@linux.ibm.com>
- <20200403002649.GB22412@oc0525413822.ibm.com>
-Date:   Sun, 05 Apr 2020 19:07:40 +0530
-Message-ID: <87h7xyjbob.fsf@linux.ibm.com>
+        Sun, 5 Apr 2020 09:39:14 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jL5UQ-00034b-KJ; Sun, 05 Apr 2020 13:39:06 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] brcm80211: remove redundant pointer 'address'
+Date:   Sun,  5 Apr 2020 14:39:06 +0100
+Message-Id: <20200405133906.381358-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-05_03:2020-04-03,2020-04-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 phishscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 mlxlogscore=999 adultscore=0
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004050121
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ram Pai <linuxram@us.ibm.com> writes:
+From: Colin Ian King <colin.king@canonical.com>
 
-> On Thu, Mar 19, 2020 at 09:25:48AM +0530, Aneesh Kumar K.V wrote:
->> Fetch pkey from vma instead of linux page table. Also document the fact that in
->> some cases the pkey returned in siginfo won't be the same as the one we took
->> keyfault on. Even with linux page table walk, we can end up in a similar scenario.
->
-> There is no way to correctly ensure that the key returned through
-> siginfo is actually the key that took the fault.  Either get it
-> from page table or get it from the corresponding vma.
+Pointer 'address' is being assigned and updated in a few places
+by it is never read. Hence the assignments are redundant and can
+be removed.
 
-That is correct.
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ .../net/wireless/broadcom/brcm80211/brcmfmac/commonring.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
->
-> So we had to choose the lesser evil. Getting it from the page table was
-> faster, and did not involve taking any locks.
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/commonring.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/commonring.c
+index 49db54d23e03..e44236cb210e 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/commonring.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/commonring.c
+@@ -180,14 +180,8 @@ brcmf_commonring_reserve_for_write_multiple(struct brcmf_commonring *commonring,
+ 
+ int brcmf_commonring_write_complete(struct brcmf_commonring *commonring)
+ {
+-	void *address;
+-
+-	address = commonring->buf_addr;
+-	address += (commonring->f_ptr * commonring->item_len);
+-	if (commonring->f_ptr > commonring->w_ptr) {
+-		address = commonring->buf_addr;
++	if (commonring->f_ptr > commonring->w_ptr)
+ 		commonring->f_ptr = 0;
+-	}
+ 
+ 	commonring->f_ptr = commonring->w_ptr;
+ 
+-- 
+2.25.1
 
-That is because you are locks which need to be held on page table walk.
-
->Getting it from the vma
-> was slower, since it needed locks.  Also I faintly recall, there
-> is a scenario where the address that gets a key fault, has no
-> corresponding VMA associated with it yet.
-
-I would be interested in this. For now IIUC even x86 fetch the key from
-VMA.
-
->
-> Hence the logic used was --
-> 	if it is key-fault, than procure the key quickly
-> 	from the page table.  In the unlikely event that the fault is
-> 	something else, but still has a non-permissive key associated
-> 	with it, get the key from the vma.
-
-
-I am fixing that logic further in the next patch. I do have a test case
-attached for that. We always check for the key in the vma and if it
-allows access, then we retry.
-
-
->
-> A well written application should avoid changing the key of an address
-> space without synchronizing the corresponding threads that operate in
-> that address range.  However, if the application ignores to do so, than
-> it is vulnerable to a undefined behavior. There is no way to prove that
-> the reported key is correct or incorrect, since there is no provable
-> order between the two events; the key-fault event and the key-change
-> event.
->
-> Hence I think the change proposed in this patch may not be necessary.
-> RP
-
-The change is needed so that we can make the page table walk safer.
-
-
--aneesh
