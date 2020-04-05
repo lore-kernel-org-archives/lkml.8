@@ -7,136 +7,119 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150DEC2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853DBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4ED220644
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A01720672
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hR4XYDoq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jmssw7Q4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbgDETGZ (ORCPT
+        id S1727607AbgDETVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 15:06:25 -0400
-Received: from mout.web.de ([217.72.192.78]:41709 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbgDETGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 15:06:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586113573;
-        bh=F9t6N3Mi4poOQ1g76zkCvSdBvDzShiTzIKtgmQuU3aI=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=hR4XYDoqSnED5nHpTBqBYKpNt88eGsHFqnTpFaf2xK1fsw9O42dOJMv4ECAbld8u/
-         xew1s1c/3qkMwEm21P/lhOj0Mzqb1m8aeg+xrrQU34DlgmFOq2yumjCR1O8LXjs/c5
-         z2MRA3SAy20yDhbbxcprjVOWecZvbMZupMh5Y/mM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.131.99.70]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M1G68-1j1ZNd1OMS-00tF2B; Sun, 05
- Apr 2020 21:06:13 +0200
-To:     Qiujun Huang <hqjagain@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3] powerpc/powernv: add NULL check after kzalloc in
- opal_add_one_export
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <d4a96597-6704-3030-b936-6282f0994f09@web.de>
-Date:   Sun, 5 Apr 2020 21:06:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 5 Apr 2020 15:21:19 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43049 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbgDETVT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 15:21:19 -0400
+Received: by mail-lj1-f195.google.com with SMTP id g27so12296794ljn.10
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 12:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=K/gE1z0Eaezf8CdrotTqmm4GlBR/apNE6goPF1H868E=;
+        b=jmssw7Q4C+dMb4APFNV1JCtZ50K44ipedz3O1LoSw7dkZ/AYx2iaQ3PE5R0a34M8on
+         4Y8ESBetYuHssrR5QDRKF006VRXj3xvYM+pK9RCUL16B1/n3/7srIiBJ3aPF21zPhyZc
+         sKskY+Mjjopx1GOb0Yk4PGosduC7m08UgOCBYDoqcAk/+lg5ziKQ41dcnkMddZdo0hLi
+         uVjs+xnIAvfpcPGwdUf1CdIFVgYcNjbNNWUUfvwzOsrlcT+mgxMqeUZjPkAWKgzAgcae
+         cIF+nWm+NgjUjfg2sko8BBD0XZ8wZ3/gKvpTtQbN8EnX2UglUJq6gU1IPN8ffgxnCfd5
+         tADA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=K/gE1z0Eaezf8CdrotTqmm4GlBR/apNE6goPF1H868E=;
+        b=gFVK8nWKn9wO+AzaGb4n33YVlulhpLgGZv2SHztlugMF+L5cZDaXQ74rDKcRvI56kB
+         3QEotAfgAre5sUfTXhZi8Sbq/qdoctJ4dT1e5FCvsSTfTceF1HRKbK0O7KkSbyumfOtq
+         BT+Amz6tWyfgevSYacy4XcTDInoE81JIhloCTK2G0wkszSqfbYq+kbcT7r2lExQQ13lv
+         ca4n9G0DzbcT8t6SYjtX3co1DkaZnPfbdoEdjZta1Z4cT428eltcOGYr7y4O2WgHuDtj
+         TLJlmCobs1J9a6TUcWJAqWDubSanqGQ/KafrPzfqY3nswCVayB6FS3pr8GpSYV8qrCC7
+         6MVA==
+X-Gm-Message-State: AGi0PuZumv8vQ1rbADQKQyHK/GEaEzQwcCTeHUMmXACscp6zCjBTC8hP
+        6Cvu6vw4gsgkRsWJDf8u9qQ=
+X-Google-Smtp-Source: APiQypIOCgLvNUUwJVdz2ZAl6mcMp7GYpClx3bpUAGMEoGpx0nrA7xNGUNZiZxBdXzqQMU5Wq6U0hQ==
+X-Received: by 2002:a2e:a412:: with SMTP id p18mr10529382ljn.39.1586114476048;
+        Sun, 05 Apr 2020 12:21:16 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id d9sm8914864ljg.39.2020.04.05.12.21.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 12:21:15 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Sun, 5 Apr 2020 21:21:08 +0200
+To:     William Kucharski <william.kucharski@oracle.com>
+Cc:     William Kucharski <william.kucharski@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jroedel@suse.de,
+        vbabka@suse.cz, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] mm/vmalloc: Sanitize __get_vm_area() arguments
+Message-ID: <20200405192108.GA9429@pc636>
+References: <D25C4027-6EF9-44C2-AD4D-DDC785288B9A@oracle.com>
+ <20200404185229.GA424@pc636>
+ <EEB53CBF-0B3F-43E0-94F6-B001918BAC3E@oracle.com>
+ <20200405172315.GA8404@pc636>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:R5F9cXQvCKRzVq8oaRBgCbtQfWlSVhukcrw1bBjAL3pP1En1Uvm
- HgmJ+jsDIFJAmpWjk42WpQPGcdDa5/Ek2G50g6T0Y4tIxAQRZ1tpl4fEaSzoruRn1DUprCZ
- aFNSKGIxrKrCWrnXCmpCbG5kosOQJWJLOsizdF/8TJMfKOYakLS4SMgxg+yrgfRX4NL26Uj
- YUgQSyTWgnYZ9Z1fWiq1w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PbZRXBLTfsw=:HN2105tXExuzk+NvXgPqaJ
- IkV3ZUEA076oCGpbjeGuV5luhkX6bEdwKneTKQA5xyybdaE3R0roSqckFdi4y+aFBMD7mRggt
- ayOI5WpHyZN09JEe7xAW3UU7tg52xTHXnIik5/AW3on06YFuv7SxmiplnPbcVE6VZdV7+80dT
- GFnjuJWA0XNYW5ivsQfLhYHenO4ljw0qYRNtySIxqr78oHJvDLQcDJrEhUchYVDsqTpd8HmTB
- T9dr2MlLbk+NLgLzGsfhrVjjuCSzWwP72mu1QfVyv60zYbPvUoH2FwLaKmQHolTUWVCO3rru1
- Z7eaPgvwGCCkjP6wAAdLoTz3se/Ytp1aU/asDcGmz45V0FX8DzUQkLZk+XOdBdDKy6APY/Oz8
- B5qOdwu3HI+Jxt0EWoZvXqwjDAUlGT4nGsLDbbYlMdTzVGFP0rhCfpnQ8I45PadjSMmqiviiM
- XGjgIphuEnAJV2yckP9gUDKXAY7wo4RuAFsgB3D8Vi2Qjtz0BRyXoyQ9XU8MbRtcdzYKOPgwz
- GqmqHlrp3UUTSLmxJo3BToxBrqG+LfYws19EyXmurl1S5BMwhOSN2ve1/0TtnJJ//rAU3zWfz
- N/cdYHNlVNwwVSGml7OoELtz95VKEAQdFg3zMC/mMp9rFxKvatlnaSVcjE0W8JevnXvgTb7mh
- qYesxixrFfWzwykTUBrfFIRsPwX4Tq42SWr6ZnGFwtqzJjqPV2IohE+GoOx7K6uTxSMYSLTwX
- vnj2mwn9vuqZffQ46t50sXUcl/dNYYPwnvT5bdPRXzXaNUdgBNtNZTKYEXTaHeXvp5CflK3+7
- Hr/+Ry2Jy5orreoF6SmJ16KHaTk2XwIP7z7DnerP9GGaJcTbzQtXqWSQZAdhDnpCFI5RdVZCL
- lE22ajGsV0E1jlNACx9gGVfaymgVDq6ztmgB3AntV6M1+R1VyaOalNBhJXCJJnkXGMINjCnxb
- xBhTjvw7TfYZxLs3yLg5AfNLqYDPBQVGQ09XudzOayxF22Zj5rB12UgyKUlFTgJraOGJGb9Vn
- o4xSgYs/7ob4ywvnttOGjLzoWChtqKYXgkKyaTpCHzi7xzRoiDCTMNp0duK4RnV0EqyQzC+Hu
- uczTmyfauoWD4WvGZx+Hg2WoCHXlBEToqwesNTtoVSrm9LyzD1x2ba1qMyx7bBEqyA3sBgWnd
- QXeT5Qz1hKPozvILqdgQ047RSypWCYq6t72GafJ2JV6TmzpB18Khkb/rIkJUolDPSD7inTrq4
- BPOHu5dRl4DDo8EA9
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200405172315.GA8404@pc636>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Here needs a NULL check.
+On Sun, Apr 05, 2020 at 07:23:15PM +0200, Uladzislau Rezki wrote:
+> On Sat, Apr 04, 2020 at 11:25:45PM -0600, William Kucharski wrote:
+> > 
+> > 
+> > > On Apr 4, 2020, at 12:52 PM, Uladzislau Rezki <urezki@gmail.com> wrote:
+> > > 
+> > >> 
+> > >> ﻿Is there any need to similarly sanitize “size” to assure start + size doesn’t go past “end?”
+> > >> 
+> > > Why is that double check needed if all such tests are done deeper on stack?
+> > 
+> > If such tests ARE performed, then it doesn't matter to me whether it is checked before or after,
+> > it just seems that nothing checks whether start + size makes some sort of sense with respect
+> > to end.
+> > 
+> > I admit I didn't walk through all the routines to see if such a check would be superfluous.
+> > 
+> Yes, we check it:
+> 
+> <snip>
+> static __always_inline bool
+> is_within_this_va(struct vmap_area *va, unsigned long size,
+>  unsigned long align, unsigned long vstart)
+> {
+>  ...
+>  return (nva_start_addr + size <= va->va_end);
+> }
+> <snip>
+> 
+Sorry, was thinking about one place showed different one. Here we go:
 
-I find this change description questionable
-(despite of a reasonable patch subject).
+<snip>
+ /* Check the "vend" restriction. */
+  if (nva_start_addr + size > vend)
+    return vend;
+<snip>
 
-
-> Issue found by coccinelle.
-
-Would an information like =E2=80=9CGenerated by: scripts/coccinelle/null/k=
-merr.cocci=E2=80=9D
-be nicer?
-
-
-> ---
-
-Will a patch change log be helpful here?
-
-Regards,
-Markus
+--
+Vlad Rezki
