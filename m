@@ -6,77 +6,83 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0268AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978A8C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB43B20753
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:57:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B41F206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:59:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ad5a9Zda";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="14dqTf2+"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="goGwj/jm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QQpV+ip6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgDEG5Q (ORCPT
+        id S1726410AbgDEG7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 02:57:16 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:51675 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726236AbgDEG5Q (ORCPT
+        Sun, 5 Apr 2020 02:59:52 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:40515 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726250AbgDEG7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 02:57:16 -0400
+        Sun, 5 Apr 2020 02:59:52 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 6E09B5C0004;
-        Sun,  5 Apr 2020 02:57:15 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id AAEDE58026A;
+        Sun,  5 Apr 2020 02:59:50 -0400 (EDT)
 Received: from imap2 ([10.202.2.52])
-  by compute3.internal (MEProxy); Sun, 05 Apr 2020 02:57:15 -0400
+  by compute3.internal (MEProxy); Sun, 05 Apr 2020 02:59:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
         mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm2; bh=A9dbn5+Kyg5hHH3Cxnfh6Nqgtjiyajy
-        p0XRJXLne8is=; b=ad5a9Zda845H8koTB0ERR7JZxprs0GdpMrwpRMZ7fZWSnYI
-        7eL/bbCcC+dym83H2P2dMsjdkNQXWhpiH56vVsuP0kuaR/JgLwRTXKOOSww4Zbad
-        xvqqV2oxA9ChQ+ljCKM/YmubHRPvb/ST9VNqC9zQfqHn1YgTMzUcuCdHFdPEkxph
-        /gYZ71NE6Cupf59BzfE2aWpGRRAswj2whckDWzral6e+f0P8t1V9xzUZrhdNPXKT
-        buYxT9RhPUsQKJ38t8yy7nu240JigMpJNxh8QpHgpMHtl//2gqX7uP9zVBpopcHA
-        Ik9ySMGJRLydoSeJ78IiVopBvdt4OV9Qm9uuc+Q==
+        :subject:content-type; s=fm2; bh=yWE5iV1vF2rjVGqJzP4udG6OgWvMuVf
+        D2zKlW0VL8vc=; b=goGwj/jmvd74/4dXXrkmJVPe5xI9r3yKgasZjk9WlI8sZvA
+        Hq8FllL86de3H+jkfEIilxOxo12fkh/uZUGny/AvGivr3scfemC7SN6haQ8cLUDX
+        kNhFTFxt3PvIwPTWj8+orWCj7oZPLvd5Jy1TS0VAMqEv9td8mDYMkk8gex5pvoeA
+        ucNFcYwGXilpC8XYUKedvB+1ommO41Vzbiusd1/aW5yknjdpImx7oilaa+/dl9qW
+        KE3k6T7vf1ggYLO/YNXbgb4F8FxAlcVUZ/d5VQ+sZyJEYLzQw5rkmZD96vbYLLu/
+        Vlukw8OOzCVMFp3RsorCHmsR+YcxKKESTznHguA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=A9dbn5
-        +Kyg5hHH3Cxnfh6Nqgtjiyajyp0XRJXLne8is=; b=14dqTf2+KbmRafna3KiVl5
-        zzDeN6LUsvzS4hfOmtaXgtf3n0fvyXYWVEpRQ7MrszpbM606GKp6iFMH3gIUzfIy
-        GkhSszW5H835rdIlDy3GylDdSP6ZHj6RHxuc/oH8oRlJhq6uuRvjBnRF1BdesFCP
-        dBBvhzCCC6VkXw3TAgLjp7UOe16IQVo0vDDXePVUqiwcO2sbYN0WYqyxGrqzdEOp
-        vpmZHJXP8cq7wHz+gvH59U6o2dIb3gdzNNjlDujJHAnwhQUptOBT2mwbv5rtwR9J
-        3wIyAd9MLwYlxKg1s6mAmB5J8w/h3BoaAyF92MokFwXnHeUNa5v75/cw5L1FjUjA
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=yWE5iV
+        1vF2rjVGqJzP4udG6OgWvMuVfD2zKlW0VL8vc=; b=QQpV+ip6yBO7k7deoxKGUs
+        rW3WfZZP7kKZy5IZipRQlASYytedxXztVz9s6lAsbr9r1rfrO4aaV5W/NgiNkG2E
+        dcwvdQ+XbPv7RwpPM2Ek7A+AqhaYPEQtoEg8FP2ct2LKqXsA//neIK5q0H5Kmv9p
+        ESfTAcXiw+aRhyXlvNuR5YKUOayawJtEIkwpYkOO6fSTgb142/azseN7ik/FsTbf
+        JdXgvn/gh/lkZtCk6sYTR3NB8gvhSy+5/RNDytiIgGfJH0n0RNJG5OJg8SLaezdB
+        dnVkGcD2iuBA+cRfi5P7ID9bOvcIdfhofBrMax6bBiggzvEoSgEP/OpDUMvMtw1Q
         ==
-X-ME-Sender: <xms:SoGJXqpQUeZqjkl-xACUmUBAr2Vg8rQ1sNxBJEcB3iSj0LoIAFcJtA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddtgddukecutefuodetggdotefrodftvf
+X-ME-Sender: <xms:5IGJXgh39OEGA02bB29v2YQALa7x8qIPFiG_n0zd-ko5F5rCutG2cA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddtgddulecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
-    rdhiugdrrghu
-X-ME-Proxy: <xmx:SoGJXmgapWBt5Kf8rTkhp7r7bng-kjXQJRPw8G_rQEHZucHN3053Ow>
-    <xmx:SoGJXoQiu6-9X_IgIbrVyp44d7z0rPw7jBSKJybq0rxbRDjSiczVJw>
-    <xmx:SoGJXrKncthCYLZnHnddBt0_ovDAKwKHuOnHh_0MYhGT2fqZrEsSCw>
-    <xmx:S4GJXiDZcqzwHGsOLHY60trRX9O_SJfagylrGPdMsXJRAMhB56CsyA>
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucffohhmrg
+    hinhepkhgvrhhnvghlrdhorhhgpdguvghvihgtvghsrdhpihhnghenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiug
+    drrghu
+X-ME-Proxy: <xmx:5IGJXoUMkaRJo6jN3vOIm7edHXudlz9cSM0j6tpYFurIuA7U-IYdnQ>
+    <xmx:5IGJXvCM5nfC-tJ_HT3EdJZkXcpgb3h5JENEvcJysnffznYFloNhjw>
+    <xmx:5IGJXslnrlyKOycSkd-ZzaXEsrp6Cgglk7UNiANZGtnAa-OYfektrg>
+    <xmx:5oGJXtU6C2CZPne5rDC3sbV-JSzh2weW3z2qanuGgwholBRpBXk-Qg>
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 62711E00B1; Sun,  5 Apr 2020 02:57:14 -0400 (EDT)
+        id A15A8E00B1; Sun,  5 Apr 2020 02:59:48 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.1.7-1082-g13d7805-fmstable-20200403v1
 Mime-Version: 1.0
-Message-Id: <73c7b292-fa99-4809-a0fa-b3605f35aff4@www.fastmail.com>
-In-Reply-To: <d1fe0157-8a4b-f0f5-f0e4-443d6f4e3e4a@linux.ibm.com>
-References: <20200402194955.16643-1-eajames@linux.ibm.com>
- <8ca08ea0-2f3e-4b44-a595-bfe96ca02b3f@www.fastmail.com>
- <d1fe0157-8a4b-f0f5-f0e4-443d6f4e3e4a@linux.ibm.com>
-Date:   Sun, 05 Apr 2020 16:27:35 +0930
+Message-Id: <69bfc045-2059-4d37-af7a-52f5840664cf@www.fastmail.com>
+In-Reply-To: <20200403130840.GR2910@minyard.net>
+References: <cover.fe20dfec1a7c91771c6bb574814ffb4bb49e2136.1576462051.git-series.andrew@aj.id.au>
+ <7734002a-181e-4baf-b9a3-af66894acc16@www.fastmail.com>
+ <20200403130840.GR2910@minyard.net>
+Date:   Sun, 05 Apr 2020 16:30:09 +0930
 From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.ibm.com>,
-        linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        "Rob Herring" <robh+dt@kernel.org>, "Joel Stanley" <joel@jms.id.au>
-Subject: Re: [PATCH v7 0/5] soc: aspeed: Add XDMA engine driver
+To:     "Corey Minyard" <minyard@acm.org>
+Cc:     openipmi-developer@lists.sourceforge.net, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, "Arnd Bergmann" <arnd@arndb.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Haiyue Wang" <haiyue.wang@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: =?UTF-8?Q?Re:_[PATCH_v2_0/3]_ipmi:_kcs-bmc:_Rework_bindings_to_clean_up_?=
+ =?UTF-8?Q?DT_warnings?=
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -85,40 +91,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On Sat, 4 Apr 2020, at 01:22, Eddie James wrote:
+On Fri, 3 Apr 2020, at 23:38, Corey Minyard wrote:
+> On Fri, Apr 03, 2020 at 02:20:21PM +1030, Andrew Jeffery wrote:
+> > 
+> > 
+> > On Mon, 16 Dec 2019, at 12:57, Andrew Jeffery wrote:
+> > > Hello,
+> > > 
+> > > This is a short series reworking the devicetree binding and driver for the
+> > > ASPEED BMC KCS devices. With the number of supported ASPEED BMC devicetrees the
+> > > changes enable removal of more than 100 lines of warning output from dtc.
+> > > 
+> > > v1 can be found here:
+> > > 
+> > > https://lore.kernel.org/lkml/cover.5630f63168ad5cddf02e9796106f8e086c196907.1575376664.git-series.andrew@aj.id.au/
+> > > 
+> > > v2 cleans up the commit message of 2/3 and changes the name of the property
+> > > governing the LPC IO address for the KCS devices.
+> > 
+> > Ping?
 > 
-> On 4/2/20 7:32 PM, Andrew Jeffery wrote:
-> >
-> > On Fri, 3 Apr 2020, at 06:19, Eddie James wrote:
-> >> This series adds a driver to control the Aspeed XDMA engine embedded in the
-> >> AST2500 and AST2600. The XDMA engine performs automatic DMA operations
-> >> over PCI-E between the Aspeed SOC (acting as a BMC) and a host processor.
-> >>
-> >> Changes since v6:
-> >>   - See individual patches
-> > v7 is not an evolution on v6 - v7 contains a bunch of bugs that v6 fixed (at least
-> > wrt locking). How did you generate this series?
-> 
-> 
-> My goodness, I could have sworn that was v6. I took the series that was 
-> merged in the openbmc kernel. Must have gotten mixed up. -_-
+> Sorry, I've been busy.
 
-No worries, hopefully v8 is in the right state :)
+No worries, so have I. I was surprised when I found it had been 4 months :)
 
-> 
-> 
-> >
-> > Also my name is misspelled in each of the Reviewed-by: tags which makes me
-> > think that something has gone quite wrong with the posting of v7, and I'm
-> > concerned that this was based on e.g. v5 but with my tags against v6 applied.
-> 
-> 
-> Well thats because I added them manually since they had "disappeared" or 
-> so I thought from v6 during the application to openbmc... guess that 
-> should have been a warning sign
+>  I've looked this over and it seems ok, and it's
+> in my next tree.
 
-It certainly was for me!
-
-Cheers,
+Thanks.
 
 Andrew
