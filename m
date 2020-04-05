@@ -2,94 +2,93 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9258FC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D8DC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C09C20675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8DF20675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:44:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ye9z1hO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgDEKl2 (ORCPT
+        id S1726543AbgDEKoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 06:41:28 -0400
-Received: from mga12.intel.com ([192.55.52.136]:4435 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbgDEKl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 06:41:27 -0400
-IronPort-SDR: 7Gw9obn4uu/Jf+Z8Ad101wVPiKA8TKke8YY01swkUN5O2YtT9BtMUjinizHCgl6YYTVvA/h+uB
- B9tqwb5WX78Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 03:41:27 -0700
-IronPort-SDR: TC0QQbWGILYXESrFkub+TzDtzSEHPZ+1bv18FpT7ZZIuPOY+aGMs8XdqASWsNYNHawWm8lrhRI
- yqEpYra/Kehw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,347,1580803200"; 
-   d="scan'208";a="241526865"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Apr 2020 03:41:25 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jL2iT-000IoS-Ak; Sun, 05 Apr 2020 18:41:25 +0800
-Date:   Sun, 5 Apr 2020 18:41:07 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Paolo Abeni <pabeni@redhat.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>
-Subject: net/mptcp/pm_netlink.c:98:22: warning: The scope of the variable
- 'skc' can be reduced. [variableScope]
-Message-ID: <202004051802.wQTCzw3s%lkp@intel.com>
+        Sun, 5 Apr 2020 06:44:06 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42288 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgDEKoF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 06:44:05 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 22so6063994pfa.9;
+        Sun, 05 Apr 2020 03:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Wqo5YREUxilhGZH5KNtR1EEFlKaeLBk2Jx3NMurpifE=;
+        b=Ye9z1hO1q/z62yGaatDoxLKqIB8WqsUzxOEKT/Ba25Exfyd7HS1d06ZeN4dtiqoCUL
+         nppVH9FJ4/LPm+TR1Bgj/ouXjdVNEB+Gt6g7ymJtIa0x592aw6AKzTT6Tmcpb/EfGVJu
+         jiTT0XqE9QoRWru/6R25WHJYnT01S3ByqtlRfMvI/LpXQrTUy7A0SbNY8bZOgm01aTGe
+         THHXb9Ii71zj556Mijna4R7G8SYDX3c8Q1D+LS38cZc5+XoF784yExlBock5/R6UeAoO
+         TglL8WVGnSbd+uD99p1Sxo+bx11IGb3QUYUocsTzem9NW/4OQEDds48hkgFq8gctNyUl
+         hM6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Wqo5YREUxilhGZH5KNtR1EEFlKaeLBk2Jx3NMurpifE=;
+        b=FcEcwGAgV2MX7fvu/Y1ouJHbDsolKOLPJYWyBg5WQ8gGHS377iDv3evwQDzfk5asgX
+         U86mskhVfuS6BzPPE3uTVWSnIPowEdf1DQGTrw7FJITfHGMKls+jyJLQyCAnYT8S3rvb
+         brKENibJYZk3MIJfeQPZOxD8zaeaC8C4hfZ5SLd8HbitXap9m4AJulB4h+H5CzXX0pAY
+         rntvENPfpmZun4Y+zaIFgN9nvitIVbAhSPGr29q8rfQ4HLn/c28Ocl5dOXjTGrdwEnwn
+         e69GXNm9haUQxNZjiegTQoeZZ4WG+tiU6Y1ALWPkR54V1xObLY2tPA3hoFpMFtcE190W
+         oOCQ==
+X-Gm-Message-State: AGi0PuZLLHKZcQxaTjKIvpzRDeUPfxNi2E4Oo45S6Wz1vie6ealYCiEQ
+        JpuF1+AG2nonPOfHtc0PVLDa6TVEivQiMk6Qows=
+X-Google-Smtp-Source: APiQypI6eSEt/7OjXlQ7fneQEBVJlUoft1YyFL/U4/lAVdAbiWACIqZ9enxEfcw8nA6jlNHxqEU3WGluCTFo0hUHszk=
+X-Received: by 2002:a63:1d4:: with SMTP id 203mr4662429pgb.74.1586083443002;
+ Sun, 05 Apr 2020 03:44:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <bb60007c-585f-052d-2f86-5598ff7619cd@web.de>
+In-Reply-To: <bb60007c-585f-052d-2f86-5598ff7619cd@web.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 5 Apr 2020 13:43:50 +0300
+Message-ID: <CAHp75Ve8hf9TZ4YL43nVJnZ+jcs80VdOddL8wbAqh-Te=0r12Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: msic: Delete an error message in platform_msic_gpio_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   4c205c84e249e0a91dcfabe461d77667ec9b2d05
-commit: 01cacb00b35cb62b139f07d5f84bcf0eeda8eff6 mptcp: add netlink-based PM
-date:   6 days ago
+On Sat, Apr 4, 2020 at 10:35 PM Markus Elfring <Markus.Elfring@web.de> wrot=
+e:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 4 Apr 2020 21:30:12 +0200
+>
+> The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
+> Thus omit a redundant message for the exception handling in the
+> calling function.
+>
+> This issue was detected by using the Coccinelle software.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
+No need to touch this ancient driver, since it's subject to remove in
+one of the (nearest) future releases.
 
-
-cppcheck warnings: (new ones prefixed by >>)
-
->> net/mptcp/pm_netlink.c:98:22: warning: The scope of the variable 'skc' can be reduced. [variableScope]
->>  struct sock_common *skc;
-                        ^
-
-vim +/skc +98 net/mptcp/pm_netlink.c
-
-    92	
-    93	static bool lookup_subflow_by_saddr(const struct list_head *list,
-    94					    struct mptcp_addr_info *saddr)
-    95	{
-    96		struct mptcp_subflow_context *subflow;
-    97		struct mptcp_addr_info cur;
-  > 98		struct sock_common *skc;
-    99	
-   100		list_for_each_entry(subflow, list, node) {
-   101			skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
-   102	
-   103			local_address(skc, &cur);
-   104			if (addresses_equal(&cur, saddr, false))
-   105				return true;
-   106		}
-   107	
-   108		return false;
-   109	}
-   110	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+--=20
+With Best Regards,
+Andy Shevchenko
