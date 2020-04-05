@@ -2,93 +2,196 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B4CC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46121C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40935206F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:54:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="QJ79tLBw"
+	by mail.kernel.org (Postfix) with ESMTP id 26EF620659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbgDEOyp (ORCPT
+        id S1727208AbgDEOyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 5 Apr 2020 10:54:45 -0400
-Received: from vps.xff.cz ([195.181.215.36]:38982 "EHLO vps.xff.cz"
+Received: from mga06.intel.com ([134.134.136.31]:26201 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbgDEOyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726669AbgDEOyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 5 Apr 2020 10:54:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1586098483; bh=YvInvH/mqpjWA9tS3gUA31bXJDMR40kHIKld7q04mmg=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=QJ79tLBwI18mxgsos5s6y/yEYEzpyGors8eAHWB3JvCsqxbtpH0uyxMCT3YGmbbfF
-         A8Rnk9/WZSr2nDyyx0DlHucdax5BmYhZ1E8B6Cyh9JiRX7+nRDVRF0eLgVfAyMxejI
-         c5y2X6oLpB3ckC9eG1gXqQSHdVvyBJUOiptaBqX0=
-Date:   Sun, 5 Apr 2020 16:54:43 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
+IronPort-SDR: 63nSUfSLM8R6twNYzqkNlzzv6yhtWouYrGSUW1Ec17Xrgfo38rApQ/NhWKY39M0VVJ1ZIErQHj
+ icJ3uvPJZQhw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 07:54:42 -0700
+IronPort-SDR: 6lf1dbhbqIm1OxUs3SWaIp9HMJgDKVQbYm0a/KiLhXqDMOGyyiRLdw8swAzUELjzEHmtzxkleP
+ GJUCDU1xxNHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,348,1580803200"; 
+   d="scan'208";a="424089231"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 05 Apr 2020 07:54:43 -0700
+Received: from [10.249.231.111] (abudanko-mobl.ccr.corp.intel.com [10.249.231.111])
+        by linux.intel.com (Postfix) with ESMTP id 01AF558033E;
+        Sun,  5 Apr 2020 07:54:38 -0700 (PDT)
+Subject: Re: [PATCH v8 12/12] doc/admin-guide: update kernel.rst with
+ CAP_PERFMON information
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH 0/7] Add support for Allwinner H6 DVFS
-Message-ID: <20200405145443.uycsh73kxmurdmil@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-References: <20200405104913.22806-1-peron.clem@gmail.com>
- <20200405115138.vrrvv7spnv6ifm6x@core.my.home>
- <CAJiuCcfAKCs5ZLi_O21eyx-ZraC2Sb_ugQSmOEYm5+eVkQ7ZSw@mail.gmail.com>
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+ <84c32383-14a2-fa35-16b6-f9e59bd37240@linux.intel.com>
+ <20200405141029.GA16896@kernel.org>
+ <eb7fd0bd-4043-b51c-9b19-ee0a1d1849e9@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <966244a1-2a2d-8e47-b805-2effa46fe8cd@linux.intel.com>
+Date:   Sun, 5 Apr 2020 17:54:37 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <eb7fd0bd-4043-b51c-9b19-ee0a1d1849e9@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJiuCcfAKCs5ZLi_O21eyx-ZraC2Sb_ugQSmOEYm5+eVkQ7ZSw@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Sun, Apr 05, 2020 at 04:33:37PM +0200, Clément Péron wrote:
-> Hi Ondřej,
-
-[ ... ]
-
-> Good point, this information should be added for both CPU and GPU regulator.
-> This could be nice to confirm this point with a scope.
+On 05.04.2020 17:41, Alexey Budankov wrote:
 > 
-> Also I remark that Allwinner user higher temperature than what we set :
-> alarm_low_temp = <105000>;
-> alarm_high_temp = <110000>;
-> alarm_temp_hysteresis = <15000>;
-> shut_temp= <115000>;
-> https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/arch/arm64/boot/dts/sunxi/sun50iw6p1.dtsi#L1924
+> On 05.04.2020 17:10, Arnaldo Carvalho de Melo wrote:
+>> Em Thu, Apr 02, 2020 at 11:54:39AM +0300, Alexey Budankov escreveu:
+>>>
+>>> Update kernel.rst documentation file with the information
+>>> related to usage of CAP_PERFMON capability to secure performance
+>>> monitoring and observability operations in system.
+>>
+>> This one is failing in my perf/core branch, please take a look. I'm
+
+Please try applying this:
+
+---
+ Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 335696d3360d..aaa5bbcd1e33 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -709,7 +709,13 @@ perf_event_paranoid
+ ===================
+ 
+ Controls use of the performance events system by unprivileged
+-users (without CAP_SYS_ADMIN).  The default value is 2.
++users (without CAP_PERFMON).  The default value is 2.
++
++For backward compatibility reasons access to system performance
++monitoring and observability remains open for CAP_SYS_ADMIN
++privileged processes but CAP_SYS_ADMIN usage for secure system
++performance monitoring and observability operations is discouraged
++with respect to CAP_PERFMON use cases.
+ 
+ ===  ==================================================================
+  -1  Allow use of (almost) all events by all users.
+@@ -718,13 +724,13 @@ users (without CAP_SYS_ADMIN).  The default value is 2.
+      ``CAP_IPC_LOCK``.
+ 
+ >=0  Disallow ftrace function tracepoint by users without
+-     ``CAP_SYS_ADMIN``.
++     ``CAP_PERFMON``.
+ 
+-     Disallow raw tracepoint access by users without ``CAP_SYS_ADMIN``.
++     Disallow raw tracepoint access by users without ``CAP_PERFMON``.
+ 
+->=1  Disallow CPU event access by users without ``CAP_SYS_ADMIN``.
++>=1  Disallow CPU event access by users without ``CAP_PERFMON``.
+ 
+->=2  Disallow kernel profiling by users without ``CAP_SYS_ADMIN``.
++>=2  Disallow kernel profiling by users without ``CAP_PERFMON``.
+ ===  ==================================================================
+ 
+---
+
+Thanks,
+Alexey
+
 > 
-> Don't you think that we can push a bit higher the temperature it's
-> actually at 80°C ?
-
-We probably can. But just 5°C between high temp and criticla temp is probably
-not enough. I'd probably set our value to something like 90-100°C so that quick
-temperature spike before regulation kicks in would not shutdown the CPU.
-
-regards,
-	o.
-
-> Thanks for the review,
-> Clement
+> Trying to reproduce right now. What kind of failure do you see?
+> Please share some specifics so I could follow up properly.
 > 
+> Thanks,
+> Alexey
+> 
+>> pushing my perf/core branch with this series applied, please check that
+>> everything is ok, I'll do some testing now, but it all seems ok.
+>>
+>> Thanks,
+>>
+>> - Arnaldo
+>>  
+>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>> ---
+>>>  Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
+>>>  1 file changed, 11 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+>>> index def074807cee..b06ae9389809 100644
+>>> --- a/Documentation/admin-guide/sysctl/kernel.rst
+>>> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+>>> @@ -720,20 +720,26 @@ perf_event_paranoid:
+>>>  ====================
+>>>  
+>>>  Controls use of the performance events system by unprivileged
+>>> -users (without CAP_SYS_ADMIN).  The default value is 2.
+>>> +users (without CAP_PERFMON). The default value is 2.
+>>> +
+>>> +For backward compatibility reasons access to system performance
+>>> +monitoring and observability remains open for CAP_SYS_ADMIN
+>>> +privileged processes but CAP_SYS_ADMIN usage for secure system
+>>> +performance monitoring and observability operations is discouraged
+>>> +with respect to CAP_PERFMON use cases.
+>>>  
+>>>  ===  ==================================================================
+>>>   -1  Allow use of (almost) all events by all users
+>>>  
+>>>       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+>>>  
+>>> ->=0  Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN
+>>> +>=0  Disallow ftrace function tracepoint by users without CAP_PERFMON
+>>>  
+>>> -     Disallow raw tracepoint access by users without CAP_SYS_ADMIN
+>>> +     Disallow raw tracepoint access by users without CAP_PERFMON
+>>>  
+>>> ->=1  Disallow CPU event access by users without CAP_SYS_ADMIN
+>>> +>=1  Disallow CPU event access by users without CAP_PERFMON
+>>>  
+>>> ->=2  Disallow kernel profiling by users without CAP_SYS_ADMIN
+>>> +>=2  Disallow kernel profiling by users without CAP_PERFMON
+>>>  ===  ==================================================================
+>>>  
+>>>  
+>>> -- 
+>>> 2.24.1
+>>>
+>>
