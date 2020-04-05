@@ -2,125 +2,105 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91F5C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D104DC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9D020659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:53:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eJQ3oG1e"
+	by mail.kernel.org (Postfix) with ESMTP id A3B3B206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586113570;
+	bh=s7jBti/EYKWZ83qo1mm3BAAccCbtDGraRQ4InJtJJ0A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2B6KKaVnDxAI77jOGzK+oH8cbtCBML7/JNXGUT5VoslloRvvi+QmLsN1dbl2Blkqp
+	 Qv6PgBwA3EfgndiquKBf//KLAXcS1Sl2GMLqu6JWzeKymlKMb0pKG4Ll4fLMQc2nFU
+	 6pO+FmwrvYW11mgfcR/LojMvukZsqxw1wu81M3XY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgDESxj (ORCPT
+        id S1727593AbgDETGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 14:53:39 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:23813 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbgDESxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 14:53:39 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wN9T41YPz9tx5x;
-        Sun,  5 Apr 2020 20:53:33 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=eJQ3oG1e; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id rPwFmN31zfvx; Sun,  5 Apr 2020 20:53:33 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wN9T2t7Vz9tx5w;
-        Sun,  5 Apr 2020 20:53:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586112813; bh=90bPcvM3Kr4KjzMKiGYjpWqCbKmKJ+xpkekjY3cVUhQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=eJQ3oG1ebDmiDGHzDikOxVWGvPigmsoEYiiyN/LJjcvcAHCs4LnhNB82kOiD64ME5
-         Elaf5u+hqdwsLi6oguAVkE6PJtJeYrWZSxeAUWZxYNWo3NcWi/U05qkcI+PI32sk9N
-         gW96UdqFlzinI2CilHJOhz7SUFwqZOxYC/XBEvE4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 11BA08B783;
-        Sun,  5 Apr 2020 20:53:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id QxPOLoXO54EU; Sun,  5 Apr 2020 20:53:37 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 200BC8B774;
-        Sun,  5 Apr 2020 20:53:36 +0200 (CEST)
-Subject: Re: [RFC WIP PATCH] powerpc/32: system call implement entry/exit
- logic in C
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <bbc0a09cfaf523bc00893253a7101362c98b31eb.1585667934.git.christophe.leroy@c-s.fr>
- <059c1abd-6be2-25ea-83e0-dcd411b7951b@c-s.fr>
- <1585898897.1jwur86s6a.astroid@bobo.none>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <fa79eac6-49e6-bbb0-5faa-7d52662a0cbe@c-s.fr>
-Date:   Sun, 5 Apr 2020 20:53:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 5 Apr 2020 15:06:08 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34645 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgDETGI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 15:06:08 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p10so12371909ljn.1
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 12:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y7l5PKSkiUm5y5Anqut8GXd6/HQY32R9b8/6v8Yv3/Y=;
+        b=hhFjiX6eAmiLO7UvcvHDqjKYw1HL5IRSCRPu+b4BSSUKyxCf+imtjMFsnCKSqMmJqW
+         9vKgFehiVHLS6ZVYGiN4utBZNCIm+6UGEVvZApcqInJ6mEyDqPqFPLlhbxqASXf4RWoW
+         ANf4gJxtxdldfM37Qw8jIuQIuGRp7ugkJBw+Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y7l5PKSkiUm5y5Anqut8GXd6/HQY32R9b8/6v8Yv3/Y=;
+        b=rax/CGjhHTMCI+1K7RxBlWoxLOYZczH7eebKxhxUIzyZ5sKS74zJKAAWqif+sl/VpZ
+         fiUfjvPCZsQB9C4ON7pgKcfG8cXYj0J/kuCJZM26CD9uvuoQPhxwgdJ64WjChqMIjgyS
+         GOYCwQJGxZe2SPzhdhszVFD3j+Ocl1soFUxqKEoNRRkiUMujpHo3BK+6/6Zp/F6WKEIF
+         +fwR7nllQ63xgGlZ493q62funNR81IG6v9vHdvvrW7UpnvEuR6k558U9bduCLDumWwWM
+         ws3fBPqvJykzlgvIOBeGIUo5gWzMZE2NKZNVFIEBxp0SEAxzdlPyygJkCjFEyI2UWcrf
+         7rCA==
+X-Gm-Message-State: AGi0PuaEIgGAKe8I8uY75hDhrHbJOvJ63g6OtkW1Z+ldhvfeUqH6KiNW
+        kW9/GIw30MoWEJyysiv1Ba+KFVTCZ1Y=
+X-Google-Smtp-Source: APiQypJSVcPPXnyAoedC5yX+WWMGN4ywPaVOJtl4XkvBg5/4nq8rkdQxu+FEOkUBt0hZgxKV9EBlIQ==
+X-Received: by 2002:a2e:9f13:: with SMTP id u19mr10161745ljk.14.1586113565093;
+        Sun, 05 Apr 2020 12:06:05 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id y29sm8804011ljd.26.2020.04.05.12.06.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Apr 2020 12:06:04 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id 19so12296325ljj.7
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 12:06:03 -0700 (PDT)
+X-Received: by 2002:a2e:b4cb:: with SMTP id r11mr10535760ljm.201.1586113563358;
+ Sun, 05 Apr 2020 12:06:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1585898897.1jwur86s6a.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <158609410988.4266.5816311298811487752.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <158609410988.4266.5816311298811487752.tglx@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 5 Apr 2020 12:05:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wix=qQ79=fqgSy8Fc9jenRG8HoUp3VZs=Ek+PGz7d+13g@mail.gmail.com>
+Message-ID: <CAHk-=wix=qQ79=fqgSy8Fc9jenRG8HoUp3VZs=Ek+PGz7d+13g@mail.gmail.com>
+Subject: Re: [GIT pull] irq/urgent for 5.7-rc1
+To:     Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Apr 5, 2020 at 6:43 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Two reverts addressing regressions of the Xilinx interrupt controller
+> driver which affected the PPC users.
 
+Gah.
 
-Le 03/04/2020 à 09:33, Nicholas Piggin a écrit :
-> Christophe Leroy's on April 1, 2020 9:48 pm:
->>
->>
->> Le 31/03/2020 à 17:22, Christophe Leroy a écrit :
->>> That's first try to port PPC64 syscall entry/exit logic in C to PPC32.
->>> I've do the minimum to get it work. I have not reworked calls
->>> to sys_fork() and friends for instance.
->>>
->>> For the time being, it seems to work more or less but:
->>> - ping reports EINVAL on recvfrom
->>> - strace shows NULL instead of strings in call like open() for instance.
->>
->> For the two above problems, that's because system_call_exception()
->> doesn't set orig_gpr3 whereas DoSycall() does in entry_32.S . Is that
->> only done on PPC32 ?
->>
->> With the following line at the begining of system_call_exception(), it
->> works perfectly:
->>
->> 	regs->orig_gpr3 = r3;
-> 
-> Oh great, nice work. We should be able to make some simple helpers or
-> move some things a bit to reduce the amount of ifdefs in the C code.
-> It doesn't look too bad though.
-> 
->> I will now focus on performance to see if we can do something about it.
-> 
-> What's the performance difference between current asm code just with
-> always saving NVGPRS vs C?
+Those reverts don't actually say what was wrong with the commits.
 
-Done new measurement and sent a series. lower values now because the 
-time accounting was done twice as it was still in the ASM part.
+The "breaks a number of PPC platforms" is not actually saying what
+went wrong. Breaks how? Does it stop booting, does it not build, or
+what?
 
-Before the series, 311 cycles for a null_syscall
-If adding SAVE_NVGPRS to the entry macro, 335 cycles
+And the link in it also is entirely useless.
 
-First patch: 353 cycles ie +13,5%
+This link _would_ have been useful:
 
-After a few changes, including conditional saving of non volatile 
-registers, I get 325 cycles that is only +4,5%. I thing that's acceptable.
+  https://lore.kernel.org/linux-next/20200323175946.7ad497ea@canb.auug.org.au/
 
-Do you see a problem with still saving non volatile registers only when 
-required ?
+but that's not what is in the commit messages.
 
-Christophe
+Please write _useful_ commit messages, not this completely worthless noise.
+
+            Linus
