@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21B6C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C24DC2BA17
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CFB206F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290BE206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgDENnJ (ORCPT
+        id S1726882AbgDENnO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 09:43:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42642 "EHLO
+        Sun, 5 Apr 2020 09:43:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42650 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbgDENnJ (ORCPT
+        with ESMTP id S1726830AbgDENnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 09:43:09 -0400
+        Sun, 5 Apr 2020 09:43:14 -0400
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jL5YH-000422-SB; Sun, 05 Apr 2020 15:43:06 +0200
+        id 1jL5YK-00042H-2g; Sun, 05 Apr 2020 15:43:08 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id ABC9A1001FC;
-        Sun,  5 Apr 2020 15:43:04 +0200 (CEST)
-Date:   Sun, 05 Apr 2020 13:41:49 -0000
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2F2AE1001FC;
+        Sun,  5 Apr 2020 15:43:07 +0200 (CEST)
+Date:   Sun, 05 Apr 2020 13:41:52 -0000
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] irq/urgent for 5.7-rc1
-Message-ID: <158609410988.4266.5816311298811487752.tglx@nanos.tec.linutronix.de>
+Subject: [GIT pull] timers/urgent for 5.7-rc1
+References: <158609410988.4266.5816311298811487752.tglx@nanos.tec.linutronix.de>
+Message-ID: <158609411231.4266.16619269103115870160.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
@@ -47,150 +48,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest irq/urgent fixes from:
+please pull the latest timers/urgent branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2020-04-05
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2020-04-05
 
-up to:  a67cd1fb660d: Merge tag 'irqchip-fixes-5.7-1' of git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms into irq/core
+up to:  760a53768610: clocksource/drivers/timer-vf-pit: Add missing parenthesis
 
 
-Two reverts addressing regressions of the Xilinx interrupt controller
-driver which affected the PPC users.
+Two timer subsystem fixes:
+
+    - Prevent a use after free in the new lockdep state tracking for hrtimers
+
+    - Add missing parenthesis in the VF pit timer driver
 
 Thanks,
 
 	tglx
 
 ------------------>
-Marc Zyngier (2):
-      Revert "irqchip/xilinx: Do not call irq_set_default_host()"
-      Revert "irqchip/xilinx: Enable generic irq multi handler"
+Sebastian Andrzej Siewior (1):
+      hrtimer: Don't dereference the hrtimer pointer after the callback
+
+afzal mohammed (1):
+      clocksource/drivers/timer-vf-pit: Add missing parenthesis
 
 
- arch/microblaze/Kconfig           |  2 --
- arch/microblaze/include/asm/irq.h |  3 +++
- arch/microblaze/kernel/irq.c      | 21 ++++++++++++++++++++-
- drivers/irqchip/irq-xilinx-intc.c | 35 +++++++++++++++--------------------
- 4 files changed, 38 insertions(+), 23 deletions(-)
+ drivers/clocksource/timer-vf-pit.c |  2 +-
+ include/linux/irqflags.h           | 27 ++++++++++++++++-----------
+ kernel/time/hrtimer.c              |  5 +++--
+ 3 files changed, 20 insertions(+), 14 deletions(-)
 
-diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-index 242f58ec086b..6a331bd57ea8 100644
---- a/arch/microblaze/Kconfig
-+++ b/arch/microblaze/Kconfig
-@@ -47,8 +47,6 @@ config MICROBLAZE
- 	select CPU_NO_EFFICIENT_FFS
- 	select MMU_GATHER_NO_RANGE if MMU
- 	select SPARSE_IRQ
--	select GENERIC_IRQ_MULTI_HANDLER
--	select HANDLE_DOMAIN_IRQ
+diff --git a/drivers/clocksource/timer-vf-pit.c b/drivers/clocksource/timer-vf-pit.c
+index 7ad4a8b008c2..1a86a4e7e344 100644
+--- a/drivers/clocksource/timer-vf-pit.c
++++ b/drivers/clocksource/timer-vf-pit.c
+@@ -129,7 +129,7 @@ static int __init pit_clockevent_init(unsigned long rate, int irq)
+ 	__raw_writel(PITTFLG_TIF, clkevt_base + PITTFLG);
  
- # Endianness selection
- choice
-diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
-index 5166f0893e2b..eac2fb4b3fb9 100644
---- a/arch/microblaze/include/asm/irq.h
-+++ b/arch/microblaze/include/asm/irq.h
-@@ -14,4 +14,7 @@
- struct pt_regs;
- extern void do_IRQ(struct pt_regs *regs);
+ 	BUG_ON(request_irq(irq, pit_timer_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
+-			   "VF pit timer", &clockevent_pit);
++			   "VF pit timer", &clockevent_pit));
  
-+/* should be defined in each interrupt controller driver */
-+extern unsigned int xintc_get_irq(void);
+ 	clockevent_pit.cpumask = cpumask_of(0);
+ 	clockevent_pit.irq = irq;
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index ceca42de4438..61a9ced3aa50 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -58,16 +58,21 @@ do {						\
+ } while (0)
+ 
+ # define lockdep_hrtimer_enter(__hrtimer)		\
+-	  do {						\
+-		  if (!__hrtimer->is_hard)		\
+-			current->irq_config = 1;	\
+-	  } while (0)
+-
+-# define lockdep_hrtimer_exit(__hrtimer)		\
+-	  do {						\
+-		  if (!__hrtimer->is_hard)		\
++({							\
++	bool __expires_hardirq = true;			\
++							\
++	if (!__hrtimer->is_hard) {			\
++		current->irq_config = 1;		\
++		__expires_hardirq = false;		\
++	}						\
++	__expires_hardirq;				\
++})
 +
- #endif /* _ASM_MICROBLAZE_IRQ_H */
-diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
-index 0b37dde60a1e..903dad822fad 100644
---- a/arch/microblaze/kernel/irq.c
-+++ b/arch/microblaze/kernel/irq.c
-@@ -20,10 +20,29 @@
- #include <linux/irqchip.h>
- #include <linux/of_irq.h>
++# define lockdep_hrtimer_exit(__expires_hardirq)	\
++	do {						\
++		if (!__expires_hardirq)			\
+ 			current->irq_config = 0;	\
+-	  } while (0)
++	} while (0)
  
-+static u32 concurrent_irq;
-+
- void __irq_entry do_IRQ(struct pt_regs *regs)
+ # define lockdep_posixtimer_enter()				\
+ 	  do {							\
+@@ -102,8 +107,8 @@ do {						\
+ # define lockdep_hardirq_exit()		do { } while (0)
+ # define lockdep_softirq_enter()	do { } while (0)
+ # define lockdep_softirq_exit()		do { } while (0)
+-# define lockdep_hrtimer_enter(__hrtimer)		do { } while (0)
+-# define lockdep_hrtimer_exit(__hrtimer)		do { } while (0)
++# define lockdep_hrtimer_enter(__hrtimer)	false
++# define lockdep_hrtimer_exit(__context)	do { } while (0)
+ # define lockdep_posixtimer_enter()		do { } while (0)
+ # define lockdep_posixtimer_exit()		do { } while (0)
+ # define lockdep_irq_work_enter(__work)		do { } while (0)
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index d0a5ba37aff4..d89da1c7e005 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1480,6 +1480,7 @@ static void __run_hrtimer(struct hrtimer_cpu_base *cpu_base,
+ 			  unsigned long flags) __must_hold(&cpu_base->lock)
  {
-+	unsigned int irq;
-+	struct pt_regs *old_regs = set_irq_regs(regs);
- 	trace_hardirqs_off();
--	handle_arch_irq(regs);
-+
-+	irq_enter();
-+	irq = xintc_get_irq();
-+next_irq:
-+	BUG_ON(!irq);
-+	generic_handle_irq(irq);
-+
-+	irq = xintc_get_irq();
-+	if (irq != -1U) {
-+		pr_debug("next irq: %d\n", irq);
-+		++concurrent_irq;
-+		goto next_irq;
-+	}
-+
-+	irq_exit();
-+	set_irq_regs(old_regs);
- 	trace_hardirqs_on();
- }
+ 	enum hrtimer_restart (*fn)(struct hrtimer *);
++	bool expires_in_hardirq;
+ 	int restart;
  
-diff --git a/drivers/irqchip/irq-xilinx-intc.c b/drivers/irqchip/irq-xilinx-intc.c
-index 7f811fe5bf69..1d3d273309bd 100644
---- a/drivers/irqchip/irq-xilinx-intc.c
-+++ b/drivers/irqchip/irq-xilinx-intc.c
-@@ -124,6 +124,20 @@ static unsigned int xintc_get_irq_local(struct xintc_irq_chip *irqc)
- 	return irq;
- }
+ 	lockdep_assert_held(&cpu_base->lock);
+@@ -1514,11 +1515,11 @@ static void __run_hrtimer(struct hrtimer_cpu_base *cpu_base,
+ 	 */
+ 	raw_spin_unlock_irqrestore(&cpu_base->lock, flags);
+ 	trace_hrtimer_expire_entry(timer, now);
+-	lockdep_hrtimer_enter(timer);
++	expires_in_hardirq = lockdep_hrtimer_enter(timer);
  
-+unsigned int xintc_get_irq(void)
-+{
-+	unsigned int irq = -1;
-+	u32 hwirq;
-+
-+	hwirq = xintc_read(primary_intc, IVR);
-+	if (hwirq != -1U)
-+		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
-+
-+	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
-+
-+	return irq;
-+}
-+
- static int xintc_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hw)
- {
- 	struct xintc_irq_chip *irqc = d->host_data;
-@@ -163,25 +177,6 @@ static void xil_intc_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
+ 	restart = fn(timer);
  
--static void xil_intc_handle_irq(struct pt_regs *regs)
--{
--	u32 hwirq;
--	struct xintc_irq_chip *irqc = primary_intc;
--
--	do {
--		hwirq = xintc_read(irqc, IVR);
--		if (likely(hwirq != -1U)) {
--			int ret;
--
--			ret = handle_domain_irq(irqc->root_domain, hwirq, regs);
--			WARN_ONCE(ret, "Unhandled HWIRQ %d\n", hwirq);
--			continue;
--		}
--
--		break;
--	} while (1);
--}
--
- static int __init xilinx_intc_of_init(struct device_node *intc,
- 					     struct device_node *parent)
- {
-@@ -250,7 +245,7 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
- 		}
- 	} else {
- 		primary_intc = irqc;
--		set_handle_irq(xil_intc_handle_irq);
-+		irq_set_default_host(primary_intc->root_domain);
- 	}
+-	lockdep_hrtimer_exit(timer);
++	lockdep_hrtimer_exit(expires_in_hardirq);
+ 	trace_hrtimer_expire_exit(timer);
+ 	raw_spin_lock_irq(&cpu_base->lock);
  
- 	return 0;
 
