@@ -2,188 +2,123 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B5FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0268AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B338206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB43B20753
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:57:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QA76mSat"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ad5a9Zda";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="14dqTf2+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgDEGvs (ORCPT
+        id S1726407AbgDEG5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 02:51:48 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50725 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbgDEGvs (ORCPT
+        Sun, 5 Apr 2020 02:57:16 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:51675 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726236AbgDEG5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 02:51:48 -0400
-Received: by mail-pj1-f67.google.com with SMTP id v13so5089369pjb.0
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 23:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=TGy9rnxZk9+7y7aCTCI01iy1QvV1657xHryoXzYxu+w=;
-        b=QA76mSat7GkAycz9Ix+QUyd+J9fKzqc/h5WIAYN1rHB/m9fsk4aL0+Ls2u8RkVKaPV
-         zF/dg9pfZm3Rbwe0v9hn2baF768y2hk7a69JUJqtagpLreDXirQyxZXvyBIe7bXEeDVc
-         fw6yX6G2Z8fUTsCZiPTQ9kSX6pYb3FSvM9kAsEP/3P38ya/98AuRlk0l9ChaBUh/7m7j
-         F6Tx8A9k9J+QnSndiXGhBw+YqNoSZOGSVzrp6N2jBz12xu4bw9YyLa3BBh+RBPPcAzog
-         77Kh2moc+T3yLKb3zXVpEBKIteYcftCn2P7wo5xtO4GH7aRmpRK2JlQivQnYDcWq+O+F
-         5e6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=TGy9rnxZk9+7y7aCTCI01iy1QvV1657xHryoXzYxu+w=;
-        b=iXgW03brEZ4fgLZva7f2+FkrxPX4rER5w5R4SfGol7BNe48M9JcoYlDsYDkN4WqbDS
-         DQYDFJigTmq3/HI/jWT6pZYUxOYU/Rp+cuyDQWG6BPi/u8buwz45h2KUoyYKusnNHa3M
-         8Na5tZ+kRU85i7eHw6hZIvbp2oeFr45bSZh9j+jMJ6tiTDRQKLQC15mqxtPElD0SuV++
-         liErUL+pl9o05w0SyGSvOvQtP1G19QoIPqunRImMhijZXCXYOsfkQV2yOOxuAcyqkNP/
-         OJulBpufPlw1SUpHBHI0X/Io3jUePM9FQtR6xaKaJ1GTIKwz0UxKJVRaoOqin1KlmGS2
-         IoHw==
-X-Gm-Message-State: AGi0PuZBHM1YutmWre83+jm53r6cNKRoHRNqqeJFB8eS26G8pjD23p+M
-        TWaWf/S1LDGtJ2DGJZUJQNGz
-X-Google-Smtp-Source: APiQypKhtqT6m4dUjC/jKfp/a1KE2PyeMsGxvd4RbU9eb/JrQOMjCpNyqmpFkHp9h9iWB4Q5RqSoWA==
-X-Received: by 2002:a17:902:342:: with SMTP id 60mr15873346pld.29.1586069505517;
-        Sat, 04 Apr 2020 23:51:45 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6e83:b2ab:75aa:fbdc:e9da:9d96])
-        by smtp.gmail.com with ESMTPSA id h198sm8842662pfe.76.2020.04.04.23.51.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Apr 2020 23:51:44 -0700 (PDT)
-Date:   Sun, 5 Apr 2020 12:21:37 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     afaerber@suse.de, mark.rutland@arm.com, robh+dt@kernel.org,
-        edgar.righi@lsitec.org.br, igor.lima@lsitec.org.br,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-Subject: Re: [PATCH v3 3/3] ARM: dts: Add Caninos Loucos Labrador
-Message-ID: <20200405065137.GC8912@Mani-XPS-13-9360>
-References: <20200229104358.GB19610@mani>
- <20200320035104.26139-1-matheus@castello.eng.br>
- <20200320035104.26139-4-matheus@castello.eng.br>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200320035104.26139-4-matheus@castello.eng.br>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sun, 5 Apr 2020 02:57:16 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6E09B5C0004;
+        Sun,  5 Apr 2020 02:57:15 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Sun, 05 Apr 2020 02:57:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=A9dbn5+Kyg5hHH3Cxnfh6Nqgtjiyajy
+        p0XRJXLne8is=; b=ad5a9Zda845H8koTB0ERR7JZxprs0GdpMrwpRMZ7fZWSnYI
+        7eL/bbCcC+dym83H2P2dMsjdkNQXWhpiH56vVsuP0kuaR/JgLwRTXKOOSww4Zbad
+        xvqqV2oxA9ChQ+ljCKM/YmubHRPvb/ST9VNqC9zQfqHn1YgTMzUcuCdHFdPEkxph
+        /gYZ71NE6Cupf59BzfE2aWpGRRAswj2whckDWzral6e+f0P8t1V9xzUZrhdNPXKT
+        buYxT9RhPUsQKJ38t8yy7nu240JigMpJNxh8QpHgpMHtl//2gqX7uP9zVBpopcHA
+        Ik9ySMGJRLydoSeJ78IiVopBvdt4OV9Qm9uuc+Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=A9dbn5
+        +Kyg5hHH3Cxnfh6Nqgtjiyajyp0XRJXLne8is=; b=14dqTf2+KbmRafna3KiVl5
+        zzDeN6LUsvzS4hfOmtaXgtf3n0fvyXYWVEpRQ7MrszpbM606GKp6iFMH3gIUzfIy
+        GkhSszW5H835rdIlDy3GylDdSP6ZHj6RHxuc/oH8oRlJhq6uuRvjBnRF1BdesFCP
+        dBBvhzCCC6VkXw3TAgLjp7UOe16IQVo0vDDXePVUqiwcO2sbYN0WYqyxGrqzdEOp
+        vpmZHJXP8cq7wHz+gvH59U6o2dIb3gdzNNjlDujJHAnwhQUptOBT2mwbv5rtwR9J
+        3wIyAd9MLwYlxKg1s6mAmB5J8w/h3BoaAyF92MokFwXnHeUNa5v75/cw5L1FjUjA
+        ==
+X-ME-Sender: <xms:SoGJXqpQUeZqjkl-xACUmUBAr2Vg8rQ1sNxBJEcB3iSj0LoIAFcJtA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddtgddukecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghj
+    rdhiugdrrghu
+X-ME-Proxy: <xmx:SoGJXmgapWBt5Kf8rTkhp7r7bng-kjXQJRPw8G_rQEHZucHN3053Ow>
+    <xmx:SoGJXoQiu6-9X_IgIbrVyp44d7z0rPw7jBSKJybq0rxbRDjSiczVJw>
+    <xmx:SoGJXrKncthCYLZnHnddBt0_ovDAKwKHuOnHh_0MYhGT2fqZrEsSCw>
+    <xmx:S4GJXiDZcqzwHGsOLHY60trRX9O_SJfagylrGPdMsXJRAMhB56CsyA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 62711E00B1; Sun,  5 Apr 2020 02:57:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-1082-g13d7805-fmstable-20200403v1
+Mime-Version: 1.0
+Message-Id: <73c7b292-fa99-4809-a0fa-b3605f35aff4@www.fastmail.com>
+In-Reply-To: <d1fe0157-8a4b-f0f5-f0e4-443d6f4e3e4a@linux.ibm.com>
+References: <20200402194955.16643-1-eajames@linux.ibm.com>
+ <8ca08ea0-2f3e-4b44-a595-bfe96ca02b3f@www.fastmail.com>
+ <d1fe0157-8a4b-f0f5-f0e4-443d6f4e3e4a@linux.ibm.com>
+Date:   Sun, 05 Apr 2020 16:27:35 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Eddie James" <eajames@linux.ibm.com>,
+        linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        "Rob Herring" <robh+dt@kernel.org>, "Joel Stanley" <joel@jms.id.au>
+Subject: Re: [PATCH v7 0/5] soc: aspeed: Add XDMA engine driver
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 12:51:04AM -0300, Matheus Castello wrote:
-> Add Device Trees for Caninos Loucos Labrador CoM and base board.
-> Based on the work of Andreas Färber on Lemaker Guitar device tree.
+
+
+On Sat, 4 Apr 2020, at 01:22, Eddie James wrote:
 > 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Will queue the series for v5.8 once Andreas is happy with it.
-
-Nit: Please keep linux-actions@lists.infradead.org in CC for all future
-patches/replies.
-
-Thanks,
-Mani
-
-> ---
->  arch/arm/boot/dts/Makefile                  |  1 +
->  arch/arm/boot/dts/owl-s500-labrador-bb.dts  | 34 +++++++++++++++++++++
->  arch/arm/boot/dts/owl-s500-labrador-v2.dtsi | 21 +++++++++++++
->  3 files changed, 56 insertions(+)
->  create mode 100644 arch/arm/boot/dts/owl-s500-labrador-bb.dts
->  create mode 100644 arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
+> On 4/2/20 7:32 PM, Andrew Jeffery wrote:
+> >
+> > On Fri, 3 Apr 2020, at 06:19, Eddie James wrote:
+> >> This series adds a driver to control the Aspeed XDMA engine embedded in the
+> >> AST2500 and AST2600. The XDMA engine performs automatic DMA operations
+> >> over PCI-E between the Aspeed SOC (acting as a BMC) and a host processor.
+> >>
+> >> Changes since v6:
+> >>   - See individual patches
+> > v7 is not an evolution on v6 - v7 contains a bunch of bugs that v6 fixed (at least
+> > wrt locking). How did you generate this series?
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index d6546d2676b9..99f633460833 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -842,6 +842,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
->  dtb-$(CONFIG_ARCH_ACTIONS) += \
->  	owl-s500-cubieboard6.dtb \
->  	owl-s500-guitar-bb-rev-b.dtb \
-> +	owl-s500-labrador-bb.dtb \
->  	owl-s500-sparky.dtb
->  dtb-$(CONFIG_ARCH_PRIMA2) += \
->  	prima2-evb.dtb
-> diff --git a/arch/arm/boot/dts/owl-s500-labrador-bb.dts b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
-> new file mode 100644
-> index 000000000000..91012b4a4c30
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/owl-s500-labrador-bb.dts
-> @@ -0,0 +1,34 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Caninos Labrador Base Board
-> + *
-> + * Copyright (c) 2019-2020 Matheus Castello
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "owl-s500-labrador-v2.dtsi"
-> +
-> +/ {
-> +	compatible = "caninos,labrador-bb", "caninos,labrador", "actions,s500";
-> +	model = "Caninos Labrador Base Board M v1.0";
-> +
-> +	aliases {
-> +		serial3 = &uart3;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial3:115200n8";
-> +	};
-> +
-> +	uart3_clk: uart3-clk {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <921600>;
-> +		#clock-cells = <0>;
-> +	};
-> +};
-> +
-> +&uart3 {
-> +	status = "okay";
-> +	clocks = <&uart3_clk>;
-> +};
-> diff --git a/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-> new file mode 100644
-> index 000000000000..0b54f1ef3ec0
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/owl-s500-labrador-v2.dtsi
-> @@ -0,0 +1,21 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Caninos Labrador CoM V2
-> + *
-> + * Copyright (c) 2019-2020 Matheus Castello
-> + */
-> +
-> +#include "owl-s500.dtsi"
-> +
-> +/ {
-> +	compatible = "caninos,labrador", "actions,s500";
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000>;
-> +	};
-> +};
-> +
-> +&timer {
-> +	clocks = <&hosc>;
-> +};
-> --
-> 2.25.0
 > 
+> My goodness, I could have sworn that was v6. I took the series that was 
+> merged in the openbmc kernel. Must have gotten mixed up. -_-
+
+No worries, hopefully v8 is in the right state :)
+
+> 
+> 
+> >
+> > Also my name is misspelled in each of the Reviewed-by: tags which makes me
+> > think that something has gone quite wrong with the posting of v7, and I'm
+> > concerned that this was based on e.g. v5 but with my tags against v6 applied.
+> 
+> 
+> Well thats because I added them manually since they had "disappeared" or 
+> so I thought from v6 during the application to openbmc... guess that 
+> should have been a warning sign
+
+It certainly was for me!
+
+Cheers,
+
+Andrew
