@@ -2,119 +2,99 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74559C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5C5C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46E9D20675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58B520675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="eW2k5TeS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="toTm0ALb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDELYL (ORCPT
+        id S1726647AbgDELYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 07:24:11 -0400
-Received: from vps.xff.cz ([195.181.215.36]:37452 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgDELYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 07:24:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1586085849; bh=QY9Q7XhPkDOAvJvjFhI09s7uaGOfN/GI8egEfmyZajg=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=eW2k5TeS8ZTpaYYemfbZP+CQujIJUdxTTMBMfsdm58FNEmhftEgEqRJqr0nWSSO+z
-         apZfhPIxZEVNsgdEgbVZIPUfRwvtgy9dNdH9HdavAbgnPesVTrAM/8g+GKrTjbF+L2
-         3+YcWOpPNMIZQ1eDXEIX5+flxI9N0TT29MajBtgU=
-Date:   Sun, 5 Apr 2020 13:24:09 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Sun, 5 Apr 2020 07:24:14 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50670 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgDELYN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 07:24:13 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x25so659750wmc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 04:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+SXrfjedrBYDlYytIqTbgN8ZqV8Q1N0fqqOl62QOS4Y=;
+        b=toTm0ALbeEoKhLTH3MjSXrfmu+PMNqosEk7uOGmgAQstwGDY6LJpSZmpNrEiyyYSkL
+         YGs+3evi0ON75+9vuRhTdbQvpUp8pxv2ENfg3X4V0oJg8VIweg52W3InQPMEG8e0I45o
+         bA9zzI+cRL8+NGJVL41uO2oDM6+eTWp/UamDGDMp93VH4nMnk52cYX6QdIlQmqdkyKjb
+         qoaHmdPb/D1vl6IgENO3LV/qxgTyaxZhWTwp50wcxGDwqRMPB8YW9Xecw36CUpOhff+s
+         HGujmeHaDp9I7McqLyUgy6wupcCFhqfkOuFRftV6efAEypwP5pYOzXMceG0BZ13g7gvY
+         mTtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+SXrfjedrBYDlYytIqTbgN8ZqV8Q1N0fqqOl62QOS4Y=;
+        b=nyTdTtf1uVBZqaH47h6mtwPOEEBKClUlpNV/TO5San6j8IkcQOPZt+k5m8qaotlPaf
+         DahvwhR/Dcnj7NKUmGHk02SKR0Ex1B25NRZBLU16j0ovkzTW7NT7Q5+XqBBxyqDX+O10
+         hzipV8arBzUpJLv9t0rM07uL4KtNWFDPrlYIos4z/36N9xJ3DQ6Ndl2GhYtSEDhbrKeW
+         cb24swZTIOcoKJjcurzyvIjaQNdNK3tjatr+UBRWBcIXAO0dsp51JVqrYLl0ilwskorn
+         caA6J2orgsXR7/CcXWDAQYwnEKUJfG77fjxyJUCh5T31eB/Vg1O6sL9V/6lKIE/TsHlh
+         ZH4g==
+X-Gm-Message-State: AGi0PubHVAYhtCrkZ+/9cZrBWrgBWlRtJG0PnH7fdGwaRyf8pLBFs/Cw
+        s+XNl764A7anU8vU4RysenI=
+X-Google-Smtp-Source: APiQypK6AC/PctIX6tMyVU4FpT2zQjW+xLA6DSL/lKKxnGpzVZz8EIZ8mONdHmfyV5warNb46JCNFQ==
+X-Received: by 2002:a05:600c:2106:: with SMTP id u6mr18681932wml.161.1586085852274;
+        Sun, 05 Apr 2020 04:24:12 -0700 (PDT)
+Received: from localhost.localdomain (dslb-002-204-143-158.002.204.pools.vodafone-ip.de. [2.204.143.158])
+        by smtp.gmail.com with ESMTPSA id b15sm20365012wru.70.2020.04.05.04.24.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 04:24:11 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [linux-sunxi] [PATCH 3/7] arm64: dts: allwinner: h6: set thermal
- polling time
-Message-ID: <20200405112409.gl6kn7cjakwludf6@core.my.home>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-References: <20200405104913.22806-1-peron.clem@gmail.com>
- <20200405104913.22806-4-peron.clem@gmail.com>
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 1/2] staging: rtl8188eu: remove unnecessary asignment
+Date:   Sun,  5 Apr 2020 13:22:29 +0200
+Message-Id: <20200405112230.31975-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200405104913.22806-4-peron.clem@gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Remove unnecessary asignment in SwLedBlink1(). The code path with the
+asignment 'pLed->BlinkTimes = 0' is only executed when
+'pLed->BlinkTimes' is already zero and the value is not changed between
+the test 'if (pLed->BlinkTimes == 0)' and the asignment.
 
-On Sun, Apr 05, 2020 at 12:49:09PM +0200, Clément Péron wrote:
-> Add reasonable thermal polling time for Allwinner H6.
-> 
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index d4d3963705f5..c3e4f09f60ce 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -905,8 +905,8 @@
->  
->  	thermal-zones {
->  		cpu-thermal {
-> -			polling-delay-passive = <0>;
-> -			polling-delay = <0>;
-> +			polling-delay-passive = <100>;
-> +			polling-delay = <1000>;
->  			thermal-sensors = <&ths 0>;
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_led.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-This is not necessary, and will not do anything useful, since the driver
-uses interrupts to update the thermal zone's temperature. Please keep the
-values at 0.
+diff --git a/drivers/staging/rtl8188eu/core/rtw_led.c b/drivers/staging/rtl8188eu/core/rtw_led.c
+index d1406cc99768..91b0029d1179 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_led.c
++++ b/drivers/staging/rtl8188eu/core/rtw_led.c
+@@ -188,7 +188,6 @@ static void SwLedBlink1(struct LED_871x *pLed)
+ 					  msecs_to_jiffies(LED_BLINK_NO_LINK_INTERVAL_ALPHA));
+ 				RT_TRACE(_module_rtl8712_led_c_, _drv_info_, ("CurrLedState %d\n", pLed->CurrLedState));
+ 			}
+-			pLed->BlinkTimes = 0;
+ 			pLed->bLedBlinkInProgress = false;
+ 		} else {
+ 			if (pLed->bLedOn)
+-- 
+2.26.0
 
-With your settings the thermal zone would just add a polling timer in addition
-to being updated every 250ms via THS interrupt. The real thermal measurements
-are available every 250ms anyway, so setting a smaller period here will not do
-anything useful, and 1s period will not lead to slower updates either.
-
-Values of 0 mean tell the thermal zone to rely on thermal driver to update
-the thermal zone by itself (via interrupt) and to not poll.
-
-regards,
-	o.
-
->  			trips {
-> @@ -935,8 +935,8 @@
->  		};
->  
->  		gpu-thermal {
-> -			polling-delay-passive = <0>;
-> -			polling-delay = <0>;
-> +			polling-delay-passive = <100>;
-> +			polling-delay = <1000>;
->  			thermal-sensors = <&ths 1>;
->  		};
->  	};
-> -- 
-> 2.20.1
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200405104913.22806-4-peron.clem%40gmail.com.
