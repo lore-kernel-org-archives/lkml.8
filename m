@@ -2,95 +2,98 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1452C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D7FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A955A2072F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F673206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:51:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="psSUHWRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbgDEHcW (ORCPT
+        id S1726408AbgDEHvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 03:32:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42496 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbgDEHcV (ORCPT
+        Sun, 5 Apr 2020 03:51:33 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51536 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbgDEHvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 03:32:21 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jKzlP-0001xP-FA; Sun, 05 Apr 2020 09:32:15 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 529E11C01BB;
-        Sun,  5 Apr 2020 09:32:14 +0200 (CEST)
-Date:   Sun, 05 Apr 2020 07:32:13 -0000
-From:   "tip-bot2 for afzal mohammed" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] clocksource/drivers/timer-vf-pit: Add missing
- parenthesis
-Cc:     kbuild test robot <lkp@intel.com>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200323061130.GA6286@afzalpc>
-References: <20200323061130.GA6286@afzalpc>
-MIME-Version: 1.0
-Message-ID: <158607193357.28353.3365476438962871660.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sun, 5 Apr 2020 03:51:32 -0400
+Received: by mail-pj1-f65.google.com with SMTP id w9so5123083pjh.1
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 00:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=fXHW1b6fO1FXiuIvfxLCGqRbJU/6omAN7vseOtHgP2o=;
+        b=psSUHWRluSuqiIOUXhePdO1uO71WyIsrMBA8Bwpc1s1/RHSbWS9NGikzTh9SWUQ4lB
+         vKbwIyi85w0j1k5NIMcV9Evw65Jjf5JSXV1lGJfVPqMTnbF7Cor/MSocRiCc7MFvIQgR
+         Wrb89k6Sw3LROe5XzNSM5KBgv4X77DaRxPY+At9qMWjUZ1/dmsGZKDLf/hPQBLanE4X/
+         scYLCRz7i8S2l9bGdRRSJyWo8xCaZMe8pNUCktkTErivMoBAIH8I6JpoZ5t7a9ki9/GE
+         l0Dv1gx0PXHgwDuWdq7IG+wYS/i5MUSGa5Gsgq81JocvMw++a5H2Tj8IWmL60DyBV2QF
+         cbEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=fXHW1b6fO1FXiuIvfxLCGqRbJU/6omAN7vseOtHgP2o=;
+        b=fGcpdRnLrLI61QxgZOmkq3hC+t+iIvZzrl1B+g2maNYyhtdy/o24/OvfVlvJVDhwxM
+         H7MqCQ+GKW6aBd/mynSdogRmDeaKasf2BuLlMeNOdfsXLUProJCjXvevFoS5welicDPm
+         58YWEs5P2DCL8wXpYU9StF6X1BmzfCRTqKbjC6cOZd4kuHQQL+qhX9GSv7cx2B7Voh/K
+         Aj8TFLt6ii6g70GXdGKirCpX3e/l2oia1cCOWsu9ueo1Aoviohht+mbY/7D5I9Sbecws
+         Wi1yQWztUIjQM1thq62crXAqchWRW+XvnzeILY5I+Yx1SR3W9Obiw2Mw/bFJdtw1SdqH
+         /Ybw==
+X-Gm-Message-State: AGi0PubLPQAphZRPd2WcauvtfNRXvWVBvbWT+Fdhdix6cnvZjy019rd1
+        1+y2On7KdMQjr5+ejv97tn4=
+X-Google-Smtp-Source: APiQypJiJTlVByPufukl1A/Ta9MCm98+QEENycaUO/SHTl0iIBzlmJGdGPiwPVcwtddpuhVs9zZfpw==
+X-Received: by 2002:a17:90a:faa:: with SMTP id 39mr20560705pjz.190.1586073091494;
+        Sun, 05 Apr 2020 00:51:31 -0700 (PDT)
+Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
+        by smtp.gmail.com with ESMTPSA id p7sm9510970pjp.1.2020.04.05.00.51.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 05 Apr 2020 00:51:30 -0700 (PDT)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.a,
+        tglx@linutronix.de
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] powerpc/powernv: add NULL check after kzalloc in opal_add_one_export
+Date:   Sun,  5 Apr 2020 15:51:23 +0800
+Message-Id: <20200405075123.28756-1-hqjagain@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+Here needs a NULL check.
 
-Commit-ID:     760a53768610d427990192b5cfdb71310e1373db
-Gitweb:        https://git.kernel.org/tip/760a53768610d427990192b5cfdb71310e1373db
-Author:        afzal mohammed <afzal.mohd.ma@gmail.com>
-AuthorDate:    Mon, 23 Mar 2020 11:41:30 +05:30
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sun, 05 Apr 2020 09:24:58 +02:00
+Issue found by coccinelle.
 
-clocksource/drivers/timer-vf-pit: Add missing parenthesis
-
-Recently all usage of setup_irq() was replaced by request_irq(). The
-replacement in timer-vf-pit.c missed closing parentheses resulting in a build
-error (vf610m4_defconfig). Fix it.
-
-Fixes: cc2550b421aa ("clocksource: Replace setup_irq() by request_irq()")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200323061130.GA6286@afzalpc
-
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
 ---
- drivers/clocksource/timer-vf-pit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/powernv/opal.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/clocksource/timer-vf-pit.c b/drivers/clocksource/timer-vf-pit.c
-index 7ad4a8b..1a86a4e 100644
---- a/drivers/clocksource/timer-vf-pit.c
-+++ b/drivers/clocksource/timer-vf-pit.c
-@@ -129,7 +129,7 @@ static int __init pit_clockevent_init(unsigned long rate, int irq)
- 	__raw_writel(PITTFLG_TIF, clkevt_base + PITTFLG);
+diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
+index 2b3dfd0b6cdd..09443ae3a86e 100644
+--- a/arch/powerpc/platforms/powernv/opal.c
++++ b/arch/powerpc/platforms/powernv/opal.c
+@@ -811,6 +811,11 @@ static int opal_add_one_export(struct kobject *parent, const char *export_name,
+ 		goto out;
  
- 	BUG_ON(request_irq(irq, pit_timer_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
--			   "VF pit timer", &clockevent_pit);
-+			   "VF pit timer", &clockevent_pit));
- 
- 	clockevent_pit.cpumask = cpumask_of(0);
- 	clockevent_pit.irq = irq;
+ 	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
++	if (!attr) {
++		rc = -ENOMEM;
++		goto out;
++	}
++
+ 	name = kstrdup(export_name, GFP_KERNEL);
+ 	if (!name) {
+ 		rc = -ENOMEM;
+-- 
+2.17.1
+
