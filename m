@@ -2,95 +2,102 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0F6C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CC7C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46BD20675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF4D2054F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:14:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asQpikoM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GbrH2OrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgDEJKr (ORCPT
+        id S1726474AbgDEJOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 05:10:47 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38153 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgDEJKr (ORCPT
+        Sun, 5 Apr 2020 05:14:45 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:62300 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726308AbgDEJOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 05:10:47 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w3so4686920plz.5;
-        Sun, 05 Apr 2020 02:10:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=mnpDuNSJf4idjQMWn0+0VKn4i4vrRg7dKql4TPPMlww=;
-        b=asQpikoMB82WzIe7GCp4O0VKa70l4WeL+s/v9JvBYQaJWfpC4mJWFGdAEXW7zu6igJ
-         mD6Os/OfXnCRrVHiNtnfLuS9Dykz6Z9rHgNa8hl/PyErwapnwyGDHcNGXS2bJICl4LS8
-         7lTu/QMA7LIatT2XBk04vAcCndyCfSodER7nvq2idhslZskq0q4nncpthYcIELGDxlvd
-         hxI+FP74xm4xnRLGnk0c6r9TmbmnJkeyRl8Ui8isozExNmjl62+ft9fonIFdqK8yWldH
-         gbu6kUlxoLHGozZLjsMiz/GuMKHkKvX1f6xqzTzVSRTxArhOotCBq2ACE7aNK00wxL6L
-         3j6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mnpDuNSJf4idjQMWn0+0VKn4i4vrRg7dKql4TPPMlww=;
-        b=kINcCz3UcQgV6QK089x7+dH3xKvm+sCJ3WBBns426SDpaYXfSlrs0rRtmeaOLvr93Z
-         b8ZyAQXVAsL6r1lEfeCNSUvnlwAdhcVzA358Z+K82a0Ug8cxibG+uoXouHLpMB/a6Aig
-         SnC2uLYpOWAw86323IPOzozM0cLE9prBbpnevYdDEGIMgZ7+dZubSf8lMLdfF+4ScepM
-         XOhffQKqBcgOMVjwurbnbwsj6YP0sTaruJHb6MswYLTIUkxH8I4Cy82slO0eXxia1xIx
-         0XLvqX/xu/tZURTeJMx+hAI7BgYv62ubv2cdfl/TdENoaESdllHfLQuCjq+Q8JyzFNB6
-         RDqw==
-X-Gm-Message-State: AGi0PuY/CQWlqfzG36NJkX+hC9eBMLkiYnHieCleUw4nzzIUD1yIlWh5
-        mbBrB2/onLX2zJZPqIij3n4=
-X-Google-Smtp-Source: APiQypLWzVuUDtIGQ8G2eOA23S2vzFYjQ4vp/WxwKYnPXILzs4mehmugr4FB+E2gNti3ySSEdBZvtQ==
-X-Received: by 2002:a17:902:ee53:: with SMTP id 19mr15486190plo.173.1586077844496;
-        Sun, 05 Apr 2020 02:10:44 -0700 (PDT)
-Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
-        by smtp.gmail.com with ESMTPSA id t27sm411518pgn.53.2020.04.05.02.10.43
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 Apr 2020 02:10:44 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     paulus@ozlabs.org, benh@kernel.crashing.org, mpe@ellerman.id.au
-Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] KVM: PPC: Book3S HV: Remove NULL check before kfree
-Date:   Sun,  5 Apr 2020 17:10:38 +0800
-Message-Id: <20200405091038.29822-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 5 Apr 2020 05:14:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586078084; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=6/9MibweBRdexKNq6gs4nfntQ4hl08uFrMqjxWvBPlM=; b=GbrH2OrBe5qxu9dN3zBhvArSYuvWWlYOr3YqMeypOFbwVtY91BDQH+56n+45TH//6ASAhy+Z
+ e3EnaGq5zYtlrgQcbdoz7ehbBtvNnhBOea1jgVnM8idLeFlj3liR9a4qexrrueZCmDHcA8F8
+ qQKOvQNsW6n9NLyzEr7VaLuNnK4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e89a179.7f1fa20ed2d0-smtp-out-n05;
+ Sun, 05 Apr 2020 09:14:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1A7E1C433D2; Sun,  5 Apr 2020 09:14:33 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 79925C433D2;
+        Sun,  5 Apr 2020 09:14:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 79925C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Luca Coelho <luca@coelho.fi>
+Cc:     Chris Rorvick <chris@rorvick.com>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] iwlwifi: actually check allocated conf_tlv pointer
+References: <20200402050219.4842-1-chris@rorvick.com>
+        <87mu7qfhiy.fsf@codeaurora.org>
+        <e43fb61905bcc31f93d6e72e5c470ad5585b6dfd.camel@coelho.fi>
+Date:   Sun, 05 Apr 2020 12:13:55 +0300
+In-Reply-To: <e43fb61905bcc31f93d6e72e5c470ad5585b6dfd.camel@coelho.fi> (Luca
+        Coelho's message of "Sun, 05 Apr 2020 11:51:53 +0300")
+Message-ID: <87zhbqz44s.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NULL check before kfree is unnecessary, so remove it.
+Luca Coelho <luca@coelho.fi> writes:
 
-This issue was detected by using the Coccinelle software.
+> On Sun, 2020-04-05 at 11:44 +0300, Kalle Valo wrote:
+>> Chris Rorvick <chris@rorvick.com> writes:
+>> 
+>> > Commit 71bc0334a637 ("iwlwifi: check allocated pointer when allocating
+>> > conf_tlvs") attempted to fix a typoe introduced by commit 17b809c9b22e
+>> > ("iwlwifi: dbg: move debug data to a struct") but does not implement the
+>> > check correctly.
+>> > 
+>> > Tweeted-by: @grsecurity
+>> > Signed-off-by: Chris Rorvick <chris@rorvick.com>
+>> 
+>> I'll add:
+>> 
+>> Fixes: 71bc0334a637 ("iwlwifi: check allocated pointer when allocating conf_tlvs")
+>> 
+>> > ---
+>> > In this wasn't picked up?
+>> 
+>> Luca, can I take this directly?
+>
+> Yes, please take it directly.
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- arch/powerpc/kvm/book3s_hv_nested.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Ok, assigned it to me in patchwork.
 
-diff --git a/arch/powerpc/kvm/book3s_hv_nested.c b/arch/powerpc/kvm/book3s_hv_nested.c
-index dc97e5be76f6..cad324312040 100644
---- a/arch/powerpc/kvm/book3s_hv_nested.c
-+++ b/arch/powerpc/kvm/book3s_hv_nested.c
-@@ -1416,8 +1416,7 @@ static long int __kvmhv_nested_page_fault(struct kvm_run *run,
- 	rmapp = &memslot->arch.rmap[gfn - memslot->base_gfn];
- 	ret = kvmppc_create_pte(kvm, gp->shadow_pgtable, pte, n_gpa, level,
- 				mmu_seq, gp->shadow_lpid, rmapp, &n_rmap);
--	if (n_rmap)
--		kfree(n_rmap);
-+	kfree(n_rmap);
- 	if (ret == -EAGAIN)
- 		ret = RESUME_GUEST;	/* Let the guest try again */
- 
+> This can happen in OOM situations and, when it does, we will
+> potentially try to dereference a NULL pointer.
+
+I'll add this to the commit log.
+
 -- 
-2.17.1
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
