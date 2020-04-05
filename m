@@ -2,142 +2,184 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C59C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0960C2BA17
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9048E20644
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:06:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCOf9EUt"
+	by mail.kernel.org (Postfix) with ESMTP id 9D42B206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:12:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586103134;
+	bh=mtSXkX7OOB0aOyV/m8pkSsqMvTiDnQoPwSOoeeK5Mfc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=UdwXeKBUTzc6FMDb7LAjkI0y+MfBxDdRcMyrkMwkK4OkhtWrW2h2WvPfsIFKEe8+5
+	 1W0i2b3i+9cqOKverSHxMwpxZB+TC8UsSBWgCHcvq4DNsm4S9kGGvHBRxQ98aoGHsh
+	 p4k0dvUeruOfNvbh66yvDPBS+OThE8R20suOZQGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbgDEQGc (ORCPT
+        id S1727208AbgDEQMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 12:06:32 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40091 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgDEQGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 12:06:32 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c5so462369pgi.7
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 09:06:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=SFjucbzNPzTJ25Tv8/pjykzoFBgwlF+DGdtgH9cJ+GQ=;
-        b=KCOf9EUtnFOz+27goqRb0WuMUh997qLmiCQ7z609iFOB6qVLfTp081v8eadpHMfXr/
-         MpJtADlGciRxo70TahBgYABeeoI5Z0oJIs5MNpgopbQe+COr1PuB+S2hqgjju0twBRr2
-         zarTAK6vJegw1Vf97ZdU5LRreP5FJxMpT967KkaWzTTAICdzUsdwFGCoczzfW3Rj560b
-         dggq0n/esaS5TE2sWBhPUVcH4eZPxhGvXvL16hP7EroDcpGodcLV7ukCwLSC7YkkJQxH
-         voYjBSNx82GCC5xZ9vrpdTYOCIzDPDBAiBdPldcbLkT09rw0ACCvYIriy+fDLrQDK+8D
-         l5ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SFjucbzNPzTJ25Tv8/pjykzoFBgwlF+DGdtgH9cJ+GQ=;
-        b=MsjLbCa+dnYSJwT1jrRAJOGkEjbUS7F6zD4+tll0wsmpj2EvzZ4q1Ap59jzCTk5oZb
-         3HGYxcfd/NINe/nZT47YWVCnRjAXaN5PSGlROIA5cP1fDPLM5NYOpAuxCSZjTU6WfoBh
-         QW/i8LI/q4QRlDOf9eaDBFC70s2ihW6n/DWKg91uFOrh3KWVbX9PsrzJgPs966AijvNy
-         lV0D3Z2nGBysmILhls8D7iPrU0BytXIgX50l8uJxQ+COmZyfycklbu+oayj7rSOp4pCT
-         gartvLGLRA8octmeTn5CgvR3cu88/Jdqt5P0TxzFjiu8x8K7uZCbMaVSl4VIcwjFxCt3
-         WLZg==
-X-Gm-Message-State: AGi0PuZl5nGYXrgJ9Z2iFX4As7r7Lqxegi01v1FOSD30DoUHGjsXSgua
-        Roc3Upb0EgUrLFgtIMwCO7Y=
-X-Google-Smtp-Source: APiQypLuixLhWvocBX9tvPIOvmbH9besJICjQtrDtJXukEIlKrwVR3BP/25Av1kBB5zQRPtlf8+0Kw==
-X-Received: by 2002:aa7:8696:: with SMTP id d22mr17348838pfo.54.1586102790776;
-        Sun, 05 Apr 2020 09:06:30 -0700 (PDT)
-Received: from localhost.localdomain ([117.136.0.179])
-        by smtp.gmail.com with ESMTPSA id h11sm9807258pfn.125.2020.04.05.09.06.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 05 Apr 2020 09:06:30 -0700 (PDT)
-From:   zhangfeionline@gmail.com
-To:     gregkh@linuxfoundation.org
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        songmuchun@bytedance.com, PengfeiZhang <zhangfeionline@gmail.com>
-Subject: [PATCH] driver core: Fix possible use after free on name
-Date:   Sun,  5 Apr 2020 09:05:49 -0700
-Message-Id: <1586102749-3364-1-git-send-email-zhangfeionline@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 5 Apr 2020 12:12:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbgDEQMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 12:12:13 -0400
+Received: from earth.universe (dyndsl-091-096-057-090.ewe-ip-backbone.de [91.96.57.90])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C51AD20644;
+        Sun,  5 Apr 2020 16:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586103132;
+        bh=mtSXkX7OOB0aOyV/m8pkSsqMvTiDnQoPwSOoeeK5Mfc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=L6zOIPHYUyQ/9PgesvbXhZHxdpUbq4P1l5H2lpLEXJtNUsbKpsXdLNm0777e5w27o
+         QesDW5OeRd79E9VPsXsxfPNWdQhwYf5vg18LOWF+TIP6IinMd1RUXuTaK0+RrS5hSt
+         V3nVduI0LJex0oDz7H/SMNq8bQtp2Stp4BWs/Am0=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 4D68A3C082A; Sun,  5 Apr 2020 18:12:09 +0200 (CEST)
+Date:   Sun, 5 Apr 2020 18:12:09 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [GIT PULL] power-supply changes for 5.7
+Message-ID: <20200405161209.4e3z23eyvp2wsrus@earth.universe>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iuo7vvzt7573duva"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: PengfeiZhang <zhangfeionline@gmail.com>
 
-__class_create() copies the pointer to the name passed as an
-argument only to be used later. But there's a chance the caller
-could immediately free the passed string(e.g., local variable).
-This could trigger a use after free when we use class name(e.g.,
-dev_uevent_name()called by device_destroy(),class_create_release()).
+--iuo7vvzt7573duva
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-To be on the safe side: duplicate the string with kstrdup_const()
-so that if an unaware user passes an address to a stack-allocated
-buffer, we won't get the arbitrary name and crash.
+Hi Linus,
 
-Signed-off-by: PengfeiZhang <zhangfeionline@gmail.com>
----
- drivers/base/class.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+A bit less than normal due to a hardware fault on my side. Getting
+spare parts took more time than normal due to Covid-19. Other than
+that Stephen found a merge conflict in linux-next between the (already
+merged) tip tree and power-supply and provided correct solution:
 
-diff --git a/drivers/base/class.c b/drivers/base/class.c
-index bcd410e..770b3b3 100644
---- a/drivers/base/class.c
-+++ b/drivers/base/class.c
-@@ -206,6 +206,7 @@ void class_unregister(struct class *cls)
- static void class_create_release(struct class *cls)
- {
- 	pr_debug("%s called for %s\n", __func__, cls->name);
-+	kfree_const(cls->name);
- 	kfree(cls);
- }
- 
-@@ -227,7 +228,10 @@ struct class *__class_create(struct module *owner, const char *name,
- 			     struct lock_class_key *key)
- {
- 	struct class *cls;
--	int retval;
-+	int retval = -EINVAL;
-+
-+	if (!name)
-+		goto done;
- 
- 	cls = kzalloc(sizeof(*cls), GFP_KERNEL);
- 	if (!cls) {
-@@ -235,18 +239,27 @@ struct class *__class_create(struct module *owner, const char *name,
- 		goto error;
- 	}
- 
-+	name = kstrdup_const(name, GFP_KERNEL);
-+	if (!name) {
-+		retval = -ENOMEM;
-+		goto error;
-+	}
-+
- 	cls->name = name;
- 	cls->owner = owner;
- 	cls->class_release = class_create_release;
- 
- 	retval = __class_register(cls, key);
- 	if (retval)
--		goto error;
-+		goto error_class_register;
- 
- 	return cls;
- 
-+error_class_register:
-+	kfree(cls->name);
- error:
- 	kfree(cls);
-+done:
- 	return ERR_PTR(retval);
- }
- EXPORT_SYMBOL_GPL(__class_create);
--- 
-2.7.4
+s/cpu_down/remove_cpu
 
+You can find the thread about that here:
+
+https://lore.kernel.org/linux-next/20200326135258.2764f0de@canb.auug.org.au/
+
+Thanks,
+
+-- Sebastian
+
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.7
+
+for you to fetch changes up to f78c55e3b4806974f7d590b2aab8683232b7bd25:
+
+  power: reset: sc27xx: Allow the SC27XX poweroff driver building into a module (2020-03-11 23:32:09 +0100)
+
+----------------------------------------------------------------
+power supply and reset changes for the v5.7 series
+
+Core:
+ * Nothing
+
+Drivers:
+ * at91-reset: cleanups, proper handling for sam9x60
+ * sc27xx, charger-manager: allow building as module
+ * sc27xx: add support to read current charge capacity
+ * axp288: more quirks for weird hardware
+ * misc. fixes
+
+----------------------------------------------------------------
+Ashish Chavan (1):
+      power: supply: ab8500_charger: Fix typos in commit messages
+
+Baolin Wang (4):
+      power: supply: sc27xx: Add POWER_SUPPLY_PROP_CHARGE_NOW attribute
+      power: supply: Allow charger manager can be built as a module
+      power: reset: sc27xx: Change to use cpu_down()
+      power: reset: sc27xx: Allow the SC27XX poweroff driver building into a module
+
+Claudiu.Beznea@microchip.com (15):
+      power: reset: at91-reset: introduce struct at91_reset
+      power: reset: at91-reset: add ramc_base[] to struct at91_reset
+      power: reset: at91-reset: add sclk to struct at91_reset
+      power: reset: at91-reset: add notifier block to struct at91_reset
+      power: reset: at91-reset: convert reset in pointer to struct at91_reset
+      power: reset: at91-reset: pass rstc base address to at91_reset_status()
+      power: reset: at91-reset: devm_kzalloc() for at91_reset data structure
+      power: reset: at91-reset: introduce struct at91_reset_data
+      power: reset: at91-reset: introduce args member in at91_reset_data
+      power: reset: at91-reset: use r4 as tmp argument
+      power: reset: at91-reset: introduce ramc_lpr to struct at91_reset
+      power: reset: at91-reset: make at91sam9g45_restart() generic
+      power: reset: at91-reset: keep only one reset function
+      power: reset: at91-reset: get rid of at91_reset_data
+      power: reset: at91-reset: handle nrst async for sam9x60
+
+Dmitry Osipenko (1):
+      power: supply: bq27xxx_battery: Silence deferred-probe error
+
+Hans de Goede (1):
+      power: supply: axp288_charger: Add special handling for HP Pavilion x2 10
+
+Jeffery Miller (1):
+      power: supply: axp288_fuel_gauge: Broaden vendor check for Intel Compute Sticks.
+
+Paul Cercueil (1):
+      power/supply: ingenic-battery: Don't print error on -EPROBE_DEFER
+
+Sherry Zong (1):
+      power: reset: sc27xx: Power off the external subsystems' connection
+
+Takashi Iwai (1):
+      power: twl4030: Use scnprintf() for avoiding potential buffer overflow
+
+ drivers/power/reset/Kconfig              |   2 +-
+ drivers/power/reset/at91-reset.c         | 190 +++++++++++++++----------------
+ drivers/power/reset/sc27xx-poweroff.c    |  21 +++-
+ drivers/power/supply/Kconfig             |   2 +-
+ drivers/power/supply/ab8500_charger.c    |  35 +++---
+ drivers/power/supply/axp288_charger.c    |  57 +++++++++-
+ drivers/power/supply/axp288_fuel_gauge.c |   4 +-
+ drivers/power/supply/bq27xxx_battery.c   |   5 +-
+ drivers/power/supply/ingenic-battery.c   |   3 +-
+ drivers/power/supply/sc27xx_fuel_gauge.c |  12 ++
+ drivers/power/supply/twl4030_charger.c   |   4 +-
+ include/linux/power/charger-manager.h    |   2 +-
+ 12 files changed, 211 insertions(+), 126 deletions(-)
+
+--iuo7vvzt7573duva
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6KA1QACgkQ2O7X88g7
++preORAAhzkOm9+wv0vX6fGJ7I/tKHxk9OytmQBWG+D4Y09KtNwdxDcJt8JGWnPU
+TkaNO0A/JSEkFbu1htOqzsZohAyd+W2O7CbDMGFkns3o9/HFPWHivik0RQtqrZ2I
+pZaXlsG5nhDjj42KjxnlusSZM2xmp2lPYHS47QsEeEHhiDWTyHBgrVvDF8Em4yvJ
+eiVhwgaz+zShqWn9hxfoYJGBI4dxwoFsXrODy9fxVPUGKTPNe7Bbhra0rHYB5L8I
+2JOYUJvf8pqH+IXCvJ0zww+bodb4GQ3J4UrFycEBogmuLVvtcre33YwLaE3y0G+/
+hFrWgQGJvt3kWoBD7+X2Rmop/2CmRRLtGSnWC1qgOFyDbpbR/SxHYzrC7kiH81en
+DHQIUqCwy1sernZJI9MN/LvLSVTkv69KKy4MnTiyoFdjGH7jVMs4pDyFMAap2Woz
++nABIuwJ1z473PrPzPEEcpdPzK+wJEGv7nIvhe2lD9idjQvhQfkzSG7KglPq5oOf
+CqOUL7q8rY0uanZiXU/HrXzGbS7j8h3VaFf2PPryHHuQXct64Mjmb2pdKc61Q8fY
+k6KPSKZDdklVtTFATGqyC5LRgnZAYMY79PNvgwxx43atuhsKGXSfLAIn24UaIN5r
++gqNXd5MK9D0EjaoCv6nFLJYjoCsoPPY/JsBJrqhWmVYZvOoz2o=
+=rVDI
+-----END PGP SIGNATURE-----
+
+--iuo7vvzt7573duva--
