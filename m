@@ -2,124 +2,147 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E357BC2BA17
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A282C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59CF20675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2805420675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:41:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="e6P4ik73";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vl9myuJP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dq7sjnd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgDEQlD (ORCPT
+        id S1727677AbgDEQla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 12:41:03 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:35235 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727356AbgDEQlC (ORCPT
+        Sun, 5 Apr 2020 12:41:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43786 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbgDEQl3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 12:41:02 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C22A1580084;
-        Sun,  5 Apr 2020 12:41:00 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Sun, 05 Apr 2020 12:41:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=0tXJRElr7BDueItOzw3JF8FMO6D
-        wZZ6S27H7eTNZmDY=; b=e6P4ik73A8ZRZCAWVa6AracLqG7LJeDADvOOw+rcCfa
-        GXDXxPSXpf8fD+vnxt7SoG92lsTaMP6ZSLfSywL96k6/CIjG5KuEzUV4LS+xUqXm
-        FS2BqhfZO1o1saeuTWVCJHye9PE/Ik6Mret8ollNa9MM6+8amYWLDCZlnXQFQrep
-        3ewjs6nm4mQ4yp1EjelVOBbT8tPcuywiqqgvRG1amzknQNrYiZCeNdPqhJLGC8G7
-        EMg2b/b5BoVQTn2Kjk75ioIVa+214jwajVFJEUw4zG9XCIOHn3TVNJaWxv/Vcpse
-        8HMXmo+LSPfT20eL2i6wW5J6P4HEmEdMoK1xv/+FKMg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0tXJRE
-        lr7BDueItOzw3JF8FMO6DwZZ6S27H7eTNZmDY=; b=vl9myuJPGhUgWZEpVDwaIn
-        HoACoCLhv3zCeZv3PRcwF3JVJUbkDGl6JXBZ7VlJTqxpYOslIkPp5f0yJ7xJagpF
-        JhjoI9ZzTP3JusW2QRkxKAvJPL3welgj00f1RyOUjQPNJyyDx2JnCUN+etDz/ZcL
-        0xsNGuJiYy2zhyAVypntd2PylHGcstqhHEc2GmVJixsaP0h7iJk27UEMJNlmXZJG
-        9NPT8ogSciCIwwdWNdgExP+AP5ssf4qPjUMsbAjrUkqRDrZ7J4fXQySeGv0s3Jxd
-        ey9DVeVuRLXk+dAvT3s3ozmAfXUMqXeJbDgv5Eff2dB7Bz3I6P43KLzIK+MQMbiA
-        ==
-X-ME-Sender: <xms:GAqKXmxcN_bKCeo8I3fLxYZtGgP719wduXxQV9io2Bu0DNd3xQl1_w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddugddutdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrd
-    horhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:GAqKXr9vfWQGoEP8wX6drUhvA9A7mqrp7x02khCc4Nl-PJ4PkouL7A>
-    <xmx:GAqKXvQNW90Nz-HRuvd1ghxON2yQVfMIgZgjiZPpe1pFhBskrWfdQA>
-    <xmx:GAqKXglGdifCzcRhgbFKjAp1YE4EqTDBzENju6xUUn6sSSnEvJyPwQ>
-    <xmx:HAqKXuN5tVwgndqDYrnbF_aqUrBB4UyWOLxH2bH0E6tiX0e9CFh8iw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 68AEB328005D;
-        Sun,  5 Apr 2020 12:40:56 -0400 (EDT)
-Date:   Sun, 5 Apr 2020 18:40:53 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-samsung-soc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Shane Francis <bigbeeshane@gmail.com>,
-        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
-        "for 3.8" <stable@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a
- scatterlist
-Message-ID: <20200405164053.GB1582475@kroah.com>
-References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
- <20200327162126.29705-1-m.szyprowski@samsung.com>
- <CADnq5_NpHvmRvzvh1aF293UDUXiHF4Dg1rRNkt7XbM_VB98JCg@mail.gmail.com>
+        Sun, 5 Apr 2020 12:41:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=+M0Y1kjtlZOoIzta5LvEShFkET8hM92YHdaoqL+I5Fg=; b=dq7sjnd54/K3+ZTSbi2RUgN+61
+        rJw2w4cuSzHi64TQmp4migtec4jAcBa15X41M9GNs2Ar9QcvqxJE2XP/khncENXbWRU5zmZpG9JKL
+        qUomqye3eWwhubDeX/WbcRFiJjr9q5eXJ+MwtiafS0gIpIrlNq/w+P6rfa2xOgt79r+6jNWEFx5Rk
+        9FU6XydQ4jwaryrEGp5NcqWDrb4w0QCtmGUva7es7IeTbAwzcCM704hXvi+t/Dq27YzNxW/XjyZWv
+        LCxi63wdSEOCAg822kz2avJI2F+gLYXROu7sDfgeNsJf0oYLgqZpunQq18W69n0t9dy8i5D9vY/cA
+        yNjCc1Ag==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jL8Kr-0002db-DQ; Sun, 05 Apr 2020 16:41:25 +0000
+Subject: Re: [PATCH net] skbuff.h: Improve the checksum related comments
+To:     Dexuan Cui <decui@microsoft.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "willemb@google.com" <willemb@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        "sdf@google.com" <sdf@google.com>,
+        "john.hurley@netronome.com" <john.hurley@netronome.com>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "jeremy@azazel.net" <jeremy@azazel.net>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1586071063-51656-1-git-send-email-decui@microsoft.com>
+ <20200405103618.GV21484@bombadil.infradead.org>
+ <HK0P153MB027363A6F5A5AACC366B11A3BFC50@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <7a0df207-8ad3-3731-c372-146a19befc02@infradead.org>
+Date:   Sun, 5 Apr 2020 09:41:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADnq5_NpHvmRvzvh1aF293UDUXiHF4Dg1rRNkt7XbM_VB98JCg@mail.gmail.com>
+In-Reply-To: <HK0P153MB027363A6F5A5AACC366B11A3BFC50@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 10:47:49AM -0400, Alex Deucher wrote:
-> On Fri, Mar 27, 2020 at 12:23 PM Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
-> >
-> > Scatterlist elements contains both pages and DMA addresses, but one
-> > should not assume 1:1 relation between them. The sg->length is the size
-> > of the physical memory chunk described by the sg->page, while
-> > sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
-> > the sg_dma_address(sg).
-> >
-> > The proper way of extracting both: pages and DMA addresses of the whole
-> > buffer described by a scatterlist it to iterate independently over the
-> > sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
-> >
-> > Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
-> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+On 4/5/20 9:33 AM, Dexuan Cui wrote:
+>> From: Matthew Wilcox <willy@infradead.org>
+>> Sent: Sunday, April 5, 2020 3:36 AM
+>> To: Dexuan Cui <decui@microsoft.com>
+>>
+>> On Sun, Apr 05, 2020 at 12:17:43AM -0700, Dexuan Cui wrote:
+>>>   * CHECKSUM_COMPLETE:
+>>>   *
+>>> - *   This is the most generic way. The device supplied checksum of the
+>> _whole_
+>>> - *   packet as seen by netif_rx() and fills out in skb->csum. Meaning, the
+>>> + *   This is the most generic way. The device supplies checksum of the
+>> _whole_
+>>> + *   packet as seen by netif_rx() and fills out in skb->csum. This means the
+>>
+>> I think both 'supplies' and 'supplied' are correct in this sentence.  The
+>> nuances are slightly different, but the meaning is the same in this instance.
 > 
-> Applied.  Thanks and sorry for the breakage.
+> I see. So let me rever back to "supplied".
+>  
+>> You missed a mistake in the second line though, it should be either 'fills
+>> out' or 'fills in'.  I think we tend to prefer 'fills in'.
+> 
+> Thanks! Will use "fills in" in v2.
+> 
+>>>   * CHECKSUM_COMPLETE:
+>>>   *   Not used in checksum output. If a driver observes a packet with this
+>> value
+>>> - *   set in skbuff, if should treat as CHECKSUM_NONE being set.
+>>> + *   set in skbuff, the driver should treat it as CHECKSUM_NONE being set.
+>>
+>> I would go with "it should treat the packet as if CHECKSUM_NONE were set."
+> 
+> Thanks. Will use this version.
+>  
+>>> @@ -211,7 +211,7 @@
+>>>   * is implied by the SKB_GSO_* flags in gso_type. Most obviously, if the
+>>>   * gso_type is SKB_GSO_TCPV4 or SKB_GSO_TCPV6, TCP checksum offload
+>> as
+>>>   * part of the GSO operation is implied. If a checksum is being offloaded
+>>> - * with GSO then ip_summed is CHECKSUM_PARTIAL, csum_start and
+>> csum_offset
+>>> + * with GSO then ip_summed is CHECKSUM_PARTIAL AND csum_start and
+>> csum_offset
+>>>   * are set to refer to the outermost checksum being offload (two offloaded
+>>>   * checksums are possible with UDP encapsulation).
+>>
+>> Why the capitalisation of 'AND'?
+> 
+> The current text without the patch is:
+>  * part of the GSO operation is implied. If a checksum is being offloaded
+>  * with GSO then ip_summed is CHECKSUM_PARTIAL, csum_start and csum_offset
+>  * are set to refer to the outermost checksum being offload (two offloaded
+>  * checksums are possible with UDP encapsulation).
+> 
+> The comma after the "CHECKSUM_PARTIAL" seems suspicious to me. I feel we
+> should add an "and" after the comma, or replace the comma with "and", but
+> either way we'll have "... and csum_start and csum_offset...", which seems a little
+> unnatural to me since we have 2 'and's here... So I tried to make it a little natural
+> by replacing the first 'and' with 'AND', which obviously causes confusion to you.
+
+maybe "both csum_start and csum_offset are set to refer to".
+
+> Please suggest the best change here. Thanks!
+>  
+>> Thanks for the improvements,
+>>
+>> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> 
+> Thanks for the comments! I'll wait for your suggestion on the 'AND' and post
+> a v2.
 
 
-<formletter>
+-- 
+~Randy
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
-
-</formletter>
