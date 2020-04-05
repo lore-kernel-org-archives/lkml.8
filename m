@@ -2,209 +2,128 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2427C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7283BC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1BF220659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49A5620659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:31:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="nlhymB+7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgDELad (ORCPT
+        id S1726593AbgDELbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 07:30:33 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:52995 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726622AbgDELaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 07:30:08 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 05 Apr 2020 04:30:07 -0700
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 05 Apr 2020 04:30:04 -0700
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id B01FF21657; Sun,  5 Apr 2020 17:00:02 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaprak@codeaurora.org
-Subject: [PATCH V2 5/8] clk: qcom: Add ipq apss clock controller
-Date:   Sun,  5 Apr 2020 16:59:22 +0530
-Message-Id: <1586086165-19426-6-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586086165-19426-1-git-send-email-sivaprak@codeaurora.org>
-References: <1586086165-19426-1-git-send-email-sivaprak@codeaurora.org>
+        Sun, 5 Apr 2020 07:31:48 -0400
+Received: from vps.xff.cz ([195.181.215.36]:37570 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgDELbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 07:31:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1586086306; bh=dke9xyVpu/4Upjr6OYucKLOKfLnfaYRXQxjsbKJJ/Y0=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=nlhymB+726DMdDbsKypIt3tV2pdi3zOxHtzdqT9K3s3gHvWHTueLD8bJWy8AURh9x
+         bgCX4z+Mjd8xB5zNKPK54rPO5DNS+PDikjItt0GMU+ABuEQSS9f1dS4a7Bu1v9wRbx
+         uEOsHaVh1uEOpy2CuPgD/aEiZNsekaZRhim3F+gk=
+Date:   Sun, 5 Apr 2020 13:31:46 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] [PATCH 7/7] arm64: dts: allwinner: h6: Enable CPU
+ and GPU opp tables for Beelink GS1
+Message-ID: <20200405113146.be2etxxjdkgtrmac@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+References: <20200405104913.22806-1-peron.clem@gmail.com>
+ <20200405104913.22806-8-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200405104913.22806-8-peron.clem@gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CPU on Qualcomm's IPQ platform devices are clocked primarily by a
-PLL and xo which are connected to a mux and enable block, This patch adds
-support for the mux and the enable.
+Hello,
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
- [V2]
-  * Addressed review comments from Stephen.
-  * Moved the PLL to separate patch
- drivers/clk/qcom/Kconfig    |  10 +++++
- drivers/clk/qcom/Makefile   |   1 +
- drivers/clk/qcom/apss-ipq.c | 107 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 118 insertions(+)
- create mode 100644 drivers/clk/qcom/apss-ipq.c
+On Sun, Apr 05, 2020 at 12:49:13PM +0200, Clément Péron wrote:
+> Enable CPU and GPU opp tables for Beelink GS1.
+> 
+> This needs also to change the CPU regulator min/max voltage to fit
+> the OPP table.
+> 
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  .../arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> index df6d872c34e2..8e65d56a7c85 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+> @@ -4,6 +4,8 @@
+>  /dts-v1/;
+>  
+>  #include "sun50i-h6.dtsi"
+> +#include "sun50i-h6-cpu-opp.dtsi"
+> +#include "sun50i-h6-gpu-opp.dtsi"
+>  
+>  #include <dt-bindings/gpio/gpio.h>
+>  
+> @@ -70,6 +72,10 @@
+>  	};
+>  };
+>  
+> +&cpu0 {
+> +	cpu-supply = <&reg_dcdca>;
+> +};
+> +
+>  &de {
+>  	status = "okay";
+>  };
+> @@ -226,8 +232,8 @@
+>  
+>  			reg_dcdca: dcdca {
+>  				regulator-always-on;
+> -				regulator-min-microvolt = <810000>;
+> -				regulator-max-microvolt = <1080000>;
+> +				regulator-min-microvolt = <820000>;
+> +				regulator-max-microvolt = <1160000>;
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 15cdcdc..8573f2e 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -89,6 +89,16 @@ config APQ_MMCC_8084
- 	  Say Y if you want to support multimedia devices such as display,
- 	  graphics, video encode/decode, camera, etc.
- 
-+config IPQ_APSS
-+	tristate "IPQ APSS Clock Controller"
-+	default N
-+	help
-+	  Support for APSS clock controller on ipq platform devices. The
-+	  APSS clock controller manages the Mux and enable block that feeds the
-+	  CPUs.
-+	  Say Y if you want to support CPU frequency scaling on
-+	  ipq based devices.
-+
- config IPQ_GCC_4019
- 	tristate "IPQ4019 Global Clock Controller"
- 	help
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 656a87e..1e4b296 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -19,6 +19,7 @@ clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
- # Keep alphabetically sorted by config
- obj-$(CONFIG_APQ_GCC_8084) += gcc-apq8084.o
- obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
-+obj-$(CONFIG_IPQ_APSS) += apss-ipq.o
- obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
- obj-$(CONFIG_IPQ_GCC_6018) += gcc-ipq6018.o
- obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
-diff --git a/drivers/clk/qcom/apss-ipq.c b/drivers/clk/qcom/apss-ipq.c
-new file mode 100644
-index 0000000..a37cd98
---- /dev/null
-+++ b/drivers/clk/qcom/apss-ipq.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk-provider.h>
-+#include <linux/regmap.h>
-+#include <linux/module.h>
-+
-+#include <dt-bindings/clock/qcom,apss-ipq.h>
-+
-+#include "common.h"
-+#include "clk-regmap.h"
-+#include "clk-branch.h"
-+#include "clk-alpha-pll.h"
-+#include "clk-regmap-mux.h"
-+
-+enum {
-+	P_XO,
-+	P_APSS_PLL_EARLY,
-+};
-+
-+static const struct clk_parent_data parents_apcs_alias0_clk_src[] = {
-+	{ .fw_name = "xo" },
-+	{ .fw_name = "pll" },
-+};
-+
-+static const struct parent_map parents_apcs_alias0_clk_src_map[] = {
-+	{ P_XO, 0 },
-+	{ P_APSS_PLL_EARLY, 5 },
-+};
-+
-+static struct clk_regmap_mux apcs_alias0_clk_src = {
-+	.reg = 0x0050,
-+	.width = 3,
-+	.shift = 7,
-+	.parent_map = parents_apcs_alias0_clk_src_map,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "apcs_alias0_clk_src",
-+		.parent_data = parents_apcs_alias0_clk_src,
-+		.num_parents = 2,
-+		.ops = &clk_regmap_mux_closest_ops,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+/*required for cpufreq*/
-+static struct clk_branch apcs_alias0_core_clk = {
-+	.halt_reg = 0x0058,
-+	.clkr = {
-+		.enable_reg = 0x0058,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "apcs_alias0_core_clk",
-+			.parent_hws = (const struct clk_hw *[]){
-+				&apcs_alias0_clk_src.clkr.hw },
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static const struct regmap_config apss_ipq_regmap_config = {
-+	.reg_bits       = 32,
-+	.reg_stride     = 4,
-+	.val_bits       = 32,
-+	.max_register   = 0x1000,
-+	.fast_io        = true,
-+};
-+
-+static struct clk_regmap *apss_ipq_clks[] = {
-+	[APCS_ALIAS0_CLK_SRC] = &apcs_alias0_clk_src.clkr,
-+	[APCS_ALIAS0_CORE_CLK] = &apcs_alias0_core_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc apss_ipq_desc = {
-+	.config = &apss_ipq_regmap_config,
-+	.clks = apss_ipq_clks,
-+	.num_clks = ARRAY_SIZE(apss_ipq_clks),
-+};
-+
-+static int apss_ipq_probe(struct platform_device *pdev)
-+{
-+	struct regmap *regmap;
-+
-+	regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	return qcom_cc_really_probe(pdev, &apss_ipq_desc, regmap);
-+}
-+
-+static struct platform_driver apss_ipq_driver = {
-+	.probe = apss_ipq_probe,
-+	.driver = {
-+		.name   = "qcom,apss-ipq-clk",
-+	},
-+};
-+
-+module_platform_driver(apss_ipq_driver);
-+
-+MODULE_DESCRIPTION("QCOM APSS IPQ CLK Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+The H6 datasheet says:
 
+- VDD-CPU Power Supply for CPU  0.81 - 1.08 V (recommended)
+- VDD-CPU Power Supply for CPU -0.30 - 1.30 V (abs max)
+
+So I guess there's no need to increase the lower limit, because it matches
+the datasheet already.
+
+regards,
+	o.
+
+>  				regulator-name = "vdd-cpu";
+>  			};
+>  
+> -- 
+> 2.20.1
+> 
+> -- 
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200405104913.22806-8-peron.clem%40gmail.com.
