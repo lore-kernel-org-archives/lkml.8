@@ -1,128 +1,66 @@
 Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.2 required=3.0 tests=DEAR_FRIEND,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D6FC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F79C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715DA206B8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0CE206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgDEM4t (ORCPT
+        id S1726701AbgDEM5j convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 08:56:49 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:40284 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726473AbgDEM4t (ORCPT
+        Sun, 5 Apr 2020 08:57:39 -0400
+Received: from [104.211.176.144] ([104.211.176.144]:53317 "EHLO
+        INMUDMS02.bharucha.in" rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgDEM5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 08:56:49 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 035CtW0Z005501;
-        Sun, 5 Apr 2020 15:55:32 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 95F9D639B0; Sun,  5 Apr 2020 15:55:32 +0300 (IDT)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org,
-        "benoit.houyere@st.com--to=mark.rutland"@arm.com,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v5 6/7] dt-bindings: tpm: Add YAML schema for TPM TIS I2C options
-Date:   Sun,  5 Apr 2020 15:53:51 +0300
-Message-Id: <20200405125352.183693-7-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200405125352.183693-1-amirmizi6@gmail.com>
-References: <20200405125352.183693-1-amirmizi6@gmail.com>
+        Sun, 5 Apr 2020 08:57:39 -0400
+Received: from coris.com ([103.207.36.17]) by INMUDMS02.bharucha.in with Microsoft SMTPSVC(10.0.14393.0);
+         Sun, 5 Apr 2020 18:24:39 +0530
+Reply-To: kentpace@sina.com
+From:   Kent Pace <kentpace@coris.com>
+To:     linux-kernel@vger.kernel.org
+Subject: Urgent!! Please Read
+Date:   05 Apr 2020 05:54:38 -0700
+Message-ID: <20200405055438.7C15313A645E49B1@coris.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-OriginalArrivalTime: 05 Apr 2020 12:54:39.0796 (UTC) FILETIME=[5E614740:01D60B49]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+Dear Friend,
 
-Added a YAML schema to support tpm tis i2c realted dt-bindings for the I2c
-PTP based physical layer.
 
-This patch adds the documentation for corresponding device tree bindings of
-I2C based Physical TPM.
-Refer to the 'I2C Interface Definition' section in
-'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
-for specification.
+There is something very important I need to discuss with you.  I 
+am writing  this letter in tears and fear. In tears because I 
+will soon depart and in fear because I don't really know if you 
+will do this faithfully.
 
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
----
- .../bindings/security/tpm/tpm-tis-i2c.yaml         | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
 
-diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-new file mode 100644
-index 0000000..13d7c2c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/security/tpm/tpm-tis-i2c.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: I2C PTP based TPM Device Tree Bindings
-+
-+maintainers:
-+  - Amir Mizinski <amirmizi6@gmail.com>
-+
-+description:
-+  Device Tree Bindings for I2C based Trusted Platform Module(TPM).
-+
-+properties:
-+  compatible:
-+    contains:
-+      const: tcg,tpm-tis-i2c
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupt:
-+    maxItems: 1
-+
-+  crc-checksum:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      CRC checksum enable.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      tpm-tis-i2c@2e {
-+        compatible = "tcg,tpm-tis-i2c";
-+        reg = <0x2e>;
-+        crc-checksum;
-+      };
-+    };
-+...
--- 
-2.7.4
+I am COVID-19  patient and the doctor has already confirmed I may 
+not last for the next 7 days.
 
+I have substantial amount of money deposited in a security vault 
+around your country. It is in trunk boxes and once  I receive 
+your response and see your readiness to claim the money 
+immediately, I will forward the needed documents and the contact 
+of the security vault where the consignment is deposited,
+I am not asking you to give me anything but I want you to help 
+people that has been infected with this deadly virus with 60% of 
+the money and 40% should be for you and your family.
+
+I will disclose exact amount in the boxes as soon as I 
+receive your response.
+
+
+Regards
