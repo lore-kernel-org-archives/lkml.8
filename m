@@ -6,67 +6,68 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E20AC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC49FC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7458D20678
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8094820678
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:25:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="EZ03bsic"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="0pe+lryb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgDEWYN (ORCPT
+        id S1727857AbgDEWZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 18:24:13 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41360 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbgDEWYN (ORCPT
+        Sun, 5 Apr 2020 18:25:28 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46660 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgDEWZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 18:24:13 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d24so5134708pll.8
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 15:24:12 -0700 (PDT)
+        Sun, 5 Apr 2020 18:25:28 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q3so6580068pff.13
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 15:25:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=cBUqwyFaaMgPDC136EdKrYKFduVaDYD9gWafLqWLat8=;
-        b=EZ03bsicf8ec3VRWrGwceWMI5Y3DdUFIdjPtdlthXFEau6iJP7+PcfeoJcifHAnua1
-         5TDdcQ2urw4xCp5PJhpfKgI5xyZKdeVrIG1ZPuIB3lMLVVwclfmJV8V1BGwcGnewaegc
-         N4PFhfsXRZm4z9ePInwtY64N70bf6Xo415+4uVjPm4yn27luGbZ/AHdGdWegeP+Rhn5K
-         l5lKApoqn2u7u3jCSXblHPzSHjevjVFxnF6phuXHWmdplcJ3HHLUgzxhV1Xh1a8dYeOK
-         GbAHbKrDjgUye4WyHUA0qgx38v2pKMwWWOLHvcTQnhfTR43GxMtcTu0bMBD5H6z1iG/H
-         6/jg==
+        bh=cFxnzicbTNriCHPsByY/bK8OrcBXIbAjDImLG9uKDHI=;
+        b=0pe+lrybOo2YgT9yCQps0gWWq3ki7vxmyt08By4lugK5SHWVsNdFFpSeiHvBjxbSt3
+         HSL+dRjJa91sswyq/tiH9GdEtbmss6uF+kvAcKXfDqBxWD3alZ9h304v5mACEJX76OWM
+         FioQ0Q7ZsUSQyqlwXeHh7N8zNNwik3Dfb+c5jvtbPeYhrtEMDQe1voy4a089bP7rR6tc
+         1LVWBhRsN/xWuz3RBv50y12nzdzzvsoKZ4cVgbZkgbZNMCUsXBabQINt+fmnBWLZ8XGy
+         WwySddGN41jMoooef/49pREiEI9jtz1Ehw2KOgcRRt7A2IoGPFaxRokASj0Yd36FzPEN
+         YVsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=cBUqwyFaaMgPDC136EdKrYKFduVaDYD9gWafLqWLat8=;
-        b=rejmz41T4RQ87KceXOr6YP5wE/TUL80psstGp847HV5fPdcbMNpzOdOx7xXwi6zIUf
-         DQ2z5G29oKRZeLtph5mFl30JNKELVm3j6PLtQZlntPG/UoaTSmtedkunHQHnU+jvY/fk
-         C3AsS1qZ8of7ANbEDyuN9L3VbroTkiLK1dbAIVeKj9jlkAVLHs2w3Am7FX55jplMG6Wk
-         tZY8nEjFDJoRVPNqbPGcYw4cyrRtU/hAmXkrjz5bIm05v7piAPZuZXOMwrRTx5vBXSEa
-         /2z3Fa1djKJnSeFXfHEcRxR4VT7PdxG9ub0XRrLWlFz+2kg5hkvVGKPZemhZBkTegSj0
-         yebw==
-X-Gm-Message-State: AGi0PuYgFZFrbv4bC0/LdTVMQB1lzJG4+AiZ5KYFaZALNRHRFUKknfGh
-        FdvyKjWTzYoDHAF2t04w6EFYZW4/znpxWA==
-X-Google-Smtp-Source: APiQypKLY6GAjok/YBhZdRycoLQmtEL+JiOwwcjY9MB0FZoQN/+QoPoBkvhsU+qv7sh2NO70lCpKUA==
-X-Received: by 2002:a17:90a:343:: with SMTP id 3mr19057622pjf.115.1586125451566;
-        Sun, 05 Apr 2020 15:24:11 -0700 (PDT)
+        bh=cFxnzicbTNriCHPsByY/bK8OrcBXIbAjDImLG9uKDHI=;
+        b=RsDOLE7sFwYf7hK+rBTKk3k61V8TXjdXrG8NaT+SeHotUZIdtm2sgHecWcAw+jSDyq
+         ereU4opPiR6AdvLApjkEP2tCV62o+pens5LBHQYa5G1H7J0qKy3bMlwvvtp3TsEwZx/u
+         6t1vYhO8nZ7aXdy3zu9tQ1sqrgihTr29b1B0fMUAhpMcg2RTGN9JSdL4AU2QuuQ9+Txc
+         HQu15KDhpCAf6mGAAVrlKUi7FDtgDe79ftwNJJVhKUJnmo9Z7E9fwP2tGge8fnBCo93L
+         GXDZ8rhmr8VaPj1lMTiXXr/gLVeFK/lQheV+t7Bx70aOWPKD4upPQJYPACDxzxm2Zg6j
+         N5wA==
+X-Gm-Message-State: AGi0PuaOCVVF/xk46lS6K6ukRGKoblDwDdiqVLpilwsaBR0va2BR2O2Q
+        UDlez2Il0eG+gMoM/h10bR1lWei1+2rUzA==
+X-Google-Smtp-Source: APiQypIow71tF5ScnG1EOIJX/No5w6Re3/mkxeNwSVY2lMJtseTyTGqKyq+NGrokxUi/qfabcRtOOw==
+X-Received: by 2002:aa7:9d0a:: with SMTP id k10mr19320976pfp.266.1586125525864;
+        Sun, 05 Apr 2020 15:25:25 -0700 (PDT)
 Received: from ?IPv6:2605:e000:100e:8c61:5d19:ea24:5c10:884d? ([2605:e000:100e:8c61:5d19:ea24:5c10:884d])
-        by smtp.gmail.com with ESMTPSA id g11sm10126763pjs.17.2020.04.05.15.24.10
+        by smtp.gmail.com with ESMTPSA id s3sm8253831pjd.21.2020.04.05.15.25.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Apr 2020 15:24:10 -0700 (PDT)
+        Sun, 05 Apr 2020 15:25:25 -0700 (PDT)
 Subject: Re: [PATCH] io_uring: fix ctx refcounting in io_submit_sqes()
 To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <8b53ce4539784423b493fdbfae9bd4c720b24d2a.1586120916.git.asml.silence@gmail.com>
+ <331eb009-a8c3-98c7-4cec-d91a821f22be@gmail.com>
 From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c6da3fdd-541c-ba20-ec7a-6acd2ce9c3cd@kernel.dk>
-Date:   Sun, 5 Apr 2020 15:24:09 -0700
+Message-ID: <3d0b7db2-59ae-b33c-694e-87d3d659c25e@kernel.dk>
+Date:   Sun, 5 Apr 2020 15:25:24 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <8b53ce4539784423b493fdbfae9bd4c720b24d2a.1586120916.git.asml.silence@gmail.com>
+In-Reply-To: <331eb009-a8c3-98c7-4cec-d91a821f22be@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,17 +76,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/5/20 3:08 PM, Pavel Begunkov wrote:
-> If io_get_req() fails, it drops a ref. Then, awhile keeping @submitted
-> unmodified, io_submit_sqes() breaks the loop and puts @nr - @submitted
-> refs. For each submitted req a ref is dropped in io_put_req() and
-> friends. So, for @nr taken refs there will be
-> (@nr - @submitted + @submitted + 1) dropped.
+On 4/5/20 3:13 PM, Pavel Begunkov wrote:
+> On 06/04/2020 00:08, Pavel Begunkov wrote:
+>> If io_get_req() fails, it drops a ref. Then, awhile keeping @submitted
+>> unmodified, io_submit_sqes() breaks the loop and puts @nr - @submitted
+>> refs. For each submitted req a ref is dropped in io_put_req() and
+>> friends. So, for @nr taken refs there will be
+>> (@nr - @submitted + @submitted + 1) dropped.
+>>
+>> Remove ctx refcounting from io_get_req(), that at the same time makes
+>> it clearer.
 > 
-> Remove ctx refcounting from io_get_req(), that at the same time makes
-> it clearer.
+> It seems, nobody hit OOM, so it stayed unnoticed. And neither did I.
+> It could be a good idea to do fault-injection for testing.
 
-Applied, but also marked for 5.6 stable.
+Actually think we just hit this, was testing with memcached (as per fixes
+posted recently), and a bug on the user side ended up with 196G of slab
+and running into OOM off request allocation.
+
+But yes, would be nice to have specific fault injection testing to
+avoid finding these in prod testing.
 
 -- 
 Jens Axboe
