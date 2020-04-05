@@ -2,221 +2,195 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800A4C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21B6C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF92206B8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:42:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wqn74vjV"
+	by mail.kernel.org (Postfix) with ESMTP id C8CFB206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgDENmz (ORCPT
+        id S1726828AbgDENnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 09:42:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42023 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgDENmz (ORCPT
+        Sun, 5 Apr 2020 09:43:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42642 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbgDENnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 09:42:55 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h15so14148592wrx.9;
-        Sun, 05 Apr 2020 06:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pYq5Ac37hqwzjRVuCDfokJB6SHNuA0PpWl4//5Tmdpo=;
-        b=Wqn74vjV4BB8Cecnb8lCadPxosvu/HPRbtAuIdzz1pLSaY1R2XZz0p4+yGOlL2ogHx
-         6eOZDPMKSxI03bHUA81tCci+O1O04BylnW6AFu84jQ8oLHkZ2i7WP2kBeVDxi8qzVSpK
-         dfMfOL+reJugaHE69yJnniLrUh1Za/ketLTacst79oFS83sH2N7QX7nZmemEKPx3oBPP
-         YqRYGHCY70Gy1Htubzgj0OziRXJxIicG4TvU9RPiA6kwKTDenSDUzCRjyCF/xvyrHaid
-         NSUV3QLrQHH8n9P+v/yYeMYA+DCbCkN+0hz8Fs4SHLgPxIn17ZrbMr2lSYd4/62t/k5O
-         KOtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pYq5Ac37hqwzjRVuCDfokJB6SHNuA0PpWl4//5Tmdpo=;
-        b=eEJA22jZFyk+Yu1DhvmDfGSzL6G2nhgzfU+lxensFdtKzgGjKybc/PcFtTiYs5MkU6
-         Pxor5sojEg8cH1/7hdw14U6nMKeGtLxJ/7IQFDSuwZuN7RfBvjhyoatfK1MADzToXdmB
-         NEg472kv0qXRyU+GnTIDX6dXREwm1tLPJCrJXQzbf6KiXZm8oydgMVnMy9ViZJ0QP5Ks
-         OMpUZmROor/FvkJap49HOVI3BqKnZRwWpTCPrSjxNu/hMfkZWT/5zeSideO/C0cGPGst
-         ZYZf6BPlW9mE7gNvwOA6C+1jPWkMLcASYKOwgso1AwX8Q22E9DzGmYhTNG9Kn2VydlL+
-         tjxA==
-X-Gm-Message-State: AGi0PubPwyyZqT/4B3yg+vuEWF6iPDmtAj5oE/q1boeIrPX0e/8bMak+
-        9JH8oXQRinFTW+X5AKeNqsB2OTes
-X-Google-Smtp-Source: APiQypKl9GRvIyv858C82f0tD7OhPqj/2TSvRADObcTMzQWNfvqqDXHOVfsIjuHuld/zf6AIDyol8w==
-X-Received: by 2002:adf:92a3:: with SMTP id 32mr11438386wrn.254.1586094171257;
-        Sun, 05 Apr 2020 06:42:51 -0700 (PDT)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id a7sm19391741wmm.34.2020.04.05.06.42.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Apr 2020 06:42:50 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] dt-bindings: iio: adc: convert rockchip saradc
- bindings to yaml
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        heiko@sntech.de, robh+dt@kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200404102730.3295-1-jbx6244@gmail.com>
- <20200405130621.252578e8@archlinux>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <c5072f74-695f-0554-ab3f-bd5155c356b2@gmail.com>
-Date:   Sun, 5 Apr 2020 15:42:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200405130621.252578e8@archlinux>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 5 Apr 2020 09:43:09 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jL5YH-000422-SB; Sun, 05 Apr 2020 15:43:06 +0200
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id ABC9A1001FC;
+        Sun,  5 Apr 2020 15:43:04 +0200 (CEST)
+Date:   Sun, 05 Apr 2020 13:41:49 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] irq/urgent for 5.7-rc1
+Message-ID: <158609410988.4266.5816311298811487752.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+Linus,
 
-Originally I just followed 'rk3288.dtsi' till I saw someone posting a
-patch with only 'arm-gic.h' included that made me to have a closer look
-at it.
-Due to the #ifndef construction it doesn't rise any warnings I think.
-Apply the version that fits best.
+please pull the latest irq/urgent fixes from:
 
-Kind regards,
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2020-04-05
 
-Johan Jonker
+up to:  a67cd1fb660d: Merge tag 'irqchip-fixes-5.7-1' of git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms into irq/core
 
 
+Two reverts addressing regressions of the Xilinx interrupt controller
+driver which affected the PPC users.
 
-#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
-#define _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
-[..]
-#endif
+Thanks,
 
-Something else...
-With 2 examples it gives a warning that 2 identical defines are used.
-Yaml doesn't separately compile the examples. Must use the same SoC.
+	tglx
 
-This doesn't work. One example for rk3288 and one for rk3399.
-examples:
-  - |
-    #include <dt-bindings/clock/rk3288-cru.h>
-    #include <dt-bindings/interrupt-controller/arm-gic.h>
-[..]
-  - |
-    #include <dt-bindings/clock/rk3399-cru.h>
-    #include <dt-bindings/interrupt-controller/arm-gic.h>
-[..]
+------------------>
+Marc Zyngier (2):
+      Revert "irqchip/xilinx: Do not call irq_set_default_host()"
+      Revert "irqchip/xilinx: Enable generic irq multi handler"
 
-From 'rk3288.dtsi':
 
-> // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->
-> #include <dt-bindings/gpio/gpio.h>
-> #include <dt-bindings/interrupt-controller/irq.h>
-> #include <dt-bindings/interrupt-controller/arm-gic.h>
-> #include <dt-bindings/pinctrl/rockchip.h>
-> #include <dt-bindings/clock/rk3288-cru.h>
-> #include <dt-bindings/power/rk3288-power.h>
-> #include <dt-bindings/thermal/thermal.h>
-> #include <dt-bindings/power/rk3288-power.h>
-> #include <dt-bindings/soc/rockchip,boot-mode.h>
->
-> / {
-> 	#address-cells = <2>;
-> 	#size-cells = <2>;
->
-> 	compatible = "rockchip,rk3288";
+ arch/microblaze/Kconfig           |  2 --
+ arch/microblaze/include/asm/irq.h |  3 +++
+ arch/microblaze/kernel/irq.c      | 21 ++++++++++++++++++++-
+ drivers/irqchip/irq-xilinx-intc.c | 35 +++++++++++++++--------------------
+ 4 files changed, 38 insertions(+), 23 deletions(-)
 
-[..]
+diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
+index 242f58ec086b..6a331bd57ea8 100644
+--- a/arch/microblaze/Kconfig
++++ b/arch/microblaze/Kconfig
+@@ -47,8 +47,6 @@ config MICROBLAZE
+ 	select CPU_NO_EFFICIENT_FFS
+ 	select MMU_GATHER_NO_RANGE if MMU
+ 	select SPARSE_IRQ
+-	select GENERIC_IRQ_MULTI_HANDLER
+-	select HANDLE_DOMAIN_IRQ
+ 
+ # Endianness selection
+ choice
+diff --git a/arch/microblaze/include/asm/irq.h b/arch/microblaze/include/asm/irq.h
+index 5166f0893e2b..eac2fb4b3fb9 100644
+--- a/arch/microblaze/include/asm/irq.h
++++ b/arch/microblaze/include/asm/irq.h
+@@ -14,4 +14,7 @@
+ struct pt_regs;
+ extern void do_IRQ(struct pt_regs *regs);
+ 
++/* should be defined in each interrupt controller driver */
++extern unsigned int xintc_get_irq(void);
++
+ #endif /* _ASM_MICROBLAZE_IRQ_H */
+diff --git a/arch/microblaze/kernel/irq.c b/arch/microblaze/kernel/irq.c
+index 0b37dde60a1e..903dad822fad 100644
+--- a/arch/microblaze/kernel/irq.c
++++ b/arch/microblaze/kernel/irq.c
+@@ -20,10 +20,29 @@
+ #include <linux/irqchip.h>
+ #include <linux/of_irq.h>
+ 
++static u32 concurrent_irq;
++
+ void __irq_entry do_IRQ(struct pt_regs *regs)
+ {
++	unsigned int irq;
++	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	trace_hardirqs_off();
+-	handle_arch_irq(regs);
++
++	irq_enter();
++	irq = xintc_get_irq();
++next_irq:
++	BUG_ON(!irq);
++	generic_handle_irq(irq);
++
++	irq = xintc_get_irq();
++	if (irq != -1U) {
++		pr_debug("next irq: %d\n", irq);
++		++concurrent_irq;
++		goto next_irq;
++	}
++
++	irq_exit();
++	set_irq_regs(old_regs);
+ 	trace_hardirqs_on();
+ }
+ 
+diff --git a/drivers/irqchip/irq-xilinx-intc.c b/drivers/irqchip/irq-xilinx-intc.c
+index 7f811fe5bf69..1d3d273309bd 100644
+--- a/drivers/irqchip/irq-xilinx-intc.c
++++ b/drivers/irqchip/irq-xilinx-intc.c
+@@ -124,6 +124,20 @@ static unsigned int xintc_get_irq_local(struct xintc_irq_chip *irqc)
+ 	return irq;
+ }
+ 
++unsigned int xintc_get_irq(void)
++{
++	unsigned int irq = -1;
++	u32 hwirq;
++
++	hwirq = xintc_read(primary_intc, IVR);
++	if (hwirq != -1U)
++		irq = irq_find_mapping(primary_intc->root_domain, hwirq);
++
++	pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
++
++	return irq;
++}
++
+ static int xintc_map(struct irq_domain *d, unsigned int irq, irq_hw_number_t hw)
+ {
+ 	struct xintc_irq_chip *irqc = d->host_data;
+@@ -163,25 +177,6 @@ static void xil_intc_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
+ 
+-static void xil_intc_handle_irq(struct pt_regs *regs)
+-{
+-	u32 hwirq;
+-	struct xintc_irq_chip *irqc = primary_intc;
+-
+-	do {
+-		hwirq = xintc_read(irqc, IVR);
+-		if (likely(hwirq != -1U)) {
+-			int ret;
+-
+-			ret = handle_domain_irq(irqc->root_domain, hwirq, regs);
+-			WARN_ONCE(ret, "Unhandled HWIRQ %d\n", hwirq);
+-			continue;
+-		}
+-
+-		break;
+-	} while (1);
+-}
+-
+ static int __init xilinx_intc_of_init(struct device_node *intc,
+ 					     struct device_node *parent)
+ {
+@@ -250,7 +245,7 @@ static int __init xilinx_intc_of_init(struct device_node *intc,
+ 		}
+ 	} else {
+ 		primary_intc = irqc;
+-		set_handle_irq(xil_intc_handle_irq);
++		irq_set_default_host(primary_intc->root_domain);
+ 	}
+ 
+ 	return 0;
 
-On 4/5/20 2:06 PM, Jonathan Cameron wrote:
-> On Sat,  4 Apr 2020 12:27:28 +0200
-> Johan Jonker <jbx6244@gmail.com> wrote:
->
->> Current dts files with 'saradc' nodes are manually verified.
->> In order to automate this process rockchip-saradc.txt
->> has to be converted to yaml.
->>
->> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> Hi Johan
->
-> As I'd already applied these I'd have preferred a fix patch and I'm
-not actually
-> sure it's really worth making the change.  I don't think we have any rules
-> about minimal includes or anything in DT bindings.  Was there an error or
-> warning as a result of this?
->
-> Still as I hadn't pushed out as non rebasing yet I've picked this
-version up
-> and dropped the previous.
->
-> Thanks,
->
-> Jonathan
->
->> ---
->> Changes v2:
->>   Add reviewed by
->>   Fix irq.h already included in arm-gic.h
->> ---
->>  .../bindings/iio/adc/rockchip-saradc.txt           | 37 ----------
->>  .../bindings/iio/adc/rockchip-saradc.yaml          | 78
-++++++++++++++++++++++
->>  2 files changed, 78 insertions(+), 37 deletions(-)
->>  delete mode 100644
-Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
->>  create mode 100644
-Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
->>
->> diff --git
-a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
->> deleted file mode 100644
->> index c2c50b598..000000000
->> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-
-[..]
-
->> diff --git
-a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
->> new file mode 100644
->> index 000000000..9b9882323
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
->> @@ -0,0 +1,78 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/iio/adc/rockchip-saradc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-
-[..]
-
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/rk3288-cru.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    saradc: saradc@2006c000 {
->> +      compatible = "rockchip,saradc";
->> +      reg = <0x2006c000 0x100>;
->> +      interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
->> +      clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
->> +      clock-names = "saradc", "apb_pclk";
->> +      resets = <&cru SRST_SARADC>;
->> +      reset-names = "saradc-apb";
->> +      vref-supply = <&vcc18>;
->> +      #io-channel-cells = <1>;
->> +    };
->
