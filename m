@@ -2,106 +2,71 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62807C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B29C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA44206F8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B7D20678
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgDESFN (ORCPT
+        id S1727677AbgDESGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 14:05:13 -0400
-Received: from sauhun.de ([88.99.104.3]:38412 "EHLO pokefinder.org"
+        Sun, 5 Apr 2020 14:06:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51800 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbgDESFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 14:05:13 -0400
-Received: from localhost (p5486CC0D.dip0.t-ipconnect.de [84.134.204.13])
-        by pokefinder.org (Postfix) with ESMTPSA id BDEAA2C1FCA;
-        Sun,  5 Apr 2020 20:05:10 +0200 (CEST)
-Date:   Sun, 5 Apr 2020 20:05:10 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Stefan Schaeckeler <schaecsn@gmx.net>, linux-i2c@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/1] i2c: imc: Add support for Intel iMC SMBus host
- controller.
-Message-ID: <20200405180510.GD6313@kunai>
-References: <1582498270-50674-1-git-send-email-schaecsn@gmx.net>
- <CALCETrXcFrR9V_yjPRh9eJ1=1efo_DCCwGTeusmo2CQXpFFdrw@mail.gmail.com>
+        id S1727522AbgDESGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 14:06:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4382EABE7;
+        Sun,  5 Apr 2020 18:06:10 +0000 (UTC)
+Date:   Sun, 5 Apr 2020 20:06:05 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     "Manali Shukla (manashuk)" <manashuk@cisco.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        Aristeu Rozanski Filho <arozansk@redhat.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Russ Anderson <rja@hpe.com>, Tony Luck <tony.luck@intel.com>
+Subject: Re: [ PATCH stable v4.19] EDAC: Drop per-memory controller buses
+Message-ID: <20200405180605.GC17324@zn.tnic>
+References: <20200312052201.49456-1-manashuk@cisco.com>
+ <20200317102249.GC1130294@kroah.com>
+ <5D56C6A7-B076-47BB-9016-7BD54DFE71E7@cisco.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="osDK9TLjxFScVI/L"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CALCETrXcFrR9V_yjPRh9eJ1=1efo_DCCwGTeusmo2CQXpFFdrw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5D56C6A7-B076-47BB-9016-7BD54DFE71E7@cisco.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Apr 05, 2020 at 06:01:21PM +0000, Manali Shukla (manashuk) wrote:
+> With this patch , we are removing per-MC bus, this removes dependency on value of max number of controllers (EDAC_MAX_MCS) which is hardcoded to 2 * MAX_NUMNODES  in all stable versions of kernel. 
+> 
+> On two nodes system MAX_NUMNODES value is ‘1’ , so value of max number of memory controller becomes ‘2’, this patch fixes this issue when there are only 2 nodes on the system and number of memory controllers are more than ‘2'
 
---osDK9TLjxFScVI/L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You basically repeated what you had written already.
 
-On Tue, Feb 25, 2020 at 01:49:34PM -0800, Andy Lutomirski wrote:
-> On Sun, Feb 23, 2020 at 2:52 PM Stefan Schaeckeler <schaecsn@gmx.net> wro=
-te:
-> >
-> > This patch is based on Andy Lutomirski's iMC SMBus driver patch-set
-> > https://lkml.org/lkml/2016/4/28/926. It never made it into the kernel. =
-I hope
-> > this rewrite will:
-> >
-> >
-> > Overview
-> >
-> > Modern Intel memory controllers host an SMBus controller and connection=
- to
-> > DIMMs and their thermal sensors. The memory controller firmware has thr=
-ee modes
-> > of operation: Closed Loop Thermal Throttling (CLTT), Open Loop Thermal
-> > Throttling (OLTT) and none.
-> >
-> > - CLTT: The memory controller firmware is periodically accessing the DI=
-MM
-> >   temperature sensor over the SMBus.
-> >
->=20
->=20
-> I think this is great!  One question, though: what happens if the
-> system is in CLTT mode but you disable CLTT and claim the bus for too
-> long?  For example, if there's an infinite loop or other lockup which
-> you have the tsod polling interval set to 0?  Does the system catch
-> fire or does the system do something intelligent like temporarily
-> switching to open loop?
+But what is this fixing? Some platform of yours or what? Why does it
+need to go to stable?
 
-Any news on this question?
+Btw, please do not top-post and reply under the quoted text like all of
+us do.
 
+Thx.
 
---osDK9TLjxFScVI/L
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Regards/Gruss,
+    Boris.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6KHdYACgkQFA3kzBSg
-KbbHcA//dmYTyau5m8uZUNnYgJ+AsL4/jprivL0wMkLtFlXO29EHjt0AgQnkYz9L
-OrxVH8ZMR0e/wXpICbP6mjf3kdPIQaE5uAs6FPS3Qb+jFpWElQlaDFpQqLHTJEuJ
-q4Vve6nnYnLMa3RQLpZgvhn2tYmPRSee3oir54wxovm7NOV8hB726azr61UwNvl7
-W0GAJNI1V+jBZxeauTx4j3yBO1nGDaDqeQklLcfusVxre4UO2KJvJvrQ5W1nU90k
-yMtV+AIV4tD0io0KdvMoguu/3VsUDXHfPc9XHihHot+SnoUgAisqOdfPIUUIHEwI
-jV+zc+c9Z3nXy8Az6/MW5fMYLZulDgTdAnjNUTp4HYgcrPDUrhQLAULI6NIlxF/V
-CB26nDNFg6Zri+DXqjSRMKKvLC7+c11X0YJ3TI7zGDnastv3YNE1ZqIuALlb+oxM
-iN1bjYwRvkL25fmzl4vKsVA/BM1YPReacT3OIVwd+5pLtglDnLDG3lZujX6nFzcp
-+bxDqpLonNPOcjk+E783yW4LzWEhqajDODeDaDULPLeui8Z3oBSLvZvPG/hinWtn
-+8nBSHtyfzEEptd1oqP94FECiDu6/Fra18Gy80xn790nlSSwKCqy1xU9opB/1iPx
-WhRaTw/6aIQA0Is2TWh2c0/Jk4c9FKNBFCn9XkixPcNUA1mAJpU=
-=XoV1
------END PGP SIGNATURE-----
-
---osDK9TLjxFScVI/L--
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
