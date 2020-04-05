@@ -2,176 +2,82 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D61C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0370DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9DCE20659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:26:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c8I0Qxnq"
+	by mail.kernel.org (Postfix) with ESMTP id C95C820659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgDEI0Z (ORCPT
+        id S1726479AbgDEI3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 04:26:25 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:52852 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726407AbgDEI0Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 04:26:24 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586075184; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=T/ED/TDtyl8fWHEuJYiX0c9pYeMm05ZpKV8Aehutj0Y=; b=c8I0QxnqpsaOXBgld3XMuKUW6rZF99sBaXwdMrTEAM66r1YooN0c+mk6BP7WVhZ30fW31DSI
- NHfq0fCpaYGS34SyXDzCVuCe9zFaOZR0dvGZRPm/S5wduVCYCH76dklUwL08jxsAiL9lzAP5
- kCgYuG4QOPCfkTvf7Xyb/xVpD5A=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e89962f.7f7df31b8458-smtp-out-n02;
- Sun, 05 Apr 2020 08:26:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 92C9BC43636; Sun,  5 Apr 2020 08:26:22 +0000 (UTC)
-Received: from [192.168.0.100] (unknown [49.206.125.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sivaprak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 84039C433D2;
-        Sun,  5 Apr 2020 08:26:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 84039C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
-Subject: Re: [PATCH 2/2] clk: qcom: Add ipq6018 apss clock controller
-To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        robh+dt@kernel.org
-References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
- <1582797318-26288-3-git-send-email-sivaprak@codeaurora.org>
- <158378547505.66766.155212878365765346@swboyd.mtv.corp.google.com>
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Message-ID: <3131e896-8694-083e-7b0d-a72b4abe6bed@codeaurora.org>
-Date:   Sun, 5 Apr 2020 13:56:16 +0530
+        Sun, 5 Apr 2020 04:29:02 -0400
+Received: from mga18.intel.com ([134.134.136.126]:25744 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726397AbgDEI3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 04:29:02 -0400
+IronPort-SDR: M0adLzQvFZELu7OrhuvN0mX7sdIEa22m5SmlFhhPfZrph5ht36PYVfDuI6tt3lHaZ5efzlr7R6
+ 71j6hIJJ9UWQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 01:29:01 -0700
+IronPort-SDR: GkUrYhcg8R10oY7HouQeSWq86gskBmAKtRVzlu7JTmWrleeYOaNI9ekVbKxltV+umcdu350aRE
+ jyf84Nixzyfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,347,1580803200"; 
+   d="scan'208";a="243222375"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.154]) ([10.254.208.154])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Apr 2020 01:28:58 -0700
+Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v11 00/10] Nested Shared Virtual Address (SVA) VT-d
+ support
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>
+References: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <a1eed4ed-7ad7-a445-7e5c-a5eb1771587c@linux.intel.com>
+Date:   Sun, 5 Apr 2020 16:28:57 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <158378547505.66766.155212878365765346@swboyd.mtv.corp.google.com>
+In-Reply-To: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On 2020/4/4 2:42, Jacob Pan wrote:
+> Shared virtual address (SVA), a.k.a, Shared virtual memory (SVM) on Intel
+> platforms allow address space sharing between device DMA and applications.
+> SVA can reduce programming complexity and enhance security.
+> This series is intended to enable SVA virtualization, i.e. enable use of SVA
+> within a guest user application.
+> 
+> This is the remaining portion of the original patchset that is based on
+> Joerg's x86/vt-d branch. The preparatory and cleanup patches are merged here.
+> (git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git)
 
-Thanks for the review.
+With Eric's reviewed-by added, all patches in this series have been
+piled up for v5.7.
 
-On 3/10/2020 1:54 AM, Stephen Boyd wrote:
-> Quoting Sivaprakash Murugesan (2020-02-27 01:55:18)
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index 15cdcdc..37e4ce2 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -89,6 +89,14 @@ config APQ_MMCC_8084
->>            Say Y if you want to support multimedia devices such as display,
->>            graphics, video encode/decode, camera, etc.
->>   
->> +config IPQ_APSS_6018
->> +       tristate "IPQ6018 APSS Clock Controller"
->> +       select IPQ_GCC_6018
->> +       help
->> +         Support for APSS clock controller on ipq6018 devices. The
->> +         APSS clock controller supports frequencies higher than 800Mhz.
-> supports CPU frequencies? It's not clear what APSS is to a lot of people
-> out there.
-ok. Will try to elaborate.
->
->> +         Say Y if you want to support higher frequencies on ipq6018 devices.
-> support CPU frequency scaling on ipq6018?
-ok.
->
->> +
->>   config IPQ_GCC_4019
->>          tristate "IPQ4019 Global Clock Controller"
->>          help
->> diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6018.c
->> new file mode 100644
->> index 0000000..04b8962
->> --- /dev/null
->> +++ b/drivers/clk/qcom/apss-ipq6018.c
->> @@ -0,0 +1,210 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/err.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
-> Are these two includes needed at all?
-No they're not. will remove it.
->> +#include <linux/clk-provider.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <linux/reset-controller.h>
->> +#include <dt-bindings/clock/qcom,apss-ipq6018.h>
->> +
->> +#include "common.h"
->> +#include "clk-regmap.h"
->> +#include "clk-pll.h"
->> +#include "clk-rcg.h"
->> +#include "clk-branch.h"
->> +#include "clk-alpha-pll.h"
->> +#include "clk-regmap-divider.h"
->> +#include "clk-regmap-mux.h"
->> +#include "reset.h"
->> +
->> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
-> This can be removed. It's common in clk-rcg.h now
-ok.
->
->> +
->> +static struct clk_branch apcs_alias0_core_clk = {
->> +       .halt_reg = 0x004c,
->> +       .clkr = {
->> +               .enable_reg = 0x004c,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "apcs_alias0_core_clk",
->> +                       .parent_hws = (const struct clk_hw *[]){
->> +                               &apcs_alias0_clk_src.clkr.hw },
->> +                       .num_parents = 1,
->> +                       .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-> Please add a comment about why CLK_IS_CRITICAL is here. Presumably in
-> the case that a cpufreq driver doesn't probe and claim this clk?
-ok.
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
->> +
-> [...]
->> +
->> +static int __init apss_ipq6018_init(void)
->> +{
->> +       return platform_driver_register(&apss_ipq6018_driver);
->> +}
->> +core_initcall(apss_ipq6018_init);
->> +
->> +static void __exit apss_ipq6018_exit(void)
->> +{
->> +       platform_driver_unregister(&apss_ipq6018_driver);
->> +}
->> +module_exit(apss_ipq6018_exit);
-> Any reason this can't just be module_platform_driver()?
-yeah it can be. will fix it.
+Thank you all!
+
+Best regards,
+baolu
