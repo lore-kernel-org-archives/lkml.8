@@ -2,84 +2,104 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019B3C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E76AC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C611220672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1247720672
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586094991;
+	bh=GDclGepanBvJT4uqLBie0Jp/AehPhmS+6KYTv80MtP8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qydEWrIZ0X0yO8Z2aqrad8GnKrQY2jACLNH53rXVJz22oF9/7Yc+FFPg+aWdxZz4N
+	 9jMPAoe10hL1tHHbmvkOIcxo5DZCwHd3qJ+AqQaY+FJmmcPq/HzxLmOC745pWDasjN
+	 t++L/udv9/T0UTAzq1i+mVgIiTqjH4LxGWm0Kz2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgDENy0 (ORCPT
+        id S1726853AbgDEN4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 09:54:26 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57009 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgDENy0 (ORCPT
+        Sun, 5 Apr 2020 09:56:30 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:16577 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbgDEN4a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 09:54:26 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jL5jE-0004NU-79; Sun, 05 Apr 2020 13:54:24 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][V2] drivers/tty: remove redundant assignment to variable i and rename it to ret
-Date:   Sun,  5 Apr 2020 14:54:23 +0100
-Message-Id: <20200405135423.383466-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 5 Apr 2020 09:56:30 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 035DuCEN018712;
+        Sun, 5 Apr 2020 22:56:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 035DuCEN018712
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586094973;
+        bh=HIBW+9wU6pa/k1BuO2NwsZV9UocoT5Jj56/5NqbTF7c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PVWfeqsO3ivryKKJxzlLOtGf5XoRrRR7lczuFXwHQwRVhx6R6OFDe8AkDdvLU5Cum
+         ZMZuD95ocNmE9ZEwqIy1CU7MzsgZpm+ad9l8kTl2LO+ZnSJ2+x9zEDWbttTedqGe0N
+         wIJsDAZxAp3ZK+cpjnzhxMA9SMQL04oAiJlYrZfSJngHiklzWcvSfcwup55vHxBx69
+         +e/hc2YD4yGkyhoWzBaygALDeT7xAsqUKn3q5iJR7mCh0PhupAYlZmYnPLPN+9S38T
+         mQiHAXeXtD0YYv+yMkCNsZFdKvabN7F18x3iecVB0oD4EcEk6TmYuv0NKEvf3YKVRJ
+         p0GpsZrl0sf5A==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id x82so7969850vsc.12;
+        Sun, 05 Apr 2020 06:56:12 -0700 (PDT)
+X-Gm-Message-State: AGi0PuY/BggLzogPQeMeirWk9lEtgdns8bmaT/PkHsaQpO3nmKQyLU4M
+        nly4DPhHf1/vRf8RWlQEPHVPNlategqzjwzmsFI=
+X-Google-Smtp-Source: APiQypJpa1N4IPj3YD40pPZZwmcQV1V71AHj92NGOXLU6OFQOqj5kpGruVQn3mPOedmeTudf/1g7ZyUUHYxIiBzqnBQ=
+X-Received: by 2002:a67:33cb:: with SMTP id z194mr12826483vsz.155.1586094971431;
+ Sun, 05 Apr 2020 06:56:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <202004020117.6E434C035@keescook> <CA+icZUW0R9LDGJ1YjJAB2oWkcEQxCO79xYmdVEoh=P8Fy_AL1A@mail.gmail.com>
+ <CA+icZUVowLVpAxiWw=FJHfQ38KtU7AXXkVnw46D2XLM41-NCEA@mail.gmail.com>
+In-Reply-To: <CA+icZUVowLVpAxiWw=FJHfQ38KtU7AXXkVnw46D2XLM41-NCEA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 5 Apr 2020 22:55:35 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ6ji3=2+7R1DL7eFveH7L7No6e3XkqfqgiH5QFyQj==A@mail.gmail.com>
+Message-ID: <CAK7LNAQ6ji3=2+7R1DL7eFveH7L7No6e3XkqfqgiH5QFyQj==A@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: mkcompile_h: Include $LD version in /proc/version
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Sun, Apr 5, 2020 at 8:23 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Thu, Apr 2, 2020 at 4:24 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > On Thu, Apr 2, 2020 at 10:18 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > When doing Clang builds of the kernel, it is possible to link with
+> > > either ld.bfd (binutils) or ld.lld (LLVM), but it is not possible to
+> > > discover this from a running kernel. Add the "$LD -v" output to
+> > > /proc/version.
+> > >
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> >
+>
+> Please feel free and add:
+>
+> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 
-The variable i is being assigned a value that is never read
-and it is being updated later with a new value. The assignment
-is redundant and can be removed.  Also rename i to ret as this new
-name makes makes more sense.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
-V2: fix typo in subject line
----
- drivers/tty/serial/8250/serial_cs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks.
 
-diff --git a/drivers/tty/serial/8250/serial_cs.c b/drivers/tty/serial/8250/serial_cs.c
-index c8186a05a453..e3d10794dbba 100644
---- a/drivers/tty/serial/8250/serial_cs.c
-+++ b/drivers/tty/serial/8250/serial_cs.c
-@@ -440,7 +440,7 @@ static int simple_config_check_notpicky(struct pcmcia_device *p_dev,
- static int simple_config(struct pcmcia_device *link)
- {
- 	struct serial_info *info = link->priv;
--	int i = -ENODEV, try;
-+	int ret, try;
- 
- 	/*
- 	 * First pass: look for a config entry that looks normal.
-@@ -472,8 +472,8 @@ static int simple_config(struct pcmcia_device *link)
- 	if (info->quirk && info->quirk->config)
- 		info->quirk->config(link);
- 
--	i = pcmcia_enable_device(link);
--	if (i != 0)
-+	ret = pcmcia_enable_device(link);
-+	if (ret != 0)
- 		return -1;
- 	return setup_serial(link, info, link->resource[0]->start, link->irq);
- }
+I collected all Reviewed-by and Tested-by.
+
+
+
+
+
+
 -- 
-2.25.1
-
+Best Regards
+Masahiro Yamada
