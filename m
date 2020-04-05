@@ -2,161 +2,157 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389B1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F59C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1BA02054F
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00B02054F
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:18:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="HKNN8jBa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJop5i+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgDEJRL (ORCPT
+        id S1726555AbgDEJSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 05:17:11 -0400
-Received: from mout.web.de ([212.227.17.12]:51553 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbgDEJRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 05:17:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586078205;
-        bh=LPWQ7SziA4eoJv2nsD+mwWWiIDzRTTmjMOUxFZ2RzRI=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=HKNN8jBajUi7CcIdLKHHnb42YGFZXPg8DK39V6xUsJ2VlKQrMCAUaRmuTqO/45mwj
-         QL0UF6N66Bvix78CBFDsMBFr+2JbquSBsC7vH8H9HthPW/lwOMK7PLRfXgldQ1OoZo
-         /G/d3iP6J/ITxtVVVW4O+SyQq7BFEIeFY6tpb+dY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.131.99.70]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lheqz-1iyajM38m9-00msy1; Sun, 05
- Apr 2020 11:16:45 +0200
-To:     dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
-        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] drm/imx: imx-tve: Delete an error message in imx_tve_bind()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <eb87043b-1881-da68-ba28-35406b6594ed@web.de>
-Date:   Sun, 5 Apr 2020 11:16:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 5 Apr 2020 05:18:05 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46213 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgDEJSF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 05:18:05 -0400
+Received: by mail-lj1-f193.google.com with SMTP id r7so11297189ljg.13;
+        Sun, 05 Apr 2020 02:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ezAeoP6FHV4AgjLzQuSOWjGz7T/3USe1LlIeyEWnVyY=;
+        b=BJop5i+EaG3paQbNb4bN/ifD24C0PwLCf4+Fe1ldfM6T5WuJdO6h34bW8Mg3TT2j9a
+         RTSZOePJPsJzM/ejFEoFXHzK4y7WW1IQjDrY5AeDsZtZcLuUJomZykzce7OY3U0FIeer
+         sz3CwiDmFbmYJJ1dsHGqLtoN74nBjxpnCPLTXG7qE9tU/cKisiP5ovyQoFSlaTJtEWi1
+         vlNmEU3ozk0LKP4qYL07NHUaKzYmCY+ZH501//0zXFvEeNke0kp9MbSWbiuQ9j8ZIz2d
+         xLXItZEC+zgMrjwETAydoLc8vEedkihxqKq3bl+ivRp46f9i55SX20cXTipr3iPqHerY
+         U+Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ezAeoP6FHV4AgjLzQuSOWjGz7T/3USe1LlIeyEWnVyY=;
+        b=VNCT/uVTd0dm+uPy4zEluEArEWv925MnR842mjqTXnvBH4ByLF+QmZSbfPAj+hZSFk
+         KfGSGYXRHwkn08hSL3hPc/AgU5uT9gg254pQwZ+dSZCijPUHvlZk5ky5G1hZp4/80VTb
+         HmqS5z1dc/x8Zu0BGPaQOSpBkqB+l718UUh69zZ07Q2Rn6qMrJbaqD7Uu4IjVMPLNq1t
+         7IZejh6AF1piiniO0PyJRuTfakqDrJT8KfN3Jmo2milzx9KQTNZut7EZHJUq6ur0wbyI
+         heO38wd4qjAczs92189pFAMXjzSATLIrY64+Velj6EDtpZmG8QIjCcZ/KX0gKgs/pc3S
+         GCNw==
+X-Gm-Message-State: AGi0PubgPbSsdIUeC005+CGe/ijeEseDSQj8Ddxp0VcFGarhjUFrYBnl
+        ty4BENfJChXkubU3qrVrYaLc9Bq99j63ZASZaKQIHn6d
+X-Google-Smtp-Source: APiQypJPDLy6OKizWRXuz0X5VBBP6ERK7+B3E98bN+O0lraEpSbbuOTmRKhtm25oWPuHP62rY1+rK/uU5ZMUjYZTMRI=
+X-Received: by 2002:a2e:9252:: with SMTP id v18mr9228042ljg.114.1586078282352;
+ Sun, 05 Apr 2020 02:18:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:6qsXH7NcfUP3dj9efSiFBR4IvcL7RBxJ4jGCoOyyG98pKa+sZK2
- VDjdSbAjhvo+fzFl1CSrzhEJC55RX//yxW/Km3ZOMKjU2fZyg7b7eM4cmDpjeGZAiHKobZf
- qS/2pHly1EUkiR/8GDog3ZzDLm5jDjRfGTf3LFu320T5lE44ii//3tfkxHR/S8hjRSBGZff
- KrrH5OKrRP8xZE58awTpA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6K9WHWRD+zY=:2/i1n7SGJLbhB0q883kLpt
- GsEBu6V+WrX75p/bVrtUBIbfAylC+hsTGGDV6nyC31p4J2OnUOUaqkVrPu9MGNdd33sgF3tTk
- 0Ay+cNGyiORlgF17+V/eRmW8kpf5zFw7rBFRn4hKEsCqzMOmYL7GuL06SGIipS/s2vIUYXlRd
- 3AdHaDv5erh8SY8Of3E1mkHrGO1p0Ekj/l8kmskCRSPi7v8621uDPi0nMoEKgGalPL1smeiPj
- J7UltiU4CTLbHz7455q5shHpQyi4a9/w+x+PRyL5LL6/Oub5oxuHul1mwtkMWGAXRhiDzBeuD
- C8kFKe58ux59cuasy/Dv3SiBZoaqcOV3gLgOVpJ3/CgcHaRqRrgtTODvwsKiUQeIBsczzOpo9
- r3RjmwQL8VLDP+Pmtu3FXKAgHuK+q751oYEUu7DnuSwEEB+V45svZmQ3DUfav/eoDM18Rhhe/
- GDohrhTAhcE+YZBHHOMRsd27WA0kEnJfIFQUZ4qlzmteY428pQkvTcxO5yQzj8nhu962cqKue
- XpmZ56wYn//YjAAjoxs0V2bmM502pIPTW0YOhqPcAeKAVxhiChqi9bySMJN70YJ76yXyZSvyc
- Jn0+fQ08gfwyxg7003zq0iR5uSPyWg78E35v13Oe0q0eEPETbTGL708RE/8ht1iFI8374i515
- zEPI45/1+ygPA10MUTLQZXRIhjYdJy2h9VSrl6Uf8z/mJN22+/Zjv9q8AMMiPMO4OWXbzHFUZ
- rwGWIAFcjroxk3vtoLhHUQpBtYqAx/NujEb1imgkxByXBlke+t6cnCoS1Eba/qXWuxUSTqZKq
- uwO2QW9mFYSBEMzU1gsla8g1akFQy5wQvmGfPKmy56yxC45vLufCAUxaGIRmioRYHub4PyiXW
- sKAqnuXdWKc6DCCoBSCFgefEylZ0jYQiQec6ghzOXhFEycoFuNluN+UTvmphZC21+AjGh9U+u
- Q420sU/sgn+gdd6mFg4PU82H/7uqfNnL//npSrKCsUBJLGREKwThjJ1Hy70ErHRpqwbm3oBFQ
- okTGmdnOPgjxtaYdbU+JLjgAl4h7r78HzJ74cqCVXSa/AB7JhbfG7w5RW2C5JJQcc+KaW++y8
- awiuMtBNbBX3AJJj37lATqAOjyqPI2ix4UxpVeRjvddlerBh6sufWH4qb4fsKFqO2/QGbbBcy
- ZQtMfmlsAd+26rmiH6fDGtONePqZ0UMF4kXrahpFth4vAUSgnaSOK9z0sNhWCRJJ5qNU6cdQ1
- bsOKyp2DcC/FWIzNW
+References: <20200404141909.26399-1-ap420073@gmail.com> <20200404155122.GD1476305@kroah.com>
+ <CAMArcTVdn7FcfX-BCnZ+LUzdct4yj2BLyhpTu832_VGt_O+xWA@mail.gmail.com> <20200405073212.GA1551960@kroah.com>
+In-Reply-To: <20200405073212.GA1551960@kroah.com>
+From:   Taehee Yoo <ap420073@gmail.com>
+Date:   Sun, 5 Apr 2020 18:17:50 +0900
+Message-ID: <CAMArcTVp4Hvsg607+Robuw3wgajTBa-9LeD=50+b9NumDAF-Hg@mail.gmail.com>
+Subject: Re: [PATCH net v2 2/3] net: core: add netdev_class_has_file_ns()
+ helper function
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, rafael@kernel.org,
+        j.vosburgh@gmail.com, vfalico@gmail.com,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, mitch.a.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sun, 5 Apr 2020 11:01:49 +0200
+On Sun, 5 Apr 2020 at 16:32, Greg KH <gregkh@linuxfoundation.org> wrote:
+>
 
-The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
-Thus omit a redundant message for the exception handling in the
-calling function.
+Hi Greg,
+Thank you for the review!
 
-This issue was detected by using the Coccinelle software.
+> On Sun, Apr 05, 2020 at 02:18:22AM +0900, Taehee Yoo wrote:
+> > On Sun, 5 Apr 2020 at 00:51, Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> >
+> > Hi Greg,
+> > Thank you for your review!
+> >
+> > > On Sat, Apr 04, 2020 at 02:19:09PM +0000, Taehee Yoo wrote:
+> > > > This helper function is to check whether the class file "/sys/class/net/*"
+> > > > is existing or not.
+> > > > In the next patch, this helper function will be used.
+> > > >
+> > > > Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
+> > > > Fixes: b76cdba9cdb2 ("[PATCH] bonding: add sysfs functionality to bonding (large)")
+> > > > Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+> > > > ---
+> > > >
+> > > > v1 -> v2:
+> > > >  - use class_has_file_ns(), which is introduced by the first patch.
+> > > >
+> > > >  include/linux/netdevice.h | 2 +-
+> > > >  net/core/net-sysfs.c      | 6 ++++++
+> > > >  2 files changed, 7 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> > > > index 130a668049ab..a04c487c0975 100644
+> > > > --- a/include/linux/netdevice.h
+> > > > +++ b/include/linux/netdevice.h
+> > > > @@ -4555,7 +4555,7 @@ int netdev_class_create_file_ns(const struct class_attribute *class_attr,
+> > > >                               const void *ns);
+> > > >  void netdev_class_remove_file_ns(const struct class_attribute *class_attr,
+> > > >                                const void *ns);
+> > > > -
+> > > > +bool netdev_class_has_file_ns(const char *name, const void *ns);
+> > > >  static inline int netdev_class_create_file(const struct class_attribute *class_attr)
+> > > >  {
+> > > >       return netdev_class_create_file_ns(class_attr, NULL);
+> > > > diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> > > > index cf0215734ceb..8a20d658eff0 100644
+> > > > --- a/net/core/net-sysfs.c
+> > > > +++ b/net/core/net-sysfs.c
+> > > > @@ -1914,6 +1914,12 @@ void netdev_class_remove_file_ns(const struct class_attribute *class_attr,
+> > > >  }
+> > > >  EXPORT_SYMBOL(netdev_class_remove_file_ns);
+> > > >
+> > > > +bool netdev_class_has_file_ns(const char *name, const void *ns)
+> > > > +{
+> > > > +     return class_has_file_ns(&net_class, name, ns);
+> > > > +}
+> > > > +EXPORT_SYMBOL(netdev_class_has_file_ns);
+> > >
+> > > Again, this feels broken, it can not solve a race condition.
+> > >
+> >
+> > This function is considered to be used under rtnl mutex and
+> > I assume that no one could use "/sys/class/net/*" outside of rtnl mutex.
+> > So, I think it returns the correct information under rtnl mutex.
+>
+> But you are creating a globally exported function that can be called
+> from anywhere, and as such, is not useful because it has no locking or
+> hints of how to use it correctly at all.
+>
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/gpu/drm/imx/imx-tve.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Yes, I agree with that.
 
-diff --git a/drivers/gpu/drm/imx/imx-tve.c b/drivers/gpu/drm/imx/imx-tve.c
-index 5bbfaa2cd0f4..23adbb818d92 100644
-=2D-- a/drivers/gpu/drm/imx/imx-tve.c
-+++ b/drivers/gpu/drm/imx/imx-tve.c
-@@ -598,10 +598,8 @@ static int imx_tve_bind(struct device *dev, struct de=
-vice *master, void *data)
- 	}
+> Again, don't push this "solution" down to sysfs to solve, you know if
+> you have a device that is not cleaned up yet, so don't try to
+> rename/create a device of the same name before that is finished.
+>
 
- 	irq =3D platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(dev, "failed to get irq\n");
-+	if (irq < 0)
- 		return irq;
--	}
+Okay, Thank you for that.
+I will find another way to fix it.
 
- 	ret =3D devm_request_threaded_irq(dev, irq, NULL,
- 					imx_tve_irq_handler, IRQF_ONESHOT,
-=2D-
-2.26.0
-
+Thanks a lot!
+Taehee Yoo
