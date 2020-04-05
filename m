@@ -2,145 +2,239 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18EEC2BA18
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696C1C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD6D20739
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:40:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="FOJ3IBC7"
+	by mail.kernel.org (Postfix) with ESMTP id 3634E2070E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586047415;
+	bh=zJ2PFpEYB9JE8j9pPZ9xRtBENIAE4PP4mrsX1laAi0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V/vR66mdndOmHFiF9KX+QkMYnTArm2Fh0pHRwm4Gc+pfOfKUyKgIe9n77inCQrU+C
+	 zh/HoB/DOi3sKJUWK8BK0/ox8rlXSSKtPuqus1SS+/uwLQ36+dtSaFL58J5xYLpal7
+	 snd9b0czFVKyjvoWpJoAZMrJHFE1s1fvalieBxi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgDEAkk (ORCPT
+        id S1726487AbgDEAne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 20:40:40 -0400
-Received: from ozlabs.org ([203.11.71.1]:58645 "EHLO ozlabs.org"
+        Sat, 4 Apr 2020 20:43:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726258AbgDEAkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 20:40:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726455AbgDEAne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 20:43:34 -0400
+Received: from earth.universe (dyndsl-095-033-168-093.ewe-ip-backbone.de [95.33.168.93])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48vvwG0Lq0z9sP7;
-        Sun,  5 Apr 2020 10:40:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1586047237;
-        bh=Ecetm/FWyw23pFJR9aYjHEPKZAqW0as9jZfLtutKHZE=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=FOJ3IBC7mc8ibpgD0O6posipCUoBslj9lRk5uELexERCZFzS7zW9CSUb8ptsk096b
-         +lQHDU2ACBxl75V60QihE/lrq5o4dLFUN51Y3pcnaknvfuqfNUkhA53TyO+is2N5P/
-         AdZNo2eMg7ctXOPrnOsM0xsZcTRQCldx24KBrG0TodRKbhNJlrXdoyxvJh6C+fTRDm
-         J174SpN5e7RaOOFXOIcPKC1agC94ZT8tRlERZ1/pqZ84Wj6qv+A0Y8s6y31ZVZznKP
-         hc0MWFUe0Sg5/QOTVHcvh8FPvuV1yoeTNmD9UMUXlx0A0eurI5b0nILo816HxWGSfe
-         I1xQhSMZyMSSg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, Michal Suchanek <msuchanek@suse.de>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        by mail.kernel.org (Postfix) with ESMTPSA id 006D9206C3;
+        Sun,  5 Apr 2020 00:43:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586047413;
+        bh=zJ2PFpEYB9JE8j9pPZ9xRtBENIAE4PP4mrsX1laAi0c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Htgg3Gnc/7wV1P1qXpt8Tw4WpHHXo6EPJQM14fi6qFri62INtV7b2hOvfJXkxrsEt
+         Cd/UWVa9ZgyaRw3FaKL1w6v+aKcIzdzvJ0/5emB/ExlcLli4kHahUmoxE30Ea9R6C/
+         dijN2pHPWYvmMSkk18V72eQ8sPXyczWFL+h/EinQ=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 39F4D3C082A; Sun,  5 Apr 2020 02:43:31 +0200 (CEST)
+Date:   Sun, 5 Apr 2020 02:43:31 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v11 0/8] Disable compat cruft on ppc64le v11
-In-Reply-To: <1585906885.3dbukubyr8.astroid@bobo.none>
-References: <20200225173541.1549955-1-npiggin@gmail.com> <cover.1584620202.git.msuchanek@suse.de> <1585898335.tckaz04a6x.astroid@bobo.none> <1e00a725-9710-2b80-4aff-2f284b31d2e5@c-s.fr> <1585906885.3dbukubyr8.astroid@bobo.none>
-Date:   Sun, 05 Apr 2020 10:40:38 +1000
-Message-ID: <87k12usr21.fsf@mpe.ellerman.id.au>
+        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v11 4/5] rtc: mt6397: Add support for the MediaTek MT6358
+ RTC
+Message-ID: <20200405004331.e55z5gobskjerz5f@earth.universe>
+References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2bxduq5dd7on66yi"
+Content-Disposition: inline
+In-Reply-To: <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicholas Piggin <npiggin@gmail.com> writes:
-> Christophe Leroy's on April 3, 2020 5:26 pm:
->> Le 03/04/2020 =C3=A0 09:25, Nicholas Piggin a =C3=A9crit=C2=A0:
->>> Michal Suchanek's on March 19, 2020 10:19 pm:
->>>> Less code means less bugs so add a knob to skip the compat stuff.
->>>>
->>>> Changes in v2: saner CONFIG_COMPAT ifdefs
->>>> Changes in v3:
->>>>   - change llseek to 32bit instead of builing it unconditionally in fs
->>>>   - clanup the makefile conditionals
->>>>   - remove some ifdefs or convert to IS_DEFINED where possible
->>>> Changes in v4:
->>>>   - cleanup is_32bit_task and current_is_64bit
->>>>   - more makefile cleanup
->>>> Changes in v5:
->>>>   - more current_is_64bit cleanup
->>>>   - split off callchain.c 32bit and 64bit parts
->>>> Changes in v6:
->>>>   - cleanup makefile after split
->>>>   - consolidate read_user_stack_32
->>>>   - fix some checkpatch warnings
->>>> Changes in v7:
->>>>   - add back __ARCH_WANT_SYS_LLSEEK to fix build with llseek
->>>>   - remove leftover hunk
->>>>   - add review tags
->>>> Changes in v8:
->>>>   - consolidate valid_user_sp to fix it in the split callchain.c
->>>>   - fix build errors/warnings with PPC64 !COMPAT and PPC32
->>>> Changes in v9:
->>>>   - remove current_is_64bit()
->>>> Chanegs in v10:
->>>>   - rebase, sent together with the syscall cleanup
->>>> Changes in v11:
->>>>   - rebase
->>>>   - add MAINTAINERS pattern for ppc perf
->>>=20
->>> These all look good to me. I had some minor comment about one patch but
->>> not really a big deal and there were more cleanups on top of it, so I
->>> don't mind if it's merged as is.
->>>=20
->>> Actually I think we have a bit of stack reading fixes for 64s radix now
->>> (not a bug fix as such, but we don't need the hash fault logic in radix=
-),
->>> so if I get around to that I can propose the changes in that series.
->>>=20
->>=20
->> As far as I can see, there is a v12
->
-> For the most part I was looking at the patches in mpe's next-test
-> tree on github, if that's the v12 series, same comment applies but
-> it's a pretty small nitpick.
 
-Yeah I have v12 in my tree.
+--2bxduq5dd7on66yi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This has floated around long enough (our fault), so I'm going to take it
-and we can fix anything up later.
+Hi,
 
-cheers
+On Tue, Mar 31, 2020 at 12:07:36PM +0800, Hsin-Hsiung Wang wrote:
+> From: Ran Bi <ran.bi@mediatek.com>
+>=20
+> This add support for the MediaTek MT6358 RTC. Driver using
+> compatible data to store different RTC_WRTGR address offset.
+> This replace RTC_WRTGR to RTC_WRTGR_MT6323 in mt6323-poweroff
+> driver which only needed by armv7 CPU without ATF.
+>=20
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+
+I expect this will not be merged through power-supply. No need to
+provide an immutable branch for this trivial change.
+
+Acked-by: Sebastian Reichel <sre@kernel.org>
+
+-- Sebastian
+
+>  drivers/power/reset/mt6323-poweroff.c |  2 +-
+>  drivers/rtc/rtc-mt6397.c              | 23 +++++++++++++++++++----
+>  include/linux/mfd/mt6397/rtc.h        |  9 ++++++++-
+>  3 files changed, 28 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/power/reset/mt6323-poweroff.c b/drivers/power/reset/=
+mt6323-poweroff.c
+> index 1caf43d..0532803 100644
+> --- a/drivers/power/reset/mt6323-poweroff.c
+> +++ b/drivers/power/reset/mt6323-poweroff.c
+> @@ -30,7 +30,7 @@ static void mt6323_do_pwroff(void)
+>  	int ret;
+> =20
+>  	regmap_write(pwrc->regmap, pwrc->base + RTC_BBPU, RTC_BBPU_KEY);
+> -	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR, 1);
+> +	regmap_write(pwrc->regmap, pwrc->base + RTC_WRTGR_MT6323, 1);
+> =20
+>  	ret =3D regmap_read_poll_timeout(pwrc->regmap,
+>  					pwrc->base + RTC_BBPU, val,
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index cda238d..7f3dfd2 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/mfd/mt6397/core.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/rtc.h>
+> @@ -20,7 +21,7 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
+>  	int ret;
+>  	u32 data;
+> =20
+> -	ret =3D regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
+> +	ret =3D regmap_write(rtc->regmap, rtc->addr_base + rtc->data->wrtgr, 1);
+>  	if (ret < 0)
+>  		return ret;
+> =20
+> @@ -269,6 +270,8 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+>  	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	rtc->addr_base =3D res->start;
+> =20
+> +	rtc->data =3D of_device_get_match_data(&pdev->dev);
+> +
+>  	rtc->irq =3D platform_get_irq(pdev, 0);
+>  	if (rtc->irq < 0)
+>  		return rtc->irq;
+> @@ -325,10 +328,22 @@ static int mt6397_rtc_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
+>  			mt6397_rtc_resume);
+> =20
+> +static const struct mtk_rtc_data mt6358_rtc_data =3D {
+> +	.wrtgr =3D RTC_WRTGR_MT6358,
+> +};
+> +
+> +static const struct mtk_rtc_data mt6397_rtc_data =3D {
+> +	.wrtgr =3D RTC_WRTGR_MT6397,
+> +};
+> +
+>  static const struct of_device_id mt6397_rtc_of_match[] =3D {
+> -	{ .compatible =3D "mediatek,mt6323-rtc", },
+> -	{ .compatible =3D "mediatek,mt6397-rtc", },
+> -	{ }
+> +	{ .compatible =3D "mediatek,mt6323-rtc",
+> +		.data =3D &mt6397_rtc_data, },
+> +	{ .compatible =3D "mediatek,mt6358-rtc",
+> +		.data =3D &mt6358_rtc_data, },
+> +	{ .compatible =3D "mediatek,mt6397-rtc",
+> +		.data =3D &mt6397_rtc_data, },
+> +	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, mt6397_rtc_of_match);
+> =20
+> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rt=
+c.h
+> index 7dfb63b..6200f3b 100644
+> --- a/include/linux/mfd/mt6397/rtc.h
+> +++ b/include/linux/mfd/mt6397/rtc.h
+> @@ -18,7 +18,9 @@
+>  #define RTC_BBPU_CBUSY         BIT(6)
+>  #define RTC_BBPU_KEY            (0x43 << 8)
+> =20
+> -#define RTC_WRTGR              0x003c
+> +#define RTC_WRTGR_MT6358       0x3a
+> +#define RTC_WRTGR_MT6397       0x3c
+> +#define RTC_WRTGR_MT6323       RTC_WRTGR_MT6397
+> =20
+>  #define RTC_IRQ_STA            0x0002
+>  #define RTC_IRQ_STA_AL         BIT(0)
+> @@ -65,6 +67,10 @@
+>  #define MTK_RTC_POLL_DELAY_US  10
+>  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+> =20
+> +struct mtk_rtc_data {
+> +	u32                     wrtgr;
+> +};
+> +
+>  struct mt6397_rtc {
+>  	struct device           *dev;
+>  	struct rtc_device       *rtc_dev;
+> @@ -74,6 +80,7 @@ struct mt6397_rtc {
+>  	struct regmap           *regmap;
+>  	int                     irq;
+>  	u32                     addr_base;
+> +	const struct mtk_rtc_data *data;
+>  };
+> =20
+>  #endif /* _LINUX_MFD_MT6397_RTC_H_ */
+> --=20
+> 2.6.4
+
+--2bxduq5dd7on66yi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl6JKaMACgkQ2O7X88g7
++poXSw/6A/hFwFRpm7tI04tkDezVAWK+d2kPK2/7BIIqjbwpXbI1fVn9z58XVYI5
+NJVAgFjdCS8sfwl2cTTynfCm7Vk64a9kyUacYLNvfufgCEg6M0EeRNeZ3s6AU6s6
+YyE5+X0mV/ioZh2hDLghQBvd6Re/qletLi/Ku8R99s/aqmLp00FklHWN1gXMnWsv
+sKj7gQkPqw1bGW31QQWJKs2cotojGscMfI4g2ncXguz7jLa8zohgP4T85fm5i3Ik
+ute+YbwbgoCoXWGbgJ8JrbMnfP/FreiZ0DsuyQNlbi8oA1Sr1adwUg11PB/E+wU1
+YPBQ4qfGitvXtoQ8nml8am+0+rr4WKdzGJ92aio5DBYD0amVbFTV86zk1CSU1J8o
+2n678g2xYyw9ZLmjP0G+Qy5pVBVP7jBd65WEPPQZYBwTSdUxOwXMcl9rxYyqY5bt
+GzK7NbqjDUQJJtMi9VU4kqkTF0ZjO54h0i/eMOSXyM3hS2CB59EGZABsRQG7WcO9
+b6VAAM/WHuDmg+oW1QNt9wn6CaRoxS3FFePo+J2rXejzHqpTOrnw99Mn9LmVZLZE
+plxt+XcsN1o+TOm6AmSB6OEi2sMCl/22ApUMyrV+2J0DUVJqCDpW1jXP+ol/RH1u
+bC5+zJNxe1OSesRx/Ia7rl3RpmP9wQC1UQAX/HDBuyWmdikiXTQ=
+=c+EE
+-----END PGP SIGNATURE-----
+
+--2bxduq5dd7on66yi--
