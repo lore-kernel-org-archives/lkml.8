@@ -2,93 +2,489 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D8DC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0FCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8DF20675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ye9z1hO1"
+	by mail.kernel.org (Postfix) with ESMTP id 09C2F206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586083504;
+	bh=2YiSfHRCj6n+m505S4fBDULS8D3pgrS1XZhepy9Wors=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vWAu5/dZAkLO6yWllKbymMYCi9TD3REsK4Y0JxVyAh3kZrecEywAGL5pyRQDPAwWP
+	 DKoSyC5NvGavBSqt2Tf/MasbuDCAG2+OxvM3v1/2dky5VAN/5x1BcnzDpXzFSn/oAe
+	 cQbY+k66YE0LgR3IpJjh7JZPHg+cYtUYqIiRC96g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgDEKoG (ORCPT
+        id S1726559AbgDEKpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 06:44:06 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42288 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgDEKoF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 06:44:05 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 22so6063994pfa.9;
-        Sun, 05 Apr 2020 03:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Wqo5YREUxilhGZH5KNtR1EEFlKaeLBk2Jx3NMurpifE=;
-        b=Ye9z1hO1q/z62yGaatDoxLKqIB8WqsUzxOEKT/Ba25Exfyd7HS1d06ZeN4dtiqoCUL
-         nppVH9FJ4/LPm+TR1Bgj/ouXjdVNEB+Gt6g7ymJtIa0x592aw6AKzTT6Tmcpb/EfGVJu
-         jiTT0XqE9QoRWru/6R25WHJYnT01S3ByqtlRfMvI/LpXQrTUy7A0SbNY8bZOgm01aTGe
-         THHXb9Ii71zj556Mijna4R7G8SYDX3c8Q1D+LS38cZc5+XoF784yExlBock5/R6UeAoO
-         TglL8WVGnSbd+uD99p1Sxo+bx11IGb3QUYUocsTzem9NW/4OQEDds48hkgFq8gctNyUl
-         hM6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Wqo5YREUxilhGZH5KNtR1EEFlKaeLBk2Jx3NMurpifE=;
-        b=FcEcwGAgV2MX7fvu/Y1ouJHbDsolKOLPJYWyBg5WQ8gGHS377iDv3evwQDzfk5asgX
-         U86mskhVfuS6BzPPE3uTVWSnIPowEdf1DQGTrw7FJITfHGMKls+jyJLQyCAnYT8S3rvb
-         brKENibJYZk3MIJfeQPZOxD8zaeaC8C4hfZ5SLd8HbitXap9m4AJulB4h+H5CzXX0pAY
-         rntvENPfpmZun4Y+zaIFgN9nvitIVbAhSPGr29q8rfQ4HLn/c28Ocl5dOXjTGrdwEnwn
-         e69GXNm9haUQxNZjiegTQoeZZ4WG+tiU6Y1ALWPkR54V1xObLY2tPA3hoFpMFtcE190W
-         oOCQ==
-X-Gm-Message-State: AGi0PuZLLHKZcQxaTjKIvpzRDeUPfxNi2E4Oo45S6Wz1vie6ealYCiEQ
-        JpuF1+AG2nonPOfHtc0PVLDa6TVEivQiMk6Qows=
-X-Google-Smtp-Source: APiQypI6eSEt/7OjXlQ7fneQEBVJlUoft1YyFL/U4/lAVdAbiWACIqZ9enxEfcw8nA6jlNHxqEU3WGluCTFo0hUHszk=
-X-Received: by 2002:a63:1d4:: with SMTP id 203mr4662429pgb.74.1586083443002;
- Sun, 05 Apr 2020 03:44:03 -0700 (PDT)
+        Sun, 5 Apr 2020 06:45:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726410AbgDEKpC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 06:45:02 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E0B206B8;
+        Sun,  5 Apr 2020 10:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586083500;
+        bh=2YiSfHRCj6n+m505S4fBDULS8D3pgrS1XZhepy9Wors=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wRX2G33GAO9ElNAfhHfOHohTPP6hiIq/uvw6Ac04aoLgssqg+PUzOm5YYEI49ty5z
+         g7xpU+IuAiMlTRJBRdFE2M/8MKwODXZcW1pWbKU2zlIGwY4GNZSbUdr5m8ohZLoe91
+         aaZdIcFF6BEpCNLV8mJE/MuZ7TWoOMRQfnXKFCmg=
+Date:   Sun, 5 Apr 2020 11:44:56 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devel@driverdev.osuosl.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <lorenzo.bianconi83@gmail.com>
+Subject: Re: [PATCH 2/3] iio: make use of iio_device_attach_kfifo_buffer()
+ where straightforward
+Message-ID: <20200405114456.78e52d31@archlinux>
+In-Reply-To: <20200401125936.6398-2-alexandru.ardelean@analog.com>
+References: <20200401125936.6398-1-alexandru.ardelean@analog.com>
+        <20200401125936.6398-2-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <bb60007c-585f-052d-2f86-5598ff7619cd@web.de>
-In-Reply-To: <bb60007c-585f-052d-2f86-5598ff7619cd@web.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 5 Apr 2020 13:43:50 +0300
-Message-ID: <CAHp75Ve8hf9TZ4YL43nVJnZ+jcs80VdOddL8wbAqh-Te=0r12Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: msic: Delete an error message in platform_msic_gpio_probe()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 4, 2020 at 10:35 PM Markus Elfring <Markus.Elfring@web.de> wrot=
-e:
->
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sat, 4 Apr 2020 21:30:12 +0200
->
-> The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
-> Thus omit a redundant message for the exception handling in the
-> calling function.
->
-> This issue was detected by using the Coccinelle software.
+On Wed, 1 Apr 2020 15:59:35 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-No need to touch this ancient driver, since it's subject to remove in
-one of the (nearest) future releases.
+> All drivers that already call devm_iio_kfifo_allocate() &
+> iio_device_attach_buffer() are simple to convert to
+> iio_device_attach_kfifo_buffer() in a single go/patch/.
+> 
+> This change does that.
+> 
+> For drivers max30100 & max30102 this helper is called after indio_dev has
+> been populated. This doesn't make any difference [at this point in time].
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
---=20
-With Best Regards,
-Andy Shevchenko
+Comments inline refer back to the question of whether this results in
+any order changes that might matter.  Unfortunately it does. I think
+we need to allow the new function to take the struct device *
+that the driver author wants it to us and to have the naming make it
+clear it's a managed function.
+
+The alternative is to go tidy up the allocations so all of the managed
+calls scopes are correct.  I.e. any that are associated with the iio_dev
+(or iio_priv obviously) use the indio_dev->dev including irq requests
+etc.  That might be a good exercise to do but it's not a small one
+and the benefits aren't obvious.  We'd move from a simple linear unwind
+to a nested one.
+
+devm_iio_device_alloc
+devm_iio_*_alloc
+devm_request_threaded_irq etc
+devm_kzalloc
+devm_iio_device_register
+
+devm_iio_device_alloc
+	devm_iio*alloc
+	devm_request_threaded_irq
+	devm_kzalloc
+	devm_iio_device_register
+
+So the release of the parent in the second cause the unwind of the
+device setup in devm_iio_device_alloc and take out all of the items below.
+
+If we'd structure this right in the first place the second option might be
+more elegant but we didn't so retrofitting it now will be messy.
+
+Jonathan
+
+> ---
+>  drivers/iio/accel/sca3000.c                    | 18 ++----------------
+>  drivers/iio/accel/ssp_accel_sensor.c           | 13 ++++---------
+>  drivers/iio/adc/ina2xx-adc.c                   | 13 +++++--------
+>  drivers/iio/gyro/ssp_gyro_sensor.c             | 13 ++++---------
+>  drivers/iio/health/max30100.c                  | 15 ++++++---------
+>  drivers/iio/health/max30102.c                  | 15 ++++++---------
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 17 +++++++----------
+>  drivers/iio/light/acpi-als.c                   | 11 +++++------
+>  drivers/iio/light/apds9960.c                   | 15 ++++++---------
+>  9 files changed, 45 insertions(+), 85 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
+> index 66d768d971e1..a0db76082ba6 100644
+> --- a/drivers/iio/accel/sca3000.c
+> +++ b/drivers/iio/accel/sca3000.c
+> @@ -1272,20 +1272,6 @@ static int sca3000_write_event_config(struct iio_dev *indio_dev,
+>  	return ret;
+>  }
+>  
+> -static int sca3000_configure_ring(struct iio_dev *indio_dev)
+> -{
+> -	struct iio_buffer *buffer;
+> -
+> -	buffer = devm_iio_kfifo_allocate(&indio_dev->dev);
+> -	if (!buffer)
+> -		return -ENOMEM;
+> -
+> -	iio_device_attach_buffer(indio_dev, buffer);
+> -	indio_dev->modes |= INDIO_BUFFER_SOFTWARE;
+> -
+> -	return 0;
+> -}
+> -
+>  static inline
+>  int __sca3000_hw_ring_state_set(struct iio_dev *indio_dev, bool state)
+>  {
+> @@ -1480,7 +1466,8 @@ static int sca3000_probe(struct spi_device *spi)
+>  	}
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  
+> -	ret = sca3000_configure_ring(indio_dev);
+> +	ret = iio_device_attach_kfifo_buffer(indio_dev, INDIO_BUFFER_SOFTWARE,
+> +					     &sca3000_ring_setup_ops);
+
+This one is fine (for a moment I thought we had a bug in the current code)
+as this call is the next thing that needs unwinding after the devm_iio_device_alloc
+anyway.  It would however have been more consistent if original code had
+used the parent dev.
+
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1494,7 +1481,6 @@ static int sca3000_probe(struct spi_device *spi)
+>  		if (ret)
+>  			return ret;
+>  	}
+> -	indio_dev->setup_ops = &sca3000_ring_setup_ops;
+>  	ret = sca3000_clean_setup(st);
+>  	if (ret)
+>  		goto error_free_irq;
+> diff --git a/drivers/iio/accel/ssp_accel_sensor.c b/drivers/iio/accel/ssp_accel_sensor.c
+> index c32647abce20..1d9971db949d 100644
+> --- a/drivers/iio/accel/ssp_accel_sensor.c
+> +++ b/drivers/iio/accel/ssp_accel_sensor.c
+> @@ -96,7 +96,6 @@ static int ssp_accel_probe(struct platform_device *pdev)
+>  	int ret;
+>  	struct iio_dev *indio_dev;
+>  	struct ssp_sensor_data *spd;
+> -	struct iio_buffer *buffer;
+>  
+>  	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*spd));
+>  	if (!indio_dev)
+> @@ -111,18 +110,14 @@ static int ssp_accel_probe(struct platform_device *pdev)
+>  	indio_dev->dev.parent = &pdev->dev;
+>  	indio_dev->dev.of_node = pdev->dev.of_node;
+>  	indio_dev->info = &ssp_accel_iio_info;
+> -	indio_dev->modes = INDIO_BUFFER_SOFTWARE;
+>  	indio_dev->channels = ssp_acc_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(ssp_acc_channels);
+>  	indio_dev->available_scan_masks = ssp_accel_scan_mask;
+>  
+> -	buffer = devm_iio_kfifo_allocate(&pdev->dev);
+> -	if (!buffer)
+> -		return -ENOMEM;
+> -
+> -	iio_device_attach_buffer(indio_dev, buffer);
+> -
+> -	indio_dev->setup_ops = &ssp_accel_buffer_ops;
+> +	ret = iio_device_attach_kfifo_buffer(indio_dev, INDIO_BUFFER_SOFTWARE,
+> +					     &ssp_accel_buffer_ops);
+> +	if (ret)
+> +		return ret;
+>  
+>  	platform_set_drvdata(pdev, indio_dev);
+>  
+> diff --git a/drivers/iio/adc/ina2xx-adc.c b/drivers/iio/adc/ina2xx-adc.c
+> index bdd7cba6f6b0..2070809e1acc 100644
+> --- a/drivers/iio/adc/ina2xx-adc.c
+> +++ b/drivers/iio/adc/ina2xx-adc.c
+> @@ -950,7 +950,6 @@ static int ina2xx_probe(struct i2c_client *client,
+>  {
+>  	struct ina2xx_chip_info *chip;
+>  	struct iio_dev *indio_dev;
+> -	struct iio_buffer *buffer;
+>  	unsigned int val;
+>  	enum ina2xx_ids type;
+>  	int ret;
+> @@ -1014,7 +1013,7 @@ static int ina2xx_probe(struct i2c_client *client,
+>  		return ret;
+>  	}
+>  
+> -	indio_dev->modes = INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->dev.parent = &client->dev;
+>  	indio_dev->dev.of_node = client->dev.of_node;
+>  	if (id->driver_data == ina226) {
+> @@ -1027,13 +1026,11 @@ static int ina2xx_probe(struct i2c_client *client,
+>  		indio_dev->info = &ina219_info;
+>  	}
+>  	indio_dev->name = id->name;
+> -	indio_dev->setup_ops = &ina2xx_setup_ops;
+>  
+> -	buffer = devm_iio_kfifo_allocate(&indio_dev->dev);
+> -	if (!buffer)
+> -		return -ENOMEM;
+> -
+> -	iio_device_attach_buffer(indio_dev, buffer);
+> +	ret = iio_device_attach_kfifo_buffer(indio_dev, INDIO_BUFFER_SOFTWARE,
+> +					     &ina2xx_setup_ops);
+> +	if (ret)
+> +		return ret;
+
+This changes the unwind order.  Not good from an obviously correct point of
+view.
+
+>  
+>  	return iio_device_register(indio_dev);
+>  }
+> diff --git a/drivers/iio/gyro/ssp_gyro_sensor.c b/drivers/iio/gyro/ssp_gyro_sensor.c
+> index 4e4ee4167544..c12d3db5a951 100644
+> --- a/drivers/iio/gyro/ssp_gyro_sensor.c
+> +++ b/drivers/iio/gyro/ssp_gyro_sensor.c
+> @@ -96,7 +96,6 @@ static int ssp_gyro_probe(struct platform_device *pdev)
+>  	int ret;
+>  	struct iio_dev *indio_dev;
+>  	struct ssp_sensor_data *spd;
+> -	struct iio_buffer *buffer;
+>  
+>  	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*spd));
+>  	if (!indio_dev)
+> @@ -110,18 +109,14 @@ static int ssp_gyro_probe(struct platform_device *pdev)
+>  	indio_dev->name = ssp_gyro_name;
+>  	indio_dev->dev.parent = &pdev->dev;
+>  	indio_dev->info = &ssp_gyro_iio_info;
+> -	indio_dev->modes = INDIO_BUFFER_SOFTWARE;
+>  	indio_dev->channels = ssp_gyro_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(ssp_gyro_channels);
+>  	indio_dev->available_scan_masks = ssp_gyro_scan_mask;
+>  
+> -	buffer = devm_iio_kfifo_allocate(&pdev->dev);
+> -	if (!buffer)
+> -		return -ENOMEM;
+> -
+> -	iio_device_attach_buffer(indio_dev, buffer);
+> -
+> -	indio_dev->setup_ops = &ssp_gyro_buffer_ops;
+> +	ret = iio_device_attach_kfifo_buffer(indio_dev, INDIO_BUFFER_SOFTWARE,
+> +					     &ssp_gyro_buffer_ops);
+> +	if (ret)
+> +		return ret;
+>  
+>  	platform_set_drvdata(pdev, indio_dev);
+>  
+> diff --git a/drivers/iio/health/max30100.c b/drivers/iio/health/max30100.c
+> index 546fc37ad75d..f4e9866f4c3d 100644
+> --- a/drivers/iio/health/max30100.c
+> +++ b/drivers/iio/health/max30100.c
+> @@ -418,7 +418,6 @@ static int max30100_probe(struct i2c_client *client,
+>  			  const struct i2c_device_id *id)
+>  {
+>  	struct max30100_data *data;
+> -	struct iio_buffer *buffer;
+>  	struct iio_dev *indio_dev;
+>  	int ret;
+>  
+> @@ -426,21 +425,19 @@ static int max30100_probe(struct i2c_client *client,
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+> -	buffer = devm_iio_kfifo_allocate(&client->dev);
+> -	if (!buffer)
+> -		return -ENOMEM;
+> -
+> -	iio_device_attach_buffer(indio_dev, buffer);
+> -
+>  	indio_dev->name = MAX30100_DRV_NAME;
+>  	indio_dev->channels = max30100_channels;
+>  	indio_dev->info = &max30100_info;
+>  	indio_dev->num_channels = ARRAY_SIZE(max30100_channels);
+>  	indio_dev->available_scan_masks = max30100_scan_masks;
+> -	indio_dev->modes = (INDIO_BUFFER_SOFTWARE | INDIO_DIRECT_MODE);
+> -	indio_dev->setup_ops = &max30100_buffer_setup_ops;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->dev.parent = &client->dev;
+>  
+> +	ret = iio_device_attach_kfifo_buffer(indio_dev, INDIO_BUFFER_SOFTWARE,
+> +					     &max30100_buffer_setup_ops);
+> +	if (ret)
+> +		return ret;
+> +
+>  	data = iio_priv(indio_dev);
+>  	data->indio_dev = indio_dev;
+>  	data->client = client;
+> diff --git a/drivers/iio/health/max30102.c b/drivers/iio/health/max30102.c
+> index 74fc260b957e..e15126d23dfb 100644
+> --- a/drivers/iio/health/max30102.c
+> +++ b/drivers/iio/health/max30102.c
+> @@ -507,7 +507,6 @@ static int max30102_probe(struct i2c_client *client,
+>  			  const struct i2c_device_id *id)
+>  {
+>  	struct max30102_data *data;
+> -	struct iio_buffer *buffer;
+>  	struct iio_dev *indio_dev;
+>  	int ret;
+>  	unsigned int reg;
+> @@ -516,16 +515,9 @@ static int max30102_probe(struct i2c_client *client,
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+> -	buffer = devm_iio_kfifo_allocate(&client->dev);
+> -	if (!buffer)
+> -		return -ENOMEM;
+> -
+> -	iio_device_attach_buffer(indio_dev, buffer);
+> -
+>  	indio_dev->name = MAX30102_DRV_NAME;
+>  	indio_dev->info = &max30102_info;
+> -	indio_dev->modes = (INDIO_BUFFER_SOFTWARE | INDIO_DIRECT_MODE);
+> -	indio_dev->setup_ops = &max30102_buffer_setup_ops;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->dev.parent = &client->dev;
+>  
+>  	data = iio_priv(indio_dev);
+> @@ -551,6 +543,11 @@ static int max30102_probe(struct i2c_client *client,
+>  		return -ENODEV;
+>  	}
+>  
+> +	ret = iio_device_attach_kfifo_buffer(indio_dev, INDIO_BUFFER_SOFTWARE,
+> +					     &max30102_buffer_setup_ops);
+> +	if (ret)
+> +		return ret;
+> +
+>  	data->regmap = devm_regmap_init_i2c(client, &max30102_regmap_config);
+>  	if (IS_ERR(data->regmap)) {
+>  		dev_err(&client->dev, "regmap initialization failed\n");
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> index bb899345f2bb..4ba3d5551570 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+
+I'm not going to layout the details, but this one isn't unwinding in the same
+order after this change.  There are devm_kzalloc calls between the devm_iio_device_alloc and
+the new call.
+
+> @@ -30,8 +30,8 @@
+>   * Denis Ciocca <denis.ciocca@st.com>
+>   */
+>  #include <linux/module.h>
+> -#include <linux/iio/kfifo_buf.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/iio/kfifo_buf.h>
+>  #include <linux/iio/buffer.h>
+>  #include <linux/regmap.h>
+>  #include <linux/bitfield.h>
+> @@ -713,20 +713,17 @@ static const struct iio_buffer_setup_ops st_lsm6dsx_buffer_ops = {
+>  
+>  int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw)
+>  {
+> -	struct iio_buffer *buffer;
+> -	int i;
+> +	int i, ret;
+>  
+>  	for (i = 0; i < ST_LSM6DSX_ID_MAX; i++) {
+>  		if (!hw->iio_devs[i])
+>  			continue;
+>  
+> -		buffer = devm_iio_kfifo_allocate(hw->dev);
+> -		if (!buffer)
+> -			return -ENOMEM;
+> -
+> -		iio_device_attach_buffer(hw->iio_devs[i], buffer);
+> -		hw->iio_devs[i]->modes |= INDIO_BUFFER_SOFTWARE;
+> -		hw->iio_devs[i]->setup_ops = &st_lsm6dsx_buffer_ops;
+> +		ret = iio_device_attach_kfifo_buffer(hw->iio_devs[i],
+> +						     INDIO_BUFFER_SOFTWARE,
+> +						     &st_lsm6dsx_buffer_ops);
+> +		if (ret)
+> +			return ret;
+>  	}
+>  
+>  	return 0;
+> diff --git a/drivers/iio/light/acpi-als.c b/drivers/iio/light/acpi-als.c
+> index 1eafd0b24e18..ea99705c3387 100644
+> --- a/drivers/iio/light/acpi-als.c
+> +++ b/drivers/iio/light/acpi-als.c
+> @@ -166,6 +166,7 @@ static int acpi_als_add(struct acpi_device *device)
+>  	struct acpi_als *als;
+>  	struct iio_dev *indio_dev;
+>  	struct iio_buffer *buffer;
+> +	int ret;
+>  
+>  	indio_dev = devm_iio_device_alloc(&device->dev, sizeof(*als));
+>  	if (!indio_dev)
+> @@ -180,15 +181,13 @@ static int acpi_als_add(struct acpi_device *device)
+>  	indio_dev->name = ACPI_ALS_DEVICE_NAME;
+>  	indio_dev->dev.parent = &device->dev;
+>  	indio_dev->info = &acpi_als_info;
+> -	indio_dev->modes = INDIO_BUFFER_SOFTWARE;
+>  	indio_dev->channels = acpi_als_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(acpi_als_channels);
+>  
+> -	buffer = devm_iio_kfifo_allocate(&device->dev);
+> -	if (!buffer)
+> -		return -ENOMEM;
+> -
+> -	iio_device_attach_buffer(indio_dev, buffer);
+> +	ret = iio_device_attach_kfifo_buffer(indio_dev, INDIO_BUFFER_SOFTWARE,
+> +					     NULL);
+> +	if (ret)
+> +		return ret;
+
+This one is fine as next to the devm_iio_device_alloc anyway.
+
+>  
+>  	return devm_iio_device_register(&device->dev, indio_dev);
+>  }
+> diff --git a/drivers/iio/light/apds9960.c b/drivers/iio/light/apds9960.c
+> index 52f86bc777dd..8acc319445b6 100644
+> --- a/drivers/iio/light/apds9960.c
+> +++ b/drivers/iio/light/apds9960.c
+> @@ -987,7 +987,6 @@ static int apds9960_probe(struct i2c_client *client,
+>  			  const struct i2c_device_id *id)
+>  {
+>  	struct apds9960_data *data;
+> -	struct iio_buffer *buffer;
+>  	struct iio_dev *indio_dev;
+>  	int ret;
+>  
+> @@ -995,20 +994,18 @@ static int apds9960_probe(struct i2c_client *client,
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+> -	buffer = devm_iio_kfifo_allocate(&client->dev);
+> -	if (!buffer)
+> -		return -ENOMEM;
+> -
+> -	iio_device_attach_buffer(indio_dev, buffer);
+> -
+>  	indio_dev->dev.parent = &client->dev;
+>  	indio_dev->info = &apds9960_info;
+>  	indio_dev->name = APDS9960_DRV_NAME;
+>  	indio_dev->channels = apds9960_channels;
+>  	indio_dev->num_channels = ARRAY_SIZE(apds9960_channels);
+>  	indio_dev->available_scan_masks = apds9960_scan_masks;
+> -	indio_dev->modes = (INDIO_BUFFER_SOFTWARE | INDIO_DIRECT_MODE);
+> -	indio_dev->setup_ops = &apds9960_buffer_setup_ops;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	ret = iio_device_attach_kfifo_buffer(indio_dev, INDIO_BUFFER_SOFTWARE,
+> +					     &apds9960_buffer_setup_ops);
+> +	if (ret)
+> +		return ret;
+
+In this case we do have a managed call after this, but as there is nothing between
+the devm_iio_device_alloc and iio_device_attach_kfifo_buffer I think we are fine.
+
+>  
+>  	data = iio_priv(indio_dev);
+>  	i2c_set_clientdata(client, indio_dev);
+
