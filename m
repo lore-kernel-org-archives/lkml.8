@@ -2,147 +2,254 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A282C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80462C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2805420675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:41:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dq7sjnd5"
+	by mail.kernel.org (Postfix) with ESMTP id 3D73D206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586105175;
+	bh=27Qr2piCnEQkYNYMaJeV3dxv9711F1FmGXxHcTTBmu8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LlYWx1rEjnkiMN2WbT2OI6SMb1X8Ekol0eAcGt3Wx/N9qY473IM+RhYWfeJwUCcBT
+	 jRyycqgzj6jB20lveiJH/Y5YSAqAOW0XyYtlL7Gle0Yul83shE40v7j8bfhsvDH5tA
+	 ulqz7VR9kiq3MVinFLtWoF9hKHnVyGbf+EKZT42o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgDEQla (ORCPT
+        id S1727593AbgDEQqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 12:41:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43786 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgDEQl3 (ORCPT
+        Sun, 5 Apr 2020 12:46:14 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:56167 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbgDEQqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 12:41:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=+M0Y1kjtlZOoIzta5LvEShFkET8hM92YHdaoqL+I5Fg=; b=dq7sjnd54/K3+ZTSbi2RUgN+61
-        rJw2w4cuSzHi64TQmp4migtec4jAcBa15X41M9GNs2Ar9QcvqxJE2XP/khncENXbWRU5zmZpG9JKL
-        qUomqye3eWwhubDeX/WbcRFiJjr9q5eXJ+MwtiafS0gIpIrlNq/w+P6rfa2xOgt79r+6jNWEFx5Rk
-        9FU6XydQ4jwaryrEGp5NcqWDrb4w0QCtmGUva7es7IeTbAwzcCM704hXvi+t/Dq27YzNxW/XjyZWv
-        LCxi63wdSEOCAg822kz2avJI2F+gLYXROu7sDfgeNsJf0oYLgqZpunQq18W69n0t9dy8i5D9vY/cA
-        yNjCc1Ag==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jL8Kr-0002db-DQ; Sun, 05 Apr 2020 16:41:25 +0000
-Subject: Re: [PATCH net] skbuff.h: Improve the checksum related comments
-To:     Dexuan Cui <decui@microsoft.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "willemb@google.com" <willemb@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        "sdf@google.com" <sdf@google.com>,
-        "john.hurley@netronome.com" <john.hurley@netronome.com>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "jeremy@azazel.net" <jeremy@azazel.net>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1586071063-51656-1-git-send-email-decui@microsoft.com>
- <20200405103618.GV21484@bombadil.infradead.org>
- <HK0P153MB027363A6F5A5AACC366B11A3BFC50@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7a0df207-8ad3-3731-c372-146a19befc02@infradead.org>
-Date:   Sun, 5 Apr 2020 09:41:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 5 Apr 2020 12:46:14 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 035GjvtX031028;
+        Mon, 6 Apr 2020 01:45:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 035GjvtX031028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586105158;
+        bh=LDPKC1ers4KTra5PaosAQKb9OtIhKkb2IRgJKJ1PucE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y5QCnFozrWTlxaHtyTykbkZ0Ddh7rTi7pFwk4XaWcyMFcnULagcpHiEla1zY9Wmzl
+         OHmDY+LuUu8rVfFyHsB7HinrRAsqQ2JvfOOnayI3dEJ0KGU4gSbSQh/lluFfkixUQ1
+         LJw/fi8trFtq0blreMEYLNcnjKGcPcSwxN3zhNAO1OzV3UFoxEcxW7OPBJcqKQQP/U
+         wGcwKlcQoGov6w2BdQDHei0cYKQtJPsTr9LpALXRxdZ6KrAygTIetbGRiFy6Zbb3y2
+         4f5ejtXS6je98Bzd0aNSONhVddx/Swm2yhz/dYmxnNo6vCCMzGtCvN2l37XgM7Dza6
+         cWGn8ZkwFbXrQ==
+X-Nifty-SrcIP: [209.85.222.50]
+Received: by mail-ua1-f50.google.com with SMTP id m15so3852274uao.3;
+        Sun, 05 Apr 2020 09:45:57 -0700 (PDT)
+X-Gm-Message-State: AGi0Pubu2v7hgfCF+lt6QKdoEEX6gpHGGLbdNXJBgmQgXl9n4lhrw6MK
+        pwg7SDyQgTApUjR6l3fI5tZs891xkFoOwg1YVPc=
+X-Google-Smtp-Source: APiQypIJjTRv4/QIF7T7DcDr8dCRlMy7i4kMOc03WYHXZyFiwa5KFZs/MqC1iS0miqJ/J+/Jvp2NsoHJThWlwjI/jjQ=
+X-Received: by 2002:ab0:20d6:: with SMTP id z22mr12839027ual.121.1586105156303;
+ Sun, 05 Apr 2020 09:45:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <HK0P153MB027363A6F5A5AACC366B11A3BFC50@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200403051709.22407-1-masahiroy@kernel.org> <CAKwvOdnaZ6qDVxaPY-GEH8pdUkzH6eqm16ok9_wzRSVRG-1kiQ@mail.gmail.com>
+In-Reply-To: <CAKwvOdnaZ6qDVxaPY-GEH8pdUkzH6eqm16ok9_wzRSVRG-1kiQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 6 Apr 2020 01:45:20 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQybfcYiosNU+ybd-Q7-Y2dbLqBVN2XA00wCRnFAoqdew@mail.gmail.com>
+Message-ID: <CAK7LNAQybfcYiosNU+ybd-Q7-Y2dbLqBVN2XA00wCRnFAoqdew@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Matthias_M=C3=A4nnich?= <maennich@google.com>,
+        Sandeep Patil <sspatil@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/5/20 9:33 AM, Dexuan Cui wrote:
->> From: Matthew Wilcox <willy@infradead.org>
->> Sent: Sunday, April 5, 2020 3:36 AM
->> To: Dexuan Cui <decui@microsoft.com>
->>
->> On Sun, Apr 05, 2020 at 12:17:43AM -0700, Dexuan Cui wrote:
->>>   * CHECKSUM_COMPLETE:
->>>   *
->>> - *   This is the most generic way. The device supplied checksum of the
->> _whole_
->>> - *   packet as seen by netif_rx() and fills out in skb->csum. Meaning, the
->>> + *   This is the most generic way. The device supplies checksum of the
->> _whole_
->>> + *   packet as seen by netif_rx() and fills out in skb->csum. This means the
->>
->> I think both 'supplies' and 'supplied' are correct in this sentence.  The
->> nuances are slightly different, but the meaning is the same in this instance.
-> 
-> I see. So let me rever back to "supplied".
->  
->> You missed a mistake in the second line though, it should be either 'fills
->> out' or 'fills in'.  I think we tend to prefer 'fills in'.
-> 
-> Thanks! Will use "fills in" in v2.
-> 
->>>   * CHECKSUM_COMPLETE:
->>>   *   Not used in checksum output. If a driver observes a packet with this
->> value
->>> - *   set in skbuff, if should treat as CHECKSUM_NONE being set.
->>> + *   set in skbuff, the driver should treat it as CHECKSUM_NONE being set.
->>
->> I would go with "it should treat the packet as if CHECKSUM_NONE were set."
-> 
-> Thanks. Will use this version.
->  
->>> @@ -211,7 +211,7 @@
->>>   * is implied by the SKB_GSO_* flags in gso_type. Most obviously, if the
->>>   * gso_type is SKB_GSO_TCPV4 or SKB_GSO_TCPV6, TCP checksum offload
->> as
->>>   * part of the GSO operation is implied. If a checksum is being offloaded
->>> - * with GSO then ip_summed is CHECKSUM_PARTIAL, csum_start and
->> csum_offset
->>> + * with GSO then ip_summed is CHECKSUM_PARTIAL AND csum_start and
->> csum_offset
->>>   * are set to refer to the outermost checksum being offload (two offloaded
->>>   * checksums are possible with UDP encapsulation).
->>
->> Why the capitalisation of 'AND'?
-> 
-> The current text without the patch is:
->  * part of the GSO operation is implied. If a checksum is being offloaded
->  * with GSO then ip_summed is CHECKSUM_PARTIAL, csum_start and csum_offset
->  * are set to refer to the outermost checksum being offload (two offloaded
->  * checksums are possible with UDP encapsulation).
-> 
-> The comma after the "CHECKSUM_PARTIAL" seems suspicious to me. I feel we
-> should add an "and" after the comma, or replace the comma with "and", but
-> either way we'll have "... and csum_start and csum_offset...", which seems a little
-> unnatural to me since we have 2 'and's here... So I tried to make it a little natural
-> by replacing the first 'and' with 'AND', which obviously causes confusion to you.
-
-maybe "both csum_start and csum_offset are set to refer to".
-
-> Please suggest the best change here. Thanks!
->  
->> Thanks for the improvements,
->>
->> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> 
-> Thanks for the comments! I'll wait for your suggestion on the 'AND' and post
-> a v2.
+On Sat, Apr 4, 2020 at 3:24 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> On Thu, Apr 2, 2020 at 10:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > As Documentation/kbuild/llvm.rst implies, building the kernel with a
+> > full set of LLVM tools gets very verbose and unwieldy.
+> >
+> > Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
+> > GCC and Binutils. You can pass LLVM=1 from the command line or as an
+> > environment variable. Then, Kbuild will use LLVM toolchains in your
+> > PATH environment.
+> >
+> > Please note LLVM=1 does not turn on the LLVM integrated assembler.
+> > You need to explicitly pass AS=clang to use it. When the upstream
+> > kernel is ready for the integrated assembler, I think we can make
+> > it default.
+>
+> Having this behavior change over time may be surprising.  I'd rather
+> that if you want to not use the integrated assembler, you explicitly
+> negate it, or just don't use the LLVM=1 syntax, ie. `make CC=clang
+> LD=ld.lld ...`.
+>
+> We could modify how `-no-integrated-as` is chosen when LLVM=1.
+>
+> make LLVM=1 LLVMIA=0 ... # add `-no-integrated-as`
+> # what the flag is doesn't really matter to me, something shorter might be nice.
+> make LLVM=1 # use all LLVM tools
+>
+> Since we got rid of $(AS), it would be appropriate to remove/change it
+> there, since no one really relies on AS=clang right now. (We do have 1
+> of our 60+ CI targets using it, but we can also change that trivially.
+> So I think we have a lot of freedom to change how `-no-integrated-as`
+> is set.
+>
+> This could even be independent of this patch.
 
 
--- 
-~Randy
+I also thought a boolean flag is preferred.
 
+AS=clang will not live long anyway, and
+I hesitated to break the compatibility
+for the short-term workaround.
+
+But, if this is not a big deal, I can
+replace AS=clang with LLVMIA=1.
+
+
+
+> >
+> > We discussed what we need, and we agreed to go with a simple boolean
+> > switch (https://lkml.org/lkml/2020/3/28/494).
+> >
+> > Some items in the discussion:
+> >
+> > - LLVM_DIR
+> >
+> >   When multiple versions of LLVM are installed, I just thought supporting
+> >   LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
+> >
+> >   CC      = $(LLVM_DIR)clang
+> >   LD      = $(LLVM_DIR)ld.lld
+> >     ...
+> >
+> >   However, we can handle this by modifying PATH. So, we decided to not do
+> >   this.
+> >
+> > - LLVM_SUFFIX
+> >
+> >   Some distributions (e.g. Debian) package specific versions of LLVM with
+> >   naming conventions that use the version as a suffix.
+> >
+> >   CC      = clang$(LLVM_SUFFIX)
+> >   LD      = ld.lld(LLVM_SUFFIX)
+> >     ...
+> >
+> >   will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
+> >   but the suffixed versions in /usr/bin/ are symlinks to binaries in
+> >   /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
+> >
+> > - HOSTCC, HOSTCXX, etc.
+> >
+> >   We can switch the host compilers in the same way:
+> >
+> >   ifneq ($(LLVM),)
+> >   HOSTCC       = clang
+> >   HOSTCXX      = clang++
+> >   else
+> >   HOSTCC       = gcc
+> >   HOSTCXX      = g++
+> >   endif
+> >
+> >   This may the right thing to do, but I could not make up my mind.
+> >   Because we do not frequently switch the host compiler, a counter
+> >   solution I had in my mind was to leave it to the default of the
+> >   system.
+> >
+> >   HOSTCC       = cc
+> >   HOSTCXX      = c++
+> >
+> >   Many distributions support update-alternatives to switch the default
+> >   to GCC, Clang, or whatever, but reviewers were opposed to this
+> >   approach. So, this commit does not touch the host tools.
+>
+> update-alternatives assumes you've installed Clang via a package manager?
+> $ update-alternatives --list cc
+> /usr/bin/gcc
+> On my system even though clang and friends are in my PATH.
+>
+> And previously, there was feedback that maybe folks don't want to
+> change `cc` on their systems just for Clang kernel builds.
+> https://lkml.org/lkml/2020/3/30/836
+> https://lkml.org/lkml/2020/3/30/838
+>
+> A goal for ClangBuiltLinux is to build a kernel image with no GCC or
+> binutils installed on the host.  Let the record reflect that.  And
+> there's been multiple complaints that the existing syntax is too long
+> for specifying all of the tools.
+>
+> LLVM=1 is meant to be one flag.  Not `make LLVM=1 HOSTCC=clang
+> HOSTCXX=clang`.  If folks want fine grain flexibility, use the
+> existing command line interface, which this patch does not change.
+> LLVM=1 is opinionated, and inflexible, because it makes a strong
+> choice to enable LLVM for everything.
+>
+> Another reason why I don't want to change these over time, and why I
+> want them all to be in sync is that there are 4 different CI systems
+> for the kernel, and they are currently fragmented in terms of who is
+> using what tools:
+>
+> KernelCI: CC=clang only
+> Kbuild test robot aka 0day bot: CC=clang LD=ld.lld
+> Linaro TCWG: CC=clang only
+> our CI: a complete mix due to combinatorial explosion, but more
+> coverage of LLVM than everyone else.
+>
+> That is a mess that we must solve.  Having 1 flag that works
+> consistently across systems is one solution.  Now if those were all
+> using LLVM=1, but some were enabling Clang's integrated assembler, and
+> some weren't because we changed the default over time, then we'd be
+> right back to this mismatch between systems.  I'd much rather draw the
+> line in the sand, and say "this is how this flag will work, since day
+> 1."  Maybe it's too rigid, but it's important to me that if we create
+> something new to solve multiple objectives (1. simplifies existing
+> interface. 2. turns on everything.) that it does so.  It is a partial
+> solution, if it eliminates some of the flags while leaving others. I
+> want a full solution.
+>
+> If folks want the flexibility to mix and match tools, the existing
+> interface is capable.  But for us to track who is using what, we need
+> 1 flag that we know is not different depending on the cc of the
+> system.  Once clang's integrated assembler is good to go, we will
+> begin recommending LLVM=1 to everyone.  And we want feedback if we
+> regress building the host utilities during a kernel build, even if
+> there are not many.
+>
+> I'm on the fence about having all of the above satisfied by one patch,
+> or taking this patch as is and following up on the above two points
+> (related to disabling `-no-integrated-as` and setting HOSTCC).  I
+> trust your judgement and respect your decisions, so I'll defer to you
+> Masahiro, but I need to make explicit the design goals.  Maybe with
+> this additional context it can help inform the design.
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+
+
+Thanks for the comments.
+
+I'd rather want to do this incrementally,
+making sure I am doing right.
+
+
+The meaning of LLVM=1 may change over time.
+It means "the recommended settings" at the moment.
+
+If CI does not want to change the behavior across
+kernel versions, it can pass individual variables
+explicitly.
+
+--
+Best Regards
+Masahiro Yamada
