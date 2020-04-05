@@ -2,154 +2,121 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA49AC2BA16
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 02:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09B6C2BA18
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 02:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0DD5206F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 02:43:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RRQwkh/Z"
+	by mail.kernel.org (Postfix) with ESMTP id 96E6D2076E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 02:51:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586055087;
+	bh=I7W7FJME/6CvgaEZ/xEBHMa5YsA6VclfpczMDvsnz5o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AQIcbtFbEd9ZB2oNnhPVJITikAW3epqwOKOoMv4YS3Qg4JcTQVC+EaSl9trJmJU1A
+	 MYk/W2v54aWIf+yy1b3lUKT4T2m8uMoZEYkoAXwraDanP+A+Kr8joFtCKQU6A3EARm
+	 Q0LflJW6tjw91pwV6rMzJ4dHwFlhGvcNaQ9bSPWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgDECmw (ORCPT
+        id S1726408AbgDECv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 22:42:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45523 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726057AbgDECmv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 22:42:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586054569;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hxshDYUQinqZLqwCYxTrVhfHSHwlIgcN0cuJPsf+c+A=;
-        b=RRQwkh/Zajyb1zukSKnzcBo6NWW6desU2KJDwbmOXa8QbVPShm4+ELMzWy468Pr7CYBgJQ
-        evBkYcuuw5QmDyNH3grWN9vbPNa6iBwrYcKAvmGHpAt6duBKyh0/aUvVjEKc4E29q+9wOT
-        wRsrI1wOi/HGCVYcYXYjDnGRTORISZ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-288-FfA-z2IZPp-uEjKdsZ7byQ-1; Sat, 04 Apr 2020 22:42:45 -0400
-X-MC-Unique: FfA-z2IZPp-uEjKdsZ7byQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 4 Apr 2020 22:51:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbgDECv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 22:51:26 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E35CF1007269;
-        Sun,  5 Apr 2020 02:42:43 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-112-153.rdu2.redhat.com [10.10.112.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 072229A260;
-        Sun,  5 Apr 2020 02:42:42 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
- <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
- <328f5ad3-f8b3-09b9-f2f7-b6dae0137542@redhat.com>
- <CAHk-=wgww8LFqUenUtNV7hzYSxAemjbOVYfZMXqOxK7DGRrZaw@mail.gmail.com>
- <c7c770c9-2c5c-4878-a224-d115720068f3@redhat.com>
- <86aa9fc6-6ac9-a0c2-3e1d-a602ef16d873@redhat.com>
- <CAHk-=wgOykL7cM34NraiNGsjJC5Uq6H0ybYHWhdXDSn-wzVXDQ@mail.gmail.com>
- <5c04cc6d-ec44-b840-071d-248ac81a0f91@redhat.com>
- <CAHk-=wgkE=qT6CSUJHfXNsyhW+=j4SVgxh2jEc8nWY_n3SFZ=w@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <9876d04e-32c9-dcaa-545a-bfecbf07ea74@redhat.com>
-Date:   Sat, 4 Apr 2020 22:42:42 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        by mail.kernel.org (Postfix) with ESMTPSA id 183AC20737;
+        Sun,  5 Apr 2020 02:51:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586055085;
+        bh=I7W7FJME/6CvgaEZ/xEBHMa5YsA6VclfpczMDvsnz5o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=peuxm+CkX3K/skuYFDcioLXovQjHlR2QlAIXU56fgsPztuSb+KxbXOoj+V5JNPrYs
+         wDFLY5oW/f6CO517XXnFFVlL3wrx/ssib11FJlb1w1tKNeJEIhcD/GhdQqIXXxizrC
+         JWVOYvc09R0IY9t8Tt/jdc0lpYuvszE9Bfj0V1lE=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 1/9] ARM: Remove redundant COMMON_CLK selects
+Date:   Sat,  4 Apr 2020 19:51:15 -0700
+Message-Id: <20200405025123.154688-2-sboyd@kernel.org>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+In-Reply-To: <20200405025123.154688-1-sboyd@kernel.org>
+References: <20200405025123.154688-1-sboyd@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgkE=qT6CSUJHfXNsyhW+=j4SVgxh2jEc8nWY_n3SFZ=w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/20 10:28 PM, Linus Torvalds wrote:
-> On Fri, Apr 3, 2020 at 7:02 PM Waiman Long <longman@redhat.com> wrote:
->> So in term of priority, my current thinking is
->>
->>     upgrading unfair reader > unfair reader > reader/writer
->>
->> A higher priority locker will block other lockers from acquiring the lock.
-> An alternative option might be to have readers normally be 100% normal
-> (ie with fairness wrt writers), and not really introduce any special
-> "unfair reader" lock.
-A regular down_read() caller will be handled normally.
-> Instead, all the unfairness would come into play only when the special
-> case - execve() - does it's special "lock for reading with intent to
-> upgrade".
->
-> But when it enters that kind of "intent to upgrade" lock state, it
-> would not only block all subsequent writers, it would also guarantee
-> that all other readers can continue to go).
+The mulitplatform config already selects COMMON_CLK, so selecting it
+again is not useful. Remove these selects from ARM platforms that are
+part of the multiplatform build.
 
-Yes, that shouldn't be hard to do. If that is what is required, we may
-only need a special upgrade function to drain the OSQ and then wake up
-all the readers in the wait queue. I will add a flags argument to that
-special upgrade function so that we may be able to select different
-behavior in the future.
+Cc: "Andreas Färber" <afaerber@suse.de>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Alexander Shiyan <shc_work@mail.ru>
+Cc: Lubomir Rintel <lkundrak@v3.sk>
+Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ arch/arm/mach-actions/Kconfig  | 1 -
+ arch/arm/mach-clps711x/Kconfig | 1 -
+ arch/arm/mach-mmp/Kconfig      | 1 -
+ 3 files changed, 3 deletions(-)
 
-The regular down_read_interruptible() can be used unless we want to
-designate only some readers are allowed to do upgrade by calling a
-special down_read() function.
->
-> So then the new rwsem operations would be
->
->  - read_with_write_intent_lock_interruptible()
->
->    This is the beginning of "execve()", and waits for all writers to
-> exit, and puts the lock into "all readers can go" mode.
->
->    You could think of it as a "I'm queuing myself for a write lock,
-> but I'm allowing readers to go ahead" state.
->
->  - read_lock_to_write_upgrade()
->
->    This is the "now this turns into a regular write lock". It needs to
-> wait for all other readers to exit, of course.
->
->  - read_with_write_intent_unlock()
->
->    This is the "I'm unqueuing myself, I aborted and will not become a
-> write lock after all" operation.
->
-> NOTE! In this model, there may be multiple threads that do that
-> initial queuing thing. We only guarantee that only one of them will
-> get to the actual write lock stage, and the others will abort before
-> that happens.
->
-> If that is a more natural state machine, then that should work fine
-> too. And it has some advantages, in that it keeps the readers normally
-> fair, and only turns them unfair when we get to that special
-> read-for-write stage.
->
-> But whatever it most natural for the rwsem code. Entirely up to you.
-
-To be symmetric with the existing downgrade_write() function, I will
-choose the name upgrade_read() for the upgrade function.
-
-Will that work for you?
-
-Cheers,
-Longman
+diff --git a/arch/arm/mach-actions/Kconfig b/arch/arm/mach-actions/Kconfig
+index b5e0ac965ec0..00fb4babccdd 100644
+--- a/arch/arm/mach-actions/Kconfig
++++ b/arch/arm/mach-actions/Kconfig
+@@ -7,7 +7,6 @@ menuconfig ARCH_ACTIONS
+ 	select ARM_GLOBAL_TIMER
+ 	select CACHE_L2X0
+ 	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
+-	select COMMON_CLK
+ 	select GENERIC_IRQ_CHIP
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+diff --git a/arch/arm/mach-clps711x/Kconfig b/arch/arm/mach-clps711x/Kconfig
+index fc9188b54dd6..ba497a2032e9 100644
+--- a/arch/arm/mach-clps711x/Kconfig
++++ b/arch/arm/mach-clps711x/Kconfig
+@@ -5,7 +5,6 @@ menuconfig ARCH_CLPS711X
+ 	select AUTO_ZRELADDR
+ 	select TIMER_OF
+ 	select CLPS711X_TIMER
+-	select COMMON_CLK
+ 	select CPU_ARM720T
+ 	select GENERIC_CLOCKEVENTS
+ 	select GPIOLIB
+diff --git a/arch/arm/mach-mmp/Kconfig b/arch/arm/mach-mmp/Kconfig
+index b58a03b18bde..6fe1550f43ec 100644
+--- a/arch/arm/mach-mmp/Kconfig
++++ b/arch/arm/mach-mmp/Kconfig
+@@ -110,7 +110,6 @@ config MACH_MMP_DT
+ 	depends on ARCH_MULTI_V5
+ 	select PINCTRL
+ 	select PINCTRL_SINGLE
+-	select COMMON_CLK
+ 	select ARCH_HAS_RESET_CONTROLLER
+ 	select CPU_MOHAWK
+ 	help
+-- 
+Sent by a computer, using git, on the internet
 
