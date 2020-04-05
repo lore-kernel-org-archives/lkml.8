@@ -2,132 +2,150 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87062C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8266C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661A620753
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86FE206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 06:21:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WZL2MMJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgDEGTs (ORCPT
+        id S1726444AbgDEGVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 02:19:48 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48527 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgDEGTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 02:19:48 -0400
-IronPort-SDR: 0JF/wGpFCelx3CgApolLUStyJsNdNVW979B04mnerw1lWq6BEC8nlYkVqDFCp9KIufPhX6tg3h
- hV5j6Xo/vMng==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2020 23:19:47 -0700
-IronPort-SDR: 0110s7953263huErBoTRO4j83eC8Y3EFM92Atlg5RxKrkmln04D0YozOxKZzJHYAvkykohpDAn
- 6hdmIjIg2wtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,346,1580803200"; 
-   d="scan'208";a="253776526"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by orsmga006.jf.intel.com with ESMTP; 04 Apr 2020 23:19:46 -0700
-Date:   Sat, 4 Apr 2020 23:19:46 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <david@fromorbit.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
-Message-ID: <20200405061945.GA94792@iweiny-DESK2.sc.intel.com>
-References: <20200316095509.GA13788@lst.de>
- <20200401040021.GC56958@magnolia>
- <20200401102511.GC19466@quack2.suse.cz>
- <20200402085327.GA19109@lst.de>
- <20200402205518.GF3952565@iweiny-DESK2.sc.intel.com>
- <20200403072731.GA24176@lst.de>
- <20200403154828.GJ3952565@iweiny-DESK2.sc.intel.com>
- <20200403170338.GD29920@quack2.suse.cz>
- <20200403181843.GK3952565@iweiny-DESK2.sc.intel.com>
- <20200403183746.GQ80283@magnolia>
+        Sun, 5 Apr 2020 02:21:00 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:56168 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgDEGVA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 02:21:00 -0400
+Received: by mail-pj1-f66.google.com with SMTP id fh8so5055675pjb.5
+        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 23:20:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ya6XsWj9NJlCl87tgEzDyRyY4BP+TOaWrz6fIMrtsg0=;
+        b=WZL2MMJ6gJmt7tq4wu4jI3b7GPgBtjhebgM4Gu+1Wot9A8TwfkNBQV1rJlNN3nB8Ce
+         SVeiTsgM6Jw+2eMVrCW7k7cfRCSqmu3BJC5UzXouoo/e3SiIXhhKIOJl9k9GPrWfCsMV
+         YmTj4F4pOd8ApAH+yB9e22dBKB+ix0/PmYmYj5/721pLUj1BhVSmjSt5om1M0k1uB8vE
+         bf3koF2N1kcVXYh7nOyCDudonsxt7Ml8A5rkk3Q2dTwOr5yY1tfCFh0ys58nTIU4LPZ3
+         BOw6FTVxlXRcfLtNbgSvmYTVcrmJTf4JIyFBYWgUJi8iuWcwRmCrK4A2tqhDimaY4Y29
+         3U4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ya6XsWj9NJlCl87tgEzDyRyY4BP+TOaWrz6fIMrtsg0=;
+        b=FsBJPzlkZyMRKG/rR7P29BNCCTFQH7TmIn2Rz+i7bt/Pe2liKo8DmCvMUOTkC6cG+r
+         b7MEH7akwjSQLMWv99cG1My8cf+LxLcI9CNQLb2+o5OJUTMfkzvVV/Nmoyn4q/td8aTG
+         3yr0htXBKqRKi7ucsxB/Mdd+lS1Kjtf5yGlazztDneI+Rt27YHfcMzQK426Tcsb3DenP
+         JBJEjqE6zImTJrL+gDNbBoCHf+jbAioQiQtZKYS1hTNiTI7WxXu/cvnYpEarmrkH+2rM
+         lkKHO8snYc40prbQgSJ7n/QubmY3Zb+OE0yGPzkNjLN7bgEtkBKDHO8I7UxODGflQFzb
+         /z0g==
+X-Gm-Message-State: AGi0PubQP78/Xlilk6b3rhv4Rw+7j85or+nuC8o69CzcFNfSL/6/0Uze
+        eb1sOrUxT5CzjfVpjwNRYRJg
+X-Google-Smtp-Source: APiQypKyVUSoA5hVmEgmvyZtMgtFGtP92aUvtJEdMPoBWsBbQf9V2HDKN8yBW0KQ1qIWyTVEL9UTVg==
+X-Received: by 2002:a17:902:8a88:: with SMTP id p8mr8006943plo.134.1586067658497;
+        Sat, 04 Apr 2020 23:20:58 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6e83:b2ab:75aa:fbdc:e9da:9d96])
+        by smtp.gmail.com with ESMTPSA id a2sm9271081pja.44.2020.04.04.23.20.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 04 Apr 2020 23:20:57 -0700 (PDT)
+Date:   Sun, 5 Apr 2020 11:50:50 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/9] ARM: Remove redundant COMMON_CLK selects
+Message-ID: <20200405062050.GA8912@Mani-XPS-13-9360>
+References: <20200405025123.154688-1-sboyd@kernel.org>
+ <20200405025123.154688-2-sboyd@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200403183746.GQ80283@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200405025123.154688-2-sboyd@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > 
-> > In summary:
-> > 
-> >  - Applications must call statx to discover the current S_DAX state.
+On Sat, Apr 04, 2020 at 07:51:15PM -0700, Stephen Boyd wrote:
+> The mulitplatform config already selects COMMON_CLK, so selecting it
+> again is not useful. Remove these selects from ARM platforms that are
+> part of the multiplatform build.
 > 
-> Ok.
+> Cc: "Andreas Färber" <afaerber@suse.de>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Alexander Shiyan <shc_work@mail.ru>
+> Cc: Lubomir Rintel <lkundrak@v3.sk>
+> Cc: <linux-arm-kernel@lists.infradead.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+
+For Actions,
+
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+Thanks,
+Mani
+
+> ---
+>  arch/arm/mach-actions/Kconfig  | 1 -
+>  arch/arm/mach-clps711x/Kconfig | 1 -
+>  arch/arm/mach-mmp/Kconfig      | 1 -
+>  3 files changed, 3 deletions(-)
 > 
-> >  - There exists an advisory file inode flag FS_XFLAG_DAX that is set based on
-> >    the parent directory FS_XFLAG_DAX inode flag.  (There is no way to change
-> >    this flag after file creation.)
-> > 
-> >    If FS_XFLAG_DAX is set and the fs is on pmem then it will enable S_DAX at
-> >    inode load time; if FS_XFLAG_DAX is not set, it will not enable S_DAX.
-> >    Unless overridden...
+> diff --git a/arch/arm/mach-actions/Kconfig b/arch/arm/mach-actions/Kconfig
+> index b5e0ac965ec0..00fb4babccdd 100644
+> --- a/arch/arm/mach-actions/Kconfig
+> +++ b/arch/arm/mach-actions/Kconfig
+> @@ -7,7 +7,6 @@ menuconfig ARCH_ACTIONS
+>  	select ARM_GLOBAL_TIMER
+>  	select CACHE_L2X0
+>  	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
+> -	select COMMON_CLK
+>  	select GENERIC_IRQ_CHIP
+>  	select HAVE_ARM_SCU if SMP
+>  	select HAVE_ARM_TWD if SMP
+> diff --git a/arch/arm/mach-clps711x/Kconfig b/arch/arm/mach-clps711x/Kconfig
+> index fc9188b54dd6..ba497a2032e9 100644
+> --- a/arch/arm/mach-clps711x/Kconfig
+> +++ b/arch/arm/mach-clps711x/Kconfig
+> @@ -5,7 +5,6 @@ menuconfig ARCH_CLPS711X
+>  	select AUTO_ZRELADDR
+>  	select TIMER_OF
+>  	select CLPS711X_TIMER
+> -	select COMMON_CLK
+>  	select CPU_ARM720T
+>  	select GENERIC_CLOCKEVENTS
+>  	select GPIOLIB
+> diff --git a/arch/arm/mach-mmp/Kconfig b/arch/arm/mach-mmp/Kconfig
+> index b58a03b18bde..6fe1550f43ec 100644
+> --- a/arch/arm/mach-mmp/Kconfig
+> +++ b/arch/arm/mach-mmp/Kconfig
+> @@ -110,7 +110,6 @@ config MACH_MMP_DT
+>  	depends on ARCH_MULTI_V5
+>  	select PINCTRL
+>  	select PINCTRL_SINGLE
+> -	select COMMON_CLK
+>  	select ARCH_HAS_RESET_CONTROLLER
+>  	select CPU_MOHAWK
+>  	help
+> -- 
+> Sent by a computer, using git, on the internet
 > 
-> Ok, fine with me. :)
-
-:-D
-
-> 
-> >  - There exists a dax= mount option.
-> > 
-> >    "-o dax=off" means "never set S_DAX, ignore FS_XFLAG_DAX"
-> >    	"-o nodax" means "dax=off"
-> 
-> I surveyed the three fses that support dax and found that none of the
-> filesystems actually have a 'nodax' flag.  Now would be the time not to
-> add such a thing, and make people specify dax=off instead.  It would
-> be handy if we could have a single fsparam_enum for figuring out the dax
-> mount options.
-
-yes good point.
-
-I'm working on updating the documentation patch and I think this might also
-be better as:
-
-	-o dax=never
-
-Which is the opposite of 'always'.
-
-> 
-> >    "-o dax=always" means "always set S_DAX (at least on pmem), ignore FS_XFLAG_DAX"
-> >    	"-o dax" by itself means "dax=always"
-> >    "-o dax=iflag" means "follow FS_XFLAG_DAX" and is the default
-> > 
-> >  - There exists an advisory directory inode flag FS_XFLAG_DAX that can be
-> >    changed at any time.  The flag state is copied into any files or
-> >    subdirectories when they are created within that directory.  If programs
-> >    require file access runs in S_DAX mode, they'll have to create those files
-> 
-> "...they must create..."
-
-yes
-
-> 
-> >    inside a directory with FS_XFLAG_DAX set, or mount the fs with an
-> >    appropriate dax mount option.
-> 
-> Otherwise seems ok to me.
-
-Thanks!
-Ira
-
