@@ -2,205 +2,234 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C79C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55B6C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9A320675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86622206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Qtfpu4uU"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pyQYLYsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgDEQdY (ORCPT
+        id S1727356AbgDEQhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 12:33:24 -0400
-Received: from mail-eopbgr1300135.outbound.protection.outlook.com ([40.107.130.135]:30944
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726667AbgDEQdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 12:33:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j9PnwTpmukZiE7Ywh0oc7aUOLjoTFL5u3mRWN4B8hJh30H1njBut0vOabrYEilho/Oq6IN/kXZVbPoklauLz6zCyyLHZurCiGaPAA3l6Xr+6AMqRKebog1gVeCOee7RcsTBZ9kESJ6/fj3u0pfoPBgIuPktUk4oENqy6xV9/k4QW5KzSLEwRk4BS48DSecut0UBczMhkxFzASCVXolFQ9k8samFYWqnuXBljPEX5DbeozYblBDkxoXnGiFsqfFD22BFjMJ9EAWIDe/m2P9wx4rgTMPODauB792JatSuPr0+ANfTsd4OMgV5STyFa1+0nE8BdLrsPEkjXAT6RJEYbVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bXcyki0we1zYjH2MyiDjQmX7icp8sPnRpeidT24c5k8=;
- b=fEQV/Q6XPcegQAdqapAIJXVFoVouTR5l2CmhpUjZ2n/u1ScqU0KlFzMzotbxV2hSCHROj1MONi41rzbhq13sUqJzhszFZA8KwnI9s3hGRK9D6zp9SMfZs0uin3CmQSUEArSMYjFohOgaEdI3ueB2/6ZPomoOXmH8hBhOsJcwNu3QVlfvUzmsdqHlYraP53cI8dZLtcJ0Q1NtiQXrUYlGze3n9Lgoq2XfnamN53fVWQ9ZAfEEvrcNaCmxrKY1NPtG3bgExQfioFAPTIhagnOUe8khtcsJMEJpwGHLi7hcf2j+rjJ3Yr1w8LoRFVRkFHjZB0BtevNnPhwNN+q639oWvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bXcyki0we1zYjH2MyiDjQmX7icp8sPnRpeidT24c5k8=;
- b=Qtfpu4uUkDDl1P1GyTwSGdtPLvBBl9Zh1a2UtJ3pdSdRDB6vCYzKdkMJCYEr4hgbnwD22D6p/e+0o2iLY81WIUfpkRasg9CO9Hx3ttGtb1PqlSewRrg2GNbLAVqCcE6lWt3s9DYHUKbnSsXDHVZVKVgVUTwLy/JzEi+lxKUCRv0=
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (52.132.236.76) by
- HK0P153MB0194.APCP153.PROD.OUTLOOK.COM (52.133.212.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.4; Sun, 5 Apr 2020 16:33:18 +0000
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2900.012; Sun, 5 Apr 2020
- 16:33:18 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "willemb@google.com" <willemb@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        "sdf@google.com" <sdf@google.com>,
-        "john.hurley@netronome.com" <john.hurley@netronome.com>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "jeremy@azazel.net" <jeremy@azazel.net>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net] skbuff.h: Improve the checksum related comments
-Thread-Topic: [PATCH net] skbuff.h: Improve the checksum related comments
-Thread-Index: AQHWCzYPXZ/PsAZ8AU+mHH+wagcwgqhqsF3g
-Date:   Sun, 5 Apr 2020 16:33:17 +0000
-Message-ID: <HK0P153MB027363A6F5A5AACC366B11A3BFC50@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-References: <1586071063-51656-1-git-send-email-decui@microsoft.com>
- <20200405103618.GV21484@bombadil.infradead.org>
-In-Reply-To: <20200405103618.GV21484@bombadil.infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-05T16:33:14.8895074Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b7faa033-d2e7-47db-976c-b49d93b4820d;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:ac71:2d80:3165:3247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5f24d68c-ab03-4639-42fd-08d7d97f0c0a
-x-ms-traffictypediagnostic: HK0P153MB0194:
-x-microsoft-antispam-prvs: <HK0P153MB0194F6805E393C4AEA6AEF34BFC50@HK0P153MB0194.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 03648EFF89
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(366004)(346002)(396003)(376002)(39860400002)(186003)(8936002)(6916009)(53546011)(7416002)(86362001)(2906002)(82950400001)(82960400001)(6506007)(7696005)(9686003)(55016002)(10290500003)(5660300002)(316002)(33656002)(478600001)(71200400001)(54906003)(8990500004)(4326008)(76116006)(66476007)(66556008)(64756008)(66446008)(52536014)(81156014)(66946007)(81166006)(8676002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JDpHxRuaRlEpwbhyGuSnazbR7OEIvf1QcRDRXtwjZsUSlnf+tkh9Lh6UmBdjLOMvIi5Dp417IxvVklTJciSXFHWQ7M+56XWJ8mxQiX1CJc6HZt5i/8wiPyYl+H4aUfpTMyzAAJ0aQ208+++/Gsp7hrdZHbXr/oUlL+EAlQ8vcx1MBikcxt5krvlnw83YD3TxTI5Igj4C4ISbl+A+8JJJmaRw6NB6qC6bEg4/n+b9ExLCmllbunHFtaTgXe8VDZSpEZfN2K27bBTxDvnui+PTRJYGWP9jDHTu16Pwy9ybhLqSSTmAA4asxj8XySnRflkxH5DYtLWHHPg5PBX3Bf7BB7pYAPl3cDn60PwB5WQ+eFjpfEe/07OhhhYesg8w2dDY+flHOViJVyG7QU7nVd+anBrJ6xecHcnhd+rl8LMIeFg1DqF/8579sCFKinoikITG
-x-ms-exchange-antispam-messagedata: w3hmYeDivYvVsPbcqmrNGf9h4cDa3YZTls69A1XGomVOBNt4PDsHQ/V8a0AnBLSZig3rSdVsOfakvuAtn+WNCGsLHm3BYfMwozvwg5GOvxstJgA9gglqw844XMwP4xibGc6AYeCDwWiwJwN80caml5DzVnO1uhwjsa0sBHqZmttLT7/f/heeBdAb5TvaGyUM7H82qguCboQcWrajB9tM6w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 5 Apr 2020 12:37:00 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58904 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbgDEQg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 12:36:59 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 035Gardi026340;
+        Sun, 5 Apr 2020 11:36:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586104613;
+        bh=G6SDuQLlnW4lCFkGwgKC3dY+eDXPF0x7H5NXfle18g4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pyQYLYsFQ/1CzT5K9GemB0iwOvEqX5OekSyT4de2sNk7i9QWTeclIr6d+wGdSGDeQ
+         2rsyVt0XWPoMWx6eAYB4s/YQH0tqwyrwpjslgJJa6o4SDGMmNtuEREcE4xr5Np7aJ0
+         9eb2+R6OLkSPtfv4hhtIIruqAmd/OgnRlI7seFGY=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 035GarPB100000
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 5 Apr 2020 11:36:53 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 5 Apr
+ 2020 11:36:53 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 5 Apr 2020 11:36:53 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 035GaqJL013966;
+        Sun, 5 Apr 2020 11:36:52 -0500
+Subject: Re: [PATCH v19 04/18] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200402204311.14998-1-dmurphy@ti.com>
+ <20200402204311.14998-5-dmurphy@ti.com>
+ <619a1251-d062-b9bf-6752-b867fcaa600b@infradead.org>
+ <34b07ce8-6a38-f45c-4624-730f5597f686@ti.com>
+ <a6b93d69-a1d5-f515-ee37-6106b50120cf@gmail.com>
+ <f09dadc9-f1ed-091b-f241-2f40b48f1117@ti.com>
+ <1cbe954e-76fb-9164-6b8c-af4ac70fcd05@infradead.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f842723c-fbce-c7c5-4d1f-78775f2a796a@ti.com>
+Date:   Sun, 5 Apr 2020 11:31:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f24d68c-ab03-4639-42fd-08d7d97f0c0a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Apr 2020 16:33:17.8399
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ix0J8s17/wElzYsl+RFoWBuWvHq7BLpzCTtAE/1N1mb5LHIqk6L3/uRtaGVjWyMDjhnyeFca9tkd/XagOqKAHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0194
+In-Reply-To: <1cbe954e-76fb-9164-6b8c-af4ac70fcd05@infradead.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Matthew Wilcox <willy@infradead.org>
-> Sent: Sunday, April 5, 2020 3:36 AM
-> To: Dexuan Cui <decui@microsoft.com>
->=20
-> On Sun, Apr 05, 2020 at 12:17:43AM -0700, Dexuan Cui wrote:
-> >   * CHECKSUM_COMPLETE:
-> >   *
-> > - *   This is the most generic way. The device supplied checksum of the
-> _whole_
-> > - *   packet as seen by netif_rx() and fills out in skb->csum. Meaning,=
- the
-> > + *   This is the most generic way. The device supplies checksum of the
-> _whole_
-> > + *   packet as seen by netif_rx() and fills out in skb->csum. This mea=
-ns the
->=20
-> I think both 'supplies' and 'supplied' are correct in this sentence.  The
-> nuances are slightly different, but the meaning is the same in this insta=
-nce.
 
-I see. So let me rever back to "supplied".
-=20
-> You missed a mistake in the second line though, it should be either 'fill=
-s
-> out' or 'fills in'.  I think we tend to prefer 'fills in'.
+On 4/5/20 11:28 AM, Randy Dunlap wrote:
+> On 4/5/20 9:18 AM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 4/5/20 10:08 AM, Jacek Anaszewski wrote:
+>>> Dan,
+>>>
+>>> On 4/3/20 4:39 PM, Dan Murphy wrote:
+>>>> Randy
+>>>>
+>>>> Thanks for the review
+>>>>
+>>>> On 4/2/20 10:47 PM, Randy Dunlap wrote:
+>>>>> Hi,
+>>>>> Here are a few changes for you to consider:
+>>>>>
+>>>>> On 4/2/20 1:42 PM, Dan Murphy wrote:
+>>>>>> Introduce a multicolor class that groups colored LEDs
+>>>>>> within a LED node.
+>>>>>>
+>>>>>> The multi color class groups monochrome LEDs and allows controlling two
+>>>>>         multicolor
+>>>> Ack
+>>>>>> aspects of the final combined color: hue and lightness. The former is
+>>>>>> controlled via <color>_intensity files and the latter is controlled
+>>>>>> via brightness file.
+>>>>>>
+>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>> ---
+>>>>>> diff --git a/Documentation/leds/leds-class-multicolor.rst
+>>>>>> b/Documentation/leds/leds-class-multicolor.rst
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..5bb004999248
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/leds/leds-class-multicolor.rst
+>>>>>> @@ -0,0 +1,95 @@
+>>>>>> +====================================
+>>>>>> +Multi Color LED handling under Linux
+>>>>>      Multicolor
+>>>> Ack
+>>>>>> +====================================
+>>>>>> +
+>>>>>> +Description
+>>>>>> +===========
+>>>>>> +The multi color class groups monochrome LEDs and allows controlling two
+>>>>>          multicolor
+>>>> Ack
+>>>>>> +aspects of the final combined color: hue and lightness. The former is
+>>>>>> +controlled via the color_intensity array file and the latter is
+>>>>>> controlled
+>>>>>> +via brightness file.
+>>>>>> +
+>>>>>> +For more details on hue and lightness notions please refer to
+>>>>>> +https://en.wikipedia.org/wiki/CIECAM02.
+>>>>>> +
+>>>>>> +Multicolor Class Control
+>>>>>> +========================
+>>>>>> +The multicolor class presents files that groups the colors as
+>>>>>> indexes in an
+>>>>>> +array.  These files are children under the LED parent node created
+>>>>>> by the
+>>>>>> +led_class framework.  The led_class framework is documented in
+>>>>>> led-class.rst
+>>>>>> +within this documentation directory.
+>>>>>> +
+>>>>>> +Each colored LED will be indexed under the color_* files. The order
+>>>>>> of the
+>>>>>> +colors are arbitrary the color_index file can be read to determine
+>>>>>> the color
+>>>>>> +to index value.
+>>>>>> +
+>>>>>> +The color_index file is an array that contains the string list of
+>>>>>> the colors as
+>>>>>> +they are defined in each color_* array file.
+>>>>>> +
+>>>>>> +The color_intensity is an array that can be read or written to for the
+>>>>>> +individual color intensities.  All elements within this array must
+>>>>>> be written in
+>>>>>> +order for the color LED intensities to be updated.
+>>>>>> +
+>>>>>> +The color_max_intensity is an array that can be read to indicate
+>>>>>> each color LED
+>>>>>> +maximum intensity value.
+>>>>>> +
+>>>>>> +The num_color_leds file returns the total number of color LEDs that are
+>>>>>> +presented in each color_* array.
+>>>>>> +
+>>>>>> +Directory Layout Example
+>>>>>> +========================
+>>>>>> +root:/sys/class/leds/multicolor:status# ls -lR
+>>>>>> +-rw-r--r--    1 root     root          4096 Oct 19 16:16 brightness
+>>>>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16 color_index
+>>>>>> +-rw-r--r--    1 root     root          4096 Oct 19 16:16
+>>>>>> color_intensity
+>>>>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16 num_color_leds
+>>>>>> +
+>>>>>> +Multicolor Class Brightness Control
+>>>>>> +===================================
+>>>>>> +The multiclor class framework will calculate each monochrome LEDs
+>>>>>> intensity.
+>>>>>          multicolor
+>>>> Ack
+>>>>>> +
+>>>>>> +The brightness level for each LED is calculated based on the color LED
+>>>>>> +intensity setting divided by the parent max_brightness setting
+>>>>>> multiplied by
+>>>>>> +the requested brightness.
+>>>>>> +
+>>>>>> +led_brightness = brightness * color_intensity/max_brightness
+>>>>>> +
+>>>>>> +Example:
+>>>>>> +A user first writes the color_intensity file with the brightness levels
+>>>>>> +that for each LED that is necessary to achieve a blueish violet
+>>>>>> output from a
+>>>>> drop first "that".
+>>>> Ack
+>>>>>                        that are
+>>>>> necessary                                   from an
+>>>> Ack and NACK the "from an".  It is from a since R is a consonant
+>>> But it sounds like a vowel and this rule for creating articles
+>>> "applies to the sound of the letter beginning the word, not just the
+>>> letter itself" [0].
+>>>
+>>> [0] https://www.grammar.com/a-vs-an-when-to-use/
+>>>
+>> We have had the same internal debate here at work.
+>>
+>> How does "Red" when you say it sound like a vowel?  It is definitely a "R" sound that is first not a vowel sound.
+>>
+>> To me "from an RGB" does not sound correct "from a RGB" is actually correct here because R or Red still leads with a consonant in both the sound and letter.
+>>
+>> If it sounds as if it is beginning with a vowel sound, *use an*.  Like in "an honor" as the h is silent here.  R is not silent in Red or RGB.
+> It depends on how one reads "from a RGB." Do you say/think the letters R G B
+> (I do), or do you think/say red-green-blue?
+>
+>  From the [0] web page:
+>   Articles with Acronyms, a or an
+>
+> Finally, the rule applies to acronyms as well. If you pronounce a letter as a letter and it begins with a vowel sound, you should precede it with an. The consonants with vowel sounds include f, h, l, m, n, r, s, and x.
+>
+>      He flew in an SST. He fired an M‑1. He attended an FDA hearing.
+>
+> By the same token, if a vowel letter, with a consonant sound, is pronounced as a letter, you should use a.
+>
+>      He made a U‑turn.
+>
+> Got it? So what is your grade?
+>
+>      An A? A B? Surely not an F.
+>
+>
+I will change it.  Its not that big of a change and not worth a 
+continued debate
 
-Thanks! Will use "fills in" in v2.
+Dan
 
-> >   * CHECKSUM_COMPLETE:
-> >   *   Not used in checksum output. If a driver observes a packet with t=
-his
-> value
-> > - *   set in skbuff, if should treat as CHECKSUM_NONE being set.
-> > + *   set in skbuff, the driver should treat it as CHECKSUM_NONE being =
-set.
->=20
-> I would go with "it should treat the packet as if CHECKSUM_NONE were set.=
-"
-
-Thanks. Will use this version.
-=20
-> > @@ -211,7 +211,7 @@
-> >   * is implied by the SKB_GSO_* flags in gso_type. Most obviously, if t=
-he
-> >   * gso_type is SKB_GSO_TCPV4 or SKB_GSO_TCPV6, TCP checksum offload
-> as
-> >   * part of the GSO operation is implied. If a checksum is being offloa=
-ded
-> > - * with GSO then ip_summed is CHECKSUM_PARTIAL, csum_start and
-> csum_offset
-> > + * with GSO then ip_summed is CHECKSUM_PARTIAL AND csum_start and
-> csum_offset
-> >   * are set to refer to the outermost checksum being offload (two offlo=
-aded
-> >   * checksums are possible with UDP encapsulation).
->=20
-> Why the capitalisation of 'AND'?
-
-The current text without the patch is:
- * part of the GSO operation is implied. If a checksum is being offloaded
- * with GSO then ip_summed is CHECKSUM_PARTIAL, csum_start and csum_offset
- * are set to refer to the outermost checksum being offload (two offloaded
- * checksums are possible with UDP encapsulation).
-
-The comma after the "CHECKSUM_PARTIAL" seems suspicious to me. I feel we
-should add an "and" after the comma, or replace the comma with "and", but
-either way we'll have "... and csum_start and csum_offset...", which seems =
-a little
-unnatural to me since we have 2 'and's here... So I tried to make it a litt=
-le natural
-by replacing the first 'and' with 'AND', which obviously causes confusion t=
-o you.
-
-Please suggest the best change here. Thanks!
-=20
-> Thanks for the improvements,
->=20
-> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-Thanks for the comments! I'll wait for your suggestion on the 'AND' and pos=
-t
-a v2.
-
-Thanks,
--- Dexuan
