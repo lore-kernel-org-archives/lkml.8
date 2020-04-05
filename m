@@ -2,86 +2,89 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCF8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB34C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF472051A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390BA20672
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="IYYgMZyi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WseyDcEV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgDEIlA (ORCPT
+        id S1726466AbgDEIpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 04:41:00 -0400
-Received: from sender2-op-o12.zoho.com.cn ([163.53.93.243]:17582 "EHLO
-        sender2-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726308AbgDEIk7 (ORCPT
+        Sun, 5 Apr 2020 04:45:00 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:14153 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726397AbgDEIpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 04:40:59 -0400
-X-Greylist: delayed 925 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 Apr 2020 04:40:56 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586075102;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=jlfqA7A2mmN1MCE9Hu767OVJ/7u6nHkaQCRHUH9vIcI=;
-        b=IYYgMZyiU3o33Tg3dO7svxhHO1GN8WczdboM3eNpfiTMRRuPToWQZQ1D1P0vOtPW
-        GFw4GM2403Fnmo03B47ozPxh3shyipdmVSbiuom2uHSay74TLw1tJHmxfT4+kjK3nmb
-        Skx/wzzg19y3Ke3LC6V6Kf/CoRVnCLrvRGcfjzvc=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1586075100036667.996448622306; Sun, 5 Apr 2020 16:25:00 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Fangrui Song <maskray@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-kernel@vger.kernel.org
-Message-ID: <20200405082451.694910-1-jiaxun.yang@flygoat.com>
-Subject: [PATCH] MIPS: malta: Set load address for 32bit kernel correctly
-Date:   Sun,  5 Apr 2020 16:24:49 +0800
-X-Mailer: git-send-email 2.26.0.rc2
+        Sun, 5 Apr 2020 04:45:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586076300; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=YD+6B7bB8KDIMzLCo6S03UdZ+WXtGN9oqNBfZxnj7PU=; b=WseyDcEVh4sefHTKiIZiJ//HNIlOAy6p2zxT5sHyD8oJFrjIwtNMw8/A3vmmPn3gesXAI19a
+ VtrPGl923Fmw0zAGNSLLQ7Y+T7++HNhAjxKIn1UbTRQqMh+RLeY0gntfu5/n7H/11rdDq/Xz
+ i6pU013g0CcjU39wmhfH8A7/5Zg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e899a8b.7fc9721a2538-smtp-out-n05;
+ Sun, 05 Apr 2020 08:44:59 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A02E7C43637; Sun,  5 Apr 2020 08:44:58 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC38AC433F2;
+        Sun,  5 Apr 2020 08:44:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BC38AC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Chris Rorvick <chris@rorvick.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH] iwlwifi: actually check allocated conf_tlv pointer
+References: <20200402050219.4842-1-chris@rorvick.com>
+Date:   Sun, 05 Apr 2020 11:44:53 +0300
+In-Reply-To: <20200402050219.4842-1-chris@rorvick.com> (Chris Rorvick's
+        message of "Thu, 2 Apr 2020 00:02:19 -0500")
+Message-ID: <87mu7qfhiy.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LLD failed to link vmlinux with 64bit load address for 32bit ELF
-while bfd will strip 64bit address into 32bit silently.
-To fix LLD build, we should supply a 32bit load address for 32bit
-kernel.
+Chris Rorvick <chris@rorvick.com> writes:
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/mips/mti-malta/Platform | 4 ++++
- 1 file changed, 4 insertions(+)
+> Commit 71bc0334a637 ("iwlwifi: check allocated pointer when allocating
+> conf_tlvs") attempted to fix a typoe introduced by commit 17b809c9b22e
+> ("iwlwifi: dbg: move debug data to a struct") but does not implement the
+> check correctly.
+>
+> Tweeted-by: @grsecurity
+> Signed-off-by: Chris Rorvick <chris@rorvick.com>
 
-diff --git a/arch/mips/mti-malta/Platform b/arch/mips/mti-malta/Platform
-index 2cc72c9b38e3..f9b49cba1764 100644
---- a/arch/mips/mti-malta/Platform
-+++ b/arch/mips/mti-malta/Platform
-@@ -6,6 +6,10 @@ cflags-$(CONFIG_MIPS_MALTA)=09+=3D -I$(srctree)/arch/mips/=
-include/asm/mach-malta
- ifdef CONFIG_KVM_GUEST
-     load-$(CONFIG_MIPS_MALTA)=09+=3D 0x0000000040100000
- else
-+ifdef CONFIG_64BIT
-     load-$(CONFIG_MIPS_MALTA)=09+=3D 0xffffffff80100000
-+else
-+    load-$(CONFIG_MIPS_MALTA)=09+=3D 0x80100000
-+endif
- endif
- all-$(CONFIG_MIPS_MALTA)=09:=3D $(COMPRESSION_FNAME).bin
---=20
-2.26.0.rc2
+I'll add:
 
+Fixes: 71bc0334a637 ("iwlwifi: check allocated pointer when allocating conf_tlvs")
 
+> ---
+> In this wasn't picked up?
+
+Luca, can I take this directly?
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
