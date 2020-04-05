@@ -2,168 +2,144 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC3AC2BA17
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5F9C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B7420659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNmVs66K"
+	by mail.kernel.org (Postfix) with ESMTP id DD6A220659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgDEOsC (ORCPT
+        id S1726890AbgDEOtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 10:48:02 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:36189 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgDEOsC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 10:48:02 -0400
-Received: by mail-yb1-f196.google.com with SMTP id i4so7302084ybl.3;
-        Sun, 05 Apr 2020 07:48:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v+dqDvCPt/897rtlW7rn+HRZ8CXQjFzk7KCjChk3k24=;
-        b=hNmVs66K30OIgjszWm08ENcKBGYBbmyqTsytRVdgaU8hiMRMsvs0UocE6U+1o2Cl9u
-         UnhOtihY/4/dKGac5lGPw2uhsev2IFZLr7nh2SltrUZ/CEAjruNVEfJAu1xwfNj89yBo
-         t6jqrh7D/AQWONdkAxfjoefdWy3JE2k1LgViJTxsqnKI8oqBHB3zDgVFJOdcN1e4HtKk
-         S97UpoclL3VkZmeu2lhj3ko0vuHsCsOvnFaCraRWl7n0FiLQvAsO10Lhq/40WB0j27Cp
-         rgtvjVLmOEJk+wJemh3IsBHV8fOnQ9E62iI/1KmyZP/yKFeKVUQI+nziwePMYfUfqQnE
-         jRGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v+dqDvCPt/897rtlW7rn+HRZ8CXQjFzk7KCjChk3k24=;
-        b=IdxxZSGg0Ugz65z5KHTOrDJ+41hRP+hwWq/ruKoh0FGIvZEdi+FkLKKnaguiGqg3M/
-         IXhU2oI9YGaHJo70+pjrTVwmEV5NSYeSnhxzmTkFLUAcbVhCEjtK2/GA9Gm5b6OYQCk4
-         i52/0IhjzMFZlkcoRd7QNhp8MK7ty5TIYfrucLTiiBy/fsAZqHL+cp0rV8ycj+LCKLMp
-         TMc1xB4oHRedctYlDz3VkW9mEMun+k5ulscFo47MhEKD3NChP/2j8s/kMJF9yz1z06uY
-         NtjsOeTbzU9y9R6WTWAzxgYq7VBu9j0m8P6yB4z0g6yqH4gXrfbzK657YI4/lddFiDNm
-         +pdA==
-X-Gm-Message-State: AGi0PuZTfne1x3c1CgeYhBEEdw7WYWEzd5bKBOllqYzYPVoNjJXLTVU4
-        BPfXqlkYGAEzs5Szn7V0pmAe/hgIbV7KRWvaJcsWng==
-X-Google-Smtp-Source: APiQypLStyXEBg4fQEvKQp6utKnlk02OoH8tD0TAXmioeqlnHxkn0X/oq14OJ5qqcj+o7yJGUusu0tV5/tVYB2+d+RU=
-X-Received: by 2002:a25:dcd4:: with SMTP id y203mr30504136ybe.483.1586098080938;
- Sun, 05 Apr 2020 07:48:00 -0700 (PDT)
+        Sun, 5 Apr 2020 10:49:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:39588 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726598AbgDEOtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 10:49:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6F6331B;
+        Sun,  5 Apr 2020 07:49:30 -0700 (PDT)
+Received: from [10.163.1.2] (unknown [10.163.1.2])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CCD73F52E;
+        Sun,  5 Apr 2020 07:49:21 -0700 (PDT)
+Subject: Re: [mm/debug] f675f2f91d:
+ WARNING:at_mm/debug_vm_pgtable.c:#debug_vm_pgtable
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkp@lists.01.org
+References: <20200330085636.GG11705@shao2-debian>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <282deb38-8ce1-3980-2549-4413c33b6062@arm.com>
+Date:   Sun, 5 Apr 2020 20:19:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
- <20200327162126.29705-1-m.szyprowski@samsung.com>
-In-Reply-To: <20200327162126.29705-1-m.szyprowski@samsung.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Sun, 5 Apr 2020 10:47:49 -0400
-Message-ID: <CADnq5_NpHvmRvzvh1aF293UDUXiHF4Dg1rRNkt7XbM_VB98JCg@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a scatterlist
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
-        linux-samsung-soc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Shane Francis <bigbeeshane@gmail.com>,
-        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
-        "for 3.8" <stable@vger.kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Alex Deucher <alexander.deucher@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200330085636.GG11705@shao2-debian>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 12:23 PM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
->
-> Scatterlist elements contains both pages and DMA addresses, but one
-> should not assume 1:1 relation between them. The sg->length is the size
-> of the physical memory chunk described by the sg->page, while
-> sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
-> the sg_dma_address(sg).
->
-> The proper way of extracting both: pages and DMA addresses of the whole
-> buffer described by a scatterlist it to iterate independently over the
-> sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
->
-> Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+On 03/30/2020 02:26 PM, kernel test robot wrote:
+> [  283.486118] WARNING: CPU: 1 PID: 1 at mm/debug_vm_pgtable.c:371 debug_vm_pgtable+0x4dc/0x7e3
+> [  283.487342] Modules linked in:
+> [  283.487752] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc7-next-20200323-00001-gf675f2f91d045 #1
+> [  283.488817] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [  283.489794] RIP: 0010:debug_vm_pgtable+0x4dc/0x7e3
+> [  283.490361] Code: b5 fd 48 8b 7d d0 be 20 01 00 00 e8 3d 9f b5 fd 48 8b 75 c8 48 8b 7d d0 e8 30 9f b5 fd 48 8b 75 c8 48 8b 7d d0 e8 23 9f b5 fd <0f> 0b 48 8b 75 c8 48 8b 7d d0 e8 14 9f b5 fd 0f 0b 48 8b 75 c8 48
+> [  283.492577] RSP: 0000:ffff888236493ed8 EFLAGS: 00010202
+> [  283.493235] RAX: 00000001e1d31025 RBX: ffff88823e7f6cd8 RCX: ffffffffffffffff
+> [  283.494135] RDX: 0000000000000000 RSI: 0000000000000025 RDI: 00000001e1d31000
+> [  283.495002] RBP: ffff888236493f38 R08: 0000000000000001 R09: 0000000000000001
+> [  283.495858] R10: 0000000000000001 R11: 0000000000000000 R12: ffff88821d907000
+> [  283.496748] R13: ffff88821d8fc498 R14: ffff88821d8fda90 R15: ffff88821d8fc000
+> [  283.497614] FS:  0000000000000000(0000) GS:ffff888237800000(0000) knlGS:0000000000000000
+> [  283.498585] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  283.499290] CR2: 00000000ffffffff CR3: 00000001e1222000 CR4: 00000000000406e0
+> [  283.500165] Call Trace:
+> [  283.500499]  ? rest_init+0x240/0x240
+> [  283.500985]  kernel_init+0x13/0x110
+> [  283.501433]  ret_from_fork+0x24/0x30
+> [  283.501907] irq event stamp: 4760776
+> [  283.502366] hardirqs last  enabled at (4760775): [<ffffffffb481e34d>] _raw_spin_unlock_irqrestore+0x4d/0x60
+> [  283.511686] hardirqs last disabled at (4760776): [<ffffffffb3c038d4>] trace_hardirqs_off_thunk+0x1a/0x1c
+> [  283.512914] softirqs last  enabled at (4760748): [<ffffffffb4c002cf>] __do_softirq+0x2cf/0x4ad
+> [  283.514086] softirqs last disabled at (4760741): [<ffffffffb3cf4f4d>] irq_exit+0xcd/0xe0
+> [  283.515114] ---[ end trace 7e3383c4261f8faa ]---
 
-Applied.  Thanks and sorry for the breakage.
+The above failure here and the one on the other thread can be solved with
+the following change. The failure is caused by the fact that even though
+the soft dirty helpers are defined within CONFIG_HAVE_ARCH_SOFT_DIRTY, the
+required PTE bits (_PAGE_SOFT_DIRTY and _PAGE_SWP_SOFT_DIRTY) are available
+only when CONFIG_MEM_SOFT_DIRTY is enabled. Hence these tests should not
+proceed unless CONFIG_MEM_SOFT_DIRTY is enabled. Similar situation exists
+in s390 (_PAGE_SOFT_DIRTY and _SEGMENT_ENTRY_SOFT_DIRTY) and powerpc (at
+least with _PAGE_SWP_SOFT_DIRTY).
 
-Alex
-
-> ---
->  drivers/gpu/drm/drm_prime.c | 37 +++++++++++++++++++++++++------------
->  1 file changed, 25 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-> index 1de2cde2277c..282774e469ac 100644
-> --- a/drivers/gpu/drm/drm_prime.c
-> +++ b/drivers/gpu/drm/drm_prime.c
-> @@ -962,27 +962,40 @@ int drm_prime_sg_to_page_addr_arrays(struct sg_table *sgt, struct page **pages,
->         unsigned count;
->         struct scatterlist *sg;
->         struct page *page;
-> -       u32 len, index;
-> +       u32 page_len, page_index;
->         dma_addr_t addr;
-> +       u32 dma_len, dma_index;
->
-> -       index = 0;
-> +       /*
-> +        * Scatterlist elements contains both pages and DMA addresses, but
-> +        * one shoud not assume 1:1 relation between them. The sg->length is
-> +        * the size of the physical memory chunk described by the sg->page,
-> +        * while sg_dma_len(sg) is the size of the DMA (IO virtual) chunk
-> +        * described by the sg_dma_address(sg).
-> +        */
-> +       page_index = 0;
-> +       dma_index = 0;
->         for_each_sg(sgt->sgl, sg, sgt->nents, count) {
-> -               len = sg_dma_len(sg);
-> +               page_len = sg->length;
->                 page = sg_page(sg);
-> +               dma_len = sg_dma_len(sg);
->                 addr = sg_dma_address(sg);
->
-> -               while (len > 0) {
-> -                       if (WARN_ON(index >= max_entries))
-> +               while (pages && page_len > 0) {
-> +                       if (WARN_ON(page_index >= max_entries))
->                                 return -1;
-> -                       if (pages)
-> -                               pages[index] = page;
-> -                       if (addrs)
-> -                               addrs[index] = addr;
-> -
-> +                       pages[page_index] = page;
->                         page++;
-> +                       page_len -= PAGE_SIZE;
-> +                       page_index++;
-> +               }
-> +               while (addrs && dma_len > 0) {
-> +                       if (WARN_ON(dma_index >= max_entries))
-> +                               return -1;
-> +                       addrs[dma_index] = addr;
->                         addr += PAGE_SIZE;
-> -                       len -= PAGE_SIZE;
-> -                       index++;
-> +                       dma_len -= PAGE_SIZE;
-> +                       dma_index++;
->                 }
->         }
->         return 0;
-> --
-> 2.17.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+index 87b4b495333b..2a75a51fed06 100644
+--- a/mm/debug_vm_pgtable.c
++++ b/mm/debug_vm_pgtable.c
+@@ -589,7 +589,7 @@ static void __init pte_soft_dirty_tests(unsigned long pfn, pgprot_t prot)
+ {
+        pte_t pte = pfn_pte(pfn, prot);
+ 
+-       if (!IS_ENABLED(CONFIG_HAVE_ARCH_SOFT_DIRTY))
++       if (!IS_ENABLED(CONFIG_MEM_SOFT_DIRTY))
+                return;
+ 
+        WARN_ON(!pte_soft_dirty(pte_mksoft_dirty(pte)));
+@@ -600,7 +600,7 @@ static void __init pte_swap_soft_dirty_tests(unsigned long pfn, pgprot_t prot)
+ {
+        pte_t pte = pfn_pte(pfn, prot);
+ 
+-       if (!IS_ENABLED(CONFIG_HAVE_ARCH_SOFT_DIRTY))
++       if (!IS_ENABLED(CONFIG_MEM_SOFT_DIRTY))
+                return;
+ 
+        WARN_ON(!pte_swp_soft_dirty(pte_swp_mksoft_dirty(pte)));
+@@ -612,7 +612,7 @@ static void __init pmd_soft_dirty_tests(unsigned long pfn, pgprot_t prot)
+ {
+        pmd_t pmd = pfn_pmd(pfn, prot);
+ 
+-       if (!IS_ENABLED(CONFIG_HAVE_ARCH_SOFT_DIRTY))
++       if (!IS_ENABLED(CONFIG_MEM_SOFT_DIRTY))
+                return;
+ 
+        WARN_ON(!pmd_soft_dirty(pmd_mksoft_dirty(pmd)));
+@@ -623,7 +623,7 @@ static void __init pmd_swap_soft_dirty_tests(unsigned long pfn, pgprot_t prot)
+ {
+        pmd_t pmd = pfn_pmd(pfn, prot);
+ 
+-       if (!IS_ENABLED(CONFIG_HAVE_ARCH_SOFT_DIRTY) ||
++       if (!IS_ENABLED(CONFIG_MEM_SOFT_DIRTY) ||
+                !IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION))
+                return;
