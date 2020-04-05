@@ -2,103 +2,201 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8EBC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F036C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90E7A20659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1968620644
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSj2WijV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btzKb/sD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgDEVLc (ORCPT
+        id S1727832AbgDEVO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 17:11:32 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41299 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgDEVLb (ORCPT
+        Sun, 5 Apr 2020 17:14:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40101 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgDEVO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 17:11:31 -0400
-Received: by mail-lj1-f194.google.com with SMTP id n17so12521626lji.8;
-        Sun, 05 Apr 2020 14:11:30 -0700 (PDT)
+        Sun, 5 Apr 2020 17:14:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s8so12928857wrt.7;
+        Sun, 05 Apr 2020 14:14:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NWGPhfMJZZel0rwMWEjzRwrt83gzNGV4eDnl95RcfAU=;
-        b=eSj2WijVRRdiVl8L9gDAZY9jUY/Fsew/0GhzfAmvk2a8oCD9IzUhxAFvEt3nTYYkpT
-         j7SEnDPqU/DnobMg1ThkNVLb+ZhFOiIwZ/XA2Pg6xEWegpN7VA4oh/nbshBOgYVxDJfa
-         i/EKxS+uuBdDWrWonhJzIrQz2taHsuxq9HNW6jE1yQYLaDC3iOuHFTh0X8y4stjkJpWR
-         RbprIAxyBa51w/UXxC8xtyKWhzG2SppkGDKp/jcSoA1vt5wVEyOep3k6DNL/s0JYYhPR
-         B+/gmSfWVMcjJDVbypi3SqUuyLd2e3M54JwZjpQn4TB3MdV1HEuq6Bmwl7CKQapAQNf6
-         lcrA==
+        h=subject:from:to:references:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=DUDxhMB/UN68U0GsmVbhl76obOV89JzSKfS1fMHpxR8=;
+        b=btzKb/sD99fwfWW5xBsrN/PbB5ddH3RPJixOVvqHnu/GVgI+9OuW06H/gzJQEByJxa
+         DLm3IMTUubiX8z+IDRwRqkiZ2JmEgu79gN0UsqO3B54auv8zrjkFy/UAencQ8wXJ+yvC
+         3kLfC5+sWVZ6GuISVDTwPa+LeOChZZWHkUVvKGDVXHYOPw2rwi2jHKmurGr1kN2l8Eal
+         AJJOiVV/RL+lDB1fJK/hwuFHlh7FShG3+1cjHEY7G3I9yJMBya2XCuFGgKebwJQ8Fdfh
+         x7p+YvAL2Nt7EO0B6VGzsJlcA3PlrnYkI14S2VxMVehV57niTAinDfu2E3EfAnZoJJ4f
+         CD/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NWGPhfMJZZel0rwMWEjzRwrt83gzNGV4eDnl95RcfAU=;
-        b=n9QgRPLVdUK6X6kujGnrzmEn/g+Nx2AhTLFnrhMo6WLmSFQEI5O93DH2YpWgBjFhcs
-         cBXmgfH6hD2yT+UM+Qr73N9gQx90kyVY906Rn+nW+DJ10wgUI7Cs9ScsmRkEWju+UVax
-         kmmuRmiOQzY0P0qgC4H5dN7+er1Cqz5GvRxak/25KSPyGPhskViQF2MSOYrnk4GHyHF3
-         AhHH10Tb1lFMHGSuM7aqA8MsBp8tYU7ofYwqwGfJ0oaoF0+7ywOP8zvz9Ecisy6SezVS
-         Jek4mQ8cZyFEysmaqVXLMLbkpT6ZP16hNpjPLthPhD5FJ781OFlgP6A2daCDywfoyDWl
-         hE3w==
-X-Gm-Message-State: AGi0PuaybAR9DFlzn4xHsfxer8H95AdnnRKlBRGJ/mkt4tvTpX0AJgSj
-        l1QPMQegK/4ds/fOSFb3T1LINbpl
-X-Google-Smtp-Source: APiQypJJ7DJEjhUF1T29Imc2SI1iQoEKCcN3jsiwMvcGVreI86biQ8P1kEb9QblNCiD2v5BJwY2XFQ==
-X-Received: by 2002:a2e:7004:: with SMTP id l4mr10614949ljc.55.1586121089103;
-        Sun, 05 Apr 2020 14:11:29 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id s6sm8971493ljm.58.2020.04.05.14.11.27
+        h=x-gm-message-state:subject:from:to:references:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=DUDxhMB/UN68U0GsmVbhl76obOV89JzSKfS1fMHpxR8=;
+        b=S3alalG41aUlgcRc1bcZTN12oa06zkbHRsLCcnUGlV5WrrGYPeiYrx5YRt7VQ2iYtC
+         gyP5m/WBpenQHiokyynscSt6h6LcEbk9rpzIybd/w5ZDYqRXJdpy9uSLfVpOfA8OXKOS
+         TBjpoV+XxQDzDhBcyBJiksOyaYfXFqSi0O12Bc29Hl9fS0DfJFGXyIu8ZSN5zMiIIXG3
+         JxZINwFqofZ7LJU6HCWV1w+2n7udsyAQfBZOVTfepp5TXVCZxBz+/ofmMDqK8fjVZJqw
+         2StMSF5QUfq/DbavvRKZBevocTE7hTvTUBU+wsTdUDfcGIfEewSKtfcwXPSlDI82WPoz
+         hyKA==
+X-Gm-Message-State: AGi0PubvUHtGoF8eWu3d6B1c9kZW6vfmWd5KnlzJGr0gLnTsihSSpmHO
+        EoLPACdyRFlWOnHTNxoUhfx2YA1a
+X-Google-Smtp-Source: APiQypI2IX7vLcMtIk8ayVI6+IQ/x+ieR+/mPs9xpWls7rbJpLyoFhM+djk4yZyYVv2UwkWYrCwo5Q==
+X-Received: by 2002:adf:f54d:: with SMTP id j13mr8369622wrp.28.1586121294437;
+        Sun, 05 Apr 2020 14:14:54 -0700 (PDT)
+Received: from [192.168.43.88] ([109.126.129.227])
+        by smtp.gmail.com with ESMTPSA id c190sm797561wme.10.2020.04.05.14.14.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Apr 2020 14:11:28 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <40102767-ecdb-e958-66f4-45d11464069c@gmail.com>
-Date:   Mon, 6 Apr 2020 00:11:27 +0300
+        Sun, 05 Apr 2020 14:14:53 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: fix ctx refcounting in io_submit_sqes()
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <8b53ce4539784423b493fdbfae9bd4c720b24d2a.1586120916.git.asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <331eb009-a8c3-98c7-4cec-d91a821f22be@gmail.com>
+Date:   Mon, 6 Apr 2020 00:13:55 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8b53ce4539784423b493fdbfae9bd4c720b24d2a.1586120916.git.asml.silence@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="LAAFwmJSbOmoVNvfVa9WANJQWhdlvKHW9"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.04.2020 04:25, Sowjanya Komatineni пишет:
-...
-> +static int tegra_vi_tpg_channels_alloc(struct tegra_vi *vi)
-> +{
-> +	struct tegra_vi_channel *chan, *tmp;
-> +	unsigned int port_num;
-> +	unsigned int nchannels = vi->soc->vi_max_channels;
-> +	int ret = 0;
-> +
-> +	for (port_num = 0; port_num < nchannels; port_num++) {
-> +		/*
-> +		 * Do not use devm_kzalloc as memory is freed immediately
-> +		 * when device instance is unbound but application might still
-> +		 * be holding the device node open. Channel memory allocated
-> +		 * with kzalloc is freed during video device release callback.
-> +		 */
-> +		chan = kzalloc(sizeof(*chan), GFP_KERNEL);
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--LAAFwmJSbOmoVNvfVa9WANJQWhdlvKHW9
+Content-Type: multipart/mixed; boundary="MpUJ3t078C23Yhln77CNhZqpcj2UdiCbZ";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <331eb009-a8c3-98c7-4cec-d91a821f22be@gmail.com>
+Subject: Re: [PATCH] io_uring: fix ctx refcounting in io_submit_sqes()
+References: <8b53ce4539784423b493fdbfae9bd4c720b24d2a.1586120916.git.asml.silence@gmail.com>
+In-Reply-To: <8b53ce4539784423b493fdbfae9bd4c720b24d2a.1586120916.git.asml.silence@gmail.com>
 
-Why anyone would want to unbind this driver in practice?
+--MpUJ3t078C23Yhln77CNhZqpcj2UdiCbZ
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-I think it should make more sense to set suppress_bind_attrs=true.
+On 06/04/2020 00:08, Pavel Begunkov wrote:
+> If io_get_req() fails, it drops a ref. Then, awhile keeping @submitted
+> unmodified, io_submit_sqes() breaks the loop and puts @nr - @submitted
+> refs. For each submitted req a ref is dropped in io_put_req() and
+> friends. So, for @nr taken refs there will be
+> (@nr - @submitted + @submitted + 1) dropped.
+>=20
+> Remove ctx refcounting from io_get_req(), that at the same time makes
+> it clearer.
+
+It seems, nobody hit OOM, so it stayed unnoticed. And neither did I.
+It could be a good idea to do fault-injection for testing.
+
+>=20
+> Fixes: 2b85edfc0c90 ("io_uring: batch getting pcpu references")
+> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+> ---
+>  fs/io_uring.c | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 78ae8e8ed5bf..79bd22289d73 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -1342,7 +1342,6 @@ static struct io_kiocb *io_get_req(struct io_ring=
+_ctx *ctx,
+>  	req =3D io_get_fallback_req(ctx);
+>  	if (req)
+>  		goto got_it;
+> -	percpu_ref_put(&ctx->refs);
+>  	return NULL;
+>  }
+> =20
+>=20
+
+--=20
+Pavel Begunkov
+
+
+--MpUJ3t078C23Yhln77CNhZqpcj2UdiCbZ--
+
+--LAAFwmJSbOmoVNvfVa9WANJQWhdlvKHW9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl6KShMACgkQWt5b1Glr
++6UoOxAAsy645lj2RB08lPTdJNN8b996PhkC2pkZrUoccNFCnxegQD0rlJAsZnT+
+OpVJipjd63C41eSd9Es9jOSbzT5twGCip1E+4V/yCWIcCRy7ZQg+ol5ieLtH7bDp
+XrienhiI72dIghdRzWP5oMQj0Th1ifx1uLpP56XSuAj0XPdvgUmNURiPHf2Dr7w0
+jNBUeJLs9ezc4wgpRU4aXqMdBpI3vsqR2TrhwynRjTWThjR50bUf9Vt2jsqbegVw
+Z7myxGORCB9fMhooMH4iA9JVY4/RV1zraGNverWbQWyuY00Bqq0MNE5nbD7a5f/R
+VGQTOZj3neSFFnJiadXn8oxNrs8/4p8wha9D51LWq5y3X5M4T9fCr+YxaStFhI3y
+bvQIYYBu4M6EKrB93neYmhzpAEvjS24k4/7nUJHd5TNVddOyrfk5NiSzo9ynyrd8
+GoTiHKgqnd+Yo9i69V6nHsmzo2MGOWwdkgxF8hZePvKE56YGcGSt17zk1ONpyrtJ
+AGIRIjf7U4kxLurlgo7yoXcSM1KEB5QcpDtRTZSOzMKRfwvzRWlPz4SXRHKPNNLw
+tsHhzsNA4qyNBOEy85hpYC+gQE6ZuIR1MDwoCtUkFIuioFSO/2DEtmuLD4AJ1jJ/
+ypJ9dgrBKtRxEF5b+MuIr2IMwgppwJRDymWoLSPOU6tQ4q0id30=
+=bQ0Q
+-----END PGP SIGNATURE-----
+
+--LAAFwmJSbOmoVNvfVa9WANJQWhdlvKHW9--
