@@ -2,133 +2,142 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340EDC2BA17
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49BBC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1573C206B8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C70206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgDENfq (ORCPT
+        id S1726729AbgDENiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 09:35:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56821 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgDENfq (ORCPT
+        Sun, 5 Apr 2020 09:38:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17132 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726678AbgDENiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 09:35:46 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jL5RA-0002lu-5F; Sun, 05 Apr 2020 13:35:44 +0000
-Subject: Re: [PATCH] drivers/tty: emove redundant assignment to variable i and
- rename it to ret
-From:   Colin Ian King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200405133013.380080-1-colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <dd83c6dc-da74-e961-4a25-b6515742052a@canonical.com>
-Date:   Sun, 5 Apr 2020 14:35:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 5 Apr 2020 09:38:00 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 035DYWwI049732;
+        Sun, 5 Apr 2020 09:37:49 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 306k5u52wk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 05 Apr 2020 09:37:49 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 035Dbmp2054527;
+        Sun, 5 Apr 2020 09:37:48 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 306k5u52wa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 05 Apr 2020 09:37:48 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 035DapGJ011301;
+        Sun, 5 Apr 2020 13:37:48 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma01wdc.us.ibm.com with ESMTP id 306hv5hes2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 05 Apr 2020 13:37:48 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 035DbkTV34275678
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 5 Apr 2020 13:37:46 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BFF79BE053;
+        Sun,  5 Apr 2020 13:37:46 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D67DDBE054;
+        Sun,  5 Apr 2020 13:37:42 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.199.46.157])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Sun,  5 Apr 2020 13:37:42 +0000 (GMT)
+X-Mailer: emacs 27.0.90 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Ram Pai <linuxram@us.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, npiggin@gmail.com, paulus@ozlabs.org,
+        leonardo@linux.ibm.com, kirill@shutemov.name,
+        Ram Pai <linuxram@linux.ibm.com>
+Subject: Re: [PATCH v2 01/22] powerpc/pkeys: Avoid using lockless page table
+ walk
+In-Reply-To: <20200403002649.GB22412@oc0525413822.ibm.com>
+References: <20200319035609.158654-1-aneesh.kumar@linux.ibm.com>
+ <20200319035609.158654-2-aneesh.kumar@linux.ibm.com>
+ <20200403002649.GB22412@oc0525413822.ibm.com>
+Date:   Sun, 05 Apr 2020 19:07:40 +0530
+Message-ID: <87h7xyjbob.fsf@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200405133013.380080-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-05_03:2020-04-03,2020-04-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 clxscore=1015 mlxlogscore=999 adultscore=0
+ mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004050121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oops, typo on $SUBJECT, can "emove" be replaced with "remove" when this
-is applied?
+Ram Pai <linuxram@us.ibm.com> writes:
 
-On 05/04/2020 14:30, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable i is being assigned a value that is never read
-> and it is being updated later with a new value. The assignment
-> is redundant and can be removed.  Also rename i to ret as this new
-> name makes makes more sense.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/tty/serial/8250/serial_cs.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/serial_cs.c b/drivers/tty/serial/8250/serial_cs.c
-> index c8186a05a453..e3d10794dbba 100644
-> --- a/drivers/tty/serial/8250/serial_cs.c
-> +++ b/drivers/tty/serial/8250/serial_cs.c
-> @@ -440,7 +440,7 @@ static int simple_config_check_notpicky(struct pcmcia_device *p_dev,
->  static int simple_config(struct pcmcia_device *link)
->  {
->  	struct serial_info *info = link->priv;
-> -	int i = -ENODEV, try;
-> +	int ret, try;
->  
->  	/*
->  	 * First pass: look for a config entry that looks normal.
-> @@ -472,8 +472,8 @@ static int simple_config(struct pcmcia_device *link)
->  	if (info->quirk && info->quirk->config)
->  		info->quirk->config(link);
->  
-> -	i = pcmcia_enable_device(link);
-> -	if (i != 0)
-> +	ret = pcmcia_enable_device(link);
-> +	if (ret != 0)
->  		return -1;
->  	return setup_serial(link, info, link->resource[0]->start, link->irq);
->  }
-> 
+> On Thu, Mar 19, 2020 at 09:25:48AM +0530, Aneesh Kumar K.V wrote:
+>> Fetch pkey from vma instead of linux page table. Also document the fact that in
+>> some cases the pkey returned in siginfo won't be the same as the one we took
+>> keyfault on. Even with linux page table walk, we can end up in a similar scenario.
+>
+> There is no way to correctly ensure that the key returned through
+> siginfo is actually the key that took the fault.  Either get it
+> from page table or get it from the corresponding vma.
 
+That is correct.
+
+>
+> So we had to choose the lesser evil. Getting it from the page table was
+> faster, and did not involve taking any locks.
+
+That is because you are locks which need to be held on page table walk.
+
+>Getting it from the vma
+> was slower, since it needed locks.  Also I faintly recall, there
+> is a scenario where the address that gets a key fault, has no
+> corresponding VMA associated with it yet.
+
+I would be interested in this. For now IIUC even x86 fetch the key from
+VMA.
+
+>
+> Hence the logic used was --
+> 	if it is key-fault, than procure the key quickly
+> 	from the page table.  In the unlikely event that the fault is
+> 	something else, but still has a non-permissive key associated
+> 	with it, get the key from the vma.
+
+
+I am fixing that logic further in the next patch. I do have a test case
+attached for that. We always check for the key in the vma and if it
+allows access, then we retry.
+
+
+>
+> A well written application should avoid changing the key of an address
+> space without synchronizing the corresponding threads that operate in
+> that address range.  However, if the application ignores to do so, than
+> it is vulnerable to a undefined behavior. There is no way to prove that
+> the reported key is correct or incorrect, since there is no provable
+> order between the two events; the key-fault event and the key-change
+> event.
+>
+> Hence I think the change proposed in this patch may not be necessary.
+> RP
+
+The change is needed so that we can make the page table walk safer.
+
+
+-aneesh
