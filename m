@@ -2,127 +2,91 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAB4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71783C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A96F20675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48EE420675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IQzGYW7l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cq+S/cRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgDEJA5 (ORCPT
+        id S1726508AbgDEJED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 05:00:57 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35936 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgDEJA5 (ORCPT
+        Sun, 5 Apr 2020 05:04:03 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28850 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726308AbgDEJEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 05:00:57 -0400
-Received: by mail-pg1-f196.google.com with SMTP id c23so6009600pgj.3;
-        Sun, 05 Apr 2020 02:00:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=C3DKHqFF1QCT9SKqcOsEde3IYDbstDW/l6K2MKOt7IQ=;
-        b=IQzGYW7l6NC43L3AKAWdfRigHVEgTsXVUFr3j/W1sZDICh7EE0gGJPKtnme44E6VGK
-         84TD4JnVJIHa2WbN4V8kfV676tOBqP1i2gPHY7NZI4LLGUMqYXxC0wLxtUt3p0tAtfgQ
-         4d5jCmPkb0mOckJZFhaZdhD2hO0xrns7rz383UesOCebq0ikOxdnF3leY+FWiioxkPFm
-         xjJyZzyOoX46XbDFenneVCm12r2hA9a6uXslgOitrhhNXy2JuErku9XjCiXzATOExBSb
-         TJtAAaZV29Pv+7C2EWprUZ2mNUqPCMjpAlXZZx7ZqveU7SU3OkNLLStLJr/yuhlFnCfJ
-         jXLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=C3DKHqFF1QCT9SKqcOsEde3IYDbstDW/l6K2MKOt7IQ=;
-        b=GkXUI8XxdcfS5IQLn1ZT/TZNxhjouXpAn0bHIffYNEWMW21rceshCJUHWPj1Pme0ik
-         9nMAzYD5OfXfIBG0gJztYnWZ4xCeRiyh+BbvAn6QNAwUylbqjPvEsT1NQooPntKeX5xf
-         jNRWHAt3Ohu84glwzA9p3jjYAfDsJwVs60Apr+IpPHt1rxoUYpWbsqL9h1YZA7ZRLN3b
-         vNTPsW76d9gOAboWh/MRrtEgBOshN4RPAxxf3q6lRhijvc1354pPUka+RnJJgV6rin6l
-         JatbP4FsGtWPpifVlT3h4LSpIneKsXkKiPZ7NYA+0VBFrHoshQ3dGvvZ1Y0PytWB8A24
-         3JDA==
-X-Gm-Message-State: AGi0PubfH7F0UedMGQ82Z7KmzgINhEU7v3Vr9RzaVkQRWDRBKnzXPJbR
-        G7H28CzdX1Ib20uokRWGAZU=
-X-Google-Smtp-Source: APiQypJsHVf6GyysweAe/1bPGo6zHgQbzzOZwulYM/cOPNz7LazsGhbU9DyKDJPlhFeaAKOaW53QFw==
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr16864268pgb.203.1586077255898;
-        Sun, 05 Apr 2020 02:00:55 -0700 (PDT)
-Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
-        by smtp.gmail.com with ESMTPSA id f15sm9157708pfd.215.2020.04.05.02.00.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 Apr 2020 02:00:55 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     hare@suse.com, jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] scsi: aic7xxx: Remove NULL check before kfree
-Date:   Sun,  5 Apr 2020 17:00:34 +0800
-Message-Id: <20200405090034.29622-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 5 Apr 2020 05:04:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586077442;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GRL0Uyd6AdEG1TYouQC+LIcNPbvfldHHxdImooUbNU8=;
+        b=Cq+S/cRoBgGo6ZLKE/LqaadPNebO1ww7L9FQMEyo9RneYPy9hk26Ps0GQXx9SWzAIzLudP
+        hI5tUxVYgFZjlhHKuidBNuPo5b2+vrsxsUJVN5136T/7bOPQwZ6+nF4ErSrK3oKirOq8/q
+        BV6QEzbuRI3BPXmkSQ1UFW7pYVVUT90=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-455-mpbKV-gPP1i9TVJFj_N8oA-1; Sun, 05 Apr 2020 05:03:57 -0400
+X-MC-Unique: mpbKV-gPP1i9TVJFj_N8oA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9BEE2477;
+        Sun,  5 Apr 2020 09:03:55 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-114-243.ams2.redhat.com [10.36.114.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD19B118F39;
+        Sun,  5 Apr 2020 09:03:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <78ff6e5d-9643-8798-09cb-65b1415140be@redhat.com>
+References: <78ff6e5d-9643-8798-09cb-65b1415140be@redhat.com> <1437197.1585570598@warthog.procyon.org.uk> <CAHk-=wgWnZCvTFDfiYAy=uMUf2F1Yy1r9ur5ARcmtqLjX8Tz4Q@mail.gmail.com>
+To:     Waiman Long <longman@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] keys: Fix key->sem vs mmap_sem issue when reading key
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3567368.1586077430.1@warthog.procyon.org.uk>
+Date:   Sun, 05 Apr 2020 10:03:50 +0100
+Message-ID: <3567369.1586077430@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NULL check before kfree is unnecessary so remove it.
-This issue was detected by using the Coccinelle software.
+Waiman Long <longman@redhat.com> wrote:
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/scsi/aic7xxx/aic7xxx_core.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+> > And yes, kzfree() isn't a good name either, and had that same
+> > memset(), but at least it doesn't do the dual-underscore mistake.
+> >
+> > Including some kzfree()/crypto people explicitly - I hope we can get
+> > away from this incorrect and actively wrong pattern of thinking that
+> > "sensitive data should be memset(), and then we should add a random
+> > 'z' in the name somewhere to 'document' that".
+> >
+> >                Linus
+> >
+> Thanks for the suggestion, I will post a patch to rename the function to
+> kvzfree_explicit() and use memzero_explicit() for clearing memory.
 
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_core.c b/drivers/scsi/aic7xxx/aic7xxx_core.c
-index 4190a025381a..a45365b0651a 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_core.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_core.c
-@@ -2193,8 +2193,7 @@ ahc_free_tstate(struct ahc_softc *ahc, u_int scsi_id, char channel, int force)
- 	if (channel == 'B')
- 		scsi_id += 8;
- 	tstate = ahc->enabled_targets[scsi_id];
--	if (tstate != NULL)
--		kfree(tstate);
-+	kfree(tstate);
- 	ahc->enabled_targets[scsi_id] = NULL;
- }
- #endif
-@@ -4474,8 +4473,7 @@ ahc_set_unit(struct ahc_softc *ahc, int unit)
- void
- ahc_set_name(struct ahc_softc *ahc, char *name)
- {
--	if (ahc->name != NULL)
--		kfree(ahc->name);
-+	kfree(ahc->name);
- 	ahc->name = name;
- }
- 
-@@ -4536,10 +4534,8 @@ ahc_free(struct ahc_softc *ahc)
- 		kfree(ahc->black_hole);
- 	}
- #endif
--	if (ahc->name != NULL)
--		kfree(ahc->name);
--	if (ahc->seep_config != NULL)
--		kfree(ahc->seep_config);
-+	kfree(ahc->name);
-+	kfree(ahc->seep_config);
- #ifndef __FreeBSD__
- 	kfree(ahc);
- #endif
-@@ -4950,8 +4946,7 @@ ahc_fini_scbdata(struct ahc_softc *ahc)
- 	case 0:
- 		break;
- 	}
--	if (scb_data->scbarray != NULL)
--		kfree(scb_data->scbarray);
-+	kfree(scb_data->scbarray);
- }
- 
- static void
--- 
-2.17.1
+Should this be moved into core code, rather than being squirrelled away in
+security/keys/?
+
+David
 
