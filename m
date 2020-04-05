@@ -2,130 +2,103 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C03C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 05:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A99C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 05:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF408206F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 05:39:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/FnXHfm"
+	by mail.kernel.org (Postfix) with ESMTP id C7D3C206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 05:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbgDEFiv (ORCPT
+        id S1726386AbgDEFnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 01:38:51 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45090 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgDEFiv (ORCPT
+        Sun, 5 Apr 2020 01:43:32 -0400
+Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:50776
+        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgDEFnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 01:38:51 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o26so5840437pgc.12
-        for <linux-kernel@vger.kernel.org>; Sat, 04 Apr 2020 22:38:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=0jF9pWSlPaYD2ziUF6nhbSGdT6OrmVhlRN/nJQLR7yg=;
-        b=O/FnXHfmFd7Y76aERNuCdYP50qox8r/7AmaQg/6NAGF15KAtLfoYnIJ9HG+/cCxPCx
-         MvEEhAShBjFQHwvL04kP9EPuawOO3vqF7JL+bykfIF10tKdgo0XpuWDqKzCCt1/W2FBh
-         AxFkqGyQk0rOhijemgyiBvH7a8UFKLWewEM+ifAY4bfWHN9xAVdywWY7pau9fNtKz9Po
-         elx0g9Cpui5z/Orjj97vsDJ/RpkTK0tFh3bzqfccafsybhrdKfMadFmaeFB6h2ChVebu
-         yAWeRKfQuHLlrPdhLzZUJFyWycrkUzXsfx0Lw8fGsLPE9c2G8EJvZc7rCLXqN98recMz
-         Z0vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=0jF9pWSlPaYD2ziUF6nhbSGdT6OrmVhlRN/nJQLR7yg=;
-        b=a2E6rz9qvNZXezRJy692XAhOwNNrANIsMkhWEezOVJbV/FB8cBqPIxewMwEFo+KQAE
-         r1Su/NfHdbaewPIQeCBvqUzAQaEHT620xqkF2ppQkO2nYmf3Cr5FdJHeyjxFlB99x9nJ
-         XObCqcj6cbQnWtYaXO+Yud33HlCALC9a5UQ4vJKFXnQi6iixrtsgwdc69j8JMTfLlBcz
-         1H1kROhN2+/wiIZ5t2RnxSF9SAw2IJBNdHEQb6/NtAae6a/76HnPrQItqnGeuA9/KM16
-         87iWeZopf1F7wCEw60mnrntbmmboPp72obRrbEvMRgRNHM7ea6QUsxsjJ4BM4NoooYWs
-         bs0g==
-X-Gm-Message-State: AGi0PuajPkgXvEU5U8fE6xcBQ6rtvYPv27I5tJKBVotLPNnewLs+vaR0
-        QfC8/bMMpnHhGkrI+5oBf34=
-X-Google-Smtp-Source: APiQypJHl1JHTNi4KksI7t0wqA8F9ee3ecGYciGKKpidiT6PK7CBoaGYo6/oBTSJbDLrjlqUuyY3pg==
-X-Received: by 2002:a63:f54d:: with SMTP id e13mr15170163pgk.157.1586065129988;
-        Sat, 04 Apr 2020 22:38:49 -0700 (PDT)
-Received: from localhost ([183.82.183.216])
-        by smtp.gmail.com with ESMTPSA id q8sm8935676pjq.28.2020.04.04.22.38.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 04 Apr 2020 22:38:49 -0700 (PDT)
-Date:   Sun, 5 Apr 2020 11:08:47 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     kbuild test robot <lkp@intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clocksource/drivers/timer-vf-pit: Fix build error
-Message-ID: <20200405053847.GA5593@afzalpc>
-References: <202003230153.VzOyvdbR%lkp@intel.com>
- <20200323061130.GA6286@afzalpc>
- <5616c931-1c44-d6b5-8baa-24c66f334e28@linaro.org>
+        Sun, 5 Apr 2020 01:43:32 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by www.teo-en-ming.com (Postfix) with ESMTPA id 5CF03426B9A;
+        Sun,  5 Apr 2020 13:43:31 +0800 (+08)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5616c931-1c44-d6b5-8baa-24c66f334e28@linaro.org>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Date:   Sun, 05 Apr 2020 13:43:31 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ceo@teo-en-ming.com
+Subject: Teo En Ming's PDF Manual: How to Install and Configure pfSense
+ Firewall and Snort Intrusion Prevention System (IPS) for AMD Athlon 3000G DIY
+ Desktop PC
+Message-ID: <ed15da251507fa09b263830ea66cf81b@teo-en-ming.com>
+X-Sender: ceo@teo-en-ming.com
+User-Agent: Roundcube Webmail/1.2.3
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel, Thomas,
+Subject: Teo En Ming's PDF Manual: How to Install and Configure pfSense 
+Firewall and Snort Intrusion Prevention System (IPS) for AMD Athlon 
+3000G DIY Desktop PC
 
-On Tue, Mar 31, 2020 at 01:40:36PM +0200, Daniel Lezcano wrote:
+Teo En Ming's PDF Manual: How to Install and Configure pfSense Firewall 
+and Snort Intrusion Prevention System (IPS) for AMD Athlon 3000G DIY 
+Desktop PC
 
-> Hi Thomas,
-> 
-> I was about to send a PR with the revert and this patch. As you picked
-> up the revert, do you mind to pick also this one?
+PUBLISHED 5 APRIL 2020 SUNDAY 1:30 PM SINGAPORE TIME
+SINGAPORE
 
-Mainline is broken w/o this change for ARM vf610m4_defconfig, Stephen
-Rothwell also reported it today, please do the needful so as to let it
-reach mainline.
+This PDF manual consists of 124 pages and is about 148 MB in filesize. 
+It shows you how to self assemble a brand new AMD Athlon 3000G desktop 
+PC, install and configure pfSense firewall community edition version 
+2.4.5 and subsequently install and configure Snort Intrusion Prevention 
+System (IPS). I have spent SGD$276 in total doing this exercise.
 
-Regards
-afzal
+Redundant Google Drive download links for Teo En Ming's PDF manual:
 
-> On 23/03/2020 07:11, afzal mohammed wrote:
-> > Recently all usages of setup_irq() was replaced by request_irq().
-> > The replacement in timer-vf-pit.c missed closing parentheses
-> > resulting in build error (vf610m4_defconfig). Fix it.
-> >
-> > Fixes: cc2550b421aa ("clocksource: Replace setup_irq() by
-> > request_irq()") Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com> ---
-> > drivers/clocksource/timer-vf-pit.c | 2 +- 1 file changed, 1
-> > insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/clocksource/timer-vf-pit.c
-> > b/drivers/clocksource/timer-vf-pit.c index
-> > 7ad4a8b008c2..1a86a4e7e344 100644 ---
-> > a/drivers/clocksource/timer-vf-pit.c +++
-> > b/drivers/clocksource/timer-vf-pit.c @@ -129,7 +129,7 @@ static int
-> > __init pit_clockevent_init(unsigned long rate, int irq)
-> > __raw_writel(PITTFLG_TIF, clkevt_base + PITTFLG);
-> >
-> > BUG_ON(request_irq(irq, pit_timer_interrupt, IRQF_TIMER |
-> > IRQF_IRQPOLL, -			   "VF pit timer", &clockevent_pit); +			   "VF
-> > pit timer", &clockevent_pit));
-> >
-> > clockevent_pit.cpumask = cpumask_of(0); clockevent_pit.irq = irq;
-> >
-> 
-> 
-> -- 
-> <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-> 
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
+[1] https://drive.google.com/open?id=198aqUm5FCxeNwXIvXwMf61KZhFOLhI1_
+
+[2] https://drive.google.com/open?id=1Dkfc-ozWWAVsYptBkQJDUuwsUrczQuJd
+
+[3] https://drive.google.com/open?id=1Q3FQOx3IVXppCF-ZZazcpLC7xOj8vuYC
+
+[4] https://drive.google.com/open?id=1HnMpZPd5zc1OgZ0GeQHu9VWFrXQwZUzz
+
+[5] https://drive.google.com/open?id=1WwNIWh1cAE9ot9LIVjsL4zEJhOUSZlWD
+
+
+
+
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: 
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
+United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
+2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
