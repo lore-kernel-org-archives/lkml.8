@@ -2,106 +2,91 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DADC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E20AC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 180EE206F8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7458D20678
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uNl11IBg"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="EZ03bsic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgDEV4i (ORCPT
+        id S1727833AbgDEWYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 17:56:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43564 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgDEV4i (ORCPT
+        Sun, 5 Apr 2020 18:24:13 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41360 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbgDEWYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 17:56:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dpw9xsZ0gY0GT7tsgtGf0/8FnrsUbxUf5AWEI2NyNks=; b=uNl11IBgUVuiJEAEneJlEoOmNV
-        ns32BrV+sa/IQQIqPRBgg+QkSMiD/pFyPxe+gxE4cX4WYZ1S+sYl16UL/oZplqjVW/GAhvKgIwQqK
-        9B2w1/3uPFzDEmBKnF+sOyAwnlUgw/7GQIQBh63DyTIr6qsZMdFXn/rXcAJo8rmzuH5QAwEEqIKOn
-        1o7VaqD5iss01kVLoci28nHO6j4lC/BQV+PX3yoDQy6njwZqe68otmKmDFth3iZbVHcqOItKrsZsy
-        f9mAd8RHtF8va5uHLZkNIJNE7qyvVwW3tu7VCm+mepzIOtAOAIyz9Jcd0wpVcuE5/f5q5M5fQwE0w
-        gJAq0CuQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLDFs-0004o8-T8; Sun, 05 Apr 2020 21:56:36 +0000
-Date:   Sun, 5 Apr 2020 14:56:36 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
- node
-Message-ID: <20200405215636.GW21484@bombadil.infradead.org>
-References: <20200330124842.GY22483@bombadil.infradead.org>
- <20200330141558.soeqhstone2liqud@master>
- <20200330142821.GD22483@bombadil.infradead.org>
- <20200331134208.gfkyym6n3gpgk3x3@master>
- <20200331164212.GC21484@bombadil.infradead.org>
- <20200331220440.roq4pv6wk7tq23gx@master>
- <20200331235912.GD21484@bombadil.infradead.org>
- <20200401221021.v6igvcpqyeuo2cws@master>
- <20200401222000.GK21484@bombadil.infradead.org>
- <20200405110743.bzpvz4jzwr4kharr@master>
+        Sun, 5 Apr 2020 18:24:13 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d24so5134708pll.8
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 15:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=cBUqwyFaaMgPDC136EdKrYKFduVaDYD9gWafLqWLat8=;
+        b=EZ03bsicf8ec3VRWrGwceWMI5Y3DdUFIdjPtdlthXFEau6iJP7+PcfeoJcifHAnua1
+         5TDdcQ2urw4xCp5PJhpfKgI5xyZKdeVrIG1ZPuIB3lMLVVwclfmJV8V1BGwcGnewaegc
+         N4PFhfsXRZm4z9ePInwtY64N70bf6Xo415+4uVjPm4yn27luGbZ/AHdGdWegeP+Rhn5K
+         l5lKApoqn2u7u3jCSXblHPzSHjevjVFxnF6phuXHWmdplcJ3HHLUgzxhV1Xh1a8dYeOK
+         GbAHbKrDjgUye4WyHUA0qgx38v2pKMwWWOLHvcTQnhfTR43GxMtcTu0bMBD5H6z1iG/H
+         6/jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cBUqwyFaaMgPDC136EdKrYKFduVaDYD9gWafLqWLat8=;
+        b=rejmz41T4RQ87KceXOr6YP5wE/TUL80psstGp847HV5fPdcbMNpzOdOx7xXwi6zIUf
+         DQ2z5G29oKRZeLtph5mFl30JNKELVm3j6PLtQZlntPG/UoaTSmtedkunHQHnU+jvY/fk
+         C3AsS1qZ8of7ANbEDyuN9L3VbroTkiLK1dbAIVeKj9jlkAVLHs2w3Am7FX55jplMG6Wk
+         tZY8nEjFDJoRVPNqbPGcYw4cyrRtU/hAmXkrjz5bIm05v7piAPZuZXOMwrRTx5vBXSEa
+         /2z3Fa1djKJnSeFXfHEcRxR4VT7PdxG9ub0XRrLWlFz+2kg5hkvVGKPZemhZBkTegSj0
+         yebw==
+X-Gm-Message-State: AGi0PuYgFZFrbv4bC0/LdTVMQB1lzJG4+AiZ5KYFaZALNRHRFUKknfGh
+        FdvyKjWTzYoDHAF2t04w6EFYZW4/znpxWA==
+X-Google-Smtp-Source: APiQypKLY6GAjok/YBhZdRycoLQmtEL+JiOwwcjY9MB0FZoQN/+QoPoBkvhsU+qv7sh2NO70lCpKUA==
+X-Received: by 2002:a17:90a:343:: with SMTP id 3mr19057622pjf.115.1586125451566;
+        Sun, 05 Apr 2020 15:24:11 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:5d19:ea24:5c10:884d? ([2605:e000:100e:8c61:5d19:ea24:5c10:884d])
+        by smtp.gmail.com with ESMTPSA id g11sm10126763pjs.17.2020.04.05.15.24.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Apr 2020 15:24:10 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: fix ctx refcounting in io_submit_sqes()
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <8b53ce4539784423b493fdbfae9bd4c720b24d2a.1586120916.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c6da3fdd-541c-ba20-ec7a-6acd2ce9c3cd@kernel.dk>
+Date:   Sun, 5 Apr 2020 15:24:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200405110743.bzpvz4jzwr4kharr@master>
+In-Reply-To: <8b53ce4539784423b493fdbfae9bd4c720b24d2a.1586120916.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 11:07:43AM +0000, Wei Yang wrote:
-> Occasionally, I see this error message without my change on 5.6.
+On 4/5/20 3:08 PM, Pavel Begunkov wrote:
+> If io_get_req() fails, it drops a ref. Then, awhile keeping @submitted
+> unmodified, io_submit_sqes() breaks the loop and puts @nr - @submitted
+> refs. For each submitted req a ref is dropped in io_put_req() and
+> friends. So, for @nr taken refs there will be
+> (@nr - @submitted + @submitted + 1) dropped.
+> 
+> Remove ctx refcounting from io_get_req(), that at the same time makes
+> it clearer.
 
-I've never seen this one before.  Maybe my test machine is insufficient ...
+Applied, but also marked for 5.6 stable.
 
-> random seed 1586068185
-> running tests
-> XArray: 21151201 of 21151201 tests passed
-> =================================================================
-> ==6040==ERROR: AddressSanitizer: heap-use-after-free on address 0x60c0031bce81 at pc 0x00000040b4b3 bp 0x7f95e87f9bb0 sp 0x7f95e87f9ba0
-> READ of size 1 at 0x60c0031bce81 thread T11
->     #0 0x40b4b2 in xas_find_marked ../../../lib/xarray.c:1182
->     #1 0x45318e in tagged_iteration_fn /root/git/linux/tools/testing/radix-tree/iteration_check.c:77
->     #2 0x7f95ef2464e1 in start_thread (/lib64/libpthread.so.0+0x94e1)
->     #3 0x7f95ee8026d2 in clone (/lib64/libc.so.6+0x1016d2)
-> 
-> 0x60c0031bce81 is located 1 bytes inside of 128-byte region [0x60c0031bce80,0x60c0031bcf00)
-> freed by thread T1 here:
->     #0 0x7f95ef36c91f in __interceptor_free (/lib64/libasan.so.5+0x10d91f)
->     #1 0x43e4ba in kmem_cache_free /root/git/linux/tools/testing/radix-tree/linux.c:64
-> 
-> previously allocated by thread T13 here:
->     #0 0x7f95ef36cd18 in __interceptor_malloc (/lib64/libasan.so.5+0x10dd18)
->     #1 0x43e1af in kmem_cache_alloc /root/git/linux/tools/testing/radix-tree/linux.c:44
-> 
-> Thread T11 created by T0 here:
->     #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
->     #1 0x454862 in iteration_test /root/git/linux/tools/testing/radix-tree/iteration_check.c:178
-> 
-> Thread T1 created by T0 here:
->     #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
->     #1 0x7f95ef235b89  (/lib64/liburcu.so.6+0x3b89)
-> 
-> Thread T13 created by T0 here:
->     #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
->     #1 0x4548a4 in iteration_test /root/git/linux/tools/testing/radix-tree/iteration_check.c:186
-> 
-> This is not always like this. Didn't figure out the reason yet. Hope you many
-> have some point.
+-- 
+Jens Axboe
 
-How often are you seeing it?
-
-T1 (the thread which frees the memory) is the RCU thread, so the freeing
-went through RCU.  For some reason, T11 (the iterating thread) isn't
-preventing the freeing by its use of the RCU read lock.
