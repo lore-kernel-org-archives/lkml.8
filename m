@@ -2,181 +2,131 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538DFC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B297C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298A020659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42B9E20659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBaEBSkX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rgz2/Mn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgDEOFT (ORCPT
+        id S1726828AbgDEOIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 10:05:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40414 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgDEOFT (ORCPT
+        Sun, 5 Apr 2020 10:08:09 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35377 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbgDEOII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 10:05:19 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j17so9587214lfe.7;
-        Sun, 05 Apr 2020 07:05:17 -0700 (PDT)
+        Sun, 5 Apr 2020 10:08:08 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c12so4849279plz.2
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 07:08:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HogDBcooWi67XENOKHci5+dOZCCQV64k3pTiHWgv4s4=;
-        b=rBaEBSkXK2C0yzndQ/RkDwHj0w17BJXrPk7f9u7teTV8P9IxLUVusf3MKIvc4yffff
-         Yp8Cpb3XQoNRyLBWUd2Cd7nJAmpHo6S2cmHSanRKQuITwv2z21ePnlDUNkIwkgTX1i4b
-         2b2hc/0oVkEq6Q/e6S/1eW4jWOR2sSWa6ETRpFJgiSyBZ9wFqfWxgz9m9JutlfOFQN3J
-         9kOG+onl1TMLjo1attSQqqadWl5xzuog8qJNOfcpGDTqTbgXykfUBXmW/KFEtZBhN2D5
-         JO+FVp4R1fbWK6EjdVZmpfDN0wT+15Cuvh2HkfxPT+Gi+KckM4yugfn3CPwbKCbdHzvT
-         kyrg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D1Alutm8Kz0gIUiQDyHVyu0RXaT8qrBV0QAHZoy8LI8=;
+        b=Rgz2/Mn+rn4dCEVcoawWzXBK5JL6tV65J4lw4QvmUiox3TESU526+qFxhBlUrPXdr6
+         UOxz+3do+0YW5XmA1tmpOLMpXRfXXybaoSfMxUi28ozSZ2JMEQNzUDTr4VvmdjWwPLd4
+         X4AStBSbH3MujuRQV3kB2CekDrMCOZAXxzkCU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HogDBcooWi67XENOKHci5+dOZCCQV64k3pTiHWgv4s4=;
-        b=AwxUA+ndjKdeATrtFD1HKARSpUhTHo/ADo6mWTaePL/fBlOQe8QJ9yRlgfJPL7VRb+
-         xql2pKtFJqqJqNlByRzYH4dJ72pNgG39lNGl2JPuZfRDwTwzBDCF8SGm8Piglz2iTxPe
-         yN3Qp1tv7ywXe8vGB5Jb1tenjmsVsIUxnMgpYFxTm5g1O7POCm61CsvDOy9MZRoo8cYX
-         9Y4+cHAleZv+KZa7NCurS7j8RUjCLJEaw7nJUNfL5RiQIXWmydT1UcW1lsKH+twS467y
-         vO366HHA2SSuhPPTlvO1DTnE1CnZwTBeJN+fDjofATf4SzyTZHvjoWMzJLUIAGYWq5o5
-         SlEA==
-X-Gm-Message-State: AGi0PuZxCrI3yRGLw/bmKkbPMW0uFO764ZsXB5CgoirxWQOlauHtKBTg
-        n3F5dY6C0JwDvbEdtoy5ZVM=
-X-Google-Smtp-Source: APiQypILiNlHrBcNHoxP8124hD18AOTk35fqkGU+DQleRMILHJTfrkd1aUr9wRQOkM31pqNtx2BDfQ==
-X-Received: by 2002:ac2:5185:: with SMTP id u5mr3629194lfi.64.1586095516549;
-        Sun, 05 Apr 2020 07:05:16 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id k3sm8527148lji.43.2020.04.05.07.05.15
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D1Alutm8Kz0gIUiQDyHVyu0RXaT8qrBV0QAHZoy8LI8=;
+        b=g0KIsbOb1oHkRyM7M4XRJnXGwYmjtk8lZ4ciI8BUSIdekTUWBLXxxQ9+StESxkalKb
+         QVnZx9BpicIRg099PX59xPrp3ALsMAjjiGXDpZ+0YDxYJmKBu5aiMUDRHrRFuso4yMH+
+         V7TlCfWgwoCO4z+/3PweYCnPmlTm47CONkfUaGgKPKjVFS01nEuLWW5WSHcG8UFA5tCq
+         tM7O1ZNs/su1UApa2TCrBz7TNz8FAtqU9FrMobCT7xpC6YjFw6Jg9WkmKj2wTvlz2Rop
+         r4y7BKRBvHLZKj2GyIMaLnPNLw7BOd7J7O7C1BejtLvbNHf1IKYDVycX/ztsdJoVAflV
+         s5fg==
+X-Gm-Message-State: AGi0PuYZfjs0c5lYQwQuz+DJmpvIdDPzpZ0v9VYudtm2WAQrCU0JwVHk
+        5GRumMTz/t+S788WFS3Kj6p0bL0NGDQ=
+X-Google-Smtp-Source: APiQypJ2B6ZErsCGIRPfqaln0uBatZTZFZY6lN9N0AFLLzSpk8H551rcsV7OA7W0wFTKR6HXmqC0+A==
+X-Received: by 2002:a17:90a:e013:: with SMTP id u19mr11596704pjy.54.1586095687586;
+        Sun, 05 Apr 2020 07:08:07 -0700 (PDT)
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com. [209.85.216.44])
+        by smtp.gmail.com with ESMTPSA id a19sm9641731pfk.110.2020.04.05.07.08.07
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Apr 2020 07:05:15 -0700 (PDT)
-Subject: Re: [TEGRA194_CPUFREQ Patch v2 2/3] cpufreq: Add Tegra194 cpufreq
- driver
-To:     Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     bbasu@nvidia.com, mperttunen@nvidia.com
-References: <1586028547-14993-1-git-send-email-sumitg@nvidia.com>
- <1586028547-14993-3-git-send-email-sumitg@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <67f9feb1-ba51-f1ac-b6eb-4587924d0748@gmail.com>
-Date:   Sun, 5 Apr 2020 17:05:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 05 Apr 2020 07:08:07 -0700 (PDT)
+Received: by mail-pj1-f44.google.com with SMTP id fh8so5317459pjb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 07:08:07 -0700 (PDT)
+X-Received: by 2002:a1f:a055:: with SMTP id j82mr11678218vke.75.1586095258097;
+ Sun, 05 Apr 2020 07:00:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1586028547-14993-3-git-send-email-sumitg@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200402155130.8264-1-dianders@chromium.org> <20200402085050.v2.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
+ <20200403013356.GA6987@ming.t460p> <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
+ <CAD=FV=Vsk0SjkA+DbUwJxvO6NFcr0CO9=H1FD7okJ2PxMt5pYA@mail.gmail.com> <20200405091446.GA3421@localhost.localdomain>
+In-Reply-To: <20200405091446.GA3421@localhost.localdomain>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Sun, 5 Apr 2020 07:00:46 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X_S_YHvKkp96f3HVM3uX0VFTCKBxNK3fEu9Yt=NB8wEQ@mail.gmail.com>
+Message-ID: <CAD=FV=X_S_YHvKkp96f3HVM3uX0VFTCKBxNK3fEu9Yt=NB8wEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] blk-mq: Rerun dispatching in the case of budget contention
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Salman Qazi <sqazi@google.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
+        Ajay Joshi <ajay.joshi@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Hou Tao <houtao1@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.04.2020 22:29, Sumit Gupta пишет:
-...
-> +static void tegra_read_counters(struct work_struct *work)
-> +{
-> +	struct read_counters_work *read_counters_work;
-> +	struct tegra_cpu_ctr *c;
-> +	u64 val;
-> +
-> +	/*
-> +	 * ref_clk_counter(32 bit counter) runs on constant clk,
-> +	 * pll_p(408MHz).
-> +	 * It will take = 2 ^ 32 / 408 MHz to overflow ref clk counter
-> +	 *              = 10526880 usec = 10.527 sec to overflow
-> +	 *
-> +	 * Like wise core_clk_counter(32 bit counter) runs on core clock.
-> +	 * It's synchronized to crab_clk (cpu_crab_clk) which runs at
-> +	 * freq of cluster. Assuming max cluster clock ~2000MHz,
-> +	 * It will take = 2 ^ 32 / 2000 MHz to overflow core clk counter
-> +	 *              = ~2.147 sec to overflow
-> +	 */
-> +	read_counters_work = container_of(work, struct read_counters_work,
-> +					  work);
-> +	c = &read_counters_work->c;
-> +
-> +	val = read_freq_feedback();
-> +	c->last_refclk_cnt = lower_32_bits(val);
-> +	c->last_coreclk_cnt = upper_32_bits(val);
-> +	udelay(c->delay);
-> +	val = read_freq_feedback();
-> +	c->refclk_cnt = lower_32_bits(val);
-> +	c->coreclk_cnt = upper_32_bits(val);
-> +}
-> +
-> +/*
-> + * Return instantaneous cpu speed
-> + * Instantaneous freq is calculated as -
-> + * -Takes sample on every query of getting the freq.
-> + *	- Read core and ref clock counters;
-> + *	- Delay for X us
-> + *	- Read above cycle counters again
-> + *	- Calculates freq by subtracting current and previous counters
-> + *	  divided by the delay time or eqv. of ref_clk_counter in delta time
-> + *	- Return Kcycles/second, freq in KHz
-> + *
-> + *	delta time period = x sec
-> + *			  = delta ref_clk_counter / (408 * 10^6) sec
-> + *	freq in Hz = cycles/sec
-> + *		   = (delta cycles / x sec
-> + *		   = (delta cycles * 408 * 10^6) / delta ref_clk_counter
-> + *	in KHz	   = (delta cycles * 408 * 10^3) / delta ref_clk_counter
-> + *
-> + * @cpu - logical cpu whose freq to be updated
+Hi,
 
-
-> + * Returns freq in KHz on success, 0 if cpu is offline
-
-I don't see any checks in the code about whether CPU is offline.
-
-Googling for "queue_work_on offline cpu" suggests that this function
-should hang.
-
-> + */
-> +static unsigned int tegra194_get_speed_common(u32 cpu, u32 delay)
-> +{
-> +	struct read_counters_work read_counters_work;
-> +	struct tegra_cpu_ctr c;
-> +	u32 delta_refcnt;
-> +	u32 delta_ccnt;
-> +	u32 rate_mhz;
+On Sun, Apr 5, 2020 at 2:15 AM Ming Lei <ming.lei@redhat.com> wrote:
+>
+> OK, looks it isn't specific on BFQ any more.
+>
+> Follows another candidate approach for this issue, given it is so hard
+> to trigger, we can make it more reliable by rerun queue when has_work()
+> returns true after ops->dispath_request() returns NULL.
+>
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index 74cedea56034..4408e5d4fcd8 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -80,6 +80,7 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+>         blk_mq_run_hw_queue(hctx, true);
+>  }
+>
+> +#define BLK_MQ_BUDGET_DELAY    3               /* ms units */
+>  /*
+>   * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+>   * its queue by itself in its completion handler, so we don't need to
+> @@ -103,6 +104,9 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>                 rq = e->type->ops.dispatch_request(hctx);
+>                 if (!rq) {
+>                         blk_mq_put_dispatch_budget(hctx);
 > +
-> +	read_counters_work.c.cpu = cpu;
-> +	read_counters_work.c.delay = delay;
-> +	INIT_WORK_ONSTACK(&read_counters_work.work, tegra_read_counters);
-> +	queue_work_on(cpu, read_counters_wq, &read_counters_work.work);
-> +	flush_work(&read_counters_work.work);
-> +	c = read_counters_work.c;
-> +
-> +	if (c.coreclk_cnt < c.last_coreclk_cnt)
-> +		delta_ccnt = c.coreclk_cnt + (MAX_CNT - c.last_coreclk_cnt);
-> +	else
-> +		delta_ccnt = c.coreclk_cnt - c.last_coreclk_cnt;
-> +	if (!delta_ccnt)
-> +		return 0;
-> +
-> +	/* ref clock is 32 bits */
-> +	if (c.refclk_cnt < c.last_refclk_cnt)
-> +		delta_refcnt = c.refclk_cnt + (MAX_CNT - c.last_refclk_cnt);
-> +	else
-> +		delta_refcnt = c.refclk_cnt - c.last_refclk_cnt;
-> +	if (!delta_refcnt) {
-> +		pr_debug("cpufreq: %d is idle, delta_refcnt: 0\n", cpu);
-> +		return 0;
-> +	}
-> +	rate_mhz = ((unsigned long)(delta_ccnt * REF_CLK_MHZ)) / delta_refcnt;
-> +
-> +	return (rate_mhz * KHZ); /* in KHz */
-> +}
+> +                       if (e->type->ops.has_work && e->type->ops.has_work(hctx))
+> +                               blk_mq_delay_run_hw_queue(hctx, BLK_MQ_BUDGET_DELAY);
 
+I agree that your patch should solve the race.  With the current BFQ's
+has_work() it's a bit of a disaster though. It will essentially put
+blk-mq into a busy-wait loop (with a 3 ms delay between each poll)
+while BFQ's has_work() says "true" but BFQ doesn't dispatch anything.
+
+...so I guess the question that still needs to be answered: does
+has_work() need to be exact?  If so then we need the patch you propose
+plus one to BFQ.  If not, we should continue along the lines of my
+patch.
+
+-Doug
