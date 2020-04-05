@@ -2,196 +2,100 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46121C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE83C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26EF620659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABDE20659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:55:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgDEOyp (ORCPT
+        id S1727444AbgDEOzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 10:54:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:26201 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726669AbgDEOyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 10:54:44 -0400
-IronPort-SDR: 63nSUfSLM8R6twNYzqkNlzzv6yhtWouYrGSUW1Ec17Xrgfo38rApQ/NhWKY39M0VVJ1ZIErQHj
- icJ3uvPJZQhw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 07:54:42 -0700
-IronPort-SDR: 6lf1dbhbqIm1OxUs3SWaIp9HMJgDKVQbYm0a/KiLhXqDMOGyyiRLdw8swAzUELjzEHmtzxkleP
- GJUCDU1xxNHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,348,1580803200"; 
-   d="scan'208";a="424089231"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 05 Apr 2020 07:54:43 -0700
-Received: from [10.249.231.111] (abudanko-mobl.ccr.corp.intel.com [10.249.231.111])
-        by linux.intel.com (Postfix) with ESMTP id 01AF558033E;
-        Sun,  5 Apr 2020 07:54:38 -0700 (PDT)
-Subject: Re: [PATCH v8 12/12] doc/admin-guide: update kernel.rst with
- CAP_PERFMON information
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <84c32383-14a2-fa35-16b6-f9e59bd37240@linux.intel.com>
- <20200405141029.GA16896@kernel.org>
- <eb7fd0bd-4043-b51c-9b19-ee0a1d1849e9@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <966244a1-2a2d-8e47-b805-2effa46fe8cd@linux.intel.com>
-Date:   Sun, 5 Apr 2020 17:54:37 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 5 Apr 2020 10:55:14 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42275 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgDEOzO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 10:55:14 -0400
+Received: by mail-io1-f71.google.com with SMTP id a16so10938432ios.9
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 07:55:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=t0QGEA/iH/o9fVkzIV8JLJ4OWazCZ63P3kwBKE4Z9Eg=;
+        b=JVZbryDrj1azr29bCZL0+Oh6mnXj92K3RaUShZujWU3q0ZHeGV1eWtFQ72b/NyOOnU
+         evxziX2GfjxtvfN6xpVejOulw6Nat1yG+oLKoOfhNkTskI5eU2OROr3iCFAEjyxrqxGo
+         Z9Md4pzr3uubV5SQY0ijCAMgSGVAZNBpSDSGoATLYBc/73sKbcKAIMqogNIc7EQpNQSy
+         nik9MHk3Uc7PQjMWSGEVfx4E1WuXslgB5YZydnu909r8dl48GRS+UNYapKbXvSIJ1Ggw
+         ipHWZ2TPR1PAZOibity1Gh1CKABlKXkQAqcnbdfu3YyFwKhjBOvuxjROtuqIcEdbFkdr
+         M6dA==
+X-Gm-Message-State: AGi0Pub8MZ41K8R07Xoa3oMlyuwuRr2kmIAxudKRvKFwBoimY2/ztomO
+        G5Y0/OULLfBARMvkvlEUH83kgubeEYmbs5nl+Qam/XbFFCjQ
+X-Google-Smtp-Source: APiQypJjDnivtGjrXVVXX6qPLRwtG90L59xknFkl/xI2XrfEyOqYveejmrftzszBBpCWE8S4yvakjolrCifCExy1O5OMJ/ddCS4k
 MIME-Version: 1.0
-In-Reply-To: <eb7fd0bd-4043-b51c-9b19-ee0a1d1849e9@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:bbd8:: with SMTP id x85mr17736262ilk.40.1586098513205;
+ Sun, 05 Apr 2020 07:55:13 -0700 (PDT)
+Date:   Sun, 05 Apr 2020 07:55:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000075615505a28c569e@google.com>
+Subject: WARNING: can't dereference registers at ADDR for ip interrupt_entry
+From:   syzbot <syzbot+be0c7be873b78b57c065@syzkaller.appspotmail.com>
+To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, netdev@vger.kernel.org, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, suravee.suthikulpanit@amd.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 05.04.2020 17:41, Alexey Budankov wrote:
-> 
-> On 05.04.2020 17:10, Arnaldo Carvalho de Melo wrote:
->> Em Thu, Apr 02, 2020 at 11:54:39AM +0300, Alexey Budankov escreveu:
->>>
->>> Update kernel.rst documentation file with the information
->>> related to usage of CAP_PERFMON capability to secure performance
->>> monitoring and observability operations in system.
->>
->> This one is failing in my perf/core branch, please take a look. I'm
+syzbot found the following crash on:
 
-Please try applying this:
+HEAD commit:    a0ba26f3 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=1669fcb7e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=27392dd2975fd692
+dashboard link: https://syzkaller.appspot.com/bug?extid=be0c7be873b78b57c065
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ab1edbe00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=150eb063e00000
+
+The bug was bisected to:
+
+commit 24bbf74c0c36bfbaa276c9921b55b844018b241e
+Author: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Date:   Thu Nov 14 20:15:07 2019 +0000
+
+    kvm: x86: Add APICv (de)activate request trace points
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12f1dadbe00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11f1dadbe00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16f1dadbe00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+be0c7be873b78b57c065@syzkaller.appspotmail.com
+Fixes: 24bbf74c0c36 ("kvm: x86: Add APICv (de)activate request trace points")
+
+WARNING: can't dereference registers at 00000000ebf55915 for ip interrupt_entry+0xb8/0xc0 arch/x86/entry/entry_64.S:579
+
 
 ---
- Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 335696d3360d..aaa5bbcd1e33 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -709,7 +709,13 @@ perf_event_paranoid
- ===================
- 
- Controls use of the performance events system by unprivileged
--users (without CAP_SYS_ADMIN).  The default value is 2.
-+users (without CAP_PERFMON).  The default value is 2.
-+
-+For backward compatibility reasons access to system performance
-+monitoring and observability remains open for CAP_SYS_ADMIN
-+privileged processes but CAP_SYS_ADMIN usage for secure system
-+performance monitoring and observability operations is discouraged
-+with respect to CAP_PERFMON use cases.
- 
- ===  ==================================================================
-  -1  Allow use of (almost) all events by all users.
-@@ -718,13 +724,13 @@ users (without CAP_SYS_ADMIN).  The default value is 2.
-      ``CAP_IPC_LOCK``.
- 
- >=0  Disallow ftrace function tracepoint by users without
--     ``CAP_SYS_ADMIN``.
-+     ``CAP_PERFMON``.
- 
--     Disallow raw tracepoint access by users without ``CAP_SYS_ADMIN``.
-+     Disallow raw tracepoint access by users without ``CAP_PERFMON``.
- 
-->=1  Disallow CPU event access by users without ``CAP_SYS_ADMIN``.
-+>=1  Disallow CPU event access by users without ``CAP_PERFMON``.
- 
-->=2  Disallow kernel profiling by users without ``CAP_SYS_ADMIN``.
-+>=2  Disallow kernel profiling by users without ``CAP_PERFMON``.
- ===  ==================================================================
- 
----
-
-Thanks,
-Alexey
-
-> 
-> Trying to reproduce right now. What kind of failure do you see?
-> Please share some specifics so I could follow up properly.
-> 
-> Thanks,
-> Alexey
-> 
->> pushing my perf/core branch with this series applied, please check that
->> everything is ok, I'll do some testing now, but it all seems ok.
->>
->> Thanks,
->>
->> - Arnaldo
->>  
->>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>> ---
->>>  Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
->>>  1 file changed, 11 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
->>> index def074807cee..b06ae9389809 100644
->>> --- a/Documentation/admin-guide/sysctl/kernel.rst
->>> +++ b/Documentation/admin-guide/sysctl/kernel.rst
->>> @@ -720,20 +720,26 @@ perf_event_paranoid:
->>>  ====================
->>>  
->>>  Controls use of the performance events system by unprivileged
->>> -users (without CAP_SYS_ADMIN).  The default value is 2.
->>> +users (without CAP_PERFMON). The default value is 2.
->>> +
->>> +For backward compatibility reasons access to system performance
->>> +monitoring and observability remains open for CAP_SYS_ADMIN
->>> +privileged processes but CAP_SYS_ADMIN usage for secure system
->>> +performance monitoring and observability operations is discouraged
->>> +with respect to CAP_PERFMON use cases.
->>>  
->>>  ===  ==================================================================
->>>   -1  Allow use of (almost) all events by all users
->>>  
->>>       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->>>  
->>> ->=0  Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN
->>> +>=0  Disallow ftrace function tracepoint by users without CAP_PERFMON
->>>  
->>> -     Disallow raw tracepoint access by users without CAP_SYS_ADMIN
->>> +     Disallow raw tracepoint access by users without CAP_PERFMON
->>>  
->>> ->=1  Disallow CPU event access by users without CAP_SYS_ADMIN
->>> +>=1  Disallow CPU event access by users without CAP_PERFMON
->>>  
->>> ->=2  Disallow kernel profiling by users without CAP_SYS_ADMIN
->>> +>=2  Disallow kernel profiling by users without CAP_PERFMON
->>>  ===  ==================================================================
->>>  
->>>  
->>> -- 
->>> 2.24.1
->>>
->>
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
