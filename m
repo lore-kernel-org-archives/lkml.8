@@ -7,439 +7,212 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F94C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EBEC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 567D920738
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3496020659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:28:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AH0fj9TS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t7VXQjl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgDEQ1n (ORCPT
+        id S1727611AbgDEQ2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 12:27:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37747 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgDEQ1m (ORCPT
+        Sun, 5 Apr 2020 12:28:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41612 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbgDEQ2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 12:27:42 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x1so4925483plm.4;
-        Sun, 05 Apr 2020 09:27:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bJ/LcOSIlYiaLe2lBWuO3tI66lhILiB6h5yZlYKXPHI=;
-        b=AH0fj9TSSbTaMy2uQaKS113BKu2jo+djlzk8QUJ8GIQzO7A6eAbFE7mfgPqc0Ii1sj
-         wTeIzsCEMFETu2MkHeOwJIKIS2StfUvrxoR4OZaE8DHKIprKblDseq/vbdEzsPIdMh+G
-         KtstcxmhyOEWu/Badqwu2ek+kv/ALHsY4drtpCFw0X0JAF10+Yx6Jyccziv5MSVASETy
-         aBuiExokVTycIW+PkI3R+oLYFOqKef47/OLXnYjzug4R12rE1PeuGA20QyuJ2YN/z/Jf
-         iWU8z/QurfW3uo+vlg+g2JaHXw2p+5W3TzYs+l/tolNpTddQe8Ej9wAEjIjwnGPIMUsJ
-         IBLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bJ/LcOSIlYiaLe2lBWuO3tI66lhILiB6h5yZlYKXPHI=;
-        b=dfWbh/HoP7VYcR3olELO5ueYd9iIwwOww+ESvOicFDZ/RPXaT9iFYh6V/OWyoArxai
-         1L3XlNyIz4PBIdPfXpR1mzVboDxwP88i2hMKNttq22QGu+Xu8GP1ClLlB2V3fiH/MtDd
-         ATjDYZ5Igh7pHuo633VwFn6N/gMIwEvlJAjkwSHzQy387VHNPj4rtsiLI4ZEEl6CkjhL
-         aF3dfnt+eYQ304ootfdvcxHhhTGz7fg+U2lDeNW83JBc73hPBhw3qhHFLpReEeIt+9bl
-         hoFUz0NXWj5i7QSgOJtjrWwXHitb7mNjTBu/ShEjT7QS00yUDPouj4JiTZPUvZ0e+XYw
-         R+ZA==
-X-Gm-Message-State: AGi0PuZWstYX7zEk3Hefa8c8DpjZ0UJ+r7QJIkWpObd4aesWvuR5K8U9
-        F66iTpxcMNmtNjIlLbED/uE=
-X-Google-Smtp-Source: APiQypJYKKjonvi129GAuEokj1MBJcWucjt1DpxCmGL97+oXqjf4mlzEFgdTfgrMXHiwofkzx3I9rg==
-X-Received: by 2002:a17:90a:a00c:: with SMTP id q12mr21198502pjp.7.1586104060576;
-        Sun, 05 Apr 2020 09:27:40 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u13sm9005251pgp.49.2020.04.05.09.27.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 Apr 2020 09:27:39 -0700 (PDT)
-Date:   Sun, 5 Apr 2020 09:27:38 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Kun Yi <kunyi@google.com>
-Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        openbmc@lists.ozlabs.org, joel@jms.id.au,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH linux hwmon-next v3 1/3] hwmon: (sbtsi) Add basic support
- for SB-TSI sensors
-Message-ID: <20200405162738.GA161211@roeck-us.net>
-References: <20200405030118.191950-1-kunyi@google.com>
- <20200405030118.191950-2-kunyi@google.com>
+        Sun, 5 Apr 2020 12:28:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=gt8zbf6Le1W6z7iSqHuQYNQ4IfCUTEic30B2rOlpQIY=; b=t7VXQjl2K1xCFJ97tKv1BzZ7vO
+        JibHXA/D/TborFQgXoK3qMPj629MRWQ6X+LZiOFkccz1Bt5f10TvSLykDNlho58VBmdG17f/cS1PO
+        yhbIR0RWzHUQzR/djiNoMN6OCa02K0nObJkjhm3rJZ8zebWSzKxOE7OwoxpE6FNPQPwGZFuz+iblT
+        4tPuhU0j8rhpZI6bjT+bEXOqMSs7o0oC1m8pafnvJ4/4kAWYE+puZkrNr8x7s1XreZqCq7i0E5zNY
+        JygciFZ4EmZyQamLi6RzAPQXCq/vnO6Da7ATWd8ChOgWmqFHvS7FjZLHr6GEKMUY/pXKwrchLZ08m
+        qyaPz1xg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jL88P-0002k7-VL; Sun, 05 Apr 2020 16:28:34 +0000
+Subject: Re: [PATCH v19 04/18] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200402204311.14998-1-dmurphy@ti.com>
+ <20200402204311.14998-5-dmurphy@ti.com>
+ <619a1251-d062-b9bf-6752-b867fcaa600b@infradead.org>
+ <34b07ce8-6a38-f45c-4624-730f5597f686@ti.com>
+ <a6b93d69-a1d5-f515-ee37-6106b50120cf@gmail.com>
+ <f09dadc9-f1ed-091b-f241-2f40b48f1117@ti.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1cbe954e-76fb-9164-6b8c-af4ac70fcd05@infradead.org>
+Date:   Sun, 5 Apr 2020 09:28:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200405030118.191950-2-kunyi@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <f09dadc9-f1ed-091b-f241-2f40b48f1117@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 04, 2020 at 08:01:16PM -0700, Kun Yi wrote:
-> SB Temperature Sensor Interface (SB-TSI) is an SMBus compatible
-> interface that reports AMD SoC's Ttcl (normalized temperature),
-> and resembles a typical 8-pin remote temperature sensor's I2C interface
-> to BMC.
+On 4/5/20 9:18 AM, Dan Murphy wrote:
+> Jacek
 > 
-> This commit adds basic support using this interface to read CPU
-> temperature, and read/write high/low CPU temp thresholds.
+> On 4/5/20 10:08 AM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 4/3/20 4:39 PM, Dan Murphy wrote:
+>>> Randy
+>>>
+>>> Thanks for the review
+>>>
+>>> On 4/2/20 10:47 PM, Randy Dunlap wrote:
+>>>> Hi,
+>>>> Here are a few changes for you to consider:
+>>>>
+>>>> On 4/2/20 1:42 PM, Dan Murphy wrote:
+>>>>> Introduce a multicolor class that groups colored LEDs
+>>>>> within a LED node.
+>>>>>
+>>>>> The multi color class groups monochrome LEDs and allows controlling two
+>>>>        multicolor
+>>> Ack
+>>>>> aspects of the final combined color: hue and lightness. The former is
+>>>>> controlled via <color>_intensity files and the latter is controlled
+>>>>> via brightness file.
+>>>>>
+>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>> ---
+>>>>> diff --git a/Documentation/leds/leds-class-multicolor.rst
+>>>>> b/Documentation/leds/leds-class-multicolor.rst
+>>>>> new file mode 100644
+>>>>> index 000000000000..5bb004999248
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/leds/leds-class-multicolor.rst
+>>>>> @@ -0,0 +1,95 @@
+>>>>> +====================================
+>>>>> +Multi Color LED handling under Linux
+>>>>     Multicolor
+>>> Ack
+>>>>> +====================================
+>>>>> +
+>>>>> +Description
+>>>>> +===========
+>>>>> +The multi color class groups monochrome LEDs and allows controlling two
+>>>>         multicolor
+>>> Ack
+>>>>> +aspects of the final combined color: hue and lightness. The former is
+>>>>> +controlled via the color_intensity array file and the latter is
+>>>>> controlled
+>>>>> +via brightness file.
+>>>>> +
+>>>>> +For more details on hue and lightness notions please refer to
+>>>>> +https://en.wikipedia.org/wiki/CIECAM02.
+>>>>> +
+>>>>> +Multicolor Class Control
+>>>>> +========================
+>>>>> +The multicolor class presents files that groups the colors as
+>>>>> indexes in an
+>>>>> +array.  These files are children under the LED parent node created
+>>>>> by the
+>>>>> +led_class framework.  The led_class framework is documented in
+>>>>> led-class.rst
+>>>>> +within this documentation directory.
+>>>>> +
+>>>>> +Each colored LED will be indexed under the color_* files. The order
+>>>>> of the
+>>>>> +colors are arbitrary the color_index file can be read to determine
+>>>>> the color
+>>>>> +to index value.
+>>>>> +
+>>>>> +The color_index file is an array that contains the string list of
+>>>>> the colors as
+>>>>> +they are defined in each color_* array file.
+>>>>> +
+>>>>> +The color_intensity is an array that can be read or written to for the
+>>>>> +individual color intensities.  All elements within this array must
+>>>>> be written in
+>>>>> +order for the color LED intensities to be updated.
+>>>>> +
+>>>>> +The color_max_intensity is an array that can be read to indicate
+>>>>> each color LED
+>>>>> +maximum intensity value.
+>>>>> +
+>>>>> +The num_color_leds file returns the total number of color LEDs that are
+>>>>> +presented in each color_* array.
+>>>>> +
+>>>>> +Directory Layout Example
+>>>>> +========================
+>>>>> +root:/sys/class/leds/multicolor:status# ls -lR
+>>>>> +-rw-r--r--    1 root     root          4096 Oct 19 16:16 brightness
+>>>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16 color_index
+>>>>> +-rw-r--r--    1 root     root          4096 Oct 19 16:16
+>>>>> color_intensity
+>>>>> +-r--r--r--    1 root     root          4096 Oct 19 16:16 num_color_leds
+>>>>> +
+>>>>> +Multicolor Class Brightness Control
+>>>>> +===================================
+>>>>> +The multiclor class framework will calculate each monochrome LEDs
+>>>>> intensity.
+>>>>         multicolor
+>>> Ack
+>>>>> +
+>>>>> +The brightness level for each LED is calculated based on the color LED
+>>>>> +intensity setting divided by the parent max_brightness setting
+>>>>> multiplied by
+>>>>> +the requested brightness.
+>>>>> +
+>>>>> +led_brightness = brightness * color_intensity/max_brightness
+>>>>> +
+>>>>> +Example:
+>>>>> +A user first writes the color_intensity file with the brightness levels
+>>>>> +that for each LED that is necessary to achieve a blueish violet
+>>>>> output from a
+>>>> drop first "that".
+>>> Ack
+>>>>                       that are
+>>>> necessary                                   from an
+>>> Ack and NACK the "from an".  It is from a since R is a consonant
+>> But it sounds like a vowel and this rule for creating articles
+>> "applies to the sound of the letter beginning the word, not just the
+>> letter itself" [0].
+>>
+>> [0] https://www.grammar.com/a-vs-an-when-to-use/
+>>
+> We have had the same internal debate here at work.
 > 
-> To instantiate this driver on an AMD CPU with SB-TSI
-> support, the i2c bus number would be the bus connected from the board
-> management controller (BMC) to the CPU. The i2c address is specified in
-> Section 6.3.1 of the spec [1]: The SB-TSI address is normally 98h for socket 0
-> and 90h for socket 1, but it could vary based on hardware address select pins.
+> How does "Red" when you say it sound like a vowel?  It is definitely a "R" sound that is first not a vowel sound.
 > 
-> [1]: https://www.amd.com/system/files/TechDocs/56255_OSRR.pdf
+> To me "from an RGB" does not sound correct "from a RGB" is actually correct here because R or Red still leads with a consonant in both the sound and letter.
 > 
-> Test status: tested reading temp1_input, and reading/writing
-> temp1_max/min.
-> 
-> Signed-off-by: Kun Yi <kunyi@google.com>
-> ---
->  drivers/hwmon/Kconfig      |  10 ++
->  drivers/hwmon/Makefile     |   1 +
->  drivers/hwmon/sbtsi_temp.c | 259 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 270 insertions(+)
->  create mode 100644 drivers/hwmon/sbtsi_temp.c
-> 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 05a30832c6ba..9585dcd01d1b 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1412,6 +1412,16 @@ config SENSORS_RASPBERRYPI_HWMON
->  	  This driver can also be built as a module. If so, the module
->  	  will be called raspberrypi-hwmon.
->  
-> +config SENSORS_SBTSI
-> +	tristate "Emulated SB-TSI temperature sensor"
-> +	depends on I2C
-> +	help
-> +	  If you say yes here you get support for emulated temperature
-> +	  sensors on AMD SoCs with SB-TSI interface connected to a BMC device.
-> +
-> +	  This driver can also be built as a module. If so, the module will
-> +	  be called sbtsi_temp.
-> +
->  config SENSORS_SHT15
->  	tristate "Sensiron humidity and temperature sensors. SHT15 and compat."
->  	depends on GPIOLIB || COMPILE_TEST
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index b0b9c8e57176..cd109f003ce4 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -152,6 +152,7 @@ obj-$(CONFIG_SENSORS_POWR1220)  += powr1220.o
->  obj-$(CONFIG_SENSORS_PWM_FAN)	+= pwm-fan.o
->  obj-$(CONFIG_SENSORS_RASPBERRYPI_HWMON)	+= raspberrypi-hwmon.o
->  obj-$(CONFIG_SENSORS_S3C)	+= s3c-hwmon.o
-> +obj-$(CONFIG_SENSORS_SBTSI)	+= sbtsi_temp.o
->  obj-$(CONFIG_SENSORS_SCH56XX_COMMON)+= sch56xx-common.o
->  obj-$(CONFIG_SENSORS_SCH5627)	+= sch5627.o
->  obj-$(CONFIG_SENSORS_SCH5636)	+= sch5636.o
-> diff --git a/drivers/hwmon/sbtsi_temp.c b/drivers/hwmon/sbtsi_temp.c
-> new file mode 100644
-> index 000000000000..e3ad6a9f7ec1
-> --- /dev/null
-> +++ b/drivers/hwmon/sbtsi_temp.c
-> @@ -0,0 +1,259 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * sbtsi_temp.c - hwmon driver for a SBI Temperature Sensor Interface (SB-TSI)
-> + *                compliant AMD SoC temperature device.
-> + *
-> + * Copyright (c) 2020, Google Inc.
-> + * Copyright (c) 2020, Kun Yi <kunyi@google.com>
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/init.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of.h>
-> +
-> +/*
-> + * SB-TSI registers only support SMBus byte data access. "_INT" registers are
-> + * the integer part of a temperature value or limit, and "_DEC" registers are
-> + * corresponding decimal parts.
-> + */
-> +#define SBTSI_REG_TEMP_INT		0x01 /* RO */
-> +#define SBTSI_REG_STATUS		0x02 /* RO */
-> +#define SBTSI_REG_CONFIG		0x03 /* RO */
-> +#define SBTSI_REG_TEMP_HIGH_INT		0x07 /* RW */
-> +#define SBTSI_REG_TEMP_LOW_INT		0x08 /* RW */
-> +#define SBTSI_REG_TEMP_DEC		0x10 /* RW */
-> +#define SBTSI_REG_TEMP_HIGH_DEC		0x13 /* RW */
-> +#define SBTSI_REG_TEMP_LOW_DEC		0x14 /* RW */
-> +#define SBTSI_REG_REV			0xFF /* RO */
+> If it sounds as if it is beginning with a vowel sound, *use an*.  Like in "an honor" as the h is silent here.  R is not silent in Red or RGB.
 
-The revision register is not actually used. 
+It depends on how one reads "from a RGB." Do you say/think the letters R G B
+(I do), or do you think/say red-green-blue?
 
-> +
-> +#define SBTSI_CONFIG_READ_ORDER_SHIFT	5
-> +
-> +#define SBTSI_TEMP_MIN	0
-> +#define SBTSI_TEMP_MAX	255875
-> +#define SBTSI_REV_MAX_VALID_ID	4
+From the [0] web page:
+ Articles with Acronyms, a or an
 
-Not actually used, and I am not sure if it would make sense to check it.
-If at all, it would only make sense if you also check SBTSIxFE (Manufacture
-ID). Unfortunately, the actual SB-TSI specification seems to be non-public,
-so I can't check if the driver as-is supports versions 0..3 (assuming those
-exist).
+Finally, the rule applies to acronyms as well. If you pronounce a letter as a letter and it begins with a vowel sound, you should precede it with an. The consonants with vowel sounds include f, h, l, m, n, r, s, and x.
 
-> +
-> +/* Each client has this additional data */
-> +struct sbtsi_data {
-> +	struct i2c_client *client;
-> +	struct mutex lock;
-> +};
-> +
-> +/*
-> + * From SB-TSI spec: CPU temperature readings and limit registers encode the
-> + * temperature in increments of 0.125 from 0 to 255.875. The "high byte"
-> + * register encodes the base-2 of the integer portion, and the upper 3 bits of
-> + * the "low byte" encode in base-2 the decimal portion.
-> + *
-> + * e.g. INT=0x19, DEC=0x20 represents 25.125 degrees Celsius
-> + *
-> + * Therefore temperature in millidegree Celsius =
-> + *   (INT + DEC / 256) * 1000 = (INT * 8 + DEC / 32) * 125
-> + */
-> +static inline int sbtsi_reg_to_mc(s32 integer, s32 decimal)
-> +{
-> +	return ((integer << 3) + (decimal >> 5)) * 125;
-> +}
-> +
-> +/*
-> + * Inversely, given temperature in millidegree Celsius
-> + *   INT = (TEMP / 125) / 8
-> + *   DEC = ((TEMP / 125) % 8) * 32
-> + * Caller have to make sure temp doesn't exceed 255875, the max valid value.
-> + */
-> +static inline void sbtsi_mc_to_reg(s32 temp, u8 *integer, u8 *decimal)
-> +{
-> +	temp /= 125;
-> +	*integer = temp >> 3;
-> +	*decimal = (temp & 0x7) << 5;
-> +}
-> +
-> +static int sbtsi_read(struct device *dev, enum hwmon_sensor_types type,
-> +		      u32 attr, int channel, long *val)
-> +{
-> +	struct sbtsi_data *data = dev_get_drvdata(dev);
-> +	s32 temp_int, temp_dec;
-> +	int err, reg_int, reg_dec;
-> +	u8 read_order;
-> +
-> +	if (type != hwmon_temp)
-> +		return -EINVAL;
-> +
-> +	read_order = 0;
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		/*
-> +		 * ReadOrder bit specifies the reading order of integer and
-> +		 * decimal part of CPU temp for atomic reads. If bit == 0,
-> +		 * reading integer part triggers latching of the decimal part,
-> +		 * so integer part should be read first. If bit == 1, read
-> +		 * order should be reversed.
-> +		 */
-> +		err = i2c_smbus_read_byte_data(data->client, SBTSI_REG_CONFIG);
-> +		if (err < 0)
-> +			return err;
-> +
-As I understand it, the idea is to set this configuration bit once and then
-just use it. Any chance to do that ? This would save an i2c read operation
-each time the temperature is read, and the if/else complexity below.
+    He flew in an SST. He fired an M‑1. He attended an FDA hearing.
 
-> +		read_order = (u8)err & BIT(SBTSI_CONFIG_READ_ORDER_SHIFT);
+By the same token, if a vowel letter, with a consonant sound, is pronounced as a letter, you should use a.
 
-Nit: typecast is unnecessary.
+    He made a U‑turn.
 
-> +		reg_int = SBTSI_REG_TEMP_INT;
-> +		reg_dec = SBTSI_REG_TEMP_DEC;
-> +		break;
-> +	case hwmon_temp_max:
-> +		reg_int = SBTSI_REG_TEMP_HIGH_INT;
-> +		reg_dec = SBTSI_REG_TEMP_HIGH_DEC;
-> +		break;
-> +	case hwmon_temp_min:
-> +		reg_int = SBTSI_REG_TEMP_LOW_INT;
-> +		reg_dec = SBTSI_REG_TEMP_LOW_DEC;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (read_order == 0) {
-> +		temp_int = i2c_smbus_read_byte_data(data->client, reg_int);
-> +		temp_dec = i2c_smbus_read_byte_data(data->client, reg_dec);
-> +	} else {
-> +		temp_dec = i2c_smbus_read_byte_data(data->client, reg_dec);
-> +		temp_int = i2c_smbus_read_byte_data(data->client, reg_int);
-> +	}
+Got it? So what is your grade?
 
-Just a thought: if you use regmap and tell it that the limit registers
-are non-volatile, this wouldn't actually read from the chip more than once.
+    An A? A B? Surely not an F.
 
-Also, since the read involves reading two registers, and the first read
-locks the value for the second, you'll need mutex protection when reading
-the current temperature (not for limits, though).
 
-> +
-> +	if (temp_int < 0)
-> +		return temp_int;
-> +	if (temp_dec < 0)
-> +		return temp_dec;
-> +
-> +	*val = sbtsi_reg_to_mc(temp_int, temp_dec);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sbtsi_write(struct device *dev, enum hwmon_sensor_types type,
-> +		       u32 attr, int channel, long val)
-> +{
-> +	struct sbtsi_data *data = dev_get_drvdata(dev);
-> +	int reg_int, reg_dec, err;
-> +	u8 temp_int, temp_dec;
-> +
-> +	if (type != hwmon_temp)
-> +		return -EINVAL;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_max:
-> +		reg_int = SBTSI_REG_TEMP_HIGH_INT;
-> +		reg_dec = SBTSI_REG_TEMP_HIGH_DEC;
-> +		break;
-> +	case hwmon_temp_min:
-> +		reg_int = SBTSI_REG_TEMP_LOW_INT;
-> +		reg_dec = SBTSI_REG_TEMP_LOW_DEC;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	val = clamp_val(val, SBTSI_TEMP_MIN, SBTSI_TEMP_MAX);
-> +	mutex_lock(&data->lock);
-> +	sbtsi_mc_to_reg(val, &temp_int, &temp_dec);
-> +	err = i2c_smbus_write_byte_data(data->client, reg_int, temp_int);
-> +	if (err)
-> +		goto exit;
-> +
-> +	err = i2c_smbus_write_byte_data(data->client, reg_dec, temp_dec);
-> +exit:
-> +	mutex_unlock(&data->lock);
-> +	return err;
-> +}
-> +
-> +static umode_t sbtsi_is_visible(const void *data,
-> +				enum hwmon_sensor_types type,
-> +				u32 attr, int channel)
-> +{
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		switch (attr) {
-> +		case hwmon_temp_input:
-> +			return 0444;
-> +		case hwmon_temp_min:
-> +			return 0644;
-> +		case hwmon_temp_max:
-> +			return 0644;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct hwmon_channel_info *sbtsi_info[] = {
-> +	HWMON_CHANNEL_INFO(chip,
-> +			   HWMON_C_REGISTER_TZ),
-> +	HWMON_CHANNEL_INFO(temp,
-> +			   HWMON_T_INPUT | HWMON_T_MIN | HWMON_T_MAX),
+-- 
+~Randy
 
-For your consideration: SB-TSI supports reporting high/low alerts.
-With this, it would be possible to implement respective alarm attributes.
-In conjunction with https://patchwork.kernel.org/patch/11277347/mbox/,
-it should also be possible to add interrupt and thus userspace notification
-for those attributes.
-
-SBTSI also supports setting the update rate (SBTSIx04) and setting
-the temperature offset (SBTSIx11, SBTSIx12), which could also be
-implemented as standard attributes.
-
-I won't require that for the initial version, just something to keep
-in mind.
-
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops sbtsi_hwmon_ops = {
-> +	.is_visible = sbtsi_is_visible,
-> +	.read = sbtsi_read,
-> +	.write = sbtsi_write,
-> +};
-> +
-> +static const struct hwmon_chip_info sbtsi_chip_info = {
-> +	.ops = &sbtsi_hwmon_ops,
-> +	.info = sbtsi_info,
-> +};
-> +
-> +static int sbtsi_probe(struct i2c_client *client,
-> +		       const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct device *hwmon_dev;
-> +	struct sbtsi_data *data;
-> +
-> +	data = devm_kzalloc(dev, sizeof(struct sbtsi_data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->client = client;
-> +	mutex_init(&data->lock);
-> +
-> +	hwmon_dev =
-> +		devm_hwmon_device_register_with_info(dev, client->name, data,
-> +						     &sbtsi_chip_info, NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +static const struct i2c_device_id sbtsi_id[] = {
-> +	{"sbtsi", 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, sbtsi_id);
-> +
-> +static const struct of_device_id __maybe_unused sbtsi_of_match[] = {
-> +	{
-> +		.compatible = "amd,sbtsi",
-> +	},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, sbtsi_of_match);
-> +
-> +static struct i2c_driver sbtsi_driver = {
-> +	.class = I2C_CLASS_HWMON,
-> +	.driver = {
-> +		.name = "sbtsi",
-> +		.of_match_table = of_match_ptr(sbtsi_of_match),
-> +	},
-> +	.probe = sbtsi_probe,
-> +	.id_table = sbtsi_id,
-> +};
-> +
-> +module_i2c_driver(sbtsi_driver);
-> +
-> +MODULE_AUTHOR("Kun Yi <kunyi@google.com>");
-> +MODULE_DESCRIPTION("Hwmon driver for AMD SB-TSI emulated sensor");
-> +MODULE_LICENSE("GPL");
