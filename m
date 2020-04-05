@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D7C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEC2C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C02020672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27FB20672
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ceoJ45Kn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5AZ/Rsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgDEOhI (ORCPT
+        id S1727076AbgDEOhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 10:37:08 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:33701 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726636AbgDEOhG (ORCPT
+        Sun, 5 Apr 2020 10:37:13 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:37732 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726636AbgDEOhN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 10:37:06 -0400
-Received: by mail-yb1-f195.google.com with SMTP id e17so7299431ybq.0
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 07:37:05 -0700 (PDT)
+        Sun, 5 Apr 2020 10:37:13 -0400
+Received: by mail-yb1-f193.google.com with SMTP id n2so7275309ybg.4
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 07:37:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iq7bhlEuP87tC6Doi+ny260jw1k9nQHO7+JOk7S3IkY=;
-        b=ceoJ45Knn9Zl8eU0DnsRGTYDGS/rlw59aWGmmu4eKd7i+po8bbRfvj35jP480FpTik
-         +dv7MMJyUBYx9tvSzv4Ur+3QXjnxBxvee3eCTh/znJDHI/At3sWu1GFiGsLAsO7RXS8t
-         uVSULXAHxbwXrttJxRz60IX+IVJ6OxEO9Ynjab00ggtC09tELS2JFRWXSkzsRHRDBBXd
-         oANpCMHo4In+LXHYG1uwnaTVbHKuE+wB4S15wFRhVp6lUQWhGd5uwWeWu6Xoi33UpWXr
-         cODrBQJzQC0EsFwp6o4npxr+cARk7fzU6Usf7v9uAt9+NEOfKp1fpfEVKBBFTdOT/q4K
-         RnBw==
+        bh=SK0gM5FiI9XuUvcTFvtmQjbWZBJJQIOo8chrmozcPoE=;
+        b=j5AZ/RsuWdKjZog+IPmSJ8xEKc+kCYPKGASqxpoZiRUSDzIipgtVU4HSjrOEjHCSQF
+         bgM7QXS1VIZEd9ZtmvdezVLiobKFngS8stMwtzgr2LLTuxX9W5N8rgFRJpfwM4zHwYHp
+         1qMgpUyYttbidGObst6ryCYUavhxDltWQElPE4M9R9CdtA7C4Q+iOeDsmZGomjz87fTm
+         BQz4meXv5ahOAwDFftNU3JwUqSEMbdvm4Rwl4tzCTZ9KIVHb8Pfw1ACkZToIuzfdJBGm
+         cQh4RCx9EyXmmk6n+30X1I08dQPxvdSZNiqFd4CoUVfTi5+9JKLx7ygRhRBpWsGZ4yVI
+         /KgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iq7bhlEuP87tC6Doi+ny260jw1k9nQHO7+JOk7S3IkY=;
-        b=nmRj58tO5LVhRfuJ1mCKqYsdrVIoBCnCVBUlj/TTgZJWZj295zTrAW9ib22kN1gYz9
-         kHjcXGjPcbwntQV2VQVx6u3s0Bmy4le6dLIwktHjGT0034FGqhKqHLFCOTvDZfQVy5wv
-         FYcJ3H2F4TYB5CyWwLHuGn7+5KpKrFGSJhtEcHzAKF49jG8cLMjc9RCFlhbQNEWft/Re
-         MMkv2Dovf3NnAY83l8HjVO2rULnKxsphhGehKIGFGvanGvz51mD6gwweMrbJdBXQrsVK
-         FsT9QGGDj8/6xE40NmRIxhtJq1FS/6l6cRcvJTJL3eVB/dUi2yf1WjjKWM31ipoX5qOt
-         Fsdw==
-X-Gm-Message-State: AGi0PubiqS4spWik/vxmmoOroct4Dwe0kewzdEXBoc6c7KHL6uNvMrEe
-        olObS1etIvPHcl+rYJjVKtMyC2QbeFhOdayiYQw=
-X-Google-Smtp-Source: APiQypLYFc4hPKnBc3SI599uWHHdT62VKldY45eeM+yxx81Vkxo1ZqqvUh4Ibry1DdjGmKA319R54ohKQmegiUiein8=
-X-Received: by 2002:a05:6902:686:: with SMTP id i6mr25980689ybt.56.1586097425185;
- Sun, 05 Apr 2020 07:37:05 -0700 (PDT)
+        bh=SK0gM5FiI9XuUvcTFvtmQjbWZBJJQIOo8chrmozcPoE=;
+        b=dHO7TX3Hbx6rH5liMzYH02BSnXTp+4Tz7CQiBWbjlnuQrsEcEYsKCeWb2X6saPiCMm
+         dG96+KRSLbnCdjIoRCR4ODSU92iqLX85W4NFXDWm9RnTyB8e7cDxOZ15YC0ZCbbwER11
+         TpgL3yrBkRDHD3/QKGie1XyVysWQ8QHCWtreVkN4Y9KRI1vyR3ZC1BnyCpFkmcdjpX3b
+         bq2z3D6/pQjLN8vuLv5PYAhXl5dxg2kqWrhHlnVh1VkXIgE0ResJbwwpSnhY/7J/yC9t
+         q6SKTU34T9VVVx8vjhmIqFvz4MEr01bbBsudnnwiFyBVHYFE0SX/qg4l+b1I8iAjpgzZ
+         hKJw==
+X-Gm-Message-State: AGi0PuY11bHyKrPR3xFrauNOhcmyoxAcz89jBNpqGftjP14zLbBxlsSS
+        3thvuererjQ7JkgQNrEGa476n3pghjxRnSKqpIg=
+X-Google-Smtp-Source: APiQypIXLNvikhWh1JwSWqmiAj/CdMw3jmv/ihkLr5mX0EIzMKlQDZeFeXPoudR2shtZzU/LpUwGxwkMhW1FBSIMzR0=
+X-Received: by 2002:a25:e694:: with SMTP id d142mr29195012ybh.490.1586097431973;
+ Sun, 05 Apr 2020 07:37:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200318011144.91532-1-atish.patra@wdc.com> <20200318011144.91532-3-atish.patra@wdc.com>
-In-Reply-To: <20200318011144.91532-3-atish.patra@wdc.com>
+References: <20200318011144.91532-1-atish.patra@wdc.com> <20200318011144.91532-4-atish.patra@wdc.com>
+In-Reply-To: <20200318011144.91532-4-atish.patra@wdc.com>
 From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Sun, 5 Apr 2020 22:36:53 +0800
-Message-ID: <CAEUhbmXH0GP_=r-jUHNCB9wPkSoh6_BNWtUG1SN57QPgLCtDNg@mail.gmail.com>
-Subject: Re: [PATCH v11 02/11] RISC-V: Add basic support for SBI v0.2
+Date:   Sun, 5 Apr 2020 22:37:00 +0800
+Message-ID: <CAEUhbmWxFR3VX7BkJt6Nc1t-QF2Q+GnXH0_B8QEbgTADcy7+RA@mail.gmail.com>
+Subject: Re: [PATCH v11 03/11] RISC-V: Add SBI v0.2 extension definitions
 To:     Atish Patra <atish.patra@wdc.com>
 Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
         Anup Patel <anup@brainfault.org>,
@@ -82,21 +82,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Mar 18, 2020 at 9:11 AM Atish Patra <atish.patra@wdc.com> wrote:
 >
-> The SBI v0.2 introduces a base extension which is backward compatible
-> with v0.1. Implement all helper functions and minimum required SBI
-> calls from v0.2 for now. All other base extension function will be
-> added later as per need.
-> As v0.2 calling convention is backward compatible with v0.1, remove
-> the v0.1 helper functions and just use v0.2 calling convention.
+> Few v0.1 SBI calls are being replaced by new SBI calls that follows
+> v0.2 calling convention.
+>
+> This patch just defines these new extensions.
 >
 > Signed-off-by: Atish Patra <atish.patra@wdc.com>
 > Reviewed-by: Anup Patel <anup@brainfault.org>
 > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
 > ---
->  arch/riscv/include/asm/sbi.h | 139 ++++++++++----------
->  arch/riscv/kernel/sbi.c      | 243 ++++++++++++++++++++++++++++++++++-
->  arch/riscv/kernel/setup.c    |   5 +
->  3 files changed, 314 insertions(+), 73 deletions(-)
+>  arch/riscv/include/asm/sbi.h | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 >
 
 Reviewed-by: Bin Meng <bmeng.cn@gmail.com>
