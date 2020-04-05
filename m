@@ -2,184 +2,359 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD29C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7E0C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9432A20672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:07:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGU82UIH"
+	by mail.kernel.org (Postfix) with ESMTP id B5C64206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 11:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586084892;
+	bh=wADKfMEYJB0GPYyIpzhoR48rj//i0JjVYuLqICKFraE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SP+osx7+Wrufg/7tQCeq9x5VdWVFPkT55SiW5vPxEjSXIHyVsvokD07QpoE3JFn9g
+	 rrHNKTLXuHTIiJHGC1ZFkQ8L1M9ijT97onAT5SwNS+wOmJ+Pff1yFStb4A86f4Y+xy
+	 FnTnpI4pu5J09hFNdgw9nNxv1sQrg/o8mJshxoD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgDELHs (ORCPT
+        id S1726605AbgDELIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 07:07:48 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35248 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgDELHs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 07:07:48 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i19so12696611wmb.0;
-        Sun, 05 Apr 2020 04:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AlRG+LoppUJyQBaVTdt9cgVDBGOZQeT8M5I9dff2qrw=;
-        b=nGU82UIH/LAsyRZZWFxKHVdA1ZPYtDp1N0LdWaHHzCfZSexdf8AcnzyK596fEUVH0y
-         fKQDb9nvozu0Xtr1rBJpYPYWefzXvluth+LXYeRW4Dw2+0CLR2X0JNKALede267Q86Ac
-         OEuQr494j/JKPDBp3+F1ENtRCM8YRAln9c2fE+ORVPz78xkZIQewHMFkB2sZggxgMoX+
-         F9m57HEK2NDqcfzr2hKdr0qsHRFioj37SP+eSDMynLQgMKZVd5VL36bgymRXpTZKEPEE
-         yN7dYOgJ1grB4UAsgbHUPrFcZf6WNIY8oOlv4ScMpm+pwJ8QTM+eG8zsg0OcD2N4ddL3
-         oZ5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AlRG+LoppUJyQBaVTdt9cgVDBGOZQeT8M5I9dff2qrw=;
-        b=oYcdyOXzSw/tuZ9eUH7E/FGRWHM11Y43mtTimnl6gB4c8zX7C5bthPUshER80Eq1gl
-         7xCAUhBFrO9ewwWkvquAtaL0SAy2B7Pdmi1y6HKg/2w/AqR8euZLzN/tkSwNH235fBsm
-         RTHqeIOYX/KOTF02EC6R+roRfLtquIZmtFjXdYVFX1vs+AzUpnlznyxY8KqcvnU+9C58
-         8xHoWZyc39TkawUt/6+HIDVXnSZX0Mi6kkue2dox2CLRrdHvic2BqFcGvLJAv8QvwY+3
-         WWVWHRRc7hjGT6UFGyZ5pDwsH49rSmE7zn1j3IxcEbGNWGIlrzYzTgaZhCBHK101wnGs
-         qFjw==
-X-Gm-Message-State: AGi0PuYVWBeNnt0i7QaSDhTKlZUba/8YTfFMLy+OM79RZPH06y1CjtK7
-        7eQ++bz4ava5mVUoJB2UCkGeVQ8O
-X-Google-Smtp-Source: APiQypKwVdPB3nw4bqwXFW8LTr9MyJV4J1LF0VaVSa7BbkonynyUE6TNDYQqFS/C/K8q1Fvgnidk5Q==
-X-Received: by 2002:a05:600c:2251:: with SMTP id a17mr17446973wmm.106.1586084865623;
-        Sun, 05 Apr 2020 04:07:45 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id t2sm2415254wrs.7.2020.04.05.04.07.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 Apr 2020 04:07:44 -0700 (PDT)
-Date:   Sun, 5 Apr 2020 11:07:43 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
- node
-Message-ID: <20200405110743.bzpvz4jzwr4kharr@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200330123643.17120-6-richard.weiyang@gmail.com>
- <20200330124842.GY22483@bombadil.infradead.org>
- <20200330141558.soeqhstone2liqud@master>
- <20200330142821.GD22483@bombadil.infradead.org>
- <20200331134208.gfkyym6n3gpgk3x3@master>
- <20200331164212.GC21484@bombadil.infradead.org>
- <20200331220440.roq4pv6wk7tq23gx@master>
- <20200331235912.GD21484@bombadil.infradead.org>
- <20200401221021.v6igvcpqyeuo2cws@master>
- <20200401222000.GK21484@bombadil.infradead.org>
+        Sun, 5 Apr 2020 07:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726388AbgDELIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 07:08:09 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD67D20672;
+        Sun,  5 Apr 2020 11:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586084888;
+        bh=wADKfMEYJB0GPYyIpzhoR48rj//i0JjVYuLqICKFraE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ULUtOSx8/9c1LHRZ0Thh7IV9l1HesVaYgQ6Taxhf/ujzRP1I25ov73MSA2eVokCEa
+         6mXExk8LiFly0actvyG7aleikDpdu4wfKYdUPJKItp2DJl3dwirTfFxA6ryNtEMcom
+         KdmorvMJ0z639ZiJif1c4NngG6MWszm+6Ljt/1MI=
+Date:   Sun, 5 Apr 2020 12:08:03 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "Leslie =?UTF-8?B?SHNpYQ==?=(=?UTF-8?B?5aSP6YKm6YCyX1BlZ2F0cm9u?=)" 
+        <Leslie_Hsia@pegatroncorp.com>
+Cc:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Hermes =?UTF-8?B?SHNpZWg=?=(=?UTF-8?B?6Kyd5pe75YqtX1BlZ2F0cm9u?=)" 
+        <Hermes_Hsieh@pegatroncorp.com>,
+        "jesse.sung@canonical.com" <jesse.sung@canonical.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] subsystem: Amplifier driver for TAS5805M,Texas
+ instruments
+Message-ID: <20200405120803.7ca63241@archlinux>
+In-Reply-To: <754706C925201D4896E92CCAD6B38E4401F0F61013@PTW-EX-37.PEGA.CORP.PEGATRON>
+References: <754706C925201D4896E92CCAD6B38E4401F0F61013@PTW-EX-37.PEGA.CORP.PEGATRON>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401222000.GK21484@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 03:20:00PM -0700, Matthew Wilcox wrote:
->On Wed, Apr 01, 2020 at 10:10:21PM +0000, Wei Yang wrote:
->> On Tue, Mar 31, 2020 at 04:59:12PM -0700, Matthew Wilcox wrote:
->> >On Tue, Mar 31, 2020 at 10:04:40PM +0000, Wei Yang wrote:
->> >> cc -I. -I../../include -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined   -c -o main.o main.c
->> >> In file included from ./linux/../../../../include/linux/radix-tree.h:15,
->> >>                  from ./linux/radix-tree.h:5,
->> >>                  from main.c:10:
->> >> ./linux/rcupdate.h:5:10: fatal error: urcu.h: No such file or directory
->> >>     5 | #include <urcu.h>
->> >>       |          ^~~~~~~~
->> >> compilation terminated.
->> >> make: *** [<builtin>: main.o] Error 1
->> >
->> >Oh, you need liburcu installed.  On Debian, that's liburcu-dev ... probably
->> >liburcu-devel on Red Hat style distros.
->> 
->> The bad news is I didn't find the package on Fedora.
->
->Really?  https://www.google.com/search?q=fedora+liburcu has the -devel
->package as the second hit from https://pkgs.org/search/?q=liburcu
+On Tue, 31 Mar 2020 06:49:12 +0000
+Leslie Hsia(=E5=A4=8F=E9=82=A6=E9=80=B2_Pegatron) <Leslie_Hsia@pegatroncorp=
+.com> wrote:
 
-Occasionally, I see this error message without my change on 5.6.
+>   *   Author: Leslie Hsia
+>   *   Amplifier driver for TAS5805M, initial the amplifier and set the so=
+und's parameter.
+>   *   Signed-off-by: Leslie Hsia <Leslie_Hsia@pegatroncorp.com<mailto:Les=
+lie_Hsia@pegatroncorp.com>>
+
+Hi. Please read the SubmittingPatches.rst file for how to submit a diver.
+
+https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html
+
+I've pasted the patch below though to allow some quick initial comments.
+
+One high level comment to start off.  This is very much an audio focused am=
+plifier.
+I wouldn't normally expect to see a driver for such a device in IIO.  Why h=
+ere
+rather than somewhere in the audio subsystems?
+
+sound/soc/codecs/
+already has a large number of similar looking amplifiers.
+
+The amplifiers in IIO tend to be general purpose (and normally extremely hi=
+gh
+frequency supporting) amplifiers. Cc'd Mark Brown as one of the ASOC mainta=
+iners
+who can probably give you a clear answer to if this belongs in ASOC.
+
+Anyhow, some general comments inline.
+
+Thanks
+
+Jonathan
+
+>=20
+>       -------------------------------------------------------------------=
+------------------------------
+>=20
+>   *   This is a new driver for TAS5805M, please help me to Cc to the rela=
+ted people. Thanks.
+>=20
+>=20
+>=20
+> This e-mail and its attachment may contain information that is confidenti=
+al or privileged, and are solely for the use of the individual to whom this=
+ e-mail is addressed. If you are not the intended recipient or have receive=
+d it accidentally, please immediately notify the sender by reply e-mail and=
+ destroy all copies of this email and its attachment. Please be advised tha=
+t any unauthorized use, disclosure, distribution or copying of this email o=
+r its attachment is strictly prohibited.
+>=20
+> =E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=E4=BB=B6=E5=8F=8A=E5=85=B6=E9=99=84=
+=E4=BB=B6=E5=8F=AF=E8=83=BD=E5=90=AB=E6=9C=89=E6=A9=9F=E5=AF=86=E6=88=96=E4=
+=BE=9D=E6=B3=95=E5=8F=97=E7=89=B9=E6=AE=8A=E7=AE=A1=E5=88=B6=E4=B9=8B=E8=B3=
+=87=E8=A8=8A=EF=BC=8C=E5=83=85=E4=BE=9B=E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=
+=E4=BB=B6=E4=B9=8B=E5=8F=97=E6=96=87=E8=80=85=E4=BD=BF=E7=94=A8=E3=80=82=E5=
+=8F=B0=E7=AB=AF=E5=A6=82=E9=9D=9E=E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=E4=BB=
+=B6=E4=B9=8B=E5=8F=97=E6=96=87=E8=80=85=E6=88=96=E8=AA=A4=E6=94=B6=E6=9C=AC=
+=E9=9B=BB=E5=AD=90=E9=83=B5=E4=BB=B6=EF=BC=8C=E8=AB=8B=E7=AB=8B=E5=8D=B3=E5=
+=9B=9E=E8=A6=86=E9=83=B5=E4=BB=B6=E9=80=9A=E7=9F=A5=E5=AF=84=E4=BB=B6=E4=BA=
+=BA=EF=BC=8C=E4=B8=A6=E9=8A=B7=E6=AF=80=E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=
+=E4=BB=B6=E4=B9=8B=E6=89=80=E6=9C=89=E8=A4=87=E6=9C=AC=E5=8F=8A=E9=99=84=E4=
+=BB=B6=E3=80=82=E4=BB=BB=E4=BD=95=E6=9C=AA=E7=B6=93=E6=8E=88=E6=AC=8A=E8=80=
+=8C=E4=BD=BF=E7=94=A8=E3=80=81=E6=8F=AD=E9=9C=B2=E3=80=81=E6=95=A3=E4=BD=88=
+=E6=88=96=E8=A4=87=E8=A3=BD=E6=9C=AC=E9=9B=BB=E5=AD=90=E9=83=B5=E4=BB=B6=E6=
+=88=96=E5=85=B6=E9=99=84=E4=BB=B6=E4=B9=8B=E8=A1=8C=E7=82=BA=EF=BC=8C=E7=9A=
+=86=E5=9A=B4=E6=A0=BC=E7=A6=81=E6=AD=A2 =E3=80=82
+>=20
+
+diff -uprN -X linux-4.15-vanilla/Documentation/dontdiff linux-4.15-vanilla/=
+drivers/iio/amplifiers/tas5805m.c linux-4.15/drivers/iio/amplifiers/tas5805=
+m.c
+--- linux-4.15-vanilla/drivers/iio/amplifiers/tas5805m.c	1970-01-01 08:00:0=
+0.000000000 +0800
++++ linux-4.15/drivers/iio/amplifiers/tas5805m.c	2020-03-13 13:58:36.201225=
+000 +0800
+@@ -0,0 +1,151 @@
+
+Use an SPDX license identifier and then don't put the license
+boilerplate in each file.
+
++/*
++ * Driver for the TAS5805M Audio Amplifier (I2C part only)
++ *
++ * Author: Leslie Hsia <Leslie_Hsia@pegatroncorp.com>
++ * Author: Andy Liu <andy-liu@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ */
++=20
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/init.h>
++#include <linux/acpi.h>
++#include <linux/i2c.h>
++#include <linux/regmap.h>
++#include "tas5805m.h"
++
++struct tas5805m_priv {
++	struct regmap *regmap;
++	struct mutex lock;
++};
++
++const struct regmap_config tas5805m_regmap =3D {
++	.reg_bits =3D 8,
++	.val_bits =3D 8,
++	.cache_type =3D REGCACHE_RBTREE,
++};
++
++static const struct reg_sequence tas5805m_init_dsp[] =3D {
++	{ 0x03, 0x00 },
++	{ 0x03, 0x02 },
++	{ 0x33, 0x00 },
++	{ 0x4c, 0x3d }, // set volume to -6.5dB
+
+These magic numbers should ideally be replaced with defines that
+decode the fields and identify the register names setc.
+
++	{ 0x03, 0x03 },
++};
++
++static int tas5805m_set_device_state(struct tas5805m_priv *tas5805m, int s=
+tate)
++{
++	int ret =3D 0;
++
++	ret =3D regmap_write(tas5805m->regmap, 0x00, 0x00);
++	if (ret !=3D 0)
+
+if (ret)
+
++		return ret;
++
++	ret =3D regmap_write(tas5805m->regmap, 0x7F, 0x00);
++	if (ret !=3D 0)
++		return ret;
++
++	ret =3D regmap_update_bits(tas5805m->regmap, TAS5805M_REG_DEV_CTL2,
++				 TAS5805M_DEV_STAT_CTL_MSK, state);
++	if (ret !=3D 0)
++		return ret;
++
++	return ret;
+
+return regmap_update_bits...
+
++}
++
++static int tas5805m_probe(struct device *dev, struct regmap *regmap)
++{
+
+Superficially it seems like there is little benefit in separating this
+from the i2c_probe below - I would just have it inline.
+
++	struct tas5805m_priv *tas5805m;
++	int ret;
++
++	tas5805m =3D devm_kzalloc(dev, sizeof(struct tas5805m_priv), GFP_KERNEL);
+
+sizeof(*tas5805m)
+
++	if (!tas5805m)
++		return -ENOMEM;
++
++	dev_set_drvdata(dev, tas5805m);
+
+Not used.
+
++	tas5805m->regmap =3D regmap;
++   =20
++	mutex_init(&tas5805m->lock);
++
++	ret =3D regmap_register_patch(regmap, tas5805m_init_dsp, ARRAY_SIZE(tas58=
+05m_init_dsp));
++	if (ret !=3D 0) {
+
+if (ret)
 
 
-random seed 1586068185
-running tests
-XArray: 21151201 of 21151201 tests passed
-=================================================================
-==6040==ERROR: AddressSanitizer: heap-use-after-free on address 0x60c0031bce81 at pc 0x00000040b4b3 bp 0x7f95e87f9bb0 sp 0x7f95e87f9ba0
-READ of size 1 at 0x60c0031bce81 thread T11
-    #0 0x40b4b2 in xas_find_marked ../../../lib/xarray.c:1182
-    #1 0x45318e in tagged_iteration_fn /root/git/linux/tools/testing/radix-tree/iteration_check.c:77
-    #2 0x7f95ef2464e1 in start_thread (/lib64/libpthread.so.0+0x94e1)
-    #3 0x7f95ee8026d2 in clone (/lib64/libc.so.6+0x1016d2)
++		dev_err(dev, "Failed to initialize TAS5805M: %d\n",ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int tas5805m_i2c_probe(struct i2c_client *i2c, const struct i2c_dev=
+ice_id *id)
++{=09
 
-0x60c0031bce81 is located 1 bytes inside of 128-byte region [0x60c0031bce80,0x60c0031bcf00)
-freed by thread T1 here:
-    #0 0x7f95ef36c91f in __interceptor_free (/lib64/libasan.so.5+0x10d91f)
-    #1 0x43e4ba in kmem_cache_free /root/git/linux/tools/testing/radix-tree/linux.c:64
+Use probe_new as you aren't using the i2c_device_id anyway
 
-previously allocated by thread T13 here:
-    #0 0x7f95ef36cd18 in __interceptor_malloc (/lib64/libasan.so.5+0x10dd18)
-    #1 0x43e1af in kmem_cache_alloc /root/git/linux/tools/testing/radix-tree/linux.c:44
++	struct regmap *regmap;
++	struct regmap_config config =3D tas5805m_regmap;
++
++	regmap =3D devm_regmap_init_i2c(i2c, &config);
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	return tas5805m_probe(&i2c->dev, regmap);
++}
++
++static int tas5805m_i2c_remove(struct i2c_client *i2c)
++{=09
++	return 0;
++}
++
++#ifdef CONFIG_OF
 
-Thread T11 created by T0 here:
-    #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
-    #1 0x454862 in iteration_test /root/git/linux/tools/testing/radix-tree/iteration_check.c:178
+No need for this protection and it will probably result in build errors
+if you build with device tree support.
 
-Thread T1 created by T0 here:
-    #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
-    #1 0x7f95ef235b89  (/lib64/liburcu.so.6+0x3b89)
-
-Thread T13 created by T0 here:
-    #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
-    #1 0x4548a4 in iteration_test /root/git/linux/tools/testing/radix-tree/iteration_check.c:186
-
-SUMMARY: AddressSanitizer: heap-use-after-free ../../../lib/xarray.c:1182 in xas_find_marked
-Shadow bytes around the buggy address:
-  0x0c188062f980: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
-  0x0c188062f990: 00 00 00 00 00 00 00 00 fa fa fa fa fa fa fa fa
-  0x0c188062f9a0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c188062f9b0: fa fa fa fa fa fa fa fa fd fd fd fd fd fd fd fd
-  0x0c188062f9c0: fd fd fd fd fd fd fd fd fa fa fa fa fa fa fa fa
-=>0x0c188062f9d0:[fd]fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-  0x0c188062f9e0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c188062f9f0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c188062fa00: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-  0x0c188062fa10: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c188062fa20: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-  Shadow gap:              cc
-==6040==ABORTING
-
-This is not always like this. Didn't figure out the reason yet. Hope you many
-have some point.
-
--- 
-Wei Yang
-Help you, Help me
++static const struct of_device_id tas5805m_of_match[] =3D {
++	{=20
++		.compatible =3D "ti,TAS5805M",=20
++		.data =3D TAS5805M_AMP_DEV_NAME,
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, tas5805m_of_match);
++#else
++#define tas5805m_of_match NULL
++#endif
++
++#ifdef CONFIG_ACPI
++static const struct acpi_device_id tas5805m_acpi_match[] =3D {
++	{"TXNM5805", TAS5805M},
++	{ },
++};
++MODULE_DEVICE_TABLE(acpi, tas5805m_acpi_match);
++#else
++#define st_accel_acpi_match NULL
++#endif
++
++static const struct i2c_device_id tas5805m_i2c_id[] =3D {
++	{ TAS5805M_AMP_DEV_NAME, TAS5805M },
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, tas5805m_i2c_id);
++
++static struct i2c_driver tas5805m_i2c_driver =3D {
++	.driver	=3D {
++		.name =3D TAS5805M_DRV_NAME,
++		.of_match_table =3D tas5805m_of_match,
++		.acpi_match_table =3D ACPI_PTR(tas5805m_acpi_match),
++	},
++	.probe =3D tas5805m_i2c_probe,
++	.remove =3D tas5805m_i2c_remove,
++	.id_table =3D tas5805m_i2c_id,
++};
++
++module_i2c_driver(tas5805m_i2c_driver);
++
++MODULE_AUTHOR("Leslie Hsia <Leslie_Hsia@pegatroncorp.com>");
++MODULE_AUTHOR("Andy Liu <andy-liu@ti.com>");
++MODULE_DESCRIPTION("TAS5805M Audio Amplifier I2C Driver");
++MODULE_LICENSE("GPL v2");
+diff -uprN -X linux-4.15-vanilla/Documentation/dontdiff linux-4.15-vanilla/=
+drivers/iio/amplifiers/tas5805m.h linux-4.15/drivers/iio/amplifiers/tas5805=
+m.h
+--- linux-4.15-vanilla/drivers/iio/amplifiers/tas5805m.h	1970-01-01 08:00:0=
+0.000000000 +0800
++++ linux-4.15/drivers/iio/amplifiers/tas5805m.h	2020-03-13 14:00:11.350955=
+000 +0800
+@@ -0,0 +1,15 @@
++#include <linux/types.h>
++enum ti_ampfilier_type {
++	TAS5805M,
++};
++
++#define TAS5805M_DRV_NAME    "TAS5805M"
++
++#define TAS5805M_REG_DEV_CTL2		0x03
++#define TAS5805M_DEV_STAT_CTL_MSK	(BIT(1) | BIT(0))
++#define TAS5805M_DEV_STAT_DSLEEP 	0x00
++#define TAS5805M_DEV_STAT_SLEEP 	0x01
++#define TAS5805M_DEV_STAT_HIZ	 	0x02
++#define TAS5805M_DEV_STAT_PLAY		0x03
++#define TAS5805M_AMP_DEV_NAME		"TAS5805M"
++
