@@ -2,139 +2,124 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550D4C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E357BC2BA17
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E8820675
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586104811;
-	bh=tRkkXO+PEc/JrqWheuKG1whPIrxpx6mFXjlo4ozKhNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PZ7F5JBFwlLj9vTc4Ds6hxluD9nRtyI/tkRlAwUq6G7dvUmrynPJJ8FK5UYNN5V7n
-	 SRIK457C1wfwi9RutzQiHNLAy6c7fPOlPF5LYdvno+pR1QJsjHqN1QaTnrPY9IOxZP
-	 wOg/9zctDXc2ETh4oGHEjuKrs94+k3sbXi/IQrIQ=
+	by mail.kernel.org (Postfix) with ESMTP id B59CF20675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:41:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="e6P4ik73";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vl9myuJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbgDEQkK (ORCPT
+        id S1727593AbgDEQlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 12:40:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbgDEQkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 12:40:09 -0400
+        Sun, 5 Apr 2020 12:41:03 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:35235 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727356AbgDEQlC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 12:41:02 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C22A1580084;
+        Sun,  5 Apr 2020 12:41:00 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Sun, 05 Apr 2020 12:41:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=0tXJRElr7BDueItOzw3JF8FMO6D
+        wZZ6S27H7eTNZmDY=; b=e6P4ik73A8ZRZCAWVa6AracLqG7LJeDADvOOw+rcCfa
+        GXDXxPSXpf8fD+vnxt7SoG92lsTaMP6ZSLfSywL96k6/CIjG5KuEzUV4LS+xUqXm
+        FS2BqhfZO1o1saeuTWVCJHye9PE/Ik6Mret8ollNa9MM6+8amYWLDCZlnXQFQrep
+        3ewjs6nm4mQ4yp1EjelVOBbT8tPcuywiqqgvRG1amzknQNrYiZCeNdPqhJLGC8G7
+        EMg2b/b5BoVQTn2Kjk75ioIVa+214jwajVFJEUw4zG9XCIOHn3TVNJaWxv/Vcpse
+        8HMXmo+LSPfT20eL2i6wW5J6P4HEmEdMoK1xv/+FKMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0tXJRE
+        lr7BDueItOzw3JF8FMO6DwZZ6S27H7eTNZmDY=; b=vl9myuJPGhUgWZEpVDwaIn
+        HoACoCLhv3zCeZv3PRcwF3JVJUbkDGl6JXBZ7VlJTqxpYOslIkPp5f0yJ7xJagpF
+        JhjoI9ZzTP3JusW2QRkxKAvJPL3welgj00f1RyOUjQPNJyyDx2JnCUN+etDz/ZcL
+        0xsNGuJiYy2zhyAVypntd2PylHGcstqhHEc2GmVJixsaP0h7iJk27UEMJNlmXZJG
+        9NPT8ogSciCIwwdWNdgExP+AP5ssf4qPjUMsbAjrUkqRDrZ7J4fXQySeGv0s3Jxd
+        ey9DVeVuRLXk+dAvT3s3ozmAfXUMqXeJbDgv5Eff2dB7Bz3I6P43KLzIK+MQMbiA
+        ==
+X-ME-Sender: <xms:GAqKXmxcN_bKCeo8I3fLxYZtGgP719wduXxQV9io2Bu0DNd3xQl1_w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddugddutdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrd
+    horhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:GAqKXr9vfWQGoEP8wX6drUhvA9A7mqrp7x02khCc4Nl-PJ4PkouL7A>
+    <xmx:GAqKXvQNW90Nz-HRuvd1ghxON2yQVfMIgZgjiZPpe1pFhBskrWfdQA>
+    <xmx:GAqKXglGdifCzcRhgbFKjAp1YE4EqTDBzENju6xUUn6sSSnEvJyPwQ>
+    <xmx:HAqKXuN5tVwgndqDYrnbF_aqUrBB4UyWOLxH2bH0E6tiX0e9CFh8iw>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD33420675;
-        Sun,  5 Apr 2020 16:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586104809;
-        bh=tRkkXO+PEc/JrqWheuKG1whPIrxpx6mFXjlo4ozKhNw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jnfgp1DKwXMsHdHtFBSb419gEpYl3xaXybe04XzGLilluGFkO/IyJSj4Fo7+WxIcD
-         fWJgt3dMpy84fwtijWeRReDHRsQ+oKGboxD6fpuFaUg6pzM1HS8gLRa+KmsggIUsuD
-         6CiqndUfJHhHDUROUe8aX0q6ZoGnsnqrHh51aTRk=
-Date:   Sun, 5 Apr 2020 18:40:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     zhangfeionline@gmail.com
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        songmuchun@bytedance.com
-Subject: Re: [PATCH] driver core: Fix possible use after free on name
-Message-ID: <20200405164006.GA1582475@kroah.com>
-References: <1586102749-3364-1-git-send-email-zhangfeionline@gmail.com>
+        by mail.messagingengine.com (Postfix) with ESMTPA id 68AEB328005D;
+        Sun,  5 Apr 2020 12:40:56 -0400 (EDT)
+Date:   Sun, 5 Apr 2020 18:40:53 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-samsung-soc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Shane Francis <bigbeeshane@gmail.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        "for 3.8" <stable@vger.kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a
+ scatterlist
+Message-ID: <20200405164053.GB1582475@kroah.com>
+References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
+ <20200327162126.29705-1-m.szyprowski@samsung.com>
+ <CADnq5_NpHvmRvzvh1aF293UDUXiHF4Dg1rRNkt7XbM_VB98JCg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1586102749-3364-1-git-send-email-zhangfeionline@gmail.com>
+In-Reply-To: <CADnq5_NpHvmRvzvh1aF293UDUXiHF4Dg1rRNkt7XbM_VB98JCg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 09:05:49AM -0700, zhangfeionline@gmail.com wrote:
-> From: PengfeiZhang <zhangfeionline@gmail.com>
+On Sun, Apr 05, 2020 at 10:47:49AM -0400, Alex Deucher wrote:
+> On Fri, Mar 27, 2020 at 12:23 PM Marek Szyprowski
+> <m.szyprowski@samsung.com> wrote:
+> >
+> > Scatterlist elements contains both pages and DMA addresses, but one
+> > should not assume 1:1 relation between them. The sg->length is the size
+> > of the physical memory chunk described by the sg->page, while
+> > sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
+> > the sg_dma_address(sg).
+> >
+> > The proper way of extracting both: pages and DMA addresses of the whole
+> > buffer described by a scatterlist it to iterate independently over the
+> > sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
+> >
+> > Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
+> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
 > 
-> __class_create() copies the pointer to the name passed as an
-> argument only to be used later. But there's a chance the caller
-> could immediately free the passed string(e.g., local variable).
-> This could trigger a use after free when we use class name(e.g.,
-> dev_uevent_name()called by device_destroy(),class_create_release()).
-> 
-> To be on the safe side: duplicate the string with kstrdup_const()
-> so that if an unaware user passes an address to a stack-allocated
-> buffer, we won't get the arbitrary name and crash.
-
-Where are you seeing this happen?  
-
-> 
-> Signed-off-by: PengfeiZhang <zhangfeionline@gmail.com>
-> ---
->  drivers/base/class.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/base/class.c b/drivers/base/class.c
-> index bcd410e..770b3b3 100644
-> --- a/drivers/base/class.c
-> +++ b/drivers/base/class.c
-> @@ -206,6 +206,7 @@ void class_unregister(struct class *cls)
->  static void class_create_release(struct class *cls)
->  {
->  	pr_debug("%s called for %s\n", __func__, cls->name);
-> +	kfree_const(cls->name);
->  	kfree(cls);
->  }
->  
-> @@ -227,7 +228,10 @@ struct class *__class_create(struct module *owner, const char *name,
->  			     struct lock_class_key *key)
->  {
->  	struct class *cls;
-> -	int retval;
-> +	int retval = -EINVAL;
-> +
-> +	if (!name)
-> +		goto done;
-
-This is a new change, who calls this function with name not being set?
+> Applied.  Thanks and sorry for the breakage.
 
 
->  
->  	cls = kzalloc(sizeof(*cls), GFP_KERNEL);
->  	if (!cls) {
-> @@ -235,18 +239,27 @@ struct class *__class_create(struct module *owner, const char *name,
->  		goto error;
->  	}
->  
-> +	name = kstrdup_const(name, GFP_KERNEL);
-> +	if (!name) {
-> +		retval = -ENOMEM;
-> +		goto error;
-> +	}
+<formletter>
 
-and overwriting the pointer like that is bad-form, try doing something
-else here instead.
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-> +
->  	cls->name = name;
->  	cls->owner = owner;
->  	cls->class_release = class_create_release;
->  
->  	retval = __class_register(cls, key);
->  	if (retval)
-> -		goto error;
-> +		goto error_class_register;
->  
->  	return cls;
->  
-> +error_class_register:
-> +	kfree(cls->name);
-
-kfree_const()?
-
-thanks,
-
-greg k-h
+</formletter>
