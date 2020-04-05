@@ -2,82 +2,177 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0370DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89184C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C95C820659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F80D20659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:30:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CLSoNEy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgDEI3C (ORCPT
+        id S1726486AbgDEIas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 04:29:02 -0400
-Received: from mga18.intel.com ([134.134.136.126]:25744 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbgDEI3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 04:29:02 -0400
-IronPort-SDR: M0adLzQvFZELu7OrhuvN0mX7sdIEa22m5SmlFhhPfZrph5ht36PYVfDuI6tt3lHaZ5efzlr7R6
- 71j6hIJJ9UWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 01:29:01 -0700
-IronPort-SDR: GkUrYhcg8R10oY7HouQeSWq86gskBmAKtRVzlu7JTmWrleeYOaNI9ekVbKxltV+umcdu350aRE
- jyf84Nixzyfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,347,1580803200"; 
-   d="scan'208";a="243222375"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.154]) ([10.254.208.154])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Apr 2020 01:28:58 -0700
-Cc:     baolu.lu@linux.intel.com, Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v11 00/10] Nested Shared Virtual Address (SVA) VT-d
- support
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>
-References: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <a1eed4ed-7ad7-a445-7e5c-a5eb1771587c@linux.intel.com>
-Date:   Sun, 5 Apr 2020 16:28:57 +0800
+        Sun, 5 Apr 2020 04:30:48 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:56355 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726408AbgDEIas (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 04:30:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586075447; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=boJiaV3EccHj3kSwD3JA7pnnQAJZ7j95LcXsC2qfwdk=; b=CLSoNEy6U3jxtVg1sV6U6mYUUJWWMoeIiWESy3bcxzLS95sITeBHh3sap1MPHdoEa3MK0Z8O
+ MPrMLHc5tbRal9BaRkDabZeHdMoYxoft9r6tBRe2rbHn58v8HX7mmijrn75frezIQ2xlTU9o
+ gcXMFRKF6WO8v52RqRgAwVLTgUA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e899727.7f860ad8f180-smtp-out-n01;
+ Sun, 05 Apr 2020 08:30:31 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 73276C433D2; Sun,  5 Apr 2020 08:30:30 +0000 (UTC)
+Received: from [192.168.0.100] (unknown [49.206.125.103])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5564BC433F2;
+        Sun,  5 Apr 2020 08:30:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5564BC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH 1/2] clk: qcom: Add DT bindings for ipq6018 apss clock
+ controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1582797318-26288-1-git-send-email-sivaprak@codeaurora.org>
+ <1582797318-26288-2-git-send-email-sivaprak@codeaurora.org>
+ <20200309211349.GA10752@bogus>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <a8248eb8-ed65-7d80-7824-08aef22a963b@codeaurora.org>
+Date:   Sun, 5 Apr 2020 14:00:25 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1585939334-21396-1-git-send-email-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <20200309211349.GA10752@bogus>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/4/4 2:42, Jacob Pan wrote:
-> Shared virtual address (SVA), a.k.a, Shared virtual memory (SVM) on Intel
-> platforms allow address space sharing between device DMA and applications.
-> SVA can reduce programming complexity and enhance security.
-> This series is intended to enable SVA virtualization, i.e. enable use of SVA
-> within a guest user application.
-> 
-> This is the remaining portion of the original patchset that is based on
-> Joerg's x86/vt-d branch. The preparatory and cleanup patches are merged here.
-> (git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git)
+Hi Rob,
 
-With Eric's reviewed-by added, all patches in this series have been
-piled up for v5.7.
+Thanks for the review.
 
-Thank you all!
-
-Best regards,
-baolu
+On 3/10/2020 2:43 AM, Rob Herring wrote:
+> On Thu, Feb 27, 2020 at 03:25:17PM +0530, Sivaprakash Murugesan wrote:
+>> add dt-binding for ipq6018 apss clock controller
+>>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/clock/qcom,apsscc.yaml     | 58 ++++++++++++++++++++++
+>>   include/dt-bindings/clock/qcom,apss-ipq6018.h      | 26 ++++++++++
+>>   2 files changed, 84 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>>   create mode 100644 include/dt-bindings/clock/qcom,apss-ipq6018.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>> new file mode 100644
+>> index 0000000..7433721
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,apsscc.yaml
+>> @@ -0,0 +1,58 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+> Dual license new bindings please:
+>
+> (GPL-2.0-only OR BSD-2-Clause)
+ok.
+>
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/bindings/clock/qcom,apsscc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm IPQ6018 APSS Clock Controller Binding
+>> +
+>> +maintainers:
+>> +  - Stephen Boyd <sboyd@kernel.org>
+> I'd expect this to be a QCom person, not who is applying patches.
+>
+>> +
+>> +description: |
+> You can drop '|'.
+ok.
+>> +  Qualcomm IPQ6018 APSS clock control module which supports the clocks with
+>> +  frequencies above 800Mhz.
+>> +
+>> +properties:
+>> +  compatible :
+>> +    const: qcom,apss-ipq6018
+> Normal ordering is: qcom,ipq6018-apss
+ok.
+>> +
+>> +  clocks:
+>> +    description: clocks required for this controller.
+>> +    maxItems: 4
+> Need to define what each clock is.
+ok.
+>> +
+>> +  clock-names:
+>> +    description: clock output names of required clocks.
+>> +    maxItems: 4
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +  '#reset-cells':
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - '#clock-cells'
+>> +  - '#reset-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +      #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+>> +      apss_clk: qcom,apss_clk@b111000 {
+> I thought I'd finally seen the last of these Qcom node names...
+>
+> clock-controller@...
+ok.
+>> +            compatible = "qcom,apss-ipq6018";
+>> +            clocks = <&xo>, <&gcc GPLL0>,
+>> +                        <&gcc GPLL2>, <&gcc GPLL4>;
+>> +            clock-names = "xo", "gpll0",
+>> +                         "gpll2", "gpll4";
+>> +            reg = <0xb11100c 0x5ff4>;
+>> +            #clock-cells = <1>;
+>> +            #reset-cells = <1>;
+>> +      };
+>> +...
+>> diff --git a/include/dt-bindings/clock/qcom,apss-ipq6018.h b/include/dt-bindings/clock/qcom,apss-ipq6018.h
+>> new file mode 100644
+>> index 0000000..ed9d7d8
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/qcom,apss-ipq6018.h
+>> @@ -0,0 +1,26 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+> I'm pretty sure your employer would like an additional license here.
+my bad. will correct it.
