@@ -2,286 +2,165 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A69C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92770C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B6A20659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D1B20659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 16:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TIUGIRzk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P3tSPTDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgDEQRR (ORCPT
+        id S1727075AbgDEQXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 12:17:17 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36185 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgDEQRR (ORCPT
+        Sun, 5 Apr 2020 12:23:35 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46735 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726696AbgDEQXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 12:17:17 -0400
-Received: by mail-pj1-f67.google.com with SMTP id nu11so5372104pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 09:17:16 -0700 (PDT)
+        Sun, 5 Apr 2020 12:23:34 -0400
+Received: by mail-qk1-f196.google.com with SMTP id u4so13594812qkj.13
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 09:23:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kMPrOJrptqa6ersWxHE93MMDA++1RsqQDHkHmUg7IaM=;
-        b=TIUGIRzkS/7e8ZfSJzfqhMSEP/3N3s08GQQZXDKAqH2Lcgb/XtePkRkPQLc0Z5ji5w
-         VKfq4veNO9zu5g0a+QG+IRFeBnSbosj7CuVpqoyKFVgoNLLHhOLorCeydjbK0KYTUvO9
-         ZKFLXNfzi5NK5eNOzU3oYiwJbtBqfq2qoaEVc=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T6xRDGarxRrQ+McG4oPgKgxZsvgT+lL55o+pn4FdRW0=;
+        b=P3tSPTDy1xRCb4k4SD8xFq/6fzytUsmxxMdM64YWsMUx3U5tS7FSoWOyXGdQXL/yx2
+         aPc7DVKSQ/3ZhfEsfW2SSW5Et/Zl/uzf4kwog2W8BEUyD0Rv7WDaRQc7KpiT+IvUT5XV
+         p/eA9XCxpHNeW8oBcj+LcVOmpJfnXskYJ0SaM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kMPrOJrptqa6ersWxHE93MMDA++1RsqQDHkHmUg7IaM=;
-        b=Ge59p+UExtWU9EqN3gsAnRduKzwhR1ixcja0//3rnandTc5IaksiJB+yL095Ns9yyV
-         U6lJTni9/EeFTaaN0C79bOsc5NJ9zwZNc0W6QhY851F+5eC80fOnlFms+ZxabpdpjWD0
-         M0j/Ju+bbB8w0iJwkaAdKqHZDoDUj4+OJu+eYIIUSwGOlENs75mqn0gLoYR2IXW4ZpLN
-         z4AP4NVgbBs+xD9OZFcc+sd0usRkTlZQjwI9SHcjslxm02UMRTjLjiNreXzpsOpF3Eps
-         Ks5JkEEqSzprLX3SaywZ0dW2Ulxim4okYx8+a1mxL+AaLnwKeIDNSlfXkoek7lrD5bZR
-         xVyQ==
-X-Gm-Message-State: AGi0PuazSNUSj6HKoieWF8H+Se2gzl0mVqPnOKYvgAuNz1YVQ0oHF+ig
-        5C+z0KEF+o1U79hTid8D7dShrg==
-X-Google-Smtp-Source: APiQypLTHP0XN1nFJK4aJmPKkt8gcKrwuklgdNwtx5WVMi6d4RpqFjAqsu/nzn6WE/pu/1IVGRgHZg==
-X-Received: by 2002:a17:90a:2dc2:: with SMTP id q2mr21382647pjm.146.1586103435877;
-        Sun, 05 Apr 2020 09:17:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b25sm9754948pfp.201.2020.04.05.09.17.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 09:17:14 -0700 (PDT)
-Date:   Sun, 5 Apr 2020 09:17:13 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     intel-gvt-dev@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
-        zhenyuw@linux.intel.com, pbonzini@redhat.com, kevin.tian@intel.com,
-        peterx@redhat.com
-Subject: Re: [PATCH v4 2/7] vfio: introduce vfio_dma_rw to read/write a range
- of IOVAs
-Message-ID: <202004050916.E52CA610@keescook>
-References: <20200313030548.7705-1-yan.y.zhao@intel.com>
- <20200313030901.7830-1-yan.y.zhao@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T6xRDGarxRrQ+McG4oPgKgxZsvgT+lL55o+pn4FdRW0=;
+        b=L0WNVbv30vLGGyOyAWmWGOBMo3X3UMHERpeLTlKtT08P1Yz1BqxpQNZVG0ODAlZzVT
+         e0LDVd1+NxNDqQ57Xf1eW/PWxSfyhXD1RZuzq2fa04kTl3ce+QmWyFqYNUtdDVWj1PS2
+         N/BunNrhsCiE6DnAEsjdZLWjVNV7RMCLzLHhYGmrvHEq5e0fkfsu1qZYO81y+UjdfnoY
+         Xz/qWmC7qOuSjinZ5oHudwzy7RGh5S4zSPB80Nbi8/zbj3ixZTtts1GbK7YEJHkBtnXh
+         Sssvyqj9U4TfcjUcDI+v73Sb6IrMhSDkM3JeOsmkq7prINVYc82PuHLExnI8EK7UbL9H
+         ngbA==
+X-Gm-Message-State: AGi0PubYAhxLF2S1c7oO9T0N7BoquDP3LHOIvIML4jXs0MSK61gOfozU
+        zBfX9l96nhTxzJmrPZIoJIdCKqk1h/k=
+X-Google-Smtp-Source: APiQypKw1a29RGxF622c2ghOgHrfgH8NtFbz6LLY4VOx2vltqeTt3uh4voyQSlih8H4xPlc3LqGsSQ==
+X-Received: by 2002:a37:8bc5:: with SMTP id n188mr18388946qkd.415.1586103812862;
+        Sun, 05 Apr 2020 09:23:32 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id s11sm12697762qke.97.2020.04.05.09.23.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Apr 2020 09:23:32 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id a5so7376207ybo.7
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 09:23:32 -0700 (PDT)
+X-Received: by 2002:ab0:2389:: with SMTP id b9mr10876340uan.120.1586103403434;
+ Sun, 05 Apr 2020 09:16:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200313030901.7830-1-yan.y.zhao@intel.com>
+References: <20200402155130.8264-1-dianders@chromium.org> <20200402085050.v2.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
+ <20200403013356.GA6987@ming.t460p> <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
+ <CAD=FV=Vsk0SjkA+DbUwJxvO6NFcr0CO9=H1FD7okJ2PxMt5pYA@mail.gmail.com>
+ <20200405091446.GA3421@localhost.localdomain> <CAD=FV=X_S_YHvKkp96f3HVM3uX0VFTCKBxNK3fEu9Yt=NB8wEQ@mail.gmail.com>
+ <E316A36E-1B2B-47E8-A78C-7DD3F354425A@linaro.org>
+In-Reply-To: <E316A36E-1B2B-47E8-A78C-7DD3F354425A@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Sun, 5 Apr 2020 09:16:30 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UK=4OW2Q5i2FhrJw_+A-q+R=K8E5ui-PCQXvYhDY3ZHw@mail.gmail.com>
+Message-ID: <CAD=FV=UK=4OW2Q5i2FhrJw_+A-q+R=K8E5ui-PCQXvYhDY3ZHw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] blk-mq: Rerun dispatching in the case of budget contention
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Salman Qazi <sqazi@google.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
+        Ajay Joshi <ajay.joshi@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Hou Tao <houtao1@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 11:09:01PM -0400, Yan Zhao wrote:
-> vfio_dma_rw will read/write a range of user space memory pointed to by
-> IOVA into/from a kernel buffer without enforcing pinning the user space
-> memory.
-> 
-> TODO: mark the IOVAs to user space memory dirty if they are written in
-> vfio_dma_rw().
-> 
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> ---
->  drivers/vfio/vfio.c             | 49 +++++++++++++++++++++
->  drivers/vfio/vfio_iommu_type1.c | 76 +++++++++++++++++++++++++++++++++
->  include/linux/vfio.h            |  5 +++
->  3 files changed, 130 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio.c b/drivers/vfio/vfio.c
-> index 97b972bfb735..6997f711b925 100644
-> --- a/drivers/vfio/vfio.c
-> +++ b/drivers/vfio/vfio.c
-> @@ -1999,6 +1999,55 @@ int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn, int npage)
->  }
->  EXPORT_SYMBOL(vfio_unpin_pages);
->  
-> +
-> +/*
-> + * This interface allows the CPUs to perform some sort of virtual DMA on
-> + * behalf of the device.
-> + *
-> + * CPUs read/write from/into a range of IOVAs pointing to user space memory
-> + * into/from a kernel buffer.
-> + *
-> + * As the read/write of user space memory is conducted via the CPUs and is
-> + * not a real device DMA, it is not necessary to pin the user space memory.
-> + *
-> + * The caller needs to call vfio_group_get_external_user() or
-> + * vfio_group_get_external_user_from_dev() prior to calling this interface,
-> + * so as to prevent the VFIO group from disposal in the middle of the call.
-> + * But it can keep the reference to the VFIO group for several calls into
-> + * this interface.
-> + * After finishing using of the VFIO group, the caller needs to release the
-> + * VFIO group by calling vfio_group_put_external_user().
-> + *
-> + * @group [in]		: VFIO group
-> + * @user_iova [in]	: base IOVA of a user space buffer
-> + * @data [in]		: pointer to kernel buffer
-> + * @len [in]		: kernel buffer length
-> + * @write		: indicate read or write
-> + * Return error code on failure or 0 on success.
-> + */
-> +int vfio_dma_rw(struct vfio_group *group, dma_addr_t user_iova,
-> +		void *data, size_t len, bool write)
-> +{
-> +	struct vfio_container *container;
-> +	struct vfio_iommu_driver *driver;
-> +	int ret = 0;
-> +
-> +	if (!group || !data || len <= 0)
-> +		return -EINVAL;
-> +
-> +	container = group->container;
-> +	driver = container->iommu_driver;
-> +
-> +	if (likely(driver && driver->ops->dma_rw))
-> +		ret = driver->ops->dma_rw(container->iommu_data,
-> +					  user_iova, data, len, write);
-> +	else
-> +		ret = -ENOTTY;
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(vfio_dma_rw);
-> +
->  static int vfio_register_iommu_notifier(struct vfio_group *group,
->  					unsigned long *events,
->  					struct notifier_block *nb)
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index a177bf2c6683..9fdfae1cb17a 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -27,6 +27,7 @@
->  #include <linux/iommu.h>
->  #include <linux/module.h>
->  #include <linux/mm.h>
-> +#include <linux/mmu_context.h>
->  #include <linux/rbtree.h>
->  #include <linux/sched/signal.h>
->  #include <linux/sched/mm.h>
-> @@ -2305,6 +2306,80 @@ static int vfio_iommu_type1_unregister_notifier(void *iommu_data,
->  	return blocking_notifier_chain_unregister(&iommu->notifier, nb);
->  }
->  
-> +static int vfio_iommu_type1_dma_rw_chunk(struct vfio_iommu *iommu,
-> +					 dma_addr_t user_iova, void *data,
-> +					 size_t count, bool write,
-> +					 size_t *copied)
-> +{
-> +	struct mm_struct *mm;
-> +	unsigned long vaddr;
-> +	struct vfio_dma *dma;
-> +	bool kthread = current->mm == NULL;
-> +	size_t offset;
-> +
-> +	*copied = 0;
-> +
-> +	dma = vfio_find_dma(iommu, user_iova, 1);
-> +	if (!dma)
-> +		return -EINVAL;
-> +
-> +	if ((write && !(dma->prot & IOMMU_WRITE)) ||
-> +			!(dma->prot & IOMMU_READ))
-> +		return -EPERM;
-> +
-> +	mm = get_task_mm(dma->task);
-> +
-> +	if (!mm)
-> +		return -EPERM;
-> +
-> +	if (kthread)
-> +		use_mm(mm);
-> +	else if (current->mm != mm)
-> +		goto out;
-> +
-> +	offset = user_iova - dma->iova;
-> +
-> +	if (count > dma->size - offset)
-> +		count = dma->size - offset;
-> +
-> +	vaddr = dma->vaddr + offset;
-> +
-> +	if (write)
-> +		*copied = __copy_to_user((void __user *)vaddr, data,
-> +					 count) ? 0 : count;
-> +	else
-> +		*copied = __copy_from_user(data, (void __user *)vaddr,
-> +					   count) ? 0 : count;
+Hi,
 
-Why are these using __copy_*_user()? Where are the access_ok() checks?
+On Sun, Apr 5, 2020 at 7:55 AM Paolo Valente <paolo.valente@linaro.org> wrote:
+>
+> > Il giorno 5 apr 2020, alle ore 16:00, Doug Anderson <dianders@chromium.org> ha scritto:
+> >
+> > Hi,
+> >
+> > On Sun, Apr 5, 2020 at 2:15 AM Ming Lei <ming.lei@redhat.com> wrote:
+> >>
+> >> OK, looks it isn't specific on BFQ any more.
+> >>
+> >> Follows another candidate approach for this issue, given it is so hard
+> >> to trigger, we can make it more reliable by rerun queue when has_work()
+> >> returns true after ops->dispath_request() returns NULL.
+> >>
+> >> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> >> index 74cedea56034..4408e5d4fcd8 100644
+> >> --- a/block/blk-mq-sched.c
+> >> +++ b/block/blk-mq-sched.c
+> >> @@ -80,6 +80,7 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+> >>        blk_mq_run_hw_queue(hctx, true);
+> >> }
+> >>
+> >> +#define BLK_MQ_BUDGET_DELAY    3               /* ms units */
+> >> /*
+> >>  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+> >>  * its queue by itself in its completion handler, so we don't need to
+> >> @@ -103,6 +104,9 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+> >>                rq = e->type->ops.dispatch_request(hctx);
+> >>                if (!rq) {
+> >>                        blk_mq_put_dispatch_budget(hctx);
+> >> +
+> >> +                       if (e->type->ops.has_work && e->type->ops.has_work(hctx))
+> >> +                               blk_mq_delay_run_hw_queue(hctx, BLK_MQ_BUDGET_DELAY);
+> >
+> > I agree that your patch should solve the race.  With the current BFQ's
+> > has_work() it's a bit of a disaster though. It will essentially put
+> > blk-mq into a busy-wait loop (with a 3 ms delay between each poll)
+> > while BFQ's has_work() says "true" but BFQ doesn't dispatch anything.
+> >
+> > ...so I guess the question that still needs to be answered: does
+> > has_work() need to be exact?  If so then we need the patch you propose
+> > plus one to BFQ.  If not, we should continue along the lines of my
+> > patch.
+> >
+>
+> Some more comments.  BFQ's I/O plugging lasts 9 ms by default.  So,
+> with this last Ming's patch, BFQ may happen to be polled every 3ms,
+> for at most three times.
 
--Kees
+Ah!  I did not know this.  OK, then Ming's patch seems like it should
+work.  If nothing else it should fix the problem.  If this ends up
+making BFQ chew up too much CPU time then presumably someone will
+notice and BFQ's has_work() can be improved.
 
-> +	if (kthread)
-> +		unuse_mm(mm);
-> +out:
-> +	mmput(mm);
-> +	return *copied ? 0 : -EFAULT;
-> +}
-> +
-> +static int vfio_iommu_type1_dma_rw(void *iommu_data, dma_addr_t user_iova,
-> +				   void *data, size_t count, bool write)
-> +{
-> +	struct vfio_iommu *iommu = iommu_data;
-> +	int ret = 0;
-> +	size_t done;
-> +
-> +	mutex_lock(&iommu->lock);
-> +	while (count > 0) {
-> +		ret = vfio_iommu_type1_dma_rw_chunk(iommu, user_iova, data,
-> +						    count, write, &done);
-> +		if (ret)
-> +			break;
-> +
-> +		count -= done;
-> +		data += done;
-> +		user_iova += done;
-> +	}
-> +
-> +	mutex_unlock(&iommu->lock);
-> +	return ret;
-> +}
-> +
->  static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
->  	.name			= "vfio-iommu-type1",
->  	.owner			= THIS_MODULE,
-> @@ -2317,6 +2392,7 @@ static const struct vfio_iommu_driver_ops vfio_iommu_driver_ops_type1 = {
->  	.unpin_pages		= vfio_iommu_type1_unpin_pages,
->  	.register_notifier	= vfio_iommu_type1_register_notifier,
->  	.unregister_notifier	= vfio_iommu_type1_unregister_notifier,
-> +	.dma_rw			= vfio_iommu_type1_dma_rw,
->  };
->  
->  static int __init vfio_iommu_type1_init(void)
-> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
-> index fb71e0ac0e76..34b2fdf4de6e 100644
-> --- a/include/linux/vfio.h
-> +++ b/include/linux/vfio.h
-> @@ -82,6 +82,8 @@ struct vfio_iommu_driver_ops {
->  					     struct notifier_block *nb);
->  	int		(*unregister_notifier)(void *iommu_data,
->  					       struct notifier_block *nb);
-> +	int		(*dma_rw)(void *iommu_data, dma_addr_t user_iova,
-> +				  void *data, size_t count, bool write);
->  };
->  
->  extern int vfio_register_iommu_driver(const struct vfio_iommu_driver_ops *ops);
-> @@ -109,6 +111,9 @@ extern int vfio_pin_pages(struct device *dev, unsigned long *user_pfn,
->  extern int vfio_unpin_pages(struct device *dev, unsigned long *user_pfn,
->  			    int npage);
->  
-> +extern int vfio_dma_rw(struct vfio_group *group, dma_addr_t user_iova,
-> +		       void *data, size_t len, bool write);
-> +
->  /* each type has independent events */
->  enum vfio_notify_type {
->  	VFIO_IOMMU_NOTIFY = 0,
-> -- 
-> 2.17.1
-> 
+Ming: how do you want to proceed?  Do you want to formally post the
+patch?  Do you want me to post a v3 of my series where I place patch
+#2 with your patch?  Do you want authorship (which implies adding your
+Signed-off-by)?
 
--- 
-Kees Cook
+
+> On the opposite end, making bfq_has_work plugging aware costs more
+> complexity, and possibly one more lock.  While avoiding the above
+> occasional polling, this may imply a lot of overhead or CPU stalls on
+> every dispatch.
+
+I still think it would be interesting to run performance tests with my
+proof-of-concept solution for has_work().  Even if it's not ideal,
+knowing whether performance increased, decreased, or stayed the same
+would give information about how much more effort should be put into
+this.
+
+-Doug
