@@ -2,123 +2,228 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90943C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 15:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089AFC2BA17
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 15:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5261B206F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 15:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B70206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 15:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0oIvEOd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7HC76M5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgDEPCE (ORCPT
+        id S1726949AbgDEPGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 11:02:04 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35517 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgDEPCE (ORCPT
+        Sun, 5 Apr 2020 11:06:03 -0400
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:45997 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbgDEPGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 11:02:04 -0400
-Received: by mail-il1-f196.google.com with SMTP id 7so12245577ill.2;
-        Sun, 05 Apr 2020 08:02:03 -0700 (PDT)
+        Sun, 5 Apr 2020 11:06:02 -0400
+Received: by mail-qv1-f65.google.com with SMTP id g4so6151464qvo.12;
+        Sun, 05 Apr 2020 08:06:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=g8MbrIxOq0zCTo9fKog8mhMy9bOW8Fg9D9RRomTrVFI=;
-        b=c0oIvEOdEgPWSDDAJkRrteqAJ3sCP4mCe/YU5gQyLw7rZEqtGK3507vguvbOdjP0Ku
-         l/gsKL4J9b55i0DtEkFtOrwhBm9U/Ud17zTpDyGTAtqirorOHRySO1PQ2DTpj8My2A36
-         QI8PVjlCjThg1wzF8PEAbT/Fj2TVpekpwd82Jn6Rm48N7aj2COYNCPr5f5AUPEraQVIb
-         RQxjVxFxo/KJcJsMlulaasXOgVZ6b1hpo8jVevu095Ezb4QRJpZai8VErHtcWIpY77xi
-         gPJbT3QZJioFrrvD+9Id+v9oBZgWb/axGwLn2rqkmaxybnljKKmMRejVqScpghWMmJKD
-         ZOOw==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9N0f+yc5GoSCYnU9CVx853Ppx5E/zoOAAJ8nxJTEFpA=;
+        b=Y7HC76M5hVnZTH8jN1WbAtr84f16u+KO/0nyPseW+pLLAipoydW7pYF+tiVNoF9ltF
+         nbON5GLMf6QRr52JUdP83hAVn+jLhQvGMFWskD4I9BQ4/odgzvrDIxLY1xI9g+yVb4C/
+         s2cXWLpGSGzf4q/LWNJcl8OkpS52o0e6zCslyw2/Qq1avqM+IwMRvbjeSG8ehkjV1pyP
+         jk0xK8gMfmYrXak7p4ZBSW4h4CSVZrnstU6bREaND652xm4ip4yb8awoWHKWAlDfQN7H
+         2JukMwQacbyr6AGkGf4X1IAviX6LZpurPEzVRr6WO9rx86RHbTcv8uI2206+v2FhdU+k
+         1Law==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=g8MbrIxOq0zCTo9fKog8mhMy9bOW8Fg9D9RRomTrVFI=;
-        b=RL0DuaqWP5W8KZTVooKJH53TWwcAfwOnBMbmxSVaDpgZq+Rpm8amAPiSftyfGk3Ykd
-         eOdE8m4r0lBZCtRWSkwVrWqAeJPrW3XeVRNsHA4SmiwP58edhE8G0YcGaU7w3WxYB1px
-         Nr11/dgeFlliDa4Gt2YTYgNm+vGCcs5IBvbJt06N3k3K2P7EWP0AISCehmhMK19hwh+S
-         2TfBh3hZBOcrD9SFfK49RoOuS6SDYXNuAVqQGXcrUXeO/SccWtgT8oyv3hMN8uM3B+QY
-         G/TqgyHkFw1CAJOXpB/HRJ/ESj4c5MMZvvCLbpBDduq+k06V6035wfhJ0pOlBrU1ayam
-         wyJA==
-X-Gm-Message-State: AGi0PuYLINfheUPWueSW4PYYmaiS9fmix9jN40VeDK59kep2G8C2PSVQ
-        DPGuamzv7/8OkDgPdofgfjP6IA7cvuLpQmln2/U=
-X-Google-Smtp-Source: APiQypL0dkIH9W+iVFh+3Kch1QpTGXIz6w0urhh9Ynz7E5vaHn9o5pPCdsvh7b7WT0kXp4kHiPPmamoXZdEpSSTdNn8=
-X-Received: by 2002:a05:6e02:6cd:: with SMTP id p13mr16728576ils.150.1586098922818;
- Sun, 05 Apr 2020 08:02:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200405104913.22806-1-peron.clem@gmail.com> <20200405115138.vrrvv7spnv6ifm6x@core.my.home>
- <CAJiuCcfAKCs5ZLi_O21eyx-ZraC2Sb_ugQSmOEYm5+eVkQ7ZSw@mail.gmail.com> <20200405145443.uycsh73kxmurdmil@core.my.home>
-In-Reply-To: <20200405145443.uycsh73kxmurdmil@core.my.home>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sun, 5 Apr 2020 17:01:51 +0200
-Message-ID: <CAJiuCceROWv1ni3YZ6rU71O9R__t6ZOgnkZQDjBhJvhqHRAVng@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 0/7] Add support for Allwinner H6 DVFS
-To:     =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
-        =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9N0f+yc5GoSCYnU9CVx853Ppx5E/zoOAAJ8nxJTEFpA=;
+        b=YZM2Ojf0ShWMqlF82rCP5lZSnv1uTVehy3kyEcwJd+BhvcmUyotRpPeTGii2kUjOMt
+         FXEf4ohTqswAa6UUyeRspIASk2g66n25yRsl0Lexhpc++xm15EszBooUnWLPcrVdfQjq
+         mHQPArqMgfw6QShQ5ZePOh9bsevFQYxyEtFGMWPbK86dIt27YGGS2uNo/y8PR+bUkYiA
+         0Lu9zFbwfM3v/3o+4nOomHnFLd8jq7h+GJXSS4KoPqDEh6N6zlDTlXWwZGWHA0A8efiu
+         R9JtLm5yYNaU6vS9slMlIMRVJ8BydzoNOcYYUOff9ugoCcy0Hqnq/hoVCmKbwSZVaWBY
+         1Owg==
+X-Gm-Message-State: AGi0Pubigtbs67Tn9f+VcaumBljo+WU1hOM4eSxzCYOlCK85YNrdhtQ7
+        akZw5Egw3BTlIa4dzxnTF1A=
+X-Google-Smtp-Source: APiQypLiZ3GOPWLtLhl8U0huwRiWUGwCKoPM/+nsqylQydejMUMQHHoJEpvfE25ROQ27KYKdEh9uaQ==
+X-Received: by 2002:a0c:db86:: with SMTP id m6mr16240577qvk.116.1586099160280;
+        Sun, 05 Apr 2020 08:06:00 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id m10sm12655562qte.71.2020.04.05.08.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 08:05:59 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 535B0409A3; Sun,  5 Apr 2020 12:05:57 -0300 (-03)
+Date:   Sun, 5 Apr 2020 12:05:57 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v8 12/12] doc/admin-guide: update kernel.rst with
+ CAP_PERFMON information
+Message-ID: <20200405150557.GP9917@kernel.org>
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+ <84c32383-14a2-fa35-16b6-f9e59bd37240@linux.intel.com>
+ <20200405141029.GA16896@kernel.org>
+ <eb7fd0bd-4043-b51c-9b19-ee0a1d1849e9@linux.intel.com>
+ <966244a1-2a2d-8e47-b805-2effa46fe8cd@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <966244a1-2a2d-8e47-b805-2effa46fe8cd@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Em Sun, Apr 05, 2020 at 05:54:37PM +0300, Alexey Budankov escreveu:
+> 
+> On 05.04.2020 17:41, Alexey Budankov wrote:
+> > 
+> > On 05.04.2020 17:10, Arnaldo Carvalho de Melo wrote:
+> >> Em Thu, Apr 02, 2020 at 11:54:39AM +0300, Alexey Budankov escreveu:
+> >>>
+> >>> Update kernel.rst documentation file with the information
+> >>> related to usage of CAP_PERFMON capability to secure performance
+> >>> monitoring and observability operations in system.
+> >>
+> >> This one is failing in my perf/core branch, please take a look. I'm
+> 
+> Please try applying this:
 
-On Sun, 5 Apr 2020 at 16:54, Ond=C5=99ej Jirman <megous@megous.com> wrote:
->
-> Hi,
->
-> On Sun, Apr 05, 2020 at 04:33:37PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi Ond=C5=99ej,
->
-> [ ... ]
->
-> > Good point, this information should be added for both CPU and GPU regul=
-ator.
-> > This could be nice to confirm this point with a scope.
-> >
-> > Also I remark that Allwinner user higher temperature than what we set :
-> > alarm_low_temp =3D <105000>;
-> > alarm_high_temp =3D <110000>;
-> > alarm_temp_hysteresis =3D <15000>;
-> > shut_temp=3D <115000>;
-> > https://github.com/orangepi-xunlong/OrangePiH6_Linux4_9/blob/master/arc=
-h/arm64/boot/dts/sunxi/sun50iw6p1.dtsi#L1924
-> >
-> > Don't you think that we can push a bit higher the temperature it's
-> > actually at 80=C2=B0C ?
->
-> We probably can. But just 5=C2=B0C between high temp and criticla temp is=
- probably
-> not enough. I'd probably set our value to something like 90-100=C2=B0C so=
- that quick
-> temperature spike before regulation kicks in would not shutdown the CPU.
+Thanks, applied with the original commit log message,
 
-OK I will push it to 85=C2=B0C and leave the critical to 100=C2=B0C.
+- Arnaldo
+ 
+> ---
+>  Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 335696d3360d..aaa5bbcd1e33 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -709,7 +709,13 @@ perf_event_paranoid
+>  ===================
+>  
+>  Controls use of the performance events system by unprivileged
+> -users (without CAP_SYS_ADMIN).  The default value is 2.
+> +users (without CAP_PERFMON).  The default value is 2.
+> +
+> +For backward compatibility reasons access to system performance
+> +monitoring and observability remains open for CAP_SYS_ADMIN
+> +privileged processes but CAP_SYS_ADMIN usage for secure system
+> +performance monitoring and observability operations is discouraged
+> +with respect to CAP_PERFMON use cases.
+>  
+>  ===  ==================================================================
+>   -1  Allow use of (almost) all events by all users.
+> @@ -718,13 +724,13 @@ users (without CAP_SYS_ADMIN).  The default value is 2.
+>       ``CAP_IPC_LOCK``.
+>  
+>  >=0  Disallow ftrace function tracepoint by users without
+> -     ``CAP_SYS_ADMIN``.
+> +     ``CAP_PERFMON``.
+>  
+> -     Disallow raw tracepoint access by users without ``CAP_SYS_ADMIN``.
+> +     Disallow raw tracepoint access by users without ``CAP_PERFMON``.
+>  
+> ->=1  Disallow CPU event access by users without ``CAP_SYS_ADMIN``.
+> +>=1  Disallow CPU event access by users without ``CAP_PERFMON``.
+>  
+> ->=2  Disallow kernel profiling by users without ``CAP_SYS_ADMIN``.
+> +>=2  Disallow kernel profiling by users without ``CAP_PERFMON``.
+>  ===  ==================================================================
+>  
+> ---
+> 
+> Thanks,
+> Alexey
+> 
+> > 
+> > Trying to reproduce right now. What kind of failure do you see?
+> > Please share some specifics so I could follow up properly.
+> > 
+> > Thanks,
+> > Alexey
+> > 
+> >> pushing my perf/core branch with this series applied, please check that
+> >> everything is ok, I'll do some testing now, but it all seems ok.
+> >>
+> >> Thanks,
+> >>
+> >> - Arnaldo
+> >>  
+> >>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> >>> ---
+> >>>  Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
+> >>>  1 file changed, 11 insertions(+), 5 deletions(-)
+> >>>
+> >>> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> >>> index def074807cee..b06ae9389809 100644
+> >>> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> >>> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> >>> @@ -720,20 +720,26 @@ perf_event_paranoid:
+> >>>  ====================
+> >>>  
+> >>>  Controls use of the performance events system by unprivileged
+> >>> -users (without CAP_SYS_ADMIN).  The default value is 2.
+> >>> +users (without CAP_PERFMON). The default value is 2.
+> >>> +
+> >>> +For backward compatibility reasons access to system performance
+> >>> +monitoring and observability remains open for CAP_SYS_ADMIN
+> >>> +privileged processes but CAP_SYS_ADMIN usage for secure system
+> >>> +performance monitoring and observability operations is discouraged
+> >>> +with respect to CAP_PERFMON use cases.
+> >>>  
+> >>>  ===  ==================================================================
+> >>>   -1  Allow use of (almost) all events by all users
+> >>>  
+> >>>       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+> >>>  
+> >>> ->=0  Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN
+> >>> +>=0  Disallow ftrace function tracepoint by users without CAP_PERFMON
+> >>>  
+> >>> -     Disallow raw tracepoint access by users without CAP_SYS_ADMIN
+> >>> +     Disallow raw tracepoint access by users without CAP_PERFMON
+> >>>  
+> >>> ->=1  Disallow CPU event access by users without CAP_SYS_ADMIN
+> >>> +>=1  Disallow CPU event access by users without CAP_PERFMON
+> >>>  
+> >>> ->=2  Disallow kernel profiling by users without CAP_SYS_ADMIN
+> >>> +>=2  Disallow kernel profiling by users without CAP_PERFMON
+> >>>  ===  ==================================================================
+> >>>  
+> >>>  
+> >>> -- 
+> >>> 2.24.1
+> >>>
+> >>
 
-Test it again and will send a v2
+-- 
 
-Regards,
-Cl=C3=A9ment
-
->
-> regards,
->         o.
->
-> > Thanks for the review,
-> > Clement
-> >
+- Arnaldo
