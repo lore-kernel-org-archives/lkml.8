@@ -2,122 +2,94 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB08CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9258FC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B953E206F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:38:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXLhu3KB"
+	by mail.kernel.org (Postfix) with ESMTP id 5C09C20675
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgDEKit (ORCPT
+        id S1726523AbgDEKl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 06:38:49 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42447 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgDEKis (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 06:38:48 -0400
-Received: by mail-pg1-f195.google.com with SMTP id g6so4108814pgs.9;
-        Sun, 05 Apr 2020 03:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qdLT95uUUHQQjan6IE7MImhuwtChu6BiQ6bgREKm7VM=;
-        b=MXLhu3KBzqbM7vGo8jZvb7194ZggQq+Rej3BI7Vu8KoJUXc36JHdoH3rU0SK24Q/N9
-         IdzsJGJ4LCDiyF0OfwAezRI30kFwJ08BUB8yJsFZz9EwPYD6JoiiLKBM3E/4qIv6HT6S
-         grhT/7ubthWiKfmBX95cGAsY3jVuTaLkP7V3ZpJZM54+jZoxtKhHCFfzK8z8BTdZTiTe
-         707weLjiVp+vnaIEsJClyv1vSvUL4YpocdJsP63n88sdSPK3CubOfMyw7LXqaL6d/FmG
-         UsOKCY6yzhfebMpt5GNWTIDIKfVf/GYUiUki1nEMB3eZSMH57CXpOlMaE/eArrZYhYl0
-         8EdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qdLT95uUUHQQjan6IE7MImhuwtChu6BiQ6bgREKm7VM=;
-        b=ea0rNsaS8lE7K7f7u2XIzSwquQfvX7wU8WL2cO/THBuAfWlL4ziZJ3EYhqrCwu483q
-         bsAZkbOdzHVK7EsHIFibtwrtlNjsqwhlTMpNzmnMAmHEVVe32zxEvombij0H4grGEf3G
-         7N/hFGtpHjEKSWwE++NJZlu0ltUniUtHs8iJU0L0igUjhKsEAvJUTyv2zlcwqDg+yHqN
-         EWPpvJNCCnCIayLhJjzYURCKGz8P4fbhjA7NQwuU/quaUERCOYTWAE+GQodBNAiykxyd
-         P4Xvbau7cr0L7gmYEIqkcUhEnwYWzX9bydpJDZLZle7V5iu8trORoB+A2Rhzbluwncc+
-         HZKg==
-X-Gm-Message-State: AGi0Pua3Czw9nTzOTS5TL6WuSJBls9blWA+JhMjnEVlE4cDdW2/kBljf
-        /DXEvXF5E0gDbwra2r2qDqnfsvLivi4anzERGacf8ZP01LM=
-X-Google-Smtp-Source: APiQypIdZjZrO4aeX+/9G7UXEKP7hP1w5JadaMQbG06oUiIQ8NjExQZ7der4QrwRDuenrob6GM+iG+QvYzm3UfSS+fE=
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr17155666pgb.203.1586083127176;
- Sun, 05 Apr 2020 03:38:47 -0700 (PDT)
+        Sun, 5 Apr 2020 06:41:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:4435 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726444AbgDEKl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 06:41:27 -0400
+IronPort-SDR: 7Gw9obn4uu/Jf+Z8Ad101wVPiKA8TKke8YY01swkUN5O2YtT9BtMUjinizHCgl6YYTVvA/h+uB
+ B9tqwb5WX78Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 03:41:27 -0700
+IronPort-SDR: TC0QQbWGILYXESrFkub+TzDtzSEHPZ+1bv18FpT7ZZIuPOY+aGMs8XdqASWsNYNHawWm8lrhRI
+ yqEpYra/Kehw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,347,1580803200"; 
+   d="scan'208";a="241526865"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Apr 2020 03:41:25 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jL2iT-000IoS-Ak; Sun, 05 Apr 2020 18:41:25 +0800
+Date:   Sun, 5 Apr 2020 18:41:07 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Paolo Abeni <pabeni@redhat.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>
+Subject: net/mptcp/pm_netlink.c:98:22: warning: The scope of the variable
+ 'skc' can be reduced. [variableScope]
+Message-ID: <202004051802.wQTCzw3s%lkp@intel.com>
 MIME-Version: 1.0
-References: <20200401162416.24474-1-i.mikhaylov@yadro.com> <20200401162416.24474-3-i.mikhaylov@yadro.com>
- <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
- <1e2c9b590a3626abee330a28cca86cbae7affb39.camel@yadro.com>
- <CAHp75VdaM_pumyWyeHJxCQXrKUAW=ktJme1uYxH0w4e9an0X2A@mail.gmail.com> <20200405111341.0912468d@archlinux>
-In-Reply-To: <20200405111341.0912468d@archlinux>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 5 Apr 2020 13:38:36 +0300
-Message-ID: <CAHp75VeQ7LNve3bUEgzH2YrMwcihSDs+LHB3fgxy=b6pKH4RcA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 5, 2020 at 1:13 PM Jonathan Cameron <jic23@kernel.org> wrote:
-> On Thu, 2 Apr 2020 15:42:02 +0300
-> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Apr 2, 2020 at 11:24 AM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > > On Wed, 2020-04-01 at 19:35 +0300, Andy Shevchenko wrote:
-> > > > On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   4c205c84e249e0a91dcfabe461d77667ec9b2d05
+commit: 01cacb00b35cb62b139f07d5f84bcf0eeda8eff6 mptcp: add netlink-based PM
+date:   6 days ago
 
-> > > > > +       indio_dev->name = VCNL_DRV_NAME;
-> > > >
-> > > > It's definitely not a driver name. You have to put part number here.
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/tsl4531.c?h=v5.6#n199
-> That one is actually fine (if not very pretty) because the driver only supports one part and it happens
-> to also be the name of the driver.
->
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/max44009.c?h=v5.6#n507
-> Also only one part supported, so fine if liable to accidentally get broken if we support more parts.
->
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/vl6180.c?h=v5.6#n515
->
-> Again, one part supported and the driver has the same name.
->
-> >
-> > Let's Jonathan speak up.
->
-> So, the real point here is not the value being assigned but the fact it's
-> explicitly linked to the name of the driver.  I'd argue that you could use
-> VCNL_NAME as the define and that link is clearly broken. Or just put the string
-> inline in both places and don't worry about the tiny bit of replication!
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
 
-My comments, except this one, to this version are quite minor, so,
-after addressing this in a way Jonathan likes,
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+cppcheck warnings: (new ones prefixed by >>)
 
-P.S. Don't forget to include given tags in the commit message of next
-(fixed) version.
+>> net/mptcp/pm_netlink.c:98:22: warning: The scope of the variable 'skc' can be reduced. [variableScope]
+>>  struct sock_common *skc;
+                        ^
 
--- 
-With Best Regards,
-Andy Shevchenko
+vim +/skc +98 net/mptcp/pm_netlink.c
+
+    92	
+    93	static bool lookup_subflow_by_saddr(const struct list_head *list,
+    94					    struct mptcp_addr_info *saddr)
+    95	{
+    96		struct mptcp_subflow_context *subflow;
+    97		struct mptcp_addr_info cur;
+  > 98		struct sock_common *skc;
+    99	
+   100		list_for_each_entry(subflow, list, node) {
+   101			skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+   102	
+   103			local_address(skc, &cur);
+   104			if (addresses_equal(&cur, saddr, false))
+   105				return true;
+   106		}
+   107	
+   108		return false;
+   109	}
+   110	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
