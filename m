@@ -2,191 +2,383 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82142C2BA18
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E536AC2BA16
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580D5206D4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3588206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:39:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586057993;
+	bh=t2OD5FHHjwh/lbaTpLK43eSeF6L05/SSjVW++3rmqHY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1xl5TaOjQqNGmk62PFYCHcBW8wfGA9UcTwefI6uk9Uv1KQdsniKHCWsAoj7HFRybk
+	 Su51LZI37cyR3PosNeTVWBwXwY3nQfsCqUn6rbAM5XluvnGejONMslIwvfIFFRd4ol
+	 bQl8gNBIpq1Vyc+WsI3g1fPOb4qYEI7pzoJO1lfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDEDfu (ORCPT
+        id S1726420AbgDEDhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 23:35:50 -0400
-Received: from mail-oln040092064012.outbound.protection.outlook.com ([40.92.64.12]:7246
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726307AbgDEDfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 23:35:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cVy4aaOBmQOizaN4ohWwT0bHq6U0GUo0+IvuTTingVdYCZv4bbkRPqRaZ3VJ+f3FznQsyEgl3CSsbvQPON6mgejVKCXg6WCLOBVAKJuAlhFcNKIy3zwH3xBdMZT0JtOA2Frq54pNUWHTXqI+97YT7e2AJ1h/hqz1dMgkpYCB8raX7orDstsx68dSFxNoN1KzZv7ew4ENzlI3vgnSkrStQeJ468dqY84GL1ucluWXNeg2oJk6y6F8qwMRRMGJhHy02BM7kFRlWJoybQOeC+Yg6L5KucVzW2Qg8nP39B/Gn6iEtzMxPggLenAvWK2xsqIc4fdPL5cAnYDXgkjPvSDm4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xJoKBbrvch//gCfItNC55PrtEKKJe+9nCYuf9aS6IZE=;
- b=Tvoty26WNC1bDE/7yusw2FBBqXFbNYKTt1ENeoWpJ5QSb8b9Wjcs3u0cEZ7WUFxgq40lvPpuRwM/OmsfQ2awdjiBxMuvRLW1H8t9l9dZ32HrgI7CKt08K2SVLZVysta5d4rTeQNJk1pIjTCG1T+2LlC5tqxoLAAXAKR/39bQ9i05IYx3eBttP0+H/8RTiRC6pNwvocb8cG2E8UwdMdug3EUpv76pTdQB5PqCv0/DVmRwUxhRT/AOeiVVPV1oMuUFdIjAvPX9FXIhp1XmX5wYO/NS4pwybM989+erjpKYApBGTgDWIyuEPdaVDOd6j8XYyYovy6b6M4MDq+qe1PIDig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hotmail.de; dmarc=pass action=none header.from=hotmail.de;
- dkim=pass header.d=hotmail.de; arc=none
-Received: from HE1EUR01FT010.eop-EUR01.prod.protection.outlook.com
- (2a01:111:e400:7e18::44) by
- HE1EUR01HT138.eop-EUR01.prod.protection.outlook.com (2a01:111:e400:7e18::282)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Sun, 5 Apr
- 2020 03:35:47 +0000
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- (2a01:111:e400:7e18::45) by HE1EUR01FT010.mail.protection.outlook.com
- (2a01:111:e400:7e18::86) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend
- Transport; Sun, 5 Apr 2020 03:35:47 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:FA9581A416FDE9D71EF17AD4864829C61EC912C7D0FE56F72B53D0E5C6539A17;UpperCasedChecksum:74782C3E9E5EF0BA4C1B7C42923819ED1DD71F4F680CB8A72B25212B0638E0C1;SizeAsReceived:9979;Count:50
-Received: from AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d]) by AM6PR03MB5170.eurprd03.prod.outlook.com
- ([fe80::d57:5853:a396:969d%7]) with mapi id 15.20.2878.018; Sun, 5 Apr 2020
- 03:35:47 +0000
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
- <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
- <328f5ad3-f8b3-09b9-f2f7-b6dae0137542@redhat.com>
- <CAHk-=wgww8LFqUenUtNV7hzYSxAemjbOVYfZMXqOxK7DGRrZaw@mail.gmail.com>
- <c7c770c9-2c5c-4878-a224-d115720068f3@redhat.com>
- <86aa9fc6-6ac9-a0c2-3e1d-a602ef16d873@redhat.com>
- <CAHk-=wgOykL7cM34NraiNGsjJC5Uq6H0ybYHWhdXDSn-wzVXDQ@mail.gmail.com>
- <5c04cc6d-ec44-b840-071d-248ac81a0f91@redhat.com>
- <CAHk-=wgkE=qT6CSUJHfXNsyhW+=j4SVgxh2jEc8nWY_n3SFZ=w@mail.gmail.com>
- <9876d04e-32c9-dcaa-545a-bfecbf07ea74@redhat.com>
-From:   Bernd Edlinger <bernd.edlinger@hotmail.de>
-Message-ID: <AM6PR03MB5170E4AA9CBA36BDC87A3F43E4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
-Date:   Sun, 5 Apr 2020 05:35:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <9876d04e-32c9-dcaa-545a-bfecbf07ea74@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Sat, 4 Apr 2020 23:37:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbgDEDhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 23:37:23 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4735206D4;
+        Sun,  5 Apr 2020 03:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586057841;
+        bh=t2OD5FHHjwh/lbaTpLK43eSeF6L05/SSjVW++3rmqHY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Xm4e+dyWvzwIIi6izY7mvVYKDJPfVkUGYLccfm7pBFLvtQtJvNUkqspFeFreRxSMi
+         Nh5Z1gqYC0lSKHwMTWr1UKKF6YifHmRfAsll4fBwiQZlqFCv6rn41TKj9BVGX6uD8C
+         m5CrYfRgP7yNsaXdWIaD2/f+dsB295qbm+rZRKT8=
+Date:   Sun, 5 Apr 2020 12:37:12 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Jann Horn <jannh@google.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: AMD DC graphics display code enables -mhard-float, -msse,
+ -msse2 without any visible FPU state protection
+Message-Id: <20200405123712.63d4d62e9f3ef25e339222bf@kernel.org>
+In-Reply-To: <20200404143620.GM2452@worktop.programming.kicks-ass.net>
+References: <CAG48ez2Sx4ELkM94aD_h_J7K7KBOeuGmvZLKRkg3n_f2WoZ_cg@mail.gmail.com>
+        <4c5fe55d-9db9-2f61-59b2-1fb2e1b45ed0@amd.com>
+        <20200402141308.GB20730@hirez.programming.kicks-ass.net>
+        <20200403142837.f61a18d7bd32fd73777479ad@kernel.org>
+        <20200403112113.GN20730@hirez.programming.kicks-ass.net>
+        <20200404120808.05e9aa61500265be2e031bd6@kernel.org>
+        <20200404143620.GM2452@worktop.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0001.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::11) To AM6PR03MB5170.eurprd03.prod.outlook.com
- (2603:10a6:20b:ca::23)
-X-Microsoft-Original-Message-ID: <d91160b6-e0ae-8473-2fa5-0db110b7ab38@hotmail.de>
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.101] (92.77.140.102) by FR2P281CA0001.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Sun, 5 Apr 2020 03:35:46 +0000
-X-Microsoft-Original-Message-ID: <d91160b6-e0ae-8473-2fa5-0db110b7ab38@hotmail.de>
-X-TMN:  [LDqmbWEhkTJI6kKTuYBHvIMTSYEHgM2o]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 03758535-7d6c-4ef6-be13-08d7d9126d89
-X-MS-TrafficTypeDiagnostic: HE1EUR01HT138:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zf4Al81HtPmtu0W+YX2TSGCDM5fHYp8rOnM3K8mbDWOK9oP+8bwVECuD43X5nkFr+erOIF2HDntkWqEBDTkV+kQFsw2jAuEk8wscpTY7BUa/RfV+bpWodGXFPI/YtkAABlIEcfZugic2Agvk/SDzyk1TbLAcdoIo8izTYl4JBzRwxA3pNJDaDPWn5Cetu8Dv
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR03MB5170.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: JgwrFeNWYMS5vCbDCUqdlOIRC7AlRL3gx3JkLxEPFbEbISjWWyU9S3kjRIBNLBukOrUktHeBXt9FhRwf65YGJBYGEFuAR9PkjFmu2XSE2xFQuoNsBlQOWsR2wDgsZ5PMsyqUSsHGrLKnrJZCqQJsDg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03758535-7d6c-4ef6-be13-08d7d9126d89
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2020 03:35:46.9904
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/5/20 4:42 AM, Waiman Long wrote:
-> On 4/3/20 10:28 PM, Linus Torvalds wrote:
->> On Fri, Apr 3, 2020 at 7:02 PM Waiman Long <longman@redhat.com> wrote:
->>> So in term of priority, my current thinking is
->>>
->>>     upgrading unfair reader > unfair reader > reader/writer
->>>
->>> A higher priority locker will block other lockers from acquiring the lock.
->> An alternative option might be to have readers normally be 100% normal
->> (ie with fairness wrt writers), and not really introduce any special
->> "unfair reader" lock.
-> A regular down_read() caller will be handled normally.
->> Instead, all the unfairness would come into play only when the special
->> case - execve() - does it's special "lock for reading with intent to
->> upgrade".
->>
->> But when it enters that kind of "intent to upgrade" lock state, it
->> would not only block all subsequent writers, it would also guarantee
->> that all other readers can continue to go).
+On Sat, 4 Apr 2020 16:36:20 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Sat, Apr 04, 2020 at 12:08:08PM +0900, Masami Hiramatsu wrote:
+> > From c609be0b6403245612503fca1087628655bab96c Mon Sep 17 00:00:00 2001
+> > From: Masami Hiramatsu <mhiramat@kernel.org>
+> > Date: Fri, 3 Apr 2020 16:58:22 +0900
+> > Subject: [PATCH] x86: insn: Add insn_is_fpu()
+> > 
+> > Add insn_is_fpu(insn) which tells that the insn is
+> > whether touch the MMX/XMM/YMM register or the instruction
+> > of FP coprocessor.
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 > 
-> Yes, that shouldn't be hard to do. If that is what is required, we may
-> only need a special upgrade function to drain the OSQ and then wake up
-> all the readers in the wait queue. I will add a flags argument to that
-> special upgrade function so that we may be able to select different
-> behavior in the future.
+> With that I get a lot of warnings:
 > 
-> The regular down_read_interruptible() can be used unless we want to
-> designate only some readers are allowed to do upgrade by calling a
-> special down_read() function.
->>
->> So then the new rwsem operations would be
->>
->>  - read_with_write_intent_lock_interruptible()
->>
->>    This is the beginning of "execve()", and waits for all writers to
->> exit, and puts the lock into "all readers can go" mode.
->>
->>    You could think of it as a "I'm queuing myself for a write lock,
->> but I'm allowing readers to go ahead" state.
->>
->>  - read_lock_to_write_upgrade()
->>
->>    This is the "now this turns into a regular write lock". It needs to
->> wait for all other readers to exit, of course.
->>
->>  - read_with_write_intent_unlock()
->>
->>    This is the "I'm unqueuing myself, I aborted and will not become a
->> write lock after all" operation.
->>
->> NOTE! In this model, there may be multiple threads that do that
->> initial queuing thing. We only guarantee that only one of them will
->> get to the actual write lock stage, and the others will abort before
->> that happens.
->>
->> If that is a more natural state machine, then that should work fine
->> too. And it has some advantages, in that it keeps the readers normally
->> fair, and only turns them unfair when we get to that special
->> read-for-write stage.
->>
->> But whatever it most natural for the rwsem code. Entirely up to you.
+>   FPU instruction outside of kernel_fpu_{begin,end}()
 > 
-> To be symmetric with the existing downgrade_write() function, I will
-> choose the name upgrade_read() for the upgrade function.
+> two random examples (x86-64-allmodconfig build):
 > 
-> Will that work for you?
+> arch/x86/xen/enlighten.o: warning: objtool: xen_vcpu_restore()+0x341: FPU instruction outside of kernel_fpu_{begin,end}()
+> 
+> $ ./objdump-func.sh defconfig-build/arch/x86/xen/enlighten.o xen_vcpu_restore | grep 341
+> 0341  841:      0f 92 c3                setb   %bl
+> 
+> arch/x86/events/core.o: warning: objtool: x86_pmu_stop()+0x6d: FPU instruction outside of kernel_fpu_{begin,end}()
+> 
+> $ ./objdump-func.sh defconfig-build/arch/x86/events/core.o x86_pmu_stop | grep 6d
+> 006d     23ad:  41 0f 92 c6             setb   %r14b
+> 
+> Which seems to suggest something goes wobbly with SETB, but I'm not
+> seeing what in a hurry.
+
+Yes, I also got same issue, please try the new one.
+
+Thank you!
+
+> 
+> 
+> ---
+> --- a/arch/x86/include/asm/fpu/api.h
+> +++ b/arch/x86/include/asm/fpu/api.h
+> @@ -12,6 +12,13 @@
+>  #define _ASM_X86_FPU_API_H
+>  #include <linux/bottom_half.h>
+> 
+> +#define annotate_fpu() ({						\
+> +	asm volatile("%c0:\n\t"						\
+> +		     ".pushsection .discard.fpu_safe\n\t"		\
+> +		     ".long %c0b - .\n\t"				\
+> +		     ".popsection\n\t" : : "i" (__COUNTER__));		\
+> +})
+> +
+>  /*
+>   * Use kernel_fpu_begin/end() if you intend to use FPU in kernel context. It
+>   * disables preemption so be careful if you intend to use it for long periods
+> --- a/arch/x86/include/asm/fpu/internal.h
+> +++ b/arch/x86/include/asm/fpu/internal.h
+> @@ -437,6 +437,7 @@ static inline int copy_fpregs_to_fpstate
+>  	 * Legacy FPU register saving, FNSAVE always clears FPU registers,
+>  	 * so we have to mark them inactive:
+>  	 */
+> +	annotate_fpu();
+>  	asm volatile("fnsave %[fp]; fwait" : [fp] "=m" (fpu->state.fsave));
+> 
+>  	return 0;
+> @@ -462,6 +463,7 @@ static inline void copy_kernel_to_fpregs
+>  	 * "m" is a random variable that should be in L1.
+>  	 */
+>  	if (unlikely(static_cpu_has_bug(X86_BUG_FXSAVE_LEAK))) {
+> +		annotate_fpu();
+>  		asm volatile(
+>  			"fnclex\n\t"
+>  			"emms\n\t"
+> --- a/arch/x86/kernel/fpu/init.c
+> +++ b/arch/x86/kernel/fpu/init.c
+> @@ -38,7 +38,10 @@ static void fpu__init_cpu_generic(void)
+>  		fpstate_init_soft(&current->thread.fpu.state.soft);
+>  	else
+>  #endif
+> +	{
+> +		annotate_fpu();
+>  		asm volatile ("fninit");
+> +	}
+>  }
+> 
+>  /*
+> @@ -61,6 +64,7 @@ static bool fpu__probe_without_cpuid(voi
+>  	cr0 &= ~(X86_CR0_TS | X86_CR0_EM);
+>  	write_cr0(cr0);
+> 
+> +	annotate_fpu();
+>  	asm volatile("fninit ; fnstsw %0 ; fnstcw %1" : "+m" (fsw), "+m" (fcw));
+> 
+>  	pr_info("x86/fpu: Probing for FPU: FSW=0x%04hx FCW=0x%04hx\n", fsw, fcw);
+> --- a/tools/objtool/arch.h
+> +++ b/tools/objtool/arch.h
+> @@ -27,6 +27,7 @@ enum insn_type {
+>  	INSN_CLAC,
+>  	INSN_STD,
+>  	INSN_CLD,
+> +	INSN_FPU,
+>  	INSN_OTHER,
+>  };
+> 
+> --- a/tools/objtool/arch/x86/decode.c
+> +++ b/tools/objtool/arch/x86/decode.c
+> @@ -92,6 +92,11 @@ int arch_decode_instruction(struct elf *
+>  	*len = insn.length;
+>  	*type = INSN_OTHER;
+> 
+> +	if (insn_is_fpu(&insn)) {
+> +		*type = INSN_FPU;
+> +		return 0;
+> +	}
+> +
+>  	if (insn.vex_prefix.nbytes)
+>  		return 0;
+> 
+> @@ -357,48 +362,54 @@ int arch_decode_instruction(struct elf *
+> 
+>  	case 0x0f:
+> 
+> -		if (op2 == 0x01) {
+> -
+> +		switch (op2) {
+> +		case 0x01:
+>  			if (modrm == 0xca)
+>  				*type = INSN_CLAC;
+>  			else if (modrm == 0xcb)
+>  				*type = INSN_STAC;
+> +			break;
+> 
+> -		} else if (op2 >= 0x80 && op2 <= 0x8f) {
+> -
+> +		case 0x80 ... 0x8f: /* Jcc */
+>  			*type = INSN_JUMP_CONDITIONAL;
+> +			break;
+> 
+> -		} else if (op2 == 0x05 || op2 == 0x07 || op2 == 0x34 ||
+> -			   op2 == 0x35) {
+> -
+> -			/* sysenter, sysret */
+> +		case 0x05: /* syscall */
+> +		case 0x07: /* sysret */
+> +		case 0x34: /* sysenter */
+> +		case 0x35: /* sysexit */
+>  			*type = INSN_CONTEXT_SWITCH;
+> +			break;
+> 
+> -		} else if (op2 == 0x0b || op2 == 0xb9) {
+> -
+> -			/* ud2 */
+> +		case 0xff: /* ud0 */
+> +		case 0xb9: /* ud1 */
+> +		case 0x0b: /* ud2 */
+>  			*type = INSN_BUG;
+> +			break;
+> 
+> -		} else if (op2 == 0x0d || op2 == 0x1f) {
+> -
+> +		case 0x0d:
+> +		case 0x1f:
+>  			/* nopl/nopw */
+>  			*type = INSN_NOP;
+> +			break;
+> 
+> -		} else if (op2 == 0xa0 || op2 == 0xa8) {
+> -
+> -			/* push fs/gs */
+> +		case 0xa0: /* push fs */
+> +		case 0xa8: /* push gs */
+>  			*type = INSN_STACK;
+>  			op->src.type = OP_SRC_CONST;
+>  			op->dest.type = OP_DEST_PUSH;
+> +			break;
+> 
+> -		} else if (op2 == 0xa1 || op2 == 0xa9) {
+> -
+> -			/* pop fs/gs */
+> +		case 0xa1: /* pop fs */
+> +		case 0xa9: /* pop gs */
+>  			*type = INSN_STACK;
+>  			op->src.type = OP_SRC_POP;
+>  			op->dest.type = OP_DEST_MEM;
+> -		}
+> +			break;
+> 
+> +		default:
+> +			break;
+> +		}
+>  		break;
+> 
+>  	case 0xc9:
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -1316,6 +1316,43 @@ static int read_unwind_hints(struct objt
+>  	return 0;
+>  }
+> 
+> +static int read_fpu_hints(struct objtool_file *file)
+> +{
+> +	struct section *sec;
+> +	struct instruction *insn;
+> +	struct rela *rela;
+> +
+> +	sec = find_section_by_name(file->elf, ".rela.discard.fpu_safe");
+> +	if (!sec)
+> +		return 0;
+> +
+> +	list_for_each_entry(rela, &sec->rela_list, list) {
+> +		if (rela->sym->type != STT_SECTION) {
+> +			WARN("unexpected relocation symbol type in %s", sec->name);
+> +			return -1;
+> +		}
+> +
+> +		insn = find_insn(file, rela->sym->sec, rela->addend);
+> +		if (!insn) {
+> +			WARN("bad .discard.fpu_safe entry");
+> +			return -1;
+> +		}
+> +
+> +		if (insn->type != INSN_FPU) {
+> +			WARN_FUNC("fpu_safe hint not an FPU instruction",
+> +				  insn->sec, insn->offset);
+> +//			return -1;
+> +		}
+> +
+> +		while (insn && insn->type == INSN_FPU) {
+> +			insn->fpu_safe = true;
+> +			insn = next_insn_same_func(file, insn);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int read_retpoline_hints(struct objtool_file *file)
+>  {
+>  	struct section *sec;
+> @@ -1422,6 +1459,10 @@ static int decode_sections(struct objtoo
+>  	if (ret)
+>  		return ret;
+> 
+> +	ret = read_fpu_hints(file);
+> +	if (ret)
+> +		return ret;
+> +
+>  	return 0;
+>  }
+> 
+> @@ -2167,6 +2208,16 @@ static int validate_branch(struct objtoo
+>  			if (dead_end_function(file, insn->call_dest))
+>  				return 0;
+> 
+> +			if (insn->call_dest) {
+> +				if (!strcmp(insn->call_dest->name, "kernel_fpu_begin") ||
+> +				    !strcmp(insn->call_dest->name, "emulator_get_fpu"))
+> +					state.fpu = true;
+> +
+> +				if (!strcmp(insn->call_dest->name, "kernel_fpu_end") ||
+> +				    !strcmp(insn->call_dest->name, "emulator_put_fpu"))
+> +					state.fpu = false;
+> +			}
+> +
+>  			break;
+> 
+>  		case INSN_JUMP_CONDITIONAL:
+> @@ -2275,6 +2326,13 @@ static int validate_branch(struct objtoo
+>  			state.df = false;
+>  			break;
+> 
+> +		case INSN_FPU:
+> +			if (!state.fpu && !insn->fpu_safe) {
+> +				WARN_FUNC("FPU instruction outside of kernel_fpu_{begin,end}()", sec, insn->offset);
+> +				return 1;
+> +			}
+> +			break;
+> +
+>  		default:
+>  			break;
+>  		}
+> --- a/tools/objtool/check.h
+> +++ b/tools/objtool/check.h
+> @@ -20,6 +20,7 @@ struct insn_state {
+>  	unsigned char type;
+>  	bool bp_scratch;
+>  	bool drap, end, uaccess, df;
+> +	bool fpu;
+>  	unsigned int uaccess_stack;
+>  	int drap_reg, drap_offset;
+>  	struct cfi_reg vals[CFI_NUM_REGS];
+> @@ -34,7 +35,7 @@ struct instruction {
+>  	enum insn_type type;
+>  	unsigned long immediate;
+>  	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
+> -	bool retpoline_safe;
+> +	bool retpoline_safe, fpu_safe;
+>  	u8 visited;
+>  	struct symbol *call_dest;
+>  	struct instruction *jump_dest;
 > 
 
-May I ask, if the proposed rwsem will also work for RT-linux,
-or will it be a normal mutex there?
 
-
-Thanks
-Bernd.
-
-
-> Cheers,
-> Longman
-> 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
