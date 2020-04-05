@@ -2,88 +2,109 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2090EC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A001EC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBFA20753
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586071397;
-	bh=8HepJiw1FvzXNWCyScyutmWBhUqV6eFYiX/4mVftltw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wpQICJbqMqx5Oh16YZck3fE/ojg/sTKOJbBVX9OAk+gQ1bXVeGmt2t5UBrVk+J65O
-	 G/3KyideaWbzzv/vmw5htGL+zJ15aqe1Ow0X70oG/t2W61s5CmuP7gS/gkBslwrduT
-	 wJfEIIiiV21SpR3vfZk5UWfjri0MI/v3ad0B3exk=
+	by mail.kernel.org (Postfix) with ESMTP id 68239206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IaUFjyzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgDEHXQ (ORCPT
+        id S1726410AbgDEHcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 03:23:16 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:22596 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgDEHXP (ORCPT
+        Sun, 5 Apr 2020 03:32:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41115 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgDEHcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 03:23:15 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 0357N4D1018483;
-        Sun, 5 Apr 2020 16:23:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 0357N4D1018483
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586071385;
-        bh=rDBr6Z4PlmrNk6qXgwDFt7g6UkYgRhKbHk3RIA0gRnA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QWS4v1+Z7xuIvfQ/SZK05czrsohjzLqiB9BwiKCGUudBvtXyXZ4N2CqFuDU9dIgvl
-         KW2wRkC5nhY8NilidZC++/7PSgl1LXozE9e8q/5LAibclOiQSA8ja+uhuJZ1rTJGlO
-         vRcoyOmBnpeQdZM6gRJhHwPeNtgRvCMNQ1Qoe3MW3qbkwC7rbAT+s02OFqsUMxKBb6
-         YIs22yE6z5H0dpFrFUjo86bNngRs4v218r3Sjyo8i/J4koXcMZ7lZUe7rfkjavAJ7V
-         ryAMt5/Go4T5uQ+AINBoPpYW95T/edAok8R8NItZRUPB1g5varpI12/BItA6yZXlaS
-         kGSoThdytAhLA==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id y17so4290570uap.13;
-        Sun, 05 Apr 2020 00:23:05 -0700 (PDT)
-X-Gm-Message-State: AGi0PuaxEqe1q6FWpKNV5MKR4YOk6GvyP5wg5ChKdL6ZJyXvIvcAikYM
-        vQ97sGV8Gf7EcFkEW8cQ/QO4YG9OXODil0pqi6s=
-X-Google-Smtp-Source: APiQypLR5VMNv0uM0sAR6/Zl4HAGSg7rAsknyqO54Hajt+/AYtLDU4d3U07TNecOOhrPJwL/v9FmF2EERpjRwXogJfA=
-X-Received: by 2002:ab0:768b:: with SMTP id v11mr10890922uaq.109.1586071384017;
- Sun, 05 Apr 2020 00:23:04 -0700 (PDT)
+        Sun, 5 Apr 2020 03:32:07 -0400
+Received: by mail-lj1-f193.google.com with SMTP id n17so11218111lji.8;
+        Sun, 05 Apr 2020 00:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eD1t6b6bMcxK4Ie5EdhHP4NX5L/6yZx5WWdL+NqTuFM=;
+        b=IaUFjyzGMjvSuZUhuIT+qX06jQmPcM9zWOwoyVDc9uLUmFlE+sahAVX+0e9YPgVIla
+         6tb2IbvPacUnriosr16vxHsDBxhnZT0uBiCPWRHn8MswqURqTAbb21rzHQs/84JUgKyV
+         pp4ok2OLNxQ25Y/P+8xRcTwVN7Q1Gb3hyHkgbHO4eOtWGx/S5Yj4DMII3RkpbnTTmXN2
+         2BUuBaqh5AwW+ing808geuVCgSpaqPzM+lEwjnzNqoK9YXN3F3rXng9IbyRVlHM7MDw4
+         nY3KBii/I7alyruhKl1s0KtU1yiwXfM+877h7BcAckjrV26GttzdgXJgI20nZ93XG8t8
+         MNww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eD1t6b6bMcxK4Ie5EdhHP4NX5L/6yZx5WWdL+NqTuFM=;
+        b=RFeuTv6iQvTzIYNFZYRq7rXvtGhzn0N8poazjKirQoMEMCjcqqi7ZAS4iByeiscCgD
+         1zgjIzjao0UmeD6AHGYPaXJ43W4dcx1vK4BbO4N0smT0MikIAV9UL6wRPyvptjLliWEh
+         VBx749T/0ba01QRgCHaASPm5xEBUD7B562e90rcij7oX5BcCipb9AWB7J/P1VtT4c3F6
+         0zMMPKviBO8xXahp6260zDftieRLyAqVZWUsAMz30YjLvW6AcL7leRpXyykmbFINkVsC
+         GtOF+GhJ5gR6PKAmGNeT2iaR1HjxRDb2pvSuw/EZkuiod/y5vKg47iLkd0e8rD+7XeZE
+         TfFg==
+X-Gm-Message-State: AGi0PubXLapU52zg9vvrvGyG9TCCbw77H55YZkux1QnY7+rCfCpd9sXp
+        Whw8fTUnWOct5QtLMo6F3clJA79rplHA7oNjKXA=
+X-Google-Smtp-Source: APiQypJXdhdQBquZgZTuHcyBb40zTgvwv7f2rBl+afcbHzTn4x/NBwTXLrLQdqpUR11TUZKMM7vHIYbWMG7nYY7ww64=
+X-Received: by 2002:a2e:b4e9:: with SMTP id s9mr9174132ljm.108.1586071923337;
+ Sun, 05 Apr 2020 00:32:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200405145820.466f886b@canb.auug.org.au>
-In-Reply-To: <20200405145820.466f886b@canb.auug.org.au>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 5 Apr 2020 16:22:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQeefNnKVxauoPeJiRFZs1VusmTgmdKLdsjd9WyxyxbbA@mail.gmail.com>
-Message-ID: <CAK7LNAQeefNnKVxauoPeJiRFZs1VusmTgmdKLdsjd9WyxyxbbA@mail.gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the kbuild tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200404141922.26492-1-ap420073@gmail.com> <20200404155247.GE1476305@kroah.com>
+In-Reply-To: <20200404155247.GE1476305@kroah.com>
+From:   Taehee Yoo <ap420073@gmail.com>
+Date:   Sun, 5 Apr 2020 16:31:51 +0900
+Message-ID: <CAMArcTVOgG_4Qp4UDFNj-FwxkePJDOw92fkNtDEtTVte9EUpLQ@mail.gmail.com>
+Subject: Re: [PATCH net v2 3/3] net: core: avoid warning in dev_change_net_namespace()
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, rafael@kernel.org,
+        j.vosburgh@gmail.com, vfalico@gmail.com,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, mitch.a.williams@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 5, 2020 at 1:58 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Sun, 5 Apr 2020 at 00:52, Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> Hi all,
->
-> Commit
->
->   4075db8ab43a ("x86: update AS_* macros to binutils >=2.23, supporting ADX and AVX2")
->
-> is missing a Signed-off-by from its committer.
->
-> --
-> Cheers,
-> Stephen Rothwell
 
-Thanks.
-Now added.
+Hi Greg,
+Thank you for your review!
 
+> On Sat, Apr 04, 2020 at 02:19:22PM +0000, Taehee Yoo wrote:
+> > When interface's namespace is being changed, dev_change_net_namespace()
+> > is called. This removes and re-allocates many resources that include
+> > sysfs files. The "/net/class/net/<interface name>" is one of them.
+> > If the sysfs creation routine(device_rename()) found duplicate sysfs
+> > file name, it warns about it and fails. But unfortunately, at that point,
+> > dev_change_net_namespace() doesn't return fail because rollback cost
+> > is too high.
+> > So, the interface can't have a sysfs file.
+>
+> Why don't you check for a duplicate namespace before you do anything
+> like mess with sysfs?  Wouldn't that be the correct thing instead of
+> trying to paper over the issue by having sysfs be the thing to tell you
+> not to do this or not?
+>
 
--- 
-Best Regards
-Masahiro Yamada
+Sorry, I don't understand about "check for a duplicate namespace".
+Could you please explain it?
+
+> > The approach of this patch is to find the duplicate sysfs file as
+> > fast as possible. If it found that, dev_change_net_namespace() returns
+> > fail immediately with zero rollback cost.
+>
+> Don't rely on sysfs to save you from this race condition, it's not the
+> way to do it at all.
+
+Okay, I will find another approach.
+
+Thank you so much.
+Taehee Yoo
