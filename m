@@ -2,97 +2,141 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48515C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC716C2BA17
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D50B206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:12:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdc5sH/c"
+	by mail.kernel.org (Postfix) with ESMTP id 9D0D6206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgDEOMB (ORCPT
+        id S1726853AbgDEO1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 10:12:01 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33987 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgDEOMB (ORCPT
+        Sun, 5 Apr 2020 10:27:23 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:37452 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgDEO1X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 10:12:01 -0400
-Received: by mail-lf1-f65.google.com with SMTP id f20so2270628lfm.1;
-        Sun, 05 Apr 2020 07:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XleQO4WpERYdOmy1fbpTS+4ISogr+wHW1vFifmpyodE=;
-        b=fdc5sH/cRUKo6KAsRvp4eot+aiIc/g0j3762pp9C2VfqdoxdmqNZgdydgkUyiN2A0F
-         oqm0IIqKkpAuIQOrPqmltADM6jBPV7vgVfXksDLcDOGGO/v3d70hy2K8gMbo5Fve9+r4
-         TWGRS38lmO4IZSspoUc47GIGnpu+oCO4MKv5UfHhRRLR6uYakbBmVw0RFjxqKSFWlFgz
-         CAHCYGJGXeKgy9L6abus3eJNYJiMfS9Dci6cDgMC9OQUdGkSWcr5G9Pjzs1EY9tSTAsz
-         ze+DpQHiyWaVPQAODkV+Fq96STmwwW/emOunpt+gYcrwn5qVWnPd56XKah9WW7dB8zsN
-         nJ5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XleQO4WpERYdOmy1fbpTS+4ISogr+wHW1vFifmpyodE=;
-        b=c1Z/TysVn4VAfGX7DlLD/rSl68L0RQWeMXcZ32K/tlWnf6xQwtEanh5SnJhFF1EQQZ
-         OEboRhaInqr5uT0KBbECVF6J+FDQJorblWlfUw4m6ACW1imHsWo0u8G1TlSG0bmCRCar
-         CSir7cT0jns8Sy/qTTh5cNh7c5mPqyU5lqF2dMaE5o5nyXvVjwJMLeKewL1ACchVGMDE
-         jcR0VTYOuz7GtZ+/ygmHhoJ6SikU8vC4hl0/dSwTJ2uryp6kjGNciz3e2qrpFwW+y6S2
-         wN1uMfco+c5w/dq38QzvaRriYpSMoPmuQs9PHL4EPeR4MAxPFhndQ+kb8E/uH6N4fE6n
-         kSig==
-X-Gm-Message-State: AGi0PubRvQCP1ibWBfwvGuQjbIDWbMvEGbCnD3kNbMe+ouqfjpiWTNqB
-        JCIxaOUXDstB20OoD9Vf9B0=
-X-Google-Smtp-Source: APiQypLVoKcshv+FiT9j3E9JOCfkZaibdzpWPVu3sNp1yGEE4gobEgWuAA1GCJX39Y527pWDdWS0xg==
-X-Received: by 2002:a05:6512:308e:: with SMTP id z14mr10880297lfd.110.1586095918181;
-        Sun, 05 Apr 2020 07:11:58 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id m193sm8047452lfa.39.2020.04.05.07.11.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Apr 2020 07:11:57 -0700 (PDT)
-Subject: Re: [TEGRA194_CPUFREQ Patch v2 2/3] cpufreq: Add Tegra194 cpufreq
- driver
-To:     Sumit Gupta <sumitg@nvidia.com>, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, catalin.marinas@arm.com, will@kernel.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, talho@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     bbasu@nvidia.com, mperttunen@nvidia.com
-References: <1586028547-14993-1-git-send-email-sumitg@nvidia.com>
- <1586028547-14993-3-git-send-email-sumitg@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ba12496f-ac27-d4f2-dc69-d0a7e2d58679@gmail.com>
-Date:   Sun, 5 Apr 2020 17:11:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 5 Apr 2020 10:27:23 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id D742320160;
+        Sun,  5 Apr 2020 16:27:17 +0200 (CEST)
+Date:   Sun, 5 Apr 2020 16:27:15 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Joonas =?iso-8859-1?Q?Kylm=E4l=E4?= <joonas.kylmala@iki.fi>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        paul.kocialkowski@bootlin.com, GNUtoo@cyberdimension.org
+Subject: Re: [PATCH] drm/panel: samsung: s6e8aa0: Add backlight control
+ support
+Message-ID: <20200405142715.GA28291@ravnborg.org>
+References: <CGME20190921125017epcas3p2f5661cca04f0959f9707f6111102435d@epcas3p2.samsung.com>
+ <20190921124843.6967-1-joonas.kylmala@iki.fi>
+ <d8a8bf25-0c5e-8d94-9406-b1f74e3edfac@samsung.com>
+ <53385e44-1847-ace0-cd87-5571f6acd3f2@iki.fi>
 MIME-Version: 1.0
-In-Reply-To: <1586028547-14993-3-git-send-email-sumitg@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <53385e44-1847-ace0-cd87-5571f6acd3f2@iki.fi>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10
+        a=8Bv4S_VrHzWzl_PHQgMA:9 a=wPNLvfGTeEIA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.04.2020 22:29, Sumit Gupta пишет:
-...
-> +static void tegra_read_counters(struct work_struct *work)
-> +{
-> +	struct read_counters_work *read_counters_work;
-> +	struct tegra_cpu_ctr *c;
-> +	u64 val;
-> +
-> +	/*
-> +	 * ref_clk_counter(32 bit counter) runs on constant clk,
-> +	 * pll_p(408MHz).
+Hi Joonas.
 
-Is changing PLLP rate really impossible on T194? What makes you say that
-it runs on a fixed 408MHz?
+On Sat, Apr 04, 2020 at 04:27:02PM +0300, Joonas Kylm�l� wrote:
+> Hi,
+> 
+> addressing this email to you all since there might be widespread race
+> condition issue in the DRM panel drivers that are using MIPI DSI. See
+> below for my message.
+> 
+> Andrzej Hajda:
+> >> +static int s6e8aa0_set_brightness(struct backlight_device *bd)
+> >> +{
+> >> +	struct s6e8aa0 *ctx = bl_get_data(bd);
+> >> +	const u8 *gamma;
+> >> +
+> >> +	if (ctx->error)
+> >> +		return;
+> >> +
+> >> +	gamma = ctx->variant->gamma_tables[bd->props.brightness];
+> >> +
+> >> +	if (ctx->version >= 142)
+> >> +		s6e8aa0_elvss_nvm_set(ctx);
+> >> +
+> >> +	s6e8aa0_dcs_write(ctx, gamma, GAMMA_TABLE_LEN);
+> >> +
+> >> +	/* update gamma table. */
+> >> +	s6e8aa0_dcs_write_seq_static(ctx, 0xf7, 0x03);
+> >> +
+> >> +	return s6e8aa0_clear_error(ctx);
+> >> +}
+> >> +
+> >> +static const struct backlight_ops s6e8aa0_backlight_ops = {
+> >> +	.update_status	= s6e8aa0_set_brightness,
+> > 
+> > 
+> > This is racy, update_status can be called in any time between probe and
+> > remove, particularly:
+> > 
+> > a) before panel enable,
+> > 
+> > b) during panel enable,
+> > 
+> > c) when panel is enabled,
+> > 
+> > d) during panel disable,
+> > 
+> > e) after panel disable,
+> > 
+> > 
+> > b and d are racy for sure - backlight and drm callbacks are async.
+> > 
+> > IMO the best solution would be to register backlight after attaching
+> > panel to drm, but for this drm_panel_funcs should have attach/detach
+> > callbacks (like drm_bridge_funcs),
+> > 
+> > then update_status callback should take some drm_connector lock to
+> > synchronize with drm, and write to hw only when pipe is enabled.
+> 
+> I have done now research and if I understand right one issue here might
+> be with setting the backlight brightness if the DSI device is not
+> attached before calling update_status() since calling it would call
+> subsequently s6e8aa0_set_brightness() -> s6e8aa0_dcs_write() ->
+> mipi_dsi_dcs_write_buffer(), which then requires DSI to be attached.
+
+Not directly related to your comments above.
+But I have looked at the backlight support for the various
+samsung panels.
+
+None of them are good examples to follow.
+Please have a look at for example panel-novatek-nt35510.c
+which is a good example how to have a local backligth
+and tie it into the general way it is used by drm_panel.
+
+I have typed patches to fix all three samsung panels, will
+post patches later when I get more time.
+
+If we are concerned with set_brightness() being called
+while not ready, this can be checked in the
+set_brightness() function and return error if not OK.
+
+As the the race concerns see Daniel's reply.
+
+	Sam
