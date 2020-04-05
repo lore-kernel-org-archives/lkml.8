@@ -2,109 +2,258 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162E6C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FED9C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D690E20672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJ1ZlYHp"
+	by mail.kernel.org (Postfix) with ESMTP id 2D8A220672
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 12:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgDEM0B (ORCPT
+        id S1726671AbgDEM2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 08:26:01 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41884 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726388AbgDEM0B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 08:26:01 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a24so6137253pfc.8
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 05:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=mblZgCC2Cl9506DCpo/VF03PoaE1EG2NCS/yPRhOyVc=;
-        b=fJ1ZlYHpiC1YETL+MpOGOhen2lYkAFpSNfdQwn56F/eqWl78ShJ75UG0vPwAkNPc7s
-         mc9AJlqmcXOZBeizj1v96RTUf6bBBK7mNOGdrbqJZvLxW5SH6xknxnCA1FANunKiaz36
-         bnzCsHHXBoiFUEt/ZyJTf6IOqhGfimvXGwnpCyyLvNVarMYxAbKAaeev+qlmPsCRrRRL
-         2zo7VwFeulBDRK4v4iealA/UEJIjAWsrBcXWUhQcOyFQQdOaFNVaTe0l/7MC8sqdbO8E
-         QDMtTY7/lXbszNk16igin42MJeruNb2M0xsvix8XEZZpbjpt3e6ENpGtc7g8y09f1KxM
-         0Pqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mblZgCC2Cl9506DCpo/VF03PoaE1EG2NCS/yPRhOyVc=;
-        b=CgG74dumKqMyP6x7L/suNT9HaUsKZaP4eRixBxnfIAb0D1oPRNYVigahpeyde6Darh
-         D0QIT1yL8lXQ4gx6P2gHhGNSimcc867nGntr9zU2MvYsTIjJp1FsB4Mm1BsWtU1WinPm
-         +NATIuZzwOe9nWpMwpxCxDrxuYJ/cPB3wFhclBZLJvHerXJkgpwKJXZAMnBPT+koFQ9s
-         rTS7/7Jcalb+Bog/N/gs+8wjPLRCTrj//kajkQ9+oB8x6SDvR95gB0t+Xd6YIt8zJWD3
-         CblrLH0P1rLa34U82fk9C7fwXiAcSbLzT3aBoqVMAJhe8jVRjUHRxAe430bnbLbPY/FU
-         TdFQ==
-X-Gm-Message-State: AGi0PuafzjjEK9SJSK4W1pVLlUsWkfb1NG9QOPkioEaKUzlVR/RVnU+E
-        limjpbtuKerrBeRO5uTOUk0aA7OV
-X-Google-Smtp-Source: APiQypJQUqDjf/IeYoPYu4U+unuDH9yiglYxc4QpmhiuOWuRnx9jcIZm24TtJmxIW1p4es3hQcSQxA==
-X-Received: by 2002:a63:7a49:: with SMTP id j9mr16094104pgn.183.1586089560133;
-        Sun, 05 Apr 2020 05:26:00 -0700 (PDT)
-Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
-        by smtp.gmail.com with ESMTPSA id n100sm9561716pjc.38.2020.04.05.05.25.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 Apr 2020 05:25:59 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        tglx@linutronix.de
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        christophe.leroy@c-s.fr, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH v3] powerpc/powernv: add NULL check after kzalloc in opal_add_one_export
-Date:   Sun,  5 Apr 2020 20:25:54 +0800
-Message-Id: <20200405122554.357-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 5 Apr 2020 08:28:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:39040 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbgDEM2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 08:28:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8481F31B;
+        Sun,  5 Apr 2020 05:28:32 -0700 (PDT)
+Received: from [192.168.0.129] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD9653F68F;
+        Sun,  5 Apr 2020 05:28:22 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+ <20200331143059.29fca8fa@thinkpad>
+Message-ID: <e3e35885-6852-16aa-3889-e22750a0cc87@arm.com>
+Date:   Sun, 5 Apr 2020 17:58:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200331143059.29fca8fa@thinkpad>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here needs a NULL check.
+On 03/31/2020 06:00 PM, Gerald Schaefer wrote:
+> On Tue, 24 Mar 2020 10:52:52 +0530
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+>> This series adds more arch page table helper tests. The new tests here are
+>> either related to core memory functions and advanced arch pgtable helpers.
+>> This also creates a documentation file enlisting all expected semantics as
+>> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
+>>
+>> This series has been tested on arm64 and x86 platforms. There is just one
+>> expected failure on arm64 that will be fixed when we enable THP migration.
+>>
+>> [   21.741634] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:782
+>>
+>> which corresponds to
+>>
+>> WARN_ON(!pmd_present(pmd_mknotpresent(pmd_mkhuge(pmd))))
+>>
+>> There are many TRANSPARENT_HUGEPAGE and ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD
+>> ifdefs scattered across the test. But consolidating all the fallback stubs
+>> is not very straight forward because ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD is
+>> not explicitly dependent on ARCH_HAS_TRANSPARENT_HUGEPAGE.
+>>
+>> This series has been build tested on many platforms including the ones that
+>> subscribe the test through ARCH_HAS_DEBUG_VM_PGTABLE.
+>>
+> 
+> Hi Anshuman,
+> 
+> thanks for the update. There are a couple of issues on s390, some might
+> also affect other archs.
 
-Issue found by coccinelle.
+Sure, thanks for taking a look and giving it a spin on s390.
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- arch/powerpc/platforms/powernv/opal.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> 1) The pxd_huge_tests are using pxd_set/clear_huge, which defaults to
+> returning 0 if !CONFIG_HAVE_ARCH_HUGE_VMAP. As result, the checks for
+> !pxd_test/clear_huge in the pxd_huge_tests will always trigger the
+> warning. This should affect all archs w/o CONFIG_HAVE_ARCH_HUGE_VMAP.
+> Could be fixed like this:
+> 
+> @@ -923,8 +923,10 @@ void __init debug_vm_pgtable(void)
+>         pmd_leaf_tests(pmd_aligned, prot);
+>         pud_leaf_tests(pud_aligned, prot);
+>  
+> -       pmd_huge_tests(pmdp, pmd_aligned, prot);
+> -       pud_huge_tests(pudp, pud_aligned, prot);
+> +       if (IS_ENABLED(CONFIG_HAVE_ARCH_HUGE_VMAP)) {
+> +               pmd_huge_tests(pmdp, pmd_aligned, prot);
+> +               pud_huge_tests(pudp, pud_aligned, prot);
+> +       }
 
-diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-index 2b3dfd0b6cdd..908d749bcef5 100644
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -801,16 +801,19 @@ static ssize_t export_attr_read(struct file *fp, struct kobject *kobj,
- static int opal_add_one_export(struct kobject *parent, const char *export_name,
- 			       struct device_node *np, const char *prop_name)
- {
--	struct bin_attribute *attr = NULL;
--	const char *name = NULL;
-+	struct bin_attribute *attr;
-+	const char *name;
- 	u64 vals[2];
- 	int rc;
- 
- 	rc = of_property_read_u64_array(np, prop_name, &vals[0], 2);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
-+	if (!attr)
-+		return -ENOMEM;
-+
- 	name = kstrdup(export_name, GFP_KERNEL);
- 	if (!name) {
- 		rc = -ENOMEM;
--- 
-2.17.1
+That is correct. It was an omission on my part and will fix it.
 
+>  
+>         pte_savedwrite_tests(pte_aligned, prot);
+>         pmd_savedwrite_tests(pmd_aligned, prot);
+> 
+> BTW, please add some comments to the various #ifdef/#else stuff, especially
+> when the different parts are far away and/or nested.
+
+Sure, will do.
+
+> 
+> 2) The hugetlb_advanced_test will fail because it directly de-references
+> huge *ptep pointers instead of using huge_ptep_get() for this. We have
+> very different pagetable entry layout for pte and (large) pmd on s390,
+> and unfortunately the whole hugetlbfs code is using pte_t instead of pmd_t
+> like THP. For this reason, huge_ptep_get() was introduced, which will
+> return a "converted" pte, because directly reading from a *ptep (pointing
+> to a large pmd) will not return a proper pte. Only ARM has also an
+> implementation of huge_ptep_get(), so they could be affected, depending
+> on what exactly they need it for.
+
+Currently, we dont support ARM (32). But as huge_ptep_get() already got a
+fallback, its better to use that than a direct READ_ONCE().
+
+> 
+> Could be fixed like this (the first de-reference is a bit special,
+> because at that point *ptep does not really point to a large (pmd) entry
+> yet, it is initially an invalid pte entry, which breaks our huge_ptep_get()
+
+There seems to be an inconsistency on s390 platform. Even though it defines
+a huge_ptep_get() override, it does not subscribe __HAVE_ARCH_HUGE_PTEP_GET
+which should have forced it fallback on generic huge_ptep_get() but it does
+not :) Then I realized that __HAVE_ARCH_HUGE_PTEP_GET only makes sense when
+an arch uses <asm-generic/hugetlb.h>. s390 does not use that and hence gets
+away with it's own huge_ptep_get() without __HAVE_ARCH_HUGE_PTEP_GET. Sounds
+confusing ? But I might not have the entire context here.
+
+> conversion logic. I also added PMD_MASK alignment for RANDOM_ORVALUE,
+> because we do have some special bits there in our large pmds. It seems
+> to also work w/o that alignment, but it feels a bit wrong):
+
+Sure, we can accommodate that.
+
+> 
+> @@ -731,26 +731,26 @@ static void __init hugetlb_advanced_test
+>                                           unsigned long vaddr, pgprot_t prot)
+>  {
+>         struct page *page = pfn_to_page(pfn);
+> -       pte_t pte = READ_ONCE(*ptep);
+> +       pte_t pte;
+> 
+> -       pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
+> +       pte = pte_mkhuge(mk_pte_phys(RANDOM_ORVALUE & PMD_MASK, prot));
+
+So that keeps the existing value in 'ptep' pointer at bay and instead
+construct a PTE from scratch. I would rather have READ_ONCE(*ptep) at
+least provide the seed that can be ORed with RANDOM_ORVALUE before
+being masked with PMD_MASK. Do you see any problem ?
+
+Some thing like this instead.
+
+pte_t pte = READ_ONCE(*ptep);
+pte = pte_mkhuge(__pte((pte_val(pte) | RANDOM_ORVALUE) & PMD_MASK));
+
+We cannot use mk_pte_phys() as it is defined only on some platforms
+without any generic fallback for others.
+
+>         set_huge_pte_at(mm, vaddr, ptep, pte);
+>         barrier();
+>         WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
+>         huge_pte_clear(mm, vaddr, ptep, PMD_SIZE);
+> -       pte = READ_ONCE(*ptep);
+> +       pte = huge_ptep_get(ptep);
+>         WARN_ON(!huge_pte_none(pte));
+>  
+>         pte = mk_huge_pte(page, prot);
+>         set_huge_pte_at(mm, vaddr, ptep, pte);
+>         huge_ptep_set_wrprotect(mm, vaddr, ptep);
+> -       pte = READ_ONCE(*ptep);
+> +       pte = huge_ptep_get(ptep);
+>         WARN_ON(huge_pte_write(pte));
+>  
+>         pte = mk_huge_pte(page, prot);
+>         set_huge_pte_at(mm, vaddr, ptep, pte);
+>         huge_ptep_get_and_clear(mm, vaddr, ptep);
+> -       pte = READ_ONCE(*ptep);
+> +       pte = huge_ptep_get(ptep);
+>         WARN_ON(!huge_pte_none(pte));
+>  
+>         pte = mk_huge_pte(page, prot);
+> @@ -759,7 +759,7 @@ static void __init hugetlb_advanced_test
+>         pte = huge_pte_mkwrite(pte);
+>         pte = huge_pte_mkdirty(pte);
+>         huge_ptep_set_access_flags(vma, vaddr, ptep, pte, 1);
+> -       pte = READ_ONCE(*ptep);
+> +       pte = huge_ptep_get(ptep);
+>         WARN_ON(!(huge_pte_write(pte) && huge_pte_dirty(pte)));
+>  }
+>  #else
+> 
+> 3) The pmd_protnone_tests() has an issue, because it passes a pmd to
+> pmd_protnone() which has not been marked as large. We check for large
+> pmd in the s390 implementation of pmd_protnone(), and will fail if a
+> pmd is not large. We had similar issues before, in other helpers, where
+> I changed the logic on s390 to not require the pmd large check, but I'm
+> not so sure in this case. Is there a valid use case for doing
+> pmd_protnone() on "normal" pmds? Or could this be changed like this:
+
+That is a valid question. IIUC, all existing callers for pmd_protnone()
+ensure that it is indeed a huge PMD. But even assuming otherwise should
+not the huge PMD requirement get checked in the caller itself rather than
+in the arch helper which is just supposed to check the existence of the
+dedicated PTE bit(s) for this purpose. Purely from a helper perspective
+pmd_protnone() should not really care about being large even though it
+might never get used without one.
+
+Also all platforms (except s390) derive the pmd_protnone() from their
+respective pte_protnone(). I wonder why should s390 be any different
+unless it is absolutely necessary.
+
+> 
+> @@ -537,7 +537,7 @@ static void __init pte_protnone_tests(un
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  static void __init pmd_protnone_tests(unsigned long pfn, pgprot_t prot)
+>  {
+> -       pmd_t pmd = pfn_pmd(pfn, prot);
+> +       pmd_t pmd = mk_huge_pmd(pfn_to_page(pfn), prot);
+> 
+>         if (!IS_ENABLED(CONFIG_NUMA_BALANCING))
+>                 return;
+> 
+> Regards,
+> Gerald
+> 
+> 
