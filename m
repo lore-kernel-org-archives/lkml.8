@@ -2,163 +2,111 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F9AC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1D8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EBA1206F7
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586081628;
-	bh=ghf9W49fa0GIdxDuV5JE4eaa5z4UtJDAY5lmSbNPgTc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=caL2QZ7rwyV6s2cJVYx38uCkNHJKmXgzgtLd1A1EkzBIp2PM5+HwD729madOj/Dj/
-	 KkfcLNN2RRjGdf0qhIGTlZdIA46rebbEMjapiOeBZcz317ufCma/fwjD1m77TJUtPZ
-	 ZB4s0SSOL4SVrhzBk1ySp5BUBN/Qin0rpdnH0rDY=
+	by mail.kernel.org (Postfix) with ESMTP id 2835C206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:13:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="A7u+wZ4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDEKNr (ORCPT
+        id S1726555AbgDEKNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 06:13:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
+        Sun, 5 Apr 2020 06:13:55 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:61055 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgDEKNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 06:13:47 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB813206B8;
-        Sun,  5 Apr 2020 10:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586081626;
-        bh=ghf9W49fa0GIdxDuV5JE4eaa5z4UtJDAY5lmSbNPgTc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B+F8IVPjv9LTZbW6sBkR1pmYL1qgQjV7eq90RekpAAoIJIlRuYVR2aLiNzXjZ8WTb
-         dA5NOmRpdAV5sGblfE1Zr0uMw9o78KgXd22Z/6CpbLTM1XfrPanEOH5o+zcrFP7p9z
-         IkX425+un73fhQnStMGbk4VfWqPmOK+jgaTXbSy8=
-Date:   Sun, 5 Apr 2020 11:13:41 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-Message-ID: <20200405111341.0912468d@archlinux>
-In-Reply-To: <CAHp75VdaM_pumyWyeHJxCQXrKUAW=ktJme1uYxH0w4e9an0X2A@mail.gmail.com>
-References: <20200401162416.24474-1-i.mikhaylov@yadro.com>
-        <20200401162416.24474-3-i.mikhaylov@yadro.com>
-        <CAHp75VcdDR-owtFuFMqNLFh_-L902fXODG14_6Dh416tTwjidA@mail.gmail.com>
-        <1e2c9b590a3626abee330a28cca86cbae7affb39.camel@yadro.com>
-        <CAHp75VdaM_pumyWyeHJxCQXrKUAW=ktJme1uYxH0w4e9an0X2A@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726410AbgDEKNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 06:13:54 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48w8dp3QWyz9txJW;
+        Sun,  5 Apr 2020 12:13:50 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=A7u+wZ4v; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id dMABDtHwrNiZ; Sun,  5 Apr 2020 12:13:50 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48w8dp26Cfz9txJV;
+        Sun,  5 Apr 2020 12:13:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586081630; bh=U/MW7ws8EhYmPKvRgeUjzUL9RHH90FUjn6jmBMga+ic=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=A7u+wZ4veJE+AdBa08nnR4R/k6UEP099TNMMRFz+5wFoPC7AkPwCho4iqGEeJYkFK
+         JYPC7Veq2mDbUFdgbABi9BQr7r2Ypy5wr68RDrvZejdfpZIFW1k2F5Nh9szmWkzr8b
+         sg+uRYLWJupcKh61f2FjQ54XGumD1aHKWUO7USwU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 53C028B774;
+        Sun,  5 Apr 2020 12:13:53 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id RzGBOCQrIJq2; Sun,  5 Apr 2020 12:13:53 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FB798B764;
+        Sun,  5 Apr 2020 12:13:52 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/powernv: add NULL check after kzalloc in
+ opal_add_one_export
+To:     Qiujun Huang <hqjagain@gmail.com>, benh@kernel.crashing.org,
+        paulus@samba.org, mpe@ellerman.id.a, tglx@linutronix.de
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200405075123.28756-1-hqjagain@gmail.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <99de2220-5a64-e81e-6886-447296431548@c-s.fr>
+Date:   Sun, 5 Apr 2020 12:13:03 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200405075123.28756-1-hqjagain@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2 Apr 2020 15:42:02 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> On Thu, Apr 2, 2020 at 11:24 AM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> >
-> > On Wed, 2020-04-01 at 19:35 +0300, Andy Shevchenko wrote:  
-> > > On Wed, Apr 1, 2020 at 7:24 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:  
-> > > > Proximity sensor driver based on light/vcnl4000.c code.
-> > > > For now supports only the single on-demand measurement.
-> > > >
-> > > > The VCNL3020 is a fully integrated proximity sensor. Fully
-> > > > integrated means that the infrared emitter is included in the
-> > > > package. It has 16-bit resolution. It includes a signal
-> > > > processing IC and features standard I2C communication
-> > > > interface. It features an interrupt function.  
-> > >
-> > > Thank you for an update, my comments below.
-> > >
-> > > ...
-> > >  
-> > > > +static int get_and_apply_property(struct vcnl3020_data *data, const char
-> > > > *prop,
-> > > > +                                 u32 reg)
-> > > > +{
-> > > > +       int rc;
-> > > > +       u32 val;
-> > > > +
-> > > > +       rc = device_property_read_u32(data->dev, prop, &val);
-> > > > +       if (rc)
-> > > > +               return 0;
-> > > > +
-> > > > +       rc = regmap_write(data->regmap, reg, val);
-> > > > +       if (rc)
-> > > > +               dev_err(data->dev, "Error (%d) setting property (%s)",
-> > > > +                       rc, prop);  
-> > >
-> > > This requires {} according to the coding style  
-> >
-> > checkpatch.pl doesn't say anything bad on this spot. Do you mean to make
-> > something like this?
-> >
-> > rc = regmap_write(data->regmap, reg, val);
-> > if (rc) {
-> >         dev_err(data->dev, "Error (%d) setting property (%s)",
-> >                 rc, prop);
-> > }  
+
+Le 05/04/2020 à 09:51, Qiujun Huang a écrit :
+> Here needs a NULL check.
 > 
-> Yes. Checkpatch is neither strict nor fully comprehensive tool.
+> Issue found by coccinelle.
 > 
-> > In previous notes you said to remove them.  
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> ---
+>   arch/powerpc/platforms/powernv/opal.c | 5 +++++
+>   1 file changed, 5 insertions(+)
 > 
-> When it's one line, it fine, otherwise you need {} surround.
-> 
-> https://www.kernel.org/doc/html/latest/process/coding-style.html#placing-braces-and-spaces
-> 
-> > > > +       return rc;
-> > > > +}  
-> > >
-> > > ...
-> > >  
-> > > > +static int vcnl3020_probe(struct i2c_client *client)
-> > > > +{
-> > > > +       indio_dev->name = VCNL_DRV_NAME;  
-> > >
-> > > It's definitely not a driver name. You have to put part number here.  
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/tsl4531.c?h=v5.6#n199
-That one is actually fine (if not very pretty) because the driver only supports one part and it happens
-to also be the name of the driver.
+> diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
+> index 2b3dfd0b6cdd..09443ae3a86e 100644
+> --- a/arch/powerpc/platforms/powernv/opal.c
+> +++ b/arch/powerpc/platforms/powernv/opal.c
+> @@ -811,6 +811,11 @@ static int opal_add_one_export(struct kobject *parent, const char *export_name,
+>   		goto out;
+>   
+>   	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
+> +	if (!attr) {
+> +		rc = -ENOMEM;
+> +		goto out;
 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/max44009.c?h=v5.6#n507
-Also only one part supported, so fine if liable to accidentally get broken if we support more parts.
+You don't need to go to out:, there is nothing to do. You should do:
 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/iio/light/vl6180.c?h=v5.6#n515  
+	if (!attr)
+		return -ENOMEM;
 
-Again, one part supported and the driver has the same name.
-
-> 
-> Let's Jonathan speak up.
-
-So, the real point here is not the value being assigned but the fact it's
-explicitly linked to the name of the driver.  I'd argue that you could use
-VCNL_NAME as the define and that link is clearly broken. Or just put the string
-inline in both places and don't worry about the tiny bit of replication!
-
-Jonathan
-
-
-
-
-
+> +	}
+> +
+>   	name = kstrdup(export_name, GFP_KERNEL);
+>   	if (!name) {
+>   		rc = -ENOMEM;
 > 
 
+Christophe
