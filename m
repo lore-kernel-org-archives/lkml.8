@@ -7,102 +7,160 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23C9C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F021C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762AB20659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C9B20659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:44:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="RZdGphhf"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="tiXOtKVb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgDERok (ORCPT
+        id S1727874AbgDERoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 13:44:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:25337 "EHLO pegase1.c-s.fr"
+        Sun, 5 Apr 2020 13:44:46 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:63633 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727749AbgDERok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 13:44:40 -0400
+        id S1727817AbgDERon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 13:44:43 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wLdv1JL1z9ty3L;
-        Sun,  5 Apr 2020 19:44:35 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 48wLdy2qSTz9ty3X;
+        Sun,  5 Apr 2020 19:44:38 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=RZdGphhf; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=tiXOtKVb; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id sO0UJIhGt_9C; Sun,  5 Apr 2020 19:44:35 +0200 (CEST)
+        with ESMTP id yKqHJO3fievx; Sun,  5 Apr 2020 19:44:38 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wLdv0F8Sz9ty2y;
-        Sun,  5 Apr 2020 19:44:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586108675; bh=/9XgCX7ZNJJPrUF+WQ+S9CCuMlj+u/mt4LD/Anh8LO4=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=RZdGphhfQJpXMML9EYAYJZKjGygcznlJM5NS1qXq0U26m2MV5F2PBBzVk/Ykhyf0i
-         gSDRERCbfJGTwyIMtfRwZYs+5Qw8eBWmJCS8xIo26aF9TYjvknQbmzDqZk7RoCSiMB
-         jVNfmn6vFwthQtZ34yLx2fTZ7i1GCeHPV+hSmXZs=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F2ED8B783;
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wLdy1Kfwz9ty2y;
         Sun,  5 Apr 2020 19:44:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586108678; bh=dCMHiTskm/XCCeUjTH9Ono1sBmfZYixoeovZ3XW+rrc=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=tiXOtKVb+xNX1S+uJ+bDo/QIoKhF1E5N2zoTmrobvc4y4nSiuS8jSK6SGLk708BHr
+         6riR4Mx/3OUP1lpatDkuJOF5truSQKFyJJ5VW1ypfkCHNU9NByaWxQx2F8bmhYr2hf
+         MpznLbVnqMU0Vnv2dVey/d4jxDHYwquNRkbFpSNc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C4F948B783;
+        Sun,  5 Apr 2020 19:44:41 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Vh44H95c2jsb; Sun,  5 Apr 2020 19:44:38 +0200 (CEST)
+        with ESMTP id iKBKoEBhrmHb; Sun,  5 Apr 2020 19:44:41 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6B06A8B774;
-        Sun,  5 Apr 2020 19:44:38 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8CA758B774;
+        Sun,  5 Apr 2020 19:44:41 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 40BF86571C; Sun,  5 Apr 2020 17:44:38 +0000 (UTC)
-Message-Id: <daf7bf5dadb9d7412e63010f60112a32c1f01b98.1586108649.git.christophe.leroy@c-s.fr>
+        id 61A346571C; Sun,  5 Apr 2020 17:44:41 +0000 (UTC)
+Message-Id: <923ab2df9d4a4d0f3a072421e054028c18d614d8.1586108649.git.christophe.leroy@c-s.fr>
 In-Reply-To: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
 References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v2 03/13] powerpc/8xx: Create C version of kuap_restore()
- and kuap_check()
+Subject: [RFC PATCH v2 06/13] powerpc/syscall: Make syscall_64.c buildable on
+ PPC32
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
         msuchanek@suse.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Sun,  5 Apr 2020 17:44:38 +0000 (UTC)
+Date:   Sun,  5 Apr 2020 17:44:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation of porting PPC32 to C syscall entry/exit,
-create C version of kuap_restore() and kuap_check() on 8xx
+ifdef out specific PPC64 stuff to allow building
+syscall_64.c on PPC32.
+
+Modify Makefile to always build syscall.o
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/nohash/32/kup-8xx.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/powerpc/kernel/Makefile  |  5 ++---
+ arch/powerpc/kernel/syscall.c | 10 ++++++++++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/kup-8xx.h b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-index 85ed2390fb99..1918d2e55da3 100644
---- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-@@ -34,6 +34,19 @@
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index 8cc3c831dccd..e4be425b7718 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -45,11 +45,10 @@ obj-y				:= cputable.o syscalls.o \
+ 				   signal.o sysfs.o cacheinfo.o time.o \
+ 				   prom.o traps.o setup-common.o \
+ 				   udbg.o misc.o io.o misc_$(BITS).o \
+-				   of_platform.o prom_parse.o
++				   of_platform.o prom_parse.o syscall.o
+ obj-y				+= ptrace/
+ obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o signal_64.o \
+-				   paca.o nvram_64.o firmware.o note.o \
+-				   syscall.o
++				   paca.o nvram_64.o firmware.o note.o
+ obj-$(CONFIG_VDSO32)		+= vdso32/
+ obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
+ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
+index 72f3d2f0a823..28bd43db8755 100644
+--- a/arch/powerpc/kernel/syscall.c
++++ b/arch/powerpc/kernel/syscall.c
+@@ -25,8 +25,10 @@ notrace long system_call_exception(long r3, long r4, long r5,
+ 	unsigned long ti_flags;
+ 	syscall_fn f;
  
- #include <asm/reg.h>
++#ifdef CONFIG_PPC64
+ 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+ 		BUG_ON(irq_soft_mask_return() != IRQS_ALL_DISABLED);
++#endif
  
-+static inline void kuap_restore(struct pt_regs *regs)
-+{
-+	mtspr(SPRN_MD_AP, regs->kuap);
-+}
-+
-+static inline void kuap_check(void)
-+{
-+	if (!IS_ENABLED(CONFIG_PPC_KUAP_DEBUG))
-+		return;
-+
-+	WARN_ON_ONCE((mfspr(SPRN_MD_AP) & 0xffff0000) != (MD_APG_KUAP & 0xffff0000));
-+}
-+
- static inline void allow_user_access(void __user *to, const void __user *from,
- 				     unsigned long size, unsigned long dir)
- {
+ 	trace_hardirqs_off(); /* finish reconciling */
+ 
+@@ -34,7 +36,9 @@ notrace long system_call_exception(long r3, long r4, long r5,
+ 		BUG_ON(!(regs->msr & MSR_RI));
+ 	BUG_ON(!(regs->msr & MSR_PR));
+ 	BUG_ON(!FULL_REGS(regs));
++#ifdef CONFIG_PPC64
+ 	BUG_ON(regs->softe != IRQS_ENABLED);
++#endif
+ 
+ 	account_cpu_user_entry();
+ 
+@@ -56,7 +60,9 @@ notrace long system_call_exception(long r3, long r4, long r5,
+ 	 * frame, or if the unwinder was taught the first stack frame always
+ 	 * returns to user with IRQS_ENABLED, this store could be avoided!
+ 	 */
++#ifdef CONFIG_PPC64
+ 	regs->softe = IRQS_ENABLED;
++#endif
+ 
+ 	local_irq_enable();
+ 
+@@ -148,7 +154,9 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
+ 		ret |= _TIF_RESTOREALL;
+ 	}
+ 
++#ifdef CONFIG_PPC64
+ again:
++#endif
+ 	local_irq_disable();
+ 	ti_flags = READ_ONCE(*ti_flagsp);
+ 	while (unlikely(ti_flags & (_TIF_USER_WORK_MASK & ~_TIF_RESTORE_TM))) {
+@@ -191,6 +199,7 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
+ 
+ 	/* This pattern matches prep_irq_for_idle */
+ 	__hard_EE_RI_disable();
++#ifdef CONFIG_PPC64
+ 	if (unlikely(lazy_irq_pending())) {
+ 		__hard_RI_enable();
+ 		trace_hardirqs_off();
+@@ -201,6 +210,7 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
+ 	}
+ 	local_paca->irq_happened = 0;
+ 	irq_soft_mask_set(IRQS_ENABLED);
++#endif
+ 
+ #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+ 	local_paca->tm_scratch = regs->msr;
 -- 
 2.25.0
 
