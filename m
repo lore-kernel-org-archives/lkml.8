@@ -2,145 +2,168 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A495CC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC3AC2BA17
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85575206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B7420659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:48:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNmVs66K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgDEOlz (ORCPT
+        id S1726765AbgDEOsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 10:41:55 -0400
-Received: from mga09.intel.com ([134.134.136.24]:24011 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726598AbgDEOlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 10:41:55 -0400
-IronPort-SDR: S4cGvXSxi2/klGoN29F4rMj4gO96mp8JnGa2AxfhgzemCc3rLlzIfxE3o6fAi+dURw9letqoSl
- 5Z0TxiznpJgA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 07:41:53 -0700
-IronPort-SDR: V9TTnqMqeP8/mt/DnG2oD1FLvKhWCmWRQBS8RDGukSKATPDRkrkgsVQd86I7vpAYDNMB3ztthq
- YPmkBeqaY/pQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,348,1580803200"; 
-   d="scan'208";a="243901790"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 05 Apr 2020 07:41:53 -0700
-Received: from [10.249.231.111] (abudanko-mobl.ccr.corp.intel.com [10.249.231.111])
-        by linux.intel.com (Postfix) with ESMTP id 653B058033E;
-        Sun,  5 Apr 2020 07:41:49 -0700 (PDT)
-Subject: Re: [PATCH v8 12/12] doc/admin-guide: update kernel.rst with
- CAP_PERFMON information
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <84c32383-14a2-fa35-16b6-f9e59bd37240@linux.intel.com>
- <20200405141029.GA16896@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <eb7fd0bd-4043-b51c-9b19-ee0a1d1849e9@linux.intel.com>
-Date:   Sun, 5 Apr 2020 17:41:48 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 5 Apr 2020 10:48:02 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:36189 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726598AbgDEOsC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 10:48:02 -0400
+Received: by mail-yb1-f196.google.com with SMTP id i4so7302084ybl.3;
+        Sun, 05 Apr 2020 07:48:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v+dqDvCPt/897rtlW7rn+HRZ8CXQjFzk7KCjChk3k24=;
+        b=hNmVs66K30OIgjszWm08ENcKBGYBbmyqTsytRVdgaU8hiMRMsvs0UocE6U+1o2Cl9u
+         UnhOtihY/4/dKGac5lGPw2uhsev2IFZLr7nh2SltrUZ/CEAjruNVEfJAu1xwfNj89yBo
+         t6jqrh7D/AQWONdkAxfjoefdWy3JE2k1LgViJTxsqnKI8oqBHB3zDgVFJOdcN1e4HtKk
+         S97UpoclL3VkZmeu2lhj3ko0vuHsCsOvnFaCraRWl7n0FiLQvAsO10Lhq/40WB0j27Cp
+         rgtvjVLmOEJk+wJemh3IsBHV8fOnQ9E62iI/1KmyZP/yKFeKVUQI+nziwePMYfUfqQnE
+         jRGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v+dqDvCPt/897rtlW7rn+HRZ8CXQjFzk7KCjChk3k24=;
+        b=IdxxZSGg0Ugz65z5KHTOrDJ+41hRP+hwWq/ruKoh0FGIvZEdi+FkLKKnaguiGqg3M/
+         IXhU2oI9YGaHJo70+pjrTVwmEV5NSYeSnhxzmTkFLUAcbVhCEjtK2/GA9Gm5b6OYQCk4
+         i52/0IhjzMFZlkcoRd7QNhp8MK7ty5TIYfrucLTiiBy/fsAZqHL+cp0rV8ycj+LCKLMp
+         TMc1xB4oHRedctYlDz3VkW9mEMun+k5ulscFo47MhEKD3NChP/2j8s/kMJF9yz1z06uY
+         NtjsOeTbzU9y9R6WTWAzxgYq7VBu9j0m8P6yB4z0g6yqH4gXrfbzK657YI4/lddFiDNm
+         +pdA==
+X-Gm-Message-State: AGi0PuZTfne1x3c1CgeYhBEEdw7WYWEzd5bKBOllqYzYPVoNjJXLTVU4
+        BPfXqlkYGAEzs5Szn7V0pmAe/hgIbV7KRWvaJcsWng==
+X-Google-Smtp-Source: APiQypLStyXEBg4fQEvKQp6utKnlk02OoH8tD0TAXmioeqlnHxkn0X/oq14OJ5qqcj+o7yJGUusu0tV5/tVYB2+d+RU=
+X-Received: by 2002:a25:dcd4:: with SMTP id y203mr30504136ybe.483.1586098080938;
+ Sun, 05 Apr 2020 07:48:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200405141029.GA16896@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CGME20200327162330eucas1p1b0413e0e9887aa76d3048f86d2166dcd@eucas1p1.samsung.com>
+ <20200327162126.29705-1-m.szyprowski@samsung.com>
+In-Reply-To: <20200327162126.29705-1-m.szyprowski@samsung.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Sun, 5 Apr 2020 10:47:49 -0400
+Message-ID: <CADnq5_NpHvmRvzvh1aF293UDUXiHF4Dg1rRNkt7XbM_VB98JCg@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/prime: fix extracting of the DMA addresses from a scatterlist
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
+        linux-samsung-soc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        Shane Francis <bigbeeshane@gmail.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        "for 3.8" <stable@vger.kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Mar 27, 2020 at 12:23 PM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> Scatterlist elements contains both pages and DMA addresses, but one
+> should not assume 1:1 relation between them. The sg->length is the size
+> of the physical memory chunk described by the sg->page, while
+> sg_dma_len(sg) is the size of the DMA (IO virtual) chunk described by
+> the sg_dma_address(sg).
+>
+> The proper way of extracting both: pages and DMA addresses of the whole
+> buffer described by a scatterlist it to iterate independently over the
+> sg->pages/sg->length and sg_dma_address(sg)/sg_dma_len(sg) entries.
+>
+> Fixes: 42e67b479eab ("drm/prime: use dma length macro when mapping sg")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
 
-On 05.04.2020 17:10, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Apr 02, 2020 at 11:54:39AM +0300, Alexey Budankov escreveu:
->>
->> Update kernel.rst documentation file with the information
->> related to usage of CAP_PERFMON capability to secure performance
->> monitoring and observability operations in system.
-> 
-> This one is failing in my perf/core branch, please take a look. I'm
+Applied.  Thanks and sorry for the breakage.
 
-Trying to reproduce right now. What kind of failure do you see?
-Please share some specifics so I could follow up properly.
+Alex
 
-Thanks,
-Alexey
-
-> pushing my perf/core branch with this series applied, please check that
-> everything is ok, I'll do some testing now, but it all seems ok.
-> 
-> Thanks,
-> 
-> - Arnaldo
->  
->> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->> ---
->>  Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
->>  1 file changed, 11 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
->> index def074807cee..b06ae9389809 100644
->> --- a/Documentation/admin-guide/sysctl/kernel.rst
->> +++ b/Documentation/admin-guide/sysctl/kernel.rst
->> @@ -720,20 +720,26 @@ perf_event_paranoid:
->>  ====================
->>  
->>  Controls use of the performance events system by unprivileged
->> -users (without CAP_SYS_ADMIN).  The default value is 2.
->> +users (without CAP_PERFMON). The default value is 2.
->> +
->> +For backward compatibility reasons access to system performance
->> +monitoring and observability remains open for CAP_SYS_ADMIN
->> +privileged processes but CAP_SYS_ADMIN usage for secure system
->> +performance monitoring and observability operations is discouraged
->> +with respect to CAP_PERFMON use cases.
->>  
->>  ===  ==================================================================
->>   -1  Allow use of (almost) all events by all users
->>  
->>       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->>  
->> ->=0  Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN
->> +>=0  Disallow ftrace function tracepoint by users without CAP_PERFMON
->>  
->> -     Disallow raw tracepoint access by users without CAP_SYS_ADMIN
->> +     Disallow raw tracepoint access by users without CAP_PERFMON
->>  
->> ->=1  Disallow CPU event access by users without CAP_SYS_ADMIN
->> +>=1  Disallow CPU event access by users without CAP_PERFMON
->>  
->> ->=2  Disallow kernel profiling by users without CAP_SYS_ADMIN
->> +>=2  Disallow kernel profiling by users without CAP_PERFMON
->>  ===  ==================================================================
->>  
->>  
->> -- 
->> 2.24.1
->>
-> 
+> ---
+>  drivers/gpu/drm/drm_prime.c | 37 +++++++++++++++++++++++++------------
+>  1 file changed, 25 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+> index 1de2cde2277c..282774e469ac 100644
+> --- a/drivers/gpu/drm/drm_prime.c
+> +++ b/drivers/gpu/drm/drm_prime.c
+> @@ -962,27 +962,40 @@ int drm_prime_sg_to_page_addr_arrays(struct sg_table *sgt, struct page **pages,
+>         unsigned count;
+>         struct scatterlist *sg;
+>         struct page *page;
+> -       u32 len, index;
+> +       u32 page_len, page_index;
+>         dma_addr_t addr;
+> +       u32 dma_len, dma_index;
+>
+> -       index = 0;
+> +       /*
+> +        * Scatterlist elements contains both pages and DMA addresses, but
+> +        * one shoud not assume 1:1 relation between them. The sg->length is
+> +        * the size of the physical memory chunk described by the sg->page,
+> +        * while sg_dma_len(sg) is the size of the DMA (IO virtual) chunk
+> +        * described by the sg_dma_address(sg).
+> +        */
+> +       page_index = 0;
+> +       dma_index = 0;
+>         for_each_sg(sgt->sgl, sg, sgt->nents, count) {
+> -               len = sg_dma_len(sg);
+> +               page_len = sg->length;
+>                 page = sg_page(sg);
+> +               dma_len = sg_dma_len(sg);
+>                 addr = sg_dma_address(sg);
+>
+> -               while (len > 0) {
+> -                       if (WARN_ON(index >= max_entries))
+> +               while (pages && page_len > 0) {
+> +                       if (WARN_ON(page_index >= max_entries))
+>                                 return -1;
+> -                       if (pages)
+> -                               pages[index] = page;
+> -                       if (addrs)
+> -                               addrs[index] = addr;
+> -
+> +                       pages[page_index] = page;
+>                         page++;
+> +                       page_len -= PAGE_SIZE;
+> +                       page_index++;
+> +               }
+> +               while (addrs && dma_len > 0) {
+> +                       if (WARN_ON(dma_index >= max_entries))
+> +                               return -1;
+> +                       addrs[dma_index] = addr;
+>                         addr += PAGE_SIZE;
+> -                       len -= PAGE_SIZE;
+> -                       index++;
+> +                       dma_len -= PAGE_SIZE;
+> +                       dma_index++;
+>                 }
+>         }
+>         return 0;
+> --
+> 2.17.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
