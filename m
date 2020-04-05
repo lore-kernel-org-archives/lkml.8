@@ -2,191 +2,145 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991C2C2BA15
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18EEC2BA18
 	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603D120739
+	by mail.kernel.org (Postfix) with ESMTP id BFD6D20739
 	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:40:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="FOJ3IBC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgDEAgd (ORCPT
+        id S1726443AbgDEAkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 20:36:33 -0400
-Received: from mga12.intel.com ([192.55.52.136]:41028 "EHLO mga12.intel.com"
+        Sat, 4 Apr 2020 20:40:40 -0400
+Received: from ozlabs.org ([203.11.71.1]:58645 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbgDEAgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 20:36:33 -0400
-IronPort-SDR: loZeyCuccoFaoDUpx7OCHdcGlcIAAiaKxlKVvMcA7N5zTTQA6DW3aYjJOW6MPLnZ5q6fdapYkF
- s8MKaCXowzYg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2020 17:36:32 -0700
-IronPort-SDR: qiaQn/L8q0jTVK10nfNPIrey6v45gv9jvjok5trc8SEjiYrKXfkVgodsiL1ak0S41sdL0f4QcE
- 2/5MWROO5Crw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,345,1580803200"; 
-   d="scan'208";a="253731755"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 04 Apr 2020 17:36:30 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jKtH4-00030L-5D; Sun, 05 Apr 2020 08:36:30 +0800
-Date:   Sun, 05 Apr 2020 08:36:10 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:perf/urgent] BUILD SUCCESS
- 7dc41b9b99cd0037a418ac47e342d56a438df649
-Message-ID: <5e8927fa.WVljxzvo4V++SuMo%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726258AbgDEAkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 20:40:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48vvwG0Lq0z9sP7;
+        Sun,  5 Apr 2020 10:40:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1586047237;
+        bh=Ecetm/FWyw23pFJR9aYjHEPKZAqW0as9jZfLtutKHZE=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=FOJ3IBC7mc8ibpgD0O6posipCUoBslj9lRk5uELexERCZFzS7zW9CSUb8ptsk096b
+         +lQHDU2ACBxl75V60QihE/lrq5o4dLFUN51Y3pcnaknvfuqfNUkhA53TyO+is2N5P/
+         AdZNo2eMg7ctXOPrnOsM0xsZcTRQCldx24KBrG0TodRKbhNJlrXdoyxvJh6C+fTRDm
+         J174SpN5e7RaOOFXOIcPKC1agC94ZT8tRlERZ1/pqZ84Wj6qv+A0Y8s6y31ZVZznKP
+         hc0MWFUe0Sg5/QOTVHcvh8FPvuV1yoeTNmD9UMUXlx0A0eurI5b0nILo816HxWGSfe
+         I1xQhSMZyMSSg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, Michal Suchanek <msuchanek@suse.de>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Michael Neuling <mikey@neuling.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v11 0/8] Disable compat cruft on ppc64le v11
+In-Reply-To: <1585906885.3dbukubyr8.astroid@bobo.none>
+References: <20200225173541.1549955-1-npiggin@gmail.com> <cover.1584620202.git.msuchanek@suse.de> <1585898335.tckaz04a6x.astroid@bobo.none> <1e00a725-9710-2b80-4aff-2f284b31d2e5@c-s.fr> <1585906885.3dbukubyr8.astroid@bobo.none>
+Date:   Sun, 05 Apr 2020 10:40:38 +1000
+Message-ID: <87k12usr21.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/urgent
-branch HEAD: 7dc41b9b99cd0037a418ac47e342d56a438df649  Merge tag 'perf-urgent-for-mingo-5.7-20200403' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
+Nicholas Piggin <npiggin@gmail.com> writes:
+> Christophe Leroy's on April 3, 2020 5:26 pm:
+>> Le 03/04/2020 =C3=A0 09:25, Nicholas Piggin a =C3=A9crit=C2=A0:
+>>> Michal Suchanek's on March 19, 2020 10:19 pm:
+>>>> Less code means less bugs so add a knob to skip the compat stuff.
+>>>>
+>>>> Changes in v2: saner CONFIG_COMPAT ifdefs
+>>>> Changes in v3:
+>>>>   - change llseek to 32bit instead of builing it unconditionally in fs
+>>>>   - clanup the makefile conditionals
+>>>>   - remove some ifdefs or convert to IS_DEFINED where possible
+>>>> Changes in v4:
+>>>>   - cleanup is_32bit_task and current_is_64bit
+>>>>   - more makefile cleanup
+>>>> Changes in v5:
+>>>>   - more current_is_64bit cleanup
+>>>>   - split off callchain.c 32bit and 64bit parts
+>>>> Changes in v6:
+>>>>   - cleanup makefile after split
+>>>>   - consolidate read_user_stack_32
+>>>>   - fix some checkpatch warnings
+>>>> Changes in v7:
+>>>>   - add back __ARCH_WANT_SYS_LLSEEK to fix build with llseek
+>>>>   - remove leftover hunk
+>>>>   - add review tags
+>>>> Changes in v8:
+>>>>   - consolidate valid_user_sp to fix it in the split callchain.c
+>>>>   - fix build errors/warnings with PPC64 !COMPAT and PPC32
+>>>> Changes in v9:
+>>>>   - remove current_is_64bit()
+>>>> Chanegs in v10:
+>>>>   - rebase, sent together with the syscall cleanup
+>>>> Changes in v11:
+>>>>   - rebase
+>>>>   - add MAINTAINERS pattern for ppc perf
+>>>=20
+>>> These all look good to me. I had some minor comment about one patch but
+>>> not really a big deal and there were more cleanups on top of it, so I
+>>> don't mind if it's merged as is.
+>>>=20
+>>> Actually I think we have a bit of stack reading fixes for 64s radix now
+>>> (not a bug fix as such, but we don't need the hash fault logic in radix=
+),
+>>> so if I get around to that I can propose the changes in that series.
+>>>=20
+>>=20
+>> As far as I can see, there is a v12
+>
+> For the most part I was looking at the patches in mpe's next-test
+> tree on github, if that's the v12 series, same comment applies but
+> it's a pretty small nitpick.
 
-elapsed time: 957m
+Yeah I have v12 in my tree.
 
-configs tested: 124
-configs skipped: 0
+This has floated around long enough (our fault), so I'm going to take it
+and we can fix anything up later.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm64                            allyesconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm                              allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                generic-64bit_defconfig
-parisc                generic-32bit_defconfig
-parisc                           allyesconfig
-i386                 randconfig-a002-20200404
-x86_64               randconfig-a002-20200404
-x86_64               randconfig-a001-20200404
-i386                 randconfig-a001-20200404
-i386                 randconfig-a003-20200404
-mips                 randconfig-a001-20200404
-nds32                randconfig-a001-20200404
-m68k                 randconfig-a001-20200404
-parisc               randconfig-a001-20200404
-alpha                randconfig-a001-20200404
-riscv                randconfig-a001-20200404
-sparc64              randconfig-a001-20200404
-h8300                randconfig-a001-20200404
-nios2                randconfig-a001-20200404
-microblaze           randconfig-a001-20200404
-c6x                  randconfig-a001-20200404
-i386                 randconfig-c003-20200404
-i386                 randconfig-c001-20200404
-x86_64               randconfig-c002-20200404
-x86_64               randconfig-c003-20200404
-i386                 randconfig-c002-20200404
-x86_64               randconfig-c001-20200404
-i386                 randconfig-f001-20200404
-x86_64               randconfig-f003-20200404
-i386                 randconfig-f003-20200404
-x86_64               randconfig-f002-20200404
-i386                 randconfig-f002-20200404
-arm64                randconfig-a001-20200404
-sparc                randconfig-a001-20200404
-ia64                 randconfig-a001-20200404
-arc                  randconfig-a001-20200404
-arm                  randconfig-a001-20200404
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+cheers
