@@ -2,97 +2,124 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2671AC2BA17
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ABBC2BA17
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F108720672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:50:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pn2nPfw3"
+	by mail.kernel.org (Postfix) with ESMTP id 82277206F5
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgDENuX (ORCPT
+        id S1727185AbgDENuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 09:50:23 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34955 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbgDENuV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 09:50:21 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k21so11809138ljh.2;
-        Sun, 05 Apr 2020 06:50:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uv0gJAJePFo80MkHUlxiyjcf0SQ/kT+ozQK6DRClyD0=;
-        b=Pn2nPfw3fa/VzBCppjsY9oLHVVNDBWybYdBiswD/GCnrYEJ4RG7LOYtZBHAEr03War
-         3pzJj/qyEl5StxNUxq1CMjLh8b9azV/EHDP6o1cgisLtM/97doYSWFoXZjzfI5diZH5v
-         Y1t8f0Qk4HvVmXuIbGkw9mMg/WCdcMQQkh9UhX/TrCzIr3OZVsutwAV8+zfjl3esO6Mq
-         nIL4tj7AptJEJ73E1Bdp4hUXtMDQZRhDCOiCzJ0Wl7A0Y2bDJKULFiutOWj22JtXMf/Z
-         S/ybJbV8aN3eh7jtQDU3ESc8qx0uT4U36Np4ihU+eC4KxXzzvPHG7TysVDjfW/rnXtYW
-         tFDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uv0gJAJePFo80MkHUlxiyjcf0SQ/kT+ozQK6DRClyD0=;
-        b=foSGslpQ/GWI3LEDWEBkTwOBruvi4ujmu0sj2xgXX+Zg4S+DPIQIoEWLhhX3ckDlvy
-         9xbQ0XBR77eJRHt9rcvUjmqSXfO82muyIfiUKKoRo76f+p2Kplkf1hrTaJeOHoatgoXf
-         KMDJcA014t2+SO8CJ1cMsn/J3SiURuy758FDTfo8FXmzqctwiPjMBvN0CwwwPSBpizSy
-         q+4XMR782kr0r41sKSdY5gZbV6GotW4CK2SA10wBWy/9484wyRkx2+SAov5oxSTuOiHu
-         N1hVKi/kSQ4m/SVtxX6/HA34pGKi7/ZgY3lY4rHgQ4oofBDqy4xI4gR9srsSd9X69stx
-         7UYA==
-X-Gm-Message-State: AGi0PuZ9OM/G16PF+zMB5qGKVzAqQ1E3eawr2COLAgudMHdddTfh2gnz
-        L4LjLyU3jyoSex0x+nu0Uj0=
-X-Google-Smtp-Source: APiQypI9e1yr2ND9ohdIUGxNvEo1UIOO0dT9J5Gy/HM2tG3hd+Jld+2dg1md4VFp2iAK418A70mIIg==
-X-Received: by 2002:a05:651c:113:: with SMTP id a19mr9435045ljb.167.1586094618771;
-        Sun, 05 Apr 2020 06:50:18 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id y20sm8555337ljd.35.2020.04.05.06.50.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Apr 2020 06:50:18 -0700 (PDT)
-Subject: Re: PM / devfreq: tegra30: Delete an error message in
- tegra_devfreq_probe()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-References: <ba67e238-43a7-6c53-363e-7a2c12f09949@web.de>
- <27bdd09b-0b8d-a6ef-2ffd-53421277fcca@gmail.com>
- <72e2319e-9b9b-9045-c007-320b2be1e886@web.de>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <2af3ed08-3607-9ecf-e092-fc126d2abeab@gmail.com>
-Date:   Sun, 5 Apr 2020 16:50:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Sun, 5 Apr 2020 09:50:40 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:44776 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726599AbgDENuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 09:50:40 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 8DA5DFB08;
+        Sun,  5 Apr 2020 15:50:36 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id m8aQt_F5d4QC; Sun,  5 Apr 2020 15:50:33 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id DD3DC414D7; Sun,  5 Apr 2020 15:50:32 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Tomas Novotny <tomas@novotny.cz>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nishant Malpani <nish.malpani25@gmail.com>
+Subject: [PATCH v4 0/5] iio: vcnl4000: Export near level property for proximity sensor
+Date:   Sun,  5 Apr 2020 15:50:27 +0200
+Message-Id: <cover.1586094535.git.agx@sigxcpu.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <72e2319e-9b9b-9045-c007-320b2be1e886@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-05.04.2020 09:00, Markus Elfring пишет:
->> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> Thanks for your positive feedback.
-> 
-> Will the logging of error codes need any more clarification
-> around such function calls?
 
-In general no, but it could be different for some (more complex) drivers.
+If an object can be considered close to the device that has the proximity
+sensor built in is hardware dependent. Allowing to configure the property via
+device tree allows to export this device specific value to userspace via
+ext_info. This is useful for e.g. iio-sensor-proxy.
+
+This came up when adding proximity support to iio-sensor-proxy [1], [2], it is
+not meant as a vcnl4000 thing but rather as something useful for other proximity
+sensors too in the future.
+
+I've not converted the vcnl4000 binding docs to yaml but can do so as part of
+this series in a v2 if the approach makes sense.
+
+Changes from v3:
+- as per review comment by Jonathan Cameron
+  Fix patch title and description of sysfs patch
+  https://lore.kernel.org/linux-iio/20200329102705.0a69000c@archlinux/
+- Add Reviewed-by by Rob Herring, thanks!
+  https://lore.kernel.org/linux-iio/20200331214330.GA24010@bogus/
+- As per review comments by Rob Herring
+  https://lore.kernel.org/linux-iio/20200331214517.GA24128@bogus/
+  - Rename property to proximity-near-level
+  - document proximity-near-level in a common file
+
+Changes from v2:
+- as per review comment by Lars-Peter Clausen
+  https://lore.kernel.org/linux-iio/c787921f-c412-4986-14ea-e31b531d3d5b@metafoo.de/
+  Switch sysfs name to `nearlevel`
+- as per review comment by Nishant Malpani
+  https://lore.kernel.org/linux-iio/f5ea512c-d427-94c7-cf5f-f1300cbd4aa3@gmail.com/
+  Add manufacturer do binding document name
+- as per review comments by Andy Shevchenko
+  - Drop superfluous blank line
+  - Check return value of device_property_read_u32 for '!= 0' instead of '< 0'
+
+Changes from v1:
+- as per review comments by Jonathan Cameron
+  https://lore.kernel.org/linux-iio/20200221120519.43b72007@archlinux/
+  Document new sysfs file in Documentation/ABI/testing/sysfs-bus-iio-proximity
+- convert bindings to yaml
+- bindings: fix typo in near-level property
+
+[1]: https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/merge_requests/298
+[2]: https://lore.kernel.org/linux-iio/20200210154153.GA26903@bogon.m.sigxcpu.org/
+
+To: Tomas Novotny <tomas@novotny.cz>, Jonathan Cameron <jic23@kernel.org>,Hartmut Knaack <knaack.h@gmx.de>,Lars-Peter Clausen <lars@metafoo.de>,Peter Meerwald-Stadler <pmeerw@pmeerw.net>,"Angus Ainslie (Purism)" <angus@akkea.ca>,"Guido Günther" <agx@sigxcpu.org>,Marco Felsch <m.felsch@pengutronix.de>,Thomas Gleixner <tglx@linutronix.de>,linux-iio@vger.kernel.org,linux-kernel@vger.kernel.org,devicetree@vger.kernel.org,Andy Shevchenko <andy.shevchenko@gmail.com>,Nishant Malpani <nish.malpani25@gmail.com>
+
+
+Guido Günther (5):
+  dt-bindings: iio: vcnl4000: convert bindings to YAML format
+  dt-bindings: iio: Introduce common properties for iio sensors
+  dt-bindings: iio: light: vcnl4000: Add proximity-near-level
+  iio: vcnl4000: Export near level property for proximity sensor
+  Documentation: ABI: document IIO in_proximity_nearlevel file
+
+ .../ABI/testing/sysfs-bus-iio-proximity       | 10 ++++
+ .../devicetree/bindings/iio/common.yaml       | 35 +++++++++++++
+ .../bindings/iio/light/vcnl4000.txt           | 24 ---------
+ .../bindings/iio/light/vishay,vcnl4000.yaml   | 50 +++++++++++++++++++
+ drivers/iio/light/vcnl4000.c                  | 25 ++++++++++
+ 5 files changed, 120 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-proximity
+ create mode 100644 Documentation/devicetree/bindings/iio/common.yaml
+ delete mode 100644 Documentation/devicetree/bindings/iio/light/vcnl4000.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.yaml
+
+-- 
+2.23.0
+
