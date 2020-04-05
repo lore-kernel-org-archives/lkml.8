@@ -2,191 +2,129 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C7DC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0280CC2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7B220659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1EDE206F8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 18:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="QQTY4ckB";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="thro8YDa"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="vDT4kbDd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgDESpa (ORCPT
+        id S1727600AbgDESsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 14:45:30 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:53418 "EHLO mail.z3ntu.xyz"
+        Sun, 5 Apr 2020 14:48:04 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:17029 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbgDESpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 14:45:30 -0400
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id 66D30C4A48; Sun,  5 Apr 2020 18:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1586112327; bh=gcwe3ElP/7v212/hOuOpcAarEMfzryBhN3eyrrQNMAs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=QQTY4ckBmuk02vYdyVquWzcGkBYIMht5m93iBxL+mnlWWIIVOoV1JKJSHs36jlVr3
-         CMmiBY7zPdKxSDzdihpa9F2LjaxienpmcK2nsNNL2+7cjdXi0jXNNDtwRX+ztCo8Ya
-         ncJaqP7yE8m7swDvuAqLVNU/ngpNNDu3TN1hrPzw=
-Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 02A56C4A0D;
-        Sun,  5 Apr 2020 18:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1586112315; bh=gcwe3ElP/7v212/hOuOpcAarEMfzryBhN3eyrrQNMAs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=thro8YDa0mNSr/5s68+qG0xZMKN7QlPuGqecmo2yOyzEFKtxlKOJtuMMbCcgwwna2
-         3NtganpJu5fSJ5DShL2C7Xl+ZW81M3ooLq8UNc+DlOkRgz5W6n0RW+D+L/Q24NRFir
-         M+yqPtaTmhcqn1tsJbEFCyT2rfrdPhMG6GKRjRrc=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        id S1726771AbgDESsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 14:48:04 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48wN326Bkfz9tx5R;
+        Sun,  5 Apr 2020 20:47:58 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=vDT4kbDd; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id QLy_PZYARygD; Sun,  5 Apr 2020 20:47:58 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wN3250PRz9tx5Q;
+        Sun,  5 Apr 2020 20:47:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586112478; bh=5K5fWcVt/dZhMcfYZl39DOWw/ijhu2ZfXrNWbrQtW5w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=vDT4kbDd2d2luI9YlINWxSulY5GzJlc/jwO7NCfKm9AMRlr2bdQic4qJizaWFEb5/
+         qcVnWwGTahszH0Ix4iGZVUn3QMwmYXlQ3jAlShEJm0JRShtjY55DPEHrt9faonT8l/
+         CcmWKseqFccIl50tAZWfd0By1014uveiS11CdABY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 312BE8B783;
+        Sun,  5 Apr 2020 20:48:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Y8LGSBfSdJTp; Sun,  5 Apr 2020 20:48:02 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A4AC08B774;
+        Sun,  5 Apr 2020 20:48:00 +0200 (CEST)
+Subject: Re: [PATCH v2 5/5] uaccess: Rename user_access_begin/end() to
+ user_full_access_begin/end()
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>, Peter Anvin <hpa@zytor.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v2 2/2] leds: add sgm3140 driver
-Date:   Sun, 05 Apr 2020 20:45:14 +0200
-Message-ID: <4437676.LvFx2qVVIh@g550jk>
-In-Reply-To: <CAHp75Vf6ZS1UGUv-okzzcDNnMtjjBjGbjsXb8w6TmGcgKdhhfA@mail.gmail.com>
-References: <20200330194757.2645388-1-luca@z3ntu.xyz> <20200330194757.2645388-3-luca@z3ntu.xyz> <CAHp75Vf6ZS1UGUv-okzzcDNnMtjjBjGbjsXb8w6TmGcgKdhhfA@mail.gmail.com>
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        intel-gfx@lists.freedesktop.org
+References: <36e43241c7f043a24b5069e78c6a7edd11043be5.1585898438.git.christophe.leroy@c-s.fr>
+ <42da416106d5c1cf92bda1e058434fe240b35f44.1585898438.git.christophe.leroy@c-s.fr>
+ <CAHk-=wh_DY_dysMX0NuvJmMFr3+QDKOZPZqWKwLkkjgZTuyQ+A@mail.gmail.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <0e5985d7-e73b-455b-6b05-351831f09340@c-s.fr>
+Date:   Sun, 5 Apr 2020 20:47:26 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <CAHk-=wh_DY_dysMX0NuvJmMFr3+QDKOZPZqWKwLkkjgZTuyQ+A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
 
-On Samstag, 4. April 2020 11:58:31 CEST Andy Shevchenko wrote:
-> On Mon, Mar 30, 2020 at 10:49 PM Luca Weiss <luca@z3ntu.xyz> wrote:
-> > Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
-> > 
-> > This device is controlled by two GPIO pins, one for enabling and the
-> > second one for switching between torch and flash mode.
+
+Le 03/04/2020 à 20:01, Linus Torvalds a écrit :
+> On Fri, Apr 3, 2020 at 12:21 AM Christophe Leroy
+> <christophe.leroy@c-s.fr> wrote:
+>>
+>> Now we have user_read_access_begin() and user_write_access_begin()
+>> in addition to user_access_begin().
 > 
-> ...
+> I realize Al asked for this, but I don't think it really adds anything
+> to the series.
 > 
-> > +config LEDS_SGM3140
-> > +       tristate "LED support for the SGM3140"
-> > +       depends on LEDS_CLASS_FLASH
-> > +       depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
-> > 
-> > +       depends on OF
+> The "full" makes the names longer, but not really any more legible.
 > 
-> depends on OF || COMPILE_TEST ?
-> But hold on...
-> 
-> ...
-> 
-> > +#include <linux/of.h>
-> 
-> Perhaps switch this to property.h and replace OF with more generic
-> device property / fwnode API?
+> So I like 1-4, but am unconvinced about 5 and would prefer that to be
+> dropped. Sorry for the bikeshedding.
 > 
 
-I didn't find clear documentation on this, the functions in drivers/base/
-property.c can be used instead of the of_* (device tree) functions?
+Yes I was not sure about it, that's the reason why I added it as the 
+last patch of the series.
 
-As far as I can tell, the device_property_* functions are supposed to be used 
-for simple "give me a property for this 'struct device*'" while the fwnode_* 
-functions are used as generic equivalent of the of_* functions?
+And in the meantime, we see Robots reporting build failures due to 
+additional use of user_access_begin() in parallele to this change, so I 
+guess it would anyway be a challenge to perform such a change without 
+coordination.
 
-So in this case I can replace 
-
-struct device_node *child_node;
-child_node = of_get_next_available_child(pdev->dev.of_node, NULL);
-
-with
-
-struct fwnode_handle *child_node;
-child_node = fwnode_get_next_available_child_node(pdev->dev.fwnode, NULL);
-
-and then instead of
-
-ret = of_property_read_u32(child_node, "flash-max-timeout-us",
-		   &priv->max_timeout);
-
-use
-
-ret = fwnode_property_read_u32(child_node, "flash-max-timeout-us",
-		            &priv->max_timeout);
-
-and finally instead of
-
-init_data.fwnode = of_fwnode_handle(child_node);
-
-I can probably directly do
-
-init_data.fwnode = child_node;
-
-Does that sound correct?
-
-> ...
+> And I like this series much better without the cookie that was
+> discussed, and just making the hard rule be that they can't nest.
 > 
-> > +struct sgm3140 {
-> > +       bool enabled;
-> > +       struct gpio_desc *flash_gpio;
-> > +       struct gpio_desc *enable_gpio;
-> > +       struct regulator *vin_regulator;
-> > +
-> > +       /* current timeout in us */
-> > +       u32 timeout;
-> > +       /* maximum timeout in us */
-> > +       u32 max_timeout;
-> > +
-> > 
-> > +       struct led_classdev_flash fled_cdev;
+> Some architecture may obviously use a cookie internally if they have
+> some nesting behavior of their own, but it doesn't look like we have
+> any major reason to expose that as the actual interface.
 > 
-> I guess it might be slightly better to make it first member of the
-> struct (I didn't check but the rationale is to put more often used
-> members at the beginning to utilize cachelines).
-> 
-> > +       struct v4l2_flash *v4l2_flash;
-> > +
-> > +       struct timer_list powerdown_timer;
-> > +};
-> 
-> ...
-> 
-> > +static struct sgm3140 *flcdev_to_sgm3140(struct led_classdev_flash
-> > *flcdev) +{
-> > +       return container_of(flcdev, struct sgm3140, fled_cdev);
-> > +}
-> 
-> ...and this becomes a no-op AFAICS (doesn't mean you need to remove it).
-> 
-> ...
-> 
-> > +       struct device_node *child_node;
-> > 
-> > +       child_node = of_get_next_available_child(pdev->dev.of_node, NULL);
-> > 
-> > +       ret = of_property_read_u32(child_node, "flash-max-timeout-us",
-> > +                                  &priv->max_timeout);
-> > 
-> > +       init_data.fwnode = of_fwnode_handle(child_node);
-> > 
-> > +       of_node_put(child_node);
-> 
-> Device property / fwnode API?
-> 
-> --
-> With Best Regards,
-> Andy Shevchenko
+> The only other question is how to synchronize this? I'm ok with it
+> going through the ppc tree, for example, and just let others build on
+> that.  Maybe using a shared immutable branch with 5.6 as a base?
 
-Regards
-Luca
+Michael, can you take patches 1 to 4 ?
 
+Otherwise, can you ack patch 4 to enable merging through another tree ?
 
-
+Christophe
