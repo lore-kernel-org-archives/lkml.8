@@ -2,105 +2,138 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B6EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C81C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8495920672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586127109;
-	bh=+qkpE/VzZVJjNYp14D0CGe0j5+UI5EbcqBZ0isMWYz0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c8wYAQBowQoAgIX+gHSdGkcuOdsaZGQBYiHYw0m4pQ4KK012idX5EW2xZxXs27Iew
-	 Eo/zOnYSTEdRgHSDLaUW8Wz/Rw/EP0f4kGc305GAlWTqgJy5Q8+MAoqWcZHpExq9GW
-	 hb6JxtrPVJULXZ62X26Fa1sXChBOCZ8AakwbzP/g=
+	by mail.kernel.org (Postfix) with ESMTP id 6805D20672
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 22:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="aWfcGa/g";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DLHnqaRd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgDEWvn (ORCPT
+        id S1727889AbgDEWwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 18:51:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbgDEWvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 18:51:42 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAAF7206F8
-        for <linux-kernel@vger.kernel.org>; Sun,  5 Apr 2020 22:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586127102;
-        bh=+qkpE/VzZVJjNYp14D0CGe0j5+UI5EbcqBZ0isMWYz0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f7N8j9bTEuX2pG7W41IR6FqaiigUcXyvSGQ66YOVJA02bYSkh6emWYqiN4GluXnBm
-         sO7A1MZJJpNwgiFW/AV4zpbaScDAR/kEqwGHOAJzBqArfyuiGi9RTiwfzU0y0NNwFz
-         7uWbIv7/7cx76niUT/3fD8KvowuBbWTTSAtl05e0=
-Received: by mail-wr1-f50.google.com with SMTP id k1so5788266wrm.3
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 15:51:41 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZPN5BmZot42mnAmkjMivNiA0dva7QmTeLlhKDsYYy2AfGZnAyJ
-        wUlaFl9VUa0fybu7VrfrtPMFlvgoD0pCis11pCFmow==
-X-Google-Smtp-Source: APiQypIZZeGyy9AWnrPYhspWabgLmcetsyynlVwx/fKVCTu+hT5tJ8/0bFBFj8nmq1k3Wvg5vUMIUVBAH8TL7+FgBpw=
-X-Received: by 2002:adf:aad7:: with SMTP id i23mr20451094wrc.184.1586127100363;
- Sun, 05 Apr 2020 15:51:40 -0700 (PDT)
+        Sun, 5 Apr 2020 18:52:43 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:51617 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727254AbgDEWwn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 18:52:43 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 66A9858013A;
+        Sun,  5 Apr 2020 18:52:42 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sun, 05 Apr 2020 18:52:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=euu86y6yACvCvstNFbv3DwBO9Kn
+        QxP4jRh+eEX/Uz4E=; b=aWfcGa/g12RY6GgtiE4vbPeqndfFU5TauoaxI2sn/mk
+        nSPdTiGGwqKZY5eH6mP0/5QnVVwdwJT91KjE8Yo0IiXVZKPvzwSvvxuRSLq8YaZs
+        XcE9L7BSvZor3cZY1JEYNmy1I71P4ghowrUcuvJxMq4Dckhj6uHkRdSg0ZzkOJaf
+        uM3YLFa4ZTDNyulM+BbWAOfTTUdN1oEbMeIwNHWmh0/7y4NPGesKQ7jutWt6POiX
+        KU2Vwd6J6CVwXy1/IfGGRE6GcyWCGat9lp3810xCGBpRsj/I+DZjq3LBUR/P9gEl
+        ufil6hnKfzU7gGfgjAHSzVqpFF6ylNsQusqXGRYBZFA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=euu86y
+        6yACvCvstNFbv3DwBO9KnQxP4jRh+eEX/Uz4E=; b=DLHnqaRdNucpqbnHm1V02h
+        VvZajeUd3i21cHyA+Db+q5To2ahUXvySaDB14pwmjC6n6SN4J/h7uM4qhTVWnnt+
+        TtkUaFOVP+/9qPPXFNMdcqZPuFodmM5mcyR0VB+e8kDVPUndmWBDUMzF5b19gMCF
+        YH4g3VBkFQphkpZvAKDDU650xCEbTJvpfEo7bDmmWAlMrGmy0BWY7YIbwXkZEZQ7
+        4y6kOk5oOpIs0LIEl2fX5apAjMQ2zEyykKmzB6D1nzTlE8kcrOQP2t5TvITsITW5
+        pGypOMF+cd9fetOY1v1UJmVJsvIBraTSlnh+QkJOjeWOrp7y1AhV6AaSaHSpQMNg
+        ==
+X-ME-Sender: <xms:OWGKXscNy94fqLNfWljzjQBDrzE3de91hpXWMBfKHE9IKLKgSmTjMg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgdduhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnughrvghs
+    ucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuffhomhgrih
+    hnpehkvghrnhgvlhdrohhrghenucfkphepieejrdduiedtrddvudejrddvhedtnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvghsse
+    grnhgrrhgriigvlhdruggv
+X-ME-Proxy: <xmx:OWGKXl0DJATAJ95cUjLQbU_AVVMoaVKmZiXQ3lU2eZO6CQ95Bbkf0A>
+    <xmx:OWGKXrL3f2zc6VTEg0VEj-eDytojIlGjhEE7Ed4R3PEewixZbD-gcQ>
+    <xmx:OWGKXsEgq3L8WFv-h4XFjLOIspUCCLrYabvQios6LeAO3G9JuyS6MQ>
+    <xmx:OmGKXtXN5JMmzMArvzsaUG8YESD0g0rqcAiIMBw1bNixBFfbhSSLXg>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5A2FC328005A;
+        Sun,  5 Apr 2020 18:52:41 -0400 (EDT)
+Date:   Sun, 5 Apr 2020 15:52:40 -0700
+From:   Andres Freund <andres@anarazel.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>, jlayton@redhat.com,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        keyrings@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Mount and superblock notifications
+Message-ID: <20200405225240.kofadjkmpigfzcfy@alap3.anarazel.de>
+References: <1445647.1585576702@warthog.procyon.org.uk>
+ <1449543.1585579014@warthog.procyon.org.uk>
+ <CAHk-=wghjTM+z_oAATqWOvPa8Lh6BKRtTVMi7hLxo6pbqc+kVg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1582498270-50674-1-git-send-email-schaecsn@gmx.net>
- <CALCETrXcFrR9V_yjPRh9eJ1=1efo_DCCwGTeusmo2CQXpFFdrw@mail.gmail.com>
- <20200405180510.GD6313@kunai> <20200405214059.91F97899799@corona.crabdance.com>
-In-Reply-To: <20200405214059.91F97899799@corona.crabdance.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 5 Apr 2020 15:51:29 -0700
-X-Gmail-Original-Message-ID: <CALCETrVUWEOwpMOLAPieU5mffaA6vJPWQov5N82gtcBo04JsyA@mail.gmail.com>
-Message-ID: <CALCETrVUWEOwpMOLAPieU5mffaA6vJPWQov5N82gtcBo04JsyA@mail.gmail.com>
-Subject: Re: [PATCH 0/1] i2c: imc: Add support for Intel iMC SMBus host controller.
-To:     Stefan Schaeckeler <schaecsn@gmx.net>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Andrew Lutomirski <luto@kernel.org>, linux-i2c@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wghjTM+z_oAATqWOvPa8Lh6BKRtTVMi7hLxo6pbqc+kVg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 5, 2020 at 2:41 PM Stefan Schaeckeler <schaecsn@gmx.net> wrote:
->
-> Hello Wolfram,
->
-> > > > This patch is based on Andy Lutomirski's iMC SMBus driver patch-set
-> > > > https://lkml.org/lkml/2016/4/28/926. It never made it into the kernel. I hope
-> > > > this rewrite will:
-> > > >
-> > > >
-> > > > Overview
-> > > >
-> > > > Modern Intel memory controllers host an SMBus controller and connection to
-> > > > DIMMs and their thermal sensors. The memory controller firmware has three modes
-> > > > of operation: Closed Loop Thermal Throttling (CLTT), Open Loop Thermal
-> > > > Throttling (OLTT) and none.
-> > > >
-> > > > - CLTT: The memory controller firmware is periodically accessing the DIMM
-> > > >   temperature sensor over the SMBus.
-> > > >
-> > >
-> > >
-> > > I think this is great!  One question, though: what happens if the
-> > > system is in CLTT mode but you disable CLTT and claim the bus for too
-> > > long?  For example, if there's an infinite loop or other lockup which
-> > > you have the tsod polling interval set to 0?  Does the system catch
-> > > fire or does the system do something intelligent like temporarily
-> > > switching to open loop?
-> >
-> > Any news on this question?
->
-> Thank you for your interest in this patch. You can read my reply here
-> https://lkml.org/lkml/2020/3/1/216
+Hi,
 
-I think it could make sense to upstream this driver but to require a
-scary boot-time option to enable it.  Maybe i2c_imc.dangerous=1?
+On 2020-04-04 14:13:03 -0700, Linus Torvalds wrote:
+> And it needs to be interesting and pressing enough that those people
+> actually at least do a working prototype on top of a patch-set that
+> hasn't made it into the kernel yet.
+> 
+> Now, I realize that other projects won't _upstream_ their support
+> before the kernel has the infrastructure, so I'm not looking for
+> _that_ kind of "yeah, look, project XYZ already does this and Red Hat
+> ships it". No, I'm looking for those outside developers who say more
+> than "this is a pet peeve of mine with the existing interface". I want
+> to see some actual use - even if it's just in a development
+> environment - that shows that it's (a) sufficient and (b) actually
+> fixes problems.
 
->
->  Stefan
+FWIW, postgres remains interested in using the per-superblock events.
+
+On 2020-03-30 15:36:54 +0100, David Howells wrote:
+>  (2) Superblock notifications.
+> 
+>      This one is provided to allow systemd or the desktop to more easily
+>      detect events such as I/O errors and EDQUOT/ENOSPC.  This would be of
+>      interest to Postgres:
+> 
+> 	https://lore.kernel.org/linux-fsdevel/20200211005626.7yqjf5rbs3vbwagd@alap3.anarazel.de/
+> 
+>      But could also be used to indicate to systemd when a superblock has
+>      had its configuration changed.
+
+What prevents me from coming up with a prototype is that the error
+handling pieces aren't complete, as far as I can tell:
+
+On 2020-03-30 15:36:54 +0100, David Howells wrote:
+>  (2) Superblock events, such as R/W<->R/O changes, quota overrun and I/O
+>      errors (not complete yet).
+
+There's afaict no notify_sb_error() callers, making it hard for me to
+actually test anything.
+
+The important issue for us is I/O errors, but EDQUOT/ENOSPC could also
+be useful (but is not urgent).
+
+Greetings,
+
+Andres Freund
