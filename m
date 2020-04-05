@@ -7,145 +7,98 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0128CC2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2A6C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C786C20659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6361420659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wcWUomYD"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="iLg4w9MP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbgDERo5 (ORCPT
+        id S1727855AbgDERop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 13:44:57 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:16723 "EHLO pegase1.c-s.fr"
+        Sun, 5 Apr 2020 13:44:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:34909 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbgDERov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 13:44:51 -0400
+        id S1727800AbgDERom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 13:44:42 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wLf44C2mz9ty3M;
-        Sun,  5 Apr 2020 19:44:44 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 48wLdx24tvz9ty3Q;
+        Sun,  5 Apr 2020 19:44:37 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=wcWUomYD; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=iLg4w9MP; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id KpjL9PWw_sEu; Sun,  5 Apr 2020 19:44:44 +0200 (CEST)
+        with ESMTP id 781y5hQ5ZCse; Sun,  5 Apr 2020 19:44:37 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wLf43CLGz9ty2y;
-        Sun,  5 Apr 2020 19:44:44 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wLdx13mNz9ty2y;
+        Sun,  5 Apr 2020 19:44:37 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586108684; bh=T0suTl0BTFRF4sRPMYUbza6cd6VMEsnPiv6JirSP2TU=;
+        t=1586108677; bh=MwxdsxMck4eaEAPV4Ww9U1Ygwtb2fGfhDbCMs+X12uo=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=wcWUomYDP4YBUNujKfSRL3CNdHHtW+kAxTbIGTyQUeScsOPW7ib9w7RzyvnI60Qy1
-         546mp/M2lLdLWI59hclvoGT95/95o4w9FWUgdeBidgn1layLgBEIZf5jG97QxvRors
-         tfIDSmN3c3LCSojh6wkRBRc+S77Pl3XE2AZuCXS4=
+        b=iLg4w9MPSpwkxz3uM6jWYWoFEtvzuY38B460YOrEjZ66hurpRyExXz2SVdySm02ab
+         6UAq+ruEuM4eWcwNhPYi/yER2JXtCDlF5BwWZCP4Eo5w5+wahr+L0qLouw9EqjosGN
+         Kbvpkole1hNPCh4mW00+JFxcW67WfDhonUc6tku8=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 002E08B783;
-        Sun,  5 Apr 2020 19:44:47 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B8D978B783;
+        Sun,  5 Apr 2020 19:44:40 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id D4F0wqvJboPq; Sun,  5 Apr 2020 19:44:47 +0200 (CEST)
+        with ESMTP id syQGhlSeH7Tb; Sun,  5 Apr 2020 19:44:40 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BB95B8B774;
-        Sun,  5 Apr 2020 19:44:47 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8542E8B774;
+        Sun,  5 Apr 2020 19:44:40 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 8DBB16571C; Sun,  5 Apr 2020 17:44:47 +0000 (UTC)
-Message-Id: <4ef6d617cfd34e09e9bf5a456b2e0b6d2a8a3c96.1586108649.git.christophe.leroy@c-s.fr>
+        id 59A4C6571C; Sun,  5 Apr 2020 17:44:40 +0000 (UTC)
+Message-Id: <cacbc62ded444e26e15ca67e0ec91b05b7de6459.1586108649.git.christophe.leroy@c-s.fr>
 In-Reply-To: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
 References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v2 12/13] powerpc/kernel: Do not inconditionally save non
- volatile registers on system call
+Subject: [RFC PATCH v2 05/13] powerpc/syscall: Rename syscall_64.c into
+ syscall.c
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
         msuchanek@suse.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Sun,  5 Apr 2020 17:44:47 +0000 (UTC)
+Date:   Sun,  5 Apr 2020 17:44:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before : 347 cycles on null_syscall
-After  : 327 cycles on null_syscall
+syscall_64.c will be reused almost as is for PPC32.
+
+Rename it syscall.c
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/entry_32.S | 15 +++++++++++++++
- arch/powerpc/kernel/head_32.h  |  3 +--
- arch/powerpc/kernel/syscall.c  |  2 +-
- 3 files changed, 17 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/Makefile                    | 2 +-
+ arch/powerpc/kernel/{syscall_64.c => syscall.c} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename arch/powerpc/kernel/{syscall_64.c => syscall.c} (100%)
 
-diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index 103f5158bc44..b5113593e57f 100644
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -315,13 +315,28 @@ stack_ovf:
- 	RFI
- #endif
- 
-+save_nvgprs:
-+	lwz	r11, _TRAP(r1)
-+	andi.	r12, r11, 1
-+	rlwinm	r11, r11, 0, ~1
-+	beqlr
-+	SAVE_NVGPRS(r1)
-+	stw	r11, _TRAP(r1)
-+	blr
-+
- 	.globl	transfer_to_syscall
- transfer_to_syscall:
-+	lwz     r10, TI_FLAGS(r2)
- 	mr	r9, r0
-+	andi.   r10, r10, _TIF_SYSCALL_DOTRACE
- 	addi	r10, r1, STACK_FRAME_OVERHEAD
-+	bnel-	save_nvgprs
- 	bl	system_call_exception
- ret_from_syscall:
-+	lwz     r9, TI_FLAGS(r2)
- 	addi    r4, r1, STACK_FRAME_OVERHEAD
-+	andi.   r0, r9, _TIF_SYSCALL_DOTRACE | _TIF_SINGLESTEP | _TIF_USER_WORK_MASK
-+	bnel-	save_nvgprs
- 	bl	syscall_exit_prepare
- 	lwz	r2, _CCR(r1)
- 	lwz	r4, _NIP(r1)
-diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index c301d666a3e5..1cc9a67cb42c 100644
---- a/arch/powerpc/kernel/head_32.h
-+++ b/arch/powerpc/kernel/head_32.h
-@@ -174,13 +174,12 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
- 	stw	r2,GPR2(r11)
- 	addi	r10,r10,STACK_FRAME_REGS_MARKER@l
- 	stw	r9,_MSR(r11)
--	li	r2, \trapno
-+	li	r2, \trapno + 1
- 	stw	r10,8(r11)
- 	stw	r2,_TRAP(r11)
- 	SAVE_GPR(0, r11)
- 	SAVE_4GPRS(3, r11)
- 	SAVE_2GPRS(7, r11)
--	SAVE_NVGPRS(r11)
- 	addi	r11,r1,STACK_FRAME_OVERHEAD
- 	addi	r2,r12,-THREAD
- 	stw	r11,PT_REGS(r12)
-diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
-index 630c423e089a..34fd66fd11a2 100644
---- a/arch/powerpc/kernel/syscall.c
-+++ b/arch/powerpc/kernel/syscall.c
-@@ -39,7 +39,7 @@ notrace long system_call_exception(long r3, long r4, long r5,
- 	if (!IS_ENABLED(CONFIG_PPC_BOOK3E))
- 		BUG_ON(!(regs->msr & MSR_RI));
- 	BUG_ON(IS_ENABLED(CONFIG_PPC64) && !(regs->msr & MSR_PR));
--	BUG_ON(!FULL_REGS(regs));
-+	BUG_ON(IS_ENABLED(CONFIG_PPC64) && !FULL_REGS(regs));
- #ifdef CONFIG_PPC64
- 	BUG_ON(regs->softe != IRQS_ENABLED);
- #endif
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index 570660efbb3d..8cc3c831dccd 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -49,7 +49,7 @@ obj-y				:= cputable.o syscalls.o \
+ obj-y				+= ptrace/
+ obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o signal_64.o \
+ 				   paca.o nvram_64.o firmware.o note.o \
+-				   syscall_64.o
++				   syscall.o
+ obj-$(CONFIG_VDSO32)		+= vdso32/
+ obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
+ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall.c
+similarity index 100%
+rename from arch/powerpc/kernel/syscall_64.c
+rename to arch/powerpc/kernel/syscall.c
 -- 
 2.25.0
 
