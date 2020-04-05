@@ -2,150 +2,221 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2B7C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800A4C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A230206B8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AF92206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 13:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jYry63Kb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wqn74vjV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgDENjg (ORCPT
+        id S1726760AbgDENmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 09:39:36 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:56267 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726556AbgDENjf (ORCPT
+        Sun, 5 Apr 2020 09:42:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42023 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbgDENmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 09:39:35 -0400
-X-UUID: 55f9515929204793aefd51cdfd46eb3b-20200405
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=UbTwFkXlKvsh7AL8yRvXou4qBQc6I/nzGcy+Hyh3Skw=;
-        b=jYry63KbM4o57brsLB2iD5/qb64G1u2dfWaTRrlKXNMVJ7o7RlURl9jJ/22FGh/6+TTcIygejwUZUvNQNl5+GPhIJrm9BGjt7h2HjdPIPywiHNTsRcBYaAn4VOedUDum1QTDEIsgj8z1IdHt5/Fl1J48ylwYsetpqE1nCQEjgBM=;
-X-UUID: 55f9515929204793aefd51cdfd46eb3b-20200405
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1909430432; Sun, 05 Apr 2020 21:39:14 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
- (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 5 Apr
- 2020 21:39:12 +0800
-Received: from [10.16.6.141] (10.16.6.141) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sun, 5 Apr 2020 21:39:11 +0800
-Message-ID: <1586093949.10544.4.camel@mszsdaap41>
-Subject: Re: [PATCH v4 4/4] drm/mediatek: config mipitx impedance with
- calibration data
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, <huijuan.xie@mediatek.com>,
-        <stonea168@163.com>, <cawa.cheng@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, <yingjoe.chen@mediatek.com>,
-        <eddie.huang@mediatek.com>, <linux-arm-kernel@lists.infradead.org>
-Date:   Sun, 5 Apr 2020 21:39:09 +0800
-In-Reply-To: <CAAOTY_8vpzfKeyxVxXOVC7mDpw+QGGOX+8fJaQg5WduvndEmoA@mail.gmail.com>
-References: <20200331082725.81048-1-jitao.shi@mediatek.com>
-         <20200331082725.81048-5-jitao.shi@mediatek.com>
-         <CAAOTY_8vpzfKeyxVxXOVC7mDpw+QGGOX+8fJaQg5WduvndEmoA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 5 Apr 2020 09:42:55 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h15so14148592wrx.9;
+        Sun, 05 Apr 2020 06:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pYq5Ac37hqwzjRVuCDfokJB6SHNuA0PpWl4//5Tmdpo=;
+        b=Wqn74vjV4BB8Cecnb8lCadPxosvu/HPRbtAuIdzz1pLSaY1R2XZz0p4+yGOlL2ogHx
+         6eOZDPMKSxI03bHUA81tCci+O1O04BylnW6AFu84jQ8oLHkZ2i7WP2kBeVDxi8qzVSpK
+         dfMfOL+reJugaHE69yJnniLrUh1Za/ketLTacst79oFS83sH2N7QX7nZmemEKPx3oBPP
+         YqRYGHCY70Gy1Htubzgj0OziRXJxIicG4TvU9RPiA6kwKTDenSDUzCRjyCF/xvyrHaid
+         NSUV3QLrQHH8n9P+v/yYeMYA+DCbCkN+0hz8Fs4SHLgPxIn17ZrbMr2lSYd4/62t/k5O
+         KOtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pYq5Ac37hqwzjRVuCDfokJB6SHNuA0PpWl4//5Tmdpo=;
+        b=eEJA22jZFyk+Yu1DhvmDfGSzL6G2nhgzfU+lxensFdtKzgGjKybc/PcFtTiYs5MkU6
+         Pxor5sojEg8cH1/7hdw14U6nMKeGtLxJ/7IQFDSuwZuN7RfBvjhyoatfK1MADzToXdmB
+         NEg472kv0qXRyU+GnTIDX6dXREwm1tLPJCrJXQzbf6KiXZm8oydgMVnMy9ViZJ0QP5Ks
+         OMpUZmROor/FvkJap49HOVI3BqKnZRwWpTCPrSjxNu/hMfkZWT/5zeSideO/C0cGPGst
+         ZYZf6BPlW9mE7gNvwOA6C+1jPWkMLcASYKOwgso1AwX8Q22E9DzGmYhTNG9Kn2VydlL+
+         tjxA==
+X-Gm-Message-State: AGi0PubPwyyZqT/4B3yg+vuEWF6iPDmtAj5oE/q1boeIrPX0e/8bMak+
+        9JH8oXQRinFTW+X5AKeNqsB2OTes
+X-Google-Smtp-Source: APiQypKl9GRvIyv858C82f0tD7OhPqj/2TSvRADObcTMzQWNfvqqDXHOVfsIjuHuld/zf6AIDyol8w==
+X-Received: by 2002:adf:92a3:: with SMTP id 32mr11438386wrn.254.1586094171257;
+        Sun, 05 Apr 2020 06:42:51 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id a7sm19391741wmm.34.2020.04.05.06.42.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Apr 2020 06:42:50 -0700 (PDT)
+Subject: Re: [PATCH v2 1/3] dt-bindings: iio: adc: convert rockchip saradc
+ bindings to yaml
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        heiko@sntech.de, robh+dt@kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200404102730.3295-1-jbx6244@gmail.com>
+ <20200405130621.252578e8@archlinux>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <c5072f74-695f-0554-ab3f-bd5155c356b2@gmail.com>
+Date:   Sun, 5 Apr 2020 15:42:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 3590BF9D5BA1AE18EC2E1E20178B6904B8159592795221EED6053E89AE35411F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200405130621.252578e8@archlinux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBTYXQsIDIwMjAtMDQtMDQgYXQgMjI6MjYgKzA4MDAsIENodW4tS3VhbmcgSHUgd3JvdGU6
-DQo+IEhpLCBKaXRhbzoNCj4gDQo+IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4g
-5pa8IDIwMjDlubQz5pyIMzHml6Ug6YCx5LqMIOS4i+WNiDQ6Mjjlr6vpgZPvvJoNCj4gPg0KPiA+
-IFJlYWQgY2FsaWJyYXRpb24gZGF0YSBmcm9tIG52bWVtLCBhbmQgY29uZmlnIG1pcGl0eCBpbXBl
-ZGFuY2Ugd2l0aA0KPiA+IGNhbGlicmF0aW9uIGRhdGEgdG8gbWFrZSBzdXJlIHRoZWlyIGltcGVk
-YW5jZSBhcmUgMTAwb2htLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogSml0YW8gU2hpIDxqaXRh
-by5zaGlAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX210ODE4M19taXBpX3R4LmMgfCA1NyArKysrKysrKysrKysrKysrKysrDQo+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCA1NyBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19tdDgxODNfbWlwaV90eC5jIGIvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19tdDgxODNfbWlwaV90eC5jDQo+ID4gaW5kZXggZTRjYzk2Nzc1MGNi
-Li4wZjg3Y2QzZDFkN2QgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19tdDgxODNfbWlwaV90eC5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19tdDgxODNfbWlwaV90eC5jDQo+ID4gQEAgLTUsNiArNSw4IEBADQo+ID4gICAqLw0KPiA+
-DQo+ID4gICNpbmNsdWRlICJtdGtfbWlwaV90eC5oIg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbnZt
-ZW0tY29uc3VtZXIuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCj4gPg0KPiA+ICAj
-ZGVmaW5lIE1JUElUWF9MQU5FX0NPTiAgICAgICAgICAgICAgICAweDAwMGMNCj4gPiAgI2RlZmlu
-ZSBSR19EU0lfQ1BIWV9UMURSVl9FTiAgICAgICAgICAgQklUKDApDQo+ID4gQEAgLTI4LDYgKzMw
-LDcgQEANCj4gPiAgI2RlZmluZSBNSVBJVFhfUExMX0NPTjQgICAgICAgICAgICAgICAgMHgwMDNj
-DQo+ID4gICNkZWZpbmUgUkdfRFNJX1BMTF9JQklBUyAgICAgICAgICAgICAgICgzIDw8IDEwKQ0K
-PiA+DQo+ID4gKyNkZWZpbmUgTUlQSVRYX0QyUF9SVENPREUgICAgICAweDAxMDANCj4gPiAgI2Rl
-ZmluZSBNSVBJVFhfRDJfU1dfQ1RMX0VOICAgIDB4MDE0NA0KPiA+ICAjZGVmaW5lIE1JUElUWF9E
-MF9TV19DVExfRU4gICAgMHgwMjQ0DQo+ID4gICNkZWZpbmUgTUlQSVRYX0NLX0NLTU9ERV9FTiAg
-ICAweDAzMjgNCj4gPiBAQCAtMTA4LDYgKzExMSw1OCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGNs
-a19vcHMgbXRrX21pcGlfdHhfcGxsX29wcyA9IHsNCj4gPiAgICAgICAgIC5yZWNhbGNfcmF0ZSA9
-IG10a19taXBpX3R4X3BsbF9yZWNhbGNfcmF0ZSwNCj4gPiAgfTsNCj4gPg0KPiA+ICtzdGF0aWMg
-dm9pZCBtdGtfbWlwaV90eF9jb25maWdfY2FsaWJyYXRpb25fZGF0YShzdHJ1Y3QgbXRrX21pcGlf
-dHggKm1pcGlfdHgpDQo+ID4gK3sNCj4gPiArICAgICAgIHUzMiAqYnVmOw0KPiA+ICsgICAgICAg
-dTMyIHJ0X2NvZGVbNV07DQo+ID4gKyAgICAgICBpbnQgaSwgajsNCj4gPiArICAgICAgIHN0cnVj
-dCBudm1lbV9jZWxsICpjZWxsOw0KPiA+ICsgICAgICAgc3RydWN0IGRldmljZSAqZGV2ID0gbWlw
-aV90eC0+ZGV2Ow0KPiA+ICsgICAgICAgc2l6ZV90IGxlbjsNCj4gPiArDQo+ID4gKyAgICAgICBj
-ZWxsID0gbnZtZW1fY2VsbF9nZXQoZGV2LCAiY2FsaWJyYXRpb24tZGF0YSIpOw0KPiA+ICsgICAg
-ICAgaWYgKElTX0VSUihjZWxsKSkgew0KPiA+ICsgICAgICAgICAgICAgICBkZXZfaW5mbyhkZXYs
-ICJudm1lbV9jZWxsX2dldCBmYWlsXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuOw0K
-PiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIGJ1ZiA9ICh1MzIgKiludm1lbV9jZWxs
-X3JlYWQoY2VsbCwgJmxlbik7DQo+ID4gKw0KPiA+ICsgICAgICAgbnZtZW1fY2VsbF9wdXQoY2Vs
-bCk7DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKElTX0VSUihidWYpKSB7DQo+ID4gKyAgICAgICAg
-ICAgICAgIGRldl9pbmZvKGRldiwgImNhbid0IGdldCBkYXRhXG4iKTsNCj4gPiArICAgICAgICAg
-ICAgICAgcmV0dXJuOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIGlmIChsZW4g
-PCAzICogc2l6ZW9mKHUzMikpIHsNCj4gPiArICAgICAgICAgICAgICAgZGV2X2luZm8oZGV2LCAi
-aW52YWxpZCBjYWxpYnJhdGlvbiBkYXRhXG4iKTsNCj4gPiArICAgICAgICAgICAgICAga2ZyZWUo
-YnVmKTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsN
-Cj4gPiArICAgICAgIHJ0X2NvZGVbMF0gPSAoKGJ1ZlswXSA+PiA2ICYgMHgxZikgPDwgNSkgfCAo
-YnVmWzBdID4+IDExICYgMHgxZik7DQo+ID4gKyAgICAgICBydF9jb2RlWzFdID0gKChidWZbMV0g
-Pj4gMjcgJiAweDFmKSA8PCA1KSB8IChidWZbMF0gPj4gMSAmIDB4MWYpOw0KPiA+ICsgICAgICAg
-cnRfY29kZVsyXSA9ICgoYnVmWzFdID4+IDE3ICYgMHgxZikgPDwgNSkgfCAoYnVmWzFdID4+IDIy
-ICYgMHgxZik7DQo+ID4gKyAgICAgICBydF9jb2RlWzNdID0gKChidWZbMV0gPj4gNyAmIDB4MWYp
-IDw8IDUpIHwgKGJ1ZlsxXSA+PiAxMiAmIDB4MWYpOw0KPiA+ICsgICAgICAgcnRfY29kZVs0XSA9
-ICgoYnVmWzJdID4+IDI3ICYgMHgxZikgPDwgNSkgfCAoYnVmWzFdID4+IDIgJiAweDFmKTsNCj4g
-DQo+IFdoeSBub3QganVzdCBzYXZlIHJ0X2NvZGUgaW4gbnZtZW0gYW5kIHlvdSBkb24ndCBuZWVk
-IHRvIHRyYW5zbGF0ZSBoZXJlPw0KPiBJZiB5b3UgbmVlZCB0byBkbyBzbywgcGxlYXNlIGFkZCBk
-ZXNjcmlwdGlvbiBmb3IgdGhpcy4NCj4gDQo+IFJlZ2FyZHMsDQo+IENodW4tS3VhbmcuDQo+IA0K
-DQpIaSBDaHVuLUt1YW5nLA0KDQpUaGUgY2FsaWJyYXRpb24gZGF0YSBpcyBmbGFzaGVkIGluIHJv
-bSB3aGVuIHRoZSBJQyBGVCB0ZXN0DQpBbmQgdGhlIGRhdGEgc3RydWN0IGNhbid0IGJlIHN0b3Jl
-ZCBhZ2Fpbg0KDQpCZXN0IFJlZ2FyZHMNCkpJdGFvDQo+IA0KPiA+ICsNCj4gPiArICAgICAgIGZv
-ciAoaSA9IDA7IGkgPCA1OyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgaWYgKChydF9jb2Rl
-W2ldICYgMHgxZikgPT0gMCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBydF9jb2RlW2ld
-IHw9IDB4MTA7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBpZiAoKHJ0X2NvZGVbaV0gPj4g
-NSAmIDB4MWYpID09IDApDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcnRfY29kZVtpXSB8
-PSAweDEwIDw8IDU7DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBmb3IgKGogPSAwOyBqIDwg
-MTA7IGorKykNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBtdGtfbWlwaV90eF91cGRhdGVf
-Yml0cyhtaXBpX3R4LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTUlQSVRY
-X0QyUF9SVENPREUgKiAoaSArIDEpICsgaiAqIDQsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAxLCBydF9jb2RlW2ldID4+IGogJiAxKTsNCj4gPiArICAgICAgIH0NCj4gPiAr
-DQo+ID4gKyAgICAgICBrZnJlZShidWYpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICBzdGF0aWMgdm9p
-ZCBtdGtfbWlwaV90eF9wb3dlcl9vbl9zaWduYWwoc3RydWN0IHBoeSAqcGh5KQ0KPiA+ICB7DQo+
-ID4gICAgICAgICBzdHJ1Y3QgbXRrX21pcGlfdHggKm1pcGlfdHggPSBwaHlfZ2V0X2RydmRhdGEo
-cGh5KTsNCj4gPiBAQCAtMTMwLDYgKzE4NSw4IEBAIHN0YXRpYyB2b2lkIG10a19taXBpX3R4X3Bv
-d2VyX29uX3NpZ25hbChzdHJ1Y3QgcGh5ICpwaHkpDQo+ID4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBSR19EU0lfSFNUWF9MRE9fUkVGX1NFTCwNCj4gPiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIChtaXBpX3R4LT5taXBpdHhfZHJpdmUgLSAzMDAwKSAvIDIwMCA8PCA2
-KTsNCj4gPg0KPiA+ICsgICAgICAgbXRrX21pcGlfdHhfY29uZmlnX2NhbGlicmF0aW9uX2RhdGEo
-bWlwaV90eCk7DQo+ID4gKw0KPiA+ICAgICAgICAgbXRrX21pcGlfdHhfc2V0X2JpdHMobWlwaV90
-eCwgTUlQSVRYX0NLX0NLTU9ERV9FTiwgRFNJX0NLX0NLTU9ERV9FTik7DQo+ID4gIH0NCj4gPg0K
-PiA+IC0tDQo+ID4gMi4yMS4wDQo+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18NCj4gPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0DQo+ID4gZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPiA+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsDQoNCg0K
+Hi Jonathan,
 
+Originally I just followed 'rk3288.dtsi' till I saw someone posting a
+patch with only 'arm-gic.h' included that made me to have a closer look
+at it.
+Due to the #ifndef construction it doesn't rise any warnings I think.
+Apply the version that fits best.
+
+Kind regards,
+
+Johan Jonker
+
+
+
+#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
+#define _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
+[..]
+#endif
+
+Something else...
+With 2 examples it gives a warning that 2 identical defines are used.
+Yaml doesn't separately compile the examples. Must use the same SoC.
+
+This doesn't work. One example for rk3288 and one for rk3399.
+examples:
+  - |
+    #include <dt-bindings/clock/rk3288-cru.h>
+    #include <dt-bindings/interrupt-controller/arm-gic.h>
+[..]
+  - |
+    #include <dt-bindings/clock/rk3399-cru.h>
+    #include <dt-bindings/interrupt-controller/arm-gic.h>
+[..]
+
+From 'rk3288.dtsi':
+
+> // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>
+> #include <dt-bindings/gpio/gpio.h>
+> #include <dt-bindings/interrupt-controller/irq.h>
+> #include <dt-bindings/interrupt-controller/arm-gic.h>
+> #include <dt-bindings/pinctrl/rockchip.h>
+> #include <dt-bindings/clock/rk3288-cru.h>
+> #include <dt-bindings/power/rk3288-power.h>
+> #include <dt-bindings/thermal/thermal.h>
+> #include <dt-bindings/power/rk3288-power.h>
+> #include <dt-bindings/soc/rockchip,boot-mode.h>
+>
+> / {
+> 	#address-cells = <2>;
+> 	#size-cells = <2>;
+>
+> 	compatible = "rockchip,rk3288";
+
+[..]
+
+On 4/5/20 2:06 PM, Jonathan Cameron wrote:
+> On Sat,  4 Apr 2020 12:27:28 +0200
+> Johan Jonker <jbx6244@gmail.com> wrote:
+>
+>> Current dts files with 'saradc' nodes are manually verified.
+>> In order to automate this process rockchip-saradc.txt
+>> has to be converted to yaml.
+>>
+>> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+> Hi Johan
+>
+> As I'd already applied these I'd have preferred a fix patch and I'm
+not actually
+> sure it's really worth making the change.  I don't think we have any rules
+> about minimal includes or anything in DT bindings.  Was there an error or
+> warning as a result of this?
+>
+> Still as I hadn't pushed out as non rebasing yet I've picked this
+version up
+> and dropped the previous.
+>
+> Thanks,
+>
+> Jonathan
+>
+>> ---
+>> Changes v2:
+>>   Add reviewed by
+>>   Fix irq.h already included in arm-gic.h
+>> ---
+>>  .../bindings/iio/adc/rockchip-saradc.txt           | 37 ----------
+>>  .../bindings/iio/adc/rockchip-saradc.yaml          | 78
+++++++++++++++++++++++
+>>  2 files changed, 78 insertions(+), 37 deletions(-)
+>>  delete mode 100644
+Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+>>  create mode 100644
+Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+>>
+>> diff --git
+a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+>> deleted file mode 100644
+>> index c2c50b598..000000000
+>> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+
+[..]
+
+>> diff --git
+a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+>> new file mode 100644
+>> index 000000000..9b9882323
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+>> @@ -0,0 +1,78 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/iio/adc/rockchip-saradc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+[..]
+
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/rk3288-cru.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    saradc: saradc@2006c000 {
+>> +      compatible = "rockchip,saradc";
+>> +      reg = <0x2006c000 0x100>;
+>> +      interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+>> +      clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
+>> +      clock-names = "saradc", "apb_pclk";
+>> +      resets = <&cru SRST_SARADC>;
+>> +      reset-names = "saradc-apb";
+>> +      vref-supply = <&vcc18>;
+>> +      #io-channel-cells = <1>;
+>> +    };
+>
