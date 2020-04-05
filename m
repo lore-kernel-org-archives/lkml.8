@@ -2,89 +2,106 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029D6C2BA18
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAFEC2BA18
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86A62070E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A9820737
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586056236;
-	bh=kIx1RwDLGEcqPPIAxfxHLABlBLsQ0tfPVc+AsI9wId0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=gxOOGt/JGYPVe9/vPFHe3T6ZwiB1JrxOgldUwHyOhN8dUrnl/vBQlJDunAAHN7tYG
-	 Obfp75QDSwDoj0s8FOYs3kD4g4ZqexDXPPeOewsV0DhicT9AZM1wUUzoxxy7rfA/Rj
-	 0DYoPbwEJ/AnUp27gssAMDidbcg7akUvWr2/a4MM=
+	s=default; t=1586056259;
+	bh=JT+cqz7qLQP4SxN8BKeesGICXxCLM/dtqRMyPQ3Sypg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=VAgd4hBEnVoAKyOXIByuyPdiCbdqROGQU4K4TO+rMBq8J48/0/STRImzXEZHxTkQ7
+	 jyrzVUokIOajs1nlzzzZmGxSatRvgIkoay5rCP+9t9cKULfkcaSxEWBrRpoKBeagEQ
+	 OsA58KYgpwqOgrGG+d/L8GmaoQ8KnzfgKBQ5vCmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgDEDKf (ORCPT
+        id S1726514AbgDEDK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 23:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55278 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 23:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgDEDKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 23:10:35 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        id S1726057AbgDEDK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 23:10:58 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B3BE206A3;
-        Sun,  5 Apr 2020 03:10:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8897206A3;
+        Sun,  5 Apr 2020 03:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586056235;
-        bh=kIx1RwDLGEcqPPIAxfxHLABlBLsQ0tfPVc+AsI9wId0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=pXamp4nkiQoy7exHotB/mfI+a4tKPTV91qXOXpv8MfNMLJkn01chX2ranfvTsUgKS
-         /s9oyOXrHV1ZmEiRpxBLTDtrpmwgfvZmHlaApCA0mI/JmY9aFEzAZT0n1i+6WbpZtk
-         G1yBZlyKP6BALtvym17XP6sLvzJ1cy2O2Sxyd/r8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DCD3235227F2; Sat,  4 Apr 2020 20:10:34 -0700 (PDT)
-Date:   Sat, 4 Apr 2020 20:10:34 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rcu tree
-Message-ID: <20200405031034.GX19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200405114959.335eae46@canb.auug.org.au>
+        s=default; t=1586056257;
+        bh=JT+cqz7qLQP4SxN8BKeesGICXxCLM/dtqRMyPQ3Sypg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=gH6i3tO5MVQB3uPNo+huaHmkejxuBY4nUhUoCunnAqMsmF7anDqq0ZyFOb0Cm/062
+         oNFKVzSEKGRTGILKizSs4A5zAnTdvUWnRrLd++9JV+COQo8DjgElxvI+U+quW9jfPU
+         7JXLOLw2oTI3bIOEozn/Lfqjau/wBp5VXM3Uw6hE=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200405114959.335eae46@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <00f701d60958$a9ed46c0$fdc7d440$@gmail.com>
+References: <20200330205647.24806-1-ansuelsmth@gmail.com> <158587766752.125146.7582840761926137726@swboyd.mtv.corp.google.com> <00f701d60958$a9ed46c0$fdc7d440$@gmail.com>
+Subject: Re: R: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     'Mathieu Olivari' <mathieu@codeaurora.org>,
+        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Rob Herring' <robh+dt@kernel.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Michael Turquette' <mturquette@baylibre.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To:     'Andy Gross' <agross@kernel.org>, ansuelsmth@gmail.com
+Date:   Sat, 04 Apr 2020 20:10:56 -0700
+Message-ID: <158605625697.158626.12280118012638752686@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 11:49:59AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the rcu tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
-> 
-> kernel/trace/ftrace.c: In function 'ftrace_shutdown':
-> kernel/trace/ftrace.c:2924:3: error: implicit declaration of function 'synchronize_rcu_tasks_rude'; did you mean 'synchronize_rcu_tasks'? [-Werror=implicit-function-declaration]
->  2924 |   synchronize_rcu_tasks_rude();
->       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~
->       |   synchronize_rcu_tasks
-> 
-> Caused by commit
-> 
->   59377f3e06b8 ("ftrace: Use synchronize_rcu_tasks_rude() instead of ftrace_sync()")
-> 
-> synchronize_rcu_tasks_rude() is only declared when
-> CONFIG_TASKS_RCU_GENERIC is defined.
-> 
-> I have reverted that commit for today.
-> 
-> Just asking: are all the commits currently in the rcu tree actually
-> intended for v5.7?
+Quoting ansuelsmth@gmail.com (2020-04-02 18:39:04)
+>=20
+>=20
+> > -----Messaggio originale-----
+> > Da: Stephen Boyd <sboyd@kernel.org>
+> > Inviato: venerd=C3=AC 3 aprile 2020 03:34
+> > A: Andy Gross <agross@kernel.org>; Ansuel Smith
+> > <ansuelsmth@gmail.com>
+> > Cc: Ansuel Smith <ansuelsmth@gmail.com>; Mathieu Olivari
+> > <mathieu@codeaurora.org>; Bjorn Andersson
+> > <bjorn.andersson@linaro.org>; Rob Herring <robh+dt@kernel.org>; Mark
+> > Rutland <mark.rutland@arm.com>; Michael Turquette
+> > <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> > clk@vger.kernel.org
+> > Oggetto: Re: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for
+> > ipq806x
+> >=20
+> > Quoting Ansuel Smith (2020-03-30 13:56:46)
+> > > diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-
+> > ipq806x.c
+> > > index b0eee0903807..f7d7a2bc84c1 100644
+> > > --- a/drivers/clk/qcom/gcc-ipq806x.c
+> > > +++ b/drivers/clk/qcom/gcc-ipq806x.c
+> > > @@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk =3D {
+> > >                 .hw.init =3D &(struct clk_init_data){
+> > >                         .name =3D "gsbi4_h_clk",
+> > >                         .ops =3D &clk_branch_ops,
+> > > +                       .flags =3D CLK_IGNORE_UNUSED,
+> >=20
+> > Is this necessary? Shouldn't we skip clks that are protected during the
+> > unused phase?
+> >=20
+>=20
+> gsbi4_h_clk is not protected. gsbi4_h_clk needs to not be disabled if unu=
+sed
+> (as it's used by rpm) but can't be protected since it's used by uart gsbi=
+4.
+> (With some test protecting also this clk cause the malfunction of uart gs=
+b4)
+>=20
 
-My bad!  I have moved rcu/next to where it need to be for the duration
-of the merge window.  Please accept my apologies for the hassle.
-
-							Thanx, Paul
+Who owns gsbi4 on this platform? Is it RPM? If so, it should be
+protected and we shouldn't touch this clk from the kernel.
