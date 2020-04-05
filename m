@@ -2,158 +2,382 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DF9C2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B66EC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE26B20672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:30:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="cGwimnwt"
+	by mail.kernel.org (Postfix) with ESMTP id 29361206B8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbgDEJae (ORCPT
+        id S1726535AbgDEJ72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 05:30:34 -0400
-Received: from mout.web.de ([212.227.17.12]:52295 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726534AbgDEJae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 05:30:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586079021;
-        bh=wPquJ+Whli71qk48bH13/+zmxMWVmiS56DJQmU6p9eg=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=cGwimnwtgDIvSW4ZPakBUeBVWNlrCvvZGH2aj6fLGlHhOFmqyMuPbSjqzMpXxOjM/
-         ajLy5CUT8vUZRKtYIIGLdMLlp1Zi1R2AgWF2tmVT9zVwHrdx9n5qA0UpMIMFuoSXtt
-         Zn9u+M3ZVDRSLfajQlxtQB49RYEOnb3QGEpgfNY8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.131.99.70]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MN4Oy-1jNFbB0TZg-006iVt; Sun, 05
- Apr 2020 11:30:21 +0200
-To:     dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Paul Cercueil <paul@crapouillou.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] gpu/drm: ingenic: Delete an error message in
- ingenic_drm_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e03e7106-0f22-99c4-ad21-b288e8990b5a@web.de>
-Date:   Sun, 5 Apr 2020 11:30:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sun, 5 Apr 2020 05:59:28 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:39270 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgDEJ72 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 05:59:28 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B29AE8001467;
+        Sun,  5 Apr 2020 09:59:19 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id hu0QSTV3PMHD; Sun,  5 Apr 2020 12:59:18 +0300 (MSK)
+Date:   Sun, 5 Apr 2020 12:59:25 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Stephen Boyd <sboyd@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/5] dt-bindings: clk: Add Baikal-T1 CCU PLLs bindings
+Message-ID: <20200405095925.6vwclimnba7lefe4@ubsrv2.baikal.int>
+References: <20200306130048.8868-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306130054.8702F8030786@mail.baikalelectronics.ru>
+ <20200310021052.2E40F80307C5@mail.baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5yOIP5Rvh1kgAtf7eNwS8Y+DOex4AWFztEYVJqkfiK2SyjcEdBI
- OBaVIKeI/S4Xw/9wwr5tjTAH8HqB+3ib/KgIzWmTc9244xZFncc/qd9sRoR3mMzkmfYbww6
- 6tPDNtzVdeWYKFO06OKYolOC0o6vN77crSxgkfdgBsktKp2/DU9+OlHcTc8VRVDe2F6H1Jx
- RTLQ0wJhExX86LwiUuNQA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5OdgCFZiayg=:erT7PYhr3DlWipG60BVFyG
- wWWAD8baapzFz7rXXxZ5iouKwEUsCqPI2qHCsqS4TP0jbbyOpZQztC615uqosUnGSmMiQCfbe
- r1D12lNssUbccC1CQQg4MhJ70tSJ0XgD4KbuCRzECk0vNDswucX0KdMQ7oDdPVaC/zczms5Z9
- gV+U6sWJp7Rl4LnsP6nB9YN92gr1h338A4ukQ1PrvmJNgve+68hpxVvb0IE9y+5dWhdzS5t0L
- le+XGxag8oAc7ep2UsPYKftSXDY3vAgeTTpwGgb3Egrr6LS9UnpKQpWCNuDABJjTYdGQ7h6Px
- /XsxiCPJ8CKbUY+q4Fk3FUqitlPgYbrHi/ULMm9ncnDE/fl2MYUQcnlyx6ynYQdtR22o49506
- /qdOyMZbQq6coXcYfMSbvf2RftMgITsoUWAG+nEYRZ0S4lvZsT0ovJBsNbZlILN1T337FHHk+
- V3Vun7DhB+icBP+8wRzYRIKtg1deOeIYNO+nISr/Biq8+F8bzc1cEbkWLNo137HFqX33mZ+Il
- pA6XyGzDxd28STJVBEbunXVvvdlWgupaGSLfDIuOAZsilkeV5yTV+eUD/FxnBCtd/YxmoaV91
- txPcNvj2nh6U9HTVxT0iIPDiUNvGv9M19imA2GFcxVinwUrmyg0yCU6CBIdBoLxcFdj5qP+gT
- G4XMgKjLegbzQOhjEwIJUXEzANlry667iO06RuEZ+XWrS3lF4BpaPkv7szTh4Ngjffk1EnMGS
- nC496zF3yKnveGqNs/z9E6rijmaRmW4vvQtIaj7X9POolUwGAqLttcl4RT/N3tftTwiRHsBXj
- z9k38kvv1SWqDgd/+mEluJDTIC3K12Ogf6qnaaPDhL7htw0u8o11+j1AZWlclSE168dbHzS/S
- 7z4G2sV/duTG9vYXCkQXVtKQuauF1Z9B8LBnUw3NRv1SNrGpTr0CRxuy0/+UugbngwnL1TwAF
- llpzk3hOrtNy0bPB1TN1dg5Y4aCEmoAlqNkZ2rfpK1P2ohiZmlXOcAaqYfchHuIEVTeOq7Y7d
- 4Gh5ZxctPgV8quYwjpn7sZoqHpBoM+lzYoq9Urue5fSo61629CjB0yiQ4r+NAjiFlR26wRl0u
- ZERTo2ED7HEdVA4+aIbCEQcMEXBPttmYsXRD31nO081AYeJTppm6FQL1xeUa3I0unV+qcIA+A
- oBMvtKEIJqr87PGWGJJZjRWe3onmxpOFNTC38Kr+ww/ebQDKzfee91HzdUw5zXXMYgBFvVf9X
- Mg0nmtBiUNsyQTR4g
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200310021052.2E40F80307C5@mail.baikalelectronics.ru>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Sun, 5 Apr 2020 11:25:30 +0200
+Hello Stephen,
 
-The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
-Thus omit a redundant message for the exception handling in the
-calling function.
+Sorry for a delayed response. My answers to your comments are below.
 
-This issue was detected by using the Coccinelle software.
+On Mon, Mar 09, 2020 at 07:02:27PM -0700, Stephen Boyd wrote:
+> Quoting Sergey.Semin@baikalelectronics.ru (2020-03-06 05:00:44)
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Baikal-T1 Clocks Control Unit is responsible for transformation of a
+> > signal coming from an external oscillator into clocks of various
+> > frequencies to propagate them then to the corresponding clocks
+> > consumers (either individual IP-blocks or clock domains). In order
+> > to create a set of high-frequency clocks the external signal is
+> > firstly handled by the embedded into CCU PLLs. So the corresponding
+> > dts-node is just a normal clock-provider node with standard set of
+> > properties.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> 
+> SoB chain is backwards. Is Alexey the author? Or Co-developed-by?
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/gpu/drm/ingenic/ingenic-drm.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Thanks for noticing this. I'll rearrange the SoB's in v2.
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingen=
-ic/ingenic-drm.c
-index 9dfe7cb530e1..06ca752b76ee 100644
-=2D-- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -661,10 +661,8 @@ static int ingenic_drm_probe(struct platform_device *=
-pdev)
- 	}
+> 
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  .../bindings/clock/be,bt1-ccu-pll.yaml        | 139 ++++++++++++++++++
+> >  include/dt-bindings/clock/bt1-ccu.h           |  17 +++
+> >  2 files changed, 156 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/be,bt1-ccu-pll.yaml
+> >  create mode 100644 include/dt-bindings/clock/bt1-ccu.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/be,bt1-ccu-pll.yaml b/Documentation/devicetree/bindings/clock/be,bt1-ccu-pll.yaml
+> > new file mode 100644
+> > index 000000000000..f2e397cc147b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/be,bt1-ccu-pll.yaml
+> > @@ -0,0 +1,139 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +#
+> > +# Copyright (C) 2019 - 2020 BAIKAL ELECTRONICS, JSC
+> > +#
+> > +# Baikal-T1 Clocks Control Unit PLL Device Tree Bindings.
+> > +#
+> 
+> I don't think we need any of these comments besides the license
+> identifier line. Can you dual license this?
+> 
 
- 	irq =3D platform_get_irq(pdev, 0);
--	if (irq < 0) {
--		dev_err(dev, "Failed to get platform irq");
-+	if (irq < 0)
- 		return irq;
--	}
+It's normal to have a copyright here, but in a single-lined form.
+I'll do this in v2 and also dual license the binding file.
 
- 	if (soc_info->needs_dev_clk) {
- 		priv->lcd_clk =3D devm_clk_get(dev, "lcd");
-=2D-
-2.26.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/clock/be,bt1-ccu-pll.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Baikal-T1 Clock Control Unit PLLs
+> > +
+> > +maintainers:
+> > +  - Serge Semin <fancer.lancer@gmail.com>
+> > +
+> > +description: |
+> > +  Clocks Control Unit is the core of Baikal-T1 SoC responsible for the chip
+> > +  subsystems clocking and resetting. The CCU is connected with an external
+> > +  fixed rate oscillator, which signal is transformed into clocks of various
+> > +  frequencies and then propagated to either individual IP-blocks or to groups
+> > +  of blocks (clock domains). The transformation is done by means of PLLs and
+> > +  gateable/non-gateable dividers embedded into the CCU. It's logically divided
+> > +  into the next components:
+> > +  1) External oscillator (normally XTAL's 25 MHz crystal oscillator, but
+> > +     in general can provide any frequency supported by the CCU PLLs).
+> > +  2) PLLs clocks generators (PLLs) - described in this bindings file.
+> > +  3) AXI-bus clock dividers (AXI).
+> > +  4) System devices reference clock dividers (SYS).
+> > +  which are connected with each other as shown on the next figure:
+> 
+> Please add a newline here
 
+Ok.
+
+> 
+> > +          +---------------+
+> > +          | Baikal-T1 CCU |
+> > +          |   +----+------|- MIPS P5600 cores
+> > +          | +-|PLLs|------|- DDR controller
+> > +          | | +----+      |
+> > +  +----+  | |  |  |       |
+> > +  |XTAL|--|-+  |  | +---+-|
+> > +  +----+  | |  |  +-|AXI|-|- AXI-bus
+> > +          | |  |    +---+-|
+> > +          | |  |          |
+> > +          | |  +----+---+-|- APB-bus
+> > +          | +-------|SYS|-|- Low-speed Devices
+> > +          |         +---+-|- High-speed Devices
+> > +          +---------------+
+> 
+> And here.
+> 
+
+Ok
+
+> > +  Each CCU sub-block is represented as a separate dts-node and has an
+> > +  individual driver to be bound with.
+> > +
+> > +  In order to create signals of wide range frequencies the external oscillator
+> > +  output is primarily connected to a set of CCU PLLs. There are five PLLs
+> > +  to create a clock for the MIPS P5600 cores, the embedded DDR controller,
+> > +  SATA, Ethernet and PCIe domains. The last three domains though named by the
+> > +  biggest system interfaces in fact include nearly all of the rest SoC
+> > +  peripherals. Each of the PLLs is based on True Circuits TSMC CLN28HPM core
+> > +  with an interface wrapper (so called safe PLL' clocks switcher) to simplify
+> > +  the PLL configuration procedure. The PLLs work as depicted on the next
+> > +  diagram:
+> 
+> Same, space out the diagrams.
+> 
+
+Ok
+
+> > +      +--------------------------+
+> > +      |                          |
+> > +      +-->+---+    +---+   +---+ |  +---+   0|\
+> > +  CLKF--->|/NF|--->|PFD|...|VCO|-+->|/OD|--->| |
+> > +          +---+ +->+---+   +---+ /->+---+    | |--->CLKOUT
+> > +  CLKOD---------C----------------+          1| |
+> > +       +--------C--------------------------->|/
+> > +       |        |                             ^
+> > +  Rclk-+->+---+ |                             |
+> > +  CLKR--->|/NR|-+                             |
+> > +          +---+                               |
+> > +  BYPASS--------------------------------------+
+> > +  BWADJ--->
+> > +  where Rclk is the reference clock coming  from XTAL, NR - reference clock
+> > +  divider, NF - PLL clock multiplier, OD - VCO output clock divider, CLKOUT -
+> > +  output clock, BWADJ is the PLL bandwidth adjustment parameter. At this moment
+> > +  the binding supports the PLL dividers configuration in accordance with a
+> > +  requested rate, while bypassing and bandwidth adjustment settings can be
+> > +  added in future if it gets to be necessary.
+> > +
+> > +  The PLLs CLKOUT is then either directly connected with the corresponding
+> > +  clocks consumer (like P5600 cores or DDR controller) or passed over a CCU
+> > +  divider to create a signal required for the clock domain.
+> > +
+> > +  The CCU PLL dts-node uses the common clock bindings [1] with no custom
+> > +  parameters. The list of exported clocks can be found in
+> > +  'dt-bindings/clock/bt1-ccu.h'.
+> > +
+> > +  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> 
+> Don't think we need to mention this binding anymore. But it's good that
+> we know what exported clock ids are.
+> 
+
+Ok. I'll remove the legacy text binding file mention here and retain the
+reference to the header file with the clock IDs defined. The similar
+thing will be done for the others bindings in the patchset.
+
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/clock/clock.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: be,bt1-ccu-pll
+> > +
+
+> > +  reg:
+> > +    description: CCU PLLs sub-block base address.
+> > +    maxItems: 1
+> > +
+
+Sometime ago I sent a RFC to Rob and you being in Cc there:
+https://lkml.org/lkml/2020/3/22/393
+Simply speaking there are several issues raised in comments to different
+patchsets, which are indirectly connected with the Baikal-T1 System Controller
+DT node design I've initially chosen. In accordance with that I've spread its
+functional blocks into different DT nodes with no reference to being related
+to the System Controller. Clock Control Unit nodes are amongst these blocks.
+Seeing such design caused these issues I suggested an alternative solution
+of having a single System Controller node and multiple functional sub-nodes.
+These sub-nodes will include the Clock Control Unit PLLs, AXI-bus and System
+Device blocks. I thoroughly described the solution in the RFC. So if no
+arguments against it pop up soon in the RFC comments, I'll implement it in
+v2 of this patchset as well. This solution cause the reg-property removal
+from this binding. Instead the drivers shall refer to the parental syscon
+node to get a regmap with CCU registers from it.
+
+> > +  "#clock-cells":
+> > +    description: |
+> > +      Clocks are referenced by the node phandle and an unique identifier
+> > +      from 'dt-bindings/clock/bt1-ccu.h'.
+> 
+> Don't think we need this description.
+
+Agreed.
+
+> 
+> > +    const: 1
+> > +
+> > +  clocks:
+> > +    description: Phandle of CCU External reference clock.
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    const: ref_clk
+> 
+> Can we drop _clk? It's redundant.
+
+I would leave this and "pcie_clk", "sata_clk", "eth_clk" declared in the
+next two bindings as is, since this way they would exactly match the names
+used in the documentation. The same thing is with the clock-output-names
+property values.
+
+I've seen such names in many other drivers/bindings including the
+bindings in the clock subsystem even submitted rather recently, not to
+mention the names like "aclk", "pclk", etc used all over the dt nodes.
+Are there any requirements in naming the clocks? Should I avoid using the
+'_clk' clock names suffix in accordance with them? If so, please point
+me out to that requirement in docs for future reference.
+
+Normally If I don't find something in the requirements documented in the kernel,
+I use either a commonly utilized practice seen in other similar drivers, or
+select a solution which seems better to me like providing a better readability
+and code understanding. 
+
+> 
+> > +
+> > +  clock-output-names: true
+> > +
+> > +  assigned-clocks: true
+> > +
+> > +  assigned-clock-rates: true
+> > +
+> > +additionalProperties: false
+> > +
+
+I'll also replace these four properties with a single
+"unevaluatedProperties: false". In the framework of other patchset
+review Rob said this property is more suitable in such situations and
+will get to be supported by the dt_binding_check script eventually.
+
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#clock-cells"
+> > +  - clocks
+> > +  - clock-names
+> > +
+> > +examples:
+> > +  - |
+> > +    ccu_pll: ccu_pll@1F04D000 {
+> 
+> Drop the phandle unless it's actually used.
+
+Do you mean the label definition? If so, Ok. I'll remove it.
+
+Unit-address will be also lowercased if I don't remove the reg property
+from here. As I said in RFC in accordance with the alternative solution
+this node will be a sub-node of the system controller, which regmap will
+be used instead of the individual reg-property definition. So if the
+reg-property is removed from the node, the unit-address will be also
+discarded from here.
+
+> 
+> > +      compatible = "be,bt1-ccu-pll";
+> > +      reg = <0x1F04D000 0x028>;
+> 
+> Lowercase hex please. That size is oddly small.
+
+It's small due to be range being part of the system controller registers
+set. I've briefly described this above and thoroughly - in the RFC.
+Please see the RFC text and send your comments regarding an alternative
+solution there shall you have any.
+
+Anyway if no comments are received there soon, I'll remove the reg
+property from here. The PLL driver will refer to the parental system
+controller to get the registers regmap handler.
+
+> 
+> > +      #clock-cells = <1>;
+> > +
+> > +      clocks = <&osc25>;
+> > +      clock-names = "ref_clk";
+> > +
+> > +      clock-output-names = "cpu_pll", "sata_pll", "ddr_pll",
+> > +                           "pcie_pll", "eth_pll";
+> > +    };
+> > +...
+> > diff --git a/include/dt-bindings/clock/bt1-ccu.h b/include/dt-bindings/clock/bt1-ccu.h
+> > new file mode 100644
+> > index 000000000000..86e63162ade0
+> > --- /dev/null
+> > +++ b/include/dt-bindings/clock/bt1-ccu.h
+> > @@ -0,0 +1,17 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2019 BAIKAL ELECTRONICS, JSC
+> > + *
+> > + * Baikal-T1 CCU clock indeces.
+> > + */
+> > +#ifndef __DT_BINDINGS_CLOCK_BT1_CCU_H
+> > +#define __DT_BINDINGS_CLOCK_BT1_CCU_H
+> > +
+> > +/* Baikal-T1 CCU PLL indeces. */
+> 
+> Please drop this comment. It's not useful.
+
+Ok.
+
+Regards,
+-Sergey
+
+> 
+> > +#define CCU_CPU_PLL                    0
+> > +#define CCU_SATA_PLL                   1
+> > +#define CCU_DDR_PLL                    2
+> > +#define CCU_PCIE_PLL                   3
+> > +#define CCU_ETH_PLL                    4
+> > +
+> > +#endif /* __DT_BINDINGS_CLOCK_BT1_CCU_H */
+> > -- 
+> > 2.25.1
+> >
