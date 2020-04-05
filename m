@@ -2,222 +2,149 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B8FC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 01:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5CFC2BA18
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 01:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5301206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 01:28:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="bjyhRyLW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZsrE0sTa"
+	by mail.kernel.org (Postfix) with ESMTP id 72DA620719
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 01:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586050133;
+	bh=c0Mf3mvWyNHHAmvgmHxxzKG+n2Io+Yk07t3s0UuBuD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=07guAS4TOn+BpbS1M+ZXQCmxi0TOaL3KQNzrDoBZr5Uq9R06hBf/Zf+6fcgeEsWKi
+	 lkMev9Mrbc/45p/J0yMwfClqmY4hUJlaTpNY6eAwSw+8f/OXZQHiNZ/bHsoPBEOkzK
+	 hUUlIcRnGUcUixNfOc7AANGTbtymnbYtta3yBwCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgDEB2o (ORCPT
+        id S1726504AbgDEB2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 21:28:44 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:56479 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726307AbgDEB2o (ORCPT
+        Sat, 4 Apr 2020 21:28:52 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37496 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgDEB2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 21:28:44 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id B56BA77E;
-        Sat,  4 Apr 2020 21:28:42 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sat, 04 Apr 2020 21:28:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-         h=subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=n
-        2xIAo0j6M7nb0dEky/Y1uh63ap0cnK6/HZ2kEdFDLc=; b=bjyhRyLW6TkbdYrIT
-        vUuAujP2aC+R4Ld/oiSrmwXb7zKyUU+CzVq7C9X0MnhHjNjwDermHYis9yxtLTaH
-        QqqNrpXHw4HakKxmMZTsxpKmAgDK/VnyEzzHTI0Jz0rWXba0+WSOJL4s7S7Cd9yo
-        lwjpR5AzMtaRfNuDSzmuXp6XAINPc66pllL7rc7tMuSpYXEpOPvb+4y96J+Cqz0t
-        U6bbalrnOQYrBQXrr0OnQZ+28zOo9bIf1BlkMl49+8ijYCfvjkd9HwcPxZj4cCNo
-        srvx85BpXozrHD+ySA3TQzrQGdOTv9hEsF3UPW4rw4RUELdeyPnIBmI4Pnan57j3
-        jJq1g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=n2xIAo0j6M7nb0dEky/Y1uh63ap0cnK6/HZ2kEdFD
-        Lc=; b=ZsrE0sTaJdipkfWayfTn/Odu3KKEs9rJzdcqhPV9ZZI1VGLt/AF8r8CRK
-        bS1Nndrx2Ytql/AiMetktDQx+vEw9kH+E9xbZI/Of0LHWbAIfB3KtQduOGT25eQO
-        qrU6ADdLhngl9NLIFjAz+UPcIFITjIB3PkWweuJO/mEB3cpNNkWaII8QqaMbuvPp
-        iHnbW0THBzWa8LDRFW8zSW9xag2LlY6Rm5C2FAFqjyzMuNE3VV47Zqf8ZeoeJ0x9
-        bltlcT8G6MmTB7gP2W4UnCEVwC4Dsd0lLgS/VL4dQ87AzhJYcFFADRmMKtqxQO4d
-        /Ob4XmXxwBlgdJ8EvJlp2UawreuDw==
-X-ME-Sender: <xms:QDSJXjEb877FyG7AHZc1lKPIIqbFZRYz1je44IgtEdcur3NfMJxQHw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrtdelgdegjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpeetlhhishht
-    rghirhcuhfhrrghntghishcuoegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhmvg
-    eqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhrghdpkhgvrhhnvghlrdhorhhg
-    necukfhppeejfedrleefrdekgedrvddtkeenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegrlhhishhtrghirhesrghlihhsthgrihhrvdefrdhm
-    vg
-X-ME-Proxy: <xmx:QDSJXkThRhWHG37yvqbflKUZBbfteEWEAdDrfvj6BRPy6MlMshCkfA>
-    <xmx:QDSJXtpB_qhggbuHYvsnJo69gSrWO9Ctjpc2jlk9GQLO5QXg_aC-0A>
-    <xmx:QDSJXqr2P5Ziiou5nISNn3sil8deBdqZEa_X_AFrDgCSnAiNGHkCig>
-    <xmx:SjSJXlPdDvXlZV2ZYnnevXNXVMk282B0iJzelzATqdVRpOLBl53rcrrlZb4>
-Received: from [172.16.1.131] (c-73-93-84-208.hsd1.ca.comcast.net [73.93.84.208])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CA5033280066;
-        Sat,  4 Apr 2020 21:28:30 -0400 (EDT)
-Subject: Re: [PATCH 1/3] dt-bindings: net: bluetooth: Add rtl8723bs-bluetooth
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     alistair23@gmail.com, anarsoul@gmail.com,
-        devicetree@vger.kernel.org, johan.hedberg@gmail.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, mripard@kernel.org, netdev@vger.kernel.org,
-        wens@csie.org, max.chou@realtek.com, hdegoede@redhat.com
-References: <20200404204850.405050-1-alistair@alistair23.me>
- <20200404224205.1643238-1-martin.blumenstingl@googlemail.com>
-From:   Alistair Francis <alistair@alistair23.me>
-Message-ID: <46b0f1dc-15df-55d5-1a9c-cb70a7d453ad@alistair23.me>
-Date:   Sat, 4 Apr 2020 18:28:29 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Sat, 4 Apr 2020 21:28:51 -0400
+Received: by mail-il1-f194.google.com with SMTP id a6so11337397ilr.4;
+        Sat, 04 Apr 2020 18:28:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WGbgIdmOv5Wc5UUMJfMtgDqF41fZaw2KceIkWNuOtOQ=;
+        b=kyvXX7GCvZ66SP5U25XORmkfSYg2FfJx57yWv9Kt/407Ruy2weDbkU3sYqN+SmKLJT
+         jpOJrbRqQhE9STp6lVxUzcpVprZEeck9wFg4aryki5bUeFmfgefrUfCENrP/Smz8fjeU
+         mTQQzgoDqwcRbyDFHeBMnA7wk0SkcWGvfDV/KXAdXMMlxriRQA9J2iCwiQrG8Eqy7kcm
+         bAU661DXvZI+jzpG/bHqt7LTOc/hfdVsjAbWFSXAS3U+zoBSiWzzaJG4iz7WXLYKWaSA
+         lYiCs6A1jKh3cOKb40cFBZxq6G3TLcxVdAEEpxsaGYO+8pqPUm7zIdfRQCvJiMFblDrH
+         KFtw==
+X-Gm-Message-State: AGi0PubWCxKxeX7yFxQ3bwFxlpluEokCSLuFiYyu83yc3LLlDK3FpnVj
+        KcvCiWNI8jIjc/vU4c+cMA==
+X-Google-Smtp-Source: APiQypI6PbdotC9mrYE+CpW9fKH4YceucS0Yef5Gf0KZGyBkpO4RhQk/A/AMbdgA32TOlTBSGy2JIw==
+X-Received: by 2002:a05:6e02:6cd:: with SMTP id p13mr14925447ils.150.1586050130495;
+        Sat, 04 Apr 2020 18:28:50 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id k81sm4425517ilf.44.2020.04.04.18.28.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Apr 2020 18:28:49 -0700 (PDT)
+Received: (nullmailer pid 18915 invoked by uid 1000);
+        Sun, 05 Apr 2020 01:28:47 -0000
+Date:   Sat, 4 Apr 2020 19:28:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     devicetree@vger.kernel.org, aford@beaconembedded.com,
+        charles.stevens@logicpd.com,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC] clk: vc5: Add bindings for output configurations
+Message-ID: <20200405012847.GA5234@bogus>
+References: <20200326213251.54457-1-aford173@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200404224205.1643238-1-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326213251.54457-1-aford173@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/04/2020 3:42 pm, Martin Blumenstingl wrote:
-> Hi Alistair,
->
-> +Cc Max Chou, he may be interested in this also
->
-> [...]
->> @@ -0,0 +1,56 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/net/realtek,rtl8723bs-bt.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: RTL8723BS/RTL8723CS Bluetooth Device Tree Bindings
-> I suggest you also add RTL8822C here (as well as to the compatible enum
-> and the description below). commit 848fc6164158d6 ("Bluetooth: hci_h5:
-> btrtl: Add support for RTL8822C") adde support for that chip but didn't
-> add the dt-binding documentation.
+On Thu, Mar 26, 2020 at 04:32:51PM -0500, Adam Ford wrote:
+> The Versaclock can be purchased in a non-programmed configuration.
+> If that is the case, the driver needs to configure the chip to
+> output the correct signal type, voltage and slew.
+> 
+> This RFC is proposing an additional binding to allow non-programmed
+> chips to be configured beyond their default configuration.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> index 05a245c9df08..4bc46ed9ba4a 100644
+> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> @@ -30,6 +30,25 @@ Required properties:
+>  		- 5p49v5933 and
+>  		- 5p49v5935: (optional) property not present or "clkin".
+>  
+> +For all output ports, an option child node can be used to specify:
+> +
+> +- mode: can be one of
+> +		  - LVPECL: Low-voltage positive/psuedo emitter-coupled logic
+> +		  - CMOS
+> +		  - HCSL 
+> +		  - LVDS: Low voltage differential signal
+> +
+> +- voltage-level:  can be one of the following microvolts
+> +		  - 1800000
+> +		  - 2500000
+> +		  - 3300000
+> +-  slew: Percent of normal, can be one of 
+> +		  - P80 
+> +		  - P85
+> +		  - P90
+> +		  - P100 
+> +
+> +
+>  ==Mapping between clock specifier and physical pins==
+>  
+>  When referencing the provided clock in the DT using phandle and
+> @@ -62,6 +81,8 @@ clock specifier, the following mapping applies:
+>  
+>  ==Example==
+>  
+> +#include <dt-bindings/versaclock.h>
+> +
+>  /* 25MHz reference crystal */
+>  ref25: ref25m {
+>  	compatible = "fixed-clock";
+> @@ -80,6 +101,13 @@ i2c-master-node {
+>  		/* Connect XIN input to 25MHz reference */
+>  		clocks = <&ref25m>;
+>  		clock-names = "xin";
+> +
+> +		ports@1 {
 
+'ports' is already taken as a node name.
 
-Done!
+> +			reg = <1>;
 
+What do the reg value signify?
 
->
-> [...]
->> +  device-wake-gpios:
->> +    description:
->> +      GPIO specifier, used to wakeup the BT module (active high)
->> +
->> +  enable-gpios:
->> +    description:
->> +      GPIO specifier, used to enable the BT module (active high)
->> +
->> +  host-wake-gpios:
->> +    desciption:
->> +      GPIO specifier, used to wakeup the host processor (active high)
-> regarding all GPIOs here: it entirely depends on the board whether these
-> are active HIGH or LOW. even though the actual Bluetooth part may
-> require a specific polarity there can be (for example) a transistor on
-> the board which could be used to invert the polarity (from the SoC's
-> view).
+> +			mode = <CMOS>;
+> +			pwr_sel = <1800000>;
 
+Not documented. Don't use '-' in property names.
 
-I have removed the "(active..." part from the GPIOs.
-
-
->
-> also "make dt_binding_check" reports:
->    properties:host-wake-gpios: 'maxItems' is a required property
-> I assume that it'll be the same for the other properties
-
-
-Added.
-
-
->
->> +firmware-postfix: firmware postfix to be used for firmware config
-> there's no other dt-binding that uses "firmware-postfix" yet. However,
-> there are a few that use "firmware-name". My opinion hasn't changed
-> since Vasily has posted this series initially: I would not add that
-> property for now because there seems to be a "standard" config blob
-> (which works for "all" boards), see Hans' analysis result of the ACPI
-> config blobs for RTL8723BS: [0].
-
-
-I have removed the 'firmware-postfix" part from this series.
-
-
-> Getting that "standard" config blob into linux-firmware would be
-> awesome (I assume licensing is not an issue here, Hans can probably give
-> more details here). I'm not sure about the licenses of "board specific"
-> config blobs and whether these can be added to linux-firmware.
->
-> also indentation seems wrong here
->
->> +reset-gpios: GPIO specifier, used to reset the BT module (active high)
-> indentation seems wrong here too
-
-
-Fixed.
-
-
->
-> also please note that there is currently no support for this property
-> inside the hci_h5 driver and you don't seem to add support for it within
-> this series either. so please double check that the reset GPIO is really
-> wired up on your sopine board.
-
-
-Removed.
-
-
->
->> +required:
->> +  - compatible
->> +
->> +examples:
->> +  - |
->> +    &uart1 {
->> +        pinctrl-names = "default";
->> +        pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
->> +        status = "okay";
-> AFAIK the "status" property should be omitted from examples
-
-
-Removed.
-
-
-> Z
-> also please add a "uart-has-rtscts" propery, see
-> Documentation/devicetree/bindings/serial/serial.yaml
-> Also please update patch #3.
-
-
-Added.
-
-
-Thanks for the review.
-
-
-Alistair
-
-
->
->
-> Martin
->
->
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/rtl_bt/rtl8723bs_config-OBDA8723.bin?id=e6b9001e91110c654573b8f8e2db6155d10d3b57
+> +			slew = <P80>;
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 2.25.1
+> 
