@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83784C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60062C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5759D2063A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3780920678
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 17:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7iGAme+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPds2W0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgDERgQ (ORCPT
+        id S1727845AbgDERgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 13:36:16 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53610 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727614AbgDERgL (ORCPT
+        Sun, 5 Apr 2020 13:36:25 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36807 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbgDERgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 13:36:11 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d77so12363417wmd.3;
-        Sun, 05 Apr 2020 10:36:10 -0700 (PDT)
+        Sun, 5 Apr 2020 13:36:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k1so5198206wrm.3;
+        Sun, 05 Apr 2020 10:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5M1R3a7is4s7bwwepv3EX0pn0j+KLFdAxm++0b65K4A=;
-        b=S7iGAme+T3NPEMI9AvbI2gNLYo7JoAAMnoYrBRZuD3OUceRM5JM7eoqCbSXL++jVqL
-         KTqd4ymrixpLdkKy6zKlHF6gcZUTYrtane3bMrBiks3A44xKQMUyDbrcTERarUBXuM3W
-         pjWYZPRkzZds+o1veMy+owZJGMdKXzkjsHYBvK5Q+klp9XL8pDRX/50EzWfAnchR1+CF
-         bjYE8K/c872nsf2RzKZYdpt1pW38l1d+WtoNWfZfWzqeetqRFiN/g6Z7oXrmwjCXPX/o
-         HIq/mc0xYJ3QPfk0esFckfg2G1DJxXT1c/Nd35dfVrexd142sqPnK7FXFfdeC2i45Vnx
-         j1CA==
+        bh=rpDrOVW4CGjRqmVW4DS9/TWcV76xtMAb2kaqMzg2fdg=;
+        b=dPds2W0H0HucETftAHC4o51mgBuA3TO0JK1LWeBiPX3R3wHm2V65XnzsC5Q3ArTFPY
+         qL87pOuFyVXJ8BSDU5jWFAalVq2uDYgqLdb7ssWe38bn66XzP47XLcym7UPivgj34OiL
+         L0Gh1+LtJ0fiWZ8qHsjYmI1X9IL1kOPsFlDOIoSDpM/oZD2wecJjzvRX/KIglJVWJI3a
+         AGflKC0YmupGbN2l+QH2tWqxH4YXpyy5ceJDaMbXuDy66FAhOEa5O0GwmrpQXsMMz3pM
+         Kyy57Nv7lWHxLKmRSj6TTcOXulAmdGx1XXyX4OgKtwcYNoi0qFoR51Ff/SY5NH+zU0dh
+         MTKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5M1R3a7is4s7bwwepv3EX0pn0j+KLFdAxm++0b65K4A=;
-        b=EtdzblDnldHKW2EAnptOKtGNxKMX7/tPPjUpqtmbxZskfvkfP/4+gPb56tmNjoI+PF
-         xau7ys3pKzRcMjYhRjyr5ELwiXdUlfag4TfBbRu0Pr/See+CS5fpKN03CiG0Qd++dlmO
-         vZDvtzk3nXbSdSSsw8CumldSEPgctFXus41jeOmETenYgmM83pjBdESECyz8iRo+0i3q
-         B0dEEzbgEfPO+sElu2kpJg42JOl7I8vqwJuX9LyiDuVl5KDLRUCUIjhzMN87cDJOUpmY
-         3+3SroPk/w7MOgLoj03Pg4Tjv+Te7S70bR8oSzi5VB0mqEXAC/johqb3TplYOxJEml7R
-         k91w==
-X-Gm-Message-State: AGi0Pub8zdONam9OjAWUuwP9A1L0ICYtT8pFICE+qLYfgGS8rl1K6irF
-        2Tmn1V2kAzJ8xp12U2ptw1k=
-X-Google-Smtp-Source: APiQypICLzZwmhla0XhGF8QMFIN6xjgNZ5W4a7wriO/UdPeeYjgTuyOeDIDFhxt5UHnt2aMPJ3/FWA==
-X-Received: by 2002:a05:600c:3d1:: with SMTP id z17mr18985049wmd.56.1586108169523;
-        Sun, 05 Apr 2020 10:36:09 -0700 (PDT)
+        bh=rpDrOVW4CGjRqmVW4DS9/TWcV76xtMAb2kaqMzg2fdg=;
+        b=a9XmWsjR7HSQbRziyFxFShw8npZrS5IUYZTPA8/po3Ji8D6XZsvz5MG/hhmRKph4li
+         HTIJUV7xyUoF022YpnXkS7YwtbUqZ3VT/HjsBblritmim8xsJnR0/DSOcYSUjf9GsL4n
+         lCHRg1nWKWjTO49tzvk58SOD5pxZYwcICiT4g2ehwStyt05/EOgq3W603Cl0vkEQCUgb
+         mIhMZORgv+P+2ru5wY/TkRsUvO5ypP45g4huGxPsdJeBZA0rg5UT2Tw8Ehu8VPuW/khg
+         wjry3WqfW2OL3DhBMtKUGEgdvX7FUSYHtVKSX0ktSBOpQ8PikDXD6SjOFaMIGxs5fNjE
+         EWlg==
+X-Gm-Message-State: AGi0PubrepzQQWpEERvHn7WicdXjDSNYXomzWAST5eZOY5J9UCCKuSar
+        odvJy6YSUpE8nZINUb+iCBc=
+X-Google-Smtp-Source: APiQypIw5vGQ+o0obmPs3lpXvuOamBClwY4w5DsXT20ZYnY09W6mHrbpJWtszqL/S1QlpoqeujVaoQ==
+X-Received: by 2002:a5d:4488:: with SMTP id j8mr2584014wrq.170.1586108172846;
+        Sun, 05 Apr 2020 10:36:12 -0700 (PDT)
 Received: from localhost.localdomain (91-167-199-67.subs.proxad.net. [91.167.199.67])
-        by smtp.gmail.com with ESMTPSA id s13sm6031669wrw.20.2020.04.05.10.36.08
+        by smtp.gmail.com with ESMTPSA id s13sm6031669wrw.20.2020.04.05.10.36.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 10:36:08 -0700 (PDT)
+        Sun, 05 Apr 2020 10:36:12 -0700 (PDT)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -64,9 +64,9 @@ Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         linux-sunxi <linux-sunxi@googlegroups.com>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2 4/7] arm64: dts: allwinner: h6: Add GPU Operating Performance Points table
-Date:   Sun,  5 Apr 2020 19:35:58 +0200
-Message-Id: <20200405173601.24331-5-peron.clem@gmail.com>
+Subject: [PATCH v2 7/7] arm64: dts: allwinner: h6: Enable CPU and GPU opp tables for Orange Pi boards
+Date:   Sun,  5 Apr 2020 19:36:01 +0200
+Message-Id: <20200405173601.24331-8-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200405173601.24331-1-peron.clem@gmail.com>
 References: <20200405173601.24331-1-peron.clem@gmail.com>
@@ -78,95 +78,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an Operating Performance Points table for the GPU to
-enable Dynamic Voltage & Frequency Scaling on the H6.
+Enable CPU and GPU opp tables for Orange Pi boards.
+
+This needs to change the CPU regulator max voltage to fit
+the OPP table.
+
+Also add the ramp-delay information to avoid any out of spec
+running as the regulator is slower at reaching the voltage
+requested compare to the PLL reaching the frequency.
+
+There is no such information for AXP805 but similar PMIC (AXP813)
+has a DVM (Dynamic Voltage scaling Management) ramp rate equal
+to 2500uV/us.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .../boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi | 74 +++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi
-new file mode 100644
-index 000000000000..4a1814844fe0
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-gpu-opp.dtsi
-@@ -0,0 +1,74 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+// Copyright (C) 2020 Clément Péron <peron.clem@gmail.com>
-+
-+/ {
-+	gpu_opp_table: opp_table1 {
-+		compatible = "operating-points-v2";
-+
-+		opp@756000000 {
-+			opp-hz = /bits/ 64 <756000000>;
-+			opp-microvolt = <1040000>;
-+		};
-+		opp@624000000 {
-+			opp-hz = /bits/ 64 <624000000>;
-+			opp-microvolt = <950000>;
-+		};
-+		opp@576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-microvolt = <930000>;
-+		};
-+		opp@540000000 {
-+			opp-hz = /bits/ 64 <540000000>;
-+			opp-microvolt = <910000>;
-+		};
-+		opp@504000000 {
-+			opp-hz = /bits/ 64 <504000000>;
-+			opp-microvolt = <890000>;
-+		};
-+		opp@456000000 {
-+			opp-hz = /bits/ 64 <456000000>;
-+			opp-microvolt = <870000>;
-+		};
-+		opp@432000000 {
-+			opp-hz = /bits/ 64 <432000000>;
-+			opp-microvolt = <860000>;
-+		};
-+		opp@420000000 {
-+			opp-hz = /bits/ 64 <420000000>;
-+			opp-microvolt = <850000>;
-+		};
-+		opp@408000000 {
-+			opp-hz = /bits/ 64 <408000000>;
-+			opp-microvolt = <840000>;
-+		};
-+		opp@384000000 {
-+			opp-hz = /bits/ 64 <384000000>;
-+			opp-microvolt = <830000>;
-+		};
-+		opp@360000000 {
-+			opp-hz = /bits/ 64 <360000000>;
-+			opp-microvolt = <820000>;
-+		};
-+		opp@336000000 {
-+			opp-hz = /bits/ 64 <336000000>;
-+			opp-microvolt = <810000>;
-+		};
-+		opp@312000000 {
-+			opp-hz = /bits/ 64 <312000000>;
-+			opp-microvolt = <810000>;
-+		};
-+		opp@264000000 {
-+			opp-hz = /bits/ 64 <264000000>;
-+			opp-microvolt = <810000>;
-+		};
-+		opp@216000000 {
-+			opp-hz = /bits/ 64 <216000000>;
-+			opp-microvolt = <810000>;
-+		};
-+	};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+index 37f4c57597d4..f3ba500ce4c6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+@@ -5,6 +5,8 @@
+ /dts-v1/;
+ 
+ #include "sun50i-h6.dtsi"
++#include "sun50i-h6-cpu-opp.dtsi"
++#include "sun50i-h6-gpu-opp.dtsi"
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ 
+@@ -45,6 +47,10 @@
+ 	};
+ };
+ 
++&cpu0 {
++	cpu-supply = <&reg_dcdca>;
 +};
 +
-+&gpu {
-+	operating-points-v2 = <&gpu_opp_table>;
-+	#cooling-cells = <2>;
-+};
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -161,7 +167,8 @@
+ 			reg_dcdca: dcdca {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+-				regulator-max-microvolt = <1080000>;
++				regulator-max-microvolt = <1160000>;
++				regulator-ramp-delay = <2500>;
+ 				regulator-name = "vdd-cpu";
+ 			};
+ 
+@@ -169,6 +176,7 @@
+ 				regulator-enable-ramp-delay = <32000>;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
++				regulator-ramp-delay = <2500>;
+ 				regulator-name = "vdd-gpu";
+ 			};
+ 
 -- 
 2.20.1
 
