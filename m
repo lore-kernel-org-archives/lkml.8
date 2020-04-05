@@ -2,106 +2,134 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAFEC2BA18
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153D2C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A9820737
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:10:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586056259;
-	bh=JT+cqz7qLQP4SxN8BKeesGICXxCLM/dtqRMyPQ3Sypg=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=VAgd4hBEnVoAKyOXIByuyPdiCbdqROGQU4K4TO+rMBq8J48/0/STRImzXEZHxTkQ7
-	 jyrzVUokIOajs1nlzzzZmGxSatRvgIkoay5rCP+9t9cKULfkcaSxEWBrRpoKBeagEQ
-	 OsA58KYgpwqOgrGG+d/L8GmaoQ8KnzfgKBQ5vCmE=
+	by mail.kernel.org (Postfix) with ESMTP id DF35C206A3
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 03:11:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OA7iB1Dm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgDEDK6 (ORCPT
+        id S1726533AbgDEDLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 23:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgDEDK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 23:10:58 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 4 Apr 2020 23:11:05 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50452 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726388AbgDEDLE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 23:11:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586056263;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EG5ytn3q4cjrK4N/hwUftqYJUijBPztWPiSrSQnYoRI=;
+        b=OA7iB1Dm1pXRGyEi5r57zEPfUlGkNIVURBO68AK6OP9XW7XyzKh1jaQdKC/OBCqPFqvGt8
+        zyhnA3XQCHgLMdsleZqr/QTVx74fTDmiY2DmFr+cHy2yVL4s/A2K7PDFlJwHPblA4K0WJm
+        w/bCvGQKylxwrzONxZyhVgcX5hVFw9g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-400-5rHQ2HdINEyC9VBzDOicDQ-1; Sat, 04 Apr 2020 23:11:01 -0400
+X-MC-Unique: 5rHQ2HdINEyC9VBzDOicDQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8897206A3;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3A9A100551A;
+        Sun,  5 Apr 2020 03:10:59 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-112-153.rdu2.redhat.com [10.10.112.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D4B2D1001B09;
         Sun,  5 Apr 2020 03:10:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586056257;
-        bh=JT+cqz7qLQP4SxN8BKeesGICXxCLM/dtqRMyPQ3Sypg=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=gH6i3tO5MVQB3uPNo+huaHmkejxuBY4nUhUoCunnAqMsmF7anDqq0ZyFOb0Cm/062
-         oNFKVzSEKGRTGILKizSs4A5zAnTdvUWnRrLd++9JV+COQo8DjgElxvI+U+quW9jfPU
-         7JXLOLw2oTI3bIOEozn/Lfqjau/wBp5VXM3Uw6hE=
-Content-Type: text/plain; charset="utf-8"
+Subject: Re: [GIT PULL] keys: Fix key->sem vs mmap_sem issue when reading key
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        keyrings@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1437197.1585570598@warthog.procyon.org.uk>
+ <CAHk-=wgWnZCvTFDfiYAy=uMUf2F1Yy1r9ur5ARcmtqLjX8Tz4Q@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <78ff6e5d-9643-8798-09cb-65b1415140be@redhat.com>
+Date:   Sat, 4 Apr 2020 23:10:57 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <00f701d60958$a9ed46c0$fdc7d440$@gmail.com>
-References: <20200330205647.24806-1-ansuelsmth@gmail.com> <158587766752.125146.7582840761926137726@swboyd.mtv.corp.google.com> <00f701d60958$a9ed46c0$fdc7d440$@gmail.com>
-Subject: Re: R: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for ipq806x
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     'Mathieu Olivari' <mathieu@codeaurora.org>,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Michael Turquette' <mturquette@baylibre.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-To:     'Andy Gross' <agross@kernel.org>, ansuelsmth@gmail.com
-Date:   Sat, 04 Apr 2020 20:10:56 -0700
-Message-ID: <158605625697.158626.12280118012638752686@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <CAHk-=wgWnZCvTFDfiYAy=uMUf2F1Yy1r9ur5ARcmtqLjX8Tz4Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting ansuelsmth@gmail.com (2020-04-02 18:39:04)
->=20
->=20
-> > -----Messaggio originale-----
-> > Da: Stephen Boyd <sboyd@kernel.org>
-> > Inviato: venerd=C3=AC 3 aprile 2020 03:34
-> > A: Andy Gross <agross@kernel.org>; Ansuel Smith
-> > <ansuelsmth@gmail.com>
-> > Cc: Ansuel Smith <ansuelsmth@gmail.com>; Mathieu Olivari
-> > <mathieu@codeaurora.org>; Bjorn Andersson
-> > <bjorn.andersson@linaro.org>; Rob Herring <robh+dt@kernel.org>; Mark
-> > Rutland <mark.rutland@arm.com>; Michael Turquette
-> > <mturquette@baylibre.com>; linux-arm-msm@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > clk@vger.kernel.org
-> > Oggetto: Re: [PATCH v2] ARM: qcom: Disable i2c device on gsbi4 for
-> > ipq806x
-> >=20
-> > Quoting Ansuel Smith (2020-03-30 13:56:46)
-> > > diff --git a/drivers/clk/qcom/gcc-ipq806x.c b/drivers/clk/qcom/gcc-
-> > ipq806x.c
-> > > index b0eee0903807..f7d7a2bc84c1 100644
-> > > --- a/drivers/clk/qcom/gcc-ipq806x.c
-> > > +++ b/drivers/clk/qcom/gcc-ipq806x.c
-> > > @@ -991,6 +991,7 @@ static struct clk_branch gsbi4_h_clk =3D {
-> > >                 .hw.init =3D &(struct clk_init_data){
-> > >                         .name =3D "gsbi4_h_clk",
-> > >                         .ops =3D &clk_branch_ops,
-> > > +                       .flags =3D CLK_IGNORE_UNUSED,
-> >=20
-> > Is this necessary? Shouldn't we skip clks that are protected during the
-> > unused phase?
-> >=20
->=20
-> gsbi4_h_clk is not protected. gsbi4_h_clk needs to not be disabled if unu=
-sed
-> (as it's used by rpm) but can't be protected since it's used by uart gsbi=
-4.
-> (With some test protecting also this clk cause the malfunction of uart gs=
-b4)
->=20
+On 4/4/20 4:00 PM, Linus Torvalds wrote:
+> On Mon, Mar 30, 2020 at 5:16 AM David Howells <dhowells@redhat.com> wrote:
+>>  security/keys/internal.h                  |  12 ++++
+> This isn't so much about this pull (which I have taken), as about the
+> fact that this code re-inforces bad behavior we already in the slub
+> layer, and now extends it further to kvfree.
+>
+> Doing this:
+>
+>
+>    __kvzfree(const void *addr, size_t len)
+>   ..
+>                 memset((void *)addr, 0, len);
+>                 kvfree(addr);
+>
+> is wrong to begin with. It's wrong because if the compiler ever knows
+> that kvfree is a freeing function (with something like
+> __attribute__((free)) - I don't think gcc is smart enough today), the
+> compiler might throw the memset away.
+>
+> Yeah, so far we've only seen that for automatic stack clearing, but
+> there are very much compilers that know that alloc/free are special
+> (both for warning about use-after-free issues, and for "improving"
+> code generation by blindly removing dead writes).
+>
+> We have a function for clearing sensitive information: it's called
+> "memclear_explicit()", and it's about forced (explicit) clearing even
+> if the data might look dead afterwards.
+>
+> The other problem with that function is the name: "__kvzfree()" is not
+> a useful name for this function. We use the "__" format for internal
+> low-level helpers, and it generally means that it does *less* than the
+> full function. This does more, not less, and "__" is not following any
+> sane naming model.
+>
+> So the name should probably be something like "kvfree_sensitive()" or
+> similar. Or maybe it could go even further, and talk about _why_ it's
+> sensitive, and call it "kvfree_cleartext()" or something like that.
+>
+> Because the clearing is really not what even matters. It might choose
+> other patterns to overwrite things with, but it might do other things
+> too, like putting special barriers for data leakage (or flags to tell
+> return-to-user-mode to do so).
+>
+> And yes, kzfree() isn't a good name either, and had that same
+> memset(), but at least it doesn't do the dual-underscore mistake.
+>
+> Including some kzfree()/crypto people explicitly - I hope we can get
+> away from this incorrect and actively wrong pattern of thinking that
+> "sensitive data should be memset(), and then we should add a random
+> 'z' in the name somewhere to 'document' that".
+>
+>                Linus
+>
+Thanks for the suggestion, I will post a patch to rename the function to
+kvzfree_explicit() and use memzero_explicit() for clearing memory.
 
-Who owns gsbi4 on this platform? Is it RPM? If so, it should be
-protected and we shouldn't touch this clk from the kernel.
+Cheers,
+Longman
+
