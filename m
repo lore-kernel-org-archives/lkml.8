@@ -2,125 +2,106 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA94C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DADC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16BD8206F8
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180EE206F8
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 21:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gRTssLRK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uNl11IBg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgDEVnM (ORCPT
+        id S1727805AbgDEV4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 17:43:12 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:57599 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726887AbgDEVnL (ORCPT
+        Sun, 5 Apr 2020 17:56:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43564 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgDEV4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 17:43:11 -0400
-X-UUID: 5a9b77c3b4a34741ba45ff9529a91eae-20200406
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ykXJOg+MvDEO7S3FZP+B/VvjET2n99Rmo5Cho9/ZgpU=;
-        b=gRTssLRKXrFy0OgrWpjs8H26qsP0+ZTDpbOcTyDRX/5Z2LfivujVghPTcEjH4155zYsovdKMJ0O+R/u5rfji7IGyckyuAQzspBiJ/GCde3KPmMm+tZS93LHwOuwBEGsSo/o62C/XVBgriqFQ8MZYONu7v6cgIZa5VFxPMgrwYus=;
-X-UUID: 5a9b77c3b4a34741ba45ff9529a91eae-20200406
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <sean.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 600928693; Mon, 06 Apr 2020 05:43:06 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 6 Apr 2020 05:42:54 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 6 Apr 2020 05:42:54 +0800
-From:   <sean.wang@mediatek.com>
-To:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <vivien.didelot@savoirfairelinux.com>, <Mark-MC.Lee@mediatek.com>,
-        <john@phrozen.org>
-CC:     <Landen.Chao@mediatek.com>, <steven.liu@mediatek.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= <opensource@vdorst.com>
-Subject: [PATCH v2 net 2/2] net: ethernet: mediatek: move mt7623 settings out off the mt7530
-Date:   Mon, 6 Apr 2020 05:42:54 +0800
-Message-ID: <1586122974-22125-2-git-send-email-sean.wang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1586122974-22125-1-git-send-email-sean.wang@mediatek.com>
-References: <1586122974-22125-1-git-send-email-sean.wang@mediatek.com>
+        Sun, 5 Apr 2020 17:56:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dpw9xsZ0gY0GT7tsgtGf0/8FnrsUbxUf5AWEI2NyNks=; b=uNl11IBgUVuiJEAEneJlEoOmNV
+        ns32BrV+sa/IQQIqPRBgg+QkSMiD/pFyPxe+gxE4cX4WYZ1S+sYl16UL/oZplqjVW/GAhvKgIwQqK
+        9B2w1/3uPFzDEmBKnF+sOyAwnlUgw/7GQIQBh63DyTIr6qsZMdFXn/rXcAJo8rmzuH5QAwEEqIKOn
+        1o7VaqD5iss01kVLoci28nHO6j4lC/BQV+PX3yoDQy6njwZqe68otmKmDFth3iZbVHcqOItKrsZsy
+        f9mAd8RHtF8va5uHLZkNIJNE7qyvVwW3tu7VCm+mepzIOtAOAIyz9Jcd0wpVcuE5/f5q5M5fQwE0w
+        gJAq0CuQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLDFs-0004o8-T8; Sun, 05 Apr 2020 21:56:36 +0000
+Date:   Sun, 5 Apr 2020 14:56:36 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
+ node
+Message-ID: <20200405215636.GW21484@bombadil.infradead.org>
+References: <20200330124842.GY22483@bombadil.infradead.org>
+ <20200330141558.soeqhstone2liqud@master>
+ <20200330142821.GD22483@bombadil.infradead.org>
+ <20200331134208.gfkyym6n3gpgk3x3@master>
+ <20200331164212.GC21484@bombadil.infradead.org>
+ <20200331220440.roq4pv6wk7tq23gx@master>
+ <20200331235912.GD21484@bombadil.infradead.org>
+ <20200401221021.v6igvcpqyeuo2cws@master>
+ <20200401222000.GK21484@bombadil.infradead.org>
+ <20200405110743.bzpvz4jzwr4kharr@master>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200405110743.bzpvz4jzwr4kharr@master>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUmVuw6kgdmFuIERvcnN0IDxvcGVuc291cmNlQHZkb3JzdC5jb20+DQoNCk1vdmluZyBt
-dDc2MjMgbG9naWMgb3V0IG9mZiBtdDc1MzAsIGlzIHJlcXVpcmVkIHRvIG1ha2UgaGFyZHdhcmUg
-c2V0dGluZw0KY29uc2lzdGVudCBhZnRlciB3ZSBpbnRyb2R1Y2UgcGh5bGluayB0byBtdGsgZHJp
-dmVyLg0KDQpGaXhlczogYjhmYzlmMzA4MjFlICgibmV0OiBldGhlcm5ldDogbWVkaWF0ZWs6IEFk
-ZCBiYXNpYyBQSFlMSU5LIHN1cHBvcnQiKQ0KUmV2aWV3ZWQtYnk6IFNlYW4gV2FuZyA8c2Vhbi53
-YW5nQG1lZGlhdGVrLmNvbT4NClRlc3RlZC1ieTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0
-ZWsuY29tPg0KU2lnbmVkLW9mZi1ieTogUmVuw6kgdmFuIERvcnN0IDxvcGVuc291cmNlQHZkb3Jz
-dC5jb20+DQotLS0NCnYxIC0+IHYyOiBzcGxpdCBvdXQgbG9naWMgY2hhbmdpbmcgbXRrX2dtYWMw
-X3JnbWlpX2FkanVzdCB0aGF0IHNob3VsZCBiZQ0KCSAgcmVmaW5lZCBmdXJ0aGVyIGFuZCBhY3R1
-YWx5IGJlbG9uZ2VkIHRvIHNlcGFyYXRlIHBhdGNoLg0KLS0tDQogZHJpdmVycy9uZXQvZXRoZXJu
-ZXQvbWVkaWF0ZWsvbXRrX2V0aF9zb2MuYyB8IDI0ICsrKysrKysrKysrKysrKysrKysrLQ0KIGRy
-aXZlcnMvbmV0L2V0aGVybmV0L21lZGlhdGVrL210a19ldGhfc29jLmggfCAgOCArKysrKysrDQog
-MiBmaWxlcyBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWRpYXRlay9tdGtfZXRoX3NvYy5jIGIvZHJp
-dmVycy9uZXQvZXRoZXJuZXQvbWVkaWF0ZWsvbXRrX2V0aF9zb2MuYw0KaW5kZXggOGQyOGY5MGFj
-ZmU3Li4wOTA0NzEwOWQwZGEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWRp
-YXRlay9tdGtfZXRoX3NvYy5jDQorKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWRpYXRlay9t
-dGtfZXRoX3NvYy5jDQpAQCAtNjUsNiArNjUsMTcgQEAgdTMyIG10a19yMzIoc3RydWN0IG10a19l
-dGggKmV0aCwgdW5zaWduZWQgcmVnKQ0KIAlyZXR1cm4gX19yYXdfcmVhZGwoZXRoLT5iYXNlICsg
-cmVnKTsNCiB9DQogDQordTMyIG10a19tMzIoc3RydWN0IG10a19ldGggKmV0aCwgdTMyIG1hc2ss
-IHUzMiBzZXQsIHVuc2lnbmVkIHJlZykNCit7DQorCXUzMiB2YWw7DQorDQorCXZhbCA9IG10a19y
-MzIoZXRoLCByZWcpOw0KKwl2YWwgJj0gfm1hc2s7DQorCXZhbCB8PSBzZXQ7DQorCW10a193MzIo
-ZXRoLCB2YWwsIHJlZyk7DQorCXJldHVybiByZWc7DQorfQ0KKw0KIHN0YXRpYyBpbnQgbXRrX21k
-aW9fYnVzeV93YWl0KHN0cnVjdCBtdGtfZXRoICpldGgpDQogew0KIAl1bnNpZ25lZCBsb25nIHRf
-c3RhcnQgPSBqaWZmaWVzOw0KQEAgLTE5Myw3ICsyMDQsNyBAQCBzdGF0aWMgdm9pZCBtdGtfbWFj
-X2NvbmZpZyhzdHJ1Y3QgcGh5bGlua19jb25maWcgKmNvbmZpZywgdW5zaWduZWQgaW50IG1vZGUs
-DQogCXN0cnVjdCBtdGtfbWFjICptYWMgPSBjb250YWluZXJfb2YoY29uZmlnLCBzdHJ1Y3QgbXRr
-X21hYywNCiAJCQkJCSAgIHBoeWxpbmtfY29uZmlnKTsNCiAJc3RydWN0IG10a19ldGggKmV0aCA9
-IG1hYy0+aHc7DQotCXUzMiBtY3JfY3VyLCBtY3JfbmV3LCBzaWQ7DQorCXUzMiBtY3JfY3VyLCBt
-Y3JfbmV3LCBzaWQsIGk7DQogCWludCB2YWwsIGdlX21vZGUsIGVycjsNCiANCiAJLyogTVQ3Nng4
-IGhhcyBubyBoYXJkd2FyZSBzZXR0aW5ncyBiZXR3ZWVuIGZvciB0aGUgTUFDICovDQpAQCAtMjU1
-LDYgKzI2NiwxNyBAQCBzdGF0aWMgdm9pZCBtdGtfbWFjX2NvbmZpZyhzdHJ1Y3QgcGh5bGlua19j
-b25maWcgKmNvbmZpZywgdW5zaWduZWQgaW50IG1vZGUsDQogCQkJCSAgICBQSFlfSU5URVJGQUNF
-X01PREVfVFJHTUlJKQ0KIAkJCQkJbXRrX2dtYWMwX3JnbWlpX2FkanVzdChtYWMtPmh3LA0KIAkJ
-CQkJCQkgICAgICAgc3RhdGUtPnNwZWVkKTsNCisNCisJCQkJLyogbXQ3NjIzX3BhZF9jbGtfc2V0
-dXAgKi8NCisJCQkJZm9yIChpID0gMCA7IGkgPCBOVU1fVFJHTUlJX0NUUkw7IGkrKykNCisJCQkJ
-CW10a193MzIobWFjLT5odywNCisJCQkJCQlURF9ETV9EUlZQKDgpIHwgVERfRE1fRFJWTig4KSwN
-CisJCQkJCQlUUkdNSUlfVERfT0RUKGkpKTsNCisNCisJCQkJLyogQXNzZXJ0L3JlbGVhc2UgTVQ3
-NjIzIFJYQyByZXNldCAqLw0KKwkJCQltdGtfbTMyKG1hYy0+aHcsIDAsIFJYQ19SU1QgfCBSWENf
-RFFTSVNFTCwNCisJCQkJCVRSR01JSV9SQ0tfQ1RSTCk7DQorCQkJCW10a19tMzIobWFjLT5odywg
-UlhDX1JTVCwgMCwgVFJHTUlJX1JDS19DVFJMKTsNCiAJCQl9DQogCQl9DQogDQpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVkaWF0ZWsvbXRrX2V0aF9zb2MuaCBiL2RyaXZlcnMv
-bmV0L2V0aGVybmV0L21lZGlhdGVrL210a19ldGhfc29jLmgNCmluZGV4IDg1ODMwZmUxNGExYi4u
-NDU0Y2ZjZDQ2NWZkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVkaWF0ZWsv
-bXRrX2V0aF9zb2MuaA0KKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVkaWF0ZWsvbXRrX2V0
-aF9zb2MuaA0KQEAgLTM1MiwxMCArMzUyLDEzIEBADQogI2RlZmluZSBEUVNJMCh4KQkJKCh4IDw8
-IDApICYgR0VOTUFTSyg2LCAwKSkNCiAjZGVmaW5lIERRU0kxKHgpCQkoKHggPDwgOCkgJiBHRU5N
-QVNLKDE0LCA4KSkNCiAjZGVmaW5lIFJYQ1RMX0RNV1RMQVQoeCkJKCh4IDw8IDE2KSAmIEdFTk1B
-U0soMTgsIDE2KSkNCisjZGVmaW5lIFJYQ19SU1QJCQlCSVQoMzEpDQogI2RlZmluZSBSWENfRFFT
-SVNFTAkJQklUKDMwKQ0KICNkZWZpbmUgUkNLX0NUUkxfUkdNSUlfMTAwMAkoUlhDX0RRU0lTRUwg
-fCBSWENUTF9ETVdUTEFUKDIpIHwgRFFTSTEoMTYpKQ0KICNkZWZpbmUgUkNLX0NUUkxfUkdNSUlf
-MTBfMTAwCVJYQ1RMX0RNV1RMQVQoMikNCiANCisjZGVmaW5lIE5VTV9UUkdNSUlfQ1RSTAkJNQ0K
-Kw0KIC8qIFRSR01JSSBSWEMgY29udHJvbCByZWdpc3RlciAqLw0KICNkZWZpbmUgVFJHTUlJX1RD
-S19DVFJMCQkweDEwMzQwDQogI2RlZmluZSBUWENUTF9ETVdUTEFUKHgpCSgoeCA8PCAxNikgJiBH
-RU5NQVNLKDE4LCAxNikpDQpAQCAtMzYzLDYgKzM2NiwxMSBAQA0KICNkZWZpbmUgVENLX0NUUkxf
-UkdNSUlfMTAwMAlUWENUTF9ETVdUTEFUKDIpDQogI2RlZmluZSBUQ0tfQ1RSTF9SR01JSV8xMF8x
-MDAJKFRYQ19JTlYgfCBUWENUTF9ETVdUTEFUKDIpKQ0KIA0KKy8qIFRSR01JSSBUWCBEcml2ZSBT
-dHJlbmd0aCAqLw0KKyNkZWZpbmUgVFJHTUlJX1REX09EVChpKQkoMHgxMDM1NCArIDggKiAoaSkp
-DQorI2RlZmluZSAgVERfRE1fRFJWUCh4KQkJKCh4KSAmIDB4ZikNCisjZGVmaW5lICBURF9ETV9E
-UlZOKHgpCQkoKCh4KSAmIDB4ZikgPDwgNCkNCisNCiAvKiBUUkdNSUkgSW50ZXJmYWNlIG1vZGUg
-cmVnaXN0ZXIgKi8NCiAjZGVmaW5lIElOVEZfTU9ERQkJMHgxMDM5MA0KICNkZWZpbmUgVFJHTUlJ
-X0lOVEZfRElTCQlCSVQoMCkNCi0tIA0KMi4yNS4xDQo=
+On Sun, Apr 05, 2020 at 11:07:43AM +0000, Wei Yang wrote:
+> Occasionally, I see this error message without my change on 5.6.
 
+I've never seen this one before.  Maybe my test machine is insufficient ...
+
+> random seed 1586068185
+> running tests
+> XArray: 21151201 of 21151201 tests passed
+> =================================================================
+> ==6040==ERROR: AddressSanitizer: heap-use-after-free on address 0x60c0031bce81 at pc 0x00000040b4b3 bp 0x7f95e87f9bb0 sp 0x7f95e87f9ba0
+> READ of size 1 at 0x60c0031bce81 thread T11
+>     #0 0x40b4b2 in xas_find_marked ../../../lib/xarray.c:1182
+>     #1 0x45318e in tagged_iteration_fn /root/git/linux/tools/testing/radix-tree/iteration_check.c:77
+>     #2 0x7f95ef2464e1 in start_thread (/lib64/libpthread.so.0+0x94e1)
+>     #3 0x7f95ee8026d2 in clone (/lib64/libc.so.6+0x1016d2)
+> 
+> 0x60c0031bce81 is located 1 bytes inside of 128-byte region [0x60c0031bce80,0x60c0031bcf00)
+> freed by thread T1 here:
+>     #0 0x7f95ef36c91f in __interceptor_free (/lib64/libasan.so.5+0x10d91f)
+>     #1 0x43e4ba in kmem_cache_free /root/git/linux/tools/testing/radix-tree/linux.c:64
+> 
+> previously allocated by thread T13 here:
+>     #0 0x7f95ef36cd18 in __interceptor_malloc (/lib64/libasan.so.5+0x10dd18)
+>     #1 0x43e1af in kmem_cache_alloc /root/git/linux/tools/testing/radix-tree/linux.c:44
+> 
+> Thread T11 created by T0 here:
+>     #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
+>     #1 0x454862 in iteration_test /root/git/linux/tools/testing/radix-tree/iteration_check.c:178
+> 
+> Thread T1 created by T0 here:
+>     #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
+>     #1 0x7f95ef235b89  (/lib64/liburcu.so.6+0x3b89)
+> 
+> Thread T13 created by T0 here:
+>     #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
+>     #1 0x4548a4 in iteration_test /root/git/linux/tools/testing/radix-tree/iteration_check.c:186
+> 
+> This is not always like this. Didn't figure out the reason yet. Hope you many
+> have some point.
+
+How often are you seeing it?
+
+T1 (the thread which frees the memory) is the RCU thread, so the freeing
+went through RCU.  For some reason, T11 (the iterating thread) isn't
+preventing the freeing by its use of the RCU read lock.
