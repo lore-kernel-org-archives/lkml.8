@@ -2,187 +2,158 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B38C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DF9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968E6206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:29:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586078992;
-	bh=MjC92rt0E5l5W5t5bknkFQpDqRFmsGXr/XiP7FEyRnw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ccLc7Lz2mM1D1gV/vzjJ5aOjUdG1h187dWQ+KMj3EN852ev6IYamwPCAQBMhtl46r
-	 07fNolWK0mymg4+GXn7zSDUqbZ0g4vm2QAY1bUqF+9ZtZKmUH0ERi3R8AERmXsM17h
-	 kffl8992888DTxORkPa/sycrpqR31o22kcry919w=
+	by mail.kernel.org (Postfix) with ESMTP id BE26B20672
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 09:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="cGwimnwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgDEJ3u (ORCPT
+        id S1726564AbgDEJae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 05:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
+        Sun, 5 Apr 2020 05:30:34 -0400
+Received: from mout.web.de ([212.227.17.12]:52295 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbgDEJ3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 05:29:50 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4740B20672;
-        Sun,  5 Apr 2020 09:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586078989;
-        bh=MjC92rt0E5l5W5t5bknkFQpDqRFmsGXr/XiP7FEyRnw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ANdgQ1IlKPeaeP/UytsafnLFyaKFe4sOwigg/u5QrYmJJa+OIda9LoCwhMDL14Nxv
-         BZBVt6Nr44kJtnK53DkJ0pjs7O/MKIJaKILuKldI5RPiWyja6nOh1hSYrVygl2T0TK
-         sTWsyONTO4eGptXCELaIsRF835tYvTjTYsc/BXvA=
-Date:   Sun, 5 Apr 2020 10:29:44 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc:     Rob Herring <robh@kernel.org>, Tomas Novotny <tomas@novotny.cz>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: iio: light: vcnl4000: Add
- near-level
-Message-ID: <20200405102944.41589d98@archlinux>
-In-Reply-To: <20200404174521.GA24709@bogon.m.sigxcpu.org>
-References: <cover.1585134362.git.agx@sigxcpu.org>
-        <f0ad40351d7ab12f79d2c29f738443514ae0fb76.1585134362.git.agx@sigxcpu.org>
-        <20200329102526.1ee85e96@archlinux>
-        <20200331214517.GA24128@bogus>
-        <20200404160127.1ef9d1ac@archlinux>
-        <20200404174521.GA24709@bogon.m.sigxcpu.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726534AbgDEJae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 05:30:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586079021;
+        bh=wPquJ+Whli71qk48bH13/+zmxMWVmiS56DJQmU6p9eg=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=cGwimnwtgDIvSW4ZPakBUeBVWNlrCvvZGH2aj6fLGlHhOFmqyMuPbSjqzMpXxOjM/
+         ajLy5CUT8vUZRKtYIIGLdMLlp1Zi1R2AgWF2tmVT9zVwHrdx9n5qA0UpMIMFuoSXtt
+         Zn9u+M3ZVDRSLfajQlxtQB49RYEOnb3QGEpgfNY8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.131.99.70]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MN4Oy-1jNFbB0TZg-006iVt; Sun, 05
+ Apr 2020 11:30:21 +0200
+To:     dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] gpu/drm: ingenic: Delete an error message in
+ ingenic_drm_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e03e7106-0f22-99c4-ad21-b288e8990b5a@web.de>
+Date:   Sun, 5 Apr 2020 11:30:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5yOIP5Rvh1kgAtf7eNwS8Y+DOex4AWFztEYVJqkfiK2SyjcEdBI
+ OBaVIKeI/S4Xw/9wwr5tjTAH8HqB+3ib/KgIzWmTc9244xZFncc/qd9sRoR3mMzkmfYbww6
+ 6tPDNtzVdeWYKFO06OKYolOC0o6vN77crSxgkfdgBsktKp2/DU9+OlHcTc8VRVDe2F6H1Jx
+ RTLQ0wJhExX86LwiUuNQA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5OdgCFZiayg=:erT7PYhr3DlWipG60BVFyG
+ wWWAD8baapzFz7rXXxZ5iouKwEUsCqPI2qHCsqS4TP0jbbyOpZQztC615uqosUnGSmMiQCfbe
+ r1D12lNssUbccC1CQQg4MhJ70tSJ0XgD4KbuCRzECk0vNDswucX0KdMQ7oDdPVaC/zczms5Z9
+ gV+U6sWJp7Rl4LnsP6nB9YN92gr1h338A4ukQ1PrvmJNgve+68hpxVvb0IE9y+5dWhdzS5t0L
+ le+XGxag8oAc7ep2UsPYKftSXDY3vAgeTTpwGgb3Egrr6LS9UnpKQpWCNuDABJjTYdGQ7h6Px
+ /XsxiCPJ8CKbUY+q4Fk3FUqitlPgYbrHi/ULMm9ncnDE/fl2MYUQcnlyx6ynYQdtR22o49506
+ /qdOyMZbQq6coXcYfMSbvf2RftMgITsoUWAG+nEYRZ0S4lvZsT0ovJBsNbZlILN1T337FHHk+
+ V3Vun7DhB+icBP+8wRzYRIKtg1deOeIYNO+nISr/Biq8+F8bzc1cEbkWLNo137HFqX33mZ+Il
+ pA6XyGzDxd28STJVBEbunXVvvdlWgupaGSLfDIuOAZsilkeV5yTV+eUD/FxnBCtd/YxmoaV91
+ txPcNvj2nh6U9HTVxT0iIPDiUNvGv9M19imA2GFcxVinwUrmyg0yCU6CBIdBoLxcFdj5qP+gT
+ G4XMgKjLegbzQOhjEwIJUXEzANlry667iO06RuEZ+XWrS3lF4BpaPkv7szTh4Ngjffk1EnMGS
+ nC496zF3yKnveGqNs/z9E6rijmaRmW4vvQtIaj7X9POolUwGAqLttcl4RT/N3tftTwiRHsBXj
+ z9k38kvv1SWqDgd/+mEluJDTIC3K12Ogf6qnaaPDhL7htw0u8o11+j1AZWlclSE168dbHzS/S
+ 7z4G2sV/duTG9vYXCkQXVtKQuauF1Z9B8LBnUw3NRv1SNrGpTr0CRxuy0/+UugbngwnL1TwAF
+ llpzk3hOrtNy0bPB1TN1dg5Y4aCEmoAlqNkZ2rfpK1P2ohiZmlXOcAaqYfchHuIEVTeOq7Y7d
+ 4Gh5ZxctPgV8quYwjpn7sZoqHpBoM+lzYoq9Urue5fSo61629CjB0yiQ4r+NAjiFlR26wRl0u
+ ZERTo2ED7HEdVA4+aIbCEQcMEXBPttmYsXRD31nO081AYeJTppm6FQL1xeUa3I0unV+qcIA+A
+ oBMvtKEIJqr87PGWGJJZjRWe3onmxpOFNTC38Kr+ww/ebQDKzfee91HzdUw5zXXMYgBFvVf9X
+ Mg0nmtBiUNsyQTR4g
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 4 Apr 2020 19:45:21 +0200
-Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sun, 5 Apr 2020 11:25:30 +0200
 
-> Hi,
-> On Sat, Apr 04, 2020 at 04:01:27PM +0100, Jonathan Cameron wrote:
-> > On Tue, 31 Mar 2020 15:45:17 -0600
-> > Rob Herring <robh@kernel.org> wrote:
-> >  =20
-> > > On Sun, Mar 29, 2020 at 10:25:26AM +0100, Jonathan Cameron wrote: =20
-> > > > On Wed, 25 Mar 2020 12:09:06 +0100
-> > > > Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
-> > > >    =20
-> > > > > This value indicates when userspace should consider an object
-> > > > > near to the sensor/device.
-> > > > >=20
-> > > > > Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>   =20
-> > > >=20
-> > > > I'm fine with this.  Note for Rob or other DT people.
-> > > >=20
-> > > > This is a new generic binding hence no vendor prefix.   =20
-> > >=20
-> > > Then document in a common place. =20
-> >=20
-> > Ok.=20
-> >=20
-> > I guess we need to create a proximity specific binding file.
-> >=20
-> > Documentation/devicetree/bindings/iio/proximity.yaml
-> >=20
-> > Guido, could you do a v4 adding such a file.  For now I think
-> > this is pretty much all that is proximity specific. =20
->=20
-> I did a Documentation/devicetree/bindings/iio/common.yaml:
->=20
-> https://source.puri.sm/guido.gunther/linux-imx8/commit/8b91f0b7fa76ca4b2f=
-3cdc251411829f71f8d810
->=20
-> so we can add new properties there and move iio-bindings.txt over.
->=20
-> Does that work as well? If so I'll send out a v4.
+The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
+Thus omit a redundant message for the exception handling in the
+calling function.
 
-I can't find any real precedence for naming of such files.
-So I guess this is still evolving. Send it out and we'll see what Rob think=
-s.
+This issue was detected by using the Coccinelle software.
 
-Jonathan
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/gpu/drm/ingenic/ingenic-drm.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingen=
+ic/ingenic-drm.c
+index 9dfe7cb530e1..06ca752b76ee 100644
+=2D-- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -661,10 +661,8 @@ static int ingenic_drm_probe(struct platform_device *=
+pdev)
+ 	}
 
-> Cheers,
->  -- Guido
->=20
->=20
-> >=20
-> > At somepoint we should convert the subsystem wide iio-bindings.txt
-> > but not today!
-> >=20
-> > Thanks,
-> >=20
-> > Jonathan
-> >  =20
-> > >  =20
-> > > >=20
-> > > > I will ideally want review of both the dt patches though
-> > > > before applying.  As we've missed the merge window anyway
-> > > > there is no particular rush.
-> > > >=20
-> > > > Thanks,
-> > > >=20
-> > > > Jonathan
-> > > >    =20
-> > > > > ---
-> > > > >  .../devicetree/bindings/iio/light/vishay,vcnl4000.yaml    | 8 ++=
-++++++
-> > > > >  1 file changed, 8 insertions(+)
-> > > > >=20
-> > > > > diff --git a/Documentation/devicetree/bindings/iio/light/vishay,v=
-cnl4000.yaml b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000.=
-yaml
-> > > > > index 21ef2eb7a205..ac9e3bb6a505 100644
-> > > > > --- a/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000=
-.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/iio/light/vishay,vcnl4000=
-.yaml
-> > > > > @@ -25,6 +25,13 @@ properties:
-> > > > >    reg:
-> > > > >      maxItems: 1
-> > > > > =20
-> > > > > +  near-level:   =20
-> > >=20
-> > > Perhaps proximity-near-level instead. =20
-> >=20
-> > Makes sense.
-> >  =20
-> > >  =20
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > > +    description:
-> > > > > +      Raw proximity values equal or above this level should be
-> > > > > +      considered 'near' to the device (an object is near to the
-> > > > > +      sensor).
-> > > > > +
-> > > > >  required:
-> > > > >    - compatible
-> > > > >    - reg
-> > > > > @@ -40,6 +47,7 @@ examples:
-> > > > >        light-sensor@51 {
-> > > > >                compatible =3D "vishay,vcnl4200";
-> > > > >                reg =3D <0x51>;
-> > > > > +              near-level =3D <220>;
-> > > > >        };
-> > > > >    };
-> > > > >  ...   =20
-> > > >    =20
-> >  =20
+ 	irq =3D platform_get_irq(pdev, 0);
+-	if (irq < 0) {
+-		dev_err(dev, "Failed to get platform irq");
++	if (irq < 0)
+ 		return irq;
+-	}
+
+ 	if (soc_info->needs_dev_clk) {
+ 		priv->lcd_clk =3D devm_clk_get(dev, "lcd");
+=2D-
+2.26.0
 
