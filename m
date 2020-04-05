@@ -2,177 +2,121 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A52FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E06C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE27220672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:26:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="YlfKTgLk";
-	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="nyj8HAUj"
+	by mail.kernel.org (Postfix) with ESMTP id 5918720659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 19:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586115392;
+	bh=wwwU7AKjQhJuMCN/DMQpCeuXbMLGbJ7GdVZ5T69Ztfo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1ych+MGbKoomMfZiVOn6BqJ2wi3g5kxNvgb22n6DfwzViWLTmMzhZHOzDYE/TA0rj
+	 rMrpS6/DLV0YhtQkF+GCZwU1QIRLTZBaIO4rJcSwdNWSRVyMHFGxurX9+sQuUvgMJg
+	 7eKR7YiALrKdJ4L/4Dlyl20IMpGwQQbtbfrp0wOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbgDET0H (ORCPT
+        id S1727620AbgDETgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 15:26:07 -0400
-Received: from rcdn-iport-7.cisco.com ([173.37.86.78]:51577 "EHLO
-        rcdn-iport-7.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbgDET0G (ORCPT
+        Sun, 5 Apr 2020 15:36:14 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40667 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbgDETgO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 15:26:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=1964; q=dns/txt; s=iport;
-  t=1586114765; x=1587324365;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=WXgpscTcRWeEhKqFXVKYpzOzqXgkbB2jj9f8HNO+BbI=;
-  b=YlfKTgLkT5KfiAecLb+bQHolTKnRkJ9yGFI+QXcz6CY1ONiWWrx5CF/w
-   fZB/m7qrggf+UvAmipEVwI7dSDTdN0Vrhkc2AQrKArPyt4eA8Kxvibgmh
-   tB2B8HAK+NQEqtXIkN18oZz7sP4nqXtj0nIqrAFN6kFTFT6594gtQsK4x
-   k=;
-IronPort-PHdr: =?us-ascii?q?9a23=3AC2I/PRKDi4lzpaWHKNmcpTVXNCE6p7X5OBIU4Z?=
- =?us-ascii?q?M7irVIN76u5InmIFeBvKd2lFGcW4Ld5roEkOfQv636EU04qZea+DFnEtRXUg?=
- =?us-ascii?q?Mdz8AfngguGsmAXEjyKvfxbzE5NM9DT1RiuXq8NBsdFQ=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0DVAQAHMIpe/5ldJa1mHAEBAQEBBwE?=
- =?us-ascii?q?BEQEEBAEBgWoEAQELAYFTUAWBRCAECyoKhBGDRQOKZU6CEZgeglIDVAoBAQE?=
- =?us-ascii?q?MAQEtAgQBAYFQgnQCF4IvJDcGDgIDAQELAQEFAQEBAgEFBG2FVgyFcAEBAQE?=
- =?us-ascii?q?CARIRBA0MAQE3AQQLAgEGAg4KAgImAgICMBUQAgQOBRsHgwSCTAMOHwEBk1C?=
- =?us-ascii?q?QZwKBOYhidX8zgn8BAQWFPRiCDQkUeioBjDIagUE/gREnHIJNPoROF4J7MoI?=
- =?us-ascii?q?skEk7oB4Kgj2XKh2CTog4kHyrXAIEAgQFAg4BAQWBaCOBV3AVZQGCPlAYDY4?=
- =?us-ascii?q?dg3OKVXSBKY0cAYEPAQE?=
-X-IronPort-AV: E=Sophos;i="5.72,348,1580774400"; 
-   d="scan'208";a="741810511"
-Received: from rcdn-core-2.cisco.com ([173.37.93.153])
-  by rcdn-iport-7.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 05 Apr 2020 19:26:05 +0000
-Received: from XCH-RCD-004.cisco.com (xch-rcd-004.cisco.com [173.37.102.14])
-        by rcdn-core-2.cisco.com (8.15.2/8.15.2) with ESMTPS id 035JQ5Bj027985
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
-        Sun, 5 Apr 2020 19:26:05 GMT
-Received: from xhs-aln-002.cisco.com (173.37.135.119) by XCH-RCD-004.cisco.com
- (173.37.102.14) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 5 Apr
- 2020 14:26:05 -0500
-Received: from xhs-rtp-001.cisco.com (64.101.210.228) by xhs-aln-002.cisco.com
- (173.37.135.119) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 5 Apr
- 2020 14:26:04 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (64.101.32.56) by
- xhs-rtp-001.cisco.com (64.101.210.228) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Sun, 5 Apr 2020 15:26:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TOUVTxouxx1nhw9uf2RChf+OIkDsvg0sLLW+OOeQsO+AN4Ew41d5tjyNcijwa46/ieKcZh6ygwaJQmjJJTn9JW8bGIfRQy21asyj58ZxsksgR6iQUZJVKWVBfsEuBNhICp8SommjCxPUct9T4TqBIuW5xS0SW4vmKegma5rjsEVfnv3M5aDIMq4OQL2XxAthXZvwZberi89LF8R8D3SPo/1JAOjkJtgBNjtyp2KZ4qUxNJRgkVHajp2Gt4ONCLYC8AJ1EWS62m4oZioZYdAE+j1mALj1IEGby2DtNCEwYGI0ii6YByAzCEaXIcLLh+zOKDAivtYkV0YyG7qquWSLEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WXgpscTcRWeEhKqFXVKYpzOzqXgkbB2jj9f8HNO+BbI=;
- b=AVWlM8/Eq5KfQ7X8UV/sY1b3+PF+2xBI1XfA77l8Rx600uRAKEZmpOlsiUZonNE0TfE+WcuQ0wbwA7i6lhNrhWRiYnRleaEc4GIPdgfSNvRJVPguAYFKrZy7HCqinpy4Gyc+hOBkiPAHXy+kgdjVuBO8m6dqKo/c1aCd+vAknthgdfld9zICimOdZ6axXrKI3nGKukiYdI/NyHPPSF8wxB7/v6W1XGLSpaKvYNf5RI53YMOsC56ZS05Xfo0iIf8k6S5FP97vMfv1ijXDqeTNVv4o1cuxRfC3Z2L2KOuM5lM1ikGc+4Gs15d42xR4x0KtiBsIQdeePk4+ftAwSkAiaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
- dkim=pass header.d=cisco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
- s=selector2-cisco-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WXgpscTcRWeEhKqFXVKYpzOzqXgkbB2jj9f8HNO+BbI=;
- b=nyj8HAUjIseQ6JUvvDdc+kee449mO+tnKMGrlQX5HKl/nDIp0p0MGOp1AIcxQKFqQDzo/UkeaOzc2G9pDBh2AHb7AJHInEs1gngqCn2Kaq2YcL+hlKBcHgGO8mmksZ4OEnd9Kl2DSAi7hflII+4zPoef1yIR94qb0+TJ2X9OrjU=
-Received: from DM6PR11MB2539.namprd11.prod.outlook.com (2603:10b6:5:bf::30) by
- DM6PR11MB4491.namprd11.prod.outlook.com (2603:10b6:5:204::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.21; Sun, 5 Apr 2020 19:26:02 +0000
-Received: from DM6PR11MB2539.namprd11.prod.outlook.com
- ([fe80::805b:a037:1a5a:362a]) by DM6PR11MB2539.namprd11.prod.outlook.com
- ([fe80::805b:a037:1a5a:362a%4]) with mapi id 15.20.2878.018; Sun, 5 Apr 2020
- 19:26:02 +0000
-From:   "Manali Shukla (manashuk)" <manashuk@cisco.com>
-To:     Borislav Petkov <bp@suse.de>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        "Aristeu Rozanski Filho" <arozansk@redhat.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Russ Anderson <rja@hpe.com>, Tony Luck <tony.luck@intel.com>
-Subject: Re: [ PATCH stable v4.19] EDAC: Drop per-memory controller buses
-Thread-Topic: [ PATCH stable v4.19] EDAC: Drop per-memory controller buses
-Thread-Index: AQHV+C49gAe7MhzwwUqG/ujZrWDTQahMm6eAgB64nID//6UfgIAAcogA
-Date:   Sun, 5 Apr 2020 19:26:01 +0000
-Message-ID: <994FAF5C-B773-4B09-8C08-91E22ECDB8A9@cisco.com>
-References: <20200312052201.49456-1-manashuk@cisco.com>
- <20200317102249.GC1130294@kroah.com>
- <5D56C6A7-B076-47BB-9016-7BD54DFE71E7@cisco.com>
- <20200405180605.GC17324@zn.tnic>
-In-Reply-To: <20200405180605.GC17324@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/16.35.20030802
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=manashuk@cisco.com; 
-x-originating-ip: [171.76.93.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ec25555b-9e8f-4f69-769f-08d7d9972d69
-x-ms-traffictypediagnostic: DM6PR11MB4491:
-x-ld-processed: 5ae1af62-9505-4097-a69a-c1553ef7840e,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB4491FF3D14670E17104E33C6C6C50@DM6PR11MB4491.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 03648EFF89
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2539.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(136003)(366004)(396003)(6512007)(2616005)(186003)(8676002)(86362001)(81166006)(4326008)(81156014)(33656002)(2906002)(76116006)(66446008)(64756008)(66556008)(66476007)(66946007)(91956017)(54906003)(5660300002)(6916009)(53546011)(6506007)(36756003)(71200400001)(26005)(8936002)(6486002)(478600001)(316002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: cisco.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CtktHPUVGsazmW6mE1OirbufZp7x1WPG9Ih1zLYah88LotItCkyr0rrmk/+A4zbiUsYj6A/KBg1Itt/Cf2uHAhHhLg2j3ZsN3nqw6F1PZfg+CWrHQpJasXshR1cuBXpbyLeMNXd0lSv6fSoHUJzRPQMDCpxUwDVumGbRDTxeOcY8HNjvIlKZRHksPiZV6lzncTimmca5CpOa47F1sXSkDoV83PYrx0BmSr41qM/dfjSCqTHUvAjHoNA1FlEPazWQxHKCVStUj/2YgB3K23bS+KoRiD+XFk6l++jROhlF+cn7WzJ1YeLgSLBx5+GbdCb0bD9To36tbaSkSwHGhgcJlFtW5gHW7foG5qI/Ot9JDMNq6Iulc4WHIeFkUagsxAHpwgGJJHDwodQ4s66Ita9m0q1oMQIZfI2nmh13h4kVGHk0b52br+mY80cN0DN0DDZH
-x-ms-exchange-antispam-messagedata: Z3GyVKjr6SciD8Wmxf7LX51OT4N5tP3LuCu+iv0gQhgtj7Cmr8Dpaa/MvqiVExJsQ19cx6iaR7WcVJwrqBl0Oub1ZJr26rJFx0jQODJSTD/yBAfPJpgaOqV1uNg20bIPyqaPTJ+qYKp9nmEOpbjIJw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F1BE35C63ACB224D84B607E2697196AC@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Sun, 5 Apr 2020 15:36:14 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 19so12350911ljj.7
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 12:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=McxNvBKCZ6JPN08OgrptO9lPEWVuANGL5JPQo1cYmzU=;
+        b=cWkloafk1u9C1dM2sB8E6IvHCliy8gXmxKWFFWXfSHYohaUGzpNRNlEVHifOqRDSvo
+         OosYIkcsU9H/hl2tIwQEUOs+onByylg6uy1RPOA/u2zjbBFMk3dVPXtThJGR/ixUcaqh
+         wMTmGospwPYmk9dn16WwABooWdUc/ALk9Sdcg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=McxNvBKCZ6JPN08OgrptO9lPEWVuANGL5JPQo1cYmzU=;
+        b=rrO4Fv1c62EHpDY45WY26msKWV5HDyR1IOeburD6WI6e6t4zU+LS53AOQOmJwtj7j0
+         oiI4Hq0+BvLsObcyxZ9ucTCao7+ZRQ39QasBd0q2Xyu3IK+cAFYB/USiOTmB0qkzkN3y
+         y3KbXSMoJvKwgF89Noq5FnrXH9CBiMfhtVvqo7B/iCASO+lY2tQB7YrVTiO9k8+PA4Yn
+         hd7Xiu5bneQATRjbuTrHPG2N/zIEsnRzp1CmN/0RtNnUrKOm5PXLun5NaerKUm+YhSyE
+         pyV+YRFipC6TDr30CczRaGu5zwnZilo8QztlQ/ZXREN5i2SE7Cs/j6LNwAJSaurBnd3D
+         6W2Q==
+X-Gm-Message-State: AGi0Pua4LE5HOV3LbUVpFuZedX/NfMybcNP9YSxKmLaM/tbNjhmhybtI
+        wQDYVXct5fSEs8wM88MlXVcHIkorKp0=
+X-Google-Smtp-Source: APiQypJfyAYqRb7K3rw++QRKIqmL9mdhnQdEuqoKwLi8izd2ABEZozLpJssZp3cHM4t+fifipdD2Yg==
+X-Received: by 2002:a2e:a554:: with SMTP id e20mr9801566ljn.88.1586115371530;
+        Sun, 05 Apr 2020 12:36:11 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id q6sm8945664ljp.21.2020.04.05.12.36.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Apr 2020 12:36:10 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 131so9998218lfh.11
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 12:36:09 -0700 (PDT)
+X-Received: by 2002:a19:9109:: with SMTP id t9mr7701604lfd.10.1586115369481;
+ Sun, 05 Apr 2020 12:36:09 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec25555b-9e8f-4f69-769f-08d7d9972d69
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Apr 2020 19:26:01.9591
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fZpICnhqr62LJ3VVxpozJLINKLkFZ9+1jMQL1PtMmt+ibZXb9NKssSm1/mZt66EXqV65cNUJzr6OxLg2YS9YEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4491
-X-OriginatorOrg: cisco.com
-X-Outbound-SMTP-Client: 173.37.102.14, xch-rcd-004.cisco.com
-X-Outbound-Node: rcdn-core-2.cisco.com
+References: <87blobnq02.fsf@x220.int.ebiederm.org> <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
+ <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
+ <87lfnda3w3.fsf@x220.int.ebiederm.org> <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
+ <328f5ad3-f8b3-09b9-f2f7-b6dae0137542@redhat.com> <CAHk-=wgww8LFqUenUtNV7hzYSxAemjbOVYfZMXqOxK7DGRrZaw@mail.gmail.com>
+ <c7c770c9-2c5c-4878-a224-d115720068f3@redhat.com> <86aa9fc6-6ac9-a0c2-3e1d-a602ef16d873@redhat.com>
+ <CAHk-=wgOykL7cM34NraiNGsjJC5Uq6H0ybYHWhdXDSn-wzVXDQ@mail.gmail.com>
+ <5c04cc6d-ec44-b840-071d-248ac81a0f91@redhat.com> <CAHk-=wgkE=qT6CSUJHfXNsyhW+=j4SVgxh2jEc8nWY_n3SFZ=w@mail.gmail.com>
+ <AM6PR03MB517044AE8D005BB0BBB1EC98E4C40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <AM6PR03MB5170135E51DBF9093346E1DDE4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+In-Reply-To: <AM6PR03MB5170135E51DBF9093346E1DDE4C50@AM6PR03MB5170.eurprd03.prod.outlook.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 5 Apr 2020 12:35:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgbxavbe82MTKYn8_qasqw-9kC346Azo0bGy062w0bWGg@mail.gmail.com>
+Message-ID: <CAHk-=wgbxavbe82MTKYn8_qasqw-9kC346Azo0bGy062w0bWGg@mail.gmail.com>
+Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     Waiman Long <longman@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiAwNS8wNC8yMCwgMTE6MzYgUE0sICJCb3Jpc2xhdiBQZXRrb3YiIDxicEBzdXNlLmRlPiB3
-cm90ZToNCg0KPiAgICBPbiBTdW4sIEFwciAwNSwgMjAyMCBhdCAwNjowMToyMVBNICswMDAwLCBN
-YW5hbGkgU2h1a2xhIChtYW5hc2h1aykgd3JvdGU6DQo+PiBXaXRoIHRoaXMgcGF0Y2ggLCB3ZSBh
-cmUgcmVtb3ZpbmcgcGVyLU1DIGJ1cywgdGhpcyByZW1vdmVzIGRlcGVuZGVuY3kgb24gdmFsdWUg
-b2YgbWF4IG51bWJlciBvZiBjb250cm9sbGVycyAoRURBQ19NQVhfTUNTKSB3aGljaCBpcyBoYXJk
-Y29kZWQgdG8gMiAqIE1BWF9OVU1OT0RFUyAgaW4gYWxsIHN0YWJsZSB2ZXJzaW9ucyBvZiBrZXJu
-ZWwuIA0KID4+IE9uIHR3byBub2RlcyBzeXN0ZW0gTUFYX05VTU5PREVTIHZhbHVlIGlzIOKAmDHi
-gJkgLCBzbyB2YWx1ZSBvZiBtYXggbnVtYmVyIG9mIG1lbW9yeSBjb250cm9sbGVyIGJlY29tZXMg
-4oCYMuKAmSwgdGhpcyBwYXRjaCBmaXhlcyB0aGlzIGlzc3VlIHdoZW4gdGhlcmUgYXJlIG9ubHkg
-MiBub2RlcyBvbiB0aGUgc3lzdGVtIGFuZCBudW1iZXIgb2YgbWVtb3J5IGNvbnRyb2xsZXJzIGFy
-ZSBtb3JlIHRoYW4g4oCYMicNCiAgICANCiA+IFlvdSBiYXNpY2FsbHkgcmVwZWF0ZWQgd2hhdCB5
-b3UgaGFkIHdyaXR0ZW4gYWxyZWFkeS4NCiAgICANCiA+ICBCdXQgd2hhdCBpcyB0aGlzIGZpeGlu
-Zz8gU29tZSBwbGF0Zm9ybSBvZiB5b3VycyBvciB3aGF0PyBXaHkgZG9lcyBpdA0KID4gbmVlZCB0
-byBnbyB0byBzdGFibGU/DQogICAgDQpDZXJ0YWluIE1JUFMgcGxhdGZvcm0gY2FuIGhhdmUgMiBu
-b2RlcyBhbmQgbnVtYmVyIG9mIG1lbW9yeSBjb250cm9sbGVycyBjYW4gYmUgbW9yZSB0aGFuICcy
-JyAuDQoNCmZvciBhYm92ZSBjb25kaXRpb24sIGlmDQojZGVmaW5lIEVEQUNfTUFYX01DUyAyICog
-TUFYX05VTU5PREVTLA0KaXQgZmFpbHMgaW4gdGhpcyBmdW5jdGlvbiBlZGFjX21jX2FkZF9tY193
-aXRoX2dyb3Vwcw0KaW4gYmVsb3cgY29uZGl0aW9uDQppZiAobWNpLT5tY19pZHggPj0gRURBQ19N
-QVhfTUNTKSB7DQpwcl93YXJuX29uY2UoIlRvbyBtYW55IG1lbW9yeSBjb250cm9sbGVyczogJWRc
-biIsIG1jaS0+bWNfaWR4KTsNCnJldHVybiAtRU5PREVWOw0KfQ0KVGhhdCBpcyB3aHkgdGhpcyBm
-aXggaXMgbmVlZGVkLg0KDQogPiAgQnR3LCBwbGVhc2UgZG8gbm90IHRvcC1wb3N0IGFuZCByZXBs
-eSB1bmRlciB0aGUgcXVvdGVkIHRleHQgbGlrZSBhbGwgb2YNCiA+IHVzIGRvLg0KICAgIA0KID4g
-VGh4Lg0KICAgIA0KICAgIC0tIA0KID4gIFJlZ2FyZHMvR3J1c3MsDQogPiAgIEJvcmlzLg0KICAg
-IA0KID4gIFNVU0UgU29mdHdhcmUgU29sdXRpb25zIEdlcm1hbnkgR21iSCwgR0Y6IEZlbGl4IElt
-ZW5kw7ZyZmZlciwgSFJCIDM2ODA5LCBBRyBOw7xybmJlcmcNCg0KVGhhbmtzIA0KTWFuYWxpDQog
-ICAgDQoNCg==
+On Sat, Apr 4, 2020 at 11:34 PM Bernd Edlinger
+<bernd.edlinger@hotmail.de> wrote:
+>
+> What really makes it impossible to write a multi-threaded strace program,
+> is that *only* the tread that made PTRACE_ATTACH can do all the other
+> PTRACE-APIs, but for a multi-treaded strace, any thread should be able
+> to call PTRACE-APIs as long as we are in the same process.
+
+I agree that the ptrace model is broken, and no, you can't do a
+threaded ptrace the way things are now.
+
+Some of that is really fundamental to how we do things (ie the ptracer
+is the parent), and our data structures really make that be
+per-thread.
+
+I'm not sure how easy it would be to fix. Some of it is probably
+really painful. For example, right now we know we can't race between
+different pthread operations, because only the thread that did
+PTRACE_ATTACH is allowed to do most of them.
+
+So it could be very painful indeed to try to fix it so that you can do
+threaded tracing. It woudl probably be a good thing to have, but it
+might not be worth the pain.
+
+Some daring person could try...
+
+               Linus
