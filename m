@@ -2,158 +2,129 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B5AC2BA17
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FF5C2BA17
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691A420659
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F06620659
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUXZHGoa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYwYgN7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgDEOKg (ORCPT
+        id S1726890AbgDEOLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 10:10:36 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40512 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726410AbgDEOKf (ORCPT
+        Sun, 5 Apr 2020 10:11:36 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33016 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726410AbgDEOLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 10:10:35 -0400
-Received: by mail-qt1-f195.google.com with SMTP id y25so10637537qtv.7;
-        Sun, 05 Apr 2020 07:10:34 -0700 (PDT)
+        Sun, 5 Apr 2020 10:11:36 -0400
+Received: by mail-wr1-f67.google.com with SMTP id a25so14267350wrd.0
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 07:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Fj5IkYeTwvEQJU3mrvn13eBZKNJ+9tUvL96085xGJxE=;
-        b=PUXZHGoaZxdIN6d3dLITTVmOMYMyzD1WzUovhblIhnH0+gX1MNWpAzLXCQgk2kjb4r
-         MlJo8+N8G03Sa1hMX0SzavAQvly8jLAQ+hbQperFpamXKFXDtOKZO1KBx7z3QF7jU4DN
-         v2O2rih9I491tXxgjaiA8y75O5NeuTOBTrBD5lyOIL+4LBqVTqjlPgB8IOP+vdkio7Ne
-         OF0/t3wAwc/c/4fhcxK0mgit6koSfOKh3e8xFvAUuaInvIs+DvGpC7Qx4f3FaJ6/exvW
-         RQ5WEGhuuoq8VdPrvO9ejeK2M4qtHC7mPdoXm5yO6XzAi2YIMIwcRWsAHg60RLTYDgVS
-         MEwQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z8d6AJalPWCNMrPOGz4TUIkHpGcbuci4u9pqA1PXRY4=;
+        b=vYwYgN7F788ec2HchBK0gZg5sIYR9ljFlwIGKfHmBSUxHEvOXZQbgx+BkVjX7AT5Mi
+         Rg95I3KaLsK3YliZlxnTwmJGhap+HcDW3XK3X+rWBHLKN9gS90dRxuBpWK5WZnDBUCtF
+         oWH9X6a4G7l/NQ38u3iW/1mz+mnLazv6VZ+706fRVfwiz2ndImLjRdtLo+DaHkE0O5jd
+         VbuDp/iUrnyZ58m9eKRtGGGGuGcgqcQdMDpgBSBLuoTicTIfF/JWEmkM17l8+55cXgxN
+         J1Tc/3jsFpjLnEHITpQc5xjgDIW5PDpygrM3+kpAQiQc5Bn12KuEQh2uaTC6CiHJCKJF
+         74AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Fj5IkYeTwvEQJU3mrvn13eBZKNJ+9tUvL96085xGJxE=;
-        b=CUbM8n9R1BIZ509Zn+V4YwkO3TbRgDHl/e8ettddQvDgRBSjvtYKV+0W63VoKCnB/1
-         NwS8rpTK2ysXVSFf5ZjxX4EDRvFzxuBm9xtVYgjPo0WxkoQXUKgZN4REB1NZHBIU98of
-         bGVLwmeDrVstBWhjYWkyz4OmUZPLCvZx3Kf7sijDMAtaeo/snNdvj/uoca3hVtvzXfPs
-         dE9whIHKThHT79pOaKj7ExC19aWNIZX0k8Prev9Q/4e1z5uxlKp/CUwkbPdKFc8+HP8y
-         LwoXGcqdVT+nBtz+KCgry7NE7kyiuJI0e/rM1cyjxCPofrIBoz6wLTKMO6PxvYQfEMjt
-         fSlQ==
-X-Gm-Message-State: AGi0Pua+CmfbzlG7fB/wdGUvXnQkhezH2Fup34fegx1aH8V4y4uM0mNk
-        g9Wx9qXKBcLSurIO+F4lHno=
-X-Google-Smtp-Source: APiQypJu0uvODNR9YrN0sb4Kh6DQPLH6AalqUaYQK8KEpypo5wVQtssYkV/vcueHnh7R58TbWcdGhg==
-X-Received: by 2002:aed:2435:: with SMTP id r50mr16393370qtc.314.1586095833851;
-        Sun, 05 Apr 2020 07:10:33 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id 6sm9452806qkr.25.2020.04.05.07.10.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 07:10:32 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AE02E409A3; Sun,  5 Apr 2020 11:10:29 -0300 (-03)
-Date:   Sun, 5 Apr 2020 11:10:29 -0300
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-Subject: Re: [PATCH v8 12/12] doc/admin-guide: update kernel.rst with
- CAP_PERFMON information
-Message-ID: <20200405141029.GA16896@kernel.org>
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <84c32383-14a2-fa35-16b6-f9e59bd37240@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z8d6AJalPWCNMrPOGz4TUIkHpGcbuci4u9pqA1PXRY4=;
+        b=LFA2xziejMUUt1FnIXI1y21qNEmwDA2mW+sxdCBbk369cs2VeVkxe/JFOafxxZER0V
+         axQcia20gW4Z+QocxVVT7CYYMVnyl8X582xr3RSOFxQ2aRYEdhtH83evt6qSh95HMMEO
+         uxE/d7xOF8UbCJdOIRwMDuDnptbmOgYtHvPkynXfwbQ08sr/reVkF8FJHOslE8FG1DoP
+         v87eDAnEBRRiEs5G2U/zjalcAk+G52cXzdPrdzTHWDIPu8DO7UveGy8Q1W3gt83xD1B5
+         nVZIW9PzRV4ndSinnY4B6jAaTKWeHeiPUIViBJPqny1H+2ps85oXejxgZ+fYg2lIKR9L
+         I/Ew==
+X-Gm-Message-State: AGi0PuYWt3IMVRJBGxvBPyezrNdBlWyUVKI/NjHIXsGZrUFzhvdja8ac
+        1xwRdDhtpMxVWId37VT3c7tIoJ/9CpIr3DHzlk0=
+X-Google-Smtp-Source: APiQypI1bpG7n23q0Oyvtk/yrSkc8iHjgkhHT4ACcnN2nkvQdBnroCMPII6M51C6TxRsgRuiEIfOF8NcN0WsL3MFu6s=
+X-Received: by 2002:a5d:6742:: with SMTP id l2mr20105220wrw.124.1586095894440;
+ Sun, 05 Apr 2020 07:11:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84c32383-14a2-fa35-16b6-f9e59bd37240@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+References: <5e863110.1c69fb81.17969.099e@mx.google.com> <187eeb8e-5c70-4479-d806-a7123f9023c8@collabora.com>
+ <MN2PR12MB4488D9D3984D03030D3BACC3F7C70@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <20200404090658.nxfvi5zg2rgag2qo@gilmour.lan>
+In-Reply-To: <20200404090658.nxfvi5zg2rgag2qo@gilmour.lan>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Sun, 5 Apr 2020 10:11:23 -0400
+Message-ID: <CADnq5_NbDH+aDFAwj2-rajD8QgF2J=Zmq2w9-7mh8wwRYVWk8Q@mail.gmail.com>
+Subject: Re: mainline/master bisection: baseline.login on peach-pi
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Shane Francis <bigbeeshane@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "kernelci@groups.io" <kernelci@groups.io>,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Tom Murphy <murphyt7@tcd.ie>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Apr 02, 2020 at 11:54:39AM +0300, Alexey Budankov escreveu:
-> 
-> Update kernel.rst documentation file with the information
-> related to usage of CAP_PERFMON capability to secure performance
-> monitoring and observability operations in system.
+On Sat, Apr 4, 2020 at 8:46 AM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi,
+>
+> On Fri, Apr 03, 2020 at 03:47:46PM +0000, Deucher, Alexander wrote:
+> > [AMD Official Use Only - Internal Distribution Only]
+> >
+> > > -----Original Message-----
+> > > From: Guillaume Tucker <guillaume.tucker@collabora.com>
+> > > Sent: Friday, April 3, 2020 10:14 AM
+> > > To: Michael J. Ruhl <michael.j.ruhl@intel.com>; Shane Francis
+> > > <bigbeeshane@gmail.com>; Deucher, Alexander
+> > > <Alexander.Deucher@amd.com>
+> > > Cc: kernelci@groups.io; dri-devel@lists.freedesktop.org; linux-
+> > > kernel@vger.kernel.org; Tom Murphy <murphyt7@tcd.ie>; Joerg Roedel
+> > > <jroedel@suse.de>; David Airlie <airlied@linux.ie>; Maarten Lankhorst
+> > > <maarten.lankhorst@linux.intel.com>; Daniel Vetter <daniel@ffwll.ch>;
+> > > Maxime Ripard <mripard@kernel.org>; Enric Balletbo i Serra
+> > > <enric.balletbo@collabora.com>
+> > > Subject: Re: mainline/master bisection: baseline.login on peach-pi
+> > >
+> > > Please see the bisection report below about a boot failure.
+> > >
+> > > Reports aren't automatically sent to the public while we're trialing new
+> > > bisection features on kernelci.org but this one looks valid.
+> > >
+> > > This bisection was run with exynos_defconfig but the issue can also be
+> > > reproduced with multi_v7_defconfig.  It doesn't appear to be affecting any
+> > > other platforms on kernelci.org.  This looks like a DRM driver problem, the
+> > > kernel image boots fine without the modules installed.  It actually started
+> > > failing on Tuesday in mainline.
+> >
+> > Fixed with this patch:
+> > https://patchwork.freedesktop.org/patch/359081/
+> >
+> > Just trying to get this into 5.7 and stable.  I was waiting for a
+> > 5.6 back merge to drm-misc-next-fixes, but I could send it as a
+> > separate PR if Dave or Daniel prefer.
+>
+> You should ask us next time, we're not doing them unless asked :)
+>
+> I've done it, it's compiling at the moment, it should be pushed in the
+> next 10 minutes or so.
+>
 
-This one is failing in my perf/core branch, please take a look. I'm
-pushing my perf/core branch with this series applied, please check that
-everything is ok, I'll do some testing now, but it all seems ok.
+I sent out a generic ping on IRC.  Next time I'll be more specific.
 
-Thanks,
+Thanks!
 
-- Arnaldo
- 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-> ---
->  Documentation/admin-guide/sysctl/kernel.rst | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index def074807cee..b06ae9389809 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -720,20 +720,26 @@ perf_event_paranoid:
->  ====================
->  
->  Controls use of the performance events system by unprivileged
-> -users (without CAP_SYS_ADMIN).  The default value is 2.
-> +users (without CAP_PERFMON). The default value is 2.
-> +
-> +For backward compatibility reasons access to system performance
-> +monitoring and observability remains open for CAP_SYS_ADMIN
-> +privileged processes but CAP_SYS_ADMIN usage for secure system
-> +performance monitoring and observability operations is discouraged
-> +with respect to CAP_PERFMON use cases.
->  
->  ===  ==================================================================
->   -1  Allow use of (almost) all events by all users
->  
->       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->  
-> ->=0  Disallow ftrace function tracepoint by users without CAP_SYS_ADMIN
-> +>=0  Disallow ftrace function tracepoint by users without CAP_PERFMON
->  
-> -     Disallow raw tracepoint access by users without CAP_SYS_ADMIN
-> +     Disallow raw tracepoint access by users without CAP_PERFMON
->  
-> ->=1  Disallow CPU event access by users without CAP_SYS_ADMIN
-> +>=1  Disallow CPU event access by users without CAP_PERFMON
->  
-> ->=2  Disallow kernel profiling by users without CAP_SYS_ADMIN
-> +>=2  Disallow kernel profiling by users without CAP_PERFMON
->  ===  ==================================================================
->  
->  
-> -- 
-> 2.24.1
-> 
-
--- 
-
-- Arnaldo
+Alex
