@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09B1C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EBCC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83E1420672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2E4206C3
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 14:37:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEemUvBb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KI+/uhwx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgDEOhS (ORCPT
+        id S1727185AbgDEOhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 10:37:18 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:34878 "EHLO
+        Sun, 5 Apr 2020 10:37:21 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:37738 "EHLO
         mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgDEOhQ (ORCPT
+        with ESMTP id S1726598AbgDEOhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 10:37:16 -0400
-Received: by mail-yb1-f193.google.com with SMTP id i2so1721357ybk.2
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 07:37:15 -0700 (PDT)
+        Sun, 5 Apr 2020 10:37:19 -0400
+Received: by mail-yb1-f193.google.com with SMTP id n2so7275388ybg.4
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 07:37:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MKQvHdwC+ist3T6F8i7xcPFrJp3xaHVCClbktGExROY=;
-        b=aEemUvBbCWM/Pv9KFjjqy1aPFijL+dwSiZ/pFpkmnZ++FzJnyTEqoPZG05slBZslZ3
-         1npbJcN33CUNn2vFXG5c81zx/j8x/3vEEOmgdve3p9EwtxzuD/Yr3oeiQ6wfNFC9KcdH
-         9ik3prusQPUyMEOQMxm/NEj7Dge7shyfTVmiSU4P642LRqvjDJlBVwJldmj6v30Wm8oP
-         yUMonnOGlCAMAt0g2C8WjR+BJyAYxV6GOYlWICIY+0yGx31sZkGUC56KbiizQwD0yyyI
-         JAWoobJuYULQKamzGbHglpmv1svTsANMC6vduQ1Ipsv1ko4G7Xnq+H+bra8DNywTeZp8
-         4BWQ==
+        bh=mfgUAunoLM+HahCbkyo4i/ldtjZiqNOiQU1VXreBYiw=;
+        b=KI+/uhwxvtydGdjySRjob/lIdKlJiII/vA6C7rFNTo6dRVUCMw1eHiLDWbMRduMKTi
+         JDYBCFYX9jDDi3eV5x6NzGZpgOA1g8AWDT/kyR8L1jIi5fhGuhhLrnlpUyig25SvqjsA
+         vzrWjKaoGQi7v9sDdvvQmcnY6RdwFu4JR1A9hYNKKIIcuD2ta4KS7a9CvLBM6koAoyXQ
+         cMs+FPo1fRbgHSiYoLyVtUVoIws9u74miY2liE1WtnTc3zuQIrYbcuFTIfA1CbgVCGx1
+         kUq/2ZQlVIEhIKDt1aPfollhYqOHyxdydBrN6o6nw/fXoBeuc/UgjR32x9zWcw1gjikB
+         2mAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MKQvHdwC+ist3T6F8i7xcPFrJp3xaHVCClbktGExROY=;
-        b=JHUQ8jSZTnr98DlrDMfQFUeRdl4j5IcAya9wB6r0IwRozAZh5ZQeh7WVEmRre9lYx0
-         6vZMZpi+589DLC48qGfDaPfAqBDXWvyIz9/6Z5bUwb6AuIuzuDXdXU1Im9yOM/hZStYu
-         mp2CXjEL26ocjLLPoF0HY4nOs3siJ2b8yxcQV9JWB/ssoF1WZKCRZqTVNqOFtCNvv27i
-         +0tvlfOFjDKVHnPrXA8Fos3uIN7BYJgksDtfh2QEoLO/wH28ADcfB+jK8US3e+X7PYep
-         dEF1GjK8PzmyxDmqE/jLv4bOONcytpwBLsObd3Fe/d+JFgl5R3KFwLQHx0tzWlRQ6tDL
-         PBUQ==
-X-Gm-Message-State: AGi0PuY6UHccrPcLrpNt99g8LxoJ9H5rECSTG4zomR+C1OyOmta6oZEn
-        KlxGpqyFzBmZkSds5PuQ2Kx8nT4Uz1ervCot3ik=
-X-Google-Smtp-Source: APiQypLIDyHR18s2gWsL39NR76H+2z45jTNzr28WXT++x/VulixJW1bLPAjQ+4WHe9BzUecXNEZzdh4k8VAoF/PdpCs=
-X-Received: by 2002:a25:d646:: with SMTP id n67mr26357259ybg.65.1586097435424;
- Sun, 05 Apr 2020 07:37:15 -0700 (PDT)
+        bh=mfgUAunoLM+HahCbkyo4i/ldtjZiqNOiQU1VXreBYiw=;
+        b=bLrGQAwCpTLXfVYF1Z5NfM1wVsdWBEmORlTObgHxQ4LvVtxrfLpZ4/AXVDv1MAFGUn
+         gROy5t6MCMvjjwjzWR4sMWZPHHKE+cQHCiFE6A73Us7wu4USR+6KV9XrKjx8j+aL3J38
+         6GZK/wc/Fd9vU1GeZImwhTliQj/LKMpU+wDFqzhxm08fX89dmCqEYoC6sBbaYd1NUJs8
+         5bMvPsJUDow8frGD0Pmp9nRbRWW0pjNuTbAxd+90RaYhMkpPyTTHgkvh7s6of0oBVGUu
+         b1oJkSYI8ZDpMfVElPGYWmhMKWStByrYyBpwTGORSwUWA2WQ97xq7eUP5ZBhYn6MrhDu
+         jXPg==
+X-Gm-Message-State: AGi0PubIwb/qNc9DEquSu6XXHozhJKqHWmHiI/lnwrbWfYn60xpYrYSg
+        yr/W9u8nEZhbc1j4hKQog3n5fOdfOPqeupYAvhw=
+X-Google-Smtp-Source: APiQypKSRfIBkRfIXFXlJVSLEmw46Q8lLHjNcMsvlZBhlrzpGd282f9HGb54tLnKBbr6tojfFpZXducTqTC2t6NQg84=
+X-Received: by 2002:a25:3b15:: with SMTP id i21mr30614690yba.11.1586097437766;
+ Sun, 05 Apr 2020 07:37:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200318011144.91532-1-atish.patra@wdc.com> <20200318011144.91532-5-atish.patra@wdc.com>
-In-Reply-To: <20200318011144.91532-5-atish.patra@wdc.com>
+References: <20200318011144.91532-1-atish.patra@wdc.com> <20200318011144.91532-6-atish.patra@wdc.com>
+In-Reply-To: <20200318011144.91532-6-atish.patra@wdc.com>
 From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Sun, 5 Apr 2020 22:37:03 +0800
-Message-ID: <CAEUhbmUN4rkJA+KZQN1n=VFhC5=QX-DsfjEun6_HGR6WL3WgpQ@mail.gmail.com>
-Subject: Re: [PATCH v11 04/11] RISC-V: Introduce a new config for SBI v0.1
+Date:   Sun, 5 Apr 2020 22:37:06 +0800
+Message-ID: <CAEUhbmXa9xuszy-h0xSwn9SYOdCNwGSh15pAQDYkvs6+7H9=NQ@mail.gmail.com>
+Subject: Re: [PATCH v11 05/11] RISC-V: Implement new SBI v0.2 extensions
 To:     Atish Patra <atish.patra@wdc.com>
 Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
         Anup Patel <anup@brainfault.org>,
@@ -81,23 +81,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Mar 18, 2020 at 9:11 AM Atish Patra <atish.patra@wdc.com> wrote:
 >
-> We now have SBI v0.2 which is more scalable and extendable to handle
-> future needs for RISC-V supervisor interfaces.
+> Few v0.1 SBI calls are being replaced by new SBI calls that follows v0.2
+> calling convention.
 >
-> Introduce a new config and move all SBI v0.1 code under that config.
-> This allows to implement the new replacement SBI extensions cleanly
-> and remove v0.1 extensions easily in future. Currently, the config
-> is enabled by default. Once all M-mode software, with v0.1, is no
-> longer in use, this config option and all relevant code can be easily
-> removed.
+> Implement the replacement extensions and few additional new SBI function calls
+> that makes way for a better SBI interface in future.
 >
 > Signed-off-by: Atish Patra <atish.patra@wdc.com>
 > Reviewed-by: Anup Patel <anup@brainfault.org>
 > ---
->  arch/riscv/Kconfig           |   7 ++
->  arch/riscv/include/asm/sbi.h |   2 +
->  arch/riscv/kernel/sbi.c      | 132 +++++++++++++++++++++++++++++------
->  3 files changed, 118 insertions(+), 23 deletions(-)
+>  arch/riscv/include/asm/sbi.h |  14 ++
+>  arch/riscv/include/asm/smp.h |   7 +
+>  arch/riscv/kernel/sbi.c      | 253 ++++++++++++++++++++++++++++++++++-
+>  3 files changed, 270 insertions(+), 4 deletions(-)
 >
 
 Reviewed-by: Bin Meng <bmeng.cn@gmail.com>
