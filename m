@@ -2,184 +2,135 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C249C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFDDC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74538206C3
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586083568;
-	bh=ei7dY175ZTQdNCbfUxChZGjkMvGPPhBe13PsivIWOSA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UiCoKOUGCV25QcKBtmtr2Czi27TIOYrfQi/q1aUeJTGFvbFD7s3BDwcmlKHNjxhiy
-	 ANqAN8rq3htgA+Gf76KkD6pcq6WZIuO1EB4QA65R9IEXLVEGS+KbmD95zL7wcsXofv
-	 rEXefeqlT2kHJ57aeUzYvL6EGE+0B7F6KLerxsGc=
+	by mail.kernel.org (Postfix) with ESMTP id 12C0120709
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 10:49:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDU9MpLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgDEKqH (ORCPT
+        id S1726574AbgDEKtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 06:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52382 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726410AbgDEKqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 06:46:07 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 406F5206B8;
-        Sun,  5 Apr 2020 10:46:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586083566;
-        bh=ei7dY175ZTQdNCbfUxChZGjkMvGPPhBe13PsivIWOSA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N81zGrWkJOqifa+/UrodK7kgmy32fbmCqDYoYU22LVI+dRMoJoNk/BHm3p/364e5i
-         Jo0udIWDW6Tk3ksjPQzBSNCbYqWBaWrAuoIcnYxX26xObKzJjf0gQB8SL8IahIdWFS
-         /KtX6QIASULhnYAowVgFBUt58PT1mxvQA3zfFql8=
-Date:   Sun, 5 Apr 2020 11:46:02 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <lorenzo.bianconi83@gmail.com>
-Subject: Re: [PATCH 1/3] iio: kfifo: add iio_device_attach_kfifo_buffer()
- helper
-Message-ID: <20200405114602.160c690b@archlinux>
-In-Reply-To: <20200401125936.6398-1-alexandru.ardelean@analog.com>
-References: <20200401125936.6398-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 5 Apr 2020 06:49:20 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52205 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbgDEKtT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 06:49:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z7so11632211wmk.1;
+        Sun, 05 Apr 2020 03:49:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=953t16PaqsK6LcXl7SedQvIrbO2yGs6c/tDrXm7TIhc=;
+        b=gDU9MpLlJXCxtnrJImoSbWNKul0yvFgILeoD6x0Az1GLzewahCBNoaASoP2PwKMwu0
+         If9A7h8AvWGp43dPJXZzkKEWy+TXf18/nhD7/OEk//SJ2ussttndqB67MpOX80y7qPUn
+         XDGeAkJXlialvYn4mgovXTGTwk8h/cvavMSNFpPg/Aj27whu6BgHq6IBDtcprRnzyUzp
+         dI1LvNsoFTdLJjqO/j4OYwqsXAkiHGiXaaYvT9LHva1GvzuNTZ6/rHO3AfdFjz2pStlS
+         Rc46XrpmD1T7jUWt7gQd0ferGemsUtHc4Gna7eOK4HpiGdwGRzH2RqlvIhpuSwWQHmSl
+         XnQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=953t16PaqsK6LcXl7SedQvIrbO2yGs6c/tDrXm7TIhc=;
+        b=OYJqFIhSu3stR2uhzjZe7nbe7UHRX53H/Zdoz++OHekF0iMeKzxxHkEf6CXiOg0y0m
+         TRc+qj/H2L4wx3KWK5KyuvV5RBwEz+vUfhiZeVFzM88Ds6KT0mh6eS6SR5KLM0J0UYPj
+         MA/y8DkoMHOtAQEtFvWPbcjnw4T6hicFsOzd9TCOu963vapZ0e4St+DMlotSObtWKnsI
+         lW2vthZ0qbfsFl2Kr35nkaiK8QO2IQnWq/vYj0XKRrU81XFte+LA9YjpYV1TGA5W8LFC
+         YKW8SB18y3ZB1R4OMKldJ81r6xC8Gn3oaQaMpCqr1TgDuz+7npauw5Duy5/TbnUktZYd
+         Z/tg==
+X-Gm-Message-State: AGi0PuYNIbo+hHIMnjSy1P2IumB6C271Bl8KqplV6qTkttnOEcncEjYc
+        9C6FViKYr5YC1M0hCrw4s1g=
+X-Google-Smtp-Source: APiQypIb6hYEiZU/p/Pp6GyHUm6hJVSiw5xrphdOw1InxhwhbkqgTWtX3m4rJUfQxyavTQCkImQr2g==
+X-Received: by 2002:a1c:6044:: with SMTP id u65mr9806744wmb.11.1586083757409;
+        Sun, 05 Apr 2020 03:49:17 -0700 (PDT)
+Received: from localhost.localdomain (91-167-199-67.subs.proxad.net. [91.167.199.67])
+        by smtp.gmail.com with ESMTPSA id u13sm21606411wru.88.2020.04.05.03.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 03:49:16 -0700 (PDT)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH 1/7] arm64: dts: allwinner: h6: Add clock to CPU cores
+Date:   Sun,  5 Apr 2020 12:49:07 +0200
+Message-Id: <20200405104913.22806-2-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200405104913.22806-1-peron.clem@gmail.com>
+References: <20200405104913.22806-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 1 Apr 2020 15:59:34 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-> This change adds the iio_device_attach_kfifo_buffer() helper/short-hand,
-> which groups the simple routine of allocating a kfifo buffers via
-> devm_iio_kfifo_allocate() and calling iio_device_attach_buffer().
-> 
-> The mode_flags parameter is required. The setup_ops parameter is optional.
-> 
-> This function will be a bit more useful when needing to define multiple
-> buffers per IIO device.
-> 
-> One requirement [that is more a recommendation] for this helper, is to call
-> it after 'indio_dev' has been populated.
-> 
-> Also, one consequence related to using this helper is that the resource
-> management of the buffer will be tied to 'indio_dev->dev'. Previously it
-> was open-coded, and each driver does it slightly differently. Most of them
-> tied it to the parent device, some of them to 'indio_dev->dev'.
-> This shouldn't be a problem, and may be a good idea when adding more
-> buffers per-device.
+The ARM CPU cores are fed by the CPU clock from the CCU. Add a
+reference to the clock for each CPU core, along with the clock
+transition latency.
 
-I'm glad you highlighted this subtlety.  I'm not sure it's safe in all cases
-because the result is that the managed cleanup for this will occur once we
-get to the cleanup for devm_iio_device_alloc and we release the indio_dev->dev
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-That would put it 'after' any other devm calls that are still hung off the parent
-device.
-
-Now the question is whether that ever causes us problems... See next patch.
-It potentially does.  I think we need to provide the dev separately even
-if it feels a bit silly to do so.  Scope management is complex so I don't
-really want to force people to mix and match between different devices
-and so get it wrong by accident.
-
-The other issue is that it's not readily apparent from the naming that
-this function is registering stuff that is cleaned up automatically or
-that it even allocates anything that might need that..
-
-devm_iio_device_attach_new_kfifo_buffer maybe?
-
-I'm sort of wondering if we should do what dma did and have
-
-iiom_device_attach_new_kfifo_buffer to indicate it's managed in the
-scope of the iio device?
-
-What do people think?
-
-However, see patch 2 before commenting.  Reality is I'm not sure forcing
-managed calls to hang off iio_dev->dev is a good idea (at this stage given
-where we are).
-
-Thanks
-
-Jonathan
-
-
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/iio/buffer/kfifo_buf.c | 37 ++++++++++++++++++++++++++++++++++
->  include/linux/iio/kfifo_buf.h  |  4 ++++
->  2 files changed, 41 insertions(+)
-> 
-> diff --git a/drivers/iio/buffer/kfifo_buf.c b/drivers/iio/buffer/kfifo_buf.c
-> index 3150f8ab984b..05b7c5fc6f1d 100644
-> --- a/drivers/iio/buffer/kfifo_buf.c
-> +++ b/drivers/iio/buffer/kfifo_buf.c
-> @@ -228,4 +228,41 @@ void devm_iio_kfifo_free(struct device *dev, struct iio_buffer *r)
->  }
->  EXPORT_SYMBOL(devm_iio_kfifo_free);
->  
-> +/**
-> + * iio_device_attach_kfifo_buffer - Allocate a kfifo buffer & attach it to an IIO device
-> + * @indio_dev: The device the buffer should be attached to
-> + * @mode_flags: The mode flags for this buffer (INDIO_BUFFER_SOFTWARE and/or
-> + *		INDIO_BUFFER_TRIGGERED).
-> + * @setup_ops: The setup_ops required to configure the HW part of the buffer (optional)
-> + *
-> + * This function allocates a kfifo buffer via devm_iio_kfifo_allocate() and
-> + * attaches it to the IIO device via iio_device_attach_buffer().
-> + * This is meant to be a bit of a short-hand/helper function as many driver
-> + * seem to do this.
-> + */
-> +int iio_device_attach_kfifo_buffer(struct iio_dev *indio_dev,
-> +				   int mode_flags,
-> +				   const struct iio_buffer_setup_ops *setup_ops)
-> +{
-> +	struct iio_buffer *buffer;
-> +
-> +	if (mode_flags)
-> +		mode_flags &= kfifo_access_funcs.modes;
-> +
-> +	if (!mode_flags)
-> +		return -EINVAL;
-> +
-> +	buffer = devm_iio_kfifo_allocate(&indio_dev->dev);
-> +	if (!buffer)
-> +		return -ENOMEM;
-> +
-> +	iio_device_attach_buffer(indio_dev, buffer);
-> +
-> +	indio_dev->modes |= mode_flags;
-> +	indio_dev->setup_ops = setup_ops;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(iio_device_attach_kfifo_buffer);
-> +
->  MODULE_LICENSE("GPL");
-> diff --git a/include/linux/iio/kfifo_buf.h b/include/linux/iio/kfifo_buf.h
-> index 764659e01b68..2363a931be14 100644
-> --- a/include/linux/iio/kfifo_buf.h
-> +++ b/include/linux/iio/kfifo_buf.h
-> @@ -11,4 +11,8 @@ void iio_kfifo_free(struct iio_buffer *r);
->  struct iio_buffer *devm_iio_kfifo_allocate(struct device *dev);
->  void devm_iio_kfifo_free(struct device *dev, struct iio_buffer *r);
->  
-> +int iio_device_attach_kfifo_buffer(struct iio_dev *indio_dev,
-> +				   int mode_flags,
-> +				   const struct iio_buffer_setup_ops *setup_ops);
-> +
->  #endif
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 3329283e38ab..aef4ae760d5e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -25,6 +25,8 @@
+ 			device_type = "cpu";
+ 			reg = <0>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -32,6 +34,8 @@
+ 			device_type = "cpu";
+ 			reg = <1>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -39,6 +43,8 @@
+ 			device_type = "cpu";
+ 			reg = <2>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -46,6 +52,8 @@
+ 			device_type = "cpu";
+ 			reg = <3>;
+ 			enable-method = "psci";
++			clocks = <&ccu CLK_CPUX>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 	};
+ 
+-- 
+2.20.1
 
