@@ -2,163 +2,191 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D08C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991C2C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000DD206F5
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603D120739
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 00:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbgDEAH1 (ORCPT
+        id S1726417AbgDEAgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 4 Apr 2020 20:07:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
+        Sat, 4 Apr 2020 20:36:33 -0400
+Received: from mga12.intel.com ([192.55.52.136]:41028 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726057AbgDEAH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 4 Apr 2020 20:07:26 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB016206F5;
-        Sun,  5 Apr 2020 00:07:24 +0000 (UTC)
-Date:   Sat, 4 Apr 2020 20:07:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] tracing: Updates for 5.7
-Message-ID: <20200404200723.26662e07@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726352AbgDEAgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 4 Apr 2020 20:36:33 -0400
+IronPort-SDR: loZeyCuccoFaoDUpx7OCHdcGlcIAAiaKxlKVvMcA7N5zTTQA6DW3aYjJOW6MPLnZ5q6fdapYkF
+ s8MKaCXowzYg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2020 17:36:32 -0700
+IronPort-SDR: qiaQn/L8q0jTVK10nfNPIrey6v45gv9jvjok5trc8SEjiYrKXfkVgodsiL1ak0S41sdL0f4QcE
+ 2/5MWROO5Crw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,345,1580803200"; 
+   d="scan'208";a="253731755"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 04 Apr 2020 17:36:30 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jKtH4-00030L-5D; Sun, 05 Apr 2020 08:36:30 +0800
+Date:   Sun, 05 Apr 2020 08:36:10 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:perf/urgent] BUILD SUCCESS
+ 7dc41b9b99cd0037a418ac47e342d56a438df649
+Message-ID: <5e8927fa.WVljxzvo4V++SuMo%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  perf/urgent
+branch HEAD: 7dc41b9b99cd0037a418ac47e342d56a438df649  Merge tag 'perf-urgent-for-mingo-5.7-20200403' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent
 
-Linus,
+elapsed time: 957m
 
-New tracing features:
+configs tested: 124
+configs skipped: 0
 
- - The ring buffer is no longer disabled when reading the trace file.
-   The trace_pipe file was made to be used for live tracing and reading
-   as it acted like the normal producer/consumer. As the trace file
-   would not consume the data, the easy way of handling it was to just
-   disable writes to the ring buffer. This came to a surprise to the
-   BPF folks who complained about lost events due to reading.
-   This is no longer an issue. If someone wants to keep the old disabling
-   there's a new option "pause-on-trace" that can be set.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
- - New set_ftrace_notrace_pid file. PIDs in this file will not be traced
-   by the function tracer. Similar to set_ftrace_pid, which makes the
-   function tracer only trace those tasks with PIDs in the file, the
-   set_ftrace_notrace_pid does the reverse.
+arm64                            allyesconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm                              allmodconfig
+arm64                             allnoconfig
+arm                               allnoconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         3c120_defconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+openrisc                    or1ksim_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                               defconfig
+h8300                       h8s-sim_defconfig
+h8300                     edosk2674_defconfig
+m68k                       m5475evb_defconfig
+m68k                             allmodconfig
+h8300                    h8300h-sim_defconfig
+m68k                           sun3_defconfig
+m68k                          multi_defconfig
+arc                                 defconfig
+arc                              allyesconfig
+powerpc                          rhel-kconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+mips                             allyesconfig
+mips                         64r6el_defconfig
+mips                              allnoconfig
+mips                           32r2_defconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                generic-64bit_defconfig
+parisc                generic-32bit_defconfig
+parisc                           allyesconfig
+i386                 randconfig-a002-20200404
+x86_64               randconfig-a002-20200404
+x86_64               randconfig-a001-20200404
+i386                 randconfig-a001-20200404
+i386                 randconfig-a003-20200404
+mips                 randconfig-a001-20200404
+nds32                randconfig-a001-20200404
+m68k                 randconfig-a001-20200404
+parisc               randconfig-a001-20200404
+alpha                randconfig-a001-20200404
+riscv                randconfig-a001-20200404
+sparc64              randconfig-a001-20200404
+h8300                randconfig-a001-20200404
+nios2                randconfig-a001-20200404
+microblaze           randconfig-a001-20200404
+c6x                  randconfig-a001-20200404
+i386                 randconfig-c003-20200404
+i386                 randconfig-c001-20200404
+x86_64               randconfig-c002-20200404
+x86_64               randconfig-c003-20200404
+i386                 randconfig-c002-20200404
+x86_64               randconfig-c001-20200404
+i386                 randconfig-f001-20200404
+x86_64               randconfig-f003-20200404
+i386                 randconfig-f003-20200404
+x86_64               randconfig-f002-20200404
+i386                 randconfig-f002-20200404
+arm64                randconfig-a001-20200404
+sparc                randconfig-a001-20200404
+ia64                 randconfig-a001-20200404
+arc                  randconfig-a001-20200404
+arm                  randconfig-a001-20200404
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                             alldefconfig
+s390                                defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
- - New set_event_notrace_pid file. PIDs in this file will cause events
-   not to be traced if triggered by a task with a matching PID.
-   Similar to the set_event_pid file but will not be traced.
-   Note, sched_waking and sched_switch events may still be trace if
-   one of the tasks referenced by those events contains a PID that
-   is allowed to be traced.
-
-Tracing related features:
-
- - New bootconfig option, that is attached to the initrd file.
-   If bootconfig is on the command line, then the initrd file
-   is searched looking for a bootconfig appended at the end.
-
- - New GPU tracepoint infrastructure to help the gfx drivers to get
-   off debugfs (acked by Greg Kroah-Hartman)
-
-Other minor updates and fixes.
-
-
-Please pull the latest trace-v5.7 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.7
-
-Tag SHA1: 7c483089c1d670b55a9b2d574a74b6c0f6481544
-Head SHA1: 8e99cf91b99bb30e16727f10ad6828741c0e992f
-
-
-Masami Hiramatsu (3):
-      bootconfig: Support O=<builddir> option
-      tools/bootconfig: Show line and column in parse error
-      ftrace/kprobe: Show the maxactive number on kprobe_events
-
-Nathan Chancellor (1):
-      tracing: Use address-of operator on section symbols
-
-Steven Rostedt (VMware) (22):
-      tracing: Have hwlat ts be first instance and record count of instances
-      tracing: Remove unused TRACE_BUFFER bits
-      selftest/ftrace: Fix function trigger test to handle trace not disabling the tracer
-      tracing: Save off entry when peeking at next entry
-      ring-buffer: Have ring_buffer_empty() not depend on tracing stopped
-      ring-buffer: Rename ring_buffer_read() to read_buffer_iter_advance()
-      ring-buffer: Add page_stamp to iterator for synchronization
-      ring-buffer: Have rb_iter_head_event() handle concurrent writer
-      ring-buffer: Do not die if rb_iter_peek() fails more than thrice
-      ring-buffer: Optimize rb_iter_head_event()
-      ring-buffer: Make resize disable per cpu buffer instead of total buffer
-      ring-buffer: Do not disable recording when there is an iterator
-      tracing: Do not disable tracing when reading the trace file
-      ring-buffer/tracing: Have iterator acknowledge dropped events
-      tracing: Have the document reflect that the trace file keeps tracing enabled
-      ftrace: Make function trace pid filtering a bit more exact
-      ftrace: Create set_ftrace_notrace_pid to not trace tasks
-      tracing: Create set_event_notrace_pid to not trace tasks
-      selftests/ftrace: Add test to test new set_ftrace_notrace_pid file
-      selftests/ftrace: Add test to test new set_event_notrace_pid file
-      tracing: Add documentation on set_ftrace_notrace_pid and set_event_notrace_pid
-      tracing: Do not allocate buffer in trace_find_next_entry() in atomic
-
-Yiwei Zhang (1):
-      gpu/trace: add a gpu total memory usage tracepoint
-
-----
- Documentation/trace/ftrace.rst                     |  82 ++++--
- drivers/Kconfig                                    |   2 +
- drivers/gpu/Makefile                               |   1 +
- drivers/gpu/trace/Kconfig                          |   4 +
- drivers/gpu/trace/Makefile                         |   3 +
- drivers/gpu/trace/trace_gpu_mem.c                  |  13 +
- include/linux/bootconfig.h                         |   3 +-
- include/linux/ring_buffer.h                        |   4 +-
- include/linux/trace_events.h                       |   2 +
- include/trace/events/gpu_mem.h                     |  57 +++++
- init/main.c                                        |  14 +-
- kernel/trace/ftrace.c                              | 200 +++++++++++++--
- kernel/trace/ring_buffer.c                         | 239 ++++++++++++------
- kernel/trace/trace.c                               | 110 ++++++--
- kernel/trace/trace.h                               |  39 ++-
- kernel/trace/trace_entries.h                       |   4 +-
- kernel/trace/trace_events.c                        | 280 ++++++++++++++++-----
- kernel/trace/trace_functions_graph.c               |   2 +-
- kernel/trace/trace_hwlat.c                         |  24 +-
- kernel/trace/trace_kprobe.c                        |   2 +
- kernel/trace/trace_output.c                        |  19 +-
- lib/bootconfig.c                                   |  35 ++-
- tools/bootconfig/Makefile                          |  27 +-
- tools/bootconfig/main.c                            |  35 ++-
- tools/bootconfig/test-bootconfig.sh                |  14 +-
- .../selftests/ftrace/test.d/event/event-no-pid.tc  | 125 +++++++++
- .../test.d/ftrace/func-filter-notrace-pid.tc       | 108 ++++++++
- .../test.d/ftrace/func_traceonoff_triggers.tc      |   2 +-
- 28 files changed, 1194 insertions(+), 256 deletions(-)
- create mode 100644 drivers/gpu/trace/Kconfig
- create mode 100644 drivers/gpu/trace/Makefile
- create mode 100644 drivers/gpu/trace/trace_gpu_mem.c
- create mode 100644 include/trace/events/gpu_mem.h
- create mode 100644 tools/testing/selftests/ftrace/test.d/event/event-no-pid.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/func-filter-notrace-pid.tc
----------------------------
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
