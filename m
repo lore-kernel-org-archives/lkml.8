@@ -2,129 +2,86 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9518DC2BA19
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCF8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E36720678
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF472051A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 08:41:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiBbl3Jg"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="IYYgMZyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgDEIhA (ORCPT
+        id S1726455AbgDEIlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 04:37:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34881 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726308AbgDEIhA (ORCPT
+        Sun, 5 Apr 2020 04:41:00 -0400
+Received: from sender2-op-o12.zoho.com.cn ([163.53.93.243]:17582 "EHLO
+        sender2-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726308AbgDEIk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 04:37:00 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a13so6007474pfa.2;
-        Sun, 05 Apr 2020 01:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ncl8XXtzp8goItvEp2ww15C1VisVJr6bKa4zYnBNmX0=;
-        b=UiBbl3JgXB+WXPn0PDlm6JGE4zUA0Lk+w2SyBVnGyw+dtI3fMZAwpQvxLQLp1zocmc
-         cbZAjRELnDckLbIDej8cQ9TYieSow+wb5wXbORwlZevebns6eo8/z0JWd8gu9J6eQvcw
-         hazEBqpkdC/xBC+YGvNdp/RryMhQ/PVr5bSPI/hnLNMKTMSs9uJrrKbom6qKwt53EDl6
-         DcRcqE9SMUU8sMl3p5awrJZf2xuCdUStIN8IFN3vUpYauz/B1Me3zUaDSTYiU1K/RbSb
-         fzUtxc7jlXr99CrDzjo6H1+wCRql+6stLwwjt9iiefUmyJqE7D+H6jnjoPQcAsxrXOVl
-         ZGFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ncl8XXtzp8goItvEp2ww15C1VisVJr6bKa4zYnBNmX0=;
-        b=IVIxM5N2nZf2mFqVHJknxklv6Tozfk8SMDwcv9j956+LEdk+pKN7R3QArlfYX6WWvg
-         Hk0R2ouoazFK1irysfp3DtVp8nF3r0m6Rx+MqAsq+qWxGo1R9Qp9OsEfvK5pV49vUdXQ
-         H8s+7o1gJmwji70hX4O6cM1qrrFtveq6YAaIaCITm6t0Ah80kLiqohz8hGcCT9nLeEG6
-         kJeZhhmMnEbzcrejqXtHfpiD7cyQG5ieBHzO1tnAcJKgScDgfvYF1fcCGFJZGznowZCN
-         a/0yUSIXgsyvaElOOrbln2fSu5eXDkHTkYbV5CU5KuL5iajctvrJre1oQ6YaHuGcmR69
-         0aPg==
-X-Gm-Message-State: AGi0Pubx71WSMvGnvlOUz0g1uNenb3YTfEEyjkoi0x2LLW65VR0tjzwj
-        Vb6pdicLoN57msxlyAfC2OM=
-X-Google-Smtp-Source: APiQypLwjpQ8/2K2EhOZmMPEwHuHozeHT2LsHn3MvCuDvbg8478/A6s7FGnWlBvSyPQ5EeyjF7JA+w==
-X-Received: by 2002:a63:602:: with SMTP id 2mr15774896pgg.356.1586075818769;
-        Sun, 05 Apr 2020 01:36:58 -0700 (PDT)
-Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
-        by smtp.gmail.com with ESMTPSA id y3sm8991405pfy.158.2020.04.05.01.36.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 Apr 2020 01:36:58 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com
-Cc:     ast@kernel.org, daniel@iogearbox.net, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] um: delete an unnecessary check before the kfree
-Date:   Sun,  5 Apr 2020 16:36:52 +0800
-Message-Id: <20200405083652.29462-1-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 5 Apr 2020 04:40:59 -0400
+X-Greylist: delayed 925 seconds by postgrey-1.27 at vger.kernel.org; Sun, 05 Apr 2020 04:40:56 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586075102;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=jlfqA7A2mmN1MCE9Hu767OVJ/7u6nHkaQCRHUH9vIcI=;
+        b=IYYgMZyiU3o33Tg3dO7svxhHO1GN8WczdboM3eNpfiTMRRuPToWQZQ1D1P0vOtPW
+        GFw4GM2403Fnmo03B47ozPxh3shyipdmVSbiuom2uHSay74TLw1tJHmxfT4+kjK3nmb
+        Skx/wzzg19y3Ke3LC6V6Kf/CoRVnCLrvRGcfjzvc=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 1586075100036667.996448622306; Sun, 5 Apr 2020 16:25:00 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Fangrui Song <maskray@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-kernel@vger.kernel.org
+Message-ID: <20200405082451.694910-1-jiaxun.yang@flygoat.com>
+Subject: [PATCH] MIPS: malta: Set load address for 32bit kernel correctly
+Date:   Sun,  5 Apr 2020 16:24:49 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NULL check before kfree is unnecessary so remove it.
+LLD failed to link vmlinux with 64bit load address for 32bit ELF
+while bfd will strip 64bit address into 32bit silently.
+To fix LLD build, we should supply a 32bit load address for 32bit
+kernel.
 
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- arch/um/drivers/vector_user.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ arch/mips/mti-malta/Platform | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
-index ddcd917be0af..aa28e9eecb7b 100644
---- a/arch/um/drivers/vector_user.c
-+++ b/arch/um/drivers/vector_user.c
-@@ -221,8 +221,7 @@ static struct vector_fds *user_init_tap_fds(struct arglist *ifspec)
- 	return result;
- tap_cleanup:
- 	printk(UM_KERN_ERR "user_init_tap: init failed, error %d", fd);
--	if (result != NULL)
--		kfree(result);
-+	kfree(result);
- 	return NULL;
- }
- 
-@@ -266,8 +265,7 @@ static struct vector_fds *user_init_hybrid_fds(struct arglist *ifspec)
- 	return result;
- hybrid_cleanup:
- 	printk(UM_KERN_ERR "user_init_hybrid: init failed");
--	if (result != NULL)
--		kfree(result);
-+	kfree(result);
- 	return NULL;
- }
- 
-@@ -344,10 +342,8 @@ static struct vector_fds *user_init_unix_fds(struct arglist *ifspec, int id)
- unix_cleanup:
- 	if (fd >= 0)
- 		os_close_file(fd);
--	if (remote_addr != NULL)
--		kfree(remote_addr);
--	if (result != NULL)
--		kfree(result);
-+	kfree(remote_addr);
-+	kfree(result);
- 	return NULL;
- }
- 
-@@ -382,8 +378,7 @@ static struct vector_fds *user_init_raw_fds(struct arglist *ifspec)
- 	return result;
- raw_cleanup:
- 	printk(UM_KERN_ERR "user_init_raw: init failed, error %d", err);
--	if (result != NULL)
--		kfree(result);
-+	kfree(result);
- 	return NULL;
- }
- 
--- 
-2.17.1
+diff --git a/arch/mips/mti-malta/Platform b/arch/mips/mti-malta/Platform
+index 2cc72c9b38e3..f9b49cba1764 100644
+--- a/arch/mips/mti-malta/Platform
++++ b/arch/mips/mti-malta/Platform
+@@ -6,6 +6,10 @@ cflags-$(CONFIG_MIPS_MALTA)=09+=3D -I$(srctree)/arch/mips/=
+include/asm/mach-malta
+ ifdef CONFIG_KVM_GUEST
+     load-$(CONFIG_MIPS_MALTA)=09+=3D 0x0000000040100000
+ else
++ifdef CONFIG_64BIT
+     load-$(CONFIG_MIPS_MALTA)=09+=3D 0xffffffff80100000
++else
++    load-$(CONFIG_MIPS_MALTA)=09+=3D 0x80100000
++endif
+ endif
+ all-$(CONFIG_MIPS_MALTA)=09:=3D $(COMPRESSION_FNAME).bin
+--=20
+2.26.0.rc2
+
 
