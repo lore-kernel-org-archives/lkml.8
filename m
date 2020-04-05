@@ -2,131 +2,301 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5F0C2BA15
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 20:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C447C2BA15
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 20:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9313720672
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 20:13:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="jJyCDymm"
+	by mail.kernel.org (Postfix) with ESMTP id F04882063A
+	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 20:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgDEUNY (ORCPT
+        id S1727749AbgDEUOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 16:13:24 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40110 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgDEUNY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 16:13:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j17so10087028lfe.7
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 13:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZecswmQzcKyJcaA1KVr1PgDOFuDkBa9m5xQm0CMlRfg=;
-        b=jJyCDymm6a4Y4wyhQ19mQrdIHDOuRafStVA1S1Ig6u2VsstNNG+WN5ithcMu/UoDhe
-         CJm6CNrO5du/C461KF08IoNM6ixV+wdPZH8150mM/yVeqUBK51IxAnWz7mKOY839n8aW
-         d7cHEB5htx7FQ8+DMQOGIPAUPdAP2iIaT8fdrFL0ztPZz0GCoILB7X3WnENer2eAJskQ
-         eeo1VWbmuMKB2MUvYRbouX1S5SlVWKrKQ6M6xDtskZYZDXj9EBjSi5jMaCUjXzgkBOze
-         jU3zjVkxzmHp8gl2mo4gFFASzkAJPg2bF21TLTOydSfR8DchzsZcVw7KD93PqUSsu39Y
-         78tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZecswmQzcKyJcaA1KVr1PgDOFuDkBa9m5xQm0CMlRfg=;
-        b=lvqpQLsD7CeJ+4XW4UGqdo+ZpknT/mJumbMrDmk3MvU8NS5dPBL6wMXTMWdwCBP10u
-         V0XSEL0qwhcXQ3hM23Ir6Yu47K4dI6CNxDgGMuSx6b8BDcCKQuwDFieryaLKn+SHtEXi
-         um0bO21fp/et0xHD2gn01epfEdiWqGMvg+hIuXB4Qwmov7MIBb0MfQ2u0uPeWHjFltgg
-         m7jTx82Qk7jOAi2y454WslQ0SUVpz213QWI3rTaiInfLzDdOr/ECNr0A36LKZVUOc5on
-         IvowRbz17UNhVC1keKXM/mcOFw5yZSm+fen/YIRuqA7N+43kIvOL2BIQLPCYBh0XYDin
-         4lcw==
-X-Gm-Message-State: AGi0Pub1QZ1xZTv6StS/I+4pIjoweybnYw1WiGIxO4nY6uzgUx9SFxe9
-        44DkW6URIryYqYaItDv/mhzzTsmo5UnTdQ==
-X-Google-Smtp-Source: APiQypIEsOpmUVRbUVIGQF9PTFmAXeRwenTbMDANUZ4VQGITx+F9m6bijBqeMQEHZ9PikkiF90Ex9A==
-X-Received: by 2002:ac2:4143:: with SMTP id c3mr4585061lfi.131.1586117602906;
-        Sun, 05 Apr 2020 13:13:22 -0700 (PDT)
-Received: from navi.cosmonova.net.ua ([95.67.24.131])
-        by smtp.gmail.com with ESMTPSA id m1sm5450815lfl.69.2020.04.05.13.13.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 13:13:22 -0700 (PDT)
-From:   andrew@daynix.com
-To:     virtualization@lists.linux-foundation.org
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix: buffer overflow during hvc_alloc().
-Date:   Sun,  5 Apr 2020 23:40:24 +0300
-Message-Id: <20200405204024.1007843-1-andrew@daynix.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 5 Apr 2020 16:14:18 -0400
+Received: from mga01.intel.com ([192.55.52.88]:62225 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726887AbgDEUOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 16:14:17 -0400
+IronPort-SDR: JkCale7GbP1ZmTyda90MPz9Ho/z8ZLcw3yk2P9mENkPvF37tohqNK0p9ZR5Y25Jf6QbqHjnEh9
+ nI3sw8+nO0DA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 13:14:17 -0700
+IronPort-SDR: lsnpJBhoI9DEBErc0atIDPfOn0IN1Q86/t6bvgY328+C1NOO7e3pnLsn/sBEizDgNAMktLOzOh
+ YQsCEX8w8eJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,348,1580803200"; 
+   d="scan'208";a="329688337"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.87])
+  by orsmga001.jf.intel.com with ESMTP; 05 Apr 2020 13:14:12 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH V6 00/15] perf/x86: Add perf text poke events
+Date:   Sun,  5 Apr 2020 23:13:12 +0300
+Message-Id: <20200405201327.7332-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Melnychenko <andrew@daynix.com>
+Hi
 
-If there is a lot(more then 16) of virtio-console devices
-or virtio_console module is reloaded
-- buffers 'vtermnos' and 'cons_ops' are overflowed.
-In older kernels it overruns spinlock which leads to kernel freezing:
-https://bugzilla.redhat.com/show_bug.cgi?id=1786239
+Here are patches to add a text poke event to record changes to kernel text
+(i.e. self-modifying code) in order to support tracers like Intel PT
+decoding through jump labels, kprobes and ftrace trampolines.
 
-Signed-off-by: Andrew Melnychenko <andrew@daynix.com>
----
- drivers/tty/hvc/hvc_console.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+The first 8 patches make the kernel changes and the subsequent patches are
+tools changes.
 
-diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
-index 27284a2dcd2b..436cc51c92c3 100644
---- a/drivers/tty/hvc/hvc_console.c
-+++ b/drivers/tty/hvc/hvc_console.c
-@@ -302,10 +302,6 @@ int hvc_instantiate(uint32_t vtermno, int index, const struct hv_ops *ops)
- 	vtermnos[index] = vtermno;
- 	cons_ops[index] = ops;
- 
--	/* reserve all indices up to and including this index */
--	if (last_hvc < index)
--		last_hvc = index;
--
- 	/* check if we need to re-register the kernel console */
- 	hvc_check_console(index);
- 
-@@ -960,13 +956,22 @@ struct hvc_struct *hvc_alloc(uint32_t vtermno, int data,
- 		    cons_ops[i] == hp->ops)
- 			break;
- 
--	/* no matching slot, just use a counter */
--	if (i >= MAX_NR_HVC_CONSOLES)
--		i = ++last_hvc;
-+	if (i >= MAX_NR_HVC_CONSOLES) {
-+
-+		/* find 'empty' slot for console */
-+		for (i = 0; i < MAX_NR_HVC_CONSOLES && vtermnos[i] != -1; i++) {
-+		}
-+
-+		/* no matching slot, just use a counter */
-+		if (i == MAX_NR_HVC_CONSOLES)
-+			i = ++last_hvc + MAX_NR_HVC_CONSOLES;
-+	}
- 
- 	hp->index = i;
--	cons_ops[i] = ops;
--	vtermnos[i] = vtermno;
-+	if (i < MAX_NR_HVC_CONSOLES) {
-+		cons_ops[i] = ops;
-+		vtermnos[i] = vtermno;
-+	}
- 
- 	list_add_tail(&(hp->next), &hvc_structs);
- 	mutex_unlock(&hvc_structs_mutex);
--- 
-2.24.1
+The next 4 patches add support for updating perf tools' data cache
+with the changed bytes.
 
+The next patch is an Intel PT specific tools change.
+
+The final 2 patches add perf script --show-text-poke-events option
+
+Patches also here:
+
+	git://git.infradead.org/users/ahunter/linux-perf.git text_poke
+
+Changes in V6
+
+  perf: Add perf text poke event
+
+	Adjustments due to re-base on top of cgroup event patches
+
+  perf/x86: Add perf text poke events for kprobes
+
+	Expand commit message
+	Add Masami's Ack
+
+  perf tools: Add support for PERF_RECORD_TEXT_POKE
+
+	Adjustments due to re-base on top of cgroup event patches
+	Improvements to perf_event__fprintf_text_poke()
+
+  perf script: Add option --show-text-poke-events
+  perf script: Show text poke address symbol
+
+	New patches
+
+Changes in V5
+
+  perf/x86: Add perf text poke events for kprobes
+
+	Simplify optimized kprobes events (Peter)
+
+Changes in V4
+
+  kprobes: Add symbols for kprobe insn pages
+
+	Change "module name" from kprobe to __builtin__kprobes
+	Added comment about "module name" use
+
+  ftrace: Add symbols for ftrace trampolines
+	
+	Change "module name" from ftrace to __builtin__ftrace
+	Move calls of ftrace_add_trampoline_to_kallsyms() and
+	ftrace_remove_trampoline_from_kallsyms() into
+	kernel/trace/ftrace.c
+	Added comment about "module name" use
+
+  ftrace: Add perf ksymbol events for ftrace trampolines
+
+	Move changes into kernel/trace/ftrace.c
+
+  ftrace: Add perf text poke events for ftrace trampolines
+
+	Move changes into kernel/trace/ftrace.c
+
+Changes in V3:
+
+  perf: Add perf text poke event
+
+	To prevent warning, cast pointer to (unsigned long) not (u64)
+
+  kprobes: Add symbols for kprobe insn pages
+
+	Expand commit message
+	Remove un-needed declarations of kprobe_cache_get_kallsym() and arch_kprobe_get_kallsym() when !CONFIG_KPROBES
+
+  ftrace: Add symbols for ftrace trampolines
+
+	Expand commit message
+	Make ftrace_get_trampoline_kallsym() static
+
+Changes in V2:
+
+  perf: Add perf text poke event
+
+	Separate out x86 changes
+	The text poke event now has old len and new len
+	Revised commit message
+
+  perf/x86: Add support for perf text poke event for text_poke_bp_batch() callers
+
+	New patch containing x86 changes from original first patch
+
+  kprobes: Add symbols for kprobe insn pages
+  kprobes: Add perf ksymbol events for kprobe insn pages
+  perf/x86: Add perf text poke events for kprobes
+  ftrace: Add symbols for ftrace trampolines
+  ftrace: Add perf ksymbol events for ftrace trampolines
+  ftrace: Add perf text poke events for ftrace trampolines
+  perf kcore_copy: Fix module map when there are no modules loaded
+  perf evlist: Disable 'immediate' events last
+
+	New patches
+
+  perf tools: Add support for PERF_RECORD_TEXT_POKE
+
+	The text poke event now has old len and new len
+	Also select ksymbol events with text poke events
+
+  perf tools: Add support for PERF_RECORD_KSYMBOL_TYPE_OOL
+
+	New patch
+
+  perf intel-pt: Add support for text poke events
+
+	The text poke event now has old len and new len
+	Allow for the address not having a map yet
+
+
+Changes since RFC:
+
+  Dropped 'flags' from the new event.  The consensus seemed to be that text
+  pokes should employ a scheme similar to x86's INT3 method instead.
+
+  dropped tools patches already applied.
+
+
+Example:
+
+  For jump labels, the kernel needs
+	CONFIG_JUMP_LABEL=y
+  and also an easy to flip jump label is in sysctl_schedstats() which needs
+	CONFIG_SCHEDSTATS=y
+	CONFIG_PROC_SYSCTL=y
+	CONFIG_SCHED_DEBUG=y
+
+  Also note the 'sudo perf record' is put into the background which, as
+  written, needs sudo credential caching (otherwise the background task
+  will stop awaiting the sudo password), hence the 'sudo echo' to start.
+
+Before:
+
+  $ sudo echo
+  $ sudo perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M &
+  [1] 1640
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo bash -c 'echo 1 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  1
+  $ sudo bash -c 'echo 0 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo kill 1640
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 16.635 MB perf.data.before ]
+  $ perf script -i perf.data.before --itrace=e >/dev/null
+  Warning:
+  1946 instruction trace errors
+
+After:
+
+  $ sudo echo
+  $ sudo perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
+  [1] 1882
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo bash -c 'echo 1 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  1
+  $ sudo bash -c 'echo 0 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo kill 1882
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 10.893 MB perf.data.after ]
+  $ perf script -i perf.data.after --itrace=e
+  $
+
+
+Adrian Hunter (15):
+      perf: Add perf text poke event
+      perf/x86: Add support for perf text poke event for text_poke_bp_batch() callers
+      kprobes: Add symbols for kprobe insn pages
+      kprobes: Add perf ksymbol events for kprobe insn pages
+      perf/x86: Add perf text poke events for kprobes
+      ftrace: Add symbols for ftrace trampolines
+      ftrace: Add perf ksymbol events for ftrace trampolines
+      ftrace: Add perf text poke events for ftrace trampolines
+      perf kcore_copy: Fix module map when there are no modules loaded
+      perf evlist: Disable 'immediate' events last
+      perf tools: Add support for PERF_RECORD_TEXT_POKE
+      perf tools: Add support for PERF_RECORD_KSYMBOL_TYPE_OOL
+      perf intel-pt: Add support for text poke events
+      perf script: Add option --show-text-poke-events
+      perf script: Show text poke address symbol
+
+ arch/x86/include/asm/kprobes.h            |   2 +
+ arch/x86/kernel/alternative.c             |  37 ++++++++++-
+ arch/x86/kernel/kprobes/core.c            |  15 ++++-
+ arch/x86/kernel/kprobes/opt.c             |  38 +++++++++--
+ include/linux/ftrace.h                    |  12 ++--
+ include/linux/kprobes.h                   |  15 +++++
+ include/linux/perf_event.h                |   8 +++
+ include/uapi/linux/perf_event.h           |  26 +++++++-
+ kernel/events/core.c                      |  90 +++++++++++++++++++++++++-
+ kernel/kallsyms.c                         |  42 +++++++++++--
+ kernel/kprobes.c                          |  57 +++++++++++++++++
+ kernel/trace/ftrace.c                     | 101 +++++++++++++++++++++++++++++-
+ tools/include/uapi/linux/perf_event.h     |  26 +++++++-
+ tools/lib/perf/include/perf/event.h       |   9 +++
+ tools/perf/Documentation/perf-script.txt  |   4 ++
+ tools/perf/arch/x86/util/intel-pt.c       |   4 ++
+ tools/perf/builtin-record.c               |  45 +++++++++++++
+ tools/perf/builtin-script.c               |  23 ++++++-
+ tools/perf/tests/perf-record.c            |   4 +-
+ tools/perf/util/dso.c                     |   3 +
+ tools/perf/util/dso.h                     |   1 +
+ tools/perf/util/event.c                   |  62 +++++++++++++++++-
+ tools/perf/util/event.h                   |   9 ++-
+ tools/perf/util/evlist.c                  |  31 ++++++---
+ tools/perf/util/evlist.h                  |   1 +
+ tools/perf/util/evsel.c                   |   7 ++-
+ tools/perf/util/intel-pt.c                |  77 ++++++++++++++++++++++-
+ tools/perf/util/machine.c                 |  49 +++++++++++++++
+ tools/perf/util/machine.h                 |   3 +
+ tools/perf/util/map.c                     |   5 ++
+ tools/perf/util/map.h                     |   3 +-
+ tools/perf/util/perf_event_attr_fprintf.c |   1 +
+ tools/perf/util/record.c                  |  10 +++
+ tools/perf/util/record.h                  |   1 +
+ tools/perf/util/session.c                 |  23 +++++++
+ tools/perf/util/symbol-elf.c              |   7 +++
+ tools/perf/util/symbol.c                  |   1 +
+ tools/perf/util/tool.h                    |   3 +-
+ 38 files changed, 815 insertions(+), 40 deletions(-)
+
+
+Regards
+Adrian
