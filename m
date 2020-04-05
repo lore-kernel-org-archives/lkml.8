@@ -2,133 +2,95 @@ Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6E5C2BA1A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1452C2BA1B
 	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546B82072F
+	by mail.kernel.org (Postfix) with ESMTP id A955A2072F
 	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 07:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586071946;
-	bh=uxJFsqHw4FMXwzJ8lGsDQw5mgJwOHY1JB3yeEsk4k6E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ij7pf4d/5Zqzt1RFGktaOwW8V4LmFnP7Es96s+kwGxfk0bbvHMElc/4CMsrUTfAFl
-	 3LQtF86WpKBxhUm+TtVo0lPVIyKT7Yy7N58ekx39BjYrnexIJVJo0vw5oROz9HcGx4
-	 O8fyBzgDVYRMCIdTG8NhD2XeEawgTI4CATocQKH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbgDEHcV (ORCPT
+        id S1726486AbgDEHcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sun, 5 Apr 2020 03:32:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42496 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbgDEHcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 5 Apr 2020 03:32:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbgDEHcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 03:32:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 440C42072F;
-        Sun,  5 Apr 2020 07:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586071939;
-        bh=uxJFsqHw4FMXwzJ8lGsDQw5mgJwOHY1JB3yeEsk4k6E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DCl1GoRCD/Rx2VQQtXD5hnFB5LQit3vR4Am5qmD4WI9e7YRWFSVKmQksYYa+Kntxo
-         9hVdssY+pEF22w+r7QCVRlIRBsFLGPeZyNlkK5jd3K+EC9+dfIQ0pX//VZZKdzWUgP
-         Nb0OtnMlkuMe7k4/jTSkyX3oi6V8T8brjcyCCZHo=
-Date:   Sun, 5 Apr 2020 09:32:12 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Taehee Yoo <ap420073@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, rafael@kernel.org,
-        j.vosburgh@gmail.com, vfalico@gmail.com,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, mitch.a.williams@intel.com
-Subject: Re: [PATCH net v2 2/3] net: core: add netdev_class_has_file_ns()
- helper function
-Message-ID: <20200405073212.GA1551960@kroah.com>
-References: <20200404141909.26399-1-ap420073@gmail.com>
- <20200404155122.GD1476305@kroah.com>
- <CAMArcTVdn7FcfX-BCnZ+LUzdct4yj2BLyhpTu832_VGt_O+xWA@mail.gmail.com>
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jKzlP-0001xP-FA; Sun, 05 Apr 2020 09:32:15 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 529E11C01BB;
+        Sun,  5 Apr 2020 09:32:14 +0200 (CEST)
+Date:   Sun, 05 Apr 2020 07:32:13 -0000
+From:   "tip-bot2 for afzal mohammed" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] clocksource/drivers/timer-vf-pit: Add missing
+ parenthesis
+Cc:     kbuild test robot <lkp@intel.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200323061130.GA6286@afzalpc>
+References: <20200323061130.GA6286@afzalpc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMArcTVdn7FcfX-BCnZ+LUzdct4yj2BLyhpTu832_VGt_O+xWA@mail.gmail.com>
+Message-ID: <158607193357.28353.3365476438962871660.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 02:18:22AM +0900, Taehee Yoo wrote:
-> On Sun, 5 Apr 2020 at 00:51, Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> 
-> Hi Greg,
-> Thank you for your review!
-> 
-> > On Sat, Apr 04, 2020 at 02:19:09PM +0000, Taehee Yoo wrote:
-> > > This helper function is to check whether the class file "/sys/class/net/*"
-> > > is existing or not.
-> > > In the next patch, this helper function will be used.
-> > >
-> > > Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
-> > > Fixes: b76cdba9cdb2 ("[PATCH] bonding: add sysfs functionality to bonding (large)")
-> > > Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-> > > ---
-> > >
-> > > v1 -> v2:
-> > >  - use class_has_file_ns(), which is introduced by the first patch.
-> > >
-> > >  include/linux/netdevice.h | 2 +-
-> > >  net/core/net-sysfs.c      | 6 ++++++
-> > >  2 files changed, 7 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> > > index 130a668049ab..a04c487c0975 100644
-> > > --- a/include/linux/netdevice.h
-> > > +++ b/include/linux/netdevice.h
-> > > @@ -4555,7 +4555,7 @@ int netdev_class_create_file_ns(const struct class_attribute *class_attr,
-> > >                               const void *ns);
-> > >  void netdev_class_remove_file_ns(const struct class_attribute *class_attr,
-> > >                                const void *ns);
-> > > -
-> > > +bool netdev_class_has_file_ns(const char *name, const void *ns);
-> > >  static inline int netdev_class_create_file(const struct class_attribute *class_attr)
-> > >  {
-> > >       return netdev_class_create_file_ns(class_attr, NULL);
-> > > diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
-> > > index cf0215734ceb..8a20d658eff0 100644
-> > > --- a/net/core/net-sysfs.c
-> > > +++ b/net/core/net-sysfs.c
-> > > @@ -1914,6 +1914,12 @@ void netdev_class_remove_file_ns(const struct class_attribute *class_attr,
-> > >  }
-> > >  EXPORT_SYMBOL(netdev_class_remove_file_ns);
-> > >
-> > > +bool netdev_class_has_file_ns(const char *name, const void *ns)
-> > > +{
-> > > +     return class_has_file_ns(&net_class, name, ns);
-> > > +}
-> > > +EXPORT_SYMBOL(netdev_class_has_file_ns);
-> >
-> > Again, this feels broken, it can not solve a race condition.
-> >
-> 
-> This function is considered to be used under rtnl mutex and
-> I assume that no one could use "/sys/class/net/*" outside of rtnl mutex.
-> So, I think it returns the correct information under rtnl mutex.
+The following commit has been merged into the timers/urgent branch of tip:
 
-But you are creating a globally exported function that can be called
-from anywhere, and as such, is not useful because it has no locking or
-hints of how to use it correctly at all.
+Commit-ID:     760a53768610d427990192b5cfdb71310e1373db
+Gitweb:        https://git.kernel.org/tip/760a53768610d427990192b5cfdb71310e1373db
+Author:        afzal mohammed <afzal.mohd.ma@gmail.com>
+AuthorDate:    Mon, 23 Mar 2020 11:41:30 +05:30
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sun, 05 Apr 2020 09:24:58 +02:00
 
-Again, don't push this "solution" down to sysfs to solve, you know if
-you have a device that is not cleaned up yet, so don't try to
-rename/create a device of the same name before that is finished.
+clocksource/drivers/timer-vf-pit: Add missing parenthesis
 
-thanks,
+Recently all usage of setup_irq() was replaced by request_irq(). The
+replacement in timer-vf-pit.c missed closing parentheses resulting in a build
+error (vf610m4_defconfig). Fix it.
 
-greg k-h
+Fixes: cc2550b421aa ("clocksource: Replace setup_irq() by request_irq()")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200323061130.GA6286@afzalpc
+
+---
+ drivers/clocksource/timer-vf-pit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clocksource/timer-vf-pit.c b/drivers/clocksource/timer-vf-pit.c
+index 7ad4a8b..1a86a4e 100644
+--- a/drivers/clocksource/timer-vf-pit.c
++++ b/drivers/clocksource/timer-vf-pit.c
+@@ -129,7 +129,7 @@ static int __init pit_clockevent_init(unsigned long rate, int irq)
+ 	__raw_writel(PITTFLG_TIF, clkevt_base + PITTFLG);
+ 
+ 	BUG_ON(request_irq(irq, pit_timer_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
+-			   "VF pit timer", &clockevent_pit);
++			   "VF pit timer", &clockevent_pit));
+ 
+ 	clockevent_pit.cpumask = cpumask_of(0);
+ 	clockevent_pit.irq = irq;
