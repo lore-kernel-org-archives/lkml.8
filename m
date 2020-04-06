@@ -2,102 +2,131 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AADAC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ED1C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F356123A1D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A89238E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586182088;
-	bh=vhgy+ynRxUHpgkk7e+S8dG76pMVg1GKWZpZgWdztIoQ=;
+	s=default; t=1586182121;
+	bh=hcuGXHY3MNVxXukSV6J8rpsvBWkOiZRjUDrI4HxB6cE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Vq3fu4vtDQYJ5acQIil8bgb/Wx7awp2mfAdJ80pNBmnihwP0HAPW5Bc/LuISuMZ/l
-	 1AC4EA1H43UvRS8xDJ1R1wxmtZxl4vep+YZa96SwCB5VmosA5hj6dBMT5B25Wi4dZR
-	 9xKvws5AwIk/EN8wIHEH312LiJAX8dOeTBnL1M94=
+	b=akrXh9LRgiiKukU1uZLyWA5Lc8OOQDtwgUNRWLhlsjQGwPYqJp1AkN07gJVtBJXWu
+	 3ndX8X3WHJ3NHt3SONBz6e0tTrfQT04+qhSneKQLpAUFgIighM10Y7VsuhQ+duyc4A
+	 RqA7WcdvcUwTjjFnOOoX1VNzcGVEITCBv7NhzaYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgDFOIG (ORCPT
+        id S1728650AbgDFOIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728546AbgDFOIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:08:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65414238E1;
-        Mon,  6 Apr 2020 14:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586182085;
-        bh=vhgy+ynRxUHpgkk7e+S8dG76pMVg1GKWZpZgWdztIoQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IYLzb8Nm+sRiuji67P8mULB1l3aELwXC6jX+mkA4tZKJUI33MBO8HYv729g4sdVBA
-         oS5g0++iCERktqPGvNmlezEGY16tvAEQK0ejAt7ewaua1+cpQ2FB1ps3+Z6TAbYuJq
-         keh2EWYEPHa/pO4Mln43DeJnnPNDxCZ80IlK/c6s=
-Date:   Mon, 6 Apr 2020 16:08:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     puranjay12@gmail.com, robsonde@gmail.com, zhengbin13@huawei.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: rtl8192e: remove set but not used variable
- 'tmpRegC'
-Message-ID: <20200406140803.GB26701@kroah.com>
-References: <1586262964-4582-1-git-send-email-wanghai38@huawei.com>
+        Mon, 6 Apr 2020 10:08:41 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43344 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728405AbgDFOIk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 10:08:40 -0400
+Received: by mail-pl1-f193.google.com with SMTP id v23so5946283ply.10;
+        Mon, 06 Apr 2020 07:08:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qiVBZPsdURZP1jhMxDWHye9mEvFMkZlVNadDHV0ejs4=;
+        b=aCOZdE+kKjgXwNUh4wa7sd0iC9RrBIh1NeBcPBx4YJ0956l6hfldfq2s4fiZPX+lEl
+         XGScgrYshv2BiX4tuViMJ3evSNjGd2ZbtMIgQ9nPhrj4iqZLksyIYDbvBejmOYH6pUyH
+         bP/YBd6oM2UHno72Ret0EoO1lJYoX2Py3+VW5NVtrCmJILUBxMFug1MFpJqwAUS5467A
+         /lvGRWWoLCMbjM+XAPp5qlKBm8Trf+4IArkY2NZMSQISWQi6oJmVjYyAIbeILTMWiUaF
+         vXEKxMOzmU4i69trexUmXEuCVsy2qH31wrm00vShlTHZgEb6huwdYXDxYOoHvIW5Cqka
+         zYIw==
+X-Gm-Message-State: AGi0PuZPGeANKt/2IzIxM987UtFdYovcKcaxifm/j/kHLXPzUt8PCU2f
+        eqbcB9uySbQjYnA17WkjR1g=
+X-Google-Smtp-Source: APiQypK4PBijtr6jrSkxbP+qg+JhVIDRUZnqmssM67o2eOuF1E9o8YpsOIerTZkbPlD0P7gpp2RFWw==
+X-Received: by 2002:a17:90a:aa95:: with SMTP id l21mr11323852pjq.4.1586182119271;
+        Mon, 06 Apr 2020 07:08:39 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id b2sm4506439pgg.77.2020.04.06.07.08.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 07:08:37 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id DD95740246; Mon,  6 Apr 2020 14:08:36 +0000 (UTC)
+Date:   Mon, 6 Apr 2020 14:08:36 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <20200406140836.GA11244@42.do-not-panic.com>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-2-vbabka@suse.cz>
+ <20200330224422.GX11244@42.do-not-panic.com>
+ <287ac6ae-a898-3e68-c7d8-4c1d17a40db9@suse.cz>
+ <20200402160442.GA11244@42.do-not-panic.com>
+ <202004021017.3A23B759@keescook>
+ <20200402205932.GM11244@42.do-not-panic.com>
+ <202004031654.C4389A04EF@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1586262964-4582-1-git-send-email-wanghai38@huawei.com>
+In-Reply-To: <202004031654.C4389A04EF@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 08:36:04AM -0400, Wang Hai wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
+On Fri, Apr 03, 2020 at 04:57:51PM -0700, Kees Cook wrote:
+> On Thu, Apr 02, 2020 at 08:59:32PM +0000, Luis Chamberlain wrote:
+> > We modify the copied bootparams to allow new sysctls to map to old boot params?
 > 
-> drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c: In function rtl92e_start_adapter:
-> drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c:693:15: warning: variable ‘tmpRegC’ set but not used [-Wunused-but-set-variable]
-> 
-> commit 94a799425eee ("rtl8192e: Split into two directories")
-> involved this, remove it.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> ---
->  drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-> index ddcd788..ff934ae 100644
-> --- a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-> +++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-> @@ -690,7 +690,7 @@ bool rtl92e_start_adapter(struct net_device *dev)
->  	u8 tmpvalue;
->  	u8 ICVersion, SwitchingRegulatorOutput;
->  	bool bfirmwareok = true;
-> -	u32 tmpRegA, tmpRegC, TempCCk;
-> +	u32 tmpRegA, TempCCk;
->  	int i = 0;
->  	u32 retry_times = 0;
->  
-> @@ -889,8 +889,8 @@ bool rtl92e_start_adapter(struct net_device *dev)
->  		if (priv->IC_Cut >= IC_VersionCut_D) {
->  			tmpRegA = rtl92e_get_bb_reg(dev, rOFDM0_XATxIQImbalance,
->  						    bMaskDWord);
-> -			tmpRegC = rtl92e_get_bb_reg(dev, rOFDM0_XCTxIQImbalance,
-> -						    bMaskDWord);
-> +			rtl92e_get_bb_reg(dev, rOFDM0_XCTxIQImbalance,
-> +					  bMaskDWord);
+> This strdup is so that the
+> command line can have '\0's injected while it steps through the args
+> (and for doing the . and / replacement).
 
-That is odd, are you sure you aren't supposed to do something with that
-value you read?
+Please ignore the const feedback then.
 
-thanks,
+> > This is the least cumbersome solution I could think of. Other things
+> > would require things like using qemu, etc. That seems much more messsy.
+> 
+> Yes. Doing an internal extension isn't testing the actual code.
 
-greg k-h
+But it would.
+
+> > > This is an external interface (boot params), so
+> > > I'd rather an external driver handle that testing. We don't have a
+> > > common method to do that with the kernel, though.
+> > 
+> > Right... which begs the question now -- how do we test this sort of
+> > stuff? The above would at least get us coverage while we iron something
+> > more generic out for boot params.
+> > 
+> > > > That would test both cases with one kernel.
+> > > > 
+> > > > You could then also add a bogus new sysctl which also expands to a silly
+> > > > raw boot param to test the wrapper you are providing. That would be the
+> > > > only new test syctl you would need to add.
+> > > 
+> > > Sure, that seems reasonable. Supporting externally driven testing makes
+> > > sense for this.
+> > 
+> > But again, what exactly?
+> 
+> I don't think anything is needed for this series. It can be boot tested
+> manually.
+
+Why test it manually when it could be tested automatically with a new kconfig?
+
+  Luis
