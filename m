@@ -2,84 +2,1031 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB20BC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D7DC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C70248BF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8EA20780
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R3l62Bv5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YU6vZTfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbgDFPjK (ORCPT
+        id S1729012AbgDFPkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:39:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48336 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbgDFPjK (ORCPT
+        Mon, 6 Apr 2020 11:40:01 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:39978 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbgDFPkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:39:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=mxSwDQedmKVmfPXA425qbplhX+5HMsLQ63GXQLeSu9Q=; b=R3l62Bv5nxTACfVHr6B2NmsGoN
-        1NEdK3b3VFySdKHFGT06A3IL3rEwJdx9lWYbqg5VzEWdKwW1bOw1fNB8Ju5sIgKRoYM5WsNokc/qJ
-        ByJ2FYIy3eRTOQQSv4u4Zd4G/G451m2nOfh2JQ9MjK+jrHDCJ0bliJ5GXraPkuf0geXIO1aeE5pQw
-        icVlUx5Fe1gTzwCtxVYI4aMrCvCmLP2dTEQBteKUiQwTBFLUScRKx2IrRbmV6mr6WXsJfA1VYZuf3
-        MlO8oeCTxLQvTKB36HhTGPzdk0mAk1WzXf4XRU/j7sy2u3cPPzxWPYwU7ukDX9lrHfX/9vSXdR8ub
-        aqKITC3g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLTq2-0002dc-Dc; Mon, 06 Apr 2020 15:39:02 +0000
-Date:   Mon, 6 Apr 2020 08:39:02 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Laight <David.Laight@aculab.com>,
-        Doug Covelli <dcovelli@vmware.com>
-Subject: Re: [RFC PATCH] x86/split_lock: Disable SLD if an unaware
- (out-of-tree) module enables VMX
-Message-ID: <20200406153902.GA9939@infradead.org>
-References: <20200403163007.6463-1-sean.j.christopherson@intel.com>
- <20200406125010.GA29306@infradead.org>
- <20200406140403.GL20730@hirez.programming.kicks-ass.net>
- <20200406152411.GA25652@infradead.org>
+        Mon, 6 Apr 2020 11:40:00 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200406153958euoutp028ca7ea2bed37d605b4e27e9d189c13a6~DRTeFwS_k1673216732euoutp02E
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Apr 2020 15:39:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200406153958euoutp028ca7ea2bed37d605b4e27e9d189c13a6~DRTeFwS_k1673216732euoutp02E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1586187598;
+        bh=LE9o93z1H4+vrNHKGxH+7SEMGJDQDQ2ekDo7doWD18I=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=YU6vZTfM9pLDTuUZTMrSbQbz6IDQchdpsjbai5AjLtSKf0Jyy/xdA3w0dHTGy/hXr
+         GrgLrgJfKzoTBQRV55hqDPSiJWpVh5HmBVQGqRs0K06ep5lwPpKtrNrjKkqHPNfBc5
+         DBFRzmJsXd2lvXy8Opb4+d1v3W0s+XBL8ylH0d5Y=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200406153958eucas1p1162e5969d5c5296d4ed78fe161bf6e7f~DRTdp7WCy1401314013eucas1p1B;
+        Mon,  6 Apr 2020 15:39:58 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id D8.03.60698.D4D4B8E5; Mon,  6
+        Apr 2020 16:39:57 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200406153957eucas1p13a1767c355ef8a0018f60f60ce5fa161~DRTdB2ZWE1335413354eucas1p1B;
+        Mon,  6 Apr 2020 15:39:57 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200406153957eusmtrp268b0c5205b42948954b275af304476b6~DRTc7RjVS0779207792eusmtrp2P;
+        Mon,  6 Apr 2020 15:39:57 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-55-5e8b4d4dc54a
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 98.08.07950.D4D4B8E5; Mon,  6
+        Apr 2020 16:39:57 +0100 (BST)
+Received: from [106.210.85.205] (unknown [106.210.85.205]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200406153956eusmtip1f2f651b5c7c331010da37d37dacb2167~DRTbuum_z0289802898eusmtip18;
+        Mon,  6 Apr 2020 15:39:55 +0000 (GMT)
+Subject: Re: [PATCH v5 2/5] drm: bridge: dw_mipi_dsi: abstract register
+ access using reg_fields
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Emil Velikov <emil.velikov@collabora.com>,
+        linux-rockchip@lists.infradead.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-imx@nxp.com, kernel@collabora.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <37751774-ba48-39d0-3b1b-4ac5363420ae@samsung.com>
+Date:   Mon, 6 Apr 2020 17:39:55 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406152411.GA25652@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200330113542.181752-3-adrian.ratiu@collabora.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: pl
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjld1+7W02uc+GHRdlIpaeJYpdeFAbdwMAgSARXt7zZY2rt+qj+
+        UcpizkeakPmoLCwtNG06m+K7SKe1wmqYmK9MUDOjGpXWzHmL/O985zvnd84HPxpXDZFe9PHY
+        eEEfy+s0lIKoffrTtn7v3nTtxo4bW9mf2bUk2/WsE2NvPrGR7GvHFMV+ME5S7JvvYzhr/fiG
+        YKttGSSbllMiY03v7SRrnL6Hs6/qiyj2y+AszhrtI+QON87yrgRxhYZ8kuvI7sa4gfR2jKsu
+        SeYefrJgXEtmLsG1NgVwX03Lw+QRiq1Rgu54oqD3335IcSz1YwU6VXMNO/M4s4lKQedHkBHJ
+        aWCCYDyjiDQiBa1iyhCkfa4kpOEbgt76GplLpWK+IrCnhv5zNJmyMElUimC8sVImDVMIyi0m
+        0qXyYHiYzUmZd6uZ02Az35/PwJlbOPww/J4XUcxq+F39lnJhJbMdnJnd8waCWQVDjkHMhZcw
+        kWAb7iEljTtY80fm+tG0nNkJDeUhLhpnVsAFcyEuYTX0DKciVxYwF2nIeHCPkGrvgv7cCZmE
+        PWC8veYvXgazdTcxCSfDQFkqLpkNCMxVdbi02AJ9tmnKFYzPla6s95fondA9mCVz0cC4Qc+k
+        u9TBDa7U5uESrQTDJZWkXgkDz81/H/SEOy8dVDbSFCw4rGDBNQULrin4n1uMiPvIU0gQY6IF
+        MTBWSNog8jFiQmz0hiNxMSY09/G6nO0OC2r6dbgNMTTSLFaGy9O1KpJPFM/GtCGgcY1a6ZWZ
+        plUpo/iz5wR93EF9gk4Q29BSmtB4KgNvj0WqmGg+XjgpCKcE/b8tRsu9UlBQhbJf3REeRn+3
+        eh5dW+wthPl32vnw3pzKxpHNw/sPOLgdPn760pqWvFVZwX2dcc2P3NUdKfJ1oXfJmTptw9VW
+        S67vaMCQ/frh6pl9YnOr8/FVw9Rlxza/RfYTuo3a67szkpBzOGRPXpVvV69yYpNPYPDTeO+I
+        gy98Rq9stiq+aAjxGB+wBteL/B8WkhUhdAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMIsWRmVeSWpSXmKPExsVy+t/xu7q+vt1xBm/m8Fj8nLCN1eL0mVNM
+        FvOPnGO1uPL1PZvF0663bBZXv79ktjj55iqLxeZzPawWnROXsFtsenyN1aLr10pmi8u75rBZ
+        fHrwn9mi69oTVgc+jx13lzB6zO6YyepxYsIlJo/73ceZPDYvqffY+G4Hk8eB3sksHgf3GXp8
+        3iQXwBmlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5eg
+        l9HyZi1jwZYZTBWHe/exNTA2PWHsYuTkkBAwkdi3qY+pi5GLQ0hgKaPE9m6YhLjE7vlvmSFs
+        YYk/17rYQGwhgbeMEof3qHcxcnAICyRKLHgdDxIWESiU+HJ9AxvIHGaBhcwSs548gxp6mlHi
+        0tttTCBVbAKaEn833wQbxCtgJ/Gv9xI7iM0ioCLx8OsDsBpRgViJ/ubdjBA1ghInZz5hAVnG
+        KeAosWeNM0iYWcBMYt7mh8wQtrxE89bZULaIxI1HLYwTGIVmIemehaRlFpKWWUhaFjCyrGIU
+        SS0tzk3PLTbSK07MLS7NS9dLzs/dxAiM8G3Hfm7Zwdj1LvgQowAHoxIPbwRnd5wQa2JZcWXu
+        IUYJDmYlEV6p3s44Id6UxMqq1KL8+KLSnNTiQ4ymQL9NZJYSTc4HJp+8knhDU0NzC0tDc2Nz
+        YzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2MiwKXybQJH9b6IO4g6TyzJIpn+oYvP38t
+        FlrxxseY169qKZPITbPjl9ZpfbAz0JgddefLM4n4JNkbqknLJtzg3J96oP0WW9wfhd9HX/FN
+        1IiKFEnLbl8g5/Zxlcv2QI/DHj0umTsFXO9fDwvcq5BlF3ftZtfBbvM3QtEtDp3LDNPVFssq
+        nH2rxFKckWioxVxUnAgAHA8URgYDAAA=
+X-CMS-MailID: 20200406153957eucas1p13a1767c355ef8a0018f60f60ce5fa161
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200330113504eucas1p15157d5c21e1e42cb1d5638d03903a5af
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200330113504eucas1p15157d5c21e1e42cb1d5638d03903a5af
+References: <20200330113542.181752-1-adrian.ratiu@collabora.com>
+        <CGME20200330113504eucas1p15157d5c21e1e42cb1d5638d03903a5af@eucas1p1.samsung.com>
+        <20200330113542.181752-3-adrian.ratiu@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:24:11AM -0700, Christoph Hellwig wrote:
-> > and this
-> > removes __get_vm_area() and with the ability to custom ranges. It also
-> > removes map_vm_area() and replaces it with map_vm_area_nx() which kills
-> > adding executable maps.
 
-Also there seems to be various other ways to create exectuable mappings,
-pretty much everything in vmalloc.c that gets a pgprot_t..
+W dniu 30.03.2020 o 13:35, Adrian Ratiu pisze:
+> Register existence, address/offsets, field layouts, reserved bits and
+> so on differ between MIPI-DSI versions and between SoC vendor boards.
+> Despite these differences the hw IP and protocols are mostly the same
+> so the generic bridge can be made to compensate these differences.
+>
+> The current Rockchip and STM drivers hardcoded a lot of their common
+> definitions in the bridge code because they're based on DSI v1.30 and
+> 1.31 which are relatively close, but in order to support older/future
+> versions with more diverging layouts like the v1.01 present on imx6,
+> we abstract some of the register accesses via the regmap field APIs.
+>
+> The bridge detects the DSI core version and initializes the required
+> regmap register layout. Other DSI versions / register layouts can
+> easily be added in the future by only changing the bridge code.
+>
+> The platform drivers don't require any changes, DSI register layout
+> versioning will be handled transparently by the bridge, but if in
+> the future the regmap or layouts needs to be exposed to the drivres,
+> it could easily be done via plat_data or a new API in dw_mipi_dsi.h.
+>
+> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+> Changes since v4:
+>    - Move regmap infrastructure logic to a separate commit (Ezequiel)
+>    - Consolidate field infrastructure in this commit (Ezequiel)
+>    - Move the dsi v1.01 layout logic to a separate commit (Ezequiel)
+>
+> Changes since v2:
+>    - Added const declarations to dw_mipi_dsi structs (Emil)
+>    - Fixed commit tags (Emil)
+>
+> Changes since v1:
+>    - Moved register definitions & regmap initialization into bridge
+>    module. Platform drivers get the regmap via plat_data after calling
+>    the bridge probe (Emil).
+> ---
+>   drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 510 ++++++++++++------
+>   1 file changed, 352 insertions(+), 158 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> index 6d9e2f21c9cc..5b78ff925af0 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> @@ -31,6 +31,7 @@
+>   #include <drm/drm_probe_helper.h>
+>   
+>   #define HWVER_131			0x31333100	/* IP version 1.31 */
+> +#define HWVER_130			0x31333000	/* IP version 1.30 */
+>   
+>   #define DSI_VERSION			0x00
+>   #define VERSION				GENMASK(31, 8)
+> @@ -47,7 +48,6 @@
+>   #define DPI_VCID(vcid)			((vcid) & 0x3)
+>   
+>   #define DSI_DPI_COLOR_CODING		0x10
+> -#define LOOSELY18_EN			BIT(8)
+>   #define DPI_COLOR_CODING_16BIT_1	0x0
+>   #define DPI_COLOR_CODING_16BIT_2	0x1
+>   #define DPI_COLOR_CODING_16BIT_3	0x2
+> @@ -56,11 +56,6 @@
+>   #define DPI_COLOR_CODING_24BIT		0x5
+>   
+>   #define DSI_DPI_CFG_POL			0x14
+> -#define COLORM_ACTIVE_LOW		BIT(4)
+> -#define SHUTD_ACTIVE_LOW		BIT(3)
+> -#define HSYNC_ACTIVE_LOW		BIT(2)
+> -#define VSYNC_ACTIVE_LOW		BIT(1)
+> -#define DATAEN_ACTIVE_LOW		BIT(0)
+>   
+>   #define DSI_DPI_LP_CMD_TIM		0x18
+>   #define OUTVACT_LPCMD_TIME(p)		(((p) & 0xff) << 16)
+> @@ -81,27 +76,19 @@
+>   #define DSI_GEN_VCID			0x30
+>   
+>   #define DSI_MODE_CFG			0x34
+> -#define ENABLE_VIDEO_MODE		0
+> -#define ENABLE_CMD_MODE			BIT(0)
+>   
+>   #define DSI_VID_MODE_CFG		0x38
+> -#define ENABLE_LOW_POWER		(0x3f << 8)
+> -#define ENABLE_LOW_POWER_MASK		(0x3f << 8)
+> +#define ENABLE_LOW_POWER		0x3f
+> +
+>   #define VID_MODE_TYPE_NON_BURST_SYNC_PULSES	0x0
+>   #define VID_MODE_TYPE_NON_BURST_SYNC_EVENTS	0x1
+>   #define VID_MODE_TYPE_BURST			0x2
+> -#define VID_MODE_TYPE_MASK			0x3
+> -#define VID_MODE_VPG_ENABLE		BIT(16)
+> -#define VID_MODE_VPG_HORIZONTAL		BIT(24)
+>   
+>   #define DSI_VID_PKT_SIZE		0x3c
+> -#define VID_PKT_SIZE(p)			((p) & 0x3fff)
+>   
+>   #define DSI_VID_NUM_CHUNKS		0x40
+> -#define VID_NUM_CHUNKS(c)		((c) & 0x1fff)
+>   
+>   #define DSI_VID_NULL_SIZE		0x44
+> -#define VID_NULL_SIZE(b)		((b) & 0x1fff)
+>   
+>   #define DSI_VID_HSA_TIME		0x48
+>   #define DSI_VID_HBP_TIME		0x4c
+> @@ -125,7 +112,6 @@
+>   #define GEN_SW_2P_TX_LP			BIT(10)
+>   #define GEN_SW_1P_TX_LP			BIT(9)
+>   #define GEN_SW_0P_TX_LP			BIT(8)
+> -#define ACK_RQST_EN			BIT(1)
+>   #define TEAR_FX_EN			BIT(0)
+>   
+>   #define CMD_MODE_ALL_LP			(MAX_RD_PKT_SIZE_LP | \
+> @@ -154,8 +140,6 @@
+>   #define GEN_CMD_EMPTY			BIT(0)
+>   
+>   #define DSI_TO_CNT_CFG			0x78
+> -#define HSTX_TO_CNT(p)			(((p) & 0xffff) << 16)
+> -#define LPRX_TO_CNT(p)			((p) & 0xffff)
+>   
+>   #define DSI_HS_RD_TO_CNT		0x7c
+>   #define DSI_LP_RD_TO_CNT		0x80
+> @@ -164,52 +148,17 @@
+>   #define DSI_BTA_TO_CNT			0x8c
+>   
+>   #define DSI_LPCLK_CTRL			0x94
+> -#define AUTO_CLKLANE_CTRL		BIT(1)
+> -#define PHY_TXREQUESTCLKHS		BIT(0)
+> -
+>   #define DSI_PHY_TMR_LPCLK_CFG		0x98
+> -#define PHY_CLKHS2LP_TIME(lbcc)		(((lbcc) & 0x3ff) << 16)
+> -#define PHY_CLKLP2HS_TIME(lbcc)		((lbcc) & 0x3ff)
+> -
+>   #define DSI_PHY_TMR_CFG			0x9c
+> -#define PHY_HS2LP_TIME(lbcc)		(((lbcc) & 0xff) << 24)
+> -#define PHY_LP2HS_TIME(lbcc)		(((lbcc) & 0xff) << 16)
+> -#define MAX_RD_TIME(lbcc)		((lbcc) & 0x7fff)
+> -#define PHY_HS2LP_TIME_V131(lbcc)	(((lbcc) & 0x3ff) << 16)
+> -#define PHY_LP2HS_TIME_V131(lbcc)	((lbcc) & 0x3ff)
+> -
+>   #define DSI_PHY_RSTZ			0xa0
+> -#define PHY_DISFORCEPLL			0
+> -#define PHY_ENFORCEPLL			BIT(3)
+> -#define PHY_DISABLECLK			0
+> -#define PHY_ENABLECLK			BIT(2)
+> -#define PHY_RSTZ			0
+> -#define PHY_UNRSTZ			BIT(1)
+> -#define PHY_SHUTDOWNZ			0
+> -#define PHY_UNSHUTDOWNZ			BIT(0)
+> -
+>   #define DSI_PHY_IF_CFG			0xa4
+> -#define PHY_STOP_WAIT_TIME(cycle)	(((cycle) & 0xff) << 8)
+> -#define N_LANES(n)			(((n) - 1) & 0x3)
+> -
+> -#define DSI_PHY_ULPS_CTRL		0xa8
+> -#define DSI_PHY_TX_TRIGGERS		0xac
+>   
+>   #define DSI_PHY_STATUS			0xb0
+>   #define PHY_STOP_STATE_CLK_LANE		BIT(2)
+>   #define PHY_LOCK			BIT(0)
+>   
+>   #define DSI_PHY_TST_CTRL0		0xb4
+> -#define PHY_TESTCLK			BIT(1)
+> -#define PHY_UNTESTCLK			0
+> -#define PHY_TESTCLR			BIT(0)
+> -#define PHY_UNTESTCLR			0
+> -
+>   #define DSI_PHY_TST_CTRL1		0xb8
+> -#define PHY_TESTEN			BIT(16)
+> -#define PHY_UNTESTEN			0
+> -#define PHY_TESTDOUT(n)			(((n) & 0xff) << 8)
+> -#define PHY_TESTDIN(n)			((n) & 0xff)
+>   
+>   #define DSI_INT_ST0			0xbc
+>   #define DSI_INT_ST1			0xc0
+> @@ -217,7 +166,6 @@
+>   #define DSI_INT_MSK1			0xc8
+>   
+>   #define DSI_PHY_TMR_RD_CFG		0xf4
+> -#define MAX_RD_TIME_V131(lbcc)		((lbcc) & 0x7fff)
+>   
+>   #define PHY_STATUS_TIMEOUT_US		10000
+>   #define CMD_PKT_STATUS_TIMEOUT_US	20000
+> @@ -250,6 +198,53 @@ struct dw_mipi_dsi {
+>   	struct dw_mipi_dsi *slave; /* dual-dsi slave ptr */
+>   
+>   	const struct dw_mipi_dsi_plat_data *plat_data;
+> +
+> +	struct regmap_field	*field_dpi_18loosely_en;
+> +	struct regmap_field	*field_dpi_color_coding;
+> +	struct regmap_field	*field_dpi_vid;
+> +	struct regmap_field	*field_dpi_vsync_active_low;
+> +	struct regmap_field	*field_dpi_hsync_active_low;
+> +	struct regmap_field	*field_cmd_mode_ack_rqst_en;
+> +	struct regmap_field	*field_cmd_mode_all_lp_en;
+> +	struct regmap_field	*field_cmd_mode_en;
+> +	struct regmap_field	*field_cmd_pkt_status;
+> +	struct regmap_field	*field_vid_mode_en;
+> +	struct regmap_field	*field_vid_mode_type;
+> +	struct regmap_field	*field_vid_mode_low_power;
+> +	struct regmap_field	*field_vid_mode_vpg_en;
+> +	struct regmap_field	*field_vid_mode_vpg_horiz;
+> +	struct regmap_field	*field_vid_pkt_size;
+> +	struct regmap_field	*field_vid_hsa_time;
+> +	struct regmap_field	*field_vid_hbp_time;
+> +	struct regmap_field	*field_vid_hline_time;
+> +	struct regmap_field	*field_vid_vsa_time;
+> +	struct regmap_field	*field_vid_vbp_time;
+> +	struct regmap_field	*field_vid_vfp_time;
+> +	struct regmap_field	*field_vid_vactive_time;
+> +	struct regmap_field	*field_phy_txrequestclkhs;
+> +	struct regmap_field	*field_phy_bta_time;
+> +	struct regmap_field	*field_phy_max_rd_time;
+> +	struct regmap_field	*field_phy_lp2hs_time;
+> +	struct regmap_field	*field_phy_hs2lp_time;
+> +	struct regmap_field	*field_phy_clklp2hs_time;
+> +	struct regmap_field	*field_phy_clkhs2lp_time;
+> +	struct regmap_field	*field_phy_testclr;
+> +	struct regmap_field	*field_phy_unshutdownz;
+> +	struct regmap_field	*field_phy_unrstz;
+> +	struct regmap_field	*field_phy_enableclk;
+> +	struct regmap_field	*field_phy_forcepll;
+> +	struct regmap_field	*field_phy_nlanes;
+> +	struct regmap_field	*field_phy_stop_wait_time;
+> +	struct regmap_field	*field_phy_status;
+> +	struct regmap_field	*field_pckhdl_cfg;
+> +	struct regmap_field	*field_hstx_timeout_counter;
+> +	struct regmap_field	*field_lprx_timeout_counter;
+> +	struct regmap_field	*field_int_stat0;
+> +	struct regmap_field	*field_int_stat1;
+> +	struct regmap_field	*field_int_mask0;
+> +	struct regmap_field	*field_int_mask1;
+> +	struct regmap_field	*field_gen_hdr;
+> +	struct regmap_field	*field_gen_payload;
+>   };
+>   
+>   static const struct regmap_config dw_mipi_dsi_regmap_cfg = {
+> @@ -259,6 +254,111 @@ static const struct regmap_config dw_mipi_dsi_regmap_cfg = {
+>   	.name = "dw-mipi-dsi",
+>   };
+>   
+> +struct dw_mipi_dsi_variant {
+> +	/* Regmap field configs for DSI adapter */
+> +	struct reg_field	cfg_dpi_18loosely_en;
+> +	struct reg_field	cfg_dpi_color_coding;
+> +	struct reg_field	cfg_dpi_vid;
+> +	struct reg_field	cfg_dpi_vsync_active_low;
+> +	struct reg_field	cfg_dpi_hsync_active_low;
+> +	struct reg_field	cfg_cmd_mode_en;
+> +	struct reg_field	cfg_cmd_mode_ack_rqst_en;
+> +	struct reg_field	cfg_cmd_mode_all_lp_en;
+> +	struct reg_field	cfg_cmd_pkt_status;
+> +	struct reg_field	cfg_vid_mode_en;
+> +	struct reg_field	cfg_vid_mode_type;
+> +	struct reg_field	cfg_vid_mode_low_power;
+> +	struct reg_field	cfg_vid_mode_vpg_en;
+> +	struct reg_field	cfg_vid_mode_vpg_horiz;
+> +	struct reg_field	cfg_vid_pkt_size;
+> +	struct reg_field	cfg_vid_hsa_time;
+> +	struct reg_field	cfg_vid_hbp_time;
+> +	struct reg_field	cfg_vid_hline_time;
+> +	struct reg_field	cfg_vid_vsa_time;
+> +	struct reg_field	cfg_vid_vbp_time;
+> +	struct reg_field	cfg_vid_vfp_time;
+> +	struct reg_field	cfg_vid_vactive_time;
+> +	struct reg_field	cfg_phy_txrequestclkhs;
+> +	struct reg_field	cfg_phy_bta_time;
+> +	struct reg_field	cfg_phy_max_rd_time;
+> +	struct reg_field	cfg_phy_lp2hs_time;
+> +	struct reg_field	cfg_phy_hs2lp_time;
+> +	struct reg_field	cfg_phy_max_rd_time_v131;
+> +	struct reg_field	cfg_phy_lp2hs_time_v131;
+> +	struct reg_field	cfg_phy_hs2lp_time_v131;
+> +	struct reg_field	cfg_phy_clklp2hs_time;
+> +	struct reg_field	cfg_phy_clkhs2lp_time;
+> +	struct reg_field	cfg_phy_testclr;
+> +	struct reg_field	cfg_phy_unshutdownz;
+> +	struct reg_field	cfg_phy_unrstz;
+> +	struct reg_field	cfg_phy_enableclk;
+> +	struct reg_field	cfg_phy_forcepll;
+> +	struct reg_field	cfg_phy_nlanes;
+> +	struct reg_field	cfg_phy_stop_wait_time;
+> +	struct reg_field	cfg_phy_status;
+> +	struct reg_field	cfg_pckhdl_cfg;
+> +	struct reg_field	cfg_hstx_timeout_counter;
+> +	struct reg_field	cfg_lprx_timeout_counter;
+> +	struct reg_field	cfg_int_stat0;
+> +	struct reg_field	cfg_int_stat1;
+> +	struct reg_field	cfg_int_mask0;
+> +	struct reg_field	cfg_int_mask1;
+> +	struct reg_field	cfg_gen_hdr;
+> +	struct reg_field	cfg_gen_payload;
+> +};
+> +
+> +static const struct dw_mipi_dsi_variant dw_mipi_dsi_v130_v131_layout = {
+> +	.cfg_dpi_color_coding =		REG_FIELD(DSI_DPI_COLOR_CODING, 0, 3),
+> +	.cfg_dpi_18loosely_en =		REG_FIELD(DSI_DPI_COLOR_CODING, 8, 8),
+> +	.cfg_dpi_vid =			REG_FIELD(DSI_DPI_VCID, 0, 2),
+> +	.cfg_dpi_vsync_active_low =	REG_FIELD(DSI_DPI_CFG_POL, 1, 1),
+> +	.cfg_dpi_hsync_active_low =	REG_FIELD(DSI_DPI_CFG_POL, 2, 2),
+> +	.cfg_cmd_mode_ack_rqst_en =	REG_FIELD(DSI_CMD_MODE_CFG, 1, 1),
+> +	.cfg_cmd_mode_all_lp_en =	REG_FIELD(DSI_CMD_MODE_CFG, 8, 24),
+> +	.cfg_cmd_mode_en =		REG_FIELD(DSI_MODE_CFG, 0, 31),
+> +	.cfg_cmd_pkt_status =		REG_FIELD(DSI_CMD_PKT_STATUS, 0, 31),
+> +	.cfg_vid_mode_en =		REG_FIELD(DSI_MODE_CFG, 0, 31),
+> +	.cfg_vid_mode_type =		REG_FIELD(DSI_VID_MODE_CFG, 0, 1),
+> +	.cfg_vid_mode_low_power =	REG_FIELD(DSI_VID_MODE_CFG, 8, 13),
+> +	.cfg_vid_mode_vpg_en =		REG_FIELD(DSI_VID_MODE_CFG, 16, 16),
+> +	.cfg_vid_mode_vpg_horiz =	REG_FIELD(DSI_VID_MODE_CFG, 24, 24),
+> +	.cfg_vid_pkt_size =		REG_FIELD(DSI_VID_PKT_SIZE, 0, 10),
+> +	.cfg_vid_hsa_time =		REG_FIELD(DSI_VID_HSA_TIME, 0, 31),
+> +	.cfg_vid_hbp_time =		REG_FIELD(DSI_VID_HBP_TIME, 0, 31),
+> +	.cfg_vid_hline_time =		REG_FIELD(DSI_VID_HLINE_TIME, 0, 31),
+> +	.cfg_vid_vsa_time =		REG_FIELD(DSI_VID_VSA_LINES, 0, 31),
+> +	.cfg_vid_vbp_time =		REG_FIELD(DSI_VID_VBP_LINES, 0, 31),
+> +	.cfg_vid_vfp_time =		REG_FIELD(DSI_VID_VFP_LINES, 0, 31),
+> +	.cfg_vid_vactive_time =		REG_FIELD(DSI_VID_VACTIVE_LINES, 0, 31),
+> +	.cfg_phy_txrequestclkhs =	REG_FIELD(DSI_LPCLK_CTRL, 0, 0),
+> +	.cfg_phy_bta_time =		REG_FIELD(DSI_BTA_TO_CNT, 0, 31),
+> +	.cfg_phy_max_rd_time =		REG_FIELD(DSI_PHY_TMR_CFG, 0, 15),
+> +	.cfg_phy_lp2hs_time =		REG_FIELD(DSI_PHY_TMR_CFG, 16, 23),
+> +	.cfg_phy_hs2lp_time =		REG_FIELD(DSI_PHY_TMR_CFG, 24, 31),
+> +	.cfg_phy_max_rd_time_v131 =	REG_FIELD(DSI_PHY_TMR_RD_CFG, 0, 15),
+> +	.cfg_phy_lp2hs_time_v131 =	REG_FIELD(DSI_PHY_TMR_CFG, 0, 15),
+> +	.cfg_phy_hs2lp_time_v131 =	REG_FIELD(DSI_PHY_TMR_CFG, 16, 31),
+> +	.cfg_phy_clklp2hs_time =	REG_FIELD(DSI_PHY_TMR_LPCLK_CFG, 0, 15),
+> +	.cfg_phy_clkhs2lp_time =	REG_FIELD(DSI_PHY_TMR_LPCLK_CFG, 16, 31),
+> +	.cfg_phy_testclr =		REG_FIELD(DSI_PHY_TST_CTRL0, 0, 0),
+> +	.cfg_phy_unshutdownz =		REG_FIELD(DSI_PHY_RSTZ, 0, 0),
+> +	.cfg_phy_unrstz =		REG_FIELD(DSI_PHY_RSTZ, 1, 1),
+> +	.cfg_phy_enableclk =		REG_FIELD(DSI_PHY_RSTZ, 2, 2),
+> +	.cfg_phy_forcepll =		REG_FIELD(DSI_PHY_RSTZ, 3, 3),
+> +	.cfg_phy_nlanes =		REG_FIELD(DSI_PHY_IF_CFG, 0, 1),
+> +	.cfg_phy_stop_wait_time =	REG_FIELD(DSI_PHY_IF_CFG, 8, 15),
+> +	.cfg_phy_status =		REG_FIELD(DSI_PHY_STATUS, 0, 0),
+> +	.cfg_pckhdl_cfg =		REG_FIELD(DSI_PCKHDL_CFG, 0, 4),
+> +	.cfg_hstx_timeout_counter =	REG_FIELD(DSI_TO_CNT_CFG, 16, 31),
+> +	.cfg_lprx_timeout_counter =	REG_FIELD(DSI_TO_CNT_CFG, 0, 15),
+> +	.cfg_int_stat0 =		REG_FIELD(DSI_INT_ST0, 0, 31),
+> +	.cfg_int_stat1 =		REG_FIELD(DSI_INT_ST1, 0, 31),
+> +	.cfg_int_mask0 =		REG_FIELD(DSI_INT_MSK0, 0, 31),
+> +	.cfg_int_mask1 =		REG_FIELD(DSI_INT_MSK1, 0, 31),
+> +	.cfg_gen_hdr =			REG_FIELD(DSI_GEN_HDR, 0, 31),
+> +	.cfg_gen_payload =		REG_FIELD(DSI_GEN_PLD_DATA, 0, 31),
+> +};
+> +
+>   /*
+>    * Check if either a link to a master or slave is present
+>    */
+> @@ -359,15 +459,22 @@ static void dw_mipi_message_config(struct dw_mipi_dsi *dsi,
+>   				   const struct mipi_dsi_msg *msg)
+>   {
+>   	bool lpm = msg->flags & MIPI_DSI_MSG_USE_LPM;
+> -	u32 val = 0;
+> +	u32 cmd_mode_lp = 0;
+> +
+> +	switch (dsi->hw_version) {
+> +	case HWVER_130:
+> +	case HWVER_131:
+> +		cmd_mode_lp = CMD_MODE_ALL_LP;
+> +		break;
+> +	}
+>   
+>   	if (msg->flags & MIPI_DSI_MSG_REQ_ACK)
+> -		val |= ACK_RQST_EN;
+> +		regmap_field_write(dsi->field_cmd_mode_ack_rqst_en, 1);
+> +
+>   	if (lpm)
+> -		val |= CMD_MODE_ALL_LP;
+> +		regmap_field_write(dsi->field_cmd_mode_all_lp_en, cmd_mode_lp);
+>   
+> -	regmap_write(dsi->regs, DSI_LPCLK_CTRL, lpm ? 0 : PHY_TXREQUESTCLKHS);
+> -	regmap_write(dsi->regs, DSI_CMD_MODE_CFG, val);
+> +	regmap_field_write(dsi->field_phy_txrequestclkhs, lpm ? 0 : 1);
+>   }
+>   
+>   static int dw_mipi_dsi_gen_pkt_hdr_write(struct dw_mipi_dsi *dsi, u32 hdr_val)
+> @@ -375,18 +482,18 @@ static int dw_mipi_dsi_gen_pkt_hdr_write(struct dw_mipi_dsi *dsi, u32 hdr_val)
+>   	int ret;
+>   	u32 val = 0, mask;
+>   
+> -	ret = regmap_read_poll_timeout(dsi->regs, DSI_CMD_PKT_STATUS,
+> -				       val, !(val & GEN_CMD_FULL), 1000,
+> -				       CMD_PKT_STATUS_TIMEOUT_US);
+> +	ret = regmap_field_read_poll_timeout(dsi->field_cmd_pkt_status,
+> +					     val, !(val & GEN_CMD_FULL),
+> +					     1000, CMD_PKT_STATUS_TIMEOUT_US);
+>   	if (ret) {
+>   		dev_err(dsi->dev, "failed to get available command FIFO\n");
+>   		return ret;
+>   	}
+>   
+> -	regmap_write(dsi->regs, DSI_GEN_HDR, hdr_val);
+> +	regmap_field_write(dsi->field_gen_hdr, hdr_val);
+>   
+>   	mask = GEN_CMD_EMPTY | GEN_PLD_W_EMPTY;
+> -	ret = regmap_read_poll_timeout(dsi->regs, DSI_CMD_PKT_STATUS,
+> +	ret = regmap_field_read_poll_timeout(dsi->field_cmd_pkt_status,
+>   				       val, (val & mask) == mask,
+>   				       1000, CMD_PKT_STATUS_TIMEOUT_US);
+>   	if (ret) {
+> @@ -409,20 +516,22 @@ static int dw_mipi_dsi_write(struct dw_mipi_dsi *dsi,
+>   		if (len < pld_data_bytes) {
+>   			word = 0;
+>   			memcpy(&word, tx_buf, len);
+> -			regmap_write(dsi->regs, DSI_GEN_PLD_DATA,
+> -				     le32_to_cpu(word));
+> +			regmap_field_write(dsi->field_gen_payload,
+> +					   le32_to_cpu(word));
+>   			len = 0;
+>   		} else {
+>   			memcpy(&word, tx_buf, pld_data_bytes);
+> -			regmap_write(dsi->regs, DSI_GEN_PLD_DATA,
+> -				     le32_to_cpu(word));
+> +			regmap_field_write(dsi->field_gen_payload,
+> +					   le32_to_cpu(word));
+>   			tx_buf += pld_data_bytes;
+>   			len -= pld_data_bytes;
+>   		}
+>   
+> -		ret = regmap_read_poll_timeout(dsi->regs, DSI_CMD_PKT_STATUS,
+> -					       val, !(val & GEN_PLD_W_FULL),
+> -					       1000, CMD_PKT_STATUS_TIMEOUT_US);
+> +		ret = regmap_field_read_poll_timeout(dsi->field_cmd_pkt_status,
+> +						     val,
+> +						     !(val & GEN_PLD_W_FULL),
+> +						     1000,
+> +						     CMD_PKT_STATUS_TIMEOUT_US);
+>   		if (ret) {
+>   			dev_err(dsi->dev,
+>   				"failed to get available write payload FIFO\n");
+> @@ -443,9 +552,9 @@ static int dw_mipi_dsi_read(struct dw_mipi_dsi *dsi,
+>   	u32 val = 0;
+>   
+>   	/* Wait end of the read operation */
+> -	ret = regmap_read_poll_timeout(dsi->regs, DSI_CMD_PKT_STATUS,
+> -				       val, !(val & GEN_RD_CMD_BUSY),
+> -				       1000, CMD_PKT_STATUS_TIMEOUT_US);
+> +	ret = regmap_field_read_poll_timeout(dsi->field_cmd_pkt_status,
+> +					     val, !(val & GEN_RD_CMD_BUSY),
+> +					     1000, CMD_PKT_STATUS_TIMEOUT_US);
+>   	if (ret) {
+>   		dev_err(dsi->dev, "Timeout during read operation\n");
+>   		return ret;
+> @@ -453,15 +562,17 @@ static int dw_mipi_dsi_read(struct dw_mipi_dsi *dsi,
+>   
+>   	for (i = 0; i < len; i += 4) {
+>   		/* Read fifo must not be empty before all bytes are read */
+> -		ret = regmap_read_poll_timeout(dsi->regs, DSI_CMD_PKT_STATUS,
+> -					       val, !(val & GEN_PLD_R_EMPTY),
+> -					       1000, CMD_PKT_STATUS_TIMEOUT_US);
+> +		ret = regmap_field_read_poll_timeout(dsi->field_cmd_pkt_status,
+> +						     val,
+> +						     !(val & GEN_PLD_R_EMPTY),
+> +						     1000,
+> +						     CMD_PKT_STATUS_TIMEOUT_US);
+>   		if (ret) {
+>   			dev_err(dsi->dev, "Read payload FIFO is empty\n");
+>   			return ret;
+>   		}
+>   
+> -		regmap_read(dsi->regs, DSI_GEN_PLD_DATA, &val);
+> +		regmap_field_read(dsi->field_gen_payload, &val);
+>   		for (j = 0; j < 4 && j + i < len; j++)
+>   			buf[i + j] = val >> (8 * j);
+>   	}
+> @@ -515,30 +626,30 @@ static const struct mipi_dsi_host_ops dw_mipi_dsi_host_ops = {
+>   
+>   static void dw_mipi_dsi_video_mode_config(struct dw_mipi_dsi *dsi)
+>   {
+> -	u32 val;
+> -
+>   	/*
+>   	 * TODO dw drv improvements
+>   	 * enabling low power is panel-dependent, we should use the
+>   	 * panel configuration here...
+>   	 */
+> -	val = ENABLE_LOW_POWER;
+> +	regmap_field_write(dsi->field_vid_mode_low_power, ENABLE_LOW_POWER);
+>   
+>   	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
+> -		val |= VID_MODE_TYPE_BURST;
+> +		regmap_field_write(dsi->field_vid_mode_type,
+> +				   VID_MODE_TYPE_BURST);
+>   	else if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+> -		val |= VID_MODE_TYPE_NON_BURST_SYNC_PULSES;
+> +		regmap_field_write(dsi->field_vid_mode_type,
+> +				   VID_MODE_TYPE_NON_BURST_SYNC_PULSES);
+>   	else
+> -		val |= VID_MODE_TYPE_NON_BURST_SYNC_EVENTS;
+> +		regmap_field_write(dsi->field_vid_mode_type,
+> +				   VID_MODE_TYPE_NON_BURST_SYNC_EVENTS);
+>   
+>   #ifdef CONFIG_DEBUG_FS
+>   	if (dsi->vpg) {
+> -		val |= VID_MODE_VPG_ENABLE;
+> -		val |= dsi->vpg_horizontal ? VID_MODE_VPG_HORIZONTAL : 0;
+> +		regmap_field_write(dsi->regs, dsi->field_vid_mode_vpg_en, 1);
+> +		regmap_field_write(dsi->regs, dsi->field_vid_mode_vpg_horiz,
+> +				   dsi->vpg_horizontal ? 1 : 0);
+>   	}
+>   #endif /* CONFIG_DEBUG_FS */
+> -
+> -	regmap_write(dsi->regs, DSI_VID_MODE_CFG, val);
+>   }
+>   
+>   static void dw_mipi_dsi_set_mode(struct dw_mipi_dsi *dsi,
+> @@ -547,11 +658,13 @@ static void dw_mipi_dsi_set_mode(struct dw_mipi_dsi *dsi,
+>   	regmap_write(dsi->regs, DSI_PWR_UP, RESET);
+>   
+>   	if (mode_flags & MIPI_DSI_MODE_VIDEO) {
+> -		regmap_write(dsi->regs, DSI_MODE_CFG, ENABLE_VIDEO_MODE);
+> +		regmap_field_write(dsi->field_cmd_mode_en, 0);
+> +
+>   		dw_mipi_dsi_video_mode_config(dsi);
+> -		regmap_write(dsi->regs, DSI_LPCLK_CTRL, PHY_TXREQUESTCLKHS);
+> +
+> +		regmap_field_write(dsi->field_phy_txrequestclkhs, 1);
+>   	} else {
+> -		regmap_write(dsi->regs, DSI_MODE_CFG, ENABLE_CMD_MODE);
+> +		regmap_field_write(dsi->field_cmd_mode_en, 1);
+>   	}
+>   
+>   	regmap_write(dsi->regs, DSI_PWR_UP, POWERUP);
+> @@ -560,7 +673,7 @@ static void dw_mipi_dsi_set_mode(struct dw_mipi_dsi *dsi,
+>   static void dw_mipi_dsi_disable(struct dw_mipi_dsi *dsi)
+>   {
+>   	regmap_write(dsi->regs, DSI_PWR_UP, RESET);
+> -	regmap_write(dsi->regs, DSI_PHY_RSTZ, PHY_RSTZ);
+> +	regmap_field_write(dsi->field_phy_unrstz, 0);
+>   }
+>   
+>   static void dw_mipi_dsi_init(struct dw_mipi_dsi *dsi)
+> @@ -589,14 +702,15 @@ static void dw_mipi_dsi_init(struct dw_mipi_dsi *dsi)
+>   static void dw_mipi_dsi_dpi_config(struct dw_mipi_dsi *dsi,
+>   				   const struct drm_display_mode *mode)
+>   {
+> -	u32 val = 0, color = 0;
+> +	u32 color = 0;
+>   
+>   	switch (dsi->format) {
+>   	case MIPI_DSI_FMT_RGB888:
+>   		color = DPI_COLOR_CODING_24BIT;
+>   		break;
+>   	case MIPI_DSI_FMT_RGB666:
+> -		color = DPI_COLOR_CODING_18BIT_2 | LOOSELY18_EN;
+> +		color = DPI_COLOR_CODING_18BIT_2;
+> +		regmap_field_write(dsi->field_dpi_18loosely_en, 1);
+>   		break;
+>   	case MIPI_DSI_FMT_RGB666_PACKED:
+>   		color = DPI_COLOR_CODING_18BIT_1;
+> @@ -606,14 +720,15 @@ static void dw_mipi_dsi_dpi_config(struct dw_mipi_dsi *dsi,
+>   		break;
+>   	}
+>   
+> -	if (mode->flags & DRM_MODE_FLAG_NVSYNC)
+> -		val |= VSYNC_ACTIVE_LOW;
+> -	if (mode->flags & DRM_MODE_FLAG_NHSYNC)
+> -		val |= HSYNC_ACTIVE_LOW;
+> +	regmap_field_write(dsi->field_dpi_color_coding, color);
+> +
+> +	if (!(mode->flags & DRM_MODE_FLAG_NVSYNC))
+> +		regmap_field_write(dsi->field_dpi_vsync_active_low, 1);
+> +	if (!(mode->flags & DRM_MODE_FLAG_NHSYNC))
+> +		regmap_field_write(dsi->field_dpi_hsync_active_low, 1);
+> +
+> +	regmap_field_write(dsi->field_dpi_vid, DPI_VCID(dsi->channel));
+>   
+> -	regmap_write(dsi->regs, DSI_DPI_VCID, DPI_VCID(dsi->channel));
+> -	regmap_write(dsi->regs, DSI_DPI_COLOR_CODING, color);
+> -	regmap_write(dsi->regs, DSI_DPI_CFG_POL, val);
+>   	/*
+>   	 * TODO dw drv improvements
+>   	 * largest packet sizes during hfp or during vsa/vpb/vfp
+> @@ -626,7 +741,8 @@ static void dw_mipi_dsi_dpi_config(struct dw_mipi_dsi *dsi,
+>   
+>   static void dw_mipi_dsi_packet_handler_config(struct dw_mipi_dsi *dsi)
+>   {
+> -	regmap_write(dsi->regs, DSI_PCKHDL_CFG, CRC_RX_EN | ECC_RX_EN | BTA_EN);
+> +	regmap_field_write(dsi->field_pckhdl_cfg,
+> +			   CRC_RX_EN | ECC_RX_EN | BTA_EN);
+>   }
+>   
+>   static void dw_mipi_dsi_video_packet_config(struct dw_mipi_dsi *dsi,
+> @@ -639,11 +755,9 @@ static void dw_mipi_dsi_video_packet_config(struct dw_mipi_dsi *dsi,
+>   	 * DSI_VNPCR.NPSIZE... especially because this driver supports
+>   	 * non-burst video modes, see dw_mipi_dsi_video_mode_config()...
+>   	 */
+> -
+> -	regmap_write(dsi->regs, DSI_VID_PKT_SIZE,
+> -		       dw_mipi_is_dual_mode(dsi) ?
+> -				VID_PKT_SIZE(mode->hdisplay / 2) :
+> -				VID_PKT_SIZE(mode->hdisplay));
+> +	regmap_field_write(dsi->field_vid_pkt_size,
+> +			   dw_mipi_is_dual_mode(dsi) ?
+> +				mode->hdisplay / 2 : mode->hdisplay);
+>   }
+>   
+>   static void dw_mipi_dsi_command_mode_config(struct dw_mipi_dsi *dsi)
+> @@ -653,15 +767,17 @@ static void dw_mipi_dsi_command_mode_config(struct dw_mipi_dsi *dsi)
+>   	 * compute high speed transmission counter timeout according
+>   	 * to the timeout clock division (TO_CLK_DIVISION) and byte lane...
+>   	 */
+> -	regmap_write(dsi->regs, DSI_TO_CNT_CFG,
+> -		     HSTX_TO_CNT(1000) | LPRX_TO_CNT(1000));
+> +	regmap_field_write(dsi->field_hstx_timeout_counter, 1000);
+> +	regmap_field_write(dsi->field_lprx_timeout_counter, 1000);
+> +
+>   	/*
+>   	 * TODO dw drv improvements
+>   	 * the Bus-Turn-Around Timeout Counter should be computed
+>   	 * according to byte lane...
+>   	 */
+> -	regmap_write(dsi->regs, DSI_BTA_TO_CNT, 0xd00);
+> -	regmap_write(dsi->regs, DSI_MODE_CFG, ENABLE_CMD_MODE);
+> +	regmap_field_write(dsi->field_phy_bta_time, 0xd00);
+> +
+> +	regmap_field_write(dsi->field_cmd_mode_en, 1);
+>   }
+>   
+>   /* Get lane byte clock cycles. */
+> @@ -695,13 +811,13 @@ static void dw_mipi_dsi_line_timer_config(struct dw_mipi_dsi *dsi,
+>   	 * computations below may be improved...
+>   	 */
+>   	lbcc = dw_mipi_dsi_get_hcomponent_lbcc(dsi, mode, htotal);
+> -	regmap_write(dsi->regs, DSI_VID_HLINE_TIME, lbcc);
+> +	regmap_field_write(dsi->field_vid_hline_time, lbcc);
+>   
+>   	lbcc = dw_mipi_dsi_get_hcomponent_lbcc(dsi, mode, hsa);
+> -	regmap_write(dsi->regs, DSI_VID_HSA_TIME, lbcc);
+> +	regmap_field_write(dsi->field_vid_hsa_time, lbcc);
+>   
+>   	lbcc = dw_mipi_dsi_get_hcomponent_lbcc(dsi, mode, hbp);
+> -	regmap_write(dsi->regs, DSI_VID_HBP_TIME, lbcc);
+> +	regmap_field_write(dsi->field_vid_hbp_time, lbcc);
+>   }
+>   
+>   static void dw_mipi_dsi_vertical_timing_config(struct dw_mipi_dsi *dsi,
+> @@ -714,17 +830,16 @@ static void dw_mipi_dsi_vertical_timing_config(struct dw_mipi_dsi *dsi,
+>   	vfp = mode->vsync_start - mode->vdisplay;
+>   	vbp = mode->vtotal - mode->vsync_end;
+>   
+> -	regmap_write(dsi->regs, DSI_VID_VACTIVE_LINES, vactive);
+> -	regmap_write(dsi->regs, DSI_VID_VSA_LINES, vsa);
+> -	regmap_write(dsi->regs, DSI_VID_VFP_LINES, vfp);
+> -	regmap_write(dsi->regs, DSI_VID_VBP_LINES, vbp);
+> +	regmap_field_write(dsi->field_vid_vactive_time, vactive);
+> +	regmap_field_write(dsi->field_vid_vsa_time, vsa);
+> +	regmap_field_write(dsi->field_vid_vfp_time, vfp);
+> +	regmap_field_write(dsi->field_vid_vbp_time, vbp);
+>   }
+>   
+>   static void dw_mipi_dsi_dphy_timing_config(struct dw_mipi_dsi *dsi)
+>   {
+>   	const struct dw_mipi_dsi_phy_ops *phy_ops = dsi->plat_data->phy_ops;
+>   	struct dw_mipi_dsi_dphy_timing timing;
+> -	u32 hw_version;
+>   	int ret;
+>   
+>   	ret = phy_ops->get_timing(dsi->plat_data->priv_data,
+> @@ -739,26 +854,12 @@ static void dw_mipi_dsi_dphy_timing_config(struct dw_mipi_dsi *dsi)
+>   	 * note: DSI_PHY_TMR_CFG.MAX_RD_TIME should be in line with
+>   	 * DSI_CMD_MODE_CFG.MAX_RD_PKT_SIZE_LP (see CMD_MODE_ALL_LP)
+>   	 */
+> +	regmap_field_write(dsi->field_phy_lp2hs_time, timing.data_lp2hs);
+> +	regmap_field_write(dsi->field_phy_hs2lp_time, timing.data_hs2lp);
+>   
+> -	regmap_read(dsi->regs, DSI_VERSION, &hw_version);
+> -	hw_version &= VERSION;
+> -
+> -	if (hw_version >= HWVER_131) {
+> -		regmap_write(dsi->regs, DSI_PHY_TMR_CFG,
+> -			     PHY_HS2LP_TIME_V131(timing.data_hs2lp) |
+> -			     PHY_LP2HS_TIME_V131(timing.data_lp2hs));
+> -		regmap_write(dsi->regs, DSI_PHY_TMR_RD_CFG,
+> -			     MAX_RD_TIME_V131(10000));
+> -	} else {
+> -		regmap_write(dsi->regs, DSI_PHY_TMR_CFG,
+> -			     PHY_HS2LP_TIME(timing.data_hs2lp) |
+> -			     PHY_LP2HS_TIME(timing.data_lp2hs) |
+> -			     MAX_RD_TIME(10000));
+> -	}
+> -
+> -	regmap_write(dsi->regs, DSI_PHY_TMR_LPCLK_CFG,
+> -		     PHY_CLKHS2LP_TIME(timing.clk_hs2lp) |
+> -		     PHY_CLKLP2HS_TIME(timing.clk_lp2hs));
+> +	regmap_field_write(dsi->field_phy_max_rd_time, 10000);
+> +	regmap_field_write(dsi->field_phy_clkhs2lp_time, timing.clk_hs2lp);
+> +	regmap_field_write(dsi->field_phy_clklp2hs_time, timing.clk_lp2hs);
+>   }
+>   
+>   static void dw_mipi_dsi_dphy_interface_config(struct dw_mipi_dsi *dsi)
+> @@ -768,18 +869,22 @@ static void dw_mipi_dsi_dphy_interface_config(struct dw_mipi_dsi *dsi)
+>   	 * stop wait time should be the maximum between host dsi
+>   	 * and panel stop wait times
+>   	 */
+> -	regmap_write(dsi->regs, DSI_PHY_IF_CFG,
+> -		     PHY_STOP_WAIT_TIME(0x20) | N_LANES(dsi->lanes));
+> +	regmap_field_write(dsi->field_phy_stop_wait_time, 0x20);
+> +	regmap_field_write(dsi->field_phy_nlanes, dsi->lanes - 1);
+>   }
+>   
+>   static void dw_mipi_dsi_dphy_init(struct dw_mipi_dsi *dsi)
+>   {
+>   	/* Clear PHY state */
+> -	regmap_write(dsi->regs, DSI_PHY_RSTZ, PHY_DISFORCEPLL | PHY_DISABLECLK
+> -		     | PHY_RSTZ | PHY_SHUTDOWNZ);
+> -	regmap_write(dsi->regs, DSI_PHY_TST_CTRL0, PHY_UNTESTCLR);
+> -	regmap_write(dsi->regs, DSI_PHY_TST_CTRL0, PHY_TESTCLR);
+> -	regmap_write(dsi->regs, DSI_PHY_TST_CTRL0, PHY_UNTESTCLR);
+> +	regmap_field_write(dsi->field_phy_enableclk, 0);
+> +	regmap_field_write(dsi->field_phy_unrstz, 0);
+> +	regmap_field_write(dsi->field_phy_unshutdownz, 0);
+> +
+> +	regmap_field_write(dsi->field_phy_forcepll, 0);
+> +
+> +	regmap_field_write(dsi->field_phy_testclr, 0);
+> +	regmap_field_write(dsi->field_phy_testclr, 1);
+> +	regmap_field_write(dsi->field_phy_testclr, 0);
+>   }
+>   
+>   static void dw_mipi_dsi_dphy_enable(struct dw_mipi_dsi *dsi)
+> @@ -787,18 +892,21 @@ static void dw_mipi_dsi_dphy_enable(struct dw_mipi_dsi *dsi)
+>   	u32 val = 0;
+>   	int ret;
+>   
+> -	regmap_write(dsi->regs, DSI_PHY_RSTZ, PHY_ENFORCEPLL | PHY_ENABLECLK |
+> -		     PHY_UNRSTZ | PHY_UNSHUTDOWNZ);
+> +	regmap_field_write(dsi->field_phy_enableclk, 1);
+> +	regmap_field_write(dsi->field_phy_unrstz, 1);
+> +	regmap_field_write(dsi->field_phy_unshutdownz, 1);
+> +
+> +	regmap_field_write(dsi->field_phy_forcepll, 1);
+>   
+> -	ret = regmap_read_poll_timeout(dsi->regs, DSI_PHY_STATUS,
+> -				       val, val & PHY_LOCK,
+> -				       1000, PHY_STATUS_TIMEOUT_US);
+> +	ret = regmap_field_read_poll_timeout(dsi->field_phy_status,
+> +					     val, val & PHY_LOCK,
+> +					     1000, PHY_STATUS_TIMEOUT_US);
+>   	if (ret)
+>   		DRM_DEBUG_DRIVER("failed to wait phy lock state\n");
+>   
+> -	ret = regmap_read_poll_timeout(dsi->regs, DSI_PHY_STATUS,
+> -				       val, val & PHY_STOP_STATE_CLK_LANE, 1000,
+> -				       PHY_STATUS_TIMEOUT_US);
+> +	ret = regmap_field_read_poll_timeout(dsi->field_phy_status,
+> +					     val, val & PHY_STOP_STATE_CLK_LANE,
+> +					     1000, PHY_STATUS_TIMEOUT_US);
+>   	if (ret)
+>   		DRM_DEBUG_DRIVER("failed to wait phy clk lane stop state\n");
+>   }
+> @@ -807,10 +915,10 @@ static void dw_mipi_dsi_clear_err(struct dw_mipi_dsi *dsi)
+>   {
+>   	u32 val;
+>   
+> -	regmap_read(dsi->regs, DSI_INT_ST0, &val);
+> -	regmap_read(dsi->regs, DSI_INT_ST1, &val);
+> -	regmap_write(dsi->regs, DSI_INT_MSK0, 0);
+> -	regmap_write(dsi->regs, DSI_INT_MSK1, 0);
+> +	regmap_field_read(dsi->field_int_stat0, &val);
+> +	regmap_field_read(dsi->field_int_stat1, &val);
+> +	regmap_field_write(dsi->field_int_mask0, 0);
+> +	regmap_field_write(dsi->field_int_mask1, 0);
+>   }
+>   
+>   static void dw_mipi_dsi_bridge_post_disable(struct drm_bridge *bridge)
+> @@ -1005,6 +1113,86 @@ static void dw_mipi_dsi_get_hw_version(struct dw_mipi_dsi *dsi)
+>   		dev_err(dsi->dev, "Failed to read DSI hw version register\n");
+>   }
+>   
+> +#define INIT_FIELD(f) INIT_FIELD_CFG(field_##f, cfg_##f)
+> +#define INIT_FIELD_CFG(f, conf)						\
+> +	do {								\
+> +		dsi->f = devm_regmap_field_alloc(dsi->dev, dsi->regs,	\
+> +						 variant->conf);	\
+> +		if (IS_ERR(dsi->f))					\
+> +			dev_warn(dsi->dev, "Ignoring regmap field " #f "\n"); \
+> +	} while (0)
+
+
+In kernel you can use gcc extension ({ ... }) instead "do { ... } while 
+(0)" [1].
+
+[1]: https://gcc.gnu.org/onlinedocs/gcc/Statement-Exprs.html
+
+
+> +
+> +static int dw_mipi_dsi_regmap_fields_init(struct dw_mipi_dsi *dsi)
+> +{
+> +	const struct dw_mipi_dsi_variant *variant;
+> +
+> +	switch (dsi->hw_version) {
+> +	case HWVER_130:
+> +	case HWVER_131:
+> +		variant = &dw_mipi_dsi_v130_v131_layout;
+> +		break;
+> +	default:
+> +		DRM_ERROR("Unrecognized DSI host controller HW revision\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	INIT_FIELD(dpi_18loosely_en);
+> +	INIT_FIELD(dpi_vid);
+> +	INIT_FIELD(dpi_color_coding);
+> +	INIT_FIELD(dpi_vsync_active_low);
+> +	INIT_FIELD(dpi_hsync_active_low);
+> +	INIT_FIELD(cmd_mode_ack_rqst_en);
+> +	INIT_FIELD(cmd_mode_all_lp_en);
+> +	INIT_FIELD(cmd_mode_en);
+> +	INIT_FIELD(cmd_pkt_status);
+> +	INIT_FIELD(vid_mode_en);
+> +	INIT_FIELD(vid_mode_type);
+> +	INIT_FIELD(vid_mode_low_power);
+> +	INIT_FIELD(vid_pkt_size);
+> +	INIT_FIELD(vid_hsa_time);
+> +	INIT_FIELD(vid_hbp_time);
+> +	INIT_FIELD(vid_hline_time);
+> +	INIT_FIELD(vid_vsa_time);
+> +	INIT_FIELD(vid_vbp_time);
+> +	INIT_FIELD(vid_vfp_time);
+> +	INIT_FIELD(vid_vactive_time);
+> +	INIT_FIELD(phy_txrequestclkhs);
+> +	INIT_FIELD(phy_testclr);
+> +	INIT_FIELD(phy_unshutdownz);
+> +	INIT_FIELD(phy_unrstz);
+> +	INIT_FIELD(phy_enableclk);
+> +	INIT_FIELD(phy_nlanes);
+> +	INIT_FIELD(phy_stop_wait_time);
+> +	INIT_FIELD(phy_status);
+> +	INIT_FIELD(pckhdl_cfg);
+> +	INIT_FIELD(hstx_timeout_counter);
+> +	INIT_FIELD(lprx_timeout_counter);
+> +	INIT_FIELD(int_stat0);
+> +	INIT_FIELD(int_stat1);
+> +	INIT_FIELD(int_mask0);
+> +	INIT_FIELD(int_mask1);
+> +	INIT_FIELD(gen_hdr);
+> +	INIT_FIELD(gen_payload);
+> +	INIT_FIELD(phy_bta_time);
+> +	INIT_FIELD(vid_mode_vpg_en);
+> +	INIT_FIELD(vid_mode_vpg_horiz);
+> +	INIT_FIELD(phy_clklp2hs_time);
+> +	INIT_FIELD(phy_clkhs2lp_time);
+> +	INIT_FIELD(phy_forcepll);
+> +
+> +	if (dsi->hw_version == HWVER_131) {
+> +		INIT_FIELD_CFG(field_phy_max_rd_time, cfg_phy_max_rd_time_v131);
+> +		INIT_FIELD_CFG(field_phy_lp2hs_time, cfg_phy_lp2hs_time_v131);
+> +		INIT_FIELD_CFG(field_phy_hs2lp_time, cfg_phy_hs2lp_time_v131);
+> +	} else {
+> +		INIT_FIELD(phy_max_rd_time);
+> +		INIT_FIELD(phy_lp2hs_time);
+> +		INIT_FIELD(phy_hs2lp_time);
+> +	}
+
+
+And here we have devres storm - for every field we allocate memory, 
+enqueue deallocator, copy static values to dynamic struct and more.
+
+I know that CPU power and memory are cheap, but this hurts my eyes :)
+
+Other thing is that this complicates the driver - adding new field will 
+require changes at least in 4 (?) places, without counting real field usage.
+
+And here is very simple alternative how different hw register layout can 
+be coded without much ado: [1][2].
+
+[1]: 
+https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/exynos/exynos_hdmi.c#L55
+
+[2]: 
+https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/exynos/exynos_hdmi.c#L667
+
+
+To be clear, I am not totally against this approach - the patch seems to 
+me correct, it is just 'baroque' :) If you can show that approach from 
+[1] and [2] in this case will be more problematic we can go your way.
+
+Anyway more comments appreciated.
+
+
+Regards
+
+Andrzej
+
+
+> +
+> +	return 0;
+> +}
+> +
+>   static struct dw_mipi_dsi *
+>   __dw_mipi_dsi_probe(struct platform_device *pdev,
+>   		    const struct dw_mipi_dsi_plat_data *plat_data)
+> @@ -1081,6 +1269,12 @@ __dw_mipi_dsi_probe(struct platform_device *pdev,
+>   
+>   	dw_mipi_dsi_get_hw_version(dsi);
+>   
+> +	ret = dw_mipi_dsi_regmap_fields_init(dsi);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to init register layout map: %d\n", ret);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+>   	dw_mipi_dsi_debugfs_init(dsi);
+>   	pm_runtime_enable(dev);
+>   
