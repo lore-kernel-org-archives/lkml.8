@@ -2,102 +2,100 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F430C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ECEC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00E1322204
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705E522209
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:53:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rrrAbP73"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FyOy3XWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgDFMxC (ORCPT
+        id S1728200AbgDFMx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:53:02 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43488 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728077AbgDFMxB (ORCPT
+        Mon, 6 Apr 2020 08:53:26 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:42472 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728152AbgDFMx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:53:01 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s4so376101pgk.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 05:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=K7FMm9TMPU2qrk84mTQv2iPYDxxJSQ/dj4GfvVj1fPY=;
-        b=rrrAbP73yD1ONDLTJHHC1edjnAz/00GjC3TLiTQauyplI1K0G6mcDZER5itCStgNul
-         yEIizr773ToeQHFL7xgIGaMoJaElXJy+Fvo10z0KlxP5xwDR+AiVFVaAQQ8wt6vrZJuO
-         E0MVHVBcVNw8JHGotScE7QKBMMHaIrEIrvp3s+pvNp36yxuwIf4yfhcZq9Kesu61IcD/
-         DE3V/TdKBQ0Nd0z2bSIOLQdjSc6d7iHJdM1MEqA11Wy/wkhNevInHzNMcwJzo22kAlyl
-         7eFZBJj3FPfdwewQVg/Kod4pAE/fqy9m7fJkmRgtI+FOmj1kf7++ZEl//uT4FwzeBuwb
-         if6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=K7FMm9TMPU2qrk84mTQv2iPYDxxJSQ/dj4GfvVj1fPY=;
-        b=ZbBv9l0FHW9sC0AMd98g+YwE4K2OcVWGzxRFCLLgqtX5BL5sLFAsZ8f5uOP9MhFi8u
-         d/knhwdQ8UORZuxRG3glivwNRFYlu08r8+ozpSlLb34iBKNek9i5ADRr/Ml2w+mjuWf/
-         PN4WjE2KhrrM5WPtNmU8kyhq8cYo6rV6nLFSzGYD1n0qSSgVlw03nMYG+DmIuYps9t+2
-         FgcyDTVUkTCeQuQ9wK8INvxC8oHAzSd6VhSnkpRELb8vDrD7iBIzTpp+aklbVxAubLWu
-         XQcLIZTFZivAwNtWPJIyOMbCEAUVe9D+kFycKDUWybk0xKgwopM+2tjVi2qcxyagW1+b
-         pnKQ==
-X-Gm-Message-State: AGi0PuYObNdZCRlh50RMzP4DxBVLIr/VFzQWZq0BjvUEhIzqaDCie9Ez
-        8/3ZLNiKdQMEzpyTv4AUZtQ=
-X-Google-Smtp-Source: APiQypJluYV8v1xRV51ls0+EjZR690Elsj1PdDoZoSspzpE1nvsNRa/80w2Kxh3Myp/I6Lbi7JZvDA==
-X-Received: by 2002:a62:1cf:: with SMTP id 198mr21700306pfb.246.1586177578658;
-        Mon, 06 Apr 2020 05:52:58 -0700 (PDT)
-Received: from localhost (n112120135125.netvigator.com. [112.120.135.125])
-        by smtp.gmail.com with ESMTPSA id u129sm11493248pfb.101.2020.04.06.05.52.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 05:52:58 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        oohall@gmail.com
-Cc:     tglx@linutronix.de, Markus.Elfring@web.de, christophe.leroy@c-s.fr,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH v5 2/2] powerpc/powernv: Add NULL check after kzalloc in opal_add_one_export
-Date:   Mon,  6 Apr 2020 20:52:42 +0800
-Message-Id: <20200406125242.4973-3-hqjagain@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200406125242.4973-1-hqjagain@gmail.com>
-References: <20200406125242.4973-1-hqjagain@gmail.com>
+        Mon, 6 Apr 2020 08:53:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586177605; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=SkosyJUm7vVYnO35iFNm2T5LbebuBXAANUFwoGPZCAg=; b=FyOy3XWEJ6Y3CIfhcdKU9MX/CuV/Se/oBMJ61QkAQkUdwMb4VZ47ruUQ0KMnYQ7I4rtVFZDl
+ 1eUpYFSvYLB8FfDgP9iLsWw292Gpblk9tiSDwUMsYVyAw8SzHyLbaAcfwAkSUY0yJojeo2Vd
+ AmitaUGFtE/gFIRQcFaQPW/e/cY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b2632.7f509e960f10-smtp-out-n02;
+ Mon, 06 Apr 2020 12:53:06 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E0CEDC4478C; Mon,  6 Apr 2020 12:53:05 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F1C66C433F2;
+        Mon,  6 Apr 2020 12:53:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F1C66C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Sumit Garg <sumit.garg@linaro.org>, linux-wireless@vger.kernel.org,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, matthias.schoepfer@ithinx.io,
+        Philipp.Berg@liebherr.com, Michael.Weitner@liebherr.com,
+        daniel.thompson@linaro.org, loic.poulain@linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
+References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
+        <87ftdgokao.fsf@tynnyri.adurom.net>
+        <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+Date:   Mon, 06 Apr 2020 15:52:59 +0300
+In-Reply-To: <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+        (Johannes Berg's message of "Mon, 06 Apr 2020 14:47:43 +0200")
+Message-ID: <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here needs a NULL check, as kzalloc may fail returning NULL.
+Johannes Berg <johannes@sipsolutions.net> writes:
 
-Issue was found by coccinelle.
-Generated by: scripts/coccinelle/null/kmerr.cocci
+> On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
+>> 
+>> >     user-space  ieee80211_register_hw()  RX IRQ
+>> >     +++++++++++++++++++++++++++++++++++++++++++++
+>> >        |                    |             |
+>> >        |<---wlan0---wiphy_register()      |
+>> >        |----start wlan0---->|             |
+>> >        |                    |<---IRQ---(RX packet)
+>> >        |              Kernel crash        |
+>> >        |              due to unallocated  |
+>> >        |              workqueue.          |
+>
+> [snip]
+>
+>> I have understood that no frames should be received until mac80211 calls
+>> struct ieee80211_ops::start:
+>> 
+>>  * @start: Called before the first netdevice attached to the hardware
+>>  *         is enabled. This should turn on the hardware and must turn on
+>>  *         frame reception (for possibly enabled monitor interfaces.)
+>
+> True, but I think he's saying that you can actually add and configure an
+> interface as soon as the wiphy is registered?
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
----
- arch/powerpc/platforms/powernv/opal.c | 3 +++
- 1 file changed, 3 insertions(+)
+With '<---IRQ---(RX packet)' I assumed wcn36xx is delivering a frame to
+mac80211 using ieee80211_rx(), but of course I'm just guessing here.
 
-diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-index 71af1cbc6334..908d749bcef5 100644
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -811,6 +811,9 @@ static int opal_add_one_export(struct kobject *parent, const char *export_name,
- 		return rc;
- 
- 	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
-+	if (!attr)
-+		return -ENOMEM;
-+
- 	name = kstrdup(export_name, GFP_KERNEL);
- 	if (!name) {
- 		rc = -ENOMEM;
 -- 
-2.17.1
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
