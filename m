@@ -2,131 +2,103 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B696C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32583C2BA18
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B66206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC4F20719
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgDFGZB (ORCPT
+        id S1726562AbgDFG3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 02:25:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48601 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgDFGZB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 02:25:01 -0400
-Received: from mail-lf1-f69.google.com ([209.85.167.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1jLLBr-0008Fb-2N
-        for linux-kernel@vger.kernel.org; Mon, 06 Apr 2020 06:24:59 +0000
-Received: by mail-lf1-f69.google.com with SMTP id b16so4916544lfb.19
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 23:24:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ise8WB4LRl+1spcOs3F4DjReORuX4aKlSFdb77NCTb4=;
-        b=oWWfTKezTgYaPbQUlQ/VQu3P63BcSNMl8eNYntccpFhhhHDp+xh9lorf95tQ96eT0T
-         6ij4N1CGXas2hAEuStOu5vNsf8g5Xvp0KAQG02kwT0maiRTm8bVoB4Maa1ivBt1oEJge
-         NjnTyZITuTvweEy/QkfFaIq5V3dSN7u13NBvjzSGf0KP24OeLf0tBvQFMbMocBptJSSS
-         Zjj9rTrhrcNiyr15sMvp549Lz7Wq1qQwf2zSFKmsqyyIrlkKLrFCifKsElOFlXqSChtZ
-         eEGNW7/ZGl9V2fyoj1ZDFAoRUYQfF65DZ0wfeJDjk/DirWpqNopLk1Qj3Arx0a06mzWA
-         6iDw==
-X-Gm-Message-State: AGi0Pub0IrNaljRvzgCl13fNHWCGT+wx+sBrQB5VMsKUNS6o+sEkKHBV
-        Q/0D8DAOpjr5SnDhGcWU5h+OvNiAIaaGoF+mSbdqra4T9HryZ7gdrMeD+tPYTspsiquCBEhc43O
-        ai6jObLHlZGiS8a3CMbcrnF6Kc6/n6s0TNnUdbtG+wEy1DNK4lf9echXX
-X-Received: by 2002:a2e:b5b2:: with SMTP id f18mr10630834ljn.136.1586154298524;
-        Sun, 05 Apr 2020 23:24:58 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLknrn4eH27Rcgb0jVh8EDXWocACeNuBZt1r2IrlCa/6rD5lG/hFhrhEnjD0tVOq1ce+J+HhjD+4A8KeoX660c=
-X-Received: by 2002:a2e:b5b2:: with SMTP id f18mr10630818ljn.136.1586154298241;
- Sun, 05 Apr 2020 23:24:58 -0700 (PDT)
+        Mon, 6 Apr 2020 02:29:37 -0400
+Received: from mga02.intel.com ([134.134.136.20]:33202 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726486AbgDFG3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 02:29:37 -0400
+IronPort-SDR: OcmwFdCSyM50eK6y86cGoaZMn2oORlS0fFjfH/CPr7qX4mnhCST10SCu6bbfHNuef5e2KOULaQ
+ sa/9It9lQZ9w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2020 23:29:36 -0700
+IronPort-SDR: 7e5L34Y+rt3E7GG9GfybLo7T4EOEtglNQ7+WMHvNTxahyFk7KZ5UFlI+0W46C7I61/CGt+apdu
+ m0aSTz8EJbJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,350,1580803200"; 
+   d="scan'208";a="285778220"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Apr 2020 23:29:36 -0700
+Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 5 Apr 2020 23:29:36 -0700
+Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
+ FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 5 Apr 2020 23:29:36 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ shsmsx102.ccr.corp.intel.com ([169.254.2.138]) with mapi id 14.03.0439.000;
+ Mon, 6 Apr 2020 14:29:32 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Auger Eric <eric.auger@redhat.com>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>
+CC:     "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "zhangfei.gao@gmail.com" <zhangfei.gao@gmail.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+Subject: RE: [PATCH v10 04/11] vfio/pci: Add VFIO_REGION_TYPE_NESTED region
+ type
+Thread-Topic: [PATCH v10 04/11] vfio/pci: Add VFIO_REGION_TYPE_NESTED region
+ type
+Thread-Index: AQHV/tNxynbYpV5vT0iLn8klxfIfp6hkUe3A//995QCAB+uK0A==
+Date:   Mon, 6 Apr 2020 06:29:32 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A222F4C@SHSMSX104.ccr.corp.intel.com>
+References: <20200320161911.27494-1-eric.auger@redhat.com>
+ <20200320161911.27494-5-eric.auger@redhat.com>
+ <A2975661238FB949B60364EF0F2C25743A21DBDF@SHSMSX104.ccr.corp.intel.com>
+ <893039be-265a-8c70-8e48-74122d9857de@redhat.com>
+In-Reply-To: <893039be-265a-8c70-8e48-74122d9857de@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200225165749.6399-1-po-hsu.lin@canonical.com> <6e13759d-370f-6cd3-34a7-08f2a9b6c0f0@kernel.org>
-In-Reply-To: <6e13759d-370f-6cd3-34a7-08f2a9b6c0f0@kernel.org>
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-Date:   Mon, 6 Apr 2020 14:24:46 +0800
-Message-ID: <CAMy_GT_kAeMX51N_Ujh8nRB44KNG99xMx0mpRXt1Lj0gkLQR-A@mail.gmail.com>
-Subject: Re: [PATCHv2] selftests/timers: Turn off timeout setting
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kselftest@vger.kernel.org, sboyd@kernel.org,
-        tglx@linutronix.de, John Stultz <john.stultz@linaro.org>,
-        joe.lawrence@redhat.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch V3 re-submitted, thanks!
-https://lore.kernel.org/linux-kselftest/20200318024215.5270-1-po-hsu.lin@canonical.com/T/#u
-
-On Sat, Mar 14, 2020 at 1:41 AM shuah <shuah@kernel.org> wrote:
->
-> On 2/25/20 9:57 AM, Po-Hsu Lin wrote:
-> > The following 4 tests in timers can take longer than the default 45
-> > seconds that added in commit 852c8cbf (selftests/kselftest/runner.sh:
-> > Add 45 second timeout per test) to run:
->
-> Please use the commit format:
->
-> commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
-> timeout per test")
->
-> >    * nsleep-lat - 2m7.350s
-> >    * set-timer-lat - 2m0.66s
-> >    * inconsistency-check - 1m45.074s
-> >    * raw_skew - 2m0.013s
-> >
-> > Thus they will be marked as failed with the current 45s setting:
-> >    not ok 3 selftests: timers: nsleep-lat # TIMEOUT
-> >    not ok 4 selftests: timers: set-timer-lat # TIMEOUT
-> >    not ok 6 selftests: timers: inconsistency-check # TIMEOUT
-> >    not ok 7 selftests: timers: raw_skew # TIMEOUT
-> >
-> > Disable the timeout setting for timers can make these tests finish
-> > properly:
-> >    ok 3 selftests: timers: nsleep-lat
-> >    ok 4 selftests: timers: set-timer-lat
-> >    ok 6 selftests: timers: inconsistency-check
-> >    ok 7 selftests: timers: raw_skew
-> >
-> > https://bugs.launchpad.net/bugs/1864626
-> Please add Fixes tag with commit 852c8cbf34d3
-> ("selftests/kselftest/runner.sh: Add 45 second timeout per test")
-> > Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-> > ---
-> >   tools/testing/selftests/timers/Makefile | 1 +
-> >   tools/testing/selftests/timers/settings | 1 +
-> >   2 files changed, 2 insertions(+)
-> >   create mode 100644 tools/testing/selftests/timers/settings
-> >
-> > diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
-> > index 7656c7c..0e73a16 100644
-> > --- a/tools/testing/selftests/timers/Makefile
-> > +++ b/tools/testing/selftests/timers/Makefile
-> > @@ -13,6 +13,7 @@ DESTRUCTIVE_TESTS = alarmtimer-suspend valid-adjtimex adjtick change_skew \
-> >
-> >   TEST_GEN_PROGS_EXTENDED = $(DESTRUCTIVE_TESTS)
-> >
-> > +TEST_FILES := settings
-> >
-> >   include ../lib.mk
-> >
-> > diff --git a/tools/testing/selftests/timers/settings b/tools/testing/selftests/timers/settings
-> > new file mode 100644
-> > index 0000000..e7b9417
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/timers/settings
-> > @@ -0,0 +1 @@
-> > +timeout=0
-> >
->
-> thanks,
-> -- Shuah
+SGkgRXJpYywNCj4gRnJvbTogQXVnZXIgRXJpYyA8ZXJpYy5hdWdlckByZWRoYXQuY29tPg0KPiBT
+ZW50OiBXZWRuZXNkYXksIEFwcmlsIDEsIDIwMjAgOTozMSBQTQ0KPiBUbzogTGl1LCBZaSBMIDx5
+aS5sLmxpdUBpbnRlbC5jb20+OyBlcmljLmF1Z2VyLnByb0BnbWFpbC5jb207IGlvbW11QGxpc3Rz
+LmxpbnV4LQ0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYxMCAwNC8xMV0gdmZpby9wY2k6IEFkZCBW
+RklPX1JFR0lPTl9UWVBFX05FU1RFRCByZWdpb24NCj4gdHlwZQ0KPiANCj4gSGkgWWksDQo+IA0K
+PiBPbiA0LzEvMjAgMzoxOCBQTSwgTGl1LCBZaSBMIHdyb3RlOg0KPiA+IEhpIEVyaWMsDQo+ID4N
+Cj4gPiBKdXN0IGN1cmlvdXMgYWJvdXQgeW91ciBwbGFuIG9uIHRoaXMgcGF0Y2gsIEkganVzdCBo
+ZWFyZCBteSBjb2xsZWFndWUNCj4gPiB3b3VsZCBsaWtlIHRvIHJlZmVyZW5jZSB0aGUgZnVuY3Rp
+b25zIGZyb20gdGhpcyBwYXRjaCBpbiBoaXMgZHNhIGRyaXZlciB3b3JrLg0KPiANCj4gV2VsbCBJ
+IGludGVuZCB0byByZXNwaW4gdW50aWwgc29tZWJvZHkgdGVsbHMgbWUgaXQgaXMgY29tcGxldGVs
+eSB2YWluIG9yIGRlYWQgZm9sbG93cy4NCj4gSm9raW5nIGFzaWRlLCBmZWVsIGZyZWUgdG8gZW1i
+ZWQgaXQgaW4gYW55IHNlcmllcyBpdCB3b3VsZCBiZSBiZW5lZmljaWFsIHRvLCBqdXN0IHBsZWFz
+ZQ0KPiBjYyBtZSBpbiBjYXNlIGNvZGUgZGl2ZXJnZXMuDQoNCmdvdCBpdC4gUGxlYXNlIGFsc28g
+Y2MgbWUgaW4gZnV0dXJlIHZlcnNpb24uIDotKQ0KDQpSZWdhcmRzLA0KWWkgTGl1DQoNCg==
