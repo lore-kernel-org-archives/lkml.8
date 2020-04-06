@@ -2,126 +2,127 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE23EC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F51C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A721206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810EF206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:16:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Ro214fb4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FR5Grp1I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a3AzdDdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgDFJPO (ORCPT
+        id S1726950AbgDFJQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:15:14 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:47793 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726744AbgDFJPO (ORCPT
+        Mon, 6 Apr 2020 05:16:06 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:59328 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgDFJQG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:15:14 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id DB10B58014F;
-        Mon,  6 Apr 2020 05:15:10 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 06 Apr 2020 05:15:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=Yo+kk4ssQ5zTwLnaP0Ele1F1y+q
-        26rLa/dshj8KwXRs=; b=Ro214fb4noi/VPI5Awh/ibsEBUH7Z0GDSeRdL6qHYNE
-        WSGTgsQP5+6VhuWw9Ijk1lgaOPmNONRf3EXjX8sa2BbJjqInAyBuf7Uv+Iy9M5+L
-        usgr7yewwEJCyjQBbXkhtq1iAOxPOgrQKjQn97RIGsIpyIvAbly7HOg72t48Anxc
-        8DH12mBcovs+0oMyKWConql2bipT4Xc3eACcVNNoXxKaaaWJfQMbqRSSel++g22P
-        88fpGjS/9ACxPKF+9zWSFkDNDfukHxY7Wq/CvlnVHC40a2M4Am/eO/w6YbA0mu2x
-        vcyPGvsuxx1bp4fA/89o74GRTRPjrTba2A8I+WhmUTQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Yo+kk4
-        ssQ5zTwLnaP0Ele1F1y+q26rLa/dshj8KwXRs=; b=FR5Grp1IpF2SHehuXf4r3T
-        jtjEpQUxE/4oUH49uBfa3ICmSkitQx0xtqkdtzt9M/hCnqxkETqV7RBMO/0CkIu9
-        xeBKOs9HQS2snUBhB3iidR9TZaoU3kG4SaTcsr8RKXhgLrHih+Muo4tTin/yFwEP
-        O6tLMUSLGUkCCNCRi0u9oLIkmmJoAUkyU/5TlYtTZsTBZmKxrVW74qoGeI5nnS+5
-        5VObxN3qoh1brt1cxFT5fdkNMERQrJ5AcqzOzqLGEtHAgV7TZaz7z+Si/AY3TobL
-        vZ4vzoDsgtCsa17DkciA/hIEqII76xDso8J5lB5yuSC5gLhGxnwXssch2lh5Jm2g
-        ==
-X-ME-Sender: <xms:HfOKXr5Nyxk6k1GVM9huhudZON1Hd0xo4IV5rT93EZvHaC1VzD3jTw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefgdduhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
-    hordhtvggthh
-X-ME-Proxy: <xmx:HfOKXn0d3TaUbMsAZPubP-kvk10FGNh38AW9nbJRP30Fl6YIAcNAAg>
-    <xmx:HfOKXnn4plu2WCUixfRxj3e5hNUQWt_Gk-ZHD2dx30OJhCPOGFUKQw>
-    <xmx:HfOKXggQ-btirr7O0G8WO0ikBaRltjPaSejWBznZ5pkiSr3u8c_CCg>
-    <xmx:HvOKXmsisu5MBDr0BCoB62pLG6EMM8T4AHp8Oc61JSeoAWyA-6YXhw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7C6C9328005D;
-        Mon,  6 Apr 2020 05:15:09 -0400 (EDT)
-Date:   Mon, 6 Apr 2020 11:15:07 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v7 0/6] Allwinner sun6i message box support
-Message-ID: <20200406091507.jojdzjidru64sjhm@gilmour.lan>
-References: <20200223040853.2658-1-samuel@sholland.org>
- <59dc1ee9-a369-7cf9-df6a-4b5b99e24324@sholland.org>
+        Mon, 6 Apr 2020 05:16:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=pozUv80YoSRHHvx9sVkpMZ7CBAgwyFGYde+t9E6Fl08=; b=a3AzdDdzO/gg8dpEwGMPQCN9wH
+        Ud3ROlUqDiusUwrXUeDg9X7pdmbTCnVf60Dl5wrm5WfGx49mekafeM2aT33NabLWpZisI6LbXWPrv
+        Vq+9tSpLzJPEE3xetdYp08N9BU0iJ0NJR8nU4Z+jDrV1tazi1RSLKTF0RogSgxD3Dbqd+hdPQ34+g
+        u54c/1tSUYMg8e31V0VXkviN6ZnDJQDVLw5YzdWBOK6wbcsGyNyDGTuC1wT4A0OrX52/KG3/ZTUOr
+        8pTAMkjI4hMakJ+niz+ekYs0hoSgjCa15wq13xCI/Ufbv9u/xbiMWT5GbsCsiJis9gwUF+7rFIu5W
+        89t15qxw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLNrG-00085S-6Z; Mon, 06 Apr 2020 09:15:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6F5D23011DD;
+        Mon,  6 Apr 2020 11:15:51 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3E3382BAC6A65; Mon,  6 Apr 2020 11:15:51 +0200 (CEST)
+Date:   Mon, 6 Apr 2020 11:15:51 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "chengjian (D)" <cj.chengjian@huawei.com>
+Cc:     andrew.murray@arm.com, bristot@redhat.com,
+        jakub.kicinski@netronome.com, Kees Cook <keescook@chromium.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>, bobo.shaobowang@huawei.com,
+        Will Deacon <will@kernel.org>
+Subject: Re: Why is text_mutex used in jump_label_transform for x86_64
+Message-ID: <20200406091551.GG20730@hirez.programming.kicks-ass.net>
+References: <f7f686f2-4f28-1763-dd19-43eff6a5a8f2@huawei.com>
+ <20200320102709.GC20696@hirez.programming.kicks-ass.net>
+ <28edc3d5-83a3-43cb-3e64-7d0525d430f3@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xdzfhjy327jx4nkm"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <59dc1ee9-a369-7cf9-df6a-4b5b99e24324@sholland.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <28edc3d5-83a3-43cb-3e64-7d0525d430f3@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 06, 2020 at 04:39:11PM +0800, chengjian (D) wrote:
+> 
+> On 2020/3/20 18:27, Peter Zijlstra wrote:
+> > It depends on the architecture details of how self-modifying code works.
+> > In particular, x86 is a variable instruction length architecture and
+> > needs extreme care -- it's implementation requires there only be a
+> > single text modifier at any one time, hence the use of text_mutex.
+> > 
+> > ARM64 OTOH is, like most RISC based architectures, a fixed width
+> > instruction architecture. And in particular it can re-write certain
+> > (branch) instructions with impunity (see their
+> > aarch64_insn_patch_text_nosync()). Which is why they don't need
+> > additional serialization.
+> 
+> Hi, Peter
+> 
+> Thank you very much for your reply.
+> 
+> X86 is a variable-length instruction, only one byte modification of the
+> instruction
+> can be regarded as atomic. so we must be very careful when modifying
+> instructions
+> concurrently.
 
---xdzfhjy327jx4nkm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Close enough.
 
-On Wed, Apr 01, 2020 at 11:55:34AM -0500, Samuel Holland wrote:
-> On 2/22/20 10:08 PM, Samuel Holland wrote:
-> > Samuel Holland (6):
-> >   dt-bindings: mailbox: Add a binding for the sun6i msgbox
-> >   mailbox: sun6i-msgbox: Add a new mailbox driver
->
-> These two patches have been applied for 5.7[1], so the DTS changes should be
-> ready to apply as well.
->
-> [1]:
-> https://lore.kernel.org/lkml/CABb+yY0-q+5+pqP-rBHCYpw-LmT+h80+OU26XL34fTrXhO+T3Q@mail.gmail.com/
+> For other architectures such as ARM64, the modification of some instructions
+> can be
+> considered atomic, (Eg. nop -> jmp/b). The set of instructions that can be
+> executed
+> by one thread of execution as they are being modified by another thread of
+> execution
+> without requiring explicit synchronization.
+> 
+> In ARM64 Architecture Reference Manual, I find that:
+>     Concurrent modification and execution of instructions can lead to the
+> resulting instruction performing any behavior
+>     that can be achieved by executing any sequence of instructions that can
+> be executed from the same Exception level,
+>     except where each of the instruction before modification and the
+> instruction after modification is one of a B, BL, BRK,
+>     HVC, ISB, NOP, SMC, or SVC instruction.
+>     For the B, BL, BRK, HVC, ISB, NOP, SMC, and SVC instructions the
+> architecture guarantees that, after modification of the
+>     instruction, behavior is consistent with execution of either:
+>     • The instruction originally fetched.
+>     • A fetch of the modified instruction
+> 
+> So we can safely modify jump_label for ARM64(from NOP to b or form b to
+> NOP).
+> 
+> Is my understanding correct?
 
-Sorry, I missed that it was merged and sent for a PR.
+I think so; but I'm really not much of an ARM64 person. FWIW I think I
+remember Will saying the same is true of ARM (32bit) and they could
+implement the same optimization, but so far nobody has bothered doing
+so. But please, ask an ARM64 maintainer and don't take my word for this.
 
-I've queued the DT changes for 5.8
-
-Maxime
-
---xdzfhjy327jx4nkm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorzGwAKCRDj7w1vZxhR
-xfkjAQDQamF1U+7L7tVY2lQH6acuSJ6qmfCYNC0tJ9ZUu1NNmQD9H2qUHh5Aqh+d
-wYXK+j0yeHQAgMu9TwBZ32Dg/eeKRwU=
-=ay2J
------END PGP SIGNATURE-----
-
---xdzfhjy327jx4nkm--
