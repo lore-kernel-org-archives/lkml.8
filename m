@@ -2,100 +2,100 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ECEC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0523C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705E522209
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:53:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FyOy3XWE"
+	by mail.kernel.org (Postfix) with ESMTP id A3AA422206
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586177623;
+	bh=bJ6dHQ+dU4Gwaqq98S5TKRBD0OIF5fwK51njnQkIHpA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jAZd4dMO2UCf7Q8HkhNckt7hXHYTq/fa84ZF261ELW9Ykz3LQpqECi1UjpkqwVM32
+	 jSfZl4aFuQFoNfG4mhry4XfOhPldmwCwFs63R8b0Ukw0PszM3IAz5v+I9t5PlAS9YE
+	 snWMqQ6DSHc2kwhp3iACp2ooB8fWjzmZS8+q8gHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgDFMx0 (ORCPT
+        id S1728207AbgDFMxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:53:26 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:42472 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728152AbgDFMx0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:53:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586177605; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=SkosyJUm7vVYnO35iFNm2T5LbebuBXAANUFwoGPZCAg=; b=FyOy3XWEJ6Y3CIfhcdKU9MX/CuV/Se/oBMJ61QkAQkUdwMb4VZ47ruUQ0KMnYQ7I4rtVFZDl
- 1eUpYFSvYLB8FfDgP9iLsWw292Gpblk9tiSDwUMsYVyAw8SzHyLbaAcfwAkSUY0yJojeo2Vd
- AmitaUGFtE/gFIRQcFaQPW/e/cY=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b2632.7f509e960f10-smtp-out-n02;
- Mon, 06 Apr 2020 12:53:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E0CEDC4478C; Mon,  6 Apr 2020 12:53:05 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 6 Apr 2020 08:53:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728041AbgDFMxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 08:53:42 -0400
+Received: from linux-8ccs (p3EE2C7AC.dip0.t-ipconnect.de [62.226.199.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F1C66C433F2;
-        Mon,  6 Apr 2020 12:53:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F1C66C433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Sumit Garg <sumit.garg@linaro.org>, linux-wireless@vger.kernel.org,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, matthias.schoepfer@ithinx.io,
-        Philipp.Berg@liebherr.com, Michael.Weitner@liebherr.com,
-        daniel.thompson@linaro.org, loic.poulain@linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
-References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
-        <87ftdgokao.fsf@tynnyri.adurom.net>
-        <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
-Date:   Mon, 06 Apr 2020 15:52:59 +0300
-In-Reply-To: <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
-        (Johannes Berg's message of "Mon, 06 Apr 2020 14:47:43 +0200")
-Message-ID: <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1389222205;
+        Mon,  6 Apr 2020 12:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586177621;
+        bh=bJ6dHQ+dU4Gwaqq98S5TKRBD0OIF5fwK51njnQkIHpA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GjrZbmPPR6KGv95jck7xM0A0OUTHFTE3Aw9ztAQC0gH+2jFYRKd3EE346MvrOUcn6
+         GeZ1OEonLUZz736ojym0weT6lIc5dFFTI/pqOJBXpioOAw6rEM4av2Ssd676414zRo
+         qdf37HZLNr0OW81BXTSlmwteh+hW2j3dNsK9c8mM=
+Date:   Mon, 6 Apr 2020 14:53:37 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        keescook@chromium.org
+Subject: Re: [PATCH] module: Harden STRICT_MODULE_RWX
+Message-ID: <20200406125336.GA21006@linux-8ccs>
+References: <20200403163716.GV20730@hirez.programming.kicks-ass.net>
+ <20200403165631.hrxxm3pnzqa4vxln@treble>
+ <alpine.LSU.2.21.2004061146590.26870@pobox.suse.cz>
+ <20200406104615.GA9629@linux-8ccs>
+ <20200406112732.GK20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200406112732.GK20730@hirez.programming.kicks-ass.net>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes Berg <johannes@sipsolutions.net> writes:
-
-> On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
->> 
->> >     user-space  ieee80211_register_hw()  RX IRQ
->> >     +++++++++++++++++++++++++++++++++++++++++++++
->> >        |                    |             |
->> >        |<---wlan0---wiphy_register()      |
->> >        |----start wlan0---->|             |
->> >        |                    |<---IRQ---(RX packet)
->> >        |              Kernel crash        |
->> >        |              due to unallocated  |
->> >        |              workqueue.          |
++++ Peter Zijlstra [06/04/20 13:27 +0200]:
+>On Mon, Apr 06, 2020 at 12:46:17PM +0200, Jessica Yu wrote:
+>> +++ Miroslav Benes [06/04/20 11:55 +0200]:
+>> > On Fri, 3 Apr 2020, Josh Poimboeuf wrote:
+>> >
+>> > > On Fri, Apr 03, 2020 at 06:37:16PM +0200, Peter Zijlstra wrote:
+>> > > > +{
+>> > > > +	int i;
+>> > > > +
+>> > > > +	for (i = 0; i < hdr->e_shnum; i++) {
+>> > > > +		if (sechdrs[i].sh_flags & (SHF_EXECINSTR|SHF_WRITE))
+>> > > > +			return -ENOEXEC;
+>> > >
+>> > > I think you only want the error when both are set?
+>> > >
+>> > > 		if (sechdrs[i].sh_flags & (SHF_EXECINSTR|SHF_WRITE) == (SHF_EXECINSTR|SHF_WRITE))
+>> >
+>> > A section with SHF_EXECINSTR and SHF_WRITE but without SHF_ALLOC would be
+>> > strange though, no? It wouldn't be copied to the final module later
+>> > anyway.
+>>
+>> That's right - move_module() ignores !SHF_ALLOC sections and does not
+>> copy them over to their final location. So I think we want to look for
+>> SHF_EXECINSTR|SHF_WRITE|SHF_ALLOC here..
 >
-> [snip]
+>So I did notice that !SHF_ALLOC sections get ignored, but since this
+>check is about W^X we don't strictly care about SHF_ALLOC. What we care
+>about it never allowing a writable and executable map.
 >
->> I have understood that no frames should be received until mac80211 calls
->> struct ieee80211_ops::start:
->> 
->>  * @start: Called before the first netdevice attached to the hardware
->>  *         is enabled. This should turn on the hardware and must turn on
->>  *         frame reception (for possibly enabled monitor interfaces.)
->
-> True, but I think he's saying that you can actually add and configure an
-> interface as soon as the wiphy is registered?
+>Adding ALLOC to the test only allows for future mistakes and doesn't
+>make the check any better.
 
-With '<---IRQ---(RX packet)' I assumed wcn36xx is delivering a frame to
-mac80211 using ieee80211_rx(), but of course I'm just guessing here.
+Ugh sorry, my brain shorted out and for some reason I mistakenly
+thought the check excluded SHF_WRITE|SHF_EXECINSTR|SHF_ALLOC sections.
+It doesn't obviously. Sorry for the noise.
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
