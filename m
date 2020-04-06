@@ -2,103 +2,131 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D04C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C99C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CC8206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:45:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="H1sWTFHS"
+	by mail.kernel.org (Postfix) with ESMTP id 9E15F20731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:46:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586159214;
+	bh=y1V0y5qByl604OEH2YnRM/oaDhSWbRYnOBO3/Q8sV1g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=i2W7woCel8C7ql2Akccf35qZB4lfm0xPtcvGWvHEc/M0MZgO52K7tzTAe6yGTeAlu
+	 xoiq/fYn/odkAYRd3Ibzqx66Evi+6kqu7ElB/3mvDB3xG2r4jpcgPj1xTKhCpGX2FS
+	 UQq8j2eRCA2OsO8dY9BTi+QL40oIVWiRyiAlEoi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgDFHp3 (ORCPT
+        id S1726591AbgDFHqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 03:45:29 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:8325 "EHLO smtp1.axis.com"
+        Mon, 6 Apr 2020 03:46:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbgDFHp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 03:45:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1392; q=dns/txt; s=axis-central1;
-  t=1586159128; x=1617695128;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hKjWOr9FSgMwzvGDh1VBVkoJ1lF8KGvb+K5ewVawfCo=;
-  b=H1sWTFHSQaVNHJpYmMb1ogscI348SWmEJL42VEI0J02uwu/UYekAhOQw
-   kchvTPWOZV8H3w/r6HxSF/qJvqKJwrRKdu3VLEVs2peDhmCjdlelRutAN
-   43fupTLtqymQPD2jr+CzyTpNoHvk5WgAHEje2ptPAOSylS5CveoO0NwMd
-   TPBFjPFdjYVv04QdavAmyua0VjGABP4NxWcy6aeUdlNpdjBrd7VSR8IFJ
-   YrkafmoTwI8wr9onaZSiM8bVvLNRJAILaAgAUooDSNOowhDReOfEHCBQw
-   NdBqyDhxmkUct9vfZ31ViSppt855kMDiUshB8RtcrdkVe7b4STIjI5Hpy
-   w==;
-IronPort-SDR: rktaN4umJOdoahSgBwoHdhjxgRERbzY2cMeYoRJ4E66mpfllBiVsbl1/D6wOqUY5XzXBzQs1/q
- TaBKFoy9vy8uzlxvUGzZo1Zy1z4OsyJ1Sc7gZtBNSK0+bf1cOkBG9vl/dn97dYtskI1AU8gute
- DW+9xzSg0JTg7eKYV9TCJa3JFD4OHdro9DILAOJETJuRzSbSjB1RoVYJZEkTzzL6OGnaRDT3PH
- kfe5C4nZBlrgzc61k07H78FTHeXp+Cco/zKqGNDlZx1ESVa2a+IjIOqzZsh9pc5mhU6AtEZFmM
- OVg=
-X-IronPort-AV: E=Sophos;i="5.72,350,1580770800"; 
-   d="scan'208";a="7358640"
-Date:   Mon, 6 Apr 2020 09:45:26 +0200
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] thermal: core: Send a sysfs notification on trip points
-Message-ID: <20200406074525.2bhseq3n5bw7dd2t@axis.com>
-References: <a7e8287d-72be-7ab0-697a-9de40eb3f81f@linaro.org>
- <20200402142116.22869-1-daniel.lezcano@linaro.org>
- <20200403144009.szjoss5ecleisg2f@axis.com>
- <e0c819ce-31f4-cee1-c7cc-7ecb73d374a3@linaro.org>
+        id S1726475AbgDFHqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 03:46:53 -0400
+Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26D85206F5;
+        Mon,  6 Apr 2020 07:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586159212;
+        bh=y1V0y5qByl604OEH2YnRM/oaDhSWbRYnOBO3/Q8sV1g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AkF8viHMnjwxIIQDLRi8bLfelyOx5KL02q8bMWh4XEhGRpSk8BtJMuDhz76aIvqix
+         12PQNXmLNtmvsDBto0D6NU7yWjEKTpRXkDbzOfebECj47JWsJzAjEbeZ90grjMzzq0
+         BxJY/i4R+hzAA6x9VeDTajqkhPMHa54InTzsNxw0=
+Date:   Mon, 6 Apr 2020 09:46:45 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
+ DRM fourccs
+Message-ID: <20200406094645.5f96457a@coco.lan>
+In-Reply-To: <CAHp75Vf+m_qzOwZb38dObLpKV2N27-J_7beqffhFVoSHaNV2vg@mail.gmail.com>
+References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
+        <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk>
+        <b1e6213ba9f67da8278dd5c5f5e4def8ab927c83.camel@perches.com>
+        <20200403193242.38611906@coco.lan>
+        <2751400ae13b25d8259a8a9d7b36caf98ec2d367.camel@perches.com>
+        <CAHp75Vf+m_qzOwZb38dObLpKV2N27-J_7beqffhFVoSHaNV2vg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <e0c819ce-31f4-cee1-c7cc-7ecb73d374a3@linaro.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 05:26:39PM +0200, Daniel Lezcano wrote:
-> On 03/04/2020 16:40, Vincent Whitchurch wrote:
-> > Normally sysfs_notify() is used to notify userspace that the value
-> > of the sysfs file has changed, but in this case it's being used on
-> > a sysfs file whose value never changes.  I don't know if there are
-> > other drivers that do something similar.
-> 
-> I think so:
-> 
-> eg.
-> 
-> drivers/hwmon/adt7x10.c:
-> 	sysfs_notify(&dev->kobj, NULL, "temp1_max_alarm");
-> drivers/hwmon/adt7x10.c:
-> 	sysfs_notify(&dev->kobj, NULL, "temp1_min_alarm");
-> drivers/hwmon/adt7x10.c:
-> 	sysfs_notify(&dev->kobj, NULL, "temp1_crit_alarm");
-> 
-> drivers/hwmon/abx500.c:
-> 	sysfs_notify(&data->pdev->dev.kobj, NULL, alarm_node);
-> drivers/hwmon/abx500.c:
-> 	sysfs_notify(&data->pdev->dev.kobj, NULL, alarm_node);
-> 
-> drivers/hwmon/stts751.c:
-> 	sysfs_notify(&priv->dev->kobj, NULL, "temp1_max_alarm");
-> drivers/hwmon/stts751.c:
-> 	sysfs_notify(&priv->dev->kobj, NULL, "temp1_min_alarm");
-> 
-> There are also some other places I believe they are doing the same like:
-> 
-> drivers/md/md.c:
-> 	sysfs_notify(&mddev->kobj, NULL, "sync_completed");
-> drivers/md/md.c:
-> 	sysfs_notify(&mddev->kobj, NULL, "degraded");
+Em Fri, 3 Apr 2020 21:32:42 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> escreveu:
 
-AFAICS all these drivers (including the hwmon ones) use sysfs_notify()
-to notify that the value of the sysfs file has changed, unlike your
-proposed patch.
+> On Fri, Apr 3, 2020 at 8:54 PM Joe Perches <joe@perches.com> wrote:
+> > On Fri, 2020-04-03 at 19:32 +0200, Mauro Carvalho Chehab wrote:  
+> > > Em Fri, 03 Apr 2020 09:56:42 -0700
+> > > Joe Perches <joe@perches.com> escreveu:  
+> 
+> > It _might_ be useful to use a CONFIG_MEDIA_SUPPORT guard
+> > in lib/vsprintf for this.  
+> 
+> No need. FourCC, if Sakari makes it more generic, can be used for
+> other purposes, e.g. printing component names from the chips (not
+> related to media at all).
+> 
+
+Hmm... not 100% sure about what you're meaning with "component names".
+
+At media, some vendors use a cc-like code to allow identifying the
+name of the chip, retrieved on a common register via an I2C bus.
+Omnivision uses, for example, uses a 2 bytes code:
+
+	OV5670_CHIP_ID			0x5670
+	OV5675_CHIP_ID			0x5675
+	OV2680_CHIP_ID			0x2680
+	OV5670_CHIP_ID			0x5670
+	OV5675_CHIP_ID			0x5675
+
+We used this at the em28xx driver to detect a camera sensor, and give
+a name for the chip (see drivers/media/usb/em28xx/em28xx-camera.c):
+
+		switch (id) {
+		case 0x2642:
+			name = "OV2640";
+			dev->em28xx_sensor = EM28XX_OV2640;
+			break;
+		case 0x7648:
+			name = "OV7648";
+			break;
+		case 0x7660:
+			name = "OV7660";
+			break;
+
+Yet, this is not too reliable, as, for some products, they use something
+different:
+
+	OV8856_CHIP_ID			0x885a
+	OV13858_CHIP_ID		0xd855
+
+	OV9640 can either be 0x9648 or 0x9649, depending on its revision.
+
+If you're referring to this kind of code, I don't think we can have
+something generic.
+
+Thanks,
+Mauro
