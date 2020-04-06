@@ -2,137 +2,142 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B33CC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C516EC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2C5A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B49206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:59:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NQprIZDo";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="HTmHTArh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0jnGpAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgDFW7W (ORCPT
+        id S1726428AbgDFW7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 18:59:22 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:8727 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgDFW7V (ORCPT
+        Mon, 6 Apr 2020 18:59:46 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44594 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgDFW7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 18:59:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1586213961; x=1617749961;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=olkP+6a0wdniulgdKQVNWlqZKShXXYnuE9HbN9dRYNU=;
-  b=NQprIZDoAyFoNl15Nvhfvmro3vMoSxXuIwefns6ml1Xc2ZmCBcY4RF8i
-   p51BR2olr9hBuapJGFVztQVnEDFfyQima5X8onQHjk2/wULMkmh+dD29g
-   p1bnd3ZhZUefQSxpp84V4MpPOuwGgEs3MBqdj9RdvyqEbcc6WMYWtoqtJ
-   bPJ2L/KrTyHKV26De95iwokx1JdFvLPzo+eep38twwos3bFGkWx1JoCn9
-   LF7k56A5tonhoqzH+4bw7QidojTmSJ4miX3CU4y6wdTUyuyWJjTAFh5Oz
-   PX0bp5qOqVzYwbaxyCCCv3EqyG9hU28STANjMvy1bbcYjAWyhYx4L19jc
-   g==;
-IronPort-SDR: 1nMviI9IHFC6scJnr8Gz+kw73tKTNZ1Y9Ht/WnfPmGimHC9+/cNmDGA3ta0pKPoK/dN+JY0cgX
- f5EIMHEMvw+NWa8RNPWLY0Avtqxi4Kx1eWyUkP3Os3qk7VEvCSDDGfmhq1EFbwALTQsPg/K+nh
- YR6BKPnOAJMC2ZP0ZEFbWJWPVAM2UeouTUC424gGjKcifS8zNEOCtAXfjFbdVU8otcWDbwMOxi
- h9KLyI0QUBO8MmqvuuzGNPyv1aqOxjvZB7t/Qv08BPX5YIFmbxaG3WLCW71HJHxag4QizBx2EV
- Pkw=
-X-IronPort-AV: E=Sophos;i="5.72,352,1580745600"; 
-   d="scan'208";a="136173732"
-Received: from mail-cys01nam02lp2058.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.58])
-  by ob1.hgst.iphmx.com with ESMTP; 07 Apr 2020 06:59:20 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YNzW/vjM5IWV1Zd9Pv9/25//1FeHT7IltSkiIvaZe4mGfmt3rO6uz8YZaudhn4zM1rKpK5zgIg9EurUmVC5el6As0DOc1qJga0/bi95VmrrX18Gk0VDFoay/SgGZXTiAOd2Fb4dl1XRZkC8b6XumRndqsZLlXv9K5PCHDbyaAqtdCl4eQiNGEyv/kLclVy+s2/FxuUHb3KPz6wQAInXago/oULnhayoE1gUhbe+1r2OSCDSRCM/zjRR2Pv28AiWDFYme11aBa85c6nq1R0dTEzMHcKK8W6ROhq92Ck+wkwHWrLrXQ6s0SS7UYT3FMdPgJLLrQKJ6uE2vdwTgCtFOdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=olkP+6a0wdniulgdKQVNWlqZKShXXYnuE9HbN9dRYNU=;
- b=DzvCnOjnFzUjmyniMVPHoOiSHOZCLVpv3lf45Ad1bO18u9q6+qZ4yUia3NwvobKHDH5o5uHJSGJOZAa+MWe5i0FcjRdbyzEdQ2T5Y4RV8v+E/BYzxh45z6zyrjPCUGpgC30WSlLFCHZlgVeBvmBzZnt5j/Hh0m8SH/uUktC1LKDtbcEcAGRVzsfQpKnk2Xz85bj24iUjCVMMrJXMtVw/R/28eU7TKCVeSYyXIhigMPLVbyQjjMikIJOCyc79llMDwRpvBBMmnpzodia2FPNZ7tsw3lyV+m6dlbj9FRt2DU21dPOrXcaeLQbyQSX8SbzMSGTErWD7xcg6sPNx9xvjOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Mon, 6 Apr 2020 18:59:46 -0400
+Received: by mail-pl1-f193.google.com with SMTP id h11so458167plr.11;
+        Mon, 06 Apr 2020 15:59:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=olkP+6a0wdniulgdKQVNWlqZKShXXYnuE9HbN9dRYNU=;
- b=HTmHTArhqNn+6Z5ZVZclj9weGN7htuIqtQjQK1e+F2FSLWTNIitMbdM5DUMeq65+XziDoWN/wcFAodDoyv+7Q/IN7qjpH9QgQSxZXUFqGU6AM8iG8Kojmtv/BPXtkFI9ocqfdMbaG30PuiN7KPOeCBgNb+Nsd1GM5tX4Kzv80dQ=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BYAPR04MB5335.namprd04.prod.outlook.com (2603:10b6:a03:ca::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Mon, 6 Apr
- 2020 22:59:18 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::d826:82b2:764f:9733]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::d826:82b2:764f:9733%7]) with mapi id 15.20.2878.018; Mon, 6 Apr 2020
- 22:59:18 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Colin King <colin.king@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] io_uring: remove redundant variable pointer nxt and
- io_wq_assign_next call
-Thread-Topic: [PATCH] io_uring: remove redundant variable pointer nxt and
- io_wq_assign_next call
-Thread-Index: AQHWDGZeKYMyN+Xeh0S7OVpfwOQ1+w==
-Date:   Mon, 6 Apr 2020 22:59:18 +0000
-Message-ID: <BYAPR04MB4965E6F6CCDA94AAD2EA1DDB86C20@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <20200406225439.654486-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 054947ca-656a-4494-289b-08d7da7e22ed
-x-ms-traffictypediagnostic: BYAPR04MB5335:
-x-microsoft-antispam-prvs: <BYAPR04MB533556BDB3378FF621BFD2E486C20@BYAPR04MB5335.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:175;
-x-forefront-prvs: 0365C0E14B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(376002)(136003)(39850400004)(396003)(346002)(26005)(7696005)(4744005)(186003)(52536014)(9686003)(55016002)(5660300002)(66476007)(8936002)(71200400001)(6506007)(81156014)(8676002)(53546011)(64756008)(478600001)(66446008)(81166006)(86362001)(66556008)(110136005)(33656002)(2906002)(4326008)(316002)(54906003)(76116006)(66946007);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NwXgbykESUfWruQJ0mdN2Ew8M4io2d7ymFs7sAwAy1uDaIljXD9ZR8Y/78V/eG37fk3eKb4hEtAtOEQHgw2UhER7tu3tkDYusP2jmUcpER2xXsoWbbyCSnYGSqH7UdgZAy54b/ESWXu+23qblJRmEDZoc75azoAuOKBxIEUUPi07zl3gtRE8HmAXOnnicVcy0U4QqUoe8nvqzdRt/6XcG44Nt+cHoT3jXykfx8psr8rHFFqrbKHWxyMgxKu7NuLB05VKj9K5U93sfpotfuUjp3rmJ1qIn/ZF3wu8+HEG5pmcopkKiDUAAgQ19/y1PEyd+5kJWIerjtcSiupisv4MVoNdOnn04oFbo2aA+O6pNBtjlJMghpXobOoEARvSLcscZ0Vf7Gb5+c22wvS+YRs2F9WG0vkIK/4JezWD/tS9Irgs9ABfoUPE4S0xZe4z9FsH
-x-ms-exchange-antispam-messagedata: UzjD2XTMSfwnhGpbBzzpk0zxILOxLLZdKTWypJH2xQboa4eiGdEQuFkZT4X7mYg0OAbLP9DjU+eqaaRpKmdA4DygLY8orpS2PM+XI40tZrjKXXgj7FBfHBdrj7JF1JMVTMQu9qfrJxG8o876/vjnTA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QabBQhlHvDhp4mCqAg3c+5phsRTL1odJr+vofj/Jd6U=;
+        b=N0jnGpAQZkHqM2qyCjOqgHLclBH0mnCHDoPt2hEx5cT4hQMCCfS7llAe9nHscseUpJ
+         M36pwwnl+ap0A9KQ8nuvLFxWLtV9TZRXoNVMF6PLUPb8g90jUoFcpxfghOXwdwslq99v
+         DY9sdaA2//pFIAFXL4OXhjlf4fx9Nk2vmjOOX05h4V/vB9WaZPNmHQL7uukQCasVjF9s
+         f5Tt7K93PUsZ/BEZaB9B+nydUbQVtYFZAFIaqn92j4FsYNs6UnVHT1qnk8q8+kAYRvI3
+         7/dPM94KZRoOcVwKkd0mkF+XEQm3LgglgAgeSeMlUpD/JfZ4P1cDu+b/49TQI5C6QGQB
+         vtJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QabBQhlHvDhp4mCqAg3c+5phsRTL1odJr+vofj/Jd6U=;
+        b=Bq5rQRcYf2fq8lqc2ktHrd2rLnWNNssFMYSz3SGZv4EQTx5bvE6/urYokh6TrDyOsK
+         BNhhtpO5CemlERU8ZopR6mMDPv/eL2WctQXqWlCbAhVabuxT0i0g1Vju1kxaoOcmRGqX
+         BfPYD6gH3JNZMo7o/HLhHMT3i/+t+3n4YQlS0kbKdCs9xpv7x7sBBaNjkPUehSTQ03g/
+         sKp26qNTR69cm/MGM9KcpqIvZYgY2ASGbVDil8Bth3mT1qqAYVJR8RQOd/aBYmLZlwFl
+         ti+YztrMPfRW4GyaxocIlqbpo70LOv3/0W4HK7puP/5lVcPeE2V7QouPLmn9E1xB8Mh6
+         pCCA==
+X-Gm-Message-State: AGi0PubpYo2Y1nUM0v+LaeiUmbT7NnwoNr7xHodb5imtMeYPrpAxu3j1
+        sp3nmmtEIELi2yg56DABJ34=
+X-Google-Smtp-Source: APiQypJ1B/70Ak3FAawANFmM+3TECFxtBax+d2t7PbnhnVBThvOaaEXHLohLyb1PG3QFqsxDwm3y8A==
+X-Received: by 2002:a17:90b:3c4:: with SMTP id go4mr1656393pjb.162.1586213985103;
+        Mon, 06 Apr 2020 15:59:45 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id 66sm12650177pfb.150.2020.04.06.15.59.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 15:59:44 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 15:59:49 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/7] ASoC: fsl-asoc-card: Support new property
+ fsl,asrc-format
+Message-ID: <20200406225949.GB20891@Asurada-Nvidia.nvidia.com>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
+ <b8d6d9322e865f61f0c9cb17c69a399624e07676.1585726761.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 054947ca-656a-4494-289b-08d7da7e22ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2020 22:59:18.1917
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QCcXwD2XCHfV5hnrCCiduJ7xBizfX+Epvl/pB4GsD/e8qCrUu/DLWIXns/auo+WG4K3Toc9MWR0aZP1fra9lYpxgfEHEVX2B6/P7qqqhytM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5335
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8d6d9322e865f61f0c9cb17c69a399624e07676.1585726761.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/06/2020 03:54 PM, Colin King wrote:=0A=
-> From: Colin Ian King<colin.king@canonical.com>=0A=
->=0A=
-> An earlier commit "io_uring: remove @nxt from handlers" removed the=0A=
-> setting of pointer nxt and now it is always null, hence the non-null=0A=
-> check and call to io_wq_assign_next is redundant and can be removed.=0A=
->=0A=
-> Addresses-Coverity: ("'Constant' variable guard")=0A=
-> Signed-off-by: Colin Ian King<colin.king@canonical.com>=0A=
-=0A=
-Looks good.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+On Wed, Apr 01, 2020 at 04:45:36PM +0800, Shengjiu Wang wrote:
+> In order to align with new ESARC, we add new property fsl,asrc-format.
+> The fsl,asrc-format can replace the fsl,asrc-width, driver
+> can accept format from devicetree, don't need to convert it to
+> format through width.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+> ---
+>  sound/soc/fsl/fsl-asoc-card.c | 21 ++++++++++++---------
+>  1 file changed, 12 insertions(+), 9 deletions(-)
+> 
+> diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
+> index bb33601fab84..a0f5eb27d61a 100644
+> --- a/sound/soc/fsl/fsl-asoc-card.c
+> +++ b/sound/soc/fsl/fsl-asoc-card.c
+> @@ -680,17 +680,20 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
+>  			goto asrc_fail;
+>  		}
+>  
+> -		ret = of_property_read_u32(asrc_np, "fsl,asrc-width", &width);
+> +		ret = of_property_read_u32(asrc_np, "fsl,asrc-format", &priv->asrc_format);
+>  		if (ret) {
+> -			dev_err(&pdev->dev, "failed to get output rate\n");
+> -			ret = -EINVAL;
+> -			goto asrc_fail;
+> -		}
+> +			/* Fallback to old binding; translate to asrc_format */
+> +			ret = of_property_read_u32(asrc_np, "fsl,asrc-width", &width);
+> +			if (ret) {
+> +				dev_err(&pdev->dev, "failed to get output width\n");
+
+Should warn 'format' over 'width', since it's preferable.
+
+> +				return ret;
+
+Should goto asrc_fail as we did prior to the change.
+
+And some of lines are over 80 characters.
+
+Let's try this:
+		ret = of_property_read_u32(asrc_np, "fsl,asrc-format",
+					   &priv->asrc_format);
+		if (ret) {
+			/* Fallback to old binding; translate to asrc_format */
+			ret = of_property_read_u32(asrc_np, "fsl,asrc-width",
+						   &width);
+			if (ret) {
+				dev_err(&pdev->dev,
+					"failed to decide output format\n");
+				goto asrc_fail;
+			}
+
+			if (width == 24)
+				priv->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
+			else
+				priv->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
+		}
