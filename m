@@ -2,68 +2,74 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C92C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EC5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B269E20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30F1B20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:10:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WzkhUBZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgDFMIO convert rfc822-to-8bit (ORCPT
+        id S1727857AbgDFMKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:08:14 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:34267 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727666AbgDFMIO (ORCPT
+        Mon, 6 Apr 2020 08:10:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59234 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727614AbgDFMKi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:08:14 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id B2988CECC4;
-        Mon,  6 Apr 2020 14:17:46 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v1] Bluetooth: debugfs option to unset MITM flag
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CAJQfnxHUWCDVs5O-sJG8cqQKRrs9UvEjm3Yjv65SoyrzNNGV=Q@mail.gmail.com>
-Date:   Mon, 6 Apr 2020 14:08:12 +0200
-Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Archie Pusaka <apusaka@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <39BBAF39-1552-48A2-AC0C-F6148987E804@holtmann.org>
-References: <20200406165542.v1.1.Ibfc500cbf0bf2dc8429b17f064e960e95bb228e9@changeid>
- <9673F164-A14E-4DD6-88FB-277694C50328@holtmann.org>
- <CAJQfnxHUWCDVs5O-sJG8cqQKRrs9UvEjm3Yjv65SoyrzNNGV=Q@mail.gmail.com>
-To:     Archie Pusaka <apusaka@google.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 6 Apr 2020 08:10:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=HbahpenxFs2WlSOpyCi+8NS4LjYRGaVKCZV3KQuvnWE=; b=WzkhUBZpY4XeQFrQo4R81bDqrJ
+        36m4MCGHB29NFSPoQpBAsq9xDbv1faU4N+Nnbnsy4oyy2aiY4Vg0xEBWtQVmseQj42B+ju7jgLE0h
+        3GhHV1Jf7KS1TwLjvCRHHGK0C0dfuiMOtevlOvQKGROGPHvPvfnjTTfrcZ0pzMO/23f3c89uzIqSV
+        9bvhUw20a3ENhS+sKjYNuB5Oe+jKg2zO8RMFYhW3WQFcjGoKVf+UixKnZ+IS8GfyU71v4MY/8Rtlp
+        NwHKhNvLOMm+eWil7vpQunwQCmD8P1reNXEULuIeYVGXzD6+i3CN2Q+3nc4aP7gBHUvVrhnUhU5Ed
+        mzyAXJzA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLQaG-0002nC-3d; Mon, 06 Apr 2020 12:10:32 +0000
+Date:   Mon, 6 Apr 2020 05:10:32 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] exec: open code copy_string_kernel
+Message-ID: <20200406121032.GX21484@bombadil.infradead.org>
+References: <20200406120312.1150405-1-hch@lst.de>
+ <20200406120312.1150405-7-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406120312.1150405-7-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Archie,
+On Mon, Apr 06, 2020 at 02:03:12PM +0200, Christoph Hellwig wrote:
+> +	int len = strnlen(arg, MAX_ARG_STRLEN) + 1 /* terminating null */;
 
-> The way I implemented it is, if HCI_ENFORCE_MITM_SMP is set (which it
-> is by default), then it will assume the default behavior.
-> However, if it is toggled to false, then it will not set the MITM flag
-> although the io capability supports that.
-> 
-> I am reluctant to use names with "no" on it, especially since it is a
-> boolean. But if it is OK then I shall update to HCI_FORCE_NO_MITM,
-> this way it will become more separable with the default behavior.
-> 
-> Sure, I will move that to hci_debugfs.c.
+If you end up doing another version of this, it's a terminating NUL, not null.
 
-I dislike setting a flag for default behavior. So we need the invert here. I want the “force” in front of it that it clearly indicates that it is not default behavior. Similar to the force_static_addr flag.
+I almost wonder if we shouldn't have
 
-Regards
+#define TERMINATING_NUL		1
 
-Marcel
+in kernel.h.
 
+	int len = strnlen(arg, MAX_ARG_STRLEN) + TERMINATING_NUL;
+
+has a certain appeal.  There's the risk people might misuse it though ...
+
+	str[end] = TERMINATING_NUL;
+
+so probably not a good idea.
