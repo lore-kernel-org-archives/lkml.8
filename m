@@ -2,171 +2,199 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA08CC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1A5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C855F206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A263E206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="bfzLdk4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727242AbgDFLKP (ORCPT
+        id S1727356AbgDFLKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:10:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40542 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgDFLKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:10:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8ADA1ABAD;
-        Mon,  6 Apr 2020 11:10:11 +0000 (UTC)
-Subject: Re: [PATCH] thermal: devfreq_cooling: inline all stubs for
- CONFIG_DEVFREQ_THERMAL=n
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, javi.merino@kernel.org,
-        edubezval@gmail.com, orjan.eide@arm.com, stable@vger.kernel.org
-References: <20200403205133.1101808-1-martin.blumenstingl@googlemail.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <0af90cb5-f6ba-d3a9-2cc7-8813ebab5ed6@suse.de>
-Date:   Mon, 6 Apr 2020 13:10:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 07:10:17 -0400
+Received: from forward104p.mail.yandex.net ([77.88.28.107]:43565 "EHLO
+        forward104p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727187AbgDFLKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:10:17 -0400
+X-Greylist: delayed 376 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Apr 2020 07:10:15 EDT
+Received: from mxback2g.mail.yandex.net (mxback2g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:163])
+        by forward104p.mail.yandex.net (Yandex) with ESMTP id 2D1A14B01769;
+        Mon,  6 Apr 2020 14:03:58 +0300 (MSK)
+Received: from iva6-add863d6e49c.qloud-c.yandex.net (iva6-add863d6e49c.qloud-c.yandex.net [2a02:6b8:c0c:7ea0:0:640:add8:63d6])
+        by mxback2g.mail.yandex.net (mxback/Yandex) with ESMTP id 1lkKD5Qv5k-3taCEc9W;
+        Mon, 06 Apr 2020 14:03:58 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1586171038;
+        bh=MVbOdw9l4QGn3nnIO9erS76GIdiX/YjUcUkIYMD5UTg=;
+        h=Subject:To:From:Cc:Date:Message-Id;
+        b=bfzLdk4ExqJTfeP8CqC6jDSZSy5lO661rPA2yyCDjnZMShwp+rNaeaquL/r9csELL
+         3/vZ+zcrswugGBBiwKe5pdRTro0gPsZXB/qI0dTKtOmpbsKUiL4SbE9VwRqmIC4wCe
+         InbKcGer7B9aKeu93ZNjH2gDvGbj0RNlUX1bH0nA=
+Authentication-Results: mxback2g.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by iva6-add863d6e49c.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 2f6WU2NpeW-3r287sqM;
+        Mon, 06 Apr 2020 14:03:55 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Alexander Lobakin <bloodyreaper@yandex.ru>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Mao Wenan <maowenan@huawei.com>,
+        Alexander Lobakin <bloodyreaper@yandex.ru>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH resend net-next] net: dsa: add GRO support via gro_cells
+Date:   Mon,  6 Apr 2020 14:03:18 +0300
+Message-Id: <20200406110318.33738-1-bloodyreaper@yandex.ru>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200403205133.1101808-1-martin.blumenstingl@googlemail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="rs5boHrlPxoqBFfxZ68VQcjl33WRm3lV0"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---rs5boHrlPxoqBFfxZ68VQcjl33WRm3lV0
-Content-Type: multipart/mixed; boundary="XtqKdN7vdrbl3NXOzpHyXgHa0EpwxDHhz";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- rui.zhang@intel.com, daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
- linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, javi.merino@kernel.org,
- edubezval@gmail.com, orjan.eide@arm.com, stable@vger.kernel.org
-Message-ID: <0af90cb5-f6ba-d3a9-2cc7-8813ebab5ed6@suse.de>
-Subject: Re: [PATCH] thermal: devfreq_cooling: inline all stubs for
- CONFIG_DEVFREQ_THERMAL=n
-References: <20200403205133.1101808-1-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20200403205133.1101808-1-martin.blumenstingl@googlemail.com>
+gro_cells lib is used by different encapsulating netdevices, such as
+geneve, macsec, vxlan etc. to speed up decapsulated traffic processing.
+CPU tag is a sort of "encapsulation", and we can use the same mechs to
+greatly improve overall DSA performance.
+skbs are passed to the GRO layer after removing CPU tags, so we don't
+need any new packet offload types as it was firstly proposed by me in
+the first GRO-over-DSA variant [1].
 
---XtqKdN7vdrbl3NXOzpHyXgHa0EpwxDHhz
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+The size of struct gro_cells is sizeof(void *), so hot struct
+dsa_slave_priv becomes only 4/8 bytes bigger, and all critical fields
+remain in one 32-byte cacheline.
+The other positive side effect is that drivers for network devices
+that can be shipped as CPU ports of DSA-driven switches can now use
+napi_gro_frags() to pass skbs to kernel. Packets built that way are
+completely non-linear and are likely being dropped without GRO.
 
+This was tested on to-be-mainlined-soon Ethernet driver that uses
+napi_gro_frags(), and the overall performance was on par with the
+variant from [1], sometimes even better due to minimal overhead.
+net.core.gro_normal_batch tuning may help to push it to the limit
+on particular setups and platforms.
 
+[1] https://lore.kernel.org/netdev/20191230143028.27313-1-alobakin@dlink.ru/
 
-Am 03.04.20 um 22:51 schrieb Martin Blumenstingl:
-> When CONFIG_DEVFREQ_THERMAL is disabled all functions except
-> of_devfreq_cooling_register_power() were already inlined. Also inline
-> the last function to avoid compile errors when multiple drivers call
-> of_devfreq_cooling_register_power() when CONFIG_DEVFREQ_THERMAL is not
-> set. Compilation failed with the following message:
->   multiple definition of `of_devfreq_cooling_register_power'
-> (which then lists all usages of of_devfreq_cooling_register_power())
->=20
-> Thomas Zimmermann reported this problem [0] on a kernel config with
-> CONFIG_DRM_LIMA=3D{m,y}, CONFIG_DRM_PANFROST=3D{m,y} and
-> CONFIG_DEVFREQ_THERMAL=3Dn after both, the lima and panfrost drivers
-> gained devfreq cooling support.
->=20
-> [0] https://www.spinics.net/lists/dri-devel/msg252825.html
->=20
-> Fixes: a76caf55e5b356 ("thermal: Add devfreq cooling")
-> Cc: stable@vger.kernel.org
-> Reported-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>=
+Signed-off-by: Alexander Lobakin <bloodyreaper@yandex.ru>
+---
+ net/dsa/Kconfig    |  1 +
+ net/dsa/dsa.c      |  2 +-
+ net/dsa/dsa_priv.h |  3 +++
+ net/dsa/slave.c    | 10 +++++++++-
+ 4 files changed, 14 insertions(+), 2 deletions(-)
 
+diff --git a/net/dsa/Kconfig b/net/dsa/Kconfig
+index 92663dcb3aa2..739613070d07 100644
+--- a/net/dsa/Kconfig
++++ b/net/dsa/Kconfig
+@@ -9,6 +9,7 @@ menuconfig NET_DSA
+ 	tristate "Distributed Switch Architecture"
+ 	depends on HAVE_NET_DSA
+ 	depends on BRIDGE || BRIDGE=n
++	select GRO_CELLS
+ 	select NET_SWITCHDEV
+ 	select PHYLINK
+ 	select NET_DEVLINK
+diff --git a/net/dsa/dsa.c b/net/dsa/dsa.c
+index ee2610c4d46a..0384a911779e 100644
+--- a/net/dsa/dsa.c
++++ b/net/dsa/dsa.c
+@@ -234,7 +234,7 @@ static int dsa_switch_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	if (dsa_skb_defer_rx_timestamp(p, skb))
+ 		return 0;
+ 
+-	netif_receive_skb(skb);
++	gro_cells_receive(&p->gcells, skb);
+ 
+ 	return 0;
+ }
+diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
+index 904cc7c9b882..6d9a1ef65fa0 100644
+--- a/net/dsa/dsa_priv.h
++++ b/net/dsa/dsa_priv.h
+@@ -11,6 +11,7 @@
+ #include <linux/netdevice.h>
+ #include <linux/netpoll.h>
+ #include <net/dsa.h>
++#include <net/gro_cells.h>
+ 
+ enum {
+ 	DSA_NOTIFIER_AGEING_TIME,
+@@ -77,6 +78,8 @@ struct dsa_slave_priv {
+ 
+ 	struct pcpu_sw_netstats	*stats64;
+ 
++	struct gro_cells	gcells;
++
+ 	/* DSA port data, such as switch, port index, etc. */
+ 	struct dsa_port		*dp;
+ 
+diff --git a/net/dsa/slave.c b/net/dsa/slave.c
+index 5390ff541658..36c7491e8e5f 100644
+--- a/net/dsa/slave.c
++++ b/net/dsa/slave.c
+@@ -1762,6 +1762,11 @@ int dsa_slave_create(struct dsa_port *port)
+ 		free_netdev(slave_dev);
+ 		return -ENOMEM;
+ 	}
++
++	ret = gro_cells_init(&p->gcells, slave_dev);
++	if (ret)
++		goto out_free;
++
+ 	p->dp = port;
+ 	INIT_LIST_HEAD(&p->mall_tc_list);
+ 	p->xmit = cpu_dp->tag_ops->xmit;
+@@ -1781,7 +1786,7 @@ int dsa_slave_create(struct dsa_port *port)
+ 	ret = dsa_slave_phy_setup(slave_dev);
+ 	if (ret) {
+ 		netdev_err(master, "error %d setting up slave phy\n", ret);
+-		goto out_free;
++		goto out_gcells;
+ 	}
+ 
+ 	dsa_slave_notify(slave_dev, DSA_PORT_REGISTER);
+@@ -1800,6 +1805,8 @@ int dsa_slave_create(struct dsa_port *port)
+ 	phylink_disconnect_phy(p->dp->pl);
+ 	rtnl_unlock();
+ 	phylink_destroy(p->dp->pl);
++out_gcells:
++	gro_cells_destroy(&p->gcells);
+ out_free:
+ 	free_percpu(p->stats64);
+ 	free_netdev(slave_dev);
+@@ -1820,6 +1827,7 @@ void dsa_slave_destroy(struct net_device *slave_dev)
+ 	dsa_slave_notify(slave_dev, DSA_PORT_UNREGISTER);
+ 	unregister_netdev(slave_dev);
+ 	phylink_destroy(dp->pl);
++	gro_cells_destroy(&p->gcells);
+ 	free_percpu(p->stats64);
+ 	free_netdev(slave_dev);
+ }
+-- 
+2.26.0
 
-Tested-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
->  include/linux/devfreq_cooling.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/include/linux/devfreq_cooling.h b/include/linux/devfreq_co=
-oling.h
-> index 4635f95000a4..79a6e37a1d6f 100644
-> --- a/include/linux/devfreq_cooling.h
-> +++ b/include/linux/devfreq_cooling.h
-> @@ -75,7 +75,7 @@ void devfreq_cooling_unregister(struct thermal_coolin=
-g_device *dfc);
-> =20
->  #else /* !CONFIG_DEVFREQ_THERMAL */
-> =20
-> -struct thermal_cooling_device *
-> +static inline struct thermal_cooling_device *
->  of_devfreq_cooling_register_power(struct device_node *np, struct devfr=
-eq *df,
->  				  struct devfreq_cooling_power *dfc_power)
->  {
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---XtqKdN7vdrbl3NXOzpHyXgHa0EpwxDHhz--
-
---rs5boHrlPxoqBFfxZ68VQcjl33WRm3lV0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl6LDhIACgkQaA3BHVML
-eiPOmggAo2AgrVyoaHLR1NAsGf/aJPm535dYRX/7X3exyn7bcEApm1TYiMsmbZI2
-KJ4umEw7myXEoQQfmUpRKywvdTOyAaapShsIm8xvIj/F8/U/yKGWXQNIfcPhhoFh
-4LrhPYQ/tTkju79OLVcVMc7DK2darHAnpYwlgW2CKOFZCix4mONZQNp+HKfc+j07
-rXzL8N9TrDugLDaVqpLum9Lf+VMATa4ojnHts0quf72cPYQn4pp1g+CVyjb6mzIn
-bcVyRfp+fc2v92jz2KHWC6vxz54jnv7E6C1HMYCDdPThriG3dM62L65p1+J1i8Hp
-BopII8/+/VpG8DRx70xtMuiW+NJvXg==
-=KDV+
------END PGP SIGNATURE-----
-
---rs5boHrlPxoqBFfxZ68VQcjl33WRm3lV0--
