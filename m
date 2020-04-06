@@ -2,134 +2,271 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F711C2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32520C2BA18
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31186206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D81D3206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:07:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fUl+6I4x"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BlZICsBD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgDFHG0 (ORCPT
+        id S1726626AbgDFHH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 03:06:26 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35848 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgDFHGZ (ORCPT
+        Mon, 6 Apr 2020 03:07:58 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36523 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbgDFHH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 03:06:25 -0400
-Received: by mail-pj1-f68.google.com with SMTP id nu11so6064516pjb.1;
-        Mon, 06 Apr 2020 00:06:25 -0700 (PDT)
+        Mon, 6 Apr 2020 03:07:58 -0400
+Received: by mail-qt1-f194.google.com with SMTP id m33so12073640qtb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 00:07:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RqJfBxc+5hEXzJUkSWB0gPw7NrIyI3K3Pr3732qHYAQ=;
-        b=fUl+6I4x7XwQcdmoCTE2Z0XeWKNZEAvwwQhxESe8sRcEQ6vn+AfhNO23bXM8aiWdRe
-         wVnHoSlX0U3b04JnkGrI5Ay7r0HfzNA0pKXN6fKs/gP6RV4tnDNoiDyKyGKhADiOl43n
-         F+mF6OdX/tADPC9HmEUR2PJJhzbFPdsXHduQuuFTWnIM3HbbkxMv3OvuJKYbTAl42H8N
-         1djGWbVFtbtxKYMtodVAdgw7d1ViLwhPqusfpHjBZmhP8Wby1fHN6KWDj01D0FRMHbs2
-         40LctGPDNwQdiPuTkW3RvZYYmwy5GjBoAHY3eo1S34N7o4Y+/bM9ACEMqEVOAq1Y+/ZZ
-         d+Tg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0JIAa3kWR0e+Q9qTBrl2ZROhFHWvllNmMEAIWw//rnA=;
+        b=BlZICsBDOba8VGt6ntbjWdx2iSnkeBZJiKwwkcF+JmD/5iJDXfg/Ar7hvCpXxsMpMT
+         VYxFRW5224r2Dvgm/LwEIjF6fhH8SkFFmVE/HVaz+tUhue6jOEtACIRtXxXUKI+G4M46
+         oSLSLhyMLbYJ8I0WsK6jmsuoYknLFcyZrh0EU3kfc5scjlDFLslv95Xb/TAiD7WmTkgw
+         Rl8bKBTNyRve2VFMTk+Xx4UJReaTAZ7pnmBzzjfNPpkUuRP8LpvQTwFv/L42NqOE0uEB
+         CBk8UoH1s/WCGPFKQJYmrbuYdia/CcDfzcFB9SOhyyq+PVPvwQc6/JagpT2ZUkhD63Kg
+         BOmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RqJfBxc+5hEXzJUkSWB0gPw7NrIyI3K3Pr3732qHYAQ=;
-        b=GCOKNDwRQ6oPwdsISBwc3Ccs2EyJR0gJjOeSzMRphCCQxoQqy6U3mLimza2FQ1i9PY
-         Bs0qzgOGKuUM+XbjwPaFoUmsxW7+OKCbf+7ELoJOMA7gr9HrdszmqHB1EQaOVbC1BpcP
-         fImoGj0VdvYj4w3TCJh7zsRq4RhKH5/tCOeYrZ8jGtnZia4Bo2yUVpyXYVu5jgUN/PxO
-         jc8K+9enhl/4BmWOUd9dkmCxBzDYiAaFb9mwQEt7Lt7ENM5BTj8yaeC+GbMYxtLd9Ubx
-         lMjivOwNlL4aIm1LCbeQgHBYTbJcryybWFSyygoBvDLAOFsgecIGyzlLncSWaCbaXrJr
-         +k1Q==
-X-Gm-Message-State: AGi0PubBiffcWLft+F3M/nvSKrBEaHC7eXxnmtFmyQOM6+JF3Q+ot2uQ
-        wH+7yzLxRa1z+EQLLfx0svI=
-X-Google-Smtp-Source: APiQypKNbF2E3D32XKuBDPJhhlvxxo8J2rW27s0dKvSTxEZx7hANy5tViHe3jOKRRTeN/AfHY6j/Qg==
-X-Received: by 2002:a17:902:507:: with SMTP id 7mr19209367plf.42.1586156784681;
-        Mon, 06 Apr 2020 00:06:24 -0700 (PDT)
-Received: from workstation-LAP.localdomain ([103.87.57.178])
-        by smtp.gmail.com with ESMTPSA id m2sm11318884pjk.4.2020.04.06.00.06.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 00:06:23 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 12:36:12 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jeremy Sowden <jeremy@azazel.net>,
-        Florent Fourcot <florent.fourcot@wifirst.fr>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] netfilter: ipset: Pass lockdep expression to RCU lists
-Message-ID: <20200406070612.GA240@workstation-LAP.localdomain>
-References: <20200216172653.19772-1-frextrite@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0JIAa3kWR0e+Q9qTBrl2ZROhFHWvllNmMEAIWw//rnA=;
+        b=Pdk3pMJsuCrixOUya19DrBSrtsbHfQfBkTO5z7gd5XU/lHKQRjaz8ggC1Ng5BkP03V
+         70WKnZcChkkFUP3Unk+nPPjHapdEUI779YVbN6Fs15qkPMTdnb8lnkcTFOYRFvHpyHVL
+         fLfq+BTIjfrls3Z9/YiQaZ4uHqvGDO0GB9wqrAH0jvXSt+sZc+94tEJorizFjZjBILf4
+         raVO/bZJVNrxLBgRVUWf/eIKepAsG6F7tlEjzdo2v5V6xcv241Gg/y5TnWrFRKH8jwEF
+         EqruLDR97wBsXtoLXS33xo8f06FlNGpFNKZx1qSi25ESk4TOdtTIUwu3i0MhagJMzUW1
+         E/WQ==
+X-Gm-Message-State: AGi0PuaFcxLtznCQzjH3WM5NJ6WHHQlC6dWMHKtz0bkJjDwuLC5NsK4P
+        oZPKL+lrDTwWPFAfA4KXylySKeyGj12yT0asKjEnHA==
+X-Google-Smtp-Source: APiQypKAOBcPEtY+9VgL94kyZS6tr3aB4uQ3KkeJqWLrTqsjWD5kNY0wwkbf25F4pA0BDO91IGlZVJKoHFnacb9XF20=
+X-Received: by 2002:ac8:1b6a:: with SMTP id p39mr5649587qtk.158.1586156876162;
+ Mon, 06 Apr 2020 00:07:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200216172653.19772-1-frextrite@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <00000000000091056b05a2999f1e@google.com>
+In-Reply-To: <00000000000091056b05a2999f1e@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 6 Apr 2020 09:07:44 +0200
+Message-ID: <CACT4Y+b4RcgG_GrcpaghmqhX47zUVsAcGGd6vb6MYJT=6gf89g@mail.gmail.com>
+Subject: Re: upstream boot error: KASAN: slab-out-of-bounds Write in virtio_gpu_object_create
+To:     syzbot <syzbot+d3a7951ed361037407db@syzkaller.appspotmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        virtualization@lists.linux-foundation.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 10:56:54PM +0530, Amol Grover wrote:
-> ip_set_type_list is traversed using list_for_each_entry_rcu
-> outside an RCU read-side critical section but under the protection
-> of ip_set_type_mutex.
-> 
-> Hence, add corresponding lockdep expression to silence false-positive
-> warnings, and harden RCU lists.
-> 
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
+On Mon, Apr 6, 2020 at 8:46 AM syzbot
+<syzbot+d3a7951ed361037407db@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    ffc1c20c Merge tag 'for-5.7/dm-changes' of git://git.kerne..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1690471fe00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d6a1e2f9a9986236
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d3a7951ed361037407db
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+d3a7951ed361037407db@syzkaller.appspotmail.com
+
+
++drivers/gpu/drm/virtio/virtgpu_object.c maintainers
+Now we have both mainline and linux-next boot broken (linux-next is
+broken for the past 40 days).
+No testing of new code happens.
+
+
+> NET: Registered protocol family 38
+> async_tx: api initialized (async)
+> Key type asymmetric registered
+> Asymmetric key parser 'x509' registered
+> Asymmetric key parser 'pkcs8' registered
+> Key type pkcs7_test registered
+> Asymmetric key parser 'tpm_parser' registered
+> Block layer SCSI generic (bsg) driver version 0.4 loaded (major 243)
+> io scheduler mq-deadline registered
+> io scheduler kyber registered
+> io scheduler bfq registered
+> hgafb: HGA card not detected.
+> hgafb: probe of hgafb.0 failed with error -22
+> usbcore: registered new interface driver udlfb
+> uvesafb: failed to execute /sbin/v86d
+> uvesafb: make sure that the v86d helper is installed and executable
+> uvesafb: Getting VBE info block failed (eax=0x4f00, err=-2)
+> uvesafb: vbe_init() failed with -22
+> uvesafb: probe of uvesafb.0 failed with error -22
+> vga16fb: mapped to 0x00000000ab381a8e
+> Console: switching to colour frame buffer device 80x30
+> fb0: VGA16 VGA frame buffer device
+> input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+> ACPI: Power Button [PWRF]
+> ioatdma: Intel(R) QuickData Technology Driver 5.00
+> PCI Interrupt Link [GSIF] enabled at IRQ 21
+> PCI Interrupt Link [GSIH] enabled at IRQ 23
+> N_HDLC line discipline registered with maxframe=4096
+> Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+> 00:05: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+> Cyclades driver 2.6
+> Initializing Nozomi driver 2.1d
+> RocketPort device driver module, version 2.09, 12-June-2003
+> No rocketport ports found; unloading driver
+> Non-volatile memory driver v1.3
+> Linux agpgart interface v0.103
+> [drm] Initialized vgem 1.0.0 20120112 for vgem on minor 0
+> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> [drm] Initialized vkms 1.0.0 20180514 for vkms on minor 1
+> usbcore: registered new interface driver udl
+> [drm] pci: virtio-vga detected at 0000:00:01.0
+> fb0: switching to virtiodrmfb from VGA16 VGA
+> Console: switching to colour VGA+ 80x25
+> virtio-pci 0000:00:01.0: vgaarb: deactivate vga console
+> Console: switching to colour dummy device 80x25
+> [drm] features: -virgl +edid
+> [drm] number of scanouts: 1
+> [drm] number of cap sets: 0
+> [drm] Initialized virtio_gpu 0.1.0 0 for virtio0 on minor 2
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in virtio_gpu_object_shmem_init drivers/gpu/drm/virtio/virtgpu_object.c:151 [inline]
+> BUG: KASAN: slab-out-of-bounds in virtio_gpu_object_create+0x9f3/0xaa0 drivers/gpu/drm/virtio/virtgpu_object.c:230
+> Write of size 8 at addr ffff888027f7a388 by task swapper/0/1
+>
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-syzkaller #0
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
+>  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
+>  kasan_report+0xe/0x20 mm/kasan/common.c:641
+>  virtio_gpu_object_shmem_init drivers/gpu/drm/virtio/virtgpu_object.c:151 [inline]
+>  virtio_gpu_object_create+0x9f3/0xaa0 drivers/gpu/drm/virtio/virtgpu_object.c:230
+>  virtio_gpu_gem_create+0xaa/0x1d0 drivers/gpu/drm/virtio/virtgpu_gem.c:42
+>  virtio_gpu_mode_dumb_create+0x21e/0x360 drivers/gpu/drm/virtio/virtgpu_gem.c:82
+>  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
+>  drm_client_buffer_create drivers/gpu/drm/drm_client.c:267 [inline]
+>  drm_client_framebuffer_create+0x1b7/0x770 drivers/gpu/drm/drm_client.c:412
+>  drm_fb_helper_generic_probe+0x1e4/0x810 drivers/gpu/drm/drm_fb_helper.c:2039
+>  drm_fb_helper_single_fb_probe drivers/gpu/drm/drm_fb_helper.c:1588 [inline]
+>  __drm_fb_helper_initial_config_and_unlock+0xb56/0x11e0 drivers/gpu/drm/drm_fb_helper.c:1746
+>  drm_fb_helper_initial_config drivers/gpu/drm/drm_fb_helper.c:1841 [inline]
+>  drm_fb_helper_initial_config drivers/gpu/drm/drm_fb_helper.c:1833 [inline]
+>  drm_fbdev_client_hotplug+0x30f/0x580 drivers/gpu/drm/drm_fb_helper.c:2133
+>  drm_fbdev_generic_setup drivers/gpu/drm/drm_fb_helper.c:2212 [inline]
+>  drm_fbdev_generic_setup+0x18b/0x295 drivers/gpu/drm/drm_fb_helper.c:2185
+>  virtio_gpu_probe+0x28f/0x2de drivers/gpu/drm/virtio/virtgpu_drv.c:127
+>  virtio_dev_probe+0x463/0x710 drivers/virtio/virtio.c:248
+>  really_probe+0x281/0x6d0 drivers/base/dd.c:527
+>  driver_probe_device+0x104/0x210 drivers/base/dd.c:701
+>  device_driver_attach+0x108/0x140 drivers/base/dd.c:975
+>  __driver_attach+0xda/0x240 drivers/base/dd.c:1052
+>  bus_for_each_dev+0x14b/0x1d0 drivers/base/bus.c:305
+>  bus_add_driver+0x4a2/0x5a0 drivers/base/bus.c:622
+>  driver_register+0x1c4/0x330 drivers/base/driver.c:171
+>  do_one_initcall+0x10a/0x7d0 init/main.c:1152
+>  do_initcall_level init/main.c:1225 [inline]
+>  do_initcalls init/main.c:1241 [inline]
+>  do_basic_setup init/main.c:1261 [inline]
+>  kernel_init_freeable+0x501/0x5ae init/main.c:1445
+>  kernel_init+0xd/0x1bb init/main.c:1352
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Allocated by task 1:
+>  save_stack+0x1b/0x80 mm/kasan/common.c:72
+>  set_track mm/kasan/common.c:80 [inline]
+>  __kasan_kmalloc mm/kasan/common.c:515 [inline]
+>  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
+>  kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
+>  kmalloc include/linux/slab.h:555 [inline]
+>  kzalloc include/linux/slab.h:669 [inline]
+>  virtio_gpu_create_object+0x3c/0xe0 drivers/gpu/drm/virtio/virtgpu_object.c:128
+>  drm_gem_shmem_create+0x83/0x330 drivers/gpu/drm/drm_gem_shmem_helper.c:58
+>  virtio_gpu_object_create+0xa5/0xaa0 drivers/gpu/drm/virtio/virtgpu_object.c:199
+>  virtio_gpu_gem_create+0xaa/0x1d0 drivers/gpu/drm/virtio/virtgpu_gem.c:42
+>  virtio_gpu_mode_dumb_create+0x21e/0x360 drivers/gpu/drm/virtio/virtgpu_gem.c:82
+>  drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
+>  drm_client_buffer_create drivers/gpu/drm/drm_client.c:267 [inline]
+>  drm_client_framebuffer_create+0x1b7/0x770 drivers/gpu/drm/drm_client.c:412
+>  drm_fb_helper_generic_probe+0x1e4/0x810 drivers/gpu/drm/drm_fb_helper.c:2039
+>  drm_fb_helper_single_fb_probe drivers/gpu/drm/drm_fb_helper.c:1588 [inline]
+>  __drm_fb_helper_initial_config_and_unlock+0xb56/0x11e0 drivers/gpu/drm/drm_fb_helper.c:1746
+>  drm_fb_helper_initial_config drivers/gpu/drm/drm_fb_helper.c:1841 [inline]
+>  drm_fb_helper_initial_config drivers/gpu/drm/drm_fb_helper.c:1833 [inline]
+>  drm_fbdev_client_hotplug+0x30f/0x580 drivers/gpu/drm/drm_fb_helper.c:2133
+>  drm_fbdev_generic_setup drivers/gpu/drm/drm_fb_helper.c:2212 [inline]
+>  drm_fbdev_generic_setup+0x18b/0x295 drivers/gpu/drm/drm_fb_helper.c:2185
+>  virtio_gpu_probe+0x28f/0x2de drivers/gpu/drm/virtio/virtgpu_drv.c:127
+>  virtio_dev_probe+0x463/0x710 drivers/virtio/virtio.c:248
+>  really_probe+0x281/0x6d0 drivers/base/dd.c:527
+>  driver_probe_device+0x104/0x210 drivers/base/dd.c:701
+>  device_driver_attach+0x108/0x140 drivers/base/dd.c:975
+>  __driver_attach+0xda/0x240 drivers/base/dd.c:1052
+>  bus_for_each_dev+0x14b/0x1d0 drivers/base/bus.c:305
+>  bus_add_driver+0x4a2/0x5a0 drivers/base/bus.c:622
+>  driver_register+0x1c4/0x330 drivers/base/driver.c:171
+>  do_one_initcall+0x10a/0x7d0 init/main.c:1152
+>  do_initcall_level init/main.c:1225 [inline]
+>  do_initcalls init/main.c:1241 [inline]
+>  do_basic_setup init/main.c:1261 [inline]
+>  kernel_init_freeable+0x501/0x5ae init/main.c:1445
+>  kernel_init+0xd/0x1bb init/main.c:1352
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 0:
+> (stack is not available)
+>
+> The buggy address belongs to the object at ffff888027f7a000
+>  which belongs to the cache kmalloc-1k of size 1024
+> The buggy address is located 904 bytes inside of
+>  1024-byte region [ffff888027f7a000, ffff888027f7a400)
+> The buggy address belongs to the page:
+> page:ffffea00009fde80 refcount:1 mapcount:0 mapping:ffff88802c800c40 index:0x0
+> flags: 0xfffe0000000200(slab)
+> raw: 00fffe0000000200 ffffea0000a49408 ffff88802c801850 ffff88802c800c40
+> raw: 0000000000000000 ffff888027f7a000 0000000100000002 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>  ffff888027f7a280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>  ffff888027f7a300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >ffff888027f7a380: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>                       ^
+>  ffff888027f7a400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  ffff888027f7a480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ==================================================================
+>
+>
 > ---
-
-Hi David
-
-Could you please go through this patch aswell? This patch was directed to 
-preemptively fix the _suspicious RCU usage_ warning which is now also
-being reported by Kernel Test Robot.
-
-[   11.654186] =============================
-[   11.654619] WARNING: suspicious RCU usage
-[   11.655022] 5.6.0-rc1-00179-gdb4ead2cd5253 #1 Not tainted
-[   11.655583] -----------------------------
-[   11.656001] net/netfilter/ipset/ip_set_core.c:89 RCU-list traversed in non-reader section!!
-
-Thanks
-Amol
-
->  net/netfilter/ipset/ip_set_core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
-> index cf895bc80871..97c851589160 100644
-> --- a/net/netfilter/ipset/ip_set_core.c
-> +++ b/net/netfilter/ipset/ip_set_core.c
-> @@ -86,7 +86,8 @@ find_set_type(const char *name, u8 family, u8 revision)
->  {
->  	struct ip_set_type *type;
->  
-> -	list_for_each_entry_rcu(type, &ip_set_type_list, list)
-> +	list_for_each_entry_rcu(type, &ip_set_type_list, list,
-> +				lockdep_is_held(&ip_set_type_mutex))
->  		if (STRNCMP(type->name, name) &&
->  		    (type->family == family ||
->  		     type->family == NFPROTO_UNSPEC) &&
-> -- 
-> 2.24.1
-> 
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000091056b05a2999f1e%40google.com.
