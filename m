@@ -2,100 +2,125 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56176C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D098C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 230F221841
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:40:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IqV4lCRJ"
+	by mail.kernel.org (Postfix) with ESMTP id 33D1E248C5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgDFPkI (ORCPT
+        id S1729013AbgDFPla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:40:08 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:39966 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729013AbgDFPkH (ORCPT
+        Mon, 6 Apr 2020 11:41:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26824 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726723AbgDFPla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:40:07 -0400
-Received: by mail-yb1-f193.google.com with SMTP id a5so65268ybo.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F00FerRMC/iZ1VNpTR4/uGlV6Ri7SKzco769wYX8wKM=;
-        b=IqV4lCRJPE59U0ZhY8oViBP7OY0GP2QaVSZxP79YyR1WXHGgfTydsVq4uVn/GUxmi4
-         TypEjwO1qCK3AVGAEj9PCCcgrl4TaFHieTIrQkYT5zKEmYeiw9ZXX/xdtCDTCNQDxHXa
-         uyikB+hXXts4vpCIHb7+JuF+z2jppRaOChrQP7RopFAfpwIUXPvPCtl2zSevHj6mfVsE
-         n41WZ4Pf3jAAVAsA6v0JXpzRrpUZkkpKY816qSSpNJrvzWx9Vo8M7e/JzVdY9J62aEo7
-         UWWKuCs1sFrXl1ApGurI8/yTK76VFQ0LdfjNtjRLuQEYb2Aq348d0zPurErV130Zuw56
-         tZ5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F00FerRMC/iZ1VNpTR4/uGlV6Ri7SKzco769wYX8wKM=;
-        b=OrQwOOT3rJ7+5ox2PqxVcNGX0vNRjDUhOdw3UzFi+J+GsvjFdQ02wWkMhVPmvrMN2V
-         pZph81Kta3IS0k1EPuwR35k5zPU8fCFpQGbJ5Sr6LObiIqd7Ko+ozXWJr/dlKXOMafQe
-         MS9vfL/2MyuQcsUqUKZArcMoDDBYk7Whid77ku0Klp54aIEcoP2gDsbT4LTUBavR0LmO
-         q9+WmowIsamyo4bzWFqN/6sGPwVqvbBGzJZxLCyqOK6fq9Ih+RKXyZHT0xDRanTbdjXw
-         X3czKWcWaFMj8SUN9MzKQE/IzaJg0efEhtvPodtX/HYAVHt1vJ+PB5t6qooI2Oq79UOO
-         n7FQ==
-X-Gm-Message-State: AGi0PuZUOLvz91N7TQ5sjuZdhb0vO5+lCo/CbaKyt4XTsJ3qHMtkxSc9
-        Q9W/pWs/EAf23OkmdC/ntlJe5G0Uuu/rlR6tORiSqw==
-X-Google-Smtp-Source: APiQypJ2nxvqmsPaJbcYbfk/h7s3U0WAdHb0BAJ0U4v0ana9CI40VWbA+MdyQhuncqfmlkGhikmtq3ZdICXpJXYVV3A=
-X-Received: by 2002:a25:d382:: with SMTP id e124mr33963146ybf.162.1586187605964;
- Mon, 06 Apr 2020 08:40:05 -0700 (PDT)
+        Mon, 6 Apr 2020 11:41:30 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036FYack057517;
+        Mon, 6 Apr 2020 11:41:11 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 306n24eudc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 11:41:10 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 036FZV37015214;
+        Mon, 6 Apr 2020 15:41:10 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma01wdc.us.ibm.com with ESMTP id 306hv5s2v6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 15:41:10 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 036Ff9O254460904
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Apr 2020 15:41:09 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 978E0AE062;
+        Mon,  6 Apr 2020 15:41:09 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 13345AE05F;
+        Mon,  6 Apr 2020 15:41:07 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.165.246])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Apr 2020 15:41:06 +0000 (GMT)
+Message-ID: <6c09a6e1a1f790ad87a2591ff8f8a6e1c7d6b079.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 1/1] powerpc/kernel: Enables memory hot-remove after
+ reboot on pseries guests
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     bharata@linux.ibm.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
+Date:   Mon, 06 Apr 2020 12:41:01 -0300
+In-Reply-To: <20200403143831.GA12662@in.ibm.com>
+References: <20200402195156.626430-1-leonardo@linux.ibm.com>
+         <20200403143831.GA12662@in.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-9qOAwFiqOabJT4Un+oxn"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-References: <20200327225102.25061-1-walken@google.com> <20200327225102.25061-8-walken@google.com>
- <20200401134633.GS20696@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200401134633.GS20696@hirez.programming.kicks-ass.net>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Mon, 6 Apr 2020 08:39:53 -0700
-Message-ID: <CANN689FRvuZFGUKT+4Xd32JvHoH+OkMiB=OJzoGh+b3YtCwq3g@mail.gmail.com>
-Subject: Re: [PATCH v3 07/10] mmap locking API: add mmap_read_release() and mmap_read_unlock_non_owner()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Markus Elfring <Markus.Elfring@web.de>
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_08:2020-04-06,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=537
+ priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
+ suspectscore=1 lowpriorityscore=0 adultscore=0 mlxscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004060124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 6:46 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> On Fri, Mar 27, 2020 at 03:50:59PM -0700, Michel Lespinasse wrote:
-> > Add a couple APIs to allow splitting mmap_read_unlock() into two calls:
-> > - mmap_read_release(), called by the task that had taken the mmap lock;
-> > - mmap_read_unlock_non_owner(), called from a work queue.
-> >
-> > These apis are used by kernel/bpf/stackmap.c only.
->
-> That code is an absolute abomination and should never have gotten
-> merged.
 
-I have to say, it's causing me some grief too :/
+--=-9qOAwFiqOabJT4Un+oxn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> That said; I would prefer a mmap_read_trylock_nonowner() over
-> mmap_read_release() existing.
+Hello Bharata,
 
-It only addresses part of the issue, but I suppose I could do that. Is
-this something I could append to the end of this series, or do I need
-to prepare a v4 for such changes ?
+On Fri, 2020-04-03 at 20:08 +0530, Bharata B Rao wrote:
+> The patch would be more complete with the following change that ensures
+> that DRCONF_MEM_HOTREMOVABLE flag is set for non-boot-time hotplugged
+> memory too. This will ensure that ibm,dynamic-memory-vN property
+> reflects the right flags value for memory that gets hotplugged
+> post boot.
+>=20
+
+You just sent that on a separated patchset, so I think it's dealt with.
+Do you have any other comments on the present patch?
+
+Best regards,
+
+--=-9qOAwFiqOabJT4Un+oxn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6LTY0ACgkQlQYWtz9S
+ttTE0xAAwC4OgrLJoU37JGHUVnbtvnDoM/soV+/MjQz128yoydIeASSL9FZJBa9I
+py00+2vLjFXtLyOqv/JQPLaZmhwmNLJFgykmdVFM2zsM6pWIpASNZ86eSYhbzASn
+iw4T38IYMp8BHgb7ajO8R5nUAmPZhDAZCjlXMGgsxOkxfP0Cn2nymoznQAoEy2zf
+/Vlzs/8eDHNj6msFXEnTjXt4liG9jp6itoQaLQjGWiXDlAFPvXVcn5pxvu/culPU
+sdWmwbo+PHJxEtAarZ95iJH8rbWgtJVUheGsyEILFojhk4yzKp2r5rq/JLMUy96+
+3tfxUom7V3tqfEPvfrC5LzFx/Dxr/SPod9mEu6whjcJVK1QJW8s5CBgmA1XBLnWP
+fSyUQNCMZCl2S7l1ucqqcNyDXDX3DSHYbbJVOcKkafIhczitLriRJR/fp43s6ysd
+4RejaK1Eh+KRc2nkHGvah/p5X7io00fU6WQeXyQGz+EEvTZ7NeUSPV22VDnhfZXN
+3v1chC7v8066KkU86fj8N0D//srfnkxEaA1jRgRQ6Sc4YkQPhuprrqqilsVo3dNP
+onlowpsjXcMoKFckXYu4d2DC+n++Rb0q4fnX+sEHLAB3r+9LGLwL1yH13MVEI96Q
+b/HOVSm2+hTWo/R294Z1YaCDHZjz2ez0gO8KDVitodS1ez3YV7Q=
+=VJEq
+-----END PGP SIGNATURE-----
+
+--=-9qOAwFiqOabJT4Un+oxn--
+
