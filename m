@@ -3,53 +3,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FE7C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8E3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8845F206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9112072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgDFUNH (ORCPT
+        id S1726331AbgDFUPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 16:13:07 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:37928 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgDFUNH (ORCPT
+        Mon, 6 Apr 2020 16:15:03 -0400
+Received: from www62.your-server.de ([213.133.104.62]:50996 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgDFUPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 16:13:07 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id DAE1A1C47B3; Mon,  6 Apr 2020 22:13:05 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 22:13:03 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org,
+        Mon, 6 Apr 2020 16:15:03 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLY8s-0000iS-RH; Mon, 06 Apr 2020 22:14:46 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLY8s-0001Mt-Ch; Mon, 06 Apr 2020 22:14:46 +0200
+Subject: Re: [PATCH] libbpf: Initialize *nl_pid so gcc 10 is happy
+To:     Jeremy Cline <jcline@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v19 03/18] leds: Add multicolor ID to the color ID list
-Message-ID: <20200406201303.GF18036@bug>
-References: <20200402204311.14998-1-dmurphy@ti.com>
- <20200402204311.14998-4-dmurphy@ti.com>
+References: <20200404051430.698058-1-jcline@redhat.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <977ea25b-01bc-c1aa-eb93-e51ff916da0f@iogearbox.net>
+Date:   Mon, 6 Apr 2020 22:14:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200402204311.14998-4-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200404051430.698058-1-jcline@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25774/Mon Apr  6 14:53:25 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-04-02 15:42:56, Dan Murphy wrote:
-> Add a new color ID that is declared as MULTICOLOR as with the
-> multicolor framework declaring a definitive color is not accurate
-> as the node can contain multiple colors.
+On 4/4/20 7:14 AM, Jeremy Cline wrote:
+> Builds of Fedora's kernel-tools package started to fail with "may be
+> used uninitialized" warnings for nl_pid in bpf_set_link_xdp_fd() and
+> bpf_get_link_xdp_info() on the s390 architecture.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Although libbpf_netlink_open() always returns a negative number when it
+> does not set *nl_pid, the compiler does not determine this and thus
+> believes the variable might be used uninitialized. Assuage gcc's fears
+> by explicitly initializing nl_pid.
+> 
+> Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1807781
+> Signed-off-by: Jeremy Cline <jcline@redhat.com>
 
-Squash with previous patch, ack for both, they can't be separate.
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Applied, thanks!
