@@ -2,75 +2,125 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8E0C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B72C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0B8206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8C3206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="o05WS8wL";
-	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="o05WS8wL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NCWEwV6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgDFTJs (ORCPT
+        id S1726393AbgDFTKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:09:48 -0400
-Received: from fallback14.mail.ru ([94.100.179.44]:51982 "EHLO
-        fallback14.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgDFTJr (ORCPT
+        Mon, 6 Apr 2020 15:10:01 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25678 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725928AbgDFTKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:09:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
-        h=Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:Date:MIME-Version:Subject:Cc:To:From; bh=IuqH8oOZ7Smuf50iB0pt180lv+WFKGM8y/rdC+IqHuI=;
-        b=o05WS8wLMnY48IpjiVA8q1yyulzCH6WsGIYZwxSQKGopLT5RuV5J3DyQj7kbGiSRtfW7kjOkrVtmTxbjAKUdKQp3T5x4hrXeb5pVszcdufWse4319aLsF4zPX/eIpVUfV92aNjydD7ZoJzkybQvXOUUea1tRVHF18fbtd7LjMKM=;
-Received: from [10.161.63.35] (port=55450 helo=f412.i.mail.ru)
-        by fallback14.m.smailru.net with esmtp (envelope-from <safinaskar@mail.ru>)
-        id 1jLX7w-0004qe-2c; Mon, 06 Apr 2020 22:09:44 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
-        h=Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:Date:MIME-Version:Subject:Cc:To:From; bh=IuqH8oOZ7Smuf50iB0pt180lv+WFKGM8y/rdC+IqHuI=;
-        b=o05WS8wLMnY48IpjiVA8q1yyulzCH6WsGIYZwxSQKGopLT5RuV5J3DyQj7kbGiSRtfW7kjOkrVtmTxbjAKUdKQp3T5x4hrXeb5pVszcdufWse4319aLsF4zPX/eIpVUfV92aNjydD7ZoJzkybQvXOUUea1tRVHF18fbtd7LjMKM=;
-Received: by f412.i.mail.ru with local (envelope-from <safinaskar@mail.ru>)
-        id 1jLX7t-0000Hb-Eq; Mon, 06 Apr 2020 22:09:41 +0300
-Received: by light.mail.ru with HTTP;
-        Mon, 06 Apr 2020 22:09:41 +0300
-From:   =?UTF-8?B?QXNrYXIgU2FmaW4=?= <safinaskar@mail.ru>
-To:     asml.silence@gmail.com
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: =?UTF-8?B?UmU6IFtQT0MgUkZDIDAvM10gc3BsaWNlKDIpIHN1cHBvcnQgZm9yIGlvX3Vy?=
- =?UTF-8?B?aW5n?=
+        Mon, 6 Apr 2020 15:10:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586200200;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2WntavKAAILKmUl5tuzVQBGYOFdZ1K83H/b52IOT1/E=;
+        b=NCWEwV6c9gOnYDRP5msUjPOdy+lWkCKNMtmtVOa4/XEsSDN8bqmIKD13jqHtreKQ2Ogz3s
+        S32JTP7SsSS2DkJNhR7VXvgT59jEVONW5iKAQJX+iWZIbCZGcb8ZSy3UaXSjrWs0Z8hdGY
+        wrQpTHaou0YwviKdnMJiq+vkAPIpd8I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-bU9l9M8MMvWWter2viivmA-1; Mon, 06 Apr 2020 15:09:54 -0400
+X-MC-Unique: bU9l9M8MMvWWter2viivmA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 694FC8018A8;
+        Mon,  6 Apr 2020 19:09:52 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-173.rdu2.redhat.com [10.10.115.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 331809D36D;
+        Mon,  6 Apr 2020 19:09:52 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id A9577220515; Mon,  6 Apr 2020 15:09:51 -0400 (EDT)
+Date:   Mon, 6 Apr 2020 15:09:51 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+Message-ID: <20200406190951.GA19259@redhat.com>
+References: <87ftek9ngq.fsf@nanos.tec.linutronix.de>
+ <CALCETrVsc-t=tDRPbCg5dWHDY0NFv2zjz12ahD-vnGPn8T+RXA@mail.gmail.com>
+ <87a74s9ehb.fsf@nanos.tec.linutronix.de>
+ <87wo7v8g4j.fsf@nanos.tec.linutronix.de>
+ <877dzu8178.fsf@nanos.tec.linutronix.de>
+ <37440ade-1657-648b-bf72-2b8ca4ac21ce@redhat.com>
+ <871rq199oz.fsf@nanos.tec.linutronix.de>
+ <CALCETrUHwd8pNr_ZdFqY8vMjJeMdNyw2C+FL6uOUM98SEE9rNQ@mail.gmail.com>
+ <87d09l73ip.fsf@nanos.tec.linutronix.de>
+ <20200309202215.GM12561@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-Mailer: Mail.Ru Mailer 1.0
-Date:   Mon, 06 Apr 2020 22:09:41 +0300
-Reply-To: =?UTF-8?B?QXNrYXIgU2FmaW4=?= <safinaskar@mail.ru>
-X-Priority: 3 (Normal)
-Message-ID: <1586200181.435329676@f412.i.mail.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-X-7564579A: 646B95376F6C166E
-X-77F55803: 0A44E481635329DB4E7FAE048FD183FFD32E5E488652173699CE90E9CBBFB45FD85348D1E2A9D7ADFBDBF69DD7E3F5385EBDC71A3AD865557E0E8ECF5F1B131EA9B517628670D6AC19BBA5EB247851AA
-X-7FA49CB5: 70AAF3C13DB7016878DA827A17800CE75EE3C8C1E9563377D82A6BABE6F325AC9EB98D58427B1C2A7C6FB206A91F05B29C7C0829E2D134F6D7B4160BD3A4204CFEEB761FB9071033D2E47CDBA5A96583C09775C1D3CA48CFCA5A41EBD8A3A0199FA2833FD35BB23D2EF20D2F80756B5F40A5AABA2AD37119CC7F00164DA146DA9985D098DBDEAEC8EDCF5861DED71B2F389733CBF5DBD5E9B5C8C57E37DE458B4C7702A67D5C33162DBA43225CD8A89F0A35B161A8BF67C135872C767BF85DA2F004C906525384306FED454B719173D6462275124DF8B9C99B0B8D173C204012BD9CCCA9EDD067B1EDA766A37F9254B7
-X-D57D3AED: Y8kq8+OzVozcFQziTi/Zi098oNK9gy3Irm5KFwLuDg60je4lC+GbTj0M8KbzpOmgsB7wYP6nnel8wfEHQiZAetlEg7qy07ISeqrIhHPnkjzMJIKhkt3sDQ==
-X-Mailru-Internal-Actual: A:0.86392021091368
-X-Mailru-Sender: 5EEECD413B34D8D993653919C5945805FE1BF4CAD608F7818366DED19131207113EE28446F3ACD7AE050B273745CFBD67903AA853BEC14D66BF3EC0C2B8D44F11752C749FAB18CA3A8F61D99D8C7FF8FA4CD9F439FE7F8175FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-Spam: undefined
-X-7564579A: EEAE043A70213CC8
-X-77F55803: 6AF0DA0BABFA9FDB7F9F52485CB584D7271FD7DF62800FDC345666C2E9EB2C0D55E1275D1DAB18D9BA01449C46688777952C6472C343E45A
-X-7FA49CB5: 0D63561A33F958A59B2DE3E227FDBE6E3D0F53EE919DFB671E576249E52586428941B15DA834481FA18204E546F3947CEDCF5861DED71B2F389733CBF5DBD5E9C8A9BA7A39EFB7666BA297DBC24807EA117882F44604297287769387670735209ECD01F8117BC8BEA471835C12D1D977C4224003CC836476C0CAF46E325F83A522CA9DD8327EE4930A3850AC1BE2E735156CCFE7AF13BCA4B5C8C57E37DE458B4C7702A67D5C3316FA3894348FB808DBEB6346B700B4D54FE5BFE6E7EFDEDCD789D4C264860C145E
-X-D57D3AED: Y8kq8+OzVozcFQziTi/Zi098oNK9gy3Irm5KFwLuDg60je4lC+GbTj0M8KbzpOmgsB7wYP6nnel8wfEHQiZAetlEg7qy07ISeqrIhHPnkjzNy7BgrLUYXw==
-X-Mailru-MI: 800
-X-Mras: Ok
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200309202215.GM12561@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkuIFRoYW5rcyBmb3IgeW91ciBzcGxpY2UgaW9fdXJpbmcgcGF0Y2guIE1heWJlIGl0IHdpbGwg
-YmUgZ29vZCBpZGVhIHRvIGFkZCB1cmluZyBvcGVyYXRpb24sIHdoaWNoIHdpbGwgdW5pZnkgc3Bs
-aWNlLCBzZW5kZmlsZSBhbmQgY29weV9maWxlX3JhbmdlIGluc3RlYWQgb2YganVzdCBJT1JJTkdf
-T1BfU1BMSUNFPwo9PQpBc2thciBTYWZpbgpodHRwczovL2dpdGh1Yi5jb20vc2FmaW5hc2thcgo=
+On Mon, Mar 09, 2020 at 09:22:15PM +0100, Peter Zijlstra wrote:
+> On Mon, Mar 09, 2020 at 08:05:18PM +0100, Thomas Gleixner wrote:
+> > Andy Lutomirski <luto@kernel.org> writes:
+> 
+> > > I'm okay with the save/restore dance, I guess.  It's just yet more
+> > > entry crud to deal with architecture nastiness, except that this
+> > > nastiness is 100% software and isn't Intel/AMD's fault.
+> > 
+> > And we can do it in C and don't have to fiddle with it in the ASM
+> > maze.
+> 
+> Right; I'd still love to kill KVM_ASYNC_PF_SEND_ALWAYS though, even if
+> we do the save/restore in do_nmi(). That is some wild brain melt. Also,
+> AFAIK none of the distros are actually shipping a PREEMPT=y kernel
+> anyway, so killing it shouldn't matter much.
+
+It will be nice if we can retain KVM_ASYNC_PF_SEND_ALWAYS. I have another
+use case outside CONFIG_PREEMPT.
+
+I am trying to extend async pf interface to also report page fault errors
+to the guest.
+
+https://lore.kernel.org/kvm/20200331194011.24834-1-vgoyal@redhat.com/
+
+Right now async page fault interface assumes that host will always be
+able to successfully resolve the page fault and sooner or later PAGE_READY
+event will be sent to guest. And there is no mechnaism to report the
+errors back to guest.
+
+I am trying to add enhance virtiofs to directly map host page cache in guest.
+
+https://lore.kernel.org/linux-fsdevel/20200304165845.3081-1-vgoyal@redhat.com/
+
+There it is possible that a file page on host is mapped in guest and file
+got truncated and page is not there anymore. Guest tries to access it,
+and it generates async page fault. On host we will get -EFAULT and I 
+need to propagate it back to guest so that guest can either send SIGBUS
+to process which caused this. Or if kernel was trying to do memcpy(),
+then be able to use execpetion table error handling and be able to
+return with error.  (memcpy_mcflush()).
+
+For the second case to work, I will need async pf events to come in
+even if guest is in kernel and CONFIG_PREEMPT=n.
+
+So it would be nice if we can keep KVM_ASYNC_PF_SEND_ALWAYS around.
+
+Thanks
+Vivek
+
