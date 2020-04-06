@@ -2,431 +2,204 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EE4C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA4BC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FCB206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A2120719
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="NMJLXJuS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JrVvmAvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgDFS4O (ORCPT
+        id S1726230AbgDFS6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:56:14 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:45797 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgDFS4N (ORCPT
+        Mon, 6 Apr 2020 14:58:49 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28268 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725928AbgDFS6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:56:13 -0400
-Received: by mail-ua1-f67.google.com with SMTP id 9so331678uav.12
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:56:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YCt9CgbBrzDRuK00OoymzXY2ko3dB7fTGcCY007YOZs=;
-        b=NMJLXJuSUipFN2jWrzRqytL4ZCYTvvfT1ckaVE2gbYkuDUS71hrCmNT9M0dXLP3dO6
-         3/Ti0+LCLAwTkV0icyklghku3G5pE488aIIuAVLCu5RZeJpGxwSNrtsuDDei010eL8fx
-         TBt+Wm9l6KuqIDFOXDlNDT4J9TmE+XccPop0f2xaj6ksGoijIHieXois8/S5vB7F+Wpx
-         yPmhaZfrBfZ2RPHMZZ0XT2hpk7zf0fOVb05p03yIpZVLuFf0Um2k72SX51i377Rfd2kI
-         YThSvxnxKUy/GZGuO34h3ewzit8uEL2Uh3CxMzvP/t4A2OeEMA37DlW3u6Boq/18p3fY
-         fNVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YCt9CgbBrzDRuK00OoymzXY2ko3dB7fTGcCY007YOZs=;
-        b=UA6A2reE+/7tVOelXC5wBIFw2NDRhkNOZMuUkM6lb8oWkyUx8qeG5InPcKU0Ka9b08
-         QrLSJuhmsjde5NgTo67lFxtDnOW5O724xLsbtleI6RCcNMEtU/ljeg/rjYah1kyyyLtT
-         kjcmsDQNw/70+I2+b5QLox1Or+yRB/sYe0Nle9T1EjLVuAgIt9nbwyRma06gwIiCvmX0
-         7mY9btG8kRha9xHxVu6a7bRWFZu/HI13YFy/rdAYqs/m0WbLG4+uO0EZ3naZGTf5JN+D
-         RRK5eDJYgiLgLL7TVFiGMqWTSh8Y5T5TDYCuzWoIseDj5GMIdQQnFU2rNzYmZZ+nxAUK
-         ag8A==
-X-Gm-Message-State: AGi0PuYH5FSbL9O776/LCjuLriimvZBAzhW1LaCYNsK34/BjWYIxm1jT
-        Z7kmf9BabhcLgYP23xrPHI+dVbwf/LBG2k0sD+S5kw==
-X-Google-Smtp-Source: APiQypLGBKWQKH327cHkPy1xzfBkm0CtDriYAFhKuYjgdi5YcigLSB9yGh/2OvKDRjcaN0LWJ4I9t9xAL1fCnKcmN1g=
-X-Received: by 2002:ab0:4e96:: with SMTP id l22mr884101uah.67.1586199369194;
- Mon, 06 Apr 2020 11:56:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200331075356.19171-1-j-keerthy@ti.com> <20200331075356.19171-3-j-keerthy@ti.com>
-In-Reply-To: <20200331075356.19171-3-j-keerthy@ti.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 7 Apr 2020 00:25:58 +0530
-Message-ID: <CAHLCerNvRvp7QAeODb34EV89a0g77ZDLuDioBct7kuBjPgrjwQ@mail.gmail.com>
-Subject: Re: [PATCH v5 2/4] thermal: k3: Add support for bandgap sensors
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, t-kristo@ti.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Apr 2020 14:58:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586199527;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=QLx4/sdG9v1nmxm7Nxx7v62MFnknzk0r6dRJ8swzlNk=;
+        b=JrVvmAvHuX78u3DOxJIElTGGhSMHg2o93j38NLsrYeONi2J86v8Z+On54sR4pk4oICAqC1
+        mNF+dRI0fsv6b3VxhijGyM3H5oUWXufw6z6QtPwJjxEh4CE7rt+iqPAE08pxQ1IxbI4Z9B
+        xuZAtpRC9p5jhwbsae5ZBBEXes47RcA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-T2oxZoLWMue6HCaiqW986Q-1; Mon, 06 Apr 2020 14:58:42 -0400
+X-MC-Unique: T2oxZoLWMue6HCaiqW986Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 095A4DBA5;
+        Mon,  6 Apr 2020 18:58:41 +0000 (UTC)
+Received: from llong.com (ovpn-115-20.rdu2.redhat.com [10.10.115.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 58A9F19C4F;
+        Mon,  6 Apr 2020 18:58:36 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive data objects
+Date:   Mon,  6 Apr 2020 14:58:27 -0400
+Message-Id: <20200406185827.22249-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 1:24 PM Keerthy <j-keerthy@ti.com> wrote:
->
-> The bandgap provides current and voltage reference for its internal
-> circuits and other analog IP blocks. The analog-to-digital
-> converter (ADC) produces an output value that is proportional
-> to the silicon temperature.
->
-> Currently reading temperatures only is supported.
-> There are no active/passive cooling agent supported.
->
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->
-> Changes in v5:
->
->   * Removed thermal work function which was unused.
->   * Removed unused preve_tenmp and a couple more struct variables.
->   * Removed couple of redundant header function include.
->
->  drivers/thermal/Kconfig      |  10 ++
->  drivers/thermal/Makefile     |   1 +
->  drivers/thermal/k3_bandgap.c | 268 +++++++++++++++++++++++++++++++++++
->  3 files changed, 279 insertions(+)
->  create mode 100644 drivers/thermal/k3_bandgap.c
->
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 5a05db5438d6..1df434527f8d 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -251,6 +251,16 @@ config IMX_THERMAL
->           cpufreq is used as the cooling device to throttle CPUs when the
->           passive trip is crossed.
->
-> +config K3_THERMAL
-> +       tristate "Texas Instruments K3 thermal support"
-> +       depends on ARCH_K3 || COMPILE_TEST
-> +       help
-> +         If you say yes here you get thermal support for the Texas Instruments
-> +         K3 SoC family. The current chip supported is:
-> +          - AM654
-> +
-> +         This includes temperature reading functionality.
-> +
->  config MAX77620_THERMAL
->         tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
->         depends on MFD_MAX77620
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 9fb88e26fb10..5ad6535139ae 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -28,6 +28,7 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)   += clock_cooling.o
->  # devfreq cooling
->  thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
->
-> +obj-$(CONFIG_K3_THERMAL)       += k3_bandgap.o
->  # platform thermal drivers
->  obj-y                          += broadcom/
->  obj-$(CONFIG_THERMAL_MMIO)             += thermal_mmio.o
-> diff --git a/drivers/thermal/k3_bandgap.c b/drivers/thermal/k3_bandgap.c
-> new file mode 100644
-> index 000000000000..1d976af4461a
-> --- /dev/null
-> +++ b/drivers/thermal/k3_bandgap.c
-> @@ -0,0 +1,268 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TI Bandgap temperature sensor driver for K3 SoC Family
-> + *
-> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/err.h>
-> +#include <linux/types.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/io.h>
-> +#include <linux/thermal.h>
-> +#include <linux/of.h>
-> +
+For kvmalloc'ed data object that contains sensitive information like
+cryptographic key, we need to make sure that the buffer is always
+cleared before freeing it. Using memset() alone for buffer clearing may
+not provide certainty as the compiler may compile it away. To be sure,
+the special memzero_explicit() has to be used.
 
-Sort these includes alphabetically
+This patch introduces a new kvfree_sensitive() for freeing those
+sensitive data objects allocated by kvmalloc(). The relevnat places
+where kvfree_sensitive() can be used are modified to use it.
 
+Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ include/linux/mm.h       |  1 +
+ mm/util.c                | 18 ++++++++++++++++++
+ security/keys/internal.h | 11 -----------
+ security/keys/keyctl.c   | 16 +++++-----------
+ 4 files changed, 24 insertions(+), 22 deletions(-)
 
-> +#define K3_VTM_DEVINFO_PWR0_OFFSET             0x4
-> +#define K3_VTM_DEVINFO_PWR0_CVD_CT_MASK        0xf
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 7dd5c4ccbf85..9b3130b20f42 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -757,6 +757,7 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
+ }
+ 
+ extern void kvfree(const void *addr);
++extern void kvfree_sensitive(const void *addr, size_t len);
+ 
+ static inline int compound_mapcount(struct page *page)
+ {
+diff --git a/mm/util.c b/mm/util.c
+index 988d11e6c17c..01e210766f3d 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -604,6 +604,24 @@ void kvfree(const void *addr)
+ }
+ EXPORT_SYMBOL(kvfree);
+ 
++/**
++ * kvfree_sensitive - free a data object containing sensitive information
++ * @addr - address of the data object to be freed
++ * @len  - length of the data object
++ *
++ * Use the special memzero_explicit() function to clear the content of a
++ * kvmalloc'ed object containing sensitive data to make sure that the
++ * compiler won't optimize out the data clearing.
++ */
++void kvfree_sensitive(const void *addr, size_t len)
++{
++	if (likely(!ZERO_OR_NULL_PTR(addr))) {
++		memzero_explicit((void *)addr, len);
++		kvfree(addr);
++	}
++}
++EXPORT_SYMBOL(kvfree_sensitive);
++
+ static inline void *__page_rmapping(struct page *page)
+ {
+ 	unsigned long mapping;
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index 6d0ca48ae9a5..153d35c20d3d 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -350,15 +350,4 @@ static inline void key_check(const struct key *key)
+ #define key_check(key) do {} while(0)
+ 
+ #endif
+-
+-/*
+- * Helper function to clear and free a kvmalloc'ed memory object.
+- */
+-static inline void __kvzfree(const void *addr, size_t len)
+-{
+-	if (addr) {
+-		memset((void *)addr, 0, len);
+-		kvfree(addr);
+-	}
+-}
+ #endif /* _INTERNAL_H */
+diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+index 5e01192e222a..edde63a63007 100644
+--- a/security/keys/keyctl.c
++++ b/security/keys/keyctl.c
+@@ -142,10 +142,7 @@ SYSCALL_DEFINE5(add_key, const char __user *, _type,
+ 
+ 	key_ref_put(keyring_ref);
+  error3:
+-	if (payload) {
+-		memzero_explicit(payload, plen);
+-		kvfree(payload);
+-	}
++	kvfree_sensitive(payload, plen);
+  error2:
+ 	kfree(description);
+  error:
+@@ -360,7 +357,7 @@ long keyctl_update_key(key_serial_t id,
+ 
+ 	key_ref_put(key_ref);
+ error2:
+-	__kvzfree(payload, plen);
++	kvfree_sensitive(payload, plen);
+ error:
+ 	return ret;
+ }
+@@ -914,7 +911,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+ 		 */
+ 		if (ret > key_data_len) {
+ 			if (unlikely(key_data))
+-				__kvzfree(key_data, key_data_len);
++				kvfree_sensitive(key_data, key_data_len);
+ 			key_data_len = ret;
+ 			continue;	/* Allocate buffer */
+ 		}
+@@ -923,7 +920,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+ 			ret = -EFAULT;
+ 		break;
+ 	}
+-	__kvzfree(key_data, key_data_len);
++	kvfree_sensitive(key_data, key_data_len);
+ 
+ key_put_out:
+ 	key_put(key);
+@@ -1225,10 +1222,7 @@ long keyctl_instantiate_key_common(key_serial_t id,
+ 		keyctl_change_reqkey_auth(NULL);
+ 
+ error2:
+-	if (payload) {
+-		memzero_explicit(payload, plen);
+-		kvfree(payload);
+-	}
++	kvfree_sensitive(payload, plen);
+ error:
+ 	return ret;
+ }
+-- 
+2.18.1
 
-Not used, remove.
-
-> +#define K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK   0xf0
-> +#define K3_VTM_TMPSENS0_CTRL_OFFSET    0x80
-> +#define K3_VTM_REGS_PER_TS                     0x10
-> +#define K3_VTM_TS_STAT_DTEMP_MASK      0x3ff
-> +#define K3_VTM_MAX_NUM_TS              8
-
-Not used, remove
-
-> +#define K3_VTM_TMPSENS_CTRL_CBIASSEL   BIT(0)
-> +#define K3_VTM_TMPSENS_CTRL_SOC                BIT(5)
-> +#define K3_VTM_TMPSENS_CTRL_CLRZ               BIT(6)
-> +#define K3_VTM_TMPSENS_CTRL_CLKON_REQ  BIT(7)
-> +
-> +#define K3_VTM_ADC_BEGIN_VAL           540
-> +#define K3_VTM_ADC_END_VAL             944
-> +
-> +static const int k3_adc_to_temp[] = {
-> +       -40000, -40000, -40000, -40000, -39800, -39400, -39000, -38600, -38200,
-> +       -37800, -37400, -37000, -36600, -36200, -35800, -35300, -34700, -34200,
-> +       -33800, -33400, -33000, -32600, -32200, -31800, -31400, -31000, -30600,
-> +       -30200, -29800, -29400, -29000, -28600, -28200, -27700, -27100, -26600,
-> +       -26200, -25800, -25400, -25000, -24600, -24200, -23800, -23400, -23000,
-> +       -22600, -22200, -21800, -21400, -21000, -20500, -19900, -19400, -19000,
-> +       -18600, -18200, -17800, -17400, -17000, -16600, -16200, -15800, -15400,
-> +       -15000, -14600, -14200, -13800, -13400, -13000, -12500, -11900, -11400,
-> +       -11000, -10600, -10200, -9800, -9400, -9000, -8600, -8200, -7800, -7400,
-> +       -7000, -6600, -6200, -5800, -5400, -5000, -4500, -3900, -3400, -3000,
-> +       -2600, -2200, -1800, -1400, -1000, -600, -200, 200, 600, 1000, 1400,
-> +       1800, 2200, 2600, 3000, 3400, 3900, 4500, 5000, 5400, 5800, 6200, 6600,
-> +       7000, 7400, 7800, 8200, 8600, 9000, 9400, 9800, 10200, 10600, 11000,
-> +       11400, 11800, 12200, 12700, 13300, 13800, 14200, 14600, 15000, 15400,
-> +       15800, 16200, 16600, 17000, 17400, 17800, 18200, 18600, 19000, 19400,
-> +       19800, 20200, 20600, 21000, 21400, 21900, 22500, 23000, 23400, 23800,
-> +       24200, 24600, 25000, 25400, 25800, 26200, 26600, 27000, 27400, 27800,
-> +       28200, 28600, 29000, 29400, 29800, 30200, 30600, 31000, 31400, 31900,
-> +       32500, 33000, 33400, 33800, 34200, 34600, 35000, 35400, 35800, 36200,
-> +       36600, 37000, 37400, 37800, 38200, 38600, 39000, 39400, 39800, 40200,
-> +       40600, 41000, 41400, 41800, 42200, 42600, 43100, 43700, 44200, 44600,
-> +       45000, 45400, 45800, 46200, 46600, 47000, 47400, 47800, 48200, 48600,
-> +       49000, 49400, 49800, 50200, 50600, 51000, 51400, 51800, 52200, 52600,
-> +       53000, 53400, 53800, 54200, 54600, 55000, 55400, 55900, 56500, 57000,
-> +       57400, 57800, 58200, 58600, 59000, 59400, 59800, 60200, 60600, 61000,
-> +       61400, 61800, 62200, 62600, 63000, 63400, 63800, 64200, 64600, 65000,
-> +       65400, 65800, 66200, 66600, 67000, 67400, 67800, 68200, 68600, 69000,
-> +       69400, 69800, 70200, 70600, 71000, 71500, 72100, 72600, 73000, 73400,
-> +       73800, 74200, 74600, 75000, 75400, 75800, 76200, 76600, 77000, 77400,
-> +       77800, 78200, 78600, 79000, 79400, 79800, 80200, 80600, 81000, 81400,
-> +       81800, 82200, 82600, 83000, 83400, 83800, 84200, 84600, 85000, 85400,
-> +       85800, 86200, 86600, 87000, 87400, 87800, 88200, 88600, 89000, 89400,
-> +       89800, 90200, 90600, 91000, 91400, 91800, 92200, 92600, 93000, 93400,
-> +       93800, 94200, 94600, 95000, 95400, 95800, 96200, 96600, 97000, 97500,
-> +       98100, 98600, 99000, 99400, 99800, 100200, 100600, 101000, 101400,
-> +       101800, 102200, 102600, 103000, 103400, 103800, 104200, 104600, 105000,
-> +       105400, 105800, 106200, 106600, 107000, 107400, 107800, 108200, 108600,
-> +       109000, 109400, 109800, 110200, 110600, 111000, 111400, 111800, 112200,
-> +       112600, 113000, 113400, 113800, 114200, 114600, 115000, 115400, 115800,
-> +       116200, 116600, 117000, 117400, 117800, 118200, 118600, 119000, 119400,
-> +       119800, 120200, 120600, 121000, 121400, 121800, 122200, 122600, 123000,
-> +       123400, 123800, 124200, 124600, 124900, 125000,
-> +};
-> +
-> +struct k3_bandgap {
-> +       void __iomem *base;
-> +       const struct k3_bandgap_data *conf;
-> +};
-> +
-> +/* common data structures */
-> +struct k3_thermal_data {
-> +       struct thermal_zone_device *ti_thermal;
-
-Nit: perhap use tzd/tzdev instead of ti_thermal which doesn't really say much?
-
-> +       struct k3_bandgap *bgp;
-> +       int sensor_id;
-> +       u32 ctrl_offset;
-> +       u32 stat_offset;
-> +};
-> +
-> +static unsigned int vtm_get_best_value(unsigned int s0, unsigned int s1,
-> +                                      unsigned int s2)
-> +{
-> +       int d01 = abs(s0 - s1);
-> +       int d02 = abs(s0 - s2);
-> +       int d12 = abs(s1 - s2);
-> +
-> +       if (d01 <= d02 && d01 <= d12)
-> +               return (s0 + s1) / 2;
-> +
-> +       if (d02 <= d01 && d02 <= d12)
-> +               return (s0 + s2) / 2;
-> +
-> +       return (s1 + s2) / 2;
-> +}
-> +
-> +static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
-> +                           int *temp)
-> +{
-> +       struct k3_bandgap *bgp;
-> +       unsigned int dtemp, s0, s1, s2;
-> +
-> +       bgp = devdata->bgp;
-> +
-> +       /*
-> +        * Errata is applicable for am654 pg 1.0 silicon. There
-> +        * is a variation of the order for 8-10 degree centigrade.
-> +        * Work around that by getting the average of two closest
-> +        * readings out of three readings everytime we want to
-> +        * report temperatures.
-> +        *
-> +        * Errata workaround.
-
-So there is no fix in later versions of silicon? If so, shouldn't this
-errata only apply to a subset of chips after checking some IP version?
-
-
-> +        */
-> +       s0 = readl(bgp->base + devdata->stat_offset) &
-> +               K3_VTM_TS_STAT_DTEMP_MASK;
-> +       s1 = readl(bgp->base + devdata->stat_offset) &
-> +               K3_VTM_TS_STAT_DTEMP_MASK;
-> +       s2 = readl(bgp->base + devdata->stat_offset) &
-> +               K3_VTM_TS_STAT_DTEMP_MASK;
-> +       dtemp = vtm_get_best_value(s0, s1, s2);
-> +
-> +       if (dtemp < K3_VTM_ADC_BEGIN_VAL || dtemp > K3_VTM_ADC_END_VAL)
-> +               return -EINVAL;
-> +
-> +       *temp = k3_adc_to_temp[dtemp - K3_VTM_ADC_BEGIN_VAL];
-> +
-> +       return 0;
-> +}
-> +
-> +static int k3_thermal_get_temp(void *devdata, int *temp)
-> +{
-> +       struct k3_thermal_data *data = devdata;
-> +       int ret = 0;
-> +
-> +       ret = k3_bgp_read_temp(data, temp);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct thermal_zone_of_device_ops k3_of_thermal_ops = {
-> +       .get_temp = k3_thermal_get_temp,
-> +};
-> +
-> +static const struct of_device_id of_k3_bandgap_match[];
-> +
-> +static int k3_bandgap_probe(struct platform_device *pdev)
-> +{
-> +       int ret = 0, cnt, val, id, reg_cnt = 0;
-> +       struct resource *res;
-> +       struct device *dev = &pdev->dev;
-> +       struct k3_bandgap *bgp;
-> +       struct k3_thermal_data *data;
-> +
-> +       if (ARRAY_SIZE(k3_adc_to_temp) != (K3_VTM_ADC_END_VAL + 1 -
-> +                                               K3_VTM_ADC_BEGIN_VAL))
-> +               return -EINVAL;
-> +
-> +       bgp = devm_kzalloc(&pdev->dev, sizeof(*bgp), GFP_KERNEL);
-> +       if (!bgp)
-> +               return -ENOMEM;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       bgp->base = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(bgp->base))
-> +               return PTR_ERR(bgp->base);
-> +
-> +       pm_runtime_enable(dev);
-> +       ret = pm_runtime_get_sync(dev);
-> +       if (ret < 0) {
-> +               pm_runtime_put_noidle(dev);
-> +               pm_runtime_disable(dev);
-> +               return ret;
-> +       }
-> +
-> +       /* Get the sensor count in the VTM */
-> +       val = readl(bgp->base + K3_VTM_DEVINFO_PWR0_OFFSET);
-> +       cnt = val & K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK;
-> +       cnt >>= __ffs(K3_VTM_DEVINFO_PWR0_TEMPSENS_CT_MASK);
-> +
-> +       data = devm_kcalloc(dev, cnt, sizeof(*data), GFP_KERNEL);
-> +       if (!data) {
-> +               ret = -ENOMEM;
-> +               goto err_alloc;
-> +       }
-> +
-> +       /* Register the thermal sensors */
-> +       for (id = 0; id < cnt; id++) {
-> +               data[id].sensor_id = id;
-> +               data[id].bgp = bgp;
-> +               data[id].ctrl_offset = K3_VTM_TMPSENS0_CTRL_OFFSET +
-> +                                       id * K3_VTM_REGS_PER_TS;
-> +               data[id].stat_offset = data[id].ctrl_offset + 0x8;
-> +
-> +               val = readl(data[id].bgp->base + data[id].ctrl_offset);
-> +               val |= (K3_VTM_TMPSENS_CTRL_SOC |
-> +                       K3_VTM_TMPSENS_CTRL_CLRZ |
-> +                       K3_VTM_TMPSENS_CTRL_CLKON_REQ);
-> +               val &= ~K3_VTM_TMPSENS_CTRL_CBIASSEL;
-> +               writel(val, data[id].bgp->base + data[id].ctrl_offset);
-> +
-> +               data[id].ti_thermal =
-> +               devm_thermal_zone_of_sensor_register(dev, id,
-> +                                                    &data[id],
-> +                                                    &k3_of_thermal_ops);
-> +               if (IS_ERR(data[id].ti_thermal)) {
-> +                       dev_err(dev, "thermal zone device is NULL\n");
-> +                       ret = PTR_ERR(data[id].ti_thermal);
-> +                       goto err_alloc;
-> +               }
-> +
-> +               reg_cnt++;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, bgp);
-> +
-> +       return 0;
-> +
-> +err_alloc:
-> +       pm_runtime_put_sync(&pdev->dev);
-> +       pm_runtime_disable(&pdev->dev);
-
-Just use dev?
-
-
-> +
-> +       return ret;
-> +}
-> +
-> +static int k3_bandgap_remove(struct platform_device *pdev)
-> +{
-> +       pm_runtime_put_sync(&pdev->dev);
-> +       pm_runtime_disable(&pdev->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id of_k3_bandgap_match[] = {
-> +       {
-> +               .compatible = "ti,am654-vtm",
-> +       },
-> +       { /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, of_k3_bandgap_match);
-> +
-> +static struct platform_driver k3_bandgap_sensor_driver = {
-> +       .probe = k3_bandgap_probe,
-> +       .remove = k3_bandgap_remove,
-> +       .driver = {
-> +               .name = "k3-soc-thermal",
-> +               .of_match_table = of_k3_bandgap_match,
-> +       },
-> +};
-> +
-> +module_platform_driver(k3_bandgap_sensor_driver);
-> +
-> +MODULE_DESCRIPTION("K3 bandgap temperature sensor driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("J Keerthy <j-keerthy@ti.com>");
-> --
-> 2.17.1
->
