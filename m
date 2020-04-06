@@ -2,138 +2,140 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBC3C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3744C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5A520672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29CA20672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:47:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="EJZ4+f8F"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Xc0rOf/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgDFTqI (ORCPT
+        id S1726407AbgDFTrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:46:08 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:34911 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgDFTqI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:46:08 -0400
-Received: by mail-il1-f193.google.com with SMTP id u15so456176ilm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 12:46:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1pqdM4albOPOy3AZvC52W1X+oMJ+ayp+9lG6bAjF590=;
-        b=EJZ4+f8FXWMH9z7TXBeHek+lsf+bw3y0S6R+vNG8yqluQyLJU9UHQc1j6V2FdbQozw
-         NWWwLzOsKgIzPavdkMoe6B/0uHbk4InVuIhtu5Ij3bTCPw4DxD+435BQHbB9WS/6nOwL
-         Ytft9w2UTujVbdkvuyXCXR9z+1LAszxrsZ2Y64wwLs1IO2HE05aW63dxyn8Bg7My2/7E
-         BPHKrzR0ZqG+R4mpOFUINLUx/Y/CXhVcyO6We88jUiYLK+LO5fHRp8KajrQoISnM05Dw
-         eMPbKWtHv5IjaDFpybeSf4zKR+uMk79mhaO3sSdXsOc7Y9PXWlRY9MyKXO0JB/H6g1si
-         SJag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1pqdM4albOPOy3AZvC52W1X+oMJ+ayp+9lG6bAjF590=;
-        b=VI/x/T7SGw/xfxTLadWVZ+s8BVrl2WXZNGYGO3pYOrnGa9kvXZb9Z+fSxl64cnOUvJ
-         nCB7WsTJlf75EyNzc7A+p+LVf3rAYJk47Yydp8vTKqqleHRaCTQxrTymTuRjkadY7k44
-         zoknFESJaK9cuKa0HXwYvNYAFUlzroAh5ICCiU8SnE3LGrZuIhPvGuNwCFl2Q4Cyd6aZ
-         tUFXxIzRLtdFh02t3UhYcOsI6O5CBnvvb5Nq+eoBHmz5l8WQ9g+AVI/4bSMTFiGTt7Ih
-         nQ6j7ubLZ47de5oT7elBJbnkhPPoL9kThkQRG6j/b6st3V04Itzre7ka17RMiiZXfPJa
-         DkMw==
-X-Gm-Message-State: AGi0PuabZCd3FfIzRNkSLLTcQeTcwNgmb7ZmQlcJHiFXxbxvFiWCr6BD
-        0quHDDmdchMDd8xf+vC9wQHlR+FzyTiC/O1/nWB/Nw==
-X-Google-Smtp-Source: APiQypIzxUc9lo8BfgwCF7ePRKNh7UGZuyaMOHCzkUQNYY3Os8wHIXONk+oHbmhLDFH2B5S1ofvx8r8osaKrZ9Rz8mw=
-X-Received: by 2002:a92:1dd9:: with SMTP id g86mr1095904ile.2.1586202367018;
- Mon, 06 Apr 2020 12:46:07 -0700 (PDT)
+        Mon, 6 Apr 2020 15:47:09 -0400
+Received: from mout.web.de ([212.227.17.12]:55577 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbgDFTrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 15:47:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586202421;
+        bh=bJ6wweKpkHlByA6Q6e8+/NUkCdi0x/x3PugEKawABUM=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=Xc0rOf/Yil9FKybcL/IBsC84ah9yskuJLyxnzOQkKeIiwZ1+BTk2G6vF24xvzZwMC
+         HSYbUDPaVjGbPM7nqr/xeLyv0jImwaR7k9k+jwoNG3spZhWhJKwrLwjFCU/7zNu4fC
+         0wMMAXWwpzC9vQZIYu0UYCOS9XSySNh5TvKu2RXg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.243.176.200]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LylnX-1jHOTr3m9X-0169ZZ; Mon, 06
+ Apr 2020 21:47:01 +0200
+Cc:     Alexandru Tachici <alexandru.tachici@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad7192: fix null de-ref crash during probe
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <4ff0776f-b5de-536a-ccf9-7516f1a65d87@web.de>
+Date:   Mon, 6 Apr 2020 21:46:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200406193352.1245985-1-lyude@redhat.com>
-In-Reply-To: <20200406193352.1245985-1-lyude@redhat.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Mon, 6 Apr 2020 15:45:31 -0400
-Message-ID: <CAMavQK+tFSVx068FKnxD0X6TMWnf_TKPHy4ZmR=CD8kGtk5A_w@mail.gmail.com>
-Subject: Re: [PATCH] drm/dp_mst: Fix NULL deref in drm_dp_get_one_sb_msg()
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Wayne Lin <Wayne.Lin@amd.com>, Wayne Lin <waynelin@amd.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nTkTxTA1SZNVGPWwxO9KOH6GehbIAhymhujo1VqWuIDAZu/B7nk
+ MCk7vNIcjXdXG8m99Hf9+4rT8A2L1EIEgweTFPC/fvj3RZxkuvEN07wlV47ftwn4xOJLImZ
+ bWF5ScRJc9+cKsTcXRENIhb0P/1IUoc+5eSKMXytIG83sfMQbd5FacDhU8qQGJDekFwlsx2
+ 2KGnEOgc1rc2MWYVhVYag==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QVlMxmMQ314=:T53pCEETDaqWsriQ+Vhxn0
+ e6PTAp4Iqn7Qz+DDFavIHC3Jd2gjP9BBAeTvWu8o0OpqtlFYZXFDmnZaLEl2LtDn/fZbs7ux6
+ YNBX1Qpo5tnPsMZCVKsBgJJtB+iv/muKrsTa3QgFQOr9vzfgZd44bDT/3lbeVXpWdZjYcAdRh
+ 74AP+xVM+oATPH+WlLDRJhnADqdjjAJsAAQz55x25/8WAMQWAaZDbf8DcOcc+gV2sAjbKEYmq
+ fz+OGlfm5Kn0NIP1R9qWbOmsx727OO2TZacmRBJO4k6Jr8bKe86kmOZI2DnVYCUNr8OI/ctHe
+ Zx+4bgi1Pmz6BBdPnRhO046Y8cVUaLTmPPT0xpJoJiAIC0Gqvo7SsJgnmhbiWZC6oxvulGcWr
+ JQtT3adGy05tiSEfSFNokO/H58sypdrndbqKJg6upblYyYc2nnUWKEaS/ChFyLgjlOx1PsBe0
+ d2rL149mh3U/eQHnlYNCjSipi9ci0wwv+8YHPq0X3i5nbsjJzm7/89Ds/shFKnEcoQNKEJYkJ
+ +wqjaIjF9PiDfcuAsy0DDwVnRkqdo2OT7vdOH66BW7ncL6s6ksUA6NUOMQG8aD8oTAUthS204
+ lTFtF5+fe2xlyEQzTCFSCOEWnahxZUVhNZTxiusDHb7AQYfhUmVKmVxC9jtmEyTp+e0VC0y5r
+ Y6it3dHl5BXA/Kiwb4P1AsFCoSC0Gdp+UAN5eALfOaJvsVKHhTyghep92xL3PHhhJdj0b55/g
+ EI3v2zSUyMQbrGUWLdfSKgKrYsYqm+vy0o5WYm4IPQSik1xoGBK0xNVAv0PshLXUiwDQjTwjy
+ t+miPb/MJo2/x5QfSXVS8YTzImCmGFHfVW0EuQ0iRVJDiSxHMF7sKVaoI5Q67EZkLrGFKoZ8a
+ GcgjyBkipctXisvvpK9fpQ9xLf9x5aUIdZwrgYAvK2WOEhrxSL0oX7l89svCduuDARgzmzqV7
+ 3Z6n1J0KRriP7kf/dc2CqFIzhVazAY7mmQWzl1Smeik6kMG5Qo6G03kxDY707kmK1UVVlq/Lm
+ 1ZuYUEMJtOBHQkSfo1T17HbtewV+Tg3saW3oyQYWjGAon0mdN06qexYPtIcS0uUx5KaK5EWiK
+ 4b1kyjmCdEobfG1nNfwD+M2tu8Vblj2tE51oGiWEa8QzYZM92/97QERGkRf2SjsXqIIWEhTJu
+ fSkWy9+LhLdUm/BU1hLvN+QeGhXapRDGeJvWpq0VCh6f6L9MkkkSnnAWeEShJaeKJga0sR35O
+ m8N5eKNhlv/YITcLu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 3:34 PM Lyude Paul <lyude@redhat.com> wrote:
->
-> While we don't need this function to store an mstb anywhere for UP
-> requests since we process them asynchronously, we do need to make sure
-> that we don't try to write to **mstb for UP requests otherwise we'll
-> cause a NULL pointer deref:
->
->     RIP: 0010:drm_dp_get_one_sb_msg+0x4b/0x460 [drm_kms_helper]
->     Call Trace:
->      ? vprintk_emit+0x16a/0x230
->      ? drm_dp_mst_hpd_irq+0x133/0x1010 [drm_kms_helper]
->      drm_dp_mst_hpd_irq+0x133/0x1010 [drm_kms_helper]
->      ? __drm_dbg+0x87/0x90 [drm]
->      ? intel_dp_hpd_pulse+0x24b/0x400 [i915]
->      intel_dp_hpd_pulse+0x24b/0x400 [i915]
->      i915_digport_work_func+0xd6/0x160 [i915]
->      process_one_work+0x1a9/0x370
->      worker_thread+0x4d/0x3a0
->      kthread+0xf9/0x130
->      ? process_one_work+0x370/0x370
->      ? kthread_park+0x90/0x90
->      ret_from_fork+0x35/0x40
->
-> So, fix this.
+> After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
+> during probe with null de-ref.
 
-Ugggh, what a fail! I found this in Feb and posted the patch in
-20200218171522.GF253734@art_vandelay. I had to migrate my workstation
-due to WFH order and didn't apply the patch before pushing. Messy
-messy messy.
+How do you think about to use the term =E2=80=9Cnull pointer dereference=
+=E2=80=9D
+in the commit message?
 
-Thanks for fixing!
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+> Fixes 66614ab2be38: ("staging: iio: adc: ad7192: removed spi_device_id")
 
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Fixes: fbc821c4a506 ("drm/mst: Support simultaneous down replies")
-> Cc: Wayne Lin <Wayne.Lin@amd.com>
-> Cc: Lyude Paul <lyude@redhat.com>
-> Cc: Wayne Lin <waynelin@amd.com>
-> Cc: Sean Paul <seanpaul@chromium.org>
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 1ff49547b2e8..8751278b3941 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -3703,7 +3703,8 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up,
->         int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE :
->                            DP_SIDEBAND_MSG_DOWN_REP_BASE;
->
-> -       *mstb = NULL;
-> +       if (!up)
-> +               *mstb = NULL;
->         *seqno = -1;
->
->         len = min(mgr->max_dpcd_transaction_bytes, 16);
-> --
-> 2.25.1
->
+Please correct this tag.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D7e63420847ae5f1036e4f7c42f=
+0b3282e73efbc2#n183
+
+Why was a colon misplaced here?
+
+Regards,
+Markus
