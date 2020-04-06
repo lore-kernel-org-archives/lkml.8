@@ -2,90 +2,141 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1132C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D16C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15E624899
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3973A249AC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:52:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKSpNuaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbgDFQvQ (ORCPT
+        id S1729664AbgDFQwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:51:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:56820 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729331AbgDFQvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:51:16 -0400
-IronPort-SDR: duF6fNvmuIy3p1pe0XWqMt8R91hjqWKX19Hj+K8kJ2c5XXPtr6MjDXWvxnsyH4IqPqtuwsm89s
- +nwKpuX+XW5g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 09:51:16 -0700
-IronPort-SDR: kjCiRUBms6Oudl08kIgmjRJ8yJFiqdbX9CskZ1NCkQPkJ5tiWYY/FBE+/gJesUjKh8ZqsLOOJZ
- Hi9KN4lWORPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,351,1580803200"; 
-   d="scan'208";a="452131333"
-Received: from unknown (HELO kekkonen.fi.intel.com) ([10.252.48.155])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Apr 2020 09:51:11 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id B273921D18; Mon,  6 Apr 2020 19:51:08 +0300 (EEST)
-Date:   Mon, 6 Apr 2020 19:51:08 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
- dt-property
-Message-ID: <20200406165108.GA7646@kekkonen.localdomain>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 6 Apr 2020 12:52:47 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43800 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729616AbgDFQwr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:52:47 -0400
+Received: by mail-qk1-f193.google.com with SMTP id 13so4623285qko.10;
+        Mon, 06 Apr 2020 09:52:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kUFTINxY0J+AJDEkYeQlbkaSmRAtfjNqncCfu7j55wA=;
+        b=dKSpNuaATcx3mYuSOs8e3rofkdfCBjXOXmBkGKcgji8SN8Nyy16u2sLNbQHa6UG/jd
+         XpkAAcOgoeKOKrDIWeXKpLIF6IiSF9f7TY4fsKad6fyvJBzBE278OR3lGk9lZUWd/2MO
+         RrOjYbqPURYyUneDXBAX5AioJ3rmolf3d49KjfiKXTC9Msm06SxLurypqPoShifEziw6
+         MgNI+1I0LRKVf/lZkf4A6IOBmVVxw80B7NF+PIK8GPQeUj94YVN56kngTdI7UsohGORy
+         nGB8FEsNYUnxkvQ+CFBYTzkBIKhSoBdU1MTEE4KRTwC4uldNU+TDm4meep/5AcnItHzn
+         vw6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=kUFTINxY0J+AJDEkYeQlbkaSmRAtfjNqncCfu7j55wA=;
+        b=cPCgeD7dYRa6r0dct0ERlSqetEEk+0SYoh+9q1cAJuEziWaYtG7a+CFR9v9UUFLQdz
+         3f1gd+uqwvJA7sqis6leZn67vkz7L9khYVIAXjh3gZz3vvBwxEqMcoNryni5K7DY5vOV
+         QDrSSXJBKOgKNby4SqZx4dxfA9/j6ZPXpnNyFtLFDEZ0IXAqnRdbDERnCSd6ID4sTqkw
+         X0iZp9Vfi1YaCFw6ZRjLjuX4NZX3xCYk9pEWh9NOpC0dhBuLNPf72y9WjynqQaA5P/3D
+         0MaZYmGthsvDHsWYCaA0fR93laDBp0SAFVd/wWsvVu1GWyheG9VmjP1C9wXt+gbIQn8q
+         oIJA==
+X-Gm-Message-State: AGi0Pubif5J3KSTD/LJwn1DWF5kyaY1yzd36vPCou/JRNmvb2z4GS47q
+        Jt3HRp0jOfsyrfZRUrkv0nE=
+X-Google-Smtp-Source: APiQypLG+N0+0eHCnvXI+vRC+MTlszBZR60uTTpgG8AhX3Uzt/8vd2aBAE3kfyMkNz/uyR0az++i3Q==
+X-Received: by 2002:a37:5903:: with SMTP id n3mr22753933qkb.332.1586191965924;
+        Mon, 06 Apr 2020 09:52:45 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id t23sm16047838qtj.63.2020.04.06.09.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 09:52:45 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 6 Apr 2020 12:52:43 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
+        hpa@zytor.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
+ bzImage
+Message-ID: <20200406165243.GA303819@rani.riverdale.lan>
+References: <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
+ <20200406035110.GA3241052@rani.riverdale.lan>
+ <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
+ <20200406084738.GA2520@zn.tnic>
+ <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
+ <20200406112042.GC2520@zn.tnic>
+ <20200406132215.GA113388@rani.riverdale.lan>
+ <CAMj1kXG+34-bK1XuxX5VopkRt1SV1ewUAEmif+aQj5cJQ=9vbA@mail.gmail.com>
+ <20200406160148.GB113388@rani.riverdale.lan>
+ <CAMj1kXFKDWB9n0kWhXHLH0XP0O1v_0b=bFJad=kBvx2qVxqDcQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMj1kXFKDWB9n0kWhXHLH0XP0O1v_0b=bFJad=kBvx2qVxqDcQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Mon, Apr 06, 2020 at 06:22:33PM +0200, Ard Biesheuvel wrote:
+> 
+> > We could just pull the stub's bss section all into data with objcopy
+> > similar to what ARM64 does [1]? i.e. rename .bss to .bss.efistub and
+> > then pull that into .data in the linker script for the compressed
+> > kernel?
+> >
+> 
+> I don't follow. I'm not aware of arm64 doing anything out of the
+> ordinary with .bss? Note that arm64 does not have a separate
+> decompressor, so the EFI stub is part of the kernel proper. This is
+> why sections are renamed to start with .init
 
-On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
-> Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
-> as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
-> 24MHz. So instead making clock-frequency as dt-property just let the
-> driver enforce the required clock frequency.
+ARM64 renames the stub sections prefixing them with .init, and that
+includes .bss. The ARM64 linker script then puts .init.bss into the
+.init.data section. So I was suggesting doing something similar with the
+x86 stub, renaming .bss to .bss.efistub, and then putting that into
+.data via linker script.
 
-Even if some current systems where the driver is used are using 24 MHz
-clock, that doesn't mean there wouldn't be systems using another frequency
-that the driver does not support right now.
+Anyway, I'll do the section annotation for now as that will be less
+churn and we can revisit this after that.
 
-The driver really should not set the frequency unless it gets it from DT,
-but I think the preferred means is to use assigned-clock-rates instead, and
-not to involve the driver with setting the frequency.
+> 
+> > There is also this scary looking comment in gnu-efi's linker script:
+> >         /* the EFI loader doesn't seem to like a .bss section, so we stick
+> >            it all into .data: */
+> > I don't know what the history of that is.
+> >
+> 
+> I don't remember, to be honest, but I'm pretty sure I copy-pasted that
+> from elsewhere at the time.
+> 
+> > [1] As an aside, why doesn't ARM do this as well rather than using the
+> > section(.data) annotation?
+> >
+> 
+> The ARM decompressor has this hideous hack, where text [and rodata]
+> executes straight from flash, and BSS is relocated into DRAM. In order
+> for this to work, it actually *requires* GOT indirections for BSS
+> items, to ensure that all BSS references use absolute addresses, which
+> can be relocated independently from the rest of the kernel image. This
+> is the reason ARM does not permit a .data section in the decompressor.
+> However, the EFI stub does not support execute in place from flash,
+> and so we can permit a .data section there. At the same time, we don't
+> support GOT indirections in the EFI stub, so we cannot use the BSS
+> section. So instead, we just put the few BSS pieces we have into .data
+> instead.
+> 
 
-Otherwise we'll make it impossible to support other frequencies, at least
-without more or less random defaults.
-
--- 
-Kind regards,
-
-Sakari Ailus
+I see, thanks.
