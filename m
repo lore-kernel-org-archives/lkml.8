@@ -2,255 +2,134 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE1EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6F8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16E0422284
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rtFgLkj0"
+	by mail.kernel.org (Postfix) with ESMTP id 8EF0523A1C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:10:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586182228;
+	bh=OgOGUCitRRP/T8mKYZLXW0xweJNWsGNMLQglNR9Ce8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r3e3B2FPWn3eIbt2zJRQKGdbS20ff6Spbk7yhEkgd8yNKWTArSVgWKteo26pMyb/0
+	 0Bqrc21vP+57Rjkmj5dB2hP5bdm6KXFuRp14mJlprfczEYV2XJwgIIqINNstPuBVW0
+	 3+NoBhK8q1ovzT8Q5ivIopGm4POllkTYm56WB4jA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgDFOJ4 (ORCPT
+        id S1728606AbgDFOK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:09:56 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41382 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728584AbgDFOJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:09:55 -0400
-Received: by mail-qt1-f196.google.com with SMTP id i3so12864580qtv.8;
-        Mon, 06 Apr 2020 07:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=G1rSBURl2zWm9/ISfqkcj4HvKPnz52goe6oMKSgf0oI=;
-        b=rtFgLkj0p2RrTrAWhHybESc3oB+VWTYbUa2PeYE/n6ibqiHBMkcCsI9h+iBlU7mER2
-         3djYK5HzlapCimAAbDZ40sLBTdS88FINSzM56xLra7q+/FUmeLK7MRqT1bCptMiyuPay
-         8R2i0XXqySVKQg+BLYHP8yCLgcEvdumbhEB4IEApLhPf5yd5K9fyOwApT3zcH97+2QRt
-         bzwwIKg9KoMUGrH+CJpK8KjmJIPhi33BIu5FESwQVCX39OsRjUbr42JkfWpSWClpD1vq
-         eZa3fdcq3l6gmjoPsyDKYFAdwHQtzdEfoG0P+JryG4BFzMMhb7VqXLOU+Xei+wDnR3B8
-         pi0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=G1rSBURl2zWm9/ISfqkcj4HvKPnz52goe6oMKSgf0oI=;
-        b=QlOyNUy9hSZAPjzXMZbae2o75vvXA+LXbCwXawd32ukY/YMFS9emNN8CID6Pda4nje
-         2P27ijkw8o0zcnINbddRFEX2ZTDqO8qUfAqD2An3lNZTtWI4dOsu2xhs9ZRlSPMEtwTR
-         K1A8oj8cHWmwSjg5Qaa5TMXPW4VfXMVf15fMUC7hFFg/G85JyrKHgdK4NZ1QOjBB5DfJ
-         +hHAcHml9a5Hv4SOzBmB4IUbjBDlsvQaic/7pAemJRn/jy3kRUi1LzHrbmMPOdzqLBxg
-         Q1h1RN389EWpJsacfPxOD/SpTZs7qPYBgYKrS6gdUTdudYWofG4B09WTsWgG1X/rsmSN
-         lZlg==
-X-Gm-Message-State: AGi0PuZmMFsrKlwz8/aE0P/k8qsKxsGYHJX8r/uu/6QOwzBSFgMd9BB6
-        4woeVTjTlcaFjikacFn+cN4=
-X-Google-Smtp-Source: APiQypJiFuilmxySOSTcg4mbSaBEqnkoUgeoSO7gspSBdPAvYJD/ohLgnqVe/A6XH3xNinJWn0+GqQ==
-X-Received: by 2002:ac8:674a:: with SMTP id n10mr8395633qtp.150.1586182194189;
-        Mon, 06 Apr 2020 07:09:54 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id h138sm14600509qke.86.2020.04.06.07.09.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 07:09:53 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 53F96409A3; Mon,  6 Apr 2020 11:09:51 -0300 (-03)
-Date:   Mon, 6 Apr 2020 11:09:51 -0300
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>,
-        Andrey Zhizhikin <andrey.z@gmail.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 4/5] tools api: add a lightweight buffered reading api
-Message-ID: <20200406140951.GE29826@kernel.org>
-References: <20200402154357.107873-1-irogers@google.com>
- <20200402154357.107873-5-irogers@google.com>
- <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
+        Mon, 6 Apr 2020 10:10:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728405AbgDFOK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 10:10:27 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12912395B;
+        Mon,  6 Apr 2020 14:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586182225;
+        bh=OgOGUCitRRP/T8mKYZLXW0xweJNWsGNMLQglNR9Ce8c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CON5JSBs/tPWIZV3Nd9bYqXiekdGMRmbI5kIIE99ckLSpocYPhdy/06x90OACGYdO
+         zPiEJLs8YCmx4ZHTayBxPyVjceHWp/QeglX+Oudhf97+w8INuAN8RTgdRClz6zIYBO
+         wctIMM7IHW30WaN9QJtXvQiHGcK1LNpfV2locpwg=
+Date:   Mon, 6 Apr 2020 15:10:20 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "chengjian (D)" <cj.chengjian@huawei.com>, andrew.murray@arm.com,
+        bristot@redhat.com, jakub.kicinski@netronome.com,
+        Kees Cook <keescook@chromium.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>, bobo.shaobowang@huawei.com
+Subject: Re: Why is text_mutex used in jump_label_transform for x86_64
+Message-ID: <20200406141020.GB3178@willie-the-truck>
+References: <f7f686f2-4f28-1763-dd19-43eff6a5a8f2@huawei.com>
+ <20200320102709.GC20696@hirez.programming.kicks-ass.net>
+ <28edc3d5-83a3-43cb-3e64-7d0525d430f3@huawei.com>
+ <20200406091551.GG20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200406091551.GG20730@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Sat, Apr 04, 2020 at 12:06:45PM +0900, Namhyung Kim escreveu:
-> Hello,
+On Mon, Apr 06, 2020 at 11:15:51AM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 06, 2020 at 04:39:11PM +0800, chengjian (D) wrote:
+> > 
+> > On 2020/3/20 18:27, Peter Zijlstra wrote:
+> > > It depends on the architecture details of how self-modifying code works.
+> > > In particular, x86 is a variable instruction length architecture and
+> > > needs extreme care -- it's implementation requires there only be a
+> > > single text modifier at any one time, hence the use of text_mutex.
+> > > 
+> > > ARM64 OTOH is, like most RISC based architectures, a fixed width
+> > > instruction architecture. And in particular it can re-write certain
+> > > (branch) instructions with impunity (see their
+> > > aarch64_insn_patch_text_nosync()). Which is why they don't need
+> > > additional serialization.
+> > 
+> > Hi, Peter
+> > 
+> > Thank you very much for your reply.
+> > 
+> > X86 is a variable-length instruction, only one byte modification of the
+> > instruction
+> > can be regarded as atomic. so we must be very careful when modifying
+> > instructions
+> > concurrently.
 > 
-> On Fri, Apr 3, 2020 at 12:44 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > The synthesize benchmark shows the majority of execution time going to
-> > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
-> > reading library that will be used to replace these calls in a follow-up
-> > CL.
+> Close enough.
+> 
+> > For other architectures such as ARM64, the modification of some instructions
+> > can be
+> > considered atomic, (Eg. nop -> jmp/b). The set of instructions that can be
+> > executed
+> > by one thread of execution as they are being modified by another thread of
+> > execution
+> > without requiring explicit synchronization.
+> > 
+> > In ARM64 Architecture Reference Manual, I find that:
+> >     Concurrent modification and execution of instructions can lead to the
+> > resulting instruction performing any behavior
+> >     that can be achieved by executing any sequence of instructions that can
+> > be executed from the same Exception level,
+> >     except where each of the instruction before modification and the
+> > instruction after modification is one of a B, BL, BRK,
+> >     HVC, ISB, NOP, SMC, or SVC instruction.
+> >     For the B, BL, BRK, HVC, ISB, NOP, SMC, and SVC instructions the
+> > architecture guarantees that, after modification of the
+> >     instruction, behavior is consistent with execution of either:
+> >     • The instruction originally fetched.
+> >     • A fetch of the modified instruction
+> > 
+> > So we can safely modify jump_label for ARM64(from NOP to b or form b to
+> > NOP).
+> > 
+> > Is my understanding correct?
+> 
+> I think so; but I'm really not much of an ARM64 person. FWIW I think I
+> remember Will saying the same is true of ARM (32bit) and they could
+> implement the same optimization, but so far nobody has bothered doing
+> so. But please, ask an ARM64 maintainer and don't take my word for this.
 
-waiting for some conclusion to this thread,
+On 32-bit there are complications with Thumb-2 instructions where you can
+have a mixture of 16-bit and 32-bit encodings, so you have to be pretty
+careful there.
 
-- Arnaldo
+For arm64, we have aarch64_insn_patch_text_nosync() which we use to toggle
+jump labels.
 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/api/io.h | 107 +++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 107 insertions(+)
-> >  create mode 100644 tools/lib/api/io.h
-> >
-> > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-> > new file mode 100644
-> > index 000000000000..5aa5b0e26a7a
-> > --- /dev/null
-> > +++ b/tools/lib/api/io.h
-> > @@ -0,0 +1,107 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Lightweight buffered reading library.
-> > + *
-> > + * Copyright 2019 Google LLC.
-> > + */
-> > +#ifndef __API_IO__
-> > +#define __API_IO__
-> > +
-> > +struct io {
-> > +       /* File descriptor being read/ */
-> > +       int fd;
-> > +       /* Size of the read buffer. */
-> > +       unsigned int buf_len;
-> > +       /* Pointer to storage for buffering read. */
-> > +       char *buf;
-> > +       /* End of the storage. */
-> > +       char *end;
-> > +       /* Currently accessed data pointer. */
-> > +       char *data;
-> > +       /* Set true on when the end of file on read error. */
-> > +       bool eof;
-> > +};
-> > +
-> > +static inline void io__init(struct io *io, int fd,
-> > +                           char *buf, unsigned int buf_len)
-> > +{
-> > +       io->fd = fd;
-> > +       io->buf_len = buf_len;
-> > +       io->buf = buf;
-> > +       io->end = buf;
-> > +       io->data = buf;
-> > +       io->eof = false;
-> > +}
-> > +
-> > +/* Reads one character from the "io" file with similar semantics to fgetc. */
-> > +static inline int io__get_char(struct io *io)
-> > +{
-> > +       char *ptr = io->data;
-> > +
-> > +       if (ptr == io->end) {
-> > +               ssize_t n = read(io->fd, io->buf, io->buf_len);
-> > +
-> > +               if (n <= 0) {
-> > +                       io->eof = true;
-> > +                       return -1;
-> > +               }
-> > +               ptr = &io->buf[0];
-> > +               io->end = &io->buf[n];
-> > +       }
-> > +       io->data = ptr + 1;
-> > +       return *ptr;
-> > +}
-> > +
-> > +/* Read a hexadecimal value with no 0x prefix into the out argument hex.
-> > + * Returns -1 on error or if nothing is read, otherwise returns the character
-> > + * after the hexadecimal value.
-> > + */
-> > +static inline int io__get_hex(struct io *io, __u64 *hex)
-> > +{
-> > +       bool first_read = true;
-> > +
-> > +       *hex = 0;
-> > +       while (true) {
-> > +               char ch = io__get_char(io);
-> > +
-> 
-> Maybe you can add this
-> 
->     if (io->eof)
->         return 0;
-> 
-> Please see below
-> 
-> 
-> > +               if (ch < 0)
-> > +                       return ch;
-> > +               if (ch >= '0' && ch <= '9')
-> > +                       *hex = (*hex << 4) | (ch - '0');
-> > +               else if (ch >= 'a' && ch <= 'f')
-> > +                       *hex = (*hex << 4) | (ch - 'a' + 10);
-> > +               else if (ch >= 'A' && ch <= 'F')
-> > +                       *hex = (*hex << 4) | (ch - 'A' + 10);
-> > +               else if (first_read)
-> > +                       return -1;
-> > +               else
-> > +                       return ch;
-> > +               first_read = false;
-> > +       }
-> > +}
-> 
-> What if a file contains hex digits at the end (without trailing spaces)?
-> I guess it'd see EOF and return -1, right?
-> 
-> And it'd better to be clear when it sees a big hex numbers -
-> it could have a comment that it'd simply discard upper bits
-> or return an error.
-> 
-> > +
-> > +/* Read a decimal value into the out argument dec.
-> > + * Returns -1 on error or if nothing is read, otherwise returns the character
-> > + * after the decimal value.
-> > + */
-> > +static inline int io__get_dec(struct io *io, __u64 *dec)
-> > +{
-> > +       bool first_read = true;
-> > +
-> > +       *dec = 0;
-> > +       while (true) {
-> > +               char ch = io__get_char(io);
-> > +
-> > +               if (ch < 0)
-> > +                       return ch;
-> > +               if (ch >= '0' && ch <= '9')
-> > +                       *dec = (*dec * 10) + ch - '0';
-> > +               else if (first_read)
-> > +                       return -1;
-> > +               else
-> > +                       return ch;
-> > +               first_read = false;
-> > +       }
-> > +}
-> 
-> Ditto.
-> 
-> Thanks
-> Namhyung
-> 
-> 
-> > +
-> > +#endif /* __API_IO__ */
-> > --
-> > 2.26.0.rc2.310.g2932bb562d-goog
-> >
-
--- 
-
-- Arnaldo
+Will
