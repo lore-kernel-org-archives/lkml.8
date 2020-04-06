@@ -2,81 +2,146 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68946C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE2EC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3889421D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:37:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prok.pw header.i=@prok.pw header.b="bMzBCQCX"
+	by mail.kernel.org (Postfix) with ESMTP id 9255621D93
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:37:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586176640;
+	bh=SEe7dpsbSIG9Vldwf8gU5V4sDR/CwnSv9c8VsT4XWFg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WmMEQwi7vaISQ1nNbvC9lC2dwe9WFEw+HGVuLzQtpsNWQqfI8c+B/cOWOfDNiespl
+	 CIYn47noGYXWvsUB9OmqayArELQy87LqhkTbBsIBrAFrfuyCLK1lBgWfhXtojyD1fn
+	 ezq8c55k6D+tHHm6lw/7kGSlRZlxq7RBO0ciURIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgDFMhG (ORCPT
+        id S1728049AbgDFMhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:37:06 -0400
-Received: from smtp17.mail.ru ([94.100.176.154]:36636 "EHLO smtp17.mail.ru"
+        Mon, 6 Apr 2020 08:37:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbgDFMhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:37:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=prok.pw; s=mailru;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID; bh=iiNfHbyZdz43eY/ca1ZTDKaSuSr+HPfVBFPF8k2SFn4=;
-        b=bMzBCQCXt7YcOnWEiuhQXHkHpXme3hxQbJAlobZMGZw+aeYrz/mPui9HSIugXP8UadagmbMKI20AZj4XGVDFimnewZ39tt+ZDRgBm2X6gtof/SSdP5mVIAbFMew58FNAe/ZG76W7pVr8pFEQZezGgA66R/U58zR9BuHoi1BapQI=;
-Received: by smtp17.mail.ru with esmtpa (envelope-from <me@prok.pw>)
-        id 1jLQzt-0000PQ-Fc; Mon, 06 Apr 2020 15:37:02 +0300
-Message-ID: <a406bd0ab573e17c1004d3d91948938c209cf94d.camel@prok.pw>
-Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
- bzImage
-From:   Sergey Shatunov <me@prok.pw>
-To:     Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     bp@alien8.de, hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>
-Date:   Mon, 06 Apr 2020 19:36:57 +0700
-In-Reply-To: <CAMj1kXHWhPmnaCS74n=1MYLfnsKqf+UAfmaLGQYx9jH3YsXvfg@mail.gmail.com>
-References: <20200109150218.16544-1-nivedita@alum.mit.edu>
-         <20200405154245.11972-1-me@prok.pw>
-         <20200405231845.GA3095309@rani.riverdale.lan>
-         <CAMj1kXHWhPmnaCS74n=1MYLfnsKqf+UAfmaLGQYx9jH3YsXvfg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp17.mail.ru; auth=pass smtp.auth=me@prok.pw smtp.mailfrom=me@prok.pw
-X-7564579A: 78E4E2B564C1792B
-X-77F55803: 0A44E481635329DB0E1AA8A03B392317D32E5E48865217365060145B739F5F5C7141CD936E95A8CDF688BCB05C26794D00EEFFA3BE1FE4186B5281BCEF864E538028E4E492F5D27DF3F88509D94693E6
-X-7FA49CB5: 0D63561A33F958A580C73DA523369336E96807BD70808086B9B34D7F4F05369A8941B15DA834481FA18204E546F3947CEDCF5861DED71B2F389733CBF5DBD5E9C8A9BA7A39EFB7666BA297DBC24807EA117882F446042972877693876707352033AC447995A7AD18CB629EEF1311BF91D2E47CDBA5A965834E70A05D1297E1BBBA3038C0950A5D3613377AFFFEAFD269176DF2183F8FC7C0207D9C0C136568F07B076A6E789B0E97A8DF7F3B2552694A0E14360347543F5849FD398EE364050F140C956E756FBB7A287C8E22D4AE2A51B3661434B16C20AC446828A5085A663B75ECD9A6C639B01B78DA827A17800CE7F2C1598F50A6BE78731C566533BA786A40A5AABA2AD371193C9F3DD0FB1AF5EB82E77451A5C57BD33C9F3DD0FB1AF5EB4E70A05D1297E1BBCB5012B2E24CD356
-X-D57D3AED: Y8kq8+OzVozcFQziTi/Zi1xwo7H2ZNxGP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSo0zU/dgAo80gyxHfUpwjuv
-X-Mailru-Internal-Actual: A:0.8248366176939
-X-Mailru-Sender: C70B145DBB19DC3370B3FB291950C1B52184C016B27618789BBACE8634A6DD1B21401CF93FD6FA558BA0E2A9D6159BD266FEC6BF5C9C28D9A91CF0FA91B32267255DC5169939796B8DAAFE1477B51D223453F38A29522196
-X-Mras: Ok
+        id S1727989AbgDFMhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 08:37:19 -0400
+Received: from localhost.localdomain (89.208.247.74.16clouds.com [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDC8D21D82;
+        Mon,  6 Apr 2020 12:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586176638;
+        bh=SEe7dpsbSIG9Vldwf8gU5V4sDR/CwnSv9c8VsT4XWFg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TFPTKDLTEfUiAs0UycDPJuwFjdV7VuPcCjOgBNXrS3AiISNs9HHgDMuLNL/+bjgjh
+         RYVOk05NhzUlzMtyar+AkgCK+KJHMAAppL8AU/5Ov3uTOusnaQWDOw96tz0QlhR9YL
+         tujw2OoSdaFi6Fe47SrpA7FPfWVE2dOHTPIQnPtE=
+From:   guoren@kernel.org
+To:     torvalds@linux-foundation.org
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org
+Subject: [ GIT PULL ] csky updates for v5.7-rc1
+Date:   Mon,  6 Apr 2020 20:37:13 +0800
+Message-Id: <20200406123713.30492-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-06 at 10:44 +0200, Ard Biesheuvel wrote:
-> On Mon, 6 Apr 2020 at 01:18, Arvind Sankar <nivedita@alum.mit.edu>
-> wrote:
-> > On Sun, Apr 05, 2020 at 10:42:46PM +0700, Sergey Shatunov wrote:
-> > > This patch causes some strange things happens with my laptop.
-> > > 
-> > > Cold boot crashed in some early initilization logic with message
-> > > 'Failed to execute /esp/.../linux.efi: Buffer Too Small'.
-> > > After couple reboots into firmware setup (bios) or hot reboot
-> > > from other working kernel (without that commit) helps it to boot.
-> > > During bisecting couple times I saw different message:
-> > > 'exit_efi() failed; efi_main() failed', but above tricks helps it
-> > > too.
-> 
-> Could you please try adding 'efi=no_disable_early_pci_dma' to the
-> kernel command line? The lack of BSS zeroization may result in that
-> option to get inadvertently enabled, and it is known to break
-> exit_boot() on some systems.
+Hi Linus,
 
-With 'efi=no_disable_early_pci_dma' it works again.
+Please pull the changes for v5.7-rc1. In this round, we have some features
+and fixups.
 
+Best Regards
+ Guo Ren
+
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
+
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+
+are available in the Git repository at:
+
+  https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.7-rc1
+
+for you to fetch changes up to aefd9461d34a1b0a2acad0750c43216c1c27b9d4:
+
+  csky: Fixup cpu speculative execution to IO area (2020-04-03 12:40:07 +0800)
+
+----------------------------------------------------------------
+csky updates for 5.7-rc1
+
+ - Add kproobes/uprobes support
+ - Add lockdep, rseq, gcov support
+ - Fixup init_fpu
+ - Fixup ftrace_modify deadlock
+ - Fixup speculative execution on IO area
+
+----------------------------------------------------------------
+Guo Ren (10):
+      csky: Fixup init_fpu compile warning with __init
+      csky: Implement ptrace regs and stack API
+      csky: Add support for restartable sequence
+      csky: Implement ftrace with regs
+      csky/ftrace: Fixup ftrace_modify_code deadlock without CPU_HAS_ICACHE_INS
+      csky: Fixup get wrong psr value from phyical reg
+      csky: Enable LOCKDEP_SUPPORT
+      csky: Add kprobes supported
+      csky: Add uprobes support
+      csky: Fixup cpu speculative execution to IO area
+
+Ma Jun (1):
+      csky: Enable the gcov function
+
+ arch/csky/Kconfig                            |  13 +
+ arch/csky/abiv1/inc/abi/entry.h              |   5 +-
+ arch/csky/abiv2/fpu.c                        |   5 -
+ arch/csky/abiv2/inc/abi/entry.h              |  67 +++-
+ arch/csky/abiv2/inc/abi/fpu.h                |   3 +-
+ arch/csky/abiv2/mcount.S                     |  48 +++
+ arch/csky/include/asm/Kbuild                 |   1 -
+ arch/csky/include/asm/ftrace.h               |   2 +
+ arch/csky/include/asm/kprobes.h              |  48 +++
+ arch/csky/include/asm/probes.h               |  24 ++
+ arch/csky/include/asm/processor.h            |   1 +
+ arch/csky/include/asm/ptrace.h               |  43 +++
+ arch/csky/include/asm/thread_info.h          |   2 +
+ arch/csky/include/asm/uprobes.h              |  33 ++
+ arch/csky/kernel/Makefile                    |   1 +
+ arch/csky/kernel/asm-offsets.c               |   1 +
+ arch/csky/kernel/entry.S                     |  18 +-
+ arch/csky/kernel/ftrace.c                    |  42 +++
+ arch/csky/kernel/head.S                      |   5 +
+ arch/csky/kernel/probes/Makefile             |   7 +
+ arch/csky/kernel/probes/decode-insn.c        |  49 +++
+ arch/csky/kernel/probes/decode-insn.h        |  20 ++
+ arch/csky/kernel/probes/ftrace.c             |  66 ++++
+ arch/csky/kernel/probes/kprobes.c            | 499 +++++++++++++++++++++++++++
+ arch/csky/kernel/probes/kprobes_trampoline.S |  19 +
+ arch/csky/kernel/probes/simulate-insn.c      | 398 +++++++++++++++++++++
+ arch/csky/kernel/probes/simulate-insn.h      |  49 +++
+ arch/csky/kernel/probes/uprobes.c            | 150 ++++++++
+ arch/csky/kernel/ptrace.c                    | 103 ++++++
+ arch/csky/kernel/setup.c                     |  63 +---
+ arch/csky/kernel/signal.c                    |   6 +
+ arch/csky/kernel/smp.c                       |   6 +
+ arch/csky/kernel/traps.c                     |  29 +-
+ arch/csky/mm/cachev2.c                       |  45 ++-
+ arch/csky/mm/fault.c                         |  11 +
+ 35 files changed, 1807 insertions(+), 75 deletions(-)
+ create mode 100644 arch/csky/include/asm/kprobes.h
+ create mode 100644 arch/csky/include/asm/probes.h
+ create mode 100644 arch/csky/include/asm/uprobes.h
+ create mode 100644 arch/csky/kernel/probes/Makefile
+ create mode 100644 arch/csky/kernel/probes/decode-insn.c
+ create mode 100644 arch/csky/kernel/probes/decode-insn.h
+ create mode 100644 arch/csky/kernel/probes/ftrace.c
+ create mode 100644 arch/csky/kernel/probes/kprobes.c
+ create mode 100644 arch/csky/kernel/probes/kprobes_trampoline.S
+ create mode 100644 arch/csky/kernel/probes/simulate-insn.c
+ create mode 100644 arch/csky/kernel/probes/simulate-insn.h
+ create mode 100644 arch/csky/kernel/probes/uprobes.c
