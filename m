@@ -2,88 +2,96 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DB0C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D9EC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E790206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F488206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgDFLvf (ORCPT
+        id S1727641AbgDFLyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:51:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33846 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbgDFLve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:51:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 510EFAEA6;
-        Mon,  6 Apr 2020 11:51:32 +0000 (UTC)
-Subject: Re: [PATCH 03/11] EDAC/ghes: Remove local variable rdr_mask in
- ghes_edac_dmidecode()
-To:     Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200306151318.17422-1-rrichter@marvell.com>
- <20200306151318.17422-4-rrichter@marvell.com>
-From:   Matthias Brugger <mbrugger@suse.com>
-Message-ID: <f5a5c29b-e72b-9fd0-382d-75290e10153d@suse.com>
-Date:   Mon, 6 Apr 2020 13:51:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Apr 2020 07:54:18 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:34734 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbgDFLyR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:54:17 -0400
+Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
+        with ESMTP id S23992976AbgDFLyOZ7Nfb (ORCPT
+        <rfc822;linux-mips@vger.kernel.org> + 2 others);
+        Mon, 6 Apr 2020 13:54:14 +0200
+Date:   Mon, 6 Apr 2020 12:54:14 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@linux-mips.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux-MIPS <linux-mips@linux-mips.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org,
+        =?UTF-8?Q?F=C4=81ng-ru=C3=AC_S=C3=B2ng?= <maskray@google.com>
+Subject: Re: [PATCH] MIPS: fw: arc: add __weak to prom_meminit and
+ prom_free_prom_memory
+In-Reply-To: <CAK7LNATKLcCPYxQZNbrS-jMPg+_BETU0dGv0qYvLqUkJ2fMt5w@mail.gmail.com>
+Message-ID: <alpine.LFD.2.21.2004061240060.4156324@eddie.linux-mips.org>
+References: <20200405163052.18942-1-masahiroy@kernel.org> <alpine.LFD.2.21.2004051813150.4156324@eddie.linux-mips.org> <CAK7LNATKLcCPYxQZNbrS-jMPg+_BETU0dGv0qYvLqUkJ2fMt5w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200306151318.17422-4-rrichter@marvell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03/2020 16:13, Robert Richter wrote:
-> The local variable rdr_mask serves as a static constant here. It hides
-> what the code is doing. Remove it and replace it with the actual logic
-> that checks some bits.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
+On Mon, 6 Apr 2020, Masahiro Yamada wrote:
 
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+> > > As far as I understood, prom_meminit() in arch/mips/fw/arc/memory.c
+> > > is overridden by the one in arch/mips/sgi-ip32/ip32-memory.c if
+> > > CONFIG_SGI_IP32 is enabled.
+> > >
+> > > The use of EXPORT_SYMBOL in static libraries potentially causes a
+> > > problem for the llvm linker [1]. So, I want to forcibly link lib-y
+> > > objects to vmlinux when CONFIG_MODULES=y.
+> >
+> >  It looks to me like a bug in the linker in the handling of the EXTERN
+> > command.  Why not fix the linker instead?
+[...]
+> I am not sure if this is a bug.
+> Anyway, they decided to not change ld.lld
 
-> ---
->  drivers/edac/ghes_edac.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-> index 07fa3867cba1..fce53893731a 100644
-> --- a/drivers/edac/ghes_edac.c
-> +++ b/drivers/edac/ghes_edac.c
-> @@ -123,7 +123,6 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
->  	if (dh->type == DMI_ENTRY_MEM_DEVICE) {
->  		struct memdev_dmi_entry *entry = (struct memdev_dmi_entry *)dh;
->  		struct dimm_info *dimm = edac_get_dimm(mci, dimm_fill->count, 0, 0);
-> -		u16 rdr_mask = BIT(7) | BIT(13);
->  
->  		if (entry->size == 0xffff) {
->  			pr_info("Can't get DIMM%i size\n",
-> @@ -173,7 +172,8 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
->  		default:
->  			if (entry->type_detail & BIT(6))
->  				dimm->mtype = MEM_RMBS;
-> -			else if ((entry->type_detail & rdr_mask) == rdr_mask)
-> +			else if ((entry->type_detail & BIT(7)) &&
-> +				 (entry->type_detail & BIT(13)))
->  				dimm->mtype = MEM_RDR;
->  			else if (entry->type_detail & BIT(7))
->  				dimm->mtype = MEM_SDR;
-> 
+ Well, maybe that was a conscious decision, however it's a linker feature 
+that has been there since forever and projects like Linux can legitimately 
+rely on it.  In this case perhaps sticking to other linkers, which have 
+the right features, is the right solution rather than trying to turn a 
+complex and mature project like Linux upside down (and quite possibly 
+introducing bugs and pessimisations on the way) just to match an inferior 
+tool.  Adapt your tool to the task, not the task to your tool.
 
+> MIPS code is so confusing.
+> There are multiple definitions,
+> and lib.a is (ab)used to hide them.
+
+ It's a standard feature of libraries that a symbol reference is satisfied 
+by the first symbol definition encountered.  Any extra ones provided later 
+in the link order are ignored.  And we have control over the link order.
+
+> I fixed another one for MIPS before, and
+> 0-day bot reported this recently.
+> 
+> 
+> There are lots of prom_meminit() definitions
+> in arch/mips/.
+
+ Naturally, many platforms will have its own, in addition to some generic 
+(possibly dummy) one.
+
+> Making the intention clearer is a good thing, IMHO.
+
+ Hmm, what intention?  Can you please be more specific?
+
+  Maciej
