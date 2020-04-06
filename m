@@ -2,147 +2,120 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F19FC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DFCC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E521E20768
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA4F207FF
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLJPEGqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbgDFWcB (ORCPT
+        id S1726332AbgDFWnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 18:32:01 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:52119 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgDFWcB (ORCPT
+        Mon, 6 Apr 2020 18:43:52 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44686 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgDFWnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 18:32:01 -0400
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MJmbB-1jalcf0KWv-00K6XO for <linux-kernel@vger.kernel.org>; Tue, 07 Apr
- 2020 00:32:00 +0200
-Received: by mail-qv1-f49.google.com with SMTP id n1so914739qvz.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 15:31:59 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYcIBqpw0Wp3v/rSVV/meLIynPt0Ng7SYhyoK5yen+o4422wU/X
-        5XZK80/HilxMPMwuKcaFtJz5TELQTXy70h+yNXo=
-X-Google-Smtp-Source: APiQypKFVAckWbfMAfzkVve4y9m6HV2zvNISFkpe8ilPlsIDw6/BPW9MJTckFquY7fd9BAw5f2eh9E/w5FUkT1d9r8k=
-X-Received: by 2002:a0c:9e2f:: with SMTP id p47mr1905601qve.211.1586212318645;
- Mon, 06 Apr 2020 15:31:58 -0700 (PDT)
+        Mon, 6 Apr 2020 18:43:51 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so442038plr.11;
+        Mon, 06 Apr 2020 15:43:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TU6zRlp6bLsLQvuU0UNh0Rjs9SMeCJnn8DHzXq3NahA=;
+        b=kLJPEGqkkgLnVbzA/I1nZdwcgddzzL+2wXZ5Xp1wnWMMVjFPOf3YQaOQy8TL1M0v26
+         3zVTMY9m62NSg/FwiRYeADQhn6OD90JCaiQOoLGTOSfHSyRH98rGuTU4k3wUihHLgnoM
+         3slUwXsnIbL3ONy473/bh2JtTR12Aj8f9DfVhCGwBDD35ya2UJbjieo3M0XuSZONcaLe
+         4NTBLpfwm38kvCsf9/fDWgJlbf9SsZEMzZfQdD7zeT5JZ+/AmrdHAqboOvL2/ycAgkdx
+         OmtkjNNiJAORPFexNi771zvXl40gfTZ8znTbAE9+pChnRuB1o2OtQonZU9tDWIsYHnrx
+         lLHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TU6zRlp6bLsLQvuU0UNh0Rjs9SMeCJnn8DHzXq3NahA=;
+        b=CUMScXTtECcwzFqj+qhQAhHmnS/GTMXhnh43FJ7Vo5VaWChOQczx4cib6JDnOHMWZp
+         33GngKgQZrWAMZRuE8QdNBdxzEimyUn2JPStbVWPrqyo8FfziqytnivIZmTXcHdkpTiz
+         PNQHKZcsEVfHa42HMK9YVq+kXCgr/OjeoDnd9CQKNWFdNwZe28h+sifK5feuHPxDorXy
+         w7jlRbwYgZ/4O9SSFNZG32ccBAw4eEhRIank87lamU6SUU6+QK4eIO+LB+ynr8czohHA
+         Mhg0MdTmYCmVVxo5Rl69TlBTbMlTdYZfU1f3JWf7ooVjThjX4j4yegFuzeHgD92/C+yB
+         r6gg==
+X-Gm-Message-State: AGi0PuZq7EOqaBHEBy53TI38bwC+9Rygy7WSLCZzp8t8uwUfON731zC6
+        w9Njx9nvhmXjY5vtiRfC7bc=
+X-Google-Smtp-Source: APiQypLOSynrL78ItHLA268DR9LFHq6YzYF0pLnuY2yHwnMr2DJQM0F4Xmt3tudbtp848HtDy2ffOQ==
+X-Received: by 2002:a17:90a:1911:: with SMTP id 17mr1755900pjg.65.1586213030402;
+        Mon, 06 Apr 2020 15:43:50 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id l7sm12590717pfl.171.2020.04.06.15.43.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 15:43:50 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 15:43:52 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/7] ASoC: dt-bindings: fsl_asrc: Add new property
+ fsl,asrc-format
+Message-ID: <20200406224352.GA20891@Asurada-Nvidia.nvidia.com>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
+ <47fcf06689d1a086141ce4d80f7ea7af7958dc89.1585726761.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-References: <20190205133821.1a243836@gandalf.local.home> <20190206021611.2nsqomt6a7wuaket@treble>
- <20190206121638.3d2230c1@gandalf.local.home> <CAK8P3a1hsca02=jPQmBG68RTUAt-jDR-qo=UFwf13nZ0k-nDgA@mail.gmail.com>
- <20200406221614.ac2kl3vlagiaj5jf@treble>
-In-Reply-To: <20200406221614.ac2kl3vlagiaj5jf@treble>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 7 Apr 2020 00:31:42 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3QntCOJUeUfNmqogO51yh29i4NQCu=NBF4H1+h_m_Pug@mail.gmail.com>
-Message-ID: <CAK8P3a3QntCOJUeUfNmqogO51yh29i4NQCu=NBF4H1+h_m_Pug@mail.gmail.com>
-Subject: Re: libelf-0.175 breaks objtool
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NiJ53roV/fGSIrE0SWgxLmow+nTPbgCgyKWk6AWxMPZNoFfS/lj
- SpzqQ7xrYTPyjIOH8crSUof0rgsGKJUCGbUXQmxtfY8oygD+zkkhthUofKu8Cwo4DYepqge
- 8opSg70Xj/d36e3xuWqag+hnDdqqvo/obHDZbXLEZ+StpDVs9hWgzVuo38RziP94CJYvQYL
- JPGb2BZw0CHCoaajjgjLg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:m8Mb50qnuD0=:6Sniqynpgac+CoMN79AX3W
- LQ2OdsciKc+xBmJ3ViDFBSuNsyXs4Pbx3xb1u+p2zcuUYAzAWQpSTC5xrFKvEPiLJZPcOvoky
- HPuQGdBmYtLaTDw14+cpqJsL/cb1q5UHERDlYFa27XePHQqN6553cnNNKqrEPUvTnlEMFYydi
- 66Ce5Q4yrz/gfgiujjO9RSleeOHJWEJZYjQm6f4fD6ZKg1NI8DmhYsUM9zxXx/D/guAOqyq/a
- JaP1DRF4mj3LbBjY0tzPYYCWTS4lc4iF6qXNoDrf+TYBCTBvaAKBWYcOQhfPty3hq7SulJu72
- 9ilvsJBY33R+/frdHwZxBHSMwqTqE78KVEHxsfpmISTEwjGjtnBUTaTOmm/jOd2DJeYaZ7gvC
- nDbSBCpwXWE3GRgxCmWtPMHjoq/Ce6mTyNLBhG3BWLndwVgKkDmb0yBeeh1j4Fz81v7KVHr0c
- 9TDDfGuZGZgb7c0wABbQdD9RSCSxM0yQnRjaqmpT4BFMKXUX7jUoL+7Rn4eI4xisDXNysHz65
- 8yjUalM6oB/GkP5X1Kyxe88TEBTmHCosGrl48wn/zEddCTNevPHqDaFYjqSY36JJrCcs5MfiJ
- wVp1MUnUSp0Ue6fD4mDrCKOXuKjJ9ojgJm1JfonXxw4dcMpf81xMxd0mCF/TN6KDFPRWB6b8Q
- nk2qYY/rZACpbC4RpJUIoMM9qH3+S0YVyBE0KBt9yt4lClIwbtfIbIbERYpVlhtdebR4nz7vH
- Pbjxvm09g/dQ4R1QQ00O9m0k3oIbP5BgurkHI/JNuP4+55NU+9MDSKluicz5nyFbsqPfW9Qah
- FTCi3xo2vAJex2jjZ/Tv8nVIZCBYZ26X2n7p2wuACT1JgZWrnk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <47fcf06689d1a086141ce4d80f7ea7af7958dc89.1585726761.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 12:16 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Mon, Apr 06, 2020 at 11:07:15PM +0200, Arnd Bergmann wrote:
-> > On Wed, Feb 6, 2019 at 7:32 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > On Tue, 5 Feb 2019 20:16:11 -0600 Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > >
-> > > > On Tue, Feb 05, 2019 at 01:38:21PM -0500, Steven Rostedt wrote:
-> > > > > Just a FYI.
-> > > > >
-> > > > > After a recent upgrade in debian testing, I was not able to build the
-> > > > > kernel. I have a custom build of gcc, so I thought it was strange that
-> > > > > I was getting something like this (took this from the web, as I don't
-> > > > > have the error anymore with the work around, and currently doing a full
-> > > > > build):
-> > > > >
-> > > > > objdump: kernel/.tmp_signal.o: unable to initialize decompress status for section .debug_info
-> > > > > objdump: kernel/.tmp_signal.o: unable to initialize decompress status for section .debug_info
-> > > > > objdump: kernel/.tmp_signal.o: file format not recognized
-> > > > >   CC      arch/x86/kernel/platform-quirks.o
-> > > > > objdump: arch/x86/kernel/.tmp_ebda.o: unable to initialize decompress status for section .debug_info
-> > > > > objdump: arch/x86/kernel/.tmp_ebda.o: unable to initialize decompress status for section .debug_info
-> > > > > objdump: arch/x86/kernel/.tmp_ebda.o: file format not recognized
-> > > > > objdump: mm/.tmp_swap_slots.o: unable to initialize decompress status for section .debug_info
-> > > > > objdump: mm/.tmp_swap_slots.o: unable to initialize decompress status for section .debug_info
-> > > > > objdump: mm/.tmp_swap_slots.o: file format not recognized
-> > > >
-> > > > I installed debian testing on a VM, which has libelf 0.175-2, but I
-> > >
-> > > Hmm, I only have libelf-0.175 (no -2)
-> > >
-> > > > can't recreate.  Can you share your config?
-> > > >
-> > >
-> > > It's just a distro config. Ah, I think it's because I'm compiling my
-> > > own home built gcc. There seems to be an incompatibility with the
-> > > binutils that I used and with libelf-0.175. If I build with just the
-> > > distro gcc, it works.
-> > >
-> > > Bah, this means I need to recreate my gcc that I use to build my
-> > > kernels with :-p As I like to control which gcc I use.
-> >
-> > I now see the same problem that you reported using the gcc-9
-> > toolchain I provide on https://kernel.org/pub/tools/crosstool/.
-> >
-> > Do you have any other information that might help me fix it?
->
-> This sounds like an issue I saw before where the toolchain wants to
-> compress debuginfo (DWARF debug_info sections).  The "fix" was to add
-> '-gz=none' to KCFLAGS.
->
-> But if it's a desired feature then we could probably teach objtool to
-> deal with it.  It ignores DWARF anyway.
+On Wed, Apr 01, 2020 at 04:45:35PM +0800, Shengjiu Wang wrote:
+> In order to support new EASRC and simplify the code structure,
+> We decide to share the common structure between them. This bring
+> a problem that EASRC accept format directly from devicetree, but
+> ASRC accept width from devicetree.
+> 
+> In order to align with new ESARC, we add new property fsl,asrc-format.
+> The fsl,asrc-format can replace the fsl,asrc-width, then driver
+> can accept format from devicetree, don't need to convert it to
+> format through width.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-This sounds odd, as I have CONFIG_DEBUG_INFO disabled in all
-my randconfig builds.
+Once Rob has no objection:
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-It's also odd that I only see the problem in two specific files:
-arch/x86/realmode/rm/trampoline_64.o (in half of the randconfig builds)
-and fs/xfs/xfs_trace.o  (in only one configuration so far).
-
-With this patch I can avoid the first one, which is unconditionally
-built with -g (why?):
-
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -69,7 +69,7 @@ $(obj)/realmode.relocs: $(obj)/realmode.elf FORCE
- # ---------------------------------------------------------------------------
-
- KBUILD_CFLAGS  := $(REALMODE_CFLAGS) -D_SETUP -D_WAKEUP \
--                  -I$(srctree)/arch/x86/boot
-+                  -I$(srctree)/arch/x86/boot -gz=none
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
- KBUILD_CFLAGS  += -fno-asynchronous-unwind-tables
- GCOV_PROFILE := n
-
-I'll look at the other one tomorrow.
-
-        Arnd
+> ---
+>  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> index cb9a25165503..998b4c8a7f78 100644
+> --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> @@ -51,6 +51,10 @@ Optional properties:
+>  			  will be in use as default. Otherwise, the big endian
+>  			  mode will be in use for all the device registers.
+>  
+> +   - fsl,asrc-format	: Defines a mutual sample format used by DPCM Back
+> +			  Ends, which can replace the fsl,asrc-width.
+> +			  The value is 2 (S16_LE), or 6 (S24_LE).
+> +
+>  Example:
+>  
+>  asrc: asrc@2034000 {
+> -- 
+> 2.21.0
+> 
