@@ -2,210 +2,176 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C19C2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53888C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5896F20801
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2840320801
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:40:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/znBnX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgDFHks (ORCPT
+        id S1726723AbgDFHkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 03:40:48 -0400
-Received: from mga05.intel.com ([192.55.52.43]:13110 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgDFHkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Apr 2020 03:40:46 -0400
-IronPort-SDR: Aeu3us7qczGHdO4EhsOdwBIxM0ntQYXPf9/YJGuYS4G2AnzTWcfAiLF6wpuyD29neGNN1hWAEL
- wYBXENQZLkJg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 00:40:45 -0700
-IronPort-SDR: xTcWmXsSn+NILPy+xC6KYeVDw1S2qoyvPjEUPnzlvyuANBwJNIrEu44A1Bz0W6gV55SnysBdEI
- pIdEP0BREkdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,350,1580803200"; 
-   d="scan'208";a="274647768"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga004.fm.intel.com with ESMTP; 06 Apr 2020 00:40:42 -0700
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, lee.jones@linaro.org, arnd@arndb.de
-Cc:     robh@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [RESEND PATCH v6 3/4] dt-bindings: phy: Add YAML schemas for Intel ComboPhy
-Date:   Mon,  6 Apr 2020 15:39:55 +0800
-Message-Id:
- <e8cc2038f8fe417ddf8c3298eebae722ee5d8fe2.1585889042.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1585889042.git.eswara.kota@linux.intel.com>
-References: <cover.1585889042.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1585889042.git.eswara.kota@linux.intel.com>
-References: <cover.1585889042.git.eswara.kota@linux.intel.com>
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40849 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgDFHkn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 03:40:43 -0400
+Received: by mail-lj1-f194.google.com with SMTP id 19so13501553ljj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 00:40:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=SU8aAOCODFY6+GxOBeWofzHrHiCCqA1sLaMZiLXSXUw=;
+        b=Z/znBnX85OoIuiesmN8HokMcq3qYWhChOGsf8zivoV9S4x2ftkfKdDiFsgTTvL6C+9
+         b19SaGxk45gATh915vOfRtccsRQ1LbJJXrh/XfLRypE5s4AuhF/irZWilLIt7h2XLZ32
+         Pi+Dm/YNfmoNbFnj4KhycGTr7mmtxl/Crod5KNqBvdxOgUzDpDjXOqlmbcH5AXro1m5O
+         Bhv38Y4WOQgnhf16bbbR1qH1dTRFe6lc/qdwAsO50hP46PE1E5lhMOy+qOud8TmLSZHJ
+         vJ81nWZ71T0I1SlRs9WxxzpKvCUkH1G2EcrUiLpNB7UF4rxXzvJ+U+vTm0TnBNPq9RhI
+         EhVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=SU8aAOCODFY6+GxOBeWofzHrHiCCqA1sLaMZiLXSXUw=;
+        b=UijtoaZJrSj54R/+4b+haZx5P7VHKas56ukfXIF2EOFC3YlQfOvK6DUmQuFD3R7vHc
+         aLxmqZWewKye5u2iLVbUZswFAPdq5bEtA9ZMKsi+ABCvKg/MsqznLMtBmEjBzD8OwGGb
+         qLnsTVf8bj4gazEZqLhl9I18s+B/y8DB/kQ2CEGYv7qlajARGB0M1O9TdF3I2iOGWtzp
+         S2/tWVeotkTP/cwTfy35bsJLfTH/ChqVYKtO5EwH4qCclUvR1iN3PaOp7M0DdD0VkeAS
+         Oj88glgbcux76mB6T6oeEyVvcieFCGrkuGrdlLE4n2/Lvu04coiarJ7isGSCh9vWWAxg
+         wHTQ==
+X-Gm-Message-State: AGi0PuaM6MmCkeinjCJT3cGb4MgVa5SK8aliLCFmhgARl/Y3vc+7B0oB
+        xs3AQMZ0Z7K3PJ5bdPVbPMjMPaFJJkXvn2kWcIU=
+X-Google-Smtp-Source: APiQypId0afPZ4x8PvGkxbbjbbAzonmu1ZV2X/K1TsKNsXag6xthEU0nB4oLKp01uDFmixo3ZKhSX6FLJ2a8Uu8qL8E=
+X-Received: by 2002:a2e:9ccd:: with SMTP id g13mr11324753ljj.147.1586158842043;
+ Mon, 06 Apr 2020 00:40:42 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:ac2:4a77:0:0:0:0:0 with HTTP; Mon, 6 Apr 2020 00:40:41 -0700 (PDT)
+In-Reply-To: <20200406054110.GA1638548@kroah.com>
+References: <1586102749-3364-1-git-send-email-zhangfeionline@gmail.com>
+ <20200405164006.GA1582475@kroah.com> <CAC_binJNLLxfOm0W2TuVTJZxJRTZTvPPocSDNQMU=21XO37oZg@mail.gmail.com>
+ <20200406054110.GA1638548@kroah.com>
+From:   Fei Zhang <zhangfeionline@gmail.com>
+Date:   Mon, 6 Apr 2020 15:40:41 +0800
+Message-ID: <CAC_binJMn-uRNy1dwp=2fhF54R8DpaTZYskwEz3GNE-U0pShDQ@mail.gmail.com>
+Subject: Re: [PATCH] driver core: Fix possible use after free on name
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        songmuchun@bytedance.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200406073955.rXHKTe2zCBrkmCck16K6u4l9fY_bN_tz_urPkDfeXio@z>
 
-ComboPhy subsystem provides PHY support to various
-controllers, viz. PCIe, SATA and EMAC.
-Adding YAML schemas for the same.
+Dear Greg,
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes on v6:
-  Add Reviewed-by: Rob Herring <robh@kernel.org>
+Mostly, "class_creat" is used in kernel driver module, basically
+read-only strings,
+but it is easier to use a local variable string. When writing drive module,
+it fails to judge the local variable string which cannot be passed in
+only via interface.
+I found that someone else may also face the same problem.
 
-Changes on v5:
- Add changes as per Rob Herring inputs:
-  Use include/dt-bindings/phy/phy.h values to set intel,phy-mode.
-  Move children node properties to parent node and remove children
-   node completely.
+If we have 2 identical hardwares with different internal logic(fpga),
+it may be more
+appropriate to create dynamic classes according to the logical functions.
 
-Changes on v4:
-  No Change.
+Thanks,
+Fei
 
-Changes on v3:
-
- Add include/dt-bindings/phy/phy-intel-combphy.h for phy modes.
- Add SoC specific compatible "intel,combophy-lgm".
- Correct the nodename pattern.
- clocks description removed and add maxItems entry.
- Remove "simple-bus" as it expects minimum one address
-  cell and size cell in the children node. Call devm_of_platform_populate()
-  in the driver to perform "simple-bus" functionality.
-
-Changes on v2:
-
- Add custom 'select'
- Pass hardware instance entries with phandles and
-   remove cell-index and bid entries
- Clock, register address space, are same for the children.
-   So move them to parent node.
- Two PHY instances cannot run in different modes,
-   so move the phy-mode entry to parent node.
- Add second child entry in the DT example.
-
- .../devicetree/bindings/phy/intel,combo-phy.yaml   | 101 +++++++++++++++++++++
- 1 file changed, 101 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
-
-diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
-new file mode 100644
-index 000000000000..347d0cdfb80d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel ComboPhy Subsystem
-+
-+maintainers:
-+  - Dilip Kota <eswara.kota@linux.intel.com>
-+
-+description: |
-+  Intel Combophy subsystem supports PHYs for PCIe, EMAC and SATA
-+  controllers. A single Combophy provides two PHY instances.
-+
-+properties:
-+  $nodename:
-+    pattern: "combophy(@.*|-[0-9a-f])*$"
-+
-+  compatible:
-+    items:
-+      - const: intel,combophy-lgm
-+      - const: intel,combo-phy
-+
-+  clocks:
-+    maxItems: 1
-+
-+  reg:
-+    items:
-+      - description: ComboPhy core registers
-+      - description: PCIe app core control registers
-+
-+  reg-names:
-+    items:
-+      - const: core
-+      - const: app
-+
-+  resets:
-+    maxItems: 4
-+
-+  reset-names:
-+    items:
-+      - const: phy
-+      - const: core
-+      - const: iphy0
-+      - const: iphy1
-+
-+  intel,syscfg:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: Chip configuration registers handle and ComboPhy instance id
-+
-+  intel,hsio:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: HSIO registers handle and ComboPhy instance id on NOC
-+
-+  intel,aggregation:
-+    type: boolean
-+    description: |
-+      Specify the flag to configure ComboPHY in dual lane mode.
-+
-+  intel,phy-mode:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Mode of the two phys in ComboPhy.
-+      See dt-bindings/phy/phy.h for values.
-+
-+  "#phy-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - clocks
-+  - reg
-+  - reg-names
-+  - intel,syscfg
-+  - intel,hsio
-+  - intel,phy-mode
-+  - "#phy-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/phy/phy.h>
-+    combophy@d0a00000 {
-+        compatible = "intel,combophy-lgm", "intel,combo-phy";
-+        clocks = <&cgu0 1>;
-+        #phy-cells = <1>;
-+        reg = <0xd0a00000 0x40000>,
-+              <0xd0a40000 0x1000>;
-+        reg-names = "core", "app";
-+        resets = <&rcu0 0x50 6>,
-+                 <&rcu0 0x50 17>,
-+                 <&rcu0 0x50 23>,
-+                 <&rcu0 0x50 24>;
-+        reset-names = "phy", "core", "iphy0", "iphy1";
-+        intel,syscfg = <&sysconf 0>;
-+        intel,hsio = <&hsiol 0>;
-+        intel,phy-mode = <PHY_TYPE_PCIE>;
-+        intel,aggregation;
-+    };
--- 
-2.11.0
-
+2020-04-06 13:41 GMT+08:00, Greg KH <gregkh@linuxfoundation.org>:
+> On Mon, Apr 06, 2020 at 01:33:03PM +0800, Fei Zhang wrote:
+>> Dear Greg,
+>>
+>> Please refer to below for the crash. If you are fine with it, I will
+>> submit another patch with correcting the error mentioned.
+>>
+>> When writing a kernel driver module, we may use it like this:
+>>
+>> static int frv_init(int index)
+>> {
+>> ...
+>> 	char name [128]={0};
+>> 	sprintf(name,"test_%d",index);
+>> 	mount_dev_p->pci_class =class_create(THIS_MODULE,name);
+>> 	classdev = device_create(mount_dev_p->pci_class, NULL, devno,
+>> 	NULL, "PCIE_%x",index);
+>> ...
+>> }
+>>
+>> static void frv_exit(void)
+>> {
+>> ...
+>> 	device_destroy(mount_dev_p->pci_class,mount_dev_p->devno);
+>> 	class_destroy(mount_dev_p->pci_class );
+>> ...
+>> }
+>>
+>> But when we remove the module, a crash occurres when calling
+>> device_destroy.
+>>
+>> Call Trace:
+>>  vsnprintf+0x2b2/0x4e0
+>>  add_uevent_var+0x7d/0x110
+>>  kobject_uevent_env+0x23f/0x770
+>>  kobject_uevent+0xb/0x10
+>>  device_del+0x23b/0x360
+>>  device_unregister+0x1a/0x60
+>>  device_destroy+0x3c/0x50
+>>
+>> I traced the code and found that an invalid local variable was called
+>> in "kobject_uevent_env()", and triggered further crash as followed:
+>>
+>> kobject_uevent_env(...)
+>> {
+>> ...
+>> struct kset_uevent_ops *uevent_ops;
+>> uevent_ops = kset->uevent_ops;
+>> subsystem = uevent_ops->name(kset, kobj);
+>> add_uevent_var(env, "SUBSYSTEM=%s", subsystem);
+>> ...
+>> }
+>>
+>> What is the "subsystem" value, continue to track.
+>>
+>> static const struct kset_uevent_ops device_uevent_ops = {
+>> 	.name =		dev_uevent_name,
+>> };
+>>
+>> static const char *dev_uevent_name(struct kset *kset, struct kobject
+>> *kobj)
+>> {
+>> 	struct device *dev = kobj_to_dev(kobj);
+>> 	if (dev->class)
+>> 		return dev->class->name;
+>> 	return NULL;
+>> }
+>>
+>> Everything becomes clear: "class->name" and "subsystem" value is local
+>> variable array address of start module function inside "char name [128]".
+>> Used released local variable in device_destroy's kobject_uevent_env, an
+>> error occurred.
+>
+> Please do not top-post.
+>
+> Anyway, yes, that does seem to be a semi-valid way of creating a class,
+> does anyone currently do that in the kernel tree today?  Typically
+> creating classes is rare, and do not have a "dynamic name" like your
+> example above, because that is not what a class is for.
+>
+> So while the idea is good to solve this, I would like to go back to your
+> example to find out why you are doing this in the first place, as that
+> does not seem to be the way to use the driver model correctly.
+>
+> thanks,
+>
+> greg k-h
+>
