@@ -2,200 +2,93 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399D8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F99C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07BF4214DB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E25215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:23:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TiUWw6Wt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T3An/isl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgDFMWv (ORCPT
+        id S1727977AbgDFMXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:22:51 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42874 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727522AbgDFMWv (ORCPT
+        Mon, 6 Apr 2020 08:23:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44082 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727652AbgDFMXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:22:51 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e1so5834187plt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 05:22:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=iwCr3yzDYxmGeyXo7I4nPmvDOn5x27crLJNYH0MVPHs=;
-        b=TiUWw6Wt4+ZEeyTnPdEII0fumOXHJyANslkKPjbDOIV4ATYKpLRsH36K1CbirIvym4
-         Ob1I0giCW+RfY8FfnGVLD39KH50mjz5dLS8HLpAnLhZEteyq2IhWaGx/55cTu25mmISh
-         pKoemuSHysMf3D3v7d3vA4L1RipwSG+sHu2JwtPP90VMAm5KM4jk+vbIUEO+ufP7S6gR
-         fN6d8i+Wy5Ng+zmjy/HnVb50B5mkcsQvlYOjTNE0L/12CG1WbsoIA1cUXieMqGqLwk8t
-         GLBQVzISPEnN7YdFE59TOetNR3N+AndHCbDeQFRaIxpVo4MJDzOsf4+6Gbl31m9cn9hG
-         uPXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iwCr3yzDYxmGeyXo7I4nPmvDOn5x27crLJNYH0MVPHs=;
-        b=SFDijqkkiCmL2H7HL1EXc8zvJKEW/OBjlNBJY6eqob0uzxcI0hWKw2iVft8smoGXSg
-         XPWVaWYON1pSe7qRVtA9vF1uqlToUOfEK+Bt8qyCw5sa02rfI9nilwPncnXjclYYxvPU
-         NnPvbVrwsteoB2VoEZBo/NbFDYsIx8GzZefHyUyxhrQqhFVC1gK5W9dtzFwxxsQwREDY
-         5mY+lrmukst8FcDLqDT2RLohVVl6oKELUKCZgFTLnIP6Yei7WfB1vqcLP7GgD8dHmZQv
-         Fmipup/zxuR/yVUsbNK2Qk/bOOAcJid/bzq2X6bdwmoDmVmqE6pt3QnCBOHXLjSrVBlp
-         jBiA==
-X-Gm-Message-State: AGi0PuYYAAVNTkYCXkWhmHDKuFVsfME4JFdusPq3+vkWRM+W2xzN3cM6
-        vAQ8/lLhJhiXatdufPU9FMue3Q==
-X-Google-Smtp-Source: APiQypKfDZwaUil+k+EEgL45D4iyo2ZxZVgHgu893LI2qZbwmFgbUzqssqkaXv3mUo462bYdPax3BA==
-X-Received: by 2002:a17:902:8e8b:: with SMTP id bg11mr590892plb.139.1586175769460;
-        Mon, 06 Apr 2020 05:22:49 -0700 (PDT)
-Received: from localhost.localdomain ([117.196.230.86])
-        by smtp.gmail.com with ESMTPSA id t3sm11096413pfl.26.2020.04.06.05.22.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 Apr 2020 05:22:48 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     linux-wireless@vger.kernel.org
-Cc:     johannes@sipsolutions.net, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        matthias.schoepfer@ithinx.io, Philipp.Berg@liebherr.com,
-        Michael.Weitner@liebherr.com, daniel.thompson@linaro.org,
-        loic.poulain@linaro.org, Sumit Garg <sumit.garg@linaro.org>,
-        stable@vger.kernel.org
-Subject: [PATCH] mac80211: fix race in ieee80211_register_hw()
-Date:   Mon,  6 Apr 2020 17:51:17 +0530
-Message-Id: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 6 Apr 2020 08:23:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RQo2OeDfd3m+4rXBRNxBZJdmUxyXALb8lqu8vJKOiPA=; b=T3An/islyD62Q4dxt/D9Hy+mVe
+        yvurDqxme6dUP6xwB/OOGBcKVk7VCcxxImAYQ0WwRRKtNjBJlC8gSFWd6UJuqPcqoVtX3Myt36dqs
+        BHszbcFPCUv4vJ0fLTXFJ6VuiMsH7M4PTaLD4NoS0F4YZCBTaVj5txSfF0vOcIpOu8zDenonM2VZ1
+        hNeTZa+MUD73sn2ElnID2IAeLxqsS4FXJnbgcWbF/XaSJrV2D2SeEP6gRdWcD2Xrqdy/E1zVsKeKC
+        x2GS8ZiKS0R1I1NjgTMFB4WOwqgpeWiU6mR7i0VhB5JWJQCLm4STPG6pARo2ZjqSRUS4d0J9KbkX4
+        m2Yo/0Mw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLQn1-0002hG-3h; Mon, 06 Apr 2020 12:23:43 +0000
+Date:   Mon, 6 Apr 2020 05:23:43 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [patch 1/2] x86,module: Detect VMX modules and disable
+ Split-Lock-Detect
+Message-ID: <20200406122343.GA10683@infradead.org>
+References: <20200402123258.895628824@linutronix.de>
+ <20200402124205.242674296@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402124205.242674296@linutronix.de>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A race condition leading to a kernel crash is observed during invocation
-of ieee80211_register_hw() on a dragonboard410c device having wcn36xx
-driver built as a loadable module along with a wifi manager in user-space
-waiting for a wifi device (wlanX) to be active.
+On Thu, Apr 02, 2020 at 02:32:59PM +0200, Thomas Gleixner wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> It turns out that with Split-Lock-Detect enabled (default) any VMX
+> hypervisor needs at least a little modification in order to not blindly
+> inject the #AC into the guest without the guest being ready for it.
+> 
+> Since there is no telling which module implements a hypervisor, scan the
+> module text and look for the VMLAUNCH instruction. If found, the module is
+> assumed to be a hypervisor of some sort and SLD is disabled.
+> 
+> Hypervisors, which have been modified and are known to work correctly,
+> can add:
+> 
+>   MODULE_INFO(sld_safe, "Y");
+> 
+> to explicitly tell the module loader they're good.
+> 
+> NOTE: it is unfortunate that struct load_info is not available to the
+>       arch module code, this means CONFIG_CPU_SUP_INTEL gunk is needed
+>       in generic code.
+> 
+> NOTE: while we can 'trivially' fix KVM, we're still stuck with stuff
+>       like VMware and VirtualBox doing their own thing.
 
-Sequence diagram for a particular kernel crash scenario:
-
-    user-space  ieee80211_register_hw()  RX IRQ
-    +++++++++++++++++++++++++++++++++++++++++++++
-       |                    |             |
-       |<---wlan0---wiphy_register()      |
-       |----start wlan0---->|             |
-       |                    |<---IRQ---(RX packet)
-       |              Kernel crash        |
-       |              due to unallocated  |
-       |              workqueue.          |
-       |                    |             |
-       |       alloc_ordered_workqueue()  |
-       |                    |             |
-       |              Misc wiphy init.    |
-       |                    |             |
-       |            ieee80211_if_add()    |
-       |                    |             |
-
-As evident from above sequence diagram, this race condition isn't specific
-to a particular wifi driver but rather the initialization sequence in
-ieee80211_register_hw() needs to be fixed. So re-order the initialization
-sequence and the updated sequence diagram would look like:
-
-    user-space  ieee80211_register_hw()  RX IRQ
-    +++++++++++++++++++++++++++++++++++++++++++++
-       |                    |             |
-       |       alloc_ordered_workqueue()  |
-       |                    |             |
-       |              Misc wiphy init.    |
-       |                    |             |
-       |<---wlan0---wiphy_register()      |
-       |----start wlan0---->|             |
-       |                    |<---IRQ---(RX packet)
-       |                    |             |
-       |            ieee80211_if_add()    |
-       |                    |             |
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- net/mac80211/main.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
-
-diff --git a/net/mac80211/main.c b/net/mac80211/main.c
-index 4c2b5ba..4ca62fc 100644
---- a/net/mac80211/main.c
-+++ b/net/mac80211/main.c
-@@ -1051,7 +1051,7 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 		local->hw.wiphy->signal_type = CFG80211_SIGNAL_TYPE_UNSPEC;
- 		if (hw->max_signal <= 0) {
- 			result = -EINVAL;
--			goto fail_wiphy_register;
-+			goto fail_workqueue;
- 		}
- 	}
- 
-@@ -1113,7 +1113,7 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 
- 	result = ieee80211_init_cipher_suites(local);
- 	if (result < 0)
--		goto fail_wiphy_register;
-+		goto fail_workqueue;
- 
- 	if (!local->ops->remain_on_channel)
- 		local->hw.wiphy->max_remain_on_channel_duration = 5000;
-@@ -1139,10 +1139,6 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 
- 	local->hw.wiphy->max_num_csa_counters = IEEE80211_MAX_CSA_COUNTERS_NUM;
- 
--	result = wiphy_register(local->hw.wiphy);
--	if (result < 0)
--		goto fail_wiphy_register;
--
- 	/*
- 	 * We use the number of queues for feature tests (QoS, HT) internally
- 	 * so restrict them appropriately.
-@@ -1254,6 +1250,14 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 		local->sband_allocated |= BIT(band);
- 	}
- 
-+	rtnl_unlock();
-+
-+	result = wiphy_register(local->hw.wiphy);
-+	if (result < 0)
-+		goto fail_wiphy_register;
-+
-+	rtnl_lock();
-+
- 	/* add one default STA interface if supported */
- 	if (local->hw.wiphy->interface_modes & BIT(NL80211_IFTYPE_STATION) &&
- 	    !ieee80211_hw_check(hw, NO_AUTO_VIF)) {
-@@ -1293,6 +1297,8 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- #if defined(CONFIG_INET) || defined(CONFIG_IPV6)
-  fail_ifa:
- #endif
-+	wiphy_unregister(local->hw.wiphy);
-+ fail_wiphy_register:
- 	rtnl_lock();
- 	rate_control_deinitialize(local);
- 	ieee80211_remove_interfaces(local);
-@@ -1302,8 +1308,6 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 	ieee80211_led_exit(local);
- 	destroy_workqueue(local->workqueue);
-  fail_workqueue:
--	wiphy_unregister(local->hw.wiphy);
-- fail_wiphy_register:
- 	if (local->wiphy_ciphers_allocated)
- 		kfree(local->hw.wiphy->cipher_suites);
- 	kfree(local->int_scan_req);
-@@ -1353,8 +1357,8 @@ void ieee80211_unregister_hw(struct ieee80211_hw *hw)
- 	skb_queue_purge(&local->skb_queue_unreliable);
- 	skb_queue_purge(&local->skb_queue_tdls_chsw);
- 
--	destroy_workqueue(local->workqueue);
- 	wiphy_unregister(local->hw.wiphy);
-+	destroy_workqueue(local->workqueue);
- 	ieee80211_led_exit(local);
- 	kfree(local->int_scan_req);
- }
--- 
-2.7.4
-
+This is just crazy.  We have never cared about any out tree module, why
+would we care here where it creates a real complexity.  Just fix KVM
+and ignore anything else.
