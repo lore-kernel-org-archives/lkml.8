@@ -2,206 +2,143 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B24C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA0BC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7994B206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A9F2224E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9doaK/j"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="a9nQTTv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgDFN7b (ORCPT
+        id S1728548AbgDFOAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:59:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38898 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbgDFN7b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:59:31 -0400
-Received: by mail-io1-f67.google.com with SMTP id e79so6012659iof.5;
-        Mon, 06 Apr 2020 06:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WiuMw9xp+mz0F42UsrL6QJlGqNwQFdd9t3J1yc1c128=;
-        b=q9doaK/jB6bzjdiPXdM99b+qxzxFd86JnUE4lPM2p2JB/Swp2TkaXGPUs9/8Sy0l5c
-         Hm/R89+F+ZJjqwLKA0hlVs5+9vJkWinSKTrElIhHFNwWgudRJgtu3CAGAC2lAij+MAqY
-         KEjOV7kThMttPa9yFWO6204IuptO208FPDtYuS8bAiX1Zera0q9dyX9LQfjFtbWX8269
-         cKtZ60zpE+EMBatUc//2ApK/bqTWJg54i21O7Rsm+DXndSYVzAEJWSQ7nFhvyGkGXLav
-         Y8J72h1H+8zS3zQBfHmBCcNKT8aZv1ztlOle5VIZd17SY6jNMz/UBsRS6aAmJgq4QRog
-         S81g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WiuMw9xp+mz0F42UsrL6QJlGqNwQFdd9t3J1yc1c128=;
-        b=D1PNK0TQ09x58UEVRalWTC67zyOCkkiKuGXe1VxqR/IF4IDj6rPCneqK/pmzAbC+a8
-         ZILLdZGRMxC5izCZbwqTNXNK8ScKsuL2bIsDGPhwQc0Gb3yvuyxkya/eVyVNLL0gCpnu
-         BrL90XASA/086vz0bSZLHLGqZWay3iDifGJBzjHbft8jguqPWSCfxS815pXyQJwtrHHj
-         NLfNLqui3XGKL53228MVj6FFOhcnRdx9xv2oY5G9lTOIWlWHULhmRn4b2w0H3WH+GsMf
-         b2R4hJw3DD9o2Q7QzBCCU2OyOCAwn0+hddSiotVfGhnp9Alun1kqk1rNdHwTpUSnxoGP
-         oPhw==
-X-Gm-Message-State: AGi0PubasEdDS8n6ZR76qkIrU2ZavF3uirf0/9hS5Rp4fHjRWmFF0gmr
-        95UQcSwqBfFeexh12EARfYLjUkhh/IHyo65XT1c=
-X-Google-Smtp-Source: APiQypKtgDkzu/faGibQ6B724sQtNeNo6BF+zpyGWrRWohntvwo9hrBSntu3RhE1re6zf7ZfhNSGrnVqR5/HJVoHlDs=
-X-Received: by 2002:a05:6638:120c:: with SMTP id n12mr21231145jas.32.1586181568036;
- Mon, 06 Apr 2020 06:59:28 -0700 (PDT)
+        Mon, 6 Apr 2020 10:00:22 -0400
+Received: from mout.web.de ([212.227.17.11]:50321 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgDFOAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 10:00:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586181609;
+        bh=0Kcnfxa21mYpuQP9XeAG9Rvuf7115OKkh8c8w4idOGM=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=a9nQTTv5QHX3yOiVOHQ51LFjhtJZ1055h264HIBApJlGpEdni2InNa4iCAIRKnycj
+         LIt31mFv5xl566MLno2Yy0Th+4YJagexKRNZqbUYm6GzSh9Ft0HgTzm8OaP4fBh4zm
+         a2Nxx+Rwvsn1cB8OBuWZnVeaZVmsxHUC3Z5nZpgY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.243.176.200]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LhvyA-1iyzhy3lXG-00n5QO; Mon, 06
+ Apr 2020 16:00:09 +0200
+Subject: Re: [PATCH v5 2/2] powerpc/powernv: Add NULL check after kzalloc in
+ opal_add_one_export
+To:     Qiujun Huang <hqjagain@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200406125242.4973-1-hqjagain@gmail.com>
+ <20200406125242.4973-3-hqjagain@gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <ca341087-6407-eac8-6c33-9a434ceb7a98@web.de>
+Date:   Mon, 6 Apr 2020 16:00:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <1586165281-11888-1-git-send-email-chun-hung.wu@mediatek.com> <1586165281-11888-3-git-send-email-chun-hung.wu@mediatek.com>
-In-Reply-To: <1586165281-11888-3-git-send-email-chun-hung.wu@mediatek.com>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Mon, 6 Apr 2020 09:59:16 -0400
-Message-ID: <CAOGqxeUjx+OWRhwWznk-uHZ9op7WTZaAGq6xd4Z4QdL+Hja2yA@mail.gmail.com>
-Subject: Re: [PATCH 2/5] [2/5] mmc: host: Remove redundant host CQE bindings
-To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Cc:     mirq-linux@rere.qmqm.pl, Jonathan Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        kernel-team@android.com,
-        ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        DTML <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200406125242.4973-3-hqjagain@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:U/GoD/Jwo9MyiiC0iO37FfqwNUL2pw6qxW/ZkETc1xyjY/5oJgr
+ 579EOarRDglJ0zCLj1DbF2FQi9RNA+Svd/3lgX+e3Vq7cRhHk8z0UZwtlG3bWGkoW0KyPbw
+ fWt8rnbbLjyta76/Dp8Z/7IGVvQPDMTfV3Ki/oVMt1AlMHVTdDc2ukLttxHN7ILX085x5jq
+ 8bVwtWXuD4wEOX/YHzKHA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xtIgWn53RFQ=:vd1ZKPDzgea5ooovNpNThO
+ pbHBUwq6slhSVHpTni2iON2+r0i3UgQ8aGIt+XLDYadwCaJWwDQSO5YFwpUDkopVM7aPHMAoC
+ bxsa8k5MS3eNOgGbTNFWOKOmvrK2sRTq3+5XSKXVPszATMZdaDtEWI79zwBv/Nlia99zO/Uqy
+ +Fqx0m4UqAPFwCWgK9whlg+umWKeMO38y4jfXl/2ASsvSIcJL3I7k7oxhISy8GEiQevUsZoxV
+ QYDq/ev1QJNwvbYwFThN66fwtSwP99N3Vpq29ZSn+APuhWZv/ukR9VbBt+pCkv5LY9GeRzpTF
+ 09nqiRrcMUSUSzl/G+yD7PtuarMkjelEsmdEqDdNiasTIuxP4qxCyvVLiIGHKvqOIxrefw7gi
+ dj+bnGtL0+xit1L9a8PAolfGLmHiA9P7ek6jBV3PgYqvqhI6U4PgvCrngRAAswp4Rb1NU9d03
+ l+qT2sV/4pA/dBGBYWyOim6DFDSwnENlSPEzZbbEQVKA9TKgOcWMfgIe0zgjDmbentkhR+wiB
+ F68iqqz6HGOC1IwQz3q+r5z+YM0/uPccnHXQUYKH2bwyb9XqtDVOzt6LxvxGxhV1iLt2JjYWl
+ 6w/YxqdDtzHe9x1zROqK/1qqeJsJzM60ep8C1z2c/y9rwe12nDnGfjjAzZXn7am8QVnQRUZof
+ 5WMFlJrIvPhf2v5vEE1Nc9AbjsVvlj9DvYKL/u/dV1P+UIZbqU0pEjhGmm4K1qCgb4XEHzXaC
+ 8P1f1Pdz92LwSh0Y5nIyvz7IB0xnw6508F8fSKo1aVmp0Sj7An0YSxofRi6lKSXGMliOnt7iQ
+ QP9rRiEVnnXsEOE4jMs3VxvNwSNiqeG2pCX6UyLcAw00BV8iyKcrJGdQR4oNQmK5rdbtqT4xE
+ 0xJRRifZopJiOfYtps3NR8Km+4IH6zffuOYF+8h6fKx44j54lw3pk4BF0SZFcWlbnn2L3JmBa
+ Iwq5BTgc/wT93WPDVOorKGy65XMhz0jK6gsF2F3+kTJlPU0yzH5jMjVE6GiIkcv31YG+9vao+
+ Qyw05e/kPTRcawZTtGt9VwgvPIuooiGtil6910GToziZ2zcxMw8c2kYd7JPYGWIRu0yDHjhPT
+ 6HT/LUltOwKEm0MXEimfP+9BzAiQDnFyv/j0MxA5dzrnuIS4BXBRz/Sqmn97YAjY5a2z8bjWt
+ 5kupXWwYjQcRjnQVtpWF80ck9ZFkiRoyi6Am3fW1Og4fsRveIPkPoz+7RBe3F6o5WymLcSgHo
+ oXYwA8zsJ4hx6r6/q
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 5:28 AM Chun-Hung Wu <chun-hung.wu@mediatek.com> wrote:
+> Here needs a NULL check, as kzalloc may fail returning NULL.
 >
-> CQE bindings "supports-cqe" and "disable-cqe-dcmd" is parsed
-> in mmc_of_parse(). Remove vendor code which parses CQE bindings,
-> and use mmc_host->caps2 to decide support CQE or not.
->
-> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> ---
->  drivers/mmc/host/sdhci-brcmstb.c   | 11 ++++++-----
->  drivers/mmc/host/sdhci-msm.c       |  3 +--
->  drivers/mmc/host/sdhci-of-arasan.c |  3 ---
->  drivers/mmc/host/sdhci-tegra.c     |  2 +-
->  4 files changed, 8 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-> index ad01f64..07c90c6 100644
-> --- a/drivers/mmc/host/sdhci-brcmstb.c
-> +++ b/drivers/mmc/host/sdhci-brcmstb.c
-> @@ -247,10 +247,6 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
->                 return res;
->
->         memset(&brcmstb_pdata, 0, sizeof(brcmstb_pdata));
-> -       if (device_property_read_bool(&pdev->dev, "supports-cqe")) {
-> -               has_cqe = true;
-> -               match_priv->ops->irq = sdhci_brcmstb_cqhci_irq;
+> Issue was found by coccinelle.
 
-The above line that sets the irq was moved to later in the function,
-but needs to come before sdhci_pltfm_init()
+* Do you really try to ignore (my) specific patch review comments
+  (for a moment)?
+  https://lore.kernel.org/linuxppc-dev/b7d64d4a-74dd-ee21-db7b-018070f1295=
+f@web.de/
+  https://lore.kernel.org/patchwork/comment/1414845/
+  https://lkml.org/lkml/2020/4/6/279
 
-Al
+* Would you like to integrate further adjustments with a varying delay?
+  (Are you waiting on nicer feedback by any software maintainers?)
 
-> -       }
->         brcmstb_pdata.ops = match_priv->ops;
->         host = sdhci_pltfm_init(pdev, &brcmstb_pdata,
->                                 sizeof(struct sdhci_brcmstb_priv));
-> @@ -261,7 +257,6 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
->
->         pltfm_host = sdhci_priv(host);
->         priv = sdhci_pltfm_priv(pltfm_host);
-> -       priv->has_cqe = has_cqe;
->
->         /* Map in the non-standard CFG registers */
->         iomem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> @@ -276,6 +271,12 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
->         if (res)
->                 goto err;
->
-> +       if (host->mmc->caps2 & MMC_CAP2_CQE) {
-> +               has_cqe = true;
-> +               match_priv->ops->irq = sdhci_brcmstb_cqhci_irq;
-> +       }
-> +       priv->has_cqe = has_cqe;
-> +
->         /*
->          * If the chip has enhanced strobe and it's enabled, add
->          * callback
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index c3a160c..fbb2f57 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -1880,7 +1880,6 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->         u8 core_major;
->         const struct sdhci_msm_offset *msm_offset;
->         const struct sdhci_msm_variant_info *var_info;
-> -       struct device_node *node = pdev->dev.of_node;
->
->         host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, sizeof(*msm_host));
->         if (IS_ERR(host))
-> @@ -2076,7 +2075,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->         pm_runtime_use_autosuspend(&pdev->dev);
->
->         host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
-> -       if (of_property_read_bool(node, "supports-cqe"))
-> +       if (host->mmc->caps2 & MMC_CAP2_CQE)
->                 ret = sdhci_msm_cqe_add_host(host, pdev);
->         else
->                 ret = sdhci_add_host(host);
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index e49b44b..359eff6 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -1281,9 +1281,6 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->                                         sdhci_arasan_voltage_switch;
->                 sdhci_arasan->has_cqe = true;
->                 host->mmc->caps2 |= MMC_CAP2_CQE;
-> -
-> -               if (!of_property_read_bool(np, "disable-cqe-dcmd"))
-> -                       host->mmc->caps2 |= MMC_CAP2_CQE_DCMD;
->         }
->
->         ret = sdhci_arasan_add_host(sdhci_arasan);
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index 403ac44..d09abdd 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -715,7 +715,7 @@ static void tegra_sdhci_parse_dt(struct sdhci_host *host)
->         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->         struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
->
-> -       if (device_property_read_bool(host->mmc->parent, "supports-cqe"))
-> +       if (host->mmc->caps2 & MMC_CAP2_CQE)
->                 tegra_host->enable_hwcq = true;
->         else
->                 tegra_host->enable_hwcq = false;
-> --
-> 1.9.1
+Regards,
+Markus
