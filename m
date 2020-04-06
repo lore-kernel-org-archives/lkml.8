@@ -7,180 +7,117 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D416C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B96C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2BCC20719
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D800220672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgDFH3G (ORCPT
+        id S1726668AbgDFHaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 03:29:06 -0400
-Received: from mga17.intel.com ([192.55.52.151]:63537 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbgDFH3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 03:29:06 -0400
-IronPort-SDR: jahqi3kONJ0JXN2xrJezQGIzxgHs+j1Uwl1T6wHAl0JNgpQxNsxlO+zGJyzaj+pfNDTZ6NrEWs
- JfhSu2D43XRg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 00:29:05 -0700
-IronPort-SDR: PTRRg3j9W+zcLsusMj2JOJphF/aWn1Jpkx1T57J4M5dh9NJ+iQqcvF/kqw1HGOEmZ9hLAaBu0q
- L40tKvY5ZtdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,350,1580803200"; 
-   d="scan'208";a="450740106"
-Received: from unknown (HELO kekkonen.fi.intel.com) ([10.252.48.155])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Apr 2020 00:29:02 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id 5A0A621D18; Mon,  6 Apr 2020 10:28:58 +0300 (EEST)
-Date:   Mon, 6 Apr 2020 10:28:58 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        mchehab@kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joe Perches <joe@perches.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
- DRM fourccs
-Message-ID: <20200406072857.GD5835@kekkonen.localdomain>
-References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
- <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk>
+        Mon, 6 Apr 2020 03:30:18 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44353 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgDFHaS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 03:30:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p14so13490937lji.11;
+        Mon, 06 Apr 2020 00:30:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=dgmZ0bjqyUvm/qPZv62N1I4mJZ+HWVLMJ51Jy00jq/g=;
+        b=i6kBbKWfw/uGkbJj9F4mVkzO8TB+e0MjgrXI6OGbGagrncVEzQW6HjvyTBcf4fIFT+
+         kqKn4uJNmn6f0ol0aeQGmDXYYbDgjVnbnnXhvJ7TZglCOd3doNXeU9xDKYaQ73S4pNTa
+         dmqMQDFXBOuMvfqMM3LJBsj0IrP3SeseXVRZRwkzm6wnhddUXosEiIVvMjxmWon+dkA+
+         o0paejTCPQrCLvt4EKTjCQZPCVfp4gO4c3NJMY0waZp4M4myQLKZPSxx2X8CgYFDYL3Q
+         3EswPeHpaOo+4F2nCRkP/4QXwKYF2epe4QaAERNNXS6GEDpsCUR0Do1/npStP5y4U973
+         4jgw==
+X-Gm-Message-State: AGi0PuZGYQ/GJywMJSo57mvlGTwGFTc3o+Z8rqGl+xnr8LFWIraNxbNm
+        2X/m79csM4my24T5Bk/7hAo1bUk0
+X-Google-Smtp-Source: APiQypIDh8ERPkAwJp6PTql+5aLtPMaYL8QLB0SEl5+4n2GutnKQ4T6lJD9sCsX9xn2EsCOl8GqwRw==
+X-Received: by 2002:a2e:5450:: with SMTP id y16mr11870330ljd.121.1586158215774;
+        Mon, 06 Apr 2020 00:30:15 -0700 (PDT)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id m7sm12956837lfh.54.2020.04.06.00.30.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 00:30:15 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 10:30:08 +0300
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: BD718x7 - add missing I2C bus properties
+Message-ID: <20200406073008.GA13084@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
+The DT example needs #address-cells and #size-cells for I2C bus or
+validity checker will generate warnings. Add these properties in
+BD71837 and BD71847 binding examples.
 
-Thanks for the comments.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-On Fri, Apr 03, 2020 at 02:10:53PM +0200, Rasmus Villemoes wrote:
-> On 03/04/2020 11.11, Sakari Ailus wrote:
-> > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
-> > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
-> > the same implementation can be used.
-> 
-> This seems quite niche to me, I'm not sure that belongs in vsprintf.c.
-> What's wrong with having a
-> 
-> char *fourcc_string(char *buf, u32 x)
-> 
-> that formats x into buf and returns buf, so it can be used in a
-> 
-> char buf[8];
-> pr_debug("bla: %s\n", fourcc_string(buf, x))
+This patch was created against Lee's for-mfd-next branch. Please let
+me know if this was not feasible.
 
-I guess that could be one option. But changing the implementation could
-require changing the size of all those buffers.
+ Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml | 4 +++-
+ Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-We had this approach, too:
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+index aa922c560fcc..65018a019e1d 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+@@ -123,7 +123,9 @@ examples:
+     #include <dt-bindings/leds/common.h>
+ 
+     i2c {
+-      pmic: pmic@4b {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pmic: pmic@4b {
+             compatible = "rohm,bd71837";
+             reg = <0x4b>;
+             interrupt-parent = <&gpio1>;
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+index 402e40dfe0b8..77bcca2d414f 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+@@ -128,7 +128,9 @@ examples:
+     #include <dt-bindings/leds/common.h>
+ 
+     i2c {
+-      pmic: pmic@4b {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        pmic: pmic@4b {
+             compatible = "rohm,bd71847";
+             reg = <0x4b>;
+             interrupt-parent = <&gpio1>;
 
-<URL:https://lore.kernel.org/linux-media/20190916100433.24367-1-hverkuil-cisco@xs4all.nl/>
+base-commit: d2923aa4535664ae5c46c3a093985afd18fec118
+-- 
+2.21.0
 
-Let's see if we'll get more comments on this.
-
-> 
-> Or, for that matter, since it's for debugging, why not just print x with
-> 0x%08x?
-
-People generally prefer readable output that they can understand. The codes
-are currently being printed in characters, and that's how they are defined
-in kernel headers, too. Therefore the hexadecimal values are of secondary
-importance (although they could be printed too, as apparently a similar
-function in DRM does).
-
-> 
-> At the very least, the "case '4'" in pointer() should be guarded by
-> appropriate CONFIG_*.
-> 
-> Good that Documentation/ gets updated, but test_printf needs updating as
-> well.
-
-Agreed.
-
-> 
-> 
-> > Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> > since v1:
-> > 
-> > - Improve documentation (add -BE suffix, refer to "FourCC".
-> > 
-> > - Use '%p4cc' conversion specifier instead of '%ppf'.
-> 
-> Cute. Remember to update the commit log (which still says %ppf).
-
-I will.
-
-> 
-> > - Fix 31st bit handling in printing FourCC codes.
-> > 
-> > - Use string() correctly, to allow e.g. proper field width handling.
-> > 
-> > - Remove loop, use put_unaligned_le32() instead.
-> > 
-> >  Documentation/core-api/printk-formats.rst | 12 +++++++++++
-> >  lib/vsprintf.c                            | 25 +++++++++++++++++++++++
-> >  2 files changed, 37 insertions(+)
-> > 
-> > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> > index 8ebe46b1af39..550568520ab6 100644
-> > --- a/Documentation/core-api/printk-formats.rst
-> > +++ b/Documentation/core-api/printk-formats.rst
-> > @@ -545,6 +545,18 @@ For printing netdev_features_t.
-> >  
-> >  Passed by reference.
-> >  
-> > +V4L2 and DRM FourCC code (pixel format)
-> > +---------------------------------------
-> > +
-> > +::
-> > +
-> > +	%p4cc
-> > +
-> > +Print a FourCC code used by V4L2 or DRM. The "-BE" suffix is added on big endian
-> > +formats.
-> > +
-> > +Passed by reference.
-> 
-> Maybe it's obvious to anyone in that business, but perhaps make it more
-> clear the 4cc is stored in a u32 (and not, e.g., a __le32 or some other
-> integer), that obviously matters when the code treats the pointer as a u32*.
-
-The established practice is to use u32 (as this is really no hardware
-involved) but I guess it'd be good to document that here, too.
-
-> > +
-> > +	put_unaligned_le32(*fourcc & ~BIT(31), s);
-> > +
-> > +	if (*fourcc & BIT(31))
-> > +		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
-> > +			sizeof(FOURCC_STRING_BE));
-> 
-> put_unaligned_le32(0x0045422d, s + 4) probably generates smaller code,
-> and is more in line with building the first part of the string with
-> put_unaligned_le32().
-
-Uh. The fourcc code is made of printable characters (apart from the 31st
-bit) so it can be printed, but I wouldn't use that here. "-BE" is just a
-string and not related to 4ccs.
 
 -- 
-Regards,
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Sakari Ailus
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
