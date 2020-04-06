@@ -2,120 +2,117 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9445EC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E063C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71A6320672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="slRBn5fT"
+	by mail.kernel.org (Postfix) with ESMTP id E9ABF20672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726650AbgDFSTZ (ORCPT
+        id S1726683AbgDFSUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:19:25 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:23180 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgDFSTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:19:25 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wzMb6ZVxz9v0BM;
-        Mon,  6 Apr 2020 20:19:23 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=slRBn5fT; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id WPQRn9erC4S7; Mon,  6 Apr 2020 20:19:23 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzMb53Pmz9v0BL;
-        Mon,  6 Apr 2020 20:19:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586197163; bh=yZgIn2IQa50rMQP6WmsKiaEb+lPusPUrp+Nx/nDnY70=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=slRBn5fT//wm9OLrPXBHGltusxm9LC0swUDaHARxkWwQj9hvtfZPNC/5jxkuC01F8
-         CUSf3zEDTK8xLLy+0ZWmXxsCpneAedlzp/9AcRr0qW47bUrTd5aHoe2Mipju9Fdxw1
-         vMWAVmp5/MXf/hwOEVFNiRfoMv6BivHGuXJqCNbU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A3FB38B784;
-        Mon,  6 Apr 2020 20:19:23 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id G779_yM4ui7G; Mon,  6 Apr 2020 20:19:23 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1B2C78B775;
-        Mon,  6 Apr 2020 20:19:23 +0200 (CEST)
-Subject: Re: [RFC PATCH v2 11/13] powerpc/syscall: Avoid stack frame in likely
- part of syscall_call_exception()
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
- <fc0109635dbca7464d13451ce648ee49893711df.1586108649.git.christophe.leroy@c-s.fr>
- <1586136357.atgut3zasc.astroid@bobo.none>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <2447d216-1948-c121-4843-6ae5cac6f377@c-s.fr>
-Date:   Mon, 6 Apr 2020 20:19:18 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 14:20:02 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:33971 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726521AbgDFSUC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:20:02 -0400
+Received: (qmail 21603 invoked by uid 500); 6 Apr 2020 14:20:01 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 6 Apr 2020 14:20:01 -0400
+Date:   Mon, 6 Apr 2020 14:20:01 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] usb: raw-gadget: fix raw_event_queue_fetch locking
+In-Reply-To: <178e01023f2e6664908f7c9660fa6527a55a22d6.1586191134.git.andreyknvl@google.com>
+Message-ID: <Pine.LNX.4.44L0.2004061417050.19877-100000@netrider.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <1586136357.atgut3zasc.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 6 Apr 2020, Andrey Konovalov wrote:
 
-
-Le 06/04/2020 à 03:29, Nicholas Piggin a écrit :
-> Christophe Leroy's on April 6, 2020 3:44 am:
->> When r3 is not modified, reload it from regs->orig_r3 to free
->> volatile registers. This avoids a stack frame for the likely part
->> of syscall_call_exception()
->>
->> Before : 353 cycles on null_syscall
->> After  : 347 cycles on null_syscall
->>
-
-[...]
-
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/kernel/syscall.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
->> index 69d75fc4a5eb..630c423e089a 100644
->> --- a/arch/powerpc/kernel/syscall.c
->> +++ b/arch/powerpc/kernel/syscall.c
->> @@ -91,6 +91,8 @@ notrace long system_call_exception(long r3, long r4, long r5,
->>   
->>   	} else if (unlikely(r0 >= NR_syscalls)) {
->>   		return -ENOSYS;
->> +	} else {
->> +		r3 = regs->orig_gpr3;
->>   	}
+> If queue->size check in raw_event_queue_fetch() fails (which normally
+> shouldn't happen, that check is a fail-safe), the function returns
+> without reenabling interrupts. This patch fixes that issue, along with
+> propagating the cause of failure to the function caller.
 > 
-> So this just gives enough volatiles to avoid spilling to stack? I wonder
-> about other various options here if they would cause a spill anyway.
+> Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
 > 
-> Interesting optimisation, it would definitely need a comment. Would be
-> nice if we had a way to tell the compiler that a local can be reloaded
-> from a particular address.
+> Greg, this should apply cleanly on top of Dan's "usb: raw-gadget: Fix
+> copy_to/from_user() checks" patch.
+> 
+> ---
+>  drivers/usb/gadget/legacy/raw_gadget.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
+> index e490ffa1f58b..1582521ec774 100644
+> --- a/drivers/usb/gadget/legacy/raw_gadget.c
+> +++ b/drivers/usb/gadget/legacy/raw_gadget.c
+> @@ -81,6 +81,7 @@ static int raw_event_queue_add(struct raw_event_queue *queue,
+>  static struct usb_raw_event *raw_event_queue_fetch(
+>  				struct raw_event_queue *queue)
+>  {
+> +	int ret;
+>  	unsigned long flags;
+>  	struct usb_raw_event *event;
+>  
+> @@ -89,11 +90,14 @@ static struct usb_raw_event *raw_event_queue_fetch(
+>  	 * there's at least one event queued by decrementing the semaphore,
+>  	 * and then take the lock to protect queue struct fields.
+>  	 */
+> -	if (down_interruptible(&queue->sema))
+> -		return NULL;
+> +	ret = down_interruptible(&queue->sema);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+>  	spin_lock_irqsave(&queue->lock, flags);
+> -	if (WARN_ON(!queue->size))
+> +	if (WARN_ON(!queue->size)) {
+> +		spin_unlock_irqrestore(&queue->lock, flags);
+>  		return NULL;
 
-Ok, comment added.
+Suppose the WARN_ON triggers, and you return NULL here.  Then where do 
+you reverse the down_interruptible() on queue->sema?
 
-Christophe
+> +	}
+>  	event = queue->events[0];
+>  	queue->size--;
+>  	memmove(&queue->events[0], &queue->events[1],
+> @@ -522,10 +526,17 @@ static int raw_ioctl_event_fetch(struct raw_dev *dev, unsigned long value)
+>  	spin_unlock_irqrestore(&dev->lock, flags);
+>  
+>  	event = raw_event_queue_fetch(&dev->queue);
+> -	if (!event) {
+> +	if (PTR_ERR(event) == -EINTR) {
+>  		dev_dbg(&dev->gadget->dev, "event fetching interrupted\n");
+>  		return -EINTR;
+>  	}
+> +	if (IS_ERR_OR_NULL(event)) {
+> +		dev_err(&dev->gadget->dev, "failed to fetch event\n");
+> +		spin_lock_irqsave(&dev->lock, flags);
+> +		dev->state = STATE_DEV_FAILED;
+> +		spin_unlock_irqrestore(&dev->lock, flags);
+> +		return -ENODEV;
+> +	}
+
+Not here, obviously.  Does the semaphore ever get released?
+
+Alan Stern
+
