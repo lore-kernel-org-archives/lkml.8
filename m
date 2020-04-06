@@ -2,96 +2,186 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D9EC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27173C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F488206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B46206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbgDFLyS (ORCPT
+        id S1727696AbgDFL4h convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:54:18 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:34734 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbgDFLyR (ORCPT
+        Mon, 6 Apr 2020 07:56:37 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:58245 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbgDFL4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:54:17 -0400
-Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
-        with ESMTP id S23992976AbgDFLyOZ7Nfb (ORCPT
-        <rfc822;linux-mips@vger.kernel.org> + 2 others);
-        Mon, 6 Apr 2020 13:54:14 +0200
-Date:   Mon, 6 Apr 2020 12:54:14 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux-MIPS <linux-mips@linux-mips.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org,
-        =?UTF-8?Q?F=C4=81ng-ru=C3=AC_S=C3=B2ng?= <maskray@google.com>
-Subject: Re: [PATCH] MIPS: fw: arc: add __weak to prom_meminit and
- prom_free_prom_memory
-In-Reply-To: <CAK7LNATKLcCPYxQZNbrS-jMPg+_BETU0dGv0qYvLqUkJ2fMt5w@mail.gmail.com>
-Message-ID: <alpine.LFD.2.21.2004061240060.4156324@eddie.linux-mips.org>
-References: <20200405163052.18942-1-masahiroy@kernel.org> <alpine.LFD.2.21.2004051813150.4156324@eddie.linux-mips.org> <CAK7LNATKLcCPYxQZNbrS-jMPg+_BETU0dGv0qYvLqUkJ2fMt5w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 6 Apr 2020 07:56:36 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jLQMl-0003b6-1F
+        for linux-kernel@vger.kernel.org; Mon, 06 Apr 2020 11:56:35 +0000
+Received: by mail-pg1-f199.google.com with SMTP id x1so12824365pgb.14
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 04:56:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=9eWSY1IxGsEYPFqUPg7yJmTLZJ4z0NHpLMRifvIT13Y=;
+        b=FFeTxxvGqtx2CwfPyAm4HdbFwRWa8+fPcLem3+Aw7MVY/wTd2w0/DubisNzHWnr0ZX
+         WhWGXKaEzBsTHDkAKro2qFU4nrp5Y6K2XiAPmFJugfMib8py4d96hIWXmJzinRtHq6V0
+         ZJf6BHaS6jqhcjyxY4Fx95mzuylQyd21PFNq5bd3cOKZXHLsvBfK4QhTt2yni+H3vqfb
+         K4JZ1JkoobF0RSQeJusDDxnNUlIfZaFg+Ii+p5oppJ5H3LaGPkcq7Mg58Q992XDcgFd/
+         G6s0K1mTXAMzTRPBzHvJ0GYYBuhloQwDSKa+HBdbyuKbSCwHIdMzAb3OtyhOxLBOmbbq
+         5iiA==
+X-Gm-Message-State: AGi0PuYi6Us+FoqqE7bH6OSNkiExJnKX/dXarRXnMgi0NeLKTpD7nRhl
+        LSd0R7+tjGNLj3vyDzcISHRwYmDu8veYziLD0Fid34dU/k+fZW2AgWIMR1gCCX1Yn+nggTP9Q4A
+        Kq9bZaqpRNMu37JR76qSBKu4haI8GWrbjhkg3hBbncw==
+X-Received: by 2002:a17:90a:17cc:: with SMTP id q70mr25885719pja.26.1586174193663;
+        Mon, 06 Apr 2020 04:56:33 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKfhE1qBZbh4IauWV8F/SBsmWMAxNH6Gffn6pRMmztzOImt+ltsf1WlpyM66ZkDe2Z2e1oLcA==
+X-Received: by 2002:a17:90a:17cc:: with SMTP id q70mr25885693pja.26.1586174193217;
+        Mon, 06 Apr 2020 04:56:33 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id w69sm11405465pfc.52.2020.04.06.04.56.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Apr 2020 04:56:32 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] rtw88: Add delay on polling h2c command status bit
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <3b815e889a934491bca23593a84532d7@realtek.com>
+Date:   Mon, 6 Apr 2020 19:56:30 +0800
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:REALTEK WIRELESS DRIVER (rtw88)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <98FD848B-7F8A-4D2A-8265-CBF877011A5C@canonical.com>
+References: <20200406093623.3980-1-kai.heng.feng@canonical.com>
+ <3b815e889a934491bca23593a84532d7@realtek.com>
+To:     Tony Chuang <yhchuang@realtek.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020, Masahiro Yamada wrote:
+Hi Tony,
 
-> > > As far as I understood, prom_meminit() in arch/mips/fw/arc/memory.c
-> > > is overridden by the one in arch/mips/sgi-ip32/ip32-memory.c if
-> > > CONFIG_SGI_IP32 is enabled.
-> > >
-> > > The use of EXPORT_SYMBOL in static libraries potentially causes a
-> > > problem for the llvm linker [1]. So, I want to forcibly link lib-y
-> > > objects to vmlinux when CONFIG_MODULES=y.
-> >
-> >  It looks to me like a bug in the linker in the handling of the EXTERN
-> > command.  Why not fix the linker instead?
-[...]
-> I am not sure if this is a bug.
-> Anyway, they decided to not change ld.lld
-
- Well, maybe that was a conscious decision, however it's a linker feature 
-that has been there since forever and projects like Linux can legitimately 
-rely on it.  In this case perhaps sticking to other linkers, which have 
-the right features, is the right solution rather than trying to turn a 
-complex and mature project like Linux upside down (and quite possibly 
-introducing bugs and pessimisations on the way) just to match an inferior 
-tool.  Adapt your tool to the task, not the task to your tool.
-
-> MIPS code is so confusing.
-> There are multiple definitions,
-> and lib.a is (ab)used to hide them.
-
- It's a standard feature of libraries that a symbol reference is satisfied 
-by the first symbol definition encountered.  Any extra ones provided later 
-in the link order are ignored.  And we have control over the link order.
-
-> I fixed another one for MIPS before, and
-> 0-day bot reported this recently.
+> On Apr 6, 2020, at 19:01, Tony Chuang <yhchuang@realtek.com> wrote:
 > 
+>> Subject: [PATCH] rtw88: Add delay on polling h2c command status bit
+>> 
+>> On some systems we can constanly see rtw88 complains:
+>> [39584.721375] rtw_pci 0000:03:00.0: failed to send h2c command
+>> 
+>> Increase interval of each check to wait the status bit really changes.
+>> 
+>> While at it, add some helpers so we can use standarized
+>> readx_poll_timeout() macro.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>> drivers/net/wireless/realtek/rtw88/fw.c  | 12 ++++++------
+>> drivers/net/wireless/realtek/rtw88/hci.h |  4 ++++
+>> 2 files changed, 10 insertions(+), 6 deletions(-)
+>> 
+>> diff --git a/drivers/net/wireless/realtek/rtw88/fw.c
+>> b/drivers/net/wireless/realtek/rtw88/fw.c
+>> index 05c430b3489c..bc9982e77524 100644
+>> --- a/drivers/net/wireless/realtek/rtw88/fw.c
+>> +++ b/drivers/net/wireless/realtek/rtw88/fw.c
+>> @@ -2,6 +2,8 @@
+>> /* Copyright(c) 2018-2019  Realtek Corporation
+>>  */
+>> 
+>> +#include <linux/iopoll.h>
+>> +
+>> #include "main.h"
+>> #include "coex.h"
+>> #include "fw.h"
+>> @@ -193,8 +195,8 @@ static void rtw_fw_send_h2c_command(struct
+>> rtw_dev *rtwdev,
+>> 	u8 box;
+>> 	u8 box_state;
+>> 	u32 box_reg, box_ex_reg;
+>> -	u32 h2c_wait;
+>> 	int idx;
+>> +	int ret;
+>> 
+>> 	rtw_dbg(rtwdev, RTW_DBG_FW,
+>> 		"send H2C content %02x%02x%02x%02x %02x%02x%02x%02x\n",
+>> @@ -226,12 +228,10 @@ static void rtw_fw_send_h2c_command(struct
+>> rtw_dev *rtwdev,
+>> 		goto out;
+>> 	}
+>> 
+>> -	h2c_wait = 20;
+>> -	do {
+>> -		box_state = rtw_read8(rtwdev, REG_HMETFR);
+>> -	} while ((box_state >> box) & 0x1 && --h2c_wait > 0);
+>> +	ret = readx_poll_timeout(rr8, REG_HMETFR, box_state,
+>> +				 !((box_state >> box) & 0x1), 100, 3000);
+>> 
+>> -	if (!h2c_wait) {
+>> +	if (ret) {
+>> 		rtw_err(rtwdev, "failed to send h2c command\n");
+>> 		goto out;
+>> 	}
+>> diff --git a/drivers/net/wireless/realtek/rtw88/hci.h
+>> b/drivers/net/wireless/realtek/rtw88/hci.h
+>> index 2cba327e6218..24062c7079c6 100644
+>> --- a/drivers/net/wireless/realtek/rtw88/hci.h
+>> +++ b/drivers/net/wireless/realtek/rtw88/hci.h
+>> @@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32 addr,
+>> u32 mask, u8 data)
+>> 	rtw_write8(rtwdev, addr, set);
+>> }
+>> 
+>> +#define rr8(addr)      rtw_read8(rtwdev, addr)
+>> +#define rr16(addr)     rtw_read16(rtwdev, addr)
+>> +#define rr32(addr)     rtw_read32(rtwdev, addr)
+>> +
+>> static inline enum rtw_hci_type rtw_hci_type(struct rtw_dev *rtwdev)
+>> {
+>> 	return rtwdev->hci.type;
+>> --
 > 
-> There are lots of prom_meminit() definitions
-> in arch/mips/.
+> I think the timeout is because the H2C is triggered when the lower 4 bytes are written.
+> So, we probably should write h2c[4] ~ h2c[7] before h2c[0] ~ h2c[3].
 
- Naturally, many platforms will have its own, in addition to some generic 
-(possibly dummy) one.
+I can still see "failed to send h2c command" with the following patch:
 
-> Making the intention clearer is a good thing, IMHO.
+diff --git a/drivers/net/wireless/realtek/rtw88/fw.c b/drivers/net/wireless/realtek/rtw88/fw.c
+index eb7e623c811a..a296c860045f 100644
+--- a/drivers/net/wireless/realtek/rtw88/fw.c
++++ b/drivers/net/wireless/realtek/rtw88/fw.c
+@@ -240,10 +240,10 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
+                goto out;
+        }
 
- Hmm, what intention?  Can you please be more specific?
+-       for (idx = 0; idx < 4; idx++)
+-               rtw_write8(rtwdev, box_reg + idx, h2c[idx]);
+        for (idx = 0; idx < 4; idx++)
+                rtw_write8(rtwdev, box_ex_reg + idx, h2c[idx + 4]);
++       for (idx = 0; idx < 4; idx++)
++               rtw_write8(rtwdev, box_reg + idx, h2c[idx]);
 
-  Maciej
+        if (++rtwdev->h2c.last_box_num >= 4)
+                rtwdev->h2c.last_box_num = 0;
+
+
+> 
+> But this delay still works, I think you can keep it, and reorder the h2c write sequence.
+> 
+> Yen-Hsuan
+
