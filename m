@@ -2,114 +2,150 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589B0C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F412C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3166620672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2048A20A8B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="iPjyvEQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgDFRmY (ORCPT
+        id S1727737AbgDFRnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:42:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726735AbgDFRmX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:42:23 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036HXmLs007702;
-        Mon, 6 Apr 2020 13:41:47 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 306nvv0ra9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 13:41:47 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 036HYHa8008849;
-        Mon, 6 Apr 2020 13:41:46 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 306nvv0r9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 13:41:46 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 036HfUPn021250;
-        Mon, 6 Apr 2020 17:41:45 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma05wdc.us.ibm.com with ESMTP id 306hv69tb0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 17:41:45 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 036Hfi2X52560280
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Apr 2020 17:41:45 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3B1CAC062;
-        Mon,  6 Apr 2020 17:41:44 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48305AC05B;
-        Mon,  6 Apr 2020 17:41:41 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.85.165.246])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Apr 2020 17:41:41 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] powerpc/crash: Use NMI context for printk after crashing other CPUs
-Date:   Mon,  6 Apr 2020 14:40:59 -0300
-Message-Id: <20200406174058.686436-1-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
+        Mon, 6 Apr 2020 13:43:50 -0400
+Received: from mail-mw2nam10on2064.outbound.protection.outlook.com ([40.107.94.64]:64832
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726703AbgDFRnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:43:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fWvqrc0WbvR+saNHV3FxmU625Z6OFV1smbLoUJcv/QuoaoM76D2Gf+OljKz8OJs+EiElw4s9jH22deZsT4SyCpNXDJ+k2BzRzFVjMMk6CPIPFokFDHjTnIIUAkt2rXoC7zl6B6PK/GNC/KMx2sRr3kAQ1sYQgxxVdKbCfZKjuqJpWvScufiCoNGw+kt1rkrrZCghH6PIZxN7i49j2P2M4eOxOD/0WxoB5QFRhckcsq3MEgRq4AiOzMdzIeucdjQqywWfZkrSYjos3dLa/uSEPz/a3HxGEZXwcFw0Rr8V9PKgfW+152wXtj77EHE/wNb2d+a3hwHvwwRAMXrXEOZW4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t7la2qJGrRTTJ84B/rnDVHIfmpYeTc8cZSGQBmczHHU=;
+ b=XwAJTp/xFrkNhi9hZ0JpiKsIyW6Lt2LhzPUKIWNCnHmR0LTAZzuIBg9bJZzHStJmwUXpVgjoZ5Ww/PazEuTuWBZ9a4vhy8eURP9jOG+WROvz1B2rfzd1/sPiCEJFkh5VxHcN9QlduhkHXgZJN2LW6r7iBUddgJ9Agi8VpLpfQXxS6jrbA6LJaAzVcAZIG6+WwQyfz0jn5VTUsekkaXviMnrtNu/06Lu18tyZbniwrfOl/ul11RppROokiSOHeYmlZrhq09lNxFuAs4Vny4Um9GxbWtT8hagtTzqsw30JyE1eRptFbT3qjBL0L9AEwSxfe72x2uf9lbBQNzhNFvvHGg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t7la2qJGrRTTJ84B/rnDVHIfmpYeTc8cZSGQBmczHHU=;
+ b=iPjyvEQfRZF8UaZCXR+TgEPJA2OQdY434/Z9roZmrEb0g1TL1c+la+kUUn9PU3Fnyvk/IeJkWRFiwhSKtUwe6oZ574VqWCQLKTwmlc2HYbkgilH2NXAinWUU4XNJRxKuUMj+Sa/OkLASr7TUW/eANZ0ORXqr0p3WEUuzhoxpayE=
+Received: from SN4PR0801CA0015.namprd08.prod.outlook.com
+ (2603:10b6:803:29::25) by BN7PR02MB3986.namprd02.prod.outlook.com
+ (2603:10b6:406:f0::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Mon, 6 Apr
+ 2020 17:43:45 +0000
+Received: from SN1NAM02FT052.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:803:29:cafe::73) by SN4PR0801CA0015.outlook.office365.com
+ (2603:10b6:803:29::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend
+ Transport; Mon, 6 Apr 2020 17:43:44 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT052.mail.protection.outlook.com (10.152.72.146) with Microsoft SMTP
+ Server id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 17:43:44
+ +0000
+Received: from [149.199.38.66] (port=44341 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1jLVmQ-0007Zr-Fk; Mon, 06 Apr 2020 10:43:26 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1jLVmi-0001Ne-1G; Mon, 06 Apr 2020 10:43:44 -0700
+Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 036HheHd017224;
+        Mon, 6 Apr 2020 10:43:40 -0700
+Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <mnarani@xilinx.com>)
+        id 1jLVme-0001N1-1L; Mon, 06 Apr 2020 10:43:40 -0700
+Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
+        id 1F4631211F6; Mon,  6 Apr 2020 23:13:39 +0530 (IST)
+From:   Manish Narani <manish.narani@xilinx.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, michal.simek@xilinx.com
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        git@xilinx.com, Manish Narani <manish.narani@xilinx.com>
+Subject: [PATCH v3 0/6] Add support for Xilinx Versal SDHCI in Arasan driver
+Date:   Mon,  6 Apr 2020 23:13:29 +0530
+Message-Id: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
+X-Mailer: git-send-email 2.1.1
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(346002)(136003)(46966005)(5660300002)(4326008)(107886003)(26005)(6266002)(6666004)(426003)(356004)(81156014)(186003)(2616005)(44832011)(8936002)(8676002)(36756003)(336012)(47076004)(82740400003)(81166006)(478600001)(70586007)(70206006)(6636002)(2906002)(42186006)(316002);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-06_08:2020-04-06,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- malwarescore=0 phishscore=0 mlxscore=0 priorityscore=1501 adultscore=0
- suspectscore=0 lowpriorityscore=0 mlxlogscore=731 spamscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004060136
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e1ea59eb-2269-4b6f-7ce2-08d7da520d70
+X-MS-TrafficTypeDiagnostic: BN7PR02MB3986:
+X-Microsoft-Antispam-PRVS: <BN7PR02MB3986E161E1AA41FD4CCABCB6C1C20@BN7PR02MB3986.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0365C0E14B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3xNgAAF/s2BvcHhoxz65DkSdvEIeGHlTK4AzE0mEmktKXTqM67BAp/NbTDmy6AydGzwSkSZwrgqjIOEJVKFHyUyHMN4Zp3DEaJWBLp83c2xa2tGfGVaYIbku84YIOKgflDT7J+d4IYhN3RR5XYbxm/9E5aJ5aDbqw6d+juebkslXqP6d2g1zQiSDaNIJhsTLKn5a0GFqP2dpxGBtWpAwNad9EpS88UeOcrbyLVt6uXHHP8kNiqQVsSe4gjxYzQGPEDoDM5E8n7zHGtWC7Yb7QtD/WBa6s/Fsj2fjK11O86rPhOXu7ul8xRyhNPBkxHTs97yEbx1MRzQ8oQ1ZY85AAbs/q6e/+5eQppAkXzsLqNDvp20mdRoqWMWCwbyBvwa571hxvfMGfK0rIKbuQMQkTNunL0rd9Y6ZV0kuE1goxakFnj3U0hmQK/OWQy3SqAM0Yicz6h+SgkKDcuMxj+7tz43CvXt14oUqLsewY1IhV8eXd7GSL6NJjCxXasa233h/tDKXts3wHyxBiUFJNWEsPw==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 17:43:44.3743
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1ea59eb-2269-4b6f-7ce2-08d7da520d70
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB3986
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, if printk lock (logbuf_lock) is held by other thread during
-crash, there is a chance of deadlocking the crash on next printk, and
-blocking a possibly desired kdump.
+This patch series includes:
+ -> Document the Xilinx Versal SD controller
+ -> Add support for Versal SD Tap Delays
+ -> Reorganizing the clock operations handling
+ -> Resolve kernel-doc warnings
 
-After sending IPI to all other CPUs, make printk enter in NMI context,
-as it will use per-cpu buffers to store the message, and avoid locking
-logbuf_lock.
+Changes in v2:
+	- Addressed review comments given in v1
+	- Changed clock operation handling for better modularity.
+	- Changed comments to fix kernel-doc warnings
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- arch/powerpc/kexec/crash.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v3:
+	- Addressed review comments from v2
+	- Move platform related structure before doing clock related changes
+	- Rename sdhci_arasan_data to avoid confusion with another struct name
 
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index d488311efab1..9b73e3991bf4 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -115,6 +115,7 @@ static void crash_kexec_prepare_cpus(int cpu)
- 
- 	crash_send_ipi(crash_ipi_callback);
- 	smp_wmb();
-+	printk_nmi_enter();
- 
- again:
- 	/*
+Manish Narani (6):
+  dt-bindings: mmc: arasan: Document 'xlnx,versal-8.9a' controller
+  sdhci: arasan: Add support for Versal Tap Delays
+  mmc: sdhci-of-arasan: Rename sdhci_arasan_data to avoid confusion
+  mmc: sdhci-of-arasan: Rearrange the platform data structs for
+    modularity
+  mmc: sdhci-of-arasan: Modify clock operations handling
+  mmc: sdhci-of-arasan: Fix kernel-doc warnings
+
+ .../devicetree/bindings/mmc/arasan,sdhci.txt       |  15 +
+ drivers/mmc/host/sdhci-of-arasan.c                 | 473 +++++++++++++++------
+ 2 files changed, 361 insertions(+), 127 deletions(-)
+
 -- 
-2.25.1
+2.1.1
 
