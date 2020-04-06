@@ -2,146 +2,87 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE2EC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A654FC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9255621D93
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:37:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586176640;
-	bh=SEe7dpsbSIG9Vldwf8gU5V4sDR/CwnSv9c8VsT4XWFg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=WmMEQwi7vaISQ1nNbvC9lC2dwe9WFEw+HGVuLzQtpsNWQqfI8c+B/cOWOfDNiespl
-	 CIYn47noGYXWvsUB9OmqayArELQy87LqhkTbBsIBrAFrfuyCLK1lBgWfhXtojyD1fn
-	 ezq8c55k6D+tHHm6lw/7kGSlRZlxq7RBO0ciURIE=
+	by mail.kernel.org (Postfix) with ESMTP id 69A6421D90
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UEY77Gv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgDFMhT (ORCPT
+        id S1728045AbgDFMl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:37:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39072 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 08:41:29 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34944 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbgDFMhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:37:19 -0400
-Received: from localhost.localdomain (89.208.247.74.16clouds.com [89.208.247.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728005AbgDFMl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 08:41:29 -0400
+Received: from zn.tnic (p200300EC2F04F600C571FE02886A814C.dip0.t-ipconnect.de [IPv6:2003:ec:2f04:f600:c571:fe02:886a:814c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDC8D21D82;
-        Mon,  6 Apr 2020 12:37:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586176638;
-        bh=SEe7dpsbSIG9Vldwf8gU5V4sDR/CwnSv9c8VsT4XWFg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TFPTKDLTEfUiAs0UycDPJuwFjdV7VuPcCjOgBNXrS3AiISNs9HHgDMuLNL/+bjgjh
-         RYVOk05NhzUlzMtyar+AkgCK+KJHMAAppL8AU/5Ov3uTOusnaQWDOw96tz0QlhR9YL
-         tujw2OoSdaFi6Fe47SrpA7FPfWVE2dOHTPIQnPtE=
-From:   guoren@kernel.org
-To:     torvalds@linux-foundation.org
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org
-Subject: [ GIT PULL ] csky updates for v5.7-rc1
-Date:   Mon,  6 Apr 2020 20:37:13 +0800
-Message-Id: <20200406123713.30492-1-guoren@kernel.org>
-X-Mailer: git-send-email 2.17.0
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 89F001EC0C97;
+        Mon,  6 Apr 2020 14:41:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1586176887;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=PbaBekgCD+MeWyYk1vRkkQPU2yAt2/j+9avcpCI88LE=;
+        b=UEY77Gv5ArFCMO1FwtAfGHdXL/PbVEHaPP5I4lJUZvrVz9+QQCPvHfTkWcEzm503GpFgue
+        piAeGh2vlK1frRBdUfv6oqzgi1QgaCwpAEO+RIkfrXF6K6j6NVV4reEqzxS58IswwexQrJ
+        LY4CL2BMrwv2smovKGngto6QUgLDOtU=
+Date:   Mon, 6 Apr 2020 14:41:24 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH 18/70] x86/boot/compressed/64: Add stage1 #VC handler
+Message-ID: <20200406124123.GE2520@zn.tnic>
+References: <20200319091407.1481-1-joro@8bytes.org>
+ <20200319091407.1481-19-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200319091407.1481-19-joro@8bytes.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Mar 19, 2020 at 10:13:15AM +0100, Joerg Roedel wrote:
+> diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
+> index bfb3fc5aa144..67ddafab2943 100644
+> --- a/arch/x86/boot/compressed/idt_handlers_64.S
+> +++ b/arch/x86/boot/compressed/idt_handlers_64.S
+> @@ -75,3 +75,7 @@ SYM_FUNC_END(\name)
+>  	.code64
+>  
+>  EXCEPTION_HANDLER	boot_pf_handler do_boot_page_fault error_code=1
+> +
+> +#ifdef CONFIG_AMD_MEM_ENCRYPT
+> +EXCEPTION_HANDLER	boot_stage1_vc_handler vc_no_ghcb_handler error_code=1
 
-Please pull the changes for v5.7-rc1. In this round, we have some features
-and fixups.
+Like the others
+			boot_stage1_vc	do_boot_stage1_vc ...
 
-Best Regards
- Guo Ren
+-- 
+Regards/Gruss,
+    Boris.
 
-The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
-
-  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
-
-are available in the Git repository at:
-
-  https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.7-rc1
-
-for you to fetch changes up to aefd9461d34a1b0a2acad0750c43216c1c27b9d4:
-
-  csky: Fixup cpu speculative execution to IO area (2020-04-03 12:40:07 +0800)
-
-----------------------------------------------------------------
-csky updates for 5.7-rc1
-
- - Add kproobes/uprobes support
- - Add lockdep, rseq, gcov support
- - Fixup init_fpu
- - Fixup ftrace_modify deadlock
- - Fixup speculative execution on IO area
-
-----------------------------------------------------------------
-Guo Ren (10):
-      csky: Fixup init_fpu compile warning with __init
-      csky: Implement ptrace regs and stack API
-      csky: Add support for restartable sequence
-      csky: Implement ftrace with regs
-      csky/ftrace: Fixup ftrace_modify_code deadlock without CPU_HAS_ICACHE_INS
-      csky: Fixup get wrong psr value from phyical reg
-      csky: Enable LOCKDEP_SUPPORT
-      csky: Add kprobes supported
-      csky: Add uprobes support
-      csky: Fixup cpu speculative execution to IO area
-
-Ma Jun (1):
-      csky: Enable the gcov function
-
- arch/csky/Kconfig                            |  13 +
- arch/csky/abiv1/inc/abi/entry.h              |   5 +-
- arch/csky/abiv2/fpu.c                        |   5 -
- arch/csky/abiv2/inc/abi/entry.h              |  67 +++-
- arch/csky/abiv2/inc/abi/fpu.h                |   3 +-
- arch/csky/abiv2/mcount.S                     |  48 +++
- arch/csky/include/asm/Kbuild                 |   1 -
- arch/csky/include/asm/ftrace.h               |   2 +
- arch/csky/include/asm/kprobes.h              |  48 +++
- arch/csky/include/asm/probes.h               |  24 ++
- arch/csky/include/asm/processor.h            |   1 +
- arch/csky/include/asm/ptrace.h               |  43 +++
- arch/csky/include/asm/thread_info.h          |   2 +
- arch/csky/include/asm/uprobes.h              |  33 ++
- arch/csky/kernel/Makefile                    |   1 +
- arch/csky/kernel/asm-offsets.c               |   1 +
- arch/csky/kernel/entry.S                     |  18 +-
- arch/csky/kernel/ftrace.c                    |  42 +++
- arch/csky/kernel/head.S                      |   5 +
- arch/csky/kernel/probes/Makefile             |   7 +
- arch/csky/kernel/probes/decode-insn.c        |  49 +++
- arch/csky/kernel/probes/decode-insn.h        |  20 ++
- arch/csky/kernel/probes/ftrace.c             |  66 ++++
- arch/csky/kernel/probes/kprobes.c            | 499 +++++++++++++++++++++++++++
- arch/csky/kernel/probes/kprobes_trampoline.S |  19 +
- arch/csky/kernel/probes/simulate-insn.c      | 398 +++++++++++++++++++++
- arch/csky/kernel/probes/simulate-insn.h      |  49 +++
- arch/csky/kernel/probes/uprobes.c            | 150 ++++++++
- arch/csky/kernel/ptrace.c                    | 103 ++++++
- arch/csky/kernel/setup.c                     |  63 +---
- arch/csky/kernel/signal.c                    |   6 +
- arch/csky/kernel/smp.c                       |   6 +
- arch/csky/kernel/traps.c                     |  29 +-
- arch/csky/mm/cachev2.c                       |  45 ++-
- arch/csky/mm/fault.c                         |  11 +
- 35 files changed, 1807 insertions(+), 75 deletions(-)
- create mode 100644 arch/csky/include/asm/kprobes.h
- create mode 100644 arch/csky/include/asm/probes.h
- create mode 100644 arch/csky/include/asm/uprobes.h
- create mode 100644 arch/csky/kernel/probes/Makefile
- create mode 100644 arch/csky/kernel/probes/decode-insn.c
- create mode 100644 arch/csky/kernel/probes/decode-insn.h
- create mode 100644 arch/csky/kernel/probes/ftrace.c
- create mode 100644 arch/csky/kernel/probes/kprobes.c
- create mode 100644 arch/csky/kernel/probes/kprobes_trampoline.S
- create mode 100644 arch/csky/kernel/probes/simulate-insn.c
- create mode 100644 arch/csky/kernel/probes/simulate-insn.h
- create mode 100644 arch/csky/kernel/probes/uprobes.c
+https://people.kernel.org/tglx/notes-about-netiquette
