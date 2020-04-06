@@ -2,154 +2,175 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EF6C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D233AC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0963523107
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E91023107
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:22:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJzMZufc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SlGpdErR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgDFNWT (ORCPT
+        id S1728409AbgDFNWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:22:19 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40582 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbgDFNWS (ORCPT
+        Mon, 6 Apr 2020 09:22:50 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41506 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728258AbgDFNWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:22:18 -0400
-Received: by mail-qt1-f196.google.com with SMTP id y25so12736061qtv.7;
-        Mon, 06 Apr 2020 06:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cuhjb+a9vABf0xMYhIXhtlft1e/hgk3xK+XP54N7ens=;
-        b=sJzMZufcD34AmiyiMprFJO0RFheJcLI4hyj6FwC+Nj7e0iIU15QOznCGvz5MOFuRQd
-         Q3XUDXrjd9vzgPVSQqV2ruw+LDckTqbR5t8UxdpWE6zCqKDPE9SF2rGOYsfW/0qB2K37
-         WefY6hCzrEmRb4t+XLEXV/uxe8zsYNA2EBY+ZV88HEusUxVwcXTFz12pS+O2Dmph0Cm7
-         Hl3Moy5a+2/FfVnahvtgNTt5p0G/ZT/uMAMCOqwWQgJmKPGRm0W5Yljugi1BJodcp0qi
-         ROdXgM7s6DHFfHDe65AAFyRnd6NG+Xve6w8kggsG2lbjj0YoC/tHLXsKAt5krgcDa16l
-         53AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=cuhjb+a9vABf0xMYhIXhtlft1e/hgk3xK+XP54N7ens=;
-        b=ZBatNGsGHB48MuYWry69HVF04PUNuZQf51V3YvSYVWPCRt99wk2EVYGbv5muJML/aZ
-         daxh3293vX2bEtUrla5JxJlR/0Q/kF5h0MWY6Rd6Ij5dPm/7JqAv1Ft9jG3qQZXXZu/2
-         pkcWCZTcMWvQXPkPpFC5514zkLHzwXXo0bLjFdrTrR0qJqAmt9k7h6RTgpk/brfMJ2WJ
-         Ii+ZvQH7qAD39nJUSeJxTdGx9XwSdl+xXW3EswhL96JTuNgtr8iawkPefGu2LJIZXfYe
-         QltjDx7uwQWg48HMe4xu+rweIz7yGbx/oebEYsRUe6UC5sG6OTfJvmrcWyYUSto4/Zyb
-         NPzw==
-X-Gm-Message-State: AGi0PuZuVo7hLPgv8S1DHTqSEuyX9Jh5CB3DHAQXUcnplBOYazN+/Sxc
-        1tkp8XYcIHtTreNWdmfK2lg=
-X-Google-Smtp-Source: APiQypJkNNDNbGckSvNXDGUJp5nz2ma3aJvvAsdXKUmeZQcZGIZMZ7/kd70KM7NyMhqsErkUMNffAg==
-X-Received: by 2002:ac8:4f43:: with SMTP id i3mr20739565qtw.102.1586179337510;
-        Mon, 06 Apr 2020 06:22:17 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o18sm6895029qkk.52.2020.04.06.06.22.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 06:22:16 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 6 Apr 2020 09:22:15 -0400
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Sergey Shatunov <me@prok.pw>, hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
- bzImage
-Message-ID: <20200406132215.GA113388@rani.riverdale.lan>
-References: <20200109150218.16544-1-nivedita@alum.mit.edu>
- <20200405154245.11972-1-me@prok.pw>
- <20200405231845.GA3095309@rani.riverdale.lan>
- <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
- <20200406035110.GA3241052@rani.riverdale.lan>
- <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
- <20200406084738.GA2520@zn.tnic>
- <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
- <20200406112042.GC2520@zn.tnic>
+        Mon, 6 Apr 2020 09:22:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586179368;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=0TkjC5HYtOTtrZU10KhI3fNnM2TQOrHn3T1iEG5p4N0=;
+        b=SlGpdErROdNdEQp8nyP3mlpVISAYbv4VfhjMxIoKVNudc0/9kNi4oDBVvdwCQHqFJt7O9y
+        phC1RlZrZOP3S79yGau9ba+KmrhaWQphIqVUwsuK4rD2BEvQsQ1XLwFQ4uwsag+cGiV3Yk
+        Bv13bfSBUcI14/VVHIHJcyTw39DOcow=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-8GbgfZv4OjyHvo_4yLZtZw-1; Mon, 06 Apr 2020 09:22:46 -0400
+X-MC-Unique: 8GbgfZv4OjyHvo_4yLZtZw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3BC4B1937FC1;
+        Mon,  6 Apr 2020 13:22:45 +0000 (UTC)
+Received: from [10.36.114.88] (ovpn-114-88.ams2.redhat.com [10.36.114.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 414C6118E29;
+        Mon,  6 Apr 2020 13:22:43 +0000 (UTC)
+Subject: Re: [PATCH v1 2/5] KVM: s390: vsie: Fix delivery of addressing
+ exceptions
+To:     Christian Borntraeger <borntraeger@de.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, stable@vger.kernel.org
+References: <20200402184819.34215-1-david@redhat.com>
+ <20200402184819.34215-3-david@redhat.com>
+ <0cd2822e-8486-d386-6c00-faadaa573e5e@de.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <527f7bdf-d8f9-59b4-e70a-54e358ee9e26@redhat.com>
+Date:   Mon, 6 Apr 2020 15:22:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <0cd2822e-8486-d386-6c00-faadaa573e5e@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200406112042.GC2520@zn.tnic>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 01:20:42PM +0200, Borislav Petkov wrote:
-> On Mon, Apr 06, 2020 at 11:11:21AM +0200, Ard Biesheuvel wrote:
-> > Yes, it is in the PE/COFF specification. [0]
-> > 
-> > The whole problem is that we are conflating 'loading a PE/COFF image'
-> > with 'copying a PE/COFF image into memory', which are not the same
-> > thing. It is not just the layout issue, we are running into other
-> > problems with things like UEFI secure boot and TPM-based measured
-> > boot, where the fact that omitting the standard LoadImage() boot
-> > service (which takes care of these things under the hood) means that
-> > you now have to do your own checks and measurements. These things are
-> > literally all over the place at the moment, shim, GRUB, systemd-boot
-> > etc, with no authoritative spec that describes which component should
-> > be doing what.
+On 06.04.20 15:17, Christian Borntraeger wrote:
 > 
-> Sounds to me like what LoadImage() does is what the authoritative spec
-> should be. Perhaps we should write it down as "Do what LoadImage()
-> does... " and then enumerate the requirements.
 > 
-> > Commit ec93fc371f014a6fb483e3556061ecad4b40735c has the background, but ...
+> On 02.04.20 20:48, David Hildenbrand wrote:
+>> Whenever we get an -EFAULT, we failed to read in guest 2 physical
+>> address space. Such addressing exceptions are reported via a program
+>> intercept to the nested hypervisor.
+>>
+>> We faked the intercept, we have to return to guest 2. Instead, right
+>> now we would be returning -EFAULT from the intercept handler, eventually
+>> crashing the VM.
+>>
+>> Addressing exceptions can only happen if the g2->g3 page tables
+>> reference invalid g2 addresses (say, either a table or the final page is
+>> not accessible - so something that basically never happens in sane
+>> environments.
+>>
+>> Identified by manual code inspection.
+>>
+>> Fixes: a3508fbe9dc6 ("KVM: s390: vsie: initial support for nested virtualization")
+>> Cc: <stable@vger.kernel.org> # v4.8+
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  arch/s390/kvm/vsie.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
+>> index 076090f9e666..4f6c22d72072 100644
+>> --- a/arch/s390/kvm/vsie.c
+>> +++ b/arch/s390/kvm/vsie.c
+>> @@ -1202,6 +1202,7 @@ static int vsie_run(struct kvm_vcpu *vcpu, struct vsie_page *vsie_page)
+>>  		scb_s->iprcc = PGM_ADDRESSING;
+>>  		scb_s->pgmilc = 4;
+>>  		scb_s->gpsw.addr = __rewind_psw(scb_s->gpsw, 4);
+>> +		rc = 1;
 > 
-> Nice, I like the aspect of letting firmware do only a minimum amount of
-> work. :)
 > 
-> > ... I'll look into updating the documentation as well.
+> kvm_s390_handle_vsie has 
 > 
-> Thanks!
+>  return rc < 0 ? rc : 0;
 > 
-> > Note that this stuff is hot off the press, so there may be some issues
-> > lurking (like this one) that we hadn't thought of yet.
 > 
-> Right.
-> 
-> > Actually, it may be sufficient to #define __efistub_global to
-> > __section(.data) like we already do for ARM, to ensure that these
-> > global flags are always initialized correctly. (I'll wait for Sergey
-> > to confirm that the spurious enabling of the PCI DMA protection
-> > resulting from this BSS issue is causing the boot regression)
+> so rc = 0 would result in the same behaviour, correct?
 
-Yeah I thought of that as the easiest fix, but it might be safer to
-explicitly zero-init in efi_main to avoid future problems in case
-someone adds another variable in bss and isn't aware of this obscure
-requirement. We actually already have sys_table in bss, but that one is
-always initialized. There's also other globals that aren't annotated
-(but not in bss by virtue of having initializers). What do you think?
+yes
 
-What do you think of the other problem -- that's actually worse to fix,
-as it won't just be when kaslr is disabled, the startup_64 code will do
-relocation to the end of init_size and clobber the initrd before getting
-to the kaslr code, so it will break as soon as the firmware loads the
-"unified kernel image" at a 2Mb-aligned address. The only thing I can
-think of is to just unconditionally call efi_relocate_kernel if we were
-entered via handover_entry?
+> Since we DO handle everything as we should, why rc = 1 ?
 
-> 
-> Cool, but let's not jinx it. :-)
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+rc == 1 is the internal representation of "we have to go back into g2".
+rc == 0, in contrast, means "we can go back into g2 (via a NULL
+intercept) or continue executing g3". Returning rc == 1 instead of rc ==
+0 at this point is just consistency.
+
+-- 
+Thanks,
+
+David / dhildenb
+
