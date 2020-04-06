@@ -2,176 +2,153 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF93BC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DADC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 752B02063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A634B2063A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:04:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="AeXxU4Ft"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="slj96URn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgDFKC2 (ORCPT
+        id S1726898AbgDFKEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:02:28 -0400
-Received: from mout.web.de ([217.72.192.78]:48061 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726784AbgDFKC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:02:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586167335;
-        bh=JFE5yypuYuZzW5WwkCf5zJCeEjjeW5Qyz2xHEI/OQro=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=AeXxU4Ft+bfibvhKa1wd1ofSGRd3Vc2QvFsYjP4jYUSx9mF6gDu8I7uFj/SGkmGZ8
-         vWzuekP6x1pCbmccTvIIBd/Ra+wAf9vvV7XcWMC5cQm1K8j431TQxbSo9PrSbpaLJo
-         oYC0gGe3zM/mL39+/v+P4cbM4wmQ98PE76GD9tx8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.243.176.200]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MLPaA-1jKqLl2TAo-000bTG; Mon, 06
- Apr 2020 12:02:15 +0200
-Subject: Re: [PATCH v3] powerpc/powernv: add NULL check after kzalloc in
- opal_add_one_export
-To:     Oliver O'Halloran <oohall@gmail.com>,
-        Qiujun Huang <hqjagain@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <d4a96597-6704-3030-b936-6282f0994f09@web.de>
- <CAJRQjofnnhzOp4yis=sL85ESDvNApXHL3dpv6T1NJL-Wh0OOfA@mail.gmail.com>
- <CAOSf1CGLZ5H1cUsv6atZ7hNpQ+PDyyAjp6dzJjXMwC5XoUOVQQ@mail.gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <d8334f5d-403f-941f-abcc-2714d297082b@web.de>
-Date:   Mon, 6 Apr 2020 12:02:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 06:04:15 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33608 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbgDFKEP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 06:04:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g21so1356278wmh.0;
+        Mon, 06 Apr 2020 03:04:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TDxVDF2XVyHK1LpPBZBlcR0MpokI9aaOMTXvOXm2QFs=;
+        b=slj96URnwsKS5pPlbU8Zvbw/ymTmZPpymkHbhDerbD6rJvw0kYwQOb4QMhZIycJZLb
+         xp3aIPbkdJFXYU8uX5u+yy5u/opWF2hrhj0BEWP9HsLE4h1ZylqCD8Vzg3w1spTCOkZv
+         Id7azN7Qc/vONo33LjyAKXPxbPQWrY+Mld+W6h3ahI0DZGN5RTkQFMqjeDq3NIGsHv+h
+         p1xahfhixL0fGOeH4yCOG+S8S//33UsuRSZ7lXQPJlpPx29QOTYMr4N50PRpuCvN214S
+         nztGKNakCFDieyuV1KtLbs5Mg7HrQs29Czrz12UeiWiJA0erKVAoDE2MEVTEHh61d2fq
+         27Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TDxVDF2XVyHK1LpPBZBlcR0MpokI9aaOMTXvOXm2QFs=;
+        b=IwnnghIDQfM2CXD62g9OiT8J53cNHH1/2DmQ8CiSsccMFPU/Wvsqxbh5CvrPTRzN6G
+         nXnENyCkDxsLZwOb2vryu54zxAtEXRl9up8a4zfAx3o6grmojmXlw/aaKCOce7CC//l0
+         sHY59rhtPYpegq1J0dbv01+J2QbNgAHWQkuYCjT+RU+tck2mAV8xyNR7itd82pVLdW5h
+         28lhzxSuwZR+P0vINTchJQIngoT+dx1TvvqpbszRFPdbAq4bR0xYd+kPHdhAwwuXwzd+
+         LYkkywJAEgEV5ZEV66zr6UFOCX+1aBFNU3Sxw2lUSrYK3sanKUypNe/WFCzDiBlUmyOs
+         c22A==
+X-Gm-Message-State: AGi0Pub1eHhXyfvFq2QL4mLanUvug2sT4hzzUuOGU/3DcOkRc3y3j9HK
+        xW8Zl5lQx/v6cCoEYWn0iB3N50Hq
+X-Google-Smtp-Source: APiQypKnVE9KLirDRtYyYCwaK9z8EPYQ48t44bv9OTxySufX2aEFJDl57z7NIHlciCFzL4i5rBj+mw==
+X-Received: by 2002:a1c:5605:: with SMTP id k5mr12809098wmb.83.1586167453487;
+        Mon, 06 Apr 2020 03:04:13 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id r15sm27503137wra.19.2020.04.06.03.04.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 03:04:12 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 12:04:11 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] of: reserved-memory: Various improvements
+Message-ID: <20200406100411.GB475759@ulmo>
+References: <20200403185640.118569-1-thierry.reding@gmail.com>
+ <CAL_JsqLsCHJOuYBdh33eouu3VhwYzv5XR5wop8QAAi4jXP2xcQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOSf1CGLZ5H1cUsv6atZ7hNpQ+PDyyAjp6dzJjXMwC5XoUOVQQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:elEk+FNh8DDJPDv/vyH6T56FR0YYNiKzXr4V9womxuj82Z9nlRJ
- kwGWRYm6uUINU7LmcwSiwuDOx5GpWeckFgvh+wl2hDWyLjPw92i9hzQ3zp9TQmge7w3IYEx
- KwQjWf2vk77EoruoH1ginatKYhFuHunaW80ZuSEol/IOYLcORXGYU4LMDZarBROZ5i4bOuR
- LT7dSexaBA2gKYcXRwpUw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vlDb4B/53Qw=:1NKXuT386l1Fvr7BkC+8H0
- pqjuPnBHtPWYqYeEtMcZ0beJbJ7pApfaK3RERVLEM67BH4orWFA3aioHnQPViqP+oD+O2+1ZR
- UMxiUhCefNQGK3xnjbMEr6lArR1FOwqofj8KDpbQkjT/IPbuF8w0Pds8HMXBteFEf5fqWwlK+
- 3XX1LUuEm5w1CVfMU1xT1tAhYXyHmvi4MpVtLQBH2C6otrmxEieafaMrDC/XHJ0Td6xgvZbNh
- XGKIjTlk9xmFztvrPgpvURct/haGXHljh5Ad+ADolWnHZiEH7+eZO9+z3Fq2Pfwy3GFgEE8RF
- VhdyvrGz2IZ3uXeLkUQpl9Cv7lCRWDBrOzQ6k1d0lQ6XK8sm1NLi3xxp6otP3Ns42BNgTB5aQ
- UPgNGqicte+S/j0CMU2HzjB/Wx+OjSPCt6u3JdLs650faC2t3SIQ5jecYkXbqWjVMtNSrHtpk
- 54JqaVGIPV8cPJvMmc7i7C+LH9Y0p+gHIxpFF6rerESr7oib7FzAtLeH2l2yv0WHB2hxZIxwk
- qlg8bOsqFFWZnYXlfvQquL1/9uwfsCgNDk3VTDoVjntwnESiu7dwFbSlQgP4gZbNVwBD7hOcW
- LS1Ae/1m4tMIM8toUJL7rnfRTp31LGFEfWJZdIkwf/OHihUxfOpoQv3yHMK4gfOFG9FmPTw/i
- bXETrBCURHEJD5pyHXPX8hqtFxocfPNm7y4KFYEEfyZSZKX3vxgrKyRo57a1FKtO+Am0fQWeJ
- xawbxIwV0R+RKEVgFhy5VB5/tTKldtMqXQH8+pfl0IOKmHmV8IzG5iiy5LVvumbPujD0ADoix
- vtWSaU/sBPDNLxNCMUTnd65Lg1tPp3Kb8Bsow3cY/BeNt18pNSO+BD+vmY9hxlwLjLPWTL1RM
- 7TyU1FYe6gbYDaHe4hceUf8Ubpu2/3zsbuLPBypTO7HJMbdqOMvgFADH+PVUN1nIjgqqn+YTG
- dH2A9YOC2IssffSImD901ciwba0JH/OsYqiUBGeFxPbu551tF0zbyeGCiCMHiSaQJyx/BFq5o
- qgBgk5v1n2fF3M+S8nyZbKDRqA/fZOV9N0Xn3jafefW5eJrYjU46XR9t0CPq9LYpCXwzvdcfe
- bHN8/iQTwnqqah6i8Uk4i2XqB8GCZQnCrzTyqPN9T4kgH3zS50Cv5K2X+wgAEP9Jz6eRfE4t3
- U0tRk9MAneqmfvdrXH0ZVhiBdqYtC7edyd+8ZHvC5r4ia5vp9J5UgbzHiAWoMcwiIwjIztCdj
- XELNB9T60SkvFMYRW
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jho1yZJdad60DJr+"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLsCHJOuYBdh33eouu3VhwYzv5XR5wop8QAAi4jXP2xcQ@mail.gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>> Here needs a NULL check.
->> quite obvious?
 
-I suggest to consider another fine-tuning for the wording also around
-such =E2=80=9Cobvious=E2=80=9D programming items.
+--jho1yZJdad60DJr+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Apr 04, 2020 at 07:24:25PM -0600, Rob Herring wrote:
+> On Fri, Apr 3, 2020 at 12:56 PM Thierry Reding <thierry.reding@gmail.com>=
+ wrote:
+> >
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > Hi Rob, all,
+> >
+> > this is a set of patches that I've been working on to allow me to use
+> > reserved memory regions more flexibly. One of the use-cases that I have
+> > is an external memory controller driver that gets passed one or two
+> > tables from firmware containing a set of EMC frequencies and the
+> > corresponding register values to program for these frequencies.
+> >
+> > One of these tables is the "nominal" table and an optional second table
+> > is "derated" and is used when the DRAM chips are overheating. I want to
+> > be able to pass these tables as separate memory-region entries.
+> >
+> > So what this small patchset does is make the reserved-memory code adapt
+> > to this situation better. On one hand, while the DT bindings currently
+> > support multiple regions per device tree node, it's slightly unintuitive
+> > to specify them. The first patch adds a memory-region-names property
+> > that allows the DT to specify a "consumer" name for these regions much
+> > like we do for things like clocks, resets or the reg property. At the
+> > same time, a new alias for memory-region, named memory-regions, is
+> > introduced to make this more consistent with other bindings.
+>=20
+> It's just not worth supporting both flavors (forever). I don't want to
+> repeat gpio vs. gpios. Let's just stick with 'memory-region' and allow
+> that to be more than one entry.
 
->>> I find this change description questionable
->>> (despite of a reasonable patch subject).
+Alright, I'll drop the corresponding changes from the bindings and the
+OF core then.
 
-I got further development concerns.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3Da10c9c710f9ecea87b9f4bbb83=
-7467893b4bef01#n129
+> I'm not a fan of *-names, but fine.
 
-* Were changes mixed for different issues according to the diff code?
+I suppose I could work without them, but I like the descriptiveness that
+they add to the device tree. There are also cases where they can be very
+essential. For example, what if a device can take two separate memory
+regions. One case that we have on Tegra is the display controller that
+can have a framebuffer and a color-conversion lookup table assigned to
+it on boot. I think in this particular case both are actually always
+there, but what if either of them was optional. Without -names it would
+be impossible to describe the context if only one is provided in device
+tree.
 
-* I find it safer here to split specific changes into separate update step=
-s
-  for a small patch series.
+Thierry
 
-* Will the addition of the desired null pointer check qualify for
-  the specification of the tag =E2=80=9CFixes=E2=80=9D?
+--jho1yZJdad60DJr+
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
->>> Will a patch change log be helpful here?
->> I realized I should write some change log, and the change log was meani=
-ngless.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6K/pgACgkQ3SOs138+
+s6EcBBAAknv2wjVaLqK8Fv5noZrIB4XtpJNVRyHSCdzsZ32kDSogdVHbSGnmgqdb
+sGP6hAF8i6wZan9ZfAm3ZGcYTngPZPJVMI5EszlVW1WXtiXjpA963KSuVwg930H+
+h8oPvchZ6DKOiHy90RaVt3wIyZA0CQwpCDukYMxjj7o2xzx+Ig7ywmaP+GkV6lUF
+utXr68/po507c5JsgB9xc8THDnM1dOazLPrb3O0nG+WcmGeLuqZx8AVZnGZsM5Bb
+khjmisr6O2YpATkGWO7ZJbRMKSQZOVgmkFxJB2NpuOKSU0z5PdlopYAh8OgCOjy0
+e9HKoAaF0Ip7dlMaCKrEg3tifMCPQZ3o5UroATrDfVQagRCzing/UGqGSaftNkif
++yh8DiwKpttDEdsKK5Oipa6oCwViqCANXIFe443lYdlSH1qUMO2ow7Oi/DEIFeTB
+6NjOKi2HQxrhqQ3BOc7PvAG/eUH+yBH3P9mUEwctFdTLvlQgsmIo97vA+wAnkL6o
+nYP+wQLkehEV2WsHFJFFVZZbbATX0UjXyQH0QGCFGXK1vYw0KwJcwDU5V1k/+HFh
+o0TonpcG28IksxcDuw4CcuH3MZbB0a+AvAPjjfewmCbx+L3hDWULJK2dl3YPRYtP
+o1wNwBsuUDtHNREgj3KcZMBj3YgBEdryxTM6dHDtOa25Ze8SacM=
+=98ej
+-----END PGP SIGNATURE-----
 
-Will any more adjustments happen for the discussed update suggestion
-after the third patch version?
-
-
-> The changelog is fine IMO. The point of a changelog is to tell a
-> reader doing git archeology why a change happened and this is
-> sufficent for that.
-
-We might stumble on a different understanding for the affected =E2=80=9Cch=
-ange logs=E2=80=9D.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3Da10c9c710f9ecea87b9f4bbb83=
-7467893b4bef01#n751
-
-Would you like to follow the patch evolution a bit easier?
-
-Regards,
-Markus
+--jho1yZJdad60DJr+--
