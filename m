@@ -2,197 +2,143 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072C3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9770BC2BABC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD2E21D79
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6502122C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:55:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKO6nZ4/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nvhj9XNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgDFNzd (ORCPT
+        id S1728553AbgDFNzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:55:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53476 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728446AbgDFNzd (ORCPT
+        Mon, 6 Apr 2020 09:55:43 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:35714 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728271AbgDFNzn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:55:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586181331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4JbffD6uHYn0Xws8gEnJhH/ASm7vL5TTpW7bpIjfQF0=;
-        b=FKO6nZ4/z3L/WVcnS5lXJgx77phqfkvab8uAbXMvYjU3DVbE/MwnF0N19jcAifVEBqXINj
-        vGG0q7tuJBoK2OJJI2lN43I3m+RT1954LciLKCh8YWu4mmb4N2Hw/768QPgf7EUnMq2iRp
-        Cs0raJx4VO5f6zzOrT/af1K4tRQhWwk=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-400--U-sHeqqNUySlH474rquSw-1; Mon, 06 Apr 2020 09:55:30 -0400
-X-MC-Unique: -U-sHeqqNUySlH474rquSw-1
-Received: by mail-wm1-f72.google.com with SMTP id f8so4926185wmh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:55:30 -0700 (PDT)
+        Mon, 6 Apr 2020 09:55:43 -0400
+Received: by mail-yb1-f193.google.com with SMTP id i2so3248370ybk.2;
+        Mon, 06 Apr 2020 06:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4A564uO7GYoS83UthFSNGKLuETaFoTUUZVsgW2frMJ4=;
+        b=Nvhj9XNuWhnqycVcer+BNfQgj5QMrS3iIyCbKJE/Jw8YviHR0ae0eXDihVJ64AwSxf
+         e3zW6L1xXL+G7o16N9wSjvyituVB51TFepRa6s+7kzHoTSqexZxeyO+9mlJS+YL0xPf/
+         8rwsO8kurHD50voGdRw4FvDtJ09Y5ZjfZgXeVMFQdA6VaG+7wT15ksARuht2np4uyZCi
+         rcoXHE+qHi7uRgMvQSCcgyz3zMHLvJ5z6wsKMJ46Mg9/D28gmeeoJAO1W8tcgEJGm9lE
+         uKqa3JbsmYSXtDXnxRfEb3dJiAx5HslmTT9kUF/kQ89VoqolsJ4QpaC7VNPilgwDRxw7
+         vbyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4JbffD6uHYn0Xws8gEnJhH/ASm7vL5TTpW7bpIjfQF0=;
-        b=Hujp5Mnh5cLTjRlizRYYBvc9W4xJGPQO83FtKM1ud82P8GSC8uaZE732A4t/i2l97s
-         ytMVsqM5MEY/zAIH6Pha2Eyqb50m3CADuKYeuMHbOfumNaRwOx5BGvv9Fdg741CD+cyQ
-         CBbqO9qgr9WOt/PqurR3Rj5rSTzTZavWjqyB0g6gbtkaogrBPnFcZVYdBHpQjfCokBpt
-         o0jUepq0Ddy3zd0s2hI6Y17OYdgHRchJL9S6XMVYc7v0gXGNt9N2jSOIbB82aZ102PFX
-         xYqzlJXklwEuZY/dgqk5nv0a9KOpgdf9S3id/nEhRjNeYo9wNZlsh2un89kyS5NKCyoN
-         Cz3A==
-X-Gm-Message-State: AGi0PuYuuB1glTUVWDM/GrDywvEaw3mFUuwwkWa43OXgIyiruJ8cn+AY
-        cdt0Q60pwBsvyp8v9hT4kkl26Rzoo4656D1P0Gt/gvWF6aCrtfkmb3IR45xTHxCZcFLsWKuTQxH
-        EALOQh0iTRbnMBNBbC9YvyW2g
-X-Received: by 2002:a5d:4d09:: with SMTP id z9mr602255wrt.292.1586181328771;
-        Mon, 06 Apr 2020 06:55:28 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJMOX8DPPm6vlwNHfWsSuz0mrVkzWpGk7TU+nZhYELINvwWAIdcv57+eCeK2DYp6J7Z3YNU5w==
-X-Received: by 2002:a5d:4d09:: with SMTP id z9mr602237wrt.292.1586181328553;
-        Mon, 06 Apr 2020 06:55:28 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id w204sm25954947wma.1.2020.04.06.06.55.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 06:55:28 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 09:55:25 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH] vhost: force spec specified alignment on types
-Message-ID: <20200406095424-mutt-send-email-mst@kernel.org>
-References: <20200406124931.120768-1-mst@redhat.com>
- <045c84ed-151e-a850-9c72-5079bd2775e6@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4A564uO7GYoS83UthFSNGKLuETaFoTUUZVsgW2frMJ4=;
+        b=dwZdTSN4+GalXvcpJvulfHJy5phgw5w2DaG/kNudKjT8mNrCE+xY6DIzGjq300wTC+
+         8LfOI2J0RD5xhp5U7mCns9rDr9fpkVnsMBvRX4FYMj87PVZFWeR4JNBNvWRBLGRjXUHQ
+         NW6y3Oppe/6ZjB4X19lePcyhhozG2zytXoIYkqW435Oi+wnvz68HQJ/28yMneFbA2HnP
+         ODcKGUawtHhYSv5g3nspATdRhbeoQdBwKg/bcFUUvTnUJ9pX2WeN7z8dFjHQI6YEThON
+         A0sYMoijvbRuvPm4PqqvFrYxhvdMPjKpSR2bOinqyOjQt7JG3WIm9GfRemoBTCbMTz1L
+         1lBA==
+X-Gm-Message-State: AGi0Puak5ELyTqHh9J/lZ2JVpVBI4UsFuDz9SkQaLcilxjd5BkUHVjmV
+        qZkHv8YzYzJNcvOjikK0mXmp7HpAu+GYfIf5PNM=
+X-Google-Smtp-Source: APiQypJLt8xmlXCqO31w+cX00Phink2ulxeH6YpG/eytu7kYw6mbLdAyu+kvJuaHqRdzzY+m3I7A3WLxJb4Vj7CLi2o=
+X-Received: by 2002:a25:da48:: with SMTP id n69mr35562310ybf.370.1586181341740;
+ Mon, 06 Apr 2020 06:55:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <045c84ed-151e-a850-9c72-5079bd2775e6@redhat.com>
+References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
+ <87ftdgokao.fsf@tynnyri.adurom.net> <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+ <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com> <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
+ <87imiczrwm.fsf@kamboji.qca.qualcomm.com> <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
+ <CAFA6WYOjU_iDyAn5PMGe=usg-2sPtupSQEYwcomUcHZBAPnURA@mail.gmail.com> <87v9mcycbf.fsf@kamboji.qca.qualcomm.com>
+In-Reply-To: <87v9mcycbf.fsf@kamboji.qca.qualcomm.com>
+From:   Krishna Chaitanya <chaitanya.mgit@gmail.com>
+Date:   Mon, 6 Apr 2020 19:25:30 +0530
+Message-ID: <CABPxzYKs3nj0AUX4L-j87Db8v3WnM4uGif9nRTGgx1m2HNN8Rg@mail.gmail.com>
+Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Sumit Garg <sumit.garg@linaro.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
+        <matthias.schoepfer@ithinx.io>,
+        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
+        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 09:34:00PM +0800, Jason Wang wrote:
-> 
-> On 2020/4/6 下午8:50, Michael S. Tsirkin wrote:
-> > The ring element addresses are passed between components with different
-> > alignments assumptions. Thus, if guest/userspace selects a pointer and
-> > host then gets and dereferences it, we might need to decrease the
-> > compiler-selected alignment to prevent compiler on the host from
-> > assuming pointer is aligned.
-> > 
-> > This actually triggers on ARM with -mabi=apcs-gnu - which is a
-> > deprecated configuration, but it seems safer to handle this
-> > generally.
-> > 
-> > I verified that the produced binary is exactly identical on x86.
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> > 
-> > This is my preferred way to handle the ARM incompatibility issues
-> > (in preference to kconfig hacks).
-> > I will push this into next now.
-> > Comments?
-> 
-> 
-> I'm not sure if it's too late to fix. It would still be still problematic
-> for the userspace that is using old uapi headers?
-> 
-> Thanks
-
-It's not a problem in userspace. The problem is when
-userspace/guest uses 2 byte alignment and passes it to kernel
-assuming 8 byte alignment. The fix is for host not to
-make these assumptions.
-
-> 
-> > 
-> >   drivers/vhost/vhost.h            |  6 ++---
-> >   include/uapi/linux/virtio_ring.h | 41 ++++++++++++++++++++++++--------
-> >   2 files changed, 34 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> > index cc82918158d2..a67bda9792ec 100644
-> > --- a/drivers/vhost/vhost.h
-> > +++ b/drivers/vhost/vhost.h
-> > @@ -74,9 +74,9 @@ struct vhost_virtqueue {
-> >   	/* The actual ring of buffers. */
-> >   	struct mutex mutex;
-> >   	unsigned int num;
-> > -	struct vring_desc __user *desc;
-> > -	struct vring_avail __user *avail;
-> > -	struct vring_used __user *used;
-> > +	vring_desc_t __user *desc;
-> > +	vring_avail_t __user *avail;
-> > +	vring_used_t __user *used;
-> >   	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
-> >   	struct vhost_desc *descs;
-> > diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
-> > index 559f42e73315..cd6e0b2eaf2f 100644
-> > --- a/include/uapi/linux/virtio_ring.h
-> > +++ b/include/uapi/linux/virtio_ring.h
-> > @@ -118,16 +118,6 @@ struct vring_used {
-> >   	struct vring_used_elem ring[];
-> >   };
-> > -struct vring {
-> > -	unsigned int num;
-> > -
-> > -	struct vring_desc *desc;
-> > -
-> > -	struct vring_avail *avail;
-> > -
-> > -	struct vring_used *used;
-> > -};
-> > -
-> >   /* Alignment requirements for vring elements.
-> >    * When using pre-virtio 1.0 layout, these fall out naturally.
-> >    */
-> > @@ -164,6 +154,37 @@ struct vring {
-> >   #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
-> >   #define vring_avail_event(vr) (*(__virtio16 *)&(vr)->used->ring[(vr)->num])
-> > +/*
-> > + * The ring element addresses are passed between components with different
-> > + * alignments assumptions. Thus, we might need to decrease the compiler-selected
-> > + * alignment, and so must use a typedef to make sure the __aligned attribute
-> > + * actually takes hold:
-> > + *
-> > + * https://gcc.gnu.org/onlinedocs//gcc/Common-Type-Attributes.html#Common-Type-Attributes
-> > + *
-> > + * When used on a struct, or struct member, the aligned attribute can only
-> > + * increase the alignment; in order to decrease it, the packed attribute must
-> > + * be specified as well. When used as part of a typedef, the aligned attribute
-> > + * can both increase and decrease alignment, and specifying the packed
-> > + * attribute generates a warning.
-> > + */
-> > +typedef struct vring_desc __attribute__((aligned(VRING_DESC_ALIGN_SIZE)))
-> > +	vring_desc_t;
-> > +typedef struct vring_avail __attribute__((aligned(VRING_AVAIL_ALIGN_SIZE)))
-> > +	vring_avail_t;
-> > +typedef struct vring_used __attribute__((aligned(VRING_USED_ALIGN_SIZE)))
-> > +	vring_used_t;
-> > +
-> > +struct vring {
-> > +	unsigned int num;
-> > +
-> > +	vring_desc_t *desc;
-> > +
-> > +	vring_avail_t *avail;
-> > +
-> > +	vring_used_t *used;
-> > +};
-> > +
-> >   static inline void vring_init(struct vring *vr, unsigned int num, void *p,
-> >   			      unsigned long align)
-> >   {
-
+On Mon, Apr 6, 2020 at 6:57 PM Kalle Valo <kvalo@codeaurora.org> wrote:
+>
+> Sumit Garg <sumit.garg@linaro.org> writes:
+>
+> > On Mon, 6 Apr 2020 at 18:38, Johannes Berg <johannes@sipsolutions.net> wrote:
+> >>
+> >> On Mon, 2020-04-06 at 16:04 +0300, Kalle Valo wrote:
+> >> > Johannes Berg <johannes@sipsolutions.net> writes:
+> >> >
+> >> > > On Mon, 2020-04-06 at 15:52 +0300, Kalle Valo wrote:
+> >> > > > Johannes Berg <johannes@sipsolutions.net> writes:
+> >> > > >
+> >> > > > > On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
+> >> > > > > > >     user-space  ieee80211_register_hw()  RX IRQ
+> >> > > > > > >     +++++++++++++++++++++++++++++++++++++++++++++
+> >> > > > > > >        |                    |             |
+> >> > > > > > >        |<---wlan0---wiphy_register()      |
+> >> > > > > > >        |----start wlan0---->|             |
+> >> > > > > > >        |                    |<---IRQ---(RX packet)
+> >> > > > > > >        |              Kernel crash        |
+> >> > > > > > >        |              due to unallocated  |
+> >> > > > > > >        |              workqueue.          |
+> >> > > > >
+> >> > > > > [snip]
+> >> > > > >
+> >> > > > > > I have understood that no frames should be received until mac80211 calls
+> >> > > > > > struct ieee80211_ops::start:
+> >> > > > > >
+> >> > > > > >  * @start: Called before the first netdevice attached to the hardware
+> >> > > > > >  *         is enabled. This should turn on the hardware and must turn on
+> >> > > > > >  *         frame reception (for possibly enabled monitor interfaces.)
+> >> > > > >
+> >> > > > > True, but I think he's saying that you can actually add and configure an
+> >> > > > > interface as soon as the wiphy is registered?
+> >> > > >
+> >> > > > With '<---IRQ---(RX packet)' I assumed wcn36xx is delivering a frame to
+> >> > > > mac80211 using ieee80211_rx(), but of course I'm just guessing here.
+> >> > >
+> >> > > Yeah, but that could be legitimate?
+> >> >
+> >> > Ah, I misunderstood then. The way I have understood is that no rx frames
+> >> > should be delivered (= calling ieee80211_rx()_ before start() is called,
+> >> > but if that's not the case please ignore me :)
+> >>
+> >> No no, that _is_ the case. But I think the "start wlan0" could end up
+> >> calling it?
+> >>
+> >
+> > Sorry if I wasn't clear enough via the sequence diagram. It's a common
+> > RX packet that arrives via ieee80211_tasklet_handler() which is
+> > enabled via call to "struct ieee80211_ops::start" api.
+>
+> Ah sorry, I didn't realise that. So wcn36xx is not to be blamed then,
+> thanks for the clarification.
+>
+> --
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+I am still confused, without ieee80211_if_add how can the userspace
+bring up the interface?
+(there by calling drv_start())?
