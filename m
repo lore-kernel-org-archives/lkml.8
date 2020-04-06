@@ -2,83 +2,100 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4839C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9731C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9DB2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:10:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586135438;
-	bh=NapCtnOG7WBPhOJXPKNfQp/uL4cU/eeZHbTCOnYnNfM=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=XdOZWabDLp66N7gtav75mPFUu88YDnlZXiqnO6a5dpgOMuKIqLuJZFRd60mNGuQvn
-	 8KrIB6PnUcKDg0zdH/T7uAW6xj6aAjl67nVHkAcktFAX5D0qTaD2g8g0o6jn/AzORB
-	 bI+2DZRvsn5A7uQy2EnwQjw3dmDNa8ieCoi+Jds0=
+	by mail.kernel.org (Postfix) with ESMTP id 862452068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:13:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bn2nl4eq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgDFBKh (ORCPT
+        id S1727787AbgDFBNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 21:10:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgDFBKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 21:10:37 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4A9F2068E;
-        Mon,  6 Apr 2020 01:10:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586135436;
-        bh=NapCtnOG7WBPhOJXPKNfQp/uL4cU/eeZHbTCOnYnNfM=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=tPh0ZZ5IXSwmC3JWZ7d9qKNKQgjzkp9UT6hLMBIT1cjxLJjXAaxQ61hdIxhLWiuhD
-         nbFK5NfzmcSb5gUZHHYBC3xxjAGP7FLlXphrn8wN2omSOqMczBn8JGI9eicSeruuiN
-         iyWaWzbIOJTOWubYJVKcwxRx25b7+9sDQE0knUJ0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A88093522B2E; Sun,  5 Apr 2020 18:10:36 -0700 (PDT)
-Date:   Sun, 5 Apr 2020 18:10:36 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     mingo@kernel.org, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        joel@joelfernandes.org
-Subject: [GIT PULL rcu/urgent] Don't acquire lock in NMI handler (v5.7)
-Message-ID: <20200406011036.GA1435@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        Sun, 5 Apr 2020 21:13:44 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41532 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgDFBNo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 21:13:44 -0400
+Received: by mail-il1-f193.google.com with SMTP id t6so13094966ilj.8
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 18:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Tr1Ryw65VhOvk3m5+ACJJuQ36awxae0foxLzvaXT+Rc=;
+        b=Bn2nl4eq8BB2ZKi4J8DvgtFkJ49z9XvCgAAaHTOPnLupvspsxRYNrzbRxecgPvkh6J
+         Ze74qBrszLcI/hFUVBNXqcyDiYc9nm4p/2y9W3/Dyz0JQdx6TLspNKb5httdYS97ocN5
+         jbvNVkjaf2tvb6kcYC8vGwIQ89KWlYoFaiIneRC06yr4VIyGXSYKJ7rGeOjQ1RgMYqqo
+         1weqXYO3aJs9K5aGXkTCHDPFyORPSs5xOHfD7YW3Dmy4LR8UqcMLth7YagAvyCn4oqYG
+         LisuKL8NQcpH/vKi+KL1bEAL8DEmxe+iqCJegFycJOIBMFA9RAW9720LllOHnR8dukGm
+         3RHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Tr1Ryw65VhOvk3m5+ACJJuQ36awxae0foxLzvaXT+Rc=;
+        b=bBdGkZQPywPriM7+vFrmOvtqKLuP/dV8gs013GgBXWUqWiWkjYDN+prT4GyzPxyQd1
+         ftZ9tyUE1o8KflYocy94b//dQ3VYtAH3oH4yknwnldnRHNp5uPDSdlLX1ZNjpzMKHXcK
+         34LxtukN1e8sNMWpoW/AbqnoI0hpYs5Xq3dBnsbYLzMbT4n3brykA5V612SYxK4cNgoR
+         PbSc4AuZd6KQ1n1DiGds0B4XSX4y/YsRYxt8UsiPIgN4eqEYoqUCc/MC3pFNYuDT7+Rj
+         NSlYb50io1IHkf5jmFbj6oyGHUmvE/QZ8a1eD8s1CcWfic+jjkEvrosvB6TGd/7BTihc
+         kcTw==
+X-Gm-Message-State: AGi0PubmHeNvfV+4YB/pogs/Ajf2YZmXzQgD4u6lhZdt/wgcQJOn2Dma
+        mD61kGejevbCBV0aweFQwglVaE782bygp8FMu/w=
+X-Google-Smtp-Source: APiQypLctLPWysDkyb6i/E2KOEUufZlwX841KcPj07wNMqkZtrKXqXFzHg1U9vo/hFePDp1ni4Sb3bHJDeI0jsVW2cs=
+X-Received: by 2002:a92:ce51:: with SMTP id a17mr19598576ilr.263.1586135621955;
+ Sun, 05 Apr 2020 18:13:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <d4a96597-6704-3030-b936-6282f0994f09@web.de>
+In-Reply-To: <d4a96597-6704-3030-b936-6282f0994f09@web.de>
+From:   Qiujun Huang <hqjagain@gmail.com>
+Date:   Mon, 6 Apr 2020 09:13:28 +0800
+Message-ID: <CAJRQjofnnhzOp4yis=sL85ESDvNApXHL3dpv6T1NJL-Wh0OOfA@mail.gmail.com>
+Subject: Re: [PATCH v3] powerpc/powernv: add NULL check after kzalloc in opal_add_one_export
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-This pull request contains a single commit that avoid acquiring
-a lock when rcu_nmi_enter_common() is invoked from an NMI handler.
-This issue can of course result in self-deadlock, and the fix is quite
-straightforward.  I am therefore putting it forward for the current
-release (v5.7) instead of following my normal process, which would
-delay it until v5.8.
-
-This fix has been subjected to rcutorture, kbuild test robot, and -next
-testing and is available at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git urgent-for-mingo
-
-for you to fetch changes up to bf37da98c51825c90432d340e135cced37a7460d:
-
-  rcu: Don't acquire lock in NMI handler in rcu_nmi_enter_common() (2020-04-05 14:22:15 -0700)
-
-----------------------------------------------------------------
-Paul E. McKenney (1):
-      rcu: Don't acquire lock in NMI handler in rcu_nmi_enter_common()
-
- kernel/rcu/tree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Apr 6, 2020 at 3:06 AM Markus Elfring <Markus.Elfring@web.de> wrote=
+:
+>
+> > Here needs a NULL check.
+quite obvious?
+>
+> I find this change description questionable
+> (despite of a reasonable patch subject).
+>
+>
+> > Issue found by coccinelle.
+>
+> Would an information like =E2=80=9CGenerated by: scripts/coccinelle/null/=
+kmerr.cocci=E2=80=9D
+> be nicer?
+Yeah, but I think It was enough.
+>
+>
+> > ---
+>
+> Will a patch change log be helpful here?
+I realized I should write some change log, and the change log was meaningle=
+ss.
+So I left it blank.
+>
+> Regards,
+> Markus
