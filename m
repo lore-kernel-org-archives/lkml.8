@@ -2,79 +2,87 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B65FC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD560C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C98124953
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B6E724958
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N6DgYuNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgDFQXC (ORCPT
+        id S1729260AbgDFQ0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:23:02 -0400
-Received: from mail.itouring.de ([188.40.134.68]:39532 "EHLO mail.itouring.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728924AbgDFQXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:23:02 -0400
-Received: from tux.applied-asynchrony.com (p5B07E2B3.dip0.t-ipconnect.de [91.7.226.179])
-        by mail.itouring.de (Postfix) with ESMTPSA id 5C7D04161A57;
-        Mon,  6 Apr 2020 18:23:01 +0200 (CEST)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-        by tux.applied-asynchrony.com (Postfix) with ESMTP id 18391F01600;
-        Mon,  6 Apr 2020 18:23:01 +0200 (CEST)
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Subject: hwmon: drivetemp: bogus values after wake up from suspend
-Organization: Applied Asynchrony, Inc.
-Message-ID: <1af049a1-63ae-ee55-05d5-0e55eb00bd0e@applied-asynchrony.com>
-Date:   Mon, 6 Apr 2020 18:23:01 +0200
+        Mon, 6 Apr 2020 12:26:42 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55058 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729015AbgDFQ0m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:26:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586190401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=17nCtfeqSi71cffLAAYudEczCAwQpV2MoZnlr3dlA0o=;
+        b=N6DgYuNBt5Xc8o3fi2oWWO7dbiW6nKap2LBUxE21t1c5pQSkYp1XZSh/dhkAKA54WvY6Bl
+        dWWbtILI/UPCy3tqxCT7oRoqXLLBLVZQRmvRCvX2kmixyYKvu3mgnT8QTok12/YflQpqOG
+        3lJOTxJUI2dQEVXUJ7GyJs8495J+AiM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-49--c7y-mZpOL2UaIH_H3hUiA-1; Mon, 06 Apr 2020 12:26:37 -0400
+X-MC-Unique: -c7y-mZpOL2UaIH_H3hUiA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CC571007269;
+        Mon,  6 Apr 2020 16:26:35 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-224.rdu2.redhat.com [10.10.112.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2325A1001DF0;
+        Mon,  6 Apr 2020 16:26:29 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <d509771b7e08fff0d18654b746e413e93ed62fe8.camel@perches.com>
+References: <d509771b7e08fff0d18654b746e413e93ed62fe8.camel@perches.com> <a291cce3ff1ba978e7ad231a8e1b7d82f6164e86.camel@perches.com> <20200406023700.1367-1-longman@redhat.com> <319765.1586188840@warthog.procyon.org.uk>
+To:     Joe Perches <joe@perches.com>
+Cc:     dhowells@redhat.com, Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] mm: Add kvfree_sensitive() for freeing sensitive data objects
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <334932.1586190389.1@warthog.procyon.org.uk>
+Date:   Mon, 06 Apr 2020 17:26:29 +0100
+Message-ID: <334933.1586190389@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Joe Perches <joe@perches.com> wrote:
 
-I've been giving the drivetemp hwmon driver a try and am very happy
-with it; works right away and - much to my surprise - doesn't wake up
-HDDs that have gone to sleep. Nice!
+> While I agree with Linus about the __ prefix,
+> the z is pretty common and symmetric to all
+> the <foo>zalloc uses.
+> 
+> And if _sensitive is actually used, it'd be
+> good to do a s/kzfree/kfree_sensitive/ one day
+> sooner than later.
 
-I did notice one tiny thing though: after waking up from suspend, my SSD
-(Samsung 850 Pro) reports a few initial bogus values - suspiciously -128°,
-which is definitely not the temperature in my office. While this is more
-a cosmetic problem, it cramps my monitoring setup and leads to wrong graphs.
-Can't have that!
+How much overhead would it be to always use kvfree_sensitive() and never have
+a kfree_sensitive()?
 
-So I looked into the source and found that the values are (understandably)
-passed on unfiltered/uncapped. Since it's unlikely any active device has
-operating temperature below-zero, I figured the laziest way is to cap the
-value to positive:
+David
 
-diff -rup a/drivers/hwmon/drivetemp.c b/drivers/hwmon/drivetemp.c
---- a/drivers/hwmon/drivetemp.c	2020-04-02 08:02:32.000000000 +0200
-+++ b/drivers/hwmon/drivetemp.c	2020-04-06 18:13:04.892554087 +0200
-@@ -147,7 +147,7 @@ static LIST_HEAD(drivetemp_devlist);
-  #define INVALID_TEMP		0x80
-  
-  #define temp_is_valid(temp)	((temp) != INVALID_TEMP)
--#define temp_from_sct(temp)	(((s8)(temp)) * 1000)
-+#define temp_from_sct(temp)	(max(0, ((s8)(temp)) * 1000))
-  
-  static inline bool ata_id_smart_supported(u16 *id)
-  {
-
-The assumption is of course *theoretically* wrong since some
-equipment might indeed operate in negative C°. One way might be
-to use the device's "low" operating point first, but then that
-might not be available and we'd be back to capping to 0.
-I'm open to other suggestions. :)
-
-thanks,
-Holger
