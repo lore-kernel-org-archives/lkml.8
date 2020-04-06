@@ -2,78 +2,76 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E83C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB4FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD3332082D
+	by mail.kernel.org (Postfix) with ESMTP id D844B206C3
 	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:16:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DETEeYLU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rnk2RVuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgDFXQM (ORCPT
+        id S1726426AbgDFXQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 19:16:12 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39259 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgDFXQM (ORCPT
+        Mon, 6 Apr 2020 19:16:13 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38303 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgDFXQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 19:16:12 -0400
-Received: by mail-pg1-f194.google.com with SMTP id g32so792003pgb.6
+        Mon, 6 Apr 2020 19:16:13 -0400
+Received: by mail-pj1-f66.google.com with SMTP id m15so575429pje.3
         for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 16:16:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jjDe4Hi7TtVO/wKC4Ixr8yGihHqa400mWL0wehOCRBk=;
-        b=DETEeYLUPrHDWmX+mgf3XfkHhQ8bXZ4JQ20xi9rnXY3vkREikPg39QMkW+FwOTZOB6
-         ad3hnyhmQW1o2fY8ksqfVaf3PHYZJN+QwgTMVfcpg7yFW8qoLnAx5xje3nNlmfgKQLKi
-         xbiidiGJHcDcOJhrAq91ofcxuchLHrHgbpU+M=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kj0fYRHBAuDC6xz5T3+IMY573Uf4TkncfKhylRhRKr8=;
+        b=Rnk2RVuDB3re41BD3czt9clTzzC/cySvN48by3vzvbYksd47leEn0+g33oR+D6OVLF
+         uXnS/s3ykH8Z394kfgC1rK54rvOztdgYEYgrOrRJV5V3tiF0pL7Q/1fZwsVEAzo0r6Bj
+         pI05/jTCAIBznKwWxphMyFNjRNChw4MmGQa1A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jjDe4Hi7TtVO/wKC4Ixr8yGihHqa400mWL0wehOCRBk=;
-        b=b1QKFAyph8Hh/od6f3bDmrb93FoBlu5ImqWNufqM3DkTxiLSe/Mp/46NyqNYdO0jT8
-         5abWML7oH5Ooos7MLgusbglSJ/pK4jHwBNEgNYKDFqXA429R+TFssHML5CVocOj02jxJ
-         RCEsuUDJvCYeS96uKW8UKbXyi1waQYbkNoNix/d7xptyFzn8FVijpjg9LzLY0FVYW93U
-         Poa82aS3yIRRSoL/BA0yQiBRcihI68+pKuTVyYmeGMeG7QSl1XHoMmH5WJcEoH0Jda4b
-         V3pxafH/uZUZ7m3uCIpGg/4vS8EOlb3eHnXMJd/MeyjKj6v+s/IsO2lZSG6GeOHj6TXH
-         fkDA==
-X-Gm-Message-State: AGi0PuataagXpcPbNT19t7yLd6CrOrWwmNRU9K3LhMTgtrA5ViFcAElh
-        lKF+0IsGu7HrBGb0kqNPLOfm+A==
-X-Google-Smtp-Source: APiQypJOAJUD5o/cOCh1/7iAsdO0knHWBcNha6PAtRGiz4cvm/tS0aBBSt7jxUfJb4cvKE69NcjkTA==
-X-Received: by 2002:a63:7b5e:: with SMTP id k30mr1393245pgn.209.1586214971506;
-        Mon, 06 Apr 2020 16:16:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kj0fYRHBAuDC6xz5T3+IMY573Uf4TkncfKhylRhRKr8=;
+        b=l/N3wBWwa0her1baGGUxtgK6P6gBKQ0xe79XwUl/7uwh3pdKCHpjElK8oy5e9WsVbT
+         7dkkNjzLzAyAvxdyn7nXM2n8gVMMQDyLxw1dxkrrqiwgAE5cH4HNYRmoWyl+tZGav1lC
+         uOf+nOCS3Plo25QTTS2G+CB1ZVU+EKgh3wWW/q/MIub8OfcRhR1fcakUcMxyCn7Od9ch
+         Pc0tTUOcmbINVIScTnMdqrO6Fecrc3a660rZ+i2JOxXhK7QUTMiClDgFwM+NSJD6OKEZ
+         5CzbneSB5YkRN9Kj0oobCX4hzV2GrBv6NQBTRx7K7i9/H2XHURiOk0lLq7oUQziYPgxC
+         lRtQ==
+X-Gm-Message-State: AGi0PuarXd5WvdrEphM0kO1bwmyVDku0Fe0Ug2IWjSTgtcZfIEiDwWsg
+        VO2TXA0R9CMDOqy1dhFU6pY2Vw==
+X-Google-Smtp-Source: APiQypLe1NK0ouaCbwea2Ar/mlZdKQ8TmXJhYkOr0ndqJkk1T9pLSfqEkeDLbIKHtYCq5a4S/3PzgQ==
+X-Received: by 2002:a17:902:22e:: with SMTP id 43mr21611580plc.119.1586214972026;
+        Mon, 06 Apr 2020 16:16:12 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 74sm12190832pfy.120.2020.04.06.16.16.10
+        by smtp.gmail.com with ESMTPSA id a24sm12522914pfl.115.2020.04.06.16.16.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 06 Apr 2020 16:16:10 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
         Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Jann Horn <jannh@google.com>,
         kernel-hardening@lists.openwall.com,
         linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/5] init_on_alloc: Unpessimize default-on builds
-Date:   Mon,  6 Apr 2020 16:16:03 -0700
-Message-Id: <20200406231606.37619-3-keescook@chromium.org>
+Subject: [PATCH v3 0/5] Optionally randomize kernel stack offset each syscall
+Date:   Mon,  6 Apr 2020 16:16:01 -0700
+Message-Id: <20200406231606.37619-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200406231606.37619-1-keescook@chromium.org>
-References: <20200406231606.37619-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,41 +79,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, the state of CONFIG_INIT_ON_ALLOC_DEFAULT_ON (and
-...ON_FREE...) did not change the assembly ordering of the static branch
-tests. Use the new jump_label macro to check CONFIG settings to default
-to the "expected" state, unpessimizes the resulting assembly code.
+v3:
+- added review/ack tags (peterz, glider)
+- further clarified commit logs and public attack references
+- added -fstack-protector downgrades and details
+v2: https://lore.kernel.org/lkml/20200324203231.64324-1-keescook@chromium.org/
+rfc: https://lore.kernel.org/kernel-hardening/20190329081358.30497-1-elena.reshetova@intel.com/
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Alexander Potapenko <glider@google.com>
----
- include/linux/mm.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Hi,
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 059658604dd6..64e911159ffa 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2665,7 +2665,8 @@ static inline void kernel_poison_pages(struct page *page, int numpages,
- DECLARE_STATIC_KEY_MAYBE(CONFIG_INIT_ON_ALLOC_DEFAULT_ON, init_on_alloc);
- static inline bool want_init_on_alloc(gfp_t flags)
- {
--	if (static_branch_unlikely(&init_on_alloc) &&
-+	if (static_branch_maybe(CONFIG_INIT_ON_ALLOC_DEFAULT_ON,
-+				&init_on_alloc) &&
- 	    !page_poisoning_enabled())
- 		return true;
- 	return flags & __GFP_ZERO;
-@@ -2674,7 +2675,8 @@ static inline bool want_init_on_alloc(gfp_t flags)
- DECLARE_STATIC_KEY_MAYBE(CONFIG_INIT_ON_FREE_DEFAULT_ON, init_on_free);
- static inline bool want_init_on_free(void)
- {
--	return static_branch_unlikely(&init_on_free) &&
-+	return static_branch_maybe(CONFIG_INIT_ON_FREE_DEFAULT_ON,
-+				   &init_on_free) &&
- 	       !page_poisoning_enabled();
- }
- 
+This is a continuation and refactoring of Elena's earlier effort to add
+kernel stack base offset randomization. In the time since the previous
+discussions, two attacks[1][2] were made public that depended on stack
+determinism, so we're no longer in the position of "this is a good idea
+but we have no examples of attacks". :)
+
+Earlier discussions also devolved into debates on entropy sources, which
+is mostly a red herring, given the already low entropy available due
+to stack size. Regardless, entropy can be changed/improved separately
+from this series as needed.
+
+Earlier discussions also got stuck debating how much syscall overhead
+was too much, but this is also a red herring since the feature itself
+needs to be selectable at boot with no cost for those that don't want it:
+this is solved here with static branches.
+
+So, here is an improved version, made as arch-agnostic as possible,
+with usage added for x86 and arm64. It also includes some small static
+branch clean ups, and addresses some surprise performance issues due to
+the stack canary[3].
+
+Thanks!
+
+-Kees
+
+[1] https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
+[2] https://repositorio-aberto.up.pt/bitstream/10216/125357/2/374717.pdf
+[3] https://lore.kernel.org/lkml/202003281520.A9BFF461@keescook/
+
+Kees Cook (5):
+  jump_label: Provide CONFIG-driven build state defaults
+  init_on_alloc: Unpessimize default-on builds
+  stack: Optionally randomize kernel stack offset each syscall
+  x86/entry: Enable random_kstack_offset support
+  arm64: entry: Enable random_kstack_offset support
+
+ Makefile                         |  4 ++++
+ arch/Kconfig                     | 23 ++++++++++++++++++
+ arch/arm64/Kconfig               |  1 +
+ arch/arm64/kernel/Makefile       |  4 ++++
+ arch/arm64/kernel/syscall.c      | 10 ++++++++
+ arch/x86/Kconfig                 |  1 +
+ arch/x86/entry/Makefile          |  9 +++++++
+ arch/x86/entry/common.c          | 12 +++++++++-
+ include/linux/jump_label.h       | 19 +++++++++++++++
+ include/linux/mm.h               | 18 +++++---------
+ include/linux/randomize_kstack.h | 40 ++++++++++++++++++++++++++++++++
+ init/main.c                      | 23 ++++++++++++++++++
+ mm/page_alloc.c                  | 12 ++--------
+ 13 files changed, 153 insertions(+), 23 deletions(-)
+ create mode 100644 include/linux/randomize_kstack.h
+
 -- 
 2.20.1
 
