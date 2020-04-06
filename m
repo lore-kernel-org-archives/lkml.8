@@ -2,157 +2,323 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E399C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCCA4C2BABC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDAFD206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CABE20753
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CjbhAJj3"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="rBH7qXRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgDFRoo (ORCPT
+        id S1727983AbgDFRou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:44:44 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:43671 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727922AbgDFRon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:44:43 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a5so394696qtw.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:44:42 -0700 (PDT)
+        Mon, 6 Apr 2020 13:44:50 -0400
+Received: from mail-dm6nam12on2081.outbound.protection.outlook.com ([40.107.243.81]:20801
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727922AbgDFRou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:44:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d8iFNybzGONSoiKKjQiTQdBKdixZd9v4jv4xeY4dotfKObz8gqioz2JSxBoN0J8S7fiE3qq/ulomNQ+39SdTxgVt1MkY2m3x19l2qfqO0aQMUmHcYhnXfXNxrg9YUmHykQsZB8pZe1NTmlMqe3mPDjPmiOjEXyNwqiHsgcRmq75N4tnoZSHc7w+FysAukR4fUu5as91agP2lI2on+vOaDNtv6FC88tCLnLSKpputoX7scbgajONu8V5oUs7bsV/jLuzt0Ki/DeZT6SoUBtU6dHhcEFf8Tfdbdppi7kuf3rjLbELDUMc8MrkNBBalZ140qQgUN6OufSuEzHODt7Roiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MnvUnlGESzpccOv2++1kW6+V57l3CI+sdKUmDoF9GJQ=;
+ b=PJWUH02tLZpKPaqtnEXa7w35oSANZ+sULqVh+EOHZlaCu5+RT+zQ0un93oS8LEUFUEnzKt5i9NTfu3vbHNpjhpX4M29swYXwaOVcPGnS0Mw3DWGHd5JJC7K+zxzhAXglDjDq05j+ZeSk7EznVqXV9MHT9J1tIbStktknvEBkI0uS7r3X8HPJ26Rl+JaQ+jIKwS/cUVQrY/FomSOwguq9wyfN+4YHdfRgZqyvyJK6yuP/R1o2KYSFfeOUIgJq1KooPCIWTLgHqfPXEJaEpsOHnXtsUu5BZMuijiyerDHis3YKVPiW9AqYFl3wb1J3Xm414E2Qx1YAdd0gfGR8ZMTk9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O889dxB/XJ11aoM95cldpEaus4gDgLM3yTi+BUCXaL0=;
-        b=CjbhAJj3Tg6y8oKldTLzjJgMKn6v55oqoh5dQSCe0t9eI0N5Ab9KpB1ZaMBFL49hJ1
-         U2YSO0kjrRgeaVmCyD1Lcyc+Iuyxswp5BwvxKn+KzvzHMaJcVK7WJhnu0m7hWXwYQAjw
-         EsH9hi5e2/hmMFgImNwnk2oGoD+gqahObRsAOtHsmPfZSJNwMjQA+RrmNO7VLZb2hQ+h
-         qUebv2jQpa0u/8Tixk/rjBRzO66TXyjwfdnFe1eOI2mWwFyyzG4hzRY/WnE/jl5r+6YQ
-         QwHeryLLzOnmdRx3ZutBFI9zPe366Dfo41v/rVhgI7RZAv5qyT02wzORNsi1NbF9BHM3
-         ubhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O889dxB/XJ11aoM95cldpEaus4gDgLM3yTi+BUCXaL0=;
-        b=r2RQJggwCHgSd2x3vYUw1k1tqILt5ERH5SC2Wld/DHzqVfOO9JHthHUSJYqAv3tpZN
-         P/tmUa5TFwqWn/3+SkFWXW0zmSdlJFnaVGsKEypqN9I9PXSvQYAANOJG5X3q5TfROtzD
-         ZHJ1OoSRPJGQU3PRzl2yal426KvtubqE5CR6YM8ymtK7coP2afBnZR0LeIRs6KqU1MRt
-         G4k+kwfGmMNw4Kma52zIxUP01VGh+HN9A8dHakMGK6hH28+wUehKjkFibZTIOpIEVKlh
-         fiabXrVVpwPBvxgIzAn7+4r3xBlFRABUefSrbHIxnvF7TKgskPvr8s5g4cwOLxkajJPJ
-         TtdQ==
-X-Gm-Message-State: AGi0PuYKmFasXCrUqkrQvOBPHfzVY77dI/mOgodEn225V35j4UUmkZDV
-        nEioQKAETg91MaD3VOZd3dBEIA==
-X-Google-Smtp-Source: APiQypLj6wnyOzro00s4tpq9gdIN+7IPdSVtnDUW7iERedT5t2IGtckVe64o2Po3xX134XMZwCxmLA==
-X-Received: by 2002:ac8:4c8a:: with SMTP id j10mr602951qtv.69.1586195081480;
-        Mon, 06 Apr 2020 10:44:41 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id u29sm13038349qkm.102.2020.04.06.10.44.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 10:44:40 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jLVnc-0008Sf-EB; Mon, 06 Apr 2020 14:44:40 -0300
-Date:   Mon, 6 Apr 2020 14:44:40 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
-        RDMA mailing list <linux-rdma@vger.kernel.org>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, rafael@kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: WARNING in ib_umad_kill_port
-Message-ID: <20200406174440.GR20941@ziepe.ca>
-References: <00000000000075245205a2997f68@google.com>
- <20200406172151.GJ80989@unreal>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MnvUnlGESzpccOv2++1kW6+V57l3CI+sdKUmDoF9GJQ=;
+ b=rBH7qXRHcavsaHsdSYWc7WQ6EcEvr21emayjQCW7dEZIwGbU0Js6vyBIPwF3Xas19XnE++SEicZRjdo7Tykxw4R/VKIDL5FgeyfBNpPVcNyDsc46NYDEaRFzs6SvmaYy1mx5LKX8zoKmbb/EPUt3J2+eGAImBzAUVFVyk+UrRHM=
+Received: from BL0PR0102CA0063.prod.exchangelabs.com (2603:10b6:208:25::40) by
+ BN7PR02MB4098.namprd02.prod.outlook.com (2603:10b6:406:fd::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.20; Mon, 6 Apr 2020 17:44:45 +0000
+Received: from BL2NAM02FT040.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:25:cafe::58) by BL0PR0102CA0063.outlook.office365.com
+ (2603:10b6:208:25::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend
+ Transport; Mon, 6 Apr 2020 17:44:45 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT040.mail.protection.outlook.com (10.152.77.193) with Microsoft SMTP
+ Server id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 17:44:45
+ +0000
+Received: from [149.199.38.66] (port=46333 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1jLVnP-0007b6-4S; Mon, 06 Apr 2020 10:44:27 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <manish.narani@xilinx.com>)
+        id 1jLVng-0001k7-Mn; Mon, 06 Apr 2020 10:44:44 -0700
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 036HiXH9018058;
+        Mon, 6 Apr 2020 10:44:34 -0700
+Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <mnarani@xilinx.com>)
+        id 1jLVnV-0001iS-DB; Mon, 06 Apr 2020 10:44:33 -0700
+Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
+        id 337AA12124E; Mon,  6 Apr 2020 23:13:39 +0530 (IST)
+From:   Manish Narani <manish.narani@xilinx.com>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        adrian.hunter@intel.com, michal.simek@xilinx.com
+Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        git@xilinx.com, Manish Narani <manish.narani@xilinx.com>
+Subject: [PATCH v3 4/6] mmc: sdhci-of-arasan: Rearrange the platform data structs for modularity
+Date:   Mon,  6 Apr 2020 23:13:33 +0530
+Message-Id: <1586195015-128992-5-git-send-email-manish.narani@xilinx.com>
+X-Mailer: git-send-email 2.1.1
+In-Reply-To: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
+References: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(346002)(376002)(46966005)(82740400003)(4326008)(426003)(107886003)(5660300002)(8936002)(2616005)(6266002)(478600001)(44832011)(2906002)(186003)(81166006)(8676002)(356004)(36756003)(70586007)(6666004)(6636002)(70206006)(336012)(42186006)(26005)(81156014)(47076004)(316002);DIR:OUT;SFP:1101;
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406172151.GJ80989@unreal>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5077451f-c785-4234-8c7e-08d7da5231a0
+X-MS-TrafficTypeDiagnostic: BN7PR02MB4098:
+X-Microsoft-Antispam-PRVS: <BN7PR02MB4098D60392CFCD39FB11AF99C1C20@BN7PR02MB4098.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:2449;
+X-Forefront-PRVS: 0365C0E14B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tABiabFkUEbHO7skUQpsKy6mlhv9y67y0gJg7VVDBXlB1Mnkl3gSKRNmxqoSChFVl0nyhf2q0VS77uoKgmOHnuAjGz/3lESJY6Jm0Hvfr+dytqxrQjPtx+YhMUf00QII0Yyc+cWte8P/0hBBezajlUknHKR4DMBtJN+/W5yHwsUVblfkg7nqTy2Hlb4DJaadiOS1YTuv+4jPsp3Npg0etHvuAGYgKm3KToBnycW1nj4HKZCqDRahesUVgJ+STyfub4xn2YdrQbTLNGXzCd9QrpdAL6WvfV1S7oJ22olnuiz2bh+oxxJ8pH8/RJtBGjW0oa9XmNAdrp0YeA5vBZ/JjHAxMEizYotghW39hd0IIBecaeC63IWmn+vp/laNV7enSLtDej5nMuoViXe9BPgwceDQBz7SGH3ZIgpiSKYZ3RtVA6Vff9sMF3y1AswArxOTn9PbANQIK+pX+DiGarbFYnHtkMg06piHyLgJA1o09jiKpM9Kdj347Fz8hXbNk3/TAEnDCa0iUHz8n1TZ9GhPtA==
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 17:44:45.0863
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5077451f-c785-4234-8c7e-08d7da5231a0
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:21:51PM +0300, Leon Romanovsky wrote:
-> + RDMA
-> 
-> On Sun, Apr 05, 2020 at 11:37:15PM -0700, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    304e0242 net_sched: add a temporary refcnt for struct tcin..
-> > git tree:       net
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=119dd16de00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=9627a92b1f9262d5d30c
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com
-> >
-> > sysfs group 'power' not found for kobject 'umad1'
-> > WARNING: CPU: 1 PID: 31308 at fs/sysfs/group.c:279 sysfs_remove_group fs/sysfs/group.c:279 [inline]
-> > WARNING: CPU: 1 PID: 31308 at fs/sysfs/group.c:279 sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 1 PID: 31308 Comm: kworker/u4:10 Not tainted 5.6.0-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Workqueue: events_unbound ib_unregister_work
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x188/0x20d lib/dump_stack.c:118
-> >  panic+0x2e3/0x75c kernel/panic.c:221
-> >  __warn.cold+0x2f/0x35 kernel/panic.c:582
-> >  report_bug+0x27b/0x2f0 lib/bug.c:195
-> >  fixup_bug arch/x86/kernel/traps.c:175 [inline]
-> >  fixup_bug arch/x86/kernel/traps.c:170 [inline]
-> >  do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
-> >  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
-> >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> > RIP: 0010:sysfs_remove_group fs/sysfs/group.c:279 [inline]
-> > RIP: 0010:sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
-> > Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c 01 00 75 41 48 8b 33 48 c7 c7 60 c3 39 88 e8 93 c3 5f ff <0f> 0b eb 95 e8 22 62 cb ff e9 d2 fe ff ff 48 89 df e8 15 62 cb ff
-> > RSP: 0018:ffffc90001d97a60 EFLAGS: 00010282
-> > RAX: 0000000000000000 RBX: ffffffff88915620 RCX: 0000000000000000
-> > RDX: 0000000000000000 RSI: ffffffff815ca861 RDI: fffff520003b2f3e
-> > RBP: 0000000000000000 R08: ffff8880a78fc2c0 R09: ffffed1015ce66a1
-> > R10: ffffed1015ce66a0 R11: ffff8880ae733507 R12: ffff88808e5ba070
-> > R13: ffffffff88915bc0 R14: ffff88808e5ba008 R15: dffffc0000000000
-> >  dpm_sysfs_remove+0x97/0xb0 drivers/base/power/sysfs.c:794
-> >  device_del+0x18b/0xd30 drivers/base/core.c:2687
-> >  cdev_device_del+0x15/0x80 fs/char_dev.c:570
-> >  ib_umad_kill_port+0x45/0x250 drivers/infiniband/core/user_mad.c:1327
-> >  ib_umad_remove_one+0x18a/0x220 drivers/infiniband/core/user_mad.c:1409
-> >  remove_client_context+0xbe/0x110 drivers/infiniband/core/device.c:724
-> >  disable_device+0x13b/0x230 drivers/infiniband/core/device.c:1270
-> >  __ib_unregister_device+0x91/0x180 drivers/infiniband/core/device.c:1437
-> >  ib_unregister_work+0x15/0x30 drivers/infiniband/core/device.c:1547
-> >  process_one_work+0x965/0x16a0 kernel/workqueue.c:2266
-> >  worker_thread+0x96/0xe20 kernel/workqueue.c:2412
-> >  kthread+0x388/0x470 kernel/kthread.c:268
-> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
+Existing driver code has the platform specific structures scattered
+throughout the driver code. Rearrange the platform specific data
+structures for more modularity and readability. This will help in adding
+new static functions with more ease.
 
-I'm not sure what could be done wrong here to elicit this:
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+---
+ drivers/mmc/host/sdhci-of-arasan.c | 158 +++++++++++++++++++------------------
+ 1 file changed, 81 insertions(+), 77 deletions(-)
 
- sysfs group 'power' not found for kobject 'umad1'
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index 72f5d83..bff726a 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -357,29 +357,6 @@ static const struct sdhci_ops sdhci_arasan_ops = {
+ 	.set_power = sdhci_arasan_set_power,
+ };
+ 
+-static const struct sdhci_pltfm_data sdhci_arasan_pdata = {
+-	.ops = &sdhci_arasan_ops,
+-	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+-			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
+-			SDHCI_QUIRK2_STOP_WITH_TC,
+-};
+-
+-static struct sdhci_arasan_of_data sdhci_arasan_generic_data = {
+-	.pdata = &sdhci_arasan_pdata,
+-};
+-
+-static const struct sdhci_pltfm_data sdhci_arasan_zynqmp_pdata = {
+-	.ops = &sdhci_arasan_ops,
+-	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+-			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
+-			SDHCI_QUIRK2_STOP_WITH_TC,
+-};
+-
+-static struct sdhci_arasan_of_data sdhci_arasan_zynqmp_data = {
+-	.pdata = &sdhci_arasan_zynqmp_pdata,
+-};
+-
+ static u32 sdhci_arasan_cqhci_irq(struct sdhci_host *host, u32 intmask)
+ {
+ 	int cmd_error = 0;
+@@ -436,21 +413,6 @@ static const struct sdhci_pltfm_data sdhci_arasan_cqe_pdata = {
+ 			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+ };
+ 
+-static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
+-	.soc_ctl_map = &rk3399_soc_ctl_map,
+-	.pdata = &sdhci_arasan_cqe_pdata,
+-};
+-
+-static struct sdhci_arasan_of_data intel_lgm_emmc_data = {
+-	.soc_ctl_map = &intel_lgm_emmc_soc_ctl_map,
+-	.pdata = &sdhci_arasan_cqe_pdata,
+-};
+-
+-static struct sdhci_arasan_of_data intel_lgm_sdxc_data = {
+-	.soc_ctl_map = &intel_lgm_sdxc_soc_ctl_map,
+-	.pdata = &sdhci_arasan_cqe_pdata,
+-};
+-
+ #ifdef CONFIG_PM_SLEEP
+ /**
+  * sdhci_arasan_suspend - Suspend method for the driver
+@@ -546,45 +508,6 @@ static int sdhci_arasan_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(sdhci_arasan_dev_pm_ops, sdhci_arasan_suspend,
+ 			 sdhci_arasan_resume);
+ 
+-static const struct of_device_id sdhci_arasan_of_match[] = {
+-	/* SoC-specific compatible strings w/ soc_ctl_map */
+-	{
+-		.compatible = "rockchip,rk3399-sdhci-5.1",
+-		.data = &sdhci_arasan_rk3399_data,
+-	},
+-	{
+-		.compatible = "intel,lgm-sdhci-5.1-emmc",
+-		.data = &intel_lgm_emmc_data,
+-	},
+-	{
+-		.compatible = "intel,lgm-sdhci-5.1-sdxc",
+-		.data = &intel_lgm_sdxc_data,
+-	},
+-	/* Generic compatible below here */
+-	{
+-		.compatible = "arasan,sdhci-8.9a",
+-		.data = &sdhci_arasan_generic_data,
+-	},
+-	{
+-		.compatible = "arasan,sdhci-5.1",
+-		.data = &sdhci_arasan_generic_data,
+-	},
+-	{
+-		.compatible = "arasan,sdhci-4.9a",
+-		.data = &sdhci_arasan_generic_data,
+-	},
+-	{
+-		.compatible = "xlnx,zynqmp-8.9a",
+-		.data = &sdhci_arasan_zynqmp_data,
+-	},
+-	{
+-		.compatible = "xlnx,versal-8.9a",
+-		.data = &sdhci_arasan_zynqmp_data,
+-	},
+-	{ /* sentinel */ }
+-};
+-MODULE_DEVICE_TABLE(of, sdhci_arasan_of_match);
+-
+ /**
+  * sdhci_arasan_sdcardclk_recalc_rate - Return the card clock rate
+  *
+@@ -1160,6 +1083,87 @@ static void arasan_dt_parse_clk_phases(struct device *dev,
+ 				 "clk-phase-mmc-hs400");
+ }
+ 
++static const struct sdhci_pltfm_data sdhci_arasan_pdata = {
++	.ops = &sdhci_arasan_ops,
++	.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
++			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
++			SDHCI_QUIRK2_STOP_WITH_TC,
++};
++
++static struct sdhci_arasan_of_data sdhci_arasan_generic_data = {
++	.pdata = &sdhci_arasan_pdata,
++};
++
++static struct sdhci_arasan_of_data sdhci_arasan_rk3399_data = {
++	.soc_ctl_map = &rk3399_soc_ctl_map,
++	.pdata = &sdhci_arasan_cqe_pdata,
++};
++
++static struct sdhci_arasan_of_data intel_lgm_emmc_data = {
++	.soc_ctl_map = &intel_lgm_emmc_soc_ctl_map,
++	.pdata = &sdhci_arasan_cqe_pdata,
++};
++
++static struct sdhci_arasan_of_data intel_lgm_sdxc_data = {
++	.soc_ctl_map = &intel_lgm_sdxc_soc_ctl_map,
++	.pdata = &sdhci_arasan_cqe_pdata,
++};
++
++static const struct sdhci_pltfm_data sdhci_arasan_zynqmp_pdata = {
++	.ops = &sdhci_arasan_ops,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
++			SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN |
++			SDHCI_QUIRK2_STOP_WITH_TC,
++};
++
++static struct sdhci_arasan_of_data sdhci_arasan_zynqmp_data = {
++	.pdata = &sdhci_arasan_zynqmp_pdata,
++};
++
++static struct sdhci_arasan_of_data sdhci_arasan_versal_data = {
++	.pdata = &sdhci_arasan_zynqmp_pdata,
++};
++
++static const struct of_device_id sdhci_arasan_of_match[] = {
++	/* SoC-specific compatible strings w/ soc_ctl_map */
++	{
++		.compatible = "rockchip,rk3399-sdhci-5.1",
++		.data = &sdhci_arasan_rk3399_data,
++	},
++	{
++		.compatible = "intel,lgm-sdhci-5.1-emmc",
++		.data = &intel_lgm_emmc_data,
++	},
++	{
++		.compatible = "intel,lgm-sdhci-5.1-sdxc",
++		.data = &intel_lgm_sdxc_data,
++	},
++	/* Generic compatible below here */
++	{
++		.compatible = "arasan,sdhci-8.9a",
++		.data = &sdhci_arasan_generic_data,
++	},
++	{
++		.compatible = "arasan,sdhci-5.1",
++		.data = &sdhci_arasan_generic_data,
++	},
++	{
++		.compatible = "arasan,sdhci-4.9a",
++		.data = &sdhci_arasan_generic_data,
++	},
++	{
++		.compatible = "xlnx,zynqmp-8.9a",
++		.data = &sdhci_arasan_zynqmp_data,
++	},
++	{
++		.compatible = "xlnx,versal-8.9a",
++		.data = &sdhci_arasan_versal_data,
++	},
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, sdhci_arasan_of_match);
++
+ /**
+  * sdhci_arasan_register_sdcardclk - Register the sdcardclk for a PHY to use
+  *
+-- 
+2.1.1
 
-??
-
-I've seen another similar sysfs related trigger that we couldn't
-figure out.
-
-Hard to investigate without a reproducer.
-
-Jason
