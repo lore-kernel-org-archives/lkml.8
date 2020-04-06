@@ -2,262 +2,75 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F54C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A8DC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795D123B46
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:14:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcx1bcE+"
+	by mail.kernel.org (Postfix) with ESMTP id D0481238E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgDFOOD (ORCPT
+        id S1728630AbgDFOQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:14:03 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:37050 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728558AbgDFOOC (ORCPT
+        Mon, 6 Apr 2020 10:16:10 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:40263 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728228AbgDFOQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:14:02 -0400
-Received: by mail-qv1-f68.google.com with SMTP id n1so7559320qvz.4;
-        Mon, 06 Apr 2020 07:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=R0Dkto3Ot48r4LAZirJdCjJm2TIVdoamwirZwpn+9cw=;
-        b=jcx1bcE+a0LgJPXgP9nl9JzqNgJqVUUBtXhNmKY84/JIT5MP+YEoV0pzYdhGJ74g4I
-         FR7P8JUeHNeXRPkEW9RavpxyoBRZ/NYBGdzMwUyRcF2dsfIbuJQ3JIfOwI49IRgfvPp2
-         sI+ykJEfGDfSIa0l3a9fahD1j5huAGIK4IJIZqZAxrx64yG74pe/eWDuf2lZTXZNNN0R
-         aIWtKzPVWoF6hgPhXBtdvIPeWSCMitN/vXDd/qgFDT3w+hF2yhBnZQLUeeCSBRm0NoTM
-         yJ2gnHUA6KeNPEc5u9x+UKsRaoAJL7dGmwBMy5TRhkhHCkaEyLl0C1afgCZzKeE+nGU5
-         KAuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R0Dkto3Ot48r4LAZirJdCjJm2TIVdoamwirZwpn+9cw=;
-        b=oJWd/LFS5EZpWQtqvQrAa8s1m6+us0RhW7XHZLc/d3yrJhiLFtojWY16DS8a1iHONH
-         4b67Pa5Hyicxhc6emlLb+cjss5kIp4NjLow1/G8bMTV+1uWCwdugylosRifGaivXmgZ1
-         eHsrxeExaM80lyUMzXIAxcdpEvLOd+zco2g30/+53KaoSDzXy/GgDLm/vTzMgU5d91S9
-         2ZJgNiuOr5T0RKa6+yAJ92RnP14t+eV45rWmH6T3KT31B2wcJwjuPYDRHyqrsN8P5VGR
-         VngD3YLMqtlcQv+5k/8sWIuDigWPObpLemFjElAB9nw6xjuoLWAHQCObti5GGzQb2pu/
-         qv5A==
-X-Gm-Message-State: AGi0PuZR+fLOfUS7tQK29AMWIgTBOBhiVWWqDLEg0A9WanQ18Q5hK0Im
-        sX2mro+3KSIdAsSBI/361dU=
-X-Google-Smtp-Source: APiQypJCnBu9UsuvGtSAitWe33sdsCEgCiDe6OtydtOmMXDRFvRnwa459nOSeZ9/VnPo/1nEJGnDTA==
-X-Received: by 2002:a0c:f207:: with SMTP id h7mr20287593qvk.20.1586182440215;
-        Mon, 06 Apr 2020 07:14:00 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id g201sm14740449qke.99.2020.04.06.07.13.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 07:13:59 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6983D409A3; Mon,  6 Apr 2020 11:13:57 -0300 (-03)
-Date:   Mon, 6 Apr 2020 11:13:57 -0300
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v8 1/7] perf expr: Add expr_ prefix for parse_ctx and
- parse_id
-Message-ID: <20200406141357.GG29826@kernel.org>
-References: <20200401203340.31402-1-kjain@linux.ibm.com>
- <20200401203340.31402-2-kjain@linux.ibm.com>
+        Mon, 6 Apr 2020 10:16:10 -0400
+X-Originating-IP: 84.210.220.251
+Received: from [192.168.1.123] (cm-84.210.220.251.getinternet.no [84.210.220.251])
+        (Authenticated sender: fredrik@strupe.net)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 114CC20005;
+        Mon,  6 Apr 2020 14:16:07 +0000 (UTC)
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+From:   Fredrik Strupe <fredrik@strupe.net>
+Subject: [PATCH] arm64: armv8_deprecated: Fix undef_hook mask for thumb setend
+Message-ID: <911db2f1-e078-a460-32ee-154a0b4de5d4@strupe.net>
+Date:   Mon, 6 Apr 2020 16:16:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401203340.31402-2-kjain@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Apr 02, 2020 at 02:03:34AM +0530, Kajol Jain escreveu:
-> From: Jiri Olsa <jolsa@kernel.org>
-> 
-> Adding expr_ prefix for parse_ctx and parse_id,
-> to straighten out the expr* namespace.
-> 
-> There's no functional change.
+Use a full 32-bit mask to prevent accidental matchings of thumb32
+instructions where the second half-word is equal to the thumb16 setend
+encoding.
 
-Next time please add your Signed-off-by: as well when pushing 3rd party
-patches.
+This fixes the same problem as the following patch:
 
-Applied.
+     https://lkml.org/lkml/2020/3/16/341
 
-- Arnaldo
- 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/tests/expr.c       |  4 ++--
->  tools/perf/util/expr.c        | 10 +++++-----
->  tools/perf/util/expr.h        | 12 ++++++------
->  tools/perf/util/expr.y        |  6 +++---
->  tools/perf/util/stat-shadow.c |  2 +-
->  5 files changed, 17 insertions(+), 17 deletions(-)
-> 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index 28313e59d6f6..ea10fc4412c4 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -6,7 +6,7 @@
->  #include <string.h>
->  #include <linux/zalloc.h>
->  
-> -static int test(struct parse_ctx *ctx, const char *e, double val2)
-> +static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
->  {
->  	double val;
->  
-> @@ -22,7 +22,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
->  	const char **other;
->  	double val;
->  	int i, ret;
-> -	struct parse_ctx ctx;
-> +	struct expr_parse_ctx ctx;
->  	int num_other;
->  
->  	expr__ctx_init(&ctx);
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index fd192ddf93c1..c8ccc548a585 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -11,7 +11,7 @@ extern int expr_debug;
->  #endif
->  
->  /* Caller must make sure id is allocated */
-> -void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
-> +void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
->  {
->  	int idx;
->  
-> @@ -21,13 +21,13 @@ void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
->  	ctx->ids[idx].val = val;
->  }
->  
-> -void expr__ctx_init(struct parse_ctx *ctx)
-> +void expr__ctx_init(struct expr_parse_ctx *ctx)
->  {
->  	ctx->num_ids = 0;
->  }
->  
->  static int
-> -__expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
-> +__expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
->  	      int start)
->  {
->  	YY_BUFFER_STATE buffer;
-> @@ -52,7 +52,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
->  	return ret;
->  }
->  
-> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
-> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
->  {
->  	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
->  }
-> @@ -75,7 +75,7 @@ int expr__find_other(const char *expr, const char *one, const char ***other,
->  		     int *num_other)
->  {
->  	int err, i = 0, j = 0;
-> -	struct parse_ctx ctx;
-> +	struct expr_parse_ctx ctx;
->  
->  	expr__ctx_init(&ctx);
->  	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index 9377538f4097..b9e53f2b5844 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -5,19 +5,19 @@
->  #define EXPR_MAX_OTHER 20
->  #define MAX_PARSE_ID EXPR_MAX_OTHER
->  
-> -struct parse_id {
-> +struct expr_parse_id {
->  	const char *name;
->  	double val;
->  };
->  
-> -struct parse_ctx {
-> +struct expr_parse_ctx {
->  	int num_ids;
-> -	struct parse_id ids[MAX_PARSE_ID];
-> +	struct expr_parse_id ids[MAX_PARSE_ID];
->  };
->  
-> -void expr__ctx_init(struct parse_ctx *ctx);
-> -void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
-> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
-> +void expr__ctx_init(struct expr_parse_ctx *ctx);
-> +void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
-> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
->  int expr__find_other(const char *expr, const char *one, const char ***other,
->  		int *num_other);
->  
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 4720cbe79357..cd17486c1c5d 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -15,7 +15,7 @@
->  %define api.pure full
->  
->  %parse-param { double *final_val }
-> -%parse-param { struct parse_ctx *ctx }
-> +%parse-param { struct expr_parse_ctx *ctx }
->  %parse-param {void *scanner}
->  %lex-param {void* scanner}
->  
-> @@ -39,14 +39,14 @@
->  
->  %{
->  static void expr_error(double *final_val __maybe_unused,
-> -		       struct parse_ctx *ctx __maybe_unused,
-> +		       struct expr_parse_ctx *ctx __maybe_unused,
->  		       void *scanner,
->  		       const char *s)
->  {
->  	pr_debug("%s\n", s);
->  }
->  
-> -static int lookup_id(struct parse_ctx *ctx, char *id, double *val)
-> +static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
->  {
->  	int i;
->  
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> index 0fd713d3674f..402af3e8d287 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -729,7 +729,7 @@ static void generic_metric(struct perf_stat_config *config,
->  			   struct runtime_stat *st)
->  {
->  	print_metric_t print_metric = out->print_metric;
-> -	struct parse_ctx pctx;
-> +	struct expr_parse_ctx pctx;
->  	double ratio, scale;
->  	int i;
->  	void *ctxp = out->ctx;
-> -- 
-> 2.21.0
-> 
+but for setend emulation instead.
 
+Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+---
+  arch/arm64/kernel/armv8_deprecated.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
+index 9d3442d62..8c06dfee0 100644
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -609,7 +609,7 @@ static struct undef_hook setend_hooks[] = {
+  	},
+  	{
+  		/* Thumb mode */
+-		.instr_mask	= 0x0000fff7,
++		.instr_mask	= 0xfffffff7,
+  		.instr_val	= 0x0000b650,
+  		.pstate_mask	= (PSR_AA32_T_BIT | PSR_AA32_MODE_MASK),
+  		.pstate_val	= (PSR_AA32_T_BIT | PSR_AA32_MODE_USR),
 -- 
+2.20.1
 
-- Arnaldo
