@@ -2,140 +2,167 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5275AC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26D0C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B8A20768
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:23:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="re0wkM9Y"
+	by mail.kernel.org (Postfix) with ESMTP id 93A6120748
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:25:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgDFUXI (ORCPT
+        id S1726312AbgDFUZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 16:23:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37044 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFUXH (ORCPT
+        Mon, 6 Apr 2020 16:25:09 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:35959 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725957AbgDFUZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 16:23:07 -0400
-Received: by mail-ed1-f68.google.com with SMTP id de14so1167715edb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 13:23:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=39PH+pwpIycTi0BsfN3QezNcOPRNhfwqmeD1bO42FHI=;
-        b=re0wkM9Y8K0FkjQlOYTtllVGDKo96zzEV9ijGYRTSuOy69i+w+YnLmP5o40GJpt35d
-         id1hpQ7x/EK/kFALbsL9tNzD+6SkS/Vk7I8UkLLjA6NHyxmzdfU0k6F9dHb3Eiyy+jok
-         E18GAbSDHu0DAsBxHQd0paCz6sqrKShssxJf9In36mDsiTd1aw+w+YOkQcTzQqwKkpSd
-         og/4qTJ341EkMIRECzta+agUB7EVJK0c/mFmjYoRMgxHoP+ySEESE37xSNcO1R2BgqbL
-         Fbf4XVj2ywZ2YkHUG6xzQnnc3PHFsmGWn2zp1TMpAQpcERcFithJvKtO7PePdYzBw4ab
-         d7Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=39PH+pwpIycTi0BsfN3QezNcOPRNhfwqmeD1bO42FHI=;
-        b=BiRCqOzYS+quwrUWvPHThf0xdL3PUf6PYuQ/6iX8BP4pawV+WqyzlS313Ee7fQbI/M
-         YUF8yP6eKV8BmwJOnuMdTOvwUv+Q+6j9/8WO0LayoyvpkTS7WBq9QueR3jhlP1YyGXSf
-         3lCL64KxKIYBHTXqqOZjfqlEzlWSrvfROihAM1vjz3Ec73E5QZGk7IIbiYliBWKMxtbR
-         Cn5iJuTn92V7DYywsBtaCJAgwy8EATF19YLlKzcuJu8wtkNleMGGODvGnZjTCcysegma
-         1yFkmaJeXdB2MfvEirwWk+p0++OixIMYHVp6dFADAtyctnmKSRmsyOJmUPyxaTxTmn35
-         ZfVA==
-X-Gm-Message-State: AGi0PuYkGf+q0i0iKx0hHkeON5BYRpEZopI0dzKWFmDS7oR8QvqhPU1O
-        gqHn6uso8sfrYfZkP88QZLEmhcouhI+3ShKxW/3Y1g==
-X-Google-Smtp-Source: APiQypLKe5k4sPIdyDlAdrXh1qMjrKzUsMm7i1sTvxIVG8cUt7zm4WnRhiU6r3Bysf7eOs3J7AGGIYYvkaNPjCfcQMI=
-X-Received: by 2002:a17:906:6d8e:: with SMTP id h14mr1160830ejt.123.1586204586068;
- Mon, 06 Apr 2020 13:23:06 -0700 (PDT)
+        Mon, 6 Apr 2020 16:25:09 -0400
+Received: (qmail 32756 invoked by uid 500); 6 Apr 2020 16:25:08 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 6 Apr 2020 16:25:08 -0400
+Date:   Mon, 6 Apr 2020 16:25:08 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+In-Reply-To: <3513564.a1tKoPzQQ1@kreacher>
+Message-ID: <Pine.LNX.4.44L0.2004061541080.26186-100000@netrider.rowland.org>
 MIME-Version: 1.0
-References: <158500767138.2088294.17131646259803932461.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158500773552.2088294.8756587190550753100.stgit@dwillia2-desk3.amr.corp.intel.com>
- <23742bb8-831f-29ff-1463-75427eec57c7@oracle.com>
-In-Reply-To: <23742bb8-831f-29ff-1463-75427eec57c7@oracle.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 6 Apr 2020 13:22:54 -0700
-Message-ID: <CAPcyv4jvsBSD3SELYn=oj_nvLZ_VgM2YbyswbSEeq5DmkcbXcw@mail.gmail.com>
-Subject: Re: [PATCH 11/12] device-dax: Add dis-contiguous resource support
-To:     Joao Martins <joao.m.martins@oracle.com>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 3:46 AM Joao Martins <joao.m.martins@oracle.com> wrote:
->
-> On 3/23/20 11:55 PM, Dan Williams wrote:
->
-> [...]
->
-> >  static ssize_t dev_dax_resize(struct dax_region *dax_region,
-> >               struct dev_dax *dev_dax, resource_size_t size)
-> >  {
-> >       resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
-> > -     resource_size_t dev_size = range_len(&dev_dax->range);
-> > +     resource_size_t dev_size = dev_dax_size(dev_dax);
-> >       struct resource *region_res = &dax_region->res;
-> >       struct device *dev = &dev_dax->dev;
-> > -     const char *name = dev_name(dev);
-> >       struct resource *res, *first;
-> > +     resource_size_t alloc = 0;
-> > +     int rc;
-> >
-> >       if (dev->driver)
-> >               return -EBUSY;
-> > @@ -684,38 +766,47 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
-> >        * allocating a new resource.
-> >        */
-> >       first = region_res->child;
-> > -     if (!first)
-> > -             return __alloc_dev_dax_range(dev_dax, dax_region->res.start,
-> > -                             to_alloc);
-> > -     for (res = first; to_alloc && res; res = res->sibling) {
-> > +retry:
-> > +     rc = -ENOSPC;
-> > +     for (res = first; res; res = res->sibling) {
-> >               struct resource *next = res->sibling;
-> > -             resource_size_t free;
-> >
-> >               /* space at the beginning of the region */
-> > -             free = 0;
-> > -             if (res == first && res->start > dax_region->res.start)
-> > -                     free = res->start - dax_region->res.start;
-> > -             if (free >= to_alloc && dev_size == 0)
-> > -                     return __alloc_dev_dax_range(dev_dax,
-> > -                                     dax_region->res.start, to_alloc);
-> > -
-> > -             free = 0;
-> > +             if (res == first && res->start > dax_region->res.start) {
-> > +                     alloc = min(res->start - dax_region->res.start,
-> > +                                     to_alloc);
-> > +                     rc = __alloc_dev_dax_range(dev_dax,
-> > +                                     dax_region->res.start, alloc);
->
-> You might be missing:
->
->         first = region_res->child;
->
-> (...) right after returning from __alloc_dev_dax_range(). Alternatively, perhaps
-> even moving the 'retry' label to right before the @first initialization.
->
-> In the case that you pick space from the beginning, the child resource of the
-> dax region will point to first occupied region, and that changes after you pick
-> this space. So, IIUC, you want to adjust where you start searching free space
-> otherwise you end up wrongly picking that same space twice.
->
-> If it helps, the bug can be reproduced in this unit test below, see
-> daxctl_test3() test:
+On Mon, 6 Apr 2020, Rafael J. Wysocki wrote:
 
-It definitely will, thanks. I'll be circling back to this now that
-I've settled my tree for the v5.7 window.
+> In the meantime I have created a git branch with changes to simplify the code,
+> rename some things and clarify the documentation a bit:
+> 
+>  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+>  pm-sleep-core
+> 
+> (https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-sleep-core
+> for web access).
+> 
+> I'm going to post these changes as patches soon.
+
+All right, those are some significant changes.  It'll take me a little 
+while to absorb them.
+
+> On Friday, April 3, 2020 10:15:09 PM CEST Alan Stern wrote:
+
+> > Let's put it like this: The resume-side callbacks should have the
+> > overall effect of bringing the device back to its initial state, with
+> > the following exceptions and complications:
+> > 
+> > 	Unless SMART_SUSPEND and LEAVE_SUSPEND are both set, a device
+> > 	that was in runtime suspend before the suspend_late phase 
+> > 	must end up being runtime-active after the matching RESUME.
+> >
+> > 	Unless SMART_SUSPEND is set, a device that was in runtime 
+> > 	suspend before the freeze_late phase must end up being 
+> > 	runtime-active after the matching THAW.
+> 
+> Correct.
+>  
+> > [I'm not so sure about this.  Wouldn't it make more sense to treat
+> > _every_ device as though SMART_SUSPEND was set for FREEZE/THAW
+> > transitions, and require subsystems to do the same?]
+> 
+> Drivers may expect devices to be runtime-active when their suspend
+> callbacks are invoked unless they set SMART_SUSPEND.  IOW, without
+> SMART_SUSPEND set the device should not be left in runtime suspend
+> during system-wide suspend at all unless direct-complete is applied
+> to it.
+
+[Let's confine this discussion to the not-direct-complete case.]
+
+Okay, say that SMART_SUSPEND isn't set and the device is initially
+runtime-suspended.  Since the core knows all this, shouldn't the core 
+then call pm_runtime_resume() immediately before ->suspend?  Why leave 
+this up to subsystems or drivers (which can easily get it wrong -- 
+not to mention all the code duplication it would require)?
+
+Also, doesn't it make sense for some subsystems or drivers to want 
+their devices to remain in runtime suspend throughout a FREEZE/THAW 
+transition but not throughout a SUSPEND/RESUME transition?  With only a 
+single SMART_SUSPEND flag, how can we accomodate this desire?
+
+Finally, my description above says that LEAVE_SUSPENDED matters for 
+SUSPEND/RESUME but not for FREEZE/THAW.  Is that really what you have 
+in mind?
+
+> > 	After RESTORE, _every_ device must end up being runtime 
+> > 	active.
+> 
+> Correct.
+> 
+> > 	In general, each resume-side callback should undo the effect
+> > 	of the matching suspend-side callback.  However, because of
+> > 	the requirements mentioned in the preceding sentences,
+> > 	sometimes a resume-side callback will be issued even though
+> > 	the matching suspend-side callback was skipped -- i.e., when
+> > 	a device that starts out runtime-suspended ends up being
+> > 	runtime-active.
+> > 
+> > How does that sound?
+> 
+> It is correct, but in general the other way around is possible too.
+> That is, a suspend-side callback may be issued without the matching
+> resume-side one and the device's PM runtime status may be changed
+> if LEAVE_SUSPENDED is set and SMART_SUSPEND is unset.
+
+This is inconsistent with what I wrote above (the "Unless SMART_SUSPEND
+and LEAVE_SUSPENDED are both set" part).  Are you saying that text
+should be changed?
+
+> > Are you certain you want the subsystem callback to be responsible for
+> > setting the runtime status to "active"?  Isn't this an example of
+> > something the core could do in order to help simplify subsystems?
+> 
+> The rationale here is that whoever decides whether or not to skip the
+> driver-level callbacks, should also set the PM-runtime status of the
+> device to match that decision.
+
+Well, that's not really a fair description.  The decision about
+skipping driver-level callbacks is being made right here, by us, now.  
+(Or if you prefer, by the developers who originally added the
+SMART_SUSPEND flag.)  We require subsystems to obey the decisions being
+outlined in this discussion.
+
+Given that fact, this is again a case of having the core do something 
+rather than forcing subsystems/drivers to do it (possibly getting it 
+wrong and certainly creating a lot of code duplication).
+
+If a subsystem really wants to override our decision, it can always
+call pm_runtime_set_{active|suspended} to override the core's setting.
+
+> > And this brings up another thing the core might do to help simplify
+> > drivers and subsystems: If SMART_SUSPEND isn't set and the device is in
+> > runtime suspend, couldn't the core do a pm_runtime_resume before
+> > issuing the ->suspend or ->suspend_late callback?
+> 
+> It could, but sometimes that is not desirable.  Like when the drivver points its
+> suspend callback to pm_runtime_force_suspend().
+
+This seems to contradict what you wrote above: "Drivers may expect
+devices to be runtime-active when their suspend callbacks are invoked
+unless they set SMART_SUSPEND.  IOW, without SMART_SUSPEND set the
+device should not be left in runtime suspend during system-wide suspend
+at all unless direct-complete is applied to it."
+
+If you stand by that statement then drivers should never point their
+suspend callback to pm_runtime_force_suspend() unless they also set
+SMART_SUSPEND.
+
+Alan Stern
+
