@@ -2,224 +2,200 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A29C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FD7C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D882072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586203506;
-	bh=/o4DXNgzkWofRtLIE2DOEC8cF73vnGDweYJWMyToNpE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=gUsGExhBUh/HTd9xRoZC0Nwa0UrJBQMvW5Ng3BKGzSx7Cm/kATLqOuvjyMqKxpt92
-	 4OkTEkJlSfx+N/HUti+cQBsXh8IJSdgfhjORpKK0Q6ftXF7gjtECKL8/q8byeh/T/5
-	 rpGDafScPZCW26s6azW5U5BZpGXxLfgamkxI67yA=
+	by mail.kernel.org (Postfix) with ESMTP id C40062072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:05:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LJRaJOIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgDFUFF (ORCPT
+        id S1726403AbgDFUFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 16:05:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgDFUFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 16:05:04 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98AE1206C0;
-        Mon,  6 Apr 2020 20:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586203503;
-        bh=/o4DXNgzkWofRtLIE2DOEC8cF73vnGDweYJWMyToNpE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=y052ti9pOmiNTsdcAy/oue9bkBL7v3dP59SdC/Bm6+h3Hty6eEJAPyKLyBiHpU3KO
-         m9FKACcquw0bxTN/0l3vnV5L5mliXEMN/kEndKPn7NcrbFcI24GP8P0s0z12cOuse9
-         RmzVCqNCIJ8Og11Pg6Qzdd7cwGMK8kdunBjkJ0t8=
-Message-ID: <538e31d9f231fbc09500c92929ef7a3cc516377f.camel@kernel.org>
-Subject: Re: [PATCH 2/2] ceph: allow rename operation under different quota
- realms
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Gregory Farnum <gfarnum@redhat.com>,
-        Zheng Yan <zyan@redhat.com>
-Cc:     Frank Schilder <frans@dtu.dk>, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 06 Apr 2020 16:05:01 -0400
-In-Reply-To: <20200406151201.32432-3-lhenriques@suse.com>
-References: <20200406151201.32432-1-lhenriques@suse.com>
-         <20200406151201.32432-3-lhenriques@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 6 Apr 2020 16:05:46 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4335 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgDFUFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 16:05:46 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8b8b330000>; Mon, 06 Apr 2020 13:04:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Apr 2020 13:05:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 13:05:45 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
+ 2020 20:05:45 +0000
+Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
+ 20:05:43 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
+ <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
+ <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
+ <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
+ <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
+ <fe6a17c1-fae2-a365-4dd6-6d3a25d47d54@nvidia.com>
+ <9038ce90-ac53-93e7-ce65-57f6ff1e9b30@nvidia.com>
+ <abe82fd1-0464-0627-6c97-39c896e53dd0@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <36b5627a-8639-6244-8620-4f23828e0638@nvidia.com>
+Date:   Mon, 6 Apr 2020 13:05:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <abe82fd1-0464-0627-6c97-39c896e53dd0@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586203443; bh=/cQeQIFkotsxVl4iOAXgB7AypQjT4YsAA1hb19W7EoY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=LJRaJOIkLv6YKhIRIfeTh+coVu/yi4RULJDCuKHuc5G7ydBH0pTlTgPX09GwKSw/N
+         7busPDL5R0eOzF3zX82nUdrtwTU4zo5xNOnl79u2aZPi5aZQkxjmxp2S6htrvZ8U8C
+         RYm6gjNqGAwgFYBwjc3lAelcwkWX++ayI1N4wOE/Tj7r8hRd7Dq08DV8vshkggOY6d
+         QNlVQx8D1DO/sBUQbgMhN7uVIS8Oq6CNwy+Nl4/2MiUUYL0kTWbECP0vNf8QXauWpP
+         E9af5mWqT3EHet7lgpG0Uixtia9TqyhZ0y1dl6/bfRkircQODDGV53OYIvoVCapRLv
+         kpO7/pyF7q83g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-06 at 16:12 +0100, Luis Henriques wrote:
-> Returning -EXDEV when trying to 'mv' files/directories from different
-> quota realms results in copy+unlink operations instead of the faster
-> CEPH_MDS_OP_RENAME.  This will occur even when there aren't any quotas
-> set in the destination directory, or if there's enough space left for
-> the new file(s).
-> 
-> This patch adds a new helper function to be called on rename operations
-> which will allow these operations if they can be executed.  This patch
-> mimics userland fuse client commit b8954e5734b3 ("client:
-> optimize rename operation under different quota root").
-> 
-> Since ceph_quota_is_same_realm() is now called only from this new
-> helper, make it static.
-> 
-> URL: https://tracker.ceph.com/issues/44791
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
->  fs/ceph/dir.c   |  9 ++++----
->  fs/ceph/quota.c | 58 ++++++++++++++++++++++++++++++++++++++++++++++++-
->  fs/ceph/super.h |  3 ++-
->  3 files changed, 64 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
-> index d0cd0aba5843..9d3f0062d800 100644
-> --- a/fs/ceph/dir.c
-> +++ b/fs/ceph/dir.c
-> @@ -1099,11 +1099,12 @@ static int ceph_rename(struct inode *old_dir, struct dentry *old_dentry,
->  			op = CEPH_MDS_OP_RENAMESNAP;
->  		else
->  			return -EROFS;
-> +	} else {
-> +		err = ceph_quota_check_rename(mdsc, d_inode(old_dentry),
-> +					      new_dir);
 
-I was wondering why not use "old_dir" here, but I think this is more
-correct. I guess a directory could have a different quotarealm from its
-parent?
+On 4/6/20 12:53 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 06.04.2020 20:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 4/6/20 9:37 AM, Sowjanya Komatineni wrote:
+>>> On 4/6/20 9:29 AM, Dmitry Osipenko wrote:
+>>>> External email: Use caution opening links or attachments
+>>>>
+>>>>
+>>>> 06.04.2020 19:12, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> On 4/6/20 9:05 AM, Dmitry Osipenko wrote:
+>>>>>> External email: Use caution opening links or attachments
+>>>>>>
+>>>>>>
+>>>>>> 06.04.2020 18:35, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>> ...
+>>>>>>>>> +     /* wait for syncpt counter to reach frame start event
+>>>>>>>>> threshold */
+>>>>>>>>> +     err =3D host1x_syncpt_wait(chan->frame_start_sp, thresh,
+>>>>>>>>> + TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
+>>>>>>>>> +     if (err) {
+>>>>>>>>> +             dev_err(&chan->video.dev,
+>>>>>>>>> +                     "frame start syncpt timeout: %d\n", err);
+>>>>>>>>> +             /* increment syncpoint counter for timedout events =
+*/
+>>>>>>>>> + host1x_syncpt_incr(chan->frame_start_sp);
+>>>>>>>> Why incrementing is done while hardware is still active?
+>>>>>>>>
+>>>>>>>> The sync point's state needs to be completely reset after resettin=
+g
+>>>>>>>> hardware. But I don't think that the current upstream host1x drive=
+r
+>>>>>>>> supports doing that, it's one of the known-long-standing problems =
+of
+>>>>>>>> the
+>>>>>>>> host1x driver.
+>>>>>>>>
+>>>>>>>> At least the sp->max_val incrementing should be done based on the
+>>>>>>>> actual
+>>>>>>>> syncpoint value and this should be done after resetting hardware.
+>>>>>>> upstream host1x driver don't have API to reset or to equalize max
+>>>>>>> value
+>>>>>>> with min/load value.
+>>>>>>>
+>>>>>>> So to synchronize missed event, incrementing HW syncpt counter.
+>>>>>>>
+>>>>>>> This should not impact as we increment this in case of missed event=
+s
+>>>>>>> only.
+>>>>>> It's wrong to touch sync point while hardware is active and it's
+>>>>>> active
+>>>>>> until being reset.
+>>>>>>
+>>>>>> You should re-check the timeout after hw resetting and manually put
+>>>>>> the
+>>>>>> syncpoint counter back into sync only if needed.
+>>>>> There is possibility of timeout to happen any time even during the
+>>>>> capture also and is not related to hw reset.
+>>>>>
+>>>>> Manual synchronization is needed when timeout of any frame events
+>>>>> happen
+>>>>> otherwise all subsequence frames will timeout due to mismatch in even=
+t
+>>>>> counters.
+>>>> My point is that hardware is stopped only after being reset, until the=
+n
+>>>> you should assume that sync point could be incremented by HW at any
+>>>> time.
+>>>>
+>>>> And if this happens that HW increments sync point after the timeout,
+>>>> then the sync point counter should become out-of-sync in yours case,
+>>>> IIUC. Because host1x_syncpt_incr() doesn't update the cached counter.
+>>> We wait for enough time based on frame rate for syncpt increment to
+>>> happen and if it doesn't happen by then definitely its missed event
+>>> and we increment HW syncpoint for this timed event.
+>>>
+>>> cached value gets updated during syncpt wait for subsequent event.
+>>>
+>>> syncpt increment happens for all subsequent frame events during video
+>>> capture.
+>>>
+>> Just to be clear, syncpt max value increment happens first and syncpt
+>> trigger condition is programmed. hw syncpt increment happens based on HW
+>> events.
+>>
+>> Wait time for HW syncpt to reach threshold is tuned to work for all
+>> frame rates. So if increment doesn't happen by then, its definitely
+>> missed event.
+> This is questionable. Technically, speculating about whether the tuned
+> value is good for all possible cases is incorrect thing to do.
+>
+> Although, I guess in practice it should be good enough for the starter
+> and could be improved later on, once the host1x driver will be improved.
 
-> +		if (err)
-> +			return err;
->  	}
-> -	/* don't allow cross-quota renames */
-> -	if ((old_dir != new_dir) &&
-> -	    (!ceph_quota_is_same_realm(old_dir, new_dir)))
-> -		return -EXDEV;
->  
->  	dout("rename dir %p dentry %p to dir %p dentry %p\n",
->  	     old_dir, old_dentry, new_dir, new_dentry);
-> diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
-> index c5c8050f0f99..a6dd1a528c70 100644
-> --- a/fs/ceph/quota.c
-> +++ b/fs/ceph/quota.c
-> @@ -264,7 +264,7 @@ static struct ceph_snap_realm *get_quota_realm(struct ceph_mds_client *mdsc,
->  	return NULL;
->  }
->  
-> -bool ceph_quota_is_same_realm(struct inode *old, struct inode *new)
-> +static bool ceph_quota_is_same_realm(struct inode *old, struct inode *new)
->  {
->  	struct ceph_mds_client *mdsc = ceph_inode_to_client(old)->mdsc;
->  	struct ceph_snap_realm *old_realm, *new_realm;
-> @@ -516,3 +516,59 @@ bool ceph_quota_update_statfs(struct ceph_fs_client *fsc, struct kstatfs *buf)
->  	return is_updated;
->  }
->  
-> +/*
-> + * ceph_quota_check_rename - check if a rename can be executed
-> + * @mdsc:	MDS client instance
-> + * @old:	inode to be copied
-> + * @new:	destination inode (directory)
-> + *
-> + * This function verifies if a rename (e.g. moving a file or directory) can be
-> + * executed.  It forces an rstat update in the @new target directory (and in the
-> + * source @old as well, if it's a directory).  The actual check is done both for
-> + * max_files and max_bytes.
-> + *
-> + * This function returns 0 if it's OK to do the rename, or, if quotas are
-> + * exceeded, -EXDEV (if @old is a directory) or -EDQUOT.
-> + */
-> +int ceph_quota_check_rename(struct ceph_mds_client *mdsc,
-> +			    struct inode *old, struct inode *new)
-> +{
-> +	struct ceph_inode_info *ci_old = ceph_inode(old);
-> +	int ret = 0;
-> +
-> +	if ((old == new) || (ceph_quota_is_same_realm(old, new)))
-> +		return 0;
-> +
+By tuned value I meant about 200ms wait timeout for frame event to=20
+happen is what we have been using in downstream and with BSP release=20
+images which works good for all sensors and bridges we supported so far.
 
-"old" represents the old dentry being moved. "new" is the new parent
-dir. Do we need to test for old == new? The vfs won't allow the source
-to be the ancestor of the target (or vice versa). From vfs_rename():
-
-        /* source should not be ancestor of target */
-        error = -EINVAL;
-        if (old_dentry == trap)
-                goto exit5;
-        /* target should not be an ancestor of source */
-        if (!(flags & RENAME_EXCHANGE))
-                error = -ENOTEMPTY;
-
-
-> +	/*
-> +	 * Get the latest rstat for target directory (and for source, if a
-> +	 * directory)
-> +	 */
-> +	ret = ceph_do_getattr(new, CEPH_STAT_RSTAT, false);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (S_ISDIR(old->i_mode)) {
-> +		ret = ceph_do_getattr(old, CEPH_STAT_RSTAT, false);
-> +		if (ret)
-> +			return ret;
-> +		ret = check_quota_exceeded(new, QUOTA_CHECK_MAX_BYTES_OP,
-> +					   ci_old->i_rbytes);
-> +		if (!ret)
-> +			ret = check_quota_exceeded(new,
-> +						   QUOTA_CHECK_MAX_FILES_OP,
-> +						   ci_old->i_rfiles +
-> +						   ci_old->i_rsubdirs);
-> +		if (ret)
-> +			ret = -EXDEV;
-> +	} else {
-> +		ret = check_quota_exceeded(new, QUOTA_CHECK_MAX_BYTES_OP,
-> +					   i_size_read(old));
-> +		if (!ret)
-> +			ret = check_quota_exceeded(new,
-> +						   QUOTA_CHECK_MAX_FILES_OP, 1);
-> +		if (ret)
-> +			ret = -EDQUOT;
-> +	}
-> +
-> +	return ret;
-> +}
-> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-> index 037cdfb2ad4f..d5853831a6b5 100644
-> --- a/fs/ceph/super.h
-> +++ b/fs/ceph/super.h
-> @@ -1175,13 +1175,14 @@ extern void ceph_handle_quota(struct ceph_mds_client *mdsc,
->  			      struct ceph_mds_session *session,
->  			      struct ceph_msg *msg);
->  extern bool ceph_quota_is_max_files_exceeded(struct inode *inode);
-> -extern bool ceph_quota_is_same_realm(struct inode *old, struct inode *new);
->  extern bool ceph_quota_is_max_bytes_exceeded(struct inode *inode,
->  					     loff_t newlen);
->  extern bool ceph_quota_is_max_bytes_approaching(struct inode *inode,
->  						loff_t newlen);
->  extern bool ceph_quota_update_statfs(struct ceph_fs_client *fsc,
->  				     struct kstatfs *buf);
-> +extern int ceph_quota_check_rename(struct ceph_mds_client *mdsc,
-> +				   struct inode *old, struct inode *new);
->  extern void ceph_cleanup_quotarealms_inodes(struct ceph_mds_client *mdsc);
->  
->  #endif /* _FS_CEPH_SUPER_H */
-
-Looks good otherwise. Nice work!
--- 
-Jeff Layton <jlayton@kernel.org>
-
+>
+>> In case of missed HW event corresponding to syncpt condition, hw syncpt
+>> increment does not happen and driver increments it on timeout.
+>>
+>> As there is not API to equialize max with min incase of timeout/reset,
+>> incrementing HW syncpt for timed out event.
+>>
+>> syncpt cached value gets updated during syncpt wait when it loads from
+>> HW syncpt.
+>>
+>> As syncpt condition is already triggered, without compensating timeout
+>> events or leaving syncpt max and hw syncpt in non synchronized state for
+>> missed events, subsequent streamings will all timeout even on real event=
+s.
+>>
