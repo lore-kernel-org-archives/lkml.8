@@ -2,142 +2,96 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4018AC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB4CC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB892068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C33620678
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ppBr4Gi9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G2nMMa+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgDFBOJ (ORCPT
+        id S1727923AbgDFBOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 21:14:09 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55740 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgDFBOJ (ORCPT
+        Sun, 5 Apr 2020 21:14:44 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41637 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgDFBOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 21:14:09 -0400
-Received: by mail-wm1-f67.google.com with SMTP id r16so13018517wmg.5;
-        Sun, 05 Apr 2020 18:14:08 -0700 (PDT)
+        Sun, 5 Apr 2020 21:14:43 -0400
+Received: by mail-il1-f196.google.com with SMTP id t6so13096501ilj.8;
+        Sun, 05 Apr 2020 18:14:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bJtMRXUYGhEctBGfz2+hfKmFxvUUDe7W7/3S3divJqU=;
-        b=ppBr4Gi9AFrAvDXZtUu8S83Fbs2TO8JPYKUBd1Ecul2SkZjm65BmNBJExrAZKopE2V
-         22QY/GxWS6b7NN1b/i/ZBILsMez01/8GB2WQLQlmWBDVzWRQFbShBqLas8ujXP/Vj9wo
-         kkNmSpTjMAIZg0pvlmtLq3puydUmz6fBmd97V0stlq2oXdqJNR6zid8dmcRabaJ6+TMG
-         iHtb0r9UlSXjWWkSFEYQqKglc54hGeI2NkwcDF6/wr7Ow53vJHEfZ4sD4fe/J1BEXEFn
-         auYFz6zz7A4JUhnbIed1KMCLb8vWpgIP78nUK58wKyPy2Qe530HGJ6ORkvjLNxQDAx8H
-         1Cdw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YwCOIl6rg+llGZKcQOSC7VcoDmT0lOYkJHour7MlvaM=;
+        b=G2nMMa+I1IjhF8SmsMgqfF0rS+tfh09srGUsjcuZB0bdex0yF9/ofZ3h2KCYEG9Txw
+         tC87qqVAbqXPwXgqgxQ0mqtaVVs5SovPKrJ/6G00gPglDwop3n2CqA10y/Xmnltf0FFX
+         6cSPk3Z6yKqa8eOAQV7Lb5dfUxYEAbtyPECT5mwu1tjYCObrSWQf8O8BgsoFdyz5x/Uk
+         9y79+ULN+hwvvgejTaAxr3/YsqLV9cnoESZZOkggXQTcBZL2Bzhj3jZqK5LGv6VZk8aw
+         DCNH9Gc9B/BnAYqusUP+M+e4C+yCPSsF+cbwfTNS1mpyrDoIFIutQ0YVcDkAfJpVTsNy
+         X3bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bJtMRXUYGhEctBGfz2+hfKmFxvUUDe7W7/3S3divJqU=;
-        b=BYJqwx7UvNIqk0+t4Dkx41PyFlIgpq0swTTnj8gTiEbyDL3bmvy/xVzoBdUZxpRCO7
-         nNhT2lmin1cQKNJR+m1hHsa6dcgGeXl2zNxItSKcx9dwZbgZlur98dRcTzzeB+5317RU
-         PISZD8yLy68Jx6IW+aFKS82z6w/QChmJbRoOOvArEVZfWQmsjsCYSTmCL7yf7IbJN0Ur
-         rzJRsPcKBxPd0drwhDa3VfXILi3T8L4fd2axPzt0cvPzeRbTb1aYjzoww0jS5hY5u6Ix
-         gRg+si9Lm0X45EQYeo4T+mroVtMMEaaE5MR/1dttsLXn53kQbgzdDoQvPSEbA9Lu+3dL
-         +6Bw==
-X-Gm-Message-State: AGi0Pubc7GagryFz1KWjWXzc+hlIn3A7LyvGpu9mNFtz4cZRoW+mAEYv
-        iOqig0CCK4arGBdTIznwVaE=
-X-Google-Smtp-Source: APiQypJTBqEB/X/t5i4jbXxMN0/duX0+pVDANaW5/a//QdH1E2+1MGftenSxW10V26tQOfxUv86m/A==
-X-Received: by 2002:a1c:1b58:: with SMTP id b85mr3617549wmb.112.1586135647517;
-        Sun, 05 Apr 2020 18:14:07 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id y20sm13433886wmi.31.2020.04.05.18.14.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 Apr 2020 18:14:06 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 01:14:06 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] XArray: entry in last level is not expected to be a
- node
-Message-ID: <20200406011406.aeccnuh4owmm53xs@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200330141558.soeqhstone2liqud@master>
- <20200330142821.GD22483@bombadil.infradead.org>
- <20200331134208.gfkyym6n3gpgk3x3@master>
- <20200331164212.GC21484@bombadil.infradead.org>
- <20200331220440.roq4pv6wk7tq23gx@master>
- <20200331235912.GD21484@bombadil.infradead.org>
- <20200401221021.v6igvcpqyeuo2cws@master>
- <20200401222000.GK21484@bombadil.infradead.org>
- <20200405110743.bzpvz4jzwr4kharr@master>
- <20200405215636.GW21484@bombadil.infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YwCOIl6rg+llGZKcQOSC7VcoDmT0lOYkJHour7MlvaM=;
+        b=NKNgj2pDFh5qsyjDRoznr18h6izC6LLJA7YccXs9CdD9AzDwEXUjmTzoVbVbFslnq0
+         vgzIis6Es0+Aj2pGnpWgvslhYv3L+wUceXrJfeC4EoLYlS/W2ZDSYUfUFUyBuSt3nwWw
+         NUAkian4G5auBELJcJDG7VLh81tjCLeIj5VTyjZ+d5M+8GMnV9i+7fW+smMKizbZ3LMr
+         kG0e9EB1IGF16zlYrw0Ek0pXJOd7YAkQ318b9XFhVB4TOs7EAwYCWldWcWdnNT/WKWgq
+         3DRvUnL7dsXZU/tBl4FvjK0ufiOgp/9YSCav52QvMGZ0cCJev/O8UoAIeoxukn1q2qtp
+         sGng==
+X-Gm-Message-State: AGi0Puae36papi9xEAClFU+yImlnIZsQN52LzsvEG6f5yoh9tIDL6HP4
+        uBkLdPqIGHiczBvXA+FC1J7CvZS8uuMociW6406scAlm
+X-Google-Smtp-Source: APiQypJAXKSDf3vMmm7PT7mvcGb0DoQBoXEZeZlhVWL4s6AoLunr+WnTx9OZQuzVhAUAOg6emDiQ1KxAH9kVccgCL8k=
+X-Received: by 2002:a92:77c2:: with SMTP id s185mr18577266ilc.297.1586135682656;
+ Sun, 05 Apr 2020 18:14:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200405215636.GW21484@bombadil.infradead.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <72bc89d5-cf50-3f3a-41e0-b46b134e754d@web.de>
+In-Reply-To: <72bc89d5-cf50-3f3a-41e0-b46b134e754d@web.de>
+From:   Qiujun Huang <hqjagain@gmail.com>
+Date:   Mon, 6 Apr 2020 09:14:29 +0800
+Message-ID: <CAJRQjocPmP0bEX5s-gkPh8w_=ndksxMF-Gx-rov1sJDO3r+TfA@mail.gmail.com>
+Subject: Re: [PATCH] scsi: aic7xxx: Remove null pointer checks before kfree()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-scsi@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Alex Dewar <alex.dewar@gmx.co.uk>,
+        Hannes Reinecke <hare@suse.com>,
+        "James E. J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 02:56:36PM -0700, Matthew Wilcox wrote:
->On Sun, Apr 05, 2020 at 11:07:43AM +0000, Wei Yang wrote:
->> Occasionally, I see this error message without my change on 5.6.
->
->I've never seen this one before.  Maybe my test machine is insufficient ...
->
->> random seed 1586068185
->> running tests
->> XArray: 21151201 of 21151201 tests passed
->> =================================================================
->> ==6040==ERROR: AddressSanitizer: heap-use-after-free on address 0x60c0031bce81 at pc 0x00000040b4b3 bp 0x7f95e87f9bb0 sp 0x7f95e87f9ba0
->> READ of size 1 at 0x60c0031bce81 thread T11
->>     #0 0x40b4b2 in xas_find_marked ../../../lib/xarray.c:1182
->>     #1 0x45318e in tagged_iteration_fn /root/git/linux/tools/testing/radix-tree/iteration_check.c:77
->>     #2 0x7f95ef2464e1 in start_thread (/lib64/libpthread.so.0+0x94e1)
->>     #3 0x7f95ee8026d2 in clone (/lib64/libc.so.6+0x1016d2)
->> 
->> 0x60c0031bce81 is located 1 bytes inside of 128-byte region [0x60c0031bce80,0x60c0031bcf00)
->> freed by thread T1 here:
->>     #0 0x7f95ef36c91f in __interceptor_free (/lib64/libasan.so.5+0x10d91f)
->>     #1 0x43e4ba in kmem_cache_free /root/git/linux/tools/testing/radix-tree/linux.c:64
->> 
->> previously allocated by thread T13 here:
->>     #0 0x7f95ef36cd18 in __interceptor_malloc (/lib64/libasan.so.5+0x10dd18)
->>     #1 0x43e1af in kmem_cache_alloc /root/git/linux/tools/testing/radix-tree/linux.c:44
->> 
->> Thread T11 created by T0 here:
->>     #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
->>     #1 0x454862 in iteration_test /root/git/linux/tools/testing/radix-tree/iteration_check.c:178
->> 
->> Thread T1 created by T0 here:
->>     #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
->>     #1 0x7f95ef235b89  (/lib64/liburcu.so.6+0x3b89)
->> 
->> Thread T13 created by T0 here:
->>     #0 0x7f95ef299955 in pthread_create (/lib64/libasan.so.5+0x3a955)
->>     #1 0x4548a4 in iteration_test /root/git/linux/tools/testing/radix-tree/iteration_check.c:186
->> 
->> This is not always like this. Didn't figure out the reason yet. Hope you many
->> have some point.
->
->How often are you seeing it?
->
+Sorry about nnnnoise, please just ignore it.
 
-Didn't do a strict analysis. My intuition feels 30% of reproduction.
-
->T1 (the thread which frees the memory) is the RCU thread, so the freeing
->went through RCU.  For some reason, T11 (the iterating thread) isn't
->preventing the freeing by its use of the RCU read lock.
-
-Maybe this is the RCU problem. I didn't manage to install liburcu from rpm,
-but build it from source.
-
--- 
-Wei Yang
-Help you, Help me
+On Mon, Apr 6, 2020 at 4:02 AM Markus Elfring <Markus.Elfring@web.de> wrote=
+:
+>
+> > NULL check before kfree is unnecessary so remove it.
+>
+> I hope that you would like to take another update suggestion into account
+> (besides a typo correction for your commit message).
+> https://lore.kernel.org/patchwork/patch/1220189/
+> https://lore.kernel.org/linux-scsi/20200403164712.49579-1-alex.dewar@gmx.=
+co.uk/
+>
+> Do you find a previous update suggestion like =E2=80=9CSCSI-aic7...: Dele=
+te unnecessary
+> checks before the function call "kfree"=E2=80=9D also interesting?
+> https://lore.kernel.org/linux-scsi/54D3E057.9030600@users.sourceforge.net=
+/
+> https://lore.kernel.org/patchwork/patch/540593/
+> https://lkml.org/lkml/2015/2/5/650
+>
+> Regards,
+> Markus
