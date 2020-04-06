@@ -2,181 +2,155 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29440C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57498C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E096C2072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CBPXCgQU"
+	by mail.kernel.org (Postfix) with ESMTP id 2D90E206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586170650;
+	bh=/QHOao1WVMYyIK8FDHrbYWUALkc6FgTKa02pF+w97ow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=By/lLpVTD+MEsussuvTsXXdyaZTlBhH/YMba82F2VytAqiGiq5M58Di86ZVeSW6Ar
+	 G691gQRUTD8bny6Hva6xds+nnKg8vJdFOdXegJm+BHShkRU56lIko3zPcvii5A1pba
+	 L9TCPok1abFClVIDWEs/QMm7+u1IdM4DU4JJBVXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbgDFKzd (ORCPT
+        id S1727126AbgDFK53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:55:33 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35838 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgDFKzd (ORCPT
+        Mon, 6 Apr 2020 06:57:29 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36378 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgDFK52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:55:33 -0400
-Received: by mail-qk1-f193.google.com with SMTP id k134so5043502qke.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 03:55:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+wdEtajVoyLqgAvqGqYNiCNXOxg9qyO5Ddu4EUSO/4c=;
-        b=CBPXCgQUCkx4unuFWcuwTweKM3yOZzDcvOXw5OWfMxMcyJpW4DYoNd9TM+OMHULyRa
-         iLVgasY9iJoEM+qDkmLrYSgyy5LuXUOmnw/LYFuJxKk/wTfE9Dr99l/dUAs7rZSwyopY
-         thQPyAx1RGipfvma4oEtCh3A+iPAbxYA62+RMqKeNXUoHu0LcgLOonZtfib5D4a0JoHn
-         fYj43xC1kD/ZnlwkNdSbvrAve3qTzU/XidkGvoXVWZkcGm5SpWN/fk+ixNaJijIFMeCg
-         lxbECGe2SyDOqjf7zsZC2R7xYtJFBZVyeLFJg9h5CoDntumGdea6xJlwC8i+hgkg/twz
-         sB2Q==
+        Mon, 6 Apr 2020 06:57:28 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d202so15339990wmd.1;
+        Mon, 06 Apr 2020 03:57:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+wdEtajVoyLqgAvqGqYNiCNXOxg9qyO5Ddu4EUSO/4c=;
-        b=tRDIcHg8CMFhmPy9+Rcju1nkqGeLmMyBLln7UXlYyKfAFA+tzh8FRPyvontAuP15wI
-         oWuVWkYQpbKVniArWwEP3n1DcvjGgStVVGbnLDSmQ4LSZMohp1bOYVImQ3yMjV8fBZuF
-         /U/zBZ75Xag9PI9uNXmPN4D12CffRltfjxFJ8mfU5/BnaDfKkiDe013VSpz6NjcHA5VP
-         qjnpixxT/JoJwJVn03mL3WyTigVJp8NAy7r4mCbtrxRVwreLnXO21X8HpfzXkKBzLPRD
-         HMPNRUMulJoeB7/9Ek0Wy0kUyLd3vkom8qfS/ym9nitg8J0Y0aMxzge6i+GVwwdK/BTK
-         cQ6A==
-X-Gm-Message-State: AGi0PuaDLm1wNolf48PGBiClHNvA+bioinYl+j6Df/4ItTOn3fi4/J8U
-        vgaZ4M2M7hzeW9F56hr4bbiNhdVhs0sXEIVEw+PtDA==
-X-Google-Smtp-Source: APiQypIYaZCTcQvxndKYkKUeNWKytaqjjq7JBOSystgiXQFPuY/nWdK+EIURYPa5E2CAjQ8kOoNcEAowYWqqUSC48NQ=
-X-Received: by 2002:a37:9c8b:: with SMTP id f133mr21160222qke.482.1586170531983;
- Mon, 06 Apr 2020 03:55:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=g5mY/6j+QCbr50e5xP/QNFLfFi9SvIAJHD7FGYbPvOI=;
+        b=epdGNnlRAHhd8nG5XjmSks0ueQkDVxN+tk76w/WK4rdFEiMDcWsZ1KhqSszzqqK6ME
+         ijoDDhSVr7sqVyVc7tq2zoeL0XZRyhZepYsQRATkj7EFaAo3r2gQpZhRFSUbwfa/6S5t
+         Yuzbe+TSHV20V3ZQMF2+L+l9UeItgFdenwb0/2hu1KLZyNMGeGRuGNXaLxbouYxCmP2k
+         BuS2iaHuCDL8fgOU9nqnOiDhZZY6AIhF+Q/HCikTJ4H4s0qZ0j4d1PU+ExxMWmdwdrjv
+         2+0GqiLWrgWoXZPnt567wYp19+7duZQxjrcEGUNW5XuqowIIYwmBJqB5osX3L81jHyID
+         /4cg==
+X-Gm-Message-State: AGi0PuaY8dfXz7oekAtUQIHD5yZ128odoymlfKPzset/Tef5wqsFJJ+F
+        iH10wV+0uI7E/LIOi7PtWDE=
+X-Google-Smtp-Source: APiQypLI2VKCrb+awtZriktURlgTQ9LBJ2jKntQWFaLBR48f6AeEwpIjCggmXhacyVJA38rFQc9SrA==
+X-Received: by 2002:a7b:cb13:: with SMTP id u19mr4747173wmj.132.1586170645555;
+        Mon, 06 Apr 2020 03:57:25 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id a2sm17369883wra.71.2020.04.06.03.57.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 03:57:24 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 12:57:23 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
+Message-ID: <20200406105723.GM19426@dhcp22.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name>
+ <87v9miydai.fsf@notabene.neil.brown.name>
+ <87sghmyd8v.fsf@notabene.neil.brown.name>
+ <20200403151534.GG22681@dhcp22.suse.cz>
+ <878sjcxn7i.fsf@notabene.neil.brown.name>
+ <20200406074453.GH19426@dhcp22.suse.cz>
+ <20200406093601.GA1143@quack2.suse.cz>
 MIME-Version: 1.0
-References: <20200405102819.28460-1-saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <20200405102819.28460-1-saiprakash.ranjan@codeaurora.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Mon, 6 Apr 2020 11:55:21 +0100
-Message-ID: <CAJ9a7VgQzK1XSCvLwuqODwkWfvo=6Wwps7Db+pL5xYDeCuktrg@mail.gmail.com>
-Subject: Re: [RFC PATCH] coresight: dynamic-replicator: Fix handling of
- multiple connections
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406093601.GA1143@quack2.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon 06-04-20 11:36:01, Jan Kara wrote:
+> On Mon 06-04-20 09:44:53, Michal Hocko wrote:
+> > On Sat 04-04-20 08:40:17, Neil Brown wrote:
+> > > On Fri, Apr 03 2020, Michal Hocko wrote:
+> > > 
+> > > > On Thu 02-04-20 10:53:20, Neil Brown wrote:
+> > > >> 
+> > > >> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
+> > > >> loop block driver, where a daemon needs to write to one bdi in
+> > > >> order to free up writes queued to another bdi.
+> > > >> 
+> > > >> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
+> > > >> pages, so that it can still dirty pages after other processses have been
+> > > >> throttled.
+> > > >> 
+> > > >> This approach was designed when all threads were blocked equally,
+> > > >> independently on which device they were writing to, or how fast it was.
+> > > >> Since that time the writeback algorithm has changed substantially with
+> > > >> different threads getting different allowances based on non-trivial
+> > > >> heuristics.  This means the simple "add 25%" heuristic is no longer
+> > > >> reliable.
+> > > >> 
+> > > >> This patch changes the heuristic to ignore the global limits and
+> > > >> consider only the limit relevant to the bdi being written to.  This
+> > > >> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
+> > > >> should not introduce surprises.  This has the desired result of
+> > > >> protecting the task from the consequences of large amounts of dirty data
+> > > >> queued for other devices.
+> > > >
+> > > > While I understand that you want to have per bdi throttling for those
+> > > > "special" files I am still missing how this is going to provide the
+> > > > additional room that the additnal 25% gave them previously. I might
+> > > > misremember or things have changed (what you mention as non-trivial
+> > > > heuristics) but PF_LESS_THROTTLE really needed that room to guarantee a
+> > > > forward progress. Care to expan some more on how this is handled now?
+> > > > Maybe we do not need it anymore but calling that out explicitly would be
+> > > > really helpful.
+> > > 
+> > > The 25% was a means to an end, not an end in itself.
+> > > 
+> > > The problem is that the NFS server needs to be able to write to the
+> > > backing filesystem when the dirty memory limits have been reached by
+> > > being totally consumed by dirty pages on the NFS filesystem.
+> > > 
+> > > The 25% was just a way of giving an allowance of dirty pages to nfsd
+> > > that could not be consumed by processes writing to an NFS filesystem.
+> > > i.e. it doesn't need 25% MORE, it needs 25% PRIVATELY.  Actually it only
+> > > really needs 1 page privately, but a few pages give better throughput
+> > > and 25% seemed like a good idea at the time.
+> > 
+> > Yes this part is clear to me.
+> >  
+> > > per-bdi throttling focuses on the "PRIVATELY" (the important bit) and
+> > > de-emphasises the 25% (the irrelevant detail).
+> > 
+> > It is still not clear to me how this patch is going to behave when the
+> > global dirty throttling is essentially equal to the per-bdi - e.g. there
+> > is only a single bdi and now the PF_LOCAL_THROTTLE process doesn't have
+> > anything private.
+> 
+> Let me think out loud so see whether I understand this properly. There are
+> two BDIs involved in NFS loop mount - the NFS virtual BDI (let's call it
+> simply NFS-bdi) and the bdi of the real filesystem that is backing NFS
+> (let's call this real-bdi). The case we are concerned about is when NFS-bdi
+> is full of dirty pages so that global dirty limit of the machine is
+> exceeded. Then flusher thread will take dirty pages from NFS-bdi and send
+> them over localhost to nfsd. Nfsd, which has PF_LOCAL_THROTTLE set, will take
+> these pages and write them to real-bdi. Now because PF_LOCAL_THROTTLE is
+> set for nfsd, the fact that we are over global limit does not take effect
+> and nfsd is still able to write to real-bdi until dirty limit on real-bdi
+> is reached. So things should work as Neil writes AFAIU.
 
-The programmable replicator hardware by design enables trace through
-both ports on reset. (see 1, section 4.4, 9.11)  The replicator driver
-overrides this functionality to disable output, until the Coresight
-infrastructure chooses a path from source to sink.
-Now given that the hardware design is such that we must be able to
-allow trace to be sent to both ports, a generic patch to prevent this
-does not seem appropriate here.
-
-I think this needs further investigation - to determine why this
-appears to be failing in this particular instance.
-
-Regards
-
-Mike
-
-[1] CoreSight System-on-Chip SoC-600 TRM, r3p2, 100806_0302_00_en
-
-On Sun, 5 Apr 2020 at 11:28, Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Since commit 30af4fb619e5 ("coresight: dynamic-replicator:
-> Handle multiple connections"), we do not make sure that
-> the other port is disabled when the dynamic replicator is
-> enabled. This is seen to cause the CPU hardlockup atleast
-> on SC7180 SoC when enabling ETM with ETR as the sink via
-> sysfs.
->
->   Kernel panic - not syncing: Watchdog detected hard LOCKUP on cpu 0
->   CPU: 7 PID: 0 Comm: swapper/7 Tainted: G S  B             5.4.25 #100
->   Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
->   Call trace:
->    dump_backtrace+0x0/0x188
->    show_stack+0x20/0x2c
->    dump_stack+0xdc/0x144
->    panic+0x168/0x370
->    arch_seccomp_spec_mitigate+0x0/0x14
->    watchdog_timer_fn+0x68/0x290
->    __hrtimer_run_queues+0x264/0x498
->    hrtimer_interrupt+0xf0/0x22c
->    arch_timer_handler_phys+0x40/0x50
->    handle_percpu_devid_irq+0x8c/0x158
->    __handle_domain_irq+0x84/0xc4
->    gic_handle_irq+0x100/0x1c4
->    el1_irq+0xbc/0x180
->    arch_cpu_idle+0x3c/0x5c
->    default_idle_call+0x1c/0x38
->    do_idle+0x100/0x280
->    cpu_startup_entry+0x24/0x28
->    secondary_start_kernel+0x15c/0x170
->   SMP: stopping secondary CPUs
->
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  .../hwtracing/coresight/coresight-replicator.c    | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index e7dc1c31d20d..f4eaa38f8f43 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -66,14 +66,16 @@ static int dynamic_replicator_enable(struct replicator_drvdata *drvdata,
->                                      int inport, int outport)
->  {
->         int rc = 0;
-> -       u32 reg;
-> +       u32 reg0, reg1;
->
->         switch (outport) {
->         case 0:
-> -               reg = REPLICATOR_IDFILTER0;
-> +               reg0 = REPLICATOR_IDFILTER0;
-> +               reg1 = REPLICATOR_IDFILTER1;
->                 break;
->         case 1:
-> -               reg = REPLICATOR_IDFILTER1;
-> +               reg0 = REPLICATOR_IDFILTER1;
-> +               reg1 = REPLICATOR_IDFILTER0;
->                 break;
->         default:
->                 WARN_ON(1);
-> @@ -87,8 +89,11 @@ static int dynamic_replicator_enable(struct replicator_drvdata *drvdata,
->                 rc = coresight_claim_device_unlocked(drvdata->base);
->
->         /* Ensure that the outport is enabled. */
-> -       if (!rc)
-> -               writel_relaxed(0x00, drvdata->base + reg);
-> +       if (!rc) {
-> +               writel_relaxed(0x00, drvdata->base + reg0);
-> +               writel_relaxed(0xff, drvdata->base + reg1);
-> +       }
-> +
->         CS_LOCK(drvdata->base);
->
->         return rc;
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-
-
-
+Thanks for the clarification. I was not aware of the 2 bdi situation.
+This makes more sense now. Maybe this is a trivial fact for everybody
+who is more familiar with nfs internals but it would be so much esier to
+follow if it was explicit in the changelog.
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Michal Hocko
+SUSE Labs
