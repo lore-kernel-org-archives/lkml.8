@@ -2,164 +2,86 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95422C2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0856C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFDC206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C535520753
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDFE5T (ORCPT
+        id S1726523AbgDFFGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 00:57:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64368 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726473AbgDFE5T (ORCPT
+        Mon, 6 Apr 2020 01:06:54 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:5392 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgDFFGx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 00:57:19 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0364Yl86097301;
-        Mon, 6 Apr 2020 00:57:10 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 306k5uj65u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 00:57:10 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0364tDZf016378;
-        Mon, 6 Apr 2020 04:57:09 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02dal.us.ibm.com with ESMTP id 306hv6h0ar-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 04:57:09 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0364v8eX54133176
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Apr 2020 04:57:08 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD6C628059;
-        Mon,  6 Apr 2020 04:57:08 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 230B628058;
-        Mon,  6 Apr 2020 04:57:08 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.79.181.69])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Apr 2020 04:57:08 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id AD3982E3231; Fri,  3 Apr 2020 16:54:28 +0530 (IST)
-Date:   Fri, 3 Apr 2020 16:54:28 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     ego@linux.vnet.ibm.com,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH v4 2/6] powerpc/idle: Add accessor function to always
- read latest idle PURR
-Message-ID: <20200403112428.GB20293@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1585308760-28792-1-git-send-email-ego@linux.vnet.ibm.com>
- <1585308760-28792-3-git-send-email-ego@linux.vnet.ibm.com>
- <1585734073.0qmf6bbdoa.naveen@linux.ibm.com>
- <20200403061536.GA9066@in.ibm.com>
- <1585909343.fw0f8jg7ug.naveen@linux.ibm.com>
+        Mon, 6 Apr 2020 01:06:53 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app10-12010 (RichMail) with SMTP id 2eea5e8ab8d4e13-9af74; Mon, 06 Apr 2020 13:06:29 +0800 (CST)
+X-RM-TRANSID: 2eea5e8ab8d4e13-9af74
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.1.173.122])
+        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85e8ab8d204d-b87e0;
+        Mon, 06 Apr 2020 13:06:28 +0800 (CST)
+X-RM-TRANSID: 2ee85e8ab8d204d-b87e0
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     sre@kernel.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH] [PATCH v2] power:supply:88pm860x_battery:remove redundant dev_err message
+Date:   Mon,  6 Apr 2020 13:07:57 +0800
+Message-Id: <20200406050757.13796-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585909343.fw0f8jg7ug.naveen@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-06_01:2020-04-03,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 phishscore=0
- malwarescore=0 impostorscore=0 clxscore=1015 mlxlogscore=999 adultscore=0
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004060032
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 04:04:56PM +0530, Naveen N. Rao wrote:
-> Gautham R Shenoy wrote:
-> >On Wed, Apr 01, 2020 at 03:12:53PM +0530, Naveen N. Rao wrote:
-> >>Hi Gautham,
-> >>
-> >>Gautham R. Shenoy wrote:
-> >>>From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> >>>
-> >>>+
-> >>>+static inline u64 read_this_idle_purr(void)
-> >>>+{
-> >>>+	/*
-> >>>+	 * If we are reading from an idle context, update the
-> >>>+	 * idle-purr cycles corresponding to the last idle period.
-> >>>+	 * Since the idle context is not yet over, take a fresh
-> >>>+	 * snapshot of the idle-purr.
-> >>>+	 */
-> >>>+	if (unlikely(get_lppaca()->idle == 1)) {
-> >>>+		update_idle_purr_accounting();
-> >>>+		snapshot_purr_idle_entry();
-> >>>+	}
-> >>>+
-> >>>+	return be64_to_cpu(get_lppaca()->wait_state_cycles);
-> >>>+}
-> >>>+
-> >>
-> >>I think this and read_this_idle_spurr() from the next patch should be moved
-> >>to Patch 4/6, where they are actually used.
-> >
-> >The reason I included this function in this patch was to justify why
-> >we were introducing snapshotting the purr values in a global per-cpu
-> >variable instead of on a stack variable. The reason being that someone
-> >might want to read the PURR value from an interrupt context which had
-> >woken up the CPU from idle. At this point, since epilog() function
-> >wasn't called, the idle PURR count corresponding to this latest idle
-> >period would have been accumulated in lppaca->wait_cycles. Thus, this
-> >helper function safely reads the value by
-> >   1) First updating the lppaca->wait_cycles with the latest idle_purr
-> >   count.
-> >   2) Take a fresh snapshot, since the time from now to the epilog()
-> >   call is also counted under idle CPU. So the PURR cycle increment
-> >   during this short period should also be accumulated in lppaca->wait_cycles.
-> >
-> >
-> >prolog()
-> >|	snapshot PURR
-> >|
-> >|
-> >|
-> >Idle
-> >|
-> >| <----- Interrupt . Read idle PURR ---- update idle PURR;
-> >|                              	         snapshot PURR;
-> >|                                   	 Read idle PURR.       |
-> >epilog()
-> >	update idle PURR
-> >
-> 
-> Yes, I understand. It makes sense.
-> 
-> >
-> >However, if you feel that moving this function to Patch 4 where it is
-> >actually used makes it more readable, I can do that.
-> 
-> My suggestion was from a bisectability standpoint though. This is a fairly
-> simple function, but it is generally recommended to ensure that newly added
-> code gets exercized in the patch that it is introduced in:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/5.Posting.rst#n119
->
+In the pm860x_battery_probe(),when get irq failed, the function
+platform_get_irq() can log an dev_err message,so remove redundant
+message here.
 
-Fair point. Will move those functions to Patch 4.
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+Changes from v1
+ - changed the theme、commit message and the code,but the purpose is the same.
+   The original piece is:https://lore.kernel.org/linux-pm/20200402111222.15204-1-tangbin@cmss.chinamobile.com/
+---
+ drivers/power/supply/88pm860x_battery.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/power/supply/88pm860x_battery.c b/drivers/power/supply/88pm860x_battery.c
+index 5ca047b3f..1308f3a18 100644
+--- a/drivers/power/supply/88pm860x_battery.c
++++ b/drivers/power/supply/88pm860x_battery.c
+@@ -919,16 +919,12 @@ static int pm860x_battery_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	info->irq_cc = platform_get_irq(pdev, 0);
+-	if (info->irq_cc <= 0) {
+-		dev_err(&pdev->dev, "No IRQ resource!\n");
++	if (info->irq_cc <= 0)
+ 		return -EINVAL;
+-	}
+ 
+ 	info->irq_batt = platform_get_irq(pdev, 1);
+-	if (info->irq_batt <= 0) {
+-		dev_err(&pdev->dev, "No IRQ resource!\n");
++	if (info->irq_batt <= 0)
+ 		return -EINVAL;
+-	}
+ 
+ 	info->chip = chip;
+ 	info->i2c =
+-- 
+2.20.1.windows.1
 
 
-> 
-> Regards,
-> Naveen
-> 
+
