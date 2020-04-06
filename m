@@ -2,117 +2,94 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E063C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FA1C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9ABF20672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EA420672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:20:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="wnZjCqGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgDFSUC (ORCPT
+        id S1726670AbgDFSUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:20:02 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:33971 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726521AbgDFSUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:20:02 -0400
-Received: (qmail 21603 invoked by uid 500); 6 Apr 2020 14:20:01 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 6 Apr 2020 14:20:01 -0400
-Date:   Mon, 6 Apr 2020 14:20:01 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@netrider.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] usb: raw-gadget: fix raw_event_queue_fetch locking
-In-Reply-To: <178e01023f2e6664908f7c9660fa6527a55a22d6.1586191134.git.andreyknvl@google.com>
-Message-ID: <Pine.LNX.4.44L0.2004061417050.19877-100000@netrider.rowland.org>
+        Mon, 6 Apr 2020 14:20:43 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:1178 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726520AbgDFSUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:20:43 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48wzP560d0z9v0BM;
+        Mon,  6 Apr 2020 20:20:41 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=wnZjCqGS; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id TwiiTzaOFqWZ; Mon,  6 Apr 2020 20:20:41 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzP54YFjz9v0BL;
+        Mon,  6 Apr 2020 20:20:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586197241; bh=thfJd+r+S9lcNOYlrQipQHaWRbxSbp2YiRq9Qz50kIw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=wnZjCqGSm8Bv/Rd1c7fZapIPZo6cm6+pd/Mcc7AiEzSHeWr8QVBNV+qjgj/EqKN93
+         4gsW7Md902ze56F4NGoFbK52nCbFxloCOrJRO38XWBivzJ2zTpNYfkr3IpjXDCmqut
+         nCKUC0Ram6lpp5Sj0p9hJxGTGcIDs0/hTtGAe3Vg=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 88B838B784;
+        Mon,  6 Apr 2020 20:20:41 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id rhOAMV4eOYhe; Mon,  6 Apr 2020 20:20:41 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 654148B775;
+        Mon,  6 Apr 2020 20:20:40 +0200 (CEST)
+Subject: Re: [RFC PATCH v2 05/13] powerpc/syscall: Rename syscall_64.c into
+ syscall.c
+To:     Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
+ <cacbc62ded444e26e15ca67e0ec91b05b7de6459.1586108649.git.christophe.leroy@c-s.fr>
+ <1586137301.c2ssus5vmb.astroid@bobo.none>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <1a154868-6849-ebd7-9d38-673d0954c2d7@c-s.fr>
+Date:   Mon, 6 Apr 2020 20:20:35 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <1586137301.c2ssus5vmb.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020, Andrey Konovalov wrote:
 
-> If queue->size check in raw_event_queue_fetch() fails (which normally
-> shouldn't happen, that check is a fail-safe), the function returns
-> without reenabling interrupts. This patch fixes that issue, along with
-> propagating the cause of failure to the function caller.
+
+Le 06/04/2020 à 03:42, Nicholas Piggin a écrit :
+> Christophe Leroy's on April 6, 2020 3:44 am:
+>> syscall_64.c will be reused almost as is for PPC32.
+>>
+>> Rename it syscall.c
 > 
-> Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
-> 
-> Greg, this should apply cleanly on top of Dan's "usb: raw-gadget: Fix
-> copy_to/from_user() checks" patch.
-> 
-> ---
->  drivers/usb/gadget/legacy/raw_gadget.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
-> index e490ffa1f58b..1582521ec774 100644
-> --- a/drivers/usb/gadget/legacy/raw_gadget.c
-> +++ b/drivers/usb/gadget/legacy/raw_gadget.c
-> @@ -81,6 +81,7 @@ static int raw_event_queue_add(struct raw_event_queue *queue,
->  static struct usb_raw_event *raw_event_queue_fetch(
->  				struct raw_event_queue *queue)
->  {
-> +	int ret;
->  	unsigned long flags;
->  	struct usb_raw_event *event;
->  
-> @@ -89,11 +90,14 @@ static struct usb_raw_event *raw_event_queue_fetch(
->  	 * there's at least one event queued by decrementing the semaphore,
->  	 * and then take the lock to protect queue struct fields.
->  	 */
-> -	if (down_interruptible(&queue->sema))
-> -		return NULL;
-> +	ret = down_interruptible(&queue->sema);
-> +	if (ret)
-> +		return ERR_PTR(ret);
->  	spin_lock_irqsave(&queue->lock, flags);
-> -	if (WARN_ON(!queue->size))
-> +	if (WARN_ON(!queue->size)) {
-> +		spin_unlock_irqrestore(&queue->lock, flags);
->  		return NULL;
+> Don't mind this, but I wonder if we can rename it to interrupt.c.
 
-Suppose the WARN_ON triggers, and you return NULL here.  Then where do 
-you reverse the down_interruptible() on queue->sema?
+Interrupt for me is irq.
 
-> +	}
->  	event = queue->events[0];
->  	queue->size--;
->  	memmove(&queue->events[0], &queue->events[1],
-> @@ -522,10 +526,17 @@ static int raw_ioctl_event_fetch(struct raw_dev *dev, unsigned long value)
->  	spin_unlock_irqrestore(&dev->lock, flags);
->  
->  	event = raw_event_queue_fetch(&dev->queue);
-> -	if (!event) {
-> +	if (PTR_ERR(event) == -EINTR) {
->  		dev_dbg(&dev->gadget->dev, "event fetching interrupted\n");
->  		return -EINTR;
->  	}
-> +	if (IS_ERR_OR_NULL(event)) {
-> +		dev_err(&dev->gadget->dev, "failed to fetch event\n");
-> +		spin_lock_irqsave(&dev->lock, flags);
-> +		dev->state = STATE_DEV_FAILED;
-> +		spin_unlock_irqrestore(&dev->lock, flags);
-> +		return -ENODEV;
-> +	}
+Maybe exception.c ?
 
-Not here, obviously.  Does the semaphore ever get released?
+Exceptions, that's what interrupts and system calls are.
 
-Alan Stern
-
+Christophe
