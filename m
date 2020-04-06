@@ -2,122 +2,142 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA487C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B125AC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51F8207FF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826252078A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:11:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586164295;
+	bh=IEKnLroPOXhZZoEjwk2Sy7qHL1p/3PpX8cAZjySktEg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MYzaRVb154Mz+A7e7DhEVFfIHnsa4l7QL0wbIfz9mZKzVdQG1M9LSTbAg8WlHV9Kj
+	 yeMwFGALOM1a1b4YAzJmtDqqaKnpE64/FBQAsTFU+q1Bp6nU6u6ljIFbYEvAV1Zpez
+	 9ffLMYeaEbm4hcpdXNLvQgCzzXUhhjNlmA8G1C5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgDFJLI convert rfc822-to-8bit (ORCPT
+        id S1726977AbgDFJLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:11:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36872 "EHLO mx2.suse.de"
+        Mon, 6 Apr 2020 05:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbgDFJLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:11:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B8358AC40;
-        Mon,  6 Apr 2020 09:11:03 +0000 (UTC)
-From:   Nicolai Stange <nstange@suse.de>
-To:     Nicolai Stange <nstange@suse.de>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
-        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
-        ming.lei@redhat.com, mhocko@suse.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [RFC 3/3] block: avoid deferral of blk_release_queue() work
-References: <20200402000002.7442-1-mcgrof@kernel.org>
-        <20200402000002.7442-4-mcgrof@kernel.org>
-        <774a33e8-43ba-143f-f6fd-9cb0ae0862ac@acm.org>
-        <87o8saj62m.fsf@suse.de>
-Date:   Mon, 06 Apr 2020 11:11:01 +0200
-In-Reply-To: <87o8saj62m.fsf@suse.de> (Nicolai Stange's message of "Thu, 02
-        Apr 2020 16:49:37 +0200")
-Message-ID: <87eet1j7x6.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        id S1726689AbgDFJLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 05:11:34 -0400
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C6E12078A;
+        Mon,  6 Apr 2020 09:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586164293;
+        bh=IEKnLroPOXhZZoEjwk2Sy7qHL1p/3PpX8cAZjySktEg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=x9/XnaHxSYASdAnWEA1KJzzEgemj3vDGBjEXM3ZS/mXiYMEt9DQ0mPtb0MiA+/29Y
+         +kCeLxo9TBIfyZSeU3y51QeFqzPHoFJwv+7AsMuW4PnVgUifoqVMoKIWZOPhq55kOi
+         pVVdq0uKWDmwPU73ZYVXd9jmL6nD/cuzCdeXqVa8=
+Received: by mail-io1-f47.google.com with SMTP id o3so15016926ioh.2;
+        Mon, 06 Apr 2020 02:11:33 -0700 (PDT)
+X-Gm-Message-State: AGi0PuapjANHW4VO8VO6oiRiB4Y98aWNUuCGaZXoWBGpkzkewu0xYMuV
+        jkaTDn8/aNZH+I6KsID7rmIvziKT/7zZJSP6ztA=
+X-Google-Smtp-Source: APiQypJ08+HDD3z4MBXBa9W9lMQHNod6bQSMdsaxyTfs2CUw/1PrNMe5MnrwEhdaeSq/8Hso8MUAfaqal+pRLZa+9IU=
+X-Received: by 2002:a6b:f413:: with SMTP id i19mr18808491iog.203.1586164292977;
+ Mon, 06 Apr 2020 02:11:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+References: <20200109150218.16544-1-nivedita@alum.mit.edu> <20200405154245.11972-1-me@prok.pw>
+ <20200405231845.GA3095309@rani.riverdale.lan> <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
+ <20200406035110.GA3241052@rani.riverdale.lan> <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
+ <20200406084738.GA2520@zn.tnic>
+In-Reply-To: <20200406084738.GA2520@zn.tnic>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 6 Apr 2020 11:11:21 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
+Message-ID: <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Sergey Shatunov <me@prok.pw>, hpa@zytor.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolai Stange <nstange@suse.de> writes:
+On Mon, 6 Apr 2020 at 10:47, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, Apr 06, 2020 at 09:32:47AM +0200, Ard Biesheuvel wrote:
+> > The EFI handover protocol strikes again :-(
+> >
+> > It seems we did not include any guidance in the documentation in
+> > Documentation/x86/boot.rst regarding zero-initializing BSS, and come
+> > to think of it, we don't include any other requirements either, i.e.,
+> > regarding placement wrt section alignment etc. This is a serious bug.
+> > Even though EFI usually lays out PE/COFF images in files the exact way
+> > they appear in memory, this is not actually required by the spec. Most
+> > notably, the virtual size can be smaller than the file size, and the
+> > loader is expected to zero-initialize the difference as well.
+>
+> Is that expectation stated explicitly somewhere?
+>
 
-> Bart Van Assche <bvanassche@acm.org> writes:
->
->> The description of this patch mentions a single blk_release_queue() call
->> that happened in the past from a context from which sleeping is not
->> allowed and from which sleeping is allowed today. Have all other
->> blk_release_queue() / blk_put_queue() calls been verified to see whether
->> none of these happens from a context from which sleeping is not allowed?
->
-> I've just done this today and found the following potentially
-> problematic call paths to blk_put_queue().
->
-> 1.) mem_cgroup_throttle_swaprate() takes a spinlock and
->     calls blkcg_schedule_throttle()->blk_put_queue().
->
->     Also note that AFAICS mem_cgroup_try_charge_delay() can be called
->     with GFP_ATOMIC.
->
-> 2.) scsi_unblock_requests() gets called from a lot of drivers and
->     invoke blk_put_queue() through
->     scsi_unblock_requests() -> scsi_run_host_queues() ->
->     scsi_starved_list_run() -> blk_put_queue().
->
->     Most call sites are fine, the ones which are not are:
->     a.) pmcraid_complete_ioa_reset(). This gets assigned
->         to struct pmcraid_cmd's ->cmd_done and later invoked
->         under a spinlock.
->
->     b.) qla82xx_fw_dump() and qla8044_fw_dump().
->         These can potentially block w/o this patch already,
->         because both invoke qla2x00_wait_for_chip_reset().
->
-> 	However, they can get called from IRQ context. For example,
->         qla82xx_intr_handler(), qla82xx_msix_default() and
->         qla82xx_poll() call qla2x00_async_event(), which calls
->         ->fw_dump().
->
-> 	The aforementioned functions can also reach ->fw_dump() through
->         qla24xx_process_response_queue()->qlt_handle_abts_recv()->qlt_response_pkt_all_vps()
->         ->qlt_response_pkt()->qlt_handle_abts_completion()->qlt_chk_unresolv_exchg()
->         -> ->fw_dump().
->
-> 	But I'd consider this a problem with the driver -- either
-> 	->fw_dump() can sleep and must not be called from IRQ context
->         or they must not invoke qla2x00_wait_for_hba_ready().
->
->
-> (I can share the full analysis, but it's lengthy and contains nothing
->  interesting except for what is listed above).
->
->
-> One final note though: If I'm not mistaken, then the final
-> blk_put_queue() can in principle block even today, simply by virtue of
-> the kernfs operations invoked through
-> kobject_put()->kobject_release()->kobject_cleanup()->kobject_del()
-> ->sysfs_remove_dir()->kernfs_remove()->mutex_lock()?\
+Yes, it is in the PE/COFF specification. [0]
 
-That's wrong, I missed kobject_del() invocation issued from
-blk_unregister_queue(). Thus, blk_put_queue() in its current
-implementation won't ever block.
+The whole problem is that we are conflating 'loading a PE/COFF image'
+with 'copying a PE/COFF image into memory', which are not the same
+thing. It is not just the layout issue, we are running into other
+problems with things like UEFI secure boot and TPM-based measured
+boot, where the fact that omitting the standard LoadImage() boot
+service (which takes care of these things under the hood) means that
+you now have to do your own checks and measurements. These things are
+literally all over the place at the moment, shim, GRUB, systemd-boot
+etc, with no authoritative spec that describes which component should
+be doing what.
 
-Thanks,
+> > Since the EFI handover protocol should be considered deprecated at
+> > this point (and is never going to be supported in upstream GRUB
+> > either, for instance), I would recommend the systemd-boot developers
+> > to start looking into deprecating this as well, and switch to the
+> > ordinary PE/COFF entry point, and use the new initrd callback protocol
+> > for initrd loading.
+>
+> Any pointers to that new initrd callback protocol?
+>
 
-Nicolai
+Commit ec93fc371f014a6fb483e3556061ecad4b40735c has the background, but ...
 
--- 
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-(HRB 36809, AG Nürnberg), GF: Felix Imendörffer
+> In any case, I'd really appreciate a patch to boot.rst formulating those
+> requirements so that they're written down and people can find them.
+>
+
+... I'll look into updating the documentation as well. Note that this
+stuff is hot off the press, so there may be some issues lurking (like
+this one) that we hadn't thought of yet.
+
+OVMF and u-boot already have implementations of this initrd loading
+approach. A GRUB version is under discussion.
+
+> > On the Linux/x86 side, we should at least add some code to the EFI
+> > handover protocol entry point to zero initialize BSS, and ensure that
+> > it is either not needed in other places, or add the code to deal with
+> > those as well.
+>
+> Sounds like a simple fix, if that would fix it.
+>
+
+Actually, it may be sufficient to #define __efistub_global to
+__section(.data) like we already do for ARM, to ensure that these
+global flags are always initialized correctly. (I'll wait for Sergey
+to confirm that the spurious enabling of the PCI DMA protection
+resulting from this BSS issue is causing the boot regression)
+
+
+
+[0] https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
