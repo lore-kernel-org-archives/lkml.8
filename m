@@ -2,131 +2,117 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C005C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7002AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27B42072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497BA206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z17icQy6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R1GhoI9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgDFTay (ORCPT
+        id S1726230AbgDFTeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:30:54 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40900 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgDFTax (ORCPT
+        Mon, 6 Apr 2020 15:34:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20008 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725895AbgDFTeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:30:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c20so8062135pfi.7;
-        Mon, 06 Apr 2020 12:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nh5t5HwqaZ5vwtLT3aQ5LPtySy+1nmXDpAkBkNh9qyc=;
-        b=Z17icQy61jImrE8skOGEPbOqTmG9HyfmTZHJ9J4nDsMICEIMALuGTFfraW+NGGOger
-         WWNTDt/WYlVXRQqUtOKRYznm5XdVAdS23I5p2WLLp0LEKzyY6Pny/FPVO0Mm/W8Ootak
-         b4jaqqUZmbQ/XE50A31zs7bH9DxX/RzKnjA7BnWRdyx2eE/JNItutYtaFDpm0C2BPxd6
-         +BB/q0KROQAgfS5eSHctOHZ4Kay8cKPXLHdsIEfSHR54mK+4RmkArDtBT4IhujG1TnlZ
-         UhPgsZjV6GxCIBaffTOFOQiGbHsz5ZPQA+dqrJ7zplqxMnxQMYqbxStcaW7jUQdRJnRE
-         tCJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nh5t5HwqaZ5vwtLT3aQ5LPtySy+1nmXDpAkBkNh9qyc=;
-        b=p0JOb7lCycA/jkBAsfPZ/ZBHbZnThYVs7SYVY9xZ0v0QwkQFt+2EoQxYIDF5yIVW5l
-         ZNZC/ozGnLrO0bUvZYJqpFLjjZAGzZlaZf8ycOnXAudAsYZuiK+TfGDOy6nN0qD2Sc2E
-         eLelrvh+Bp5gjoNcXTL9FJTtuqkeHB+aNwGLvtKk6MRjAWtS2sXHjvCpVvLtAXJb2EIt
-         AvIokjkEzbAMCRpVrwB17rDmkj7Ws/qehIzrLz+dwtKs5AtaGzdT4fmvZosUS6bUsqwm
-         lFkVAjZaqWffnpY9lh3wAkJg/eTGP/+Qzom8gztXNunhfYz5nXpPhiwxIwojKaUap7Jx
-         Bm6Q==
-X-Gm-Message-State: AGi0PubWqakPgUEdjtP4S2j4l8Q/VkuxN/eVHsmIw0XxB/0DINwN7oYw
-        FzQG0xUng4YLnI/NN+c0zh8=
-X-Google-Smtp-Source: APiQypIdxJFiZxwLmJw0oNITUEQIevo3vGxi8hwQjd0iINquNH4IGOvTh7aTLBwC6be3oGyutBQ5GA==
-X-Received: by 2002:aa7:9695:: with SMTP id f21mr1030846pfk.93.1586201452092;
-        Mon, 06 Apr 2020 12:30:52 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y29sm11509937pge.22.2020.04.06.12.30.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 12:30:51 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 12:30:50 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 04/17] clk: mmp2: Add support for PLL clock sources
-Message-ID: <20200406193050.GA53133@roeck-us.net>
-References: <20200309194254.29009-1-lkundrak@v3.sk>
- <20200309194254.29009-5-lkundrak@v3.sk>
+        Mon, 6 Apr 2020 15:34:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586201650;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BSgez8GiaPB88s5mIg8AyQPW/mDw6g5wVL3NjzNhkP8=;
+        b=R1GhoI9D+CL1pYmwVal4mEzRU4RnkHKqp3zI50Ayi2pUz91q15YoMi7/qkYnnl/mcuGDCc
+        U541Z3Z5IrVUkktlB6vSsb/UZOCI8XMoe4ob9XJWeOet5KZRm35Zex+CuWvluev6mLXQNJ
+        EJd0JO+VaqkQhU+Zi3ZoPBkruia8ukw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-468-7sVfS2VFNe6hrJBroCNwkQ-1; Mon, 06 Apr 2020 15:34:07 -0400
+X-MC-Unique: 7sVfS2VFNe6hrJBroCNwkQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12EE0190B2A0;
+        Mon,  6 Apr 2020 19:34:02 +0000 (UTC)
+Received: from Ruby.redhat.com (ovpn-117-12.rdu2.redhat.com [10.10.117.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A7E962697;
+        Mon,  6 Apr 2020 19:33:59 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Wayne Lin <Wayne.Lin@amd.com>, Wayne Lin <waynelin@amd.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/dp_mst: Fix NULL deref in drm_dp_get_one_sb_msg()
+Date:   Mon,  6 Apr 2020 15:33:52 -0400
+Message-Id: <20200406193352.1245985-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200309194254.29009-5-lkundrak@v3.sk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 08:42:41PM +0100, Lubomir Rintel wrote:
-> The clk-of-mmp2 driver pretends that the clock outputs from the PLLs are
-> constant, but in fact they are configurable.
-> 
-> Add logic for obtaining the actual clock rates on MMP2 as well as MMP3.
-> There is no documentation for either SoC, but the "systemsetting" drivers
-> from Marvell GPL code dump provide some clue as far as MPMU registers on
-> MMP2 [1] and MMP3 [2] go.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-dell-ariel.git/tree/drivers/char/mmp2_systemsetting.c
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-dell-ariel.git/tree/drivers/char/mmp3_systemsetting.c
-> 
-> A separate commit will adjust the clk-of-mmp2 driver.
-> 
-> Tested on a MMP3-based Dell Wyse 3020 as well as MMP2-based OLPC
-> XO-1.75 laptop.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+While we don't need this function to store an mstb anywhere for UP
+requests since we process them asynchronously, we do need to make sure
+that we don't try to write to **mstb for UP requests otherwise we'll
+cause a NULL pointer deref:
 
-This patch results in:
+    RIP: 0010:drm_dp_get_one_sb_msg+0x4b/0x460 [drm_kms_helper]
+    Call Trace:
+     ? vprintk_emit+0x16a/0x230
+     ? drm_dp_mst_hpd_irq+0x133/0x1010 [drm_kms_helper]
+     drm_dp_mst_hpd_irq+0x133/0x1010 [drm_kms_helper]
+     ? __drm_dbg+0x87/0x90 [drm]
+     ? intel_dp_hpd_pulse+0x24b/0x400 [i915]
+     intel_dp_hpd_pulse+0x24b/0x400 [i915]
+     i915_digport_work_func+0xd6/0x160 [i915]
+     process_one_work+0x1a9/0x370
+     worker_thread+0x4d/0x3a0
+     kthread+0xf9/0x130
+     ? process_one_work+0x370/0x370
+     ? kthread_park+0x90/0x90
+     ret_from_fork+0x35/0x40
 
-arm-linux-gnueabi-ld: drivers/clk/mmp/clk.o: in function `mmp_register_pll_clks':
-drivers/clk/mmp/clk.c:192: undefined reference to `mmp_clk_register_pll'
+So, fix this.
 
-when building arm:pxa910_defconfig.
-
-Bisect log is attached.
-
-Guenter
-
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Fixes: fbc821c4a506 ("drm/mst: Support simultaneous down replies")
+Cc: Wayne Lin <Wayne.Lin@amd.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Wayne Lin <waynelin@amd.com>
+Cc: Sean Paul <seanpaul@chromium.org>
 ---
-# bad: [a10c9c710f9ecea87b9f4bbb837467893b4bef01] Merge tag 'for-v5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply
-# good: [4c205c84e249e0a91dcfabe461d77667ec9b2d05] Merge tag 'keys-fixes-20200329' of git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs
-git bisect start 'a10c9c710f9e' '4c205c84e249'
-# bad: [31c0aa87ec8a30b1e9e4cf862905a369560f7705] Merge tag 'random_for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tytso/random
-git bisect bad 31c0aa87ec8a30b1e9e4cf862905a369560f7705
-# bad: [53a2cc5cc36fd97728e1b418dbfa8f70bf23391a] Merge branches 'clk-ti', 'clk-ingenic', 'clk-typo', 'clk-at91', 'clk-mmp2' and 'clk-arm-icst' into clk-next
-git bisect bad 53a2cc5cc36fd97728e1b418dbfa8f70bf23391a
-# good: [2d11e9a1fd2abe784b334442b36f7d83ff914287] Merge branches 'clk-phase-errors', 'clk-amlogic', 'clk-renesas' and 'clk-allwinner' into clk-next
-git bisect good 2d11e9a1fd2abe784b334442b36f7d83ff914287
-# bad: [de17be999cb07effacf6a1129602f63396f5af27] clk: mmp2: Fix bit masks for LCDC I/O and pixel clocks
-git bisect bad de17be999cb07effacf6a1129602f63396f5af27
-# bad: [4d6da655d1871fadcb2b5de086e5a35883e22c95] dt-bindings: marvell,mmp2: Add clock ids for MMP3 PLLs
-git bisect bad 4d6da655d1871fadcb2b5de086e5a35883e22c95
-# bad: [5d34d0b32d6c13947b0aa890fc4c68f203491169] clk: mmp2: Add support for PLL clock sources
-git bisect bad 5d34d0b32d6c13947b0aa890fc4c68f203491169
-# good: [cb8dbfe831758fb2ba52d8c30db5249e48f57b8b] clk: mmp2: Constify some strings
-git bisect good cb8dbfe831758fb2ba52d8c30db5249e48f57b8b
-# good: [7de0b8b8b0508af5fed2f2a07e3abb6acac0c466] dt-bindings: clock: Convert marvell,mmp2-clock to json-schema
-git bisect good 7de0b8b8b0508af5fed2f2a07e3abb6acac0c466
-# first bad commit: [5d34d0b32d6c13947b0aa890fc4c68f203491169] clk: mmp2: Add support for PLL clock sources
+ drivers/gpu/drm/drm_dp_mst_topology.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
+dp_mst_topology.c
+index 1ff49547b2e8..8751278b3941 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -3703,7 +3703,8 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst=
+_topology_mgr *mgr, bool up,
+ 	int basereg =3D up ? DP_SIDEBAND_MSG_UP_REQ_BASE :
+ 			   DP_SIDEBAND_MSG_DOWN_REP_BASE;
+=20
+-	*mstb =3D NULL;
++	if (!up)
++		*mstb =3D NULL;
+ 	*seqno =3D -1;
+=20
+ 	len =3D min(mgr->max_dpcd_transaction_bytes, 16);
+--=20
+2.25.1
+
