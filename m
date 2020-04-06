@@ -7,68 +7,67 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D90C2BB54
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04DEC2BB55
 	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D422078A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9712020753
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:26:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z4VIHn8t"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/vFF5Vp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgDFW0u (ORCPT
+        id S1726549AbgDFW0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 18:26:50 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33862 "EHLO
+        Mon, 6 Apr 2020 18:26:51 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:34228 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726477AbgDFW0q (ORCPT
+        by vger.kernel.org with ESMTP id S1726508AbgDFW0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 18:26:46 -0400
+        Mon, 6 Apr 2020 18:26:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586212005;
+        s=mimecast20190719; t=1586212007;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=qWI++drUheRLgJRLP25chFJvpGmbc+MWUzzhPso8aKg=;
-        b=Z4VIHn8tCLGJ2XVkPFFmOY5ktk2t9BBHzw6QN0WKQXnlDx+Ytam344d7zxwL39w8DT4f/S
-        cF73FA4VRnplLvE6f2Xy+ebqANjGAcO2MRxf8i+Y5gMoi8aHOiWFP0c3xzugulNlBc6HR0
-        Rthng8fEdv+vxpmwGnvDAvaYxB4BYIw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-441-yGl7crbFOniGuGorniovxw-1; Mon, 06 Apr 2020 18:26:39 -0400
-X-MC-Unique: yGl7crbFOniGuGorniovxw-1
-Received: by mail-wr1-f70.google.com with SMTP id k11so639014wrm.19
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 15:26:39 -0700 (PDT)
+        bh=b+P99eoGOE59dzJri6nDdYTRF/iHp1rUM821OiEBSWI=;
+        b=U/vFF5VpXdmJuvhGVtoAcxNjDn8Yk87a3t6GmWVVKJW6gY9fo+Ei6MevQc/8I0qh4LitRW
+        /zglA5B++K0mdu5RAIDy8DsuK6jbwy+qzP/Astl6XkayEHxVRHXn8SOwCTRO+UCtJwehfB
+        YFxDE5HwoaAnl6IzJEPcXMQ2g8a+rGg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-u1YDe4V8MLim71KuFBZndg-1; Mon, 06 Apr 2020 18:26:43 -0400
+X-MC-Unique: u1YDe4V8MLim71KuFBZndg-1
+Received: by mail-wm1-f72.google.com with SMTP id r8so177513wmn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 15:26:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qWI++drUheRLgJRLP25chFJvpGmbc+MWUzzhPso8aKg=;
-        b=eRGkNIuJgK5KtsnR0nd+vw3sNGlyDCNxrGVrQYheBWDgRmoSnn8q54Q4EqV1Q2p550
-         D/QtLCat2Q5TPRrXBwOSVgKMNOjiPEJyY54RO2NrknH26/sXnleSj6le2KKFvAKh1xmK
-         6qs4JpGu1IlrYFejtafVNq9cnC0+G/ufpPbZlXfHl9lYCRCAkLRdfcAWoqyGe3+4/jN3
-         v5bubwOQY6BJEXBg+cxIYPEcf/ni7XnS8mEF9Fq1e0ExdKZWZOu/NbBqJAYEh9w9OiF3
-         AKzo2c42Clctsp+3SsTKYfvC+ayN95z9aIfdQx6h5N2lttcWKBkYVdwg2NahFX9XvXdT
-         NB9g==
-X-Gm-Message-State: AGi0PuZQuT8zEE9jbC7ea51ItvPXiP1gwV0eUgYpndD+fMkwp/rlCzfC
-        2EHRB0B+ti4slb8yFtVVUuK3MhfLXOWK0ObFJd+z0ej6iqe8VS9/r6wr7Zbmv4Y+G7FHh1ITgYz
-        f0O92TIxooyhl6n4KW+TCjJ8S
-X-Received: by 2002:a5d:6204:: with SMTP id y4mr1590912wru.410.1586211998045;
-        Mon, 06 Apr 2020 15:26:38 -0700 (PDT)
-X-Google-Smtp-Source: APiQypITDhGNQZa99ndk04hNA7xG8SlNGaI/jBhEo5PQXjQ1+zaBzfx8Hh0Zv03WWW0lajc0/UW2QQ==
-X-Received: by 2002:a5d:6204:: with SMTP id y4mr1590896wru.410.1586211997853;
-        Mon, 06 Apr 2020 15:26:37 -0700 (PDT)
+        bh=b+P99eoGOE59dzJri6nDdYTRF/iHp1rUM821OiEBSWI=;
+        b=aJZ+LteSiuyOngeVZqfE9MaBpW0RPrtk2//nbKiGWPBsnyrO19j6ZURHq/zTfdJJ/z
+         rW2JEHc70zMfAuYzQtNAa4KkgAMFm87Uf8l0qL5VYOnG/NNEwf7t3FB6P85z9X0u2/O/
+         +OEqPul7JDCVEA/E7GcJXgd5uYowfqg2C9+hdYxHgLRFI9ET++i/NdO7W5OAJOJiV+At
+         SpCFL/X3YBE9qUVsZM+W5rEBTMZ9lzFYYu2bExcQZs273FnPMjGxYEYBPrGFSWcKvKtC
+         1Z93pUfWyTVTdEVmC7TBe0rjVirh1Kmr0qgFBPGdgHcfbE00lFFIyQeWdWSvYmBxeJXe
+         uYZA==
+X-Gm-Message-State: AGi0Pua9g5HopkpPoCt+wabVwYer0TaX6FalW/rC+EsEPLKtVrLIv9S4
+        CvwERCoqOhgFN7WMD+YKPNth2uE+rUBV4oXNPoggrduDXp857fuCE72xnDltdE7yw5CG2LIuZCZ
+        eKZqtGpWwVKa2UQz7T27YKLJX
+X-Received: by 2002:a7b:ca47:: with SMTP id m7mr1618543wml.55.1586212002446;
+        Mon, 06 Apr 2020 15:26:42 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJbM6FeH7VkbvEqYuHfim8CWxiQKaSSyipP1ZEG1ds7M2SyHjKH/nl5jukff0ySxHyaH4YMVA==
+X-Received: by 2002:a7b:ca47:: with SMTP id m7mr1618523wml.55.1586212002230;
+        Mon, 06 Apr 2020 15:26:42 -0700 (PDT)
 Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id f3sm1304116wmj.24.2020.04.06.15.26.36
+        by smtp.gmail.com with ESMTPSA id h2sm1186449wmb.16.2020.04.06.15.26.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 15:26:37 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 18:26:36 -0400
+        Mon, 06 Apr 2020 15:26:41 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 18:26:40 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Matej Genci <matej.genci@nutanix.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 04/12] virtio: add VIRTIO_RING_NO_LEGACY
-Message-ID: <20200406222507.281867-5-mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH v6 06/12] vhost: force spec specified alignment on types
+Message-ID: <20200406222507.281867-7-mst@redhat.com>
 References: <20200406222507.281867-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -81,52 +80,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matej Genci <matej.genci@nutanix.com>
+The ring element addresses are passed between components with different
+alignments assumptions. Thus, if guest/userspace selects a pointer and
+host then gets and dereferences it, we might need to decrease the
+compiler-selected alignment to prevent compiler on the host from
+assuming pointer is aligned.
 
-Add macro to disable legacy vring functions.
+This actually triggers on ARM with -mabi=apcs-gnu - which is a
+deprecated configuration, but it seems safer to handle this
+generally.
 
-Signed-off-by: Matej Genci <matej.genci@nutanix.com>
-Link: https://lore.kernel.org/r/20190911124942.243713-1-matej.genci@nutanix.com
+I verified that the produced binary is exactly identical on x86.
+
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/virtio/virtio_pci_modern.c | 1 +
- include/uapi/linux/virtio_ring.h   | 4 ++++
- 2 files changed, 5 insertions(+)
+ drivers/vhost/vhost.h       |  6 +++---
+ include/linux/virtio_ring.h | 24 +++++++++++++++++++++---
+ 2 files changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-index 7abcc50838b8..db93cedd262f 100644
---- a/drivers/virtio/virtio_pci_modern.c
-+++ b/drivers/virtio/virtio_pci_modern.c
-@@ -16,6 +16,7 @@
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index f8403bd46b85..60cab4c78229 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -67,9 +67,9 @@ struct vhost_virtqueue {
+ 	/* The actual ring of buffers. */
+ 	struct mutex mutex;
+ 	unsigned int num;
+-	struct vring_desc __user *desc;
+-	struct vring_avail __user *avail;
+-	struct vring_used __user *used;
++	vring_desc_t __user *desc;
++	vring_avail_t __user *avail;
++	vring_used_t __user *used;
+ 	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
+ 	struct file *kick;
+ 	struct eventfd_ctx *call_ctx;
+diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
+index 11680e74761a..c3f9ca054250 100644
+--- a/include/linux/virtio_ring.h
++++ b/include/linux/virtio_ring.h
+@@ -60,14 +60,32 @@ static inline void virtio_store_mb(bool weak_barriers,
+ struct virtio_device;
+ struct virtqueue;
  
- #include <linux/delay.h>
- #define VIRTIO_PCI_NO_LEGACY
-+#define VIRTIO_RING_NO_LEGACY
- #include "virtio_pci_common.h"
++/*
++ * The ring element addresses are passed between components with different
++ * alignments assumptions. Thus, we might need to decrease the compiler-selected
++ * alignment, and so must use a typedef to make sure the __aligned attribute
++ * actually takes hold:
++ *
++ * https://gcc.gnu.org/onlinedocs//gcc/Common-Type-Attributes.html#Common-Type-Attributes
++ *
++ * When used on a struct, or struct member, the aligned attribute can only
++ * increase the alignment; in order to decrease it, the packed attribute must
++ * be specified as well. When used as part of a typedef, the aligned attribute
++ * can both increase and decrease alignment, and specifying the packed
++ * attribute generates a warning.
++ */
++typedef struct vring_desc __aligned(VRING_DESC_ALIGN_SIZE) vring_desc_t;
++typedef struct vring_avail __aligned(VRING_AVAIL_ALIGN_SIZE) vring_avail_t;
++typedef struct vring_used __aligned(VRING_USED_ALIGN_SIZE) vring_used_t;
++
+ struct vring {
+ 	unsigned int num;
+ 
+-	struct vring_desc *desc;
++	vring_desc_t *desc;
+ 
+-	struct vring_avail *avail;
++	vring_avail_t *avail;
+ 
+-	struct vring_used *used;
++	vring_used_t *used;
+ };
  
  /*
-diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
-index 559f42e73315..9223c3a5c46a 100644
---- a/include/uapi/linux/virtio_ring.h
-+++ b/include/uapi/linux/virtio_ring.h
-@@ -135,6 +135,8 @@ struct vring {
- #define VRING_USED_ALIGN_SIZE 4
- #define VRING_DESC_ALIGN_SIZE 16
- 
-+#ifndef VIRTIO_RING_NO_LEGACY
-+
- /* The standard layout for the ring is a continuous chunk of memory which looks
-  * like this.  We assume num is a power of 2.
-  *
-@@ -181,6 +183,8 @@ static inline unsigned vring_size(unsigned int num, unsigned long align)
- 		+ sizeof(__virtio16) * 3 + sizeof(struct vring_used_elem) * num;
- }
- 
-+#endif /* VIRTIO_RING_NO_LEGACY */
-+
- /* The following is used with USED_EVENT_IDX and AVAIL_EVENT_IDX */
- /* Assuming a given event_idx value from the other side, if
-  * we have just incremented index from old to new_idx,
 -- 
 MST
 
