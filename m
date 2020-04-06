@@ -2,100 +2,119 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D80CC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF536C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BDA2495E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="DGLBL0Yq"
+	by mail.kernel.org (Postfix) with ESMTP id 78ED52080C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586190873;
+	bh=jd+QYmsLAndEMcvErDpP1RE/VLLxn/LwwnxoCW7nOVg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2XV6Nz1V3d5dEx1bIoMPrLmPWcKRgkqG73z49uK+VMo4YevFSHqtZWTS8WZfIEW0w
+	 gNmfKdj7zHx7puy7iFngC37fkDhqj5Tawbil4V4i2RMj711VNqRk4q9aNcx+zbJ4i9
+	 ZwAqvctqFQIPvYm85oCwl5ceSx5qFVAUhXRKmdbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbgDFQdQ (ORCPT
+        id S1729445AbgDFQec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:33:16 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:48262 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728789AbgDFQdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:33:16 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 9704B41259;
-        Mon,  6 Apr 2020 16:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1586190792; x=1588005193; bh=5jzTCimFf/ZN+kP2sD+q9bPMb
-        I+Q4K3DWZbRHFkwR74=; b=DGLBL0YqcGOeu952klY/cvzNCyealrFkuiwZbyjdc
-        7z9P+5KzECC3m8eMMBVGj7O2zvtVW9Dp2pT0qtRvL3R1wc2zw+DLVSEJ98NQBwJS
-        yG4k9OEWHeICT9dwej1SvhFN1rxtcacC7BYuKWum+PW2vgQpcFjyXsuT1zy4YRGb
-        s0=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CN7tA-FteRvA; Mon,  6 Apr 2020 19:33:12 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 53EAB412E2;
-        Mon,  6 Apr 2020 19:32:38 +0300 (MSK)
-Received: from localhost.localdomain (10.199.2.226) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Mon, 6 Apr 2020 19:32:38 +0300
-Message-ID: <b02f5e2fc09b30c36b0d9e8984c18eb21cba7b73.camel@yadro.com>
-Subject: Re: [PATCH v7 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 6 Apr 2020 19:32:56 +0300
-In-Reply-To: <CAHp75Vdg7bhB69uQSZt2LK3JXJ-my-+-Mg-0F6ij9HcFdQ=LTg@mail.gmail.com>
-References: <20200406151839.13572-1-i.mikhaylov@yadro.com>
-         <20200406151839.13572-3-i.mikhaylov@yadro.com>
-         <CAHp75Vdg7bhB69uQSZt2LK3JXJ-my-+-Mg-0F6ij9HcFdQ=LTg@mail.gmail.com>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Mon, 6 Apr 2020 12:34:32 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41436 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728789AbgDFQec (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:34:32 -0400
+Received: by mail-lj1-f193.google.com with SMTP id n17so336305lji.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 09:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fMHiT/Wub3WobBASn8jTrpUwrDr3u4OoR64hK8bb9Ks=;
+        b=AfWDLI+z1soflaJhqnVIBl+g08ryFIMdzJqIJa45tvPYBFyKn+PmZgyAKpbs5cJwZl
+         9gtU1jadiJkYAbncJSZUPSb1X2kcckqoo15hGsCWmJf/qxcwWTHrb5wLDAA7sDdZ3t6B
+         sFkeB7u4W8ywdCcWyLji2espSviyDN/+Gi3rc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fMHiT/Wub3WobBASn8jTrpUwrDr3u4OoR64hK8bb9Ks=;
+        b=k7LXqXdE3qpmlfmYfNlUxViXkCYxhm2tmlFPjoZJpX+qF7SjxHF6OEe4tP/gkVSC9g
+         HUHk4+HATYUGXSJS09GoyoE9fNsSjJGhWA2Td4nWljbP49svEm/E4N2R3vs02IsJWiUY
+         5Q3QV7H/48Al+rSsYRP66aHTa0t5xwm9b1B9IN3Td6mdI8r51S04VxIPg/Ey6qRLlues
+         W6KnI46Jbsa12NvckUDC0R/T/+DZI7J3sorIxZYdiZIFcpI7f1XVhVOtivMJ+ARDCbwT
+         6yuzwrdFVmtFWk8RC8qt7ZTj8f1NT8nkGelHrNe4mXXXkAlxoMwwVaaEZbGt7r2Bd6A3
+         w0GA==
+X-Gm-Message-State: AGi0PuZWc+zmszRJGL2EBonFIDYzWQP4mZmFOczV2ojLbP0EwD+OO/kg
+        pT1/2BL6rU5k0y/1Xci5KfDyHM4vkDo=
+X-Google-Smtp-Source: APiQypJS9xDo+v4peMcy5XQO/ifHqSnYmhyjxBayDeCelmvC1lZ4PAbV+3bco79azHmk1t4LcxgaZw==
+X-Received: by 2002:a2e:b52f:: with SMTP id z15mr80980ljm.38.1586190867919;
+        Mon, 06 Apr 2020 09:34:27 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id m8sm10264897lji.12.2020.04.06.09.34.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 09:34:26 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id w145so9649lff.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 09:34:25 -0700 (PDT)
+X-Received: by 2002:a19:7706:: with SMTP id s6mr10019987lfc.31.1586190864915;
+ Mon, 06 Apr 2020 09:34:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.199.2.226]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+References: <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
+ <2590640.1585757211@warthog.procyon.org.uk> <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
+ <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
+ <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
+ <27994c53034c8f769ea063a54169317c3ee62c04.camel@themaw.net>
+ <20200403111144.GB34663@gardel-login> <CAJfpeguQAw+Mgc8QBNd+h3KV8=Y-SOGT7TB_N_54wa8MCoOSzg@mail.gmail.com>
+ <20200403151223.GB34800@gardel-login> <20200403203024.GB27105@fieldses.org> <20200406091701.q7ctdek2grzryiu3@ws.net.home>
+In-Reply-To: <20200406091701.q7ctdek2grzryiu3@ws.net.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 6 Apr 2020 09:34:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjW735UE+byK1xsM9UvpF2ubh7bCMaAOwz575U7hRCKyA@mail.gmail.com>
+Message-ID: <CAHk-=wjW735UE+byK1xsM9UvpF2ubh7bCMaAOwz575U7hRCKyA@mail.gmail.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+To:     Karel Zak <kzak@redhat.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Ian Kent <raven@themaw.net>,
+        David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-06 at 18:43 +0300, Andy Shevchenko wrote:
-> On Mon, Apr 6, 2020 at 6:18 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > Proximity sensor driver based on light/vcnl4000.c code.
-> > For now supports only the single on-demand measurement.
-> > 
-> > The VCNL3020 is a fully integrated proximity sensor. Fully
-> > integrated means that the infrared emitter is included in the
-> > package. It has 16-bit resolution. It includes a signal
-> > processing IC and features standard I2C communication
-> > interface. It features an interrupt function.
-> > 
-> 
-> I don't know how to explain to you that if anybody gives the tag, you
-> need to add it to your commit message.
-> Why are you ignoring this?
-> 
+On Mon, Apr 6, 2020 at 2:17 AM Karel Zak <kzak@redhat.com> wrote:
+>
+> On Fri, Apr 03, 2020 at 04:30:24PM -0400, J. Bruce Fields wrote:
+> >
+> > nfs-utils/support/misc/mountpoint.c:check_is_mountpoint() stats the file
+> > and ".." and returns true if they have different st_dev or the same
+> > st_ino.  Comparing mount ids sounds better.
+>
+> BTW, this traditional st_dev+st_ino way is not reliable for bind mounts.
+> For mountpoint(1) we search the directory in /proc/self/mountinfo.
 
-Sorry for that, I'll add it.
+These days you should probably use openat2() with RESOLVE_NO_XDEV.
 
-> Jonathan, my tag still applies here, but I'm so confused with the above.
+No need for any mountinfo or anything like that. Just look up the
+pathname and say "don't cross mount-points", and you'll get an error
+if it's a mount crossing lookup.
 
+So this kind of thing is _not_ an argument for another kernel querying
+interface.  We got a new (and better) model for a lot of this.
+
+              Linus
