@@ -2,74 +2,120 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BODY_SINGLE_WORD,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5136C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242A5C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF2C21D79
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001A221D79
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgDFMbW (ORCPT
+        id S1728016AbgDFMcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:31:22 -0400
-Received: from correo.us.es ([193.147.175.20]:52580 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727928AbgDFMbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:31:22 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 54EA8F2DF8
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Apr 2020 14:31:20 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 45DA6102190
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Apr 2020 14:31:20 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 3BC03100A52; Mon,  6 Apr 2020 14:31:20 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 1E548100A47;
-        Mon,  6 Apr 2020 14:31:18 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 06 Apr 2020 14:31:18 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id D75D242EE38E;
-        Mon,  6 Apr 2020 14:31:17 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 14:31:17 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Amol Grover <frextrite@gmail.com>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jeremy Sowden <jeremy@azazel.net>,
-        Florent Fourcot <florent.fourcot@wifirst.fr>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] netfilter: ipset: Pass lockdep expression to RCU lists
-Message-ID: <20200406123117.22e22uurcvqyc4qs@salvia>
-References: <20200216172653.19772-1-frextrite@gmail.com>
+        Mon, 6 Apr 2020 08:32:10 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:60702 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727652AbgDFMcJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 08:32:09 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036CUQeg010174;
+        Mon, 6 Apr 2020 08:32:07 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 306m3672rg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 08:32:07 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 036CW6XB045562
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Mon, 6 Apr 2020 08:32:06 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 6 Apr 2020 08:32:05 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 6 Apr 2020 08:32:05 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 6 Apr 2020 08:32:05 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 036CW3WT026034;
+        Mon, 6 Apr 2020 08:32:03 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <alexandru.tachici@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: adc: ad7192: fix null de-ref crash during probe
+Date:   Mon, 6 Apr 2020 15:31:09 +0300
+Message-ID: <20200406123109.56947-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200216172653.19772-1-frextrite@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_07:2020-04-06,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004060109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.
+When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
+assignment:
+  'indio_dev->name = spi_get_device_id(spi)->name;'
+
+After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
+during probe with null de-ref.
+
+This change assigns the 'compatible' string from the DT table, as the new
+'indio_dev->name'. As such, the new device/part name now looks like
+'adi,ad719x', and now has the vendor prefix.
+
+Note that this change is not doing any NULL check to the return value of
+'of_match_device()'. This shouldn't happen, and if it does it's likely a
+framework error on the probe side.
+
+Fixes 66614ab2be38: ("staging: iio: adc: ad7192: removed spi_device_id")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/adc/ad7192.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+index 8ec28aa8fa8a..0039a45e1f33 100644
+--- a/drivers/iio/adc/ad7192.c
++++ b/drivers/iio/adc/ad7192.c
+@@ -888,6 +888,7 @@ MODULE_DEVICE_TABLE(of, ad7192_of_match);
+ 
+ static int ad7192_probe(struct spi_device *spi)
+ {
++	const struct of_device_id *of_id;
+ 	struct ad7192_state *st;
+ 	struct iio_dev *indio_dev;
+ 	int ret, voltage_uv = 0;
+@@ -937,10 +938,12 @@ static int ad7192_probe(struct spi_device *spi)
+ 		goto error_disable_avdd;
+ 	}
+ 
++	of_id = of_match_device(ad7192_of_match, &spi->dev);
++
+ 	spi_set_drvdata(spi, indio_dev);
+-	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
++	st->devid = (unsigned long)of_id->data;
+ 	indio_dev->dev.parent = &spi->dev;
+-	indio_dev->name = spi_get_device_id(spi)->name;
++	indio_dev->name = of_id->compatible;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
+ 	ret = ad7192_channels_config(indio_dev);
+-- 
+2.17.1
+
