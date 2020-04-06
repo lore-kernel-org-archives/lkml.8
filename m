@@ -2,105 +2,90 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97958C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120E6C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F0320753
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:36:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDFF/r12"
+	by mail.kernel.org (Postfix) with ESMTP id C2D5F20753
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgDFVen (ORCPT
+        id S1726416AbgDFVh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:34:43 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60679 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726477AbgDFVek (ORCPT
+        Mon, 6 Apr 2020 17:37:28 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45760 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgDFVh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:34:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586208878;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=avaeRkZ1JnKDUOT0Z2Dx4o4wqMo2IiZX1JaGDR9LW2A=;
-        b=KDFF/r12yuTXWqHbz8i/fPKqKyeWeFJiMW5BcKWR1wO8xIPqhWEfEY+FrRcUQJWqCL6uDe
-        fpdV2F4VIsNu11/luFoMWgRbF/S/qkPne8SxUst9Q9BvIooL2P9d8SG9o0cMUywuetJZ3V
-        6zAbwbXsydEuZyQUR6+6JUu41t91dfg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-95-usBq063ANYqw0RUWQEEsFQ-1; Mon, 06 Apr 2020 17:34:34 -0400
-X-MC-Unique: usBq063ANYqw0RUWQEEsFQ-1
-Received: by mail-wm1-f72.google.com with SMTP id f9so409874wme.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:34:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=avaeRkZ1JnKDUOT0Z2Dx4o4wqMo2IiZX1JaGDR9LW2A=;
-        b=qKNwysfS9zB7YE/We2nznJy5mhYMbnnhRMDvvVBOW1G9UtOigfIU3LKHKF9XnbrXOr
-         DNvnGR9dmyHpUz5WLO8Ej2eoUAHiQm/AJuv/0ZRZpHvWcdlc8PTia82BmC7qOIh4INyI
-         iH2unfbX6OaMHtveR5mYa7eiltqA/RlbDLAm515R1+cdWT8yzRjCcOnXK7u/Z0AvL824
-         ka75dWRwwH3CVV3JcuR4ssguC1M8+4Zvjo+K/+iWUMO7avM1/Ge1t2VNjR6UTY1sAT7m
-         w6haFtUnbW0UKXvMI1IsDjWueOw6l3uv7Y2Cuf6Cn9/Sx934+SPmMGU86jGkXyma8j/i
-         hB7Q==
-X-Gm-Message-State: AGi0PuY3RDiPC0IFud+eFQzaiMli0Ydv6Mqsv1/+YJ2dMCPjek/3ovDz
-        zgxCff9Zsk9Dp8h/Qq5pFxRJI1IemcwXwft7UX3NMlK9/c+pg7ZdNfi7D4vl7VNP3S4Yf6i6q98
-        CPY0MA8+PhJPjyanFIvY2bQIg
-X-Received: by 2002:a7b:cbd2:: with SMTP id n18mr1068233wmi.74.1586208872976;
-        Mon, 06 Apr 2020 14:34:32 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKsDLUhGQC/Tn+0qnGfmRAOsV6x9/Q1yC0yzxYjjrHjRbm6CASil7gnkQZHykkq9cDFgqyFnw==
-X-Received: by 2002:a7b:cbd2:: with SMTP id n18mr1068219wmi.74.1586208872813;
-        Mon, 06 Apr 2020 14:34:32 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id f16sm992072wmc.37.2020.04.06.14.34.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 14:34:31 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 17:34:30 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 03/12] tools/virtio: define __KERNEL__
-Message-ID: <20200406210108.148131-4-mst@redhat.com>
-References: <20200406210108.148131-1-mst@redhat.com>
+        Mon, 6 Apr 2020 17:37:28 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jLZQV-0001S6-Ah; Mon, 06 Apr 2020 23:37:03 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id C4A0B100C47; Mon,  6 Apr 2020 23:37:02 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christoph Hellwig <hch@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Laight <David.Laight@aculab.com>,
+        Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [RFC PATCH] x86/split_lock: Disable SLD if an unaware (out-of-tree) module enables VMX
+In-Reply-To: <20200406125010.GA29306@infradead.org>
+References: <20200403163007.6463-1-sean.j.christopherson@intel.com> <20200406125010.GA29306@infradead.org>
+Date:   Mon, 06 Apr 2020 23:37:02 +0200
+Message-ID: <87tv1wjny9.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406210108.148131-1-mst@redhat.com>
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200406213430.0cMyWmqz-gAbTHMs4AnqbspIEzMzMkvzsSwLBx3jmqc@z>
 
-Even though we are building in userspace, we are emulating kernel bits.
+Christoph Hellwig <hch@infradead.org> writes:
+> On Fri, Apr 03, 2020 at 09:30:07AM -0700, Sean Christopherson wrote:
+>> Hook into native CR4 writes to disable split-lock detection if CR4.VMXE
+>> is toggled on by an SDL-unaware entity, e.g. an out-of-tree hypervisor
+>> module.  Most/all VMX-based hypervisors blindly reflect #AC exceptions
+>> into the guest, or don't intercept #AC in the first place.  With SLD
+>> enabled, this results in unexpected #AC faults in the guest, leading to
+>> crashes in the guest and other undesirable behavior.
+>
+> Out of tree modules do not matter, so we should not add code just to
+> work around broken third party code.  If you really feel strongly just
+> make sure something they rely on for their hacks stops being exported
+> and they are properly broken.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- tools/virtio/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As we agreed on elsewhere in the thread already, we are not going to
+disable SLD, we just reject the module to be loaded. That's way better
+than silently failing.
 
-diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
-index b587b9a7a124..ea6674307507 100644
---- a/tools/virtio/Makefile
-+++ b/tools/virtio/Makefile
-@@ -4,7 +4,7 @@ test: virtio_test vringh_test
- virtio_test: virtio_ring.o virtio_test.o
- vringh_test: vringh_test.o vringh.o virtio_ring.o
- 
--CFLAGS += -g -O2 -Werror -Wall -I. -I../include/ -I ../../usr/include/ -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-common -MMD -U_FORTIFY_SOURCE -include ../../include/linux/kconfig.h
-+CFLAGS += -g -O2 -Werror -Wall -I. -I../include/ -I ../../usr/include/ -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-common -MMD -U_FORTIFY_SOURCE -include ../../include/linux/kconfig.h -D__KERNEL__
- vpath %.c ../../drivers/virtio ../../drivers/vhost
- mod:
- 	${MAKE} -C `pwd`/../.. M=`pwd`/vhost_test V=${V}
--- 
-MST
+Aside of that I think that we should extend this kind of analysis to
+other nasty patterns of out of tree modules, like directly fiddling with
+CR* and other circumventions of stuff we are trying to protect.
 
+Thanks,
+
+        tglx
