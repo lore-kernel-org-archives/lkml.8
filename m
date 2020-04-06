@@ -2,103 +2,193 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A38BC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F49C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8BC24880
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D270A23BCD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:11:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d03zDIJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgDFPG7 (ORCPT
+        id S1728828AbgDFPLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:06:59 -0400
-Received: from outgoing15.flk.host-h.net ([197.242.87.49]:57293 "EHLO
-        outgoing15.flk.host-h.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbgDFPG6 (ORCPT
+        Mon, 6 Apr 2020 11:11:23 -0400
+Received: from mail-qt1-f169.google.com ([209.85.160.169]:40602 "EHLO
+        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728685AbgDFPLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:06:58 -0400
-X-Greylist: delayed 4351 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Apr 2020 11:06:57 EDT
-Received: from www31.flk1.host-h.net ([188.40.1.173])
-        by antispam4-flk1.host-h.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1jLSCk-0002PP-Tr; Mon, 06 Apr 2020 15:54:24 +0200
-Received: from [130.255.73.16] (helo=v01.28459.vpscontrol.net)
-        by www31.flk1.host-h.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <justin.swartz@risingedge.co.za>)
-        id 1jLSCh-0003gd-WD; Mon, 06 Apr 2020 15:54:20 +0200
-From:   Justin Swartz <justin.swartz@risingedge.co.za>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Justin Swartz <justin.swartz@risingedge.co.za>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        Mon, 6 Apr 2020 11:11:23 -0400
+Received: by mail-qt1-f169.google.com with SMTP id y25so13087216qtv.7;
+        Mon, 06 Apr 2020 08:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=99djusiLVzCO2PuJgf7fSS2owapfZJNAdNjwh2DypLI=;
+        b=d03zDIJQRG1Y7JjZSX8Qh73uTuwxDH7V53ruH0Y4h4VSarne/EQPE53gkBuMneOWeJ
+         fpDT38mLHN8gBVzH9iHIFeRagolXnbHOiIZctbiHuSxw1aQ9MXBnLCzBH7JYczbpvQkk
+         kJMUigd7dhD4zwQ0Bl9eA1OBrwET/E8Gnd9AZ7lo7y419Jfniu4wVVcbA/Q9nQMFd4v6
+         anaQLsuNQbhxF+NxZh1vDiVe1b+wybML8paZ3oUPKcsXxajW8vfZ61drdjxyC5ksV35J
+         N2lfTabGre8BZRZ48UoQ2d4XLLzNcwbWDL+6cGuI/EkSv5k5PyoSHTMq+Z3t9/Pv3HeX
+         cD+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=99djusiLVzCO2PuJgf7fSS2owapfZJNAdNjwh2DypLI=;
+        b=LvPJMdjr5BQ5yvKYryly8X3PFeFr7zML0Ak7mWNRq79dWeSeb7wXUZIiafQMalYRYd
+         XXxQ2LPU8O/+r/pnaA87lUzpuZFH+n2DerUzFAXWKMdjnZe5xUP5n9DwD5nX68mIuARk
+         s+7Up746VuHfiUZ/qrfZJPRvswPnU6VjQ/Wk5roNGKYDXuf/H1IE0GHk5qph3KBOAVNt
+         2/zUqHydH5Is9ctfbHS0cat2KcXvNy+U4KzUr0o7K8fEqxPBty6rNVHt1lA2beVtnGpS
+         kS3FcdToTytpMIMW+47O8/zLVKbI6oF0G+xvXN+X1B5XfyZx1nEmTwvUSWBRntaAuMk/
+         FCBw==
+X-Gm-Message-State: AGi0PuZCmL4y6S8prXB4Lzj29McQI94IM/WiEz/Lq2Zhe6MUc/vC2YJx
+        GKF9QKGkuiXt2zlKs7DUAuI=
+X-Google-Smtp-Source: APiQypKb8f3Uck3LmrJlm1lO36LFaO1OSwIU4B8qW3rEPLY0MY6AVEU2W4imzr3BAitfKwcL8rLK7A==
+X-Received: by 2002:ac8:3f78:: with SMTP id w53mr21409901qtk.26.1586185882030;
+        Mon, 06 Apr 2020 08:11:22 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id f7sm1279570qkh.25.2020.04.06.08.11.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 08:11:21 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5AFD7409A3; Mon,  6 Apr 2020 12:11:18 -0300 (-03)
+Date:   Mon, 6 Apr 2020 12:11:18 -0300
+To:     Andreas Gerstmayr <agerstmayr@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Martin Spier <mspier@netflix.com>,
+        Brendan Gregg <bgregg@netflix.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: remove disable-wp from rk3229-xms6 emmc
-Date:   Mon,  6 Apr 2020 13:50:05 +0000
-Message-Id: <20200406135006.23759-2-justin.swartz@risingedge.co.za>
-In-Reply-To: <e602c1b8-3606-a8d3-c64c-ec9e58315974@gmail.com>
-References: <e602c1b8-3606-a8d3-c64c-ec9e58315974@gmail.com>
-X-Authenticated-Sender: justin.swartz@risingedge.co.za
-X-Virus-Scanned: Clear
-X-Originating-IP: 188.40.1.173
-X-SpamExperts-Domain: risingedge.co.za
-X-SpamExperts-Username: 
-Authentication-Results: host-h.net; auth=pass (login) smtp.auth=@risingedge.co.za
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.02)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0VxB0mWeGZk2wSOLROvd+japSDasLI4SayDByyq9LIhVMzIT/cdpaPXn
- 8mlmYDKPTUTNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K7uDjV/sFUXQr+CDrNQuIHgQg
- mAX8Bxy/iUu0ThNZg0jxJtcVJProrT987X1VDPOqN+OoDzRTdku7DidYUZdNf38Sp7Of4wP429AA
- f49baR+f3He7jw4SoVhmTJ/3eP9ORQWVx8ds1M4qmk3/bYr2p8zbg4Paoa3pNVQ0zl7t/+UfQLYB
- qEPnp1U88kqVD8AM2G81dFO0E3gi+MOI1foZYzDggRXhpvoPtF3cVkniFXU3qJSqpdJudO6+rkiw
- E5i8Wl78Q18OeOfsy4h7jF1Uv9lnibl3vcBqVmvQB4A18acGxkU6APd/2A0Kw7VphYofAVXirbLu
- Jjy3NtnGWLbnBGfrUBEXB2fYGLNieGQuoHtJvp0r29Rf3ZjFwL+MhHEWw/0qBlNDp8uABz3dkWV+
- tnlsqEID1rwhWix/EYFNtp1TycYLFeAN4+MGwnsp7SkU6CLbyF0Zq4b1/7rjUzETJrWks4pbbQJq
- 6gWopI3ep45X19ZysgQ+31LcAX8eoFXAhohfegXGH2GIVQVglJFbK771YV8YbC29CtmpcTqTfSIf
- CWq9oj7OiT8GwpAriB+3/81I3rvR8KJ2fK9jiDYgijyqqY0rATpzHKGfmtNsYTr4SmDZ/bGW8xZC
- RRs6ZD24UhFcZZEpLhnBCwImTQNvxaLyCc35VA7RvW/HGiGqxL09Cymermt8NAa/gGopT3kKfO4C
- gvcKmV0o9jYzsFpuc43pp/LzIs3ornuRuAAdgrkq+6l7ZLNYJcf7Z6PCydDzoYZgInuDxgFOs7AZ
- TwbwMdGiAezOfJNnrbxp9qi+/W68d5545dki9+vnsnnTQ8Wq38NrFoXSENXH6UXfnav35JPA4YfM
- 6tBkXsqvKY6zoLLTPpuFqUUQz+mM8JAD4ECWNo09vb0YLIRnK477e9Xake5PIWKjIXX7qe2zOXoS
- foz/k0KmhMm/d7m9QAUl+M6tQhYDNj8G8czrGYe1tD5Uy2bjO41FyBEqIaDudcVplPE6wCr6GXU1
- lCw88ijyus1sGnWknJqS8gGhNQxpB5P3qu7c1xMljx2PG/R+pKBSKy8hXOgvE1zSS7XUhkYEQYeb
- 3jR5NeVaJQBh0uawl0Cg8j+knAzOA9mmoJvkuhKHiekUuskYaI6ERCKp8gXWqnT9kLHhStr5fiGK
- 7KncpWELuTEvuGslKTrRIXcXpFg5ivY=
-X-Report-Abuse-To: spam@antispammaster.host-h.net
+Subject: Re: [PATCH] perf script: add flamegraph.py script
+Message-ID: <20200406151118.GC32649@kernel.org>
+References: <20200320151355.66302-1-agerstmayr@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320151355.66302-1-agerstmayr@redhat.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the disable-wp attribute from &emmc as it is, according to
-Documentation/devicetree/bindings/mmc/mmc-controller.yaml:
+Em Fri, Mar 20, 2020 at 04:13:48PM +0100, Andreas Gerstmayr escreveu:
+> This script works in tandem with d3-flame-graph to generate flame graphs
+> from perf. It supports two output formats: JSON and HTML (the default).
+> The HTML format will look for a standalone d3-flame-graph template file in
+> /usr/share/d3-flame-graph/d3-flamegraph-base.html and fill in the collected
+> stacks.
+> 
+> Usage:
+> 
+>     perf record -a -g -F 99 sleep 60
+>     perf script report flamegraph
+> 
+> Combined:
+> 
+>     perf script flamegraph -a -F 99 sleep 60
+> 
+> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
 
-    "Not used in combination with eMMC or SDIO."
+Trying it now with:
 
-Suggested-by: Johan Jonker <jbx6244@gmail.com>
-Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
----
- arch/arm/boot/dts/rk3229-xms6.dts | 1 -
- 1 file changed, 1 deletion(-)
+[root@five ~]# perf record -a -g -F 99 sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 1.120 MB perf.data (59 samples) ]
+[root@five ~]#  perf script report flamegraph
+  File "/home/acme/libexec/perf-core/scripts/python/flamegraph.py", line 46
+    print(f"Flame Graph template {self.args.template} does not " +
+                                                               ^
+SyntaxError: invalid syntax
+Error running python script /home/acme/libexec/perf-core/scripts/python/flamegraph.py
+[root@five ~]#
 
-diff --git a/arch/arm/boot/dts/rk3229-xms6.dts b/arch/arm/boot/dts/rk3229-xms6.dts
-index 6890af0b7..e75624d46 100644
---- a/arch/arm/boot/dts/rk3229-xms6.dts
-+++ b/arch/arm/boot/dts/rk3229-xms6.dts
-@@ -137,7 +137,6 @@
- 
- &emmc {
- 	cap-mmc-highspeed;
--	disable-wp;
- 	non-removable;
- 	status = "okay";
- };
--- 
-2.11.0
+
+
+Ok, gets better when I build with 'make -C tools/perf PYTHON=python3'
+
+[root@five ~]#  perf script report flamegraph
+Flame Graph template /usr/share/d3-flame-graph/d3-flamegraph-base.html does not exist. Please install the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) package, specify an existing flame graph template (--template PATH) or another output format (--format FORMAT).
+[root@five ~]#
+
+It works then, so I'll add a note to that effect. But please consider
+fixing it so that it works with both python2 and python3, if possible,
+or to fail gracefully and state that only python3 is supported and that
+perf should be built with "PYTHON=python3" on the make command line.
+
+Some RFEs for you to consider:
+
+1. make:
+
+   perf flamegraph -a -F 99 sleep 1
+
+be equivalent, should be easy.
+
+2. make the command somehow create a new tab on an existing browser with
+the generated file, and switch the focus to that tab.
+
+3. get whats in:
+
+[root@five ~]# perf report --header-only
+# ========
+# captured on    : Mon Apr  6 12:02:52 2020
+# header version : 1
+# data offset    : 336
+# data size      : 1173584
+# feat offset    : 1173920
+# hostname : five
+# os release : 5.5.10-200.fc31.x86_64
+# perf version : 5.6.gb6b7dc6ec0c8
+# arch : x86_64
+# nrcpus online : 12
+# nrcpus avail : 12
+# cpudesc : AMD Ryzen 5 3600X 6-Core Processor
+# cpuid : AuthenticAMD,23,113,0
+# total memory : 32890748 kB
+# cmdline : /home/acme/bin/perf record -a -g -F 99 sleep 1
+# event : name = cycles, , id = { 2918625, 2918626, 2918627, 2918628, 2918629, 2918630, 2918631, 2918632, 2918633, 2918634, 2918635, 2918636 }, size = 120, { sample_period, sample_freq } = 99, sample_type = IP|TID|TIME|CALLCHAIN|CPU|PERIOD, read_format = ID, disabled = 1,>
+# CPU_TOPOLOGY info available, use -I to display
+# NUMA_TOPOLOGY info available, use -I to display
+# pmu mappings: amd_df = 8, software = 1, ibs_op = 11, ibs_fetch = 10, uprobe = 7, cpu = 4, amd_iommu_0 = 12, breakpoint = 5, amd_l3 = 9, tracepoint = 2, kprobe = 6, msr = 13
+# CACHE info available, use -I to display
+# time of first sample : 87600.831767
+# time of last sample : 87601.096829
+# sample duration :    265.062 ms
+# MEM_TOPOLOGY info available, use -I to display
+# bpf_prog_info 40: bpf_prog_6deef7357e7b4530 addr 0xffffffffc030650c size 66
+# bpf_prog_info 41: bpf_prog_6deef7357e7b4530 addr 0xffffffffc03080e8 size 66
+# bpf_prog_info 42: bpf_prog_6deef7357e7b4530 addr 0xffffffffc030a218 size 66
+# bpf_prog_info 43: bpf_prog_6deef7357e7b4530 addr 0xffffffffc036c698 size 66
+# bpf_prog_info 44: bpf_prog_5a2b06eab81b8f51 addr 0xffffffffc036e2c0 size 1132
+# bpf_prog_info 45: bpf_prog_6deef7357e7b4530 addr 0xffffffffc06e7118 size 66
+# bpf_prog_info 46: bpf_prog_6deef7357e7b4530 addr 0xffffffffc06e9cd8 size 66
+# bpf_prog_info 47: bpf_prog_f3b9e166f6c1aaaa addr 0xffffffffc089732c size 1786
+# bpf_prog_info 48: bpf_prog_6deef7357e7b4530 addr 0xffffffffc0dcb64c size 66
+# bpf_prog_info 49: bpf_prog_6deef7357e7b4530 addr 0xffffffffc0dcd0fc size 66
+# bpf_prog_info 50: bpf_prog_6deef7357e7b4530 addr 0xffffffffc0f4d8dc size 66
+# bpf_prog_info 51: bpf_prog_6deef7357e7b4530 addr 0xffffffffc0f4fc7c size 66
+# bpf_prog_info 52: bpf_prog_84efc2eecc454ca6 addr 0xffffffffc0f6e584 size 373
+# missing features: TRACING_DATA BRANCH_STACK GROUP_DESC AUXTRACE STAT CLOCKID DIR_FORMAT COMPRESSED
+# ========
+#
+[root@five ~]#
+
+And make it available in some UI element.
+
+Thanks,
+
+- Arnaldo
 
