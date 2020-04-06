@@ -2,106 +2,112 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC32C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD96AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29EDF206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C80B206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RO6bTnl9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="hcunOytY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgDFJBx (ORCPT
+        id S1726766AbgDFJDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:01:53 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42532 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726533AbgDFJBx (ORCPT
+        Mon, 6 Apr 2020 05:03:01 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:51627 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726684AbgDFJDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:01:53 -0400
-Received: by mail-io1-f68.google.com with SMTP id y17so12843583iow.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 02:01:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pPm6etZ3DUUwdeDCq5weBWVRzrJKUcDMh1m6LaRUmg0=;
-        b=RO6bTnl9ZO8chRFxwBeCgpSPjiaXGSo/VIogGReccYaReJrAqlGbeuPXi1/pb4+D//
-         8TT4Lv9F13EkLo1Gwk60cf0zhFjSrwuT6Ul+RFDalmwEh5ktCIw1nTvXsuLpMcrx2nGg
-         CIbYnUxlAtzBZ1ZjFl3/iLVRzXV0p27M19WUsjeJn29dtx1eNTXiDnapuGtguKXqBW0r
-         4S8aYm8e1cLhhM9agl0Z7zlIiq4GkfmWD+QWL/js/9UrbZ+Rnrhunypu3uGV7EB2oSN5
-         Vg3wtiIIjMH+vQOajOslPnZDUii4fDuMSTIzExnmx3lbfIYqMFIyRIS4LxBIsYwoaBVR
-         iaWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pPm6etZ3DUUwdeDCq5weBWVRzrJKUcDMh1m6LaRUmg0=;
-        b=APTy7r2ngT0t0JX+4MrUrREf6jt3Gwj14LPZ2TD6nbY2Df5QWmR41nmB8zBs0IgGXp
-         HlN1GSclgM1FlSflhobEzh17E+vTSr8sGSbHvGmGTyn9D/FigsGYwTkazLLbvm/LkllR
-         E/ewep9NLhzd5TPmDSbYz3s1m5NHSCumQXhSWNWh4+/1U8f9o62QFJwBZGJZJpDBpM4r
-         Y6g+4T1Kn1ZKKnz8ZXBu69rZHluXXJLNulYdRIpIfvYVdsUOgzpz62KZGW9TDvmDabtr
-         /CFQnD5ThsIaQH3vEmAk8Qn+43I4IkQnTGLHvCJ5+1lm0sBIVkizO5OSmxU7FroCIF1B
-         Hi+A==
-X-Gm-Message-State: AGi0PuZgG15Dnf7SYdsKm3nkYpH6vxO++8lTXF/p9kv40UPDD1wfvE0N
-        LotEaXcIYLuTZxoBNwssGp2f+r2jaxftTkMGkxo=
-X-Google-Smtp-Source: APiQypLku0LYgnaIgBugI+M3YhMRY6xZpLQ6kvGHLYNz1gKDqsMI0LsZRNJJvk7btsnOIpyZBTM50rTOlldIgmCnN5A=
-X-Received: by 2002:a02:390b:: with SMTP id l11mr19599417jaa.111.1586163712467;
- Mon, 06 Apr 2020 02:01:52 -0700 (PDT)
+        Mon, 6 Apr 2020 05:03:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1586163780;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=7NHbB9BsfudNyev+nKE/1EJEWNA2WPr4keczYxzGBKc=;
+  b=hcunOytYs0OatDlmU2yrO/Pk1ju+t0Yp8734iREq5izwUR7qBuxklmRq
+   OEOGHX1vy0W0gDHehTCjminoSX6XBx95fu/AsJBXTaCGhVJT+T9sPFFod
+   yyoXA8lrSmLPVDpFa2W8jW5EhvaGWdasQXAOtSPusIzEHkr3HxEbS8Yvg
+   A=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: sfPgwiT0RDqtOpIx8BpsOCGBpAYrEzJ8byAffdFSgPLT9oxrM1pLGxV1YpTJCLmm+D5/KjNwTc
+ 4UshXQsueyUHBq1QxYi9jubJ5prBv2AV1sK3XdnCfpQ5nvwcoAgTHamzh1kzvb9Msqal7Yq7ju
+ qkhW17FkqJq6jUNmkeLMrG3DrtG4VCWd4pl8ZCS6WZTcR9wCZPK+yuKDj30clW5wGNYiAOrJNF
+ kaoORMq+5pf6CxfxkMZjiwGVrinU52Ub1BjdqlJR6wPq5FyizUbdSQa9w4AHuCK67Qe5lhHDdp
+ LIU=
+X-SBRS: 2.7
+X-MesageID: 15445372
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,350,1580792400"; 
+   d="scan'208";a="15445372"
+Date:   Mon, 6 Apr 2020 11:02:50 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Juergen Gross <jgross@suse.com>
+CC:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, <stable@vger.kernel.org>
+Subject: Re: [PATCH] xen/blkfront: fix memory allocation flags in
+ blkfront_setup_indirect()
+Message-ID: <20200406090250.GX28601@Air-de-Roger>
+References: <20200403090034.8753-1-jgross@suse.com>
 MIME-Version: 1.0
-References: <d4a96597-6704-3030-b936-6282f0994f09@web.de> <CAJRQjofnnhzOp4yis=sL85ESDvNApXHL3dpv6T1NJL-Wh0OOfA@mail.gmail.com>
-In-Reply-To: <CAJRQjofnnhzOp4yis=sL85ESDvNApXHL3dpv6T1NJL-Wh0OOfA@mail.gmail.com>
-From:   "Oliver O'Halloran" <oohall@gmail.com>
-Date:   Mon, 6 Apr 2020 19:01:41 +1000
-Message-ID: <CAOSf1CGLZ5H1cUsv6atZ7hNpQ+PDyyAjp6dzJjXMwC5XoUOVQQ@mail.gmail.com>
-Subject: Re: [PATCH v3] powerpc/powernv: add NULL check after kzalloc in opal_add_one_export
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200403090034.8753-1-jgross@suse.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 11:15 AM Qiujun Huang <hqjagain@gmail.com> wrote:
->
-> On Mon, Apr 6, 2020 at 3:06 AM Markus Elfring <Markus.Elfring@web.de> wro=
-te:
-> >
-> > > Here needs a NULL check.
-> quite obvious?
-> >
-> > I find this change description questionable
-> > (despite of a reasonable patch subject).
-> >
-> >
-> > > Issue found by coccinelle.
-> >
-> > Would an information like =E2=80=9CGenerated by: scripts/coccinelle/nul=
-l/kmerr.cocci=E2=80=9D
-> > be nicer?
-> Yeah, but I think It was enough.
+On Fri, Apr 03, 2020 at 11:00:34AM +0200, Juergen Gross wrote:
+> Commit 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for
+> large array allocation") didn't fix the issue it was meant to, as the
+> flags for allocating the memory are GFP_NOIO, which will lead the
+> memory allocation falling back to kmalloc().
+> 
+> So instead of GFP_NOIO use GFP_KERNEL and do all the memory allocation
+> in blkfront_setup_indirect() in a memalloc_noio_{save,restore} section.
+> 
+> Fixes: 1d5c76e664333 ("xen-blkfront: switch kcalloc to kvcalloc for large array allocation")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Juergen Gross <jgross@suse.com>
 
-I didn't know we had that script in the kernel tree so I think it's a
-good to mention that you used it. It might even help idiots like me
-who write this sort of bug.
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
 
-> > Will a patch change log be helpful here?
-> I realized I should write some change log, and the change log was meaning=
-less.
-> So I left it blank.
-
-The changelog is fine IMO. The point of a changelog is to tell a
-reader doing git archeology why a change happened and this is
-sufficent for that.
-
-Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
+Thanks!
