@@ -2,524 +2,124 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB14C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43940C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3C624938
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B35024939
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:11:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="rtf2VHYx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrynkiAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbgDFQLH (ORCPT
+        id S1729400AbgDFQLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:11:07 -0400
-Received: from mail-eopbgr680050.outbound.protection.outlook.com ([40.107.68.50]:7030
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728707AbgDFQLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:11:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=auCv+cIZq6k3EkxYOTKDWafLqE9a+qKb9YNt99mZsYhYTiRuv9Lr86kmWc3nnTaKaBrhDcwkZPrfC1olf8ECIZyun1WsOVM3RDmrn+XhMINp+g4Duontqc21aAfzJ9UYmYo7t/YEEyfMyHW9+LynqfGQnCtTtVfmC8PRtMW2377Q36UPCMB2ae0ZAguedFQxEAilVzO1acoznJ9wdIRLNgPm5wqY9r9acn5e3jw+nlEMIOmqocdcJf/1Od2o5wAkkABxPEAbe1AZxb2aW0WT+b8M43pw7pI21MUO5f/h5D/Wsjcf0ibSt3cyEtBgEntbpDLU14zty7infk9DsYcIpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ARHG6MhaYb6uzELiwv1wy5e8PYJfBq2f2KwOW2yWW2Y=;
- b=bx5dpx7MmMtPrwMbXQboh3zG7gSwkPf+uf+WZ8wVGnvQCCuJjuUoF2rdq6oX+ZmdSGOjOD8nLx5e8l/3k7n18yOtuJ2DZy55XhrGUP7e2HxfbXCEX8ghWlpbF771vTIV0Y3joIXTJo1Rt6dwXDeaUzcxcqD2Y00AlGizYOqmNh+fYx1rVctNunBhXOZRY9NGpyvUKQaejFFH/lNutIpRhyn4ROyvUkO7jUwfR4tN4RDqXlsVaJqZ54FTM/LyqjCeAZrzyIroE3C6DYNd6cxEgeiQDOpdDHJ5SBQZE1UPmDKaqVT6RfQLPYuj/PToxn1iBWmu6vZBv3IEh7W7x7IxsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 6 Apr 2020 12:11:37 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35729 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728707AbgDFQLg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:11:36 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r17so8755304lff.2;
+        Mon, 06 Apr 2020 09:11:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ARHG6MhaYb6uzELiwv1wy5e8PYJfBq2f2KwOW2yWW2Y=;
- b=rtf2VHYxUH8bE+1cAfqpZ7naj1xRGejDy+Ds4WNnZaSVwqpXtZMdtGqwQDJ/u9kfjoMTt7Mml0yE7l+AV2s6kObIZPDhcOsGjvx4DUMyNrT+kHqzw+aOxi8TZEzWIu9RlpHZF1pywXL5xSlNE8SPh6HP0R1OHFffma7ifbwdRq8=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Felix.Kuehling@amd.com; 
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
- by SN1PR12MB2575.namprd12.prod.outlook.com (2603:10b6:802:25::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Mon, 6 Apr
- 2020 16:09:26 +0000
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::38ef:1510:9525:f806]) by SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::38ef:1510:9525:f806%7]) with mapi id 15.20.2878.018; Mon, 6 Apr 2020
- 16:09:26 +0000
-Subject: Re: [PATCH 4/6] kernel: move use_mm/unuse_mm to kthread.c
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200404094101.672954-1-hch@lst.de>
- <20200404094101.672954-5-hch@lst.de>
-From:   Felix Kuehling <felix.kuehling@amd.com>
-Message-ID: <86ab9f2f-4081-ebd6-790d-9b334db998c1@amd.com>
-Date:   Mon, 6 Apr 2020 12:09:22 -0400
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qhOUGpjPKASmxoCysFaxbtOB2AHvvFDFpDiOJXOBlNo=;
+        b=UrynkiAylxjENx/BTXAnxsXfsPXLlbFbVf9NAYsIXircg3qbDqGgXpl0Agz7FjWxYV
+         o23532+gFX5nUrvt45ZV+JltPlf69OMbNpqjzTuosCOt+1TThYRgyYXYgYMkj+bUQNsG
+         C69GB+hmlKc3cCgePelBhWBhuChb5+qwFpoG4xSqLYRjBNPx6x+CFL965NRxL6Us8zd4
+         Wf/pi01y6+iKV4sj4gOGgXO+LjmCb6gg+SeknB1wc28TVxBs8RbprSXCBwbecK0DCmuy
+         PR1s0hQt4uSC473SJAESyeCrMUqIFMusJ/MdF888X8m4l9XMR0JNA8DN1/oIaDaGHcDb
+         w/cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qhOUGpjPKASmxoCysFaxbtOB2AHvvFDFpDiOJXOBlNo=;
+        b=SyVsXx2wOx8e6TxCr7c4OkNuOUldRLwD8Z5UcQzotf3BSofN0+UaVW3ir/sPbcY4yY
+         rSTbBJNEsDm91I4LlOgSDKnXMxl9brXyHwsl4gJuTG4B3FJ123pXCWKOmj9gwOy9r8FQ
+         eXLQXCLorQjFY61mMwXKsA6KMgJKe9RxTvqstbcRDpJVeCgCPtO8m2LeZwT5Xd2Wiyct
+         leNygLt8hyJDUvd9OFOmVKOEZV3YpS4UITRSXHPRj7hJ/Q+nVKdaTFkvKQaYwilEKZ/6
+         gN8KtCa5FxOD9KHG3h67I8igd0HsD4vANE/nNnYdUfSEv9AuMqXIs5FuesBY1wBcaLed
+         BXZw==
+X-Gm-Message-State: AGi0PuZFjZi1OYxPf1OvTmPLtMfiWqHeROEBCaLGnXMYkH92axsYZqSo
+        nea+beupW+tVkcZQoaP8eTCrZTG1
+X-Google-Smtp-Source: APiQypJjSmNNCPDM8/uvaTTUFwGwmlSABQOaKn62Vzpr2BzuKzoLuemeS08xNpG1PBcFQFtRQNlQHQ==
+X-Received: by 2002:a05:6512:686:: with SMTP id t6mr14141091lfe.163.1586189492891;
+        Mon, 06 Apr 2020 09:11:32 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id o18sm1360571lfb.13.2020.04.06.09.11.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 09:11:31 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <40102767-ecdb-e958-66f4-45d11464069c@gmail.com>
+ <b7b77258-6309-7ed2-489d-337cf273ba1e@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <6014fee9-ce97-7ced-f2ba-82176b8b36db@gmail.com>
+Date:   Mon, 6 Apr 2020 19:11:30 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200404094101.672954-5-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: YQBPR0101CA0043.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:1::20) To SN1PR12MB2414.namprd12.prod.outlook.com
- (2603:10b6:802:2e::31)
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.2.100] (142.116.63.128) by YQBPR0101CA0043.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c00:1::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 16:09:24 +0000
-X-Originating-IP: [142.116.63.128]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5fb951dd-8f84-4d1a-87f8-08d7da44e0a5
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2575:|SN1PR12MB2575:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2575845BB857C9C4DBD9377392C20@SN1PR12MB2575.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0365C0E14B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(346002)(136003)(366004)(39860400002)(376002)(16576012)(54906003)(110136005)(86362001)(31696002)(4326008)(8676002)(52116002)(81156014)(30864003)(81166006)(8936002)(6486002)(44832011)(2616005)(66476007)(316002)(478600001)(956004)(2906002)(36756003)(66556008)(31686004)(5660300002)(7416002)(186003)(16526019)(26005)(66946007);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: L2x+HwF0/Us/K1rnBuIZqefqX2sfAhTTJFHnx6Rs0ABtNhc0vKwmf+EpwRuctRF1NaNYBWZdJjl/Vnqk5mLcTRY7/gWgaxOGUoR/zvUAIeJjMsQbUeM+yJa5+lbz+IJ9O3xIEISrf5OSwrLjrPLFC19pNika9SqbZ+o0xt27UxlRld7X6hl68CHFptb1pMDBKtPWJVfUjovEOjW+4Tjoo6OsSciRWtF58+P0FEYCFZiGLpL33uFCydaQK6PPY8mLwz+xAc/Hpq+ySDWtYpO9BKZabmFqN6ycj0BzNvj39BC431nEkHBgXZyBuEaGCZyczeublZtwqayx0WQokW2ItEpy8bogAStYAjuq6bt+iqTGJfy4KJ5s4fsi0K7C2Pi72tWwTfZO5WaERAJNk+xD3JoTvisBd+kTp/nsUkd3NAZlDtvvnLW3UQgRJp6vMAvW
-X-MS-Exchange-AntiSpam-MessageData: 2Wzqkgs4CauDpddiQPvt7h7UU1WILTmT61mxeDGEDNK1DCfOnNMjo/4+NoC9MO+ICIFgfnpavRHsDIuDawqyITxcjTqXElRXcs7Ur9NTh2lSGuaHR2zjCX9bLkr8Ekav/DHrJBFmSDNZOvna/T3anQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fb951dd-8f84-4d1a-87f8-08d7da44e0a5
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 16:09:26.0428
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GjScqc1PJNAKsTkMraH8OqxF1ZWhCMngdr6OmZKilOV2JHlM15NzxGZ0Ll4+3akfOvnpuk38ycGtitf8QUM/SA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2575
+In-Reply-To: <b7b77258-6309-7ed2-489d-337cf273ba1e@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-04 um 5:40 a.m. schrieb Christoph Hellwig:
-> These helpers are only for use with kernel threads, and I will tie them
-> more into the kthread infrastructure going forward.  Also move the
-> prototypes to kthread.h - mmu_context.h was a little weird to start with
-> as it otherwise contains very low-level MM bits.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+06.04.2020 18:41, Sowjanya Komatineni пишет:
+> 
+> On 4/5/20 2:11 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 04.04.2020 04:25, Sowjanya Komatineni пишет:
+>> ...
+>>> +static int tegra_vi_tpg_channels_alloc(struct tegra_vi *vi)
+>>> +{
+>>> +     struct tegra_vi_channel *chan, *tmp;
+>>> +     unsigned int port_num;
+>>> +     unsigned int nchannels = vi->soc->vi_max_channels;
+>>> +     int ret = 0;
+>>> +
+>>> +     for (port_num = 0; port_num < nchannels; port_num++) {
+>>> +             /*
+>>> +              * Do not use devm_kzalloc as memory is freed immediately
+>>> +              * when device instance is unbound but application
+>>> might still
+>>> +              * be holding the device node open. Channel memory
+>>> allocated
+>>> +              * with kzalloc is freed during video device release
+>>> callback.
+>>> +              */
+>>> +             chan = kzalloc(sizeof(*chan), GFP_KERNEL);
+>> Why anyone would want to unbind this driver in practice?
+>>
+>> I think it should make more sense to set suppress_bind_attrs=true.
+> 
+> From the previous feedback of patch series, we need to support
+> unbind/bind and looks like this driver should also support to built as a
+> module.
 
-Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+If module unloading is also affected, then perhaps you should use
+get/put_device() to not allow freeing the resources until they're still
+in-use.
 
-Thanks for cleaning up the unnecessary includes in amdgpu.
-
-Regards,
-  Felix
-
-
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h    |  1 +
->  .../drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c   |  1 -
->  .../drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c    |  1 -
->  .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c |  2 -
->  .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c |  2 -
->  .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c |  2 -
->  drivers/gpu/drm/i915/gvt/kvmgt.c              |  2 +-
->  drivers/usb/gadget/function/f_fs.c            |  2 +-
->  drivers/usb/gadget/legacy/inode.c             |  2 +-
->  drivers/vhost/vhost.c                         |  1 -
->  fs/aio.c                                      |  1 -
->  fs/io-wq.c                                    |  1 -
->  fs/io_uring.c                                 |  1 -
->  include/linux/kthread.h                       |  5 ++
->  include/linux/mmu_context.h                   |  5 --
->  kernel/kthread.c                              | 56 ++++++++++++++++
->  mm/Makefile                                   |  2 +-
->  mm/mmu_context.c                              | 64 -------------------
->  18 files changed, 66 insertions(+), 85 deletions(-)
->  delete mode 100644 mm/mmu_context.c
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-> index 4db143c19dcc..bce5e93fefc8 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-> @@ -27,6 +27,7 @@
->  
->  #include <linux/types.h>
->  #include <linux/mm.h>
-> +#include <linux/kthread.h>
->  #include <linux/workqueue.h>
->  #include <kgd_kfd_interface.h>
->  #include <drm/ttm/ttm_execbuf_util.h>
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c
-> index 6529caca88fe..35d4a5ab0228 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_arcturus.c
-> @@ -22,7 +22,6 @@
->  #include <linux/module.h>
->  #include <linux/fdtable.h>
->  #include <linux/uaccess.h>
-> -#include <linux/mmu_context.h>
->  #include <linux/firmware.h>
->  #include "amdgpu.h"
->  #include "amdgpu_amdkfd.h"
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c
-> index 4ec6d0c03201..b1655054b919 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v10.c
-> @@ -19,7 +19,6 @@
->   * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->   * OTHER DEALINGS IN THE SOFTWARE.
->   */
-> -#include <linux/mmu_context.h>
->  #include "amdgpu.h"
->  #include "amdgpu_amdkfd.h"
->  #include "gc/gc_10_1_0_offset.h"
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c
-> index 0b7e78748540..7d01420c0c85 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c
-> @@ -20,8 +20,6 @@
->   * OTHER DEALINGS IN THE SOFTWARE.
->   */
->  
-> -#include <linux/mmu_context.h>
-> -
->  #include "amdgpu.h"
->  #include "amdgpu_amdkfd.h"
->  #include "cikd.h"
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c
-> index ccd635b812b5..635cd1a26bed 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c
-> @@ -20,8 +20,6 @@
->   * OTHER DEALINGS IN THE SOFTWARE.
->   */
->  
-> -#include <linux/mmu_context.h>
-> -
->  #include "amdgpu.h"
->  #include "amdgpu_amdkfd.h"
->  #include "gfx_v8_0.h"
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c
-> index df841c2ac5e7..c7fd0c47b254 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c
-> @@ -19,8 +19,6 @@
->   * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->   * OTHER DEALINGS IN THE SOFTWARE.
->   */
-> -#include <linux/mmu_context.h>
-> -
->  #include "amdgpu.h"
->  #include "amdgpu_amdkfd.h"
->  #include "gc/gc_9_0_offset.h"
-> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> index 5848400620b4..dee01c371bf5 100644
-> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> @@ -31,7 +31,7 @@
->  #include <linux/init.h>
->  #include <linux/device.h>
->  #include <linux/mm.h>
-> -#include <linux/mmu_context.h>
-> +#include <linux/kthread.h>
->  #include <linux/sched/mm.h>
->  #include <linux/types.h>
->  #include <linux/list.h>
-> diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-> index c81023b195c3..c57b1b2507c6 100644
-> --- a/drivers/usb/gadget/function/f_fs.c
-> +++ b/drivers/usb/gadget/function/f_fs.c
-> @@ -32,7 +32,7 @@
->  #include <linux/usb/functionfs.h>
->  
->  #include <linux/aio.h>
-> -#include <linux/mmu_context.h>
-> +#include <linux/kthread.h>
->  #include <linux/poll.h>
->  #include <linux/eventfd.h>
->  
-> diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
-> index aa0de9e35afa..8b5233888bf8 100644
-> --- a/drivers/usb/gadget/legacy/inode.c
-> +++ b/drivers/usb/gadget/legacy/inode.c
-> @@ -21,7 +21,7 @@
->  #include <linux/sched.h>
->  #include <linux/slab.h>
->  #include <linux/poll.h>
-> -#include <linux/mmu_context.h>
-> +#include <linux/kthread.h>
->  #include <linux/aio.h>
->  #include <linux/uio.h>
->  #include <linux/refcount.h>
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index f44340b41494..4e9ce54869af 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -14,7 +14,6 @@
->  #include <linux/vhost.h>
->  #include <linux/uio.h>
->  #include <linux/mm.h>
-> -#include <linux/mmu_context.h>
->  #include <linux/miscdevice.h>
->  #include <linux/mutex.h>
->  #include <linux/poll.h>
-> diff --git a/fs/aio.c b/fs/aio.c
-> index 5f3d3d814928..328829f0343b 100644
-> --- a/fs/aio.c
-> +++ b/fs/aio.c
-> @@ -27,7 +27,6 @@
->  #include <linux/file.h>
->  #include <linux/mm.h>
->  #include <linux/mman.h>
-> -#include <linux/mmu_context.h>
->  #include <linux/percpu.h>
->  #include <linux/slab.h>
->  #include <linux/timer.h>
-> diff --git a/fs/io-wq.c b/fs/io-wq.c
-> index cc5cf2209fb0..c49c2bdbafb5 100644
-> --- a/fs/io-wq.c
-> +++ b/fs/io-wq.c
-> @@ -10,7 +10,6 @@
->  #include <linux/errno.h>
->  #include <linux/sched/signal.h>
->  #include <linux/mm.h>
-> -#include <linux/mmu_context.h>
->  #include <linux/sched/mm.h>
->  #include <linux/percpu.h>
->  #include <linux/slab.h>
-> diff --git a/fs/io_uring.c b/fs/io_uring.c
-> index 358f97be9c7b..27a4ecb724ca 100644
-> --- a/fs/io_uring.c
-> +++ b/fs/io_uring.c
-> @@ -55,7 +55,6 @@
->  #include <linux/fdtable.h>
->  #include <linux/mm.h>
->  #include <linux/mman.h>
-> -#include <linux/mmu_context.h>
->  #include <linux/percpu.h>
->  #include <linux/slab.h>
->  #include <linux/kthread.h>
-> diff --git a/include/linux/kthread.h b/include/linux/kthread.h
-> index 8bbcaad7ef0f..c2d40c9672d6 100644
-> --- a/include/linux/kthread.h
-> +++ b/include/linux/kthread.h
-> @@ -5,6 +5,8 @@
->  #include <linux/err.h>
->  #include <linux/sched.h>
->  
-> +struct mm_struct;
-> +
->  __printf(4, 5)
->  struct task_struct *kthread_create_on_node(int (*threadfn)(void *data),
->  					   void *data,
-> @@ -198,6 +200,9 @@ bool kthread_cancel_delayed_work_sync(struct kthread_delayed_work *work);
->  
->  void kthread_destroy_worker(struct kthread_worker *worker);
->  
-> +void use_mm(struct mm_struct *mm);
-> +void unuse_mm(struct mm_struct *mm);
-> +
->  struct cgroup_subsys_state;
->  
->  #ifdef CONFIG_BLK_CGROUP
-> diff --git a/include/linux/mmu_context.h b/include/linux/mmu_context.h
-> index d9a543a9e1cc..c51a84132d7c 100644
-> --- a/include/linux/mmu_context.h
-> +++ b/include/linux/mmu_context.h
-> @@ -4,11 +4,6 @@
->  
->  #include <asm/mmu_context.h>
->  
-> -struct mm_struct;
-> -
-> -void use_mm(struct mm_struct *mm);
-> -void unuse_mm(struct mm_struct *mm);
-> -
->  /* Architectures that care about IRQ state in switch_mm can override this. */
->  #ifndef switch_mm_irqs_off
->  # define switch_mm_irqs_off switch_mm
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index bfbfa481be3a..ce4610316377 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -1,13 +1,17 @@
->  // SPDX-License-Identifier: GPL-2.0-only
->  /* Kernel thread helper functions.
->   *   Copyright (C) 2004 IBM Corporation, Rusty Russell.
-> + *   Copyright (C) 2009 Red Hat, Inc.
->   *
->   * Creation is done via kthreadd, so that we get a clean environment
->   * even if we're invoked from userspace (think modprobe, hotplug cpu,
->   * etc.).
->   */
->  #include <uapi/linux/sched/types.h>
-> +#include <linux/mm.h>
-> +#include <linux/mmu_context.h>
->  #include <linux/sched.h>
-> +#include <linux/sched/mm.h>
->  #include <linux/sched/task.h>
->  #include <linux/kthread.h>
->  #include <linux/completion.h>
-> @@ -25,6 +29,7 @@
->  #include <linux/numa.h>
->  #include <trace/events/sched.h>
->  
-> +
->  static DEFINE_SPINLOCK(kthread_create_lock);
->  static LIST_HEAD(kthread_create_list);
->  struct task_struct *kthreadd_task;
-> @@ -1203,6 +1208,57 @@ void kthread_destroy_worker(struct kthread_worker *worker)
->  }
->  EXPORT_SYMBOL(kthread_destroy_worker);
->  
-> +/*
-> + * use_mm
-> + *	Makes the calling kernel thread take on the specified
-> + *	mm context.
-> + *	(Note: this routine is intended to be called only
-> + *	from a kernel thread context)
-> + */
-> +void use_mm(struct mm_struct *mm)
-> +{
-> +	struct mm_struct *active_mm;
-> +	struct task_struct *tsk = current;
-> +
-> +	task_lock(tsk);
-> +	active_mm = tsk->active_mm;
-> +	if (active_mm != mm) {
-> +		mmgrab(mm);
-> +		tsk->active_mm = mm;
-> +	}
-> +	tsk->mm = mm;
-> +	switch_mm(active_mm, mm, tsk);
-> +	task_unlock(tsk);
-> +#ifdef finish_arch_post_lock_switch
-> +	finish_arch_post_lock_switch();
-> +#endif
-> +
-> +	if (active_mm != mm)
-> +		mmdrop(active_mm);
-> +}
-> +EXPORT_SYMBOL_GPL(use_mm);
-> +
-> +/*
-> + * unuse_mm
-> + *	Reverses the effect of use_mm, i.e. releases the
-> + *	specified mm context which was earlier taken on
-> + *	by the calling kernel thread
-> + *	(Note: this routine is intended to be called only
-> + *	from a kernel thread context)
-> + */
-> +void unuse_mm(struct mm_struct *mm)
-> +{
-> +	struct task_struct *tsk = current;
-> +
-> +	task_lock(tsk);
-> +	sync_mm_rss(mm);
-> +	tsk->mm = NULL;
-> +	/* active_mm is still 'mm' */
-> +	enter_lazy_tlb(mm, tsk);
-> +	task_unlock(tsk);
-> +}
-> +EXPORT_SYMBOL_GPL(unuse_mm);
-> +
->  #ifdef CONFIG_BLK_CGROUP
->  /**
->   * kthread_associate_blkcg - associate blkcg to current kthread
-> diff --git a/mm/Makefile b/mm/Makefile
-> index dbc8346d16ca..0af4ee81aed2 100644
-> --- a/mm/Makefile
-> +++ b/mm/Makefile
-> @@ -41,7 +41,7 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
->  			   maccess.o page-writeback.o \
->  			   readahead.o swap.o truncate.o vmscan.o shmem.o \
->  			   util.o mmzone.o vmstat.o backing-dev.o \
-> -			   mm_init.o mmu_context.o percpu.o slab_common.o \
-> +			   mm_init.o percpu.o slab_common.o \
->  			   compaction.o vmacache.o \
->  			   interval_tree.o list_lru.o workingset.o \
->  			   debug.o gup.o $(mmu-y)
-> diff --git a/mm/mmu_context.c b/mm/mmu_context.c
-> deleted file mode 100644
-> index 3e612ae748e9..000000000000
-> --- a/mm/mmu_context.c
-> +++ /dev/null
-> @@ -1,64 +0,0 @@
-> -/* Copyright (C) 2009 Red Hat, Inc.
-> - *
-> - * See ../COPYING for licensing terms.
-> - */
-> -
-> -#include <linux/mm.h>
-> -#include <linux/sched.h>
-> -#include <linux/sched/mm.h>
-> -#include <linux/sched/task.h>
-> -#include <linux/mmu_context.h>
-> -#include <linux/export.h>
-> -
-> -#include <asm/mmu_context.h>
-> -
-> -/*
-> - * use_mm
-> - *	Makes the calling kernel thread take on the specified
-> - *	mm context.
-> - *	(Note: this routine is intended to be called only
-> - *	from a kernel thread context)
-> - */
-> -void use_mm(struct mm_struct *mm)
-> -{
-> -	struct mm_struct *active_mm;
-> -	struct task_struct *tsk = current;
-> -
-> -	task_lock(tsk);
-> -	active_mm = tsk->active_mm;
-> -	if (active_mm != mm) {
-> -		mmgrab(mm);
-> -		tsk->active_mm = mm;
-> -	}
-> -	tsk->mm = mm;
-> -	switch_mm(active_mm, mm, tsk);
-> -	task_unlock(tsk);
-> -#ifdef finish_arch_post_lock_switch
-> -	finish_arch_post_lock_switch();
-> -#endif
-> -
-> -	if (active_mm != mm)
-> -		mmdrop(active_mm);
-> -}
-> -EXPORT_SYMBOL_GPL(use_mm);
-> -
-> -/*
-> - * unuse_mm
-> - *	Reverses the effect of use_mm, i.e. releases the
-> - *	specified mm context which was earlier taken on
-> - *	by the calling kernel thread
-> - *	(Note: this routine is intended to be called only
-> - *	from a kernel thread context)
-> - */
-> -void unuse_mm(struct mm_struct *mm)
-> -{
-> -	struct task_struct *tsk = current;
-> -
-> -	task_lock(tsk);
-> -	sync_mm_rss(mm);
-> -	tsk->mm = NULL;
-> -	/* active_mm is still 'mm' */
-> -	enter_lazy_tlb(mm, tsk);
-> -	task_unlock(tsk);
-> -}
-> -EXPORT_SYMBOL_GPL(unuse_mm);
+I suppose that it should be up to the V4L core to keep the device alive
+while needed, rather than to put the burden to the individual drivers.
