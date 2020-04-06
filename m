@@ -2,78 +2,99 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91155C2BABC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CBCC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 730A0206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA3B206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:45:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKWwlFiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgDFSpL (ORCPT
+        id S1726386AbgDFSp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:45:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44238 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbgDFSpK (ORCPT
+        Mon, 6 Apr 2020 14:45:27 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34026 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgDFSp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:45:10 -0400
-Received: from mail-lj1-f200.google.com ([209.85.208.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <guilherme.piccoli@canonical.com>)
-        id 1jLWk8-0006QF-7M
-        for linux-kernel@vger.kernel.org; Mon, 06 Apr 2020 18:45:08 +0000
-Received: by mail-lj1-f200.google.com with SMTP id k26so2153933lji.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:45:08 -0700 (PDT)
+        Mon, 6 Apr 2020 14:45:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id l14so428689pgb.1;
+        Mon, 06 Apr 2020 11:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/1DPYFqAeGE+UCkdCXoyPwx1w0eifFPE8zzU1CMzhOQ=;
+        b=hKWwlFiDELsryAnxzd68vIeOzEQrdoqEl+IlUclRCJCQFqwobsWYl7DAEz5sTUgHev
+         5WYzJRLB4rmo3X1+ChPvAkQZNyYo5OK81AxbYTgBhFzjhBTPHJC+8mOuhjc/0IWVi9ZH
+         c5aKR1HP/j6hheiTxmN+hE3TBNdU4/FCHRrUP5cz/uZ1NH6EAN0H+Iduo9Lgippyduq+
+         sRc5jt6pN41X16LBSrA89cba6n9cB7yP4rUkjUnmDZA11SeVlxach34+KwjK+Oor1LwT
+         tKh4dw14UKLG3eGVxDZmtsQkt30lgXiNI6eoMvFCsKRsfp3pEvpHTJqzxSUGvx9qQ+e9
+         MSuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=35u7sIzL2v+ZtiB13vYxkmAljAmMWY1VBaJPchGChPU=;
-        b=f0o6QM+EKngriQ7mixOqw9pHRhM3SJVJ6wxvVr6kO52WHFuYeKUXuDZdgMfzJV1cyH
-         YWCGnIsg2cfO69calM+Ugy2VEn66uJ7fCbY7ri7Pv5HFxZF4oEcr8KxJIREj/PKm/utb
-         2F3aEuB2/jzaL8X11gZumXKVeJ2ZHfVRBOmhcOcFTEZk7Qm83hkyWNVlHZV+d6sgNDSD
-         +xnVkF98fAQNmCa3xhEdhj+SoPZgeOHL40UQFBCrKFS7jqMkfn7Zmv4/XbCosYz7l8fY
-         IqubeIJqE03ZTmmoiyzzZjuxxYMcXlRgP4xqsdEbC1rZuRZ5OFNJvmSuqG7S2TQmiEku
-         43LA==
-X-Gm-Message-State: AGi0PuaHQWtBSI9pfyRjV9OruIN8HevlPfdHWc4QV/EGrXXwgThsHLhL
-        wKhMYJpNoPFvmQyhDjmqklWNfbFp5gUZXZJ8ACmRI3EPhKqlusdhQbcLfkyIij3as1RkvJZkv7z
-        6lJYDCd12l7VyCsAZZDwMEw4dQjeshL4sujgkqMBmU3JoCQ1c/yhcJbiB8g==
-X-Received: by 2002:a2e:85c6:: with SMTP id h6mr388501ljj.218.1586198707559;
-        Mon, 06 Apr 2020 11:45:07 -0700 (PDT)
-X-Google-Smtp-Source: APiQypIfgUD0+Npj1fpuxcNsRprQ6GCvlWvrh7CigDE9Ba3M6ZRRFnD0WowMDyU8FhSHaePkKFsdLtJmDNIULbInyv4=
-X-Received: by 2002:a2e:85c6:: with SMTP id h6mr388490ljj.218.1586198707394;
- Mon, 06 Apr 2020 11:45:07 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/1DPYFqAeGE+UCkdCXoyPwx1w0eifFPE8zzU1CMzhOQ=;
+        b=a0WOm3jaaqx0yLyj3mqHe/tz2ER2gn5mOyssv8e1DpnAGhmdfO6Nu8az6NN+9TS2kv
+         gWs9XhP3zvoIaDyZkxc24LhTFR4R73rxkT8Lvzb3IKlloYbZ2MYoxDyC35B5qwel6Lpi
+         ED2cBzjP4WMR29D+0D0z4lMI2PoxEMVX6F179yAT8QiNJxz+z/h4PROhHl2ysQGrGgWQ
+         5C4wg3qrISMUD5tZPZS8e9SCAE/ZXD2UHApPI7qgzjZQDxoMDm9oBtPRCGe/tf+IebtN
+         rPZRndY3bTGDbGl8j3wOG4ToJVu+FTsb8Y1N+mL7z5kechXxN7e8SVxp+tjTGKoDnPL8
+         4Tig==
+X-Gm-Message-State: AGi0PubiDG+Jm8646n2ed4vnv+7WLn+6KXgyB/GYetdvDP/Sc2zZ9ltF
+        RU3gebaytyW/DEQsn/tLNZg=
+X-Google-Smtp-Source: APiQypJyK7NUWrU47DEl6MuoqEoOTtj5ngNdJjMv97JA9OlH+gVQKnSW2c9KY9p3WwSdiMBgntXRPg==
+X-Received: by 2002:a63:5023:: with SMTP id e35mr467624pgb.165.1586198726005;
+        Mon, 06 Apr 2020 11:45:26 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h15sm12193700pfq.10.2020.04.06.11.45.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 11:45:25 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 11:45:23 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Sonny Sasaka <sonnysasaka@chromium.org>,
+        Alain Michaud <alainmichaud@google.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        BlueZ <linux-bluetooth@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Bluetooth: Simplify / fix return values from tk_request
+Message-ID: <20200406184523.GA49680@roeck-us.net>
+References: <20200403150236.74232-1-linux@roeck-us.net>
+ <CALWDO_WK2Vcq+92isabfsn8+=0UPoexF4pxbnEcJJPGas62-yw@mail.gmail.com>
+ <0f0ea237-5976-e56f-cd31-96b76bb03254@roeck-us.net>
+ <6456552C-5910-4D77-9607-14D9D1FA38FD@holtmann.org>
+ <CAOxioNneH_wieg39xLyBHb_E12LXiAm-uZBqvt3brdoQr0c7XQ@mail.gmail.com>
+ <40C87EEE-BE73-4B32-91AD-480112B9A2F4@holtmann.org>
 MIME-Version: 1.0
-References: <20200327223646.20779-1-gpiccoli@canonical.com>
- <d4888de4-5748-a1d0-4a45-d1ecebe6f2a9@canonical.com> <202004060854.22F15BDBF1@keescook>
- <CAHD1Q_xwR4OqsF8n3VJXknZ5QgpLWPQ3YTuztTgn0GTMR0vgKA@mail.gmail.com> <202004061136.8029EF3@keescook>
-In-Reply-To: <202004061136.8029EF3@keescook>
-From:   Guilherme Piccoli <gpiccoli@canonical.com>
-Date:   Mon, 6 Apr 2020 15:44:31 -0300
-Message-ID: <CAHD1Q_y_qzn7=skyDiFnU0cKNMEjiiNSeyK-jqy8qmEdzUKmpg@mail.gmail.com>
-Subject: Re: [PATCH V3] kernel/hung_task.c: Introduce sysctl to print all
- traces when a hung task is detected
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        mcgrof@kernel.org, Iurii Zaikin <yzaikin@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40C87EEE-BE73-4B32-91AD-480112B9A2F4@holtmann.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Awesome, no problem at all. And thanks for all the information and review =)
+On Mon, Apr 06, 2020 at 08:26:55PM +0200, Marcel Holtmann wrote:
+> Hi Sonny,
+> 
+> > Can this patch be merged? Or do you prefer reverting the original
+> > patch and relanding it together with the fix?
+> 
+> since the original patch is already upstream, I need a patch with Fixes etc. And a Reviewed-By from you preferably.
+> 
+
+Isn't that what I sent with https://patchwork.kernel.org/patch/11472991/ ?
+What is missing (besides Sonny's Reviewed-by: tag) ?
+
+Thanks,
+Guenter
