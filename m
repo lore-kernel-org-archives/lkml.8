@@ -2,101 +2,70 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A798CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DB9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71DAA206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586166871;
-	bh=JySuv0PudjYeh/FL38Bu9IBjCHRDdt6DoTfZ4HM5AvQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WiYPwR0UA7JG59iVUNV06QI8Z5mQQOxRoO6twbRb+MRArv/FK1xdtg2u0p+7/2MxA
-	 4TuwzawcrR8pD2HlbeBuzeNdHeZBaWcTFqe3e+0FmVvzQgHyF6TP+aXT1Cqv/PN0Sf
-	 KWrMcX88DtS//V9i2ZwPY80lYKpIPgPsqvZ0Cv4k=
+	by mail.kernel.org (Postfix) with ESMTP id 6FEB2206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgDFJya (ORCPT
+        id S1726858AbgDFJzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:54:30 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43355 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgDFJya (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:54:30 -0400
-Received: by mail-ed1-f68.google.com with SMTP id bd14so18417615edb.10;
-        Mon, 06 Apr 2020 02:54:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jq4dLklSvXAh4mHXbS3uqTp1YFNR8Y8OhfEZxV4SEp8=;
-        b=VDsECvv3dJgi/WyNSZFMnqH3tsD34fheZWAJo4vw+UFqci/Nu5BJ01uGZMnST6INBi
-         VXM7yNlHLkNJ99iLC0KHJXaN7YRq901+WLGHU1fa6Pk7zCcXy6cvcSy2TUgOqg2GhCr6
-         MNG+zcLv6GxdgGTRg78xqDlumDVA0P1vEKq9Y4VYdUtjALLaFtVGhoYIXCV33IhxhrBS
-         cuanFkxpXyYCrJ5n4nAnWBS5oIyI0u/S8qp0vhEQF0umBpMSkX98MKNT60qE7acWXtvf
-         y8kWDx6ToPNoV2vwQ8WEBoHaPNB53ERL5XmcOoo7Ymqm7OPNBFvmnX1ZTAdP45Ohr2BH
-         0/ww==
-X-Gm-Message-State: AGi0PuYvPmA4+xned3M0dvI6E48WB61LDhaB+F3ycgi8ZYQ7a2rEcSc2
-        QTucn9f1mKSktqxh+qp98UU=
-X-Google-Smtp-Source: APiQypIGsI1vy9jtZIncxZtn6HgnNsW1Vh3ZNhBDX+cUzlu30NjC5DdfbDeJxopv+1PyeG+Z0DSLcQ==
-X-Received: by 2002:a17:906:30c5:: with SMTP id b5mr21234309ejb.102.1586166868311;
-        Mon, 06 Apr 2020 02:54:28 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id y10sm2858156ejm.3.2020.04.06.02.54.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 02:54:27 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 11:54:25 +0200
-From:   'Krzysztof Kozlowski' <krzk@kernel.org>
-To:     Hyunki Koo <hyunki00.koo@samsung.com>
-Cc:     gregkh@linuxfoundation.org, 'Kukjin Kim' <kgene@kernel.org>,
-        'Jiri Slaby' <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tty: samsung_tty: 32-bit access for TX/RX hold
- registers
-Message-ID: <20200406095425.GB13565@kozik-lap>
-References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
- <CGME20200403111520epcas2p42ef81138693ffaaa281499c7a24e0e48@epcas2p4.samsung.com>
- <20200403111511.10598-1-hyunki00.koo@samsung.com>
- <20200403115941.GB29484@kozik-lap>
- <000001d60b92$2adaee50$8090caf0$@samsung.com>
+        Mon, 6 Apr 2020 05:55:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33864 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726787AbgDFJzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 05:55:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 70C75AE17;
+        Mon,  6 Apr 2020 09:55:39 +0000 (UTC)
+Date:   Mon, 6 Apr 2020 11:55:39 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Peter Zijlstra <peterz@infradead.org>, jeyu@kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        keescook@chromium.org
+Subject: Re: [PATCH] module: Harden STRICT_MODULE_RWX
+In-Reply-To: <20200403165631.hrxxm3pnzqa4vxln@treble>
+Message-ID: <alpine.LSU.2.21.2004061146590.26870@pobox.suse.cz>
+References: <20200403163716.GV20730@hirez.programming.kicks-ass.net> <20200403165631.hrxxm3pnzqa4vxln@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <000001d60b92$2adaee50$8090caf0$@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 06:35:46AM +0900, Hyunki Koo wrote:
-> On Fri, Apr 03, 2020 at 9:00: 10PM +0900, Krzysztof Kozlowski wrote:
-> > On Fri, Apr 03, 2020 at 08:15:10PM +0900, Hyunki Koo wrote:
-> > > Support 32-bit access for the TX/RX hold registers UTXH and URXH.
-> > >
-> > > This is required for some newer SoCs.
-> > >
-> > > Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-> > > ---
-> > > v2:
-> > > line 954 : change rd_regl to rd_reg in for backward compatibility.
-> > 
-> > I did not see any change around line 954 in v1... so what was it?
-> 954  line  is changed like below.
-> V1 : rd_regb --> rd_regl : we thought, this register need to change to 
-> V2: rd_regl --> rd_reg : we discuss internally, and 
-> I decided not to change  to existing devices for backward compatibility.
-> So we changed to rd_reg.
+On Fri, 3 Apr 2020, Josh Poimboeuf wrote:
 
-Thanks.
+> On Fri, Apr 03, 2020 at 06:37:16PM +0200, Peter Zijlstra wrote:
+> > +{
+> > +	int i;
+> > +
+> > +	for (i = 0; i < hdr->e_shnum; i++) {
+> > +		if (sechdrs[i].sh_flags & (SHF_EXECINSTR|SHF_WRITE))
+> > +			return -ENOEXEC;
+> 
+> I think you only want the error when both are set?
+> 
+> 		if (sechdrs[i].sh_flags & (SHF_EXECINSTR|SHF_WRITE) == (SHF_EXECINSTR|SHF_WRITE))
 
-Best regards,
-Krzysztof
+A section with SHF_EXECINSTR and SHF_WRITE but without SHF_ALLOC would be 
+strange though, no? It wouldn't be copied to the final module later 
+anyway.
 
+Looking at layout_sections()... a section with 
+SHF_EXECINSTR|SHF_WRITE|SHF_ALLOC would not be counted at all. However, 
+move_module() later copies everything with SHF_ALLOC flag to the final 
+module. If there is WXA section, there would be a bug because the 
+allocation there would not get the correct size. In that case it is 
+important to error out early as you're proposing.
+
+Am I missing something?
+
+Miroslav
