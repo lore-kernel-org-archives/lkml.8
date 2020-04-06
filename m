@@ -2,542 +2,503 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2FDC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F520C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F349022BEF
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B0E22C9E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="c8jx9ixg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ossNAa4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgDFNRa (ORCPT
+        id S1728426AbgDFNRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:17:30 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:3698 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728176AbgDFNRa (ORCPT
+        Mon, 6 Apr 2020 09:17:44 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11593 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728176AbgDFNRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:17:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586179047; x=1617715047;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=b1/um2cXTfGlOZfWUXjByE570fqVy6wo+xbh3lt8fEY=;
-  b=c8jx9ixgmS0BbkC3KRRKNXudMoHAEXCTjRpDyZzt8vzp0muONku185qL
-   cY0VIrJh172T2sciiimA+8Mo9cV1H+MsbMa3RK4u9x+ORGryb9QIKe8U/
-   LSMaN7bDOF/+5kMZXjmrp1bj6cidSDK6Xfw34hKt+daQX1xYtjB1j40Ea
-   8=;
-IronPort-SDR: PWq2+JesZJn8U1X+VjxRpmo2oWJ9fkax+ZogsFkDDpjXqly6pNgRe0JtYoV+CoqZsUpoz9bMIP
- MaKeTDHscy4w==
-X-IronPort-AV: E=Sophos;i="5.72,351,1580774400"; 
-   d="scan'208";a="25729105"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 06 Apr 2020 13:17:27 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 3CB74A1F84;
-        Mon,  6 Apr 2020 13:17:15 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:17:15 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.65) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:17:01 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 12/15] Documentation/admin-guide/mm: Add a document for DAMON
-Date:   Mon, 6 Apr 2020 15:09:35 +0200
-Message-ID: <20200406130938.14066-13-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200406130938.14066-1-sjpark@amazon.com>
-References: <20200406130938.14066-1-sjpark@amazon.com>
+        Mon, 6 Apr 2020 09:17:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8b2b900000>; Mon, 06 Apr 2020 06:16:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Apr 2020 06:17:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 06:17:41 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
+ 2020 13:17:41 +0000
+Received: from [10.2.163.253] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
+ 13:17:39 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Yang Shi" <yang.shi@linux.alibaba.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCHv2 8/8] khugepaged: Introduce 'max_ptes_shared' tunable
+Date:   Mon, 6 Apr 2020 09:17:38 -0400
+X-Mailer: MailMate (1.13.1r5680)
+Message-ID: <8C523F05-00B4-40F5-BB07-EE4AACA86E26@nvidia.com>
+In-Reply-To: <20200403112928.19742-9-kirill.shutemov@linux.intel.com>
+References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
+ <20200403112928.19742-9-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D11UWB003.ant.amazon.com (10.43.161.206) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_3C84D458-72E9-49F2-86F8-DF884C3695D6_=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586178960; bh=o7QQbEc+lcVWCXGD8rD0z686yhy4y+uZENc5OMrJ1PQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=ossNAa4BbhhggiH6Pt9mLF8KQKHM33Sb/r/p7AY5K4Gwz+I/Zho82hUwDk3Mm+/ED
+         OLVViEVeTGvWbFHTx5kBAXoQdvBKNtcXOBYlh5KTO6nqiDdbkYaJcIsrGcRp55ENml
+         0HTKZszb7I3ZTZI5W3/ttpE8SFcooIs2qT2OtsmBNm1Wv2Lx0TwiAVIfFr2MS05mNf
+         63nWm0KWunpJjt1neLCau6bvjy8sY0EDkUK4w5Q5/3fy+DuVVwOCIjNdDn7N0W4OCn
+         KvNzQtr1Jlo1vWrK4gl35MvU40svO9/ia6QgmWhKPYAeFww1bjjrQet2bf7J8QaRz5
+         m/3+y6FkH4ytg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+--=_MailMate_3C84D458-72E9-49F2-86F8-DF884C3695D6_=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This commit adds a simple document for DAMON under
-`Documentation/admin-guide/mm`.
+On 3 Apr 2020, at 7:29, Kirill A. Shutemov wrote:
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- .../admin-guide/mm/data_access_monitor.rst    | 428 ++++++++++++++++++
- Documentation/admin-guide/mm/index.rst        |   1 +
- 2 files changed, 429 insertions(+)
- create mode 100644 Documentation/admin-guide/mm/data_access_monitor.rst
+> External email: Use caution opening links or attachments
+>
+>
+> ``max_ptes_shared`` speicies how many pages can be shared across multip=
+le
 
-diff --git a/Documentation/admin-guide/mm/data_access_monitor.rst b/Documentation/admin-guide/mm/data_access_monitor.rst
-new file mode 100644
-index 000000000000..95099ba4e8b5
---- /dev/null
-+++ b/Documentation/admin-guide/mm/data_access_monitor.rst
-@@ -0,0 +1,428 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+DAMON: Data Access MONitor
-+==========================
-+
-+Introduction
-+============
-+
-+Memory management decisions can be improved if finer data access information is
-+available.  However, because such finer information usually comes with higher
-+overhead, most systems including Linux forgives the potential benefit and rely
-+on only coarse information or some light-weight heuristics.
-+
-+A number of data access pattern awared memory management optimizations
-+consistently say the potential benefit is not small (2.55x speedup).  However,
-+none of those has successfully adopted into into the Linux kernel mainly due to
-+the absence of a scalable and efficient data access monitoring mechanism.
-+
-+DAMON is a data access monitoring subsystem for the problem.  It is 1) accurate
-+enough to be used for the DRAM level memory management, 2) light-weight enough
-+to be applied online, and 3) keeps predefined upper-bound overhead
-+regardless of the size of target workloads (thus scalable).
-+
-+DAMON is implemented as a standalone kernel module and provides several simple
-+interfaces.  Owing to that, though it has mainly designed for the kernel's
-+memory management mechanisms, it can be also used for a wide range of user
-+space programs and people.
-+
-+
-+Frequently Asked Questions
-+==========================
-+
-+Q: Why not integrated with perf?
-+A: From the perspective of perf like profilers, DAMON can be thought of as a
-+data source in kernel, like tracepoints, pressure stall information (psi), or
-+idle page tracking.  Thus, it can be easily integrated with those.  However,
-+this patchset doesn't provide a fancy perf integration because current step of
-+DAMON development is focused on its core logic only.  That said, DAMON already
-+provides two interfaces for user space programs, which based on debugfs and
-+tracepoint, respectively.  Using the tracepoint interface, you can use DAMON
-+with perf.  This patchset also provides the debugfs interface based user space
-+tool for DAMON.  It can be used to record, visualize, and analyze data access
-+pattern of target processes in a convenient way.
-+
-+Q: Why a new module, instead of extending perf or other tools?
-+A: First, DAMON aims to be used by other programs including the kernel.
-+Therefore, having dependency to specific tools like perf is not desirable.
-+Second, because it need to be lightweight as much as possible so that it can be
-+used online, any unnecessary overhead such as kernel - user space context
-+switching cost should be avoided.  These are the two most biggest reasons why
-+DAMON is implemented in the kernel space.  The idle page tracking subsystem
-+would be the kernel module that most seems similar to DAMON.  However, it's own
-+interface is not compatible with DAMON.  Also, the internal implementation of
-+it has no common part to be reused by DAMON.
-+
-+Q: Can 'perf mem' provide the data required for DAMON?
-+A: On the systems supporting 'perf mem', yes.  DAMON is using the PTE Accessed
-+bits in low level.  Other H/W or S/W features that can be used for the purpose
-+could be used.  However, as explained with above question, DAMON need to be
-+implemented in the kernel space.
-+
-+
-+Expected Use-cases
-+==================
-+
-+A straightforward usecase of DAMON would be the program behavior analysis.
-+With the DAMON output, users can confirm whether the program is running as
-+intended or not.  This will be useful for debuggings and tests of design
-+points.
-+
-+The monitored results can also be useful for counting the dynamic working set
-+size of workloads.  For the administration of memory overcommitted systems or
-+selection of the environments (e.g., containers providing different amount of
-+memory) for your workloads, this will be useful.
-+
-+If you are a programmer, you can optimize your program by managing the memory
-+based on the actual data access pattern.  For example, you can identify the
-+dynamic hotness of your data using DAMON and call ``mlock()`` to keep your hot
-+data in DRAM, or call ``madvise()`` with ``MADV_PAGEOUT`` to proactively
-+reclaim cold data.  Even though your program is guaranteed to not encounter
-+memory pressure, you can still improve the performance by applying the DAMON
-+outputs for call of ``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative
-+optimizations would be possible.  Our evaluations of DAMON includes a
-+straightforward optimization using the ``mlock()``.  Please refer to the below
-+Evaluation section for more detail.
-+
-+As DAMON incurs very low overhead, such optimizations can be applied not only
-+offline, but also online.  Also, there is no reason to limit such optimizations
-+to the user space.  Several parts of the kernel's memory management mechanisms
-+could be also optimized using DAMON. The reclamation, the THP (de)promotion
-+decisions, and the compaction would be such a candidates.
-+
-+
-+Mechanisms of DAMON
-+===================
-+
-+
-+Basic Access Check
-+------------------
-+
-+DAMON basically reports what pages are how frequently accessed.  The report is
-+passed to users in binary format via a ``result file`` which users can set it's
-+path.  Note that the frequency is not an absolute number of accesses, but a
-+relative frequency among the pages of the target workloads.
-+
-+Users can also control the resolution of the reports by setting two time
-+intervals, ``sampling interval`` and ``aggregation interval``.  In detail,
-+DAMON checks access to each page per ``sampling interval``, aggregates the
-+results (counts the number of the accesses to each page), and reports the
-+aggregated results per ``aggregation interval``.  For the access check of each
-+page, DAMON uses the Accessed bits of PTEs.
-+
-+This is thus similar to the previously mentioned periodic access checks based
-+mechanisms, which overhead is increasing as the size of the target process
-+grows.
-+
-+
-+Region Based Sampling
-+---------------------
-+
-+To avoid the unbounded increase of the overhead, DAMON groups a number of
-+adjacent pages that assumed to have same access frequencies into a region.  As
-+long as the assumption (pages in a region have same access frequencies) is
-+kept, only one page in the region is required to be checked.  Thus, for each
-+``sampling interval``, DAMON randomly picks one page in each region and clears
-+its Accessed bit.  After one more ``sampling interval``, DAMON reads the
-+Accessed bit of the page and increases the access frequency of the region if
-+the bit has set meanwhile.  Therefore, the monitoring overhead is controllable
-+by setting the number of regions.  DAMON allows users to set the minimal and
-+maximum number of regions for the trade-off.
-+
-+Except the assumption, this is almost same with the above-mentioned
-+miniature-like static region based sampling.  In other words, this scheme
-+cannot preserve the quality of the output if the assumption is not guaranteed.
-+
-+
-+Adaptive Regions Adjustment
-+---------------------------
-+
-+At the beginning of the monitoring, DAMON constructs the initial regions by
-+evenly splitting the memory mapped address space of the process into the
-+user-specified minimal number of regions.  In this initial state, the
-+assumption is normally not kept and thus the quality could be low.  To keep the
-+assumption as much as possible, DAMON adaptively merges and splits each region.
-+For each ``aggregation interval``, it compares the access frequencies of
-+adjacent regions and merges those if the frequency difference is small.  Then,
-+after it reports and clears the aggregated access frequency of each region, it
-+splits each region into two regions if the total number of regions is smaller
-+than the half of the user-specified maximum number of regions.
-+
-+In this way, DAMON provides its best-effort quality and minimal overhead while
-+keeping the bounds users set for their trade-off.
-+
-+
-+Applying Complex and Dynamic Memory Mappings
-+--------------------------------------------
-+
-+Only a number of small parts in the super-huge virtual address space of the
-+processes is mapped to physical memory and accessed.  Thus, tracking the
-+unmapped address regions is just wasteful.  However, because DAMON can deal
-+with some level of noises using the adaptive regions adjustment mechanism,
-+tracking every mapping is not strictly required but could even incur a high
-+overhead in somce cases.  That said, too huge unmapped areas inside the
-+monitoring target should be removed to not take the time for the adaptive
-+mechanism.
-+
-+For the reason, DAMON converts the complex mappings to three distinct regions
-+that cover every mapped areas of the address space.  Also the two gaps between
-+the three regions are the two biggest unmapped areas in the given address
-+space.  The two biggest unmapped areas might be the gap between the heap and
-+the uppermost mmap()-ed region, and the gap between the lowermost mmap()-ed
-+region and the stack will be two biggest unmapped regions.  Because these gaps
-+are exceptionally huge areas in usual address space, excluding these two
-+biggest unmapped regions will be sufficient to make a trade-off.
-+
-+To further minimize dynamic mapping changes applying overhead, DAMON check the
-+dynamic memory mapping changes and applies it to the abstracted target area
-+only for each of a user-specified time interval (``regions update interval``).
-+
-+
-+``debugfs`` Interface
-+=====================
-+
-+DAMON exports four files, ``attrs``, ``pids``, ``record``, and ``monitor_on``
-+under its debugfs directory, ``<debugfs>/damon/``.
-+
-+Attributes
-+----------
-+
-+Users can read and write the ``sampling interval``, ``aggregation interval``,
-+``regions update interval``, and min/max number of monitoring target regions by
-+reading from and writing to the ``attrs`` file.  For example, below commands
-+set those values to 5 ms, 100 ms, 1,000 ms, 10, 1000 and check it again::
-+
-+    # cd <debugfs>/damon
-+    # echo 5000 100000 1000000 10 1000 > attrs
-+    # cat attrs
-+    5000 100000 1000000 10 1000
-+
-+Target PIDs
-+-----------
-+
-+Users can read and write the pids of current monitoring target processes by
-+reading from and writing to the ``pids`` file.  For example, below commands set
-+processes having pids 42 and 4242 as the processes to be monitored and check it
-+again::
-+
-+    # cd <debugfs>/damon
-+    # echo 42 4242 > pids
-+    # cat pids
-+    42 4242
-+
-+Note that setting the pids doesn't starts the monitoring.
-+
-+Record
-+------
-+
-+DAMON support direct monitoring result record feature.  The recorded results
-+are first written to a buffer and flushed to a file in batch.  Users can set
-+the size of the buffer and the path to the result file by reading from and
-+writing to the ``record`` file.  For example, below commands set the buffer to
-+be 4 KiB and the result to be saved in ``/damon.data``.
-+
-+    # cd <debugfs>/damon
-+    # echo "4096 /damon.data" > record
-+    # cat record
-+    4096 /damon.data
-+
-+Turning On/Off
-+--------------
-+
-+You can check current status, start and stop the monitoring by reading from and
-+writing to the ``monitor_on`` file.  Writing ``on`` to the file starts DAMON to
-+monitor the target processes with the attributes.  Writing ``off`` to the file
-+stops DAMON.  DAMON also stops if every target processes is be terminated.
-+Below example commands turn on, off, and check status of DAMON::
-+
-+    # cd <debugfs>/damon
-+    # echo on > monitor_on
-+    # echo off > monitor_on
-+    # cat monitor_on
-+    off
-+
-+Please note that you cannot write to the ``attrs`` and ``pids`` files while the
-+monitoring is turned on.  If you write to the files while DAMON is running, an
-+error code such as ``-EBUSY`` will be returned.
-+
-+
-+User Space Tool for DAMON
-+=========================
-+
-+There is a user space tool for DAMON, ``/tools/damon/damo``.  It provides
-+another user interface which more convenient than the debugfs interface.
-+Nevertheless, note that it is only aimed to be used for minimal reference of
-+the DAMON's debugfs interfaces and for tests of the DAMON itself.  Based on the
-+debugfs interface, you can create another cool and more convenient user space
-+tools.
-+
-+The interface of the tool is basically subcommand based.  You can almost always
-+use ``-h`` option to get help of the use of each subcommand.  Currently, it
-+supports two subcommands, ``record`` and ``report``.
-+
-+
-+Recording Data Access Pattern
-+-----------------------------
-+
-+The ``record`` subcommand records the data access pattern of target process in
-+a file (``./damon.data`` by default) using DAMON.  You can specifies the target
-+as either pid or a command for an execution of the process.  Below example
-+shows a command target usage::
-+
-+    # cd <kernel>/tools/damon/
-+    # ./damo record "sleep 5"
-+
-+The tool will execute ``sleep 5`` by itself and record the data access patterns
-+of the process.  Below example shows a pid target usage::
-+
-+    # sleep 5 &
-+    # ./damo record `pidof sleep`
-+
-+You can set more detailed attributes and path to the recorded data file using
-+optional arguments to the subcommand.  Use the ``-h`` option for more help.
-+
-+
-+Analyzing Data Access Pattern
-+-----------------------------
-+
-+The ``report`` subcommand reads a data access pattern record file (if not
-+explicitly specified, reads ``./damon.data`` file if exists) and generates
-+reports of various types.  You can specify what type of report you want using
-+sub-subcommand to ``report`` subcommand.  For supported types, pass the ``-h``
-+option to ``report`` subcommand.
-+
-+
-+raw
-+~~~
-+
-+``raw`` sub-subcommand simply transforms the record, which is storing the data
-+access patterns in binary format to human readable text.  For example::
-+
-+    $ ./damo report raw
-+    start_time:  193485829398
-+    rel time:                0
-+    nr_tasks:  1
-+    pid:  1348
-+    nr_regions:  4
-+    560189609000-56018abce000(  22827008):  0
-+    7fbdff59a000-7fbdffaf1a00(   5601792):  0
-+    7fbdffaf1a00-7fbdffbb5000(    800256):  1
-+    7ffea0dc0000-7ffea0dfd000(    249856):  0
-+
-+    rel time:        100000731
-+    nr_tasks:  1
-+    pid:  1348
-+    nr_regions:  6
-+    560189609000-56018abce000(  22827008):  0
-+    7fbdff59a000-7fbdff8ce933(   3361075):  0
-+    7fbdff8ce933-7fbdffaf1a00(   2240717):  1
-+    7fbdffaf1a00-7fbdffb66d99(    480153):  0
-+    7fbdffb66d99-7fbdffbb5000(    320103):  1
-+    7ffea0dc0000-7ffea0dfd000(    249856):  0
-+
-+The first line shows recording started timestamp (nanosecond).  Records of data
-+access patterns are following this.  Each record is sperated by a blank line.
-+Each record first specifies the recorded time (``rel time``), number of
-+monitored tasks in this record (``nr_tasks``).  Multiple number of records of
-+data access pattern for each task continue.  Each data access pattern for each
-+task shows first it's pid (``pid``) and number of monitored virtual address
-+regions in this access pattern (``nr_regions``).  After that, each line shows
-+start/end address, size, and number of monitored accesses to the region for
-+each of the regions.
-+
-+
-+heats
-+~~~~~
-+
-+The ``raw`` type shows detailed information but it is exhaustive to manually
-+read and analyzed.  For the reason, ``heats`` plots the data in heatmap form,
-+using time as x-axis, virtual address as y-axis, and access frequency as
-+z-axis.  Also, users set the resolution and start/end point of each axis via
-+optional arguments.  For example::
-+
-+    $ ./damo report heats --tres 3 --ares 3
-+    0               0               0.0
-+    0               7609002         0.0
-+    0               15218004        0.0
-+    66112620851     0               0.0
-+    66112620851     7609002         0.0
-+    66112620851     15218004        0.0
-+    132225241702    0               0.0
-+    132225241702    7609002         0.0
-+    132225241702    15218004        0.0
-+
-+This command shows the recorded access pattern of the ``sleep`` command using 3
-+data points for each of time axis and address axis.  Therefore, it shows 9 data
-+points in total.
-+
-+Users can easily converts this text output into heatmap image or other 3D
-+representation using various tools such as 'gnuplot'.  ``raw`` sub-subcommand
-+also provides 'gnuplot' based heatmap image creation.  For this, you can use
-+``--heatmap`` option.  Also, note that because it uses 'gnuplot' internally, it
-+will fail if 'gnuplot' is not installed on your system.  For example::
-+
-+    $ ./damo report heats --heatmap heatmap.png
-+
-+Creates ``heatmap.png`` file containing the heatmap image.  It supports
-+``pdf``, ``png``, ``jpeg``, and ``svg``.
-+
-+For proper zoom in / zoom out, you need to see the layout of the record.  For
-+that, use '--guide' option.  If the option is given, it will provide useful
-+information about the records in the record file.  For example::
-+
-+    $ ./damo report heats --guide
-+    pid:1348
-+    time: 193485829398-198337863555 (4852034157)
-+    region   0: 00000094564599762944-00000094564622589952 (22827008)
-+    region   1: 00000140454009610240-00000140454016012288 (6402048)
-+    region   2: 00000140731597193216-00000140731597443072 (249856)
-+
-+The output shows monitored regions (start and end addresses in byte) and
-+monitored time duration (start and end time in nanosecond) of each target task.
-+Therefore, it would be wise to plot only each region rather than plotting
-+entire address space in one heatmap because the gaps between the regions are so
-+huge in this case.
-+
-+
-+wss
-+~~~
-+
-+The ``wss`` type shows the distribution or time-varying working set sizes of
-+the recorded workload using the records.  For example::
-+
-+    $ ./damo report wss
-+    # <percentile> <wss>
-+    # pid   1348
-+    # avr:  66228
-+    0       0
-+    25      0
-+    50      0
-+    75      0
-+    100     1920615
-+
-+Without any option, it shows the distribution of the working set sizes as
-+above.  Basically it shows 0th, 25th, 50th, 75th, and 100th percentile and
-+average of the measured working set sizes in the access pattern records.  In
-+this case, the working set size was zero for 75th percentile but 1,920,615
-+bytes in max and 66,228 in average.
-+
-+By setting the sort key of the percentile using '--sortby', you can also see
-+how the working set size is chronologically changed.  For example::
-+
-+    $ ./damo report wss --sortby time
-+    # <percentile> <wss>
-+    # pid   1348
-+    # avr:  66228
-+    0       0
-+    25      0
-+    50      0
-+    75      0
-+    100     0
-+
-+The average is still 66,228.  And, because we sorted the working set using
-+recorded time and the access is very short, we cannot show when the access
-+made.
-+
-+Users can specify the resolution of the distribution (``--range``).  It also
-+supports 'gnuplot' based simple visualization (``--plot``) of the distribution.
-diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
-index 11db46448354..d3d0ba373eb6 100644
---- a/Documentation/admin-guide/mm/index.rst
-+++ b/Documentation/admin-guide/mm/index.rst
-@@ -27,6 +27,7 @@ the Linux memory management.
- 
-    concepts
-    cma_debugfs
-+   data_access_monitor
-    hugetlbpage
-    idle_page_tracking
-    ksm
--- 
-2.17.1
+s/speicies/specifies
 
+> processes. Exeeding the number woul block the collapse::
+
+s/Exeeding/Exceeding
+
+s/woul/would
+
+>
+>         /sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_shared
+>
+> A higher value may increase memory footprint for some workloads.
+>
+> By default, at least half of pages has to be not shared.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  Documentation/admin-guide/mm/transhuge.rst |  7 ++
+>  include/trace/events/huge_memory.h         |  3 +-
+>  mm/khugepaged.c                            | 52 ++++++++++++--
+>  tools/testing/selftests/vm/khugepaged.c    | 83 ++++++++++++++++++++++=
+
+>  4 files changed, 140 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation=
+/admin-guide/mm/transhuge.rst
+> index bd5714547cee..d16e4f2bb70f 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -220,6 +220,13 @@ memory. A lower value can prevent THPs from being
+>  collapsed, resulting fewer pages being collapsed into
+>  THPs, and lower memory access performance.
+>
+> +``max_ptes_shared`` speicies how many pages can be shared across multi=
+ple
+> +processes. Exeeding the number woul block the collapse::
+
+s/speicies/specifies
+
+s/Exeeding/Exceeding
+
+s/woul/would
+> +
+> +       /sys/kernel/mm/transparent_hugepage/khugepaged/max_ptes_shared
+> +
+> +A higher value may increase memory footprint for some workloads.
+> +
+>  Boot parameter
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/=
+huge_memory.h
+> index d82a0f4e824d..53532f5925c3 100644
+> --- a/include/trace/events/huge_memory.h
+> +++ b/include/trace/events/huge_memory.h
+> @@ -12,6 +12,8 @@
+>         EM( SCAN_SUCCEED,               "succeeded")                   =
+ \
+>         EM( SCAN_PMD_NULL,              "pmd_null")                    =
+ \
+>         EM( SCAN_EXCEED_NONE_PTE,       "exceed_none_pte")             =
+ \
+> +       EM( SCAN_EXCEED_SWAP_PTE,       "exceed_swap_pte")             =
+ \
+> +       EM( SCAN_EXCEED_SHARED_PTE,     "exceed_shared_pte")           =
+ \
+>         EM( SCAN_PTE_NON_PRESENT,       "pte_non_present")             =
+ \
+>         EM( SCAN_PAGE_RO,               "no_writable_page")            =
+ \
+>         EM( SCAN_LACK_REFERENCED_PAGE,  "lack_referenced_page")        =
+ \
+> @@ -30,7 +32,6 @@
+>         EM( SCAN_DEL_PAGE_LRU,          "could_not_delete_page_from_lru=
+")\
+>         EM( SCAN_ALLOC_HUGE_PAGE_FAIL,  "alloc_huge_page_failed")      =
+ \
+>         EM( SCAN_CGROUP_CHARGE_FAIL,    "ccgroup_charge_failed")       =
+ \
+> -       EM( SCAN_EXCEED_SWAP_PTE,       "exceed_swap_pte")             =
+ \
+>         EM( SCAN_TRUNCATED,             "truncated")                   =
+ \
+>         EMe(SCAN_PAGE_HAS_PRIVATE,      "page_has_private")            =
+ \
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 49e56e4e30d1..bfb6155f1d69 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -28,6 +28,8 @@ enum scan_result {
+>         SCAN_SUCCEED,
+>         SCAN_PMD_NULL,
+>         SCAN_EXCEED_NONE_PTE,
+> +       SCAN_EXCEED_SWAP_PTE,
+> +       SCAN_EXCEED_SHARED_PTE,
+>         SCAN_PTE_NON_PRESENT,
+>         SCAN_PAGE_RO,
+>         SCAN_LACK_REFERENCED_PAGE,
+> @@ -46,7 +48,6 @@ enum scan_result {
+>         SCAN_DEL_PAGE_LRU,
+>         SCAN_ALLOC_HUGE_PAGE_FAIL,
+>         SCAN_CGROUP_CHARGE_FAIL,
+> -       SCAN_EXCEED_SWAP_PTE,
+>         SCAN_TRUNCATED,
+>         SCAN_PAGE_HAS_PRIVATE,
+>  };
+> @@ -71,6 +72,7 @@ static DECLARE_WAIT_QUEUE_HEAD(khugepaged_wait);
+>   */
+>  static unsigned int khugepaged_max_ptes_none __read_mostly;
+>  static unsigned int khugepaged_max_ptes_swap __read_mostly;
+> +static unsigned int khugepaged_max_ptes_shared __read_mostly;
+>
+>  #define MM_SLOTS_HASH_BITS 10
+>  static __read_mostly DEFINE_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BIT=
+S);
+> @@ -290,15 +292,43 @@ static struct kobj_attribute khugepaged_max_ptes_=
+swap_attr =3D
+>         __ATTR(max_ptes_swap, 0644, khugepaged_max_ptes_swap_show,
+>                khugepaged_max_ptes_swap_store);
+>
+> +static ssize_t khugepaged_max_ptes_shared_show(struct kobject *kobj,
+> +                                            struct kobj_attribute *att=
+r,
+> +                                            char *buf)
+> +{
+> +       return sprintf(buf, "%u\n", khugepaged_max_ptes_shared);
+> +}
+> +
+> +static ssize_t khugepaged_max_ptes_shared_store(struct kobject *kobj,
+> +                                             struct kobj_attribute *at=
+tr,
+> +                                             const char *buf, size_t c=
+ount)
+> +{
+> +       int err;
+> +       unsigned long max_ptes_shared;
+> +
+> +       err  =3D kstrtoul(buf, 10, &max_ptes_shared);
+> +       if (err || max_ptes_shared > HPAGE_PMD_NR-1)
+> +               return -EINVAL;
+> +
+> +       khugepaged_max_ptes_shared =3D max_ptes_shared;
+> +
+> +       return count;
+> +}
+> +
+> +static struct kobj_attribute khugepaged_max_ptes_shared_attr =3D
+> +       __ATTR(max_ptes_shared, 0644, khugepaged_max_ptes_shared_show,
+> +              khugepaged_max_ptes_shared_store);
+> +
+>  static struct attribute *khugepaged_attr[] =3D {
+>         &khugepaged_defrag_attr.attr,
+>         &khugepaged_max_ptes_none_attr.attr,
+> +       &khugepaged_max_ptes_swap_attr.attr,
+> +       &khugepaged_max_ptes_shared_attr.attr,
+>         &pages_to_scan_attr.attr,
+>         &pages_collapsed_attr.attr,
+>         &full_scans_attr.attr,
+>         &scan_sleep_millisecs_attr.attr,
+>         &alloc_sleep_millisecs_attr.attr,
+> -       &khugepaged_max_ptes_swap_attr.attr,
+>         NULL,
+>  };
+>
+> @@ -360,6 +390,7 @@ int __init khugepaged_init(void)
+>         khugepaged_pages_to_scan =3D HPAGE_PMD_NR * 8;
+>         khugepaged_max_ptes_none =3D HPAGE_PMD_NR - 1;
+>         khugepaged_max_ptes_swap =3D HPAGE_PMD_NR / 8;
+> +       khugepaged_max_ptes_shared =3D HPAGE_PMD_NR / 2;
+>
+>         return 0;
+>  }
+> @@ -549,7 +580,7 @@ static int __collapse_huge_page_isolate(struct vm_a=
+rea_struct *vma,
+>  {
+>         struct page *page =3D NULL;
+>         pte_t *_pte;
+> -       int none_or_zero =3D 0, result =3D 0, referenced =3D 0;
+> +       int none_or_zero =3D 0, shared =3D 0, result =3D 0, referenced =
+=3D 0;
+>         bool writable =3D false;
+>
+>         for (_pte =3D pte; _pte < pte+HPAGE_PMD_NR;
+> @@ -577,6 +608,12 @@ static int __collapse_huge_page_isolate(struct vm_=
+area_struct *vma,
+>
+>                 VM_BUG_ON_PAGE(!PageAnon(page), page);
+>
+> +               if (page_mapcount(page) > 1 &&
+> +                               ++shared > khugepaged_max_ptes_shared) =
+{
+> +                       result =3D SCAN_EXCEED_SHARED_PTE;
+> +                       goto out;
+> +               }
+> +
+>                 if (PageCompound(page)) {
+>                         struct page *p;
+>                         page =3D compound_head(page);
+> @@ -1168,7 +1205,8 @@ static int khugepaged_scan_pmd(struct mm_struct *=
+mm,
+>  {
+>         pmd_t *pmd;
+>         pte_t *pte, *_pte;
+> -       int ret =3D 0, none_or_zero =3D 0, result =3D 0, referenced =3D=
+ 0;
+> +       int ret =3D 0, result =3D 0, referenced =3D 0;
+> +       int none_or_zero =3D 0, shared =3D 0;
+>         struct page *page =3D NULL;
+>         unsigned long _address;
+>         spinlock_t *ptl;
+> @@ -1218,6 +1256,12 @@ static int khugepaged_scan_pmd(struct mm_struct =
+*mm,
+>                         goto out_unmap;
+>                 }
+>
+> +               if (page_mapcount(page) > 1 &&
+> +                               ++shared > khugepaged_max_ptes_shared) =
+{
+> +                       result =3D SCAN_EXCEED_SHARED_PTE;
+> +                       goto out_unmap;
+> +               }
+> +
+>                 page =3D compound_head(page);
+>
+>                 /*
+> diff --git a/tools/testing/selftests/vm/khugepaged.c b/tools/testing/se=
+lftests/vm/khugepaged.c
+> index 3eeff4a0fbc9..9ae119234a39 100644
+> --- a/tools/testing/selftests/vm/khugepaged.c
+> +++ b/tools/testing/selftests/vm/khugepaged.c
+> @@ -77,6 +77,7 @@ struct khugepaged_settings {
+>         unsigned int scan_sleep_millisecs;
+>         unsigned int max_ptes_none;
+>         unsigned int max_ptes_swap;
+> +       unsigned int max_ptes_shared;
+>         unsigned long pages_to_scan;
+>  };
+>
+> @@ -276,6 +277,7 @@ static void write_settings(struct settings *setting=
+s)
+>                         khugepaged->scan_sleep_millisecs);
+>         write_num("khugepaged/max_ptes_none", khugepaged->max_ptes_none=
+);
+>         write_num("khugepaged/max_ptes_swap", khugepaged->max_ptes_swap=
+);
+> +       write_num("khugepaged/max_ptes_shared", khugepaged->max_ptes_sh=
+ared);
+>         write_num("khugepaged/pages_to_scan", khugepaged->pages_to_scan=
+);
+>  }
+>
+> @@ -312,6 +314,7 @@ static void save_settings(void)
+>                         read_num("khugepaged/scan_sleep_millisecs"),
+>                 .max_ptes_none =3D read_num("khugepaged/max_ptes_none")=
+,
+>                 .max_ptes_swap =3D read_num("khugepaged/max_ptes_swap")=
+,
+> +               .max_ptes_shared =3D read_num("khugepaged/max_ptes_shar=
+ed"),
+>                 .pages_to_scan =3D read_num("khugepaged/pages_to_scan")=
+,
+>         };
+>         success("OK");
+> @@ -843,12 +846,90 @@ static void collapse_fork_compound(void)
+>                         fail("Fail");
+>                 fill_memory(p, 0, page_size);
+>
+> +               write_num("khugepaged/max_ptes_shared", hpage_pmd_nr - =
+1);
+>                 if (wait_for_scan("Collapse PTE table full of compound =
+pages in child", p))
+>                         fail("Timeout");
+>                 else if (check_huge(p))
+>                         success("OK");
+>                 else
+>                         fail("Fail");
+> +               write_num("khugepaged/max_ptes_shared",
+> +                               default_settings.khugepaged.max_ptes_sh=
+ared);
+> +
+> +               validate_memory(p, 0, hpage_pmd_size);
+> +               munmap(p, hpage_pmd_size);
+> +               exit(exit_status);
+> +       }
+> +
+> +       wait(&wstatus);
+> +       exit_status +=3D WEXITSTATUS(wstatus);
+> +
+> +       printf("Check if parent still has huge page...");
+> +       if (check_huge(p))
+> +               success("OK");
+> +       else
+> +               fail("Fail");
+> +       validate_memory(p, 0, hpage_pmd_size);
+> +       munmap(p, hpage_pmd_size);
+> +}
+> +
+> +static void collapse_max_ptes_shared()
+> +{
+> +       int max_ptes_shared =3D read_num("khugepaged/max_ptes_shared");=
+
+> +       int wstatus;
+> +       void *p;
+> +
+> +       p =3D alloc_mapping();
+> +
+> +       printf("Allocate huge page...");
+> +       madvise(p, hpage_pmd_size, MADV_HUGEPAGE);
+> +       fill_memory(p, 0, hpage_pmd_size);
+> +       if (check_huge(p))
+> +               success("OK");
+> +       else
+> +               fail("Fail");
+> +
+> +       printf("Share huge page over fork()...");
+> +       if (!fork()) {
+> +               /* Do not touch settings on child exit */
+> +               skip_settings_restore =3D true;
+> +               exit_status =3D 0;
+> +
+> +               if (check_huge(p))
+> +                       success("OK");
+> +               else
+> +                       fail("Fail");
+> +
+> +               printf("Trigger CoW in %d of %d...",
+> +                               hpage_pmd_nr - max_ptes_shared - 1, hpa=
+ge_pmd_nr);
+> +               fill_memory(p, 0, (hpage_pmd_nr - max_ptes_shared - 1) =
+* page_size);
+> +               if (!check_huge(p))
+> +                       success("OK");
+> +               else
+> +                       fail("Fail");
+> +
+> +               if (wait_for_scan("Do not collapse with max_ptes_shared=
+ exeeded", p))
+> +                       fail("Timeout");
+> +               else if (!check_huge(p))
+> +                       success("OK");
+> +               else
+> +                       fail("Fail");
+> +
+> +               printf("Trigger CoW in %d of %d...",
+> +                               hpage_pmd_nr - max_ptes_shared, hpage_p=
+md_nr);
+> +               fill_memory(p, 0, (hpage_pmd_nr - max_ptes_shared) * pa=
+ge_size);
+> +               if (!check_huge(p))
+> +                       success("OK");
+> +               else
+> +                       fail("Fail");
+> +
+> +
+> +               if (wait_for_scan("Collapse with max_ptes_shared PTEs s=
+hared", p))
+> +                       fail("Timeout");
+> +               else if (check_huge(p))
+> +                       success("OK");
+> +               else
+> +                       fail("Fail");
+>
+>                 validate_memory(p, 0, hpage_pmd_size);
+>                 munmap(p, hpage_pmd_size);
+> @@ -877,6 +958,7 @@ int main(void)
+>
+>         default_settings.khugepaged.max_ptes_none =3D hpage_pmd_nr - 1;=
+
+>         default_settings.khugepaged.max_ptes_swap =3D hpage_pmd_nr / 8;=
+
+> +       default_settings.khugepaged.max_ptes_shared =3D hpage_pmd_nr / =
+2;
+>         default_settings.khugepaged.pages_to_scan =3D hpage_pmd_nr * 8;=
+
+>
+>         save_settings();
+> @@ -894,6 +976,7 @@ int main(void)
+>         collapse_compound_extreme();
+>         collapse_fork();
+>         collapse_fork_compound();
+> +       collapse_max_ptes_shared();
+>
+>         restore_settings(0);
+>  }
+> --
+> 2.26.0
+
+
+=E2=80=94
+Best Regards,
+Yan Zi
+
+--=_MailMate_3C84D458-72E9-49F2-86F8-DF884C3695D6_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl6LK/IPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKMMwQAJGMXMGsV2CSdb/zy+3CyUL148Wl8RpM62Fs
+dGRr7L0elnPv7EYwbQV6Z6DL04FYOuUg1M/R+idDt5KaWz1+mlrGLpmMEKsvez+4
+u/jLB41/jBHMSzeHjU/4wGWVbRAbTbVBIVXShQ1MVQlqncoabAB0qYepjQT5S87P
+Z6ss6ERPkx9zAGJu8R0M0By1+cA+DwnUhJMV6WJXC7nLg8zKszMJRUfTlGR3otgL
+v02elp05qbDyPCaMVxd7MNKFgupAg9XnG6nGR/wQUXyV39EH+gGFKyC67R3Xy/83
+yMG3Am+bB0OhibgRX8NG7qxwBYzGSrqnfNt/JIf+ShohR8bHqU4fYXfBSHgC6qF+
+cdJK658tO7inoxxWP8NlpE3f5lYSOI7ruEQ+r43UZ0Q1jaM/qDaR/Nn71vRc7dJp
+kYjdkHbKTT4UsG0hHoQZGT5dUzTEy2W1ymwQDtxvrxC/rGgv2Oe+Bu/Y8N6OKzo8
+lik+RtF/vN9GWpFybABAS7+RkT2U6lAoGUwFnmYqDV1L6iHNSlKRiAn9H1IkgUjd
+Vxrr0e/EJtlDmsw9EZpRl9MCUHxlDM9fQleGdo+2IWnyU4FEESfX8bl+kbw/1j8+
+eX8P+rdxPJ0LhihAh7MxOfZ8FZ6dNRYtoPO+soWIjbASMdqX2ResOQ7MIX9E0swW
+ewHavedE
+=ShM4
+-----END PGP SIGNATURE-----
+
+--=_MailMate_3C84D458-72E9-49F2-86F8-DF884C3695D6_=--
