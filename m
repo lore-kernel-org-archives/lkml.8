@@ -2,235 +2,141 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982D5C2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE34C2BA18
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5424C20672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2342B20672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:54:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NxsdW1M+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgDFGqQ (ORCPT
+        id S1726595AbgDFGyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 02:46:16 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:52994 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgDFGqP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 02:46:15 -0400
-Received: by mail-io1-f69.google.com with SMTP id c15so198089iom.19
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 23:46:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Unvu00AzWihNcjFsSegg++/SIJKIxJgCZcRTM9IrS/E=;
-        b=ICIkThAWArs/u49yEneWSzAepM6saEJ0zQKPkOLh6Y/rqukejEmTYHVgGvRoO3dGCN
-         A7dTTsW7S2OWvvJV2hqYRpLNTNLQFDLUX7umpAZeK1gcdOhYCnW2fb2w1yMHkVVipxjo
-         9/p5JX7J97fk0ePrieydLtZtcAnwgy3pY3RRH4mhX2FNA2K9jqNRH45wkJvbiuHDINI/
-         2L6MwBRFM2Xp54HtFm1JNa+1g+EEZMy944bjjFrPJtnQUjl/u3kk44/y3nAaY78VZy7q
-         gamVd+uJDWz12whsu6jDUgf03ZGUuHkQXgrpY27a+J3CCSNk/vCXzvkhycvdmbsP8mb4
-         eS8w==
-X-Gm-Message-State: AGi0PuYsIppyAosL5SZ0VU/1ZJP4Rh3RzwRnvJzuj5+SA0goghsT+hZK
-        CfebynD6VaS/Wv5SwdzhGsKRQqNvf57GLZqlbBkktPCnukFi
-X-Google-Smtp-Source: APiQypI42AhMdpPxlU9bJ4dEm3CQ2AzXPVsUtQcCoxRydTQKXEFT0X1NEeIup+SXwT9RTiSSYZr8JQZQLvq+R8H5vCi7rpZAtTVo
+        Mon, 6 Apr 2020 02:54:51 -0400
+Received: from mout.web.de ([217.72.192.78]:40973 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbgDFGyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 02:54:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586156078;
+        bh=rCy76P9PUqATeEVtGZt2SPKa1RtA9OAXSPP5+zNddb8=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=NxsdW1M+MYd7wkBg+6nUPUrTg5I7Yy4JpnO2IU29y1XHg0W9KHHKdwFtEFcs+TpNO
+         MQ8T0UrJxn37DELV4+78Wa01pr6UouUBWxglm5ACEEIkze4dO+3OK1NlTxlqulxVOp
+         UcQuP5fHiTbgiJl0FhMtmSciRPOOID6QqXic/FGE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.243.176.200]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MNcV4-1jMzHY0UqA-007C08; Mon, 06
+ Apr 2020 08:54:38 +0200
+Subject: Re: hwrng: omap - Delete an error message in
+ of_get_omap_rng_device_details()
+To:     =?UTF-8?B?5ZSQ5b2s?= <tangbin@cmss.chinamobile.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <eae7170c-4371-4865-7b85-589c0ed2b5b6@web.de>
+ <2020040423261552036811@cmss.chinamobile.com>
+ <e71d56f1-6fce-5e2d-9719-1385ef3b0811@web.de>
+ <2020040505380926003012@cmss.chinamobile.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <e719f5df-a79d-fa91-e88f-ba32f1a64a69@web.de>
+Date:   Mon, 6 Apr 2020 08:54:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:d650:: with SMTP id x16mr20678240ilp.226.1586155574329;
- Sun, 05 Apr 2020 23:46:14 -0700 (PDT)
-Date:   Sun, 05 Apr 2020 23:46:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000091056b05a2999f1e@google.com>
-Subject: upstream boot error: KASAN: slab-out-of-bounds Write in virtio_gpu_object_create
-From:   syzbot <syzbot+d3a7951ed361037407db@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2020040505380926003012@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lVxYgaIvrXBAqfcg/7w2v0qLQUnGPZHrdQj8ypdOpm+K77vWW6i
+ KhjEyYt20kJlFybRaUi+0+qItdNmjz3HSdUVNPyhXchljcx6AQ23UV4bh6qSHBE520UIWX+
+ zJ83C5r3dmDhS0VbxvAuOR+TAdQ75dBWiSiEYMTqNtAZ/cM47kpRN2zHhB4MI/z6Ze2E+aE
+ F/9TYVjPf6N4Srwivl7SQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4VPpKDDXisI=:O1D+Dcq6kpxJgAnkTvtV+T
+ Zab1TEYxPLPHW9gZ8+/9187ML45ZzyQe9wQRb+yRL8REHmie+rxLROCXlbXx6rnKxHAU1D0pG
+ NKXJIaej+wlOjM8frRZqj6CKXEN3Yg0oH/t6m21Yt55kH7JBq7VzqPXzB5IO3S0pvOAfpjVVJ
+ iMfjzUso5IrQh2uz4Oz+TZs1rxD6vryfArS7TDXiLqtZ6cWyFTAPhGUMQMrRF+sRWf0+jRHCh
+ RafgpiJ0ruN5ZF9GY1kNom5y40VFF7K9BZz6Mi3556nBgKeLCbuaTGJqumoaSCB4ODMcoEBms
+ gac9fSWTvM/rHZZjJ/XgKUeAakI1LP+7FB/Nftz2hx91O0SLuuUn8F0uaZWiNFeGN96HIqe0K
+ xz7uBuaqs8gvdtqOHT9Z3BT5OYubWbbUvzNsRyO6SnAx7RSIoVxlEzl6jPDRNrbapqqtQZzkq
+ ymbEQzXJ8pLXm3E5EBAdXTymoGr9h6ty9uboi+Sb4/7Re0jZiMvbDBxMGJM4SfRwe2GwSWNpz
+ cg6ZRMllgOhIMX9D+i+0lmYVtrhGWwmQjliN695EMjQkRXtTAIfpZ9Tgqk/hbFlyjwkKlN2oy
+ RWp1yy6iSpnAxtt5Vgx+6FFmMdnZq1HKZxVARm7HkkQ36ayrqC7erONgt9N3fuvGDBzB74A5S
+ r1MynE5eQzrQRBzB1py07+kkumziIH3ZCx67KIdkBUh5W3+5LAS/2OSazbqu9ixGhUfyOWw0a
+ eva+pcMBF36xrlOe9+whBtOdzYRv8ERYZenMYzYNP8DIbThQS0SGIzRowcPfdclxzIcCCXH+C
+ VOAlmN9Fsfxd0STCRbFobn6YCTyGrT9CJN0FnqrbSnhTlIpyRbVEstkIaC2MLHmr24HyutZsJ
+ TyUoO3/mjXXLktJrD2lgKxqSbR0dfnan+B10qkzYAvRFa/+j/1/OFETrfIHetipf+7RlTTVzf
+ 120Auw+tiooNKFsPuaM26r3NfwGDQkeBlH3LgahmPVudilDXJirLVANoc8ztBjDe637Ng2ZDA
+ L0aITGuvHNjSMcfbxUAf/37gxxMJs0+hszv2aFbCD0SsalptaL2VF+oAAUc3xDG+VTWxCr10b
+ TW7bzurr7y4xjYiTw2YyQU1nSlX+ajGZEjx4l+OzxTDdxN/Pm+WDcTC+yew8DFHQ+iKAXGARA
+ tT9eGsn2gOZTcJzWGnhU1RCqHIDS3m2GZBwJNVVxoovmJuCTR7IkkD4KebWuDe63/C5jkbBor
+ Qi/zR++Fbsz2Y97mu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> I don't know what is=C2=A0Coccinelle software, I will check it out.
 
-syzbot found the following crash on:
+I suggest to take another look at corresponding software development possi=
+bilities.
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/sc=
+ripts/coccinelle/api/platform_get_irq.cocci
 
-HEAD commit:    ffc1c20c Merge tag 'for-5.7/dm-changes' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1690471fe00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d6a1e2f9a9986236
-dashboard link: https://syzkaller.appspot.com/bug?extid=d3a7951ed361037407db
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Do you find any information from previous clarification attempts interesti=
+ng?
+Commit 7723f4c5ecdb8d832f049f8483beb0d1081cedf6
+("driver core: platform: Add an error message to platform_get_irq*()"
+by Stephen Boyd on 2019-07-29)
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Are you looking for further collateral evolution?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+d3a7951ed361037407db@syzkaller.appspotmail.com
-
-NET: Registered protocol family 38
-async_tx: api initialized (async)
-Key type asymmetric registered
-Asymmetric key parser 'x509' registered
-Asymmetric key parser 'pkcs8' registered
-Key type pkcs7_test registered
-Asymmetric key parser 'tpm_parser' registered
-Block layer SCSI generic (bsg) driver version 0.4 loaded (major 243)
-io scheduler mq-deadline registered
-io scheduler kyber registered
-io scheduler bfq registered
-hgafb: HGA card not detected.
-hgafb: probe of hgafb.0 failed with error -22
-usbcore: registered new interface driver udlfb
-uvesafb: failed to execute /sbin/v86d
-uvesafb: make sure that the v86d helper is installed and executable
-uvesafb: Getting VBE info block failed (eax=0x4f00, err=-2)
-uvesafb: vbe_init() failed with -22
-uvesafb: probe of uvesafb.0 failed with error -22
-vga16fb: mapped to 0x00000000ab381a8e
-Console: switching to colour frame buffer device 80x30
-fb0: VGA16 VGA frame buffer device
-input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
-ACPI: Power Button [PWRF]
-ioatdma: Intel(R) QuickData Technology Driver 5.00
-PCI Interrupt Link [GSIF] enabled at IRQ 21
-PCI Interrupt Link [GSIH] enabled at IRQ 23
-N_HDLC line discipline registered with maxframe=4096
-Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-00:05: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-Cyclades driver 2.6
-Initializing Nozomi driver 2.1d
-RocketPort device driver module, version 2.09, 12-June-2003
-No rocketport ports found; unloading driver
-Non-volatile memory driver v1.3
-Linux agpgart interface v0.103
-[drm] Initialized vgem 1.0.0 20120112 for vgem on minor 0
-[drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[drm] Initialized vkms 1.0.0 20180514 for vkms on minor 1
-usbcore: registered new interface driver udl
-[drm] pci: virtio-vga detected at 0000:00:01.0
-fb0: switching to virtiodrmfb from VGA16 VGA
-Console: switching to colour VGA+ 80x25
-virtio-pci 0000:00:01.0: vgaarb: deactivate vga console
-Console: switching to colour dummy device 80x25
-[drm] features: -virgl +edid
-[drm] number of scanouts: 1
-[drm] number of cap sets: 0
-[drm] Initialized virtio_gpu 0.1.0 0 for virtio0 on minor 2
-==================================================================
-BUG: KASAN: slab-out-of-bounds in virtio_gpu_object_shmem_init drivers/gpu/drm/virtio/virtgpu_object.c:151 [inline]
-BUG: KASAN: slab-out-of-bounds in virtio_gpu_object_create+0x9f3/0xaa0 drivers/gpu/drm/virtio/virtgpu_object.c:230
-Write of size 8 at addr ffff888027f7a388 by task swapper/0/1
-
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
- __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
- kasan_report+0xe/0x20 mm/kasan/common.c:641
- virtio_gpu_object_shmem_init drivers/gpu/drm/virtio/virtgpu_object.c:151 [inline]
- virtio_gpu_object_create+0x9f3/0xaa0 drivers/gpu/drm/virtio/virtgpu_object.c:230
- virtio_gpu_gem_create+0xaa/0x1d0 drivers/gpu/drm/virtio/virtgpu_gem.c:42
- virtio_gpu_mode_dumb_create+0x21e/0x360 drivers/gpu/drm/virtio/virtgpu_gem.c:82
- drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
- drm_client_buffer_create drivers/gpu/drm/drm_client.c:267 [inline]
- drm_client_framebuffer_create+0x1b7/0x770 drivers/gpu/drm/drm_client.c:412
- drm_fb_helper_generic_probe+0x1e4/0x810 drivers/gpu/drm/drm_fb_helper.c:2039
- drm_fb_helper_single_fb_probe drivers/gpu/drm/drm_fb_helper.c:1588 [inline]
- __drm_fb_helper_initial_config_and_unlock+0xb56/0x11e0 drivers/gpu/drm/drm_fb_helper.c:1746
- drm_fb_helper_initial_config drivers/gpu/drm/drm_fb_helper.c:1841 [inline]
- drm_fb_helper_initial_config drivers/gpu/drm/drm_fb_helper.c:1833 [inline]
- drm_fbdev_client_hotplug+0x30f/0x580 drivers/gpu/drm/drm_fb_helper.c:2133
- drm_fbdev_generic_setup drivers/gpu/drm/drm_fb_helper.c:2212 [inline]
- drm_fbdev_generic_setup+0x18b/0x295 drivers/gpu/drm/drm_fb_helper.c:2185
- virtio_gpu_probe+0x28f/0x2de drivers/gpu/drm/virtio/virtgpu_drv.c:127
- virtio_dev_probe+0x463/0x710 drivers/virtio/virtio.c:248
- really_probe+0x281/0x6d0 drivers/base/dd.c:527
- driver_probe_device+0x104/0x210 drivers/base/dd.c:701
- device_driver_attach+0x108/0x140 drivers/base/dd.c:975
- __driver_attach+0xda/0x240 drivers/base/dd.c:1052
- bus_for_each_dev+0x14b/0x1d0 drivers/base/bus.c:305
- bus_add_driver+0x4a2/0x5a0 drivers/base/bus.c:622
- driver_register+0x1c4/0x330 drivers/base/driver.c:171
- do_one_initcall+0x10a/0x7d0 init/main.c:1152
- do_initcall_level init/main.c:1225 [inline]
- do_initcalls init/main.c:1241 [inline]
- do_basic_setup init/main.c:1261 [inline]
- kernel_init_freeable+0x501/0x5ae init/main.c:1445
- kernel_init+0xd/0x1bb init/main.c:1352
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 1:
- save_stack+0x1b/0x80 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:515 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
- kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- virtio_gpu_create_object+0x3c/0xe0 drivers/gpu/drm/virtio/virtgpu_object.c:128
- drm_gem_shmem_create+0x83/0x330 drivers/gpu/drm/drm_gem_shmem_helper.c:58
- virtio_gpu_object_create+0xa5/0xaa0 drivers/gpu/drm/virtio/virtgpu_object.c:199
- virtio_gpu_gem_create+0xaa/0x1d0 drivers/gpu/drm/virtio/virtgpu_gem.c:42
- virtio_gpu_mode_dumb_create+0x21e/0x360 drivers/gpu/drm/virtio/virtgpu_gem.c:82
- drm_mode_create_dumb+0x27c/0x300 drivers/gpu/drm/drm_dumb_buffers.c:94
- drm_client_buffer_create drivers/gpu/drm/drm_client.c:267 [inline]
- drm_client_framebuffer_create+0x1b7/0x770 drivers/gpu/drm/drm_client.c:412
- drm_fb_helper_generic_probe+0x1e4/0x810 drivers/gpu/drm/drm_fb_helper.c:2039
- drm_fb_helper_single_fb_probe drivers/gpu/drm/drm_fb_helper.c:1588 [inline]
- __drm_fb_helper_initial_config_and_unlock+0xb56/0x11e0 drivers/gpu/drm/drm_fb_helper.c:1746
- drm_fb_helper_initial_config drivers/gpu/drm/drm_fb_helper.c:1841 [inline]
- drm_fb_helper_initial_config drivers/gpu/drm/drm_fb_helper.c:1833 [inline]
- drm_fbdev_client_hotplug+0x30f/0x580 drivers/gpu/drm/drm_fb_helper.c:2133
- drm_fbdev_generic_setup drivers/gpu/drm/drm_fb_helper.c:2212 [inline]
- drm_fbdev_generic_setup+0x18b/0x295 drivers/gpu/drm/drm_fb_helper.c:2185
- virtio_gpu_probe+0x28f/0x2de drivers/gpu/drm/virtio/virtgpu_drv.c:127
- virtio_dev_probe+0x463/0x710 drivers/virtio/virtio.c:248
- really_probe+0x281/0x6d0 drivers/base/dd.c:527
- driver_probe_device+0x104/0x210 drivers/base/dd.c:701
- device_driver_attach+0x108/0x140 drivers/base/dd.c:975
- __driver_attach+0xda/0x240 drivers/base/dd.c:1052
- bus_for_each_dev+0x14b/0x1d0 drivers/base/bus.c:305
- bus_add_driver+0x4a2/0x5a0 drivers/base/bus.c:622
- driver_register+0x1c4/0x330 drivers/base/driver.c:171
- do_one_initcall+0x10a/0x7d0 init/main.c:1152
- do_initcall_level init/main.c:1225 [inline]
- do_initcalls init/main.c:1241 [inline]
- do_basic_setup init/main.c:1261 [inline]
- kernel_init_freeable+0x501/0x5ae init/main.c:1445
- kernel_init+0xd/0x1bb init/main.c:1352
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 0:
-(stack is not available)
-
-The buggy address belongs to the object at ffff888027f7a000
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 904 bytes inside of
- 1024-byte region [ffff888027f7a000, ffff888027f7a400)
-The buggy address belongs to the page:
-page:ffffea00009fde80 refcount:1 mapcount:0 mapping:ffff88802c800c40 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0000a49408 ffff88802c801850 ffff88802c800c40
-raw: 0000000000000000 ffff888027f7a000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888027f7a280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff888027f7a300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff888027f7a380: 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                      ^
- ffff888027f7a400: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888027f7a480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Regards,
+Markus
