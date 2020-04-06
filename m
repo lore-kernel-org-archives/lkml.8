@@ -2,123 +2,97 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABDFC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38BBC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F3C206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC87620768
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kvQOK4Gg"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tve+3Sxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgDFVkC (ORCPT
+        id S1726332AbgDFVtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:40:02 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10876 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFVkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:40:02 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8ba14b0000>; Mon, 06 Apr 2020 14:38:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 14:40:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 14:40:01 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 21:40:00 +0000
-Received: from [10.2.164.193] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 21:39:59 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
- <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
- <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
- <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
- <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
- <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
- <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
- <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
-Message-ID: <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
-Date:   Mon, 6 Apr 2020 14:39:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 17:49:17 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50669 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726225AbgDFVtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 17:49:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48x41k4g5tz9sPF;
+        Tue,  7 Apr 2020 07:49:14 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1586209755;
+        bh=NWcuyzViV6lzfUobgKJBcKajPh/YkbUXXzQpMSODrGI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Tve+3Sxu2pQpZyDbUNXcW77iK+kyroU3prUAIrA6SUK79yf4Fx3kn7DI7LaPL7ZC/
+         bVgNd4iQ3UxP9Xnht6zzmAMftT22I+DYb9052oBwigtYqyqMkQKzQsKJEwXOVvmcoA
+         Cyzogn9bg1cKmvY+NUM9M7kHdVmJQtL7+QSp/5dUZq1fj7y2r1NTmh0JXVEtHXqh4d
+         /XAwoRtprFKhuG09/2G3i6SqCzl4pEQZTUF8l45R+uvk+5qhVwzq6Y7F813fijb5eT
+         zKFj8ArNkSqFwghscrX0IXtCwPyL2f2iRVUuy1rc6LVt1ZnFmmS4c+c3wZVE7lfho3
+         aWnmPZBl54iuQ==
+Date:   Tue, 7 Apr 2020 07:49:13 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julia Lawall <Julia.Lawall@inria.fr>
+Subject: linux-next: Fixes tag needs some work in the sound-asoc tree
+Message-ID: <20200407074913.75fd8ac7@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586209099; bh=o0hT2mgBLzZYzTwAxCmEeFHH5UCRVvtcMzb/Xs+59co=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=kvQOK4GgGgPHSuaGCrkAEoD0fzmKhvZbHlQmJWp1gFjW7cdoyx4QWJYTb4DgimWxO
-         bpvvSQXr42gHwohZSAMAN98Z19FbSRdV1mWpJ63aNUSsu5sehMjGKB5YUPh6QVSEqn
-         4iYE4xJjzSzwAderHqXG7FFt92y9zgQXBNBtetmBlGt/C8GJa8Zq/bYljyHnR814OR
-         esili6YrDmQzrfqPprS+4sGbSRDzl3Pd+EGQtesSkGMwam9tAVV5vD7Rd/LpAa7bXv
-         sfAZl4DQ8g80XQV36cYYjII3rw38ikQl+klym4HGy8cSfWLWq5Rb4/esUlNty08jF9
-         ehJU23kkDxTFA==
+Content-Type: multipart/signed; boundary="Sig_/6nV8PcPx0=WMHmqqOCoWP_w";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/6nV8PcPx0=WMHmqqOCoWP_w
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 4/6/20 2:15 PM, Sowjanya Komatineni wrote:
->
-> On 4/6/20 2:11 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 07.04.2020 00:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>> Am I understanding correctly that this thread will take 100% CPU,
->>>>>>>> spinning here, if more than 2 frame-captures queued?
->>>>>>> on more than 2 frames captures, it breaks thread and on next=20
->>>>>>> wakeup it
->>>>>>> continues
->>>>>> The wait_event() won't wait if condition is true.
->>>>> condition is checked when waitqueue is woken up
->>>> https://elixir.bootlin.com/linux/v5.6.2/source/include/linux/wait.h#L4=
-62=20
->>>>
->>> process is put to sleep until the condition evaluates to true or signal
->>> is received.
->>>
->>> condition is checked each time the waitqueue head is woken up.
->> This is a wrong assumption in accordance to the code.
->
-> when every buffer is available as long as we are in streaming, we=20
-> should process it.
->
-> So if wake up happens when list has buffer, it will be processed but=20
-> at a time we limit processing 2 simultaneous buffer capture starts only.
->
-Fixing typo.
+Hi all,
 
-I meant when ever buffer is available as long as we are in streaming, we=20
-should process it.
+In commit
 
-So capture thread processes as long as buffers are available from user=20
-space limiting 2 simultaneous trigger of captures and thread will be in=20
-sleep when capture buffers list is empty or no stop thread is signaled.
+  7506baeed8d0 ("ASoC: stm32: sai: Add missing cleanup")
 
+Fixes tag
+
+  Fixes: commit 0d6defc7e0e4 ("ASoC: stm32: sai: manage rebind issue")
+
+has these problem(s):
+
+  - leading word 'commit' unexpected
+
+Also, please keep all the commit tags together at the end of the commit
+message.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6nV8PcPx0=WMHmqqOCoWP_w
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6Lo9kACgkQAVBC80lX
+0GyW3gf+IUmcuFC6x03xBRZyobXMkgF/FjPCyIt9waGAoKkL5zoUlKVJ+kET3ymr
+a8BE8UlDR32gmqiqmD5ENJUvGdNW6Uxom6KqF/jcS16Q+AWKSNOh1qk9pV92mFJd
+OqmaRaT7XNvqq1P93JJRtEckOkhViU4p3yzBBkRwNQPobEOk8SLkB4buRXqJiA6Z
+Pe49HicULGevlDvL7fmYXHbePml/KAXZJtRifeeW83C0CVZaRbI1Jm/EuVXO6hIf
+rlVI9Fs/eouiaqOIxuop61GkY88iBlZSldUA9ZjwVmPgSOvcQs4sdbsrxo7Jx7rd
+WNGH8J7OGmsWa228lunmcrAo11kvsw==
+=ol1I
+-----END PGP SIGNATURE-----
+
+--Sig_/6nV8PcPx0=WMHmqqOCoWP_w--
