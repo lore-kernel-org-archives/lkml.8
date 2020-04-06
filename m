@@ -7,115 +7,102 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF33C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F2FC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39326206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2491D20672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ZHSeZuKF"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="aIXMTl0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbgDFSRV (ORCPT
+        id S1727800AbgDFSRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:17:21 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:1992 "EHLO pegase1.c-s.fr"
+        Mon, 6 Apr 2020 14:17:32 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:38379 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726705AbgDFSQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:16:43 -0400
+        id S1726699AbgDFSQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:16:41 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wzJV6Bqfz9v01G;
-        Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 48wzJS5VDmz9tyd4;
+        Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ZHSeZuKF; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=aIXMTl0c; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cz3nR_S0gR3m; Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+        with ESMTP id TGiJ8bsEBvz7; Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJV59VGz9v016;
-        Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJS4R7Jz9tycr;
+        Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586197002; bh=HNyUM5qFo9XY5Fj+Oqj6ESs8K40UJCokKbJOCnivcsk=;
+        t=1586197000; bh=/9XgCX7ZNJJPrUF+WQ+S9CCuMlj+u/mt4LD/Anh8LO4=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=ZHSeZuKFaBV9IcvbK1E1aGjNT86Od/h24R4j1KBn3xWTmwQCS9846agJqIqsMSi7O
-         pxOw+4t4mqZCTsPBfniEAi26eOcwZA7/PMVljXQ3FLhZOg4MYH59AEd+jswAX0CQBI
-         6E2xpDAIX1oPGjs8WeUPt0iSwA/fZtYytF0k68bk=
+        b=aIXMTl0ci/qJ/Zg5T2BGlqvBO1C1o9yWOJW4tbot1k/1Vxo24G2LGIOlcCU1B366H
+         jdhFCo7arjVZtaC8L4xtkAVwtcv46BaH55AHk+6olCmzyhT2HZ3vH+4AHL0l6L7U24
+         TFoQh+jeUwZvMvk38AEVDc7Vw0SbtWwFXvtTwdIQ=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A11448B78D;
-        Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8ECBB8B784;
+        Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 49VM5QD-CMdi; Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+        with ESMTP id Tb15_YGivxb0; Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 67FCE8B775;
-        Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 59D4F8B775;
+        Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 3E7A6656E9; Mon,  6 Apr 2020 18:16:42 +0000 (UTC)
-Message-Id: <40bc753eaf6f82ce7c8dee219fa730bf00c0974d.1586196948.git.christophe.leroy@c-s.fr>
+        id 30558656E9; Mon,  6 Apr 2020 18:16:40 +0000 (UTC)
+Message-Id: <fe868bea1741c4d902543842726fca1671dc7ef5.1586196948.git.christophe.leroy@c-s.fr>
 In-Reply-To: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
 References: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v3 06/15] powerpc/irq: Add new helpers to play with MSR_EE
- and MSR_RI on PPC32
+Subject: [RFC PATCH v3 04/15] powerpc/8xx: Create C version of kuap_restore()
+ and kuap_check()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
         msuchanek@suse.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon,  6 Apr 2020 18:16:42 +0000 (UTC)
+Date:   Mon,  6 Apr 2020 18:16:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 In preparation of porting PPC32 to C syscall entry/exit,
-add PPC32 version of following helpers:
-	__hard_irq_enable()
-	__hard_irq_disable()
-	__hard_EE_RI_disable()
-	__hard_RI_enable()
+create C version of kuap_restore() and kuap_check() on 8xx
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/hw_irq.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/powerpc/include/asm/nohash/32/kup-8xx.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
-index e69466867d5f..8c30a72262fd 100644
---- a/arch/powerpc/include/asm/hw_irq.h
-+++ b/arch/powerpc/include/asm/hw_irq.h
-@@ -330,6 +330,16 @@ static inline void arch_local_irq_disable(void)
- 		mtmsr(mfmsr() & ~MSR_EE);
- }
+diff --git a/arch/powerpc/include/asm/nohash/32/kup-8xx.h b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
+index 85ed2390fb99..1918d2e55da3 100644
+--- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
++++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
+@@ -34,6 +34,19 @@
  
-+static inline void arch_local_recovery_disable(void)
+ #include <asm/reg.h>
+ 
++static inline void kuap_restore(struct pt_regs *regs)
 +{
-+	if (IS_ENABLED(CONFIG_BOOKE))
-+		wrtee(0);
-+	else if (IS_ENABLED(CONFIG_PPC_8xx))
-+		wrtspr(SPRN_NRI);
-+	else
-+		mtmsr(mfmsr() & ~(MSR_EE | MSR_RI));
++	mtspr(SPRN_MD_AP, regs->kuap);
 +}
 +
- static inline void arch_local_irq_enable(void)
- {
- 	if (IS_ENABLED(CONFIG_BOOKE))
-@@ -352,6 +362,11 @@ static inline bool arch_irqs_disabled(void)
- 
- #define hard_irq_disable()		arch_local_irq_disable()
- 
-+#define __hard_irq_enable()		arch_local_irq_enable()
-+#define __hard_irq_disable()		arch_local_irq_disable()
-+#define __hard_EE_RI_disable()		arch_local_recovery_disable()
-+#define __hard_RI_enable()		arch_local_irq_disable()
++static inline void kuap_check(void)
++{
++	if (!IS_ENABLED(CONFIG_PPC_KUAP_DEBUG))
++		return;
 +
- static inline bool arch_irq_disabled_regs(struct pt_regs *regs)
++	WARN_ON_ONCE((mfspr(SPRN_MD_AP) & 0xffff0000) != (MD_APG_KUAP & 0xffff0000));
++}
++
+ static inline void allow_user_access(void __user *to, const void __user *from,
+ 				     unsigned long size, unsigned long dir)
  {
- 	return !(regs->msr & MSR_EE);
 -- 
 2.25.0
 
