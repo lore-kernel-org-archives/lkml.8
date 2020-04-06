@@ -2,113 +2,114 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB97C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA152C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6EF2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86EA2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ioqBGee5"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="mlZBK7K6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgDFUa6 (ORCPT
+        id S1726332AbgDFUcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 16:30:58 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3420 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFUa6 (ORCPT
+        Mon, 6 Apr 2020 16:32:06 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:54911 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgDFUcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 16:30:58 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8b91740000>; Mon, 06 Apr 2020 13:30:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 13:30:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 13:30:57 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 20:30:57 +0000
-Received: from [10.2.164.193] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 20:30:55 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
- <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
- <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
- <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
- <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
- <fe6a17c1-fae2-a365-4dd6-6d3a25d47d54@nvidia.com>
- <9038ce90-ac53-93e7-ce65-57f6ff1e9b30@nvidia.com>
- <abe82fd1-0464-0627-6c97-39c896e53dd0@gmail.com>
- <36b5627a-8639-6244-8620-4f23828e0638@nvidia.com>
- <1c2c921e-daef-ba0f-5d1a-b58aa0b940fb@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <0227d65f-283a-1488-a48c-7bab600eae35@nvidia.com>
-Date:   Mon, 6 Apr 2020 13:30:54 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1c2c921e-daef-ba0f-5d1a-b58aa0b940fb@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Mon, 6 Apr 2020 16:32:06 -0400
+Received: by mail-pj1-f68.google.com with SMTP id np9so361773pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 13:32:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=s3PQnqVK/Yp5FB3uyQarAlUfZ38sT1XktoIyfn14ZiM=;
+        b=mlZBK7K6tkif4LvKiDSrGiP1TfmDWE0Ch8yTetjbcKPs/ijeFgu8hv8nvJ/0md4ssI
+         +a9DZ+gMb+8meffX/p88nTieoYytmRNy2jqN671tmgF9HeQsk8cMndM7JyJKCA6QNt+V
+         b/fLkbBC595wMGr/qgN/G+VGcMkpGZSwQAlc8hZgib02pj1cnCaBBSbQM4VBGanNkdcR
+         D4ojtK36QSI5XbiMg+nmOTGrvhDuSinSmZLyozBnX+AUli2q3DSUGToOi6n+mGeogVgo
+         VMnPQXCwlL7v0cIrvYAtU/wgmUJTAWeYpUbY34JDbJV1y7cLGRHSKhd6DWiDAAVyUWdF
+         6TGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=s3PQnqVK/Yp5FB3uyQarAlUfZ38sT1XktoIyfn14ZiM=;
+        b=nljWlSEJConzbG470HXWrsBIzdEHefEDVVbHmsQqQ9STIq59iW1vPQ+T9CTNCrc/YL
+         /59bFqRRIX6+Y0FgiME6FQEqvV0+YWvc1AIwE+8NfMfPznFNtf/p4IPbsa5i4a/qIx6J
+         zEqs07v5dEA3Ki6dbNfMHLhw+ZyHcaryU4ZuG4oJ2ZLiqn6sXqsSEIVgmJwo4UMr7ZeC
+         0U7xSoLL5Vk14TM8g5G1/HywdS0Xc6cTM7WJQc3/QIFDEI/33G1uEMDlt38elormLCY6
+         vmDd0/9LgCdx5iUb+Tzw0fjlgk53K8x+FNYD8AcpN6tH6+GYNeW+ATc8bNSEDLI22E1n
+         2BRg==
+X-Gm-Message-State: AGi0PuZ7UvKdASbBBzvQlGLv/inoe4L8e/TKA/qkzN/KM1vPLvtq8/T/
+        CPOPc0FkeSpG370OLspcLs0u7Q==
+X-Google-Smtp-Source: APiQypLrft5l6a8yfyKck7ACjfTPE9IytjF/AJo+wymjrE4JINBQSMNS42wvAC5dgzya9mlw54buYw==
+X-Received: by 2002:a17:90a:a40b:: with SMTP id y11mr1350538pjp.130.1586205123643;
+        Mon, 06 Apr 2020 13:32:03 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:54d3:a29c:f391:9a0d? ([2601:646:c200:1ef2:54d3:a29c:f391:9a0d])
+        by smtp.gmail.com with ESMTPSA id y14sm12278847pfp.127.2020.04.06.13.32.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 13:32:02 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586205044; bh=0vZEk85Vg56RxWijmzQRA6aIsEox1RyZFjAxmqiMRB4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=ioqBGee5d2qpNf7vj9oa4ged4b+xJySiTDRV3wcYZ6naYvuvRF/WoBP6HSfUp1zIF
-         dohT6d+9F8QuQwR76fSQ1HCsLmQFvIF4CVh6Cv237p2nUZV1W7oW8OodQ21LXcDbyg
-         7+8VXSne8vS8xvkx4wSfD8FoZVyiZFB9uO/GP0VdwFdp6VZRBO/R6vGz6hiL12XyPA
-         S++6tMNGeBu34k7qIWxoV26p4nfI3VcuqJeMgrc7jr2rG0CkelQ63JOcqxfoSr/V5W
-         BBmMjQrIQLOZcCXDpZL9f/bC20B5vVdSWxqqfjytz+b6jc6SfUCnL9RUOJyWhWTRI5
-         5WU9B7uoRgF8g==
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+Date:   Mon, 6 Apr 2020 13:32:01 -0700
+Message-Id: <6875DD55-2408-4216-B32A-9487A4FDEFD8@amacapital.net>
+References: <20200406202505.GO2452@worktop.programming.kicks-ass.net>
+Cc:     Vivek Goyal <vgoyal@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+In-Reply-To: <20200406202505.GO2452@worktop.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: iPhone Mail (17E255)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/6/20 1:28 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 06.04.2020 23:05, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ..
->>>> Wait time for HW syncpt to reach threshold is tuned to work for all
->>>> frame rates. So if increment doesn't happen by then, its definitely
->>>> missed event.
->>> This is questionable. Technically, speculating about whether the tuned
->>> value is good for all possible cases is incorrect thing to do.
->>>
->>> Although, I guess in practice it should be good enough for the starter
->>> and could be improved later on, once the host1x driver will be improved=
-.
->> By tuned value I meant about 200ms wait timeout for frame event to
->> happen is what we have been using in downstream and with BSP release
->> images which works good for all sensors and bridges we supported so far.
-> I don't know anything about the state of today's downstream, but
-> downstream of older Tegra SoCs was pretty awful in regards to the host1x
-> syncing, unfortunately it was borrowed into the upstream host1x years
-> ago and nothing was done about it so far. I'd suggest to be careful
-> about it.
-200ms timeout we wait for event to happen is the case even with=20
-T186/T194 as well and internally it was tuned from lots of testing with=20
-various sensors and frame rate computations which is known to work good.
+> On Apr 6, 2020, at 1:25 PM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> =EF=BB=BFOn Mon, Apr 06, 2020 at 03:09:51PM -0400, Vivek Goyal wrote:
+>>> On Mon, Mar 09, 2020 at 09:22:15PM +0100, Peter Zijlstra wrote:
+>>> On Mon, Mar 09, 2020 at 08:05:18PM +0100, Thomas Gleixner wrote:
+>>>> Andy Lutomirski <luto@kernel.org> writes:
+>>>=20
+>>>>> I'm okay with the save/restore dance, I guess.  It's just yet more
+>>>>> entry crud to deal with architecture nastiness, except that this
+>>>>> nastiness is 100% software and isn't Intel/AMD's fault.
+>>>>=20
+>>>> And we can do it in C and don't have to fiddle with it in the ASM
+>>>> maze.
+>>>=20
+>>> Right; I'd still love to kill KVM_ASYNC_PF_SEND_ALWAYS though, even if
+>>> we do the save/restore in do_nmi(). That is some wild brain melt. Also,
+>>> AFAIK none of the distros are actually shipping a PREEMPT=3Dy kernel
+>>> anyway, so killing it shouldn't matter much.
+>>=20
+>> It will be nice if we can retain KVM_ASYNC_PF_SEND_ALWAYS. I have another=
+
+>> use case outside CONFIG_PREEMPT.
+>>=20
+>> I am trying to extend async pf interface to also report page fault errors=
+
+>> to the guest.
+>=20
+> Then please start over and design a sane ParaVirt Fault interface. The
+> current one is utter crap.
+
+Agreed. Don=E2=80=99t extend the current mechanism. Replace it.
+
+I would be happy to review a replacement. I=E2=80=99m not really excited to r=
+eview an extension of the current mess.  The current thing is barely, if at a=
+ll, correct.=
