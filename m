@@ -2,91 +2,72 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B11C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9029EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB1322273
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6159A20769
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:04:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgDFNEN (ORCPT
+        id S1728336AbgDFNES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:04:13 -0400
-Received: from mga18.intel.com ([134.134.136.126]:38938 "EHLO mga18.intel.com"
+        Mon, 6 Apr 2020 09:04:18 -0400
+Received: from verein.lst.de ([213.95.11.211]:33475 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728077AbgDFNEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:04:13 -0400
-IronPort-SDR: +mhhf4WQP/SOB1Ta8CdjRhM1ZgY58ZFTaMegAJPWy5ftTob5Bv2JRnncIvTiocCh/DogKCPJPr
- XWIa5mzz2CWA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 06:04:01 -0700
-IronPort-SDR: M1yeWc4dK0ciV2kr3dpLZnL49hrexu8/JdeW3lQVODOoJAXpSHu0mzrDSeCBWFBGHIqkApSY9t
- jtVqmRz9IVjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,351,1580803200"; 
-   d="scan'208";a="424350736"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 06 Apr 2020 06:03:59 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jLRQ1-00GBQE-Vd; Mon, 06 Apr 2020 16:04:01 +0300
-Date:   Mon, 6 Apr 2020 16:04:01 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Fengping yu <fengping.yu@mediatek.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v3] Add support for MediaTek keypad
-Message-ID: <20200406130401.GV3676135@smile.fi.intel.com>
-References: <20200405020114.14787-1-fengping.yu@mediatek.com>
+        id S1728077AbgDFNES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:04:18 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7904768BEB; Mon,  6 Apr 2020 15:04:16 +0200 (CEST)
+Date:   Mon, 6 Apr 2020 15:04:16 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/6] binfmt_elf: open code copy_siginfo_to_user to
+ kernelspace buffer
+Message-ID: <20200406130416.GB16479@lst.de>
+References: <20200406120312.1150405-1-hch@lst.de> <20200406120312.1150405-3-hch@lst.de> <CAK8P3a02LQNOehukgaCj81wg1D2XhW1=_mQZ72cT6nQdO=mhOw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200405020114.14787-1-fengping.yu@mediatek.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAK8P3a02LQNOehukgaCj81wg1D2XhW1=_mQZ72cT6nQdO=mhOw@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 10:01:13AM +0800, Fengping yu wrote:
+On Mon, Apr 06, 2020 at 03:01:24PM +0200, Arnd Bergmann wrote:
+> >  static void fill_siginfo_note(struct memelfnote *note, user_siginfo_t *csigdata,
+> >                 const kernel_siginfo_t *siginfo)
+> >  {
+> > -       mm_segment_t old_fs = get_fs();
+> > -       set_fs(KERNEL_DS);
+> > -       copy_siginfo_to_user((user_siginfo_t __user *) csigdata, siginfo);
+> > -       set_fs(old_fs);
+> > +       memcpy(csigdata, siginfo, sizeof(struct kernel_siginfo));
+> > +       memset((char *)csigdata + sizeof(struct kernel_siginfo), 0,
+> > +               SI_EXPANSION_SIZE);
+> >         fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
+> >  }
 > 
-> This patchset add support to MediaTek matrix keypad.
+> I think this breaks compat binfmt-elf mode, which relies on this trick:
+> 
+> fs/compat_binfmt_elf.c:#define copy_siginfo_to_user     copy_siginfo_to_user32
+> fs/compat_binfmt_elf.c#include "binfmt_elf.c"
+> 
+> At least we seem to only have one remaining implementation of
+> __copy_siginfo_to_user32(), so fixing this won't require touching all
+> architectures, but I don't see an obvious way to do it right. Maybe
+> compat-binfmt-elf.c should just override fill_siginfo_note() itself
+> rather than overriding copy_siginfo_to_user().
 
-Seems it has not addressed comments I gave.
-
-> 
-> Change since V2:
-> - remove extra space and redundant lines
-> - update keypad devicetree document debounce time unit
-> - change to use devm_platform_ioremap_resource() to simplify resource management
-> - use bitmap to store and check keypad state
-> 
-> fengping.yu (2):
->   add dt-binding document for MediaTek Keypad
->   add MediaTek keypad driver
-> 
->  .../devicetree/bindings/input/mtk-kpd.txt     |  61 +++++
->  arch/arm64/configs/defconfig                  |   1 +
->  drivers/input/keyboard/Kconfig                |   7 +
->  drivers/input/keyboard/Makefile               |   1 +
->  drivers/input/keyboard/mtk-kpd.c              | 258 ++++++++++++++++++
->  5 files changed, 328 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/mtk-kpd.txt
->  create mode 100644 drivers/input/keyboard/mtk-kpd.c
-> 
-> --
-> 2.18.0
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Ooops.  Yes, this will need some manual handling.
