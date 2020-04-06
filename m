@@ -2,164 +2,164 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDD1C2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902CBC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFAF206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2CE206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="FIQ2U20C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgDFIdJ (ORCPT
+        id S1726641AbgDFIgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:33:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19672 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726475AbgDFIdJ (ORCPT
+        Mon, 6 Apr 2020 04:36:12 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34809 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgDFIgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 04:33:09 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0368X7bE128198
-        for <linux-kernel@vger.kernel.org>; Mon, 6 Apr 2020 04:33:08 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 306pcyb167-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 04:33:07 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 6 Apr 2020 09:32:34 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 Apr 2020 09:32:31 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0368WpKb54132762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Apr 2020 08:32:51 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F187B4C050;
-        Mon,  6 Apr 2020 08:32:50 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 758994C052;
-        Mon,  6 Apr 2020 08:32:50 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.23.63])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Apr 2020 08:32:50 +0000 (GMT)
-Subject: Re: [PATCH v2 1/5] KVM: s390: vsie: Fix region 1 ASCE sanity shadow
- address checks
-To:     David Hildenbrand <david@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>, stable@vger.kernel.org
-References: <59b411eb-dabe-8cac-9270-7a9f0faa63d5@de.ibm.com>
- <67F45F4F-33CB-455A-8CB8-7D20D9A2BF2F@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
- b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
- gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
- kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
- NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
- hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
- QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
- OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
- tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
- WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
- DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
- OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
- t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
- PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
- Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
- 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
- PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
- YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
- REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
- vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
- DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
- D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
- 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
- 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
- v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
- 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
- JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
- cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
- i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
- jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
- ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 6 Apr 2020 10:32:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Apr 2020 04:36:12 -0400
+Received: by mail-ed1-f68.google.com with SMTP id o1so18234376edv.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 01:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rpWT0MDD1UpkdCBjt4GwmUUuDmZT2CiV8oFjv2FSbJc=;
+        b=FIQ2U20CLFrpOgJbE6xj4ai+Rnc4E5kQ/LBDi4blhwf+5onbkwT/M+Gd5RPhR9tnuv
+         zaaYj6J4xLttvLdfS72P9zuIAxhckvPYgRuzZ8VPVpsP7V/K+suG3F4D0oaBg313A6jW
+         uq/Nox6b6glJaYpZBI+S86tXlw5VzZk0oNqH4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rpWT0MDD1UpkdCBjt4GwmUUuDmZT2CiV8oFjv2FSbJc=;
+        b=aB803J8i/0FOCdNJR2DqrN5LmapXJbXftHeabKJNn0b/E2Kjq2Wj3Z+Jdc3iM24lPg
+         IwDeCF7TvTUH7GJRpYUjghU0zh9d7qdp11or9P8/pSRDrfB9VxGJ4RIQRFlH1mijPSfp
+         7QpVuHaJqg6AfF3mM451rV2I12ZpPPNxAKyDyMR8CK+fIL9ZzDjxnq9lC+sRqQ/sxRq1
+         GT2Y2386R2WV7+rsLPc1l6+4bHJ6HzYgfUlJk4s0PqdhB2/E5Dl4o0mdYZPVEM0jTe2y
+         lZCkiyvlqH4jBfQvwVInrX4AzDmcCVQ/TcLjc9VIbpG1Yy+WQ0jjeRYPw1JSFCpFFPOH
+         +6kQ==
+X-Gm-Message-State: AGi0PuaYs8zgsrQEN9lagEJjAmOHP363Yu4GH+sIwpjkqHcNGnhNJB2U
+        FtrkBiF8WuD/srGXbv2QU6lH1mwk2VxBWRt9rjPvHQ==
+X-Google-Smtp-Source: APiQypJ0bW8RYsjPXbL9qEMFPDykIG2LZMaBEua5O/565lR8NmnrhrWeVSiFufYz/Cw5fwNDYVzxnpNff+6Uaebhdd0=
+X-Received: by 2002:a05:6402:160e:: with SMTP id f14mr18573307edv.301.1586162167356;
+ Mon, 06 Apr 2020 01:36:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <67F45F4F-33CB-455A-8CB8-7D20D9A2BF2F@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040608-4275-0000-0000-000003BA85B6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040608-4276-0000-0000-000038CFE2AE
-Message-Id: <e6ef6a64-70eb-448f-1dcf-2f032f94cf07@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-06_03:2020-04-03,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 clxscore=1015
- impostorscore=0 suspectscore=0 phishscore=0 mlxscore=0 spamscore=0
- mlxlogscore=999 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004060068
+References: <20200401144109.GA29945@gardel-login> <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
+ <2590640.1585757211@warthog.procyon.org.uk> <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
+ <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
+ <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
+ <27994c53034c8f769ea063a54169317c3ee62c04.camel@themaw.net>
+ <20200403111144.GB34663@gardel-login> <CAJfpeguQAw+Mgc8QBNd+h3KV8=Y-SOGT7TB_N_54wa8MCoOSzg@mail.gmail.com>
+ <20200403151223.GB34800@gardel-login> <20200403203024.GB27105@fieldses.org>
+In-Reply-To: <20200403203024.GB27105@fieldses.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Mon, 6 Apr 2020 10:35:55 +0200
+Message-ID: <CAJfpegvxnp8N-o-iTXzj0UnYZbDPfms1zpwcHf1tdhRJ4au3Og@mail.gmail.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        Ian Kent <raven@themaw.net>,
+        David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Content-Type: multipart/mixed; boundary="0000000000008acd9805a29b28ff"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--0000000000008acd9805a29b28ff
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, Apr 3, 2020 at 10:30 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+>
+> On Fri, Apr 03, 2020 at 05:12:23PM +0200, Lennart Poettering wrote:
+> > BTW, while we are at it: one more thing I'd love to see exposed by
+> > statx() is a simple flag whether the inode is a mount point. There's
+> > plenty code that implements a test like this all over the place, and
+> > it usually isn't very safe. There's one implementation in util-linux
+> > for example (in the /usr/bin/mountpoint binary), and another one in
+> > systemd. Would be awesome to just have a statx() return flag for that,
+> > that would make things *so* much easier and more robust. because in
+> > fact most code isn't very good that implements this, as much of it
+> > just compares st_dev of the specified file and its parent. Better code
+> > compares the mount ID, but as mentioned that's not as pretty as it
+> > could be so far...
+>
+> nfs-utils/support/misc/mountpoint.c:check_is_mountpoint() stats the file
+> and ".." and returns true if they have different st_dev or the same
+> st_ino.  Comparing mount ids sounds better.
+>
+> So anyway, yes, everybody reinvents the wheel here, and this would be
+> useful.  (And, yes, we want to know for the vfsmount, we don't care
+> whether the same inode is used as a mountpoint someplace else.)
 
-On 03.04.20 21:55, David Hildenbrand wrote:
-> 
-> 
->> Am 03.04.2020 um 19:56 schrieb Christian Borntraeger <borntraeger@de.ibm.com>:
->>
->> ﻿
->>
->>> On 03.04.20 17:30, David Hildenbrand wrote:
->>> In case we have a region 1 ASCE, our shadow/g3 address can have any value.
->>> Unfortunately, (-1UL << 64) is undefined and triggers sometimes,
->>> rejecting valid shadow addresses when trying to walk our shadow table
->>> hierarchy.
->>
->> I thin the range of the addresses do not matter.
->> Took me a while to understand maybe rephrase that:
->>
->> In case we have a region 1 the following calculation 
->> (31 + ((gmap->asce & _ASCE_TYPE_MASK) >> 2)*11)
->> results in 64. As shifts beyond the size are undefined the compiler is free to use
->> instructions like sllg. sllg will only use 6 bits of the shift value (here 64)
->> resulting in no shift at all. That means that ALL addresses will be rejected.
-> 
-> Interestingly, it would not fail when shadowing the r2t, but only when trying to shadow the r3t.
-> 
->>
->> With that this makes sense. 
->>
->> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
->>
-> 
-> In case there are no other comments, can you fixup when applying, or do you want me to resend?
+Attaching a patch.
 
-I can fixup.
+There's some ambiguity about what is a "mountpoint" and what these
+tools are interested in.  My guess is that they are not interested in
+an object being a mount point (something where another object is
+mounted) but being a mount root (this is the object mounted at the
+mount point).  I.e
 
+fd = open("/mnt", O_PATH);
+mount("/bin", "/mnt", NULL, MS_BIND, NULL);
+statx(AT_FDCWD, "/mnt", 0, 0, &stx1);
+statx(fd, "", AT_EMPTY_PATH, 0, &stx2);
+printf("mount_root(/mnt) = %c, mount_root(fd) = %c\n",
+    stx1.stx_attributes & STATX_ATTR_MOUNT_ROOT ? 'y' : 'n',
+    stx2.stx_attributes & STATX_ATTR_MOUNT_ROOT ? 'y' : 'n');
+
+Would print:
+mount_root(/mnt) = y, mount_root(fd) = n
+
+Thanks,
+Miklos
+
+--0000000000008acd9805a29b28ff
+Content-Type: text/x-patch; charset="US-ASCII"; name="statx-add-mount_root.patch"
+Content-Disposition: attachment; filename="statx-add-mount_root.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k8o7ysgp0>
+X-Attachment-Id: f_k8o7ysgp0
+
+RnJvbTogTWlrbG9zIFN6ZXJlZGkgPG1zemVyZWRpQHJlZGhhdC5jb20+ClN1YmplY3Q6IHN0YXR4
+OiBhZGQgbW91bnRfcm9vdAoKRGV0ZXJtaW5pbmcgd2hldGhlciBhIHBhdGggb3IgZmlsZSBkZXNj
+cmlwdG9yIHJlZmVycyB0byBhIG1vdW50cG9pbnQgKG9yCm1vcmUgcHJlY2lzZWx5IGEgbW91bnQg
+cm9vdCkgaXMgbm90IHRyaXZpYWwgdXNpbmcgY3VycmVudCB0b29scy4KCkFkZCBhIGZsYWcgdG8g
+c3RhdHggdGhhdCBpbmRpY2F0ZXMgd2hldGhlciB0aGUgcGF0aCBvciBmZCByZWZlcnMgdG8gdGhl
+CnJvb3Qgb2YgYSBtb3VudCBvciBub3QuCgpSZXBvcnRlZC1ieTogTGVubmFydCBQb2V0dGVyaW5n
+IDxtenhyZWFyeUAwcG9pbnRlci5kZT4KUmVwb3J0ZWQtYnk6IEouIEJydWNlIEZpZWxkcyA8YmZp
+ZWxkc0BmaWVsZHNlcy5vcmc+ClNpZ25lZC1vZmYtYnk6IE1pa2xvcyBTemVyZWRpIDxtc3plcmVk
+aUByZWRoYXQuY29tPgotLS0KIGZzL3N0YXQuYyAgICAgICAgICAgICAgICAgfCAgICAzICsrKwog
+aW5jbHVkZS91YXBpL2xpbnV4L3N0YXQuaCB8ICAgIDEgKwogMiBmaWxlcyBjaGFuZ2VkLCA0IGlu
+c2VydGlvbnMoKykKCi0tLSBhL2luY2x1ZGUvdWFwaS9saW51eC9zdGF0LmgKKysrIGIvaW5jbHVk
+ZS91YXBpL2xpbnV4L3N0YXQuaApAQCAtMTcyLDYgKzE3Miw3IEBAIHN0cnVjdCBzdGF0eCB7CiAj
+ZGVmaW5lIFNUQVRYX0FUVFJfTk9EVU1QCQkweDAwMDAwMDQwIC8qIFtJXSBGaWxlIGlzIG5vdCB0
+byBiZSBkdW1wZWQgKi8KICNkZWZpbmUgU1RBVFhfQVRUUl9FTkNSWVBURUQJCTB4MDAwMDA4MDAg
+LyogW0ldIEZpbGUgcmVxdWlyZXMga2V5IHRvIGRlY3J5cHQgaW4gZnMgKi8KICNkZWZpbmUgU1RB
+VFhfQVRUUl9BVVRPTU9VTlQJCTB4MDAwMDEwMDAgLyogRGlyOiBBdXRvbW91bnQgdHJpZ2dlciAq
+LworI2RlZmluZSBTVEFUWF9BVFRSX01PVU5UX1JPT1QJCTB4MDAwMDIwMDAgLyogUm9vdCBvZiBh
+IG1vdW50ICovCiAjZGVmaW5lIFNUQVRYX0FUVFJfVkVSSVRZCQkweDAwMTAwMDAwIC8qIFtJXSBW
+ZXJpdHkgcHJvdGVjdGVkIGZpbGUgKi8KIAogCi0tLSBhL2ZzL3N0YXQuYworKysgYi9mcy9zdGF0
+LmMKQEAgLTIwMiw2ICsyMDIsOSBAQCBpbnQgdmZzX3N0YXR4KGludCBkZmQsIGNvbnN0IGNoYXIg
+X191c2VyCiAJZXJyb3IgPSB2ZnNfZ2V0YXR0cigmcGF0aCwgc3RhdCwgcmVxdWVzdF9tYXNrLCBm
+bGFncyk7CiAJc3RhdC0+bW50X2lkID0gcmVhbF9tb3VudChwYXRoLm1udCktPm1udF9pZDsKIAlz
+dGF0LT5yZXN1bHRfbWFzayB8PSBTVEFUWF9NTlRfSUQ7CisJaWYgKHBhdGgubW50LT5tbnRfcm9v
+dCA9PSBwYXRoLmRlbnRyeSkKKwkJc3RhdC0+YXR0cmlidXRlcyB8PSBTVEFUWF9BVFRSX01PVU5U
+X1JPT1Q7CisJc3RhdC0+YXR0cmlidXRlc19tYXNrIHw9IFNUQVRYX0FUVFJfTU9VTlRfUk9PVDsK
+IAlwYXRoX3B1dCgmcGF0aCk7CiAJaWYgKHJldHJ5X2VzdGFsZShlcnJvciwgbG9va3VwX2ZsYWdz
+KSkgewogCQlsb29rdXBfZmxhZ3MgfD0gTE9PS1VQX1JFVkFMOwo=
+--0000000000008acd9805a29b28ff--
