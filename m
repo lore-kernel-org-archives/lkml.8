@@ -2,194 +2,212 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E047C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CCAC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4797206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AAA1206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:53:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETEKmsik"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s9MvSctF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgDFJv3 (ORCPT
+        id S1726852AbgDFJxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:51:29 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50556 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgDFJv3 (ORCPT
+        Mon, 6 Apr 2020 05:53:42 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:32871 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgDFJxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:51:29 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x25so2918602wmc.0;
-        Mon, 06 Apr 2020 02:51:27 -0700 (PDT)
+        Mon, 6 Apr 2020 05:53:42 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g21so1333897wmh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 02:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5VM8BXPopEtF/vWMO6fH4OBxYXzchIKT+rdSCRSo1hE=;
-        b=ETEKmsikJ7lNFax7fOsUxRzi5ybSvI9m3Ia2HjDWRVIYXlCGjP17IanQ/eOg4VQyfC
-         +0PzrRtw7jpxn+SgX+OHxqGwHNWAqSXvFzGqXlfElOdSYgVVZNxVJNS9nFXHYAu/GhEc
-         63xlMnvUvT0jHUipg9GgKYJICFjQhb7LVSQ/tnFSx9CJ/StAXxaZEaw5vel+g0lrSBWg
-         Ghj1nA41ky3OBPjP+Feqb64MYrhWafhhchC2ltvwaror65/IpDUEWSOTeobsnsWSBbQw
-         mPgVuaUmASzy4/oGLPsEDJWJwFzCECmkmIbFR44sAYChgQJt15tbQaeqAvXkVgFOwn9S
-         cSpg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0Y8KYYSV67CMXMuBRVrsEZZ0Dkuuswu9PWACPReBAMA=;
+        b=s9MvSctF6VhiZxmpezETuJqLWz6LiQ8GrJqpPtlj+GsurtNCV+FSmXOW/eBBmVDefy
+         qB3LCwrPEcRbOOB8cUofONyVR5HOLZuHN8Lx1bOPcong/pn7vqzjjYTs6UhJyoNVb1Y5
+         Q1z6Ks90GBFmZTL7EnyLzicSpHyoSS+IVCDnprUqf1lg5OUEvyWizrfVxOI+tpqlFJfJ
+         qzIr2UVRf4oWdKXvAShyLKewnZDleK9lAd1dAeYmJxwAhWCZis8fsWFAIq2ZZ0MOsGyn
+         EYHk1sOeM5SPbp8h1BGcw1Y2r0T94lMOuzboaipC8cyhCX6UmiToIGeeob7c8uN7SYVr
+         bY1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5VM8BXPopEtF/vWMO6fH4OBxYXzchIKT+rdSCRSo1hE=;
-        b=oCz/DSJYkwPk+6XEeasoxgDreMK5yGfFLCi8bl/R00c3EoL/kyjjdXGljiw6HRtTcY
-         f4RakM1cpm6rpq3pY6rdl8atYX1iJvKCymMvqF0IwZJ5QYO/GBhWp4BIdBypY5+68yRf
-         js+kWOACTSG36xaHE/vj2fKEk9buZOesl7uZs3Gtru9euYMII/fHtoovNOhQZuM6AheA
-         GW0D5oWNMeUzb/rmWIHbhJoZ8UPmAhizbRS5y6wWvSA98H/9dxKBS9w3NoJH9N7y+Tts
-         Nac5J/t0RrlT8yfgWMmUCT7yO/fzprqR2G6u+3hYt6SNrwd8dYpzwMYnGUAQ7mCiqDt2
-         XHaQ==
-X-Gm-Message-State: AGi0PuatCpQF88QiWyBI+sHqqCpbLqSywkGyxpu2GoCaQ4ZYk7jKwteC
-        IsiXYy2LIYj/7MMTVnBePNs=
-X-Google-Smtp-Source: APiQypKHLa6tX6IVcch/Q0+KCyUEc5LV6iQn8Mv+dkUDCEh4ACEjxzAq5d5bMU9TnSMpsN6uBZoH3w==
-X-Received: by 2002:a7b:c24a:: with SMTP id b10mr21808723wmj.84.1586166686663;
-        Mon, 06 Apr 2020 02:51:26 -0700 (PDT)
-Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
-        by smtp.gmail.com with ESMTPSA id l185sm24394718wml.44.2020.04.06.02.51.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 02:51:25 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 11:51:24 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle
- struct element
-Message-ID: <20200406095124.GA475759@ulmo>
-References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
- <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
- <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
- <20200330151231.GA1650@workstation.tuxnet>
- <CAGngYiUe-tihBJUcXQ738_5aA9pzgp_-NSs4iCrz3eWO6rMukA@mail.gmail.com>
- <20200404173546.GA55833@workstation.tuxnet>
- <CAGngYiWpO_N+t74k-==RNaXkZcp6TZvVOJzXPOi84cpQ6PHbhw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=0Y8KYYSV67CMXMuBRVrsEZZ0Dkuuswu9PWACPReBAMA=;
+        b=BnAtX9bWjrXll3N3U3b2wg0Yx+3LQxn4WpkJwidDK3Vr12dDSgMMDU8Bn+6pLJQgRC
+         2F0QwMdCk0DteZQTGEtqYjI4lnmrofcn4Yik2nTHn9HzA5g+3e3gYbNmCkU8rpT1PNw3
+         IVgQyN2G4kj7gYn3G4RmoVp6kyn8u8/4ZQCf9a+rkshYLIHhNM8bXy1/zj31dIeo+STP
+         +IYNSXybmdpd+TnAoaMKxA65jOFnh9LqTwqgXz/AAG/SvmRh14+LXh1qScIEzUKg1hHX
+         HMf/ZXQ477vN3j8yXffEk7TsKifR/YtPIUrBrcvRIj/0xc92ZHxEw7pv6AKh4cc36fAq
+         APYg==
+X-Gm-Message-State: AGi0PuYDDgA09h+Nj1cp0qy9K/bcNXkRRBPcgi3c+pyTzWYA+IQx6LJE
+        XkluLj3vAJm2VPxn8CSrpT+M6ZNOje0=
+X-Google-Smtp-Source: APiQypJeWRqP9iDhDf1jNiCXRuf5mXvCdy0pKJP/pq5t5y/BwYnRBjK6yqABQxZaq860YTwRrveEYQ==
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr21481414wml.71.1586166819655;
+        Mon, 06 Apr 2020 02:53:39 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:b51c:42dc:1499:2880? ([2a01:e34:ed2f:f020:b51c:42dc:1499:2880])
+        by smtp.googlemail.com with ESMTPSA id i2sm25867008wrx.22.2020.04.06.02.53.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 02:53:39 -0700 (PDT)
+Subject: Re: [PATCH] thermal: core: Send a sysfs notification on trip points
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>, vincent.whitchurch@axis.com,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <a7e8287d-72be-7ab0-697a-9de40eb3f81f@linaro.org>
+ <20200402142116.22869-1-daniel.lezcano@linaro.org>
+ <CAHLCerPOVouQfK4iqMc4xQpok=XTHj4d1hsLTsb9N5r=ZUBs8Q@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ea0a6c97-fe8e-d705-6ce9-b5ac60046d63@linaro.org>
+Date:   Mon, 6 Apr 2020 11:53:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
-Content-Disposition: inline
-In-Reply-To: <CAGngYiWpO_N+t74k-==RNaXkZcp6TZvVOJzXPOi84cpQ6PHbhw@mail.gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <CAHLCerPOVouQfK4iqMc4xQpok=XTHj4d1hsLTsb9N5r=ZUBs8Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/04/2020 11:25, Amit Kucheria wrote:
+> On Thu, Apr 2, 2020 at 7:53 PM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>>
+>> Currently the userspace has no easy way to get notified when a
+>> specific trip point was crossed. There are a couple of
+>> approaches:
+>>
+>> - the userspace polls the sysfs temperature with usually an
+>> unacceptable delay between the trip temperature point crossing
+>> and the moment it is detected, or a high polling rate with an
+>> unacceptable number of wakeup events.
+>>
+>> - the thermal zone is set to be managed by an userspace governor
+>> in order to receive the uevent even if the thermal zone needs to
+>> be managed by another governor.
+>>
+>> These changes allow to send a sysfs notification on the
+>> trip_point_*_temp when the temperature is getting higher than the
+>> trip point temperature. By this way, the userspace can be
+>> notified everytime when the trip point is crossed, this is useful
+>> for the thermal Android HAL or for notification to be sent via
+>> d-bus.
+>>
+>> That allows the userspace to manage the applications based on
+>> specific alerts on different thermal zones to mitigate the skin
+>> temperature, letting the kernel governors handle the high
+>> temperature for hardware like the CPU, the GPU or the modem.
+>>
+>> The temperature can be oscillating around a trip point and the
+>> event will be sent multiple times. It is up to the userspace to
+>> deal with this situation.
+>
+> Thinking about this a bit more, userspace might want a
+> notification when the temperature reduces and crosses the threshold
+> on its way down too.
+>
+> Currently, we're only sending the notification on the way up. How
+> should userspace know when to stop mitigation activity other than
+> constantly polling the TZ temperature?
 
---OgqxwSJOaUobr8KG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Assuming you want to monitor the temperature after a specific trip
+point is reached:
 
-On Sat, Apr 04, 2020 at 04:17:00PM -0400, Sven Van Asbroeck wrote:
-> On Sat, Apr 4, 2020 at 1:35 PM Clemens Gruber
-> <clemens.gruber@pqgruber.com> wrote:
-> >
-> > As the user is setting the duty cycle in nanoseconds, it makes sense
-> > that the relative duty cycle decreases in an absolute period increase.
-> > As for the behavior that the other channels remain at the same relative
-> > duty cycle: Not sure how we can avoid this, other than reprogramming all
-> > 15 other channels if one of them is changed and that's not really
-> > acceptable, I think.
->=20
-> Thank you for the explanation, Clemens.
->=20
-> Yes, it does make sense that the relative duty cycle changes when we chan=
-ge
-> the period. A relative duty cycle of duty_cycle / period is what the user=
- would
-> expect to see.
->=20
-> It also kind-of makes sense that the relative duty cycles of the other
-> pwm channels
-> do not change: after all, the user is not touching them, so would not exp=
-ect
-> them to change.
->=20
-> However, the following does not make sense to me. Imagine pwm0 and pwm1
-> are both active and at 50%: period=3D5000000, duty_cycle=3D2500000. Then,=
- change
-> the period on pwm0:
->=20
-> $ echo 10000000 > pwm0/period
->=20
-> Then pwm0 gets dimmer (makes sense) and pwm1 keeps the same relative duty
-> cycle (makes sense). However, if we now read out sysfs for pwm1, we get:
->=20
-> $ echo pwm1/period
-> 5000000 (wrong!)
-> $ echo pwm1/duty_cycle
-> 2500000 (wrong! although relative duty cycle is correct)
->=20
-> Although the pwm1 period has changed, the API calls do not reflect this.
-> This makes it next to impossible for users to know what the current period
-> is set to.
->=20
-> Moving to the atomic API won't help, because .get_state is called only
-> once, when the chip is registered.
+ - the notification is sent way up
 
-The .get_state() callback is actually called when the PWM is requested,
-which could be much later than when the chip is registered. That doesn't
-change the fact that it would be useless for this case, though.
+ - user space starts reading the temperature
 
-> It does look like we have a square peg (this chip) in a round hole (the
-> standard assumptions the pwm core makes) ?
+ - the temperature goes below the trip point temperature
 
-There are other chips where a single period is shared across multiple
-PWM channels. Typically what we do there is once a period is configured
-for a given channel, all subsequent PWM channel configurations must use
-the same period, or otherwise the driver will return an error code.
+ - user space stops reading the temperature
 
-See for example:
+Actually, I don't see the point of being notified and not read the
+temperature after.
 
-  - stm32_pwm_config() in drivers/pwm/pwm-stm32.c
-  - lpc18xx_pwm_config() in drivers/pwm/pwm-lpc18xx-sct.c
-  - pwm_imx_tpm_apply_hw() in drivers/pwm/pwm-imx-tpm.c
-  - fsl_pwm_apply_config() in drivers/pwm/pwm-fsl-ftm.c
+That is how is working the kernel side, especially with the interrupt
+mode. The sensor fires an interrupt -> thermal zone update ->
+temperature read -> trip point reached -> passive mode on ->
+temperature polling -> temperature below trip point -> passive mode off.
 
-The rationale behind that is that we must not change a PWM configuration
-without a consumer having explicitly requested it.
 
-It seems like PCA9685 is somewhere halfway between in that it will
-actually keep the same duty-cycle/period ratio, but that doesn't mean it
-is automatically okay to do this. The problem is that the duty-cycle to
-period ratio is only relevant in some cases. If all you care about is
-the power output of the PWM signal, which admittedly seems to be about
-95% of all cases, then yes, this behaviour would be okay. But what if we
-have a consumer that relies on a particular width of the PWM pulse in
-absolute terms rather than relative to the period?
 
-Thierry
+>> The following userspace program allows to monitor those events:
+>>
+>> struct trip_data { int fd; int temperature; const char *path; };
+>>
+>
+> [snip]
+>
 
---OgqxwSJOaUobr8KG
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6K+5kACgkQ3SOs138+
-s6HhFA/+PEiXL6s/Cq43Hd4WNCKlr04FsvoDJM6O5IuLU1Juh8TT2IZImpKY/BKD
-J6xXeqCkuOHbeWNpV4w8TM/ZD8UJ4JLM95l9fVs363tFZ/+UG34Oem3pSzLAv793
-gtGz5gQXgCBWcoe3dvKXdADVwuhhveigg/W0dINZJ90lwW+nfYTQKRveQTa73+EG
-1J/D7vHORq7d3Lmfa6clKNTuz/mtZ+OizAZK02a9YUJiZ9ZTB9T2UItNIZBJzjsg
-B00O/NE7siC/un37QUYgb68fryLCcRfDnuVkZGTAjx1lIXPMWID162oGhlyHqaKC
-s6rD1f7VwGOZZDaXmlj6a+gnkoGdArnOhTc4NzNiLOl5opuJjMXWTarxsP411oW5
-v31nksb37+Nr2rTbyvhUEqmeCbqiNoYFvFXsleJsF2LIrroYGTU0GrucCzXh5v7U
-Z+phxutOZMAW0OrhVS26/kNr8oOKgyVX2UHi2KI+c6n9/ccwv7LBDtgVC7/1/r0B
-ZChU1ymVrBNLSyDgclBc5DnR4FTYYiOBE5Mh/jRkccHu8HMUHCdpw6DPerrcIMil
-hxkz9CPn6tgVUgXdMNxDM/J8zn5t6IY27PP0S96ZejCZZqot7SzyxnuF25UaMeqL
-xmuRlJjDF0X2yCn/+6FflGG4Rm3RfIMfj+Zo6v5iYMtj7CmXCpo=
-=0CGN
------END PGP SIGNATURE-----
-
---OgqxwSJOaUobr8KG--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
