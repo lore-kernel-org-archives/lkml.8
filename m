@@ -2,187 +2,147 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25364C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF18C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A3D206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586156505;
-	bh=/miZDcwo/LKOwYst2qseuCoD+V/d3a4WWbj5j23oSeg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wPFY6bU0VfBwaV756moSW9Q2bSGXIf7hB+mZ5g7ppTe/OQqc0BgkrRCdd2Lb/frDj
-	 7N2z1XTiLONU4tFYPDVYsLZEBIuSwjk9y9vK5tR8G7/G0u20mSv3AjG263VDqe5sTm
-	 31nuY7v60pTp/XzWRDvDmJiz4JfbbxgX0imaRgWI=
+	by mail.kernel.org (Postfix) with ESMTP id BA682206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:03:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rd1wk9r/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDFHBn (ORCPT
+        id S1726621AbgDFHC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 03:01:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39744 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgDFHBn (ORCPT
+        Mon, 6 Apr 2020 03:02:59 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40666 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgDFHC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 03:01:43 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so16027704wrt.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 00:01:41 -0700 (PDT)
+        Mon, 6 Apr 2020 03:02:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s8so13905333wrt.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 00:02:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vqfroo7sRYSBOLw6kf5costaUhuKgoZCaUXjGN0qJ04=;
+        b=rd1wk9r/w39Q86DGuCWqlsgvQgDAVOe4F3iTkQksaCY6uPrGOvn/XBaklFaBxektzM
+         tMp74mBPJkwT8n7H7xT7484wJ6qE/ajAg15WpgnD2QqabErIOHvpAC+MAotNViUNFcA6
+         j5f50ODvlg00G4o3FXpN6fP6qhO9aCy0Ba9llgq3JqU4DGt+2TmO3WH4s6JHrwzt8A5Q
+         IiM2f5yXKcFO0kSoatbWiZo8B/vTacAc/NGme6Y8x+gA8Dk69XjY/uZ+RqhQAKmvl5gW
+         rdp5SdW4M20uu9+WPgigibIlF5ruw2pRTpFHAgUIcMPe0rsWBewBco10QqA7RgGmb+CL
+         oIGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=69TN40+/3rdC5VHL4PnojXQb7Y3XtFrcgwQ12Kvr8T0=;
-        b=l+NmnwvrdxWKvP83nYz1LAqOo2JCm2OWJ6eWvXaNrkzrMBnKdQgBjpNW+5TTxfdGfG
-         4sDIDhatKWGFrITyOaQcyEalzpbIMi1W0bQ4cvIfgD8aeNBqIF33RMbh0tlCRt30WhXT
-         gBVbONvRZq9KsqMzPdrbq9IbvWq+n6CUvNKZysGkVJmN2W5+AP5TganVjNA/bMDjJZkG
-         ZqjEBQmjNUoYzWeX0Fn9akeogg8SGnJ3Bedjzp9957cPPpWdHZ/M5Z1vM2jv4AJ8gFqk
-         frz2KgoAN2u6l8lBCk8mdz31b/K5oe6gMZtUMiY61PVnJdW/Y7wHVxCW/RVG6smnoYZo
-         WaJA==
-X-Gm-Message-State: AGi0PuaQK6Tg6sdeMEg13n8MYYdgnR0jeCTsgq1fUWXbg3XH0RpLvaXj
-        /Cse/ysBUnA00rkH/d0w+JL1g9fJ
-X-Google-Smtp-Source: APiQypL3/RnoyZOsqU3zvwU+/VtmGNcdoAvzDeAPyNEcLkX2yMKzP2qPTiiB9qFEact5c8k3WtQQxg==
-X-Received: by 2002:adf:df8e:: with SMTP id z14mr23374656wrl.296.1586156500828;
-        Mon, 06 Apr 2020 00:01:40 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id q14sm23411956wrx.57.2020.04.06.00.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 00:01:39 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 09:01:37 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm: clarify __GFP_MEMALLOC usage
-Message-ID: <20200406070137.GC19426@dhcp22.suse.cz>
-References: <20200403083543.11552-1-mhocko@kernel.org>
- <20200403083543.11552-2-mhocko@kernel.org>
- <alpine.DEB.2.21.2004031238571.230548@chino.kir.corp.google.com>
- <87blo8xnz2.fsf@notabene.neil.brown.name>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vqfroo7sRYSBOLw6kf5costaUhuKgoZCaUXjGN0qJ04=;
+        b=J+mtCpTtaCUcx3KMN6wUf3usYNIa9NI2SRQgvc4fwE04NJRHHjJSguwVt0w/jYicup
+         ssRqnKwNQ/QoP/ExjNl/8A0HWan7rzBUHzU3EFYOdHFeJQ+PioHwLmdTBWx2BAQdAGyr
+         T7TT66iVMSdLGS2gvRlj7kpCiXOJkDcwsG9xmfH1MaHTTTReohL5bVoTORaKzF9QYap1
+         Oqq2Yu+K1gihoF79siID720K8mimEjRH4hXmtQVbiunciw/vhWg9O2uDKqzIg4YbCC5M
+         u95n/qu8rmgkB9cR9IEmXTnQKj0/G/wR7CarqSmXJgUwosKZQbvBtdXrzJAPQfB69136
+         tePw==
+X-Gm-Message-State: AGi0PuYnr5IMNcFfGLO3ZRdf6z/H7qnQVCaXWz0aFfY1T77Nd6eB5B9f
+        Fvz/l6bDZ8X1cz2Jdem/VCQjrGG8MTJnjIuJmRs=
+X-Google-Smtp-Source: APiQypLrVc6Ogyp/boS/D4XzD2hjNkyCS3CVnGYhVP/4tOzreypyRELv25mDHTUISzhfH3TRvA3DslbF0AZuhndRoIM=
+X-Received: by 2002:a05:6000:187:: with SMTP id p7mr10071228wrx.196.1586156577367;
+ Mon, 06 Apr 2020 00:02:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87blo8xnz2.fsf@notabene.neil.brown.name>
+References: <20200403140952.17177-1-pasha.tatashin@soleen.com> <20200403140952.17177-4-pasha.tatashin@soleen.com>
+In-Reply-To: <20200403140952.17177-4-pasha.tatashin@soleen.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Mon, 6 Apr 2020 09:02:46 +0200
+Message-ID: <CAM9Jb+jciG8J=Mbejg7PygmFayucGG1DQcFDNvqkxLpAY9aFqA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] mm: call cond_resched() from deferred_init_memmap()
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        David Hildenbrand <david@redhat.com>, jmorris@namei.org,
+        sashal@kernel.org, Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 04-04-20 08:23:45, Neil Brown wrote:
-> On Fri, Apr 03 2020, David Rientjes wrote:
-[...]
-> > Hmm, any guidance that we can offer to users of this flag that aren't 
-> > aware of __GFP_MEMALLOC internals?  If I were to read this and not be 
-> > aware of the implementation, I would ask "how do I know when I'm at risk 
-> > of depleting this reserve" especially since the amount of reserve is 
-> > controlled by sysctl.  How do I know when I'm risking a depletion of this 
-> > shared reserve?
-> 
-> "how do I know when I'm at risk of depleting this reserve" is definitely
-> the wrong question to be asking.  The questions to ask are:
-> - how little memory to I need to ensure forward progress?
-> - how quick will that forward progress be?
+> Now that deferred pages are initialized with interrupts enabled we can
+> replace touch_nmi_watchdog() with cond_resched(), as it was before
+> 3a2d7fa8a3d5.
+>
+> For now, we cannot do the same in deferred_grow_zone() as it is still
+> initializes pages with interrupts disabled.
+>
+> This change fixes RCU problem described:
+> linux-mm/20200401104156.11564-2-david@redhat.com
+>
+> [   60.474005] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> [   60.475000] rcu:  1-...0: (0 ticks this GP) idle=02a/1/0x4000000000000000 softirq=1/1 fqs=15000
+> [   60.475000] rcu:  (detected by 0, t=60002 jiffies, g=-1199, q=1)
+> [   60.475000] Sending NMI from CPU 0 to CPUs 1:
+> [    1.760091] NMI backtrace for cpu 1
+> [    1.760091] CPU: 1 PID: 20 Comm: pgdatinit0 Not tainted 4.18.0-147.9.1.el8_1.x86_64 #1
+> [    1.760091] Hardware name: Red Hat KVM, BIOS 1.13.0-1.module+el8.2.0+5520+4e5817f3 04/01/2014
+> [    1.760091] RIP: 0010:__init_single_page.isra.65+0x10/0x4f
+> [    1.760091] Code: 48 83 cf 63 48 89 f8 0f 1f 40 00 48 89 c6 48 89 d7 e8 6b 18 80 ff 66 90 5b c3 31 c0 b9 10 00 00 00 49 89 f8 48 c1 e6 33 f3 ab <b8> 07 00 00 00 48 c1 e2 36 41 c7 40 34 01 00 00 00 48 c1 e0 33 41
+> [    1.760091] RSP: 0000:ffffba783123be40 EFLAGS: 00000006
+> [    1.760091] RAX: 0000000000000000 RBX: fffffad34405e300 RCX: 0000000000000000
+> [    1.760091] RDX: 0000000000000000 RSI: 0010000000000000 RDI: fffffad34405e340
+> [    1.760091] RBP: 0000000033f3177e R08: fffffad34405e300 R09: 0000000000000002
+> [    1.760091] R10: 000000000000002b R11: ffff98afb691a500 R12: 0000000000000002
+> [    1.760091] R13: 0000000000000000 R14: 000000003f03ea00 R15: 000000003e10178c
+> [    1.760091] FS:  0000000000000000(0000) GS:ffff9c9ebeb00000(0000) knlGS:0000000000000000
+> [    1.760091] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    1.760091] CR2: 00000000ffffffff CR3: 000000a1cf20a001 CR4: 00000000003606e0
+> [    1.760091] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [    1.760091] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [    1.760091] Call Trace:
+> [    1.760091]  deferred_init_pages+0x8f/0xbf
+> [    1.760091]  deferred_init_memmap+0x184/0x29d
+> [    1.760091]  ? deferred_free_pages.isra.97+0xba/0xba
+> [    1.760091]  kthread+0x112/0x130
+> [    1.760091]  ? kthread_flush_work_fn+0x10/0x10
+> [    1.760091]  ret_from_fork+0x35/0x40
+> [   89.123011] node 0 initialised, 1055935372 pages in 88650ms
+>
+> Fixes: 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred pages")
+> Cc: stable@vger.kernel.org # 4.17+
+>
+> Reported-by: Yiqian Wei <yiwei@redhat.com>
+> Tested-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> ---
+>  mm/page_alloc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 5ffa8d7e5545..deacfe575872 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1810,7 +1810,7 @@ static int __init deferred_init_memmap(void *data)
+>          */
+>         while (spfn < epfn) {
+>                 nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> -               touch_nmi_watchdog();
+> +               cond_resched();
+>         }
+>  zone_empty:
+>         /* Sanity check that the next zone really is unpopulated */
+> --
+> 2.17.1
 
-Absolutely agreed. The total amount of reserves will always depend on
-all other users. Unless they are perfectly coordinated, which is not the
-case.
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-> In the ideal case a small allocation will be all that is needed in order
-> for that allocation plus another page to be freed "quickly", in time
-> governed only by throughput to some device.  In that case you probably
-> don't need to worry about rate limiting.
-
-Right but I wouldn't expect this to be a general usage pattern of this
-flag. "Allocate to free memory" suggests this would be a part of the
-memory reclaim process and that really needs some form of rate
-limiting. Be it the reclaim itself directly or some other mechanism if
-this happens from a different context.
-
-> The reason I brought up ratelimiting is that RCU is slow.  You can get
-> quite a lot of memory caught up in the kfree-rcu lists.  That's not much
-> of a problem for normal memory, but it might be for the more limited
-> reserves.
-
-Right.
-
-> The other difficulty with the the kfree_rcu case is that we have no idea
-> how many users there will be, so we cannot realistically model how long
-> the queue might get.  Compare with NFS swap-out there the only user it
-> the VM swapping memory which (I think?) already tries to pace writeout
-> with the speed of the device (or is that just writeback...).  I'm
-> clearly not sure of the details but it is a more constrained environment
-> so it is more predicatable.
-
-Mel explained this http://lkml.kernel.org/r/20200401131426.GN3772@suse.de
-
-> In many cases, preallocating a private reserve is better than using
-> GFP_MEMALLOC.  That is what mempools provide and they are very effective
-> (though often way over-allocated*).
-> GFP_MEMALLOC was added because swap-over-NFS requires lots of different
-> allocations (transmit headers, receive buffers, possible routing changes
-> etc), many of them in the network layer which is very sensitive
-> to latency (and mempools require a spinlock to get the reserves).
-
-Yes.
-
-> Maybe the documentation should say.
->  Don't use this - use a mempool.  Here be dragons.
-
-OK, this looks like a good idea.
- 
-> I'm not sure you can really say anything more useful without writing a
-> long essay.
-
-Yes and I am not sure it would be really more helpful than confusing.
-What do you think about this updated patch?
-
-From 6c90b0a19a07c87d24ad576e69b33c6e19c2f9a2 Mon Sep 17 00:00:00 2001
-From: Michal Hocko <mhocko@suse.com>
-Date: Wed, 1 Apr 2020 14:00:56 +0200
-Subject: [PATCH] mm: clarify __GFP_MEMALLOC usage
-
-It seems that the existing documentation is not explicit about the
-expected usage and potential risks enough. While it is calls out
-that users have to free memory when using this flag it is not really
-apparent that users have to careful to not deplete memory reserves
-and that they should implement some sort of throttling wrt. freeing
-process.
-
-This is partly based on Neil's explanation [1].
-
-Let's also call out that a pre allocated pool allocator should be
-considered.
-
-[1] http://lkml.kernel.org/r/877dz0yxoa.fsf@notabene.neil.brown.name
-Signed-off-by: Michal Hocko <mhocko@suse.com>
----
- include/linux/gfp.h | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index e5b817cb86e7..9cacef1a3ee0 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -110,6 +110,11 @@ struct vm_area_struct;
-  * the caller guarantees the allocation will allow more memory to be freed
-  * very shortly e.g. process exiting or swapping. Users either should
-  * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
-+ * Users of this flag have to be extremely careful to not deplete the reserve
-+ * completely and implement a throttling mechanism which controls the consumption
-+ * of the reserve based on the amount of freed memory.
-+ * Usage of a pre-allocated pool (e.g. mempool) should be always considered before
-+ * using this flag.
-  *
-  * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency reserves.
-  * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
--- 
-2.25.1
-
--- 
-Michal Hocko
-SUSE Labs
+>
+>
