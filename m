@@ -2,134 +2,137 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BBAC2BABC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B209CC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DF12312F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:27:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ctPOCNbT"
+	by mail.kernel.org (Postfix) with ESMTP id 8305F214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:29:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586179773;
+	bh=cT5aiBiaDN+mknjSAU1YJCKd3LpD4afmF92dqiFWPcs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Q05bElb5ppj7gzFsox7m7qN8Q+adKx2nv2mZAXJN0vXfD2PcY4yEIc26HzCIusjX4
+	 7R1NwEPF3yuxFJZkzBvhtlQUPcRcGahSL8XaEodNNceXVNZRvD1mtMiXZ+vq1BgJjm
+	 aVbUNrLkMyhiPl3/LBXAbMo/UnZP6HmsNUsZricw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgDFN10 (ORCPT
+        id S1728392AbgDFN3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:27:26 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:34209 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728308AbgDFN1Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:27:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586179644; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=sg0YR1A5Pef3VRnFaQiwEzT6F8DEIg+uQHeuwoU6nms=; b=ctPOCNbTrQfSqlBmvS/NA29LVRi9cQTs3D0WMH8KwrHM0evUP3vwpZGM551rM6xGWeKEuh3d
- 9j7rNutWGZZxxh3VlxWBlZrSp+DgLc1dDQ6ZPvCkO6Z+N3Yr0ogyVRJgOh2GQEoyxiSDPqV5
- p8OKRo+u/lxg+e6bYTeXESKmVlA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b2e2b.7fc892fc7f80-smtp-out-n02;
- Mon, 06 Apr 2020 13:27:07 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A120AC44788; Mon,  6 Apr 2020 13:27:06 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        Mon, 6 Apr 2020 09:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728304AbgDFN3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:29:32 -0400
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DF11EC433BA;
-        Mon,  6 Apr 2020 13:27:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DF11EC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias-Peter =?utf-8?Q?Sch=C3=B6pfer?= 
-        <matthias.schoepfer@ithinx.io>,
-        "Berg Philipp \(HAU-EDS\)" <Philipp.Berg@liebherr.com>,
-        "Weitner Michael \(HAU-EDS\)" <Michael.Weitner@liebherr.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
-References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
-        <87ftdgokao.fsf@tynnyri.adurom.net>
-        <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
-        <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com>
-        <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
-        <87imiczrwm.fsf@kamboji.qca.qualcomm.com>
-        <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
-        <CAFA6WYOjU_iDyAn5PMGe=usg-2sPtupSQEYwcomUcHZBAPnURA@mail.gmail.com>
-Date:   Mon, 06 Apr 2020 16:27:00 +0300
-In-Reply-To: <CAFA6WYOjU_iDyAn5PMGe=usg-2sPtupSQEYwcomUcHZBAPnURA@mail.gmail.com>
-        (Sumit Garg's message of "Mon, 6 Apr 2020 18:51:04 +0530")
-Message-ID: <87v9mcycbf.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76F74221EC;
+        Mon,  6 Apr 2020 13:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586179770;
+        bh=cT5aiBiaDN+mknjSAU1YJCKd3LpD4afmF92dqiFWPcs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OpaU/fdXCVzLI+98p0c4cHjYadRosyr2ugnFykx08WKOfHe2O+mFvPzbxT3GEbUDx
+         V+74Gj1UWcxUc+ZAbUtKKViEOhCJ8hzXrxE1DcUnqhiZs+TPSSreflaI+K594kxDxH
+         kpp4vjzOcjkRbilKMjZUCN7a8kNNfCjcve7/Ps28=
+Received: by mail-il1-f169.google.com with SMTP id 7so14651210ill.2;
+        Mon, 06 Apr 2020 06:29:30 -0700 (PDT)
+X-Gm-Message-State: AGi0PubWlV7oMk7W6r6wF0YRS7C8N7SdI4IadCo7Z82NyIihRM0HDDyv
+        FBBtTr5TWrwxvT6xKQEfdKQ5C5Cc6X/wn+9r55o=
+X-Google-Smtp-Source: APiQypIH8pqcrpa4MStCjFoM4SH24wHLsQ4ZYOb1ESUETqsi+cwlgr5EuTIHH9XorE01jrk7eab0+NnibTOsSHLypMU=
+X-Received: by 2002:a05:6e02:4c:: with SMTP id i12mr21180329ilr.211.1586179769792;
+ Mon, 06 Apr 2020 06:29:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200109150218.16544-1-nivedita@alum.mit.edu> <20200405154245.11972-1-me@prok.pw>
+ <20200405231845.GA3095309@rani.riverdale.lan> <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
+ <20200406035110.GA3241052@rani.riverdale.lan> <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
+ <20200406084738.GA2520@zn.tnic> <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
+ <20200406112042.GC2520@zn.tnic> <20200406132215.GA113388@rani.riverdale.lan>
+In-Reply-To: <20200406132215.GA113388@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 6 Apr 2020 15:29:18 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG+34-bK1XuxX5VopkRt1SV1ewUAEmif+aQj5cJQ=9vbA@mail.gmail.com>
+Message-ID: <CAMj1kXG+34-bK1XuxX5VopkRt1SV1ewUAEmif+aQj5cJQ=9vbA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
+        hpa@zytor.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sumit Garg <sumit.garg@linaro.org> writes:
-
-> On Mon, 6 Apr 2020 at 18:38, Johannes Berg <johannes@sipsolutions.net> wrote:
->>
->> On Mon, 2020-04-06 at 16:04 +0300, Kalle Valo wrote:
->> > Johannes Berg <johannes@sipsolutions.net> writes:
->> >
->> > > On Mon, 2020-04-06 at 15:52 +0300, Kalle Valo wrote:
->> > > > Johannes Berg <johannes@sipsolutions.net> writes:
->> > > >
->> > > > > On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
->> > > > > > >     user-space  ieee80211_register_hw()  RX IRQ
->> > > > > > >     +++++++++++++++++++++++++++++++++++++++++++++
->> > > > > > >        |                    |             |
->> > > > > > >        |<---wlan0---wiphy_register()      |
->> > > > > > >        |----start wlan0---->|             |
->> > > > > > >        |                    |<---IRQ---(RX packet)
->> > > > > > >        |              Kernel crash        |
->> > > > > > >        |              due to unallocated  |
->> > > > > > >        |              workqueue.          |
->> > > > >
->> > > > > [snip]
->> > > > >
->> > > > > > I have understood that no frames should be received until mac80211 calls
->> > > > > > struct ieee80211_ops::start:
->> > > > > >
->> > > > > >  * @start: Called before the first netdevice attached to the hardware
->> > > > > >  *         is enabled. This should turn on the hardware and must turn on
->> > > > > >  *         frame reception (for possibly enabled monitor interfaces.)
->> > > > >
->> > > > > True, but I think he's saying that you can actually add and configure an
->> > > > > interface as soon as the wiphy is registered?
->> > > >
->> > > > With '<---IRQ---(RX packet)' I assumed wcn36xx is delivering a frame to
->> > > > mac80211 using ieee80211_rx(), but of course I'm just guessing here.
->> > >
->> > > Yeah, but that could be legitimate?
->> >
->> > Ah, I misunderstood then. The way I have understood is that no rx frames
->> > should be delivered (= calling ieee80211_rx()_ before start() is called,
->> > but if that's not the case please ignore me :)
->>
->> No no, that _is_ the case. But I think the "start wlan0" could end up
->> calling it?
->>
+On Mon, 6 Apr 2020 at 15:22, Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> Sorry if I wasn't clear enough via the sequence diagram. It's a common
-> RX packet that arrives via ieee80211_tasklet_handler() which is
-> enabled via call to "struct ieee80211_ops::start" api.
+> On Mon, Apr 06, 2020 at 01:20:42PM +0200, Borislav Petkov wrote:
+> > On Mon, Apr 06, 2020 at 11:11:21AM +0200, Ard Biesheuvel wrote:
+> > > Yes, it is in the PE/COFF specification. [0]
+> > >
+> > > The whole problem is that we are conflating 'loading a PE/COFF image'
+> > > with 'copying a PE/COFF image into memory', which are not the same
+> > > thing. It is not just the layout issue, we are running into other
+> > > problems with things like UEFI secure boot and TPM-based measured
+> > > boot, where the fact that omitting the standard LoadImage() boot
+> > > service (which takes care of these things under the hood) means that
+> > > you now have to do your own checks and measurements. These things are
+> > > literally all over the place at the moment, shim, GRUB, systemd-boot
+> > > etc, with no authoritative spec that describes which component should
+> > > be doing what.
+> >
+> > Sounds to me like what LoadImage() does is what the authoritative spec
+> > should be. Perhaps we should write it down as "Do what LoadImage()
+> > does... " and then enumerate the requirements.
+> >
+> > > Commit ec93fc371f014a6fb483e3556061ecad4b40735c has the background, but ...
+> >
+> > Nice, I like the aspect of letting firmware do only a minimum amount of
+> > work. :)
+> >
+> > > ... I'll look into updating the documentation as well.
+> >
+> > Thanks!
+> >
+> > > Note that this stuff is hot off the press, so there may be some issues
+> > > lurking (like this one) that we hadn't thought of yet.
+> >
+> > Right.
+> >
+> > > Actually, it may be sufficient to #define __efistub_global to
+> > > __section(.data) like we already do for ARM, to ensure that these
+> > > global flags are always initialized correctly. (I'll wait for Sergey
+> > > to confirm that the spurious enabling of the PCI DMA protection
+> > > resulting from this BSS issue is causing the boot regression)
+>
+> Yeah I thought of that as the easiest fix, but it might be safer to
+> explicitly zero-init in efi_main to avoid future problems in case
+> someone adds another variable in bss and isn't aware of this obscure
+> requirement. We actually already have sys_table in bss, but that one is
+> always initialized. There's also other globals that aren't annotated
+> (but not in bss by virtue of having initializers). What do you think?
+>
 
-Ah sorry, I didn't realise that. So wcn36xx is not to be blamed then,
-thanks for the clarification.
+*If* we zero init BSS, I'd prefer for it to be done in the EFI
+handover protocol entrypoint only. But does that fix the issue that
+BSS lives outside of the memory footprint of the kernel image?
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
+> What do you think of the other problem -- that's actually worse to fix,
+> as it won't just be when kaslr is disabled, the startup_64 code will do
+> relocation to the end of init_size and clobber the initrd before getting
+> to the kaslr code, so it will break as soon as the firmware loads the
+> "unified kernel image" at a 2Mb-aligned address. The only thing I can
+> think of is to just unconditionally call efi_relocate_kernel if we were
+> entered via handover_entry?
+>
+
+Yes, that seems to be the most robust approach.
