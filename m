@@ -2,97 +2,153 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC6BC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 02:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F887C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 03:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07ED620678
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 02:58:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NqPNfIWg"
+	by mail.kernel.org (Postfix) with ESMTP id 368FA20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 03:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726543AbgDFC6f (ORCPT
+        id S1726551AbgDFDGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 22:58:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33359 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgDFC6f (ORCPT
+        Sun, 5 Apr 2020 23:06:16 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:53458 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgDFDGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 22:58:35 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d17so6880579pgo.0
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 19:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Snmazk82MB0/0cCIeeJxaxYr1fCvgV5xCLT8s21RwAs=;
-        b=NqPNfIWgOWaM4sqrQjkJIXbp4kT3YO3B6wIsbdOFmc7pyXoGE+VpXs21oojmhTvtCm
-         Y+y1dtXB9zv/cjK4hEKRyVCSiKUqpVhrhbMDH0nxoyKBSwhydSdWpqPFNrMbYEONwqRW
-         aPZFVQ+NIt+dsDmxklpi93KoEIHkfhL69mX9exDgI3NQ7tsVfsbL/lQC2vH8WXGmiQ18
-         tK1paQ3pARNq8QchfUQ0D4YtTSh6wI92NpK4P6clPK4hPofDCqwBhwYS+iMTL+iVNgCJ
-         Eu0wi6WiU9hZSkSnbDcsayaICj10GcZoZ1P4m/kiIeeE+qqGEfWThwuD5BK6c41DsOE8
-         33/w==
+        Sun, 5 Apr 2020 23:06:15 -0400
+Received: by mail-il1-f200.google.com with SMTP id a15so13775058ilh.20
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 20:06:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Snmazk82MB0/0cCIeeJxaxYr1fCvgV5xCLT8s21RwAs=;
-        b=Jjsp87Re+4Eq32RkeFKgAFYCQ4z0Y4Pl+S0cQbxL8jGgyIfPJrY5Cqdi281fBDNYpe
-         RrvX3yp+oPse0/JdhsWYTeuVKrfSrpKS1aG329dNv3BGERLPgc4yVc53EdlLoNWM/2YC
-         SVrR7MH5cLMMgUVpiXX9nR0Bqmwtk7PLdNL4ZjkfoqnJuIaIfc3H26V+8RGsaPTj6hE3
-         gMyywjw27QEitthO5inABMnbWg0EAyFYrZBxXRnMdFpHJ3ljWe6CTAGRgqqcNntd5oLG
-         pK5LvqPFjKaFA1bZzgVlyCQjwd7IV4Cp3QDo2FkmDkh+m6JPlhfyc5vqkH4nFwFVQZ7U
-         ZO5A==
-X-Gm-Message-State: AGi0PuZRXBZ7Nw+81xgruTq6Tbagx4sZXAnp9rzxFJ9LAjq+5Y2k0Nzd
-        3nWb8AWcEgStZIUi76DtmS8FZQ==
-X-Google-Smtp-Source: APiQypJFIzF+3oECidi3FpRsgBdzk96yF/DdD8sX4fg1ZTuRL6fKY5vITqktCAnS0MAH0XqQp9KVDg==
-X-Received: by 2002:a63:64c2:: with SMTP id y185mr19296513pgb.133.1586141914636;
-        Sun, 05 Apr 2020 19:58:34 -0700 (PDT)
-Received: from localhost ([122.171.118.46])
-        by smtp.gmail.com with ESMTPSA id d3sm10450782pfq.126.2020.04.05.19.58.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 05 Apr 2020 19:58:33 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 08:28:32 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>
-Cc:     linux-pm@vger.kernel.org, andy.tang@nxp.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 1/2] cpufreq: qoriq: convert to a platform driver
-Message-ID: <20200406025832.7bbtfo52k3dz5pkj@vireshk-i7>
-References: <20200403212114.15565-1-ykaukab@suse.de>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=VMyBQZO3MBfpsL5ANLi1r3ItqnA3iEERo2V/J0TmPfY=;
+        b=N7zVuT/+MdbxsUKYZdn1Qb9DPgrzeCS0acrX0k59ALXdGBBIqLqbPc5Msr1jsdoSrm
+         8wqqAWCCER59X4bKN4c9sem0QoJY9IFyGy5O3M3ro3nVvhmONr6dMv5hrCTAQt7O6QHf
+         O04K75ECAuiU3k0EoCPwCU3DYrLnbp5vXx86bqkwl9iQXUFGKo3JEfzcZgfBYLiNqCCy
+         7rRjDV2/jhYyqrEaln26bSvS+c3qe9sjYeGFg80HPBtn5WC2FI3B6INUtjFtVUw3Txfw
+         KhwwjjS0vtB1gmL1w33Hk4DXxE7OouDQ5rQxKqauA2u1MaPk5/rCmCl6QX9/Md9WyywP
+         ZvYg==
+X-Gm-Message-State: AGi0Pub2bv5+r4o2xfpnZxMOAdUFg1Fh06mf0u/RpmQjV7lU+qFdGgBx
+        7qQWvE+1RlYbbQCA/dBpuLEssYpZT44f2fWq8aDhhdw+4U2f
+X-Google-Smtp-Source: APiQypIjLBv995v9Q6nngDvUzGI4SQF2mUpR1Cp8F7w6q8j5tX2m6Fy9bWbm94gXVesQIxpb3IH/1k2OJDuVocLSsrgxKtYxahfV
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403212114.15565-1-ykaukab@suse.de>
-User-Agent: NeoMutt/20180716-391-311a52
+X-Received: by 2002:a05:6638:d6:: with SMTP id w22mr13033959jao.72.1586142372978;
+ Sun, 05 Apr 2020 20:06:12 -0700 (PDT)
+Date:   Sun, 05 Apr 2020 20:06:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b4684e05a2968ca6@google.com>
+Subject: kernel BUG at mm/hugetlb.c:LINE!
+From:   syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        mike.kravetz@oracle.com, mszeredi@redhat.com,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-04-20, 23:21, Mian Yousaf Kaukab wrote:
-> The driver has to be manually loaded if it is built as a module. It
-> is neither exporting MODULE_DEVICE_TABLE nor MODULE_ALIAS. Moreover,
-> no platform-device is created (and thus no uevent is sent) for the
-> clockgen nodes it depends on.
-> 
-> Convert the module to a platform driver with its own alias. Moreover,
-> drop whitelisted SOCs. Platform device will be created only for the
-> compatible platforms.
-> 
-> Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
-> ---
->  drivers/cpufreq/qoriq-cpufreq.c | 76 ++++++++++++++++-------------------------
->  1 file changed, 29 insertions(+), 47 deletions(-)
+Hello,
 
-For both patches,
+syzbot found the following crash on:
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+HEAD commit:    1a323ea5 x86: get rid of 'errret' argument to __get_user_x..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=132e940be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
+dashboard link: https://syzkaller.appspot.com/bug?extid=d6ec23007e951dadf3de
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12921933e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=172e940be00000
 
--- 
-viresh
+The bug was bisected to:
+
+commit e950564b97fd0f541b02eb207685d0746f5ecf29
+Author: Miklos Szeredi <mszeredi@redhat.com>
+Date:   Tue Jul 24 13:01:55 2018 +0000
+
+    vfs: don't evict uninitialized inode
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=115cad33e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=135cad33e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=155cad33e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com
+Fixes: e950564b97fd ("vfs: don't evict uninitialized inode")
+
+overlayfs: upper fs does not support xattr, falling back to index=off and metacopy=off.
+------------[ cut here ]------------
+kernel BUG at mm/hugetlb.c:3416!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 7036 Comm: syz-executor110 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__unmap_hugepage_range+0xa26/0xbc0 mm/hugetlb.c:3416
+Code: 00 48 c7 c7 60 37 35 88 e8 57 b4 a2 ff e9 b3 fd ff ff e8 cd 90 c6 ff 0f 0b e9 c4 f7 ff ff e8 c1 90 c6 ff 0f 0b e8 ba 90 c6 ff <0f> 0b e8 b3 90 c6 ff 83 8c 24 c0 00 00 00 01 48 8d bc 24 a0 00 00
+RSP: 0018:ffffc900017779b0 EFLAGS: 00010293
+RAX: ffff88808cf5c2c0 RBX: ffffffff8c641c08 RCX: ffffffff81ac50b4
+RDX: 0000000000000000 RSI: ffffffff81ac58a6 RDI: 0000000000000007
+RBP: 0000000020000000 R08: ffff88808cf5c2c0 R09: ffffed10129d8111
+R10: ffffed10129d8110 R11: ffff888094ec0887 R12: 0000000000003000
+R13: 0000000000000000 R14: 0000000020003000 R15: 0000000000200000
+FS:  00000000013c0880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000140 CR3: 0000000093554000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __unmap_hugepage_range_final+0x30/0x70 mm/hugetlb.c:3507
+ unmap_single_vma+0x238/0x300 mm/memory.c:1296
+ unmap_vmas+0x16f/0x2f0 mm/memory.c:1332
+ exit_mmap+0x2aa/0x510 mm/mmap.c:3126
+ __mmput kernel/fork.c:1082 [inline]
+ mmput+0x168/0x4b0 kernel/fork.c:1103
+ exit_mm kernel/exit.c:477 [inline]
+ do_exit+0xa51/0x2dd0 kernel/exit.c:780
+ do_group_exit+0x125/0x340 kernel/exit.c:891
+ __do_sys_exit_group kernel/exit.c:902 [inline]
+ __se_sys_exit_group kernel/exit.c:900 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:900
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x43efe8
+Code: Bad RIP value.
+RSP: 002b:00007ffdfe6c00f8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043efe8
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004be7e8 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 0000040000000011 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d0180 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 2d36245d65cb52f7 ]---
+RIP: 0010:__unmap_hugepage_range+0xa26/0xbc0 mm/hugetlb.c:3416
+Code: 00 48 c7 c7 60 37 35 88 e8 57 b4 a2 ff e9 b3 fd ff ff e8 cd 90 c6 ff 0f 0b e9 c4 f7 ff ff e8 c1 90 c6 ff 0f 0b e8 ba 90 c6 ff <0f> 0b e8 b3 90 c6 ff 83 8c 24 c0 00 00 00 01 48 8d bc 24 a0 00 00
+RSP: 0018:ffffc900017779b0 EFLAGS: 00010293
+RAX: ffff88808cf5c2c0 RBX: ffffffff8c641c08 RCX: ffffffff81ac50b4
+RDX: 0000000000000000 RSI: ffffffff81ac58a6 RDI: 0000000000000007
+RBP: 0000000020000000 R08: ffff88808cf5c2c0 R09: ffffed10129d8111
+R10: ffffed10129d8110 R11: ffff888094ec0887 R12: 0000000000003000
+R13: 0000000000000000 R14: 0000000020003000 R15: 0000000000200000
+FS:  00000000013c0880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f8cc24dd000 CR3: 0000000093554000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
