@@ -2,334 +2,132 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B75C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7E0C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C706206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5197F206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="q5DsCVxa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LUZlI2Wo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgDFVdR (ORCPT
+        id S1726438AbgDFVec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:33:17 -0400
-Received: from forward105o.mail.yandex.net ([37.140.190.183]:43130 "EHLO
-        forward105o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726332AbgDFVdQ (ORCPT
+        Mon, 6 Apr 2020 17:34:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49918 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725895AbgDFVeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:33:16 -0400
-X-Greylist: delayed 496 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Apr 2020 17:33:13 EDT
-Received: from mxback4g.mail.yandex.net (mxback4g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:165])
-        by forward105o.mail.yandex.net (Yandex) with ESMTP id 8EE32420056F;
-        Tue,  7 Apr 2020 00:24:55 +0300 (MSK)
-Received: from sas8-6bf5c5d991b2.qloud-c.yandex.net (sas8-6bf5c5d991b2.qloud-c.yandex.net [2a02:6b8:c1b:2a1f:0:640:6bf5:c5d9])
-        by mxback4g.mail.yandex.net (mxback/Yandex) with ESMTP id rZ0X9GBYNE-Or8uJu58;
-        Tue, 07 Apr 2020 00:24:55 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1586208295;
-        bh=ylo4x/Q6roQpWhci6FeEVGlLIJ9AseZrMZBQ8493un8=;
-        h=In-Reply-To:Cc:To:From:Subject:References:Date:Message-ID;
-        b=q5DsCVxa3kgJ5LTNKC9BjvDoavjElVw+QAjQKBpRX3fvf98fGvCawyC1qxrI8bp72
-         bExX/RRhxZYjW6rJtsxITX/NCavsnOxIJd1HRjepJYfl5Mm4t6BWjqlFLNt+EbNKsD
-         LCoIixSv+H6fy6hAEPAi3+yfVMezeMUlwFOVey38=
-Authentication-Results: mxback4g.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by sas8-6bf5c5d991b2.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 1RRGL8wSk2-Op2OUFOY;
-        Tue, 07 Apr 2020 00:24:52 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Message-ID: <82d244d47e0f0ddaa0a9aee4620fa9fc31fe98f7.camel@yandex.ru>
-Subject: Re: [PATCH net-next] net: dsa: add GRO support via gro_cells
-From:   Alexander Lobakin <bloodyreaper@yandex.ru>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Microchip Linux Driver Support <unglinuxdriver@microchip.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mao Wenan <maowenan@huawei.com>
-Date:   Tue, 07 Apr 2020 00:24:18 +0300
-In-Reply-To: <c362ec65-ec84-52bb-a06e-d2ffad8bf52d@gmail.com>
-References: <97a880e4-de7d-1f94-d35b-2635fbd8237e@gmail.com>
-         <20200406191113.5983-1-bloodyreaper@yandex.ru>
-         <c362ec65-ec84-52bb-a06e-d2ffad8bf52d@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1 
+        Mon, 6 Apr 2020 17:34:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586208869;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=1sZ8OOJadwa2nvBkBvJvN7OoNXEjWxDQSrFUIfTzI4g=;
+        b=LUZlI2Wo04c51zs+UNizXdUcZK+Y2A4Ua6R7ORUuUUvx90IC0Y2BVtKuBzPiq2l0bU5uhO
+        JbcxM8OATnwhp91NflCfcm/Cg0U1d6ltqaDIuHKtGcp7olkpixhz0/DimH+ydlYAJ+yHJW
+        A1zSQYVSbVjdBwSqkx7kJKEUL//ZUpc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-494-9jGSM0QKOjeJJ9nDdGfxjg-1; Mon, 06 Apr 2020 17:34:28 -0400
+X-MC-Unique: 9jGSM0QKOjeJJ9nDdGfxjg-1
+Received: by mail-wm1-f71.google.com with SMTP id e16so412479wmh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:34:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=1sZ8OOJadwa2nvBkBvJvN7OoNXEjWxDQSrFUIfTzI4g=;
+        b=fqkxXrLSF4y61tVeC0T7OxywfQxM/qE2RxviB67j9zHXbZLjNWT/9B0dOAc1pMpg9h
+         wvvOG6mgRdpFM4phAy3OON53Gvd8Pi+fOmiDJYD2WIZftPc35IcxPVfJdrfRl9VT0FCX
+         DvzZpMiWJSdGq+HCK2QkptjJNeP4fp6obHl+q8HdNXY3GIJwhcaQ7pRiw7WHH1nQaLoZ
+         8Y81LMsPnGix/c5JTJOLxDwFtDlEcRie2GS7zMXgD5ZXuOXZz+FpPKfNr5o8yPBlBrU0
+         +7Nsf8S5nKjJW2uQS/IaPltwc33x4DPD1MfnVWQugjoqcn8nnRfXRQd47JUYl5J8sO+f
+         Cf6A==
+X-Gm-Message-State: AGi0PuYSnmyWLv90PZWKnzbHea9idPNb0GMRNVJOUS2ieMQ2ef0LrBHR
+        CDmi775D32SZy8b10U+nKd1XmrA013gt+g8aYGtsdkcyA7wINrzehYHY3PdJOwgprnM72VsXmQx
+        57H8A/VXRd2riKVwhK2EeerFr
+X-Received: by 2002:a1c:195:: with SMTP id 143mr1089750wmb.0.1586208866444;
+        Mon, 06 Apr 2020 14:34:26 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJtVitTo8Jc7qPkfGBinVZbvA0f5dsOX7DORdYPtHLOGRIFfRXKAwHHQ2twIGwKrTUEcixAMQ==
+X-Received: by 2002:a1c:195:: with SMTP id 143mr1089730wmb.0.1586208866128;
+        Mon, 06 Apr 2020 14:34:26 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id h5sm26965139wro.83.2020.04.06.14.34.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 14:34:25 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 17:34:24 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/12] virtio: alignment issues
+Message-ID: <20200406210108.148131-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200406213424.8H9A6CbSvxAftDvjkeiJ8E_zwDxMYJF5VQZ-_-iagiw@z>
 
-On Mon, 04/06/2020 at 13:16 -0700, Florian Fainelli wrote:
-> On 4/6/2020 12:11 PM, Alexander Lobakin wrote:
-> > 06.04.2020, 20:57, "Florian Fainelli" <f.fainelli@gmail.com>:
-> > > On 4/6/2020 10:34 AM, Alexander Lobakin wrote:
-> > > >  06.04.2020, 18:21, "Alexander Lobakin" <bloodyreaper@yandex.ru>:
-> > > > >  06.04.2020, 17:48, "Andrew Lunn" <andrew@lunn.ch>:
-> > > > > >   On Mon, Apr 06, 2020 at 01:59:10PM +0300, Alexander Lobakin wrote:
-> > > > > > >    gro_cells lib is used by different encapsulating netdevices, such as
-> > > > > > >    geneve, macsec, vxlan etc. to speed up decapsulated traffic processing.
-> > > > > > >    CPU tag is a sort of "encapsulation", and we can use the same mechs to
-> > > > > > >    greatly improve overall DSA performance.
-> > > > > > >    skbs are passed to the GRO layer after removing CPU tags, so we don't
-> > > > > > >    need any new packet offload types as it was firstly proposed by me in
-> > > > > > >    the first GRO-over-DSA variant [1].
-> > > > > > > 
-> > > > > > >    The size of struct gro_cells is sizeof(void *), so hot struct
-> > > > > > >    dsa_slave_priv becomes only 4/8 bytes bigger, and all critical fields
-> > > > > > >    remain in one 32-byte cacheline.
-> > > > > > >    The other positive side effect is that drivers for network devices
-> > > > > > >    that can be shipped as CPU ports of DSA-driven switches can now use
-> > > > > > >    napi_gro_frags() to pass skbs to kernel. Packets built that way are
-> > > > > > >    completely non-linear and are likely being dropped without GRO.
-> > > > > > > 
-> > > > > > >    This was tested on to-be-mainlined-soon Ethernet driver that uses
-> > > > > > >    napi_gro_frags(), and the overall performance was on par with the
-> > > > > > >    variant from [1], sometimes even better due to minimal overhead.
-> > > > > > >    net.core.gro_normal_batch tuning may help to push it to the limit
-> > > > > > >    on particular setups and platforms.
-> > > > > > > 
-> > > > > > >    [1] https://lore.kernel.org/netdev/20191230143028.27313-1-alobakin@dlink.ru/
-> > > > > > 
-> > > > > >   Hi Alexander
-> > > > > 
-> > > > >  Hi Andrew!
-> > > > > 
-> > > > > >   net-next is closed at the moment. So you should of posted this with an
-> > > > > >   RFC prefix.
-> > > > > 
-> > > > >  I saw that it's closed, but didn't knew about "RFC" tags for that period,
-> > > > >  sorry.
-> > > > > 
-> > > > > >   The implementation looks nice and simple. But it would be nice to have
-> > > > > >   some performance figures.
-> > > > > 
-> > > > >  I'll do, sure. I think I'll collect the stats with various main receiving
-> > > > >  functions in Ethernet driver (napi_gro_frags(), napi_gro_receive(),
-> > > > >  netif_receive_skb(), netif_receive_skb_list()), and with and without this
-> > > > >  patch to make them as complete as possible.
-> > > > 
-> > > >  OK, so here we go.
-> > > > 
-> > > >  My device is 1.2 GHz 4-core MIPS32 R2. Ethernet controller representing
-> > > >  the CPU port is capable of S/G, fraglists S/G, TSO4/6 and GSO UDP L4.
-> > > >  Tests are performed through simple IPoE VLAN NAT forwarding setup
-> > > >  (port0 <-> port1.218) with iperf3 in TCP mode.
-> > > >  net.core.gro_normal_batch is always set to 16 as that value seems to be
-> > > >  the most effective for that particular hardware and drivers.
-> > > > 
-> > > >  Packet counters on eth0 are the real numbers of ongoing frames. Counters
-> > > >  on portX are pure-software and are updated inside networking stack.
-> > > > 
-> > > >  ---------------------------------------------------------------------
-> > > > 
-> > > >  netif_receive_skb() in Eth driver, no patch:
-> > > > 
-> > > >  [ ID] Interval Transfer Bitrate Retr
-> > > >  [ 5] 0.00-120.01 sec 9.00 GBytes 644 Mbits/sec 413 sender
-> > > >  [ 5] 0.00-120.00 sec 8.99 GBytes 644 Mbits/sec receiver
-> > > > 
-> > > >  eth0
-> > > >  RX packets:7097731 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:7097702 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port0
-> > > >  RX packets:426050 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:6671829 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1
-> > > >  RX packets:6671681 errors:0 dropped:0 overruns:0 carrier:0
-> > > >  TX packets:425862 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1.218
-> > > >  RX packets:6671677 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:425851 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  ---------------------------------------------------------------------
-> > > > 
-> > > >  netif_receive_skb_list() in Eth driver, no patch:
-> > > > 
-> > > >  [ ID] Interval Transfer Bitrate Retr
-> > > >  [ 5] 0.00-120.01 sec 9.48 GBytes 679 Mbits/sec 129 sender
-> > > >  [ 5] 0.00-120.00 sec 9.48 GBytes 679 Mbits/sec receiver
-> > > > 
-> > > >  eth0
-> > > >  RX packets:7448098 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:7448073 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port0
-> > > >  RX packets:416115 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:7032121 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1
-> > > >  RX packets:7031983 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:415941 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1.218
-> > > >  RX packets:7031978 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:415930 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  ---------------------------------------------------------------------
-> > > > 
-> > > >  napi_gro_receive() in Eth driver, no patch:
-> > > > 
-> > > >  [ ID] Interval Transfer Bitrate Retr
-> > > >  [ 5] 0.00-120.01 sec 10.0 GBytes 718 Mbits/sec 107 sender
-> > > >  [ 5] 0.00-120.00 sec 10.0 GBytes 718 Mbits/sec receiver
-> > > > 
-> > > >  eth0
-> > > >  RX packets:7868281 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:7868267 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port0
-> > > >  RX packets:429082 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:7439343 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1
-> > > >  RX packets:7439199 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:428913 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1.218
-> > > >  RX packets:7439195 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:428902 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  =====================================================================
-> > > > 
-> > > >  netif_receive_skb() in Eth driver + patch:
-> > > > 
-> > > >  [ ID] Interval Transfer Bitrate Retr
-> > > >  [ 5] 0.00-120.01 sec 12.2 GBytes 870 Mbits/sec 2267 sender
-> > > >  [ 5] 0.00-120.00 sec 12.2 GBytes 870 Mbits/sec receiver
-> > > > 
-> > > >  eth0
-> > > >  RX packets:9474792 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:9474777 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port0
-> > > >  RX packets:455200 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:353288 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1
-> > > >  RX packets:9019592 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:455035 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1.218
-> > > >  RX packets:353144 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:455024 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  ---------------------------------------------------------------------
-> > > > 
-> > > >  netif_receive_skb_list() in Eth driver + patch:
-> > > > 
-> > > >  [ ID] Interval Transfer Bitrate Retr
-> > > >  [ 5] 0.00-120.01 sec 11.6 GBytes 827 Mbits/sec 2224 sender
-> > > >  [ 5] 0.00-120.00 sec 11.5 GBytes 827 Mbits/sec receiver
-> > > > 
-> > > >  eth0
-> > > >  RX packets:8981651 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:898187 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port0
-> > > >  RX packets:436159 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:335665 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1
-> > > >  RX packets:8545492 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:436071 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1.218
-> > > >  RX packets:335593 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:436065 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  -----------------------------------------------------------
-> > > > 
-> > > >  napi_gro_receive() in Eth driver + patch:
-> > > > 
-> > > >  [ ID] Interval Transfer Bitrate Retr
-> > > >  [ 5] 0.00-120.01 sec 11.8 GBytes 855 Mbits/sec 122 sender
-> > > >  [ 5] 0.00-120.00 sec 11.8 GBytes 855 Mbits/sec receiver
-> > > > 
-> > > >  eth0
-> > > >  RX packets:9292214 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:9292190 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port0
-> > > >  RX packets:438516 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:347236 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1
-> > > >  RX packets:8853698 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:438331 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  port1.218
-> > > >  RX packets:347082 errors:0 dropped:0 overruns:0 frame:0
-> > > >  TX packets:438320 errors:0 dropped:0 overruns:0 carrier:0
-> > > > 
-> > > >  -----------------------------------------------------------
-> > > > 
-> > > >  The main goal is achieved: we have about 100-200 Mbps of performance
-> > > >  boost while in-stack skbs are greatly reduced from ~8-9 millions to
-> > > >  ~350000 (compare port0 TX and port1 RX without patch and with it).
-> > > 
-> > > And the number of TCP retries is also lower, which likely means that we
-> > > are making better use of the flow control built into the hardware/driver
-> > > here?
-> > > 
-> > > BTW do you know why you have so many retries though? It sounds like your
-> > > flow control is missing a few edge cases, or that you have an incorrect
-> > > configuration of your TX admission queue.
-> > 
-> > Well, I have the same question TBH. All these ~1.5 years that I'm
-> > working on these switches I have pretty chaotic number of TCP
-> > retransmissions each time I change something in the code. They are
-> > less likely to happen when the average CPU load is lower, but ~100
-> > is the best result I ever got.
-> > Seems like I should stop trying to push software throughput to
-> > the max for a while and pay more attention to this and to hardware
-> > configuration instead and check if I miss something :) 
-> 
-> I have had to debug such a problem on some of our systems recently and
-> it came down to being a couple of things for those systems:
-> 
-> - as a receiver, we could create fast re-transmissions on the sender
-> side because of packet loss which was because the switch is able to push
-> packets faster than the DSA master being able to write them to DRAM. One
-> way to work around this is to clock the Ethernet MAC higher, at the cost
-> of power consumption.
-> 
-> - as a sender, we could have fast re-transmissions when we were
-> ourselves a "fast" CPU (1.7GHz or higher for Gigabit throughput), that
-> part is still being root caused, but I think it comes down to flow
-> control being incorrectly set-up in hardware, which means you could lose
-> packets between your ndo_start_xmit() and not having the software TXQ
-> assert XON/XOFF properly
-> 
-> So in both cases, packet loss is responsible for those fast
-> re-transmissions, but they are barely observable (case #1 was, since the
-> switch port counter did not match the Ethernet MAC MIB counters) since
-> you have a black hole effect.
+This is an alternative to
+	vhost: force spec specified alignment on types
+which is a bit safer as it does not change UAPI.
+I still think it's best to change the UAPI header as well,
+we can do that as a follow-up cleanup.
 
-Thank you for so detailed response! I suppose there might be both of
-these on my system, I'll have a look at this soon.
+changes from v3:
+	tools/virtio fixes
+	a bunch more cleanups that now become possible
+
+Changes from v2:
+	don't change struct name, instead add ifndef
+	so kernel does not see the legacy UAPI version.
+
+Jason, can you pls ack one of the approaches?
+
+
+Matej Genci (1):
+  virtio: add VIRTIO_RING_NO_LEGACY
+
+Michael S. Tsirkin (11):
+  tools/virtio: define aligned attribute
+  tools/virtio: make asm/barrier.h self contained
+  tools/virtio: define __KERNEL__
+  virtio: stop using legacy struct vring in kernel
+  vhost: force spec specified alignment on types
+  virtio: add legacy init/size APIs
+  virtio_ring: switch to virtio_legacy_init/size
+  tools/virtio: switch to virtio_legacy_init/size
+  vop: switch to virtio_legacy_init/size
+  remoteproc: switch to virtio_legacy_init/size
+  mellanox: switch to virtio_legacy_init/size
+
+ drivers/misc/mic/vop/vop_main.c          |  5 +--
+ drivers/misc/mic/vop/vop_vringh.c        |  8 +++--
+ drivers/platform/mellanox/mlxbf-tmfifo.c |  6 ++--
+ drivers/remoteproc/remoteproc_core.c     |  2 +-
+ drivers/vhost/vhost.h                    |  6 ++--
+ drivers/virtio/virtio_pci_modern.c       |  1 +
+ drivers/virtio/virtio_ring.c             | 15 ++++----
+ include/linux/virtio_ring.h              | 46 ++++++++++++++++++++++++
+ include/linux/vringh.h                   |  1 +
+ include/uapi/linux/virtio_ring.h         | 30 ++++++++++------
+ tools/virtio/Makefile                    |  2 +-
+ tools/virtio/asm/barrier.h               |  1 +
+ tools/virtio/linux/compiler.h            |  1 +
+ tools/virtio/ringtest/virtio_ring_0_9.c  |  6 ++--
+ tools/virtio/virtio_test.c               |  6 ++--
+ tools/virtio/vringh_test.c               | 18 +++++-----
+ 16 files changed, 110 insertions(+), 44 deletions(-)
+
+-- 
+MST
 
