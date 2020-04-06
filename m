@@ -2,312 +2,258 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8398C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C60C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 02:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2C72068E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17DF020678
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 02:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="me/5NIBv"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="N2PYd9S4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgDFBxP (ORCPT
+        id S1726492AbgDFCCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 21:53:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41735 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgDFBxP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 21:53:15 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m13so2800403pgd.8
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 18:53:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=SXNmSzR5dCwNc7/+tCsUjUE/EFRQc9Jf99e8qsmtQcE=;
-        b=me/5NIBvO2lNB6Y0A1jhUtCoK1+T+/rgkm3YXt9oSeGy8v0G+3YBCqKT3p+13hjTKQ
-         GkgNLcAQu5c7KE63P+RDnYtjmZmulP4U5V4S71QgcEfbYPn4GltpEFFq1CJX7Wp4fb6M
-         eyzwM6AeuqdYUfWbMG9iIJL7Gu5TpQGkj6FX3Wv+/+JydxYuNBuMmDJ0OG6iFp9X5e4S
-         PbnLja9dWFc7/pT2d2TfWV84PhsHTOXsTMzeiGNElukoiR2+7KULficc6UmGveDGobzJ
-         898ZdO9LzU8pJcf+4w0jrk5AYdGe4pSqdkT891row6mVAFWfn7d66WvxzXFEoFZTCnqW
-         i2rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=SXNmSzR5dCwNc7/+tCsUjUE/EFRQc9Jf99e8qsmtQcE=;
-        b=DKdiICX0GBQ4yFm/RumBSqtkjwQwetd5L6Oifba9rbL5WueH6C/0wZX10YZoCo0lZq
-         9nZeeaDzGePVYF3z8ldJxCscDMNB36MyNNjGBPTGez0wHkoZMqYx3bGRfPL0MkSIAhPm
-         rHbMqr1gYx5eb1bVqzdu1bVpM2TGaVI225aSYOggj9BhQ9VTB56USRW7mxvmSFfKaJzv
-         Zx7AlSebimB+adorvTa+0zuyeW+DTmQ9wP7rcSzNJ7q/WyIuUzGdtdgWYl2LPlEPl0Yr
-         0qic0fxQcBqMq+6sQuhD1VvjjwrYddE5W2o7l//wvw+qTXqyoD9QynfPOkLNtQV+ET/R
-         nvQA==
-X-Gm-Message-State: AGi0PuZNlZ95DTeK857HSj8zubo6uzARoGaZ/LcQz1RB/pP5D5NeF7dZ
-        PcwAs5qn2XPKAnDZd18jfKE=
-X-Google-Smtp-Source: APiQypIUQ73BYUaXI5VN/wYOyBz4psD/SXPTd1t/o0utKbOCm/PL+Ibc7ghLCiW9/740ZWslhbUqew==
-X-Received: by 2002:a63:fc24:: with SMTP id j36mr18103516pgi.397.1586137991685;
-        Sun, 05 Apr 2020 18:53:11 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id q8sm10636205pjq.28.2020.04.05.18.53.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 18:53:11 -0700 (PDT)
-Date:   Mon, 06 Apr 2020 11:52:03 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH v2 06/13] powerpc/syscall: Make syscall_64.c buildable
- on PPC32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
-        <923ab2df9d4a4d0f3a072421e054028c18d614d8.1586108649.git.christophe.leroy@c-s.fr>
-In-Reply-To: <923ab2df9d4a4d0f3a072421e054028c18d614d8.1586108649.git.christophe.leroy@c-s.fr>
+        Sun, 5 Apr 2020 22:02:00 -0400
+Received: from mail-co1nam11on2094.outbound.protection.outlook.com ([40.107.220.94]:24769
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726373AbgDFCCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 22:02:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mlPlmlwh+S6yQbGi2ckgyrB89OytZZKq+8BhrNC0hb4OA+t9m7ON0H0L4ZsbCehUatn/nS+EJ289n9y8inQ26NXpOO0T3bgEdu25OM7RRPRamr9XzF06YfVEBJx+MzfLXFTXB8YluTphwPzICu1JafzMwLd3bHYnyY4uZgPnQcBShAwWHWwDm+yn4gmqMqjXf72wJjbZO5892meIEChT+kv2jbH/VfbAlxZvHGuv2dZmnzRDeOkgWFWTcnRiSeSGu/s+hlHugf5PcrCAdWH5YoeX8pp2SXUh1otTXBgrVUGvHEMIElzwgq6SCU9zDjxCtExSOihnNsf+6EuJglrN9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l2YPG1NwyzFq65fcKxG2yfw4fGyg5WXCjYwqHl8bTJM=;
+ b=Nf9dcAA3Fk0mvhA8Vc1MZ8IuYCuVtdv7zszmSIEpwmXi91XNcnPBjgxlGlKvHOsoCkJ4o9K7V3yX9mY6F64+Z2W0E+OVi2EuJ4qenDXSVr+IX1afHR71TQ2huNJ3rU+V6pRpd6wS0PJ4svfykG/EAy5V80pKLwuZOYU5/9xoeQ5iDmUnzKfNM0sn9DMpOn7USh50MZQ5YGdytvX+FwyInCzdNJ+thc4pfE8s6GQ0AzMkeumWx4I4uPy9hEfVeGrjAMCGbKlZ6SaGvbSkQfU9VA+9E1S9a4RyOuAXG2pIn+svt/PvqZwI8QV8BTfzGCptwYgJztkUFZog3JouW0pCCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l2YPG1NwyzFq65fcKxG2yfw4fGyg5WXCjYwqHl8bTJM=;
+ b=N2PYd9S4hhXJ2e3FFu9modSbbENexCSnO3mS0mgahqaFq2CKE+U6OhkPaEk1DLT3MKdUyoKESQtGGoySFtBRaeoXGSdINV5+lJcYb4RSjolAABWKtq2YM5I7+yzfGWnievPpLb+rHc25KW71x4xVmEJIbaz/hbdlmt5ba+gdnAU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com (2603:10b6:408:72::10)
+ by BN8PR21MB1235.namprd21.prod.outlook.com (2603:10b6:408:77::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.3; Mon, 6 Apr
+ 2020 01:59:55 +0000
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b5da:34dd:f205:560b]) by BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b5da:34dd:f205:560b%4]) with mapi id 15.20.2900.010; Mon, 6 Apr 2020
+ 01:59:55 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     willy@infradead.org, netdev@vger.kernel.org, davem@davemloft.net,
+        willemb@google.com, kuba@kernel.org, simon.horman@netronome.com,
+        sdf@google.com, edumazet@google.com, fw@strlen.de,
+        jonathan.lemon@gmail.com, pablo@netfilter.org,
+        rdunlap@infradead.org, decui@microsoft.com, jeremy@azazel.net,
+        pabeni@redhat.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v3 net] skbuff.h: Improve the checksum related comments
+Date:   Sun,  5 Apr 2020 18:59:24 -0700
+Message-Id: <1586138364-71127-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR10CA0008.namprd10.prod.outlook.com (2603:10b6:301::18)
+ To BN8PR21MB1139.namprd21.prod.outlook.com (2603:10b6:408:72::10)
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1586137334.pcovkdryot.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR10CA0008.namprd10.prod.outlook.com (2603:10b6:301::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 01:59:53 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c5af1b16-6825-4a24-edcd-08d7d9ce33c8
+X-MS-TrafficTypeDiagnostic: BN8PR21MB1235:|BN8PR21MB1235:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR21MB123534D2E6CA450706A1AB6EBFC20@BN8PR21MB1235.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0365C0E14B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1139.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(39860400002)(346002)(136003)(366004)(376002)(4326008)(36756003)(6486002)(6506007)(66946007)(82950400001)(478600001)(3450700001)(6512007)(66556008)(66476007)(86362001)(82960400001)(5660300002)(2906002)(52116002)(8676002)(26005)(10290500003)(186003)(6666004)(16526019)(316002)(81166006)(81156014)(2616005)(8936002)(7416002)(956004)(921003)(1121003);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DW1ImMxgUsrevgWJ+3S62TUnC1enWifNB/wf8DeRP8lZdpfLrAeZZxGGOz/drqf+1f90sEC8MWz/Ye2P0FCns6qXfMzVzppIdl4fBM4zpIUDnhAtQW6RKwwOQILF3urFJCoNm8AEr3BUyQpFONsMQ+kcoxZV79sOgaAME1Sf55zorEv/MBEeOd9IpJ803ea5hFynT7ZHzgJqRNjsboAjdrCRcRNlXpxF5IE1KEzCjKBm9rE7DPvIqrQMhq5kY+tzSxmRRthTaYg0SHjT8UYxEXPO8lBjLN4cm96xa609hyDkXC0ZY80pOEE8Nzuce/Kx5XS4+oD6hu6QyqeoQtFuQ1vLIwnru3ahXH4sLg23w57wwjEpjHQoVeIZh2hcMlg5ziF12GmXYGy2C+fTEXfb/AOuz+dXOUdwG151P3hp2ssNmUWGOduonx9sS3A0GplvpEzB6zM3iau6K3GcXeNEuA8ibvS5fp7lo22OMQd0qDY2koZ6zGdBOSpLAnilW2iw
+X-MS-Exchange-AntiSpam-MessageData: 7DNkGybTu1/8SOIMNEaOQ90LGsBp9GuzyB26zW2ci5XO7yt4ecGdyxBbm+l6aYLNK6x+VFOb8EAH/ZWAS0Bh7EU2e3hYBEsqLkXGHWufahzpEHohanGlUHGsqYGvPMlenYjCM8zvf6jOz34qqQVuWw==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5af1b16-6825-4a24-edcd-08d7d9ce33c8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 01:59:55.4239
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oagJUbJ6OX+Jd/0xlvfs4n8XBavuhfEQbUpMPzz0z5CEuyOY98OULY7l3UmskY/1jh03lc/tJKfwcHcGE2Jqsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1235
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on April 6, 2020 3:44 am:
-> ifdef out specific PPC64 stuff to allow building
-> syscall_64.c on PPC32.
->=20
-> Modify Makefile to always build syscall.o
->=20
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  arch/powerpc/kernel/Makefile  |  5 ++---
->  arch/powerpc/kernel/syscall.c | 10 ++++++++++
->  2 files changed, 12 insertions(+), 3 deletions(-)
->=20
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index 8cc3c831dccd..e4be425b7718 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -45,11 +45,10 @@ obj-y				:=3D cputable.o syscalls.o \
->  				   signal.o sysfs.o cacheinfo.o time.o \
->  				   prom.o traps.o setup-common.o \
->  				   udbg.o misc.o io.o misc_$(BITS).o \
-> -				   of_platform.o prom_parse.o
-> +				   of_platform.o prom_parse.o syscall.o
->  obj-y				+=3D ptrace/
->  obj-$(CONFIG_PPC64)		+=3D setup_64.o sys_ppc32.o signal_64.o \
-> -				   paca.o nvram_64.o firmware.o note.o \
-> -				   syscall.o
-> +				   paca.o nvram_64.o firmware.o note.o
->  obj-$(CONFIG_VDSO32)		+=3D vdso32/
->  obj-$(CONFIG_PPC_WATCHDOG)	+=3D watchdog.o
->  obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+=3D hw_breakpoint.o
-> diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.=
-c
-> index 72f3d2f0a823..28bd43db8755 100644
-> --- a/arch/powerpc/kernel/syscall.c
-> +++ b/arch/powerpc/kernel/syscall.c
-> @@ -25,8 +25,10 @@ notrace long system_call_exception(long r3, long r4, l=
-ong r5,
->  	unsigned long ti_flags;
->  	syscall_fn f;
-> =20
-> +#ifdef CONFIG_PPC64
->  	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
->  		BUG_ON(irq_soft_mask_return() !=3D IRQS_ALL_DISABLED);
-> +#endif
-> =20
->  	trace_hardirqs_off(); /* finish reconciling */
-> =20
-> @@ -34,7 +36,9 @@ notrace long system_call_exception(long r3, long r4, lo=
-ng r5,
->  		BUG_ON(!(regs->msr & MSR_RI));
->  	BUG_ON(!(regs->msr & MSR_PR));
->  	BUG_ON(!FULL_REGS(regs));
-> +#ifdef CONFIG_PPC64
->  	BUG_ON(regs->softe !=3D IRQS_ENABLED);
-> +#endif
-> =20
->  	account_cpu_user_entry();
-> =20
-> @@ -56,7 +60,9 @@ notrace long system_call_exception(long r3, long r4, lo=
-ng r5,
->  	 * frame, or if the unwinder was taught the first stack frame always
->  	 * returns to user with IRQS_ENABLED, this store could be avoided!
->  	 */
-> +#ifdef CONFIG_PPC64
->  	regs->softe =3D IRQS_ENABLED;
-> +#endif
-> =20
->  	local_irq_enable();
-> =20
-> @@ -148,7 +154,9 @@ notrace unsigned long syscall_exit_prepare(unsigned l=
-ong r3,
->  		ret |=3D _TIF_RESTOREALL;
->  	}
-> =20
-> +#ifdef CONFIG_PPC64
->  again:
-> +#endif
->  	local_irq_disable();
->  	ti_flags =3D READ_ONCE(*ti_flagsp);
->  	while (unlikely(ti_flags & (_TIF_USER_WORK_MASK & ~_TIF_RESTORE_TM))) {
-> @@ -191,6 +199,7 @@ notrace unsigned long syscall_exit_prepare(unsigned l=
-ong r3,
-> =20
->  	/* This pattern matches prep_irq_for_idle */
->  	__hard_EE_RI_disable();
-> +#ifdef CONFIG_PPC64
->  	if (unlikely(lazy_irq_pending())) {
->  		__hard_RI_enable();
->  		trace_hardirqs_off();
-> @@ -201,6 +210,7 @@ notrace unsigned long syscall_exit_prepare(unsigned l=
-ong r3,
->  	}
->  	local_paca->irq_happened =3D 0;
->  	irq_soft_mask_set(IRQS_ENABLED);
-> +#endif
-> =20
->  #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
->  	local_paca->tm_scratch =3D regs->msr;
-> --=20
-> 2.25.0
->=20
->=20
+Fixed the punctuation and some typos.
+Improved some sentences with minor changes.
 
-The #ifdefs disappoint me!
+No change of semantics or code.
 
-Here is (unested) something that should help 32-bit avoid several ifdefs=20
-in the main part of the function. I should have done this as part of the=20
-merged series, but that's okay I'll submit as a cleanup.
-
-The rest looks okay for now. Maybe we grow some helpers to manage the
-soft-mask state, though I'm not really sure it would make sense for=20
-32-bit code to ever call them. Maybe just confined to this file would be
-okay but for now the ifdefs are okay.
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
 
 ---
- arch/powerpc/kernel/syscall_64.c | 58 +++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 30 deletions(-)
 
-diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall=
-_64.c
-index cf06eb443a80..f021db893ec2 100644
---- a/arch/powerpc/kernel/syscall_64.c
-+++ b/arch/powerpc/kernel/syscall_64.c
-@@ -103,6 +103,31 @@ notrace long system_call_exception(long r3, long r4, l=
-ong r5,
- 	return f(r3, r4, r5, r6, r7, r8);
- }
-=20
-+/*
-+ * local irqs must be disabled. Returns false if the caller must re-enable
-+ * them, check for new work, and try again.
-+ */
-+static notrace inline bool prep_irq_for_enabled_exit(void)
-+{
-+	/* This must be done with RI=3D1 because tracing may touch vmaps */
-+	trace_hardirqs_on();
-+
-+	/* This pattern matches prep_irq_for_idle */
-+	__hard_EE_RI_disable();
-+	if (unlikely(lazy_irq_pending())) {
-+		/* Took an interrupt, may have more exit work to do. */
-+		__hard_RI_enable();
-+		trace_hardirqs_off();
-+		local_paca->irq_happened |=3D PACA_IRQ_HARD_DIS;
-+
-+		return false;
-+	}
-+	local_paca->irq_happened =3D 0;
-+	irq_soft_mask_set(IRQS_ENABLED);
-+
-+	return true;
-+}
-+
- /*
-  * This should be called after a syscall returns, with r3 the return value
-  * from the syscall. If this function returns non-zero, the system call
-@@ -186,21 +211,10 @@ notrace unsigned long syscall_exit_prepare(unsigned l=
-ong r3,
- 		}
- 	}
-=20
--	/* This must be done with RI=3D1 because tracing may touch vmaps */
--	trace_hardirqs_on();
--
--	/* This pattern matches prep_irq_for_idle */
--	__hard_EE_RI_disable();
--	if (unlikely(lazy_irq_pending())) {
--		__hard_RI_enable();
--		trace_hardirqs_off();
--		local_paca->irq_happened |=3D PACA_IRQ_HARD_DIS;
-+	if (unlikely(!prep_irq_for_enabled_exit())) {
- 		local_irq_enable();
--		/* Took an interrupt, may have more exit work to do. */
- 		goto again;
- 	}
--	local_paca->irq_happened =3D 0;
--	irq_soft_mask_set(IRQS_ENABLED);
-=20
- #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
- 	local_paca->tm_scratch =3D regs->msr;
-@@ -264,19 +278,11 @@ notrace unsigned long interrupt_exit_user_prepare(str=
-uct pt_regs *regs, unsigned
- 		}
- 	}
-=20
--	trace_hardirqs_on();
--	__hard_EE_RI_disable();
--	if (unlikely(lazy_irq_pending())) {
--		__hard_RI_enable();
--		trace_hardirqs_off();
--		local_paca->irq_happened |=3D PACA_IRQ_HARD_DIS;
-+	if (unlikely(!prep_irq_for_enabled_exit())) {
- 		local_irq_enable();
- 		local_irq_disable();
--		/* Took an interrupt, may have more exit work to do. */
- 		goto again;
- 	}
--	local_paca->irq_happened =3D 0;
--	irq_soft_mask_set(IRQS_ENABLED);
-=20
- #ifdef CONFIG_PPC_BOOK3E
- 	if (unlikely(ts->debug.dbcr0 & DBCR0_IDM)) {
-@@ -334,13 +340,7 @@ notrace unsigned long interrupt_exit_kernel_prepare(st=
-ruct pt_regs *regs, unsign
- 			}
- 		}
-=20
--		trace_hardirqs_on();
--		__hard_EE_RI_disable();
--		if (unlikely(lazy_irq_pending())) {
--			__hard_RI_enable();
--			irq_soft_mask_set(IRQS_ALL_DISABLED);
--			trace_hardirqs_off();
--			local_paca->irq_happened |=3D PACA_IRQ_HARD_DIS;
-+		if (unlikely(!prep_irq_for_enabled_exit())) {
- 			/*
- 			 * Can't local_irq_restore to replay if we were in
- 			 * interrupt context. Must replay directly.
-@@ -354,8 +354,6 @@ notrace unsigned long interrupt_exit_kernel_prepare(str=
-uct pt_regs *regs, unsign
- 			/* Took an interrupt, may have more exit work to do. */
- 			goto again;
- 		}
--		local_paca->irq_happened =3D 0;
--		irq_soft_mask_set(IRQS_ENABLED);
- 	} else {
- 		/* Returning to a kernel context with local irqs disabled. */
- 		__hard_EE_RI_disable();
---=20
-2.23.0
+Changes in v2:
+1. Integrated comments from Matthew Wilcox, and added his Reviewed-by:
 
-=
+   Reverted back to "supplied" from "supplies".
+   "fills out in" -> "fills in".
+   Used "it should treat the packet as if CHECKSUM_NONE were set.".
+
+2. Integrated a comment from Randy Dunlap:
+
+   "... ip_summed is CHECKSUM_PARTIAL, csum_start and csum_offset
+   are set to..."
+
+   ->
+
+   "... ip_summed is CHECKSUM_PARTIAL, and both csum_start and
+   csum_offset are set to refer to..."
+
+Changes in v3:
+    "being offload" -> "being offloaded"   [Randy Dunlap]
+    Added Randy's Reviewed-by.
+
+ include/linux/skbuff.h | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 28b1a2b..3a2ac70 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -47,8 +47,8 @@
+  * A. IP checksum related features
+  *
+  * Drivers advertise checksum offload capabilities in the features of a device.
+- * From the stack's point of view these are capabilities offered by the driver,
+- * a driver typically only advertises features that it is capable of offloading
++ * From the stack's point of view these are capabilities offered by the driver.
++ * A driver typically only advertises features that it is capable of offloading
+  * to its device.
+  *
+  * The checksum related features are:
+@@ -63,7 +63,7 @@
+  *			  TCP or UDP packets over IPv4. These are specifically
+  *			  unencapsulated packets of the form IPv4|TCP or
+  *			  IPv4|UDP where the Protocol field in the IPv4 header
+- *			  is TCP or UDP. The IPv4 header may contain IP options
++ *			  is TCP or UDP. The IPv4 header may contain IP options.
+  *			  This feature cannot be set in features for a device
+  *			  with NETIF_F_HW_CSUM also set. This feature is being
+  *			  DEPRECATED (see below).
+@@ -79,13 +79,13 @@
+  *			  DEPRECATED (see below).
+  *
+  *	NETIF_F_RXCSUM - Driver (device) performs receive checksum offload.
+- *			 This flag is used only used to disable the RX checksum
++ *			 This flag is only used to disable the RX checksum
+  *			 feature for a device. The stack will accept receive
+  *			 checksum indication in packets received on a device
+  *			 regardless of whether NETIF_F_RXCSUM is set.
+  *
+  * B. Checksumming of received packets by device. Indication of checksum
+- *    verification is in set skb->ip_summed. Possible values are:
++ *    verification is set in skb->ip_summed. Possible values are:
+  *
+  * CHECKSUM_NONE:
+  *
+@@ -115,16 +115,16 @@
+  *   the packet minus one that have been verified as CHECKSUM_UNNECESSARY.
+  *   For instance if a device receives an IPv6->UDP->GRE->IPv4->TCP packet
+  *   and a device is able to verify the checksums for UDP (possibly zero),
+- *   GRE (checksum flag is set), and TCP-- skb->csum_level would be set to
++ *   GRE (checksum flag is set) and TCP, skb->csum_level would be set to
+  *   two. If the device were only able to verify the UDP checksum and not
+- *   GRE, either because it doesn't support GRE checksum of because GRE
++ *   GRE, either because it doesn't support GRE checksum or because GRE
+  *   checksum is bad, skb->csum_level would be set to zero (TCP checksum is
+  *   not considered in this case).
+  *
+  * CHECKSUM_COMPLETE:
+  *
+  *   This is the most generic way. The device supplied checksum of the _whole_
+- *   packet as seen by netif_rx() and fills out in skb->csum. Meaning, the
++ *   packet as seen by netif_rx() and fills in skb->csum. This means the
+  *   hardware doesn't need to parse L3/L4 headers to implement this.
+  *
+  *   Notes:
+@@ -153,8 +153,8 @@
+  *   from skb->csum_start up to the end, and to record/write the checksum at
+  *   offset skb->csum_start + skb->csum_offset. A driver may verify that the
+  *   csum_start and csum_offset values are valid values given the length and
+- *   offset of the packet, however they should not attempt to validate that the
+- *   checksum refers to a legitimate transport layer checksum-- it is the
++ *   offset of the packet, but it should not attempt to validate that the
++ *   checksum refers to a legitimate transport layer checksum -- it is the
+  *   purview of the stack to validate that csum_start and csum_offset are set
+  *   correctly.
+  *
+@@ -178,18 +178,18 @@
+  *
+  * CHECKSUM_UNNECESSARY:
+  *
+- *   This has the same meaning on as CHECKSUM_NONE for checksum offload on
++ *   This has the same meaning as CHECKSUM_NONE for checksum offload on
+  *   output.
+  *
+  * CHECKSUM_COMPLETE:
+  *   Not used in checksum output. If a driver observes a packet with this value
+- *   set in skbuff, if should treat as CHECKSUM_NONE being set.
++ *   set in skbuff, it should treat the packet as if CHECKSUM_NONE were set.
+  *
+  * D. Non-IP checksum (CRC) offloads
+  *
+  *   NETIF_F_SCTP_CRC - This feature indicates that a device is capable of
+  *     offloading the SCTP CRC in a packet. To perform this offload the stack
+- *     will set set csum_start and csum_offset accordingly, set ip_summed to
++ *     will set csum_start and csum_offset accordingly, set ip_summed to
+  *     CHECKSUM_PARTIAL and set csum_not_inet to 1, to provide an indication in
+  *     the skbuff that the CHECKSUM_PARTIAL refers to CRC32c.
+  *     A driver that supports both IP checksum offload and SCTP CRC32c offload
+@@ -200,10 +200,10 @@
+  *   NETIF_F_FCOE_CRC - This feature indicates that a device is capable of
+  *     offloading the FCOE CRC in a packet. To perform this offload the stack
+  *     will set ip_summed to CHECKSUM_PARTIAL and set csum_start and csum_offset
+- *     accordingly. Note the there is no indication in the skbuff that the
+- *     CHECKSUM_PARTIAL refers to an FCOE checksum, a driver that supports
++ *     accordingly. Note that there is no indication in the skbuff that the
++ *     CHECKSUM_PARTIAL refers to an FCOE checksum, so a driver that supports
+  *     both IP checksum offload and FCOE CRC offload must verify which offload
+- *     is configured for a packet presumably by inspecting packet headers.
++ *     is configured for a packet, presumably by inspecting packet headers.
+  *
+  * E. Checksumming on output with GSO.
+  *
+@@ -211,9 +211,9 @@
+  * is implied by the SKB_GSO_* flags in gso_type. Most obviously, if the
+  * gso_type is SKB_GSO_TCPV4 or SKB_GSO_TCPV6, TCP checksum offload as
+  * part of the GSO operation is implied. If a checksum is being offloaded
+- * with GSO then ip_summed is CHECKSUM_PARTIAL, csum_start and csum_offset
+- * are set to refer to the outermost checksum being offload (two offloaded
+- * checksums are possible with UDP encapsulation).
++ * with GSO then ip_summed is CHECKSUM_PARTIAL, and both csum_start and
++ * csum_offset are set to refer to the outermost checksum being offloaded
++ * (two offloaded checksums are possible with UDP encapsulation).
+  */
+ 
+ /* Don't change this without changing skb_csum_unnecessary! */
+-- 
+1.8.3.1
+
