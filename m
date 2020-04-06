@@ -2,146 +2,86 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8271C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8EEC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 849452487B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D946A2487B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:06:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgDFPGa (ORCPT
+        id S1728853AbgDFPGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:06:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:4461 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728695AbgDFPGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:06:30 -0400
-IronPort-SDR: IpCH46fnrgIwOj0Uw5Z8/PBPcL309qndtdiBx0TUyB8iMunWD++KxLucXS1rePGTrOd9LZgXvH
- cbgA0L82J9+A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 08:06:28 -0700
-IronPort-SDR: mqw7ycFAc1LmPAC67DPTqIPgVgTjHFH2j8p8RoZfwndcKlL/z+tEfGOZN1CLbTbI2F7YfryUZ/
- sRgsmN8ohpTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,351,1580803200"; 
-   d="scan'208";a="450862810"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Apr 2020 08:06:23 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1jLTKU-00GCiI-8A; Mon, 06 Apr 2020 18:06:26 +0300
-Date:   Mon, 6 Apr 2020 18:06:26 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        Mon, 6 Apr 2020 11:06:37 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:60306 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728695AbgDFPGg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 11:06:36 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jLTKO-00A6Sm-OD; Mon, 06 Apr 2020 17:06:20 +0200
+Message-ID: <5575dfe84aa745a3c2a61e240c3d150dc8d9446f.camel@sipsolutions.net>
+Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Krishna Chaitanya <chaitanya.mgit@gmail.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        netdev <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 2/3] media: ov8856: Add devicetree support
-Message-ID: <20200406150626.GW3676135@smile.fi.intel.com>
-References: <20200331133346.372517-1-robert.foss@linaro.org>
- <20200331133346.372517-3-robert.foss@linaro.org>
- <CAHp75VfFKY6nzb8aEWmop73v2haZ0P5+aTsKDEU8M=uUPn0u3g@mail.gmail.com>
- <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com>
+        Matthias-Peter =?ISO-8859-1?Q?Sch=F6pfer?= 
+        <matthias.schoepfer@ithinx.io>,
+        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
+        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
+Date:   Mon, 06 Apr 2020 17:06:19 +0200
+In-Reply-To: <CABPxzY++YMBPTV4quAkYvEAMfULjMXLkVfNzwocwubno5HO2Bw@mail.gmail.com> (sfid-20200406_162554_186372_29D110B6)
+References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
+         <87ftdgokao.fsf@tynnyri.adurom.net>
+         <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+         <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com>
+         <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
+         <87imiczrwm.fsf@kamboji.qca.qualcomm.com>
+         <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
+         <CAFA6WYOjU_iDyAn5PMGe=usg-2sPtupSQEYwcomUcHZBAPnURA@mail.gmail.com>
+         <87v9mcycbf.fsf@kamboji.qca.qualcomm.com>
+         <CABPxzYKs3nj0AUX4L-j87Db8v3WnM4uGif9nRTGgx1m2HNN8Rg@mail.gmail.com>
+         <35cadbaff1239378c955014f9ad491bc68dda028.camel@sipsolutions.net>
+         <CABPxzY++YMBPTV4quAkYvEAMfULjMXLkVfNzwocwubno5HO2Bw@mail.gmail.com>
+         (sfid-20200406_162554_186372_29D110B6)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 03:37:24PM +0200, Robert Foss wrote:
-> On Tue, 31 Mar 2020 at 16:01, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Tue, Mar 31, 2020 at 4:36 PM Robert Foss <robert.foss@linaro.org> wrote:
+On Mon, 2020-04-06 at 19:55 +0530, Krishna Chaitanya wrote:
 
-...
+> > iw phy0 interface add wlan0 type station
+> > ip link set wlan0 up
+> Ah okay, got it, thanks. Very narrow window though :-) as the
+> alloc_ordered_workqueue
+> doesn't need RTNL and there is a long way to go to do if_add() from
+> user and setup
+> the driver for interrupts. 
 
-> > > +       if (ret < 0) {
-> >
-> > Do you need all ' < 0' parts all over the series?
-> 
-> Some checks are needed due to ACPI and DT support co-existing.
-> Maybe it would be better to just split the probing into an ACPI path
-> and a DT path.
-> 
-> I'll have a look through the series for redundant retval checks.
+True, I do wonder how this is hit. Maybe something with no preempt and a
+uevent triggering things?
 
-Drop where it is redundant.
+> Again depends on the driver though, it
+> should properly handle
+> pending ieee80211_register_hw() with start().
 
-...
+It could, but it'd be really tricky. Much better to fix mac80211.
 
-> > > -       ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
-> > > -       if (ret)
-> > > -               return ret;
-> >
-> > Where is it gone? Why?
-> 
-> It was replaced by a clk_get_rate call, which as Sakari pointed out,
-> isn't correct.
-> I'll rework the clock handling for v4.
-
-If it was in the driver it should stay -- properties is an ABI (between firmware and kernel).
-
-> > > +       ov8856->xvclk = devm_clk_get_optional(dev, "xvclk");
-> > > +       if (IS_ERR(ov8856->xvclk)) {
-> >
-> > > +               dev_err(dev, "could not get xvclk clock (%ld)\n",
-> > > +                       PTR_ERR(ov8856->xvclk));
-> >
-> > Also you may use %pe here and in similar cases.
-> 
-> Weirdly checkpatch complains about this.
-> But it builds and runs cleanly, so I'll add it in v4.
-
-%pe requires pointer, PTR_ERR converts pointer to integer.
-
-...
-
-> > > +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
-> > > +                                     ov8856->supplies);
-> > > +       if (ret) {
-> >
-> > > +               dev_warn(dev, "failed to get regulators\n");
-> >
-> > If it's a warning, why we return from here?
-> > Same question to all other places with same issue.
-> 
-> The issue I was seeing was the driver having to return a EDEFER here,
-> so this warning sheds some light on which exact component is returning
-> an EDEFER.
-> 
-> [   15.962623] ov8856 16-0010: Dropping the link to regulator.29
-> [   15.968464] ov8856 16-0010: failed to get regulators
-> [   15.973493] ov8856 16-0010: failed to get HW configuration: -517
-> [   15.979591] ov8856 16-0010: removing from PM domain titan_top_gdsc
-> [   15.985855] ov8856 16-0010: genpd_remove_device()
-> [   15.990672] i2c 16-0010: Driver ov8856 requests probe deferral
-> 
-> Personally I found it helpful to speed up debugging, but I'll happily
-> remove it if you prefer no warning.
-
-My point is that you have it in align:
- - if it is an error, print as an error and bail out, otherwise
- - if it is a warning, print it and continue.
-
-> > > +               return ret;
-> > >         }
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+johannes
 
