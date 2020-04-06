@@ -2,140 +2,153 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3269C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A8C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1842415C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hXk7nHnX"
+	by mail.kernel.org (Postfix) with ESMTP id 994D6206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgDFO2c (ORCPT
+        id S1728697AbgDFO3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:28:32 -0400
-Received: from mail-bn7nam10on2087.outbound.protection.outlook.com ([40.107.92.87]:6038
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728406AbgDFO2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:28:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZlMZQo8eR/4942sZRHdm3aafbwiRcaKstYINssQyxO+fXbTE6VFdhYZDZsfvIRCHbQaZqd+W0vfp/oAwVRFdo8adNrC3nUdzHqU0AAEsAJVRc0PmqZSGjWm8wC543VoBxnWLonMaWh5Quu8Krysq7lQFHcrDK0+EZrUaj0K8BDCuQ+ho7oKR2InX+9dzW8Dhs47//GjvGzXIlKKIVQX19WwDWw+CWOakfcvH7YkqzqByDKCEMJkFbtKn/qxd1Y+1YizoP0dB9fv2b6yD9k8iKH4wKfl15y7+Y0ib8zFYQWcQPc+wQNulJFRlGYcVQ9r1VJr83iNmxHvWDeF5Ub43qA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l/qoCkbnKHJCBgdMTa/2issKe/yDnSU1y8MvuHHNrRI=;
- b=mRQSMfQorliP2bODRO0Rpm4nnPudQqkVBibf1epJE7NQUluOlvmJl6d84R9jhFN/loD6PpOK6ompfhT1hDOi9oOJ6LfA4y1+6laeMhKJCMR4rkPCON3K7HIOdGRS2XUwE8YDqjGRT6uDn5PFDz60uMo8/U+QQOhGKFnfX1sqddcYTwn2mIJrcoeYXb0yM62MU9QW5OWDmVDAuE9ZlAYxqIkyKujkUdrHKeyEzmF/7nwYaRwqVZlsSN+kvKHqi4YCPJxjJK5TlRYxSVsPYX6BZih/HRFztBfmuQhm8XRVS4zjAIX8nkCsdYRnppo/2lqvRM8/A9MtM+wgV00vuVm2MA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l/qoCkbnKHJCBgdMTa/2issKe/yDnSU1y8MvuHHNrRI=;
- b=hXk7nHnXwNtVJlh3G9Mfnb+ky/HokAUdg0Mk8QYEylxUDc8+6G4UwW4tEj3M2BGAUByWt/LbmGfdHcr/kcSlk7mIbrvyrgSE8XbtrUb1zGPESOH5UOHXDwtkOI8Y6/a6LdeLQY8FCATbvlyu7pJdneiz6DgokoAoDe1tkxCzOYs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
- by SN6PR12MB2846.namprd12.prod.outlook.com (2603:10b6:805:70::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Mon, 6 Apr
- 2020 14:28:25 +0000
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::654c:5d93:fd49:88b3]) by SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::654c:5d93:fd49:88b3%4]) with mapi id 15.20.2878.017; Mon, 6 Apr 2020
- 14:28:25 +0000
-Subject: Re: [PATCH] perf script report: fix segfault when using DWARF mode
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andreas Gerstmayr <agerstmayr@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
- <20200402125417.422232-1-agerstmayr@redhat.com>
- <6a098ce1-1981-dcff-ea62-af5fc07ec7fb@amd.com>
- <20200403124028.GA18559@kernel.org>
- <bf95c9f1-1970-fce4-c6f2-dc231730e7ab@redhat.com>
- <0a942366-c8dd-4767-ee84-fdc0024b035f@redhat.com>
- <20200406125915.GQ9917@kernel.org>
-From:   Kim Phillips <kim.phillips@amd.com>
-Message-ID: <f523cfca-5592-c1ea-ad5a-7603c967c0c5@amd.com>
-Date:   Mon, 6 Apr 2020 09:28:22 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200406125915.GQ9917@kernel.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR06CA0040.namprd06.prod.outlook.com
- (2603:10b6:5:54::17) To SN6PR12MB2845.namprd12.prod.outlook.com
- (2603:10b6:805:75::33)
+        Mon, 6 Apr 2020 10:29:43 -0400
+Received: from sandeen.net ([63.231.237.45]:37970 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728406AbgDFO3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 10:29:43 -0400
+Received: from Liberator.local (liberator [10.0.0.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 426217880;
+        Mon,  6 Apr 2020 09:29:36 -0500 (CDT)
+Subject: Re: [RFC 2/3] blktrace: fix debugfs use after free
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de
+Cc:     mhocko@suse.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+References: <20200402000002.7442-1-mcgrof@kernel.org>
+ <20200402000002.7442-3-mcgrof@kernel.org>
+ <3640b16b-abda-5160-301a-6a0ee67365b4@acm.org>
+ <b827d03c-e097-06c3-02ab-00df42b5fc0e@sandeen.net>
+ <75aa4cff-1b90-ebd4-17a4-c1cb6d390b30@acm.org>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ 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 pA==
+Message-ID: <4a84844d-ef87-c609-9963-4dea17bc506c@sandeen.net>
+Date:   Mon, 6 Apr 2020 09:29:40 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.102] (70.114.207.150) by DM6PR06CA0040.namprd06.prod.outlook.com (2603:10b6:5:54::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend Transport; Mon, 6 Apr 2020 14:28:24 +0000
-X-Originating-IP: [70.114.207.150]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 65ed5fa8-ee3b-4e84-996e-08d7da36c436
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2846:
-X-Microsoft-Antispam-PRVS: <SN6PR12MB284618D9D7C5C1011B7D61B687C20@SN6PR12MB2846.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 0365C0E14B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2845.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(136003)(376002)(396003)(4326008)(31686004)(52116002)(2616005)(316002)(16526019)(956004)(7416002)(186003)(54906003)(86362001)(66556008)(5660300002)(8676002)(6486002)(81156014)(16576012)(81166006)(110136005)(2906002)(36756003)(53546011)(478600001)(31696002)(26005)(66476007)(44832011)(66946007)(8936002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: w0s10lmf6sx/NfXHxY+/JS6bdlbXuwV0fz9Zwz99VWxbqEitlaVUKmMQVv9/ToNBFtzc8Zjhs76rJUJ8QpMJ+lnKykvWBNNHfFVYffvuDaEDWNkghDmRCZf+yNC0TLyEfk/kzie7bUIEFM3LhSHrRheoomhEiaBTx9RKQjlJ0aGHhiD2+A1cMH1wTn5Gq+CZcUqq7mDAhTURxF7AUvt5a4WayOVX+QPX6nLTvCnErrg7+jlVI566QD8oXaJ9PhjGum6auofR6V6IfEu7j3HIABSAAh5qoF2l/Gwzl0d2bDdC/HXnRqvzY0MS9FZ63hkzf0ifvDrip9pP/8cYCdwMyuI9N5x4iQg7aDbtc5azkX8VRR09H6n8fkhsnaS0IS2VQa1SFBbcYlr6KsTPwvjSflzr/ktUi7WI5cG4RLS1f5Ts27zuwGr9Bc58XfrN2gD4
-X-MS-Exchange-AntiSpam-MessageData: iz7jHaR9P6zSpXsqaezSzljPd1P7dN2UgMJPE8hflXqds5hw9uWA5OmPnznBPLA7qJ9oDXhk+nDJvc0pBGKXmEC88/f7A/UxTBmyKKZuSmqsfH5jySrfJGa1lnrfJXCnT+nwSPEPR8UE6zZYTClTvQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65ed5fa8-ee3b-4e84-996e-08d7da36c436
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 14:28:25.2745
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5mfaatiuuMo2aHT6bKeG1w2AIzLGxC9Js2XyMZVFRDYa/r48jHahCmidoqDjR8uLfh1hlct3/b/UC7Qj5VfrfA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2846
+In-Reply-To: <75aa4cff-1b90-ebd4-17a4-c1cb6d390b30@acm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/6/20 7:59 AM, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Apr 06, 2020 at 11:30:23AM +0200, Andreas Gerstmayr escreveu:
->> On 03.04.20 15:16, Andreas Gerstmayr wrote:
->>> On 03.04.20 14:40, Arnaldo Carvalho de Melo wrote:
->>>> Em Thu, Apr 02, 2020 at 02:07:51PM -0500, Kim Phillips escreveu:
->>>>> On 4/2/20 7:54 AM, Andreas Gerstmayr wrote:
->>>>>> When running perf script report with a Python script and a callgraph in
->>>>>> DWARF mode, intr_regs->regs can be 0 and therefore crashing
->>>>>> the regs_map
->>>>>> function.
->>>>>> Added a check for this condition (same check as in
->>>>>> builtin-script.c:595).
->>>>>> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
->>>>> Tested-by: Kim Phillips <kim.phillips@amd.com>
->>>> Thanks, added this to that patch.
->>> Great, thanks!
->> Ah, I thought you were referring to my initial flamegraph.py perf script.
->> Is there anything I can do to get it merged?
+On 4/5/20 11:25 PM, Bart Van Assche wrote:
+> On 2020-04-05 18:27, Eric Sandeen wrote:
+>> The thing I can't figure out from reading the change log is
+>>
+>> 1) what the root cause of the problem is, and
+>> 2) how this patch fixes it?
 > 
-> I'll test it today, were there any Tested-by: or Reviewed-by: to that
-> flamegraph.py?
+> I think that the root cause is that do_blk_trace_setup() uses
+> debugfs_lookup() and that debugfs_lookup() may return a pointer
+> associated with a previous incarnation of the block device.
+> Additionally, I think the following changes fix that problem by using
+> q->debugfs_dir in the blktrace code instead of debugfs_lookup():
 
-I just added mine.
+Yep, I gathered that from reading the patch, was just hoping for a commit log
+that makes it clear.
 
-Kim
+> [ ... ]
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -311,7 +311,6 @@ static void blk_trace_free(struct blk_trace *bt)
+>  	debugfs_remove(bt->msg_file);
+>  	debugfs_remove(bt->dropped_file);
+>  	relay_close(bt->rchan);
+> -	debugfs_remove(bt->dir);
+>  	free_percpu(bt->sequence);
+>  	free_percpu(bt->msg_data);
+>  	kfree(bt);
+> [ ... ]
+> @@ -509,21 +510,19 @@ static int do_blk_trace_setup(struct request_queue
+> *q, char *name, dev_t dev,
+> 
+>  	ret = -ENOENT;
+> 
+> -	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+> -	if (!dir)
+> -		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> -
+>  	bt->dev = dev;
+>  	atomic_set(&bt->dropped, 0);
+>  	INIT_LIST_HEAD(&bt->running_list);
+> 
+>  	ret = -EIO;
+> -	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
+> +	bt->dropped_file = debugfs_create_file("dropped", 0444,
+> +					       q->debugfs_dir, bt,
+>  					       &blk_dropped_fops);
+
+One thing I'm not sure about, the block_trace *bt still points to a dentry that
+could get torn down via debugfs_remove_recursive when the queue is released, right,
+but could later be sent to blk_trace_free again?  And yet this does seem to fix the
+use after free in my testing, so I must be missing something.
+
+Thanks,
+-Eric
