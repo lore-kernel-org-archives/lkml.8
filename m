@@ -2,137 +2,70 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A996C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C194AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067542072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:18:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XgVvToRn"
+	by mail.kernel.org (Postfix) with ESMTP id 94E6420748
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgDFVSX (ORCPT
+        id S1726370AbgDFVV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:18:23 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2374 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFVSW (ORCPT
+        Mon, 6 Apr 2020 17:21:27 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45702 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgDFVV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:18:22 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8b9c690000>; Mon, 06 Apr 2020 14:17:29 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 14:18:21 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 06 Apr 2020 14:18:21 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 21:18:21 +0000
-Received: from [10.2.164.193] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 21:18:19 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <782c8c4e-f5c2-d75e-0410-757172dd3090@gmail.com>
- <ac225ff3-8de8-256c-7f81-0225b4153540@nvidia.com>
- <86bbcd55-fa13-5a35-e38b-c23745eafb87@gmail.com>
- <2839b1ee-dedc-d0ee-e484-32729a82a6ea@nvidia.com>
- <7361d00d-9cfe-3e4a-6199-524d37d53bd0@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <ae1a90af-12ff-69dd-74c3-89f42a945a5c@nvidia.com>
-Date:   Mon, 6 Apr 2020 14:18:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 17:21:27 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jLZBC-00012E-S3; Mon, 06 Apr 2020 23:21:15 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id D5BEC100C47; Mon,  6 Apr 2020 23:21:13 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Benjamin Lamowski <benjamin.lamowski@kernkonzept.com>,
+        xiaoyao.li@intel.com
+Cc:     philipp.eppelt@kernkonzept.com, bp@alien8.de, fenghua.yu@intel.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, luto@kernel.org,
+        mingo@redhat.com, nivedita@alum.mit.edu, pbonzini@redhat.com,
+        peterz@infradead.org, sean.j.christopherson@intel.com,
+        tony.luck@intel.com, x86@kernel.org
+Subject: Re: [PATCH 0/1] x86/split_lock: check split lock feature on initialization
+In-Reply-To: <20200403174403.306363-1-benjamin.lamowski@kernkonzept.com>
+References: <20200325030924.132881-1-xiaoyao.li@intel.com> <20200403174403.306363-1-benjamin.lamowski@kernkonzept.com>
+Date:   Mon, 06 Apr 2020 23:21:13 +0200
+Message-ID: <87369gl392.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <7361d00d-9cfe-3e4a-6199-524d37d53bd0@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586207849; bh=8nONXWLFCq3lGgRTBCMj368KMxYIgkUaWWlaHerqj5o=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=XgVvToRn6kgcYslV6XANiWSxG4v2jhzDtr4cUsTHn11cD1GrWlnQrexedArMDcrFi
-         k+MWFh/EZtYPBii6Ph5wYVyznw3lf8K9Xe376HYGwwhp4SsPd5u2b7G1vhyrpQL/Ev
-         HwhvNMHvNcwLFR3ES2G8CrCIa/xha//0w0pKNtPpcKO7ZNpHHpmxKkXWzZTLEPX3dO
-         rEsx1E98/5wbVZuO7a9RPd9XpY5xb2y+Zh1Ke1N9QJ04ERp1rYmhJbBSqTFildaxSQ
-         DGLuTN5mrzH9gAeM7LjrVFWGktgA8TzLJY8ZgXp9ky4B0+lgBtHQZF77IX0JV/ni/O
-         adndAvNlEophw==
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 4/6/20 1:54 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
+Benjamin Lamowski <benjamin.lamowski@kernkonzept.com> writes:
+> During regression testing of our hypervisor[1] with the current git tip,
+> we got writes to the TEST_CTRL MSR on hardware that does not support
+> split lock detection. While the original split_lock implementation does
+> not exhibit this behavior, the reworked initialization from
+> dbaba47085b0c unconditionally calls split_lock_verify_msr() from
+> split_lock_init().
 >
->
-> 06.04.2020 23:38, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/6/20 1:37 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 06.04.2020 23:20, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> On 4/6/20 1:02 PM, Dmitry Osipenko wrote:
->>>>> External email: Use caution opening links or attachments
->>>>>
->>>>>
->>>>> 04.04.2020 04:25, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> ...
->>>>>> +static int chan_capture_kthread_start(void *data)
->>>>>> +{
->>>>>> +     struct tegra_vi_channel *chan =3D data;
->>>>>> +     struct tegra_channel_buffer *buf;
->>>>>> +     int err =3D 0;
->>>>>> +     int caps_inflight;
->>>>>> +
->>>>>> +     set_freezable();
->>>>>> +
->>>>>> +     while (1) {
->>>>>> +             try_to_freeze();
->>>>>> +
->>>>>> +             wait_event_interruptible(chan->start_wait,
->>>>>> +                                      !list_empty(&chan->capture) |=
-|
->>>>>> +                                      kthread_should_stop());
->>>>> Is it really okay that list_empty() isn't protected with a lock?
->>>>>
->>>>> Why wait_event is "interruptible"?
->>>> To allow it to sleep until wakeup on thread it to avoid constant
->>>> checking for condition even when no buffers are ready, basically to
->>>> prevent blocking.
->>> So the "interrupt" is for getting event about kthread_should_stop(),
->>> correct?
->> also to prevent blocking and to let is sleep and wakeup based on wait
->> queue to evaluate condition to proceed with the task
-> This looks suspicious, the comment to wait_event_interruptible() says
-> that it will return ERESTARTSYS if signal is recieved..
->
-> Does this mean that I can send signal from userspace to wake it up?
->
-> The "interruptible" part looks wrong to me.
+> After the elaborate checks in cpu_set_core_cap_bits() this seems like an
+> oversight. The following simple patch fixes our regression by checking
+> for X86_FEATURE_SPLIT_LOCK_DETECT before accessing the TEST_CTRL MSR.
 
-We are not checking for wait_event_interruptible to handle case when it=20
-returns ERESTARTSYS.
+No. It's not an oversight, it's a simplification and it's perfectly
+legit. rdsmrl_safe() on a unimplemented MSR results in a #GP which is
+caught and fixed up. Nothing to see here.
 
-So, signals sent from user space are ignore and we check if when wakeup=20
-happens if kthread_stop has requested to stop thread.
+Thanks,
 
+        tglx
