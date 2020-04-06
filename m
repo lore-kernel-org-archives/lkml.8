@@ -2,80 +2,127 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAF0C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D42C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2277F206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55C02076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgDFLgV (ORCPT
+        id S1727421AbgDFLiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:36:21 -0400
-Received: from elvis.franken.de ([193.175.24.41]:55913 "EHLO elvis.franken.de"
+        Mon, 6 Apr 2020 07:38:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55218 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbgDFLgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:36:20 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jLQ39-0007W1-00; Mon, 06 Apr 2020 13:36:19 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 2E474C0206; Mon,  6 Apr 2020 13:03:33 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 13:03:33 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-mips@linux-mips.org,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org
-Subject: Re: [PATCH] MIPS: fw: arc: add __weak to prom_meminit and
- prom_free_prom_memory
-Message-ID: <20200406110333.GA6266@alpha.franken.de>
-References: <20200405163052.18942-1-masahiroy@kernel.org>
+        id S1727192AbgDFLiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:38:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C68BFAE2D;
+        Mon,  6 Apr 2020 11:38:48 +0000 (UTC)
+Subject: Re: [PATCH 01/11] EDAC/mc: Use int type for parameters of
+ edac_mc_alloc()
+To:     Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200306151318.17422-1-rrichter@marvell.com>
+ <20200306151318.17422-2-rrichter@marvell.com>
+From:   Matthias Brugger <mbrugger@suse.com>
+Message-ID: <b87a569d-8170-2b8b-d7c8-60bc782f5f2e@suse.com>
+Date:   Mon, 6 Apr 2020 13:38:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200405163052.18942-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200306151318.17422-2-rrichter@marvell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 01:30:52AM +0900, Masahiro Yamada wrote:
-> As far as I understood, prom_meminit() in arch/mips/fw/arc/memory.c
-> is overridden by the one in arch/mips/sgi-ip32/ip32-memory.c if
-> CONFIG_SGI_IP32 is enabled.
+On 06/03/2020 16:13, Robert Richter wrote:
+> Most iterators use int type as index. mci->mc_idx is also type int. So
+> use int type for parameters of edac_mc_alloc(). Extend the range check
+> to check for negative values. There is a type cast now when assigning
+> variable n_layers to mci->n_layer, it is safe due to the range check.
 > 
-> The use of EXPORT_SYMBOL in static libraries potentially causes a
-> problem for the llvm linker [1]. So, I want to forcibly link lib-y
-> objects to vmlinux when CONFIG_MODULES=y.
+> While at it, rename the users of edac_mc_alloc() to mc_idx as this
+> fits better here.
 > 
-> As a groundwork, we must fix multiple definitions that have previously
-> been hidden by lib-y.
-> 
-> The prom_cleanup() in this file is already marked as __weak (because
-> it is overridden by the one in arch/mips/sgi-ip22/ip22-mc.c).
-> I think it should be OK to do the same for these two.
-> 
-> [1]: https://github.com/ClangBuiltLinux/linux/issues/515
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+
+Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+
 > ---
+>  drivers/edac/edac_mc.c | 7 +++----
+>  drivers/edac/edac_mc.h | 6 +++---
+>  2 files changed, 6 insertions(+), 7 deletions(-)
 > 
-> If MIPS maintainers ack this patch,
-> I want to inser it before the following patch:
+> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+> index 75ede27bdf6a..8bd3d00b4385 100644
+> --- a/drivers/edac/edac_mc.c
+> +++ b/drivers/edac/edac_mc.c
+> @@ -444,8 +444,7 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
+>  	return 0;
+>  }
+>  
+> -struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
+> -				   unsigned int n_layers,
+> +struct mem_ctl_info *edac_mc_alloc(int mc_idx, int n_layers,
+>  				   struct edac_mc_layer *layers,
+>  				   unsigned int sz_pvt)
+>  {
+> @@ -456,7 +455,7 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
+>  	void *pvt, *ptr = NULL;
+>  	bool per_rank = false;
+>  
+> -	if (WARN_ON(n_layers > EDAC_MAX_LAYERS || n_layers == 0))
+> +	if (WARN_ON(mc_idx < 0 || n_layers < 1 || n_layers > EDAC_MAX_LAYERS))
+>  		return NULL;
+>  
+>  	/*
+> @@ -505,7 +504,7 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
+>  	pvt = sz_pvt ? (((char *)mci) + ((unsigned long)pvt)) : NULL;
+>  
+>  	/* setup index and various internal pointers */
+> -	mci->mc_idx = mc_num;
+> +	mci->mc_idx = mc_idx;
+>  	mci->tot_dimms = tot_dimms;
+>  	mci->pvt_info = pvt;
+>  	mci->n_layers = n_layers;
+> diff --git a/drivers/edac/edac_mc.h b/drivers/edac/edac_mc.h
+> index 881b00eadf7a..4815f50afea0 100644
+> --- a/drivers/edac/edac_mc.h
+> +++ b/drivers/edac/edac_mc.h
+> @@ -98,7 +98,7 @@ do {									\
+>  /**
+>   * edac_mc_alloc() - Allocate and partially fill a struct &mem_ctl_info.
+>   *
+> - * @mc_num:		Memory controller number
+> + * @mc_idx:		Memory controller number
+>   * @n_layers:		Number of MC hierarchy layers
+>   * @layers:		Describes each layer as seen by the Memory Controller
+>   * @sz_pvt:		size of private storage needed
+> @@ -122,8 +122,8 @@ do {									\
+>   *	On success, return a pointer to struct mem_ctl_info pointer;
+>   *	%NULL otherwise
+>   */
+> -struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
+> -				   unsigned int n_layers,
+> +struct mem_ctl_info *edac_mc_alloc(int mc_idx,
+> +				   int n_layers,
+>  				   struct edac_mc_layer *layers,
+>  				   unsigned int sz_pvt);
+>  
+> 
 
-
-Acked-By: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
