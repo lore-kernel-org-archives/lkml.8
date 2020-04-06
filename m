@@ -2,99 +2,254 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6548C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4CDC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E4120678
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C3DD20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:26:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JODDqlVL"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cULW9ods"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727951AbgDFB0a (ORCPT
+        id S1727980AbgDFB0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 21:26:30 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37084 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbgDFB03 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 21:26:29 -0400
-Received: by mail-pf1-f195.google.com with SMTP id u65so6779142pfb.4
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 18:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=bCP/VQw337JNSqQZ2HvUPrrXtQBfFLYo/RggJtgrBzk=;
-        b=JODDqlVLar9yt2N3yezSvdVx6Le8p4yT8o0VbdUK272Yp99tZPIZzaU7VSbHlgz0yL
-         3pvJOFR1go5wOvBReFKpU2wX/ncT5zVydtd0dsEr+qvR08cN9nq6qNugH5iY3J1aUX4o
-         SXPjp37XJg5ZmuLdpa2pNBqPpTNvPaoABnYBYolgC7u15k+Kx6+Y0Se8OWV0MibaywPy
-         RCBPhUgaEq//tEPMtOlac9B0LwDaHgnHWx+L7YqwHznNM3NqeFWz7qcuaqLRhymvFCOj
-         5fpZMRdo2Z4dUgwafbsw4sWlGKKyJu+9txLNk8xZfUh0nigpUPoZA6MgKATYT8sslUi9
-         zC7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=bCP/VQw337JNSqQZ2HvUPrrXtQBfFLYo/RggJtgrBzk=;
-        b=OTkN2h5WK8Bi4xUkxJ08kk/BXnzXIi54Fee6wsOQHrEuyDR7r+qCMgia1bi2bsidg0
-         nQOzBDAFjOISfyFc3Tvz8pJ3NhzWXZ3deFSb3qXBg7rtsXBAIRdHhaEMtPz91V0Rhx1D
-         PJZolTMrvzXBeNbSRUpm+j8nFZEXZL13Tv3Sue1VdGVNOLoeoAG7VRkZDJKajftp3sD5
-         3ZPFwgwbYydW+TUsxdy66jEgqF6vqZ1AE+LhtfxFOFLbapOS3GKK1kzK9OwBRAvQacCP
-         TIcxuiXHpf7pYX14kyJJ/pngbbCoTRgvpRVN6KsyUMIsPZUfROmDbJVyo2Ck4KgFkt4p
-         sfEA==
-X-Gm-Message-State: AGi0PuYuKc/h+mMBAYr6UCV8dd7i+NeNli0jVzYLoIKHE+K24OKdM5GX
-        ufK7K3DUYBy3B6AOWrt0LsQRuK9h
-X-Google-Smtp-Source: APiQypKqiMO6ppndjhgdZ6+iwHVyw8jrQA2O3khmT516KEmmVVAwmNYuLrt9v+d/g0JDoWUtctLjpw==
-X-Received: by 2002:a65:5647:: with SMTP id m7mr18606743pgs.371.1586136388432;
-        Sun, 05 Apr 2020 18:26:28 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id a3sm10322567pfg.172.2020.04.05.18.26.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 18:26:27 -0700 (PDT)
-Date:   Mon, 06 Apr 2020 11:25:20 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH v2 12/13] powerpc/kernel: Do not inconditionally save
- non volatile registers on system call
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
-        <4ef6d617cfd34e09e9bf5a456b2e0b6d2a8a3c96.1586108649.git.christophe.leroy@c-s.fr>
-In-Reply-To: <4ef6d617cfd34e09e9bf5a456b2e0b6d2a8a3c96.1586108649.git.christophe.leroy@c-s.fr>
+        Sun, 5 Apr 2020 21:26:33 -0400
+Received: from mail-bn7nam10on2109.outbound.protection.outlook.com ([40.107.92.109]:44264
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726408AbgDFB0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 21:26:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BCuuCvmphKT9aqHC38gTGxShPrhuQ9y3Sa9jlkXc0kPTJQnJNyUMma/bR6Y2R0faGGzbjYTzYouRVKBd7VsxOP5MDtDPiS/sBeYZc6GP2jW7EC5GQGx40foq3UWQkG2AWxjm7Bu8ifw+MStZhTlrYJl2QzgD+GOZx/3ajZTxZ1O8ADApT8/w5DGkskx0aSNyQyqSqx38qmCTJ5ZAFUSxQDJlj66v21Fw5Y616Zf0d1XrlWWRhmfBtTSkvidY2LRPujdrn01xjVd+Bu8SlwB1vORgXGEzTyJe9PFSMflqH31zw08WxA+QGDC5OBmDYmX+qd1E++dqfABnHyJnROvGiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QLB13bA0uvCPI607oMAf7Q+lgm73dUZWM3dhhAJgCMc=;
+ b=C0U5kWBhnFSdOa4jgwGxtW6GcTIhSo1OXCYtrmMr7+X96P1ofISIR1XoP3t2HF4cy1cxr8VqfOp4eAgNMt6+wcIH7LOzjKVSMJewy7sluijMHKwwvoSaW58JzIrIsPtUTlK4VbwUXLIiTEt8CZIAw5DlWzYJ4vkS7fsJs7HdjHqefg7c7YXgYJqCSyEx4GDhnaXNDVlpD9zrdpJwqiCMRxio8xdvj+b4ZpyslEupqWSIM5pOF2Q7OJD6QP/VvHnr+louNM318q+7eK5OWa76u3vtVwY9ci0izIJ8bsE2rXr6+3FAG7gKKrnC/qpPDZbV1Cju5h1XwoHtPTii7VSEYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QLB13bA0uvCPI607oMAf7Q+lgm73dUZWM3dhhAJgCMc=;
+ b=cULW9odsO/ro1A0irhstGd/4fzmqiPDN45Ws5ZQP45g4cRUcpVtJ6tSYMJ/gKtsRWQg+BgX71exBtgKgawwzD6ROsqgST3BDUxQuGv7lvjd47BTf1lU81wiQL+tHWgp2YZ8ryAXXMb6wCfMhhlR5bXN8cHTaN+gN+OjPAfoO0/o=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com (2603:10b6:408:72::10)
+ by BN8PR21MB1266.namprd21.prod.outlook.com (2603:10b6:408:a1::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.5; Mon, 6 Apr
+ 2020 01:26:25 +0000
+Received: from BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b5da:34dd:f205:560b]) by BN8PR21MB1139.namprd21.prod.outlook.com
+ ([fe80::b5da:34dd:f205:560b%4]) with mapi id 15.20.2900.010; Mon, 6 Apr 2020
+ 01:26:24 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     willy@infradead.org, netdev@vger.kernel.org, davem@davemloft.net,
+        willemb@google.com, kuba@kernel.org, simon.horman@netronome.com,
+        sdf@google.com, edumazet@google.com, fw@strlen.de,
+        jonathan.lemon@gmail.com, pablo@netfilter.org,
+        rdunlap@infradead.org, decui@microsoft.com, jeremy@azazel.net,
+        pabeni@redhat.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH v2 net] skbuff.h: Improve the checksum related comments
+Date:   Sun,  5 Apr 2020 18:26:09 -0700
+Message-Id: <1586136369-67251-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR02CA0007.namprd02.prod.outlook.com
+ (2603:10b6:300:4b::17) To BN8PR21MB1139.namprd21.prod.outlook.com
+ (2603:10b6:408:72::10)
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1586135554.pnqaj0giue.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR02CA0007.namprd02.prod.outlook.com (2603:10b6:300:4b::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 01:26:23 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b289ad70-8367-4228-ec9d-08d7d9c9854b
+X-MS-TrafficTypeDiagnostic: BN8PR21MB1266:|BN8PR21MB1266:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR21MB1266E208C4E27849755C4D0FBFC20@BN8PR21MB1266.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0365C0E14B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR21MB1139.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(346002)(136003)(366004)(376002)(396003)(39860400002)(186003)(16526019)(66946007)(66556008)(26005)(6486002)(66476007)(6512007)(81156014)(3450700001)(81166006)(36756003)(8676002)(6666004)(7416002)(5660300002)(52116002)(8936002)(478600001)(86362001)(82950400001)(82960400001)(2906002)(4326008)(10290500003)(2616005)(6506007)(956004)(316002)(921003)(1121003);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XYEr6m+sglTm4Kiqqf/an5tXfayaAFtkA8FBE1kidEmIqvn3g67z5YG+TvyBgatRqH7OdXAYbhWFT44+xqk+v2XYeCOmT6ywZ3xPZVUITu/tpBR1mb59PtOf5GEojlckmyjXJTsvP9akdALXvIxMldM0RiKUaT3KDntp0bT+WQXtpAXoCx9N3a4vlseaeb19zxfDFhJdyDbImGkE2TCzwwSco5rS3y+PWLtyhAWqrBTcIpfe8hILEq7eQG+qwqdRzU9aCGMuzK3R6SZHdyKxjPFsdFpODv4sLxvkQp1ZOe0MZkqonFam50muIbTuY3ZJwODSj5vgMRNQV+E0axkRuXb8bqvyDgRaAJ355AvJzulJCZL06Qtquz0LHtPQP7a1nCGzKt0r+YFDXOXFcOqJ3oYPKR9U495KdB1dkMNTUFmt6z+gbFPNVmKviCwSWWJAVCR3RXp6VnjS7DXJZ7kCWOr+wKKuZFK5Szt3gWEA9rVpdnfAyXoHnVZ6oBcm4pmB
+X-MS-Exchange-AntiSpam-MessageData: AURUx0JOTd9I7DpPwR0+QEMnrPDwMEGSoGamy66dLTUDtW6jTv7+XUrD57GZSEsam9GiqYGE42Y+XA3xMce12XQXoHGPtP/gF2k5x+qPz0RYRXPuzEqzndln85lmm0RYKuPzpbk15Nk/HXctOSy02Q==
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b289ad70-8367-4228-ec9d-08d7d9c9854b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 01:26:24.7691
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gyk/o6cpv1Ewxw3+C3IkTUpqkfEFEmcR4crC3dO0ZNRqVhvh64Y/kBMAzohHmwA3HvINVDCjBSYdPTxl0bL1xg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1266
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on April 6, 2020 3:44 am:
-> Before : 347 cycles on null_syscall
-> After  : 327 cycles on null_syscall
+Fixed the punctuation and some typos.
+Improved some sentences with minor changes.
 
-The problem I had doing this is that signal delivery wnats full regs,
-and you don't know if you have a signal pending ahead of time if you
-have interrupts enabled.
+No change of semantics or code.
 
-I began to try bailing out back to asm to save nvgprs and call again.
-I think that can be made to work, but it is more complication in asm,
-and I soon found that 64s CPUs don't care about NVGPRs too much so it's
-nice to get rid of the !fullregs state.
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
 
-Possibly another approach would be to leave interrupts disabled for the
-case where you have no work to do. You could create a small
-syscall_exit_prepare_nowork fastpath for that case for 32-bit, perhaps?
+Changes in v2:
+1. Integrated comments from Matthew Wilcox, and added his Reviewed-by:
 
-Thanks,
-Nick
-=
+   Reverted back to "supplied" from "supplies".
+   "fills out in" -> "fills in".
+   Used "it should treat the packet as if CHECKSUM_NONE were set.".
+
+2. Integrated a comment from Randy Dunlap:
+
+   "... ip_summed is CHECKSUM_PARTIAL, csum_start and csum_offset
+   are set to..." 
+
+   ->
+
+   "... ip_summed is CHECKSUM_PARTIAL, and both csum_start and
+   csum_offset are set to refer to..." 
+
+
+ include/linux/skbuff.h | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index 28b1a2b..16eed3a 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -47,8 +47,8 @@
+  * A. IP checksum related features
+  *
+  * Drivers advertise checksum offload capabilities in the features of a device.
+- * From the stack's point of view these are capabilities offered by the driver,
+- * a driver typically only advertises features that it is capable of offloading
++ * From the stack's point of view these are capabilities offered by the driver.
++ * A driver typically only advertises features that it is capable of offloading
+  * to its device.
+  *
+  * The checksum related features are:
+@@ -63,7 +63,7 @@
+  *			  TCP or UDP packets over IPv4. These are specifically
+  *			  unencapsulated packets of the form IPv4|TCP or
+  *			  IPv4|UDP where the Protocol field in the IPv4 header
+- *			  is TCP or UDP. The IPv4 header may contain IP options
++ *			  is TCP or UDP. The IPv4 header may contain IP options.
+  *			  This feature cannot be set in features for a device
+  *			  with NETIF_F_HW_CSUM also set. This feature is being
+  *			  DEPRECATED (see below).
+@@ -79,13 +79,13 @@
+  *			  DEPRECATED (see below).
+  *
+  *	NETIF_F_RXCSUM - Driver (device) performs receive checksum offload.
+- *			 This flag is used only used to disable the RX checksum
++ *			 This flag is only used to disable the RX checksum
+  *			 feature for a device. The stack will accept receive
+  *			 checksum indication in packets received on a device
+  *			 regardless of whether NETIF_F_RXCSUM is set.
+  *
+  * B. Checksumming of received packets by device. Indication of checksum
+- *    verification is in set skb->ip_summed. Possible values are:
++ *    verification is set in skb->ip_summed. Possible values are:
+  *
+  * CHECKSUM_NONE:
+  *
+@@ -115,16 +115,16 @@
+  *   the packet minus one that have been verified as CHECKSUM_UNNECESSARY.
+  *   For instance if a device receives an IPv6->UDP->GRE->IPv4->TCP packet
+  *   and a device is able to verify the checksums for UDP (possibly zero),
+- *   GRE (checksum flag is set), and TCP-- skb->csum_level would be set to
++ *   GRE (checksum flag is set) and TCP, skb->csum_level would be set to
+  *   two. If the device were only able to verify the UDP checksum and not
+- *   GRE, either because it doesn't support GRE checksum of because GRE
++ *   GRE, either because it doesn't support GRE checksum or because GRE
+  *   checksum is bad, skb->csum_level would be set to zero (TCP checksum is
+  *   not considered in this case).
+  *
+  * CHECKSUM_COMPLETE:
+  *
+  *   This is the most generic way. The device supplied checksum of the _whole_
+- *   packet as seen by netif_rx() and fills out in skb->csum. Meaning, the
++ *   packet as seen by netif_rx() and fills in skb->csum. This means the
+  *   hardware doesn't need to parse L3/L4 headers to implement this.
+  *
+  *   Notes:
+@@ -153,8 +153,8 @@
+  *   from skb->csum_start up to the end, and to record/write the checksum at
+  *   offset skb->csum_start + skb->csum_offset. A driver may verify that the
+  *   csum_start and csum_offset values are valid values given the length and
+- *   offset of the packet, however they should not attempt to validate that the
+- *   checksum refers to a legitimate transport layer checksum-- it is the
++ *   offset of the packet, but it should not attempt to validate that the
++ *   checksum refers to a legitimate transport layer checksum -- it is the
+  *   purview of the stack to validate that csum_start and csum_offset are set
+  *   correctly.
+  *
+@@ -178,18 +178,18 @@
+  *
+  * CHECKSUM_UNNECESSARY:
+  *
+- *   This has the same meaning on as CHECKSUM_NONE for checksum offload on
++ *   This has the same meaning as CHECKSUM_NONE for checksum offload on
+  *   output.
+  *
+  * CHECKSUM_COMPLETE:
+  *   Not used in checksum output. If a driver observes a packet with this value
+- *   set in skbuff, if should treat as CHECKSUM_NONE being set.
++ *   set in skbuff, it should treat the packet as if CHECKSUM_NONE were set.
+  *
+  * D. Non-IP checksum (CRC) offloads
+  *
+  *   NETIF_F_SCTP_CRC - This feature indicates that a device is capable of
+  *     offloading the SCTP CRC in a packet. To perform this offload the stack
+- *     will set set csum_start and csum_offset accordingly, set ip_summed to
++ *     will set csum_start and csum_offset accordingly, set ip_summed to
+  *     CHECKSUM_PARTIAL and set csum_not_inet to 1, to provide an indication in
+  *     the skbuff that the CHECKSUM_PARTIAL refers to CRC32c.
+  *     A driver that supports both IP checksum offload and SCTP CRC32c offload
+@@ -200,10 +200,10 @@
+  *   NETIF_F_FCOE_CRC - This feature indicates that a device is capable of
+  *     offloading the FCOE CRC in a packet. To perform this offload the stack
+  *     will set ip_summed to CHECKSUM_PARTIAL and set csum_start and csum_offset
+- *     accordingly. Note the there is no indication in the skbuff that the
+- *     CHECKSUM_PARTIAL refers to an FCOE checksum, a driver that supports
++ *     accordingly. Note that there is no indication in the skbuff that the
++ *     CHECKSUM_PARTIAL refers to an FCOE checksum, so a driver that supports
+  *     both IP checksum offload and FCOE CRC offload must verify which offload
+- *     is configured for a packet presumably by inspecting packet headers.
++ *     is configured for a packet, presumably by inspecting packet headers.
+  *
+  * E. Checksumming on output with GSO.
+  *
+@@ -211,9 +211,9 @@
+  * is implied by the SKB_GSO_* flags in gso_type. Most obviously, if the
+  * gso_type is SKB_GSO_TCPV4 or SKB_GSO_TCPV6, TCP checksum offload as
+  * part of the GSO operation is implied. If a checksum is being offloaded
+- * with GSO then ip_summed is CHECKSUM_PARTIAL, csum_start and csum_offset
+- * are set to refer to the outermost checksum being offload (two offloaded
+- * checksums are possible with UDP encapsulation).
++ * with GSO then ip_summed is CHECKSUM_PARTIAL, and both csum_start and
++ * csum_offset are set to refer to the outermost checksum being offload (two
++ * offloaded checksums are possible with UDP encapsulation).
+  */
+ 
+ /* Don't change this without changing skb_csum_unnecessary! */
+-- 
+1.8.3.1
+
