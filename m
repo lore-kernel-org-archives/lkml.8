@@ -2,107 +2,105 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E737C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A78FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC98206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BC12072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:50:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586173812;
+	bh=T8JPB2G201IEXtY9alosGKryKAmkDfl6bXQtj/eFyw0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LUJCR/AN7n8r8MiLHhhLIH5Db6R91JTMIQlEj7CbvKZ03kmM/2nd9qoCQKLkh7fst
+	 sF6Uf6GqOQ1F9vNeqE8O0Tx61lDhh7aL8sf9620biAjajymV2u8qvj+hlr7c5O1Fme
+	 3Tqy5q1lyWRrExJyEsT4I3es2sspgsB0pfYLFBhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgDFLsT (ORCPT
+        id S1727648AbgDFLuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:48:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34617 "EHLO mga04.intel.com"
+        Mon, 6 Apr 2020 07:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbgDFLsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:48:19 -0400
-IronPort-SDR: M8pKhfpnqor5CimuhrZdjerM4d7zmsqM54FJo9XoSZk262q7whc/lZMH2gaJyuXLFemDxoem0B
- k4H2JhXdrkoQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 04:48:18 -0700
-IronPort-SDR: ODiObN0tnmXfnHxO2IELb4fSrbSIDd/5L7fZAeoI3/mkfE2h3JTTE3wHkjKqnwXLRyuafG6IZE
- NabX4fxesHbQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,350,1580803200"; 
-   d="scan'208";a="254091912"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.157]) ([10.249.169.157])
-  by orsmga006.jf.intel.com with ESMTP; 06 Apr 2020 04:48:14 -0700
-Subject: Re: [PATCH 1/1] x86/split_lock: check split lock feature on
- initialization
-To:     Benjamin Lamowski <benjamin.lamowski@kernkonzept.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     philipp.eppelt@kernkonzept.com, bp@alien8.de, fenghua.yu@intel.com,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, luto@kernel.org,
-        mingo@redhat.com, nivedita@alum.mit.edu, pbonzini@redhat.com,
-        peterz@infradead.org, tglx@linutronix.de, tony.luck@intel.com,
-        x86@kernel.org
-References: <20200325030924.132881-1-xiaoyao.li@intel.com>
- <20200403174403.306363-1-benjamin.lamowski@kernkonzept.com>
- <20200403174403.306363-2-benjamin.lamowski@kernkonzept.com>
- <20200403180149.GH2701@linux.intel.com>
- <f072e3e0-48b0-346e-b383-3e802069fc3a@kernkonzept.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <30e141b8-f9c9-370a-4667-1e2f0116b6f7@intel.com>
-Date:   Mon, 6 Apr 2020 19:48:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727376AbgDFLuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:50:11 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F841206F8;
+        Mon,  6 Apr 2020 11:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586173810;
+        bh=T8JPB2G201IEXtY9alosGKryKAmkDfl6bXQtj/eFyw0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qvyM70Aitm0A8bkQA9KFhhF+YBMwVWKMlbAXpGvIlOPB5IymIJfiYVSv8iP4QkML/
+         lQbPiycMFY5IpuJ8pTonEj1ZtW1CKB1V0TAUX7A3Udswogrt1vu4q0RGwwwsVO7D7/
+         +pX6sL+5s606/Oy82X+VJEoRkXsS12NDjvAwn6bo=
+Date:   Mon, 6 Apr 2020 12:50:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     lgirdwood@gmail.com, heiko@sntech.de, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: sound: convert rockchip spdif
+ bindings to yaml
+Message-ID: <20200406115008.GA7650@sirena.org.uk>
+References: <20200404115225.4314-1-jbx6244@gmail.com>
+ <20200406110703.GA6837@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <f072e3e0-48b0-346e-b383-3e802069fc3a@kernkonzept.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Nq2Wo0NMKNjxTN9z"
+Content-Disposition: inline
+In-Reply-To: <20200406110703.GA6837@sirena.org.uk>
+X-Cookie: Ahead warp factor one, Mr. Sulu.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/6/2020 4:23 PM, Benjamin Lamowski wrote:
-> [...]
->> Calling split_lock_verify_msr() with X86_FEATURE_SPLIT_LOCK_DETECT=0 is
->> intentional, the idea is to ensure SLD is disabled on all CPUs, e.g. in the
->> unlikely scenario that BIOS enabled SLD.
-> 
-> I was aware of the intention, but I still don't understand under which
-> scenario this could be set by the BIOS although the earlier feature
-> detection has failed, 
 
-It's for the case that SLD is explicitly disabled by kernel params 
-"split_lock_detect=off". You know, BIOS may turn SLD on for itself. So 
-if user uses "split_lock_detect=off", we have to clear the SLD bit in 
-case BIOS forgets to clear it.
+--Nq2Wo0NMKNjxTN9z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> i.e. shouldn't the feature have been detected in
-> all cases where SLD can actually be disabled? If so, checking for
-> availability first instead of catching a #GP(0) if it is not implemented
-> seems to be the cleaner solution.
+On Mon, Apr 06, 2020 at 12:07:03PM +0100, Mark Brown wrote:
+> On Sat, Apr 04, 2020 at 01:52:23PM +0200, Johan Jonker wrote:
+> > Current dts files with 'spdif' nodes are manually verified.
+> > In order to automate this process rockchip-spdif.txt
+> > has to be converted to yaml.
+>=20
+> Please don't send content free pings and please allow a reasonable time
+> for review.  People get busy, go on holiday, attend conferences and so=20
 
-I understand what you want. i.e., X86_FEATURE_SPLIT_LOCK_DETECT is 
-independent from sld_off. I guess you have to make tglx accept it first.
+Sorry, I just noticed that there are actually some changes in this
+version.
 
-> 
->> The first rdmsrl_safe() should short circuit split_lock_verify_msr() if
->> the RDMSR faults, i.e. it might fault, but it shouldn't WARN.  Are you
->> seeing issues or was this found via code inspection?
-> 
-> We stumbled across this issue because the x86 version of our VMM is not
-> yet ready for production and when accessing unimplemented MSRs would
-> simply return 0 and issue a warning. This is of course a deviation from
-> rdmsr as defined in the SDM and the pieces are ours to keep, it will be
-> changed to generate a #GP(0) once the last missing MSRs are emulated
-> properly.
-> 
+> Please submit patches using subject lines reflecting the style for the
+> subsystem, this makes it easier for people to identify relevant patches.
+> Look at what existing commits in the area you're changing are doing and
+> make sure your subject lines visually resemble what they're doing.
+> There's no need to resubmit to fix this alone.
 
-Got it. you are running linux guest in your own VMM and there is warning 
-in the VMM.
+This bit still applies though.
 
-If you really want to avoid the MSR access on the platform without SLD. 
-You could make the default sld_state as sld_unsupported. It can only be 
-changed to other value in split_lock_setup() when SLD is enumerated. So 
-in split_lock_init(), we can use if (sld_state == sld_unsupported) to 
-skip the MSR_TEST_CTRL access.
+--Nq2Wo0NMKNjxTN9z
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6LF28ACgkQJNaLcl1U
+h9BQDwf/TLMzjvaOS/XrkaDPT2V2JBzzwos/AckUmEy1bGBb3gFmfuV5mHpZFfTM
+f1svscqWp5VgXssq6EGCwZnUpmyGjo1AcJTq1aYCAgXa65a7c8D8QS2WwzYlFeFQ
+NMTO/Vd5q/9qjreQSvqWCXByFF1lSaNX3LOq4F1b8wEloSjFUv33W4AgewOq8g6P
+evxzb1IsiIUv9CJsOgz/cPAud4FseYOuh4H1L+TqigrDd4z1i9nUXeluSvmswf0k
+WJGHHvU2xxLjFicbQeJrG5VyXHSELl6JRdbojGFPksD2SKTnHXl3+/mLDWHYzFW4
+4YhxljCFCaRnx+ofEiOsmPEjt/HEOQ==
+=y6jt
+-----END PGP SIGNATURE-----
+
+--Nq2Wo0NMKNjxTN9z--
