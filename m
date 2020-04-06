@@ -2,150 +2,113 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED6FC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07484C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432FE248A6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86A924876
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:35:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E0DvGB4h"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nAkqWlSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgDFPeP (ORCPT
+        id S1729000AbgDFPfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:34:15 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:35345 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728792AbgDFPeP (ORCPT
+        Mon, 6 Apr 2020 11:35:18 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:37979 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728843AbgDFPfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:34:15 -0400
-Received: by mail-vs1-f65.google.com with SMTP id u11so99489vsg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:34:13 -0700 (PDT)
+        Mon, 6 Apr 2020 11:35:18 -0400
+Received: by mail-yb1-f194.google.com with SMTP id 204so65146ybw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:35:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9cMvg7h/oulOhGRqUiRCctY34trH980/U/Kq5XqfKrw=;
-        b=E0DvGB4hrP97mss+BsJg46f1cmsxu437DfT1QJitEIvdJiVPNsiOco+dY5/jRQAV/D
-         IJNRoFnMdOoGbnrlvm3TqWUo79zzcAE49wFNBdiONcfRXyfP6ckrH/oUSV6HAiQNbJYy
-         cXLsNIH66kgWP2PmQG/RhlOhDCsS1MW4gKPx8=
+        bh=+MduM/9HJVy6bkh8pxzs1OTdZ7KT0AQSI+WZ1X2yWzE=;
+        b=nAkqWlSXVzfD2OyrsJv+DJCzxxvRXhc2u3dO5RWOKYsugkUEH3VVSUI1BilNYk9C31
+         WRP9tVM7eYAvgL4lTtuvt7yJmwSsHFVBG+n6Img5X2LgDmDxIHTtoNkagE+qRKFDL7Jb
+         o+zyIsJpA2SZeW5NOfkMTrCIHulQ6XoCM+SeJE+AG32lUgPjKxVD74Sq5lv3dqlkAv8v
+         ecG7O17JF8MUs+UxoEq16pqhCUws/LIaFZKpipYOngeFqnCpAnAn5OWwmw7oFMU6Qef/
+         UUjov5qUBTajxiSQQ7XCNObeYX+liBiTRAnw04gUAUy28YW9E7btXfKk42fFXhwtIt3H
+         FpOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9cMvg7h/oulOhGRqUiRCctY34trH980/U/Kq5XqfKrw=;
-        b=DkoHGOQH/aHneXCbQwLotQDYGd7vBRvwj9fABfQtwBUfEaf+LZofNpaVGMLeJT7sMf
-         vsJ6eLAhjL5jr9ujQbc4nWzjcZF9t0DJnuad1OOviyPZ0EECethBV/N0KBp/0++D8VIP
-         t73e4BHr1oCmo8ff+c7YrvRB17oztWrqUtUJ2HxwZFYiI2hLOYtJbfWMNkXg3RtxuhMH
-         lgc3lJtC8KYHciklIWE6ht3z/XjQ/Cjr6TswuitldPZFxvmJewK2dVTWeOXrj+BEtrHf
-         9hJlYKankFiBCDZVDCthCa5BKPpCbDj8h+Ogp505fBPGn/1QA92Lc8ctNXbQxnwoQKXV
-         GWww==
-X-Gm-Message-State: AGi0PuZsQeyR3X9UKC98Mm3iWT10HyEHRNUkitxfX+2btaAcIxbScpST
-        3oRt//ebKpL+uBWURb+UL0IxBpOit2k=
-X-Google-Smtp-Source: APiQypKNRq3gvUSp1ib52Dd3l7b7Prfp92OvZQpXbTUOHXLql8G/iSSliqJ+1ZOB9JvCzPTPIiJ1sg==
-X-Received: by 2002:a05:6102:3104:: with SMTP id e4mr155859vsh.61.1586187251980;
-        Mon, 06 Apr 2020 08:34:11 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id s186sm4707335vkg.2.2020.04.06.08.34.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 08:34:10 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id l18so83671uak.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:34:10 -0700 (PDT)
-X-Received: by 2002:ab0:1d10:: with SMTP id j16mr26743uak.91.1586187250041;
- Mon, 06 Apr 2020 08:34:10 -0700 (PDT)
+        bh=+MduM/9HJVy6bkh8pxzs1OTdZ7KT0AQSI+WZ1X2yWzE=;
+        b=udb5kP5iIHNBY4c8ivBsP/cL743JgXOgMomKcRd7CBq+MMrSL2U7/TBGEiz267npCf
+         30V64SXz8l1FjJu0ONiOTH5u8JralqB3PV0QM7XzixbreQKefTIxFe4Nxlu83bMRsIYU
+         6lOonP4EaFsxUB1JHqAQcPouJbJLFbiBQDNpqYYuetF5rRKH7pkjrMDbfcjzEDDhpYiW
+         zwKYwwvzZoOQ9pEYnTzW1wbS2Dznf7bUOgcLdhgOCecbYUzc+OiKcVY1ElV3t1v+eqBF
+         rvet+oduzjho7fBRBaSkMviuRiTpck6fCznd4kq5Nlvc/HodLPxCLpI5iKMWJPz+sjpx
+         pTFA==
+X-Gm-Message-State: AGi0Pub68XQWps9Bx9AIRIwuI9nMqMQ9ubS7t2UMYrjAW7hHU13ATkUx
+        hxeihPH98fMBRVzO0JZVQ6vP/9/GyEUPBVoIZJx0RTFZPk8=
+X-Google-Smtp-Source: APiQypK4wWH0C6H6p51kRfIEovjLl5GRkWHPGwq1kBpRoJFoPHWOoWfvf1XDtP7x6tZMrnw9T7I5tse3rXnBcHoVtQ8=
+X-Received: by 2002:a25:d382:: with SMTP id e124mr33930648ybf.162.1586187316742;
+ Mon, 06 Apr 2020 08:35:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1585660782-23416-1-git-send-email-mkshah@codeaurora.org>
- <1585660782-23416-7-git-send-email-mkshah@codeaurora.org> <CAD=FV=UqaTR7=i=5BApvnptZXpqVJiF1AE+Q+6H9Y4QdYfjfUQ@mail.gmail.com>
- <855bb87e-6c5c-8fee-e237-f48f9d95e2ac@codeaurora.org>
-In-Reply-To: <855bb87e-6c5c-8fee-e237-f48f9d95e2ac@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 6 Apr 2020 08:33:58 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Wi1bbc-Q2PYq3+tohYcx+hguFJ8A8FyuQCzgUYjEJOHw@mail.gmail.com>
-Message-ID: <CAD=FV=Wi1bbc-Q2PYq3+tohYcx+hguFJ8A8FyuQCzgUYjEJOHw@mail.gmail.com>
-Subject: Re: [PATCH v15 6/7] soc: qcom: rpmh-rsc: Clear active mode
- configuration for wake TCS
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+References: <20200327225102.25061-1-walken@google.com> <20200327225102.25061-7-walken@google.com>
+ <20200401134234.GR20696@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200401134234.GR20696@hirez.programming.kicks-ass.net>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Mon, 6 Apr 2020 08:35:03 -0700
+Message-ID: <CANN689H1VjW4aC8HuLEtb8YrVyAJ0t6OVM6w2_o1+P2=9Mt6Gw@mail.gmail.com>
+Subject: Re: [PATCH v3 06/10] mmap locking API: convert nested write lock sites
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
-        "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Markus Elfring <Markus.Elfring@web.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Sun, Apr 5, 2020 at 10:08 PM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Wed, Apr 1, 2020 at 6:42 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> Hi,
+> On Fri, Mar 27, 2020 at 03:50:58PM -0700, Michel Lespinasse wrote:
 >
-> On 4/3/2020 1:44 AM, Doug Anderson wrote:
-> > Hi,
+> > @@ -26,6 +31,12 @@ static inline void mmap_write_unlock(struct mm_struct *mm)
+> >       up_write(&mm->mmap_sem);
+> >  }
 > >
-> > On Tue, Mar 31, 2020 at 6:21 AM Maulik Shah <mkshah@codeaurora.org> wrote:
-> >> @@ -243,6 +279,14 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
-> >>                  }
-> >>
-> >>                  trace_rpmh_tx_done(drv, i, req, err);
-> >> +
-> >> +               /*
-> >> +                * If wake tcs was re-purposed for sending active
-> >> +                * votes, clear AMC trigger & enable modes and
-> >> +                * disable interrupt for this TCS
-> >> +                */
-> >> +               if (!drv->tcs[ACTIVE_TCS].num_tcs)
-> >> +                       __tcs_set_trigger(drv, i, false);
-> > Still seems weird that we have to do the untrigger in the IRQ routine
-> > here and also weird that we _don't_ do it in the IRQ routine for
-> > non-borrowed TCSes.  I guess it's not the end of the world, though.
-> >
-> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > +/* Pairs with mmap_write_lock_nested() */
+> > +static inline void mmap_write_unlock_nested(struct mm_struct *mm)
+> > +{
+> > +     up_write(&mm->mmap_sem);
+> > +}
+> > +
+> >  static inline void mmap_downgrade_write_lock(struct mm_struct *mm)
+> >  {
+> >       downgrade_write(&mm->mmap_sem);
 >
-> Thanks Doug for the review.
->
-> IRQ is only needed to be enabled for TCSes used as ACTIVE_TCS.
->
-> When we have dedicated ACTIVE_TCS, we leave IRQ always enabled from
-> probe (one time configuration), since the TCS won't be used for anything
-> other than to send ACTIVE transaction.
->
-> When we don't have dedicated ACTIVE_TCS, we enable it when borrowed TCS
-> is used for ACTIVE transaction and then once its done using it, we
-> disable it again to leave it in its original configuration.
+> Why does unlock_nested() make sense ?
 
-Sure, I get the concept.  ...but:
+I thought it would make things more explicit to match the nested lock
+with the corresponding unlock site; however this information is not
+used at the moment (i.e. the nested unlock is implemented identically
+to the regular unlock).
 
-* It seems like it would be ideal to not call __tcs_set_trigger() from
-the IRQ handler.  It uses write_tcs_reg_sync() which has a wait loop
-in it.  That's not something you normally want in an IRQ handler.
+Having the matching sites explicitly identified may help when
+implementing lock instrumentation, or when changing the lock type
+(another patchset I am working on needs to pass an explicit lock range
+to the nested lock and unlock sites).
 
-* It seems like it would be a common case for the WAKE_TCS to be
-borrowed several times in-between actually using it as a WAKE_TCS.
-
-To make both of the above things better, it seems like you could just
-leave the WAKE_TCS configured for active-mode transfers and just
-switch all that stuff off when you actually need it as a WAKE_TCS.  To
-some extent we could conceptually re-envision this and think of this
-as being the ACTIVE_TCS that is occasionally borrowed to make up for
-not having a WAKE_TCS.
-
-
-In any case, I think the patch you have right now is good enough and
-it feels like it's overdue to land this series.  I'd suggest against
-spinning at this point.  Maybe we can try to improve this in a future
-patch after your series lands.
-
--Doug
+I'll admit this is not a super strong argument, and can be deferred to
+when an actual need shows up in the future.
