@@ -2,120 +2,121 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD25C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B039FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD38206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADA5206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="QuGm95H/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fmvs/lMC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgDFTno (ORCPT
+        id S1726446AbgDFTnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:43:44 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44615 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgDFTnn (ORCPT
+        Mon, 6 Apr 2020 15:43:47 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36366 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgDFTnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:43:43 -0400
-Received: by mail-io1-f66.google.com with SMTP id h6so727667iok.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 12:43:43 -0700 (PDT)
+        Mon, 6 Apr 2020 15:43:46 -0400
+Received: by mail-lf1-f65.google.com with SMTP id w145so480302lff.3;
+        Mon, 06 Apr 2020 12:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=abwTcU3NPLB9ZnkU0lkxt+NZ4BdMbKcPpC7Ll2Lyoj8=;
-        b=QuGm95H/LilnuJBVmVnYx0H7LMduoXK1eUUubT4UBJaC+N68X41iFuZPPIL/qJvwQd
-         h4G6ju6hnHbddVb0RuUkYDuVMdezs+invBSiSoOMIbxIChuZqsWIDUpiUxqJKs4gQoOg
-         n7E5NwCaO8If0SlL+U/0bhgS4HOPazzvYzPyAxK1IGqwWBD7H0R31WaE853O5cgKoNT+
-         cFRrmKFGfNzVeEXky8pX8Bz1mBOdRP15EAtc7GFWOj1VGJI47Po6klHBFnRsMb5szO9X
-         k2uJkx9KxgbF9hLJOhotAOxW3WVprGYUxZa8ddaEJlkIfFRkKYjaz36CCeoBBvfULPOx
-         tobA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Yi76jXrhGzr9w1zwjkk0H648baQNxRmi8nM63MPAiw=;
+        b=Fmvs/lMCDBg/kISsqujiqyFF4pLfBTut5EYbkVl8t/ZuZEhuGdQ/iwNjQlKpgwBMvC
+         sdLf5exnbnirtv57lf03yMw6IBlzZ94RnfCdEORF3TZAqRPjBQUwrqmVL6z2rhfwLW9f
+         gONERjYtFo85nPv8vvOssmVHAeElD50LtvPyzp875CUXmvqOCSTrDYoyZUWuyaSP+Q9A
+         s/kFQdpbkGJ8v/4TD3ocx2M6xFzLQBNaY1l1mHl0sts+9bm27etGiaz6TgkPXelxmbDq
+         zBQKFX1g7Hk+VFTWgoxFXedXsrbQuUTn2igvW1/KNfKiX8Aswc8cIaKBpB13tul7Gf+z
+         KD1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=abwTcU3NPLB9ZnkU0lkxt+NZ4BdMbKcPpC7Ll2Lyoj8=;
-        b=hUz46CS4VAMR2Gm1GIW+I2RwihHXwHDtFFzDj376JBaYYsIk7cnuS52Aiy1pMF8xtX
-         5nk5jKQJw51X/Hyj9p5zdjjif7rjVwlwcXfgeGTLl8xVPPczbXGNtjuiLZnSwJZCInH2
-         ON+HqlPNo9cgfLzcxLHqhJt3hrQ3KAMSvxnJAafXw43/DaZcD1p8DAUkfCyISp5Djb92
-         YuP416wGos8SbsPIozwqC1iFwWVkHO2wnzv9JS2b67BAiGKB536zBm9imrhX/83kdVFZ
-         dzso5Mx9t8bNvqM273vBWLUtrNlk1PioyAI/DRSyjw6EEMIc+yBm4OB/gb1WPZclcYro
-         okWA==
-X-Gm-Message-State: AGi0PuZhHtC4WAIzydPkj88NTCaMYKJqpn3DcuCQ/czo4J/lEUNT2Y8Z
-        u4DyYB9hbgO/WTkZXNJmqO3psBRBDTNHmoFTyyl0H8jC
-X-Google-Smtp-Source: APiQypLhF2Lp08EtG9n48GKhPoxcqCViZNaBO24fDJpPAR6rwFCZHEUpxBMLCAa2E8pd6+kNcQ8CAuSRjo8ByUOfK6Y=
-X-Received: by 2002:a6b:b3c3:: with SMTP id c186mr5093685iof.85.1586202222502;
- Mon, 06 Apr 2020 12:43:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3Yi76jXrhGzr9w1zwjkk0H648baQNxRmi8nM63MPAiw=;
+        b=RNJZb+WwoHLjNeeeFuw2K56I1cDMbXjFBbxYDiCPiTmFc8wxrNcAZWmcYTE0vv72DS
+         i1idKqrpeZQnC+TiuctrM/SC+p2nlG0AEwm8QONddAuNfnRFXvnpFjel/Uqxvi1nVEZp
+         g6jygHY//3ySa65sD22vEK4iETW5KpPWKYDjh3h5o2jDgRrk9TOsNfTi2Sw2+Tu7gzik
+         iZnfjuMgVdOskt1O+5AUQPkDMeYHD8t7WTy0MG03lHMaxfuIbL5c0F3L0NiVr6rEn5yp
+         CL66n8AfZqTzQ4vjy07DfNEPcWASz3JBvUi0WlbImL7vAvAjkd7xoDq/GoF6s/ZG7q9j
+         TMLg==
+X-Gm-Message-State: AGi0PubPGBiOM7Xxx31uHsXWMiXcUDSOAVIt9ysTJf7/9vUnpdBgqfGr
+        st7cl6SqKSEuRsn872BnDns=
+X-Google-Smtp-Source: APiQypKpTnzY15WgbOMsxN0r9NnfJmthP2UD2dk7FNkYNu8IicnUT4RX8v+kH0gjQiG6B1kp3Oi0CA==
+X-Received: by 2002:ac2:4554:: with SMTP id j20mr6220830lfm.91.1586202223959;
+        Mon, 06 Apr 2020 12:43:43 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id r206sm4996233lff.65.2020.04.06.12.43.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 12:43:43 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
+        Matt Merhar <mattmerhar@protonmail.com>
+Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/6] Support NVIDIA Tegra-based Acer A500 and Nexus 7 devices
+Date:   Mon,  6 Apr 2020 22:41:04 +0300
+Message-Id: <20200406194110.21283-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200403200757.886443-1-lyude@redhat.com> <20200403200757.886443-5-lyude@redhat.com>
-In-Reply-To: <20200403200757.886443-5-lyude@redhat.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Mon, 6 Apr 2020 15:43:06 -0400
-Message-ID: <CAMavQK+UYf8-Esah7kLcMbQtZ_J5h_bHqEroAPkO67fB=ArHyg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] drm/dp_mst: Print errors on ACT timeouts
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 4:08 PM Lyude Paul <lyude@redhat.com> wrote:
->
-> Although it's not unexpected for drm_dp_check_act_status() to fail due
-> to DPCD read failures (as the hub may have just been unplugged
-> suddenly), timeouts are a bit more worrying as they either mean we need
-> a longer timeout value, or we aren't setting up payload allocations
-> properly. So, let's start printing errors on timeouts.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Cc: Sean Paul <sean@poorly.run>
+Hello,
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+This series introduces upstream kernel support for Acer Iconia Tab A500
+and ASUS Google Nexus 7 tablet devices. Please review and apply, thanks
+in advance.
 
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index f313407374ed..3d0d373f6f91 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -4494,6 +4494,10 @@ int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
->                                         DP_PAYLOAD_TABLE_UPDATE_STATUS,
->                                         &status);
->                 if (ret < 0) {
-> +                       /*
-> +                        * Failure here isn't unexpected - the hub may have
-> +                        * just been unplugged
-> +                        */
->                         DRM_DEBUG_KMS("failed to read payload table status %d\n",
->                                       ret);
->                         return ret;
-> @@ -4505,8 +4509,8 @@ int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
->         } while (jiffies < timeout);
->
->         if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
-> -               DRM_DEBUG_KMS("failed to get ACT bit %d after %dms\n",
-> -                             status, timeout_ms);
-> +               DRM_ERROR("Failed to get ACT after %dms, last status: %02x\n",
-> +                         timeout_ms, status);
->                 return -EINVAL;
->         }
->         return 0;
-> --
-> 2.25.1
->
+Changelog:
+
+v2: - Corrected "volume down" key-label in the grouper's device-tree and
+      improved some other names in device-trees.
+
+    - Added optional (upcoming in 5.8) VDD/AVDD regulators to the touchscreen
+      node in A500 device-tree.
+
+Dmitry Osipenko (6):
+  ARM: tegra: Add device-tree for Acer Iconia Tab A500
+  ARM: tegra: Add device-tree for ASUS Google Nexus 7
+  dt-bindings: Add vendor prefix for Acer Inc.
+  dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
+  dt-bindings: ARM: tegra: Add ASUS Google Nexus 7
+  ARM: tegra_defconfig: Enable options useful for Nexus 7 and Acer A500
+
+ .../devicetree/bindings/arm/tegra.yaml        |   10 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |    2 +
+ arch/arm/boot/dts/Makefile                    |    3 +
+ .../boot/dts/tegra20-acer-a500-picasso.dts    | 1447 +++++++++
+ .../tegra30-asus-nexus7-grouper-common.dtsi   | 2646 +++++++++++++++++
+ .../boot/dts/tegra30-asus-nexus7-grouper.dts  |  463 +++
+ .../boot/dts/tegra30-asus-nexus7-tilapia.dts  |  549 ++++
+ arch/arm/configs/tegra_defconfig              |   28 +
+ 8 files changed, 5148 insertions(+)
+ create mode 100644 arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper-common.dtsi
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-grouper.dts
+ create mode 100644 arch/arm/boot/dts/tegra30-asus-nexus7-tilapia.dts
+
+-- 
+2.25.1
+
