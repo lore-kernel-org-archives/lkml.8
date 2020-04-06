@@ -2,132 +2,154 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0DCC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EF6C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2155A23107
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0963523107
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q0+b59CK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJzMZufc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbgDFNVV (ORCPT
+        id S1728415AbgDFNWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:21:21 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36393 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728288AbgDFNVT (ORCPT
+        Mon, 6 Apr 2020 09:22:19 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40582 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbgDFNWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:21:19 -0400
-Received: by mail-lj1-f193.google.com with SMTP id b1so14668901ljp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:21:17 -0700 (PDT)
+        Mon, 6 Apr 2020 09:22:18 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y25so12736061qtv.7;
+        Mon, 06 Apr 2020 06:22:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sjFMtmuU3xHuzoUFWq9Y0DhLjc0PE8fgYoHAQmkfrZE=;
-        b=q0+b59CKCMf16lfCFCrz+8Vga8AQbbnlul6SAAPiEK6Z40MhjCJl5lMXZGjeOIR4sj
-         WXFXqWqaxBwiuX3ek3W41llkgTTwVBk0Gv7UwLunZB1ahYNl0fas+Fwmv4Go9rCdrnnR
-         vOc3SPVG2rXgARf8j1lZYXSHapc7lXi7u1sv3/a1uBGyF6PET55UO7ry3TIxoItAriBJ
-         6QOpxQ19v5kFVg5xKS1C/k4iUoZc0gERXlmZLjjgNfO8i8DxiUNfc57UbPzoCRalcWxQ
-         ew1SyBeJ86G4p5AOKyX4AnoqTRKsh4lVSSWA85IA6oQdkwHuhsnIgCDpqu0FRCuceiaa
-         Ko0Q==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cuhjb+a9vABf0xMYhIXhtlft1e/hgk3xK+XP54N7ens=;
+        b=sJzMZufcD34AmiyiMprFJO0RFheJcLI4hyj6FwC+Nj7e0iIU15QOznCGvz5MOFuRQd
+         Q3XUDXrjd9vzgPVSQqV2ruw+LDckTqbR5t8UxdpWE6zCqKDPE9SF2rGOYsfW/0qB2K37
+         WefY6hCzrEmRb4t+XLEXV/uxe8zsYNA2EBY+ZV88HEusUxVwcXTFz12pS+O2Dmph0Cm7
+         Hl3Moy5a+2/FfVnahvtgNTt5p0G/ZT/uMAMCOqwWQgJmKPGRm0W5Yljugi1BJodcp0qi
+         ROdXgM7s6DHFfHDe65AAFyRnd6NG+Xve6w8kggsG2lbjj0YoC/tHLXsKAt5krgcDa16l
+         53AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sjFMtmuU3xHuzoUFWq9Y0DhLjc0PE8fgYoHAQmkfrZE=;
-        b=cDi9Cr5oIsgeLscZRswiuAFL671bY8o26DO4FRWEQOL5YSgJBxgZa8oRaywoy72rOC
-         ncD0Nx4vpfBBi6feJZamCylQXeRelM30n2nf0DSB2VYnHXN4tSZxgu7JdDuveqNb+xrg
-         zZzItAEmU9/5I/pmMKFeNoEHQC8MaZ44zqrIk263SljyOmmd+I8eCgE9VO7BNrl6MKzC
-         Si7MYyb5ENtWKfa6KeE8wavZzT6oVekQabYRTgW2zJ8+rsWGy678cBb7i0z1HUZM/+ja
-         O2fb74DuknSbw99fo6QmNvnMYzBTu8ERdrFlbZcEkC6Dr+/T6d5WGMSGSJ9EzFwG5SEA
-         gEjA==
-X-Gm-Message-State: AGi0PuabJE6uHP+0tcProIyUqBnL2LOXdAC9kJnN1bqdX3P6dRg0LH87
-        QFvK+Ofg2CFnl1qKDulYSLhN5bzAkwvjf5ebtsc9Cg==
-X-Google-Smtp-Source: APiQypIZr3Wr7gU6HfYZ2DPp4KYZRoMiMMIzh0ZeGpLkLlpRcwTmLnmLC682+JLbzmgWhr4LrLDmlXima8G8ek4WTDk=
-X-Received: by 2002:a2e:8093:: with SMTP id i19mr12191984ljg.12.1586179276126;
- Mon, 06 Apr 2020 06:21:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
- <87ftdgokao.fsf@tynnyri.adurom.net> <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
- <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com> <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
- <87imiczrwm.fsf@kamboji.qca.qualcomm.com> <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
-In-Reply-To: <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Mon, 6 Apr 2020 18:51:04 +0530
-Message-ID: <CAFA6WYOjU_iDyAn5PMGe=usg-2sPtupSQEYwcomUcHZBAPnURA@mail.gmail.com>
-Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        netdev@vger.kernel.org,
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=cuhjb+a9vABf0xMYhIXhtlft1e/hgk3xK+XP54N7ens=;
+        b=ZBatNGsGHB48MuYWry69HVF04PUNuZQf51V3YvSYVWPCRt99wk2EVYGbv5muJML/aZ
+         daxh3293vX2bEtUrla5JxJlR/0Q/kF5h0MWY6Rd6Ij5dPm/7JqAv1Ft9jG3qQZXXZu/2
+         pkcWCZTcMWvQXPkPpFC5514zkLHzwXXo0bLjFdrTrR0qJqAmt9k7h6RTgpk/brfMJ2WJ
+         Ii+ZvQH7qAD39nJUSeJxTdGx9XwSdl+xXW3EswhL96JTuNgtr8iawkPefGu2LJIZXfYe
+         QltjDx7uwQWg48HMe4xu+rweIz7yGbx/oebEYsRUe6UC5sG6OTfJvmrcWyYUSto4/Zyb
+         NPzw==
+X-Gm-Message-State: AGi0PuZuVo7hLPgv8S1DHTqSEuyX9Jh5CB3DHAQXUcnplBOYazN+/Sxc
+        1tkp8XYcIHtTreNWdmfK2lg=
+X-Google-Smtp-Source: APiQypJkNNDNbGckSvNXDGUJp5nz2ma3aJvvAsdXKUmeZQcZGIZMZ7/kd70KM7NyMhqsErkUMNffAg==
+X-Received: by 2002:ac8:4f43:: with SMTP id i3mr20739565qtw.102.1586179337510;
+        Mon, 06 Apr 2020 06:22:17 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id o18sm6895029qkk.52.2020.04.06.06.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 06:22:16 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 6 Apr 2020 09:22:15 -0400
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Sergey Shatunov <me@prok.pw>, hpa@zytor.com,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
-        <matthias.schoepfer@ithinx.io>,
-        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
-        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
+ bzImage
+Message-ID: <20200406132215.GA113388@rani.riverdale.lan>
+References: <20200109150218.16544-1-nivedita@alum.mit.edu>
+ <20200405154245.11972-1-me@prok.pw>
+ <20200405231845.GA3095309@rani.riverdale.lan>
+ <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
+ <20200406035110.GA3241052@rani.riverdale.lan>
+ <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
+ <20200406084738.GA2520@zn.tnic>
+ <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
+ <20200406112042.GC2520@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200406112042.GC2520@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 18:38, Johannes Berg <johannes@sipsolutions.net> wrote:
->
-> On Mon, 2020-04-06 at 16:04 +0300, Kalle Valo wrote:
-> > Johannes Berg <johannes@sipsolutions.net> writes:
-> >
-> > > On Mon, 2020-04-06 at 15:52 +0300, Kalle Valo wrote:
-> > > > Johannes Berg <johannes@sipsolutions.net> writes:
-> > > >
-> > > > > On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
-> > > > > > >     user-space  ieee80211_register_hw()  RX IRQ
-> > > > > > >     +++++++++++++++++++++++++++++++++++++++++++++
-> > > > > > >        |                    |             |
-> > > > > > >        |<---wlan0---wiphy_register()      |
-> > > > > > >        |----start wlan0---->|             |
-> > > > > > >        |                    |<---IRQ---(RX packet)
-> > > > > > >        |              Kernel crash        |
-> > > > > > >        |              due to unallocated  |
-> > > > > > >        |              workqueue.          |
-> > > > >
-> > > > > [snip]
-> > > > >
-> > > > > > I have understood that no frames should be received until mac80211 calls
-> > > > > > struct ieee80211_ops::start:
-> > > > > >
-> > > > > >  * @start: Called before the first netdevice attached to the hardware
-> > > > > >  *         is enabled. This should turn on the hardware and must turn on
-> > > > > >  *         frame reception (for possibly enabled monitor interfaces.)
-> > > > >
-> > > > > True, but I think he's saying that you can actually add and configure an
-> > > > > interface as soon as the wiphy is registered?
-> > > >
-> > > > With '<---IRQ---(RX packet)' I assumed wcn36xx is delivering a frame to
-> > > > mac80211 using ieee80211_rx(), but of course I'm just guessing here.
-> > >
-> > > Yeah, but that could be legitimate?
-> >
-> > Ah, I misunderstood then. The way I have understood is that no rx frames
-> > should be delivered (= calling ieee80211_rx()_ before start() is called,
-> > but if that's not the case please ignore me :)
->
-> No no, that _is_ the case. But I think the "start wlan0" could end up
-> calling it?
->
+On Mon, Apr 06, 2020 at 01:20:42PM +0200, Borislav Petkov wrote:
+> On Mon, Apr 06, 2020 at 11:11:21AM +0200, Ard Biesheuvel wrote:
+> > Yes, it is in the PE/COFF specification. [0]
+> > 
+> > The whole problem is that we are conflating 'loading a PE/COFF image'
+> > with 'copying a PE/COFF image into memory', which are not the same
+> > thing. It is not just the layout issue, we are running into other
+> > problems with things like UEFI secure boot and TPM-based measured
+> > boot, where the fact that omitting the standard LoadImage() boot
+> > service (which takes care of these things under the hood) means that
+> > you now have to do your own checks and measurements. These things are
+> > literally all over the place at the moment, shim, GRUB, systemd-boot
+> > etc, with no authoritative spec that describes which component should
+> > be doing what.
+> 
+> Sounds to me like what LoadImage() does is what the authoritative spec
+> should be. Perhaps we should write it down as "Do what LoadImage()
+> does... " and then enumerate the requirements.
+> 
+> > Commit ec93fc371f014a6fb483e3556061ecad4b40735c has the background, but ...
+> 
+> Nice, I like the aspect of letting firmware do only a minimum amount of
+> work. :)
+> 
+> > ... I'll look into updating the documentation as well.
+> 
+> Thanks!
+> 
+> > Note that this stuff is hot off the press, so there may be some issues
+> > lurking (like this one) that we hadn't thought of yet.
+> 
+> Right.
+> 
+> > Actually, it may be sufficient to #define __efistub_global to
+> > __section(.data) like we already do for ARM, to ensure that these
+> > global flags are always initialized correctly. (I'll wait for Sergey
+> > to confirm that the spurious enabling of the PCI DMA protection
+> > resulting from this BSS issue is causing the boot regression)
 
-Sorry if I wasn't clear enough via the sequence diagram. It's a common
-RX packet that arrives via ieee80211_tasklet_handler() which is
-enabled via call to "struct ieee80211_ops::start" api.
+Yeah I thought of that as the easiest fix, but it might be safer to
+explicitly zero-init in efi_main to avoid future problems in case
+someone adds another variable in bss and isn't aware of this obscure
+requirement. We actually already have sys_table in bss, but that one is
+always initialized. There's also other globals that aren't annotated
+(but not in bss by virtue of having initializers). What do you think?
 
--Sumit
+What do you think of the other problem -- that's actually worse to fix,
+as it won't just be when kaslr is disabled, the startup_64 code will do
+relocation to the end of init_size and clobber the initrd before getting
+to the kaslr code, so it will break as soon as the firmware loads the
+"unified kernel image" at a 2Mb-aligned address. The only thing I can
+think of is to just unconditionally call efi_relocate_kernel if we were
+entered via handover_entry?
 
-> johannes
->
+> 
+> Cool, but let's not jinx it. :-)
+> 
+> Thx.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
