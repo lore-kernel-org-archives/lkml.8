@@ -2,280 +2,121 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ECAC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D87C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D97F5206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77BAF2078A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="C+HE+Ews"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZpSXuzk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgDFWPn (ORCPT
+        id S1726594AbgDFWQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 18:15:43 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:58540 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgDFWOu (ORCPT
+        Mon, 6 Apr 2020 18:16:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41639 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726112AbgDFWQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 18:14:50 -0400
-Received: from dede-linux.corp.microsoft.com (unknown [131.107.147.242])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 1CD67201ECA4;
-        Mon,  6 Apr 2020 15:14:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1CD67201ECA4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1586211287;
-        bh=mm5xkjUeI4j+OjdfQaEphRpjbPqUTK3Q2KfVQ/3NTkk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C+HE+EwsI0nXFPDI/vbmlkv0xceaaSz7684Fc+92lL3czxRin9UhQkwAV6vfHAjxj
-         6Vpg8ClOH+UVUrImJ4cy+vlzf0Mvl5EtgHAAvF57Gg5yPEudxFpl0Po6FiXkzeBnki
-         fNrSGd87PJloQP71/b6/Kc97ssKol5LT/eShoN0M=
-From:   deven.desai@linux.microsoft.com
-To:     agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
-        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org
-Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
-        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
-        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v2 01/12] scripts: add ipe tooling to generate boot policy
-Date:   Mon,  6 Apr 2020 15:14:28 -0700
-Message-Id: <20200406221439.1469862-2-deven.desai@linux.microsoft.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200406221439.1469862-1-deven.desai@linux.microsoft.com>
-References: <20200406221439.1469862-1-deven.desai@linux.microsoft.com>
+        Mon, 6 Apr 2020 18:16:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586211383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i13t3l6p+DYX/XFr7w4SHbnbJlldKq1YsS0C2pumidA=;
+        b=ZpSXuzk/a6EWXkziQHfgfN6/GEf+RzJw6d9ZxY+JkwhHw2RFONMU6W3Q6tCVKd94W0ZjIy
+        eeuw8WnSVW7TSYrXIi91XUQPe3WciY2+wNrf6kvYdA0P8eki41EUK4R4cCTIQcul/Oz7Gz
+        E70cZPJNLRnQ3qEgCzX+DqOr/pgcn5E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-457-CNFbPuPwPYOwPJGqVE967Q-1; Mon, 06 Apr 2020 18:16:18 -0400
+X-MC-Unique: CNFbPuPwPYOwPJGqVE967Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 940D118A8C80;
+        Mon,  6 Apr 2020 22:16:17 +0000 (UTC)
+Received: from treble (ovpn-116-24.rdu2.redhat.com [10.10.116.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BEB36CDBE2;
+        Mon,  6 Apr 2020 22:16:16 +0000 (UTC)
+Date:   Mon, 6 Apr 2020 17:16:14 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: libelf-0.175 breaks objtool
+Message-ID: <20200406221614.ac2kl3vlagiaj5jf@treble>
+References: <20190205133821.1a243836@gandalf.local.home>
+ <20190206021611.2nsqomt6a7wuaket@treble>
+ <20190206121638.3d2230c1@gandalf.local.home>
+ <CAK8P3a1hsca02=jPQmBG68RTUAt-jDR-qo=UFwf13nZ0k-nDgA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a1hsca02=jPQmBG68RTUAt-jDR-qo=UFwf13nZ0k-nDgA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Deven Bowers <deven.desai@linux.microsoft.com>
+On Mon, Apr 06, 2020 at 11:07:15PM +0200, Arnd Bergmann wrote:
+> On Wed, Feb 6, 2019 at 7:32 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > On Tue, 5 Feb 2019 20:16:11 -0600 Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > > On Tue, Feb 05, 2019 at 01:38:21PM -0500, Steven Rostedt wrote:
+> > > > Just a FYI.
+> > > >
+> > > > After a recent upgrade in debian testing, I was not able to build the
+> > > > kernel. I have a custom build of gcc, so I thought it was strange that
+> > > > I was getting something like this (took this from the web, as I don't
+> > > > have the error anymore with the work around, and currently doing a full
+> > > > build):
+> > > >
+> > > > objdump: kernel/.tmp_signal.o: unable to initialize decompress status for section .debug_info
+> > > > objdump: kernel/.tmp_signal.o: unable to initialize decompress status for section .debug_info
+> > > > objdump: kernel/.tmp_signal.o: file format not recognized
+> > > >   CC      arch/x86/kernel/platform-quirks.o
+> > > > objdump: arch/x86/kernel/.tmp_ebda.o: unable to initialize decompress status for section .debug_info
+> > > > objdump: arch/x86/kernel/.tmp_ebda.o: unable to initialize decompress status for section .debug_info
+> > > > objdump: arch/x86/kernel/.tmp_ebda.o: file format not recognized
+> > > > objdump: mm/.tmp_swap_slots.o: unable to initialize decompress status for section .debug_info
+> > > > objdump: mm/.tmp_swap_slots.o: unable to initialize decompress status for section .debug_info
+> > > > objdump: mm/.tmp_swap_slots.o: file format not recognized
+> > >
+> > > I installed debian testing on a VM, which has libelf 0.175-2, but I
+> >
+> > Hmm, I only have libelf-0.175 (no -2)
+> >
+> > > can't recreate.  Can you share your config?
+> > >
+> >
+> > It's just a distro config. Ah, I think it's because I'm compiling my
+> > own home built gcc. There seems to be an incompatibility with the
+> > binutils that I used and with libelf-0.175. If I build with just the
+> > distro gcc, it works.
+> >
+> > Bah, this means I need to recreate my gcc that I use to build my
+> > kernels with :-p As I like to control which gcc I use.
+> 
+> I now see the same problem that you reported using the gcc-9
+> toolchain I provide on https://kernel.org/pub/tools/crosstool/.
+> 
+> Do you have any other information that might help me fix it?
 
-Add a tool for the generation of an IPE policy to be compiled into the
-kernel. This policy will be enforced until userland deploys and activates
-a new policy.
+This sounds like an issue I saw before where the toolchain wants to
+compress debuginfo (DWARF debug_info sections).  The "fix" was to add
+'-gz=none' to KCFLAGS.
 
-Signed-off-by: Deven Bowers <deven.desai@linux.microsoft.com>
----
- MAINTAINERS                   |   6 ++
- scripts/Makefile              |   1 +
- scripts/ipe/Makefile          |   2 +
- scripts/ipe/polgen/.gitignore |   1 +
- scripts/ipe/polgen/Makefile   |   7 ++
- scripts/ipe/polgen/polgen.c   | 136 ++++++++++++++++++++++++++++++++++
- 6 files changed, 153 insertions(+)
- create mode 100644 scripts/ipe/Makefile
- create mode 100644 scripts/ipe/polgen/.gitignore
- create mode 100644 scripts/ipe/polgen/Makefile
- create mode 100644 scripts/ipe/polgen/polgen.c
+But if it's a desired feature then we could probably teach objtool to
+deal with it.  It ignores DWARF anyway.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index eeff55560759..0462644271aa 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8437,6 +8437,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
- S:	Supported
- F:	security/integrity/ima/
- 
-+INTEGRITY POLICY ENFORCEMENT (IPE)
-+M:	Deven Bowers <deven.desai@linux.microsoft.com>
-+L:	linux-integrity@vger.kernel.org
-+S:	Supported
-+F:	scripts/ipe/
-+
- INTEL 810/815 FRAMEBUFFER DRIVER
- M:	Antonino Daplas <adaplas@gmail.com>
- L:	linux-fbdev@vger.kernel.org
-diff --git a/scripts/Makefile b/scripts/Makefile
-index 5e75802b1a44..9338017a3b6e 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -38,6 +38,7 @@ hostprogs += unifdef
- subdir-$(CONFIG_GCC_PLUGINS) += gcc-plugins
- subdir-$(CONFIG_MODVERSIONS) += genksyms
- subdir-$(CONFIG_SECURITY_SELINUX) += selinux
-+subdir-$(CONFIG_SECURITY_IPE) += ipe
- 
- # Let clean descend into subdirs
- subdir-	+= basic dtc gdb kconfig mod
-diff --git a/scripts/ipe/Makefile b/scripts/ipe/Makefile
-new file mode 100644
-index 000000000000..e87553fbb8d6
---- /dev/null
-+++ b/scripts/ipe/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+subdir-y := polgen
-diff --git a/scripts/ipe/polgen/.gitignore b/scripts/ipe/polgen/.gitignore
-new file mode 100644
-index 000000000000..80f32f25d200
---- /dev/null
-+++ b/scripts/ipe/polgen/.gitignore
-@@ -0,0 +1 @@
-+polgen
-diff --git a/scripts/ipe/polgen/Makefile b/scripts/ipe/polgen/Makefile
-new file mode 100644
-index 000000000000..a519b594e13c
---- /dev/null
-+++ b/scripts/ipe/polgen/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+hostprogs-y	:= polgen
-+HOST_EXTRACFLAGS += \
-+	-I$(srctree)/include \
-+	-I$(srctree)/include/uapi \
-+
-+always		:= $(hostprogs-y)
-diff --git a/scripts/ipe/polgen/polgen.c b/scripts/ipe/polgen/polgen.c
-new file mode 100644
-index 000000000000..a80fffe1b27c
---- /dev/null
-+++ b/scripts/ipe/polgen/polgen.c
-@@ -0,0 +1,136 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) Microsoft Corporation. All rights reserved.
-+ */
-+
-+#include <stdlib.h>
-+#include <stddef.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <errno.h>
-+
-+static void usage(const char *const name)
-+{
-+	printf("Usage: %s OutputFile (PolicyFile)\n", name);
-+	exit(EINVAL);
-+}
-+
-+static int policy_to_buffer(const char *pathname, char **buffer, size_t *size)
-+{
-+	int rc = 0;
-+	FILE *fd;
-+	char *lbuf;
-+	size_t fsize;
-+	size_t read;
-+
-+	fd = fopen(pathname, "r");
-+	if (!fd) {
-+		rc = errno;
-+		goto out;
-+	}
-+
-+	fseek(fd, 0, SEEK_END);
-+	fsize = ftell(fd);
-+	rewind(fd);
-+
-+	lbuf = malloc(fsize);
-+	if (!lbuf) {
-+		rc = ENOMEM;
-+		goto out_close;
-+	}
-+
-+	read = fread((void *)lbuf, sizeof(*lbuf), fsize, fd);
-+	if (read != fsize) {
-+		rc = -1;
-+		goto out_free;
-+	}
-+
-+	*buffer = lbuf;
-+	*size = fsize;
-+	fclose(fd);
-+
-+	return rc;
-+
-+out_free:
-+	free(lbuf);
-+out_close:
-+	fclose(fd);
-+out:
-+	return rc;
-+}
-+
-+static int write_boot_policy(const char *pathname, const char *buf, size_t size)
-+{
-+	FILE *fd;
-+	size_t i;
-+
-+	fd = fopen(pathname, "w");
-+	if (!fd)
-+		goto err;
-+
-+	fprintf(fd, "/* This file is automatically generated.");
-+	fprintf(fd, " Do not edit. */\n");
-+	fprintf(fd, "#include <stddef.h>\n");
-+	fprintf(fd, "const char *const ipe_boot_policy =\n");
-+
-+	if (!buf || size == 0) {
-+		fprintf(fd, "\tNULL;\n");
-+		fclose(fd);
-+		return 0;
-+	}
-+
-+	for (i = 0; i < size; ++i) {
-+		if (i == 0)
-+			fprintf(fd, "\t\"");
-+
-+		switch (buf[i]) {
-+		case '"':
-+			fprintf(fd, "\\\"");
-+			break;
-+		case '\'':
-+			fprintf(fd, "'");
-+			break;
-+		case '\n':
-+			fprintf(fd, "\\n\"\n\t\"");
-+			break;
-+		case '\\':
-+			fprintf(fd, "\\\\");
-+			break;
-+		default:
-+			fprintf(fd, "%c", buf[i]);
-+		}
-+	}
-+	fprintf(fd, "\";\n");
-+	fclose(fd);
-+
-+	return 0;
-+
-+err:
-+	if (fd)
-+		fclose(fd);
-+	return errno;
-+}
-+
-+int main(int argc, const char *argv[])
-+{
-+	int rc = 0;
-+	size_t len = 0;
-+	char *policy = NULL;
-+
-+	if (argc < 2)
-+		usage(argv[0]);
-+
-+	if (argc > 2) {
-+		rc = policy_to_buffer(argv[2], &policy, &len);
-+		if (rc != 0)
-+			goto cleanup;
-+	}
-+
-+	rc = write_boot_policy(argv[1], policy, len);
-+cleanup:
-+	if (policy)
-+		free(policy);
-+	if (rc != 0)
-+		perror("An error occurred during policy conversion: ");
-+	return rc;
-+}
 -- 
-2.26.0
+Josh
 
