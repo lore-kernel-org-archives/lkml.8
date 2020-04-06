@@ -2,81 +2,81 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15ABBC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB22C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9DE52072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA6220753
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgDFS1O (ORCPT
+        id S1726254AbgDFS3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:27:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42392 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 14:29:07 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60637 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbgDFS1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:27:14 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B902E206C3;
-        Mon,  6 Apr 2020 18:27:12 +0000 (UTC)
-Date:   Mon, 6 Apr 2020 14:27:11 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Kenneth R. Crudup" <kenny@panix.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [patch 1/2] x86,module: Detect VMX modules and disable
- Split-Lock-Detect
-Message-ID: <20200406142711.47780ff5@gandalf.local.home>
-In-Reply-To: <20200406152231.GQ20730@hirez.programming.kicks-ass.net>
-References: <20200402123258.895628824@linutronix.de>
-        <20200402124205.242674296@linutronix.de>
-        <20200406122343.GA10683@infradead.org>
-        <20200406144020.GP20730@hirez.programming.kicks-ass.net>
-        <20200406151847.GA25147@infradead.org>
-        <20200406152231.GQ20730@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725787AbgDFS3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:29:07 -0400
+IronPort-SDR: zdY2ZwOyo9enom4KOHelaPIJyTNC1sTqT302hfq6AuZnJAUvtGO2pxmqMuozJBLEU4gMhDKEnw
+ 9M9yLFGf7KEw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 11:29:05 -0700
+IronPort-SDR: Xkt7Xtn/+sHG0FniHBkUYaEK4aGrUhaQuxkz8qhNnpo04b6z/seQo7xmHzFRH2j/1mbmy15gPb
+ G3wEuwtNtIFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,352,1580803200"; 
+   d="scan'208";a="452163192"
+Received: from yweiss1-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.159])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Apr 2020 11:29:00 -0700
+Date:   Mon, 6 Apr 2020 21:28:59 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Christophe Ricard <christophe-h.ricard@st.com>
+Subject: Re: [PATCH v5 2/7] tpm: tpm_tis: Add check_data handle to
+ tpm_tis_phy_ops in order to check data integrity
+Message-ID: <20200406182859.GC20105@linux.intel.com>
+References: <20200405125352.183693-1-amirmizi6@gmail.com>
+ <20200405125352.183693-3-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200405125352.183693-3-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 17:22:31 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+Short summary could just be:
 
-> On Mon, Apr 06, 2020 at 08:18:47AM -0700, Christoph Hellwig wrote:
-> > On Mon, Apr 06, 2020 at 04:40:20PM +0200, Peter Zijlstra wrote:  
-> > > It is absolutely bonkers, but at the same time we can extend this
-> > > infrastructure to scan for dubious code patterns we don't want to
-> > > support. Like for instance direct manipulation of CR4.  
-> > 
-> > But that is not what this code does - it disables split lock detection.
-> > If it failed to load the module the whole thing would make a little
-> > more sense.  
+"Add check_data handle() to struct tpm_tis_phy_ops"
+
+and leave the reasoning to the long description.
+
+On Sun, Apr 05, 2020 at 03:53:47PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
 > 
-> If this lives, it'll be to just to fail module loading. IIRC the same
-> was suggested elsewhere in the thread.
+> In order to compute the crc over the data sent in lower layer
+> (I2C for instance), tpm_tis_check_data() calls an operation (if available)
+> to check data integrity. If data integrity cannot be verified, a retry
+> attempt to save the sent/received data is implemented.
 
-I believe I may have been the one to suggest it. It's no different than
-breaking kabi if you ask me. If a module can't deal with a new feature,
-than it should not be able to load. And let whoever owns that module fix it
-for their users.
+It does not. The existing code does not do that.
 
--- Steve
+Also it is not clear whether the steps are from existing code or
+after this commit has been applied.
+
+/Jarkko
