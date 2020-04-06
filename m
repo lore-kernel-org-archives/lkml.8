@@ -2,135 +2,103 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0562AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D04C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFBE2206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586159098;
-	bh=VcgV/eWG/axVBlX9tQrumU8VUmhJxKB36JaQLOo37fM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ESudkdbI+qv+31FpRwJbJllVj5fNX+fFJtKibTmEysqmKIw6Y+4iyIrpP1i7kfkXt
-	 vxSqtkx0QtTvZOCexRmV+8n7oPJWhLE2LOCqzL9SsX5DybgT1I5rl2zXN70o+7ZkFD
-	 18LJGdcEUVZSQUEfskaWZrjr8j+fYLEoU0YAiNoY=
+	by mail.kernel.org (Postfix) with ESMTP id D7CC8206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:45:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="H1sWTFHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDFHo5 (ORCPT
+        id S1726620AbgDFHp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 03:44:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53402 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgDFHo5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 03:44:57 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d77so13625468wmd.3;
-        Mon, 06 Apr 2020 00:44:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=txWInbuQbmkgFxJ+50xnQXLhTEQvs1Jqq2HY6J0OmlU=;
-        b=QoMOsFRiahP6Pg7Gai160asclW5Lzm+ToLoPpt83KcHbhU8hT/5CXufMx2snTIuvvo
-         Bsc5BQSEWDlAM8SoqvgXx4Az+95SK3L4nhqt5pORwyNvxLA47FGtnUAhAMcnrCu6H6Oh
-         NiGULMv/F5QmibD+1EYA3bMVgxW57vO5ro87zGcipVesoI82bWOR7H5f8/z7U37Mgy9p
-         NDaDpYzrfnrElIr1BBWag9VSJbOvMbjj5He8pjXtJGsL0nqV2ifdZ6G7ylVpRWJZk8cd
-         Wv2YIZEg6lIyT4I67M7nIbFQ3cwnNzWR7x/w107ic1QkZP0V7YbwwM+XQc0Mv74KGaEN
-         Pdjg==
-X-Gm-Message-State: AGi0PuY39d+/iEHlQptkN8JxnbrQpIhZR8k++XgbTe35tgZI/RHge60A
-        qNbTJmIJ99sqqtdDDkCNxts=
-X-Google-Smtp-Source: APiQypJ/uoIUR+40nexUPOLJDWAC+iVUJJZll3wmjJET1u6SyNHZsHCm9tunzpCMG0peDimrSZlprA==
-X-Received: by 2002:a1c:bd8b:: with SMTP id n133mr10454476wmf.175.1586159095092;
-        Mon, 06 Apr 2020 00:44:55 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id q11sm24372569wme.0.2020.04.06.00.44.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 00:44:54 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 09:44:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@Netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
-Message-ID: <20200406074453.GH19426@dhcp22.suse.cz>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name>
- <87v9miydai.fsf@notabene.neil.brown.name>
- <87sghmyd8v.fsf@notabene.neil.brown.name>
- <20200403151534.GG22681@dhcp22.suse.cz>
- <878sjcxn7i.fsf@notabene.neil.brown.name>
+        Mon, 6 Apr 2020 03:45:29 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:8325 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726475AbgDFHp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 03:45:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=1392; q=dns/txt; s=axis-central1;
+  t=1586159128; x=1617695128;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hKjWOr9FSgMwzvGDh1VBVkoJ1lF8KGvb+K5ewVawfCo=;
+  b=H1sWTFHSQaVNHJpYmMb1ogscI348SWmEJL42VEI0J02uwu/UYekAhOQw
+   kchvTPWOZV8H3w/r6HxSF/qJvqKJwrRKdu3VLEVs2peDhmCjdlelRutAN
+   43fupTLtqymQPD2jr+CzyTpNoHvk5WgAHEje2ptPAOSylS5CveoO0NwMd
+   TPBFjPFdjYVv04QdavAmyua0VjGABP4NxWcy6aeUdlNpdjBrd7VSR8IFJ
+   YrkafmoTwI8wr9onaZSiM8bVvLNRJAILaAgAUooDSNOowhDReOfEHCBQw
+   NdBqyDhxmkUct9vfZ31ViSppt855kMDiUshB8RtcrdkVe7b4STIjI5Hpy
+   w==;
+IronPort-SDR: rktaN4umJOdoahSgBwoHdhjxgRERbzY2cMeYoRJ4E66mpfllBiVsbl1/D6wOqUY5XzXBzQs1/q
+ TaBKFoy9vy8uzlxvUGzZo1Zy1z4OsyJ1Sc7gZtBNSK0+bf1cOkBG9vl/dn97dYtskI1AU8gute
+ DW+9xzSg0JTg7eKYV9TCJa3JFD4OHdro9DILAOJETJuRzSbSjB1RoVYJZEkTzzL6OGnaRDT3PH
+ kfe5C4nZBlrgzc61k07H78FTHeXp+Cco/zKqGNDlZx1ESVa2a+IjIOqzZsh9pc5mhU6AtEZFmM
+ OVg=
+X-IronPort-AV: E=Sophos;i="5.72,350,1580770800"; 
+   d="scan'208";a="7358640"
+Date:   Mon, 6 Apr 2020 09:45:26 +0200
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] thermal: core: Send a sysfs notification on trip points
+Message-ID: <20200406074525.2bhseq3n5bw7dd2t@axis.com>
+References: <a7e8287d-72be-7ab0-697a-9de40eb3f81f@linaro.org>
+ <20200402142116.22869-1-daniel.lezcano@linaro.org>
+ <20200403144009.szjoss5ecleisg2f@axis.com>
+ <e0c819ce-31f4-cee1-c7cc-7ecb73d374a3@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <878sjcxn7i.fsf@notabene.neil.brown.name>
+In-Reply-To: <e0c819ce-31f4-cee1-c7cc-7ecb73d374a3@linaro.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 04-04-20 08:40:17, Neil Brown wrote:
-> On Fri, Apr 03 2020, Michal Hocko wrote:
+On Fri, Apr 03, 2020 at 05:26:39PM +0200, Daniel Lezcano wrote:
+> On 03/04/2020 16:40, Vincent Whitchurch wrote:
+> > Normally sysfs_notify() is used to notify userspace that the value
+> > of the sysfs file has changed, but in this case it's being used on
+> > a sysfs file whose value never changes.  I don't know if there are
+> > other drivers that do something similar.
 > 
-> > On Thu 02-04-20 10:53:20, Neil Brown wrote:
-> >> 
-> >> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
-> >> loop block driver, where a daemon needs to write to one bdi in
-> >> order to free up writes queued to another bdi.
-> >> 
-> >> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
-> >> pages, so that it can still dirty pages after other processses have been
-> >> throttled.
-> >> 
-> >> This approach was designed when all threads were blocked equally,
-> >> independently on which device they were writing to, or how fast it was.
-> >> Since that time the writeback algorithm has changed substantially with
-> >> different threads getting different allowances based on non-trivial
-> >> heuristics.  This means the simple "add 25%" heuristic is no longer
-> >> reliable.
-> >> 
-> >> This patch changes the heuristic to ignore the global limits and
-> >> consider only the limit relevant to the bdi being written to.  This
-> >> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
-> >> should not introduce surprises.  This has the desired result of
-> >> protecting the task from the consequences of large amounts of dirty data
-> >> queued for other devices.
-> >
-> > While I understand that you want to have per bdi throttling for those
-> > "special" files I am still missing how this is going to provide the
-> > additional room that the additnal 25% gave them previously. I might
-> > misremember or things have changed (what you mention as non-trivial
-> > heuristics) but PF_LESS_THROTTLE really needed that room to guarantee a
-> > forward progress. Care to expan some more on how this is handled now?
-> > Maybe we do not need it anymore but calling that out explicitly would be
-> > really helpful.
+> I think so:
 > 
-> The 25% was a means to an end, not an end in itself.
+> eg.
 > 
-> The problem is that the NFS server needs to be able to write to the
-> backing filesystem when the dirty memory limits have been reached by
-> being totally consumed by dirty pages on the NFS filesystem.
+> drivers/hwmon/adt7x10.c:
+> 	sysfs_notify(&dev->kobj, NULL, "temp1_max_alarm");
+> drivers/hwmon/adt7x10.c:
+> 	sysfs_notify(&dev->kobj, NULL, "temp1_min_alarm");
+> drivers/hwmon/adt7x10.c:
+> 	sysfs_notify(&dev->kobj, NULL, "temp1_crit_alarm");
 > 
-> The 25% was just a way of giving an allowance of dirty pages to nfsd
-> that could not be consumed by processes writing to an NFS filesystem.
-> i.e. it doesn't need 25% MORE, it needs 25% PRIVATELY.  Actually it only
-> really needs 1 page privately, but a few pages give better throughput
-> and 25% seemed like a good idea at the time.
+> drivers/hwmon/abx500.c:
+> 	sysfs_notify(&data->pdev->dev.kobj, NULL, alarm_node);
+> drivers/hwmon/abx500.c:
+> 	sysfs_notify(&data->pdev->dev.kobj, NULL, alarm_node);
+> 
+> drivers/hwmon/stts751.c:
+> 	sysfs_notify(&priv->dev->kobj, NULL, "temp1_max_alarm");
+> drivers/hwmon/stts751.c:
+> 	sysfs_notify(&priv->dev->kobj, NULL, "temp1_min_alarm");
+> 
+> There are also some other places I believe they are doing the same like:
+> 
+> drivers/md/md.c:
+> 	sysfs_notify(&mddev->kobj, NULL, "sync_completed");
+> drivers/md/md.c:
+> 	sysfs_notify(&mddev->kobj, NULL, "degraded");
 
-Yes this part is clear to me.
- 
-> per-bdi throttling focuses on the "PRIVATELY" (the important bit) and
-> de-emphasises the 25% (the irrelevant detail).
-
-It is still not clear to me how this patch is going to behave when the
-global dirty throttling is essentially equal to the per-bdi - e.g. there
-is only a single bdi and now the PF_LOCAL_THROTTLE process doesn't have
-anything private.
-
--- 
-Michal Hocko
-SUSE Labs
+AFAICS all these drivers (including the hwmon ones) use sysfs_notify()
+to notify that the value of the sysfs file has changed, unlike your
+proposed patch.
