@@ -2,81 +2,86 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB22C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB83C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA6220753
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF172072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgDFS3H (ORCPT
+        id S1726310AbgDFS3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:29:07 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60637 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgDFS3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:29:07 -0400
-IronPort-SDR: zdY2ZwOyo9enom4KOHelaPIJyTNC1sTqT302hfq6AuZnJAUvtGO2pxmqMuozJBLEU4gMhDKEnw
- 9M9yLFGf7KEw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 11:29:05 -0700
-IronPort-SDR: Xkt7Xtn/+sHG0FniHBkUYaEK4aGrUhaQuxkz8qhNnpo04b6z/seQo7xmHzFRH2j/1mbmy15gPb
- G3wEuwtNtIFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,352,1580803200"; 
-   d="scan'208";a="452163192"
-Received: from yweiss1-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.159])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Apr 2020 11:29:00 -0700
-Date:   Mon, 6 Apr 2020 21:28:59 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     amirmizi6@gmail.com
-Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
-        alexander.steffen@infineon.com, robh+dt@kernel.org,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Christophe Ricard <christophe-h.ricard@st.com>
-Subject: Re: [PATCH v5 2/7] tpm: tpm_tis: Add check_data handle to
- tpm_tis_phy_ops in order to check data integrity
-Message-ID: <20200406182859.GC20105@linux.intel.com>
-References: <20200405125352.183693-1-amirmizi6@gmail.com>
- <20200405125352.183693-3-amirmizi6@gmail.com>
+        Mon, 6 Apr 2020 14:29:19 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:33577 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725787AbgDFS3S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:29:18 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tuq78hC_1586197752;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Tuq78hC_1586197752)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 07 Apr 2020 02:29:15 +0800
+Subject: Re: [PATCHv2 4/8] khugepaged: Drain LRU add pagevec after swapin
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
+ <20200403112928.19742-5-kirill.shutemov@linux.intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <620a61ed-be87-f60e-f562-379cd3adbe08@linux.alibaba.com>
+Date:   Mon, 6 Apr 2020 11:29:11 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200405125352.183693-3-amirmizi6@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200403112928.19742-5-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Short summary could just be:
 
-"Add check_data handle() to struct tpm_tis_phy_ops"
 
-and leave the reasoning to the long description.
+On 4/3/20 4:29 AM, Kirill A. Shutemov wrote:
+> __collapse_huge_page_isolate() may fail due to extra pin in the LRU add
+> pagevec. It's petty common for swapin case: we swap in pages just to
+> fail due to the extra pin.
+>
+> Drain LRU add pagevec on sucessfull swapin.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>   mm/khugepaged.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index fdc10ffde1ca..57ff287caf6b 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -940,6 +940,11 @@ static bool __collapse_huge_page_swapin(struct mm_struct *mm,
+>   	}
+>   	vmf.pte--;
+>   	pte_unmap(vmf.pte);
+> +
+> +	/* Drain LRU add pagevec to remove extra pin on the swapped in pages */
+> +	if (swapped_in)
+> +		lru_add_drain();
 
-On Sun, Apr 05, 2020 at 03:53:47PM +0300, amirmizi6@gmail.com wrote:
-> From: Amir Mizinski <amirmizi6@gmail.com>
-> 
-> In order to compute the crc over the data sent in lower layer
-> (I2C for instance), tpm_tis_check_data() calls an operation (if available)
-> to check data integrity. If data integrity cannot be verified, a retry
-> attempt to save the sent/received data is implemented.
+There is already lru_add_drain() called in swap readahead path, please 
+see swap_vma_readahead() and swap_cluster_readahead().
 
-It does not. The existing code does not do that.
+The extra call to draining lru seems unnecessary.
 
-Also it is not clear whether the steps are from existing code or
-after this commit has been applied.
+> +
+>   	trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, 1);
+>   	return true;
+>   }
 
-/Jarkko
