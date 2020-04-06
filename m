@@ -2,146 +2,65 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0535CC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CDBC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C932C249D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:13:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="C1p+CAca"
+	by mail.kernel.org (Postfix) with ESMTP id 16CA6249E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbgDFRNu (ORCPT
+        id S1729325AbgDFRRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:13:50 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37818 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbgDFRNu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:13:50 -0400
-Received: by mail-pg1-f194.google.com with SMTP id r4so258510pgg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OGJACKQu1bguU+JASnr0st35ZbPyO/prVOsR97eFOTY=;
-        b=C1p+CAcageRdS3KC99Y6ETnCxpN2z/k+fLn/ubFK9Kt38T7Baow42EI4AsMzxu+vgo
-         7tQHAk7hzJuN/3qb0+oA3J3t07BCG+6Z1dc1p85nA5BxxOTNaNEB+OJGL6NS4zppBpUO
-         I3aX3NGKydV1auY4P1etSTH9E1EsEyNaO2soSJVEU5qOCOLwXNyHXq0q2swc2pkdb2Sk
-         WN9yUPDlI8trMZL8Cxm/5HGD1GddFpBAflz2A2ereTcSL36bYUr7TNWkGsS/reBXansp
-         Sq85cpjt0zClcPaYNS3NspAtBR6mb2JCWds+9/jAR3K4zw0+CQkxFPqYn5XBjTiR1IWQ
-         huiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OGJACKQu1bguU+JASnr0st35ZbPyO/prVOsR97eFOTY=;
-        b=WPLRA27a5OHn2gl0c0uNfxQLn5h5CzdcP9M1hSBqb8armI8ergynk0fdUOFEc+mws8
-         1E0qjcZvQ4+jBTGERq0qDQl1ztlfFhH1ptYYnIKTigH6RZ2p9KtkunKEaXrHzZ+6SwEU
-         l+eZp6qj2CMa6eRxwWGoMvE90pC+dvGzJ1FoKHxDApXDqAnFb4NRHMpaEya1e6RadDwW
-         TIlsy62yacftw2QfpUsXSVrtL5nDSSzYsEeAIoOPO1gD4JoRWzilgx2sBVEVoDbV9JQF
-         8QIA44+4D4VMHl4J1RY5OhtrtG3mBQMqNxikLDcU3gT+h4MC8Qnee1ndoVqkuzdZ8Jvt
-         YlhQ==
-X-Gm-Message-State: AGi0PuYn/6M8dc+4EFz3eDOsLSFaW+FpN0QVf1/e+iC1bdJFkQ63JQ45
-        cLGNKc81zivAYCjFyfbXxizMfVocj3U=
-X-Google-Smtp-Source: APiQypKr3FJFeibyVamzRtJrpO32ZJnhX5YwVwWHy43COBXcQIeCyc45/KaSQgwsCSBC5hhs6UghaA==
-X-Received: by 2002:a62:dd09:: with SMTP id w9mr424374pff.311.1586193229108;
-        Mon, 06 Apr 2020 10:13:49 -0700 (PDT)
-Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id w29sm11219224pge.25.2020.04.06.10.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 10:13:48 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrey Vagin <avagin@openvz.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>, stable@kernel.org
-Subject: [PATCH] kernel/time: Add max_time_namespaces ucount
-Date:   Mon,  6 Apr 2020 18:13:42 +0100
-Message-Id: <20200406171342.128733-1-dima@arista.com>
-X-Mailer: git-send-email 2.26.0
+        Mon, 6 Apr 2020 13:17:10 -0400
+Received: from verein.lst.de ([213.95.11.211]:34502 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgDFRRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:17:10 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0319068BEB; Mon,  6 Apr 2020 19:17:06 +0200 (CEST)
+Date:   Mon, 6 Apr 2020 19:17:06 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct
+ device
+Message-ID: <20200406171706.GA3231@lst.de>
+References: <87sghz2ibh.fsf@linux.ibm.com> <20200323172256.GB31269@lst.de> <ffce1af6-a215-dee8-7b5c-2111f43accfd@ozlabs.ru> <20200324075402.GJ23447@lst.de> <41975da3-3a4a-fc3c-2b90-8d607cf220e6@ozlabs.ru> <20200325083740.GC21605@lst.de> <a705afc5-779d-baf4-e5d2-e2da04c82743@ozlabs.ru> <213b0c7d-f908-b4f4-466d-6240c3622cd6@ozlabs.ru> <20200406115016.GA10941@lst.de> <348046e7-7a38-62d6-4df0-e4a537b98926@ozlabs.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <348046e7-7a38-62d6-4df0-e4a537b98926@ozlabs.ru>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce missing time namespaces limit per-userns.
-Michael noticed that userns limit for number of time namespaces is
-missing.
+On Mon, Apr 06, 2020 at 11:25:09PM +1000, Alexey Kardashevskiy wrote:
+> >> Do you see any serious problem with this approach? Thanks!
+> > 
+> > Do you have a link to the whole branch?  The github UI is unfortunately
+> > unusable for that (or I'm missing something).
+> 
+> The UI shows the branch but since I rebased and forcepushed it, it does
+> not. Here is the current one with:
+> 
+> https://github.com/aik/linux/commits/dma-bypass.3
 
-Furthermore, time namespace introduced UCOUNT_TIME_NAMESPACES, but
-didn't introduce an array member in user_table[]. It would make array's
-initialisation OOB write, but by luck the user_table array has
-an excessive empty member (all accesses to the array are limited with
-UCOUNT_COUNTS - so it silently reuses the last free member.
-
-Fixes user-visible regression: max_inotify_instances by reason of the
-missing UCOUNT_ENTRY() has limited max number of namespaces instead of
-the number of inotify instances.
-
-Fixes: 769071ac9f20 ("ns: Introduce Time Namespace")
-Cc: Adrian Reber <adrian@lisas.de>
-Cc: Andrey Vagin <avagin@openvz.org>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Containers <containers@lists.linux-foundation.org>
-Cc: Linux API <linux-api@vger.kernel.org>
-Cc: stable@kernel.org # v5.6+
-Reported-by: Michael Kerrisk (man-pages) <mtk.manpages@gmail.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- Documentation/admin-guide/sysctl/user.rst | 6 ++++++
- kernel/ucount.c                           | 1 +
- 2 files changed, 7 insertions(+)
-
-diff --git a/Documentation/admin-guide/sysctl/user.rst b/Documentation/admin-guide/sysctl/user.rst
-index 650eaa03f15e..c45824589339 100644
---- a/Documentation/admin-guide/sysctl/user.rst
-+++ b/Documentation/admin-guide/sysctl/user.rst
-@@ -65,6 +65,12 @@ max_pid_namespaces
-   The maximum number of pid namespaces that any user in the current
-   user namespace may create.
- 
-+max_time_namespaces
-+===================
-+
-+  The maximum number of time namespaces that any user in the current
-+  user namespace may create.
-+
- max_user_namespaces
- ===================
- 
-diff --git a/kernel/ucount.c b/kernel/ucount.c
-index a53cc2b4179c..29c60eb4ec9b 100644
---- a/kernel/ucount.c
-+++ b/kernel/ucount.c
-@@ -69,6 +69,7 @@ static struct ctl_table user_table[] = {
- 	UCOUNT_ENTRY("max_net_namespaces"),
- 	UCOUNT_ENTRY("max_mnt_namespaces"),
- 	UCOUNT_ENTRY("max_cgroup_namespaces"),
-+	UCOUNT_ENTRY("max_time_namespaces"),
- #ifdef CONFIG_INOTIFY_USER
- 	UCOUNT_ENTRY("max_inotify_instances"),
- 	UCOUNT_ENTRY("max_inotify_watches"),
--- 
-2.26.0
-
+Ok, so we use the core bypass without persistent memory, and then
+have another bypass mode on top.  Not great, but I can't think
+of anything better.  Note that your checks for the map_sg case
+aren't very efficient - for one it would make sense to calculate
+the limit only once, but also it would make sense to reuse the
+calculted diecect mapping addresses instead of doing another pass
+later on in the dma-direct code.
