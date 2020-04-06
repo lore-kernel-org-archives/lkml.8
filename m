@@ -2,378 +2,116 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1678AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4739C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE32922265
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586189092;
-	bh=oA0pciiE5swcEV9qJePQd77q/lOOU0ILBe17Tan9iig=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sN62FXP0piK1tzMR95t/RsRqBjA8Ntu1QlQYNvXceAan2S4s8QHXsVfVwmRd2w6lK
-	 LH0mYxQY3qp0oataH4XKBA5nleKJ45LgGt0vmUaVeOnO2VDd6s8qmPpquDyuA2yiki
-	 y836qkZJCHRZljBYd7HXKpCYG4w6LJQoK4WmAzE4=
+	by mail.kernel.org (Postfix) with ESMTP id AC0B022265
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:05:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMnqzACe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbgDFQEc (ORCPT
+        id S1729362AbgDFQFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:04:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbgDFQEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:04:31 -0400
-Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 519482222D;
-        Mon,  6 Apr 2020 16:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586189070;
-        bh=oA0pciiE5swcEV9qJePQd77q/lOOU0ILBe17Tan9iig=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r1xMx4L6sGKB7gpw7/3Y1eEp08F90y24B2vhQjezYMjHUVs3osB6ts8ejV3sFP3RY
-         oRGeh4Ji16FAExtoX7ph6QdHyyb9N5PG8L09vjLii4a8bFCIUG5NOZ7InglLfyy4fB
-         HckHgIh9VLXhW8MiYaB85NJOHlFI239Y5yXSOjxY=
-From:   Dinh Nguyen <dinguyen@kernel.org>
-To:     linux-clk@vger.kernel.org
-Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
-Subject: [PATCHv6 1/5] clk: socfpga: stratix10: use new parent data scheme
-Date:   Mon,  6 Apr 2020 11:04:14 -0500
-Message-Id: <20200406160418.27476-2-dinguyen@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200406160418.27476-1-dinguyen@kernel.org>
-References: <20200406160418.27476-1-dinguyen@kernel.org>
+        Mon, 6 Apr 2020 12:05:37 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35016 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729058AbgDFQFg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:05:36 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r17so8735174lff.2;
+        Mon, 06 Apr 2020 09:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UlEB5mGfZfrR2ICgj85sakIeAX6bWAMpBvZEq4sclhs=;
+        b=hMnqzACejUMzIgLKjfDtgPf/VuejCHWZs65xvT1bS8bVxb8suPbcvAd15qTR5U4P0g
+         9fDauAF6ltaIGvTsqYfLaeVxlgkn46wpEufbxT4dptigxbccuIXGsYzbsRtRSOGECD67
+         G7CnfYjyn/LK2es30KIM7suDdloc3hwupo8NxITZgvAXpa7Wrr+RaAVg3EIC31B6BaC6
+         Y9AKM2vJURufQXg5vUF0ciBmgWNNl6d8ZnDsbL39B4uymtlKom6zPxEi0VGAeJL9+Aff
+         GEBBOK20kyNdtHh6abEOaI4L1WlK6l38B1XcIseSzQmXANclXhRVcHyU5zK8mZ6+iaDV
+         oWVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UlEB5mGfZfrR2ICgj85sakIeAX6bWAMpBvZEq4sclhs=;
+        b=LSiNBINORBqO4I1oVtmwr9sOFqr7ptTvhkReZ8XEVmMpktPJHQo3y8PlMokFIQuQVa
+         1oJkydgfIjkwg6Is2wni4Jclu6AEqDHT+nmVVTJRCLS3OZwyYxTbZfFBgb0P1qck77Pw
+         LiiVYM8ImlMQOkJXsQB8WT7A+Gf8vk77G4Icqh+1Ubdz/ft9uaM44xO/+mJ/KBQ76a8P
+         EN70K2JU2oS2+GW5x3db6ScK/1lN2ViheUY2Js4nq/+gtCSRLc5TWfijUgEuxQWqP2el
+         AsvfWqPvWaGppsQzgO0hJSFt9smx+hkLhAJFB4ybssMixHKOMK5mobH66mWiUcOt95fu
+         +RJg==
+X-Gm-Message-State: AGi0PuYjI41bG6Yr3LFiSs9CEE5LBxCOiz3ZbHZ4teccNa+Y9y7hxrSp
+        P0Ejh8pecmspqNho9TG5x2s58m05
+X-Google-Smtp-Source: APiQypLjG2SSlcN4OQg20r8eqrjVwnmiP/cugPGrrukYx2188O2RBBAD2rTfh2StJg+t9ezqr+LcYQ==
+X-Received: by 2002:a05:6512:52c:: with SMTP id o12mr13295963lfc.217.1586189133488;
+        Mon, 06 Apr 2020 09:05:33 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id z4sm9860769ljk.51.2020.04.06.09.05.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 09:05:30 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
+ <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
+Date:   Mon, 6 Apr 2020 19:05:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert, where possible, the stratix10 clock driver to the new parent
-data scheme by specifying the parent data for clocks that have multiple
-parents.
+06.04.2020 18:35, Sowjanya Komatineni пишет:
+...
+>>> +     /* wait for syncpt counter to reach frame start event threshold */
+>>> +     err = host1x_syncpt_wait(chan->frame_start_sp, thresh,
+>>> +                              TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
+>>> +     if (err) {
+>>> +             dev_err(&chan->video.dev,
+>>> +                     "frame start syncpt timeout: %d\n", err);
+>>> +             /* increment syncpoint counter for timedout events */
+>>> +             host1x_syncpt_incr(chan->frame_start_sp);
+>> Why incrementing is done while hardware is still active?
+>>
+>> The sync point's state needs to be completely reset after resetting
+>> hardware. But I don't think that the current upstream host1x driver
+>> supports doing that, it's one of the known-long-standing problems of the
+>> host1x driver.
+>>
+>> At least the sp->max_val incrementing should be done based on the actual
+>> syncpoint value and this should be done after resetting hardware.
+> 
+> upstream host1x driver don't have API to reset or to equalize max value
+> with min/load value.
+> 
+> So to synchronize missed event, incrementing HW syncpt counter.
+> 
+> This should not impact as we increment this in case of missed events only.
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v6: no change
-v5: no change
-v4: no change
-v3: no change
-v2: add fw_name
----
- drivers/clk/socfpga/clk-gate-s10.c   |   5 +-
- drivers/clk/socfpga/clk-periph-s10.c |  10 +-
- drivers/clk/socfpga/clk-pll-s10.c    |   4 +-
- drivers/clk/socfpga/clk-s10.c        | 160 ++++++++++++++++++++++-----
- drivers/clk/socfpga/stratix10-clk.h  |   8 +-
- 5 files changed, 146 insertions(+), 41 deletions(-)
+It's wrong to touch sync point while hardware is active and it's active
+until being reset.
 
-diff --git a/drivers/clk/socfpga/clk-gate-s10.c b/drivers/clk/socfpga/clk-gate-s10.c
-index 8be4722f6064..083b2ec21fdd 100644
---- a/drivers/clk/socfpga/clk-gate-s10.c
-+++ b/drivers/clk/socfpga/clk-gate-s10.c
-@@ -70,7 +70,6 @@ struct clk *s10_register_gate(const struct stratix10_gate_clock *clks, void __io
- 	struct clk *clk;
- 	struct socfpga_gate_clk *socfpga_clk;
- 	struct clk_init_data init;
--	const char * const *parent_names = clks->parent_names;
- 	const char *parent_name = clks->parent_name;
- 
- 	socfpga_clk = kzalloc(sizeof(*socfpga_clk), GFP_KERNEL);
-@@ -108,7 +107,9 @@ struct clk *s10_register_gate(const struct stratix10_gate_clock *clks, void __io
- 	init.flags = clks->flags;
- 
- 	init.num_parents = clks->num_parents;
--	init.parent_names = parent_names ? parent_names : &parent_name;
-+	init.parent_names = parent_name ? &parent_name : NULL;
-+	if (init.parent_names == NULL)
-+		init.parent_data = clks->parent_data;
- 	socfpga_clk->hw.hw.init = &init;
- 
- 	clk = clk_register(NULL, &socfpga_clk->hw.hw);
-diff --git a/drivers/clk/socfpga/clk-periph-s10.c b/drivers/clk/socfpga/clk-periph-s10.c
-index dd6d4056e9de..397b77b89b16 100644
---- a/drivers/clk/socfpga/clk-periph-s10.c
-+++ b/drivers/clk/socfpga/clk-periph-s10.c
-@@ -81,7 +81,6 @@ struct clk *s10_register_periph(const struct stratix10_perip_c_clock *clks,
- 	struct clk_init_data init;
- 	const char *name = clks->name;
- 	const char *parent_name = clks->parent_name;
--	const char * const *parent_names = clks->parent_names;
- 
- 	periph_clk = kzalloc(sizeof(*periph_clk), GFP_KERNEL);
- 	if (WARN_ON(!periph_clk))
-@@ -94,7 +93,9 @@ struct clk *s10_register_periph(const struct stratix10_perip_c_clock *clks,
- 	init.flags = clks->flags;
- 
- 	init.num_parents = clks->num_parents;
--	init.parent_names = parent_names ? parent_names : &parent_name;
-+	init.parent_names = parent_name ? &parent_name : NULL;
-+	if (init.parent_names == NULL)
-+		init.parent_data = clks->parent_data;
- 
- 	periph_clk->hw.hw.init = &init;
- 
-@@ -114,7 +115,6 @@ struct clk *s10_register_cnt_periph(const struct stratix10_perip_cnt_clock *clks
- 	struct clk_init_data init;
- 	const char *name = clks->name;
- 	const char *parent_name = clks->parent_name;
--	const char * const *parent_names = clks->parent_names;
- 
- 	periph_clk = kzalloc(sizeof(*periph_clk), GFP_KERNEL);
- 	if (WARN_ON(!periph_clk))
-@@ -137,7 +137,9 @@ struct clk *s10_register_cnt_periph(const struct stratix10_perip_cnt_clock *clks
- 	init.flags = clks->flags;
- 
- 	init.num_parents = clks->num_parents;
--	init.parent_names = parent_names ? parent_names : &parent_name;
-+	init.parent_names = parent_name ? &parent_name : NULL;
-+	if (init.parent_names == NULL)
-+		init.parent_data = clks->parent_data;
- 
- 	periph_clk->hw.hw.init = &init;
- 
-diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
-index a301bb22f36c..bcd3f14e9145 100644
---- a/drivers/clk/socfpga/clk-pll-s10.c
-+++ b/drivers/clk/socfpga/clk-pll-s10.c
-@@ -117,7 +117,6 @@ struct clk *s10_register_pll(const struct stratix10_pll_clock *clks,
- 	struct socfpga_pll *pll_clk;
- 	struct clk_init_data init;
- 	const char *name = clks->name;
--	const char * const *parent_names = clks->parent_names;
- 
- 	pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
- 	if (WARN_ON(!pll_clk))
-@@ -134,7 +133,8 @@ struct clk *s10_register_pll(const struct stratix10_pll_clock *clks,
- 	init.flags = clks->flags;
- 
- 	init.num_parents = clks->num_parents;
--	init.parent_names = parent_names;
-+	init.parent_names = NULL;
-+	init.parent_data = clks->parent_data;
- 	pll_clk->hw.hw.init = &init;
- 
- 	pll_clk->hw.bit_idx = SOCFPGA_PLL_POWER;
-diff --git a/drivers/clk/socfpga/clk-s10.c b/drivers/clk/socfpga/clk-s10.c
-index dea7c6c7d269..c1dfc9b34e4e 100644
---- a/drivers/clk/socfpga/clk-s10.c
-+++ b/drivers/clk/socfpga/clk-s10.c
-@@ -12,35 +12,137 @@
- 
- #include "stratix10-clk.h"
- 
--static const char * const pll_mux[] = { "osc1", "cb-intosc-hs-div2-clk",
--					"f2s-free-clk",};
--static const char * const cntr_mux[] = { "main_pll", "periph_pll",
--					 "osc1", "cb-intosc-hs-div2-clk",
--					 "f2s-free-clk"};
--static const char * const boot_mux[] = { "osc1", "cb-intosc-hs-div2-clk",};
--
--static const char * const noc_free_mux[] = {"main_noc_base_clk",
--					    "peri_noc_base_clk",
--					    "osc1", "cb-intosc-hs-div2-clk",
--					    "f2s-free-clk"};
--
--static const char * const emaca_free_mux[] = {"peri_emaca_clk", "boot_clk"};
--static const char * const emacb_free_mux[] = {"peri_emacb_clk", "boot_clk"};
--static const char * const emac_ptp_free_mux[] = {"peri_emac_ptp_clk", "boot_clk"};
--static const char * const gpio_db_free_mux[] = {"peri_gpio_db_clk", "boot_clk"};
--static const char * const sdmmc_free_mux[] = {"main_sdmmc_clk", "boot_clk"};
--static const char * const s2f_usr1_free_mux[] = {"peri_s2f_usr1_clk", "boot_clk"};
--static const char * const psi_ref_free_mux[] = {"peri_psi_ref_clk", "boot_clk"};
--static const char * const mpu_mux[] = { "mpu_free_clk", "boot_clk",};
--
--static const char * const s2f_usr0_mux[] = {"f2s-free-clk", "boot_clk"};
--static const char * const emac_mux[] = {"emaca_free_clk", "emacb_free_clk"};
--static const char * const noc_mux[] = {"noc_free_clk", "boot_clk"};
--
--static const char * const mpu_free_mux[] = {"main_mpu_base_clk",
--					    "peri_mpu_base_clk",
--					    "osc1", "cb-intosc-hs-div2-clk",
--					    "f2s-free-clk"};
-+static const struct clk_parent_data pll_mux[] = {
-+	{ .fw_name = "osc1",
-+	  .name = "osc1" },
-+	{ .fw_name = "cb-intosc-hs-div2-clk",
-+	  .name = "cb-intosc-hs-div2-clk" },
-+	{ .fw_name = "f2s-free-clk",
-+	  .name = "f2s-free-clk" },
-+};
-+
-+static const struct clk_parent_data cntr_mux[] = {
-+	{ .fw_name =  "main_pll",
-+	  .name = "main_pll", },
-+	{ .fw_name = "periph_pll",
-+	  .name = "periph_pll", },
-+	{ .fw_name = "osc1",
-+	  .name = "osc1", },
-+	{ .fw_name = "cb-intosc-hs-div2-clk",
-+	  .name = "cb-intosc-hs-div2-clk", },
-+	{ .fw_name = "f2s-free-clk",
-+	  .name = "f2s-free-clk", },
-+};
-+
-+static const struct clk_parent_data boot_mux[] = {
-+	{ .fw_name = "osc1",
-+	  .name = "osc1" },
-+	{ .fw_name = "cb-intosc-hs-div2-clk",
-+	  .name = "cb-intosc-hs-div2-clk" },
-+};
-+
-+static const struct clk_parent_data noc_free_mux[] = {
-+	{ .fw_name = "main_noc_base_clk",
-+	  .name = "main_noc_base_clk", },
-+	{ .fw_name = "peri_noc_base_clk",
-+	  .name = "peri_noc_base_clk", },
-+	{ .fw_name = "osc1",
-+	  .name = "osc1", },
-+	{ .fw_name = "cb-intosc-hs-div2-clk",
-+	  .name = "cb-intosc-hs-div2-clk", },
-+	{ .fw_name = "f2s-free-clk",
-+	  .name = "f2s-free-clk", },
-+};
-+
-+static const struct clk_parent_data emaca_free_mux[] = {
-+	{ .fw_name = "peri_emaca_clk",
-+	  .name = "peri_emaca_clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data emacb_free_mux[] = {
-+	{ .fw_name = "peri_emacb_clk",
-+	  .name = "peri_emacb_clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data emac_ptp_free_mux[] = {
-+	{ .fw_name = "peri_emac_ptp_clk",
-+	  .name = "peri_emac_ptp_clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data gpio_db_free_mux[] = {
-+	{ .fw_name = "peri_gpio_db_clk",
-+	  .name = "peri_gpio_db_clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data sdmmc_free_mux[] = {
-+	{ .fw_name = "main_sdmmc_clk",
-+	  .name = "main_sdmmc_clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data s2f_usr1_free_mux[] = {
-+	{ .fw_name = "peri_s2f_usr1_clk",
-+	  .name = "peri_s2f_usr1_clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data psi_ref_free_mux[] = {
-+	{ .fw_name = "peri_psi_ref_clk",
-+	  .name = "peri_psi_ref_clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data mpu_mux[] = {
-+	{ .fw_name = "mpu_free_clk",
-+	  .name = "mpu_free_clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data s2f_usr0_mux[] = {
-+	{ .fw_name = "f2s-free-clk",
-+	  .name = "f2s-free-clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data emac_mux[] = {
-+	{ .fw_name = "emaca_free_clk",
-+	  .name = "emaca_free_clk", },
-+	{ .fw_name = "emacb_free_clk",
-+	  .name = "emacb_free_clk", },
-+};
-+
-+static const struct clk_parent_data noc_mux[] = {
-+	{ .fw_name = "noc_free_clk",
-+	  .name = "noc_free_clk", },
-+	{ .fw_name = "boot_clk",
-+	  .name = "boot_clk", },
-+};
-+
-+static const struct clk_parent_data mpu_free_mux[] = {
-+	{ .fw_name = "main_mpu_base_clk",
-+	  .name = "main_mpu_base_clk", },
-+	{ .fw_name = "peri_mpu_base_clk",
-+	  .name = "peri_mpu_base_clk", },
-+	{ .fw_name = "osc1",
-+	  .name = "osc1", },
-+	{ .fw_name = "cb-intosc-hs-div2-clk",
-+	  .name = "cb-intosc-hs-div2-clk", },
-+	{ .fw_name = "f2s-free-clk",
-+	  .name = "f2s-free-clk", },
-+};
- 
- /* clocks in AO (always on) controller */
- static const struct stratix10_pll_clock s10_pll_clks[] = {
-diff --git a/drivers/clk/socfpga/stratix10-clk.h b/drivers/clk/socfpga/stratix10-clk.h
-index fcabef42249c..ffbd1fb2c8ef 100644
---- a/drivers/clk/socfpga/stratix10-clk.h
-+++ b/drivers/clk/socfpga/stratix10-clk.h
-@@ -14,7 +14,7 @@ struct stratix10_clock_data {
- struct stratix10_pll_clock {
- 	unsigned int		id;
- 	const char		*name;
--	const char		*const *parent_names;
-+	const struct clk_parent_data	*parent_data;
- 	u8			num_parents;
- 	unsigned long		flags;
- 	unsigned long		offset;
-@@ -24,7 +24,7 @@ struct stratix10_perip_c_clock {
- 	unsigned int		id;
- 	const char		*name;
- 	const char		*parent_name;
--	const char		*const *parent_names;
-+	const struct clk_parent_data	*parent_data;
- 	u8			num_parents;
- 	unsigned long		flags;
- 	unsigned long		offset;
-@@ -34,7 +34,7 @@ struct stratix10_perip_cnt_clock {
- 	unsigned int		id;
- 	const char		*name;
- 	const char		*parent_name;
--	const char		*const *parent_names;
-+	const struct clk_parent_data	*parent_data;
- 	u8			num_parents;
- 	unsigned long		flags;
- 	unsigned long		offset;
-@@ -47,7 +47,7 @@ struct stratix10_gate_clock {
- 	unsigned int		id;
- 	const char		*name;
- 	const char		*parent_name;
--	const char		*const *parent_names;
-+	const struct clk_parent_data	*parent_data;
- 	u8			num_parents;
- 	unsigned long		flags;
- 	unsigned long		gate_reg;
--- 
-2.25.1
-
+You should re-check the timeout after hw resetting and manually put the
+syncpoint counter back into sync only if needed.
