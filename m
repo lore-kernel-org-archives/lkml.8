@@ -2,139 +2,132 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B63C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0DCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B509D23107
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2155A23107
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0wZzzdU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q0+b59CK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgDFNVS (ORCPT
+        id S1728386AbgDFNVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:21:18 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:44903 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728289AbgDFNVS (ORCPT
+        Mon, 6 Apr 2020 09:21:21 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36393 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728288AbgDFNVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:21:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586179277;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Dt00ToAjgq6odVjJUr2HynAfwKXr6ghEKV21ZUG8JdU=;
-        b=D0wZzzdU8PqTR3WbL5BZnu4mgcm6k3MgzZczh6Mct2UWT/MniQVMC6xvVBPeH02lFUp0Fk
-        N2PjCGUO4iIECw24eVoCeC+FGJWUErKlmwb0/NIMHaoEcc8HYeNpTg1WWrt0gz66eLaxXO
-        l2vkcxnW5uBDjeVLedMAp+0/9HbOepE=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-2gL22dYHPhSijOz1uGqpmA-1; Mon, 06 Apr 2020 09:21:15 -0400
-X-MC-Unique: 2gL22dYHPhSijOz1uGqpmA-1
-Received: by mail-wr1-f69.google.com with SMTP id y6so2204339wrq.21
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:21:15 -0700 (PDT)
+        Mon, 6 Apr 2020 09:21:19 -0400
+Received: by mail-lj1-f193.google.com with SMTP id b1so14668901ljp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sjFMtmuU3xHuzoUFWq9Y0DhLjc0PE8fgYoHAQmkfrZE=;
+        b=q0+b59CKCMf16lfCFCrz+8Vga8AQbbnlul6SAAPiEK6Z40MhjCJl5lMXZGjeOIR4sj
+         WXFXqWqaxBwiuX3ek3W41llkgTTwVBk0Gv7UwLunZB1ahYNl0fas+Fwmv4Go9rCdrnnR
+         vOc3SPVG2rXgARf8j1lZYXSHapc7lXi7u1sv3/a1uBGyF6PET55UO7ry3TIxoItAriBJ
+         6QOpxQ19v5kFVg5xKS1C/k4iUoZc0gERXlmZLjjgNfO8i8DxiUNfc57UbPzoCRalcWxQ
+         ew1SyBeJ86G4p5AOKyX4AnoqTRKsh4lVSSWA85IA6oQdkwHuhsnIgCDpqu0FRCuceiaa
+         Ko0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Dt00ToAjgq6odVjJUr2HynAfwKXr6ghEKV21ZUG8JdU=;
-        b=iWTLfA0nRxWUNDMCgzU+d8WMV9kDkgMSIBaFusZekbTr508zc3qkQmco182VQGzQKQ
-         DfDhS6YcbqnyK0G9BrFQnNJEsMczK7mJXk83HnCMUe1YR1z6u7+fCm7WetWzPkUJdy90
-         VT9nA3XX0XZ2mRAsLfL0z2Sx5qwvY9rktGeA/ajoGA5OJo7f1i5C63YELOD4OFLLJX2m
-         SgTLgS/0MjUBcJAY3fmO5L1D2sZCy9vRLMI2dD6E58YZK+e9pK2vTMStaXesGpi8S2xa
-         oI+S7ItgC9Ncf6KwwruYKNRRIULSozuCwLASJRwG6Kme0263+b0LRbzNfLfS3zbXye7B
-         cQTg==
-X-Gm-Message-State: AGi0PuaUkzpsQvr/gzq1nCqzTObSMwkmLXuZo4dBCQEhfSBXLYG55Ns2
-        mNunxnUd8695B6k0zHGKq1/4Ptdo9j9J74d4g4UzTAQv1W68pJxJnJViOZdnU0Vr9yWTRX+nh71
-        0Qw4KPErmVBMqnNyR/48OIASw
-X-Received: by 2002:a5d:42c1:: with SMTP id t1mr11428320wrr.215.1586179274432;
-        Mon, 06 Apr 2020 06:21:14 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLTm0wN4Ob+KU8r6bjP+vUj5Sc5r+ElDJG7FGW/nVL32K8rRyDddIp810vWUMYetH05ffupWw==
-X-Received: by 2002:a5d:42c1:: with SMTP id t1mr11428298wrr.215.1586179274273;
-        Mon, 06 Apr 2020 06:21:14 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id z11sm11162174wrv.58.2020.04.06.06.21.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 06:21:13 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 09:21:10 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "richard.henderson@linaro.org" <richard.henderson@linaro.org>,
-        "christophe.lyon@st.com" <christophe.lyon@st.com>,
-        kbuild test robot <lkp@intel.com>,
-        "daniel.santos@pobox.com" <daniel.santos@pobox.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Richard Earnshaw <Richard.Earnshaw@arm.com>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        kvm list <kvm@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] vhost: disable for OABI
-Message-ID: <20200406092056-mutt-send-email-mst@kernel.org>
-References: <20200406121233.109889-1-mst@redhat.com>
- <20200406121233.109889-3-mst@redhat.com>
- <CAK8P3a1nce31itwMKbmXoNZh-Y68m3GX_WwzNiaBuk280VFh-Q@mail.gmail.com>
- <20200406085707-mutt-send-email-mst@kernel.org>
- <CAK8P3a1=-rhiMyAh6=6EwhxSmNnYaXR9NWhh+ZGh4Hh=U_gEuA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sjFMtmuU3xHuzoUFWq9Y0DhLjc0PE8fgYoHAQmkfrZE=;
+        b=cDi9Cr5oIsgeLscZRswiuAFL671bY8o26DO4FRWEQOL5YSgJBxgZa8oRaywoy72rOC
+         ncD0Nx4vpfBBi6feJZamCylQXeRelM30n2nf0DSB2VYnHXN4tSZxgu7JdDuveqNb+xrg
+         zZzItAEmU9/5I/pmMKFeNoEHQC8MaZ44zqrIk263SljyOmmd+I8eCgE9VO7BNrl6MKzC
+         Si7MYyb5ENtWKfa6KeE8wavZzT6oVekQabYRTgW2zJ8+rsWGy678cBb7i0z1HUZM/+ja
+         O2fb74DuknSbw99fo6QmNvnMYzBTu8ERdrFlbZcEkC6Dr+/T6d5WGMSGSJ9EzFwG5SEA
+         gEjA==
+X-Gm-Message-State: AGi0PuabJE6uHP+0tcProIyUqBnL2LOXdAC9kJnN1bqdX3P6dRg0LH87
+        QFvK+Ofg2CFnl1qKDulYSLhN5bzAkwvjf5ebtsc9Cg==
+X-Google-Smtp-Source: APiQypIZr3Wr7gU6HfYZ2DPp4KYZRoMiMMIzh0ZeGpLkLlpRcwTmLnmLC682+JLbzmgWhr4LrLDmlXima8G8ek4WTDk=
+X-Received: by 2002:a2e:8093:: with SMTP id i19mr12191984ljg.12.1586179276126;
+ Mon, 06 Apr 2020 06:21:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1=-rhiMyAh6=6EwhxSmNnYaXR9NWhh+ZGh4Hh=U_gEuA@mail.gmail.com>
+References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
+ <87ftdgokao.fsf@tynnyri.adurom.net> <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+ <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com> <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
+ <87imiczrwm.fsf@kamboji.qca.qualcomm.com> <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
+In-Reply-To: <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Mon, 6 Apr 2020 18:51:04 +0530
+Message-ID: <CAFA6WYOjU_iDyAn5PMGe=usg-2sPtupSQEYwcomUcHZBAPnURA@mail.gmail.com>
+Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
+        <matthias.schoepfer@ithinx.io>,
+        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
+        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 03:15:20PM +0200, Arnd Bergmann wrote:
-> On Mon, Apr 6, 2020 at 3:02 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+On Mon, 6 Apr 2020 at 18:38, Johannes Berg <johannes@sipsolutions.net> wrote:
+>
+> On Mon, 2020-04-06 at 16:04 +0300, Kalle Valo wrote:
+> > Johannes Berg <johannes@sipsolutions.net> writes:
 > >
-> > On Mon, Apr 06, 2020 at 02:50:32PM +0200, Arnd Bergmann wrote:
-> > > On Mon, Apr 6, 2020 at 2:12 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
+> > > On Mon, 2020-04-06 at 15:52 +0300, Kalle Valo wrote:
+> > > > Johannes Berg <johannes@sipsolutions.net> writes:
 > > > >
-> > > > +config VHOST_DPN
-> > > > +       bool "VHOST dependencies"
-> > > > +       depends on !ARM || AEABI
-> > > > +       default y
-> > > > +       help
-> > > > +         Anything selecting VHOST or VHOST_RING must depend on VHOST_DPN.
-> > > > +         This excludes the deprecated ARM ABI since that forces a 4 byte
-> > > > +         alignment on all structs - incompatible with virtio spec requirements.
-> > > > +
+> > > > > On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
+> > > > > > >     user-space  ieee80211_register_hw()  RX IRQ
+> > > > > > >     +++++++++++++++++++++++++++++++++++++++++++++
+> > > > > > >        |                    |             |
+> > > > > > >        |<---wlan0---wiphy_register()      |
+> > > > > > >        |----start wlan0---->|             |
+> > > > > > >        |                    |<---IRQ---(RX packet)
+> > > > > > >        |              Kernel crash        |
+> > > > > > >        |              due to unallocated  |
+> > > > > > >        |              workqueue.          |
+> > > > >
+> > > > > [snip]
+> > > > >
+> > > > > > I have understood that no frames should be received until mac80211 calls
+> > > > > > struct ieee80211_ops::start:
+> > > > > >
+> > > > > >  * @start: Called before the first netdevice attached to the hardware
+> > > > > >  *         is enabled. This should turn on the hardware and must turn on
+> > > > > >  *         frame reception (for possibly enabled monitor interfaces.)
+> > > > >
+> > > > > True, but I think he's saying that you can actually add and configure an
+> > > > > interface as soon as the wiphy is registered?
+> > > >
+> > > > With '<---IRQ---(RX packet)' I assumed wcn36xx is delivering a frame to
+> > > > mac80211 using ieee80211_rx(), but of course I'm just guessing here.
 > > >
-> > > This should not be a user-visible option, so just make this 'def_bool
-> > > !ARM || AEABI'
-> > >
+> > > Yeah, but that could be legitimate?
 > >
-> > I like keeping some kind of hint around for when one tries to understand
-> > why is a specific symbol visible.
-> 
-> I meant you should remove the "VHOST dependencies" prompt, not the
-> help text, which is certainly useful here. You can also use the three lines
-> 
->      bool
->      depends on !ARM || AEABI
->      default y
-> 
-> in front of the help text, but those are equivalent to the one-line version
-> I suggested.
-> 
->      Arnd
+> > Ah, I misunderstood then. The way I have understood is that no rx frames
+> > should be delivered (= calling ieee80211_rx()_ before start() is called,
+> > but if that's not the case please ignore me :)
+>
+> No no, that _is_ the case. But I think the "start wlan0" could end up
+> calling it?
+>
 
-Oh right. Good point. Thanks!
+Sorry if I wasn't clear enough via the sequence diagram. It's a common
+RX packet that arrives via ieee80211_tasklet_handler() which is
+enabled via call to "struct ieee80211_ops::start" api.
 
--- 
-MST
+-Sumit
 
+> johannes
+>
