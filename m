@@ -2,128 +2,131 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A189C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4033C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AD0A23433
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XI16osb7"
+	by mail.kernel.org (Postfix) with ESMTP id BB56023435
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586181831;
+	bh=UbkFYXsatuzQbUdxGVDQAxnHxupZla2aqzUmbNgnnGI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=LKKqNGr1h10K+uVb58MRzEP07hHl2JTsizglBq73zzifUBTupWxjE08zE/PaZ4oyf
+	 FWCN7qoXiim0va3fwuD6JjwxGmcNFsUkGqBFiU/xZW7TNuhNqaFJdttcYCEerqdyIp
+	 V3mTNBQpzH21KByOSOHajMD67m3sWZaDASRs6QaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbgDFODO (ORCPT
+        id S1728598AbgDFODu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:03:14 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:56283 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726436AbgDFODO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:03:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586181793; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=ddRHNrTYuHRZ9Qp05MVsdiWN86Gi1Yd/jbkzWd681IA=; b=XI16osb7s2AfVebSEw38+RbBgPt8LmZq3ab2EDaKjUu1I/hoA4FHKhR7bLnETk/o+5rPz2ga
- brWF9EVaIHXx4aBpZCmVYBLiGP7OMMrBsTCTGjHNUBifxNLl5krQ8DKjInA5MSmPUZRayqbR
- fxeSj+wtHkvZbTtWxhv0Q7mgtXo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b369a.7fc899cd3998-smtp-out-n02;
- Mon, 06 Apr 2020 14:03:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 50DCBC43636; Mon,  6 Apr 2020 14:03:05 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 6 Apr 2020 10:03:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728512AbgDFODu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 10:03:50 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0FBE0C433D2;
-        Mon,  6 Apr 2020 14:03:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0FBE0C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Tony Chuang <yhchuang@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list\:REALTEK WIRELESS DRIVER \(rtw88\)" 
-        <linux-wireless@vger.kernel.org>,
-        "open list\:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] rtw88: Add delay on polling h2c command status bit
-References: <20200406093623.3980-1-kai.heng.feng@canonical.com>
-        <87v9mczu4h.fsf@kamboji.qca.qualcomm.com>
-        <94EAAF7E-66C5-40E2-B6A9-0787CB13A3A9@canonical.com>
-        <87zhboycfr.fsf@kamboji.qca.qualcomm.com>
-        <83B3A3D8-833A-42BE-9EB0-59C95B349B01@canonical.com>
-Date:   Mon, 06 Apr 2020 17:03:00 +0300
-In-Reply-To: <83B3A3D8-833A-42BE-9EB0-59C95B349B01@canonical.com> (Kai-Heng
-        Feng's message of "Mon, 6 Apr 2020 21:35:29 +0800")
-Message-ID: <87k12syanf.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        by mail.kernel.org (Postfix) with ESMTPSA id F061C23433;
+        Mon,  6 Apr 2020 14:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586181829;
+        bh=UbkFYXsatuzQbUdxGVDQAxnHxupZla2aqzUmbNgnnGI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=F8Wsfrq0K11uyIa+GRybKbyBxjyoiQ72PIhjJXXAD60jFxbbOrC4Q4w3iv3l/BCOg
+         lJlT3GYD87feNnOAUIEaPoSpOJQBWeGU4GmwpJPLNmpRQZAqKLlBlFIku2Bnqr6+Je
+         TKQsB7z6IBrmoerd2HKKbinAfmIEktdHGKNMqioo=
+Date:   Mon, 06 Apr 2020 15:03:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Julia Lawall <Julia.Lawall@inria.fr>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        alsa-devel@alsa-project.org,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Olivier Moysan <olivier.moysan@st.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: stm32: sai: Add missing cleanup" to the asoc tree
+In-Reply-To:  <1586099028-5104-1-git-send-email-Julia.Lawall@inria.fr>
+Message-Id:  <applied-1586099028-5104-1-git-send-email-Julia.Lawall@inria.fr>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+The patch
 
->> On Apr 6, 2020, at 21:24, Kalle Valo <kvalo@codeaurora.org> wrote:
->> 
->> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
->> 
->>>> On Apr 6, 2020, at 20:17, Kalle Valo <kvalo@codeaurora.org> wrote:
->>>> 
->>>> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
->>>> 
->>>>> --- a/drivers/net/wireless/realtek/rtw88/hci.h
->>>>> +++ b/drivers/net/wireless/realtek/rtw88/hci.h
->>>>> @@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32
->>>>> addr, u32 mask, u8 data)
->>>>> 	rtw_write8(rtwdev, addr, set);
->>>>> }
->>>>> 
->>>>> +#define rr8(addr)      rtw_read8(rtwdev, addr)
->>>>> +#define rr16(addr)     rtw_read16(rtwdev, addr)
->>>>> +#define rr32(addr)     rtw_read32(rtwdev, addr)
->>>> 
->>>> For me these macros reduce code readability, not improve anything. They
->>>> hide the use of rtwdev variable, which is evil, and a name like rr8() is
->>>> just way too vague. Please keep the original function names as is.
->>> 
->>> The inspiration is from another driver.
->>> readx_poll_timeout macro only takes one argument for the op.
->>> Some other drivers have their own poll_timeout implementation,
->>> and I guess it makes sense to make one specific for rtw88.
->> 
->> I'm not even understanding the problem you are tying to fix with these
->> macros. The upstream philosopyhy is to have the source code readable and
->> maintainable, not to use minimal number of characters. There's a reason
->> why we don't name our functions a(), b(), c() and so on.
->
-> The current h2c polling doesn't have delay between each interval, so
-> the polling is too fast and the following logic considers it's a
-> timeout.
-> The readx_poll_timeout() macro provides a generic mechanism to setup
-> an interval delay and timeout which is what we need here.
-> However readx_poll_timeout only accepts one parameter which usually is
-> memory address, while we need to pass both rtwdev and address.
->
-> So if hiding rtwdev is evil, we can roll our own variant of
-> readx_poll_timeout() to make the polling readable.
+   ASoC: stm32: sai: Add missing cleanup
 
-Can't you do:
+has been applied to the asoc tree at
 
-ret = read_poll_timeout(rtw_read8, box_state,
-                        !((box_state >> box) & 0x1), 100,
-                        3000, false, rtw_dev, REG_HMETFR);
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-No ugly macros needed and it should function the same. But I did not
-test this in any way, so no idea if it even compiles.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 7506baeed8d05fc164254c64af14cfed2ac14446 Mon Sep 17 00:00:00 2001
+From: Julia Lawall <Julia.Lawall@inria.fr>
+Date: Sun, 5 Apr 2020 17:03:48 +0200
+Subject: [PATCH] ASoC: stm32: sai: Add missing cleanup
+
+The commit 0d6defc7e0e4 ("ASoC: stm32: sai: manage rebind issue")
+converts some function calls to their non-devm equivalents.  The
+appropriate cleanup code was added to the remove function, but not
+to the probe function.  Add a call to snd_dmaengine_pcm_unregister
+to compensate for the call to snd_dmaengine_pcm_register in case
+of subsequent failure.
+
+Fixes: commit 0d6defc7e0e4 ("ASoC: stm32: sai: manage rebind issue")
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+
+Acked-by: Olivier Moysan <olivier.moysan@st.com>
+Link: https://lore.kernel.org/r/1586099028-5104-1-git-send-email-Julia.Lawall@inria.fr
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/stm/stm32_sai_sub.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 2bd280c01c33..0d0c9afd8791 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -1556,8 +1556,10 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
+ 
+ 	ret = snd_soc_register_component(&pdev->dev, &stm32_component,
+ 					 &sai->cpu_dai_drv, 1);
+-	if (ret)
++	if (ret) {
++		snd_dmaengine_pcm_unregister(&pdev->dev);
+ 		return ret;
++	}
+ 
+ 	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
+ 		conf = &stm32_sai_pcm_config_spdif;
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.20.1
+
