@@ -2,136 +2,75 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F549C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58383C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0670C22450
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:59:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586192391;
-	bh=BvXBikF5zktNf7QS73awek+bnt1KyWnIJgoxiHrD7qg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sNtNctWNBZHBmI+GNbmNufWTtAs4iyR85cdHS8QL2L17G1R+rruct+Eg4aF1o/cl6
-	 s+ggPOozlDiU20S1R0fKdOGDXu0fevmfziNous4fY7Uy4198RxHZloyttdmk9N/Nnj
-	 0h+QpetDT1a0DoaZZuUPNzay5mo5Sj3gkwifCMek=
+	by mail.kernel.org (Postfix) with ESMTP id 3066A249B2
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729721AbgDFQ7u (ORCPT
+        id S1729664AbgDFRB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:59:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbgDFQ7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:59:50 -0400
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EBD7224F9;
-        Mon,  6 Apr 2020 16:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586192388;
-        bh=BvXBikF5zktNf7QS73awek+bnt1KyWnIJgoxiHrD7qg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bvojjPgqEM28uYRBkGHErCClmCMsQ2DiE+7Pi978RWpcDGKOVIrwVbaYQnnmWQJZ8
-         dnDWvM7McPg2QPRxpWyQ5OArkZ93zjd5mH7FNw4uKhTsIrpgRtvQXtPE3T2Gt9Pf9k
-         a3AG6dqPpdZOyilBFQm1l+RGnL+1tLbn0SOHNFlU=
-Received: by mail-il1-f181.google.com with SMTP id k29so192672ilg.0;
-        Mon, 06 Apr 2020 09:59:48 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZNSgvfqr249o2Tc+ThHUN4qFnp+zpKMcXCEIGtOoryEAVj+Puy
-        VhmqdhUGwd46mSj9cCnEIwG6WLuSEdHS33Qj7RE=
-X-Google-Smtp-Source: APiQypKa8x2BAEQEzrkycsQqnL3eJ2Mkoh/RIYjWlV17hdjuinwh7FaM5x2U8se97tSF4XGMVvH6B1PrNnc7edkk5oM=
-X-Received: by 2002:a92:443:: with SMTP id 64mr253419ile.258.1586192387909;
- Mon, 06 Apr 2020 09:59:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
- <20200406035110.GA3241052@rani.riverdale.lan> <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
- <20200406084738.GA2520@zn.tnic> <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
- <20200406112042.GC2520@zn.tnic> <20200406132215.GA113388@rani.riverdale.lan>
- <CAMj1kXG+34-bK1XuxX5VopkRt1SV1ewUAEmif+aQj5cJQ=9vbA@mail.gmail.com>
- <20200406160148.GB113388@rani.riverdale.lan> <CAMj1kXFKDWB9n0kWhXHLH0XP0O1v_0b=bFJad=kBvx2qVxqDcQ@mail.gmail.com>
- <20200406165243.GA303819@rani.riverdale.lan>
-In-Reply-To: <20200406165243.GA303819@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 6 Apr 2020 18:59:36 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
-Message-ID: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
-        hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Apr 2020 13:01:28 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:57154 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbgDFRB2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:01:28 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1B00215D9F72B;
+        Mon,  6 Apr 2020 10:01:27 -0700 (PDT)
+Date:   Mon, 06 Apr 2020 10:01:23 -0700 (PDT)
+Message-Id: <20200406.100123.2069151116269746360.davem@davemloft.net>
+To:     will@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, kernel-team@android.com, ast@kernel.org,
+        daniel@iogearbox.net, edumazet@google.com, jasowang@redhat.com
+Subject: Re: [PATCH] tun: Don't put_page() for all negative return values
+ from XDP program
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200403151321.20166-1-will@kernel.org>
+References: <20200403151321.20166-1-will@kernel.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 06 Apr 2020 10:01:27 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 18:52, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Mon, Apr 06, 2020 at 06:22:33PM +0200, Ard Biesheuvel wrote:
-> >
-> > > We could just pull the stub's bss section all into data with objcopy
-> > > similar to what ARM64 does [1]? i.e. rename .bss to .bss.efistub and
-> > > then pull that into .data in the linker script for the compressed
-> > > kernel?
-> > >
-> >
-> > I don't follow. I'm not aware of arm64 doing anything out of the
-> > ordinary with .bss? Note that arm64 does not have a separate
-> > decompressor, so the EFI stub is part of the kernel proper. This is
-> > why sections are renamed to start with .init
->
-> ARM64 renames the stub sections prefixing them with .init, and that
-> includes .bss. The ARM64 linker script then puts .init.bss into the
-> .init.data section. So I was suggesting doing something similar with the
-> x86 stub, renaming .bss to .bss.efistub, and then putting that into
-> .data via linker script.
->
+From: Will Deacon <will@kernel.org>
+Date: Fri,  3 Apr 2020 16:13:21 +0100
 
-OK, I see what you mean now. IIRC, putting that into .init.data was
-simply because there was no way to selectively prefix sections, and
-leave .bss alone.
+> When an XDP program is installed, tun_build_skb() grabs a reference to
+> the current page fragment page if the program returns XDP_REDIRECT or
+> XDP_TX. However, since tun_xdp_act() passes through negative return
+> values from the XDP program, it is possible to trigger the error path by
+> mistake and accidentally drop a reference to the fragments page without
+> taking one, leading to a spurious free. This is believed to be the cause
+> of some KASAN use-after-free reports from syzbot [1], although without a
+> reproducer it is not possible to confirm whether this patch fixes the
+> problem.
+> 
+> Ensure that we only drop a reference to the fragments page if the XDP
+> transmit or redirect operations actually fail.
+> 
+> [1] https://syzkaller.appspot.com/bug?id=e76a6af1be4acd727ff6bbca669833f98cbf5d95
+> 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> CC: Eric Dumazet <edumazet@google.com>
+> Acked-by: Jason Wang <jasowang@redhat.com>
+> Fixes: 8ae1aff0b331 ("tuntap: split out XDP logic")
+> Signed-off-by: Will Deacon <will@kernel.org>
 
-But I guess we can combine all these different histories and
-rationales into one coherent way of managing the stub's .bss.
-
-
-> Anyway, I'll do the section annotation for now as that will be less
-> churn and we can revisit this after that.
->
-> >
-> > > There is also this scary looking comment in gnu-efi's linker script:
-> > >         /* the EFI loader doesn't seem to like a .bss section, so we stick
-> > >            it all into .data: */
-> > > I don't know what the history of that is.
-> > >
-> >
-> > I don't remember, to be honest, but I'm pretty sure I copy-pasted that
-> > from elsewhere at the time.
-> >
-> > > [1] As an aside, why doesn't ARM do this as well rather than using the
-> > > section(.data) annotation?
-> > >
-> >
-> > The ARM decompressor has this hideous hack, where text [and rodata]
-> > executes straight from flash, and BSS is relocated into DRAM. In order
-> > for this to work, it actually *requires* GOT indirections for BSS
-> > items, to ensure that all BSS references use absolute addresses, which
-> > can be relocated independently from the rest of the kernel image. This
-> > is the reason ARM does not permit a .data section in the decompressor.
-> > However, the EFI stub does not support execute in place from flash,
-> > and so we can permit a .data section there. At the same time, we don't
-> > support GOT indirections in the EFI stub, so we cannot use the BSS
-> > section. So instead, we just put the few BSS pieces we have into .data
-> > instead.
-> >
->
-> I see, thanks.
+Applied and queued up for -stable, thank you.
