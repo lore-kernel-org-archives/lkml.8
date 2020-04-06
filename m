@@ -1,196 +1,125 @@
-Return-Path: <SRS0=MDzn=5V=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C2FC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 23:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43818C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 00:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D362020678
-	for <linux-kernel@archiver.kernel.org>; Sun,  5 Apr 2020 23:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199502072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 00:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmbDALE4"
+	dkim=pass (1024-bit key) header.d=prok.pw header.i=@prok.pw header.b="HJBWkyHI";
+	dkim=pass (1024-bit key) header.d=prok.pw header.i=@prok.pw header.b="HJBWkyHI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgDEX47 (ORCPT
+        id S1727903AbgDFABB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 19:56:59 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36283 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgDEX47 (ORCPT
+        Sun, 5 Apr 2020 20:01:01 -0400
+Received: from fallback12.mail.ru ([94.100.179.29]:46780 "EHLO
+        fallback12.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgDFABB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 19:56:59 -0400
-Received: by mail-lj1-f195.google.com with SMTP id b1so12796938ljp.3;
-        Sun, 05 Apr 2020 16:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PvyePjmdFsb80vPIxU/EKPsM4FhvVigmHotisyKmhE8=;
-        b=PmbDALE4a+kXOQCpCbV8xKwPo2gT0aaN/kgpqWI1qX10JXW454aLV3w4b0bd7fEh5n
-         jYmo7JTd3Is80bW0uenH5DpdEvSfR7vC4Z1vhuZnZwVelhZDIQMnvXABWYKr+lD3nbjc
-         kca+YEOryJ6k2GQ/JT2sdeVhPR28EAKJ8K5qnoJYHgdPQ48Tz0YR5lhNEsV74nOdM6SN
-         SaOEIy663hXvDOu1eFwKX+LWZGIAk9WiZ4ypkamUyqNaSuk2i/DvBYbGWbaKosKJVxRV
-         ywxMn/umv2l4/g2pwFHANODsdXzEkTJ9GRhngI46qnyi2n6glv6rHPHCPwS3nzJnu+sW
-         VbHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PvyePjmdFsb80vPIxU/EKPsM4FhvVigmHotisyKmhE8=;
-        b=AvNq6/7kkAvNVesSchFVIQR8RTPoqvj1mTxZf1AL3d8OnYy3/oj8PJ73XSq1WK6TZ5
-         Xk9HrKcBPTR2yD4qTkSfb9SvNVqb/zpMshNAzeYPgg4P2IpY0bB9iKXRsd8SBBL1fy99
-         cXoY3fRLn/BlZK4XIV6bHepAvnEB530PK7A6KVr6nN5DFN5gKnZsXFS5RkqeP0hbt5fm
-         IqQlDNDbNHOHBHzfyH6/S5JikqygtBEwcy+rVOQU27ABYZFnhuCK5ErwOhhDaX54O8OD
-         wVsP236otU4T2WXGV65YBu9S/l4H3r7BiVgg4dsshs0esGuyHJNnrnNwkDwfb7NbM6IM
-         ctoA==
-X-Gm-Message-State: AGi0Puavc86LzIL8CZm7Sr6zi+gbVH94VRBGBAEg3fRoglvlFuNPecM4
-        z9ys0N/v9FySQcuUiYU5Rxo=
-X-Google-Smtp-Source: APiQypK/gYtFicmQgWDmZcVip9T3onP5to0atMDXf8sjs+oYS7hhA/ZHRMlV8i0NvKjbg7SdDGP4/w==
-X-Received: by 2002:a2e:9c9:: with SMTP id 192mr9713743ljj.77.1586131016155;
-        Sun, 05 Apr 2020 16:56:56 -0700 (PDT)
-Received: from localhost.localdomain ([5.139.61.144])
-        by smtp.googlemail.com with ESMTPSA id d21sm8980841ljc.49.2020.04.05.16.56.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 16:56:55 -0700 (PDT)
-From:   Artem Borisov <dedsa2002@gmail.com>
-Cc:     jikos@kernel.org, Artem Borisov <dedsa2002@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] HID: alps: Refactor axis resolution logic
-Date:   Mon,  6 Apr 2020 03:55:16 +0400
-Message-Id: <20200405235517.18203-2-dedsa2002@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200405235517.18203-1-dedsa2002@gmail.com>
-References: <20200405235517.18203-1-dedsa2002@gmail.com>
+        Sun, 5 Apr 2020 20:01:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=prok.pw; s=mailru;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID; bh=+KbMK29ZT//E9SHitadTUiyxzqlP/0/hbxXj33EV400=;
+        b=HJBWkyHIFPfbRH5Dt7DvYru+7ICM+O7sbrZjL5YHjzpx2P523AcWdumPJFI3wKeJHVKOajddHiXpA8T4fAFagbPEb8Z30oaZya6oCvx77tbW4d93BX5hREI0prgDyJDeHfqud3TCrfC3hLZZ6LrDI8nmwtOj9ojLnPeGxfzuEPM=;
+Received: from [10.161.64.53] (port=47330 helo=smtp45.i.mail.ru)
+        by fallback12.m.smailru.net with esmtp (envelope-from <me@prok.pw>)
+        id 1jLFCC-0004c6-TB; Mon, 06 Apr 2020 03:00:57 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=prok.pw; s=mailru;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID; bh=+KbMK29ZT//E9SHitadTUiyxzqlP/0/hbxXj33EV400=;
+        b=HJBWkyHIFPfbRH5Dt7DvYru+7ICM+O7sbrZjL5YHjzpx2P523AcWdumPJFI3wKeJHVKOajddHiXpA8T4fAFagbPEb8Z30oaZya6oCvx77tbW4d93BX5hREI0prgDyJDeHfqud3TCrfC3hLZZ6LrDI8nmwtOj9ojLnPeGxfzuEPM=;
+Received: by smtp45.i.mail.ru with esmtpa (envelope-from <me@prok.pw>)
+        id 1jLFBz-0000LH-0A; Mon, 06 Apr 2020 03:00:44 +0300
+Message-ID: <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
+ bzImage
+From:   Sergey Shatunov <me@prok.pw>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, tglx@linutronix.de, x86@kernel.org,
+        linux-efi@vger.kernel.org
+Date:   Mon, 06 Apr 2020 07:00:39 +0700
+In-Reply-To: <20200405231845.GA3095309@rani.riverdale.lan>
+References: <20200109150218.16544-1-nivedita@alum.mit.edu>
+         <20200405154245.11972-1-me@prok.pw>
+         <20200405231845.GA3095309@rani.riverdale.lan>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 7bit
+X-7564579A: B8F34718100C35BD
+X-77F55803: 0A44E481635329DB0E1AA8A03B392317D32E5E48865217365060145B739F5F5C37D2C72149323728F688BCB05C26794D64D80AAD42192768407EC83892A14282A717FCED1365A4B59525BA8E2B2C40BE
+X-7FA49CB5: 0D63561A33F958A54AE798525227D406AC6237357C51EF584BEFFA12B7773D298941B15DA834481FA18204E546F3947C2FFDA4F57982C5F4F6B57BC7E64490618DEB871D839B7333395957E7521B51C2545D4CF71C94A83E9FA2833FD35BB23D27C277FBC8AE2E8BF1175FABE1C0F9B6A471835C12D1D977C4224003CC8364767815B9869FA544D8D32BA5DBAC0009BE9E8FC8737B5C224979A692957AEF9EBE76E601842F6C81A12EF20D2F80756B5F012D6517FE479FCD76E601842F6C81A127C277FBC8AE2E8BE3F710C1C8B542CF3AA81AA40904B5D99449624AB7ADAF3726B9191E2D567F0E725E5C173C3A84C360781E301B93023135872C767BF85DA2F004C906525384306FED454B719173D6462275124DF8B9C9DE2850DD75B2526BE5BFE6E7EFDEDCD789D4C264860C145E
+X-D57D3AED: Y8kq8+OzVozcFQziTi/Zi1xwo7H2ZNxGP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSrqfUrc6JdFWbRFuIOw5Q1i
+X-Mailru-Sender: C70B145DBB19DC3370B3FB291950C1B51DF7D989C85C045CF3B3C80E0EC4B0E77962F9E9328436E18BA0E2A9D6159BD266FEC6BF5C9C28D9A91CF0FA91B32267255DC5169939796B8DAAFE1477B51D223453F38A29522196
+X-Mras: Ok
+X-7564579A: EEAE043A70213CC8
+X-77F55803: 669901E4625912A97F9F52485CB584D7271FD7DF62800FDC4FDA42786C758E5644D14FAD8B0A7E49E8B94918EE1A0A8284873159AE7BD3C6
+X-7FA49CB5: 0D63561A33F958A5F5E58AAAA6346AFE85FD72E8A4C480771C438537F267035D8941B15DA834481FA18204E546F3947C2FFDA4F57982C5F4F6B57BC7E64490618DEB871D839B7333395957E7521B51C2545D4CF71C94A83E9FA2833FD35BB23D27C277FBC8AE2E8BF1175FABE1C0F9B6A471835C12D1D977C4224003CC8364767815B9869FA544D8D32BA5DBAC0009BE9E8FC8737B5C224979A692957AEF9EBE76E601842F6C81A12EF20D2F80756B5F012D6517FE479FCD76E601842F6C81A127C277FBC8AE2E8BE3F710C1C8B542CF3AA81AA40904B5D99449624AB7ADAF3726B9191E2D567F0E725E5C173C3A84C360781E301B93023135872C767BF85DA2F004C906525384306FED454B719173D6462275124DF8B9C9DE2850DD75B2526BE5BFE6E7EFDEDCD789D4C264860C145E
+X-D57D3AED: Y8kq8+OzVozcFQziTi/Zi1xwo7H2ZNxGP5qz8aO2mjTJzjHGC4ogvVuzB3zfVUBtENeZ6b5av1fnCBE34JUDkWdM6QxE+Ga5d8voMtmXfSqLAZGOJJVRLZzUdJfQ/bjz
+X-Mailru-MI: 800
+X-Mailru-Sender: A5480F10D64C900521F65ACE11A97E3D0B57720138EF7FA944D14FAD8B0A7E4984876E3DC5E244DF8BA0E2A9D6159BD266FEC6BF5C9C28D9A91CF0FA91B32267255DC5169939796B8DAAFE1477B51D223453F38A29522196
+X-Mras: Ok
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AUI1657 doesn't follow the same logic for resolution calculation, since
-the resulting values are incorrect. Instead, it reports the actual
-resolution values in place of the pitch ones.
-While we're at it, also refactor the whole resolution logic to make it more
-generic and sensible for multiple device support.
+On Sun, 2020-04-05 at 19:18 -0400, Arvind Sankar wrote:
+> I'm not familiar with systemd-boot: when you say systemd-boot stub,
+> is
+> that something different from the kernel's EFI_STUB option? Or is it
+> just a kernel with EFI_STUB enabled and with builtin initramfs +
+> builtin
+> cmdline?
+Basicaly systemd-boot stub is efi application with packed EFI_STUB-
+enabled kernel, initrd and cmdline into single file. Source can be
+found here: 
+https://github.com/systemd/systemd/blob/master/src/boot/efi/stub.c
 
-Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
----
- drivers/hid/hid-alps.c | 41 +++++++++++++++++++++++++----------------
- 1 file changed, 25 insertions(+), 16 deletions(-)
+It doesn't do anything unusual, just extracting data from sections and
+calling efi handover.
 
-diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
-index c2a2bd528890..494c08cca645 100644
---- a/drivers/hid/hid-alps.c
-+++ b/drivers/hid/hid-alps.c
-@@ -83,8 +83,8 @@ enum dev_num {
-  * @max_fingers: total number of fingers
-  * @has_sp: boolean of sp existense
-  * @sp_btn_info: button information
-- * @x_active_len_mm: active area length of X (mm)
-- * @y_active_len_mm: active area length of Y (mm)
-+ * @x_res: resolution of X
-+ * @y_res: resolution of Y
-  * @x_max: maximum x coordinate value
-  * @y_max: maximum y coordinate value
-  * @x_min: minimum x coordinate value
-@@ -100,9 +100,10 @@ struct alps_dev {
- 	enum dev_num dev_type;
- 	u8  max_fingers;
- 	u8  has_sp;
-+	u8  no_pitch;
- 	u8	sp_btn_info;
--	u32	x_active_len_mm;
--	u32	y_active_len_mm;
-+	u32	x_res;
-+	u32	y_res;
- 	u32	x_max;
- 	u32	y_max;
- 	u32	x_min;
-@@ -550,10 +551,6 @@ static int u1_init(struct hid_device *hdev, struct alps_dev *pri_data)
- 		dev_err(&hdev->dev, "failed U1_RESO_DWN_ABS (%d)\n", ret);
- 		goto exit;
- 	}
--	pri_data->x_active_len_mm =
--		(pitch_x * (sen_line_num_x - 1)) / 10;
--	pri_data->y_active_len_mm =
--		(pitch_y * (sen_line_num_y - 1)) / 10;
- 
- 	pri_data->x_max =
- 		(resolution << 2) * (sen_line_num_x - 1);
-@@ -562,6 +559,18 @@ static int u1_init(struct hid_device *hdev, struct alps_dev *pri_data)
- 		(resolution << 2) * (sen_line_num_y - 1);
- 	pri_data->y_min = 1;
- 
-+	if (pri_data->no_pitch) {
-+		pri_data->x_res = pitch_x;
-+		pri_data->y_res = pitch_y;
-+	} else {
-+		pri_data->x_res =
-+			(pri_data->x_max - 1) /
-+			((pitch_x * (sen_line_num_x - 1)) / 10);
-+		pri_data->y_res =
-+			(pri_data->y_max - 1) /
-+			((pitch_y * (sen_line_num_y - 1)) / 10);
-+	}
-+
- 	ret = u1_read_write_register(hdev, ADDRESS_U1_PAD_BTN,
- 			&tmp, 0, true);
- 	if (ret < 0) {
-@@ -622,7 +631,7 @@ static int T4_init(struct hid_device *hdev, struct alps_dev *pri_data)
- 	pri_data->x_min = T4_COUNT_PER_ELECTRODE;
- 	pri_data->y_max = sen_line_num_y * T4_COUNT_PER_ELECTRODE;
- 	pri_data->y_min = T4_COUNT_PER_ELECTRODE;
--	pri_data->x_active_len_mm = pri_data->y_active_len_mm = 0;
-+	pri_data->x_res = pri_data->y_res = 0;
- 	pri_data->btn_cnt = 1;
- 
- 	ret = t4_read_write_register(hdev, PRM_SYS_CONFIG_1, &tmp, 0, true);
-@@ -675,7 +684,7 @@ static int alps_input_configured(struct hid_device *hdev, struct hid_input *hi)
- 	struct alps_dev *data = hid_get_drvdata(hdev);
- 	struct input_dev *input = hi->input, *input2;
- 	int ret;
--	int res_x, res_y, i;
-+	int i;
- 
- 	data->input = input;
- 
-@@ -706,12 +715,9 @@ static int alps_input_configured(struct hid_device *hdev, struct hid_input *hi)
- 	input_set_abs_params(input, ABS_MT_POSITION_Y,
- 						data->y_min, data->y_max, 0, 0);
- 
--	if (data->x_active_len_mm && data->y_active_len_mm) {
--		res_x = (data->x_max - 1) / data->x_active_len_mm;
--		res_y = (data->y_max - 1) / data->y_active_len_mm;
--
--		input_abs_set_res(input, ABS_MT_POSITION_X, res_x);
--		input_abs_set_res(input, ABS_MT_POSITION_Y, res_y);
-+	if (data->x_res && data->y_res) {
-+		input_abs_set_res(input, ABS_MT_POSITION_X, data->x_res);
-+		input_abs_set_res(input, ABS_MT_POSITION_Y, data->y_res);
- 	}
- 
- 	input_set_abs_params(input, ABS_MT_PRESSURE, 0, 64, 0, 0);
-@@ -802,8 +808,11 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 		break;
- 	case HID_DEVICE_ID_ALPS_U1_DUAL:
- 	case HID_DEVICE_ID_ALPS_U1:
-+		data->dev_type = U1;
-+		break;
- 	case HID_DEVICE_ID_ALPS_1657:
- 		data->dev_type = U1;
-+		data->no_pitch = 1;
- 		break;
- 	default:
- 		data->dev_type = UNKNOWN;
--- 
-2.26.0
+Final image created by objcopy'ing precompiled stub and adding sections with that stuff:
+
+    objcopy \
+        --add-section .osrel=os_release --change-section-vma
+'.osrel=0x20000' \
+        --add-section .cmdline=cmdline --change-section-vma
+'.cmdline=0x30000' \
+        --add-section .linux=vmlinuz --change-section-vma
+'.linux=0x2000000' \
+        --add-section .initrd=initrd --change-section-vma
+'.initrd=0x3000000' \
+        /usr/lib/systemd/boot/efi/linuxx64.efi.stub output.efi
+
+> The first error message you mention should be from systemd-boot after
+> the kernel exits with an EFI_BUFFER_TOO_SMALL error status. The
+> second
+> one -- is that 'exit_boot() failed' rather than 'exit_efi() failed'?
+> I
+> can't find the latter string in the tree.
+Yeah, probably it's exit_boot()
+
+> Can you also specify a commit tag that is broken + works with this
+> patch
+> reverted, just to make sure we're looking at the same code?
+I'm using latest master branch from Torvalds tree, so latest commit
+(for now it's a10c9c710f9ecea87b9f4bbb837467893b4bef01) broken, but
+with 3ee372ccce4d4e7c610748d0583979d3ed3a0cf4 reverted works.
+
+Not sure
+what I should specify as broken except the
+3ee372ccce4d4e7c610748d0583979d3ed3a0cf4 itself.
+But as I told 'Buffer
+Too Small' changed to 'exit_boot() failed' couple times during
+bisecting (it was closely around that commit, probably in commits about
+.eh_frame section), but I don't remember exactly commits when this
+happened. I could do one more bisecting with more details about each
+step if you wish.
 
