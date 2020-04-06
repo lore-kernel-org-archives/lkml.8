@@ -2,58 +2,79 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF36EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A5AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861A02054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B990120CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:44:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pQlVg50l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgDFMoV (ORCPT
+        id S1728091AbgDFMo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:44:21 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:57804 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727993AbgDFMoV (ORCPT
+        Mon, 6 Apr 2020 08:44:57 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25527 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728052AbgDFMo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:44:21 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.93)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1jLR6j-009kcZ-Dx; Mon, 06 Apr 2020 14:44:05 +0200
-Message-ID: <f2a393a2f01c93776446c83e345a102a780cfe88.camel@sipsolutions.net>
-Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Sumit Garg <sumit.garg@linaro.org>, linux-wireless@vger.kernel.org
-Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        Mon, 6 Apr 2020 08:44:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586177095; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=ZW/Dpmb6IvXDVJ1O0supB1w+AoBm5NlO1AUtVw5L2pE=; b=pQlVg50l1fTm5A9nfHolE+iV8X8yt+s5Ap3rImbPzK4wE7e1wu7jUjnAB7/NLSWfqhhmDkEH
+ J/BlSGrDxzJbUDtPWxVP/t99OPLtOyeGgOu9ehHMXadEMtd83Lzdx4eOIFDP2S+wPdLn6cYp
+ HDrwMM9dJtFDJEn59ihO1FFLXk4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b2446.7f5dc860cb90-smtp-out-n01;
+ Mon, 06 Apr 2020 12:44:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 990AEC44788; Mon,  6 Apr 2020 12:44:53 +0000 (UTC)
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 61ACBC433F2;
+        Mon,  6 Apr 2020 12:44:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 61ACBC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     linux-wireless@vger.kernel.org, johannes@sipsolutions.net,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, matthias.schoepfer@ithinx.io,
         Philipp.Berg@liebherr.com, Michael.Weitner@liebherr.com,
         daniel.thompson@linaro.org, loic.poulain@linaro.org,
         stable@vger.kernel.org
-Date:   Mon, 06 Apr 2020 14:44:02 +0200
-In-Reply-To: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org> (sfid-20200406_142251_569735_E1B08414)
+Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
 References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
-         (sfid-20200406_142251_569735_E1B08414)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+Date:   Mon, 06 Apr 2020 15:44:47 +0300
+In-Reply-To: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org> (Sumit
+        Garg's message of "Mon, 6 Apr 2020 17:51:17 +0530")
+Message-ID: <87ftdgokao.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-06 at 17:51 +0530, Sumit Garg wrote:
+Sumit Garg <sumit.garg@linaro.org> writes:
+
 > A race condition leading to a kernel crash is observed during invocation
 > of ieee80211_register_hw() on a dragonboard410c device having wcn36xx
 > driver built as a loadable module along with a wifi manager in user-space
 > waiting for a wifi device (wlanX) to be active.
-> 
+>
 > Sequence diagram for a particular kernel crash scenario:
-> 
+>
 >     user-space  ieee80211_register_hw()  RX IRQ
 >     +++++++++++++++++++++++++++++++++++++++++++++
 >        |                    |             |
@@ -70,16 +91,12 @@ On Mon, 2020-04-06 at 17:51 +0530, Sumit Garg wrote:
 >        |                    |             |
 >        |            ieee80211_if_add()    |
 >        |                    |             |
-> 
+>
 > As evident from above sequence diagram, this race condition isn't specific
 > to a particular wifi driver but rather the initialization sequence in
-> ieee80211_register_hw() needs to be fixed. 
-
-Indeed, oops.
-
-> So re-order the initialization
+> ieee80211_register_hw() needs to be fixed. So re-order the initialization
 > sequence and the updated sequence diagram would look like:
-> 
+>
 >     user-space  ieee80211_register_hw()  RX IRQ
 >     +++++++++++++++++++++++++++++++++++++++++++++
 >        |                    |             |
@@ -93,30 +110,18 @@ Indeed, oops.
 >        |                    |             |
 >        |            ieee80211_if_add()    |
 >        |                    |             |
+>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-Makes sense.
+I have understood that no frames should be received until mac80211 calls
+struct ieee80211_ops::start:
 
-> @@ -1254,6 +1250,14 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
->  		local->sband_allocated |= BIT(band);
->  	}
->  
-> +	rtnl_unlock();
-> +
-> +	result = wiphy_register(local->hw.wiphy);
-> +	if (result < 0)
-> +		goto fail_wiphy_register;
-> +
-> +	rtnl_lock();
+ * @start: Called before the first netdevice attached to the hardware
+ *         is enabled. This should turn on the hardware and must turn on
+ *         frame reception (for possibly enabled monitor interfaces.)
+   
+So I would claim that this is a bug in wcn36xx.
 
-I'm a bit worried about this unlock/relock here though.
-
-I think we only need the RTNL for the call to
-ieee80211_init_rate_ctrl_alg() and then later ieee80211_if_add(), so
-perhaps we can move that a little closer?
-
-All the stuff between is really just setting up local stuff, so doesn't
-really need to worry?
-
-johannes
-
-
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
