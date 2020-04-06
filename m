@@ -4,132 +4,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1B0C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CB6C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4482491D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29A5224922
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgDFQGJ (ORCPT
+        id S1729379AbgDFQGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:06:09 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2634 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728878AbgDFQGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:06:09 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 9AEACEE0DA8BD16DC166;
-        Mon,  6 Apr 2020 17:06:06 +0100 (IST)
-Received: from localhost (10.47.92.64) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 6 Apr 2020
- 17:06:05 +0100
-Date:   Mon, 6 Apr 2020 17:05:54 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-CC:     Jonathan Cameron <jic23@kernel.org>, <agross@kernel.org>,
-        <bjorn.andersson@linaro.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mka@chromium.org>,
-        <linus.walleij@linaro.org>, <sboyd@codeaurora.org>,
-        <smohanad@codeaurora.org>, <kgunda@codeaurora.org>,
-        <aghayal@codeaurora.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        "Lars-Peter Clausen" <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-iio@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-msm-owner@vger.kernel.org>
-Subject: Re: [PATCH 2/3] iio: adc: Add PMIC7 ADC bindings
-Message-ID: <20200406170554.00003887@Huawei.com>
-In-Reply-To: <fe8056c5-9480-a9a3-9626-5ebab8031b08@codeaurora.org>
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
-        <1585064650-16235-3-git-send-email-jprakash@codeaurora.org>
-        <20200328165410.7db48818@archlinux>
-        <fe8056c5-9480-a9a3-9626-5ebab8031b08@codeaurora.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 6 Apr 2020 12:06:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24896 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729367AbgDFQGP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:06:15 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036G4G5x046063
+        for <linux-kernel@vger.kernel.org>; Mon, 6 Apr 2020 12:06:14 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3082mpjn3y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 12:06:13 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Mon, 6 Apr 2020 17:05:46 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 Apr 2020 17:05:44 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 036G68p213238324
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Apr 2020 16:06:08 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A55BA4054;
+        Mon,  6 Apr 2020 16:06:08 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD1EEA4060;
+        Mon,  6 Apr 2020 16:06:07 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.23.63])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Apr 2020 16:06:07 +0000 (GMT)
+Subject: Re: [PATCH v2 5/5] KVM: s390: vsie: gmap_table_walk() simplifications
+To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+References: <20200403153050.20569-1-david@redhat.com>
+ <20200403153050.20569-6-david@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
+ J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
+ CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
+ 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
+ 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
+ +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
+ T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
+ OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
+ /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
+ IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
+ Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
+ b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
+ gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
+ kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
+ NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
+ hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
+ QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
+ OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
+ tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
+ WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
+ DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
+ OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
+ t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
+ PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
+ Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
+ 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
+ PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
+ YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
+ REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
+ vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
+ DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
+ D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
+ 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
+ 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
+ v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
+ 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
+ JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
+ cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
+ i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
+ jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
+ ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Mon, 6 Apr 2020 18:06:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20200403153050.20569-6-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.92.64]
-X-ClientProxiedBy: lhreml706-chm.china.huawei.com (10.201.108.55) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+x-cbid: 20040616-0020-0000-0000-000003C2BC54
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040616-0021-0000-0000-0000221B764B
+Message-Id: <408c6d94-0753-7ccb-a9d8-5018a84499ee@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_08:2020-04-06,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ spamscore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015
+ suspectscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004060128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 17:15:21 +0530
-Jishnu Prakash <jprakash@codeaurora.org> wrote:
 
-> Hi Jonathan,
+
+On 03.04.20 17:30, David Hildenbrand wrote:
+> Let's use asce_type where applicable. Also, simplify our sanity check for
+> valid table levels and convert it into a WARN_ON_ONCE(). Check if we even
+> have a valid gmap shadow as the very first step.
 > 
-> On 3/28/2020 10:24 PM, Jonathan Cameron wrote:
-> > On Tue, 24 Mar 2020 21:14:09 +0530
-> > Jishnu Prakash <jprakash@codeaurora.org> wrote:
-> >  
-> >> Add documentation for PMIC7 ADC peripheral. For PMIC7 ADC, all SW
-> >> communication to ADC goes through PMK8350, which communicates with
-> >> other PMICs through PBS.
-> >>
-> >> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
-> >> ---
-> >>   .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 28 ++++++++++++++++------
-> >>   1 file changed, 21 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> >> index 72db14c..20f010c 100644
-> >> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> >> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
-> >> @@ -13,7 +13,7 @@ maintainers:
-> >>   description: |
-> >>     SPMI PMIC voltage ADC (VADC) provides interface to clients to read
-> >>     voltage. The VADC is a 15-bit sigma-delta ADC.
-> >> -  SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
-> >> +  SPMI PMIC5/PMIC7 voltage ADC (ADC) provides interface to clients to read
-> >>     voltage. The VADC is a 16-bit sigma-delta ADC.
-> >>   
-> >>   properties:
-> >> @@ -23,6 +23,7 @@ properties:
-> >>         - qcom,spmi-adc5
-> >>         - qcom,spmi-adc-rev2
-> >>         - qcom,pms405-adc
-> >> +      - qcom,spmi-adc7
-> >>   
-> >>     reg:
-> >>       description: VADC base address in the SPMI PMIC register map
-> >> @@ -65,6 +66,8 @@ patternProperties:
-> >>           description: |
-> >>             ADC channel number.
-> >>             See include/dt-bindings/iio/qcom,spmi-vadc.h
-> >> +          For PMIC7 ADC, the channel numbers are specified separately per PMIC
-> >> +          in the PMIC-specific files in include/dt-bindings/iio/.  
-> > That makes me thing we really should have separate compatibles.  The
-> > parts clearly have differences, even if we haven't needed to use them
-> > explicitly as yet.  
-> I'm not sure what you mean by this. We have added a new compatible 
-> property "qcom,spmi-adc7" for PMIC7 ADC.
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-I've no idea what I meant either :)
-
-Jonathan
-> >  
-> >>   
-> >>         label:
-> >>           description: |
-> >> @@ -72,7 +75,7 @@ patternProperties:
-> >>               For thermistor inputs connected to generic AMUX or GPIO inputs
-> >>               these can vary across platform for the same pins. Hence select
-> >>               the platform schematics name for this channel. It is required
-> >> -            for "qcom,spmi-adc5" and "qcom,spmi-adc-rev2".
-> >> +            for "qcom,spmi-adc5", "qcom,spmi-adc7" and "qcom,spmi-adc-rev2".
-> >>           allOf:
-> >>             - $ref: /schemas/types.yaml#/definitions/string
-> >>   
-> >>  
-
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  arch/s390/mm/gmap.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+> index 24ef30fb0833..a2bd8d7792e9 100644
+> --- a/arch/s390/mm/gmap.c
+> +++ b/arch/s390/mm/gmap.c
+> @@ -788,19 +788,19 @@ static inline unsigned long *gmap_table_walk(struct gmap *gmap,
+>  					     unsigned long gaddr, int level)
+>  {
+>  	const int asce_type = gmap->asce & _ASCE_TYPE_MASK;
+> -	unsigned long *table;
+> +	unsigned long *table = gmap->table;
+>  
+> -	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
+> -		return NULL;
+>  	if (gmap_is_shadow(gmap) && gmap->removed)
+>  		return NULL;
+>  
+> +	if (WARN_ON_ONCE(level > (asce_type >> 2) + 1))
+> +		return NULL;
+> +
+>  	if (WARN_ON_ONCE(asce_type != _ASCE_TYPE_REGION1 &&
+>  			 gaddr & (-1UL << (31 + (asce_type >> 2) * 11))))
+>  		return NULL;
+>  
+> -	table = gmap->table;
+> -	switch (gmap->asce & _ASCE_TYPE_MASK) {
+> +	switch (asce_type) {
+>  	case _ASCE_TYPE_REGION1:
+>  		table += (gaddr & _REGION1_INDEX) >> _REGION1_SHIFT;
+>  		if (level == 4)
+> 
 
