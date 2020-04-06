@@ -2,149 +2,97 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0868C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3087EC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5E2206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D602078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbgDFLBo convert rfc822-to-8bit (ORCPT
+        id S1727193AbgDFLD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:01:44 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:60770 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgDFLBo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:01:44 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 036B1KSr8017517, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 036B1KSr8017517
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 6 Apr 2020 19:01:20 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 6 Apr 2020 19:01:20 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 6 Apr 2020 19:01:20 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
- RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
- 15.01.1779.005; Mon, 6 Apr 2020 19:01:20 +0800
-From:   Tony Chuang <yhchuang@realtek.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-CC:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:REALTEK WIRELESS DRIVER (rtw88)" 
-        <linux-wireless@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] rtw88: Add delay on polling h2c command status bit
-Thread-Topic: [PATCH] rtw88: Add delay on polling h2c command status bit
-Thread-Index: AQHWC/bdJYgYrtvTIE2p2Ip9l+r986hr7Eug
-Date:   Mon, 6 Apr 2020 11:01:20 +0000
-Message-ID: <3b815e889a934491bca23593a84532d7@realtek.com>
-References: <20200406093623.3980-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20200406093623.3980-1-kai.heng.feng@canonical.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.68.175]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 6 Apr 2020 07:03:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37606 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726883AbgDFLD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:03:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E2369AD12;
+        Mon,  6 Apr 2020 11:03:25 +0000 (UTC)
+Subject: Re: [PATCH 1/9] ARM: Remove redundant COMMON_CLK selects
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+References: <20200405025123.154688-1-sboyd@kernel.org>
+ <20200405025123.154688-2-sboyd@kernel.org>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <f3d1bf68-f40f-858d-8caf-268ad9231553@suse.de>
+Date:   Mon, 6 Apr 2020 13:03:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <20200405025123.154688-2-sboyd@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH] rtw88: Add delay on polling h2c command status bit
+Am 05.04.20 um 04:51 schrieb Stephen Boyd:
+> The mulitplatform config already selects COMMON_CLK, so selecting it
+> again is not useful. Remove these selects from ARM platforms that are
+> part of the multiplatform build.
 > 
-> On some systems we can constanly see rtw88 complains:
-> [39584.721375] rtw_pci 0000:03:00.0: failed to send h2c command
-> 
-> Increase interval of each check to wait the status bit really changes.
-> 
-> While at it, add some helpers so we can use standarized
-> readx_poll_timeout() macro.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Cc: "Andreas Färber" <afaerber@suse.de>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Alexander Shiyan <shc_work@mail.ru>
+> Cc: Lubomir Rintel <lkundrak@v3.sk>
+> Cc: <linux-arm-kernel@lists.infradead.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 > ---
->  drivers/net/wireless/realtek/rtw88/fw.c  | 12 ++++++------
->  drivers/net/wireless/realtek/rtw88/hci.h |  4 ++++
->  2 files changed, 10 insertions(+), 6 deletions(-)
+>   arch/arm/mach-actions/Kconfig  | 1 -
+>   arch/arm/mach-clps711x/Kconfig | 1 -
+>   arch/arm/mach-mmp/Kconfig      | 1 -
+>   3 files changed, 3 deletions(-)
 > 
-> diff --git a/drivers/net/wireless/realtek/rtw88/fw.c
-> b/drivers/net/wireless/realtek/rtw88/fw.c
-> index 05c430b3489c..bc9982e77524 100644
-> --- a/drivers/net/wireless/realtek/rtw88/fw.c
-> +++ b/drivers/net/wireless/realtek/rtw88/fw.c
-> @@ -2,6 +2,8 @@
->  /* Copyright(c) 2018-2019  Realtek Corporation
->   */
-> 
-> +#include <linux/iopoll.h>
-> +
->  #include "main.h"
->  #include "coex.h"
->  #include "fw.h"
-> @@ -193,8 +195,8 @@ static void rtw_fw_send_h2c_command(struct
-> rtw_dev *rtwdev,
->  	u8 box;
->  	u8 box_state;
->  	u32 box_reg, box_ex_reg;
-> -	u32 h2c_wait;
->  	int idx;
-> +	int ret;
-> 
->  	rtw_dbg(rtwdev, RTW_DBG_FW,
->  		"send H2C content %02x%02x%02x%02x %02x%02x%02x%02x\n",
-> @@ -226,12 +228,10 @@ static void rtw_fw_send_h2c_command(struct
-> rtw_dev *rtwdev,
->  		goto out;
->  	}
-> 
-> -	h2c_wait = 20;
-> -	do {
-> -		box_state = rtw_read8(rtwdev, REG_HMETFR);
-> -	} while ((box_state >> box) & 0x1 && --h2c_wait > 0);
-> +	ret = readx_poll_timeout(rr8, REG_HMETFR, box_state,
-> +				 !((box_state >> box) & 0x1), 100, 3000);
-> 
-> -	if (!h2c_wait) {
-> +	if (ret) {
->  		rtw_err(rtwdev, "failed to send h2c command\n");
->  		goto out;
->  	}
-> diff --git a/drivers/net/wireless/realtek/rtw88/hci.h
-> b/drivers/net/wireless/realtek/rtw88/hci.h
-> index 2cba327e6218..24062c7079c6 100644
-> --- a/drivers/net/wireless/realtek/rtw88/hci.h
-> +++ b/drivers/net/wireless/realtek/rtw88/hci.h
-> @@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32 addr,
-> u32 mask, u8 data)
->  	rtw_write8(rtwdev, addr, set);
->  }
-> 
-> +#define rr8(addr)      rtw_read8(rtwdev, addr)
-> +#define rr16(addr)     rtw_read16(rtwdev, addr)
-> +#define rr32(addr)     rtw_read32(rtwdev, addr)
-> +
->  static inline enum rtw_hci_type rtw_hci_type(struct rtw_dev *rtwdev)
->  {
->  	return rtwdev->hci.type;
-> --
+> diff --git a/arch/arm/mach-actions/Kconfig b/arch/arm/mach-actions/Kconfig
+> index b5e0ac965ec0..00fb4babccdd 100644
+> --- a/arch/arm/mach-actions/Kconfig
+> +++ b/arch/arm/mach-actions/Kconfig
+> @@ -7,7 +7,6 @@ menuconfig ARCH_ACTIONS
+>   	select ARM_GLOBAL_TIMER
+>   	select CACHE_L2X0
+>   	select CLKSRC_ARM_GLOBAL_TIMER_SCHED_CLOCK
+> -	select COMMON_CLK
+>   	select GENERIC_IRQ_CHIP
+>   	select HAVE_ARM_SCU if SMP
+>   	select HAVE_ARM_TWD if SMP
 
-I think the timeout is because the H2C is triggered when the lower 4 bytes are written.
-So, we probably should write h2c[4] ~ h2c[7] before h2c[0] ~ h2c[3].
+Reviewed-by: Andreas Färber <afaerber@suse.de> (Actions)
 
-But this delay still works, I think you can keep it, and reorder the h2c write sequence.
+New targets such as Realtek or Sunplus don't select it anymore, but it 
+seems we didn't clean up all the old ones yet.
 
-Yen-Hsuan
+Thanks,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
