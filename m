@@ -2,136 +2,99 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55BAC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6548C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD5420678
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E4120678
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:26:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PbCo0Ceu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JODDqlVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgDFBZf (ORCPT
+        id S1727951AbgDFB0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 21:25:35 -0400
-Received: from mail-eopbgr1300100.outbound.protection.outlook.com ([40.107.130.100]:58832
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726436AbgDFBZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 21:25:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IydFnFJUpqp7t89DlPNXrChb0XngPT5ooOUYKAXBQ2jizNSukJgDGafQ0r9Pg+OAqnpdKhmuQiggbt9EIgcYcdUgH6UKspWeTYBzFCM+/Tuy3AKEVvZ8kBSiD9wnPETlpi5yWZBEF96RgGrHSxvPbsnG6vPmMCqWk43EChCM+6KGUjH4CVTXdNbaOcPmgfpg0mIMcxFB+TJHJxuwAKE5bFSyRJ+3Tr1vPsB4eSgSoq7a4OFXlELJZtszKt02CrNFwoXP2G9JOs9mr3HRXb3HF8T1G4iaa0PamUb4U1YU0nwIBn+hFCWOqyXJ8OoYHknkxhKnOaZ7XoYMKB5BnfR02A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dh1rqsC+0nitz316nIsHyE5viq//V+L/v3QZE7rGYsc=;
- b=UJ/kcSk1hmylpizL9cslyezYo9UHqreElSYPOa2gXhqHrrHv7tb4qjfrpfTBkSqM+l5PBzr5eO2mYoWxNKOL0k+zn++6msen5YmAVLSVAdnxkppobz/QyXoYxF4gWKsTM8HLoxNqA6C12pln6HB8YJBkI503QOSt7CDnvuHHJcm5Gxv7SZFPuvDKVTeyuEAqOKSenfD6BGxcjHUmSoqc5Pd3s75uuKvICNRriV1dz4YwBx7PecDWZP1+xPTc9wRVis52NW72RQydZmH2WbkNSI9lM9AjJGtABY208eloWx37iQnm+1nDd3A8pQsXteFYYcMDFEHQOsbvHzb8DYZUuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dh1rqsC+0nitz316nIsHyE5viq//V+L/v3QZE7rGYsc=;
- b=PbCo0CeuF7jK+ltmixPpsi7RpmxQ+Ms3pexJUVwR7u5DUHdlyxMFR7jZ3DEHNbR+yExDCCPbdrXYdnFHhubco4o8797Z1qWg2k9tkRXrswPbynBuho7pbiIvW38gC7j3a3GbMZb5b+WQMiR1NGUqC5WPCGROBguTc4KmdtsRl4A=
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (52.132.236.76) by
- HK0P153MB0163.APCP153.PROD.OUTLOOK.COM (52.133.156.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.4; Mon, 6 Apr 2020 01:25:29 +0000
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2921.000; Mon, 6 Apr 2020
- 01:25:29 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "willemb@google.com" <willemb@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        "sdf@google.com" <sdf@google.com>,
-        "john.hurley@netronome.com" <john.hurley@netronome.com>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "jeremy@azazel.net" <jeremy@azazel.net>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net] skbuff.h: Improve the checksum related comments
-Thread-Topic: [PATCH net] skbuff.h: Improve the checksum related comments
-Thread-Index: AQHWCzYPXZ/PsAZ8AU+mHH+wagcwgqhqsF3ggAALTQCAAJGscA==
-Date:   Mon, 6 Apr 2020 01:25:29 +0000
-Message-ID: <HK0P153MB027337B6ABF4891AC49091E6BFC20@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-References: <1586071063-51656-1-git-send-email-decui@microsoft.com>
- <20200405103618.GV21484@bombadil.infradead.org>
- <HK0P153MB027363A6F5A5AACC366B11A3BFC50@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
- <7a0df207-8ad3-3731-c372-146a19befc02@infradead.org>
-In-Reply-To: <7a0df207-8ad3-3731-c372-146a19befc02@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-06T01:25:26.5916755Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=44442bf7-547f-40e3-9b10-2eeee719a8ad;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:ac71:2d80:3165:3247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 95efa1a1-d88a-4fbe-f704-08d7d9c964cf
-x-ms-traffictypediagnostic: HK0P153MB0163:
-x-microsoft-antispam-prvs: <HK0P153MB0163A25DE8A711A58BC811AABFC20@HK0P153MB0163.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0365C0E14B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(376002)(39860400002)(346002)(136003)(396003)(8936002)(8676002)(81156014)(81166006)(316002)(478600001)(7696005)(186003)(54906003)(4744005)(5660300002)(86362001)(76116006)(7416002)(82950400001)(82960400001)(8990500004)(53546011)(64756008)(66556008)(66446008)(66946007)(6506007)(66476007)(33656002)(52536014)(10290500003)(9686003)(4326008)(71200400001)(55016002)(2906002)(110136005);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2ZlG5p0ZX7MC07oclyqKE91mIpA1dIPnr5ENSGPbHgAJwghpvmKhs9qf7C0C7vw2ycNugTRWvWCqQbdYOaOq+Yz74/0IRq7vaWZiCB+rK2BU1RFABH4Y2SLFFR6Oe0u8+tEXyHuc9xgdJDe4pCLrgYXLNc+Prfe3lwQ9179Ht3QC/4YpcDIUumMMyd5JuzFJdX3ul5qnFrtOXTVCOjuEeRUh2OMSZoptN2cjAnSJugq6S+ozXIOTpU/n4hl4h/DiT7631M1W+tztksT+9oscxpf2AVFQ9ALr3ed1At0FQyzZdTcgAS4Bmr74AMJ8Hhzs5UY+kzXv76nxxvhoe0e11Jr82rryNyf+7cFG1Gn+Gm1dSp81e84pxwMm+P6V2iN7pXVJYBOrEcDu3Y6Eh5JCpUyNFoGpgxNTdypvLumdSya/pgkLmgihJGo280kA9fD0
-x-ms-exchange-antispam-messagedata: 56cduMsIOyVZF5q3RL0QHGJg3GejZajtHvS+I0Ed18DQ2uaUGGg0Zvh5DvRdrKgMDa0bnhocJNcITQpOxBB4FOr9kKw02cZoCz24lDnwJgu4vftpf1lAFds916UgM9WsBMlsfeGxBwXl5oGYIbNXHsmhwdP9o0Ld9vtoaQdj0o7/eIhjpTkYqXDxw3H+/XneNhT4wMfVtEha3zQ4WC46eA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 5 Apr 2020 21:26:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37084 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbgDFB03 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 21:26:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id u65so6779142pfb.4
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 18:26:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=bCP/VQw337JNSqQZ2HvUPrrXtQBfFLYo/RggJtgrBzk=;
+        b=JODDqlVLar9yt2N3yezSvdVx6Le8p4yT8o0VbdUK272Yp99tZPIZzaU7VSbHlgz0yL
+         3pvJOFR1go5wOvBReFKpU2wX/ncT5zVydtd0dsEr+qvR08cN9nq6qNugH5iY3J1aUX4o
+         SXPjp37XJg5ZmuLdpa2pNBqPpTNvPaoABnYBYolgC7u15k+Kx6+Y0Se8OWV0MibaywPy
+         RCBPhUgaEq//tEPMtOlac9B0LwDaHgnHWx+L7YqwHznNM3NqeFWz7qcuaqLRhymvFCOj
+         5fpZMRdo2Z4dUgwafbsw4sWlGKKyJu+9txLNk8xZfUh0nigpUPoZA6MgKATYT8sslUi9
+         zC7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=bCP/VQw337JNSqQZ2HvUPrrXtQBfFLYo/RggJtgrBzk=;
+        b=OTkN2h5WK8Bi4xUkxJ08kk/BXnzXIi54Fee6wsOQHrEuyDR7r+qCMgia1bi2bsidg0
+         nQOzBDAFjOISfyFc3Tvz8pJ3NhzWXZ3deFSb3qXBg7rtsXBAIRdHhaEMtPz91V0Rhx1D
+         PJZolTMrvzXBeNbSRUpm+j8nFZEXZL13Tv3Sue1VdGVNOLoeoAG7VRkZDJKajftp3sD5
+         3ZPFwgwbYydW+TUsxdy66jEgqF6vqZ1AE+LhtfxFOFLbapOS3GKK1kzK9OwBRAvQacCP
+         TIcxuiXHpf7pYX14kyJJ/pngbbCoTRgvpRVN6KsyUMIsPZUfROmDbJVyo2Ck4KgFkt4p
+         sfEA==
+X-Gm-Message-State: AGi0PuYuKc/h+mMBAYr6UCV8dd7i+NeNli0jVzYLoIKHE+K24OKdM5GX
+        ufK7K3DUYBy3B6AOWrt0LsQRuK9h
+X-Google-Smtp-Source: APiQypKqiMO6ppndjhgdZ6+iwHVyw8jrQA2O3khmT516KEmmVVAwmNYuLrt9v+d/g0JDoWUtctLjpw==
+X-Received: by 2002:a65:5647:: with SMTP id m7mr18606743pgs.371.1586136388432;
+        Sun, 05 Apr 2020 18:26:28 -0700 (PDT)
+Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
+        by smtp.gmail.com with ESMTPSA id a3sm10322567pfg.172.2020.04.05.18.26.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 18:26:27 -0700 (PDT)
+Date:   Mon, 06 Apr 2020 11:25:20 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH v2 12/13] powerpc/kernel: Do not inconditionally save
+ non volatile registers on system call
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
+        <4ef6d617cfd34e09e9bf5a456b2e0b6d2a8a3c96.1586108649.git.christophe.leroy@c-s.fr>
+In-Reply-To: <4ef6d617cfd34e09e9bf5a456b2e0b6d2a8a3c96.1586108649.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95efa1a1-d88a-4fbe-f704-08d7d9c964cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2020 01:25:29.5181
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9b2mmwIe45kBnvGqPKgYspttZE/STaB7U0GfWlPnTrOUyqsQhAHChq88MNDArkPP/TZAEBWPiPQZ+Yfgv3YSjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0163
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1586135554.pnqaj0giue.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBSYW5keSBEdW5sYXAgPHJkdW5sYXBAaW5mcmFkZWFkLm9yZz4NCj4gU2VudDogU3Vu
-ZGF5LCBBcHJpbCA1LCAyMDIwIDk6NDEgQU0NCj4gVG86IERleHVhbiBDdWkgPGRlY3VpQG1pY3Jv
-c29mdC5jb20+OyBNYXR0aGV3IFdpbGNveA0KPiA+PiBXaHkgdGhlIGNhcGl0YWxpc2F0aW9uIG9m
-ICdBTkQnPw0KPiA+IC4uLg0KPiA+IFRoZSBjb21tYSBhZnRlciB0aGUgIkNIRUNLU1VNX1BBUlRJ
-QUwiIHNlZW1zIHN1c3BpY2lvdXMgdG8gbWUuIEkgZmVlbA0KPiA+IHdlIHNob3VsZCBhZGQgYW4g
-ImFuZCIgYWZ0ZXIgdGhlIGNvbW1hLCBvciByZXBsYWNlIHRoZSBjb21tYSB3aXRoICJhbmQiLA0K
-PiA+IGJ1dCBlaXRoZXIgd2F5IHdlJ2xsIGhhdmUgIi4uLiBhbmQgY3N1bV9zdGFydCBhbmQgY3N1
-bV9vZmZzZXQuLi4iLCB3aGljaCANCj4gPiBzZWVtcyBhIGxpdHRsZSB1bm5hdHVyYWwgdG8gbWUg
-c2luY2Ugd2UgaGF2ZSAyICdhbmQncyBoZXJlLi4uIFNvIEkgdHJpZWQgdG8gDQo+ID4gbWFrZSBp
-dCBhIGxpdHRsZSBuYXR1cmFsIGJ5IHJlcGxhY2luZyB0aGUgZmlyc3QgJ2FuZCcgd2l0aCAnQU5E
-Jywgd2hpY2ggDQo+ID4gb2J2aW91c2x5IGNhdXNlcyBjb25mdXNpb24gdG8geW91Lg0KPiANCj4g
-bWF5YmUgImJvdGggY3N1bV9zdGFydCBhbmQgY3N1bV9vZmZzZXQgYXJlIHNldCB0byByZWZlciB0
-byIuDQo+IH5SYW5keQ0KDQpMb29rcyBnb29kLiBJJ2xsIHBvc3QgYSB2MiBzaG9ydGx5LiBUaGFu
-ayB5b3UgYm90aCENCg0KVGhhbmtzLA0KLS0gRGV4dWFuDQo=
+Christophe Leroy's on April 6, 2020 3:44 am:
+> Before : 347 cycles on null_syscall
+> After  : 327 cycles on null_syscall
+
+The problem I had doing this is that signal delivery wnats full regs,
+and you don't know if you have a signal pending ahead of time if you
+have interrupts enabled.
+
+I began to try bailing out back to asm to save nvgprs and call again.
+I think that can be made to work, but it is more complication in asm,
+and I soon found that 64s CPUs don't care about NVGPRs too much so it's
+nice to get rid of the !fullregs state.
+
+Possibly another approach would be to leave interrupts disabled for the
+case where you have no work to do. You could create a small
+syscall_exit_prepare_nowork fastpath for that case for 32-bit, perhaps?
+
+Thanks,
+Nick
+=
