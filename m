@@ -2,97 +2,105 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF6FC2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9860C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47C120672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CDFC20768
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:06:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SJBpzLN8"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LL6O7RGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgDFGAr (ORCPT
+        id S1726525AbgDFGGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 02:00:47 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36336 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbgDFGAr (ORCPT
+        Mon, 6 Apr 2020 02:06:46 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10673 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgDFGGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 02:00:47 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g2so5497159plo.3
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 23:00:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5+uZMfBZv12Nq4DU6XHRgLdqk7yyEBTks4MoCu3V16w=;
-        b=SJBpzLN8cZ5bsVFizs2mSYop/ikIqT2uLbv4hR80BL8LBfrFSUrqxu+VSeZKuZbZXK
-         aVGcRn8y/D8GV5sR9REBmlyfBLogrSRL3Rf1R79m1gjpOnymFvURwo0irgHI87oTs/MO
-         4RKTVuuWHnd0k09FmATYaRWDqMgwldzsA8yV42fjeg1ILCzZ0M+cl7Gr67TLCHZOhPpk
-         9ByphToDAjJwRa+klKcSs43mfUTuMrM+5z6fDbwF9xcQI7/ZDQOH9Wm1ZYVBQiGejD33
-         RcH2YKt1+We57xvkTnxOZcMca6yWODRFhMJyclDxi/EfPfJmURII30Mbaw7PQEBsvc6M
-         Nn+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5+uZMfBZv12Nq4DU6XHRgLdqk7yyEBTks4MoCu3V16w=;
-        b=OudW1R0F6f8lAVay4g4kXPsm+YLI/akdg3tF9pAgvWIKIVOAfPypK6rI2H4NwVTDuQ
-         aW6PSa/CEvH8eQlKfCqIDXXMtL6iTr3Uko00EY7BXmLSnLrBUGnSUMQZHvyNfTjw3EAS
-         l6XpKQw1zqjsdRMlnmJpaT/9OyIuVqtNZ/YPxTGBTeTibZ4Cg4NHpxYmqt36RDpqyvWK
-         88nrk2xgROsgm4EBzLlejrdOsD3Y5Ci2mR+A+sJc1SCVKBIsz2FKYuTu2Hs4pdr6HKcj
-         WbpTW4hBkl0J/8lyE0knH8vBUm6dhjP6RFLeFehyKa4dQmVbdoztDuq+MX1psNEO06To
-         edYw==
-X-Gm-Message-State: AGi0PuYPckeCgZZrdCuX0a6g9v9gZZU0qFNPxd9yL4Feccea0RrEtrnw
-        6FWmOpX8jZunPe58ERpgpaoTuA==
-X-Google-Smtp-Source: APiQypK02cIrQa2bOqRgzm15ePaxfOCT5LWvMZq/McP6IafAcS0bfx4MMbkfC01e575Gql/Wc7qPnQ==
-X-Received: by 2002:a17:90a:2103:: with SMTP id a3mr24949763pje.181.1586152846668;
-        Sun, 05 Apr 2020 23:00:46 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s61sm11806003pjd.33.2020.04.05.23.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 23:00:45 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: c630: Specify UFS device reset
-Date:   Sun,  5 Apr 2020 23:00:49 -0700
-Message-Id: <20200406060049.227029-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.26.0
+        Mon, 6 Apr 2020 02:06:46 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8ac6e80000>; Sun, 05 Apr 2020 23:06:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 05 Apr 2020 23:06:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 05 Apr 2020 23:06:45 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
+ 2020 06:06:45 +0000
+Received: from [10.24.37.103] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
+ 06:06:41 +0000
+Subject: Re: [TEGRA194_CPUFREQ Patch v2 0/3] Add cpufreq driver for Tegra194
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <rjw@rjwysocki.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <talho@nvidia.com>, <linux-pm@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <bbasu@nvidia.com>,
+        <mperttunen@nvidia.com>
+References: <1586028547-14993-1-git-send-email-sumitg@nvidia.com>
+ <20200406024726.sbtutqsv2t2p2gkg@vireshk-i7>
+From:   sumitg <sumitg@nvidia.com>
+Message-ID: <69c5a02d-994e-9141-3638-cbe08f5e112e@nvidia.com>
+Date:   Mon, 6 Apr 2020 11:36:59 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200406024726.sbtutqsv2t2p2gkg@vireshk-i7>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586153192; bh=sFCRL5jNwqU2tlIogO1XkyF3JvM/cO2gFSLsQBV6B/8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=LL6O7RGdyl7OccZE4fMKyA+iqapaxHOOqyFPwcFfvNxe5vSpnh/5DHygZqXNP50Zi
+         p2VKRAicqjVXIa4VeZ3iY608aPKnDYNtoHXQHMXtV3TzKZIPPhBxsJxmNBOakQilic
+         ZkBPszNPHv1MW1fClh7dkmNY3MckRD4OjjzDO6qo4SbvXk6EygfUTmMe0MFRTgIwUi
+         W8gssJzwEh/UZszzRF51Gde44RlNpb7MSVxzzUDQAwuO4csbmMqaClDlVqCoAXXmp6
+         6KfAyNadN949RirBSJoJar4q66cCtxEkPvOm34WErDfMGP6Nexxm/bKDSfemNpmMdS
+         YzVT7uraXZZ8w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some device the reset line for the UFS memory needs to be tickled in
-order for UFS to initialize properly, add this to the ufs_mem_hc node.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index d92a22e67b67..99f197cc0505 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -623,6 +623,8 @@ bluetooth {
- &ufs_mem_hc {
- 	status = "okay";
- 
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-+
- 	vcc-supply = <&vreg_l20a_2p95>;
- 	vcc-max-microamp = <600000>;
- };
--- 
-2.26.0
-
+On 06/04/20 8:17 AM, Viresh Kumar wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On 05-04-20, 00:59, Sumit Gupta wrote:
+>> The patch series adds cpufreq driver for Tegra194 SOC.
+>>
+>> v1[1] -> v2:
+>> - Remove cpufreq_lock mutex from tegra194_cpufreq_set_target [Viresh].
+>> - Remove CPUFREQ_ASYNC_NOTIFICATION flag [Viresh].
+>> - Remove redundant _begin|end() call from tegra194_cpufreq_set_target.
+>> - Rename opp_table to freq_table [Viresh].
+> 
+> Have we concluded the earlier discussion already ? I posted some
+> questions where I had doubts and you just answered them and posted a
+> new version. Please wait for the reviewers to have a chance to reply
+> to them. Your new version may be okay, but still we can avoid another
+> set of patches which may be wrong.
+> 
+> --
+> viresh
+> 
+Sorry for that. I will wait for ongoing review to conclude before 
+posting new version.
+Thankyou for the inputs.
