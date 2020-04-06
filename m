@@ -2,106 +2,140 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C03AC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D5EC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFDC2495A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B01F20753
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:30:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="lWOyYvOY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSprrJcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbgDFQ2P (ORCPT
+        id S1729387AbgDFQaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:28:15 -0400
-Received: from mout.gmx.net ([212.227.17.22]:44107 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728924AbgDFQ2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:28:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586190475;
-        bh=FRIKvjiq28REAum1cMDGhYM9/roKmK1fSCayFBmXFgU=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=lWOyYvOYa11ecx4G8duAfFNsE3LC4IB0vGz8O5Z93F4cOppirBDoLZR//WDCBkyVK
-         8I4EhRdxsoYkpxjRW9Kuh/4IjO5ij9aq3DD3SIGenUQHcQAmq01HtWR++e05RSY/+4
-         9m19OuAXaWetgfKivN44k4MJDtjvXyoGlKEhYIP8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MFKKX-1jWE7O0293-00FjJI; Mon, 06
- Apr 2020 18:27:55 +0200
-Date:   Mon, 6 Apr 2020 18:27:42 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] staging: vt6656: Use ARRAY_SIZE instead of define
- RATE_54M
-Message-ID: <20200406162742.GA3230@ubuntu>
-References: <20200404141400.3772-1-oscar.carter@gmx.com>
- <20200404141400.3772-2-oscar.carter@gmx.com>
- <20200406111323.GD2001@kadam>
+        Mon, 6 Apr 2020 12:30:01 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39500 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728789AbgDFQaA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:30:00 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m2so1083985lfo.6;
+        Mon, 06 Apr 2020 09:29:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6s1RomBLaAaLYjYEtNzLrGXH4D7zjKQWtC32MsL6TUY=;
+        b=LSprrJcm3y6O68ykXfq0AwAcOXpXeo3pGt4YLZBoeWDaR66qrtXxzAelikL6s/AXDu
+         FGHPtdNoSflFkLVTLd8QGYdiDg6euW5aBbWHTixMjNECj2/+fyKXqZUyr1q35+D3Y8LV
+         jAzi3i9rcDH5CWJmpU1cvSgb8e4GhesT4mDs2vwz7UZCsIk/zRwij2GhEr3osByaaPP8
+         7AQuK+sVZow8NUK7mYPS5k0deg3BerX6FOWDd5wkrtmgjcFTxSJA9wOPtbJS/1sCGh71
+         f2cSYUOfE16Mm7B4ko6/HUTwI71+jGkY325iGIgz+0Ps6jznZnqGTBNBKf3YNoFx/Q9y
+         HKhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6s1RomBLaAaLYjYEtNzLrGXH4D7zjKQWtC32MsL6TUY=;
+        b=YO2drf//51T4IKoyFtBJ/3iHhkbw2tBJQufwREBCRMC4mJgbTrchdSw88+e4KxCTSR
+         VqEeWgB1FUOOkZkDRPTQLR7x186hBtlWJ7SrkgF4IIWVMVt3dNKgJn0JjoNxRU0gLo8b
+         4RmAoEqjWjU2q5DkFhrjbHDvBwoL1NjWrlR048VHBw2+fBfZ4ZU/OvAsaZTmNEHwx9Xq
+         fItD1Ana3/pCojh2YO6RvUMaObcptLOeRGwApko+oVYqGPIv5hKzhCUeuXxRsdhcABCW
+         4bi+pxTT8Cez3ZVT6VSJ8goVktw7TQ4hs0j9JpB9TpvWhc+3LUnWcp5iFP9h/Ys/FHMj
+         od4A==
+X-Gm-Message-State: AGi0PuZS7kSo+y2slepDjApV4tfei7OeCS0QI66d9Mkpc1uodjYTxvjR
+        jE6y1dPpStvVRBRmVPz8yTbBwiVc
+X-Google-Smtp-Source: APiQypJbe1lJWnXFExH2l4+Uev/fYbSRZkAaZ/gonD7P6gbu5LIxn7YaRhzchCFdPfJWvG/UV5o85g==
+X-Received: by 2002:a19:c8cf:: with SMTP id y198mr9870475lff.197.1586190596953;
+        Mon, 06 Apr 2020 09:29:56 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id j19sm11701904lfe.17.2020.04.06.09.29.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 09:29:54 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
+ <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
+ <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
+ <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
+Date:   Mon, 6 Apr 2020 19:29:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406111323.GD2001@kadam>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:T8RilL9H1r3t+wcwqfqUctvy8o8lnGN+LwBkrhd37tZNI0Hg7hX
- sbLPA+0DkJwEFiKrwbe85E2U2V3eDR0Hp0bEnQymF023ct09DHkfUWE+kAUY9DlZgfKnPwa
- 8ULu4PKW1SInKncw5yziKJjWg1VGvXbX3vcaF1kMV1ZTBK3rZou3XfGBmLcv6eMGinOA5kc
- X0ysxxyHJ6uvh22pEKk6g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xi8YNRbZVgM=:+WNzK0tl47HV8TcxIqRdwF
- +a3Cm6phfalLHfZ70JO9on5BA9sswVp6Be8Ed1zZKPuhYb8Eyv5U2ofDHR9elcuS7qTvZ8igg
- qBx9X4tfHvsMNt+Bpf+fh7+zYJbN98aXHPocMFAPCQTsVWRfZyRIaBS0MLgbGi4JAtmxLzkxG
- XDwNZRRwv9+vIbRv+6cuTMIaYUg/zq3Xjmf7XCiBujy0cooBIuuRK+19Bk98XRjMYTMMry32H
- KQ8M/8I5x6J4Leantd5O18jNN29w3sMzV0mPgs+TAFBu7wWaAQ5awxHfSFgwn2f0tr7sp/P5c
- tbER7ozPk1ZjRZ58g3lEbwvH6gokjOse0C86awSFgbtOgVty5YlyiQSjn5lp82GInkfYG7Ssn
- iWprGKx7uAT88ZEj48caWkyoEHe+1n9yI+bBr3EY6JSk7fcL2DvLrlAeFaed2+dKo6Q4tqNJ1
- bFZ4BgygxG1ZFYP0+cWAUewLQAoZZuQKwBfrukzGzzeMOmyVrxKEcHFEyvCTg3SQzkI+MgfPV
- F61ymjO//wfAqHC435NrjdxoF/94aDDPI47uN80ZUBvM8MPf9jxDZwvV8YYXHNA04+9nPkxsP
- WlHDpbtITSRME9TpiP2HGLLxDoPN9wXaEGSRxUnDl7K3DdUI1uo4V03RGZ1yHN4Os1DLuWbPO
- ZwCgfdM5XW0CCc5/K2trK5h7S5I94f2LGdrGW5UMarWO2QqB6DpECbOqqPOlPc4iakmDOkfkd
- VXRD/eo4AQRzLE8stsOoO+67FbjryL2+C9h4e8qEgQbG+GyPnSJgaBtNBnEvlAO57j4Nuc7Ah
- gLk7z3yMmwG7pjpw1epmaKGcErqmrsEtWQmK7dCfo0szAsDPqC8ZEvPic47vTcKl3KxstNe66
- OFM5+xkoxv1z9DHyr0/VEcI/xIL3tfhh14xMA4+W/VyPXHZXNroPUEwutj7OmayClcENBqhL7
- kd760vg1QJNgcKZbMgCGfDbDcSGIKDHgNA8KOEt5Dn3zjzq2CLjGcQrzUmiRlPAIS16gTiXV/
- yDlCI3cHIXukKVmbcdraLOVDoQu7G+a6CVOz8wTwHLFl6S/+p7dny+eJ+qkqmmq6Og462+/m6
- oMLOKkk3fy0wXe8a38kVzZScpS4z0X6RthkdLFyIRNLLzQ29K+TsmeXURi/WB/Tb9hn+QzcLx
- ElJIT2TUYYfXmoRCasSiJnd9sY/yxZ8pO36/GRJ3uXPheeOCIYzehtBLNvAgGoI2/vwPf8Uam
- LK2tphXxiPI6wjdQL
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 02:13:23PM +0300, Dan Carpenter wrote:
-> On Sat, Apr 04, 2020 at 04:13:58PM +0200, Oscar Carter wrote:
-> > Use ARRAY_SIZE to replace the define RATE_54M so we will never have a
-> > mismatch. In this way, avoid the possibility of a buffer overflow if
-> > this define is changed in the future to a greater value.
-> >
->
-> Future proofing is not really a valid reason to change this.
+06.04.2020 19:12, Sowjanya Komatineni пишет:
+> 
+> On 4/6/20 9:05 AM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 06.04.2020 18:35, Sowjanya Komatineni пишет:
+>> ...
+>>>>> +     /* wait for syncpt counter to reach frame start event
+>>>>> threshold */
+>>>>> +     err = host1x_syncpt_wait(chan->frame_start_sp, thresh,
+>>>>> +                              TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
+>>>>> +     if (err) {
+>>>>> +             dev_err(&chan->video.dev,
+>>>>> +                     "frame start syncpt timeout: %d\n", err);
+>>>>> +             /* increment syncpoint counter for timedout events */
+>>>>> +             host1x_syncpt_incr(chan->frame_start_sp);
+>>>> Why incrementing is done while hardware is still active?
+>>>>
+>>>> The sync point's state needs to be completely reset after resetting
+>>>> hardware. But I don't think that the current upstream host1x driver
+>>>> supports doing that, it's one of the known-long-standing problems of
+>>>> the
+>>>> host1x driver.
+>>>>
+>>>> At least the sp->max_val incrementing should be done based on the
+>>>> actual
+>>>> syncpoint value and this should be done after resetting hardware.
+>>> upstream host1x driver don't have API to reset or to equalize max value
+>>> with min/load value.
+>>>
+>>> So to synchronize missed event, incrementing HW syncpt counter.
+>>>
+>>> This should not impact as we increment this in case of missed events
+>>> only.
+>> It's wrong to touch sync point while hardware is active and it's active
+>> until being reset.
+>>
+>> You should re-check the timeout after hw resetting and manually put the
+>> syncpoint counter back into sync only if needed.
+> 
+> There is possibility of timeout to happen any time even during the
+> capture also and is not related to hw reset.
+> 
+> Manual synchronization is needed when timeout of any frame events happen
+> otherwise all subsequence frames will timeout due to mismatch in event
+> counters.
 
-Ok, then I leave it as is.
+My point is that hardware is stopped only after being reset, until then
+you should assume that sync point could be incremented by HW at any time.
 
-> We have to assume that future programmers are not idiots.
->
-That was not my intention. I'm sorry.
-
-> The only valid reason to do this is readability, but I'm not convinced
-> the new version is more readable.
->
-Ok.
-
-> regards,
-> dan carpenter
->
-Thanks,
-oscar carter
+And if this happens that HW increments sync point after the timeout,
+then the sync point counter should become out-of-sync in yours case,
+IIUC. Because host1x_syncpt_incr() doesn't update the cached counter.
