@@ -2,165 +2,137 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B07C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C357C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4013C2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BFyOEScH"
+	by mail.kernel.org (Postfix) with ESMTP id 517262064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgDFSGK (ORCPT
+        id S1727080AbgDFSGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:06:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53612 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726650AbgDFSGJ (ORCPT
+        Mon, 6 Apr 2020 14:06:19 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35549 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgDFSGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:06:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586196368;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zq2fOqfpnunCJPcnhnd4EahDTvQRSHEmjDBqkQFoh48=;
-        b=BFyOEScHpbMwsvffNWwXQ8xSpc0r/vw4lrlRclPvwDRBuc5lfz5/TmGm5iLb+FmWdx+orb
-        KOcaPcXNV9eNQND8VzIQyrk0ha6NT0N2Wtapt/tWzwWvk1RBGQOsGir9IotSW+vjCOesRd
-        qqQUq4ba7ZzWMsRJ1EP8PllIH0lKZjc=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-16-joIn02_2Ma2MgIh-wvgVmA-1; Mon, 06 Apr 2020 14:06:02 -0400
-X-MC-Unique: joIn02_2Ma2MgIh-wvgVmA-1
-Received: by mail-qt1-f197.google.com with SMTP id j7so542357qtd.22
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:06:02 -0700 (PDT)
+        Mon, 6 Apr 2020 14:06:18 -0400
+Received: by mail-qk1-f193.google.com with SMTP id k134so6606259qke.2;
+        Mon, 06 Apr 2020 11:06:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zq2fOqfpnunCJPcnhnd4EahDTvQRSHEmjDBqkQFoh48=;
-        b=SDYXfDsqTaxkB4k2mPLGk19niCfsZfXAqggCulDR0EekojOyIwFzO+okE9prqvbF98
-         n9bSU17j+iyTEaRnnnrOMzjvO8Bd+B06JNl8UiqKsplrctWAUsWO9O8Nm+NbW+ib4eom
-         uaNFLYPT+UKNYapKHt3vd9xBgwT231X9UlvLWYQ21pjrFzI+WLFmsRMxugJLB4sIjEzb
-         xEoiZPhUN5GEDLKuBVt0PruxTC7yNdZ4VCvMRRsHo1/iX/QzHane7qiYXzIOoq4Q6PDK
-         Q487jlyRgGNZNciEtDLkV1wckjxRLpcXDbfW+EgmOMNElnMEtFmJaVA6esVT1CGvSzk6
-         ra0g==
-X-Gm-Message-State: AGi0PuY6QPnPvlEjxBzZqUnBerezSBxZZlTjtA9GouNSGtcisFdXKSSg
-        c0l9/u/iU7fUpEFib88z+INTVgm1MGiH+fXDx3oEj/E/Gf3A/JEl8Ey+vaTV7WWh2SBhkHYPDol
-        JrXErMQIwl9dOPwDBnfV3rZdO
-X-Received: by 2002:ac8:2a68:: with SMTP id l37mr698229qtl.77.1586196361387;
-        Mon, 06 Apr 2020 11:06:01 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLEox3UX8MCeX0tOeCXIrNeXeiRB52F4QJf5RdYuk+NCD4GaAPnvAscpKxCIJDbeDpCWYGZow==
-X-Received: by 2002:ac8:2a68:: with SMTP id l37mr698198qtl.77.1586196361085;
-        Mon, 06 Apr 2020 11:06:01 -0700 (PDT)
-Received: from dev.jcline.org ([136.56.87.133])
-        by smtp.gmail.com with ESMTPSA id s26sm14862683qkm.114.2020.04.06.11.06.00
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3ZkbXCYZ38PnGLqA38jwgpd000NknHS2AO8++6TZ9nY=;
+        b=owWnnOiRxSQ/6+JX2fBx4dFWsdBR4vxxQ+AOtZ03MFHst62RMIlBwqkwLFi5qp5bNh
+         q7aVrEbZEvvBWvPqegsdYKqY/Mk0YSUK7VNZRoLydU+uxp4s8WAcuQrgXIeWkH5DvYoF
+         88dFjGWcM6HABUwHcWhn9wOF+CYPGROsfGmHCOXoYeGnFBAk8ry94FicSBptPxpbxzSL
+         RxbhwQaEDlN+RnVuqaYhNFK4f/mgIHQIx3H48NJtsuFUZcqAxM7zsYo2BiHq166j6+FE
+         iNXyHODbu+A8J7yv+MiLstr6FrYo2S6KLxWfIY09CxXZYdO8SN7zHzMp+2CmL23E3i/Y
+         R3NA==
+X-Gm-Message-State: AGi0Pub1HCLswVUnFbNPBHDDjZtTE5DIktMGBeSZSyVEZmQ+qI+bi2Bv
+        0ZjgOCYe6icZJxxhIlg7bWk=
+X-Google-Smtp-Source: APiQypKifO/Mxe1FPDilzsVKjqJt5wQAgGegOGVre5EBI0Q0NcU77HvXJnXFI1OxUhI4edHVU3oaYw==
+X-Received: by 2002:a37:4852:: with SMTP id v79mr21868104qka.459.1586196376781;
+        Mon, 06 Apr 2020 11:06:16 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id a136sm10548473qkc.75.2020.04.06.11.06.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 11:06:00 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 14:05:58 -0400
-From:   Jeremy Cline <jcline@redhat.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: add dummy toolchains to enable all cc-option
- etc. in Kconfig
-Message-ID: <20200406180558.GA22412@dev.jcline.org>
-References: <20200403090224.24045-1-masahiroy@kernel.org>
+        Mon, 06 Apr 2020 11:06:16 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
+        hpa@zytor.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
+Subject: [PATCH 1/2] efi/x86: Move efi stub globals from .bss to .data
+Date:   Mon,  6 Apr 2020 14:06:13 -0400
+Message-Id: <20200406180614.429454-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
+References: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403090224.24045-1-masahiroy@kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 06:02:24PM +0900, Masahiro Yamada wrote:
-> Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
-> options your compiler does not support. This works well if you configure
-> and build the kernel on the same host machine.
-> 
-> It is inconvenient if you prepare the .config that is carried to a
-> different build environment (typically this happens when you package
-> the kernel for distros) because using a different compiler potentially
-> produces different CONFIG options than the real build environment.
-> So, you probably want to make as many options visible as possible.
-> In other words, you need to create a super-set of CONFIG options that
-> cover any build environment. If some of the CONFIG options turned out
-> to be unsupported on the build machine, they are automatically disabled
-> by the nature of Kconfig.
-> 
-> However, it is not feasible to get a full-featured compiler for every
-> arch.
-> 
-> This issue was discussed here:
-> 
->   https://lkml.org/lkml/2019/12/9/620
-> 
-> Other than distros, savedefconfig is also a problem. Some arch subsytems
-> periodically resync defconfig files. If you use a less-capable compiler
-> for savedefconfig, options that do not meet 'depends on $(cc-option,...)'
-> will be forcibly disabled. So, defconfig && savedefconfig may silently
-> change the behavior.
-> 
-> This commit adds a set of dummy toolchains that pretend to support any
-> feature.
-> 
-> Most of compiler features are tested by cc-option, which simply checks
-> the exit code of $(CC). The dummy tools are just a shell script that
-> exits with 0 in most cases. So, $(cc-option, ...) is evaluated as 'y'.
-> 
-> There are more complicated checks such as:
-> 
->   scripts/gcc-x86_{32,64}-has-stack-protector.sh
->   scripts/gcc-plugin.sh
->   scripts/tools-support-relr.sh
-> 
-> I tried my best to implement the dummy scripts to pass all checks.
-> 
-> From the top directory of the source tree, you can do:
-> 
->    $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  scripts/dummy-tools/gcc     | 91 +++++++++++++++++++++++++++++++++++++
->  scripts/dummy-tools/ld      |  4 ++
->  scripts/dummy-tools/nm      |  4 ++
->  scripts/dummy-tools/objcopy |  4 ++
->  4 files changed, 103 insertions(+)
->  create mode 100755 scripts/dummy-tools/gcc
->  create mode 100755 scripts/dummy-tools/ld
->  create mode 100755 scripts/dummy-tools/nm
->  create mode 100755 scripts/dummy-tools/objcopy
-> 
+Commit
 
-<snip>
+  3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from
+  bzImage")
 
-> diff --git a/scripts/dummy-tools/ld b/scripts/dummy-tools/ld
-> new file mode 100755
-> index 000000000000..3bc56ae4cc15
-> --- /dev/null
-> +++ b/scripts/dummy-tools/ld
-> @@ -0,0 +1,4 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +# Dummy script that always succeeds
+removed the .bss section from the bzImage.
 
-It looks like scripts/Kbuild.include expects "$(LD) --version" to return
-something. If it doesn't "ld-ifversion" stops working.
+However, while a PE loader is required to zero-initialize the .bss
+section before calling the PE entry point, the EFI handover protocol
+does not currently document any requirement that .bss be initialized by
+the bootloader prior to calling the handover entry.
 
-Other than that it seems to work as advertised. Thanks!
+When systemd-boot is used to boot a unified kernel image [1], the image
+is constructed by embedding the bzImage as a .linux section in a PE
+executable that contains a small stub loader from systemd together with
+additional sections and potentially an initrd. As the .bss section
+within the bzImage is no longer explicitly present as part of the file,
+it is not initialized before calling the EFI handover entry.
+Furthermore, as the size of the embedded .linux section is only the size
+of the bzImage file itself, the .bss section's memory may not even have
+been allocated.
 
-- Jeremy
+In particular, this can result in efi_disable_pci_dma being true even
+when it was not specified via the command line or configuration option,
+which in turn causes crashes while booting on some systems.
+
+To avoid issues, place all EFI stub global variables into the .data
+section instead of .bss. As of this writing, only boolean flags for a
+few command line arguments and the sys_table pointer were in .bss and
+will now move into the .data section.
+
+[1] https://systemd.io/BOOT_LOADER_SPECIFICATION/#type-2-efi-unified-kernel-images
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Reported-by: Sergey Shatunov <me@prok.pw>
+Fixes: 3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from bzImage")
+---
+ drivers/firmware/efi/libstub/efistub.h  | 2 +-
+ drivers/firmware/efi/libstub/x86-stub.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/firmware/efi/libstub/efistub.h b/drivers/firmware/efi/libstub/efistub.h
+index cc90a748bcf0..67d26949fd26 100644
+--- a/drivers/firmware/efi/libstub/efistub.h
++++ b/drivers/firmware/efi/libstub/efistub.h
+@@ -25,7 +25,7 @@
+ #define EFI_ALLOC_ALIGN		EFI_PAGE_SIZE
+ #endif
+ 
+-#ifdef CONFIG_ARM
++#if defined(CONFIG_ARM) || defined(CONFIG_X86)
+ #define __efistub_global	__section(.data)
+ #else
+ #define __efistub_global
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index 8d3a707789de..e7af6d2eddbf 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -20,7 +20,7 @@
+ /* Maximum physical address for 64-bit kernel with 4-level paging */
+ #define MAXMEM_X86_64_4LEVEL (1ull << 46)
+ 
+-static efi_system_table_t *sys_table;
++static efi_system_table_t *sys_table __efistub_global;
+ extern const bool efi_is64;
+ extern u32 image_offset;
+ 
+-- 
+2.24.1
 
