@@ -2,150 +2,138 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDB8C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE658C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1AF2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA50220780
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i1GU0TXc"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="nK7TDjGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbgDFSRM (ORCPT
+        id S1727755AbgDFSRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:17:12 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:53222 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgDFSRI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:17:08 -0400
-Received: by mail-pj1-f65.google.com with SMTP id ng8so194537pjb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:17:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QajOetIheYc6yFfn5cGXMzoheGBlCxA/mL7SE7Ps7+Y=;
-        b=i1GU0TXcRTrIK6ml6JtkYY0yUET+I0aZOROJzKxs15NqJj4ooP/Khnpk5SlXzB0pKz
-         lYQvJlybxyZgU5l+H5YtrUX/lSfvM6dUy2Ji53n/c3GKaKhpNHoCzrksnmsCt0jQ6jNu
-         Ema3D+STgHzRn7jQlZY/u8ckaR9CGnnE8fwBJjh/I618ZupFF675g+w3N9PGFt/I8WO6
-         V0dHWeHrH69undlHyIemld5sXtywcREzJ5tvP9cD1LZgdtFthxnjyVoYU9QN/id363tp
-         aL55rh4VSl9uDAaFUlV8VDQMd74Ya0Nx2EZQK5nuxqXHmy7S/nXn7+tt7GXO89JSNwaW
-         zrbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QajOetIheYc6yFfn5cGXMzoheGBlCxA/mL7SE7Ps7+Y=;
-        b=aCD6o9AhoOrT5gnSDoaFRzYcbYeJs4mAL6q1Kk2D+gduxjjzASTfaiGpenNx0GiaG+
-         m9GNHgr/2W8qsYmP6XEOOAY4Le9vz3JgMpds8vZkrpklM/BZGxhVhswSNPs0U/jQX2Qv
-         iaVYLPiTlOHjOvOVdyxPQ8f8gL+8NG8QQC7bMp/AVbaPs7IUxIGYMSRSLpgOmOXbwqm3
-         EYTMGrp7RRRn/XMPmKupPby3Zr9tHkwg8RUrnYralUnCSikqZaMCnhpFmTPHVcpY60fB
-         zBDrf1WjvqL511aq6LZITsjMeLSk9ijEOswM5qI59k3bklEv3+h7OslgvRV6s9uNAsjm
-         6y4g==
-X-Gm-Message-State: AGi0PuYBAO40Wy4VbQdxiLW5fnWonXCBGZtXlHIzmyNiGaNh4Nz6EU7+
-        Xds741uy3U5EXa20RUhBahRAhsp6IjDav4R+5ysOAA==
-X-Google-Smtp-Source: APiQypLCp7t3h+6346geWCdUsx0/lS+7zihtrFuJoEZhdpUOzAzHYdVIsmSt/wPY3djawkdqH324uD1slvMx1toMJis=
-X-Received: by 2002:a17:902:bb91:: with SMTP id m17mr21132416pls.223.1586197027464;
- Mon, 06 Apr 2020 11:17:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200405163052.18942-1-masahiroy@kernel.org>
-In-Reply-To: <20200405163052.18942-1-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 6 Apr 2020 11:16:57 -0700
-Message-ID: <CAKwvOdmEcC7SszqpEYeT3v_gi89vAyDyofZaKkfF_YhEXu=E5A@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: fw: arc: add __weak to prom_meminit and prom_free_prom_memory
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux-MIPS <linux-mips@linux-mips.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 6 Apr 2020 14:17:21 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:15039 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726799AbgDFSQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:16:43 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48wzJT6GJFz9v00v;
+        Mon,  6 Apr 2020 20:16:41 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=nK7TDjGl; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id HrI85LxZSqs0; Mon,  6 Apr 2020 20:16:41 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJT5DcBz9tycr;
+        Mon,  6 Apr 2020 20:16:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586197001; bh=nNmDTQngYBaiiBXdSBbHyZYIJ761JnkGOMCLyZOpnRo=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=nK7TDjGlouQy5ftOoz+4/msT3hYRX+0YYMDTxPZSK11tURYpKcZ8Bm2s6jTADNkMy
+         T8+s4XXXAHQQdK1wXR7DzZoNqa/uguWeGcHH300ZaL/inY4vFSAcs1CNQtdoD3Kgjb
+         FWAsLcmVvkEhBrwkgJnmBAtrB8+Ha1nBZYzZU8Hw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 976C28B784;
+        Mon,  6 Apr 2020 20:16:41 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id o__FePgGPPOz; Mon,  6 Apr 2020 20:16:41 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 625E58B775;
+        Mon,  6 Apr 2020 20:16:41 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 383CC656E9; Mon,  6 Apr 2020 18:16:41 +0000 (UTC)
+Message-Id: <f9f0bd58f9e75e8e3826f25d9db9ff2c6ad9c84b.1586196948.git.christophe.leroy@c-s.fr>
+In-Reply-To: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
+References: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v3 05/15] powerpc/irq: Add helpers to get and set
+ regs->softe
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        msuchanek@suse.de
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon,  6 Apr 2020 18:16:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 5, 2020 at 9:31 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> As far as I understood, prom_meminit() in arch/mips/fw/arc/memory.c
-> is overridden by the one in arch/mips/sgi-ip32/ip32-memory.c if
-> CONFIG_SGI_IP32 is enabled.
+regs->softe doesn't exist on PPC32.
 
-I'm curious if this issue is affected by other combinations of files
-that each define prom_meminit with external linkage and symbol
-visibility.  I would expect __weak to be used when there's a base
-implementation that we expect to be overridden, but I don't think
-that's what's happening in this case.  It's not clear to me which
-definition would be the default, let alone the one in
-arch/mips/fw/arc/memory.c.
+Add helpers to get and set regs->softe.
+Those helpers will void on PPC32.
 
-Looks like CONFIG_SGI_IP32 selects CONFIG_FW_ARC, so it's not clear
-why arch/mips/sgi-ip32/ip32-memory.c and arch/mips/fw/arc/memory.c
-define different implementations of prom_meminit, and which one was
-expected to be used.
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/hw_irq.h | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-Hopefully the maintainers can clarify.
-
->
-> The use of EXPORT_SYMBOL in static libraries potentially causes a
-> problem for the llvm linker [1]. So, I want to forcibly link lib-y
-> objects to vmlinux when CONFIG_MODULES=y.
->
-> As a groundwork, we must fix multiple definitions that have previously
-> been hidden by lib-y.
->
-> The prom_cleanup() in this file is already marked as __weak (because
-> it is overridden by the one in arch/mips/sgi-ip22/ip22-mc.c).
-> I think it should be OK to do the same for these two.
->
-> [1]: https://github.com/ClangBuiltLinux/linux/issues/515
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
-> If MIPS maintainers ack this patch,
-> I want to inser it before the following patch:
->
-> https://patchwork.kernel.org/patch/11432969/
->
->  arch/mips/fw/arc/memory.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/mips/fw/arc/memory.c b/arch/mips/fw/arc/memory.c
-> index dbbcddc82823..89fa6e62a3b3 100644
-> --- a/arch/mips/fw/arc/memory.c
-> +++ b/arch/mips/fw/arc/memory.c
-> @@ -117,7 +117,7 @@ static int __init prom_memtype_classify(union linux_memtypes type)
->         return memtype_classify_arc(type);
->  }
->
-> -void __init prom_meminit(void)
-> +void __weak __init prom_meminit(void)
->  {
->         struct linux_mdesc *p;
->
-> @@ -162,7 +162,7 @@ void __weak __init prom_cleanup(void)
->  {
->  }
->
-> -void __init prom_free_prom_memory(void)
-> +void __weak __init prom_free_prom_memory(void)
->  {
->         int i;
->
-> --
-
+diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
+index e0e71777961f..e69466867d5f 100644
+--- a/arch/powerpc/include/asm/hw_irq.h
++++ b/arch/powerpc/include/asm/hw_irq.h
+@@ -39,6 +39,8 @@
+ #define PACA_IRQ_MUST_HARD_MASK	(PACA_IRQ_EE)
+ #endif
+ 
++#endif /* CONFIG_PPC64 */
++
+ /*
+  * flags for paca->irq_soft_mask
+  */
+@@ -47,8 +49,6 @@
+ #define IRQS_PMI_DISABLED	2
+ #define IRQS_ALL_DISABLED	(IRQS_DISABLED | IRQS_PMI_DISABLED)
+ 
+-#endif /* CONFIG_PPC64 */
+-
+ #ifndef __ASSEMBLY__
+ 
+ extern void replay_system_reset(void);
+@@ -282,6 +282,15 @@ extern void irq_set_pending_from_srr1(unsigned long srr1);
+ 
+ extern void force_external_irq_replay(void);
+ 
++static inline unsigned long get_softe(struct pt_regs *regs)
++{
++	return regs->softe;
++}
++
++static inline void set_softe(struct pt_regs *regs, unsigned long val)
++{
++	regs->softe = val;
++}
+ #else /* CONFIG_PPC64 */
+ 
+ static inline unsigned long arch_local_save_flags(void)
+@@ -350,6 +359,14 @@ static inline bool arch_irq_disabled_regs(struct pt_regs *regs)
+ 
+ static inline void may_hard_irq_enable(void) { }
+ 
++static inline unsigned long get_softe(struct pt_regs *regs)
++{
++	return 0;
++}
++
++static inline void set_softe(struct pt_regs *regs, unsigned long val)
++{
++}
+ #endif /* CONFIG_PPC64 */
+ 
+ #define ARCH_IRQ_INIT_FLAGS	IRQ_NOREQUEST
 -- 
-Thanks,
-~Nick Desaulniers
+2.25.0
+
