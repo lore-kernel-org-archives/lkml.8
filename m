@@ -2,128 +2,114 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2103EC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB91AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41242051A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA1B2051A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgDFJgI (ORCPT
+        id S1726841AbgDFJgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:36:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51342 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbgDFJgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:36:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6BA0FAE71;
-        Mon,  6 Apr 2020 09:36:04 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 671AA1E1244; Mon,  6 Apr 2020 11:36:01 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 11:36:01 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
-Message-ID: <20200406093601.GA1143@quack2.suse.cz>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name>
- <87v9miydai.fsf@notabene.neil.brown.name>
- <87sghmyd8v.fsf@notabene.neil.brown.name>
- <20200403151534.GG22681@dhcp22.suse.cz>
- <878sjcxn7i.fsf@notabene.neil.brown.name>
- <20200406074453.GH19426@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406074453.GH19426@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 6 Apr 2020 05:36:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53751 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbgDFJgi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 05:36:38 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jLOB8-0002nT-Rr; Mon, 06 Apr 2020 09:36:27 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     yhchuang@realtek.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org (open list:REALTEK WIRELESS DRIVER
+        (rtw88)), netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] rtw88: Add delay on polling h2c command status bit
+Date:   Mon,  6 Apr 2020 17:36:22 +0800
+Message-Id: <20200406093623.3980-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 06-04-20 09:44:53, Michal Hocko wrote:
-> On Sat 04-04-20 08:40:17, Neil Brown wrote:
-> > On Fri, Apr 03 2020, Michal Hocko wrote:
-> > 
-> > > On Thu 02-04-20 10:53:20, Neil Brown wrote:
-> > >> 
-> > >> PF_LESS_THROTTLE exists for loop-back nfsd, and a similar need in the
-> > >> loop block driver, where a daemon needs to write to one bdi in
-> > >> order to free up writes queued to another bdi.
-> > >> 
-> > >> The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
-> > >> pages, so that it can still dirty pages after other processses have been
-> > >> throttled.
-> > >> 
-> > >> This approach was designed when all threads were blocked equally,
-> > >> independently on which device they were writing to, or how fast it was.
-> > >> Since that time the writeback algorithm has changed substantially with
-> > >> different threads getting different allowances based on non-trivial
-> > >> heuristics.  This means the simple "add 25%" heuristic is no longer
-> > >> reliable.
-> > >> 
-> > >> This patch changes the heuristic to ignore the global limits and
-> > >> consider only the limit relevant to the bdi being written to.  This
-> > >> approach is already available for BDI_CAP_STRICTLIMIT users (fuse) and
-> > >> should not introduce surprises.  This has the desired result of
-> > >> protecting the task from the consequences of large amounts of dirty data
-> > >> queued for other devices.
-> > >
-> > > While I understand that you want to have per bdi throttling for those
-> > > "special" files I am still missing how this is going to provide the
-> > > additional room that the additnal 25% gave them previously. I might
-> > > misremember or things have changed (what you mention as non-trivial
-> > > heuristics) but PF_LESS_THROTTLE really needed that room to guarantee a
-> > > forward progress. Care to expan some more on how this is handled now?
-> > > Maybe we do not need it anymore but calling that out explicitly would be
-> > > really helpful.
-> > 
-> > The 25% was a means to an end, not an end in itself.
-> > 
-> > The problem is that the NFS server needs to be able to write to the
-> > backing filesystem when the dirty memory limits have been reached by
-> > being totally consumed by dirty pages on the NFS filesystem.
-> > 
-> > The 25% was just a way of giving an allowance of dirty pages to nfsd
-> > that could not be consumed by processes writing to an NFS filesystem.
-> > i.e. it doesn't need 25% MORE, it needs 25% PRIVATELY.  Actually it only
-> > really needs 1 page privately, but a few pages give better throughput
-> > and 25% seemed like a good idea at the time.
-> 
-> Yes this part is clear to me.
->  
-> > per-bdi throttling focuses on the "PRIVATELY" (the important bit) and
-> > de-emphasises the 25% (the irrelevant detail).
-> 
-> It is still not clear to me how this patch is going to behave when the
-> global dirty throttling is essentially equal to the per-bdi - e.g. there
-> is only a single bdi and now the PF_LOCAL_THROTTLE process doesn't have
-> anything private.
+On some systems we can constanly see rtw88 complains:
+[39584.721375] rtw_pci 0000:03:00.0: failed to send h2c command
 
-Let me think out loud so see whether I understand this properly. There are
-two BDIs involved in NFS loop mount - the NFS virtual BDI (let's call it
-simply NFS-bdi) and the bdi of the real filesystem that is backing NFS
-(let's call this real-bdi). The case we are concerned about is when NFS-bdi
-is full of dirty pages so that global dirty limit of the machine is
-exceeded. Then flusher thread will take dirty pages from NFS-bdi and send
-them over localhost to nfsd. Nfsd, which has PF_LOCAL_THROTTLE set, will take
-these pages and write them to real-bdi. Now because PF_LOCAL_THROTTLE is
-set for nfsd, the fact that we are over global limit does not take effect
-and nfsd is still able to write to real-bdi until dirty limit on real-bdi
-is reached. So things should work as Neil writes AFAIU.
+Increase interval of each check to wait the status bit really changes.
 
-								Honza
+While at it, add some helpers so we can use standarized
+readx_poll_timeout() macro.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/net/wireless/realtek/rtw88/fw.c  | 12 ++++++------
+ drivers/net/wireless/realtek/rtw88/hci.h |  4 ++++
+ 2 files changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/wireless/realtek/rtw88/fw.c b/drivers/net/wireless/realtek/rtw88/fw.c
+index 05c430b3489c..bc9982e77524 100644
+--- a/drivers/net/wireless/realtek/rtw88/fw.c
++++ b/drivers/net/wireless/realtek/rtw88/fw.c
+@@ -2,6 +2,8 @@
+ /* Copyright(c) 2018-2019  Realtek Corporation
+  */
+ 
++#include <linux/iopoll.h>
++
+ #include "main.h"
+ #include "coex.h"
+ #include "fw.h"
+@@ -193,8 +195,8 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
+ 	u8 box;
+ 	u8 box_state;
+ 	u32 box_reg, box_ex_reg;
+-	u32 h2c_wait;
+ 	int idx;
++	int ret;
+ 
+ 	rtw_dbg(rtwdev, RTW_DBG_FW,
+ 		"send H2C content %02x%02x%02x%02x %02x%02x%02x%02x\n",
+@@ -226,12 +228,10 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
+ 		goto out;
+ 	}
+ 
+-	h2c_wait = 20;
+-	do {
+-		box_state = rtw_read8(rtwdev, REG_HMETFR);
+-	} while ((box_state >> box) & 0x1 && --h2c_wait > 0);
++	ret = readx_poll_timeout(rr8, REG_HMETFR, box_state,
++				 !((box_state >> box) & 0x1), 100, 3000);
+ 
+-	if (!h2c_wait) {
++	if (ret) {
+ 		rtw_err(rtwdev, "failed to send h2c command\n");
+ 		goto out;
+ 	}
+diff --git a/drivers/net/wireless/realtek/rtw88/hci.h b/drivers/net/wireless/realtek/rtw88/hci.h
+index 2cba327e6218..24062c7079c6 100644
+--- a/drivers/net/wireless/realtek/rtw88/hci.h
++++ b/drivers/net/wireless/realtek/rtw88/hci.h
+@@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32 addr, u32 mask, u8 data)
+ 	rtw_write8(rtwdev, addr, set);
+ }
+ 
++#define rr8(addr)      rtw_read8(rtwdev, addr)
++#define rr16(addr)     rtw_read16(rtwdev, addr)
++#define rr32(addr)     rtw_read32(rtwdev, addr)
++
+ static inline enum rtw_hci_type rtw_hci_type(struct rtw_dev *rtwdev)
+ {
+ 	return rtwdev->hci.type;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.17.1
+
