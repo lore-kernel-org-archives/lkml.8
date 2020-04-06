@@ -2,221 +2,373 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1432C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E496C2BB54
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85EB2206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:56:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="KFkem/LC"
+	by mail.kernel.org (Postfix) with ESMTP id 62CEB206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgDFT4z (ORCPT
+        id S1726399AbgDFT45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:56:55 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41662 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgDFT4z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:56:55 -0400
-Received: by mail-il1-f193.google.com with SMTP id t6so729789ilj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 12:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fnZ6pExW/U6h46wgY9rWZOzZT0GV3QCI6s9Mlxp3WgU=;
-        b=KFkem/LC1MPyOeQ8gprhr2bwARr/FErtNsI8vnaEJg/xiylixuShCm0Ero8GENGAsc
-         Mjvz0FEyzb0Q0x6uu5M+rvUGojWDq9DmsJBb8rNBukP+rUHsEMoEvehWbqu0YJQtARrc
-         0oml0hoZShhDVCDQZBfly+LOX9wpcFaqe0SM9dS+yUGlHZD+PrxNAZVM39yKjbBfqG4w
-         FFZoJx8bXsbqQXzuHrzkgTLkWXe2A0HD7A59uMnqWwu0RyQrZMdROAojng2++SBPplZ2
-         kV+33A4M1BXdXn3gOImbPTLaxDBbzQIUGbBGy/uHAgB8tbI9F/yBHhdS0arYwhJ0vIux
-         K/IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fnZ6pExW/U6h46wgY9rWZOzZT0GV3QCI6s9Mlxp3WgU=;
-        b=K2BglJjEP8OKHnfG+RNmFDMZKbaY9rWzpSaCtyrOr4Px39gFV/ZSmZ1L1lR5M66fcM
-         8sk2lqSgdLv3h+pDmMDaWgVfkvVx817MYpne/lNgRorO5OlcyKPUk1fYOa3TupUpN6oG
-         nEs3pUKLya2eQH4LbSJEBso/iQnqhk1ywAhcPSmhPYJIGgFlxKOYqTTv1mnsbOeCGZZd
-         4YAhoGrTKwc1LEztrXWxN9Fu2DjHF6zT4faRXRSzbcBL/ViQ1AEE6Il48BqMIWtT36dm
-         p2YCgYEmpmu1YhPSSpslmg5TwgCHX/vtDytOV/0S9a131oyllt5XxTlYrGS+V0yRoT4u
-         HAMQ==
-X-Gm-Message-State: AGi0PuYojFUb8OOauaAjMAR2uK4i5H1Z7HhROCVA8XisPmMvjJROdGWg
-        aOp5UsYcw3wlMsFtbmNnRIEwxzuV5FwGlUQuR6Akkw==
-X-Google-Smtp-Source: APiQypK9acCe47XaSYdZCjI/gE8nQ+1Lo1fLbrq/jUyLE1JNTsHe/R+oDJmP1D8tA9K9/PU93xjVdykoWrqHRNxl4Lc=
-X-Received: by 2002:a92:9f9c:: with SMTP id z28mr1094973ilk.71.1586203014176;
- Mon, 06 Apr 2020 12:56:54 -0700 (PDT)
+        Mon, 6 Apr 2020 15:56:57 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11339 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726287AbgDFT44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 15:56:56 -0400
+IronPort-SDR: 8BJfuknPiXHNI8UuBXJotGM8c9NLmxiy8OV98bG5QUrZYnvJamh7KWIdiqvKAJ9nv8rMiSX0lF
+ XgB10H2ULjSw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 12:56:55 -0700
+IronPort-SDR: 7jaDNfISimOsHgG8svNRIWnOicdsddpNv9m3+uFUcpM6VJKwiW8snjGbgyGtWgyPJzwB932q9z
+ tta1yJ1iMWGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,352,1580803200"; 
+   d="scan'208";a="247005866"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga008.jf.intel.com with ESMTP; 06 Apr 2020 12:56:54 -0700
+Date:   Mon, 6 Apr 2020 13:02:45 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 03/10] iommu/ioasid: Introduce per set allocation APIs
+Message-ID: <20200406130245.690cfe15@jacob-builder>
+In-Reply-To: <20200401134745.GE882512@myrica>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1585158931-1825-4-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200401134745.GE882512@myrica>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200403222251.937740-1-lyude@redhat.com>
-In-Reply-To: <20200403222251.937740-1-lyude@redhat.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Mon, 6 Apr 2020 15:56:18 -0400
-Message-ID: <CAMavQKKXVuvcU=TjA8MZpjLDmLC6nga+uDu8zcX5Ps9wFQoyMw@mail.gmail.com>
-Subject: Re: [PATCH] drm/dp_mst: Remove drm_dp_mst_has_audio()
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Lee, Shawn C" <shawn.c.lee@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 6:23 PM Lyude Paul <lyude@redhat.com> wrote:
->
-> Drive-by fix I noticed the other day - drm_dp_mst_has_audio() only ever
-> made sense back when we still had to validate ports before accessing
-> them in order to (attempt to) avoid NULL dereferences. Since we have
-> proper reference counting that guarantees we always can safely access
-> the MST port, there's no use in keeping this function around as all it
-> does is validate the port pointer before checking the audio status.
->
-> Note - drm_dp_mst_port->has_audio is technically protected by
-> drm_device->mode_config.connection_mutex, since it's only ever updated
-> from drm_dp_mst_get_edid(). Additionally, we change the declaration for
-> port in struct intel_connector to be properly typed, so we can directly
-> access it.
->
+On Wed, 1 Apr 2020 15:47:45 +0200
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
-This is kind of burying the lede. I'd almost prefer a 2 patch series:
+> On Wed, Mar 25, 2020 at 10:55:24AM -0700, Jacob Pan wrote:
+> > IOASID set defines a group of IDs that share the same token. The
+> > ioasid_set concept helps to do permission checking among users as
+> > in the current code.
+> > 
+> > With guest SVA usage, each VM has its own IOASID set. More
+> > functionalities are needed:
+> > 1. Enforce quota, each guest may be assigned limited quota such
+> > that one guest cannot abuse all the system resource.
+> > 2. Stores IOASID mapping between guest and host IOASIDs
+> > 3. Per set operations, e.g. free the entire set
+> > 
+> > For each ioasid_set token, a unique set ID is assigned. This makes
+> > reference of the set and data lookup much easier to implement.
+> > 
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/ioasid.c | 147
+> > +++++++++++++++++++++++++++++++++++++++++++++++++
+> > include/linux/ioasid.h |  13 +++++ 2 files changed, 160
+> > insertions(+)
+> > 
+> > diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> > index 4026e52855b9..27ee57f7079b 100644
+> > --- a/drivers/iommu/ioasid.c
+> > +++ b/drivers/iommu/ioasid.c
+> > @@ -10,6 +10,25 @@
+> >  #include <linux/spinlock.h>
+> >  #include <linux/xarray.h>
+> >  
+> > +static DEFINE_XARRAY_ALLOC(ioasid_sets);
+> > +/**
+> > + * struct ioasid_set_data - Meta data about ioasid_set
+> > + *
+> > + * @token:	Unique to identify an IOASID set
+> > + * @xa:		XArray to store subset ID and IOASID mapping
+> > + * @size:	Max number of IOASIDs can be allocated within the
+> > set
+> > + * @nr_ioasids	Number of IOASIDs allocated in the set
+> > + * @sid		ID of the set
+> > + */
+> > +struct ioasid_set_data {
+> > +	struct ioasid_set *token;
+> > +	struct xarray xa;
+> > +	int size;
+> > +	int nr_ioasids;
+> > +	int sid;
+> > +	struct rcu_head rcu;
+> > +};
+> > +
+> >  struct ioasid_data {
+> >  	ioasid_t id;
+> >  	struct ioasid_set *set;
+> > @@ -388,6 +407,111 @@ void ioasid_free(ioasid_t ioasid)
+> >  EXPORT_SYMBOL_GPL(ioasid_free);
+> >  
+> >  /**
+> > + * ioasid_alloc_set - Allocate a set of IOASIDs
+> > + * @token:	Unique token of the IOASID set
+> > + * @quota:	Quota allowed in this set
+> > + * @sid:	IOASID set ID to be assigned
+> > + *
+> > + * Return 0 upon success. Token will be stored internally for
+> > lookup,
+> > + * IOASID allocation within the set and other per set operations
+> > will use
+> > + * the @sid assigned.
+> > + *
+> > + */
+> > +int ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int
+> > *sid) +{
+> > +	struct ioasid_set_data *sdata;
+> > +	ioasid_t id;
+> > +	int ret = 0;
+> > +
+> > +	if (quota > ioasid_capacity_avail) {
+> > +		pr_warn("Out of IOASID capacity! ask %d, avail
+> > %d\n",
+> > +			quota, ioasid_capacity_avail);
+> > +		return -ENOSPC;
+> > +	}  
+> 
+> This check should be in the same critical section as the quota
+> substraction
+> 
+yes, right.
 
-drm/i915: Allow connectors to directly access drm_dp_mst_port
-drm/dp_mst: Remove unused drm_dp_mst_port_has_audio()
+> > +
+> > +	sdata = kzalloc(sizeof(*sdata), GFP_KERNEL);
+> > +	if (!sdata)
+> > +		return -ENOMEM;  
+> 
+> I don't understand why we need this structure at all, nor why we need
+> the SID. Users have already allocated an ioasid_set, so why not just
+> stick the content of ioasid_set_data in there, and pass the
+> ioasid_set pointer to ioasid_alloc()?
+> 
 
-That way if anyone objects to the idea of accessing mst_port directly
-from i915 driver, it's more obvious from the patch subject.
+My thinking was that ioasid_set is an opaque user token, e.g. we use mm
+to identify a common set belong to a VM.
 
-Nitpicks aside, the code looks good to me, it's a nice cleanup!
+This sdata is an IOASID internal structure for managing & servicing per
+set data. If we let user fill in the content, some of the entries need
+to be managed by the IOASID code under a lock. IMO, not suitable to let
+user allocate and manage.
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+Perhaps we should rename struct ioasid_set to ioasid_set_token?
 
-> Cc: "Lee, Shawn C" <shawn.c.lee@intel.com>
-> Cc: Sean Paul <sean@poorly.run>
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c         | 21 -------------------
->  .../drm/i915/display/intel_display_debugfs.c  | 10 ++-------
->  .../drm/i915/display/intel_display_types.h    |  2 +-
->  drivers/gpu/drm/i915/display/intel_dp_mst.c   |  3 +--
->  include/drm/drm_dp_mst_helper.h               |  2 --
->  5 files changed, 4 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 1ff49547b2e8..129126091e90 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -4063,27 +4063,6 @@ drm_dp_mst_detect_port(struct drm_connector *connector,
->  }
->  EXPORT_SYMBOL(drm_dp_mst_detect_port);
->
-> -/**
-> - * drm_dp_mst_port_has_audio() - Check whether port has audio capability or not
-> - * @mgr: manager for this port
-> - * @port: unverified pointer to a port.
-> - *
-> - * This returns whether the port supports audio or not.
-> - */
-> -bool drm_dp_mst_port_has_audio(struct drm_dp_mst_topology_mgr *mgr,
-> -                                       struct drm_dp_mst_port *port)
-> -{
-> -       bool ret = false;
-> -
-> -       port = drm_dp_mst_topology_get_port_validated(mgr, port);
-> -       if (!port)
-> -               return ret;
-> -       ret = port->has_audio;
-> -       drm_dp_mst_topology_put_port(port);
-> -       return ret;
-> -}
-> -EXPORT_SYMBOL(drm_dp_mst_port_has_audio);
-> -
->  /**
->   * drm_dp_mst_get_edid() - get EDID for an MST port
->   * @connector: toplevel connector to get EDID for
-> diff --git a/drivers/gpu/drm/i915/display/intel_display_debugfs.c b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
-> index 424f4e52f783..9f736420d83f 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display_debugfs.c
-> +++ b/drivers/gpu/drm/i915/display/intel_display_debugfs.c
-> @@ -631,15 +631,9 @@ static void intel_dp_info(struct seq_file *m,
->  }
->
->  static void intel_dp_mst_info(struct seq_file *m,
-> -                         struct intel_connector *intel_connector)
-> +                             struct intel_connector *intel_connector)
->  {
-> -       struct intel_encoder *intel_encoder = intel_attached_encoder(intel_connector);
-> -       struct intel_dp_mst_encoder *intel_mst =
-> -               enc_to_mst(intel_encoder);
-> -       struct intel_digital_port *intel_dig_port = intel_mst->primary;
-> -       struct intel_dp *intel_dp = &intel_dig_port->dp;
-> -       bool has_audio = drm_dp_mst_port_has_audio(&intel_dp->mst_mgr,
-> -                                       intel_connector->port);
-> +       bool has_audio = intel_connector->port->has_audio;
->
->         seq_printf(m, "\taudio support: %s\n", yesno(has_audio));
->  }
-> diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
-> index 2bedd626c686..1de7bef0a49b 100644
-> --- a/drivers/gpu/drm/i915/display/intel_display_types.h
-> +++ b/drivers/gpu/drm/i915/display/intel_display_types.h
-> @@ -436,7 +436,7 @@ struct intel_connector {
->            state of connector->polled in case hotplug storm detection changes it */
->         u8 polled;
->
-> -       void *port; /* store this opaque as its illegal to dereference it */
-> +       struct drm_dp_mst_port *port;
->
->         struct intel_dp *mst_port;
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp_mst.c b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> index 61605eb8c2af..c35efc9e628d 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp_mst.c
-> @@ -114,8 +114,7 @@ static int intel_dp_mst_compute_config(struct intel_encoder *encoder,
->
->         if (intel_conn_state->force_audio == HDMI_AUDIO_AUTO)
->                 pipe_config->has_audio =
-> -                       drm_dp_mst_port_has_audio(&intel_dp->mst_mgr,
-> -                                                 connector->port);
-> +                       connector->port->has_audio;
->         else
->                 pipe_config->has_audio =
->                         intel_conn_state->force_audio == HDMI_AUDIO_ON;
-> diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-> index 7af51c947b81..2d7c26592c05 100644
-> --- a/include/drm/drm_dp_mst_helper.h
-> +++ b/include/drm/drm_dp_mst_helper.h
-> @@ -732,8 +732,6 @@ drm_dp_mst_detect_port(struct drm_connector *connector,
->                        struct drm_dp_mst_topology_mgr *mgr,
->                        struct drm_dp_mst_port *port);
->
-> -bool drm_dp_mst_port_has_audio(struct drm_dp_mst_topology_mgr *mgr,
-> -                                       struct drm_dp_mst_port *port);
->  struct edid *drm_dp_mst_get_edid(struct drm_connector *connector, struct drm_dp_mst_topology_mgr *mgr, struct drm_dp_mst_port *port);
->
->
-> --
-> 2.25.1
->
+/**
+ * struct ioasid_set_data - Meta data about ioasid_set
+ *
+ * @token:	Unique to identify an IOASID set
+ * @xa:		XArray to store ioasid_set private ID to
+system-wide IOASID
+ *		mapping
+ * @max_id:	Max number of IOASIDs can be allocated within the set
+ * @nr_id	Number of IOASIDs allocated in the set
+ * @sid		ID of the set
+ */
+struct ioasid_set_data {
+	struct ioasid_set *token;
+	struct xarray xa;
+	int size;
+	int nr_ioasids;
+	int sid;
+	struct rcu_head rcu;
+};
+
+
+I agree SID is optional. User could just use the token to reference
+the set. I use the SID for performance reason, i.e. quick lookup from
+SID to its data. Otherwise, we may have to search through a list of
+sets to find a match?
+
+> > +
+> > +	spin_lock(&ioasid_allocator_lock);
+> > +
+> > +	ret = xa_alloc(&ioasid_sets, &id, sdata,
+> > +		       XA_LIMIT(0, ioasid_capacity_avail - quota),
+> > +		       GFP_KERNEL);  
+> 
+> Same as Kevin, I think the limit should be the static
+> ioasid_capacity. And perhaps a comment explaining the worst case of
+> one PASID per set. I found a little confusing using the same type
+> ioasid_t for IOASIDs and IOASID sets, it may be clearer to use an int
+> for IOASID set IDs.
+> 
+Sounds good.
+
+> Thanks,
+> Jean
+> 
+> > +	if (ret) {
+> > +		kfree(sdata);
+> > +		goto error;
+> > +	}
+> > +
+> > +	sdata->token = token;
+> > +	sdata->size = quota;
+> > +	sdata->sid = id;
+> > +
+> > +	/*
+> > +	 * Set Xarray is used to store IDs within the set, get
+> > ready for
+> > +	 * sub-set ID and system-wide IOASID allocation results.
+> > +	 */
+> > +	xa_init_flags(&sdata->xa, XA_FLAGS_ALLOC);
+> > +
+> > +	ioasid_capacity_avail -= quota;
+> > +	*sid = id;
+> > +
+> > +error:
+> > +	spin_unlock(&ioasid_allocator_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(ioasid_alloc_set);
+> > +
+> > +/**
+> > + * ioasid_free_set - Free all IOASIDs within the set
+> > + *
+> > + * @sid:		The IOASID set ID to be freed
+> > + * @destroy_set:	Whether to keep the set for further
+> > allocation.
+> > + *			If true, the set will be destroyed.
+> > + *
+> > + * All IOASIDs allocated within the set will be freed upon return.
+> > + */
+> > +void ioasid_free_set(int sid, bool destroy_set)
+> > +{
+> > +	struct ioasid_set_data *sdata;
+> > +	struct ioasid_data *entry;
+> > +	unsigned long index;
+> > +
+> > +	spin_lock(&ioasid_allocator_lock);
+> > +	sdata = xa_load(&ioasid_sets, sid);
+> > +	if (!sdata) {
+> > +		pr_err("No IOASID set found to free %d\n", sid);
+> > +		goto done_unlock;
+> > +	}
+> > +
+> > +	if (xa_empty(&sdata->xa)) {
+> > +		pr_warn("No IOASIDs in the set %d\n", sdata->sid);
+> > +		goto done_destroy;
+> > +	}
+> > +
+> > +	/* Just a place holder for now */
+> > +	xa_for_each(&sdata->xa, index, entry) {
+> > +		/* Free from per sub-set pool */
+> > +		xa_erase(&sdata->xa, index);
+> > +	}
+> > +
+> > +done_destroy:
+> > +	if (destroy_set) {
+> > +		xa_erase(&ioasid_sets, sid);
+> > +
+> > +		/* Return the quota back to system pool */
+> > +		ioasid_capacity_avail += sdata->size;
+> > +		kfree_rcu(sdata, rcu);
+> > +	}
+> > +
+> > +done_unlock:
+> > +	spin_unlock(&ioasid_allocator_lock);
+> > +}
+> > +EXPORT_SYMBOL_GPL(ioasid_free_set);
+> > +
+> > +
+> > +/**
+> >   * ioasid_find - Find IOASID data
+> >   * @set: the IOASID set
+> >   * @ioasid: the IOASID to find
+> > @@ -431,6 +555,29 @@ void *ioasid_find(struct ioasid_set *set,
+> > ioasid_t ioasid, }
+> >  EXPORT_SYMBOL_GPL(ioasid_find);
+> >  
+> > +/**
+> > + * ioasid_find_sid - Retrieve IOASID set ID from an ioasid
+> > + *                   Caller must hold a reference to the set.
+> > + *
+> > + * @ioasid: IOASID associated with the set
+> > + *
+> > + * Return IOASID set ID or error
+> > + */
+> > +int ioasid_find_sid(ioasid_t ioasid)
+> > +{
+> > +	struct ioasid_data *ioasid_data;
+> > +	int ret = 0;
+> > +
+> > +	spin_lock(&ioasid_allocator_lock);
+> > +	ioasid_data = xa_load(&active_allocator->xa, ioasid);
+> > +	ret = (ioasid_data) ? ioasid_data->sdata->sid : -ENOENT;
+> > +
+> > +	spin_unlock(&ioasid_allocator_lock);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(ioasid_find_sid);
+> > +
+> >  MODULE_AUTHOR("Jean-Philippe Brucker
+> > <jean-philippe.brucker@arm.com>"); MODULE_AUTHOR("Jacob Pan
+> > <jacob.jun.pan@linux.intel.com>"); MODULE_DESCRIPTION("IO Address
+> > Space ID (IOASID) allocator"); diff --git a/include/linux/ioasid.h
+> > b/include/linux/ioasid.h index 9711fa0dc357..be158e03c034 100644
+> > --- a/include/linux/ioasid.h
+> > +++ b/include/linux/ioasid.h
+> > @@ -41,6 +41,9 @@ int ioasid_register_allocator(struct
+> > ioasid_allocator_ops *allocator); void
+> > ioasid_unregister_allocator(struct ioasid_allocator_ops
+> > *allocator); int ioasid_set_data(ioasid_t ioasid, void *data); void
+> > ioasid_install_capacity(ioasid_t total); +int
+> > ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int
+> > *sid); +void ioasid_free_set(int sid, bool destroy_set); +int
+> > ioasid_find_sid(ioasid_t ioasid); #else /* !CONFIG_IOASID */
+> >  static inline ioasid_t ioasid_alloc(struct ioasid_set *set,
+> > ioasid_t min, ioasid_t max, void *private)
+> > @@ -52,6 +55,15 @@ static inline void ioasid_free(ioasid_t ioasid)
+> >  {
+> >  }
+> >  
+> > +static inline int ioasid_alloc_set(struct ioasid_set *token,
+> > ioasid_t quota, int *sid) +{
+> > +	return -ENOTSUPP;
+> > +}
+> > +
+> > +static inline void ioasid_free_set(int sid, bool destroy_set)
+> > +{
+> > +}
+> > +
+> >  static inline void *ioasid_find(struct ioasid_set *set, ioasid_t
+> > ioasid, bool (*getter)(void *))
+> >  {
+> > @@ -75,5 +87,6 @@ static inline int ioasid_set_data(ioasid_t
+> > ioasid, void *data) static inline void
+> > ioasid_install_capacity(ioasid_t total) {
+> >  }
+> > +
+> >  #endif /* CONFIG_IOASID */
+> >  #endif /* __LINUX_IOASID_H */
+> > -- 
+> > 2.7.4
+> >   
+
+[Jacob Pan]
