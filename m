@@ -7,101 +7,96 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61250C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AB1C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F25E20672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E277F20672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="D2shqFan"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="MEse3+vj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbgDFSQv (ORCPT
+        id S1727349AbgDFSQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:16:51 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:3974 "EHLO pegase1.c-s.fr"
+        Mon, 6 Apr 2020 14:16:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:56219 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727162AbgDFSQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:16:49 -0400
+        id S1727191AbgDFSQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:16:50 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wzJc2djQz9v09G;
-        Mon,  6 Apr 2020 20:16:48 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 48wzJd221lz9v0BM;
+        Mon,  6 Apr 2020 20:16:49 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=D2shqFan; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=MEse3+vj; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id fxS0gBU9cqes; Mon,  6 Apr 2020 20:16:48 +0200 (CEST)
+        with ESMTP id MO6WKEdwWqe7; Mon,  6 Apr 2020 20:16:49 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJc1YWwz9v016;
-        Mon,  6 Apr 2020 20:16:48 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJd0xg7z9v0BL;
+        Mon,  6 Apr 2020 20:16:49 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586197008; bh=stu09CrU2mn4pu91S8qHPEGE3iMjq1lNwJ59R5Er1jA=;
+        t=1586197009; bh=KhQRpPjql4iBmrVyMyR4fg1vYv3KiRovrf87iAwV4+8=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=D2shqFanYO3jeQCNd9F05YYrZvMIoUWebmPaVR8JSNvO64GH35WBrf02totANfcAA
-         oIQocUF8whPNmg99bmVdPvH9olf+e4xcV8PvyTt16yHfBqlY39Pl7rb/4l4JP2lx5Z
-         1CA2L1ewfKanaEwJWrqy9+V2dxCsEBvUsGAGPIAM=
+        b=MEse3+vj4xGrUBLjSfa92tk0g5o3qFrVsZP2/LAHBdO5hcBYR7T6Ab7aKT3U2309P
+         tvnJ5/O9ewcMOUUviOOjPue2O4pBo8CknwLOUuYi54I9DXr4S/la61B8YaX2pqLEDH
+         dzxt4HUoAQOjNs5+ggU2R56ZISNTOtXNBq7vptqQ=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1ADD38B784;
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D20638B784;
         Mon,  6 Apr 2020 20:16:48 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id RzjwhyypyaS7; Mon,  6 Apr 2020 20:16:48 +0200 (CEST)
+        with ESMTP id zolvmdBxE9TE; Mon,  6 Apr 2020 20:16:48 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 91C7A8B775;
-        Mon,  6 Apr 2020 20:16:47 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9B5678B775;
+        Mon,  6 Apr 2020 20:16:48 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 633ED656E9; Mon,  6 Apr 2020 18:16:47 +0000 (UTC)
-Message-Id: <6f5cb16636ee153a43e0ca77a7b1cdfaa2d98355.1586196948.git.christophe.leroy@c-s.fr>
+        id 69DE7656E9; Mon,  6 Apr 2020 18:16:48 +0000 (UTC)
+Message-Id: <99851590f78150820e1c21af7f6370d7b82830e9.1586196948.git.christophe.leroy@c-s.fr>
 In-Reply-To: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
 References: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v3 11/15] powerpc/syscall: Save r3 in regs->orig_r3
+Subject: [RFC PATCH v3 12/15] powerpc/syscall: Selectively check MSR_RI and
+ MSR_PR on syscall entry
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
         msuchanek@suse.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon,  6 Apr 2020 18:16:47 +0000 (UTC)
+Date:   Mon,  6 Apr 2020 18:16:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save r3 in regs->orig_r3 in system_call_exception()
+In system_call_exception(), MSR_RI needs to also be checked on 8xx.
+Only book3e doesn't have MSR_RI.
+
+On PPC32, MSR_PR is checked in real mode to avoid clobbering the
+stack, so no need to check and panic in system_call_exception().
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/entry_64.S | 1 -
- arch/powerpc/kernel/syscall.c  | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/syscall.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/entry_64.S b/arch/powerpc/kernel/entry_64.S
-index 63f0a4414618..5ccb65f75712 100644
---- a/arch/powerpc/kernel/entry_64.S
-+++ b/arch/powerpc/kernel/entry_64.S
-@@ -114,7 +114,6 @@ END_BTB_FLUSH_SECTION
- 	std	r10,_LINK(r1)
- 	std	r11,_TRAP(r1)
- 	std	r12,_CCR(r1)
--	std	r3,ORIG_GPR3(r1)
- 	addi	r10,r1,STACK_FRAME_OVERHEAD
- 	ld	r11,exception_marker@toc(r2)
- 	std	r11,-16(r10)		/* "regshere" marker */
 diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
-index 0ad4250d2ce8..dfd7b28239b8 100644
+index dfd7b28239b8..f9fca9985b0f 100644
 --- a/arch/powerpc/kernel/syscall.c
 +++ b/arch/powerpc/kernel/syscall.c
-@@ -27,6 +27,8 @@ notrace long system_call_exception(long r3, long r4, long r5,
- 	unsigned long ti_flags;
- 	syscall_fn f;
+@@ -34,9 +34,9 @@ notrace long system_call_exception(long r3, long r4, long r5,
  
-+	regs->orig_gpr3 = r3;
-+
- 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
- 		BUG_ON(irq_soft_mask_return() != IRQS_ALL_DISABLED);
+ 	trace_hardirqs_off(); /* finish reconciling */
+ 
+-	if (IS_ENABLED(CONFIG_PPC_BOOK3S))
++	if (!IS_ENABLED(CONFIG_PPC_BOOK3E))
+ 		BUG_ON(!(regs->msr & MSR_RI));
+-	BUG_ON(!(regs->msr & MSR_PR));
++	BUG_ON(IS_ENABLED(CONFIG_PPC64) && !(regs->msr & MSR_PR));
+ 	BUG_ON(!FULL_REGS(regs));
+ 	BUG_ON(IS_ENABLED(CONFIG_PPC64) && get_softe(regs) != IRQS_ENABLED);
  
 -- 
 2.25.0
