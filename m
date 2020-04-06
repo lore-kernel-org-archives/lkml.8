@@ -2,214 +2,143 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602BEC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00DCC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBAE2074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:20:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZDsfwluE"
+	by mail.kernel.org (Postfix) with ESMTP id 913732074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgDFEUV (ORCPT
+        id S1726495AbgDFEZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 00:20:21 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38549 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgDFEUV (ORCPT
+        Mon, 6 Apr 2020 00:25:46 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35844 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbgDFEZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 00:20:21 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w3so5412075plz.5
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 21:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=/HcoQgZiE9Pv1rBqK3LLTaPK3g2aKD5HOOnSnhG2gxw=;
-        b=ZDsfwluEmMK067gw+2Je0s0vfQ/XUsMaIRb9LDK9nvdEf14r3PGX9eLKtSlUEjmocE
-         0ytImzDDo08wtYIVUCRhhJ8vMavngxXSZWLHgHfkpDdnxMt6tkS3xlXDcsQuSkMvKeDz
-         1RxRTdhFXv3fYadf9MWoeGNHhkyJFAxB2yRyfXE7bZ0uz+G8WrH/yvm+pT8wEMiqAPxO
-         r8SHij9QSvJMHT2L0hxirj24S1Fgyr364zW32utrka1wOA+0X6KKx/nXajpRwMo2Y5MZ
-         ifRS2EbVjGtO3K+rkH8HAc8e8Hij2eNV7D0r1hbbvUNAvWQarM10kNMvLv04XWGUKgFr
-         0MRw==
+        Mon, 6 Apr 2020 00:25:46 -0400
+Received: by mail-pf1-f196.google.com with SMTP id n10so6949767pff.3;
+        Sun, 05 Apr 2020 21:25:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=/HcoQgZiE9Pv1rBqK3LLTaPK3g2aKD5HOOnSnhG2gxw=;
-        b=kPraSUwZTQqfDnh8UqQlEWaaP8XZ7/f4VbEN/ZvFdRKkDreSJg9ip9dF3HUBssR9sI
-         2vyBP+1F9NZ91kHAcjD6zSWYZH+FfyQQ1ah5xyjUv3JX7vFWDEdzVEfZKWjn7ZsUMSVw
-         Nue7PwH8WYZYMDGADc0wtnq0YhL4Vr2pWBZOxVeOpcOBhN3+IUu202jNHbAWs0JI+QH8
-         VEsuvtVyuycnKkzIIo0P0wBAn91Jojbg9YSq3OmqywBRnKr92YZNDEWVMSdxZKtSCCIA
-         3LMdwFf4WHtwIuE8OynGcaKhkD11F/RW+ptayYUBO2963ZmESfgDsj3bSByXIUBxMO/K
-         Yb/w==
-X-Gm-Message-State: AGi0PubwB1I2o31QoZwDranZH87AqXsShbrtwwKQZTThLlE66uE8N2Ye
-        MYa5jzFxB+LQiuPvRIwfpF5rBg==
-X-Google-Smtp-Source: APiQypL+DURskNXslDx34UEjspJ3/iPYy2jfCqgiYyc9DYTgtIKJNU3ptIh+yrVdsV9Wg8Ttv2kR6Q==
-X-Received: by 2002:a17:90a:a484:: with SMTP id z4mr24579608pjp.77.1586146819733;
-        Sun, 05 Apr 2020 21:20:19 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id 198sm10616957pfa.87.2020.04.05.21.20.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 21:20:19 -0700 (PDT)
-Date:   Sun, 5 Apr 2020 21:20:18 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Waiman Long <longman@redhat.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] mm: Add kvfree_sensitive() for freeing sensitive data
- objects
-In-Reply-To: <20200406023700.1367-1-longman@redhat.com>
-Message-ID: <alpine.DEB.2.21.2004052119530.243304@chino.kir.corp.google.com>
-References: <20200406023700.1367-1-longman@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=c8wPbad/8W9/8b6vePf+GYvbUSqgcxrAZ3yGLbYkRIg=;
+        b=nNy1VitUHs4ZrHyV0qTotIiwPFPn26bHsJz/tDwyEl78xPQZv7H9P05l5s5+IIKo7/
+         9HKLR5ocx1coV44gUU9SZQ/S/LEp5p1DrKfc1T8bVsVntf0uC55kpOTSOYGd7uB0P/On
+         LAST/j2IzNsQsHj/ISazT4GOK7vlkjQqA1AIHN6KU2OvCoE61FUN9sqJc8fxc2bzHaLW
+         F0JKW2GEJ14ODUwRFfzKeQdx89JX2hL9PjnJ6YRvKykU2uhKW5xX7LxkzcAqoDzI+a1N
+         VSkZmQOxvuUh5jqvXUUF3J9Ym7pFRmuSIbBrOxC5oQ86Uwx+qL2qJvnyUxDQDWESWHNe
+         n1hA==
+X-Gm-Message-State: AGi0Pub8urHfmDuTS2LK9o/fiu2wz3LsZJA/OfjjeFPlLmSAQFa71XyD
+        5D3HxUuLOFiZ/Dix/SB9rEUpkXDJJ2o=
+X-Google-Smtp-Source: APiQypKEoPMxKPEw1lvcr+pVTnkijH/ndCn7BCmmULSLJlYTk+1hOrYPoUZBL8ZSN5GPm4bYSgO3WA==
+X-Received: by 2002:a63:8dc7:: with SMTP id z190mr19591971pgd.39.1586147144839;
+        Sun, 05 Apr 2020 21:25:44 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:7d7b:4f16:40c2:d1f9? ([2601:647:4000:d7:7d7b:4f16:40c2:d1f9])
+        by smtp.gmail.com with ESMTPSA id e184sm10462077pfh.219.2020.04.05.21.25.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Apr 2020 21:25:43 -0700 (PDT)
+Subject: Re: [RFC 2/3] blktrace: fix debugfs use after free
+To:     Eric Sandeen <sandeen@sandeen.net>,
+        Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de
+Cc:     mhocko@suse.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+References: <20200402000002.7442-1-mcgrof@kernel.org>
+ <20200402000002.7442-3-mcgrof@kernel.org>
+ <3640b16b-abda-5160-301a-6a0ee67365b4@acm.org>
+ <b827d03c-e097-06c3-02ab-00df42b5fc0e@sandeen.net>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <75aa4cff-1b90-ebd4-17a4-c1cb6d390b30@acm.org>
+Date:   Sun, 5 Apr 2020 21:25:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <b827d03c-e097-06c3-02ab-00df42b5fc0e@sandeen.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 5 Apr 2020, Waiman Long wrote:
+On 2020-04-05 18:27, Eric Sandeen wrote:
+> The thing I can't figure out from reading the change log is
+> 
+> 1) what the root cause of the problem is, and
+> 2) how this patch fixes it?
 
-> For kvmalloc'ed data object that contains sensitive information like
-> cryptographic key, we need to make sure that the buffer is always
-> cleared before freeing it. Using memset() alone for buffer clearing may
-> not provide certainty as the compiler may compile it away. To be sure,
-> the special memzero_explicit() has to be used.
-> 
-> This patch introduces a new kvfree_sensitive() for freeing those
-> sensitive data objects allocated by kvmalloc(). The relevnat places
-> where kvfree_sensitive() can be used are modified to use it.
-> 
-> Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  include/linux/mm.h       | 17 +++++++++++++++++
->  security/keys/internal.h | 11 -----------
->  security/keys/keyctl.c   | 16 +++++-----------
->  3 files changed, 22 insertions(+), 22 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 7dd5c4ccbf85..c26f279f1956 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -758,6 +758,23 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
->  
->  extern void kvfree(const void *addr);
->  
-> +/**
-> + * kvfree_sensitive - free a data object containing sensitive information
-> + * @addr - address of the data object to be freed
-> + * @len  - length of the data object
-> + *
-> + * Use the special memzero_explicit() function to clear the content of a
-> + * kvmalloc'ed object containing sensitive data to make sure that the
-> + * compiler won't optimize out the data clearing.
-> + */
-> +static inline void kvfree_sensitive(const void *addr, size_t len)
-> +{
-> +	if (addr) {
+I think that the root cause is that do_blk_trace_setup() uses
+debugfs_lookup() and that debugfs_lookup() may return a pointer
+associated with a previous incarnation of the block device.
+Additionally, I think the following changes fix that problem by using
+q->debugfs_dir in the blktrace code instead of debugfs_lookup():
 
-Shouldn't this be if (unlikely(ZERO_OR_NULL_PTR(addr))?
+[ ... ]
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -311,7 +311,6 @@ static void blk_trace_free(struct blk_trace *bt)
+ 	debugfs_remove(bt->msg_file);
+ 	debugfs_remove(bt->dropped_file);
+ 	relay_close(bt->rchan);
+-	debugfs_remove(bt->dir);
+ 	free_percpu(bt->sequence);
+ 	free_percpu(bt->msg_data);
+ 	kfree(bt);
+[ ... ]
+@@ -509,21 +510,19 @@ static int do_blk_trace_setup(struct request_queue
+*q, char *name, dev_t dev,
 
-> +		memzero_explicit((void *)addr, len);
-> +		kvfree(addr);
-> +	}
-> +}
-> +
->  static inline int compound_mapcount(struct page *page)
->  {
->  	VM_BUG_ON_PAGE(!PageCompound(page), page);
-> diff --git a/security/keys/internal.h b/security/keys/internal.h
-> index 6d0ca48ae9a5..153d35c20d3d 100644
-> --- a/security/keys/internal.h
-> +++ b/security/keys/internal.h
-> @@ -350,15 +350,4 @@ static inline void key_check(const struct key *key)
->  #define key_check(key) do {} while(0)
->  
->  #endif
-> -
-> -/*
-> - * Helper function to clear and free a kvmalloc'ed memory object.
-> - */
-> -static inline void __kvzfree(const void *addr, size_t len)
-> -{
-> -	if (addr) {
-> -		memset((void *)addr, 0, len);
-> -		kvfree(addr);
-> -	}
-> -}
->  #endif /* _INTERNAL_H */
-> diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-> index 5e01192e222a..edde63a63007 100644
-> --- a/security/keys/keyctl.c
-> +++ b/security/keys/keyctl.c
-> @@ -142,10 +142,7 @@ SYSCALL_DEFINE5(add_key, const char __user *, _type,
->  
->  	key_ref_put(keyring_ref);
->   error3:
-> -	if (payload) {
-> -		memzero_explicit(payload, plen);
-> -		kvfree(payload);
-> -	}
-> +	kvfree_sensitive(payload, plen);
->   error2:
->  	kfree(description);
->   error:
-> @@ -360,7 +357,7 @@ long keyctl_update_key(key_serial_t id,
->  
->  	key_ref_put(key_ref);
->  error2:
-> -	__kvzfree(payload, plen);
-> +	kvfree_sensitive(payload, plen);
->  error:
->  	return ret;
->  }
-> @@ -914,7 +911,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
->  		 */
->  		if (ret > key_data_len) {
->  			if (unlikely(key_data))
-> -				__kvzfree(key_data, key_data_len);
-> +				kvfree_sensitive(key_data, key_data_len);
->  			key_data_len = ret;
->  			continue;	/* Allocate buffer */
->  		}
-> @@ -923,7 +920,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
->  			ret = -EFAULT;
->  		break;
->  	}
-> -	__kvzfree(key_data, key_data_len);
-> +	kvfree_sensitive(key_data, key_data_len);
->  
->  key_put_out:
->  	key_put(key);
-> @@ -1225,10 +1222,7 @@ long keyctl_instantiate_key_common(key_serial_t id,
->  		keyctl_change_reqkey_auth(NULL);
->  
->  error2:
-> -	if (payload) {
-> -		memzero_explicit(payload, plen);
-> -		kvfree(payload);
-> -	}
-> +	kvfree_sensitive(payload, plen);
->  error:
->  	return ret;
->  }
-> -- 
-> 2.18.1
-> 
-> 
-> 
+ 	ret = -ENOENT;
+
+-	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+-	if (!dir)
+-		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+-
+ 	bt->dev = dev;
+ 	atomic_set(&bt->dropped, 0);
+ 	INIT_LIST_HEAD(&bt->running_list);
+
+ 	ret = -EIO;
+-	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
++	bt->dropped_file = debugfs_create_file("dropped", 0444,
++					       q->debugfs_dir, bt,
+ 					       &blk_dropped_fops);
+[ ... ]
+
+Bart.
