@@ -2,108 +2,171 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F2FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA08CC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F972072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586171227;
-	bh=MW0KG31dJrppaZHP8FQnU1F/hl4SWfSAkuygfDdzRsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h/Zu+9FBtwy9k1tQS0tBCnIIx0MPJCV8sU9nPIZFVoZC434s6ASWjYiKHIKWU6Z/O
-	 EW/IZpacy4YOmZfkaQn7Nx8cYt4+xs/OSr675p5ZvCldXaStnaoWlp8t9z66ex9Cek
-	 dv/QFqcLrW1OeTNTVJNW7uvJu5GXXvDVQaS1HOhA=
+	by mail.kernel.org (Postfix) with ESMTP id C855F206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:10:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727199AbgDFLHG (ORCPT
+        id S1727242AbgDFLKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45414 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 07:10:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40542 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgDFLHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:07:06 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31DE6206F8;
-        Mon,  6 Apr 2020 11:07:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586171225;
-        bh=MW0KG31dJrppaZHP8FQnU1F/hl4SWfSAkuygfDdzRsY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vYBvA3+sGFhq3yTKh+ucCBVysSRVEhv8kbTZ7mUax4BlKAv3D4fK5qjUXj7Z5gLgl
-         TISEdcdQC4Yw6kKUo0xsMd21GDTjBeoWPMIjRqPbpl8tuQjZBP5dWfsAI/LfpptVzJ
-         V/SAs1M5qygo+k2m9swv+YpL4hpf8/q5LkRknr1E=
-Date:   Mon, 6 Apr 2020 12:07:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     lgirdwood@gmail.com, heiko@sntech.de, robh+dt@kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: sound: convert rockchip spdif
- bindings to yaml
-Message-ID: <20200406110703.GA6837@sirena.org.uk>
-References: <20200404115225.4314-1-jbx6244@gmail.com>
+        id S1726883AbgDFLKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:10:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 8ADA1ABAD;
+        Mon,  6 Apr 2020 11:10:11 +0000 (UTC)
+Subject: Re: [PATCH] thermal: devfreq_cooling: inline all stubs for
+ CONFIG_DEVFREQ_THERMAL=n
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, javi.merino@kernel.org,
+        edubezval@gmail.com, orjan.eide@arm.com, stable@vger.kernel.org
+References: <20200403205133.1101808-1-martin.blumenstingl@googlemail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <0af90cb5-f6ba-d3a9-2cc7-8813ebab5ed6@suse.de>
+Date:   Mon, 6 Apr 2020 13:10:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
-Content-Disposition: inline
-In-Reply-To: <20200404115225.4314-1-jbx6244@gmail.com>
-X-Cookie: Serfs up!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200403205133.1101808-1-martin.blumenstingl@googlemail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="rs5boHrlPxoqBFfxZ68VQcjl33WRm3lV0"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--rs5boHrlPxoqBFfxZ68VQcjl33WRm3lV0
+Content-Type: multipart/mixed; boundary="XtqKdN7vdrbl3NXOzpHyXgHa0EpwxDHhz";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ rui.zhang@intel.com, daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+ linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, javi.merino@kernel.org,
+ edubezval@gmail.com, orjan.eide@arm.com, stable@vger.kernel.org
+Message-ID: <0af90cb5-f6ba-d3a9-2cc7-8813ebab5ed6@suse.de>
+Subject: Re: [PATCH] thermal: devfreq_cooling: inline all stubs for
+ CONFIG_DEVFREQ_THERMAL=n
+References: <20200403205133.1101808-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20200403205133.1101808-1-martin.blumenstingl@googlemail.com>
 
---TB36FDmn/VVEgNH/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--XtqKdN7vdrbl3NXOzpHyXgHa0EpwxDHhz
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 04, 2020 at 01:52:23PM +0200, Johan Jonker wrote:
-> Current dts files with 'spdif' nodes are manually verified.
-> In order to automate this process rockchip-spdif.txt
-> has to be converted to yaml.
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
 
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, so sending again is generally a better approach though there are
-some other maintainers who like them - if in doubt look at how patches
-for the subsystem are normally handled.
+Am 03.04.20 um 22:51 schrieb Martin Blumenstingl:
+> When CONFIG_DEVFREQ_THERMAL is disabled all functions except
+> of_devfreq_cooling_register_power() were already inlined. Also inline
+> the last function to avoid compile errors when multiple drivers call
+> of_devfreq_cooling_register_power() when CONFIG_DEVFREQ_THERMAL is not
+> set. Compilation failed with the following message:
+>   multiple definition of `of_devfreq_cooling_register_power'
+> (which then lists all usages of of_devfreq_cooling_register_power())
+>=20
+> Thomas Zimmermann reported this problem [0] on a kernel config with
+> CONFIG_DRM_LIMA=3D{m,y}, CONFIG_DRM_PANFROST=3D{m,y} and
+> CONFIG_DEVFREQ_THERMAL=3Dn after both, the lima and panfrost drivers
+> gained devfreq cooling support.
+>=20
+> [0] https://www.spinics.net/lists/dri-devel/msg252825.html
+>=20
+> Fixes: a76caf55e5b356 ("thermal: Add devfreq cooling")
+> Cc: stable@vger.kernel.org
+> Reported-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>=
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
 
---TB36FDmn/VVEgNH/
+Tested-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+> ---
+>  include/linux/devfreq_cooling.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/devfreq_cooling.h b/include/linux/devfreq_co=
+oling.h
+> index 4635f95000a4..79a6e37a1d6f 100644
+> --- a/include/linux/devfreq_cooling.h
+> +++ b/include/linux/devfreq_cooling.h
+> @@ -75,7 +75,7 @@ void devfreq_cooling_unregister(struct thermal_coolin=
+g_device *dfc);
+> =20
+>  #else /* !CONFIG_DEVFREQ_THERMAL */
+> =20
+> -struct thermal_cooling_device *
+> +static inline struct thermal_cooling_device *
+>  of_devfreq_cooling_register_power(struct device_node *np, struct devfr=
+eq *df,
+>  				  struct devfreq_cooling_power *dfc_power)
+>  {
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--XtqKdN7vdrbl3NXOzpHyXgHa0EpwxDHhz--
+
+--rs5boHrlPxoqBFfxZ68VQcjl33WRm3lV0
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6LDVQACgkQJNaLcl1U
-h9At1Af9FC3z9FsNzTwUOLATMox+yRod2jIFEGJXPViju4E8V2EuoclTbhXAgNQ+
-HpPLozVdeSMKzCNs57EAKph0W6rKpkaGz5R9NliqRohe0OiQpnIhftVJMHawgqCl
-0e0hzX3E+R+1hOa6R2BDTdTHuA+xk2oni8V6w/MW4LVuZZ13fl2Pxa2y5dOdp+ER
-woZL3J56Q1b6NkKdYWyCMZgj/GfOb8FFVfC0Dp4BTQh0VO0V2KvwCdklmWXqYC8D
-kkHkggw+t/98qhSUrBu+L4FvXYwc17OzhJszkbJWGLoA83ogbf12Nqm4X2ftyteA
-p+R0xiHc+axQuwhe8ch0Ei0ZBAJxvg==
-=VqFs
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl6LDhIACgkQaA3BHVML
+eiPOmggAo2AgrVyoaHLR1NAsGf/aJPm535dYRX/7X3exyn7bcEApm1TYiMsmbZI2
+KJ4umEw7myXEoQQfmUpRKywvdTOyAaapShsIm8xvIj/F8/U/yKGWXQNIfcPhhoFh
+4LrhPYQ/tTkju79OLVcVMc7DK2darHAnpYwlgW2CKOFZCix4mONZQNp+HKfc+j07
+rXzL8N9TrDugLDaVqpLum9Lf+VMATa4ojnHts0quf72cPYQn4pp1g+CVyjb6mzIn
+bcVyRfp+fc2v92jz2KHWC6vxz54jnv7E6C1HMYCDdPThriG3dM62L65p1+J1i8Hp
+BopII8/+/VpG8DRx70xtMuiW+NJvXg==
+=KDV+
 -----END PGP SIGNATURE-----
 
---TB36FDmn/VVEgNH/--
+--rs5boHrlPxoqBFfxZ68VQcjl33WRm3lV0--
