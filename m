@@ -2,110 +2,90 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D3EC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0EFC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1F7248C5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0561248C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UhuyLID1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEAEJBg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbgDFPlc (ORCPT
+        id S1729034AbgDFPno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:41:32 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8227 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgDFPlb (ORCPT
+        Mon, 6 Apr 2020 11:43:44 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:42359 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728736AbgDFPnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:41:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8b4d450000>; Mon, 06 Apr 2020 08:39:49 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 08:41:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 08:41:30 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 15:41:30 +0000
-Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 15:41:29 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <40102767-ecdb-e958-66f4-45d11464069c@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <b7b77258-6309-7ed2-489d-337cf273ba1e@nvidia.com>
-Date:   Mon, 6 Apr 2020 08:41:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 11:43:43 -0400
+Received: by mail-qv1-f67.google.com with SMTP id ca9so131509qvb.9;
+        Mon, 06 Apr 2020 08:43:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:message-id:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding;
+        bh=GRKenN9BAw4cQ1954SZogV6YlC0w8kRJmJaT7yjp8xw=;
+        b=OEAEJBg2TI5OIIHcPNEn7S/uBbfftx6RtsMNUOPvtpKqF8IBsS380YvIh44JVlNrOF
+         7kFmLxzG1mfWLmtbVY2Q7OrGw7XWvCQGxgDpEhCcAbnojTTMX+WWn40Vh6R9Om6CpeAg
+         YymyxlPtj3oKF+/nyPZCEKGFWjRExhexvOZKVMZUb7ytbtAcqDwUlKQoopyDxyD5K59r
+         q7KN4Kt1wu1DLsjiGRhTZgCjdOnJASX55I25GQCzFMiDb6yBBErOxfP/jnc9qT8VlVuV
+         akZb3ORgIjufoqWlkb8uMgF7cKMsK4Ooy0AcG+8hwec9UylJ4J3LxBui/0UnB+l2dZaU
+         KNew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:from:to:cc:subject:in-reply-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=GRKenN9BAw4cQ1954SZogV6YlC0w8kRJmJaT7yjp8xw=;
+        b=jXT/J0HZVSpLOcwPMyW0Q7KdLrG7unuBut3akFfJ4MjQFVXHoC0p/Mk+hTdLOfCywH
+         wwv2rymKA6mTxoR71D/GR+sgOBZuGju6b0fHBVvFBU+T3DJ2QYY5EZm972iFqDQlMI04
+         0GxLfx213grttROaa7va3lPumSVpNkJICD4tSRc7zLyxDqcqr07AxhHcmTrM7XgdECfY
+         hiea+T7m/ecyvKwnclpEg2hbZkb8ZIel4LMEgQPoXT/CNB2Ww24fMYB7E5z+Yqcw6Q7s
+         RFIzsaUUt6800D2z5oQiJBtdELdO3dQSveuhPu+WKuxPaAstIPxY8la+Ig1YKt5VZRix
+         bTNg==
+X-Gm-Message-State: AGi0PuYSNtzVZYyBVNkB27SBQbsIvnQLst0aAUjjWcRz+5Gt/ARNDhv+
+        nLjJ7XE0bzRXmX6Qui9GeV0=
+X-Google-Smtp-Source: APiQypJT1ZJu7Ob/SoVGxdLNDv5XVRGI9xPT04ypY1V6GvkVmjpsEv+JDgTp3+LEHIL6+6YIUYctDg==
+X-Received: by 2002:a0c:f806:: with SMTP id r6mr266562qvn.24.1586187822327;
+        Mon, 06 Apr 2020 08:43:42 -0700 (PDT)
+Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
+        by smtp.gmail.com with ESMTPSA id f1sm13857494qkl.72.2020.04.06.08.43.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 08:43:41 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 11:43:40 -0400
+Message-ID: <20200406114340.GF510003@t480s.localdomain>
+From:   Vivien Didelot <vivien.didelot@gmail.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     netdev@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+In-Reply-To: <20200405200031.27263-1-f.fainelli@gmail.com>
+References: <20200405200031.27263-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <40102767-ecdb-e958-66f4-45d11464069c@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586187589; bh=yaEffBsy3QjkHNhjq0LUVqspbBmXRTztsEwoU5cqhXY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=UhuyLID18HHRqhwyeddyzNGO/WYE7hdtJAQ4IVcQfKq5mtaUAkjrezIfV6vonRB7S
-         FKC03gRUrQHdm3V7EIBaz4Qjm2rlNoVz5je12uwC/KvmylAiNcE0QlOIeGJzzZWFeQ
-         T3svN4g6UdJh+XlKVdWxBmx0g+X8KRZsUfykrs3RbLbx/vMtycBhBqFMNvYNMU2FXj
-         DA744DeWWukiUhDzilOoyjo+VbIAOB6KBLwseOif4UnIsAwOLmk2KONGuag3lsA7zA
-         XCeXJfdOYYY/wmkrK1J3rKQrxAI4jp68X+opCtLPzW2K1KcDhfDK/gsFMZH8FGHYDG
-         FUoChbmg8bLHw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun,  5 Apr 2020 13:00:30 -0700, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> When the bcm_sf2 was converted into a proper platform device driver and
+> used the new dsa_register_switch() interface, we would still be parsing
+> the legacy DSA node that contained all the port information since the
+> platform firmware has intentionally maintained backward and forward
+> compatibility to client programs. Ensure that we do parse the correct
+> node, which is "ports" per the revised DSA binding.
+> 
+> Fixes: d9338023fb8e ("net: dsa: bcm_sf2: Make it a real platform device driver")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-On 4/5/20 2:11 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 04.04.2020 04:25, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
->> +static int tegra_vi_tpg_channels_alloc(struct tegra_vi *vi)
->> +{
->> +     struct tegra_vi_channel *chan, *tmp;
->> +     unsigned int port_num;
->> +     unsigned int nchannels =3D vi->soc->vi_max_channels;
->> +     int ret =3D 0;
->> +
->> +     for (port_num =3D 0; port_num < nchannels; port_num++) {
->> +             /*
->> +              * Do not use devm_kzalloc as memory is freed immediately
->> +              * when device instance is unbound but application might s=
-till
->> +              * be holding the device node open. Channel memory allocat=
-ed
->> +              * with kzalloc is freed during video device release callb=
-ack.
->> +              */
->> +             chan =3D kzalloc(sizeof(*chan), GFP_KERNEL);
-> Why anyone would want to unbind this driver in practice?
->
-> I think it should make more sense to set suppress_bind_attrs=3Dtrue.
-
- From the previous feedback of patch series, we need to support=20
-unbind/bind and looks like this driver should also support to built as a=20
-module.
-
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
