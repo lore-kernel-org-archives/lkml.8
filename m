@@ -2,96 +2,166 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FF1C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAD7C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D29206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E44206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:38:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZhH7J/98"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GVSDdydP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbgDFShM (ORCPT
+        id S1726310AbgDFSiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:37:12 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38251 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgDFShL (ORCPT
+        Mon, 6 Apr 2020 14:38:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33798 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgDFSiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:37:11 -0400
-Received: by mail-pj1-f66.google.com with SMTP id m15so228930pje.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:37:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RPf4iEWl31iyICcKKYAUoZ6x8ZFphZAANeccq/+cSuQ=;
-        b=ZhH7J/98IP9aFb1GIbiBZDjP8zYVMEESv42tnRyH7AYdTf+r78V5lVruWjn7mB3vr1
-         Qd0HfY4jT6/b7j8XtBs57O8ruHLNxbSFjdUZj5qZ6U01MsfE4MUUL/JKi+VHxDKHd/1P
-         fRym4RH6wHkv8Qv3chNSOPmmmhl1vpCYtaIOw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RPf4iEWl31iyICcKKYAUoZ6x8ZFphZAANeccq/+cSuQ=;
-        b=oV0j+g+AljhYusu1k1ItZJfyfc68MjFJ2CxybCZ2Yk4/MtohHtBI4bMQLoIW3JqMh3
-         mdMKxUZ3JXUgdp/BiYcG+G+LqKmfe+GPPm9eWSD3xhzprK2INKU1ZH0ffaZU9UB5Zc2z
-         QUr5MpKaO/GI/v+bQZie08bJrOMrRVOzCjqeeCFj00wUpq/q9H+FZhpl1dGBMpwI+q7S
-         tbQ/QfMN6Nq6W+q1Il/jsJbNt2UGX6sbAImTLFT6TYUmoEMhQY2dE/nzs7GIKGdKhOlg
-         wzXNAIAyUsMUTPky+r13NMsH020T9iGFcEvunqvqF6ZYxBm8QNURu+JllsKd9w4zI5YY
-         GnJw==
-X-Gm-Message-State: AGi0PuaDtf49rST2tcpsQ5iPFv6DWdFoMLreJX77otNph+osh4GudPrR
-        B1xEGGUzApIj550z9+3bVSJQ/g==
-X-Google-Smtp-Source: APiQypJkJzqyAVk93YophF2DdDXFQtQFxEQ1p7UwWuwI6Z3WRoKl15rLkyLHchyR+rCTa2HWS+biEg==
-X-Received: by 2002:a17:902:bd85:: with SMTP id q5mr22257863pls.326.1586198230653;
-        Mon, 06 Apr 2020 11:37:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h4sm11426186pgg.67.2020.04.06.11.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 11:37:09 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 11:37:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Guilherme Piccoli <gpiccoli@canonical.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Linux-Fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        mcgrof@kernel.org, Iurii Zaikin <yzaikin@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Guilherme G. Piccoli" <kernel@gpiccoli.net>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH V3] kernel/hung_task.c: Introduce sysctl to print all
- traces when a hung task is detected
-Message-ID: <202004061136.8029EF3@keescook>
-References: <20200327223646.20779-1-gpiccoli@canonical.com>
- <d4888de4-5748-a1d0-4a45-d1ecebe6f2a9@canonical.com>
- <202004060854.22F15BDBF1@keescook>
- <CAHD1Q_xwR4OqsF8n3VJXknZ5QgpLWPQ3YTuztTgn0GTMR0vgKA@mail.gmail.com>
+        Mon, 6 Apr 2020 14:38:20 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036IXhuq008182;
+        Mon, 6 Apr 2020 18:37:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=x7jn857T6+XVh/cUUNt5yuCqvNHZ55iH/LHch72QhQY=;
+ b=GVSDdydPTYMLD1Hytn0OvUzmaqgrr4pgN35tAcAQQABYSEts0E0lDc5tYke+l2g5RaHX
+ 8UwXJxSjYEDrD4dd9m/5S61klBEOuqHoEuV2p8rUP24976wtmBw/3x1umBWXy1hjasq4
+ 6w9E8AHhyLxmTGREDKhSeM/YoDBIXfdobUYHtPGO58xgx2pw+U3Jw4yHjEfz6hH4Ar28
+ ULtpVa6+bYaMlAAZ0dksVSfwxugLEe8LaXG2QfVaeymJJybgHEXlKD6fZ4HQzhORzRn5
+ Uf/A1Ltnic2ONcEeFRbIhieW8jiqlKsy32LLCzz2YYKGoV+bRTsLUnlpOJO1h8dIyoJd 7Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 306j6m8myn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 Apr 2020 18:37:55 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036IWdsc041373;
+        Mon, 6 Apr 2020 18:37:54 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 3073sqedu9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 06 Apr 2020 18:37:54 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 036Ibo4I009211;
+        Mon, 6 Apr 2020 18:37:50 GMT
+Received: from localhost.localdomain (/10.159.148.184)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 06 Apr 2020 11:37:49 -0700
+Subject: Re: [PATCH v6 14/14] KVM: x86: Add kexec support for SEV Live
+ Migration.
+To:     Ashish Kalra <ashish.kalra@amd.com>
+Cc:     pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com, joro@8bytes.org, bp@suse.de,
+        thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rientjes@google.com,
+        srutherford@google.com, luto@kernel.org, brijesh.singh@amd.com
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <0caf809845d2fdb1a1ec17955826df9777f502fb.1585548051.git.ashish.kalra@amd.com>
+ <c5977ca2-2fbd-8c71-54dc-b978da05a16e@oracle.com>
+ <20200404215741.GA29918@ashkalra_ubuntu_server>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <07da6b9a-29c5-59cc-518c-0356126f2181@oracle.com>
+Date:   Mon, 6 Apr 2020 11:37:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHD1Q_xwR4OqsF8n3VJXknZ5QgpLWPQ3YTuztTgn0GTMR0vgKA@mail.gmail.com>
+In-Reply-To: <20200404215741.GA29918@ashkalra_ubuntu_server>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 bulkscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004060145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004060145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 03:32:42PM -0300, Guilherme Piccoli wrote:
-> Thanks Kees! I was expecting this could be merged in the current
-> window, but there's really no problem in waiting for the next!
 
-That's not usually how these things work, unfortunately. Stuff going
-into the merge window are those things that have been living in
-linux-next for a while (usually since before the -rc5). Once Andrew is
-done with the merge window for the -mm tree, he'll start scanning for
-new things to pull in. I expect this to be one of them. :)
+On 4/4/20 2:57 PM, Ashish Kalra wrote:
+> The host's page encryption bitmap is maintained for the guest to keep the encrypted/decrypted state
+> of the guest pages, therefore we need to explicitly mark all shared pages as encrypted again before
+> rebooting into the new guest kernel.
+>
+> On Fri, Apr 03, 2020 at 05:55:52PM -0700, Krish Sadhukhan wrote:
+>> On 3/29/20 11:23 PM, Ashish Kalra wrote:
+>>> From: Ashish Kalra <ashish.kalra@amd.com>
+>>>
+>>> Reset the host's page encryption bitmap related to kernel
+>>> specific page encryption status settings before we load a
+>>> new kernel by kexec. We cannot reset the complete
+>>> page encryption bitmap here as we need to retain the
+>>> UEFI/OVMF firmware specific settings.
+>>
+>> Can the commit message mention why host page encryption needs to be reset ?
+>> Since the theme of these patches is guest migration in-SEV context, it might
+>> be useful to mention why the host context comes in here.
+>>
+>>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+>>> ---
+>>>    arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
+>>>    1 file changed, 28 insertions(+)
+>>>
+>>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+>>> index 8fcee0b45231..ba6cce3c84af 100644
+>>> --- a/arch/x86/kernel/kvm.c
+>>> +++ b/arch/x86/kernel/kvm.c
+>>> @@ -34,6 +34,7 @@
+>>>    #include <asm/hypervisor.h>
+>>>    #include <asm/tlb.h>
+>>>    #include <asm/cpuidle_haltpoll.h>
+>>> +#include <asm/e820/api.h>
+>>>    static int kvmapf = 1;
+>>> @@ -357,6 +358,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
+>>>    	 */
+>>>    	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+>>>    		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
+>>> +	/*
+>>> +	 * Reset the host's page encryption bitmap related to kernel
+>>> +	 * specific page encryption status settings before we load a
+>>> +	 * new kernel by kexec. NOTE: We cannot reset the complete
+>>> +	 * page encryption bitmap here as we need to retain the
+>>> +	 * UEFI/OVMF firmware specific settings.
+>>> +	 */
+>>> +	if (kvm_para_has_feature(KVM_FEATURE_SEV_LIVE_MIGRATION) &&
+>>> +		(smp_processor_id() == 0)) {
+>>> +		unsigned long nr_pages;
+>>> +		int i;
+>>> +
+>>> +		for (i = 0; i < e820_table->nr_entries; i++) {
+>>> +			struct e820_entry *entry = &e820_table->entries[i];
+>>> +			unsigned long start_pfn, end_pfn;
+>>> +
+>>> +			if (entry->type != E820_TYPE_RAM)
+>>> +				continue;
+>>> +
+>>> +			start_pfn = entry->addr >> PAGE_SHIFT;
+>>> +			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
+>>> +			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
+>>> +
+>>> +			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
+>>> +				entry->addr, nr_pages, 1);
+>>> +		}
+>>> +	}
+>>>    	kvm_pv_disable_apf();
+>>>    	kvm_disable_steal_time();
+>>>    }
 
--- 
-Kees Cook
+Thanks for the explanation. It will certainly help one understand the 
+context better if you add it to the commit message.
+
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+
