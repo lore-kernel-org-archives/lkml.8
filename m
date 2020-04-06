@@ -2,156 +2,267 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E42C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D0DC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F38220678
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F04E3206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VKzVFvDb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DviDx6kc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgDFSCl (ORCPT
+        id S1726873AbgDFSDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:02:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42516 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgDFSCl (ORCPT
+        Mon, 6 Apr 2020 14:03:47 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37745 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgDFSDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:02:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id g6so332446pgs.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:02:38 -0700 (PDT)
+        Mon, 6 Apr 2020 14:03:47 -0400
+Received: by mail-il1-f196.google.com with SMTP id a6so387076ilr.4;
+        Mon, 06 Apr 2020 11:03:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6e1Q4vKzJzmKGtNiNjd8gFNJAJWEC5ayrvQVjXOX/iA=;
-        b=VKzVFvDbHxCrHuz1BGNeFLrQzjOqXm308/UzV4dy7t/94/5o8Eqc32uFmFoYw1GhVv
-         YL/PJrZ5wYaWlf09YP/5Cw9aVe6InMX/KFrOUrgH1YJZJlWiq0Opcgr8ReG8QawTI274
-         WKtN/MWOtTpvlpHUdwxVT22pAxgnoaRhgG6I2tYHtL7RiZpTtHHQ4uZytoqFsV3Ar8ar
-         ITcWYla8llaWu6JMF/9m/uIk+0Gwo3dkQMaEfnRI4dV96O34aZcV0bQr0GRy9DktfRs3
-         TkQw9r5uzIm1fP0iGYUwFSotBFCkb0R1wjfvHieZvIKI/5/QkP4n26nnVJRvQ5geQ51+
-         8Uvg==
+         :cc:content-transfer-encoding;
+        bh=3LY5VeGYnWEgSR/Pz3b1gospRiVVwkBxzjMdAq8KEH0=;
+        b=DviDx6kcod6zhCYaVgHB68jWRCIHmauXkn0qel17bCPlzhf3b069PYzbAfgJV4kPpQ
+         EW3e0/VaO2c59Rq4n2C378XEL324cIV80rb3hlugm+X55/5FFpKWg+esg/JTC73dNGz7
+         PAcKnnbx1dOCBhI+vC24KOH+JJBhBSiwtQaH5cVm5RkkKf4NyDQ48U0Y1lKnW1B5lrfb
+         xyZzR5cUIJ5n/v2wUajvD2ZiwGDSwWlASB1gyhL9i+qQm1OOBKKLHHOC0SxvPAgjr0G2
+         XwJmlvwdryhWyBmFPexZszn1zLi1sLH7YAEyVn5Luqhyd5dBTveUMVg+vPt1R5zqR49k
+         6gjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6e1Q4vKzJzmKGtNiNjd8gFNJAJWEC5ayrvQVjXOX/iA=;
-        b=TkxLG7Xue/e1ZaAaPT1+viohAJMxJbHCyLE0RGEcs30DawRUMwwSV8QYeom528sult
-         LYTQAOjsYb3BhU2fFgJ1xE8Dg3X1Er63vhybI1t65tBhBJ8IMFxWfxaEeMsmhgnM8nBN
-         4eUo1lqj6aiRgwp66xFyWEfzAR4TJnWuMK0VQUvpSk9Fey3T3A6nMpInFvpRHXYMLY5B
-         3xDWmsWamq9Tad5BTksqQRFyAPz5IsiyHFAZEFQ8QPiYpYNlO5OpH/9Gqni7P293GX27
-         Z0QWnbmASiMS0PkY6o8JJBgT0vumRpY9hrd17JIFzvmKSXNk2n8YUiHCZ+ZciWl6OHCq
-         3edg==
-X-Gm-Message-State: AGi0PuZS32SrqCgLkZ2h0BbGJ93tlH2bCV6lcLaiworhg/SD/fAcPaJ2
-        ll7QG73vGqNk68bk796mFnxfI1WjTTTJQHzRjDx/zw==
-X-Google-Smtp-Source: APiQypKM2PYCFQ6CoF0zH+mGNXOYzfT9ZqJG+BVP9vjjtE7Ws2bYfTPeukVx527QNaPkITHuCZ24GDQU95IlK8Bm80M=
-X-Received: by 2002:a63:b954:: with SMTP id v20mr264508pgo.381.1586196157861;
- Mon, 06 Apr 2020 11:02:37 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3LY5VeGYnWEgSR/Pz3b1gospRiVVwkBxzjMdAq8KEH0=;
+        b=B3FFlyWDLS6Jd0qN3yEJZZKasMPa4+xikqCsr8ZLRVC08zaLQgBqefnDzNb1/0rPNf
+         Vq6qtICkBGHTP5SIJWiVu2JFUZXh/KP3gXB3ptd62y7bkebJXIJvDv7CaSRWFv/8EDZp
+         E7cirNreWp6Vx0ZhBzS6nRwuQpvDo2HfJH7V5ObN0D8PpcfGTrt0FHFsSeahYGIGUGCy
+         a6ozeN2EXQQcxvLzp2Q4knZs++ShZw28YSV+qPF/6cu7/RYIfGXsCTcJAPDYJtb4TFou
+         CBhdnDShWH8JY/9j93pj+v1pBTNKr49K18wxYrxvB3E0h3Gf/LeZafDSsHpmD0pZShBS
+         bFJQ==
+X-Gm-Message-State: AGi0PuYwM5Vkq78VvgRPWkSze4igItIzkS0IVaOuu5brXV69rFq4fiom
+        tnDuJtzhC+Et+w2q+KgKjp+yCKlrbER/WimyumgDNFEyL1o=
+X-Google-Smtp-Source: APiQypLVNaXxCOgsWF52COqW2pQQQ3sR2dVnqs5kVI6zorVvktZclg6R2CBTYUFEywvnTHs3vVkCUYJZ0wrUdjKBx7I=
+X-Received: by 2002:a05:6e02:c8f:: with SMTP id b15mr504343ile.35.1586196225471;
+ Mon, 06 Apr 2020 11:03:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200405163052.18942-1-masahiroy@kernel.org> <alpine.LFD.2.21.2004051813150.4156324@eddie.linux-mips.org>
- <CAK7LNATKLcCPYxQZNbrS-jMPg+_BETU0dGv0qYvLqUkJ2fMt5w@mail.gmail.com> <alpine.LFD.2.21.2004061240060.4156324@eddie.linux-mips.org>
-In-Reply-To: <alpine.LFD.2.21.2004061240060.4156324@eddie.linux-mips.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 6 Apr 2020 11:02:27 -0700
-Message-ID: <CAKwvOdkAXuTPR7Bm4+ai3GcKv+ytes3S2UZxOxqSrRtqkt485Q@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: fw: arc: add __weak to prom_meminit and prom_free_prom_memory
-To:     "Maciej W. Rozycki" <macro@linux-mips.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux-MIPS <linux-mips@linux-mips.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org,
-        =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+References: <20200405173601.24331-1-peron.clem@gmail.com> <20200405173601.24331-4-peron.clem@gmail.com>
+ <20200406081412.ubdogkjknlofynei@gilmour.lan>
+In-Reply-To: <20200406081412.ubdogkjknlofynei@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 6 Apr 2020 20:03:34 +0200
+Message-ID: <CAJiuCcdTQHGhZ=7Z_Du-zcZ_OWdGO1iEpYOBD4z=eNDYzMA5tg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] arm64: dts: allwinner: h6: Add CPU Operating
+ Performance Points table
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Ondrej Jirman <megous@megous.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 4:54 AM Maciej W. Rozycki <macro@linux-mips.org> wrote:
->
-> On Mon, 6 Apr 2020, Masahiro Yamada wrote:
->
-> > > > As far as I understood, prom_meminit() in arch/mips/fw/arc/memory.c
-> > > > is overridden by the one in arch/mips/sgi-ip32/ip32-memory.c if
-> > > > CONFIG_SGI_IP32 is enabled.
-> > > >
-> > > > The use of EXPORT_SYMBOL in static libraries potentially causes a
-> > > > problem for the llvm linker [1]. So, I want to forcibly link lib-y
-> > > > objects to vmlinux when CONFIG_MODULES=y.
-> > >
-> > >  It looks to me like a bug in the linker in the handling of the EXTERN
-> > > command.  Why not fix the linker instead?
-> [...]
-> > I am not sure if this is a bug.
-> > Anyway, they decided to not change ld.lld
->
->  Well, maybe that was a conscious decision, however it's a linker feature
-> that has been there since forever and projects like Linux can legitimately
-> rely on it.  In this case perhaps sticking to other linkers, which have
-> the right features, is the right solution rather than trying to turn a
-> complex and mature project like Linux upside down (and quite possibly
-> introducing bugs and pessimisations on the way) just to match an inferior
-> tool.  Adapt your tool to the task, not the task to your tool.
+Hi,
 
-The feature you refer to and the feature Masahiro is referring to are
-two separate issues.  If you care to understand the issue Masahiro is
-trying to fix, please take the time to read the full discussion:
-https://github.com/ClangBuiltLinux/linux/issues/515 and particularly
-https://reviews.llvm.org/D63564
-
+On Mon, 6 Apr 2020 at 10:14, Maxime Ripard <maxime@cerno.tech> wrote:
 >
-> > MIPS code is so confusing.
-> > There are multiple definitions,
-> > and lib.a is (ab)used to hide them.
->
->  It's a standard feature of libraries that a symbol reference is satisfied
-> by the first symbol definition encountered.  Any extra ones provided later
-> in the link order are ignored.  And we have control over the link order.
-
-Relying on link order is terribly brittle. Renaming a file can cause
-your implementation to change, and ties your hands from ever using
-things like LTO or newer build systems like ninja.  Static
-initialization order is a plague to C and C++.  It's explicitly
-undefined behavior you've just admitted you prefer to rely on.  (A
-Google search for "static initialization order" wants to autocomplete
-to "static initialization order fiasco" which is also an interesting
-read; https://www.cryptopp.com/wiki/Static_Initialization_Order_Fiasco).
-
-Masahiro is right that this case has some questionable choices in
-terms of redefining symbols with different implementations.  I think
-__HAVE_ARCH_STRCPY and friends in lib/string.c is actually the best
-pattern for not providing multiple definitions of a symbol, followed
-by marking symbols meant to be overridden at link time based on config
-as __weak.  He's just trying to help clean this up.
-
->
-> > I fixed another one for MIPS before, and
-> > 0-day bot reported this recently.
+> On Sun, Apr 05, 2020 at 07:35:57PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Ondrej Jirman <megous@megous.com>
 > >
+> > Add an Operating Performance Points table for the CPU cores to
+> > enable Dynamic Voltage & Frequency Scaling on the H6.
 > >
-> > There are lots of prom_meminit() definitions
-> > in arch/mips/.
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  .../boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi | 121 ++++++++++++++++++
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   4 +
+> >  2 files changed, 125 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dts=
+i
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi b/arc=
+h/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+> > new file mode 100644
+> > index 000000000000..8c1e413c6af9
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-cpu-opp.dtsi
+> > @@ -0,0 +1,121 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +// Copyright (C) 2020 Ondrej Jirman <megous@megous.com>
+> > +// Copyright (C) 2020 Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > +
+> > +/ {
+> > +     cpu0_opp_table: opp_table0 {
 >
->  Naturally, many platforms will have its own, in addition to some generic
-> (possibly dummy) one.
+> Node names shouldn't have an underscore, this will trigger a DTC
+> warning.
 >
-> > Making the intention clearer is a good thing, IMHO.
+> > +             compatible =3D "allwinner,sun50i-h6-operating-points";
+> > +             nvmem-cells =3D <&speedbin_efuse>;
+> > +             opp-shared;
+> > +
+> > +             opp@480000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <480000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <880000>;
+> > +                     opp-microvolt-speed1 =3D <820000>;
+> > +                     opp-microvolt-speed2 =3D <820000>;
+> > +             };
 >
->  Hmm, what intention?  Can you please be more specific?
+> And similarly, if you have a unit-address (the part after @), you
+> should have a matching reg property. You should use a dash instead.
+>
+> > +             opp@720000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <720000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <880000>;
+> > +                     opp-microvolt-speed1 =3D <820000>;
+> > +                     opp-microvolt-speed2 =3D <820000>;
+> > +             };
+> > +
+> > +             opp@816000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <816000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <880000>;
+> > +                     opp-microvolt-speed1 =3D <820000>;
+> > +                     opp-microvolt-speed2 =3D <820000>;
+> > +             };
+> > +
+> > +             opp@888000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <888000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <880000>;
+> > +                     opp-microvolt-speed1 =3D <820000>;
+> > +                     opp-microvolt-speed2 =3D <820000>;
+> > +             };
+> > +
+> > +             opp@1080000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <1080000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <940000>;
+> > +                     opp-microvolt-speed1 =3D <880000>;
+> > +                     opp-microvolt-speed2 =3D <880000>;
+> > +             };
+> > +
+> > +             opp@1320000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <1320000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <1000000>;
+> > +                     opp-microvolt-speed1 =3D <940000>;
+> > +                     opp-microvolt-speed2 =3D <940000>;
+> > +             };
+> > +
+> > +             opp@1488000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <1488000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <1060000>;
+> > +                     opp-microvolt-speed1 =3D <1000000>;
+> > +                     opp-microvolt-speed2 =3D <1000000>;
+> > +             };
+> > +
+> > +             opp@1608000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <1608000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <1090000>;
+> > +                     opp-microvolt-speed1 =3D <1030000>;
+> > +                     opp-microvolt-speed2 =3D <1030000>;
+> > +             };
+> > +
+> > +             opp@1704000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <1704000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <1120000>;
+> > +                     opp-microvolt-speed1 =3D <1060000>;
+> > +                     opp-microvolt-speed2 =3D <1060000>;
+> > +             };
+> > +
+> > +             opp@1800000000 {
+> > +                     clock-latency-ns =3D <244144>; /* 8 32k periods *=
+/
+> > +                     opp-hz =3D /bits/ 64 <1800000000>;
+> > +
+> > +                     opp-microvolt-speed0 =3D <1160000>;
+> > +                     opp-microvolt-speed1 =3D <1100000>;
+> > +                     opp-microvolt-speed2 =3D <1100000>;
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&cpu0 {
+> > +     operating-points-v2 =3D <&cpu0_opp_table>;
+> > +     #cooling-cells =3D <2>;
+> > +};
+> > +
+> > +&cpu1 {
+> > +     operating-points-v2 =3D <&cpu0_opp_table>;
+> > +     #cooling-cells =3D <2>;
+> > +};
+> > +
+> > +&cpu2 {
+> > +     operating-points-v2 =3D <&cpu0_opp_table>;
+> > +     #cooling-cells =3D <2>;
+> > +};
+> > +
+> > +&cpu3 {
+> > +     operating-points-v2 =3D <&cpu0_opp_table>;
+> > +     #cooling-cells =3D <2>;
+> > +};
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/=
+boot/dts/allwinner/sun50i-h6.dtsi
+> > index e0dd0757be0b..6b7af858614a 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> > @@ -253,6 +253,10 @@
+> >                       #address-cells =3D <1>;
+> >                       #size-cells =3D <1>;
+> >
+> > +                     speedbin_efuse: speed@1c {
+> > +                             reg =3D <0x1c 0x4>;
+> > +                     };
+> > +
+>
+> You should order this by address, so after the THS calibration. Also,
+> using a less generic node name than "speed" would be great. What about
+> soc-bin ?
 
-That prom_meminit and prom_free_prom_memory are meant to be overridden
-by other configs.
+Indeed it's too generic.
+I will keep coherency with i.MX8 and use "cpu_speed_grade"
 
--- 
-Thanks,
-~Nick Desaulniers
+Thanks for the review,
+Clement
+
+>
+> Maxime
