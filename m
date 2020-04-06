@@ -2,192 +2,122 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEEFC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AA6C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBE02332B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:34:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BvPejWvF"
+	by mail.kernel.org (Postfix) with ESMTP id A775A20BED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgDFNeN (ORCPT
+        id S1728500AbgDFNfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:34:13 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49966 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728319AbgDFNeN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:34:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586180051;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8Vgo7PmY6XRwUGwyUrdIW6ngf/mYRofULc4TfPkTyZY=;
-        b=BvPejWvF62X0MSz4WOnQPwDCcuOdqhbs17F7VAiAlgvk+sl+hntau1izK/X+iXgXT63dDQ
-        JQ72OCE8HVjs2mmWWlWCHhZfONUFW0GctMevBxMWGs26leDam6C0XSx3BQYZhI2U8hnmCX
-        cLUbsdHzt13NLPucFe+sAChNF4Dry4s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-57-OOOB-UXuOJGo5RROJLVUvg-1; Mon, 06 Apr 2020 09:34:07 -0400
-X-MC-Unique: OOOB-UXuOJGo5RROJLVUvg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C015801E5C;
-        Mon,  6 Apr 2020 13:34:06 +0000 (UTC)
-Received: from [10.72.12.191] (ovpn-12-191.pek2.redhat.com [10.72.12.191])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD718B19CB;
-        Mon,  6 Apr 2020 13:34:01 +0000 (UTC)
-Subject: Re: [PATCH] vhost: force spec specified alignment on types
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org
-References: <20200406124931.120768-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <045c84ed-151e-a850-9c72-5079bd2775e6@redhat.com>
-Date:   Mon, 6 Apr 2020 21:34:00 +0800
+        Mon, 6 Apr 2020 09:35:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:45810 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728451AbgDFNfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:35:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEA2F7FA;
+        Mon,  6 Apr 2020 06:35:17 -0700 (PDT)
+Received: from [10.37.12.4] (unknown [10.37.12.4])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8230E3F52E;
+        Mon,  6 Apr 2020 06:35:07 -0700 (PDT)
+Subject: Re: [PATCH v5 4/5] thermal: devfreq_cooling: Refactor code and switch
+ to use Energy Model
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
+        javi.merino@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200318114548.19916-1-lukasz.luba@arm.com>
+ <20200318114548.19916-5-lukasz.luba@arm.com>
+ <f3e9f127-47b1-9f30-2148-3c95a5933a92@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <4bf6cc66-8df4-3224-418d-0549026a3672@arm.com>
+Date:   Mon, 6 Apr 2020 14:35:05 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200406124931.120768-1-mst@redhat.com>
+In-Reply-To: <f3e9f127-47b1-9f30-2148-3c95a5933a92@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2020/4/6 =E4=B8=8B=E5=8D=888:50, Michael S. Tsirkin wrote:
-> The ring element addresses are passed between components with different
-> alignments assumptions. Thus, if guest/userspace selects a pointer and
-> host then gets and dereferences it, we might need to decrease the
-> compiler-selected alignment to prevent compiler on the host from
-> assuming pointer is aligned.
->
-> This actually triggers on ARM with -mabi=3Dapcs-gnu - which is a
-> deprecated configuration, but it seems safer to handle this
-> generally.
->
-> I verified that the produced binary is exactly identical on x86.
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->
-> This is my preferred way to handle the ARM incompatibility issues
-> (in preference to kconfig hacks).
-> I will push this into next now.
-> Comments?
 
+On 4/3/20 6:44 PM, Daniel Lezcano wrote:
+> On 18/03/2020 12:45, Lukasz Luba wrote:
+>> The overhauled Energy Model (EM) framework support also devfreq devices.
+>> The unified API interface of the EM can be used in the thermal subsystem to
+>> not duplicate code. The power table now is taken from EM structure and
+>> there is no need to maintain calculation for it locally. In case when the
+>> EM is not provided by the device a simple interface for cooling device is
+>> used.
+>>
+>> There is also an improvement in code related to enabling/disabling OPPs,
+>> which prevents from race condition with devfreq governors.
+>>
+>> [lkp: Reported the build warning]
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org> # for tracing code
+>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> 
+> The changes are too big, please split this patch into smaller chunks.
 
-I'm not sure if it's too late to fix. It would still be still=20
-problematic for the userspace that is using old uapi headers?
+OK, I will split it and re-base on top of thermal testing.
 
-Thanks
+> 
+>> ---
+>>   drivers/thermal/devfreq_cooling.c | 474 ++++++++++++++++--------------
+>>   include/linux/devfreq_cooling.h   |  39 +--
+>>   include/trace/events/thermal.h    |  19 +-
+>>   3 files changed, 277 insertions(+), 255 deletions(-)
+>>
+>> diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
+> 
+> [ ... ]
+> 
+>>   struct devfreq_cooling_device {
+>>   	int id;
+>>   	struct thermal_cooling_device *cdev;
+>>   	struct devfreq *devfreq;
+>>   	unsigned long cooling_state;
+>> -	u32 *power_table;
+>>   	u32 *freq_table;
+>> -	size_t freq_table_size;
+>> +	size_t max_level;
+> 
+> Could you rename it to 'max_state' ?
 
+Yes.
 
->
->   drivers/vhost/vhost.h            |  6 ++---
->   include/uapi/linux/virtio_ring.h | 41 ++++++++++++++++++++++++-------=
--
->   2 files changed, 34 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-> index cc82918158d2..a67bda9792ec 100644
-> --- a/drivers/vhost/vhost.h
-> +++ b/drivers/vhost/vhost.h
-> @@ -74,9 +74,9 @@ struct vhost_virtqueue {
->   	/* The actual ring of buffers. */
->   	struct mutex mutex;
->   	unsigned int num;
-> -	struct vring_desc __user *desc;
-> -	struct vring_avail __user *avail;
-> -	struct vring_used __user *used;
-> +	vring_desc_t __user *desc;
-> +	vring_avail_t __user *avail;
-> +	vring_used_t __user *used;
->   	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
->  =20
->   	struct vhost_desc *descs;
-> diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virt=
-io_ring.h
-> index 559f42e73315..cd6e0b2eaf2f 100644
-> --- a/include/uapi/linux/virtio_ring.h
-> +++ b/include/uapi/linux/virtio_ring.h
-> @@ -118,16 +118,6 @@ struct vring_used {
->   	struct vring_used_elem ring[];
->   };
->  =20
-> -struct vring {
-> -	unsigned int num;
-> -
-> -	struct vring_desc *desc;
-> -
-> -	struct vring_avail *avail;
-> -
-> -	struct vring_used *used;
-> -};
-> -
->   /* Alignment requirements for vring elements.
->    * When using pre-virtio 1.0 layout, these fall out naturally.
->    */
-> @@ -164,6 +154,37 @@ struct vring {
->   #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
->   #define vring_avail_event(vr) (*(__virtio16 *)&(vr)->used->ring[(vr)-=
->num])
->  =20
-> +/*
-> + * The ring element addresses are passed between components with diffe=
-rent
-> + * alignments assumptions. Thus, we might need to decrease the compile=
-r-selected
-> + * alignment, and so must use a typedef to make sure the __aligned att=
-ribute
-> + * actually takes hold:
-> + *
-> + * https://gcc.gnu.org/onlinedocs//gcc/Common-Type-Attributes.html#Com=
-mon-Type-Attributes
-> + *
-> + * When used on a struct, or struct member, the aligned attribute can =
-only
-> + * increase the alignment; in order to decrease it, the packed attribu=
-te must
-> + * be specified as well. When used as part of a typedef, the aligned a=
-ttribute
-> + * can both increase and decrease alignment, and specifying the packed
-> + * attribute generates a warning.
-> + */
-> +typedef struct vring_desc __attribute__((aligned(VRING_DESC_ALIGN_SIZE=
-)))
-> +	vring_desc_t;
-> +typedef struct vring_avail __attribute__((aligned(VRING_AVAIL_ALIGN_SI=
-ZE)))
-> +	vring_avail_t;
-> +typedef struct vring_used __attribute__((aligned(VRING_USED_ALIGN_SIZE=
-)))
-> +	vring_used_t;
-> +
-> +struct vring {
-> +	unsigned int num;
-> +
-> +	vring_desc_t *desc;
-> +
-> +	vring_avail_t *avail;
-> +
-> +	vring_used_t *used;
-> +};
-> +
->   static inline void vring_init(struct vring *vr, unsigned int num, voi=
-d *p,
->   			      unsigned long align)
->   {
+Thank you for your comments.
+
+Regards,
+Lukasz
 
