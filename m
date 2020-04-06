@@ -2,368 +2,250 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D58C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBCAC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96CB823340
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDD023341
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:37:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GckHuiQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgDFNh3 convert rfc822-to-8bit (ORCPT
+        id S1728555AbgDFNhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:37:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36671 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728243AbgDFNh3 (ORCPT
+        Mon, 6 Apr 2020 09:37:38 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41175 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728543AbgDFNhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:37:29 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jLRwF-0000or-9G; Mon, 06 Apr 2020 15:37:19 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jLRwB-0002wI-Ja; Mon, 06 Apr 2020 15:37:15 +0200
-Date:   Mon, 6 Apr 2020 15:37:15 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "david@protonic.nl" <david@protonic.nl>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] net: phy: micrel: add phy-mode support for the
- KSZ9031 PHY
-Message-ID: <20200406133715.GA15542@pengutronix.de>
-References: <20200403081812.19717-1-o.rempel@pengutronix.de>
- <868f2449c1bc93cfe38629708c1e449d6c16de6d.camel@toradex.com>
+        Mon, 6 Apr 2020 09:37:37 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k9so13044706oia.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6L3aORYHMbwwCq3SCrpWJ+tXaNPgCZaZOcLf7iItFoM=;
+        b=GckHuiQLusEfuz7m7kL2bfmJegj7H8mS9QM9fAP1xyMvKgqdKEty3fg6OwV6T9jPxN
+         bnSCYkeHIMVM01Rvpbr1MuFU1p0UJtWWSVscCydH/L5qbZhASReOaOo7gET1/zbaj+QI
+         c8FrHwThgqlaZMx5YZ70coYm1NXAZsfG0LiFzFrp7pg/iBBWNnhQ4Gdr8484Bz972VYC
+         4eWwQ3NZXWZI47TzKQShY+n5EuG4xi/gjs5tMzzocKEuJ0zxJTCbKSIXsQjdz5uITfqO
+         QkeBGOgQyANa82d9UCdl+C2qQHvztpu0qmTYLDWqH4o5vQik3FHeO8BdvkSDaaNpSlTG
+         DZzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6L3aORYHMbwwCq3SCrpWJ+tXaNPgCZaZOcLf7iItFoM=;
+        b=fGb9/DwZyAmDnZB4RLKK5phFVHFt8on9QD9aZrneFsWxhvrmdQf87MZUo9+0gxrHGE
+         hKvGL0Y/0j0li88Mbj2rq2jJdcCEbTA1Zcdxd2kcEmpVdakj9o3eyUF8OqrK9L0gz3bx
+         DaTKKer95xcPxlpI8zsxsftZ9Pv1r9ydLduLQhDeejH9MzvT8otKYz9j/8RNr8pdzjT8
+         JaxQTvD9X+s3PkhI7b4CTtXmpNWhRWjSf69REcgti4eKlPdVmoMvL+GCSWOWU1yOqJI2
+         JV7imUFFV5vq8yso9Ql9p0aD94pYUjDU5zb0kfO56ytz3aeukGou0BS0fK4kY8Hg49sB
+         i4BQ==
+X-Gm-Message-State: AGi0PuZN4EgWibbbTuMs/AO0xviZNiJ6bl+F1zQZCTSmNMLaIdSET8/h
+        MRxPN/dU0mTYrSGH0TFJGboplAxGxmSzXFER+tSQuA==
+X-Google-Smtp-Source: APiQypKD7wVcZWhoSfKhnnMOWHbZfY+YnnpAAJPlZzKefOLNi4hmZpG97WRWAolZBV2nqJ5aYs8hHESeS5eTQm5YhZ4=
+X-Received: by 2002:aca:fcd8:: with SMTP id a207mr13378081oii.56.1586180255395;
+ Mon, 06 Apr 2020 06:37:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <868f2449c1bc93cfe38629708c1e449d6c16de6d.camel@toradex.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 12:55:45 up 207 days, 23:43, 472 users,  load average: 31.03,
- 38.66, 32.05
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-3-robert.foss@linaro.org> <CAHp75VfFKY6nzb8aEWmop73v2haZ0P5+aTsKDEU8M=uUPn0u3g@mail.gmail.com>
+In-Reply-To: <CAHp75VfFKY6nzb8aEWmop73v2haZ0P5+aTsKDEU8M=uUPn0u3g@mail.gmail.com>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Mon, 6 Apr 2020 15:37:24 +0200
+Message-ID: <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] media: ov8856: Add devicetree support
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hey Andy,
 
-On Mon, Apr 06, 2020 at 08:58:49AM +0000, Philippe Schenker wrote:
-> On Fri, 2020-04-03 at 10:18 +0200, Oleksij Rempel wrote:
-> > Add support for following phy-modes: rgmii, rgmii-id, rgmii-txid,
-> > rgmii-rxid.
-> > 
-> > This PHY has an internal RX delay of 1.2ns and no delay for TX.
-> > 
-> > The pad skew registers allow to set the total TX delay to max 1.38ns
-> > and
-> > the total RX delay to max of 2.58ns (configurable 1.38ns + build in
-> > 1.2ns) and a minimal delay of 0ns.
-> 
-> This skew delay registers of the KSZ9031 are not meant for this delay.
+Thanks for the review, it is much appreciated!
 
-According to the documentation of the PHY [1], these registers should be
-used to tune the total delay of the circuit.
-
-> But I agree that it could make sense to implement phy-modes too for this
-> PHY. I even thought myself about implementing it.
-
-> But I guess it is not a good thing to be able to set the same
-> registers in a chip in two different places in a DT. How is this
-> solved generally in linux?
-
-In this case i would prefer to talk about several device tree properties
-describing the same thing. The phy-mode property will set a more generic
-defaults where the *-skew-ps properties cane be used to overwrite single
-or all pads.
-
-The current situation is:
-- we have a RGMII-RXID PHY (with internal not optional delay of 1.2ns)
-- which is configured in many (all?) devicetries as phy-mode="rgmii", not
-  "rgmii-rxid".
-
-There are boards:
-- with default options. No extra delays are configured, so actually they
-  want to have a "rgmii-rxid", but configure as phy-mode="rgmii" 
-- configured by fixup (for example in i'MX6Q:  RGMII-ID, but in DT
-  configuration with phy-mode=rgmii)
-
-All of this configurations are broken. This one is correct:
-
-- configured by *-skew-ps property and using phy-mode=rgmii.
-
-> Another reasoning is that this will *only* work, if the PCB traces are
-> length- matched. This leads me to the conclusion that throwing an
-> error so the PHY doesn't work if someone added e.g. 'rgmii-id' and
-> skew registers is a good thing.
-
-So you mean, skew setting should only work with phy-mode="rgmii", and
-throw an error otherwise? Makes sense to me.
-
-> But with that we would maybe break some boards... At least I would throw
-> a warning in ksz9031_of_load_skew_values.
-> 
-> > According to the RGMII v2 specification the delay provided by PCB
-> > traces
-> 
-> As I understood, RGMII v1.3 demands delay by PCB traces (that is for
-> embedded mostly not possible). Whereas RGMII v2.0 demands de MAC to add
-> the delay for TXC and the PHY for RXC.
-> 
-> I know its nitpicky but still can be confusing for someone trying to
-> understand that. Could you adjust that here?
-> 
-> > should be between 1.5ns and 2.0ns. As this PHY can provide max delay
-> > of
-> > only 1.38ns on the TX line, in RGMII-ID mode a symmetric delay of
-> > 1.38ns
-> > for both the RX and TX lines is chosen, even if the RX line could be
-> > configured with the 1.5ns according to the standard.
-> 
-> Why do you decided for a symmetric delay? I guess the hardware level
-> doesn't care if the input-stages of two different silicons don't care if
-> the delay is symmetrical. I suggest to use a delay for RXC to get the
-> RXC clock edge in the middle of the data lines.
-
-Are there any technical justification to use both 1.38 or one 1.38 and
-other 2.0?
-
-Our HW expert suggest to use the middle of the RGMII recommended delay:
-1.75ns. What is your opinion? So far ksz9031 provide not configurable 1.2ns and
-ksu9131 use 2.0ns (DLL based) delay. It looks like the "internal delay"
-interpretation has some valid range of numbers.
-
-> 
-> Best Regards,
-> Philippe
-> > 
-> > The phy-modes can still be fine tuned/overwritten by *-skew-ps
-> > device tree properties described in:
-> > Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-> > 
-> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > ---
-> >  drivers/net/phy/micrel.c | 109
-> > +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 109 insertions(+)
-> > 
-> > diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-> > index 2ec19e5540bff..4fe5a814f586d 100644
-> > --- a/drivers/net/phy/micrel.c
-> > +++ b/drivers/net/phy/micrel.c
-> > @@ -19,6 +19,7 @@
-> >   *			 ksz9477
-> >   */
-> >  
-> > +#include <linux/bitfield.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> >  #include <linux/phy.h>
-> > @@ -489,9 +490,50 @@ static int ksz9021_config_init(struct phy_device
-> > *phydev)
-> >  
-> >  /* MMD Address 0x2 */
-> >  #define MII_KSZ9031RN_CONTROL_PAD_SKEW	4
-> > +#define MII_KSZ9031RN_RX_CTL_M		GENMASK(7, 4)
-> > +#define MII_KSZ9031RN_TX_CTL_M		GENMASK(3, 0)
-> > +
-> >  #define MII_KSZ9031RN_RX_DATA_PAD_SKEW	5
-> > +#define MII_KSZ9031RN_RXD3		GENMASK(15, 12)
-> > +#define MII_KSZ9031RN_RXD2		GENMASK(11, 8)
-> > +#define MII_KSZ9031RN_RXD1		GENMASK(7, 4)
-> > +#define MII_KSZ9031RN_RXD0		GENMASK(3, 0)
-> > +
-> >  #define MII_KSZ9031RN_TX_DATA_PAD_SKEW	6
-> > +#define MII_KSZ9031RN_TXD3		GENMASK(15, 12)
-> > +#define MII_KSZ9031RN_TXD2		GENMASK(11, 8)
-> > +#define MII_KSZ9031RN_TXD1		GENMASK(7, 4)
-> > +#define MII_KSZ9031RN_TXD0		GENMASK(3, 0)
-> > +
-> >  #define MII_KSZ9031RN_CLK_PAD_SKEW	8
-> > +#define MII_KSZ9031RN_GTX_CLK		GENMASK(9, 5)
-> > +#define MII_KSZ9031RN_RX_CLK		GENMASK(4, 0)
-> > +
-> > +/* KSZ9031 has internal RGMII_IDRX = 1.2ns and RGMII_IDTX = 0ns. To
-> > + * provide different RGMII options we need to configure delay offset
-> > + * for each pad relative to build in delay.
-> > + */
-> > +/* set rx to +0.18ns and rx_clk to "No delay adjustment" value to get
-> > delays of
-> > + * 1.38ns
-> > + */
-> > +#define RX_ID				0x1a
-> 
-> 0.18ns would be 0xa, why do you put 0x1a a 5-bit value into a 4-bit
-> register?
-
-Yes, it was a typo. kbuild bot already reported this bug.
-
-> Then there's that thing with plus/minus. You shift now data-lines with
-> 0.18ns. Is that now adding or subtracting to the 1.2ns? I would say as
-> RXC is shifted by 1.2ns and you add a positive delay of 0.18ns you will
-> end up with 1.02ns delay in total.
-
-Thx! I'll fix it.
-
-> > +#define RX_CLK_ID			0xf
-> > +
-> > +/* set rx to +0.30ns and rx_clk to -0.90ns to compensate the
-> > + * internal 1.2ns delay.
-> > + */
-> > +#define RX_ND				0xc
-> > +#define RX_CLK_ND			0x0
-> > +
-> > +/* set tx to -0.42ns and tx_clk to +0.96ns to get 1.38ns delay */
-> > +#define TX_ID				0x0
-> > +#define TX_CLK_ID			0x1f
-> > +
-> > +/* set tx and tx_clk to "No delay adjustment" to keep 0ns
-> > + * dealy
-> > + */
-> > +#define TX_ND				0x7
-> > +#define TX_CLK_ND			0xf
-> >  
-> >  /* MMD Address 0x1C */
-> >  #define MII_KSZ9031RN_EDPD		0x23
-> > @@ -564,6 +606,67 @@ static int ksz9031_enable_edpd(struct phy_device
-> > *phydev)
-> >  			     reg | MII_KSZ9031RN_EDPD_ENABLE);
-> >  }
-> >  
-> > +static int ksz9031_config_rgmii_delay(struct phy_device *phydev)
+On Tue, 31 Mar 2020 at 16:01, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, Mar 31, 2020 at 4:36 PM Robert Foss <robert.foss@linaro.org> wrote:
+> >
+> > Add devicetree match table, and enable ov8856_probe()
+> > to initialize power, clocks and reset pins.
+>
+> ...
+>
+> > +static int __ov8856_power_on(struct ov8856 *ov8856)
 > > +{
-> > +	u16 rx, tx, rx_clk, tx_clk;
-> > +	int ret;
+> > +       struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> > +       int ret;
 > > +
-> > +	switch (phydev->interface) {
-> > +	case PHY_INTERFACE_MODE_RGMII:
-> > +		tx = TX_ND;
-> > +		tx_clk = TX_CLK_ND;
-> > +		rx = RX_ND;
-> > +		rx_clk = RX_CLK_ND;
-> > +		break;
-> > +	case PHY_INTERFACE_MODE_RGMII_ID:
-> > +		tx = TX_ID;
-> > +		tx_clk = TX_CLK_ID;
-> > +		rx = RX_ID;
-> > +		rx_clk = RX_CLK_ID;
-> > +		break;
-> > +	case PHY_INTERFACE_MODE_RGMII_RXID:
-> > +		tx = TX_ND;
-> > +		tx_clk = TX_CLK_ND;
-> > +		rx = RX_ID;
-> > +		rx_clk = RX_CLK_ID;
-> > +		break;
-> > +	case PHY_INTERFACE_MODE_RGMII_TXID:
-> > +		tx = TX_ID;
-> > +		tx_clk = TX_CLK_ID;
-> > +		rx = RX_ND;
-> > +		rx_clk = RX_CLK_ND;
-> > +		break;
-> > +	default:
-> > +		return 0;
-> > +	}
+> > +       ret = clk_prepare_enable(ov8856->xvclk);
+> > +       if (ret < 0) {
+> > +               dev_err(&client->dev, "failed to enable xvclk\n");
+> > +               return ret;
+> > +       }
 > > +
-> > +	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_CONTROL_PAD_SKEW,
-> > +			    FIELD_PREP(MII_KSZ9031RN_RX_CTL_M, rx) |
-> > +			    FIELD_PREP(MII_KSZ9031RN_TX_CTL_M, tx));
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_RX_DATA_PAD_SKEW,
-> > +			    FIELD_PREP(MII_KSZ9031RN_RXD3, rx) |
-> > +			    FIELD_PREP(MII_KSZ9031RN_RXD2, rx) |
-> > +			    FIELD_PREP(MII_KSZ9031RN_RXD1, rx) |
-> > +			    FIELD_PREP(MII_KSZ9031RN_RXD0, rx));
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_TX_DATA_PAD_SKEW,
-> > +			    FIELD_PREP(MII_KSZ9031RN_TXD3, tx) |
-> > +			    FIELD_PREP(MII_KSZ9031RN_TXD2, tx) |
-> > +			    FIELD_PREP(MII_KSZ9031RN_TXD1, tx) |
-> > +			    FIELD_PREP(MII_KSZ9031RN_TXD0, tx));
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return phy_write_mmd(phydev, 2, MII_KSZ9031RN_CLK_PAD_SKEW,
-> > +			     FIELD_PREP(MII_KSZ9031RN_GTX_CLK, tx_clk) |
-> > +			     FIELD_PREP(MII_KSZ9031RN_RX_CLK, rx_clk));
-> > +}
-> > +
-> >  static int ksz9031_config_init(struct phy_device *phydev)
-> >  {
-> >  	const struct device *dev = &phydev->mdio.dev;
-> > @@ -596,6 +699,12 @@ static int ksz9031_config_init(struct phy_device
-> > *phydev)
-> >  	} while (!of_node && dev_walker);
-> >  
-> >  	if (of_node) {
-> > +		if (phy_interface_is_rgmii(phydev)) {
-> > +			result = ksz9031_config_rgmii_delay(phydev);
-> > +			if (result < 0)
-> > +				return result;
-> > +		}
-> > +
-> >  		ksz9031_of_load_skew_values(phydev, of_node,
-> >  		ksz9031_of_load_skew_values		MII_KSZ9031RN_CLK_PAD_SKEW, 5,
-> >  				clk_skews, 2);
+>
+> > +       if (is_acpi_node(ov8856->dev->fwnode))
+>
+> Use dev_fwnode().
 
-[1]
-==============================================================================
-When computing the RGMII timing relationships, delays along the entire
-data path must be aggregated to determine the total delay to be used for
-comparison between RGMII pins within their respective timing group. For
-the transmit data path, total delay includes MAC output delay,
-MAC-to-PHY PCB routing delay, and PHY (KSZ9031RNX) input delay and skew
-setting (if any). For the receive data path, the total delay includes
-PHY (KSZ9031RNX) output delay, PHY-to-MAC PCB routing delay, and MAC
-input delay and skew setting (if any).
+Ack.
 
-As the default, after power-up or reset, the KSZ9031RNX RGMII timing
-conforms to the timing requirements in the RGMII Version 2.0
-Specification for internal PHY chip delay.
+>
+> > +               return 0;
+> > +
+> > +       if (ov8856->reset_gpio) {
+>
+> > +               gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
+>
+> This is wrong. You have to fix it to use either 0 or 1.
 
-For the transmit path (MAC to KSZ9031RNX), the KSZ9031RNX does not add
-any delay locally at its GTX_CLK, TX_EN and TXD[3:0] input pins, and
-expects the GTX_CLK delay to be provided on-chip by the MAC. If MAC does
-not provide any delay or insufficient delay for the GTX_CLK, the
-KSZ9031RNX has pad skew registers that can provide up to 1.38 ns on-chip
-delay.
+I've changed all gpiod_set_value_cansleep() calls to use 0/1.
 
-For the receive path (KSZ9031RNX to MAC), the KSZ9031RNX adds 1.2ns
-typical delay to the RX_CLK output pin with respect to RX_DV and
-RXD[3:0] output pins. If necessary, the KSZ9031RNX has pad skew
-registers that can adjust the RX_CLK on-chip delay up to 2.58 ns from
-the 1.2 ns default delay.
-==============================================================================
+>
+> > +               usleep_range(1000, 2000);
+> > +       }
+> > +
+> > +       ret = regulator_bulk_enable(ARRAY_SIZE(ov8856_supply_names),
+> > +                                   ov8856->supplies);
+>
+> > +       if (ret < 0) {
+>
+> Do you need all ' < 0' parts all over the series?
 
-Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Some checks are needed due to ACPI and DT support co-existing.
+Maybe it would be better to just split the probing into an ACPI path
+and a DT path.
+
+I'll have a look through the series for redundant retval checks.
+
+>
+> > +               dev_err(&client->dev, "failed to enable regulators\n");
+> > +               goto disable_clk;
+> > +       }
+>
+> ...
+>
+> > +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_LOW);
+>
+> Ditto.
+
+Ack.
+
+>
+> ...
+>
+> > +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
+>
+> Ditto.
+
+Ack.
+
+>
+> ...
+>
+> > +       gpiod_set_value_cansleep(ov8856->reset_gpio, GPIOD_OUT_HIGH);
+>
+> Ditto.
+
+Ack.
+
+>
+> ...
+>
+> > -       ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
+> > -       if (ret)
+> > -               return ret;
+>
+> Where is it gone? Why?
+
+It was replaced by a clk_get_rate call, which as Sakari pointed out,
+isn't correct.
+I'll rework the clock handling for v4.
+
+>
+> > +       ov8856->xvclk = devm_clk_get_optional(dev, "xvclk");
+> > +       if (IS_ERR(ov8856->xvclk)) {
+>
+> > +               dev_err(dev, "could not get xvclk clock (%ld)\n",
+> > +                       PTR_ERR(ov8856->xvclk));
+>
+> Also you may use %pe here and in similar cases.
+
+Weirdly checkpatch complains about this.
+But it builds and runs cleanly, so I'll add it in v4.
+
+>
+> > +               return PTR_ERR(ov8856->xvclk);
+> > +       }
+>
+> > +       ov8856->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> > +               GPIOD_OUT_HIGH);
+>
+> Here parameter is correct. The question is, what the value should be
+> HIGH or LOW?
+> Basically HIGH means to assert the signal.
+
+Ack, I'll invert the logic.
+
+>
+> > +       if (IS_ERR(ov8856->reset_gpio)) {
+>
+> > +               dev_dbg(dev, "failed to get reset-gpio\n");
+>
+> Noise.
+> Enable GPIO debug to see this kind of messages.
+
+Ack.
+
+>
+> > +               return PTR_ERR(ov8856->reset_gpio);
+> > +       }
+>
+> ...
+>
+> > +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
+> > +                                     ov8856->supplies);
+> > +       if (ret) {
+>
+> > +               dev_warn(dev, "failed to get regulators\n");
+>
+> If it's a warning, why we return from here?
+> Same question to all other places with same issue.
+
+The issue I was seeing was the driver having to return a EDEFER here,
+so this warning sheds some light on which exact component is returning
+an EDEFER.
+
+[   15.962623] ov8856 16-0010: Dropping the link to regulator.29
+[   15.968464] ov8856 16-0010: failed to get regulators
+[   15.973493] ov8856 16-0010: failed to get HW configuration: -517
+[   15.979591] ov8856 16-0010: removing from PM domain titan_top_gdsc
+[   15.985855] ov8856 16-0010: genpd_remove_device()
+[   15.990672] i2c 16-0010: Driver ov8856 requests probe deferral
+
+Personally I found it helpful to speed up debugging, but I'll happily
+remove it if you prefer no warning.
+
+>
+> > +               return ret;
+> >         }
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
