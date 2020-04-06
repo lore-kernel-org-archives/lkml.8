@@ -2,76 +2,70 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A9FC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D1AC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59ACE206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C5DE20644
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="W3pq5Mo7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBH/KyGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgDFJWq (ORCPT
+        id S1726812AbgDFJXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:22:46 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43352 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbgDFJWq (ORCPT
+        Mon, 6 Apr 2020 05:23:38 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37074 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgDFJXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:22:46 -0400
-Received: by mail-ed1-f65.google.com with SMTP id bd14so18314625edb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 02:22:43 -0700 (PDT)
+        Mon, 6 Apr 2020 05:23:38 -0400
+Received: by mail-io1-f67.google.com with SMTP id n20so1154129ioa.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 02:23:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=ICZidZS836uKk3f5MYlrKnxf/d24delcy3nSKE9ogi4=;
-        b=W3pq5Mo7uZpLVGOq5GAIDI/ai7fUH4IIThQ1nwRczafHnhltyPbRBYi4qNanWLvp69
-         +904YhfbA4VWq0KvmJHQkjtbf5BXIa7CMoQ1Fr67ulXZcagefy/tt06DHI28sQAl1Z4o
-         hoDv8pLs5dD5DoPrxG3VeoDU6ANvHB8Mx51a0=
+        bh=qFoAcV0zVN3vQ6o7xZAt9SMFc7osLXFVRI1rCfHEWUM=;
+        b=vBH/KyGFA+wvslkjWtJfq0ZgdmNm1mkxPQSFGPHQqm4PwZvPJdIWwUH0+STnDfb3aQ
+         qZJX0t14vi0s0yKDn6bweipq3CLN0dJCBG1vEQ8C/dbFw56G3CJR1dyg5YbofBDlXXe2
+         Fz0KDk0/zL5pCnDrX7X4sGe6AHEiZD0naFgGSedu6+Bz4/4l3R084+wcnzfE1Cqo9/lw
+         Xb6jWCan2j/6zn5/2mJxy/ULAv6ld9mnHrEBISgeJJdqnBC3xKqkbceZQeo9KcMhRULq
+         a6kEFtRXaAW/YqngtKEQ8+jNdHMVeb2SRMUiVpSgkEcbE/93gzjYkMlGYy3QL23NrVJx
+         Q9/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ICZidZS836uKk3f5MYlrKnxf/d24delcy3nSKE9ogi4=;
-        b=gSGaQPSSNdtSevL5xfHgg0b7Bx21mx2M4xTZ8ip2LE8M6kqey4JrM3LbLmFgNPnsld
-         GiZHvsvjfFkv3ccOcHIshnu5tamPYB6AlGyuUtd6q0rzpN/XdvpLJVPRTktm2GsKWfWO
-         SImSkOwPRU6HJhz6NmT5rhCln65K7I8L0CN4iP580JlO8oO2Tn0qbjqksPNvsYhAG7QV
-         GlNiaraHu7UdZSlPko9KhkmACVcWDIxtH8p/KAC8rJ5Or+ykJZTr7aSFL31cafMY3nGC
-         Kacn+ajdkc7JWKEMj3jcUnPPc25aPg/W6zV5dhqzkyam5K4ZA/TW5bN0c+9hBU9zlmYn
-         ndlA==
-X-Gm-Message-State: AGi0PuYHB8wsby69dEPdqhMhc4rtUDBUXt2PvGtbYEnal5Vwb+W7iyul
-        DRO6wyTNl5OlJermrEnafs4mOF00mB1R16L+cNfjDg==
-X-Google-Smtp-Source: APiQypKhY01mdGI1/JQgHY2uIzhyGBPdhVdoEMLb6wrymVsJFgMONWTk9QGbDBPrwg//+L4NEZ3xqyN3Wn1J9Hi6NTs=
-X-Received: by 2002:a17:906:b351:: with SMTP id cd17mr20431593ejb.351.1586164962711;
- Mon, 06 Apr 2020 02:22:42 -0700 (PDT)
+        bh=qFoAcV0zVN3vQ6o7xZAt9SMFc7osLXFVRI1rCfHEWUM=;
+        b=sF8pV8cgOahl2MArBPy7mpxzAry3993SVlucYAA+gg80LeQ3uGBwFXZ3Rzja0VnDPa
+         Yj57Jb/gUw0aEdOcwUATRmtP3hNGIrTCukCwT6vGSlua5PrtzxUKMYqlSmB2/9RtmGCo
+         hHYZlEgP+GWFNiv55dWGKc2lkKiA9VwdHhAPMvmpIOTflZoFgEbhZ2kmYojQQ9ufUpw/
+         nu5wl1frbaomgSJZN592ihT9WmJGXCPrqLLX0uXZqz4xyWZ3ENc1lG4wrcml15Vpky7j
+         OrXxcY+c+usdpOOeHq59G/xypXl+5nDQ1vQq+IcKEo94e3bf0Cz4qWxjB8eoBYC7c5/a
+         wtiQ==
+X-Gm-Message-State: AGi0PuZCX+gSBzi+Go/JVpKB5E/v7M2xRIxore1giaxL5sC0ZQL8vLId
+        niGNsaB4ScQIEOcjAgvdXS0Q7eHVah/bVlTL92reOTTC
+X-Google-Smtp-Source: APiQypJDMK3mHQ9lE0SSHpw0eS1W2DgEmEmxJEks9KfWSK0mJc32QCWdz9JeO82+EFpl7gSQJv+jAa4ocXX3BZKrin0=
+X-Received: by 2002:a5d:984b:: with SMTP id p11mr18749986ios.175.1586165017572;
+ Mon, 06 Apr 2020 02:23:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
- <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
- <20200402143623.GB31529@gardel-login> <CAJfpegtRi9epdxAeoVbm+7UxkZfzC6XmD4K_5dg=RKADxy_TVA@mail.gmail.com>
- <20200402152831.GA31612@gardel-login> <CAJfpegum_PsCfnar8+V2f_VO3k8CJN1LOFJV5OkHRDbQKR=EHg@mail.gmail.com>
- <20200402155020.GA31715@gardel-login> <CAJfpeguM__+S6DiD4MWFv5GCf_EUWvGFT0mzuUCCrfQwggqtDQ@mail.gmail.com>
- <20200403110842.GA34663@gardel-login> <CAJfpegtYKhXB-HNddUeEMKupR5L=RRuydULrvm39eTung0=yRg@mail.gmail.com>
- <20200403150143.GA34800@gardel-login>
-In-Reply-To: <20200403150143.GA34800@gardel-login>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Mon, 6 Apr 2020 11:22:31 +0200
-Message-ID: <CAJfpegudLD8F-25k-k=9G96JKB+5Y=xFT=ZMwiBkNTwkjMDumA@mail.gmail.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-To:     Lennart Poettering <mzxreary@0pointer.de>
-Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+References: <d4a96597-6704-3030-b936-6282f0994f09@web.de> <CAJRQjofnnhzOp4yis=sL85ESDvNApXHL3dpv6T1NJL-Wh0OOfA@mail.gmail.com>
+ <CAOSf1CGLZ5H1cUsv6atZ7hNpQ+PDyyAjp6dzJjXMwC5XoUOVQQ@mail.gmail.com>
+In-Reply-To: <CAOSf1CGLZ5H1cUsv6atZ7hNpQ+PDyyAjp6dzJjXMwC5XoUOVQQ@mail.gmail.com>
+From:   Qiujun Huang <hqjagain@gmail.com>
+Date:   Mon, 6 Apr 2020 17:23:24 +0800
+Message-ID: <CAJRQjofc4f9eyBtP8XyHG0Afp=O7dRVqpCz0eFzCfaGN9zttbQ@mail.gmail.com>
+Subject: Re: [PATCH v3] powerpc/powernv: add NULL check after kzalloc in opal_add_one_export
+To:     "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,57 +73,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 5:01 PM Lennart Poettering <mzxreary@0pointer.de> wr=
-ote:
+On Mon, Apr 6, 2020 at 5:01 PM Oliver O'Halloran <oohall@gmail.com> wrote:
 >
-> On Fr, 03.04.20 13:48, Miklos Szeredi (miklos@szeredi.hu) wrote:
->
-> > > > Does that make any sense?
+> On Mon, Apr 6, 2020 at 11:15 AM Qiujun Huang <hqjagain@gmail.com> wrote:
+> >
+> > On Mon, Apr 6, 2020 at 3:06 AM Markus Elfring <Markus.Elfring@web.de> w=
+rote:
 > > >
-> > > When all mounts in the init mount namespace are unmounted and all
-> > > remaining processes killed we switch root back to the initrd, so that
-> > > even the root fs can be unmounted, and then we disassemble any backin=
-g
-> > > complex storage if there is, i.e. lvm, luks, raid, =E2=80=A6
-> >
-> > I think it could be done the other way round, much simpler:
-> >
-> >  - switch back to initrd
-> >  - umount root, keeping the tree intact (UMOUNT_DETACHED)
-> >  - kill all remaining processes, wait for all to exit
+> > > > Here needs a NULL check.
+> > quite obvious?
+> > >
+> > > I find this change description questionable
+> > > (despite of a reasonable patch subject).
+> > >
+> > >
+> > > > Issue found by coccinelle.
+> > >
+> > > Would an information like =E2=80=9CGenerated by: scripts/coccinelle/n=
+ull/kmerr.cocci=E2=80=9D
+> > > be nicer?
+> > Yeah, but I think It was enough.
 >
-> Nah. What I wrote above is drastically simplified. It's IRL more
-> complex. Specific services need to be killed between certain mounts
-> are unmounted, since they are a backend for another mount. NFS, or
-> FUSE or stuff like that usually has some processes backing them
-> around, and we need to stop the mounts they provide before these
-> services, and then the mounts these services reside on after that, and
-> so on. It's a complex dependency tree of stuff that needs to be done
-> in order, so that we can deal with arbitrarily nested mounts, storage
-> subsystems, and backing services.
+> I didn't know we had that script in the kernel tree so I think it's a
+> good to mention that you used it. It might even help idiots like me
+> who write this sort of bug.
 
-That still doesn't explain why you need to keep track of all mounts in
-the system.
+Yes, I will resend the patch. Thanks :-)
 
-If you are aware of the dependency, then you need to keep track of
-that particular mount. If not, then why?
+>
+> > > Will a patch change log be helpful here?
+> > I realized I should write some change log, and the change log was meani=
+ngless.
+> > So I left it blank.
+>
+> The changelog is fine IMO. The point of a changelog is to tell a
+> reader doing git archeology why a change happened and this is
+> sufficent for that.
 
-What I'm starting to see is that there's a fundamental conflict
-between how systemd people want to deal with new mounts and how some
-other people want to use mounts (i.e. tens of thousands of mounts in
-an automount map).
+Get that.
 
-I'm really curious how much the mount notification ring + per mount
-query (any implementation) can help that use case.
-
-> Anyway, this all works fine in systemd, the dependency logic is
-> there. We want a more efficient way to watch mounts, that's
-> all. Subscribing and constantly reparsing /proc/self/mountinfo is
-> awful, that's all.
-
-I'm not sure that is all.   To handle storms of tens of thousands of
-mounts, my guess is that the fundamental way of dealing with these
-changes will need to be updated in systemd.
-
-Thanks,
-Miklos
+>
+> Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
