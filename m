@@ -2,91 +2,127 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEABC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6985EC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C5E206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B554206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:40:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="msdjWJ+Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZCaQK6kR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgDFXd5 (ORCPT
+        id S1726339AbgDFXkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 19:33:57 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40153 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgDFXd5 (ORCPT
+        Mon, 6 Apr 2020 19:40:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41618 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726254AbgDFXkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 19:33:57 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c5so808094pgi.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 16:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=APdJ2bbJpdKbX+Sk+LIMoTdwNG0LJpHDXmC1o7gJlEs=;
-        b=msdjWJ+QJBaucO7GD9Jl+hBSA0PUl2BSJiwTwyO6NYTKgo++vqVg0TAlaenuKxaTZH
-         GYQsp2YXDWbKyhaXMpwDDw/f8KKk2nByDrmkaR9QtCgoObBvBvsJovisx7niVMxr9702
-         HRN6s+4JhXbxnccjpu+npnHfsUlpmPlkRjJSupNg44UW8zSTOsACZtlAYb/VLrwdf8Et
-         xI+Hq3cQG1FvhxS54t33C0gsvLaBf9S7l6fbWaRVz+bq34EB+IoQoBhXm3AQ+gdogGfb
-         O/2EDSjYBb+Bh5JHEyapryREF1j2xeLhg4WgvCTPCJsDuS/cIFjxCJ9foE2VJEeRXbNp
-         fBwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=APdJ2bbJpdKbX+Sk+LIMoTdwNG0LJpHDXmC1o7gJlEs=;
-        b=sZ7S+u3iyB/GVm5q4rkAx9Y5fHMiOlpNrCOTAQbsH+mM97U9U8U8mD95imBD5WaZGz
-         rz4K9YXjCcKh7Rt3BbG0GxPRR263mYmB7MPv9Cj6QDdMezizxoK+4yYM6RfAvIo6vYFz
-         0/jsl4tDWNjt3UuYgyRUP/8Dg9vjMxFFdwJoTnK0f4nEktirYyNeieyvyqj5PxHH5SYB
-         b8D8+aY5G5tJ3LG0voxXV3PjDFUBy8y6f33tr1QlVOhMhtjATvcYCvJbD4kCfJE0+FiU
-         RXiyLreh82ao9Tneq6NeviyzvX0K7OJWbeNk8Ea1TWNoX1z+tnESBcQPtLKPDgZvR7Tj
-         az4w==
-X-Gm-Message-State: AGi0Pua73ZtJ7GvPMbVLo5NSFZnKT72fAAdupV9dHJi1hDEXVf4Fcu/e
-        Y2EM9478oJ+0jk6Dg0Zbz2B0Euw8mQqLoA==
-X-Google-Smtp-Source: APiQypIo2Aco3bI5Gz4obU/4cINPuKZSt8IQago27JXTS7utPnzZj8oW9fEgGAHRnl7DNBznTHSsUg==
-X-Received: by 2002:a63:9a1a:: with SMTP id o26mr13288335pge.447.1586216035546;
-        Mon, 06 Apr 2020 16:33:55 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:7d7c:3a38:f0f8:3951? ([2605:e000:100e:8c61:7d7c:3a38:f0f8:3951])
-        by smtp.gmail.com with ESMTPSA id r189sm11918932pgr.31.2020.04.06.16.33.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 16:33:54 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: remove redundant variable pointer nxt and
- io_wq_assign_next call
-To:     Colin King <colin.king@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200406225439.654486-1-colin.king@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <434016cd-bf33-ce65-a86b-69a565d62a61@kernel.dk>
-Date:   Mon, 6 Apr 2020 16:33:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 6 Apr 2020 19:40:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586216404;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WM8xDoDQ9iS/jeeUYD4yS2C0/dqqITfA49gu7xf3zpk=;
+        b=ZCaQK6kRrM+dNYaeYmJlZ5CLB/VZqCIF63UFZGIaTZZ5Maw47aWj9INpjx5DXujeEzESui
+        YwOQ6yL41yL49DfJZov/TL27kq6/dGtmCDxZzmQA40+WhrY2UeTJtCa64IIzwPFwje84y6
+        Eq3ugvU8M5YOtwJpnWxBUS091w64mjE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-IKF6aZ_eNCy6plDcCa3dfQ-1; Mon, 06 Apr 2020 19:40:02 -0400
+X-MC-Unique: IKF6aZ_eNCy6plDcCa3dfQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40E43800D5C;
+        Mon,  6 Apr 2020 23:40:00 +0000 (UTC)
+Received: from localhost (unknown [10.36.110.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CEC265D9C5;
+        Mon,  6 Apr 2020 23:39:56 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 01:39:51 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nft_set_pipapo: remove unused pointer lt
+Message-ID: <20200407013951.77a6409f@redhat.com>
+In-Reply-To: <20200406232031.657615-1-colin.king@canonical.com>
+References: <20200406232031.657615-1-colin.king@canonical.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20200406225439.654486-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/6/20 3:54 PM, Colin King wrote:
+Hi Colin,
+
+On Tue,  7 Apr 2020 00:20:31 +0100
+Colin King <colin.king@canonical.com> wrote:
+
 > From: Colin Ian King <colin.king@canonical.com>
 > 
-> An earlier commit "io_uring: remove @nxt from handlers" removed the
-> setting of pointer nxt and now it is always null, hence the non-null
-> check and call to io_wq_assign_next is redundant and can be removed.
+> Pointer lt being assigned with a value that is never read and
+> the pointer is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  net/netfilter/nft_set_pipapo_avx2.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/net/netfilter/nft_set_pipapo_avx2.c b/net/netfilter/nft_set_pipapo_avx2.c
+> index d65ae0e23028..9458c6b6ea04 100644
+> --- a/net/netfilter/nft_set_pipapo_avx2.c
+> +++ b/net/netfilter/nft_set_pipapo_avx2.c
+> @@ -1049,11 +1049,9 @@ static int nft_pipapo_avx2_lookup_slow(unsigned long *map, unsigned long *fill,
+>  					struct nft_pipapo_field *f, int offset,
+>  					const u8 *pkt, bool first, bool last)
+>  {
+> -	unsigned long *lt = f->lt, bsize = f->bsize;
+> +	unsigned long bsize = f->bsize;
+>  	int i, ret = -1, b;
+>  
+> -	lt += offset * NFT_PIPAPO_LONGS_PER_M256;
+> -
+>  	if (first)
+>  		memset(map, 0xff, bsize * sizeof(*map));
+>  
+        for (i = offset; i < bsize; i++) {
+                if (f->bb == 8)
+                        pipapo_and_field_buckets_8bit(f, map, pkt);
+                else
+                        pipapo_and_field_buckets_4bit(f, map, pkt);
 
-Thanks, applied.
+Now, this function should never be called, it's provided as a safety net
+in case this algorithm is ever run with some strange packet field size,
+still, your clean-up shows another "issue" here: as
+pipapo_and_field_buckets_*() functions use the full buckets in lookup
+tables, not just starting from an offset, there's no need to repeat
+those operations starting from offset up to bsize.
+
+It's fine to ignore the offset (which is just a "hint" here for faster
+lookups) -- this function isn't supposed to be optimised in any way.
+
+That is, this for loop should go away altogether, and the 'offset'
+argument should be dropped as well. Let me know if you're comfortable
+taking care of that as well, or if you prefer that I send a patch.
 
 -- 
-Jens Axboe
+Stefano
 
