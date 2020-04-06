@@ -4,137 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A8AC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D3AC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBACE2496D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427152496E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:42:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hTqD+W5O"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sFTilaim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbgDFQl7 (ORCPT
+        id S1729673AbgDFQmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:41:59 -0400
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:48648 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729617AbgDFQl4 (ORCPT
+        Mon, 6 Apr 2020 12:42:05 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:42807 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729529AbgDFQmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:41:56 -0400
-Received: by mail-wr1-f73.google.com with SMTP id d1so81817wru.15
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 09:41:53 -0700 (PDT)
+        Mon, 6 Apr 2020 12:42:03 -0400
+Received: by mail-pl1-f202.google.com with SMTP id g7so103762plj.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 09:42:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=MRjytoTEBKrt8aQLsMYC6tlVfTx2Uch92ldjURsQQQI=;
-        b=hTqD+W5OPhE0YOBWh6tJD21i4lK36j0CqvGr/4l2eL71mqbpXSi0D4mVaqQcXRHciM
-         cxGCEy9S9WafkNQT7BIcKBpjaXBvkX/UZCRPcgcFmGmd+vOBYh4DRHk3drpoyX/58VoU
-         O2gfzNHVjK022wBaAU2iic6LoqsqtlOeZ99UuaVToQi170Zg61P6e3rptmLqx0wPZd3M
-         NF5A5ZCFtmcsO/lehpJS48UpcVwbxqLvbi7qJpWs9pZ8bsz9Zl63jNPFF2sqrcb79oHY
-         35zN7CPfk1oTM/i6dL4jLh/jYfTErgpudqBKk569mSng4b/orWxdZIjcImcO+AtiOIxz
-         aRdA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=og4BfgkxEdyP0L7K3K2SXksO/AChbKUXMouXqYPSA00=;
+        b=sFTilaimS0olRUWr52P6NjZp8iOs10uO0Z0JxM5Uuc4SjrkX4akRPhGMMko6yn6Vjl
+         ws3NQWWVJtJ3ueU7u0ytNYHOplXfphbPsUfJrc6hmnfKIl9LG70ErBmGNeEAaScsBIsa
+         8pzQNL6ueTZCTceiNxzsBsZ4KCIrIv1gusx7ObuDw8OyHYxmtcP4Mhcku3xGZumdZOoc
+         822uP7JCGsr7Bd/cARY+mTanl8Xs4pkuavmztPyJ4QiMT2w19+ROUOHp2IOOfM+O1hNX
+         7nYMkWpEpPknWEovRK6lAkDgfAOYFuYN4lNw2My6u1IqRuL++rFvl2FIx6OjAvMIwUcN
+         E4oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=MRjytoTEBKrt8aQLsMYC6tlVfTx2Uch92ldjURsQQQI=;
-        b=UL7JVxJaNE1qZyRKqFCnptnCoYbhzf9Ct4/Dt+SmLWje13jZHPhJmX0vN46y78S3Cw
-         LdDA4rpr7rgnPiaKbTbyBo28AcETev+AeFNz1ED/kzy3C6UyPH0lkpodYdJLdtlZgWDE
-         2jDpNFMcGAeFvRZUmVXLcXMY3PzTtw97xsxdOQYftqnsRh1Zbgk3UEy+Hn9L46LIlOEE
-         alnNT9OglvikQij4RarX07yeaucAXET8ngbR0SMmsqx/+ZSI6Jn9y1TurhXu11OM/A/o
-         +AbtLSjYwHsik+6aEh4AmCeDvWhmVUiE3v9uVN6VRVsSMHzq1hW7hP84+wNKPeDZY7fB
-         h2Zw==
-X-Gm-Message-State: AGi0Pubml5VFqvjh4pQX076WyL6Cq9D3wJfCgQwL/2M/IjFboNkVTFYr
-        HTmrN8izVrmnLQFcTNNYApnQQhatqmRtIKdP
-X-Google-Smtp-Source: APiQypIeFTvKOe10+l4Jx6e6TStaYbpWIpj4TLTkuc3VbMP4026hAOnsx5axG05+zGwYzFQLTenvn/KS5NoqcIkB
-X-Received: by 2002:a5d:6a47:: with SMTP id t7mr54263wrw.131.1586191312456;
- Mon, 06 Apr 2020 09:41:52 -0700 (PDT)
-Date:   Mon,  6 Apr 2020 18:41:44 +0200
-Message-Id: <178e01023f2e6664908f7c9660fa6527a55a22d6.1586191134.git.andreyknvl@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=og4BfgkxEdyP0L7K3K2SXksO/AChbKUXMouXqYPSA00=;
+        b=bC4Oecoj61oCtKKVO9aVToIQIhDfS7vB77NWP+yc3KlWdj3tHPOX+NlPDvQuSVWWkp
+         yjneXeiozNPtB+rP32bhjH+akIagM75vYKhKshfm9dFdK/Ysimu6atwPRzKxd202BZUk
+         XQSUJS/cxNlRxhVFI0kgBZM8C7YOoK2+CN3cnhaG8QU8ElAUTCKX+i4DEh4Z3f2WiEpr
+         9uDLA1y5IVTFSJMplv6BJ9lmf8cFAMJ3M4fZbH0V2Ut4YZsAzjHgyRdmID/vhnm1gPzX
+         0BMq7Yw8liIsevZaS3ShtvHBjpjdJ6563hWINY4bvN7XIeVxjcdH1WazN5zU+u+7cA/4
+         5DsA==
+X-Gm-Message-State: AGi0PuYmnxPm/Hp2V3l6uO334KrcJhjGb3RDWQJUVk71SsoKx863IKnM
+        EKuJLcgRIzbvWKCIl8U9UdbMgzUnjPp2zsQ4NSo=
+X-Google-Smtp-Source: APiQypJDVItbvdsaAcfKFSSNsMelQNBO6U0MvHJemAJCSTnqHm4EIsriO2lzZR7x/iXYclFFASObx3hqbCBuu2Gzn3g=
+X-Received: by 2002:a63:c504:: with SMTP id f4mr1623499pgd.292.1586191321112;
+ Mon, 06 Apr 2020 09:42:01 -0700 (PDT)
+Date:   Mon,  6 Apr 2020 09:41:18 -0700
+In-Reply-To: <20200406164121.154322-1-samitolvanen@google.com>
+Message-Id: <20200406164121.154322-10-samitolvanen@google.com>
 Mime-Version: 1.0
+References: <20191018161033.261971-1-samitolvanen@google.com> <20200406164121.154322-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-Subject: [PATCH] usb: raw-gadget: fix raw_event_queue_fetch locking
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>
+Subject: [PATCH v10 09/12] arm64: disable SCS for hypervisor code
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If queue->size check in raw_event_queue_fetch() fails (which normally
-shouldn't happen, that check is a fail-safe), the function returns
-without reenabling interrupts. This patch fixes that issue, along with
-propagating the cause of failure to the function caller.
+Disable SCS for code that runs at a different exception level by
+adding __noscs to __hyp_text.
 
-Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Suggested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Acked-by: Marc Zyngier <maz@kernel.org>
 ---
+ arch/arm64/include/asm/kvm_hyp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Greg, this should apply cleanly on top of Dan's "usb: raw-gadget: Fix
-copy_to/from_user() checks" patch.
-
----
- drivers/usb/gadget/legacy/raw_gadget.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
-index e490ffa1f58b..1582521ec774 100644
---- a/drivers/usb/gadget/legacy/raw_gadget.c
-+++ b/drivers/usb/gadget/legacy/raw_gadget.c
-@@ -81,6 +81,7 @@ static int raw_event_queue_add(struct raw_event_queue *queue,
- static struct usb_raw_event *raw_event_queue_fetch(
- 				struct raw_event_queue *queue)
- {
-+	int ret;
- 	unsigned long flags;
- 	struct usb_raw_event *event;
+diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+index fe57f60f06a8..875b106c5d98 100644
+--- a/arch/arm64/include/asm/kvm_hyp.h
++++ b/arch/arm64/include/asm/kvm_hyp.h
+@@ -13,7 +13,7 @@
+ #include <asm/kvm_mmu.h>
+ #include <asm/sysreg.h>
  
-@@ -89,11 +90,14 @@ static struct usb_raw_event *raw_event_queue_fetch(
- 	 * there's at least one event queued by decrementing the semaphore,
- 	 * and then take the lock to protect queue struct fields.
- 	 */
--	if (down_interruptible(&queue->sema))
--		return NULL;
-+	ret = down_interruptible(&queue->sema);
-+	if (ret)
-+		return ERR_PTR(ret);
- 	spin_lock_irqsave(&queue->lock, flags);
--	if (WARN_ON(!queue->size))
-+	if (WARN_ON(!queue->size)) {
-+		spin_unlock_irqrestore(&queue->lock, flags);
- 		return NULL;
-+	}
- 	event = queue->events[0];
- 	queue->size--;
- 	memmove(&queue->events[0], &queue->events[1],
-@@ -522,10 +526,17 @@ static int raw_ioctl_event_fetch(struct raw_dev *dev, unsigned long value)
- 	spin_unlock_irqrestore(&dev->lock, flags);
+-#define __hyp_text __section(.hyp.text) notrace
++#define __hyp_text __section(.hyp.text) notrace __noscs
  
- 	event = raw_event_queue_fetch(&dev->queue);
--	if (!event) {
-+	if (PTR_ERR(event) == -EINTR) {
- 		dev_dbg(&dev->gadget->dev, "event fetching interrupted\n");
- 		return -EINTR;
- 	}
-+	if (IS_ERR_OR_NULL(event)) {
-+		dev_err(&dev->gadget->dev, "failed to fetch event\n");
-+		spin_lock_irqsave(&dev->lock, flags);
-+		dev->state = STATE_DEV_FAILED;
-+		spin_unlock_irqrestore(&dev->lock, flags);
-+		return -ENODEV;
-+	}
- 	length = min(arg.length, event->length);
- 	if (copy_to_user((void __user *)value, event, sizeof(*event) + length))
- 		return -EFAULT;
+ #define read_sysreg_elx(r,nvh,vh)					\
+ 	({								\
 -- 
 2.26.0.292.g33ef6b2f38-goog
 
