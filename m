@@ -2,261 +2,130 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA2CC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88432C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323362072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B012072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:53:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="exuIaN4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgDFUw4 (ORCPT
+        id S1726407AbgDFUxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 16:52:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39868 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbgDFUwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 16:52:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3D3FEAA55;
-        Mon,  6 Apr 2020 20:52:51 +0000 (UTC)
-Date:   Mon, 6 Apr 2020 22:52:47 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
-Message-ID: <20200406205247.GE25468@kitsune.suse.cz>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
- <cover.1584620202.git.msuchanek@suse.de>
- <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
- <1585039473.da4762n2s0.astroid@bobo.none>
- <20200324193833.GH25468@kitsune.suse.cz>
- <1585896170.ohti800w9v.astroid@bobo.none>
+        Mon, 6 Apr 2020 16:53:39 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37874 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgDFUxj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 16:53:39 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r24so1274451ljd.4;
+        Mon, 06 Apr 2020 13:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NsnlQPkOu0I9hxPUVqMcoqIuvbuxd6yL4BRh38XbG/s=;
+        b=exuIaN4CzcXYvGtI8SZcV7mmo8ozQ+K00h75JyOXe9IfkfzMPonwlG0KLd/sPWwt8R
+         wNgEmxKMSudk8By3FVl9UliCmuoVHgnZv8QhX079kjEP8G7iPRmZaz92WCzIHqEAx+GG
+         gYnRMTKfWVrK5aH5RcYtTLGDj2zUE7gSyi6FBMQ/fsoKcfHE3R+xBbjdW6smHp32nvS6
+         +joVAshhF4T0DuruVsNs7dJRe2ICjo1o+CbBI5jo3f8HHpXdzoq6ttrlL4Lvc+DSj7Ku
+         mkB/gDKk1Mkn9Imi7iPhbrGszqK/4TMguQ0rgsYiK50RhtX90CqkRvlDCJEm5TQQBLs6
+         tL6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NsnlQPkOu0I9hxPUVqMcoqIuvbuxd6yL4BRh38XbG/s=;
+        b=d9PFifXLSgjkTJNgnqAzhpi9ARxHcPDOBy/UWGR5HNJIl85qzbRIICmYSz6Px/Jw4V
+         Zfob7Emhidys9kwwXGg6QllL2FM0iiE3ZkAmNRLoWqIG/jPp/tsWdo0DvYYHXuLxqCSe
+         Py2safoakuP1D1DBef2z/+p44Hz/DCX0hQn6JfVUiaE2w/18fzvgcD7w7EY/RMLWfNhT
+         1XbP3cEWoFNx9yiOpqvAfWRsr/HKBhBAqmWCZkieJIqpeKB9cEF9+zv91dGAyhDHKhJo
+         02QbsX/+mOD5lTKhyRJTXQz5NYqPNRuXamZZjZb7FeeqpOBNQANiHBsrACvod6uZp9nY
+         TZvw==
+X-Gm-Message-State: AGi0PuZKFzkoNjUSUT4qygN7nyL8jwpM756HKg1UYpkmPtRDxPLiLdEY
+        y7aAbIFlNh4dHDcmnMj3Yxsk7S75
+X-Google-Smtp-Source: APiQypIIW2A3Op4dX1iVbdqhE53SXQnj2sIBQ82+haErgaw/x/0k3MIUmPaid6ya7GIAw2ag5DVNzA==
+X-Received: by 2002:a2e:868b:: with SMTP id l11mr687737lji.247.1586206414049;
+        Mon, 06 Apr 2020 13:53:34 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id n17sm10795873ljc.76.2020.04.06.13.53.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 13:53:33 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
+ <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
+Date:   Mon, 6 Apr 2020 23:53:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1585896170.ohti800w9v.astroid@bobo.none>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 05:13:25PM +1000, Nicholas Piggin wrote:
-> Michal Such�nek's on March 25, 2020 5:38 am:
-> > On Tue, Mar 24, 2020 at 06:48:20PM +1000, Nicholas Piggin wrote:
-> >> Michal Suchanek's on March 19, 2020 10:19 pm:
-> >> > There are two almost identical copies for 32bit and 64bit.
-> >> > 
-> >> > The function is used only in 32bit code which will be split out in next
-> >> > patch so consolidate to one function.
-> >> > 
-> >> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> >> > Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> >> > ---
-> >> > v6:  new patch
-> >> > v8:  move the consolidated function out of the ifdef block.
-> >> > v11: rebase on top of def0bfdbd603
-> >> > ---
-> >> >  arch/powerpc/perf/callchain.c | 48 +++++++++++++++++------------------
-> >> >  1 file changed, 24 insertions(+), 24 deletions(-)
-> >> > 
-> >> > diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> >> > index cbc251981209..c9a78c6e4361 100644
-> >> > --- a/arch/powerpc/perf/callchain.c
-> >> > +++ b/arch/powerpc/perf/callchain.c
-> >> > @@ -161,18 +161,6 @@ static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
-> >> >  	return read_user_stack_slow(ptr, ret, 8);
-> >> >  }
-> >> >  
-> >> > -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> >> > -{
-> >> > -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> >> > -	    ((unsigned long)ptr & 3))
-> >> > -		return -EFAULT;
-> >> > -
-> >> > -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
-> >> > -		return 0;
-> >> > -
-> >> > -	return read_user_stack_slow(ptr, ret, 4);
-> >> > -}
-> >> > -
-> >> >  static inline int valid_user_sp(unsigned long sp, int is_64)
-> >> >  {
-> >> >  	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
-> >> > @@ -277,19 +265,9 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-> >> >  }
-> >> >  
-> >> >  #else  /* CONFIG_PPC64 */
-> >> > -/*
-> >> > - * On 32-bit we just access the address and let hash_page create a
-> >> > - * HPTE if necessary, so there is no need to fall back to reading
-> >> > - * the page tables.  Since this is called at interrupt level,
-> >> > - * do_page_fault() won't treat a DSI as a page fault.
-> >> > - */
-> >> > -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> >> > +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
-> >> >  {
-> >> > -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> >> > -	    ((unsigned long)ptr & 3))
-> >> > -		return -EFAULT;
-> >> > -
-> >> > -	return probe_user_read(ret, ptr, sizeof(*ret));
-> >> > +	return 0;
-> >> >  }
-> >> >  
-> >> >  static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-> >> > @@ -312,6 +290,28 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
-> >> >  
-> >> >  #endif /* CONFIG_PPC64 */
-> >> >  
-> >> > +/*
-> >> > + * On 32-bit we just access the address and let hash_page create a
-> >> > + * HPTE if necessary, so there is no need to fall back to reading
-> >> > + * the page tables.  Since this is called at interrupt level,
-> >> > + * do_page_fault() won't treat a DSI as a page fault.
-> >> > + */
-> >> 
-> >> The comment is actually probably better to stay in the 32-bit
-> >> read_user_stack_slow implementation. Is that function defined
-> >> on 32-bit purely so that you can use IS_ENABLED()? In that case
-> > It documents the IS_ENABLED() and that's where it is. The 32bit
-> > definition is only a technical detail.
+06.04.2020 23:50, Sowjanya Komatineni пишет:
 > 
-> Sorry for the late reply, busy trying to fix bugs in the C rewrite
-> series. I don't think it is the right place, it should be in the
-> ppc32 implementation detail.
-Which does not exist anymore after the 32bit and 64bit part is split.
-> ppc64 has an equivalent comment at the top of its read_user_stack functions.
-> 
-> >> I would prefer to put a BUG() there which makes it self documenting.
-> > Which will cause checkpatch complaints about introducing new BUG() which
-> > is frowned on.
-> 
-> It's fine in this case, that warning is about not introducing
-> runtime bugs, but this wouldn't be.
-> 
-> But... I actually don't like adding read_user_stack_slow on 32-bit
-> and especially not just to make IS_ENABLED work.
-That's to not break build at this point. Later the function is removed.
-> 
-> IMO this would be better if you really want to consolidate it
-> 
-> ---
-> 
-> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.c
-> index cbc251981209..ca3a599b3f54 100644
-> --- a/arch/powerpc/perf/callchain.c
-> +++ b/arch/powerpc/perf/callchain.c
-> @@ -108,7 +108,7 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
->   * interrupt context, so if the access faults, we read the page tables
->   * to find which page (if any) is mapped and access it directly.
->   */
-> -static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
-> +static int read_user_stack_slow(const void __user *ptr, void *buf, int nb)
->  {
->  	int ret = -EFAULT;
->  	pgd_t *pgdir;
-> @@ -149,28 +149,21 @@ static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
->  	return ret;
->  }
->  
-> -static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
-> +static int __read_user_stack(const void __user *ptr, void *ret, size_t size)
->  {
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned long) ||
-> -	    ((unsigned long)ptr & 7))
-> +	if ((unsigned long)ptr > TASK_SIZE - size ||
-> +	    ((unsigned long)ptr & (size - 1)))
->  		return -EFAULT;
->  
-> -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
-> +	if (!probe_user_read(ret, ptr, size))
->  		return 0;
->  
-> -	return read_user_stack_slow(ptr, ret, 8);
-> +	return read_user_stack_slow(ptr, ret, size);
->  }
->  
-> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> +static int read_user_stack_64(unsigned long __user *ptr, unsigned long *ret)
->  {
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> -	    ((unsigned long)ptr & 3))
-> -		return -EFAULT;
-> -
-> -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
-> -		return 0;
-> -
-> -	return read_user_stack_slow(ptr, ret, 4);
-> +	return __read_user_stack(ptr, ret, sizeof(*ret));
->  }
->  
->  static inline int valid_user_sp(unsigned long sp, int is_64)
-> @@ -283,13 +276,13 @@ static void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
->   * the page tables.  Since this is called at interrupt level,
->   * do_page_fault() won't treat a DSI as a page fault.
->   */
-> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> +static int __read_user_stack(const void __user *ptr, void *ret, size_t size)
->  {
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> -	    ((unsigned long)ptr & 3))
-> +	if ((unsigned long)ptr > TASK_SIZE - size ||
-> +	    ((unsigned long)ptr & (size - 1)))
->  		return -EFAULT;
->  
-> -	return probe_user_read(ret, ptr, sizeof(*ret));
-> +	return probe_user_read(ret, ptr, size);
->  }
->  
->  static inline void perf_callchain_user_64(struct perf_callchain_entry_ctx *entry,
-> @@ -312,6 +305,11 @@ static inline int valid_user_sp(unsigned long sp, int is_64)
->  
->  #endif /* CONFIG_PPC64 */
->  
-> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *ret)
-> +{
-> +	return __read_user_stack(ptr, ret, sizeof(*ret));
-> +}
-> +
->  /*
->   * Layout for non-RT signal frames
->   */
+> On 4/6/20 1:45 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 04.04.2020 04:25, Sowjanya Komatineni пишет:
+>>> +static int chan_capture_kthread_start(void *data)
+>>> +{
+>>> +     struct tegra_vi_channel *chan = data;
+>>> +     struct tegra_channel_buffer *buf;
+>>> +     int err = 0;
+>>> +     int caps_inflight;
+>>> +
+>>> +     set_freezable();
+>>> +
+>>> +     while (1) {
+>>> +             try_to_freeze();
+>>> +
+>>> +             wait_event_interruptible(chan->start_wait,
+>>> +                                      !list_empty(&chan->capture) ||
+>>> +                                      kthread_should_stop());
+>>> +             /*
+>>> +              * Frame start and MW_ACK_DONE syncpoint condition
+>>> FIFOs are
+>>> +              * of max depth 2. So make sure max 2 capture requests are
+>>> +              * in process by the hardware at a time.
+>>> +              */
+>>> +             while (!(kthread_should_stop() ||
+>>> list_empty(&chan->capture))) {
+>>> +                     caps_inflight = chan->capture_reqs -
+>>> chan->sequence;
+>>> +                     /*
+>>> +                      * Source is not streaming if error is non-zero.
+>>> +                      * So, do not dequeue buffers on capture error
+>>> or when
+>>> +                      * syncpoint requests in FIFO are full.
+>>> +                      */
+>>> +                     if (err || caps_inflight >= SYNCPT_FIFO_DEPTH)
+>>> +                             break;
+>> Am I understanding correctly that this thread will take 100% CPU,
+>> spinning here, if more than 2 frame-captures queued?
+> on more than 2 frames captures, it breaks thread and on next wakeup it
+> continues
+
+The wait_event() won't wait if condition is true.
