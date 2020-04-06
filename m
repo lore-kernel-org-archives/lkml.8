@@ -2,146 +2,145 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9299CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB56C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A49206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F184E206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vr1zqOOW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H73+pt7B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbgDFKnj (ORCPT
+        id S1727461AbgDFKnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:43:39 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44957 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbgDFKne (ORCPT
+        Mon, 6 Apr 2020 06:43:42 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:38200 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbgDFKnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:43:34 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 131so11345600lfh.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 03:43:32 -0700 (PDT)
+        Mon, 6 Apr 2020 06:43:40 -0400
+Received: by mail-il1-f196.google.com with SMTP id n13so14185899ilm.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 03:43:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KvmRlJZD/otx8so6QDvSPODmkrR200UpnmTufaBUT38=;
-        b=Vr1zqOOW396ZD0mf9Mug4eLYzrEA29MI0brRL948nuMriYg6BZv0Tb5RtVP6HvLQQH
-         n+e/kbCoWSl3s6VqA7yKKJHaSKSKJqip1oXY0eWCGFezbHQijF0Q2SHcBSnkmFgWDywp
-         mljDJtyNhK8MPCl/YbBGGN9I6TayIpHMX1YCwWfvYG0ukJ/QSEL79rwxSPOAPax6PMRn
-         4vW4+hciDTqgLX/xTT9pOaPbnjoSanmMFnvRqIpLb/OUyiBUul53Gr2NXF3faCXkd492
-         UxelXakVnmE/s7zRk4mH7EhS5uXRSH7KMp2DFIXjE9f9xMBzwakQJR0SLqlLX7ithd8M
-         AAfw==
+        bh=2BZ8kYXiM1BuTjCJPDJWq064ZRhtYcG64ceYL8l4ZHI=;
+        b=H73+pt7BbqZdfpJ4kn3Pz3eASUQ7E5K5n+u66xAH7oKU9x7IgwRKopHEYLN767ajR/
+         JkMwOzBwNM0r+bDxpTVBuKpdc1ICpyVg7WK9BY73ENYPloSGUB+E3WaWzD7yepBQnXGP
+         eMSixej2ld7yfU5izyuXLdJnoWuWxJ9aLdQ/yJLXLJKqhtt82tSOHZfEBBi+G01dNLoH
+         LD0xGohfeYyXYVStttxxd6hR0nnDBz1qoQSq7rFfY4WfcIUmgO6MGmgNbNN5HoTt+3m3
+         r4b+DP3TC/ED9tfLdWnZlrjVKt3iyLcULgbb8I+zm/gU+NX3Ob27ytnUb1TyiQDHGjnQ
+         5THQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KvmRlJZD/otx8so6QDvSPODmkrR200UpnmTufaBUT38=;
-        b=aF4Q0V0VCTp/FjxI4JEhrmesTuDCdgffb+MleshjMAzlefMjR4aMFqmV1qlyzEtVrc
-         m4YlFTVousIV/Y8rGMVo8nkmTdiXrMHmYMqy4fMbF8QZeQTMUHBIfb8yrvxCfxzAKxFD
-         2KWOwsmwT4715auzLxPFnengcB8CkgBTctMG3cT9xkinFtfpIzb4U1m51z6+IS+eUNqW
-         lbQWCQDesedfq3Kd6HI4yLkKk1S1E+ajLY4MX4nq+ywHWzhhBOPXytX6wJy/YvvZ9RJD
-         BZHDvmXBvhfmEoVSbM/qlZUOIcWsDxbfDn7nYv2ak+00S+tbZwvOGmT8KZQ/fGNQcigE
-         CXKQ==
-X-Gm-Message-State: AGi0PubfMd30tNUBcFlvax52sFpudfPtV/VgfMqeOSWTpWTOcpFgVsOZ
-        DHVOw2p8RohMXkHgkGLfamDc5MVaV6/zUrSNoY0M2Q==
-X-Google-Smtp-Source: APiQypL+PYJMVdhXWwODi3JLfZmWHtnhhJ1Bmk3hkaHHuLbTYE3Lvtel0nEM+hl0UytOiKrvXfhQVd51dtjxYjf9wL0=
-X-Received: by 2002:ac2:44c6:: with SMTP id d6mr9122969lfm.26.1586169811657;
- Mon, 06 Apr 2020 03:43:31 -0700 (PDT)
+        bh=2BZ8kYXiM1BuTjCJPDJWq064ZRhtYcG64ceYL8l4ZHI=;
+        b=tqn6jX2FuaoF5McbL6QasdciSNKlXmPu8FrZHrzMABVXlwqFBpR8O5VlZMF3dwWGYc
+         o1V8daFlR4fqwYJS1D1E8fXEpWE4Qg6NzfYHN8oO3kWsAYoB2Bz/jmghTK67UIMtHhAT
+         j2Unf8JRnJU0PWGhotiXHniEi5zhWy8jGQjYobDiFZLb+nFYb4zRsBOY+f1LYE9f3Ed4
+         rw2L64yz5TA40HI2kIKgfgKw55PaYaa2FqAr81/KHMMmFiBkJFgQb6AMq87ze+9DsZgZ
+         XUWPo6Hn/Ej6vxuAZYVSPT7K53EH+zj7YhnRpVyX+YqCxdaqXY8ns0YnznBcwEEwJZ+Y
+         MiQw==
+X-Gm-Message-State: AGi0PuZ02pz+7YYGF3x2GARBMgZyzGLWixK0Tmh7bwrFab30wpLY0eOT
+        dSoW+jbSVXk/7Wa+2B0CkE9dM6aafDoBF0aKWGw=
+X-Google-Smtp-Source: APiQypJyrlEDFj+pXJzHS3MWEdJ04ArtFK1ZoHOVPrqWHQHCzochugDXZMIBGthwFew57upW4dM31ZUO7Ew7VgwzFYE=
+X-Received: by 2002:a92:83ca:: with SMTP id p71mr19104698ilk.278.1586169820155;
+ Mon, 06 Apr 2020 03:43:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200405234639.AU1f3x3Xg%akpm@linux-foundation.org>
-In-Reply-To: <20200405234639.AU1f3x3Xg%akpm@linux-foundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 6 Apr 2020 16:13:17 +0530
-Message-ID: <CA+G9fYsUsGS6ybozk3A=8aG5VFpF-+DJGNAim4o=Xi9CB43tDA@mail.gmail.com>
-Subject: Re: mmotm 2020-04-05-16-45 uploaded
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        mhocko@suse.cz, mm-commits@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20200406093944.4174-1-hqjagain@gmail.com> <87eet0sy79.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87eet0sy79.fsf@mpe.ellerman.id.au>
+From:   Qiujun Huang <hqjagain@gmail.com>
+Date:   Mon, 6 Apr 2020 18:43:27 +0800
+Message-ID: <CAJRQjoeTYg6NnxwvXusU6fdOFOmOiceokYJZQ23-0YQo_yqZ5w@mail.gmail.com>
+Subject: Re: [PATCH v4] powerpc/powernv: add NULL check after kzalloc in opal_add_one_export
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 05:16, <akpm@linux-foundation.org> wrote:
+On Mon, Apr 6, 2020 at 6:30 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
 >
-> The mm-of-the-moment snapshot 2020-04-05-16-45 has been uploaded to
+> Qiujun Huang <hqjagain@gmail.com> writes:
+> > Here needs a NULL check as kzalloc may fail returning NULL.
+> >
+> > Issue was found by coccinelle.
+> > Generated by: scripts/coccinelle/null/kmerr.cocci
+> >
+> > Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> > Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
+> >
+> > ---
 >
->    http://www.ozlabs.org/~akpm/mmotm/
+> Thanks for putting up with all the review comments :)
 >
-> mmotm-readme.txt says
+> But I think this should actually be two patches now.
 >
-> README for mm-of-the-moment:
+> The first patch should change the goto after
+> of_property_read_u64_array() into a return and drop the redundant
+> assignments.
 >
-> http://www.ozlabs.org/~akpm/mmotm/
->
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
->
-> You will need quilt to apply these patches to the latest Linus release (5.x
-> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> http://ozlabs.org/~akpm/mmotm/series
->
-> The file broken-out.tar.gz contains two datestamp files: .DATE and
-> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> followed by the base kernel version against which this patch series is to
-> be applied.
->
-> This tree is partially included in linux-next.  To see which patches are
-> included in linux-next, consult the `series' file.  Only the patches
-> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-> linux-next.
->
->
-> A full copy of the full kernel tree with the linux-next and mmotm patches
-> already applied is available through git within an hour of the mmotm
-> release.  Individual mmotm releases are tagged.  The master branch always
-> points to the latest release, so it's constantly rebasing.
->
->         https://github.com/hnaz/linux-mm
->
-> The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-> contains daily snapshots of the -mm tree.  It is updated more frequently
-> than mmotm, and is untested.
->
-> A git copy of this tree is also available at
->
->         https://github.com/hnaz/linux-mm
->
->
->
-> This mmotm tree contains the following patches against 5.6:
-> (patches marked "*" will be included in linux-next)
->
->   origin.patch
-<>
-> * mm-hugetlb-optionally-allocate-gigantic-hugepages-using-cma.patch
-> * mm-hugetlb-optionally-allocate-gigantic-hugepages-using-cma-fix.patch
-> * mm-hugetlb-optionally-allocate-gigantic-hugepages-using-cma-fix-2.patch
+> Then the second patch can add the NULL check for attr.
 
-While building Linux-next master for arm beagle board x15 the following
-build error was noticed.
+Get that, I'll separate them.
 
-mm/hugetlb.c: In function 'hugetlb_cma_reserve':
-mm/hugetlb.c:5580:3: error: implicit declaration of function
-'for_each_mem_pfn_range'; did you mean 'for_each_mem_range'?
-[-Werror=implicit-function-declaration]
-   for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-   ^~~~~~~~~~~~~~~~~~~~~~
-   for_each_mem_range
-mm/hugetlb.c:5580:62: error: expected ';' before '{' token
-   for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-                                                              ^
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+>
+> cheers
+>
+> > v3->v4:
+> >       Added the information about coccinelle script.
+> >       Added change log.
+> >       Added Oliver's Reviewed-by.
+> > v2->v3:
+> >       Removed redundant assignment to 'attr' and 'name'.
+> > v1->v2:
+> >       Just return -ENOMEM if attr is NULL.
+> > ---
+> >  arch/powerpc/platforms/powernv/opal.c | 9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
+> > index 2b3dfd0b6cdd..908d749bcef5 100644
+> > --- a/arch/powerpc/platforms/powernv/opal.c
+> > +++ b/arch/powerpc/platforms/powernv/opal.c
+> > @@ -801,16 +801,19 @@ static ssize_t export_attr_read(struct file *fp, struct kobject *kobj,
+> >  static int opal_add_one_export(struct kobject *parent, const char *export_name,
+> >                              struct device_node *np, const char *prop_name)
+> >  {
+> > -     struct bin_attribute *attr = NULL;
+> > -     const char *name = NULL;
+> > +     struct bin_attribute *attr;
+> > +     const char *name;
+> >       u64 vals[2];
+> >       int rc;
+> >
+> >       rc = of_property_read_u64_array(np, prop_name, &vals[0], 2);
+> >       if (rc)
+> > -             goto out;
+> > +             return rc;
+> >
+> >       attr = kzalloc(sizeof(*attr), GFP_KERNEL);
+> > +     if (!attr)
+> > +             return -ENOMEM;
+> > +
+> >       name = kstrdup(export_name, GFP_KERNEL);
+> >       if (!name) {
+> >               rc = -ENOMEM;
+> > --
+> > 2.17.1
