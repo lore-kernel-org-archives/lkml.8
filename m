@@ -2,107 +2,170 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58E3C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E715C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70930206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20197206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgDFJSQ (ORCPT
+        id S1726860AbgDFJSS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:18:16 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55960 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbgDFJSQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:18:16 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 752A51C452C; Mon,  6 Apr 2020 11:18:14 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 11:18:13 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Chen Yu <yu.c.chen@intel.com>, Linux PM <linux-pm@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH][v3] PM / sleep: Add pm_debug_messages boot command
- control
-Message-ID: <20200406091813.GG31120@duo.ucw.cz>
-References: <20200402075652.13289-1-yu.c.chen@intel.com>
- <CAJZ5v0j2W5MYJnb4hiDn0OgR1xJZwm4TxVm9o-iw+epXPTp82g@mail.gmail.com>
+        Mon, 6 Apr 2020 05:18:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40378 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726723AbgDFJSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 05:18:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2B854AC19;
+        Mon,  6 Apr 2020 09:18:14 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Eric Sandeen <sandeen@sandeen.net>,
+        Luis Chamberlain <mcgrof@kernel.org>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        ming.lei@redhat.com, nstange@suse.de, mhocko@suse.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [RFC 2/3] blktrace: fix debugfs use after free
+References: <20200402000002.7442-1-mcgrof@kernel.org>
+        <20200402000002.7442-3-mcgrof@kernel.org>
+        <3640b16b-abda-5160-301a-6a0ee67365b4@acm.org>
+        <b827d03c-e097-06c3-02ab-00df42b5fc0e@sandeen.net>
+        <75aa4cff-1b90-ebd4-17a4-c1cb6d390b30@acm.org>
+Date:   Mon, 06 Apr 2020 11:18:13 +0200
+In-Reply-To: <75aa4cff-1b90-ebd4-17a4-c1cb6d390b30@acm.org> (Bart Van Assche's
+        message of "Sun, 5 Apr 2020 21:25:41 -0700")
+Message-ID: <87d08lj7l6.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="E69HUUNAyIJqGpVn"
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0j2W5MYJnb4hiDn0OgR1xJZwm4TxVm9o-iw+epXPTp82g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Bart Van Assche <bvanassche@acm.org> writes:
 
---E69HUUNAyIJqGpVn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 2020-04-05 18:27, Eric Sandeen wrote:
+>> The thing I can't figure out from reading the change log is
+>> 
+>> 1) what the root cause of the problem is, and
+>> 2) how this patch fixes it?
+>
+> I think that the root cause is that do_blk_trace_setup() uses
+> debugfs_lookup() and that debugfs_lookup() may return a pointer
+> associated with a previous incarnation of the block device.
 
-Hi!
+That's correct, the debugfs_lookup() can find a previous incarnation's
+dir of the same name which is about to get removed from a not yet
+schedule work.
 
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Document=
-ation/admin-guide/kernel-parameters.txt
-> > index ed73df5f1369..3fb9cbee8d28 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -3720,6 +3720,9 @@
-> >                         Override pmtimer IOPort with a hex value.
-> >                         e.g. pmtmr=3D0x508
-> >
-> > +       pm_debug_messages       [SUSPEND,KNL]
-> > +                       Enable suspend/resume debug messages during boo=
-t up.
-> > +
-> >         pnp.debug=3D1     [PNP]
-> >                         Enable PNP debug messages (depends on the
-> >                         CONFIG_PNP_DEBUG_MESSAGES option).  Change at r=
-un-time
+I.e. something like the following is possible:
 
-> Applied (as 5.7-rc material) with modified subject and changelog,
-  thanks!
+  LOOP_CTL_DEL(loop0) /* schedule __blk_release_queue() work_struct */
+  LOOP_CTL_ADD(loop0) /* debugfs_create_dir() from
+		       * blk_mq_debugfs_register() fails with EEXIST
+                       */
+  BLKTRACE_SETUP(loop0) /* debugfs_lookup() finds the directory about to
+			 * get deleted and blktrace files will be created
+			 * thereunder.
+			 */
 
-Please don't.
+  The work_struct gets scheduled and the debugfs dir debugfs_remove()ed
+  recursively, which includes the blktrace files just created. blktrace's
+  dentry pointers are now dangling and there will be a UAF when it
+  attempts to delete those again.
 
-We have pnp.debug, i8042.debug, acpi.debug_*, lsm.debug... It makes
-sense to do pm.debug... we want to have some consistency.
+Luis' patch [2/3] fixes the issue of the debugfs_lookup() from
+blk_mq_debugfs_register() potentially returning an existing directory
+associated with a previous block device incarnation of the same name and
+thus, fixes the UAF.
+
+
+However, the problem that the debugfs_create_dir() from
+blk_mq_debugfs_register() in a sequence of
+  LOOP_CTL_DEL(loop0)
+  LOOP_CTL_ADD(loop0)
+could silently fail still remains. The RFC patch [3/3] from Luis
+attempts to address this issue by folding the delayed
+__blk_release_queue() work back into blk_release_queue(), the release
+handler associated with the queue kobject and executed from the final
+blk_queue_put(). However, that's still no full solution, because the
+kobject release handler can run asynchronously, long after
+blk_unregister_queue() has returned (c.f. also
+CONFIG_DEBUG_KOBJECT_RELEASE).
+
+Note that I proposed this change here (internally) as a potential
+cleanup, because I missed the kobject_del() from blk_unregister_queue()
+and *wrongly* concluded that blk_queue_put() must be allowed to sleep
+nowadays. However, that kobject_del() is in place and moreover, the
+analysis requested by Bart (c.f. [1] in this thread) revealed that there
+are indeed a couple of sites calling blk_queue_put() from atomic
+context.
+
+So I'd suggest to drop patch [3/3] from this series and modify this
+patch [2/3] here to move the blk_q_debugfs_unregister(q) invocation from
+__blk_release_queue() to blk_unregister_queue() instead.
+
+
+> Additionally, I think the following changes fix that problem by using
+> q->debugfs_dir in the blktrace code instead of debugfs_lookup():
+
+That would fix the UAF, but !queue_is_mq() queues wouldn't get a debugfs
+directory created for them by blktrace anymore?
+
 
 Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
 
---E69HUUNAyIJqGpVn
-Content-Type: application/pgp-signature; name="signature.asc"
+Nicolai
 
------BEGIN PGP SIGNATURE-----
+[1] https://lkml.kernel.org/r/87o8saj62m.fsf@suse.de
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXorz1QAKCRAw5/Bqldv6
-8tirAKCUkyHPVgDiMckfb40fMCX03KTXZQCgiI3vObBYdWvXEnTyBLT4zT9uoOs=
-=9YRC
------END PGP SIGNATURE-----
 
---E69HUUNAyIJqGpVn--
+> [ ... ]
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -311,7 +311,6 @@ static void blk_trace_free(struct blk_trace *bt)
+>  	debugfs_remove(bt->msg_file);
+>  	debugfs_remove(bt->dropped_file);
+>  	relay_close(bt->rchan);
+> -	debugfs_remove(bt->dir);
+>  	free_percpu(bt->sequence);
+>  	free_percpu(bt->msg_data);
+>  	kfree(bt);
+> [ ... ]
+> @@ -509,21 +510,19 @@ static int do_blk_trace_setup(struct request_queue
+> *q, char *name, dev_t dev,
+>
+>  	ret = -ENOENT;
+>
+> -	dir = debugfs_lookup(buts->name, blk_debugfs_root);
+> -	if (!dir)
+> -		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
+> -
+>  	bt->dev = dev;
+>  	atomic_set(&bt->dropped, 0);
+>  	INIT_LIST_HEAD(&bt->running_list);
+>
+>  	ret = -EIO;
+> -	bt->dropped_file = debugfs_create_file("dropped", 0444, dir, bt,
+> +	bt->dropped_file = debugfs_create_file("dropped", 0444,
+> +					       q->debugfs_dir, bt,
+>  					       &blk_dropped_fops);
+> [ ... ]
+>
+> Bart.
+
+-- 
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+(HRB 36809, AG Nürnberg), GF: Felix Imendörffer
