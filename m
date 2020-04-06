@@ -2,84 +2,46 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF6EC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DB0C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE22E20780
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="EVHI8E2H"
+	by mail.kernel.org (Postfix) with ESMTP id 7E790206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgDFLul (ORCPT
+        id S1727742AbgDFLvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:50:41 -0400
-Received: from mail-pg1-f180.google.com ([209.85.215.180]:39195 "EHLO
-        mail-pg1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727387AbgDFLuk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:50:40 -0400
-Received: by mail-pg1-f180.google.com with SMTP id g32so7428360pgb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 04:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eSEYeGHJW6L1yFZdjvZu8BXqsVS6+Imz64kPAhoNehc=;
-        b=EVHI8E2HsQJ9Svnqp+R7hSaCboaInyxUjdHuKNMRYaAqw5fsam3DG39gWQgpdFNaBM
-         IVZBl4jvVImZHpXf7WHBYPhkPNwaUgr3HWmQ7eyVptt+1tQcAbJNGqeCbUc9L/iFPukC
-         jH7zHJWalVPlP6OcmvBNWSpflfGaooqDmqL4UcteTQg+StXxC07N+g+ZdLOArukrSS+2
-         KP82QOWORNZ4eCLxuXVU1rfbBbXUNQLQDarzkT39jLEPXSu+hmCYJyKGgkJDA+444lJK
-         D+IrrKM38coX84i+GYBhQmjcb2yR4BWeOGdv/0sUCIcDZXPty+OIuQHyCYyDDAYbkhuw
-         d7CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eSEYeGHJW6L1yFZdjvZu8BXqsVS6+Imz64kPAhoNehc=;
-        b=JXP53vtHHecf+ItntAAzKaVNfes9OzjWce/hOJBDXgLgdYOg5kZ8g/KHPkJBwkSyBg
-         4jWXQR8Z2c1Ahyt3TNlN1DJPf81U1VyAdOc7Y2JkfXfAa8TWNbQBP3ipn1wpGzhjEPqO
-         j+wqJm54uldz2SEa+VlPOnqpQE2fPQCjvL2PZJeVQ9k8vonVnIDSIVW09jAv0CS2OI0v
-         MYDOhqU4GpiQmjHFQRrwZJCgDRUpdr+ddSCz9VTiPzHhR9xzgHSDzX5DcijglZ1GrqIT
-         xc7RJJrr3aA7OzxrXAj2o6Kf3HwQE+ZE7JxXaQAnUzp2QwK9N5xrw+QXfs/MCVYNHibc
-         fmcw==
-X-Gm-Message-State: AGi0PuZoKWd/OJ5HRwArrFnETT4NNZdN0MmoK0ZhljD8H4H21t5lTOQX
-        IzX7eBLMFOFk4Y44GJ+IRjHYIw==
-X-Google-Smtp-Source: APiQypJbSk9nhcIBkVtji01qlTReiqSK+1z9CtKxnbEsDtTA6Mr0Dhzwjf+aZwsQgRIaFpUTWaZjSQ==
-X-Received: by 2002:a63:6346:: with SMTP id x67mr20405820pgb.67.1586173839100;
-        Mon, 06 Apr 2020 04:50:39 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id k6sm12024505pje.8.2020.04.06.04.50.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 04:50:38 -0700 (PDT)
-Subject: Re: RFC: time_namespaces(7) manual page
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Andrei Vagin <avagin@openvz.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        linux-man <linux-man@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Containers <containers@lists.linux-foundation.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Adrian Reber <adrian@lisas.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-References: <7221df0a-435b-f8bc-ff91-c188af535e73@gmail.com>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <a74763df-6523-2103-b687-27cae3a433fc@arista.com>
-Date:   Mon, 6 Apr 2020 12:50:33 +0100
+        Mon, 6 Apr 2020 07:51:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33846 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727192AbgDFLve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:51:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 510EFAEA6;
+        Mon,  6 Apr 2020 11:51:32 +0000 (UTC)
+Subject: Re: [PATCH 03/11] EDAC/ghes: Remove local variable rdr_mask in
+ ghes_edac_dmidecode()
+To:     Robert Richter <rrichter@marvell.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200306151318.17422-1-rrichter@marvell.com>
+ <20200306151318.17422-4-rrichter@marvell.com>
+From:   Matthias Brugger <mbrugger@suse.com>
+Message-ID: <f5a5c29b-e72b-9fd0-382d-75290e10153d@suse.com>
+Date:   Mon, 6 Apr 2020 13:51:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <7221df0a-435b-f8bc-ff91-c188af535e73@gmail.com>
+In-Reply-To: <20200306151318.17422-4-rrichter@marvell.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -88,17 +50,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
-
-On 4/4/20 12:08 PM, Michael Kerrisk (man-pages) wrote:
-> Hello Dmitry, Andrei, et al.
+On 06/03/2020 16:13, Robert Richter wrote:
+> The local variable rdr_mask serves as a static constant here. It hides
+> what the code is doing. Remove it and replace it with the actual logic
+> that checks some bits.
 > 
-> I have written a manual page to document time namespaces.
-> Could you please take a look and let me know of any
-> corrections, improvements, etc.
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
 
-Thanks a lot for the man page. It looks good to me.
-Maybe Andrei will find some nits, but I don't have any in mind.
+Reviewed-by: Matthias Brugger <mbrugger@suse.com>
 
-Thanks for you work,
-          Dima
+> ---
+>  drivers/edac/ghes_edac.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+> index 07fa3867cba1..fce53893731a 100644
+> --- a/drivers/edac/ghes_edac.c
+> +++ b/drivers/edac/ghes_edac.c
+> @@ -123,7 +123,6 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
+>  	if (dh->type == DMI_ENTRY_MEM_DEVICE) {
+>  		struct memdev_dmi_entry *entry = (struct memdev_dmi_entry *)dh;
+>  		struct dimm_info *dimm = edac_get_dimm(mci, dimm_fill->count, 0, 0);
+> -		u16 rdr_mask = BIT(7) | BIT(13);
+>  
+>  		if (entry->size == 0xffff) {
+>  			pr_info("Can't get DIMM%i size\n",
+> @@ -173,7 +172,8 @@ static void ghes_edac_dmidecode(const struct dmi_header *dh, void *arg)
+>  		default:
+>  			if (entry->type_detail & BIT(6))
+>  				dimm->mtype = MEM_RMBS;
+> -			else if ((entry->type_detail & rdr_mask) == rdr_mask)
+> +			else if ((entry->type_detail & BIT(7)) &&
+> +				 (entry->type_detail & BIT(13)))
+>  				dimm->mtype = MEM_RDR;
+>  			else if (entry->type_detail & BIT(7))
+>  				dimm->mtype = MEM_SDR;
+> 
+
