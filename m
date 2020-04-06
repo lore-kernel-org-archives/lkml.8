@@ -2,245 +2,124 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4037C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2E4C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A576206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60C8320672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LNSvxDZj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZnUnwZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgDFI0F (ORCPT
+        id S1726620AbgDFI1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:26:05 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43985 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgDFI0F (ORCPT
+        Mon, 6 Apr 2020 04:27:24 -0400
+Received: from mail-wr1-f43.google.com ([209.85.221.43]:32796 "EHLO
+        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgDFI1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 04:26:05 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a6so14420387otb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 01:26:03 -0700 (PDT)
+        Mon, 6 Apr 2020 04:27:24 -0400
+Received: by mail-wr1-f43.google.com with SMTP id a25so16359054wrd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 01:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vOURNP/+1sHn2/oMAz9DpyrmfncIc+Lque59yZC/+5w=;
-        b=LNSvxDZjUIJxP4/R0gUjwWEcoIXjaM14W0yLZVSrDlbz182T85YKg9jbdKtsDv4lSw
-         CJiAmks7NsnTkIghjBXK8DlURDeKnUSzJHYlN+12DuAULHbIVlDN8ppxELEfYm4zwqBs
-         aw/ZeWuSYt776wwjblNiwil1Cb3zzS0HMTuWr4qv/qliIlcRDXzDzrT9gX+SGuK3v/KQ
-         SyvKYC+rBZ/4QqGchMam2id0O6G1vGyw3EkfvK4wIoXf3OQ9eMKwadXJfYRiD2FLFq/W
-         QUHuyHh4ngh+RtAjWUyHyUabXwCzTo0oYRE1r8ouVeIQ7FxN8oMye+v/vqt+KJHyEl5z
-         t9mA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=55a3ErFUzwi21OsaY2azC2jkNniTZaL9xFoaJMyXUts=;
+        b=vZnUnwZQ1qXHKPZWX9+n3t/3eu+4bLYPi6ploQCBGr2mO6XDyM+5moogDuVDP5C2E0
+         0fWMGbfcau+ZSAOFIMEtSHXueEnHV++vJN+YCDqRJyiF2EuYCIWyOpzLYn1U4aFLSuzM
+         rOR75n4gmmGORVuj3EQgVQFfBJmtjls9BN4lixj3Pf7rzDSoQzhLh3MCdS+lQct3KzGX
+         4dCXSxEt0ATG1uiz1vQcMavWBrh9LtDK8/VPJefOXf1COF7IuGnhHz1hy/OQ5tfbvreU
+         yQdz6C1+IeKUnmNLrxF3RwVQKZPsVW+3foLqVTM4EMnDrlzlNcOMbFlT0EFxMuhk/M/K
+         GHJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vOURNP/+1sHn2/oMAz9DpyrmfncIc+Lque59yZC/+5w=;
-        b=EeK1KrXFaQIypCBb267J/BzlzwM4uJMv+gbwUIv5P96eHK2cz7nXRPoAFeeewHD78D
-         +5fMUGG0rE8zhdwrd1uPdeDg+9Co15OsZ3nHcxlMn9iQNlhE7gxijUU9b7+rZjEQbKrC
-         2UIF8VLlPIgbtBSqtlJQaNw5P0EdY5G8scXScYU8MTMSvz0zRZcIKrjnZfacPRcABnGe
-         5cYV+vPS6AGUwE+jBbSRZnojox/N2BxwHWdb7eBYFMrxM5gMOdBkMjMeaRvbToqw8wbx
-         5CxlngU8ziuq+KsSh3ORzhKv/N6ka7e8REXIdPefiTsanJXdOjFE4c6E7xoN64WBpocb
-         WGOA==
-X-Gm-Message-State: AGi0Puai0gHO660ZIJu3F0cv+qUjtu68eEhcDYksTADgvId/i0frG4WY
-        x2pQOckJbuvaa9a9WHNkIMcSHPRxpLuSj4+H6wHrfw==
-X-Google-Smtp-Source: APiQypIkuoFfBZNbSuH6xY0DqxdXdxWr0AqNxKMHvTzBtHBZP9ZPw+ZzMKWrTKGg9oy2VTppKuGgJcpLQV7RZVDW/2Y=
-X-Received: by 2002:a4a:e495:: with SMTP id s21mr16488515oov.79.1586161562627;
- Mon, 06 Apr 2020 01:26:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=55a3ErFUzwi21OsaY2azC2jkNniTZaL9xFoaJMyXUts=;
+        b=C1gKj4XQKDr+xQaYFA16ePBii+0d5YAU9aP6qU2oOtRSVTtpDdYVnMZP7DnylwM5cZ
+         yzGKl8XvYg4hGPx9rCDZO78XfDhUsM1gLTJotZCGc+mB8fWEq7o9zW27iJgS0aX1Ojfe
+         tRkHa0xm9HxXtsy4G3k9Aceu9LLhcxlE4b3fNHrV6U6d7I28OD4J2dzbXJUH8sUfdr8E
+         sutnVf6gsCxKxVwZW/0How05LzSY7XI9zkfOMBtozkNlW5hgBgfe6BA9SPvX01klOTmS
+         cu+o/v7uCYR1EjkPzD4zKvN6uvHubyEM4hVsecGCPlL0eB+iAib9fudiZExauGXcuUcS
+         2t2g==
+X-Gm-Message-State: AGi0Pua0SqtFC0K97lVFWleIuGCZ6+eFz+liyycDiKFWE7tsqwongl9a
+        fN0ETlfHhxSFxWMsuWofzFYNHaMP
+X-Google-Smtp-Source: APiQypJLN67xNTSrQ/sLaRRm40PviBXbgVl5KjikszA4PoZlueozEyPgWcG4LCvJHjec39ZOyIFK2Q==
+X-Received: by 2002:a05:6000:1205:: with SMTP id e5mr24179604wrx.73.1586161642322;
+        Mon, 06 Apr 2020 01:27:22 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id f3sm24957862wmj.24.2020.04.06.01.27.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 01:27:21 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 10:27:20 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     ebiederm@xmission.com, kexec@lists.infradead.org
+Cc:     mripard@kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Trying to kexec on Allwinner A80
+Message-ID: <20200406082720.GA31279@Red>
 MIME-Version: 1.0
-References: <20200331133346.372517-1-robert.foss@linaro.org>
- <20200331133346.372517-2-robert.foss@linaro.org> <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
- <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
- <20200403232736.GA6127@valkosipuli.retiisi.org.uk> <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
-In-Reply-To: <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Mon, 6 Apr 2020 10:25:50 +0200
-Message-ID: <CAG3jFytX19r4FCateVtcd6C7mHNHUF4NA24mGTrogs6DWiE1pQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Maxime,
+Hello
 
-On Sat, 4 Apr 2020 at 11:34, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Sat, Apr 04, 2020 at 02:27:36AM +0300, Sakari Ailus wrote:
-> > Hi Robert,
-> >
-> > On Thu, Apr 02, 2020 at 12:10:00PM +0200, Robert Foss wrote:
-> > > Hey Maxime,
-> > >
-> > > On Wed, 1 Apr 2020 at 10:07, Maxime Ripard <maxime@cerno.tech> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Tue, Mar 31, 2020 at 03:33:44PM +0200, Robert Foss wrote:
-> > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > > >
-> > > > > This patch adds documentation of device tree in YAML schema for the
-> > > > > OV8856 CMOS image sensor.
-> > > > >
-> > > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> > > > > ---
-> > > > >
-> > > > > - Changes since v5:
-> > > > >   * Add assigned-clocks and assigned-clock-rates
-> > > > >   * robher: dt-schema errors
-> > > > >
-> > > > > - Changes since v4:
-> > > > >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
-> > > > >   * Add clock-lanes property to example
-> > > > >   * robher: Fix syntax error in devicetree example
-> > > > >
-> > > > > - Changes since v3:
-> > > > >   * robher: Fix syntax error
-> > > > >   * robher: Removed maxItems
-> > > > >   * Fixes yaml 'make dt-binding-check' errors
-> > > > >
-> > > > > - Changes since v2:
-> > > > >   Fixes comments from from Andy, Tomasz, Sakari, Rob.
-> > > > >   * Convert text documentation to YAML schema.
-> > > > >
-> > > > > - Changes since v1:
-> > > > >   Fixes comments from Sakari, Tomasz
-> > > > >   * Add clock-frequency and link-frequencies in DT
-> > > > >
-> > > > >  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
-> > > > >  MAINTAINERS                                   |   1 +
-> > > > >  2 files changed, 151 insertions(+)
-> > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..beeddfbb8709
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
-> > > > > @@ -0,0 +1,150 @@
-> > > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > > > +# Copyright (c) 2019 MediaTek Inc.
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
-> > > > > +
-> > > > > +maintainers:
-> > > > > +  - Ben Kao <ben.kao@intel.com>
-> > > > > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
-> > > > > +
-> > > > > +description: |-
-> > > > > +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
-> > > > > +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
-> > > > > +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
-> > > > > +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
-> > > > > +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
-> > > > > +  serial data output (up to 4-lane).
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    const: ovti,ov8856
-> > > > > +
-> > > > > +  reg:
-> > > > > +    maxItems: 1
-> > > > > +
-> > > > > +  clocks:
-> > > > > +    maxItems: 1
-> > > > > +
-> > > > > +  clock-names:
-> > > > > +    description:
-> > > > > +      Input clock for the sensor.
-> > > > > +    items:
-> > > > > +      - const: xvclk
-> > > > > +
-> > > > > +  clock-frequency:
-> > > > > +    description:
-> > > > > +      Frequency of the xvclk clock in Hertz.
-> > > >
-> > > > We also had that discussion recently for another omnivision sensor
-> > > > (ov5645 iirc), but what is clock-frequency useful for?
-> > > >
-> > > > It seems that the sensor is passed in clocks, so if you need to
-> > > > retrieve the clock rate you should use the clock API instead.
-> > > >
-> > > > Looking at the driver, it looks like it first retrieves the clock, set
-> > > > it to clock-frequency, and then checks that this is OV8856_XVCLK_19_2
-> > > > (19.2 MHz).
-> > >
-> > > As far as I understand it, 19.2MHz is requirement for the sensor mode
-> > > that currently defaults to. Some modes require higher clock speeds
-> > > than this however.
-> >
-> > It's very system specific. Either way, bindings should not assume a
-> > particular driver implementation.
-> >
-> > >
-> > > >
-> > > > The datasheet says that the sensor can have any frequency in the 6 -
-> > > > 27 MHz range, so this is a driver limitation and should be set in the
-> > > > driver using the clock API, and you can always bail out if it doesn't
-> > > > provide a rate that is not acceptable for the drivers assumption.
-> > > >
-> > > > In any case, you don't need clock-frequency here...
-> > >
-> > > So your suggestion is that we remove all clocks-rate properties, and
-> > > replace the clk_get_rate() calls in the driver with clk_set_rate()
-> > > calls for the desired frequencies?
-> >
-> > The driver shouldn't set the rate here unless it gets it from DT (but that
-> > was not the intention). So the driver should get the frequency instead.
->
-> I'm actually saying the opposite :)
->
-> Like you were saying, the binding (or DT, for that matter) shouldn't
-> assume a particular driver implementation.
->
-> So one corollary is that if the driver has some restrictions in Linux,
-> it shouldn't be part of the binding, right?
->
-> This binding uses multiple clock properties but as far as I can see,
-> the driver retrieves a clock using clocks and makes sure that its rate
-> match its limitation of 19.2MHz using clock-frequency (which is
-> redundant on a clk_get_rate on the clocks provided earlier).
->
-> I'm suspecting that the parent clock on multiple SoCs can be
-> configured and is not a fixed rate crystal, so assigned-clocks-rate is
-> here just to make sure we set the frequency at the one being checked
-> in the driver's probe so that it all works.
->
-> But that 19.2MHz is not a limitation of the device itself, it's a
-> limitation of our implementation, so we can instead implement
-> something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
-> sure that our parent clock is configured at the right rate) and the
-> clk_get_rate and compare that to 19.2MHz (to make sure that it's not
-> been rounded too far apart from the frequency we expect).
->
-> This is doing exactly the same thing, except that we don't encode our
-> implementation limitations in the DT, but in the driver instead.
->
+I am trying to add the last missing Allwinner Soc in kernelci: the A80.
+But this SoC does not have any way to be used in kernelci, no USB nor network in uboot.
+So I have tried to fake uboot since the kernel has network support and run the new kernel via kexec.
 
-Thanks for taking the time to explain this.
-I'll spin a new revision that moves the clock rate handling into the driver.
+But kexec 2.0.18 fail to work:
+kexec --force /tmp/kernel --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
+syscall kexec_file_load not available.
+Try gzip decompression.
+kernel: 0xb6535008 kernel_size: 0x853200
+MEMORY RANGES
+0000000020000000-000000009fffffff (0)
+zImage header: 0x016f2818 0x00000000 0x00853200
+zImage size 0x853200, file size 0x853200
+zImage requires 0x00864200 bytes
+  offset 0x0000bae4 tag 0x5a534c4b size 8
+Decompressed kernel sizes:
+ text+data 0x0158b3a0 bss 0x000632f0 total 0x015ee690
+Resulting kernel space: 0x01def5a0
+Kernel: address=0x20008000 size=0x01def5a0
+Initrd: address=0x21df8000 size=0x0090b6fa
+DT    : address=0x22704000 size=0x00005c09
+kexec_load: entry = 0x20008000 flags = 0x280000
+nr_segments = 3
+segment[0].buf   = 0xb6535008
+segment[0].bufsz = 0x853204
+segment[0].mem   = 0x20008000
+segment[0].memsz = 0x854000
+segment[1].buf   = 0xb5c29008
+segment[1].bufsz = 0x90b6fa
+segment[1].mem   = 0x21df8000
+segment[1].memsz = 0x90c000
+segment[2].buf   = 0x4db50
+segment[2].bufsz = 0x5c09
+segm[   71.039126] kexec_core: Starting new kernel
+ent[2].mem   = 0[   71.044712] Disabling non-boot CPUs ...
+x22704000
+segment[2].memsz = 0x6000
+[   71.489070] Bye!
+
+
+I have tried also kexec-2.0.20
+Try gzip decompression.
+zImage header: 0x00000000 0x000019b4 0x00001000
+zImage requires 0x008641c0 bytes
+Could not find a free area of memory of 0x86c1c0 bytes...
+Cannot load /tmp/kernel
+
+What can I do for made it working ? I probably need to give it some memory address, but I am a bit loss.
+
+Thanks
+Regards
