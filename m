@@ -2,161 +2,110 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027D2C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49772C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCDC2221F6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rD2AULqS"
+	by mail.kernel.org (Postfix) with ESMTP id 1C75422252
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgDFNAP (ORCPT
+        id S1728193AbgDFNBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:00:15 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41400 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728220AbgDFNAP (ORCPT
+        Mon, 6 Apr 2020 09:01:43 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:51515 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgDFNBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:00:15 -0400
-Received: by mail-lf1-f65.google.com with SMTP id z23so11746266lfh.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:00:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HaRtA1Jxq4FuD6KqIBhNnRMRisYsJA5aLAs60fjZD2Q=;
-        b=rD2AULqSP96WxjXaqAFp5EsQfPhsFzhnNWBb8t2W/fTRDZ4yomA7CMj74SfCjCGPfr
-         B/Ilxh+VR73N/yBlOUaLew5ENt0LqEJR/0252PKKN/vc/3wspe4donmTh2zcWSVH9v1V
-         CijhHhY4atIh1Avty7uGZYDLi0sezXPX6t0rZQMcnBRFc76hkXGZHInYAI63UiW+wbQ8
-         NbEthKqfcLUYQDUuAyhONVCYhn1IAkM2dB+VeAIkkPl7fhzacMVYKGCSFpr++ME88JnU
-         eEWuQMML8MKSGEUELb5W/Td4Bg057bP8H9NIN65XVJxCzTcgOQNpP1DUVjIBmIIuUl9j
-         bl5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HaRtA1Jxq4FuD6KqIBhNnRMRisYsJA5aLAs60fjZD2Q=;
-        b=FRb2K7hs7Yj1wbjTl3vzyzjyj/EDnU3TEI21JwalwucUexGunweR+uv1XV2Sy4fO8H
-         apyPQdIXsZodrydoGGYJ+8zdrd0Bfo3AWPWN7xLXdn9eYjlaI2AUMJhE9WsowCJYbT3/
-         MPHassxM3VvccMmfHw73VfYOcRvY0yU8Ttf5ZeNLTYph0eYwUJ5K1w/tOpD07N1NqsgG
-         0U49441WnFAWkZgjLLHCRdsWMeRb7xjuZ2SofVNZ0wc/+VwkuMwcnKkJMz+ARvZG8p1t
-         ZpBBFQktefU85Bn+lTPgED+Lmn91e9Bd/cjL2pXjr8Vv6hKagKUdfKDPKhfcu/FGtPId
-         QLqA==
-X-Gm-Message-State: AGi0PuZPhAnUfdh6H3tEbDa4z9HTMgO5y3RctowXxHDjtznCqSzybZdV
-        3rAqTzJ2yrX2E/WkoyK4rWgvTANqTkGQRCSe16q1tw==
-X-Google-Smtp-Source: APiQypKWLxaOr2JwxPFRIKy8DyIk+GnLoWmCpZts1WGuVzegc2XBLTsdqA1LYFKaM6QY1KoWLGPuGNAn7rVqCVucQYw=
-X-Received: by 2002:a19:6749:: with SMTP id e9mr12526614lfj.122.1586178012739;
- Mon, 06 Apr 2020 06:00:12 -0700 (PDT)
+        Mon, 6 Apr 2020 09:01:42 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N9MlI-1jIKor1ERw-015Lh9; Mon, 06 Apr 2020 15:01:41 +0200
+Received: by mail-qt1-f176.google.com with SMTP id f20so12682135qtq.6;
+        Mon, 06 Apr 2020 06:01:41 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZRqJFzBfGN2kcbOmxTsxVGDR1Ew//AdsEuGdlqjoeFeM6O6XMp
+        XK0D2kcs4tLnZfPliPVGccE1f1+4T+afC+8JkGQ=
+X-Google-Smtp-Source: APiQypKGl0rcjmxPk7LYkIyq/3sFEAQ9JSPbooEo+AQI5dEX6atvP7qavyGi7h4ravOrmygkje1eLWDqMVjJqya7e2s=
+X-Received: by 2002:ac8:d8e:: with SMTP id s14mr20274585qti.204.1586178100052;
+ Mon, 06 Apr 2020 06:01:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org> <f2a393a2f01c93776446c83e345a102a780cfe88.camel@sipsolutions.net>
-In-Reply-To: <f2a393a2f01c93776446c83e345a102a780cfe88.camel@sipsolutions.net>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Mon, 6 Apr 2020 18:30:01 +0530
-Message-ID: <CAFA6WYPBef1w2YG8vDTnRK9N3Tjt-vQahpYd61H6twsRuT8YZw@mail.gmail.com>
-Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-wireless@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
-        <matthias.schoepfer@ithinx.io>,
-        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
-        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
+References: <20200406120312.1150405-1-hch@lst.de> <20200406120312.1150405-3-hch@lst.de>
+In-Reply-To: <20200406120312.1150405-3-hch@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 6 Apr 2020 15:01:24 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a02LQNOehukgaCj81wg1D2XhW1=_mQZ72cT6nQdO=mhOw@mail.gmail.com>
+Message-ID: <CAK8P3a02LQNOehukgaCj81wg1D2XhW1=_mQZ72cT6nQdO=mhOw@mail.gmail.com>
+Subject: Re: [PATCH 2/6] binfmt_elf: open code copy_siginfo_to_user to
+ kernelspace buffer
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:dGr/PTHzNlhAg8nmJiAVpx3qyNykoPFVVfJTEzev2QMu2b+GJt5
+ MwseBCwLfebyAuVxIj/eu++fOsT1+89Ai5a1SSOdnXOQxMo6iiUdOEDBKBvBchemFXS/9iM
+ ksV7b7Y7iaQmlwq2jnGXyH1a2sQhbvu7Vto269EJGL6tEVzCkJIhvqlL7Wpb9kxOD1Likzp
+ EXMzAPOON4rmpwi8DBpEA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:H8nvoPmcBCY=:+2G3Ozxt1Z+SydtUKt6d+5
+ nhOaKGkoBaQLlFv/IWC59fP+dHQ2tuwUBpEkkjrzQNh0CBU2b/dcZd8jXcjA6Y2SVn4eiE0hU
+ eay14z9qwK4/38FrfqmBY6zLzpomzZHdr5D77TZ5ALRZU380ACuLme1pGarQZ27GoOZ9YvlB3
+ C716dVErOAKDR5FlSnHazfCKl2lRPs+vmeTXx5lRpnepmxoI1GJA5D+dCk+crd5UiNZBdOZFs
+ BKaX0b/jWX+sqWXxtmMrZo63BsZALqajLIAbTEkPsk4CR05Ii9G9Aq8iYRLu3W3EbLgBYNJLL
+ TDukJxQULIYJi658+D3FQ3YaW+RkaihjXBkRTWg2sGUej2jUtFS+v84wwgm6qIsfSPCVzwO8n
+ On95rRtx/Zb1qe5WAJJcKNqBbYXJanXtcTr5nGzlfJ5ilNbdM/21+O0UkRvxNYA9VV93FsA3+
+ Glr/520GmIxPmtFIBHC0MXy5saL92Xd3BuixvDZsfmJ6hli5jVO7jaOiXm5CGDhU9xousUa96
+ jT3xC1Mhi7uz+tSY/JZHfXw3d+JTeV4uoHeTFQzPzKIBg0W1uVLpnTbvI04IFtyJxEfunZC03
+ gtJuXf42oijsmYOTbyk8VKTmm/QgIaH0nNtuxMFEaGsHeoZeLHElAJSCBLVKOha5IDxJZheAg
+ lp6o2OEcLoYDzRCDCmX7cvqJOWM/gIlgyDQWIS4w0w5bcu3Z0URlSPZpMC6U8t6p9FLtMLNTC
+ vFJDGO5KOjV1qEgCXVohXE72xiqlUY/7DCcbqj9ags4/2F1OfuwR2JevtwdR/tGk8UVQ3JFW+
+ gB59/5Fpbgxr2cQ13bEcWC5nKoxiXp+dSu50lHipR6kRWDLU+c=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 18:14, Johannes Berg <johannes@sipsolutions.net> wrote:
+On Mon, Apr 6, 2020 at 2:03 PM Christoph Hellwig <hch@lst.de> wrote:
 >
-> On Mon, 2020-04-06 at 17:51 +0530, Sumit Garg wrote:
-> > A race condition leading to a kernel crash is observed during invocation
-> > of ieee80211_register_hw() on a dragonboard410c device having wcn36xx
-> > driver built as a loadable module along with a wifi manager in user-space
-> > waiting for a wifi device (wlanX) to be active.
-> >
-> > Sequence diagram for a particular kernel crash scenario:
-> >
-> >     user-space  ieee80211_register_hw()  RX IRQ
-> >     +++++++++++++++++++++++++++++++++++++++++++++
-> >        |                    |             |
-> >        |<---wlan0---wiphy_register()      |
-> >        |----start wlan0---->|             |
-> >        |                    |<---IRQ---(RX packet)
-> >        |              Kernel crash        |
-> >        |              due to unallocated  |
-> >        |              workqueue.          |
-> >        |                    |             |
-> >        |       alloc_ordered_workqueue()  |
-> >        |                    |             |
-> >        |              Misc wiphy init.    |
-> >        |                    |             |
-> >        |            ieee80211_if_add()    |
-> >        |                    |             |
-> >
-> > As evident from above sequence diagram, this race condition isn't specific
-> > to a particular wifi driver but rather the initialization sequence in
-> > ieee80211_register_hw() needs to be fixed.
+> Instead of messing with the address limit just open code the trivial
+> memcpy + memset logic.
 >
-> Indeed, oops.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/binfmt_elf.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 >
-> > So re-order the initialization
-> > sequence and the updated sequence diagram would look like:
-> >
-> >     user-space  ieee80211_register_hw()  RX IRQ
-> >     +++++++++++++++++++++++++++++++++++++++++++++
-> >        |                    |             |
-> >        |       alloc_ordered_workqueue()  |
-> >        |                    |             |
-> >        |              Misc wiphy init.    |
-> >        |                    |             |
-> >        |<---wlan0---wiphy_register()      |
-> >        |----start wlan0---->|             |
-> >        |                    |<---IRQ---(RX packet)
-> >        |                    |             |
-> >        |            ieee80211_if_add()    |
-> >        |                    |             |
->
-> Makes sense.
->
-> > @@ -1254,6 +1250,14 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
-> >               local->sband_allocated |= BIT(band);
-> >       }
-> >
-> > +     rtnl_unlock();
-> > +
-> > +     result = wiphy_register(local->hw.wiphy);
-> > +     if (result < 0)
-> > +             goto fail_wiphy_register;
-> > +
-> > +     rtnl_lock();
->
-> I'm a bit worried about this unlock/relock here though.
->
-> I think we only need the RTNL for the call to
-> ieee80211_init_rate_ctrl_alg() and then later ieee80211_if_add(), so
-> perhaps we can move that a little closer?
->
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index f4713ea76e82..d744ce9a4b52 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -1556,10 +1556,9 @@ static void fill_auxv_note(struct memelfnote *note, struct mm_struct *mm)
+>  static void fill_siginfo_note(struct memelfnote *note, user_siginfo_t *csigdata,
+>                 const kernel_siginfo_t *siginfo)
+>  {
+> -       mm_segment_t old_fs = get_fs();
+> -       set_fs(KERNEL_DS);
+> -       copy_siginfo_to_user((user_siginfo_t __user *) csigdata, siginfo);
+> -       set_fs(old_fs);
+> +       memcpy(csigdata, siginfo, sizeof(struct kernel_siginfo));
+> +       memset((char *)csigdata + sizeof(struct kernel_siginfo), 0,
+> +               SI_EXPANSION_SIZE);
+>         fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
+>  }
 
-Sure, will move rtnl_unlock() to just after call to
-ieee80211_init_rate_ctrl_alg().
+I think this breaks compat binfmt-elf mode, which relies on this trick:
 
-> All the stuff between is really just setting up local stuff, so doesn't
-> really need to worry?
->
+fs/compat_binfmt_elf.c:#define copy_siginfo_to_user     copy_siginfo_to_user32
+fs/compat_binfmt_elf.c#include "binfmt_elf.c"
 
-Okay.
+At least we seem to only have one remaining implementation of
+__copy_siginfo_to_user32(), so fixing this won't require touching all
+architectures, but I don't see an obvious way to do it right. Maybe
+compat-binfmt-elf.c should just override fill_siginfo_note() itself
+rather than overriding copy_siginfo_to_user().
 
--Sumit
-
-> johannes
->
->
+       Arnd
