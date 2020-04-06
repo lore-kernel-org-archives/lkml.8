@@ -2,94 +2,175 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFDCC2BA80
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DCBC2BABC
 	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1722F248DC
+	by mail.kernel.org (Postfix) with ESMTP id 4C6BB248ED
 	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKlSzMZC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QrYTLNTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgDFPxj (ORCPT
+        id S1729111AbgDFPxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 6 Apr 2020 11:53:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46002 "EHLO
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42695 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728945AbgDFPxh (ORCPT
+        with ESMTP id S1729076AbgDFPxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Apr 2020 11:53:37 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t4so6058917plq.12;
-        Mon, 06 Apr 2020 08:53:37 -0700 (PDT)
+Received: by mail-pl1-f193.google.com with SMTP id e1so6069682plt.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rN6eY9Qrqp2MyzcIySN26tQrPMmoMDpY4puhGFyM5mw=;
-        b=IKlSzMZCcVNTRiuuJTREdvQ0DQozB3+Tcxbfc0oOwCUd1mnh8GBsQGphFBawZ5p1+e
-         s+HTWu1zS0a2esb+KXnN83Qqf4k2nNPuiBnCgxO2jC4T5LwcwkEsLoMs+cS6sP2+oyY8
-         Ul6nUy11tEihE31ZV8128jkd3iYQ5Gai3QE7pyGE/A2MWryA7fNFPp2yKounLBFtzBkz
-         xzTKXuUGB2jsoz4KGE8fCqAx3mF4wic7bMTQQxV3E0IUF8AogHkG0ckdhb0OV9eVb5dT
-         JSUSKF95gMC6Z/juaRIFCQOG0tZCeIpZYVqSFqOhDkhS9fKlj5VNlR5Leh8wCAkIU+1v
-         h5VA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wcnhRTJrKqZe9cHSmG/x1YIdkcTsb9+hzvjah1m+gLU=;
+        b=QrYTLNTcoBTCrSMVW19VcWv0ByKz6+H/37bqjQyrTg4kesqGVzq2Wgfz73C4lswLje
+         dxDZgzi0QyM7rWOy5lpHTOla3P7NFlogJUYlOoFpNTtzBjXYaeEkDoiqoWeA1Phowqys
+         EamnTgsa7EEPlDYtuUdxGe+9I1orrycGdTHEo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rN6eY9Qrqp2MyzcIySN26tQrPMmoMDpY4puhGFyM5mw=;
-        b=ZTVZrLkBUV9j7UXzp+n1rO1F5Cba8re+tiisggBBN7DdXnBPcLyeQnPLUYivzutYDM
-         0uQpGqhuSpZodDQUY6JaWh7zgjlWcJUXWVedEjYzp+5t9lRkuPTJijgTM6fbIcEdv0Hh
-         baeJk25QhB3j+QHdyzMKXlT55Fxl9bw983NotLyOGCJ+H+qe68qJPp9gzYrmcOnK+asr
-         CrZDbVtcOVD+wydJjey1ZyW3M6n29lJNMNDOZEsfCq47iGmzrHk3kQAzouCLyjeDJZQU
-         gagzPNzhSiDfnoKRBF8TkpIjWuKzIEQD0tcTvZ0ekRgaKIAQdzQ362oePf+KEEnNoqhX
-         g0+Q==
-X-Gm-Message-State: AGi0PuZoZ4gJT3BhejTWEDhSEXLfFL3+uIeq4CRPULCzqkAo9cr6hvqM
-        WlNVRJfRosNghng+2P+f5Ho=
-X-Google-Smtp-Source: APiQypKEwHakGNo5xil/xnae82hio7J68wiouyjW1GRU7CpJavnsLPkfCIeBBEPCBzw8SA9wgDdOUg==
-X-Received: by 2002:a17:902:b598:: with SMTP id a24mr19607934pls.230.1586188416657;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wcnhRTJrKqZe9cHSmG/x1YIdkcTsb9+hzvjah1m+gLU=;
+        b=Dg4JzizCCBReeg0oFHBox9BtEF+k0EpkwHCooub4H4AvZ7WqY6QbyT6A42TcbmrVVS
+         4O5/8ig4RnnHQneGuEWWLJQqmQ+POOivaeY0NJgpbN2ikYtLj/TnZCOJHwSqsPXgc0KQ
+         vhVg3u3tSTQk1UuormNQzYBabCeHMbfAjey+qs6WQ+5lyAVyZf56GUlz0pmVDaHfma79
+         YMRwEpxrPZw8doRej9eMZgB85CnP8EptV/RAIQA5UHuLokKEKn/qs0PR25qiglwl62BL
+         agDck7e5HmkKg+9uqO4sQccmrhiHNtz1K8HtB9fAiG+XG4gW0f0j9G8nvNv2YIDE+IP9
+         15JQ==
+X-Gm-Message-State: AGi0Pubn4c+EMjzraR28Mp4mkjcsthbozgqhB/GOaCWJ+LEHhccOlxSN
+        eF8f0licX/j8pzicklFh6pF8Kg==
+X-Google-Smtp-Source: APiQypLqIcfMQ3mfXhR8Fc2dFArba08SdCuw59KBYoWtvJ9xxfg3FceQ1q6rQno6xNecJn9lQ4+qGQ==
+X-Received: by 2002:a17:90a:2347:: with SMTP id f65mr30129pje.105.1586188416932;
         Mon, 06 Apr 2020 08:53:36 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:89a:e705:d50:b01b:c4e4:35ad])
-        by smtp.gmail.com with ESMTPSA id q43sm3851pjc.40.2020.04.06.08.53.33
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t188sm11935793pfb.102.2020.04.06.08.53.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
-From:   Aishwarya R <aishwaryarj100@gmail.com>
-X-Google-Original-From: Aishwarya R <raishwar@visteon.com>
-Cc:     raishwar@visteon.com, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: spi-sh-msiof: Fix checkpatch error Complex macros should use ()
-Date:   Mon,  6 Apr 2020 21:23:01 +0530
-Message-Id: <20200406155301.21768-1-raishwar@visteon.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+Date:   Mon, 6 Apr 2020 08:53:35 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kbuild: mkcompile_h: Include $LD version in /proc/version
+Message-ID: <202004060851.CCB538AD1@keescook>
+References: <202004020117.6E434C035@keescook>
+ <CA+icZUW0R9LDGJ1YjJAB2oWkcEQxCO79xYmdVEoh=P8Fy_AL1A@mail.gmail.com>
+ <CA+icZUVowLVpAxiWw=FJHfQ38KtU7AXXkVnw46D2XLM41-NCEA@mail.gmail.com>
+ <CAK7LNAQ6ji3=2+7R1DL7eFveH7L7No6e3XkqfqgiH5QFyQj==A@mail.gmail.com>
+ <CA+icZUV3rhvmBv91KMKCgvGSvJUoWDVfaV+08eC-kTMdThRn6w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+icZUV3rhvmBv91KMKCgvGSvJUoWDVfaV+08eC-kTMdThRn6w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixed checkpatch error "Macros with complex values should be enclosed
-in parentheses"
+On Mon, Apr 06, 2020 at 12:35:35PM +0200, Sedat Dilek wrote:
+> On Sun, Apr 5, 2020 at 3:56 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > On Sun, Apr 5, 2020 at 8:23 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> > >
+> > > On Thu, Apr 2, 2020 at 4:24 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> > > >
+> > > > On Thu, Apr 2, 2020 at 10:18 AM Kees Cook <keescook@chromium.org> wrote:
+> > > > >
+> > > > > When doing Clang builds of the kernel, it is possible to link with
+> > > > > either ld.bfd (binutils) or ld.lld (LLVM), but it is not possible to
+> > > > > discover this from a running kernel. Add the "$LD -v" output to
+> > > > > /proc/version.
+> > > > >
+> > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > >
+> > >
+> > > Please feel free and add:
+> > >
+> > > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> >
+> >
+> > Thanks.
+> >
+> > I collected all Reviewed-by and Tested-by.
+> >
+> 
+> How to test scripts/mkcompile_h?
 
-Signed-off-by: Aishwarya R <raishwar@visteon.com>
----
- drivers/spi/spi-sh-msiof.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+There's probably a better way, but I do:
 
-diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
-index 1c11a00a2c36..b2579af0e3eb 100644
---- a/drivers/spi/spi-sh-msiof.c
-+++ b/drivers/spi/spi-sh-msiof.c
-@@ -1398,7 +1398,7 @@ static int sh_msiof_spi_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(sh_msiof_spi_pm_ops, sh_msiof_spi_suspend,
- 			 sh_msiof_spi_resume);
--#define DEV_PM_OPS	&sh_msiof_spi_pm_ops
-+#define DEV_PM_OPS	(&sh_msiof_spi_pm_ops)
- #else
- #define DEV_PM_OPS	NULL
- #endif /* CONFIG_PM_SLEEP */
+$ rm include/generated/compile.h init/version.o
+$ make init/version.o
+$ cat include/generated/compile.h
+
+-Kees
+
+> 
+> I did:
+> 
+> $ cd /path/to/linux
+> 
+> $ head -10 scripts/mkcompile_h
+> #!/bin/sh
+> # SPDX-License-Identifier: GPL-2.0
+> 
+> TARGET=$1
+> ARCH=$2
+> SMP=$3
+> PREEMPT=$4
+> PREEMPT_RT=$5
+> CC=$6
+> LD=$7
+> 
+> $ scripts/mkcompile_h include/generated/compile.h x86_64 SMP "" ""
+> clang-10 ld.lld-10
+>   UPD     include/generated/compile.h
+> 
+> $ cat include/generated/compile.h
+> /* This file is auto generated, version 1 */
+> /* SMP */
+> #define UTS_MACHINE "x86_64"
+> #define UTS_VERSION "#1 SMP Mon Apr 6 12:29:53 CEST 2020"
+> #define LINUX_COMPILE_BY "dileks"
+> #define LINUX_COMPILE_HOST "iniza"
+> #define LINUX_COMPILER "clang version 10.0.0-2, LLD 10.0.0"
+> 
+> This is with clang-10 and ld.lld-10 from Debian/unstable:
+> 
+> $ clang-10 -v
+> clang version 10.0.0-2
+> Target: x86_64-pc-linux-gnu
+> Thread model: posix
+> InstalledDir: /usr/bin
+> Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/10
+> Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/8
+> Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/9
+> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
+> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/8
+> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/9
+> Selected GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/10
+> Candidate multilib: .;@m64
+> Candidate multilib: 32;@m32
+> Candidate multilib: x32;@mx32
+> Selected multilib: .;@m64
+> 
+> $ ld.lld-10 -v
+> LLD 10.0.0 (compatible with GNU linkers)
+> 
+> Thanks.
+> 
+> - sed@ -
+
 -- 
-2.17.1
-
+Kees Cook
