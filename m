@@ -2,179 +2,138 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B036DC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBC3C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90010206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586202331;
-	bh=6Qg9shbPoLSSXKPkH9m2tfFjOyHXPkmFBOlrHZb4U6E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=fJxKYW7YOX4Kxzh5ujKcbfVlWpSsThEQpET37FuxJK8bx6Hk3VgBuW49dY7vGnUNV
-	 EDzzb79iA7afw903CJy/qoRrFwVdiJl8X6l3EXg9tZRAFUhymScQi4IaMbWidUJB6S
-	 MXFF8rmd0yoXMALhmdYtm9UUEkXhlPLCcLWC8xuE=
+	by mail.kernel.org (Postfix) with ESMTP id 9D5A520672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:46:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="EJZ4+f8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgDFTpa (ORCPT
+        id S1726370AbgDFTqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:45:30 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40218 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgDFTpa (ORCPT
+        Mon, 6 Apr 2020 15:46:08 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:34911 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgDFTqI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:45:30 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y71so14192984oia.7;
-        Mon, 06 Apr 2020 12:45:29 -0700 (PDT)
+        Mon, 6 Apr 2020 15:46:08 -0400
+Received: by mail-il1-f193.google.com with SMTP id u15so456176ilm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 12:46:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1pqdM4albOPOy3AZvC52W1X+oMJ+ayp+9lG6bAjF590=;
+        b=EJZ4+f8FXWMH9z7TXBeHek+lsf+bw3y0S6R+vNG8yqluQyLJU9UHQc1j6V2FdbQozw
+         NWWwLzOsKgIzPavdkMoe6B/0uHbk4InVuIhtu5Ij3bTCPw4DxD+435BQHbB9WS/6nOwL
+         Ytft9w2UTujVbdkvuyXCXR9z+1LAszxrsZ2Y64wwLs1IO2HE05aW63dxyn8Bg7My2/7E
+         BPHKrzR0ZqG+R4mpOFUINLUx/Y/CXhVcyO6We88jUiYLK+LO5fHRp8KajrQoISnM05Dw
+         eMPbKWtHv5IjaDFpybeSf4zKR+uMk79mhaO3sSdXsOc7Y9PXWlRY9MyKXO0JB/H6g1si
+         SJag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M1RzRkQXbJmYiaNrArg47G4F7EhjksiR5+/JZ9JGZAA=;
-        b=ZTf9mhAYlpTqIAsWcka9DZuwrlSQnZ0gncKnXX0J8AuSq4FR5vZqnaFsvSigK5Og7L
-         j/aGT9Yinui37M5/6tlb9yDiQ6nNtWqKgxrPjWVxQnDUgnDSEotv62L5VVrAmYXpLagC
-         e5ivb82SuMqXQbC+BvY3WxFoRRpe2GmYw4u53gO5O3nk8PTzyowizlC3jzFvu79E1M0K
-         QmjJ29oJ21lZiZT030a8WA2XWFQgLexD0aCi4Dk7aopMz2uACCXRjuX/04Jf6/bVS9zQ
-         5rLmJXSAsduvjTuI5xkO84hKto/z4jYaufLHS702CgSnVevq3N5LK5hY8ARG+Jez4EgZ
-         XaMQ==
-X-Gm-Message-State: AGi0PuaKiBMscF0Vck16uG6rlQ2RXt8FNaNC7iSPSCgZOn7Hkqs0XT3j
-        h8PgIfqONldFxfYbwtO8mfuLwT9kWDB9AnZ8d3w=
-X-Google-Smtp-Source: APiQypIXF0aIb3eq4HWU0gbBbL/a9JNbUJjx6T2W3EG4mDEG3nAtAAl0bmc65fjOqhva1jkfUKaBiTtCCVLf8c1z1rA=
-X-Received: by 2002:aca:f07:: with SMTP id 7mr844131oip.68.1586202329136; Mon,
- 06 Apr 2020 12:45:29 -0700 (PDT)
+        bh=1pqdM4albOPOy3AZvC52W1X+oMJ+ayp+9lG6bAjF590=;
+        b=VI/x/T7SGw/xfxTLadWVZ+s8BVrl2WXZNGYGO3pYOrnGa9kvXZb9Z+fSxl64cnOUvJ
+         nCB7WsTJlf75EyNzc7A+p+LVf3rAYJk47Yydp8vTKqqleHRaCTQxrTymTuRjkadY7k44
+         zoknFESJaK9cuKa0HXwYvNYAFUlzroAh5ICCiU8SnE3LGrZuIhPvGuNwCFl2Q4Cyd6aZ
+         tUFXxIzRLtdFh02t3UhYcOsI6O5CBnvvb5Nq+eoBHmz5l8WQ9g+AVI/4bSMTFiGTt7Ih
+         nQ6j7ubLZ47de5oT7elBJbnkhPPoL9kThkQRG6j/b6st3V04Itzre7ka17RMiiZXfPJa
+         DkMw==
+X-Gm-Message-State: AGi0PuabZCd3FfIzRNkSLLTcQeTcwNgmb7ZmQlcJHiFXxbxvFiWCr6BD
+        0quHDDmdchMDd8xf+vC9wQHlR+FzyTiC/O1/nWB/Nw==
+X-Google-Smtp-Source: APiQypIzxUc9lo8BfgwCF7ePRKNh7UGZuyaMOHCzkUQNYY3Os8wHIXONk+oHbmhLDFH2B5S1ofvx8r8osaKrZ9Rz8mw=
+X-Received: by 2002:a92:1dd9:: with SMTP id g86mr1095904ile.2.1586202367018;
+ Mon, 06 Apr 2020 12:46:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200406115835.1150002-1-hch@lst.de> <20200406115835.1150002-3-hch@lst.de>
-In-Reply-To: <20200406115835.1150002-3-hch@lst.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 6 Apr 2020 21:45:17 +0200
-Message-ID: <CAJZ5v0jqEWpdbXpDFRejWDqF-8ptEdzHKoDj40YkqYw9ZSN56w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] PM / sleep: handle the compat case in snapshot_set_swap_area
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200406193352.1245985-1-lyude@redhat.com>
+In-Reply-To: <20200406193352.1245985-1-lyude@redhat.com>
+From:   Sean Paul <sean@poorly.run>
+Date:   Mon, 6 Apr 2020 15:45:31 -0400
+Message-ID: <CAMavQK+tFSVx068FKnxD0X6TMWnf_TKPHy4ZmR=CD8kGtk5A_w@mail.gmail.com>
+Subject: Re: [PATCH] drm/dp_mst: Fix NULL deref in drm_dp_get_one_sb_msg()
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Wayne Lin <Wayne.Lin@amd.com>, Wayne Lin <waynelin@amd.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 1:58 PM Christoph Hellwig <hch@lst.de> wrote:
+On Mon, Apr 6, 2020 at 3:34 PM Lyude Paul <lyude@redhat.com> wrote:
 >
-> Use in_compat_syscall to copy directly from the 32-bit ABI structure.
+> While we don't need this function to store an mstb anywhere for UP
+> requests since we process them asynchronously, we do need to make sure
+> that we don't try to write to **mstb for UP requests otherwise we'll
+> cause a NULL pointer deref:
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  kernel/power/user.c | 54 ++++++++++++++++++---------------------------
->  1 file changed, 22 insertions(+), 32 deletions(-)
+>     RIP: 0010:drm_dp_get_one_sb_msg+0x4b/0x460 [drm_kms_helper]
+>     Call Trace:
+>      ? vprintk_emit+0x16a/0x230
+>      ? drm_dp_mst_hpd_irq+0x133/0x1010 [drm_kms_helper]
+>      drm_dp_mst_hpd_irq+0x133/0x1010 [drm_kms_helper]
+>      ? __drm_dbg+0x87/0x90 [drm]
+>      ? intel_dp_hpd_pulse+0x24b/0x400 [i915]
+>      intel_dp_hpd_pulse+0x24b/0x400 [i915]
+>      i915_digport_work_func+0xd6/0x160 [i915]
+>      process_one_work+0x1a9/0x370
+>      worker_thread+0x4d/0x3a0
+>      kthread+0xf9/0x130
+>      ? process_one_work+0x370/0x370
+>      ? kthread_park+0x90/0x90
+>      ret_from_fork+0x35/0x40
 >
-> diff --git a/kernel/power/user.c b/kernel/power/user.c
-> index 0cb555f526e4..7959449765d9 100644
-> --- a/kernel/power/user.c
-> +++ b/kernel/power/user.c
-> @@ -196,28 +196,44 @@ static ssize_t snapshot_write(struct file *filp, const char __user *buf,
->         return res;
->  }
->
-> +struct compat_resume_swap_area {
-> +       compat_loff_t offset;
-> +       u32 dev;
-> +} __packed;
-> +
->  static int snapshot_set_swap_area(struct snapshot_data *data,
->                 void __user *argp)
->  {
-> -       struct resume_swap_area swap_area;
->         sector_t offset;
->         dev_t swdev;
->
->         if (swsusp_swap_in_use())
->                 return -EPERM;
-> -       if (copy_from_user(&swap_area, argp, sizeof(swap_area)))
-> -               return -EFAULT;
-> +
-> +       if (in_compat_syscall()) {
-> +               struct compat_resume_swap_area swap_area;
-> +
-> +               if (copy_from_user(&swap_area, argp, sizeof(swap_area)))
-> +                       return -EFAULT;
-> +               swdev = new_decode_dev(swap_area.dev);
-> +               offset = swap_area.offset;
-> +       } else {
-> +               struct resume_swap_area swap_area;
-> +
-> +               if (copy_from_user(&swap_area, argp, sizeof(swap_area)))
-> +                       return -EFAULT;
-> +               swdev = new_decode_dev(swap_area.dev);
-> +               offset = swap_area.offset;
-> +       }
->
->         /*
->          * User space encodes device types as two-byte values,
->          * so we need to recode them
->          */
-> -       swdev = new_decode_dev(swap_area.dev);
->         if (!swdev) {
->                 data->swap = -1;
->                 return -EINVAL;
->         }
-> -       offset = swap_area.offset;
->         data->swap = swap_type_of(swdev, offset, NULL);
->         if (data->swap < 0)
->                 return -ENODEV;
-> @@ -394,12 +410,6 @@ static long snapshot_ioctl(struct file *filp, unsigned int cmd,
->  }
->
->  #ifdef CONFIG_COMPAT
-> -
-> -struct compat_resume_swap_area {
-> -       compat_loff_t offset;
-> -       u32 dev;
-> -} __packed;
-> -
->  static long
->  snapshot_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->  {
-> @@ -410,33 +420,13 @@ snapshot_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
->         case SNAPSHOT_AVAIL_SWAP_SIZE:
->         case SNAPSHOT_ALLOC_SWAP_PAGE:
->         case SNAPSHOT_CREATE_IMAGE:
-> +       case SNAPSHOT_SET_SWAP_AREA:
->                 return snapshot_ioctl(file, cmd,
->                                       (unsigned long) compat_ptr(arg));
-> -
-> -       case SNAPSHOT_SET_SWAP_AREA: {
-> -               struct compat_resume_swap_area __user *u_swap_area =
-> -                       compat_ptr(arg);
-> -               struct resume_swap_area swap_area;
-> -               mm_segment_t old_fs;
-> -               int err;
-> -
-> -               err = get_user(swap_area.offset, &u_swap_area->offset);
-> -               err |= get_user(swap_area.dev, &u_swap_area->dev);
-> -               if (err)
-> -                       return -EFAULT;
-> -               old_fs = get_fs();
-> -               set_fs(KERNEL_DS);
-> -               err = snapshot_ioctl(file, SNAPSHOT_SET_SWAP_AREA,
-> -                                    (unsigned long) &swap_area);
-> -               set_fs(old_fs);
-> -               return err;
-> -       }
-> -
->         default:
->                 return snapshot_ioctl(file, cmd, arg);
->         }
->  }
-> -
->  #endif /* CONFIG_COMPAT */
->
->  static const struct file_operations snapshot_fops = {
-> --
+> So, fix this.
 
-Applied along with the [1/2] as 5.7-rc material, thanks!
+Ugggh, what a fail! I found this in Feb and posted the patch in
+20200218171522.GF253734@art_vandelay. I had to migrate my workstation
+due to WFH order and didn't apply the patch before pushing. Messy
+messy messy.
+
+Thanks for fixing!
+
+Reviewed-by: Sean Paul <sean@poorly.run>
+
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Fixes: fbc821c4a506 ("drm/mst: Support simultaneous down replies")
+> Cc: Wayne Lin <Wayne.Lin@amd.com>
+> Cc: Lyude Paul <lyude@redhat.com>
+> Cc: Wayne Lin <waynelin@amd.com>
+> Cc: Sean Paul <seanpaul@chromium.org>
+> ---
+>  drivers/gpu/drm/drm_dp_mst_topology.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index 1ff49547b2e8..8751278b3941 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -3703,7 +3703,8 @@ static bool drm_dp_get_one_sb_msg(struct drm_dp_mst_topology_mgr *mgr, bool up,
+>         int basereg = up ? DP_SIDEBAND_MSG_UP_REQ_BASE :
+>                            DP_SIDEBAND_MSG_DOWN_REP_BASE;
+>
+> -       *mstb = NULL;
+> +       if (!up)
+> +               *mstb = NULL;
+>         *seqno = -1;
+>
+>         len = min(mgr->max_dpcd_transaction_bytes, 16);
+> --
+> 2.25.1
+>
