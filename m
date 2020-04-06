@@ -2,130 +2,100 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABACEC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D80CC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 826F62495D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44BDA2495E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPw2IpvE"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="DGLBL0Yq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgDFQc2 (ORCPT
+        id S1729416AbgDFQdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:32:28 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40682 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728789AbgDFQc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:32:27 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j17so12379219lfe.7;
-        Mon, 06 Apr 2020 09:32:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DeMJSh8JzgKPQANQorvFmrAQkO5UTeuBmpSrUn1GgpE=;
-        b=IPw2IpvEzk01AdXSGLkR+7SQ6u9FEex6ZOVFYWbeeposuSgfaNysRamNsBGPkU52bG
-         5oVfJcBfC7BQrkY6xbzvR7+0XlsVrcyZj3lbZpgwOlfvR3XJYKQoDgBGvCk3dxa1uoUt
-         yScdRZaicRKy2LHrayPdocK63chzCd48QGS6EUzCR+nD4OBx6JsK+vNWOZY8eQ7xvEdA
-         zyeVcLs2C5EOh9O4VZE6mEijzFxk2KrDGQPwEET3nc+fFICcZXbInQ8l0ULBWVXYWoWe
-         q7PfYKgOlYfVTiLOZTm8UMgxiC5OGM6IFpVrN3N+26PIujj91MVjb+8mFAbjxKFSg0QE
-         rpfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DeMJSh8JzgKPQANQorvFmrAQkO5UTeuBmpSrUn1GgpE=;
-        b=rmQbPFr0+RcO9caDeq9C0ETY34hjn5NFXnB3HnVj6+nOMUXEUsfQJdtdxgxPJ8TU08
-         whJOh9Gb2pw5yrcTbzNLbn7Nv3+GvjQNj8x9oGlyhOLVpMFedxjzmQ8jVp/S4aLiwn8C
-         4eglIJfq35/rusmOcD6tsw1kkgstcZVjeln+bRfkmDmGDlb3AUMzwxsp4MgJqQMw5bCE
-         g6o8JzJGc7oXfsTKVLRuY52oekBdKXmz98EXtYt10wITWopqgN3uN3xOc6PWh4+QnQX9
-         r7XG+fi2aE6Abg/5EH4hU+2ZrVA59j7BIpqbrJ/jBNVQcAgCyMBwtFB7kE9SNacSPiDB
-         2w8w==
-X-Gm-Message-State: AGi0PuZ1b2sQJBKDzfJ0Vf4szDYuPQwJfDKF/kO00mbFPtbS8EtoLMC0
-        XiXf37NDsKqhrYjZxmaGCLU=
-X-Google-Smtp-Source: APiQypKQ43UX6g8dBTlFCqaWswvvraHqaATn1I30zw3t/NRvWSUVHLktSY1hM42o83zQCQmt8ZqOHg==
-X-Received: by 2002:a05:6512:308e:: with SMTP id z14mr14072207lfd.110.1586190744030;
-        Mon, 06 Apr 2020 09:32:24 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id p21sm10205867ljg.5.2020.04.06.09.32.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 09:32:23 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 6 Apr 2020 18:32:16 +0200
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: add emergency pool for headless case
-Message-ID: <20200406163216.GA4268@pc636>
-References: <20200403173051.4081-1-urezki@gmail.com>
- <20200404195129.GA83565@google.com>
- <20200405172105.GA7539@pc636>
- <20200405233028.GC83565@google.com>
- <20200406125640.GA23256@pc636>
- <20200406153110.GE19865@paulmck-ThinkPad-P72>
+        Mon, 6 Apr 2020 12:33:16 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:48262 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728789AbgDFQdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:33:16 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 9704B41259;
+        Mon,  6 Apr 2020 16:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1586190792; x=1588005193; bh=5jzTCimFf/ZN+kP2sD+q9bPMb
+        I+Q4K3DWZbRHFkwR74=; b=DGLBL0YqcGOeu952klY/cvzNCyealrFkuiwZbyjdc
+        7z9P+5KzECC3m8eMMBVGj7O2zvtVW9Dp2pT0qtRvL3R1wc2zw+DLVSEJ98NQBwJS
+        yG4k9OEWHeICT9dwej1SvhFN1rxtcacC7BYuKWum+PW2vgQpcFjyXsuT1zy4YRGb
+        s0=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CN7tA-FteRvA; Mon,  6 Apr 2020 19:33:12 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 53EAB412E2;
+        Mon,  6 Apr 2020 19:32:38 +0300 (MSK)
+Received: from localhost.localdomain (10.199.2.226) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Mon, 6 Apr 2020 19:32:38 +0300
+Message-ID: <b02f5e2fc09b30c36b0d9e8984c18eb21cba7b73.camel@yadro.com>
+Subject: Re: [PATCH v7 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 6 Apr 2020 19:32:56 +0300
+In-Reply-To: <CAHp75Vdg7bhB69uQSZt2LK3JXJ-my-+-Mg-0F6ij9HcFdQ=LTg@mail.gmail.com>
+References: <20200406151839.13572-1-i.mikhaylov@yadro.com>
+         <20200406151839.13572-3-i.mikhaylov@yadro.com>
+         <CAHp75Vdg7bhB69uQSZt2LK3JXJ-my-+-Mg-0F6ij9HcFdQ=LTg@mail.gmail.com>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406153110.GE19865@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.2.226]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Mon, Apr 06, 2020 at 02:56:40PM +0200, Uladzislau Rezki wrote:
-> > Hello, Joel.
+On Mon, 2020-04-06 at 18:43 +0300, Andy Shevchenko wrote:
+> On Mon, Apr 6, 2020 at 6:18 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> > Proximity sensor driver based on light/vcnl4000.c code.
+> > For now supports only the single on-demand measurement.
 > > 
-> > > > > 
-> > > > > Hi Vlad,
-> > > > > 
-> > > > > One concern I have is this moves the problem a bit further down. My belief is
-> > > > > we should avoid the likelihood of even needing an rcu_head allocated for the
-> > > > > headless case, to begin with - than trying to do damage-control when it does
-> > > > > happen. The only way we would end up needing an rcu_head is if we could not
-> > > > > allocate an array.
-> > > > > 
-> > > > Let me share my view on all such caching. I think that now it becomes less as
-> > > > the issue, because of we have now https://lkml.org/lkml/2020/4/2/383 patch.
-> > > > I see that it does help a lot. I tried to simulate low memory condition and 
-> > > > apply high memory pressure with that. I did not manage to trigger the
-> > > > "synchronize rcu" path at all. It is because of using much more permissive
-> > > > parameters when we request a memory from the SLAB(direct reclaim, etc...).
-> > > 
-> > > That's a good sign that we don't hit this path in your tests.
-> > > 
-> > Just one request, of course if you have a time :) Could you please
-> > double check on your test environment to stress the system to check
-> > if you also can not hit it?
+> > The VCNL3020 is a fully integrated proximity sensor. Fully
+> > integrated means that the infrared emitter is included in the
+> > package. It has 16-bit resolution. It includes a signal
+> > processing IC and features standard I2C communication
+> > interface. It features an interrupt function.
 > > 
-> > How i test it. Please apply below patch:
 > 
-> This is of course a double challenge.
+> I don't know how to explain to you that if anybody gives the tag, you
+> need to add it to your commit message.
+> Why are you ignoring this?
 > 
-> I can assure you that even if we cannot make it happen in the comfort and
-> safety of our tests systems, someone somewhere will make it happen all
-> the time.  Because there is a very large number of Linux systems running
-> out there.
-> 
-> Which leads to the other challenge:  How do we test this code path?
-> 
-I have added extra tests to my "vmalloc tests" https://lkml.org/lkml/2020/4/2/384
-for stressing head/headless variants. Also we have rcuperf module. Running them
-together under KVM(selftests) would be good. Plus we can add a counter of the
-path we think is bad, synchronize_rcu() and so on.
 
-Thanks!
+Sorry for that, I'll add it.
 
---
-Vlad Rezki
+> Jonathan, my tag still applies here, but I'm so confused with the above.
+
