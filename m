@@ -2,174 +2,109 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079B7C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26BEC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC493206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:30:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p/z31+jz"
+	by mail.kernel.org (Postfix) with ESMTP id B3CD3206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:32:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgDFVaJ (ORCPT
+        id S1726331AbgDFVci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:30:09 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4644 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFVaJ (ORCPT
+        Mon, 6 Apr 2020 17:32:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45743 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgDFVch (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:30:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8b9efb0000>; Mon, 06 Apr 2020 14:28:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 14:30:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 14:30:08 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 21:30:08 +0000
-Received: from [10.2.60.145] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 21:30:07 +0000
-Subject: Re: [PATCHv2 5/8] khugepaged: Allow to callapse a page shared across
- fork
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        <akpm@linux-foundation.org>, Andrea Arcangeli <aarcange@redhat.com>
-CC:     Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
- <20200403112928.19742-6-kirill.shutemov@linux.intel.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <5a57635b-ed75-8f09-6f0c-5623f557fc55@nvidia.com>
-Date:   Mon, 6 Apr 2020 14:30:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 17:32:37 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jLZM7-0001C1-U3; Mon, 06 Apr 2020 23:32:32 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 5FC34100C47; Mon,  6 Apr 2020 23:32:31 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Vivek Goyal <vgoyal@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+In-Reply-To: <20200406190951.GA19259@redhat.com>
+References: <87ftek9ngq.fsf@nanos.tec.linutronix.de> <CALCETrVsc-t=tDRPbCg5dWHDY0NFv2zjz12ahD-vnGPn8T+RXA@mail.gmail.com> <87a74s9ehb.fsf@nanos.tec.linutronix.de> <87wo7v8g4j.fsf@nanos.tec.linutronix.de> <877dzu8178.fsf@nanos.tec.linutronix.de> <37440ade-1657-648b-bf72-2b8ca4ac21ce@redhat.com> <871rq199oz.fsf@nanos.tec.linutronix.de> <CALCETrUHwd8pNr_ZdFqY8vMjJeMdNyw2C+FL6uOUM98SEE9rNQ@mail.gmail.com> <87d09l73ip.fsf@nanos.tec.linutronix.de> <20200309202215.GM12561@hirez.programming.kicks-ass.net> <20200406190951.GA19259@redhat.com>
+Date:   Mon, 06 Apr 2020 23:32:31 +0200
+Message-ID: <87wo6sjo5s.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200403112928.19742-6-kirill.shutemov@linux.intel.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586208507; bh=LBAGWn1YAE5YWfeZ7nIgtxQX8b6/AI2BeWNRvWT0J+o=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=p/z31+jzqY/wgSr589kzTamsXjx6DdgS8Alysxj3pJ4/edz839OXXMVDJ5F5cbz8f
-         zH7YqoqxJ5zQtVSHwfmyy0xFcSQqO5vvG+33+T+Pyh5b60TpZjrBTylyJNfzG1+h+6
-         T7sE09x7nglK1ySqN42fcw9ZMTigsXrl0dfKH8wwfBMvy21k/fz0/x2AW/k7toWpzq
-         j7BAd4xM+JYoia+rIXvZTt58eLYh3v7/NkJXtM8NXCho9bGz9cYRkor2gT7dZ30l/F
-         sXF1yS7xBcDYU8JPKStAZGb85hkByOdjWfa/q5y+LcjQWSeZ7JnvRQXY8xD4XqiY0Q
-         0qX6R9jv/zoWA==
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/3/20 4:29 AM, Kirill A. Shutemov wrote:
-> The page can be included into collapse as long as it doesn't have extra
-> pins (from GUP or otherwise).
+Vivek Goyal <vgoyal@redhat.com> writes:
+> On Mon, Mar 09, 2020 at 09:22:15PM +0100, Peter Zijlstra wrote:
+>> On Mon, Mar 09, 2020 at 08:05:18PM +0100, Thomas Gleixner wrote:
+>> > Andy Lutomirski <luto@kernel.org> writes:
+>> 
+>> > > I'm okay with the save/restore dance, I guess.  It's just yet more
+>> > > entry crud to deal with architecture nastiness, except that this
+>> > > nastiness is 100% software and isn't Intel/AMD's fault.
+>> > 
+>> > And we can do it in C and don't have to fiddle with it in the ASM
+>> > maze.
+>> 
+>> Right; I'd still love to kill KVM_ASYNC_PF_SEND_ALWAYS though, even if
+>> we do the save/restore in do_nmi(). That is some wild brain melt. Also,
+>> AFAIK none of the distros are actually shipping a PREEMPT=y kernel
+>> anyway, so killing it shouldn't matter much.
+>
+> It will be nice if we can retain KVM_ASYNC_PF_SEND_ALWAYS. I have another
+> use case outside CONFIG_PREEMPT.
+>
+> I am trying to extend async pf interface to also report page fault errors
+> to the guest.
+>
+> https://lore.kernel.org/kvm/20200331194011.24834-1-vgoyal@redhat.com/
+>
+> Right now async page fault interface assumes that host will always be
+> able to successfully resolve the page fault and sooner or later PAGE_READY
+> event will be sent to guest. And there is no mechnaism to report the
+> errors back to guest.
+>
+> I am trying to add enhance virtiofs to directly map host page cache in guest.
+>
+> https://lore.kernel.org/linux-fsdevel/20200304165845.3081-1-vgoyal@redhat.com/
+>
+> There it is possible that a file page on host is mapped in guest and file
+> got truncated and page is not there anymore. Guest tries to access it,
+> and it generates async page fault. On host we will get -EFAULT and I 
+> need to propagate it back to guest so that guest can either send SIGBUS
+> to process which caused this. Or if kernel was trying to do memcpy(),
+> then be able to use execpetion table error handling and be able to
+> return with error.  (memcpy_mcflush()).
+>
+> For the second case to work, I will need async pf events to come in
+> even if guest is in kernel and CONFIG_PREEMPT=n.
 
-Hi Kirill,
+What?
 
-s/callapse/collapse/ in the Subject line.
+> So it would be nice if we can keep KVM_ASYNC_PF_SEND_ALWAYS around.
 
-The commit message should mention that you're also removing a
-VM_BUG_ON_PAGE().
+No. If you want this stuff to be actually useful and correct, then
+please redesign it from scratch w/o abusing #PF. It want's to be a
+separate vector and then the pagefault resulting from your example above
+becomes a real #PF without any bells and whistels.
 
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> ---
->   mm/khugepaged.c | 25 ++++++++++++++-----------
->   1 file changed, 14 insertions(+), 11 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 57ff287caf6b..1e7e6543ebca 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -581,11 +581,18 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->   		}
->   
->   		/*
-> -		 * cannot use mapcount: can't collapse if there's a gup pin.
-> -		 * The page must only be referenced by the scanned process
-> -		 * and page swap cache.
-> +		 * Check if the page has any GUP (or other external) pins.
-> +		 *
-> +		 * The page table that maps the page has been already unlinked
-> +		 * from the page table tree and this process cannot get
-> +		 * additinal pin on the page.
+Thanks,
 
-
-I'd recommend this wording instead, for the last two lines:
-
-		 * from the page table tree. Therefore, this page will not
-		 * normally receive any additional pins.
-
-
-> +		 *
-> +		 * New pins can come later if the page is shared across fork,
-> +		 * but not for the this process. It is fine. The other process
-> +		 * cannot write to the page, only trigger CoW.
->   		 */
-> -		if (page_count(page) != 1 + PageSwapCache(page)) {
-> +		if (total_mapcount(page) + PageSwapCache(page) !=
-> +				page_count(page)) {
-
-
-I think it's time to put that logic ( "does this page have any extra references")
-into a small function. It's already duplicated once below. And the documentation is
-duplicated as well.
-
-I took a quick peek at this patch because, after adding pin_user_pages*() APIs earlier
-to complement get_user_pages*(), I had a moment of doubt here: what if I'd done  it in
-a way that required additional logic here? Fortunately, that's not the case: all
-pin_user_pages() calls on huge pages take a "primary/real" refcount, in addition
-to scribbling into the compound_pincount_ptr() area. whew. :)
+        tglx
 
 
-
->   			unlock_page(page);
->   			result = SCAN_PAGE_COUNT;
->   			goto out;
-> @@ -672,7 +679,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
->   		} else {
->   			src_page = pte_page(pteval);
->   			copy_user_highpage(page, src_page, address, vma);
-> -			VM_BUG_ON_PAGE(page_mapcount(src_page) != 1, src_page);
->   			release_pte_page(src_page);
->   			/*
->   			 * ptl mostly unnecessary, but preempt has to
-> @@ -1206,12 +1212,9 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->   			goto out_unmap;
->   		}
->   
-> -		/*
-> -		 * cannot use mapcount: can't collapse if there's a gup pin.
-> -		 * The page must only be referenced by the scanned process
-> -		 * and page swap cache.
-> -		 */
-> -		if (page_count(page) != 1 + PageSwapCache(page)) {
-> +		/* Check if the page has any GUP (or other external) pins */
-> +		if (total_mapcount(page) + PageSwapCache(page) !=
-> +				page_count(page)) {>   			result = SCAN_PAGE_COUNT;
->   			goto out_unmap;
->   		}
-> 
-
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
