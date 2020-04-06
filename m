@@ -2,204 +2,117 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4EAC2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5144DC2BA18
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91A952074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 245122074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="cQrC1J4q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cI1x1u94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgDFFID (ORCPT
+        id S1726586AbgDFFIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 01:08:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37288 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgDFFID (ORCPT
+        Mon, 6 Apr 2020 01:08:47 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:33211 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726436AbgDFFIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 01:08:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id de14so17663489edb.4
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 22:08:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unikie-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TaGET+/4z6vtcUcADx2roZuk5xA0YvUz0qdcO3HDz7U=;
-        b=cQrC1J4q6DGSEnsc1PYchw3rFK/hhxFCpMrw0rDqyvxGCw9cITjgiXf/vEEBBGW6E+
-         ezxSCul4V4hiBB8O7YTfRNRSJ8BzAbWN+gWQy/emhbLJUuWS8WQa6y7WcsBb93v8vstm
-         eiWisutf4z67KXjarz9wedkTW+xm+rimMhiNdn7G6vUCN3Bm2pmbZ+xOi7KNnt5WT68V
-         +pEdsJhmUscu9v+vZjueLBuHPvJg8FfmbPGsn51PzKOvS8b+Xecx/uSNPUSpsec9ni3x
-         Z2+zUbPda4pC6kzwbmL1GiK7xaKfgHcSIA+qNaec9dKtM7AMkSn60hCO9hOR603EkT1E
-         PCMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TaGET+/4z6vtcUcADx2roZuk5xA0YvUz0qdcO3HDz7U=;
-        b=eZrMszJypSYHKGdQ1qhhJBa+O8Q+oTAgU+6pFemjHUoqHH3ij37n8becI//6y37Pn3
-         SRrSPFXDI/EmqrGM+BYQ28ac3af8CCzPLbY/+E8R/FHyU0PfpODPPVN26+SZf32Kv5rp
-         i0F2TL3xf4h4QQ4CFxnom6t0gwr+ljofKeWLQM9EvklQzkpBDeXkW+H5gdxcbmdPteup
-         frTX7F+mlGD7fCv+yF7wcN+fibcxKKASa4ggqS8TlrTK1k2HPtzRUcmptjAlBeCSTAqK
-         PYihqHmxSGvJBE+6aKv86Lxhbb4Qn9r4dOJKzcsrQtqebc0rPkjcx147N73hmuFYipnM
-         kDAw==
-X-Gm-Message-State: AGi0PuaHbGWsPrhCSo/WSUFUhZWhymxHv4Lk3I62NYEOzn5ctXGLBQjv
-        Y6TuNtTFF8kGiJ0d4910iR+o68k0jhg9+0QQwOAP3A==
-X-Google-Smtp-Source: APiQypIPNXu+Bp44UG2XShCRIR9hQ+N1rn9NygifaPNoEDJHQ8+eIRrhH08/FHBQXb7RzZ5i9BA29siDSfUXZFIWdI8=
-X-Received: by 2002:a17:906:ce4c:: with SMTP id se12mr19019601ejb.153.1586149681044;
- Sun, 05 Apr 2020 22:08:01 -0700 (PDT)
+        Mon, 6 Apr 2020 01:08:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586149726; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=e9dLjINQKPN1LVIoIlwlnA22th7UlgTMqbgS6SOqu/E=; b=cI1x1u94PhoZGRToYKYHPO6BNjD4t24DSQ1F9UDSkf5Nm/9ASvNi/f5gdWmUWiCP9FZ6PIbQ
+ jNTXOI7T8pcWex2B8pI/vqN3DZFwds0w5uKiCd2nTfJNi3FBIVn40OQSeImTkPgJrHOcR+LS
+ 2ckMR8PwYLQEn7BYat0mwBpqcO4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8ab95d.7f51098a1420-smtp-out-n04;
+ Mon, 06 Apr 2020 05:08:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EBF7DC43636; Mon,  6 Apr 2020 05:08:44 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.172.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D2CE7C433D2;
+        Mon,  6 Apr 2020 05:08:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D2CE7C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v15 6/7] soc: qcom: rpmh-rsc: Clear active mode
+ configuration for wake TCS
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org,
+        "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+References: <1585660782-23416-1-git-send-email-mkshah@codeaurora.org>
+ <1585660782-23416-7-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=UqaTR7=i=5BApvnptZXpqVJiF1AE+Q+6H9Y4QdYfjfUQ@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <855bb87e-6c5c-8fee-e237-f48f9d95e2ac@codeaurora.org>
+Date:   Mon, 6 Apr 2020 10:38:36 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200401100029.1445-1-john.mathew@unikie.com>
-In-Reply-To: <20200401100029.1445-1-john.mathew@unikie.com>
-From:   John Mathew <john.mathew@unikie.com>
-Date:   Mon, 6 Apr 2020 08:07:49 +0300
-Message-ID: <CAJz2qX=cbnHp86oZ96Mo0ghXS0v2gg7DSkaGykvn5dnG8XoEtQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] Add scheduler overview documentation
-To:     linux-doc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org,
-        Benjamin Segall <bsegall@google.com>, mgorman@suse.de,
-        bristot@redhat.com, tsbogend@alpha.franken.de,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        Mostafa Chamanara <mostafa.chamanara@basemark.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAD=FV=UqaTR7=i=5BApvnptZXpqVJiF1AE+Q+6H9Y4QdYfjfUQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 1:02 PM John Mathew <john.mathew@unikie.com> wrote:
->
-> Hi all,
->
-> Based on our investigation in the area of the MIPS scheduler context
-> switch we wish to share our learnings about the kernel scheduler in
-> the form of kernel documentation. Investigations were done mostly by
-> stepping through the code using GDB and code inspection. The aim of
-> the patchset is to provide a brief overview of the kernel scheduler
-> starting from a brief history, the overview of the kernel structs
-> used by the scheduler, scheduler invocation and context switch. We
-> have also added a small section on scheduler state modelling
-> possibilities. In order to add these subjects we have restructured
-> the existing scheduler documentation so as to put them in to suitable
-> sections. We hope the new structure will enable easy extension of the
-> scheduler documentation.
->
-> Patch 1 creates place holders and new structure for the scheduler documentation.
-> The main sections are
->  - Scheduler overview: Overview of the scheduler.
->  - CFS: A section dedicated to CFS scheduler.
->  - Process context switching: Context switching overview.
->  - Scheduler features: We thought most of the existing documentation can be moved
->    here.
->  - Architecture Specific Scheduler Implementation Differences: Aimed for each
->    architecture and future updates.
->  - Scheduler Debugging Interface: For scheduler diagnostics and utilities
->  - Scheduler related functions: Scheduler API reference.
->
-> Patch 2: Adds documentation for the place holders of the Scheduler overview,
->  Scheduler State Transition and CFS sections.
->
-> Patch 3: Adds documentation for the place holder of the Process context switching
->  and add 2 new sections to for x86 and MIPS context switch.
->
->
-> John Mathew (3):
->   docs: scheduler: Restructure scheduler documentation.
->   docs: scheduler: Add scheduler overview documentation
->   docs: scheduler: Add introduction to scheduler context-switch
->
->  Documentation/scheduler/arch-specific.rst     |  14 +
->  Documentation/scheduler/cfs-data-structs.rst  | 208 ++++++++++++++
->  Documentation/scheduler/cfs-overview.rst      |  46 ++++
->  .../scheduler/cfs-sched-overview.rst          |  17 ++
->  Documentation/scheduler/context-switching.rst |  71 +++++
->  Documentation/scheduler/index.rst             |  31 ++-
->  .../scheduler/mips-context-switch.rst         |  78 ++++++
->  Documentation/scheduler/overview.rst          | 260 ++++++++++++++++++
->  Documentation/scheduler/sched-debugging.rst   |  14 +
->  Documentation/scheduler/sched-features.rst    |  20 ++
->  Documentation/scheduler/scheduler-api.rst     |  34 +++
->  .../scheduler/x86-context-switch.rst          |  59 ++++
->  kernel/sched/core.c                           |  36 ++-
->  13 files changed, 867 insertions(+), 21 deletions(-)
->  create mode 100644 Documentation/scheduler/arch-specific.rst
->  create mode 100644 Documentation/scheduler/cfs-data-structs.rst
->  create mode 100644 Documentation/scheduler/cfs-overview.rst
->  create mode 100644 Documentation/scheduler/cfs-sched-overview.rst
->  create mode 100644 Documentation/scheduler/context-switching.rst
->  create mode 100644 Documentation/scheduler/mips-context-switch.rst
->  create mode 100644 Documentation/scheduler/overview.rst
->  create mode 100644 Documentation/scheduler/sched-debugging.rst
->  create mode 100644 Documentation/scheduler/sched-features.rst
->  create mode 100644 Documentation/scheduler/scheduler-api.rst
->  create mode 100644 Documentation/scheduler/x86-context-switch.rst
->
-> --
-> 2.17.1
->
+Hi,
 
-Thank you  Peter, Daniel, Matthew, Juri, Valentin and Jonathan for taking
-time to review this patchset.
+On 4/3/2020 1:44 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Tue, Mar 31, 2020 at 6:21 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> @@ -243,6 +279,14 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
+>>                  }
+>>
+>>                  trace_rpmh_tx_done(drv, i, req, err);
+>> +
+>> +               /*
+>> +                * If wake tcs was re-purposed for sending active
+>> +                * votes, clear AMC trigger & enable modes and
+>> +                * disable interrupt for this TCS
+>> +                */
+>> +               if (!drv->tcs[ACTIVE_TCS].num_tcs)
+>> +                       __tcs_set_trigger(drv, i, false);
+> Still seems weird that we have to do the untrigger in the IRQ routine
+> here and also weird that we _don't_ do it in the IRQ routine for
+> non-borrowed TCSes.  I guess it's not the end of the world, though.
+>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-Please find the summary of feedback:
+Thanks Doug for the review.
 
-Formatting and Representation
----------------------------------------
-1. Fix white space damage in the kernel-doc comments added to
-    the scheduler function (Peter)
-2. Find a format that can be displayed properly and edited in a text editor
-    and also looks good in the html view(Daniel)
-3. Provide graphical representation for scheduler automata models.
-4. Limit document width to 75 (Matthew)
-5. Add text representation of dot format images and check if ditaa
-tool can be used for graphical output  (Valentin)
+IRQ is only needed to be enabled for TCSes used as ACTIVE_TCS.
 
-Referencing (of code parts)
----------------------------------------
-1. Remove :c:func: directive as it is redundant. (Peter)
-2. Add reference to all the arch specific implementations of resume() (Peter).
-3. Add reference to the 32 bit version of assembly implementation of
-     __switch_to_asm (Peter)
-4. Remove references to the _cond_resched() and __cond_resched_lock()
-    from the scheduler API reference list added in the patch. (Peter)
-5. Describe rq struct member as kernel-doc comments (Matthew)
-6. Add reference to scheduler journal paper about scheduler
-    automata model (Daniel)
+When we have dedicated ACTIVE_TCS, we leave IRQ always enabled from 
+probe (one time configuration), since the TCS won't be used for anything 
+other than to send ACTIVE transaction.
 
-Style of Writing and Wording
----------------------------------------
-1. Rename running queue to runqueue (Matthew)
-2. Describe cfs_rq correctly (Matthew)
-3. Describe vruntime correctly (Matthew)
-4. Rephrase sentences about scheduler history (Matthew)
+When we don't have dedicated ACTIVE_TCS, we enable it when borrowed TCS 
+is used for ACTIVE transaction and then once its done using it, we 
+disable it again to leave it in its original configuration.
 
-Documentation Scope, Focus and Depth
-----------------------------------------------------
-1. Describe finish_task_switch() correctly (Peter)
-2. Do not over-describe current implementation (Matthew)
-3. Drop explanation and add reference to existing  rbtree
-    documentation (Matthew)
-4. Do not add too much info on current implementation (Valentin)
-5. Add documentation for sched_class fields themselves, when/why the
-    core code calls them (Valentin).
-6. Highlight the change cycle (Valentin)
-7. Mention SCHED_DEADLINE (Juri)
-8. Add pointer to sched-deadline.txt. (Juri)
+Thanks,
+Maulik
 
-Technical Understanding and Description
------------------------------------------------------
-1. Describe prepare_task_switch() correctly (Peter)
-2. Describe ASID allocation correctly (Peter)
-3. Describe kernel task to user space task transition correctly (Peter)
-4. Check FPU affinity management feature (Peter)
-
-We will work on all this feedback and provide a RFC PATCH v2
-
--John
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
