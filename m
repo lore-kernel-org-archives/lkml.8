@@ -2,131 +2,86 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1ED1C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910ECC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A89238E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586182121;
-	bh=hcuGXHY3MNVxXukSV6J8rpsvBWkOiZRjUDrI4HxB6cE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=akrXh9LRgiiKukU1uZLyWA5Lc8OOQDtwgUNRWLhlsjQGwPYqJp1AkN07gJVtBJXWu
-	 3ndX8X3WHJ3NHt3SONBz6e0tTrfQT04+qhSneKQLpAUFgIighM10Y7VsuhQ+duyc4A
-	 RqA7WcdvcUwTjjFnOOoX1VNzcGVEITCBv7NhzaYg=
+	by mail.kernel.org (Postfix) with ESMTP id 63AAF22240
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eM0qDVJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgDFOIl (ORCPT
+        id S1728629AbgDFOJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:08:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43344 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728405AbgDFOIk (ORCPT
+        Mon, 6 Apr 2020 10:09:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34072 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgDFOJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:08:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id v23so5946283ply.10;
-        Mon, 06 Apr 2020 07:08:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qiVBZPsdURZP1jhMxDWHye9mEvFMkZlVNadDHV0ejs4=;
-        b=aCOZdE+kKjgXwNUh4wa7sd0iC9RrBIh1NeBcPBx4YJ0956l6hfldfq2s4fiZPX+lEl
-         XGScgrYshv2BiX4tuViMJ3evSNjGd2ZbtMIgQ9nPhrj4iqZLksyIYDbvBejmOYH6pUyH
-         bP/YBd6oM2UHno72Ret0EoO1lJYoX2Py3+VW5NVtrCmJILUBxMFug1MFpJqwAUS5467A
-         /lvGRWWoLCMbjM+XAPp5qlKBm8Trf+4IArkY2NZMSQISWQi6oJmVjYyAIbeILTMWiUaF
-         vXEKxMOzmU4i69trexUmXEuCVsy2qH31wrm00vShlTHZgEb6huwdYXDxYOoHvIW5Cqka
-         zYIw==
-X-Gm-Message-State: AGi0PuZPGeANKt/2IzIxM987UtFdYovcKcaxifm/j/kHLXPzUt8PCU2f
-        eqbcB9uySbQjYnA17WkjR1g=
-X-Google-Smtp-Source: APiQypK4PBijtr6jrSkxbP+qg+JhVIDRUZnqmssM67o2eOuF1E9o8YpsOIerTZkbPlD0P7gpp2RFWw==
-X-Received: by 2002:a17:90a:aa95:: with SMTP id l21mr11323852pjq.4.1586182119271;
-        Mon, 06 Apr 2020 07:08:39 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id b2sm4506439pgg.77.2020.04.06.07.08.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 07:08:37 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id DD95740246; Mon,  6 Apr 2020 14:08:36 +0000 (UTC)
-Date:   Mon, 6 Apr 2020 14:08:36 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <20200406140836.GA11244@42.do-not-panic.com>
-References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-2-vbabka@suse.cz>
- <20200330224422.GX11244@42.do-not-panic.com>
- <287ac6ae-a898-3e68-c7d8-4c1d17a40db9@suse.cz>
- <20200402160442.GA11244@42.do-not-panic.com>
- <202004021017.3A23B759@keescook>
- <20200402205932.GM11244@42.do-not-panic.com>
- <202004031654.C4389A04EF@keescook>
+        Mon, 6 Apr 2020 10:09:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Ohj/i/ogLT7GicyCIBoF5EnAvSBG2ciFGJNg8Qu9r/8=; b=eM0qDVJKBgxNmEu5HlJnfeNy5e
+        UlumaPrTinMvTgddkfe7mW9Y/ZZ6FJbP+zwMJWO6YWtpI5tFPxG6M3TowfnET9lfRkgcUowWEXISv
+        UcJEC+4kxb3hbsMKN1pPl2hJWpewrgsI7bBmf5oJYc0XFkh6JOHepeOIJDOp4HrciPM36PikXbqJL
+        O43iywfTgOM3zpGHgBFQdr5lqmwa/mrn1TI9q2nYBlBVZ3CLCNvGlYaDTDpWkI16znEbVKESLafK7
+        dTxUQvDNolhLkhgM+w0i0peLkkXLFRa2L3WTC8s8/jqoIo0tDoaglxDrDTCcVpyi5JcJFyxNVQllr
+        hJbJYoiw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLSRP-0001tn-N5; Mon, 06 Apr 2020 14:09:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 390CF3010C8;
+        Mon,  6 Apr 2020 16:09:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 270EC2BAC7486; Mon,  6 Apr 2020 16:09:30 +0200 (CEST)
+Date:   Mon, 6 Apr 2020 16:09:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        dbueso@suse.de, juri.lelli@redhat.com,
+        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v2] locking/percpu-rwsem: fix a task_struct refcount
+Message-ID: <20200406140930.GN20730@hirez.programming.kicks-ass.net>
+References: <20200330213002.2374-1-cai@lca.pw>
+ <C6D137A2-15A9-49BC-BCE2-DA1202B5AC3A@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202004031654.C4389A04EF@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <C6D137A2-15A9-49BC-BCE2-DA1202B5AC3A@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 04:57:51PM -0700, Kees Cook wrote:
-> On Thu, Apr 02, 2020 at 08:59:32PM +0000, Luis Chamberlain wrote:
-> > We modify the copied bootparams to allow new sysctls to map to old boot params?
+On Mon, Apr 06, 2020 at 09:31:18AM -0400, Qian Cai wrote:
 > 
-> This strdup is so that the
-> command line can have '\0's injected while it steps through the args
-> (and for doing the . and / replacement).
-
-Please ignore the const feedback then.
-
-> > This is the least cumbersome solution I could think of. Other things
-> > would require things like using qemu, etc. That seems much more messsy.
 > 
-> Yes. Doing an internal extension isn't testing the actual code.
-
-But it would.
-
-> > > This is an external interface (boot params), so
-> > > I'd rather an external driver handle that testing. We don't have a
-> > > common method to do that with the kernel, though.
+> > On Mar 30, 2020, at 5:30 PM, Qian Cai <cai@lca.pw> wrote:
 > > 
-> > Right... which begs the question now -- how do we test this sort of
-> > stuff? The above would at least get us coverage while we iron something
-> > more generic out for boot params.
+> > The commit 7f26482a872c ("locking/percpu-rwsem: Remove the embedded
+> > rwsem") introduced some task_struct memory leaks due to messing up with
+> > a task_struct refcount. At the beginning of
+> > percpu_rwsem_wake_function(), it calls get_task_struct(), but if the
+> > trylock failed, it will remain in the waitqueue. However, it will run
+> > percpu_rwsem_wake_function() again with get_task_struct() to increase
+> > the refcount but then only call put_task_struct() once the trylock
+> > succeeded.
 > > 
-> > > > That would test both cases with one kernel.
-> > > > 
-> > > > You could then also add a bogus new sysctl which also expands to a silly
-> > > > raw boot param to test the wrapper you are providing. That would be the
-> > > > only new test syctl you would need to add.
-> > > 
-> > > Sure, that seems reasonable. Supporting externally driven testing makes
-> > > sense for this.
+> > Fix it by adjusting percpu_rwsem_wake_function() a bit to guard against
+> > when percpu_rwsem_wait() observing !private, terminating the wait and
+> > doing a quick exit() while percpu_rwsem_wake_function() then doing
+> > wake_up_process(p) as a use-after-free.
 > > 
-> > But again, what exactly?
+> > Fixes: 7f26482a872c ("locking/percpu-rwsem: Remove the embedded rwsem")
 > 
-> I don't think anything is needed for this series. It can be boot tested
-> manually.
+> Peter, Ingo, can you take a look at this patch when you have a chance?
 
-Why test it manually when it could be tested automatically with a new kconfig?
-
-  Luis
+I have it queued for urgent, should probably hit tip soon.
