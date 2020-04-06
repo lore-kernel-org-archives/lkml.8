@@ -5,137 +5,127 @@ X-Spam-Level:
 X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D5EC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABACEC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B01F20753
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826F62495D
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:32:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSprrJcm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPw2IpvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgDFQaB (ORCPT
+        id S1729370AbgDFQc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:30:01 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39500 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728789AbgDFQaA (ORCPT
+        Mon, 6 Apr 2020 12:32:28 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40682 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728789AbgDFQc1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:30:00 -0400
-Received: by mail-lf1-f66.google.com with SMTP id m2so1083985lfo.6;
-        Mon, 06 Apr 2020 09:29:58 -0700 (PDT)
+        Mon, 6 Apr 2020 12:32:27 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j17so12379219lfe.7;
+        Mon, 06 Apr 2020 09:32:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6s1RomBLaAaLYjYEtNzLrGXH4D7zjKQWtC32MsL6TUY=;
-        b=LSprrJcm3y6O68ykXfq0AwAcOXpXeo3pGt4YLZBoeWDaR66qrtXxzAelikL6s/AXDu
-         FGHPtdNoSflFkLVTLd8QGYdiDg6euW5aBbWHTixMjNECj2/+fyKXqZUyr1q35+D3Y8LV
-         jAzi3i9rcDH5CWJmpU1cvSgb8e4GhesT4mDs2vwz7UZCsIk/zRwij2GhEr3osByaaPP8
-         7AQuK+sVZow8NUK7mYPS5k0deg3BerX6FOWDd5wkrtmgjcFTxSJA9wOPtbJS/1sCGh71
-         f2cSYUOfE16Mm7B4ko6/HUTwI71+jGkY325iGIgz+0Ps6jznZnqGTBNBKf3YNoFx/Q9y
-         HKhg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DeMJSh8JzgKPQANQorvFmrAQkO5UTeuBmpSrUn1GgpE=;
+        b=IPw2IpvEzk01AdXSGLkR+7SQ6u9FEex6ZOVFYWbeeposuSgfaNysRamNsBGPkU52bG
+         5oVfJcBfC7BQrkY6xbzvR7+0XlsVrcyZj3lbZpgwOlfvR3XJYKQoDgBGvCk3dxa1uoUt
+         yScdRZaicRKy2LHrayPdocK63chzCd48QGS6EUzCR+nD4OBx6JsK+vNWOZY8eQ7xvEdA
+         zyeVcLs2C5EOh9O4VZE6mEijzFxk2KrDGQPwEET3nc+fFICcZXbInQ8l0ULBWVXYWoWe
+         q7PfYKgOlYfVTiLOZTm8UMgxiC5OGM6IFpVrN3N+26PIujj91MVjb+8mFAbjxKFSg0QE
+         rpfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6s1RomBLaAaLYjYEtNzLrGXH4D7zjKQWtC32MsL6TUY=;
-        b=YO2drf//51T4IKoyFtBJ/3iHhkbw2tBJQufwREBCRMC4mJgbTrchdSw88+e4KxCTSR
-         VqEeWgB1FUOOkZkDRPTQLR7x186hBtlWJ7SrkgF4IIWVMVt3dNKgJn0JjoNxRU0gLo8b
-         4RmAoEqjWjU2q5DkFhrjbHDvBwoL1NjWrlR048VHBw2+fBfZ4ZU/OvAsaZTmNEHwx9Xq
-         fItD1Ana3/pCojh2YO6RvUMaObcptLOeRGwApko+oVYqGPIv5hKzhCUeuXxRsdhcABCW
-         4bi+pxTT8Cez3ZVT6VSJ8goVktw7TQ4hs0j9JpB9TpvWhc+3LUnWcp5iFP9h/Ys/FHMj
-         od4A==
-X-Gm-Message-State: AGi0PuZS7kSo+y2slepDjApV4tfei7OeCS0QI66d9Mkpc1uodjYTxvjR
-        jE6y1dPpStvVRBRmVPz8yTbBwiVc
-X-Google-Smtp-Source: APiQypJbe1lJWnXFExH2l4+Uev/fYbSRZkAaZ/gonD7P6gbu5LIxn7YaRhzchCFdPfJWvG/UV5o85g==
-X-Received: by 2002:a19:c8cf:: with SMTP id y198mr9870475lff.197.1586190596953;
-        Mon, 06 Apr 2020 09:29:56 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j19sm11701904lfe.17.2020.04.06.09.29.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 09:29:54 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
- <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
- <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
- <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
-Date:   Mon, 6 Apr 2020 19:29:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DeMJSh8JzgKPQANQorvFmrAQkO5UTeuBmpSrUn1GgpE=;
+        b=rmQbPFr0+RcO9caDeq9C0ETY34hjn5NFXnB3HnVj6+nOMUXEUsfQJdtdxgxPJ8TU08
+         whJOh9Gb2pw5yrcTbzNLbn7Nv3+GvjQNj8x9oGlyhOLVpMFedxjzmQ8jVp/S4aLiwn8C
+         4eglIJfq35/rusmOcD6tsw1kkgstcZVjeln+bRfkmDmGDlb3AUMzwxsp4MgJqQMw5bCE
+         g6o8JzJGc7oXfsTKVLRuY52oekBdKXmz98EXtYt10wITWopqgN3uN3xOc6PWh4+QnQX9
+         r7XG+fi2aE6Abg/5EH4hU+2ZrVA59j7BIpqbrJ/jBNVQcAgCyMBwtFB7kE9SNacSPiDB
+         2w8w==
+X-Gm-Message-State: AGi0PuZ1b2sQJBKDzfJ0Vf4szDYuPQwJfDKF/kO00mbFPtbS8EtoLMC0
+        XiXf37NDsKqhrYjZxmaGCLU=
+X-Google-Smtp-Source: APiQypKQ43UX6g8dBTlFCqaWswvvraHqaATn1I30zw3t/NRvWSUVHLktSY1hM42o83zQCQmt8ZqOHg==
+X-Received: by 2002:a05:6512:308e:: with SMTP id z14mr14072207lfd.110.1586190744030;
+        Mon, 06 Apr 2020 09:32:24 -0700 (PDT)
+Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
+        by smtp.gmail.com with ESMTPSA id p21sm10205867ljg.5.2020.04.06.09.32.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 09:32:23 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 6 Apr 2020 18:32:16 +0200
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/1] rcu/tree: add emergency pool for headless case
+Message-ID: <20200406163216.GA4268@pc636>
+References: <20200403173051.4081-1-urezki@gmail.com>
+ <20200404195129.GA83565@google.com>
+ <20200405172105.GA7539@pc636>
+ <20200405233028.GC83565@google.com>
+ <20200406125640.GA23256@pc636>
+ <20200406153110.GE19865@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406153110.GE19865@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.04.2020 19:12, Sowjanya Komatineni пишет:
+> On Mon, Apr 06, 2020 at 02:56:40PM +0200, Uladzislau Rezki wrote:
+> > Hello, Joel.
+> > 
+> > > > > 
+> > > > > Hi Vlad,
+> > > > > 
+> > > > > One concern I have is this moves the problem a bit further down. My belief is
+> > > > > we should avoid the likelihood of even needing an rcu_head allocated for the
+> > > > > headless case, to begin with - than trying to do damage-control when it does
+> > > > > happen. The only way we would end up needing an rcu_head is if we could not
+> > > > > allocate an array.
+> > > > > 
+> > > > Let me share my view on all such caching. I think that now it becomes less as
+> > > > the issue, because of we have now https://lkml.org/lkml/2020/4/2/383 patch.
+> > > > I see that it does help a lot. I tried to simulate low memory condition and 
+> > > > apply high memory pressure with that. I did not manage to trigger the
+> > > > "synchronize rcu" path at all. It is because of using much more permissive
+> > > > parameters when we request a memory from the SLAB(direct reclaim, etc...).
+> > > 
+> > > That's a good sign that we don't hit this path in your tests.
+> > > 
+> > Just one request, of course if you have a time :) Could you please
+> > double check on your test environment to stress the system to check
+> > if you also can not hit it?
+> > 
+> > How i test it. Please apply below patch:
 > 
-> On 4/6/20 9:05 AM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 06.04.2020 18:35, Sowjanya Komatineni пишет:
->> ...
->>>>> +     /* wait for syncpt counter to reach frame start event
->>>>> threshold */
->>>>> +     err = host1x_syncpt_wait(chan->frame_start_sp, thresh,
->>>>> +                              TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
->>>>> +     if (err) {
->>>>> +             dev_err(&chan->video.dev,
->>>>> +                     "frame start syncpt timeout: %d\n", err);
->>>>> +             /* increment syncpoint counter for timedout events */
->>>>> +             host1x_syncpt_incr(chan->frame_start_sp);
->>>> Why incrementing is done while hardware is still active?
->>>>
->>>> The sync point's state needs to be completely reset after resetting
->>>> hardware. But I don't think that the current upstream host1x driver
->>>> supports doing that, it's one of the known-long-standing problems of
->>>> the
->>>> host1x driver.
->>>>
->>>> At least the sp->max_val incrementing should be done based on the
->>>> actual
->>>> syncpoint value and this should be done after resetting hardware.
->>> upstream host1x driver don't have API to reset or to equalize max value
->>> with min/load value.
->>>
->>> So to synchronize missed event, incrementing HW syncpt counter.
->>>
->>> This should not impact as we increment this in case of missed events
->>> only.
->> It's wrong to touch sync point while hardware is active and it's active
->> until being reset.
->>
->> You should re-check the timeout after hw resetting and manually put the
->> syncpoint counter back into sync only if needed.
+> This is of course a double challenge.
 > 
-> There is possibility of timeout to happen any time even during the
-> capture also and is not related to hw reset.
+> I can assure you that even if we cannot make it happen in the comfort and
+> safety of our tests systems, someone somewhere will make it happen all
+> the time.  Because there is a very large number of Linux systems running
+> out there.
 > 
-> Manual synchronization is needed when timeout of any frame events happen
-> otherwise all subsequence frames will timeout due to mismatch in event
-> counters.
+> Which leads to the other challenge:  How do we test this code path?
+> 
+I have added extra tests to my "vmalloc tests" https://lkml.org/lkml/2020/4/2/384
+for stressing head/headless variants. Also we have rcuperf module. Running them
+together under KVM(selftests) would be good. Plus we can add a counter of the
+path we think is bad, synchronize_rcu() and so on.
 
-My point is that hardware is stopped only after being reset, until then
-you should assume that sync point could be incremented by HW at any time.
+Thanks!
 
-And if this happens that HW increments sync point after the timeout,
-then the sync point counter should become out-of-sync in yours case,
-IIUC. Because host1x_syncpt_incr() doesn't update the cached counter.
+--
+Vlad Rezki
