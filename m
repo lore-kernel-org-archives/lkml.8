@@ -7,167 +7,94 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4700AC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA68C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 258532064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583492064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="li6ozEVe"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Khk97yYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbgDFSQ6 (ORCPT
+        id S1726776AbgDFSQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:16:58 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:14396 "EHLO pegase1.c-s.fr"
+        Mon, 6 Apr 2020 14:16:47 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:38379 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727162AbgDFSQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:16:53 -0400
+        id S1727048AbgDFSQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:16:45 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wzJg1WtHz9v0BP;
-        Mon,  6 Apr 2020 20:16:51 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 48wzJW6Dg8z9v017;
+        Mon,  6 Apr 2020 20:16:43 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=li6ozEVe; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=Khk97yYL; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id x2vqgQMc-n-j; Mon,  6 Apr 2020 20:16:51 +0200 (CEST)
+        with ESMTP id GABKz4NnB9jj; Mon,  6 Apr 2020 20:16:43 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJg0VWhz9v0BL;
-        Mon,  6 Apr 2020 20:16:51 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJW5CNpz9v016;
+        Mon,  6 Apr 2020 20:16:43 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586197011; bh=m6Oh1yuts4ObrTSh3NAo4HJzDL11EvAmq8RhV9wYZ0A=;
+        t=1586197003; bh=a5uur0JjQKV4vKxRMQhPMor8uQsgxQ5q+xZnIEjM+NE=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=li6ozEVeosEy5FvAn9MK+991oPDvsLU6AtwUENgL/JBp1qy10smsFXTv2AC92QYX1
-         RATvpWnnVDQVcB+rVHrYIKudA+RnKjz/zUSXfiHE2zTy9G+BtRv1u/LJ21zvVcjCYU
-         OYwu8MW3+wiP9P9KydE69XOBlDEToZ64et4onk1g=
+        b=Khk97yYLUlxW26zWADAmoDOC09G4UoAithNqdRQx8UjowElgsl8MM0YGnJatyFcfz
+         6A2h4lFBs2kPvIClvG8uv8rqU3q8pvHTW35X3T3v/eL05YF6QUcs8UUyFyGS0RM+nb
+         OK9tsLTYeEwHHQVgRJkQD+wLMy5+BXeSv6yk1koc=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0A79B8B784;
-        Mon,  6 Apr 2020 20:16:51 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A71D18B784;
+        Mon,  6 Apr 2020 20:16:43 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id uMEmrDBE1TQV; Mon,  6 Apr 2020 20:16:50 +0200 (CEST)
+        with ESMTP id UHJQSiDgbw6w; Mon,  6 Apr 2020 20:16:43 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A6ED88B775;
-        Mon,  6 Apr 2020 20:16:50 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6FA468B775;
+        Mon,  6 Apr 2020 20:16:43 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 7BE7C656E9; Mon,  6 Apr 2020 18:16:50 +0000 (UTC)
-Message-Id: <a5be904f44b273c67ac9c37cbed27dba9a34da6a.1586196948.git.christophe.leroy@c-s.fr>
+        id 45F9E656E9; Mon,  6 Apr 2020 18:16:43 +0000 (UTC)
+Message-Id: <99c8590956536b6f40b9deeaec559a324ab5f81c.1586196948.git.christophe.leroy@c-s.fr>
 In-Reply-To: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
 References: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v3 14/15] powerpc/syscall: Avoid stack frame in likely
- part of syscall_call_exception()
+Subject: [RFC PATCH v3 07/15] powerpc/irq: Add stub irq_soft_mask_return() for
+ PPC32
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
         msuchanek@suse.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon,  6 Apr 2020 18:16:50 +0000 (UTC)
+Date:   Mon,  6 Apr 2020 18:16:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When r3 is not modified, reload it from regs->orig_r3 to free
-volatile registers. This avoids a stack frame for the likely part
-of syscall_call_exception()
-
-Before : 353 cycles on null_syscall
-After  : 347 cycles on null_syscall
-
-Before the patch:
-
-c000b4d4 <system_call_exception>:
-c000b4d4:	7c 08 02 a6 	mflr    r0
-c000b4d8:	94 21 ff e0 	stwu    r1,-32(r1)
-c000b4dc:	93 e1 00 1c 	stw     r31,28(r1)
-c000b4e0:	90 01 00 24 	stw     r0,36(r1)
-c000b4e4:	90 6a 00 88 	stw     r3,136(r10)
-c000b4e8:	81 6a 00 84 	lwz     r11,132(r10)
-c000b4ec:	69 6b 00 02 	xori    r11,r11,2
-c000b4f0:	55 6b ff fe 	rlwinm  r11,r11,31,31,31
-c000b4f4:	0f 0b 00 00 	twnei   r11,0
-c000b4f8:	81 6a 00 a0 	lwz     r11,160(r10)
-c000b4fc:	55 6b 07 fe 	clrlwi  r11,r11,31
-c000b500:	0f 0b 00 00 	twnei   r11,0
-c000b504:	7c 0c 42 e6 	mftb    r0
-c000b508:	83 e2 00 08 	lwz     r31,8(r2)
-c000b50c:	81 82 00 28 	lwz     r12,40(r2)
-c000b510:	90 02 00 24 	stw     r0,36(r2)
-c000b514:	7d 8c f8 50 	subf    r12,r12,r31
-c000b518:	7c 0c 02 14 	add     r0,r12,r0
-c000b51c:	90 02 00 08 	stw     r0,8(r2)
-c000b520:	7c 10 13 a6 	mtspr   80,r0
-c000b524:	81 62 00 70 	lwz     r11,112(r2)
-c000b528:	71 60 86 91 	andi.   r0,r11,34449
-c000b52c:	40 82 00 34 	bne     c000b560 <system_call_exception+0x8c>
-c000b530:	2b 89 01 b6 	cmplwi  cr7,r9,438
-c000b534:	41 9d 00 64 	bgt     cr7,c000b598 <system_call_exception+0xc4>
-c000b538:	3d 40 c0 5c 	lis     r10,-16292
-c000b53c:	55 29 10 3a 	rlwinm  r9,r9,2,0,29
-c000b540:	39 4a 41 e8 	addi    r10,r10,16872
-c000b544:	80 01 00 24 	lwz     r0,36(r1)
-c000b548:	7d 2a 48 2e 	lwzx    r9,r10,r9
-c000b54c:	7c 08 03 a6 	mtlr    r0
-c000b550:	7d 29 03 a6 	mtctr   r9
-c000b554:	83 e1 00 1c 	lwz     r31,28(r1)
-c000b558:	38 21 00 20 	addi    r1,r1,32
-c000b55c:	4e 80 04 20 	bctr
-
-After the patch:
-
-c000b4d4 <system_call_exception>:
-c000b4d4:	81 6a 00 84 	lwz     r11,132(r10)
-c000b4d8:	90 6a 00 88 	stw     r3,136(r10)
-c000b4dc:	69 6b 00 02 	xori    r11,r11,2
-c000b4e0:	55 6b ff fe 	rlwinm  r11,r11,31,31,31
-c000b4e4:	0f 0b 00 00 	twnei   r11,0
-c000b4e8:	80 6a 00 a0 	lwz     r3,160(r10)
-c000b4ec:	54 63 07 fe 	clrlwi  r3,r3,31
-c000b4f0:	0f 03 00 00 	twnei   r3,0
-c000b4f4:	7d 6c 42 e6 	mftb    r11
-c000b4f8:	81 82 00 08 	lwz     r12,8(r2)
-c000b4fc:	80 02 00 28 	lwz     r0,40(r2)
-c000b500:	91 62 00 24 	stw     r11,36(r2)
-c000b504:	7c 00 60 50 	subf    r0,r0,r12
-c000b508:	7d 60 5a 14 	add     r11,r0,r11
-c000b50c:	91 62 00 08 	stw     r11,8(r2)
-c000b510:	7c 10 13 a6 	mtspr   80,r0
-c000b514:	80 62 00 70 	lwz     r3,112(r2)
-c000b518:	70 6b 86 91 	andi.   r11,r3,34449
-c000b51c:	40 82 00 28 	bne     c000b544 <system_call_exception+0x70>
-c000b520:	2b 89 01 b6 	cmplwi  cr7,r9,438
-c000b524:	41 9d 00 84 	bgt     cr7,c000b5a8 <system_call_exception+0xd4>
-c000b528:	80 6a 00 88 	lwz     r3,136(r10)
-c000b52c:	3d 40 c0 5c 	lis     r10,-16292
-c000b530:	55 29 10 3a 	rlwinm  r9,r9,2,0,29
-c000b534:	39 4a 41 e4 	addi    r10,r10,16868
-c000b538:	7d 2a 48 2e 	lwzx    r9,r10,r9
-c000b53c:	7d 29 03 a6 	mtctr   r9
-c000b540:	4e 80 04 20 	bctr
+To allow building syscall_64.c smoothly on PPC32, add stub version
+of irq_soft_mask_return().
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/syscall.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/include/asm/hw_irq.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
-index f9fca9985b0f..af449a4a8e8f 100644
---- a/arch/powerpc/kernel/syscall.c
-+++ b/arch/powerpc/kernel/syscall.c
-@@ -85,6 +85,9 @@ notrace long system_call_exception(long r3, long r4, long r5,
+diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
+index 8c30a72262fd..1c25a84a3159 100644
+--- a/arch/powerpc/include/asm/hw_irq.h
++++ b/arch/powerpc/include/asm/hw_irq.h
+@@ -293,6 +293,11 @@ static inline void set_softe(struct pt_regs *regs, unsigned long val)
+ }
+ #else /* CONFIG_PPC64 */
  
- 	} else if (unlikely(r0 >= NR_syscalls)) {
- 		return -ENOSYS;
-+	} else {
-+		/* Restore r3 from orig_gpr3 to free up a volatile reg */
-+		r3 = regs->orig_gpr3;
- 	}
- 
- 	/* May be faster to do array_index_nospec? */
++static inline notrace unsigned long irq_soft_mask_return(void)
++{
++	return 0;
++}
++
+ static inline unsigned long arch_local_save_flags(void)
+ {
+ 	return mfmsr();
 -- 
 2.25.0
 
