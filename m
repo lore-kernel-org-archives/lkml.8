@@ -2,158 +2,142 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F45C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFC9C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 608D9222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E6D23133
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="sPVmAcXy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgDFNaK (ORCPT
+        id S1728470AbgDFNbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:30:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:45722 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728200AbgDFNaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:30:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 313E231B;
-        Mon,  6 Apr 2020 06:30:09 -0700 (PDT)
-Received: from [10.37.12.4] (unknown [10.37.12.4])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC4473F7D8;
-        Mon,  6 Apr 2020 06:29:58 -0700 (PDT)
-Subject: Re: [PATCH v5 1/5] PM / EM: add devices to Energy Model
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
-        javi.merino@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200318114548.19916-1-lukasz.luba@arm.com>
- <20200318114548.19916-2-lukasz.luba@arm.com>
- <09b680a5-a118-8c6e-0ae1-03ab5f10c573@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <cb7f670a-a04f-ba6f-1486-0421f3cce2e9@arm.com>
-Date:   Mon, 6 Apr 2020 14:29:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <09b680a5-a118-8c6e-0ae1-03ab5f10c573@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 6 Apr 2020 09:31:21 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43538 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728319AbgDFNbV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:31:21 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 13so3824466qko.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=0V2aMn0sTHp1q9cbywc62NPYXIn4X24edf2PKFuIMDQ=;
+        b=sPVmAcXyg3O3fFueMXK/FnmysvYrh/ymDFpzaAyEFNn8NPfOl+7gF83XT7Ygdk9nBo
+         d0qEuPh/PguXTCd3LtOV4I6vSzNikDXTc8Ul7fRrBT3sg4AUoLhOUSUDjTOfptH9kMa0
+         T5o4S+GkPBGdzt+Aln2iBsk8y/IsjRp++txyqFb6H1o6ioS1tcI+yfSt9r0diFjv/tUt
+         IIbeDksGUe5e1Dfz6OMbNIw8NDYnPujt6RmdRb15C0FJAlcQl1sjQlKkj72PXTAOV6pV
+         6uHT6h1192VYlT5E0dXl2zcRONaacdOCjfPYCDshsz9pDn4jLvZWoKyFs3XBheJkiVvo
+         U9OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=0V2aMn0sTHp1q9cbywc62NPYXIn4X24edf2PKFuIMDQ=;
+        b=W+gCqjXN41z8yUtTULrEYZHw4XgMmkJVM80FnaMKmX/PMNn5x7PvsbjbIi2Sm9XQYl
+         upeh74EF7uzklUjTkW0qpSgutzwvG7r5dc1R+yPJ1Dh3nVDQ2HbXx2ANIkgendU2bvkO
+         BzGAgCtARc3py7MCAk7z6H4eudMYwf07203m1QNeVetoD8JDzicimTpkgwC8/jZQXQpz
+         GxIMNmutPtI3r85AGRbriUjVM+hnw2UQ+8B5cwI2hHQ1M094GF0WWniH0k69EBo+oyqL
+         DXjC7mTaV+f0bfyJaRYdUJFBoK6bpqNsyQy0us+ewf2wOn1p8fOL2q1GOGsm4le1nVWw
+         8/TQ==
+X-Gm-Message-State: AGi0PubUTe+KsU6nZtpbSjoN7nMdBG7xWcHf+X0x8es8+rovKaukFzGJ
+        Oladd62/PCWBCP6scvmaXiMQ4w==
+X-Google-Smtp-Source: APiQypLLMBHVc0/WueSoIoryqhI+TVfU9xBbZ/wFKQRSQg1n9i94VrK/od4/3eSNMEkLE3iXro+QPw==
+X-Received: by 2002:a05:620a:b90:: with SMTP id k16mr1180489qkh.321.1586179879727;
+        Mon, 06 Apr 2020 06:31:19 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id q5sm14887814qkq.17.2020.04.06.06.31.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Apr 2020 06:31:19 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH -next v2] locking/percpu-rwsem: fix a task_struct refcount
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200330213002.2374-1-cai@lca.pw>
+Date:   Mon, 6 Apr 2020 09:31:18 -0400
+Cc:     Will Deacon <will@kernel.org>, dbueso@suse.de,
+        juri.lelli@redhat.com, Waiman Long <longman@redhat.com>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C6D137A2-15A9-49BC-BCE2-DA1202B5AC3A@lca.pw>
+References: <20200330213002.2374-1-cai@lca.pw>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
-
-Thank you for the review.
-
-On 4/3/20 5:05 PM, Daniel Lezcano wrote:
-> 
-> Hi Lukasz,
-> 
-> 
-> On 18/03/2020 12:45, Lukasz Luba wrote:
->> Add support of other devices into the Energy Model framework not only the
->> CPUs. Change the interface to be more unified which can handle other
->> devices as well.
-> 
-> thanks for taking care of that. Overall I like the changes in this patch
-> but it hard to review in details because the patch is too big :/
-> 
-> Could you split this patch into smaller ones?
-> 
-> eg. (at your convenience)
-> 
->   - One patch renaming s/cap/perf/
-> 
->   - One patch adding a new function:
-> 
->      em_dev_register_perf_domain(struct device *dev,
-> 				unsigned int nr_states,
-> 				struct em_data_callback *cb);
-> 
->     (+ EXPORT_SYMBOL_GPL)
-> 
->      And em_register_perf_domain() using it.
-> 
->   - One converting the em_register_perf_domain() user to
-> 	em_dev_register_perf_domain
-> 
->   - One adding the different new 'em' functions
-> 
->   - And finally one removing em_register_perf_domain().
-
-I agree and will do the split. I could also break the dependencies
-for future easier merge.
-
-> 
-> 
->> Acked-by: Quentin Perret <qperret@google.com>
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->> ---
-> 
-> [ ... ]
-> 
->>   2. Core APIs
->> @@ -70,14 +72,16 @@ CONFIG_ENERGY_MODEL must be enabled to use the EM framework.
->>   Drivers are expected to register performance domains into the EM framework by
->>   calling the following API::
->>   
->> -  int em_register_perf_domain(cpumask_t *span, unsigned int nr_states,
->> -			      struct em_data_callback *cb);
->> +  int em_register_perf_domain(struct device *dev, unsigned int nr_states,
->> +		struct em_data_callback *cb, cpumask_t *cpus);
-> 
-> Isn't possible to get rid of this cpumask by using
-> cpufreq_cpu_get() which returns the cpufreq's policy and from their get
-> the related cpus ?
-
-We had similar thoughts with Quentin and I've checked this.
-Unfortunately, if the policy is a 'new policy' [1] it gets
-allocated and passed into cpufreq driver ->init(policy) [2].
-Then that policy is set into per_cpu pointer for each related_cpu [3]:
-
-for_each_cpu(j, policy->related_cpus)
-	per_cpu(cpufreq_cpu_data, j) = policy;
 
 
-Thus, any calls of functions (i.e. cpufreq_cpu_get()) which try to
-take this ptr before [3] won't work.
+> On Mar 30, 2020, at 5:30 PM, Qian Cai <cai@lca.pw> wrote:
+>=20
+> The commit 7f26482a872c ("locking/percpu-rwsem: Remove the embedded
+> rwsem") introduced some task_struct memory leaks due to messing up =
+with
+> a task_struct refcount. At the beginning of
+> percpu_rwsem_wake_function(), it calls get_task_struct(), but if the
+> trylock failed, it will remain in the waitqueue. However, it will run
+> percpu_rwsem_wake_function() again with get_task_struct() to increase
+> the refcount but then only call put_task_struct() once the trylock
+> succeeded.
+>=20
+> Fix it by adjusting percpu_rwsem_wake_function() a bit to guard =
+against
+> when percpu_rwsem_wait() observing !private, terminating the wait and
+> doing a quick exit() while percpu_rwsem_wake_function() then doing
+> wake_up_process(p) as a use-after-free.
+>=20
+> Fixes: 7f26482a872c ("locking/percpu-rwsem: Remove the embedded =
+rwsem")
 
-We are trying to register EM from cpufreq_driver->init(policy) and the
-per_cpu policy is likely to be not populated at that phase.
+Peter, Ingo, can you take a look at this patch when you have a chance?
 
-Regards,
-Lukasz
+For some reasons Ingo had decided to send a pull request which is now =
+merged
+even though I had informed the commit was broken a few days earlier, it =
+makes no
+sense to leave known memory leaks in mainline like this.
 
-[1] 
-https://elixir.bootlin.com/linux/latest/source/drivers/cpufreq/cpufreq.c#L1328
-[2] 
-https://elixir.bootlin.com/linux/latest/source/drivers/cpufreq/cpufreq.c#L1350
-[3] 
-https://elixir.bootlin.com/linux/latest/source/drivers/cpufreq/cpufreq.c#L1374
-
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> kernel/locking/percpu-rwsem.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/kernel/locking/percpu-rwsem.c =
+b/kernel/locking/percpu-rwsem.c
+> index a008a1ba21a7..8bbafe3e5203 100644
+> --- a/kernel/locking/percpu-rwsem.c
+> +++ b/kernel/locking/percpu-rwsem.c
+> @@ -118,14 +118,15 @@ static int percpu_rwsem_wake_function(struct =
+wait_queue_entry *wq_entry,
+> 				      unsigned int mode, int wake_flags,
+> 				      void *key)
+> {
+> -	struct task_struct *p =3D get_task_struct(wq_entry->private);
+> 	bool reader =3D wq_entry->flags & WQ_FLAG_CUSTOM;
+> 	struct percpu_rw_semaphore *sem =3D key;
+> +	struct task_struct *p;
+>=20
+> 	/* concurrent against percpu_down_write(), can get stolen */
+> 	if (!__percpu_rwsem_trylock(sem, reader))
+> 		return 1;
+>=20
+> +	p =3D get_task_struct(wq_entry->private);
+> 	list_del_init(&wq_entry->entry);
+> 	smp_store_release(&wq_entry->private, NULL);
+>=20
+> --=20
+> 2.21.0 (Apple Git-122.2)
+>=20
 
