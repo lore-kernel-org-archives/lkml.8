@@ -2,145 +2,112 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7312DC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B654C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDC8C206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:49:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KlcQa7lI"
+	by mail.kernel.org (Postfix) with ESMTP id 0F459206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgDFItb (ORCPT
+        id S1726689AbgDFIxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:49:31 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35298 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgDFItb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 04:49:31 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i19so14900241wmb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 01:49:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=hB/cttD2PIQJrbz4bzuL3i++GH0OSgasFqo3xqjEQAo=;
-        b=KlcQa7lIt+n/wVEV8JdYNkiUDQQp+hGTfkU1Mu02PywtjHqp63UeXe/YmyUw018Kdc
-         lpl1WphuIEEQUPCuEbfiYH37JUXWUTrg26Sf4c64ZSxRRDOVgszt6TP6yfeIKKv4bnBC
-         w3jj2IBcjWCz177Pxk5VvdWa2Y40lDC/vS6pXi98sdU+jDGOH7l9ozbD6p+C4Ah8Nsap
-         AB/D6Od+pOXPDjy792trBcGT+iJ0/81trVcYIVx4YxoA9gCgCvFxxtHf0GNkk09CRmxo
-         BTql6k2kwaGkNcIiaIY/53x86i7F0xHwY9eXlCwZPZzQEaMUhBuLdt9X9dmS8LyJB3ZM
-         EsVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=hB/cttD2PIQJrbz4bzuL3i++GH0OSgasFqo3xqjEQAo=;
-        b=X5e+EIS/cWY1YdICSKm6StpCC1S9CcHOdwfZUE3qkpVD3IyF+Kn+mADtC3AFSWimA3
-         9bTGwdbPlxyVAkuZi1zc3iiIw1Mgyg9xqUfCfGiEqEETo9sxBL3GxLmWSkadZdaOZGfG
-         Yklim5d07+1gDlMYruWFp+hwB1ZL7WVCuT11QGOfdZPMBhRIFbMNOggCWScESZq1gYPw
-         hsmq8+90AM2IsMe8eYBI1eKFF8FnGvA8t31NkeEVPzZObu18+4AQ7SzzwI+n+iERzplU
-         Q3KpNQqZALtj8PgKTN4TmbRdzVSIfgYjXVp0Q/jXXQ1OfHVBV5NvfIlPEE0K2vsNj4Qp
-         /k7w==
-X-Gm-Message-State: AGi0PuaqdD9iLvQOjbdDmmVFFZKXK/K4FMYcQkK5afgAtG7Hv7VailsO
-        oHocV6YxSh2VCgsvmW+CsbPhsy4jfW8=
-X-Google-Smtp-Source: APiQypL6NsZE4UH6W7CHGi4ojlUeqMxw4vdKpXkAYqw432CMd+116S8Nw19uLsayC9FcZNch4FCf5A==
-X-Received: by 2002:a1c:9d84:: with SMTP id g126mr6730754wme.184.1586162968744;
-        Mon, 06 Apr 2020 01:49:28 -0700 (PDT)
-Received: from dell ([2.27.35.179])
-        by smtp.gmail.com with ESMTPSA id t26sm14548888wmj.12.2020.04.06.01.49.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 01:49:27 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 09:50:24 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     kgunda@codeaurora.org, Rob Herring <robh@kernel.org>,
-        bjorn.andersson@linaro.org, jingoohan1@gmail.com,
-        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-msm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-Subject: Re: [PATCH V4 1/4] backlight: qcom-wled: convert the wled bindings
- to .yaml format
-Message-ID: <20200406085024.GF30614@dell>
-References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
- <1584985618-25689-2-git-send-email-kgunda@codeaurora.org>
- <20200331175401.GA9791@bogus>
- <ac8f25113a3bb233c11fd7cd9e62c2cf@codeaurora.org>
- <20200403114651.m6rholzufzqinanc@holly.lan>
+        Mon, 6 Apr 2020 04:53:11 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3992 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726533AbgDFIxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 04:53:10 -0400
+IronPort-SDR: lVZQZzyf4E2tq7eKqtf7kV+WPyEy4Kh2VaVvIvhIXgLg+ZBL/BJZQEza0Mlzs0GnV0ECmVQsWx
+ LuPFDrSWFjdQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 01:53:08 -0700
+IronPort-SDR: 1OiTmSfBdClOHMmb8kC2/tRljBav3tAHaJPPd1EjVO//RkkIGht5nMK7V7t2M9mD6Ne9+FLvsR
+ /fqZQSCYK7LA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,350,1580803200"; 
+   d="scan'208";a="250828319"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 06 Apr 2020 01:53:06 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jLNVC-0001c8-73; Mon, 06 Apr 2020 16:53:06 +0800
+Date:   Mon, 6 Apr 2020 16:53:03 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Oder Chiou <oder_chiou@realtek.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: idx = rt5682_div_sel(rt5682, dmic_clk_rate, div, ARRAY_SIZE(div));
+Message-ID: <202004061600.kSWORDaa%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200403114651.m6rholzufzqinanc@holly.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 Apr 2020, Daniel Thompson wrote:
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a10c9c710f9ecea87b9f4bbb837467893b4bef01
+commit: 9a74c44a6f675e4e991437eee39496109b601629 ASoC: rt5682: Add a property for DMIC clock rate
+date:   2 weeks ago
 
-> On Fri, Apr 03, 2020 at 04:45:49PM +0530, kgunda@codeaurora.org wrote:
-> > On 2020-03-31 23:24, Rob Herring wrote:
-> > > On Mon, Mar 23, 2020 at 11:16:55PM +0530, Kiran Gunda wrote:
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> > > > b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> > > > new file mode 100644
-> > > > index 0000000..8a388bf
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
-> > > > @@ -0,0 +1,184 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Binding for Qualcomm Technologies, Inc. WLED driver
-> > > > +
-> > > > +maintainers:
-> > > > +  - Lee Jones <lee.jones@linaro.org>
-> > > 
-> > > Should be the h/w owner (you), not who applies patches.
-> > > 
-> > will address in next post.
-> > <snip>
-> > will address in next post.
-> > <snip>
-> > will address in next post.
-> > <snip>
-> > will address in next post.
-> > <snip>
-> > will address in next post.
-> > <snip>
-> > will address in next post.
-> > <snip>
-> > will address in next post.
-> > <snip>
-> > will address in next post.
-> > <snip>
-> > will address in next post.
-> 
-> If you agree on all points raised I doubt there is any need for a point
-> by point reply since everyone who reads it will have to scroll down
-> simply to find out that you agree on all points.
-> 
-> Better just to acknowledge the feedback and reply to the first one
-> saying you'll agree on all points and will address all feedback in the
-> next revision (and then trim the reply to keep it short).
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
 
-Or better still, just submit the next revision with all the fixes. :)
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+cppcheck warnings: (new ones prefixed by >>)
+
+   sound/soc/codecs/rt5682.c:2394:65: warning: Boolean result is used in bitwise operation. Clarify expression with parentheses. [clarifyCondition]
+         (pll_code.m_bp ? 0 : pll_code.m_code) << RT5682_PLL_M_SFT |
+                                                                   ^
+   sound/soc/codecs/rt5682.c:1240:6: warning: Redundant initialization for 'idx'. The initialized value is overwritten before it is read. [redundantInitialization]
+>>  idx = rt5682_div_sel(rt5682, dmic_clk_rate, div, ARRAY_SIZE(div));
+        ^
+   sound/soc/codecs/rt5682.c:1234:10: note: idx is initialized
+>>  int idx = -EINVAL, dmic_clk_rate = 3072000;
+            ^
+   sound/soc/codecs/rt5682.c:1240:6: note: idx is overwritten
+>>  idx = rt5682_div_sel(rt5682, dmic_clk_rate, div, ARRAY_SIZE(div));
+        ^
+   sound/soc/codecs/rt5682.c:1269:6: warning: Redundant initialization for 'idx'. The initialized value is overwritten before it is read. [redundantInitialization]
+    idx = rt5682_div_sel(rt5682, ref, div_f, ARRAY_SIZE(div_f));
+        ^
+   sound/soc/codecs/rt5682.c:1254:25: note: idx is initialized
+    int ref, val, reg, idx = -EINVAL;
+                           ^
+   sound/soc/codecs/rt5682.c:1269:6: note: idx is overwritten
+    idx = rt5682_div_sel(rt5682, ref, div_f, ARRAY_SIZE(div_f));
+        ^
+   sound/soc/codecs/rt5682.c:918:15: warning: The scope of the variable 'val' can be reduced. [variableScope]
+    unsigned int val, count;
+                 ^
+   sound/soc/codecs/rt5682.c:918:20: warning: The scope of the variable 'count' can be reduced. [variableScope]
+    unsigned int val, count;
+                      ^
+   sound/soc/codecs/rt5682.c:1085:11: warning: The scope of the variable 'btn_type' can be reduced. [variableScope]
+    int val, btn_type;
+             ^
+   sound/soc/codecs/rt5682.c:2288:15: warning: The scope of the variable 'pll2_fout1' can be reduced. [variableScope]
+    unsigned int pll2_fout1;
+                 ^
+   sound/soc/codecs/rt5682.c:2844:16: warning: The scope of the variable 'time' can be reduced. [variableScope]
+    unsigned long time;
+                  ^
+   sound/soc/codecs/rt5682.c:2733:7: warning: Either the condition '!dai' is redundant or there is possible null pointer dereference: dai. [nullPointerRedundantCheck]
+     if (dai->id == RT5682_AIF1)
+         ^
+   sound/soc/codecs/rt5682.c:2735:6: note: Assuming that condition '!dai' is not redundant
+    if (!dai) {
+        ^
+   sound/soc/codecs/rt5682.c:2733:7: note: Null pointer dereference
+     if (dai->id == RT5682_AIF1)
+         ^
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
