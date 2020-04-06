@@ -2,108 +2,139 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A9FC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0692C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669C32075E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D67206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:54:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586166844;
+	bh=vZYTBj4F9TFPt90fOhfeKUGWkD1ktH4kLtueT7CgHJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lD6/W494zcgXaH28F5HBdVBcOUeysLpZYGiKqVeQ29iXTR/zQg7w3qdUZoXPhhg/q
+	 bpRVKXBiQnB5YY59bCZCgCg2nK5BMqyWKpku5q20el0BE4xRB+KGvHtDxUtoMRMVku
+	 U84EMQbFOD6ODj291OOHMAPOIlZlmSluMKFsm8Nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgDFJxw (ORCPT
+        id S1726964AbgDFJyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:53:52 -0400
-Received: from mga01.intel.com ([192.55.52.88]:43096 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgDFJxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:53:52 -0400
-IronPort-SDR: w0e4wFoyPMioJjZrg0tdDfu3tmw9jEE9+uGjpS54iO4BcQfUS0+I2FYHqPu2e5RNQmuDxZSXtK
- n2s9GhAWn1jw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 02:53:47 -0700
-IronPort-SDR: pSYiNYwup2Dbn4l6x88zHtU0hG4sV0HcYYC+mcCzl6PpV+ybcezEKC5wLH8DMjahWoALGHKG1t
- 0XGmDEM9OAjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,350,1580803200"; 
-   d="scan'208";a="254067748"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga006.jf.intel.com with ESMTP; 06 Apr 2020 02:53:41 -0700
-Date:   Mon, 6 Apr 2020 17:54:15 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH][v3] PM / sleep: Add pm_debug_messages boot command
- control
-Message-ID: <20200406095415.GA21720@chenyu-office.sh.intel.com>
-References: <20200402075652.13289-1-yu.c.chen@intel.com>
- <CAJZ5v0j2W5MYJnb4hiDn0OgR1xJZwm4TxVm9o-iw+epXPTp82g@mail.gmail.com>
- <20200406091813.GG31120@duo.ucw.cz>
+        Mon, 6 Apr 2020 05:54:03 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36674 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgDFJyD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 05:54:03 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i7so18489456edq.3;
+        Mon, 06 Apr 2020 02:54:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eXU3+fS3XAuOGK+yRmNEiF3QUpBoPFYpiOk6EA2d73M=;
+        b=VDxqWPoLor8r0JiaNi51BdXn/SD5eM534B1gG1bptqHBQc2/hJmlk3j9nN/sYvwQnL
+         N131hgrakRhcqOBmPek3JVgy8G/tvXEKQWQXn0qnXr0JS+ETPSSo+JTPOizqI+LPY1uQ
+         NF6jxth92sK/SB+qMNUMdKaTuEgHD+XewrzzizLgVTfcX7oLBEEIpdu2T2RvAsMwb/Vs
+         hMKe2hM1H5/8VQrqxU2LXyPv7GfsOLbpi7ug9Yi2qjBoH5tKWUtWiA9gkhN/XWBTI3s+
+         Hp4hAFj80zVukQLg4shq0P4XwH/JTjfuz67okxJdn2RTL0QqmdhsuSi7P2FrADnpS8CM
+         VbWw==
+X-Gm-Message-State: AGi0PuaOZuXhCRq3WxkMl7Qby5kczGqmALOHYvTeXlyRW2vdHpzACdgl
+        /pRZhYWys+znYEAB5nPE4Vs=
+X-Google-Smtp-Source: APiQypLwepchYmPhiWzn8mb3ybM6Te3z/xGQa8TofYqmH3OjWlJ7E/iHo/IuZQK17kfXiH2YPsukPA==
+X-Received: by 2002:a17:906:3788:: with SMTP id n8mr20728327ejc.306.1586166839488;
+        Mon, 06 Apr 2020 02:53:59 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id l14sm2851321ejc.0.2020.04.06.02.53.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 02:53:58 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 11:53:56 +0200
+From:   'Krzysztof Kozlowski' <krzk@kernel.org>
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     gregkh@linuxfoundation.org, 'Kukjin Kim' <kgene@kernel.org>,
+        'Jiri Slaby' <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] tty: samsung_tty: 32-bit access for TX/RX hold
+ registers
+Message-ID: <20200406095356.GA13565@kozik-lap>
+References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+ <CGME20200403111520epcas2p42ef81138693ffaaa281499c7a24e0e48@epcas2p4.samsung.com>
+ <20200403111511.10598-1-hyunki00.koo@samsung.com>
+ <20200403133457.GA7561@kozik-lap>
+ <000101d60b92$eb97c050$c2c740f0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200406091813.GG31120@duo.ucw.cz>
+In-Reply-To: <000101d60b92$eb97c050$c2c740f0$@samsung.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-thanks for review.
-On Mon, Apr 06, 2020 at 11:18:13AM +0200, Pavel Machek wrote:
-> Hi!
+On Mon, Apr 06, 2020 at 06:41:09AM +0900, Hyunki Koo wrote:
+> > 
+> > I got more thoughts... where is the binding for it? It looked like standard
+> > DT property but it is not described in device tree spec.
+> > 
+> > Also, where is the user (DTS) with it? I expect such changes go with the
+> > user itself... otherwise, next cleanup it will go away.
+> > 
+> > Best regards,
+> > Krzysztof
 > 
-> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > index ed73df5f1369..3fb9cbee8d28 100644
-> > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > @@ -3720,6 +3720,9 @@
-> > >                         Override pmtimer IOPort with a hex value.
-> > >                         e.g. pmtmr=0x508
-> > >
-> > > +       pm_debug_messages       [SUSPEND,KNL]
-> > > +                       Enable suspend/resume debug messages during boot up.
-> > > +
-> > >         pnp.debug=1     [PNP]
-> > >                         Enable PNP debug messages (depends on the
-> > >                         CONFIG_PNP_DEBUG_MESSAGES option).  Change at run-time
-> 
-> > Applied (as 5.7-rc material) with modified subject and changelog,
->   thanks!
-> 
-> Please don't.
-> 
-> We have pnp.debug, i8042.debug, acpi.debug_*, lsm.debug... It makes
-> sense to do pm.debug... we want to have some consistency.
-> 
-We also have initcall_debug. It looks like the 'dot' indicates
-that it is a module(or driver) parameter, and have multiple options
-for user to choose from, but it looks like this is not the case for
-pm_debug_messages.
+> Do you think this kind of change is needed?
 
-Thanks,
-Chenyu
-> Thanks,
-> 									Pavel
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+You mean the user of this binding (DTS)? It is not required because with
+binding comes ABI stability. However it would be both appreciated and
+useful because it would clearly note that this feature is used.
+
+The feature brings additional complexity and +1 function call for each
+simple register access. Therefore sometime in the future, one could see
+it is not being used and start cleaning it up. Cleaning up usually
+involves looking for users, then making binding deprecated and finally
+removing the feature.
+
+The collaboration between the Samsung LSI and upstream is quite
+limited... And it basically does not exist between the Samsung mobile
+division and upstream. This means that when we reorganize the
+code, deprecate features/drivers or certain Exynos chips (e.g. 4212 and
+4415 in the past) we look for users of them and if none are found - bye
+bye feature.
+
+The solution is either to participate (but this is difficult for
+mentioned Samsung divisions because of internal policies) or just add
+the user of such feature (e.g. DTS for evalkit).
+
+> Do I have to make as a series patches with previous patch?
+
+The DT binding you posted looks good. It should go as first patch in this
+series.
+
+Best regards,
+Krzysztof
 
 
+
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> index 9d2ce347875b..a57b1233c691 100644
+> --- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> +++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> @@ -29,6 +29,14 @@ properties:
+>    reg:
+>      maxItems: 1
+>  
+> +  reg-io-width:
+> +    description: |
+> +      The size (in bytes) of the IO accesses that should be performed
+> +      on the device.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [ 1, 4 ]
+> +
+> 
