@@ -2,111 +2,107 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D96C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E737C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98CAC206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:47:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RNw6vDbQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3AC98206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbgDFLru (ORCPT
+        id S1727769AbgDFLsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:47:50 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:43924 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727376AbgDFLru (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:47:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586173670; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=FgPDoydCs+DhGKztcRPMXkbqhx2Dj1OriztFjPgeMag=; b=RNw6vDbQqcQWRLfLwBIgdUZfpxKzS5XCzxDponZ1SC60zjlPr6Im7k15hYn7I7eiwYIcIMui
- xWlJwAgIjtMZ9KI5eondsSHnn79bxHtWYAvNyNJpEeHfFQGGmd6cQYXpm7mYBVpzkFdyn6Ok
- aNMfTZEgyskLIKUO3Uxr73DHrIE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b16c6.7f69c7495ab0-smtp-out-n04;
- Mon, 06 Apr 2020 11:47:18 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6BC51C433D2; Mon,  6 Apr 2020 11:47:16 +0000 (UTC)
-Received: from [192.168.1.100] (unknown [157.44.182.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E2F5BC433BA;
-        Mon,  6 Apr 2020 11:47:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E2F5BC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
-Subject: Re: [PATCH 3/3] iio: adc: Add support for PMIC7 ADC
-To:     Rob Herring <robh@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
- <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
- <20200331200611.GA10950@bogus>
-From:   Jishnu Prakash <jprakash@codeaurora.org>
-Message-ID: <46f4f206-ab75-31ad-66cc-71d1e458b76e@codeaurora.org>
-Date:   Mon, 6 Apr 2020 17:17:04 +0530
+        Mon, 6 Apr 2020 07:48:19 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34617 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727376AbgDFLsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:48:19 -0400
+IronPort-SDR: M8pKhfpnqor5CimuhrZdjerM4d7zmsqM54FJo9XoSZk262q7whc/lZMH2gaJyuXLFemDxoem0B
+ k4H2JhXdrkoQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 04:48:18 -0700
+IronPort-SDR: ODiObN0tnmXfnHxO2IELb4fSrbSIDd/5L7fZAeoI3/mkfE2h3JTTE3wHkjKqnwXLRyuafG6IZE
+ NabX4fxesHbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,350,1580803200"; 
+   d="scan'208";a="254091912"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.157]) ([10.249.169.157])
+  by orsmga006.jf.intel.com with ESMTP; 06 Apr 2020 04:48:14 -0700
+Subject: Re: [PATCH 1/1] x86/split_lock: check split lock feature on
+ initialization
+To:     Benjamin Lamowski <benjamin.lamowski@kernkonzept.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     philipp.eppelt@kernkonzept.com, bp@alien8.de, fenghua.yu@intel.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, luto@kernel.org,
+        mingo@redhat.com, nivedita@alum.mit.edu, pbonzini@redhat.com,
+        peterz@infradead.org, tglx@linutronix.de, tony.luck@intel.com,
+        x86@kernel.org
+References: <20200325030924.132881-1-xiaoyao.li@intel.com>
+ <20200403174403.306363-1-benjamin.lamowski@kernkonzept.com>
+ <20200403174403.306363-2-benjamin.lamowski@kernkonzept.com>
+ <20200403180149.GH2701@linux.intel.com>
+ <f072e3e0-48b0-346e-b383-3e802069fc3a@kernkonzept.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <30e141b8-f9c9-370a-4667-1e2f0116b6f7@intel.com>
+Date:   Mon, 6 Apr 2020 19:48:13 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200331200611.GA10950@bogus>
+In-Reply-To: <f072e3e0-48b0-346e-b383-3e802069fc3a@kernkonzept.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob
+On 4/6/2020 4:23 PM, Benjamin Lamowski wrote:
+> [...]
+>> Calling split_lock_verify_msr() with X86_FEATURE_SPLIT_LOCK_DETECT=0 is
+>> intentional, the idea is to ensure SLD is disabled on all CPUs, e.g. in the
+>> unlikely scenario that BIOS enabled SLD.
+> 
+> I was aware of the intention, but I still don't understand under which
+> scenario this could be set by the BIOS although the earlier feature
+> detection has failed, 
 
-On 4/1/2020 1:36 AM, Rob Herring wrote:
-> On Tue, Mar 24, 2020 at 09:14:10PM +0530, Jishnu Prakash wrote:
->> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
->> major change from PMIC5 is that all SW communication to ADC goes through
->> PMK8350, which communicates with other PMICs through PBS when the ADC
->> on PMK8350 works in master mode. The SID register is used to identify the
->> PMICs with which the PBS needs to communicate. Add support for the same.
->>
->> In addition, add definitions for ADC channels and virtual channel
->> definitions per PMIC, to be used by ADC clients for PMIC7.
->>
->> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
->> ---
->>   drivers/iio/adc/qcom-spmi-adc5.c                 | 239 ++++++++++++++++++++-
->>   drivers/iio/adc/qcom-vadc-common.c               | 260 +++++++++++++++++++++++
->>   drivers/iio/adc/qcom-vadc-common.h               |  14 ++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h  |  67 ++++++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h |  88 ++++++++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h |  46 ++++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h |  28 +++
->>   include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h |  28 +++
->>   include/dt-bindings/iio/qcom,spmi-vadc.h         |  78 ++++++-
-> DT headers go in the binding patch(es).
-I'll move these to the bindings patch in the next post.
->
->>   9 files changed, 843 insertions(+), 5 deletions(-)
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
->>   create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
+It's for the case that SLD is explicitly disabled by kernel params 
+"split_lock_detect=off". You know, BIOS may turn SLD on for itself. So 
+if user uses "split_lock_detect=off", we have to clear the SLD bit in 
+case BIOS forgets to clear it.
+
+> i.e. shouldn't the feature have been detected in
+> all cases where SLD can actually be disabled? If so, checking for
+> availability first instead of catching a #GP(0) if it is not implemented
+> seems to be the cleaner solution.
+
+I understand what you want. i.e., X86_FEATURE_SPLIT_LOCK_DETECT is 
+independent from sld_off. I guess you have to make tglx accept it first.
+
+> 
+>> The first rdmsrl_safe() should short circuit split_lock_verify_msr() if
+>> the RDMSR faults, i.e. it might fault, but it shouldn't WARN.  Are you
+>> seeing issues or was this found via code inspection?
+> 
+> We stumbled across this issue because the x86 version of our VMM is not
+> yet ready for production and when accessing unimplemented MSRs would
+> simply return 0 and issue a warning. This is of course a deviation from
+> rdmsr as defined in the SDM and the pieces are ours to keep, it will be
+> changed to generate a #GP(0) once the last missing MSRs are emulated
+> properly.
+> 
+
+Got it. you are running linux guest in your own VMM and there is warning 
+in the VMM.
+
+If you really want to avoid the MSR access on the platform without SLD. 
+You could make the default sld_state as sld_unsupported. It can only be 
+changed to other value in split_lock_setup() when SLD is enumerated. So 
+in split_lock_init(), we can use if (sld_state == sld_unsupported) to 
+skip the MSR_TEST_CTRL access.
+
