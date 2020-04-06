@@ -2,117 +2,120 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCDBC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6CFC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17FED22D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:18:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="IoPNaSb+"
+	by mail.kernel.org (Postfix) with ESMTP id 5459C22D6E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgDFNSV (ORCPT
+        id S1728486AbgDFNS1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:18:21 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:37749 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbgDFNSU (ORCPT
+        Mon, 6 Apr 2020 09:18:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33491 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728469AbgDFNS1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:18:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586179100; x=1617715100;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=+0kzseOEO2Wgx77lNa15u7+p1olXeh9q9Qu05DxPffM=;
-  b=IoPNaSb+7ngGEZwfcCOtz7K2l1bYIA4eG0LBPS69g2NrGth6TAHQ8LKd
-   B7S/zIYtVs7O07t3QvqTRhZg5kDF6kfjtZf33t7Z+wf83hgBwAulNJSgc
-   L4DRXZ8KTwqkpxOCMUU6724K8ygTKFbe/xrDt8cc03ZDSpUdNCZ3EYJUQ
-   o=;
-IronPort-SDR: R/0UjDZFQb/v4jCLfB+MVpWjtFMF7wWQniLxNG0di5e1b0uUslIswAt1urfZrobS8MZnfI4Ujs
- b/rnWB+In8zg==
-X-IronPort-AV: E=Sophos;i="5.72,351,1580774400"; 
-   d="scan'208";a="27147481"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 06 Apr 2020 13:18:16 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (Postfix) with ESMTPS id 155DA142821;
-        Mon,  6 Apr 2020 13:18:05 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:18:05 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.65) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:17:51 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 15/15] MAINTAINERS: Update for DAMON
-Date:   Mon, 6 Apr 2020 15:09:38 +0200
-Message-ID: <20200406130938.14066-16-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200406130938.14066-1-sjpark@amazon.com>
-References: <20200406130938.14066-1-sjpark@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D11UWB003.ant.amazon.com (10.43.161.206) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+        Mon, 6 Apr 2020 09:18:27 -0400
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jLRdx-0000wM-Cn
+        for linux-kernel@vger.kernel.org; Mon, 06 Apr 2020 13:18:25 +0000
+Received: by mail-pl1-f200.google.com with SMTP id r4so9941764plo.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:18:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yfh8auMdoRigiRys04NLUbX84A9moSV9U1pPae/atro=;
+        b=uBN1XJBHO0FhFwipXKbgUEzC81ipRKrQwUb9jGKEKhTmgQUsk0o29s3fC6oD6RTWMT
+         OU0loTKq9u7hCQtC2st+WxEs1Cm6JqlR7vNdeGoNcqO/sOSJpdWBggy1e5MYA90kwIRn
+         kNaYKqwJmK0WVMuPXanQZ7Cp23vewjCrXaoC2AtzGtRfk8MsBxFBSwyFWwEbkmFj5MG0
+         jO56wPDo7gl5f+0zgd8Fkm+rhcNfwreNFzaXV47HmvjegRcrivAxGNktHADS5bvcGLMt
+         P1FjSuPvQsNmVrKFx4w5IibMtVgCrsS7+ulufuyGGPHm3PhAYPK7M2mNFvspdimrtLWz
+         8aog==
+X-Gm-Message-State: AGi0Puarby1UU34D7ZKO+f/5V48QqvTzxRM11UXQ6EzrWfPXqPM50teB
+        k+wn1uSrgd1kqT+RyIkbBaPiJZqkddHtxo8Djd3LdhNPIRoV7fFmtWA6EUDudH8tuznWsqtgz1Y
+        J2msF+ktSWaTdWmuqiEM/D6FmctOtNRgIdS7XBkO7wA==
+X-Received: by 2002:a63:e558:: with SMTP id z24mr20646319pgj.368.1586179103757;
+        Mon, 06 Apr 2020 06:18:23 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIRNNfP69Byee6DnP3oE8819ZQmmW1WafsLeF6MlX6NhlFtF3wCeXFKCIqmcsiELvOx6719nA==
+X-Received: by 2002:a63:e558:: with SMTP id z24mr20646297pgj.368.1586179103368;
+        Mon, 06 Apr 2020 06:18:23 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id 135sm11948080pfu.207.2020.04.06.06.18.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Apr 2020 06:18:22 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] rtw88: Add delay on polling h2c command status bit
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <87v9mczu4h.fsf@kamboji.qca.qualcomm.com>
+Date:   Mon, 6 Apr 2020 21:18:20 +0800
+Cc:     Tony Chuang <yhchuang@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:REALTEK WIRELESS DRIVER (rtw88)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <94EAAF7E-66C5-40E2-B6A9-0787CB13A3A9@canonical.com>
+References: <20200406093623.3980-1-kai.heng.feng@canonical.com>
+ <87v9mczu4h.fsf@kamboji.qca.qualcomm.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
 
-This commit updates MAINTAINERS file for DAMON related files.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> On Apr 6, 2020, at 20:17, Kalle Valo <kvalo@codeaurora.org> wrote:
+> 
+> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+> 
+>> On some systems we can constanly see rtw88 complains:
+>> [39584.721375] rtw_pci 0000:03:00.0: failed to send h2c command
+>> 
+>> Increase interval of each check to wait the status bit really changes.
+>> 
+>> While at it, add some helpers so we can use standarized
+>> readx_poll_timeout() macro.
+> 
+> One logical change per patch, please.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5a5332b3591d..cb4a7fa3cdfe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4661,6 +4661,18 @@ F:	net/ax25/ax25_out.c
- F:	net/ax25/ax25_timer.c
- F:	net/ax25/sysctl_net_ax25.c
- 
-+DATA ACCESS MONITOR
-+M:	SeongJae Park <sjpark@amazon.de>
-+L:	linux-mm@kvack.org
-+S:	Maintained
-+F:	Documentation/admin-guide/mm/data_access_monitor.rst
-+F:	include/linux/damon.h
-+F:	include/trace/events/damon.h
-+F:	mm/damon-test.h
-+F:	mm/damon.c
-+F:	tools/damon/*
-+F:	tools/testing/selftests/damon/*
-+
- DAVICOM FAST ETHERNET (DMFE) NETWORK DRIVER
- L:	netdev@vger.kernel.org
- S:	Orphan
--- 
-2.17.1
+Will split it into two separate patches.
+
+> 
+>> --- a/drivers/net/wireless/realtek/rtw88/hci.h
+>> +++ b/drivers/net/wireless/realtek/rtw88/hci.h
+>> @@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32 addr, u32 mask, u8 data)
+>> 	rtw_write8(rtwdev, addr, set);
+>> }
+>> 
+>> +#define rr8(addr)      rtw_read8(rtwdev, addr)
+>> +#define rr16(addr)     rtw_read16(rtwdev, addr)
+>> +#define rr32(addr)     rtw_read32(rtwdev, addr)
+> 
+> For me these macros reduce code readability, not improve anything. They
+> hide the use of rtwdev variable, which is evil, and a name like rr8() is
+> just way too vague. Please keep the original function names as is.
+
+The inspiration is from another driver.
+readx_poll_timeout macro only takes one argument for the op.
+Some other drivers have their own poll_timeout implementation,
+and I guess it makes sense to make one specific for rtw88.
+
+Kai-Heng
+
+> 
+> -- 
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
