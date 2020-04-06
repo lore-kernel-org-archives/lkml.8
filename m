@@ -2,107 +2,110 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1462EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0557C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C512072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901902072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="1MwGnWt2"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qKfh1vjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgDFVON (ORCPT
+        id S1726420AbgDFVPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:14:13 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:46483 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgDFVOM (ORCPT
+        Mon, 6 Apr 2020 17:15:46 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2183 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgDFVPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:14:12 -0400
-Received: by mail-lf1-f45.google.com with SMTP id q5so616107lfb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:14:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+Xd1xzbAohX/FqkqTk1cM6F9kOwM40uvkJrnhkR7+Fo=;
-        b=1MwGnWt2vQYBfJnOaGiMooJfZu8yPk9Lnh8IpQq4l4Fbk8acKx7Q0J83j4fbMJhmTX
-         Bz+eZjKKF+Ub1qTlSs94FqivztSEebggGwKqOO2o5c+66jj41PmWZIOIuYytFsaBqmG8
-         vbyS8SUkw8WPy8l9fXvKJ/eTAO6MGiT8QjtZbd1sQ9eBCMAg61zLKtD8blKSPCHXxeBc
-         XiVn5iAZEWta1iZrNBRvwoGTxeux9ycBqcHT22tBvWp4wUHFIRiKeN3mDGTuN9nsKMVN
-         8v0178c+aA+YlM+cBBDnBIF5MieLOOec2d4ecPVr44unPekjdEqBzjzuGLrRYzF7VbXT
-         XeQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+Xd1xzbAohX/FqkqTk1cM6F9kOwM40uvkJrnhkR7+Fo=;
-        b=YWbOTIHI8eDoBw2wtUlqBxTQbISGMZbVe+7wH9jD/8c2FWCuMMjWffUTuiappehYuf
-         0XgCpThfkvY48cV1FYJ76H1X3iacjzKrgzufv9dtZGtslO/YD4UWgYUBIwDqjvHrOjUv
-         VyfIU55qYjkd1vyaE5mynnL68P/D4aGXp8YFuVJziS48fIEmixWPLU0qVGzz2UiyoFEY
-         ALbaOBi68mGva5IdfxPX7/QeUwS1jrtGGhVplC6fQaW6czMLCrwteYf55b+dOx1F20wp
-         DlfnlXX/fTCXbNm64gP0qGEvp8hAgpqphwWC3wLCXywPnyMkZ70WgKivFegP69JQ/sKv
-         NFCw==
-X-Gm-Message-State: AGi0PuZY9HtVaMn9LiBTZePk0ylzGrPXVTyVbbJlKFN8INNFqzTRSed7
-        Yp1FNGpYfk1KsIK6F1Ez4V36WQ==
-X-Google-Smtp-Source: APiQypLi+4wO9Y/cU95F3kWj2BAO3JcE28FDvZp9goT7P7q6xIUprCvzvB04YOF9s/5Y3E2PeokoTA==
-X-Received: by 2002:a19:40d0:: with SMTP id n199mr14028200lfa.161.1586207649535;
-        Mon, 06 Apr 2020 14:14:09 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:462e:583f:4b1:b175:1ecb:fb31])
-        by smtp.gmail.com with ESMTPSA id h16sm10509386ljl.73.2020.04.06.14.14.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Apr 2020 14:14:08 -0700 (PDT)
-Subject: Re: question about drivers/net/ethernet/renesas/ravb_main.c
-To:     Julia Lawall <julia.lawall@inria.fr>, horms+renesas@verge.net.au,
-        tho.vu.wh@rvc.renesas.com, uli+renesas@fpond.eu
-Cc:     netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, joe@perches.com
-References: <alpine.DEB.2.21.2004031559240.2694@hadrien>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <4c39386e-4259-ba45-1f7f-1e6307a7753a@cogentembedded.com>
-Date:   Tue, 7 Apr 2020 00:14:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Mon, 6 Apr 2020 17:15:46 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8b9bcd0000>; Mon, 06 Apr 2020 14:14:53 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 06 Apr 2020 14:15:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 06 Apr 2020 14:15:45 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
+ 2020 21:15:45 +0000
+Received: from [10.2.164.193] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
+ 21:15:42 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
+ <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
+ <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
+ <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
+ <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+Date:   Mon, 6 Apr 2020 14:15:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.2004031559240.2694@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586207693; bh=Kv75TubSJj0DHZzF3UwZ3SfwFPRT0XtEK+o2p9OzCz4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=qKfh1vjprU5DhAD9bO0W5nWhBdQ/7A3WJiOluJIV3WPbx5nntDAPt+OLiYco5+Pa7
+         I1S6i43+TOw6LxOnCGcy4OLg+6QKK33sSLwQguucce3kOEJvbMYR6iZme54RoCiLar
+         e1c99kmX6S6cqT8/22v2AUb9P24brCJ5jN8JimzUBsEGRSjAMpV6mAGXUb0I38wYBN
+         FEn80MqSadiBUqW2SLHDzcLmAlMfFJYe00l0tXLqKXewx8DksRYxjdApnpG02UvhZR
+         D7N53eWes7r7Kxx4A7TSw46SWTr4dJ/j+SiDsY8gbNlHypoxwmwEzyVelku3CG3VPv
+         7QI2a7EUT5/cQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
 
-On 04/03/2020 05:04 PM, Julia Lawall wrote:
+On 4/6/20 2:11 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 07.04.2020 00:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>>> Am I understanding correctly that this thread will take 100% CPU,
+>>>>>>> spinning here, if more than 2 frame-captures queued?
+>>>>>> on more than 2 frames captures, it breaks thread and on next wakeup =
+it
+>>>>>> continues
+>>>>> The wait_event() won't wait if condition is true.
+>>>> condition is checked when waitqueue is woken up
+>>> https://elixir.bootlin.com/linux/v5.6.2/source/include/linux/wait.h#L46=
+2
+>> process is put to sleep until the condition evaluates to true or signal
+>> is received.
+>>
+>> condition is checked each time the waitqueue head is woken up.
+> This is a wrong assumption in accordance to the code.
 
-> In the function ravb_hwtstamp_get in ravb_main.c, the following code looks
-> suspicious:
-> 
->         if (priv->tstamp_rx_ctrl & RAVB_RXTSTAMP_TYPE_V2_L2_EVENT)
->                 config.rx_filter = HWTSTAMP_FILTER_PTP_V2_L2_EVENT;
->         else if (priv->tstamp_rx_ctrl & RAVB_RXTSTAMP_TYPE_ALL)
->                 config.rx_filter = HWTSTAMP_FILTER_ALL;
->         else
->                 config.rx_filter = HWTSTAMP_FILTER_NONE;
-> 
-> According to drivers/net/ethernet/renesas/ravb.h,
-> RAVB_RXTSTAMP_TYPE_V2_L2_EVENT is 0x00000002 and RAVB_RXTSTAMP_TYPE_ALL is
-> 0x00000006.  Therefore, if the test on RAVB_RXTSTAMP_TYPE_ALL should be
-> true, it will never be reached.  How should the code be changed?
+when every buffer is available as long as we are in streaming, we should=20
+process it.
 
-   After looking at the code, I think that setting RAVB_RXTSTAMP_TYPE_ALL to
-0x00000004 should be enough. BTW, the RAVB_{R,T}XTSTAMP_VALID don't seem be
-used anywhere...
+So if wake up happens when list has buffer, it will be processed but at=20
+a time we limit processing 2 simultaneous buffer capture starts only.
 
-> thanks,
-> julia
-
-MBR, Sergei
