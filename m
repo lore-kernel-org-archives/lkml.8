@@ -2,138 +2,197 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1150C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072C3C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CDD21D79
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD2E21D79
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="pzqL4h5g"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKO6nZ4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgDFNzL (ORCPT
+        id S1728514AbgDFNzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:55:11 -0400
-Received: from mail-co1nam11on2074.outbound.protection.outlook.com ([40.107.220.74]:2304
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726910AbgDFNzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:55:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kxprmXZQkicXSloiysV/h2LM+Mgl8qoLNKmPUk52b5c1kP5g5NUKoHrv0Iqyke/kBzUTYo1eEoKnUUrYKnY9N903CyHQPoUr8TAjDzmXUC4R6xGl3m05ixgtHyQtY+1nOUFo7xrA3pv5ZMShdVaAn1V4Udkx2pg/uw5YxAAVmbQ/q/oCBPldhm64R28HShM+ivgspLhEbBCXpJ+IpVKKZGDpYviTyG0UkYvgVUiGM45cpYG42PDycNtTILzd9V+f9EaA2IAvG5aepQL12O8hJ8oU26twCRZjEmTO8LMKmBkCBK8GRIHyw0gkLRcNBuX/8LrZ1U3pMaYfZ+j8H+c3NQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pfYk+T7ztj8tkf80ESi8rb+tlFSMcroZEmsnNXAdqDY=;
- b=TtRlErtXPEWMzp4eZlWYhdm8uqajf3TLMbyS70swf13zYQmQ+8zwui+P/yLolOZ7u8y8QUn9mMF+jldrnER1ZcOZRVqAXE8zWacH+VhY4H8rGwDP14HeEt4DVx17kZMg9o4Cl8OVwLQt9DF6Trk28y4rZv1B5E7VkDUlw8XrqdUJ7/HKXVvB0JC0igEt1e86+revHuQSqN2WkVJIBzqb5Mm+vtne+fi5AHSEliFm3XoiVXIewgssqeaPt/ytoAjtUx936Gg6sNygecu7lD0hSpkSFyW0Qc/csoW7bfH5K66WZ+NIL/HD2cly46xBCah+wGk4XQA5BHqw0bA8awNmBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pfYk+T7ztj8tkf80ESi8rb+tlFSMcroZEmsnNXAdqDY=;
- b=pzqL4h5gqYOVYGofLyY0HlsvdxyZejP4UzEUMzMa11wzrteHn+PBUhahQzB/1FrWiEf49VqR05LthgNc+2QnZCeE4EnAM/lzLhZ3bHPeDqPBMMcwyxf9NuepM9MdTcROzJjj0LKEZxHqG5O3ZHd5eKfNvb8PASASMYWNzx7NlWM=
-Received: from DM6PR02MB4426.namprd02.prod.outlook.com (2603:10b6:5:22::28) by
- DM6PR02MB5962.namprd02.prod.outlook.com (2603:10b6:5:179::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.21; Mon, 6 Apr 2020 13:55:05 +0000
-Received: from DM6PR02MB4426.namprd02.prod.outlook.com
- ([fe80::2458:ae1:e813:f217]) by DM6PR02MB4426.namprd02.prod.outlook.com
- ([fe80::2458:ae1:e813:f217%6]) with mapi id 15.20.2878.018; Mon, 6 Apr 2020
- 13:55:05 +0000
-From:   Manish Narani <MNARANI@xilinx.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>
-CC:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>, git <git@xilinx.com>
-Subject: RE: [PATCH v2 3/4] mmc: sdhci-of-arasan: Modify clock operations
- handling
-Thread-Topic: [PATCH v2 3/4] mmc: sdhci-of-arasan: Modify clock operations
- handling
-Thread-Index: AQHWBlYDfVQqA2G69U+StIaVOIIdzahloRMAgAaHjIA=
-Date:   Mon, 6 Apr 2020 13:55:04 +0000
-Message-ID: <DM6PR02MB442695A77DAFC7358B9DC6CEC1C20@DM6PR02MB4426.namprd02.prod.outlook.com>
-References: <1585546879-91037-1-git-send-email-manish.narani@xilinx.com>
- <1585546879-91037-4-git-send-email-manish.narani@xilinx.com>
- <34dffb3a-aa90-db27-7465-df840d148658@intel.com>
-In-Reply-To: <34dffb3a-aa90-db27-7465-df840d148658@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=MNARANI@xilinx.com; 
-x-originating-ip: [183.83.137.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b01af45a-b306-4330-e54e-08d7da321c15
-x-ms-traffictypediagnostic: DM6PR02MB5962:|DM6PR02MB5962:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR02MB59628A5163060DE30A90A012C1C20@DM6PR02MB5962.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0365C0E14B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR02MB4426.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(366004)(136003)(396003)(478600001)(9686003)(71200400001)(8936002)(66476007)(81156014)(66446008)(64756008)(66556008)(107886003)(8676002)(6506007)(53546011)(81166006)(66946007)(76116006)(5660300002)(33656002)(52536014)(7696005)(26005)(110136005)(54906003)(2906002)(316002)(6636002)(86362001)(186003)(7416002)(55016002)(4326008);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 73r0F97fLyHjM6HZHcAsnYxapnHPecYiPhR69iJtRA2GdaR9PbY8Oc31IS9Bpe6LGEuyuWPmeIR2QbcuYfEUPQZVua9ExiXgcaneIDxDy9cX2oixBCJzMTh5YVIPD1Pgu6Kyg4cZIvslU64Zv9Lm9rd+v6sObjXdS/C+7Z+bwgbqh5gkbvaEeJSwVqwEYhz38PSXSONr4RDYfezWIf+7/pzMG/ExbYzbmHQIHbWbszdjwa/IY6oSDopI1KYg1W+8/noPnvyhS5sIJFenfavtzJds8PJ3bLBcR5pwXXu+uLWt8BpmbKg7DiWmVedq5BQQgOnsJK1PCAUU9RluJ/HBMRxdTYwm/UvJRVSkjDJ/o4EGKmxcZjfp5QL32gJtGJdYwzQT/nXwV3z7hhVj6x4svsqOdEjKUOkQLGA4eihSRpQXnBKdqLqdvbnUmFqV610U
-x-ms-exchange-antispam-messagedata: OF+7fBTir3LlxrBM2RhW8NaeotYI1z2Lin2NtnCz3w6tEmFCdKyRdzWTc+RUNAB7xLyedtrKUUj6P6jBTKzWjJ3e+SKPSEKQOVbErgQmXvMDOHrsaNvj71KrFnlYL5/j6Sf83ZNgCiXcTyymmgjnmA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 6 Apr 2020 09:55:33 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53476 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728446AbgDFNzd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:55:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586181331;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4JbffD6uHYn0Xws8gEnJhH/ASm7vL5TTpW7bpIjfQF0=;
+        b=FKO6nZ4/z3L/WVcnS5lXJgx77phqfkvab8uAbXMvYjU3DVbE/MwnF0N19jcAifVEBqXINj
+        vGG0q7tuJBoK2OJJI2lN43I3m+RT1954LciLKCh8YWu4mmb4N2Hw/768QPgf7EUnMq2iRp
+        Cs0raJx4VO5f6zzOrT/af1K4tRQhWwk=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-400--U-sHeqqNUySlH474rquSw-1; Mon, 06 Apr 2020 09:55:30 -0400
+X-MC-Unique: -U-sHeqqNUySlH474rquSw-1
+Received: by mail-wm1-f72.google.com with SMTP id f8so4926185wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:55:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=4JbffD6uHYn0Xws8gEnJhH/ASm7vL5TTpW7bpIjfQF0=;
+        b=Hujp5Mnh5cLTjRlizRYYBvc9W4xJGPQO83FtKM1ud82P8GSC8uaZE732A4t/i2l97s
+         ytMVsqM5MEY/zAIH6Pha2Eyqb50m3CADuKYeuMHbOfumNaRwOx5BGvv9Fdg741CD+cyQ
+         CBbqO9qgr9WOt/PqurR3Rj5rSTzTZavWjqyB0g6gbtkaogrBPnFcZVYdBHpQjfCokBpt
+         o0jUepq0Ddy3zd0s2hI6Y17OYdgHRchJL9S6XMVYc7v0gXGNt9N2jSOIbB82aZ102PFX
+         xYqzlJXklwEuZY/dgqk5nv0a9KOpgdf9S3id/nEhRjNeYo9wNZlsh2un89kyS5NKCyoN
+         Cz3A==
+X-Gm-Message-State: AGi0PuYuuB1glTUVWDM/GrDywvEaw3mFUuwwkWa43OXgIyiruJ8cn+AY
+        cdt0Q60pwBsvyp8v9hT4kkl26Rzoo4656D1P0Gt/gvWF6aCrtfkmb3IR45xTHxCZcFLsWKuTQxH
+        EALOQh0iTRbnMBNBbC9YvyW2g
+X-Received: by 2002:a5d:4d09:: with SMTP id z9mr602255wrt.292.1586181328771;
+        Mon, 06 Apr 2020 06:55:28 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJMOX8DPPm6vlwNHfWsSuz0mrVkzWpGk7TU+nZhYELINvwWAIdcv57+eCeK2DYp6J7Z3YNU5w==
+X-Received: by 2002:a5d:4d09:: with SMTP id z9mr602237wrt.292.1586181328553;
+        Mon, 06 Apr 2020 06:55:28 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id w204sm25954947wma.1.2020.04.06.06.55.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 06:55:28 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 09:55:25 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] vhost: force spec specified alignment on types
+Message-ID: <20200406095424-mutt-send-email-mst@kernel.org>
+References: <20200406124931.120768-1-mst@redhat.com>
+ <045c84ed-151e-a850-9c72-5079bd2775e6@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b01af45a-b306-4330-e54e-08d7da321c15
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2020 13:55:04.9602
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: N+RpeKb+AHP73WCQJH5Dylct4WizBcywFrmIk9Vp3REpGLm6+fy6y003v7g7Mub+KhG3WKr0mAn6/PBnWbMxLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5962
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <045c84ed-151e-a850-9c72-5079bd2775e6@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWRyaWFuLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gRnJvbTogQWRyaWFuIEh1bnRlciA8YWRyaWFuLmh1bnRlckBpbnRlbC5j
-b20+DQo+IFNlbnQ6IFRodXJzZGF5LCBBcHJpbCAyLCAyMDIwIDM6NDAgUE0NCj4gVG86IE1hbmlz
-aCBOYXJhbmkgPE1OQVJBTklAeGlsaW54LmNvbT47IHVsZi5oYW5zc29uQGxpbmFyby5vcmc7DQo+
-IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IE1pY2hhbCBTaW1law0K
-PiA8bWljaGFsc0B4aWxpbnguY29tPg0KPiBDYzogbGludXgtbW1jQHZnZXIua2VybmVsLm9yZzsg
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGdpdA0KPiA8Z2l0QHhp
-bGlueC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMy80XSBtbWM6IHNkaGNpLW9mLWFy
-YXNhbjogTW9kaWZ5IGNsb2NrIG9wZXJhdGlvbnMNCj4gaGFuZGxpbmcNCj4gDQo+IE9uIDMwLzAz
-LzIwIDg6NDEgYW0sIE1hbmlzaCBOYXJhbmkgd3JvdGU6DQo+ID4gVGhlIFNESENJIGNsb2NrIG9w
-ZXJhdGlvbnMgYXJlIHBsYXRmb3JtIHNwZWNpZmljLiBTbyBpdCBiZXR0ZXIgdG8gZGVmaW5lDQo+
-ID4gdGhlbSBzZXBhcmF0ZWx5IGZvciBwYXJ0aWN1bGFyIHBsYXRmb3JtLiBUaGlzIHdpbGwgcHJl
-dmVudCBtdWx0aXBsZQ0KPiA+IGlmLi5lbHNlIGNvbmRpdGlvbnMgYW5kIHdpbGwgbWFrZSBpdCBl
-YXN5IGZvciB1c2VyIHRvIGFkZCB0aGVpciBvd24NCj4gPiBjbG9jayBvcGVyYXRpb25zIGhhbmRs
-ZXJzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFuaXNoIE5hcmFuaSA8bWFuaXNoLm5hcmFu
-aUB4aWxpbnguY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL21tYy9ob3N0L3NkaGNpLW9mLWFy
-YXNhbi5jIHwgMjA4ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxMTkgaW5zZXJ0aW9ucygrKSwgODkgZGVsZXRpb25zKC0pDQo+IA0KPiBXb3VsZCB5
-b3UgbWluZCBzcGxpdHRpbmcgdGhpcyBpbnRvIGEgcGF0Y2ggdGhhdCBtb3ZlcyB0aGUgZXhpc3Rp
-bmcNCj4gc3RydWN0dXJlcyBmaXJzdCwgYW5kIHRoZW4gYSBzZWNvbmQgcGF0Y2ggdG8gbWFrZSB0
-aGUgY2hhbmdlcy4NCg0KTm90ZWQuIFdpbGwgZG8gdGhhdCBpbiBuZXh0IHBhdGNoIHNlcmllcy4N
-Cg0KPiANCj4gQWxzbywgSSBub3RpY2UgdGhlcmUgaXMgJ3N0cnVjdCBzZGhjaV9hcmFzYW5fZGF0
-YScgYnV0IGFsc28NCj4gJ3N0cnVjdCBzZGhjaV9hcmFzYW5fb2ZfZGF0YSBzZGhjaV9hcmFzYW5f
-ZGF0YScuICBUaGlzIGlzIGNvbmZ1c2luZywgc28NCj4gcGVyaGFwcyBhIHByZXBhcmF0b3J5IHBh
-dGNoIHRoYXQgcmVuYW1lcyB0aGUgbGF0dGVyIGZyb20gc2RoY2lfYXJhc2FuX2RhdGENCj4gdG8g
-c29tZXRoaW5lIGVsc2UgZS5nLiBzZGhjaV9hcmFzYW5fZ2VuZXJpY19kYXRhDQoNCk9rYXkuIEkg
-d2lsbCBjcmVhdGUgYSBzZXBhcmF0ZSBwYXRjaCBmb3IgcmVuYW1pbmcgdGhlIHNkaGNpX2FyYXNh
-bl9kYXRhLg0KDQpUaGFua3MsDQpNYW5pc2gNCg0K
+On Mon, Apr 06, 2020 at 09:34:00PM +0800, Jason Wang wrote:
+> 
+> On 2020/4/6 下午8:50, Michael S. Tsirkin wrote:
+> > The ring element addresses are passed between components with different
+> > alignments assumptions. Thus, if guest/userspace selects a pointer and
+> > host then gets and dereferences it, we might need to decrease the
+> > compiler-selected alignment to prevent compiler on the host from
+> > assuming pointer is aligned.
+> > 
+> > This actually triggers on ARM with -mabi=apcs-gnu - which is a
+> > deprecated configuration, but it seems safer to handle this
+> > generally.
+> > 
+> > I verified that the produced binary is exactly identical on x86.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > ---
+> > 
+> > This is my preferred way to handle the ARM incompatibility issues
+> > (in preference to kconfig hacks).
+> > I will push this into next now.
+> > Comments?
+> 
+> 
+> I'm not sure if it's too late to fix. It would still be still problematic
+> for the userspace that is using old uapi headers?
+> 
+> Thanks
+
+It's not a problem in userspace. The problem is when
+userspace/guest uses 2 byte alignment and passes it to kernel
+assuming 8 byte alignment. The fix is for host not to
+make these assumptions.
+
+> 
+> > 
+> >   drivers/vhost/vhost.h            |  6 ++---
+> >   include/uapi/linux/virtio_ring.h | 41 ++++++++++++++++++++++++--------
+> >   2 files changed, 34 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+> > index cc82918158d2..a67bda9792ec 100644
+> > --- a/drivers/vhost/vhost.h
+> > +++ b/drivers/vhost/vhost.h
+> > @@ -74,9 +74,9 @@ struct vhost_virtqueue {
+> >   	/* The actual ring of buffers. */
+> >   	struct mutex mutex;
+> >   	unsigned int num;
+> > -	struct vring_desc __user *desc;
+> > -	struct vring_avail __user *avail;
+> > -	struct vring_used __user *used;
+> > +	vring_desc_t __user *desc;
+> > +	vring_avail_t __user *avail;
+> > +	vring_used_t __user *used;
+> >   	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
+> >   	struct vhost_desc *descs;
+> > diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
+> > index 559f42e73315..cd6e0b2eaf2f 100644
+> > --- a/include/uapi/linux/virtio_ring.h
+> > +++ b/include/uapi/linux/virtio_ring.h
+> > @@ -118,16 +118,6 @@ struct vring_used {
+> >   	struct vring_used_elem ring[];
+> >   };
+> > -struct vring {
+> > -	unsigned int num;
+> > -
+> > -	struct vring_desc *desc;
+> > -
+> > -	struct vring_avail *avail;
+> > -
+> > -	struct vring_used *used;
+> > -};
+> > -
+> >   /* Alignment requirements for vring elements.
+> >    * When using pre-virtio 1.0 layout, these fall out naturally.
+> >    */
+> > @@ -164,6 +154,37 @@ struct vring {
+> >   #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
+> >   #define vring_avail_event(vr) (*(__virtio16 *)&(vr)->used->ring[(vr)->num])
+> > +/*
+> > + * The ring element addresses are passed between components with different
+> > + * alignments assumptions. Thus, we might need to decrease the compiler-selected
+> > + * alignment, and so must use a typedef to make sure the __aligned attribute
+> > + * actually takes hold:
+> > + *
+> > + * https://gcc.gnu.org/onlinedocs//gcc/Common-Type-Attributes.html#Common-Type-Attributes
+> > + *
+> > + * When used on a struct, or struct member, the aligned attribute can only
+> > + * increase the alignment; in order to decrease it, the packed attribute must
+> > + * be specified as well. When used as part of a typedef, the aligned attribute
+> > + * can both increase and decrease alignment, and specifying the packed
+> > + * attribute generates a warning.
+> > + */
+> > +typedef struct vring_desc __attribute__((aligned(VRING_DESC_ALIGN_SIZE)))
+> > +	vring_desc_t;
+> > +typedef struct vring_avail __attribute__((aligned(VRING_AVAIL_ALIGN_SIZE)))
+> > +	vring_avail_t;
+> > +typedef struct vring_used __attribute__((aligned(VRING_USED_ALIGN_SIZE)))
+> > +	vring_used_t;
+> > +
+> > +struct vring {
+> > +	unsigned int num;
+> > +
+> > +	vring_desc_t *desc;
+> > +
+> > +	vring_avail_t *avail;
+> > +
+> > +	vring_used_t *used;
+> > +};
+> > +
+> >   static inline void vring_init(struct vring *vr, unsigned int num, void *p,
+> >   			      unsigned long align)
+> >   {
+
