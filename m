@@ -2,86 +2,57 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AE3C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A7CC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A08F7206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE13520780
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VpNMhbNp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JtsEqtO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgDFL5E (ORCPT
+        id S1727798AbgDFL6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:57:04 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:56768 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727703AbgDFL5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:57:04 -0400
-Received: from zn.tnic (p200300EC2F04F600C571FE02886A814C.dip0.t-ipconnect.de [IPv6:2003:ec:2f04:f600:c571:fe02:886a:814c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E7D3D1EC05D6;
-        Mon,  6 Apr 2020 13:57:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1586174223;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6mkdJTICOEGUmg5Sf3oUN1anrQ+rTmVREXUkf1ARKJE=;
-        b=VpNMhbNpDvCpH+/+qc/IbAFhZgdcKcDPIv/3B+xtociH+gmByxjgr8ZIS1cyqpzEo/hLxo
-        BnNbctTh99zUhG3w9BT1hjF7Pwe3F5rqrzQnxfkrH4Ry50KxU+imvuvl55NhxW0Dm9raTc
-        3ccjkXu8dg6Ngh1tCvTKYVw8unLL30w=
-Date:   Mon, 6 Apr 2020 13:56:59 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 15/70] x86/boot/compressed/64: Always switch to own
- page-table
-Message-ID: <20200406115659.GD2520@zn.tnic>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-16-joro@8bytes.org>
+        Mon, 6 Apr 2020 07:58:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42714 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727614AbgDFL6m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:58:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=2ci0DUzI2b4YmDq85O6Os3gM/ouyEFXJM6YNbwYK0l8=; b=JtsEqtO9OMmmoHeZ0ckvc6hbVU
+        Gj5LmOmatezUDEbzz1nTvc+I11CH0PZnstD/Xe9xe+B8MwbhcAzxfFLyFu3d7rOIflPkdFF4trvO7
+        j9stw8GS1H55fJAIZXJBu79mnHmj93pn/iRMmwguSnKXo+teAleEfBFJ3iGek4zvcsjuvkz4weVMX
+        vukKc5n1n7ja/4UdTt0jUx/ZLBn3MURbXIHf9cFQ5hi80UOGj6xxPlDkKUOiow2I9qkuTDdZHsuC5
+        cQIfbd06/MutK40g/TmkPLpFnxmS9gUxSkqLwqGhsCFC3/w0mGKjrLxp6JL2uX4JPTYLXo+F7vtq2
+        wgeIoRxA==;
+Received: from [2001:4bb8:180:5765:7ca0:239a:fe26:fec2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLQOj-0008FX-99; Mon, 06 Apr 2020 11:58:37 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: improve the uswsusp ioctl handling to avoid set_fs
+Date:   Mon,  6 Apr 2020 13:58:33 +0200
+Message-Id: <20200406115835.1150002-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200319091407.1481-16-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 10:13:12AM +0100, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> When booted through startup_64 the kernel keeps running on the EFI
-> page-table until the KASLR code sets up its own page-table. Without
-> KASLR the pre-decompression boot code never switches off the EFI
-> page-table. Change that by unconditionally switching to our own
-> page-table once the kernel is relocated.
-> 
-> This makes sure we can make changes to the mapping when necessary, for
+Hi all,
 
-Pls use passive voice in your commit message: no "we" or "I", etc, and
-describe your changes in imperative mood.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+this series refactors the uswsusp ioctl so that no rewriting of
+the ioctl structure for the compat case, and thus messing with the
+address limit is required.
