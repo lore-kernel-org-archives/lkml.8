@@ -2,128 +2,185 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D752EC2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D416C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFABB20719
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BCC20719
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgDFH1P convert rfc822-to-8bit (ORCPT
+        id S1726641AbgDFH3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 03:27:15 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39314 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgDFH1P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 03:27:15 -0400
-Received: by mail-ot1-f67.google.com with SMTP id x11so14297108otp.6;
-        Mon, 06 Apr 2020 00:27:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZNGhaP+QG4HxousMGWitkhhXTfkQsmbM3E23YiyjtWU=;
-        b=qNMR0HY3bhjJ61VYibicSCfhlHXHmY/03wzI8tKChBrTxrvedMNkByNUL784Jaap8C
-         xtREEmQP11dEP1jtkxZSqiMh66hgE6JP9jPkFIxwBfRiT7esqf8pRvfSL9JKZU1gvvLc
-         h6cq7D3pU+q+FO0O8vuD56izHhli3pUCxiMNVuAGly0WMcpZFuRF5quA34KDRGOWwGDd
-         vJKO+3zG62VRmzaBdfhERT6Clpgjk1XYqRh1/x3120lRilSaskMl28Y2mGhinyFB2mWT
-         MFniSVHehZ+5myJRDxqnwOXcTjxao/Lj+AF6gqE7LCDn+XUJn9vOjW8hOUEpxVa6wcOR
-         nzzw==
-X-Gm-Message-State: AGi0PubX7jdD2dhKWI8Bwo5I1JzhTFCVOHI1aacoX+ZuBvaX6L+KuG1t
-        z+I7P32Fyo0d9J1iFmjvFIlkT7nXiBMdM/8EY9Y=
-X-Google-Smtp-Source: APiQypLoUcs5r963YYsffOMrgIHvA8vqsOhLURk+ZBO2lVrs1QldVOrkf3fGGpyKv3foSgjdb433PtNsABTO/LJevvY=
-X-Received: by 2002:a05:6830:15c2:: with SMTP id j2mr15644001otr.107.1586158032516;
- Mon, 06 Apr 2020 00:27:12 -0700 (PDT)
+        Mon, 6 Apr 2020 03:29:06 -0400
+Received: from mga17.intel.com ([192.55.52.151]:63537 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726509AbgDFH3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 03:29:06 -0400
+IronPort-SDR: jahqi3kONJ0JXN2xrJezQGIzxgHs+j1Uwl1T6wHAl0JNgpQxNsxlO+zGJyzaj+pfNDTZ6NrEWs
+ JfhSu2D43XRg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 00:29:05 -0700
+IronPort-SDR: PTRRg3j9W+zcLsusMj2JOJphF/aWn1Jpkx1T57J4M5dh9NJ+iQqcvF/kqw1HGOEmZ9hLAaBu0q
+ L40tKvY5ZtdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,350,1580803200"; 
+   d="scan'208";a="450740106"
+Received: from unknown (HELO kekkonen.fi.intel.com) ([10.252.48.155])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Apr 2020 00:29:02 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 5A0A621D18; Mon,  6 Apr 2020 10:28:58 +0300 (EEST)
+Date:   Mon, 6 Apr 2020 10:28:58 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        mchehab@kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joe Perches <joe@perches.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
+ DRM fourccs
+Message-ID: <20200406072857.GD5835@kekkonen.localdomain>
+References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
+ <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk>
 MIME-Version: 1.0
-References: <CGME20200302062625epcas1p200c53fabe17996e92257a409b7a9c857@epcas1p2.samsung.com>
- <20200302062145.1719-1-namjae.jeon@samsung.com> <20200302062145.1719-12-namjae.jeon@samsung.com>
-In-Reply-To: <20200302062145.1719-12-namjae.jeon@samsung.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 6 Apr 2020 09:27:01 +0200
-Message-ID: <CAMuHMdXdGDnvGYi1v1OhjCz=61moVRZQdZOtiKLG3m8q7vwkTg@mail.gmail.com>
-Subject: Re: [PATCH v14 11/14] exfat: add Kconfig and Makefile
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, linkinjeon@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Namjae,
+Hi Rasmus,
 
-On Mon, Mar 2, 2020 at 7:28 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
-> This adds the Kconfig and Makefile for exfat.
->
-> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
-> Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
-> Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+Thanks for the comments.
 
-This is now commit b9d1e2e6265f5dc2 ("exfat: add Kconfig and Makefile").
+On Fri, Apr 03, 2020 at 02:10:53PM +0200, Rasmus Villemoes wrote:
+> On 03/04/2020 11.11, Sakari Ailus wrote:
+> > Add a printk modifier %ppf (for pixel format) for printing V4L2 and DRM
+> > pixel formats denoted by 4ccs. The 4cc encoding is the same for both so
+> > the same implementation can be used.
+> 
+> This seems quite niche to me, I'm not sure that belongs in vsprintf.c.
+> What's wrong with having a
+> 
+> char *fourcc_string(char *buf, u32 x)
+> 
+> that formats x into buf and returns buf, so it can be used in a
+> 
+> char buf[8];
+> pr_debug("bla: %s\n", fourcc_string(buf, x))
 
-> --- /dev/null
-> +++ b/fs/exfat/Kconfig
-> @@ -0,0 +1,21 @@
-> +# SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +config EXFAT_FS
-> +       tristate "exFAT filesystem support"
-> +       select NLS
-> +       help
-> +         This allows you to mount devices formatted with the exFAT file system.
-> +         exFAT is typically used on SD-Cards or USB sticks.
-> +
-> +         To compile this as a module, choose M here: the module will be called
-> +         exfat.
-> +
-> +config EXFAT_DEFAULT_IOCHARSET
-> +       string "Default iocharset for exFAT"
-> +       default "utf8"
-> +       depends on EXFAT_FS
-> +       help
-> +         Set this to the default input/output character set to use for
-> +         converting between the encoding is used for user visible filename and
-> +         UTF-16 character that exfat filesystem use, and can be overridden with
+I guess that could be one option. But changing the implementation could
+require changing the size of all those buffers.
 
-exFAT
+We had this approach, too:
 
-> +         the "iocharset" mount option for exFAT filesystems.
+<URL:https://lore.kernel.org/linux-media/20190916100433.24367-1-hverkuil-cisco@xs4all.nl/>
 
-I think the above paragraph should be reworded.
-I tried to do it myself:
+Let's see if we'll get more comments on this.
 
-          Set this to the default input/output character set to use for
-          converting between the encoding that is used for user visible
-          filenames, and the UTF-16 character set that the exFAT filesystem
-          uses.  This can be overridden with the "iocharset" mount option for
-          the exFAT filesystems.
+> 
+> Or, for that matter, since it's for debugging, why not just print x with
+> 0x%08x?
 
-but then I got puzzled by the _3_ encodings that are part of it:
-  1. the default input/output character set to use for conversion,
-  2. encoding that is used for user visible filenames,
-  3. UTF-16 character set that the exFAT filesystem uses.
-I assume 1 == 2, but there may be more to it?
+People generally prefer readable output that they can understand. The codes
+are currently being printed in characters, and that's how they are defined
+in kernel headers, too. Therefore the hexadecimal values are of secondary
+importance (although they could be printed too, as apparently a similar
+function in DRM does).
 
-Gr{oetje,eeting}s,
+> 
+> At the very least, the "case '4'" in pointer() should be guarded by
+> appropriate CONFIG_*.
+> 
+> Good that Documentation/ gets updated, but test_printf needs updating as
+> well.
 
-                        Geert
+Agreed.
+
+> 
+> 
+> > Suggested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> > since v1:
+> > 
+> > - Improve documentation (add -BE suffix, refer to "FourCC".
+> > 
+> > - Use '%p4cc' conversion specifier instead of '%ppf'.
+> 
+> Cute. Remember to update the commit log (which still says %ppf).
+
+I will.
+
+> 
+> > - Fix 31st bit handling in printing FourCC codes.
+> > 
+> > - Use string() correctly, to allow e.g. proper field width handling.
+> > 
+> > - Remove loop, use put_unaligned_le32() instead.
+> > 
+> >  Documentation/core-api/printk-formats.rst | 12 +++++++++++
+> >  lib/vsprintf.c                            | 25 +++++++++++++++++++++++
+> >  2 files changed, 37 insertions(+)
+> > 
+> > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> > index 8ebe46b1af39..550568520ab6 100644
+> > --- a/Documentation/core-api/printk-formats.rst
+> > +++ b/Documentation/core-api/printk-formats.rst
+> > @@ -545,6 +545,18 @@ For printing netdev_features_t.
+> >  
+> >  Passed by reference.
+> >  
+> > +V4L2 and DRM FourCC code (pixel format)
+> > +---------------------------------------
+> > +
+> > +::
+> > +
+> > +	%p4cc
+> > +
+> > +Print a FourCC code used by V4L2 or DRM. The "-BE" suffix is added on big endian
+> > +formats.
+> > +
+> > +Passed by reference.
+> 
+> Maybe it's obvious to anyone in that business, but perhaps make it more
+> clear the 4cc is stored in a u32 (and not, e.g., a __le32 or some other
+> integer), that obviously matters when the code treats the pointer as a u32*.
+
+The established practice is to use u32 (as this is really no hardware
+involved) but I guess it'd be good to document that here, too.
+
+> > +
+> > +	put_unaligned_le32(*fourcc & ~BIT(31), s);
+> > +
+> > +	if (*fourcc & BIT(31))
+> > +		strscpy(s + sizeof(*fourcc), FOURCC_STRING_BE,
+> > +			sizeof(FOURCC_STRING_BE));
+> 
+> put_unaligned_le32(0x0045422d, s + 4) probably generates smaller code,
+> and is more in line with building the first part of the string with
+> put_unaligned_le32().
+
+Uh. The fourcc code is made of printable characters (apart from the 31st
+bit) so it can be printed, but I wouldn't use that here. "-BE" is just a
+string and not related to 4ccs.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Sakari Ailus
