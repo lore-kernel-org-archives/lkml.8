@@ -2,113 +2,75 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994C8C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8E0C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7564D206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0B8206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="WhAwEyU6"
+	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="o05WS8wL";
+	dkim=pass (1024-bit key) header.d=mail.ru header.i=@mail.ru header.b="o05WS8wL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgDFTFx (ORCPT
+        id S1726287AbgDFTJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:05:53 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:44133 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgDFTFx (ORCPT
+        Mon, 6 Apr 2020 15:09:48 -0400
+Received: from fallback14.mail.ru ([94.100.179.44]:51982 "EHLO
+        fallback14.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbgDFTJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:05:53 -0400
-Received: by mail-vs1-f67.google.com with SMTP id e138so555339vsc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 12:05:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CQD+C9Kg+kaXZdnpmDMOsE8KjUIcSylxGT9eltj8hNc=;
-        b=WhAwEyU65nt+MH7u4Sm52detAfx9AIKlU92gMP8ZZjnP/YTmwEGd/LbcN7xKL2hE51
-         k33IGFnYJNF81bp0cgu0ieHEO2nG2fgKfkeph9q5+J1j823v87d70SIQf5G5cmin7U33
-         fJ595tv9GlciDWOEG78lrS0WKo0atnz3Pf9p5SgHb24u7KJue2mUW3Rj8gaaTBMZfkZ3
-         tO1eq65TrQU0gUuBsACWKiy/EeyYYoJBz5BX/ZJFmU7pZ5BpCrs00HvnPh5d3nk0XN7M
-         QiMV9X/r+33J0rScDcEvCa6HdGp9/8CL/c9ItWBlLbfswn4+hM9psHLM0KescvXJSasR
-         5izg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CQD+C9Kg+kaXZdnpmDMOsE8KjUIcSylxGT9eltj8hNc=;
-        b=VdTnYvupzsIvOEWKUUxo6RxvL/eMYzcrZ2/OwTo0ASeIVl4zQIH7J0dMMugCLHsUf6
-         pJF8AoqFeKAoMy0XT54y5sN5VX7l31nAMS804hXjCtwrKE37ZmhgEJSrdAT2aGCjkk3u
-         jF/NEN9leT7CTu64Ue5iV9xF3TCkO9QIXrzwCetlyDpI18zpcpQcnKmXUXfJO0TBC/PM
-         /HitfnA32AU/stvrsRyJRaDY9whH60uU+sbsGtU55iKm/dM6yId913qW+SBXTRJN1TGs
-         bxGvYwuZbSZDZVm8PNf/Sd+avfyZzA/ayS2G0Fbk1Djp/4l9h2zABdhy3EAkgO0tqrto
-         fjvg==
-X-Gm-Message-State: AGi0PuaaQXN+Qd3GE/yYhkfxoJtuhglxgIOt1MSBUdwCwqTY9DMUeoqW
-        fTVP/GMQ9zRJMJB1GivjxZFv8BRG+Snnrbs1RUThXg==
-X-Google-Smtp-Source: APiQypLdrhoD1+TZ4jdw1dsDSA7rmF0tkHvtxRtrwnEQz6g0MHUDl4HPqBpBqlQNHeEaYI9LDwzy6jJDIgV2779T/zM=
-X-Received: by 2002:a05:6102:5c5:: with SMTP id v5mr1064068vsf.9.1586199952066;
- Mon, 06 Apr 2020 12:05:52 -0700 (PDT)
+        Mon, 6 Apr 2020 15:09:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
+        h=Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:Date:MIME-Version:Subject:Cc:To:From; bh=IuqH8oOZ7Smuf50iB0pt180lv+WFKGM8y/rdC+IqHuI=;
+        b=o05WS8wLMnY48IpjiVA8q1yyulzCH6WsGIYZwxSQKGopLT5RuV5J3DyQj7kbGiSRtfW7kjOkrVtmTxbjAKUdKQp3T5x4hrXeb5pVszcdufWse4319aLsF4zPX/eIpVUfV92aNjydD7ZoJzkybQvXOUUea1tRVHF18fbtd7LjMKM=;
+Received: from [10.161.63.35] (port=55450 helo=f412.i.mail.ru)
+        by fallback14.m.smailru.net with esmtp (envelope-from <safinaskar@mail.ru>)
+        id 1jLX7w-0004qe-2c; Mon, 06 Apr 2020 22:09:44 +0300
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail2;
+        h=Content-Transfer-Encoding:Content-Type:Message-ID:Reply-To:Date:MIME-Version:Subject:Cc:To:From; bh=IuqH8oOZ7Smuf50iB0pt180lv+WFKGM8y/rdC+IqHuI=;
+        b=o05WS8wLMnY48IpjiVA8q1yyulzCH6WsGIYZwxSQKGopLT5RuV5J3DyQj7kbGiSRtfW7kjOkrVtmTxbjAKUdKQp3T5x4hrXeb5pVszcdufWse4319aLsF4zPX/eIpVUfV92aNjydD7ZoJzkybQvXOUUea1tRVHF18fbtd7LjMKM=;
+Received: by f412.i.mail.ru with local (envelope-from <safinaskar@mail.ru>)
+        id 1jLX7t-0000Hb-Eq; Mon, 06 Apr 2020 22:09:41 +0300
+Received: by light.mail.ru with HTTP;
+        Mon, 06 Apr 2020 22:09:41 +0300
+From:   =?UTF-8?B?QXNrYXIgU2FmaW4=?= <safinaskar@mail.ru>
+To:     asml.silence@gmail.com
+Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: =?UTF-8?B?UmU6IFtQT0MgUkZDIDAvM10gc3BsaWNlKDIpIHN1cHBvcnQgZm9yIGlvX3Vy?=
+ =?UTF-8?B?aW5n?=
 MIME-Version: 1.0
-References: <20200331075356.19171-1-j-keerthy@ti.com> <20200331075356.19171-5-j-keerthy@ti.com>
-In-Reply-To: <20200331075356.19171-5-j-keerthy@ti.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 7 Apr 2020 00:35:41 +0530
-Message-ID: <CAHLCerOwqOmGRotiofs_xtB9XEa-YUwYWFgJGNMXQqifW+azAA@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] arm64: dts: ti: am6: Add VTM node
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, t-kristo@ti.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Mail.Ru Mailer 1.0
+Date:   Mon, 06 Apr 2020 22:09:41 +0300
+Reply-To: =?UTF-8?B?QXNrYXIgU2FmaW4=?= <safinaskar@mail.ru>
+X-Priority: 3 (Normal)
+Message-ID: <1586200181.435329676@f412.i.mail.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+X-7564579A: 646B95376F6C166E
+X-77F55803: 0A44E481635329DB4E7FAE048FD183FFD32E5E488652173699CE90E9CBBFB45FD85348D1E2A9D7ADFBDBF69DD7E3F5385EBDC71A3AD865557E0E8ECF5F1B131EA9B517628670D6AC19BBA5EB247851AA
+X-7FA49CB5: 70AAF3C13DB7016878DA827A17800CE75EE3C8C1E9563377D82A6BABE6F325AC9EB98D58427B1C2A7C6FB206A91F05B29C7C0829E2D134F6D7B4160BD3A4204CFEEB761FB9071033D2E47CDBA5A96583C09775C1D3CA48CFCA5A41EBD8A3A0199FA2833FD35BB23D2EF20D2F80756B5F40A5AABA2AD37119CC7F00164DA146DA9985D098DBDEAEC8EDCF5861DED71B2F389733CBF5DBD5E9B5C8C57E37DE458B4C7702A67D5C33162DBA43225CD8A89F0A35B161A8BF67C135872C767BF85DA2F004C906525384306FED454B719173D6462275124DF8B9C99B0B8D173C204012BD9CCCA9EDD067B1EDA766A37F9254B7
+X-D57D3AED: Y8kq8+OzVozcFQziTi/Zi098oNK9gy3Irm5KFwLuDg60je4lC+GbTj0M8KbzpOmgsB7wYP6nnel8wfEHQiZAetlEg7qy07ISeqrIhHPnkjzMJIKhkt3sDQ==
+X-Mailru-Internal-Actual: A:0.86392021091368
+X-Mailru-Sender: 5EEECD413B34D8D993653919C5945805FE1BF4CAD608F7818366DED19131207113EE28446F3ACD7AE050B273745CFBD67903AA853BEC14D66BF3EC0C2B8D44F11752C749FAB18CA3A8F61D99D8C7FF8FA4CD9F439FE7F8175FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
+X-Spam: undefined
+X-7564579A: EEAE043A70213CC8
+X-77F55803: 6AF0DA0BABFA9FDB7F9F52485CB584D7271FD7DF62800FDC345666C2E9EB2C0D55E1275D1DAB18D9BA01449C46688777952C6472C343E45A
+X-7FA49CB5: 0D63561A33F958A59B2DE3E227FDBE6E3D0F53EE919DFB671E576249E52586428941B15DA834481FA18204E546F3947CEDCF5861DED71B2F389733CBF5DBD5E9C8A9BA7A39EFB7666BA297DBC24807EA117882F44604297287769387670735209ECD01F8117BC8BEA471835C12D1D977C4224003CC836476C0CAF46E325F83A522CA9DD8327EE4930A3850AC1BE2E735156CCFE7AF13BCA4B5C8C57E37DE458B4C7702A67D5C3316FA3894348FB808DBEB6346B700B4D54FE5BFE6E7EFDEDCD789D4C264860C145E
+X-D57D3AED: Y8kq8+OzVozcFQziTi/Zi098oNK9gy3Irm5KFwLuDg60je4lC+GbTj0M8KbzpOmgsB7wYP6nnel8wfEHQiZAetlEg7qy07ISeqrIhHPnkjzNy7BgrLUYXw==
+X-Mailru-MI: 800
+X-Mras: Ok
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 1:24 PM Keerthy <j-keerthy@ti.com> wrote:
->
-> VTM stands for voltage and thermal management. Add the vtm node and
-> the associated thermal zones on the SoC.
->
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> index f4227e2743f2..54a133fa1bf2 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-> @@ -89,4 +89,15 @@
->                 clocks = <&k3_clks 59 0>;
->                 clock-names = "gpio";
->         };
-> +
-> +       wkup_vtm0: thermal@42050000 {
-> +               compatible = "ti,am654-vtm";
-> +               reg = <0x42050000 0x25c>;
-> +               power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
-> +               #thermal-sensor-cells = <1>;
-> +       };
-> +
-
-Make this patch 3
-
-> +       thermal_zones: thermal-zones {
-> +               #include "k3-am654-industrial-thermal.dtsi"
-> +       };
->  };
-
-Move this with what is currently patch 3.
-
-> --
-> 2.17.1
->
+SGkuIFRoYW5rcyBmb3IgeW91ciBzcGxpY2UgaW9fdXJpbmcgcGF0Y2guIE1heWJlIGl0IHdpbGwg
+YmUgZ29vZCBpZGVhIHRvIGFkZCB1cmluZyBvcGVyYXRpb24sIHdoaWNoIHdpbGwgdW5pZnkgc3Bs
+aWNlLCBzZW5kZmlsZSBhbmQgY29weV9maWxlX3JhbmdlIGluc3RlYWQgb2YganVzdCBJT1JJTkdf
+T1BfU1BMSUNFPwo9PQpBc2thciBTYWZpbgpodHRwczovL2dpdGh1Yi5jb20vc2FmaW5hc2thcgo=
