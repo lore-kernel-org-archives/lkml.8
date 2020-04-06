@@ -2,112 +2,106 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9096C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BDEC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBF1206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008E2206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgDFIjk (ORCPT
+        id S1726663AbgDFIjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:39:40 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48264 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726533AbgDFIjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 04:39:40 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6516BEF633551400EA25;
-        Mon,  6 Apr 2020 16:39:20 +0800 (CST)
-Received: from [127.0.0.1] (10.133.217.205) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 6 Apr 2020
- 16:39:12 +0800
-Subject: Re: Why is text_mutex used in jump_label_transform for x86_64
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <andrew.murray@arm.com>, <bristot@redhat.com>,
-        <jakub.kicinski@netronome.com>, Kees Cook <keescook@chromium.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>, <bobo.shaobowang@huawei.com>,
-        "chengjian (D)" <cj.chengjian@huawei.com>
-References: <f7f686f2-4f28-1763-dd19-43eff6a5a8f2@huawei.com>
- <20200320102709.GC20696@hirez.programming.kicks-ass.net>
-From:   "chengjian (D)" <cj.chengjian@huawei.com>
-Message-ID: <28edc3d5-83a3-43cb-3e64-7d0525d430f3@huawei.com>
-Date:   Mon, 6 Apr 2020 16:39:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 04:39:54 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3160 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726533AbgDFIjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 04:39:54 -0400
+IronPort-SDR: 8uyouLB70ldJPHpKI1k8yDZz7c6svAAGObK62Q/ZLMNvprjvynVWuL79SvZE1QOb/K+0VfFbo2
+ t3UMeQRxrT+w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 01:39:54 -0700
+IronPort-SDR: qt9AlbJY6pdhpLaYacPMLu1YOp/T1isBbqlT1hpkWNEgvNo42KAQXDNde9k4PqIQiYNcKFw8Vs
+ B7ycFdQOG5Zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,350,1580803200"; 
+   d="scan'208";a="424287561"
+Received: from shao2-debian.sh.intel.com (HELO localhost) ([10.239.13.3])
+  by orsmga005.jf.intel.com with ESMTP; 06 Apr 2020 01:39:52 -0700
+Date:   Mon, 6 Apr 2020 16:39:30 +0800
+From:   kernel test robot <rong.a.chen@intel.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [non] 2aa3847085: will-it-scale.per_process_ops -32.0% regression
+Message-ID: <20200406083930.GV8179@shao2-debian>
+References: <20200406012539.GR8179@shao2-debian>
+ <20200406020451.GQ23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200320102709.GC20696@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.133.217.205]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200406020451.GQ23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/3/20 18:27, Peter Zijlstra wrote:
-> It depends on the architecture details of how self-modifying code works.
-> In particular, x86 is a variable instruction length architecture and
-> needs extreme care -- it's implementation requires there only be a
-> single text modifier at any one time, hence the use of text_mutex.
->
-> ARM64 OTOH is, like most RISC based architectures, a fixed width
-> instruction architecture. And in particular it can re-write certain
-> (branch) instructions with impunity (see their
-> aarch64_insn_patch_text_nosync()). Which is why they don't need
-> additional serialization.
-
-Hi, Peter
-
-Thank you very much for your reply.
-
-X86 is a variable-length instruction, only one byte modification of the 
-instruction
-can be regarded as atomic. so we must be very careful when modifying 
-instructions
-concurrently.
-
-For other architectures such as ARM64, the modification of some 
-instructions can be
-considered atomic, (Eg. nop -> jmp/b). The set of instructions that can 
-be executed
-by one thread of execution as they are being modified by another thread 
-of execution
-without requiring explicit synchronization.
-
-In ARM64 Architecture Reference Manual, I find that:
-     Concurrent modification and execution of instructions can lead to 
-the resulting instruction performing any behavior
-     that can be achieved by executing any sequence of instructions that 
-can be executed from the same Exception level,
-     except where each of the instruction before modification and the 
-instruction after modification is one of a B, BL, BRK,
-     HVC, ISB, NOP, SMC, or SVC instruction.
-     For the B, BL, BRK, HVC, ISB, NOP, SMC, and SVC instructions the 
-architecture guarantees that, after modification of the
-     instruction, behavior is consistent with execution of either:
-     • The instruction originally fetched.
-     • A fetch of the modified instruction
-
-So we can safely modify jump_label for ARM64(from NOP to b or form b to 
-NOP).
-
-Is my understanding correct?
+On Mon, Apr 06, 2020 at 03:04:51AM +0100, Al Viro wrote:
+> On Mon, Apr 06, 2020 at 09:25:39AM +0800, kernel test robot wrote:
+> > Greeting,
+> > 
+> > FYI, we noticed a -32.0% regression of will-it-scale.per_process_ops due to commit:
+> > 
+> > 
+> > commit: 2aa38470853a65dc9b1b4bd0989d34cd3fc57ebd ("non-RCU analogue of the previous commit")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> Arrgghh...  Could you check if vfs.git#fixes recovers that?  FWIW, proposed fix
+> is this:
+> 
+> commit d98d78cd6ac9eb5ed0506140cc43432d7c7dd480
+> Author: Al Viro <viro@zeniv.linux.org.uk>
+> Date:   Sun Apr 5 21:59:55 2020 -0400
+> 
+>     fix braino in legitimize_path()
+>     
+>     brown paperbag time... wrong order of arguments ended up confusing
+>     the values to check dentry and mount_lock seqcounts against.
+>     
+>     Reported-by: kernel test robot <rong.a.chen@intel.com>
+>     Fixes: 2aa38470853a ("non-RCU analogue of the previous commit")
+>     Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 61fdb77a7d58..a320371899cf 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -610,7 +610,7 @@ static bool __legitimize_path(struct path *path, unsigned seq, unsigned mseq)
+>  static inline bool legitimize_path(struct nameidata *nd,
+>  			    struct path *path, unsigned seq)
+>  {
+> -	return __legitimize_path(path, nd->m_seq, seq);
+> +	return __legitimize_path(path, seq, nd->m_seq);
+>  }
+>  
+>  static bool legitimize_links(struct nameidata *nd)
 
 
+Hi Al,
 
-Thank You
+Yes, the regression can be fixed:
 
-     -- Cheng Jian
+7ef482fa65513b18  2aa38470853a65dc9b1b4bd098  d98d78cd6ac9eb5ed0506140cc  testcase/testparams/testbox
+----------------  --------------------------  --------------------------  ---------------------------
+         %stddev      change         %stddev      change         %stddev
+             \          |                \          |                \  
+    449960             -32%     306036                      450924        will-it-scale/performance-open2-ucode=0x21/lkp-ivb-d04
+    449959             -32%     306035                      450923        GEO-MEAN will-it-scale.per_process_ops
 
-
+Best Regards,
+Rong Chen
