@@ -2,128 +2,148 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CECC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08677C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED99206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:57:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C705020678
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tl9rRJmb"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="UgSmH10U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgDFK5c (ORCPT
+        id S1727329AbgDFK5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:57:32 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45746 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgDFK5b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:57:31 -0400
-Received: by mail-qt1-f194.google.com with SMTP id 71so5575768qtc.12;
-        Mon, 06 Apr 2020 03:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=OJVdbc4/URe+WGm2RIHS01C+7ItQ2Hr946YFGhM+r6Q=;
-        b=tl9rRJmbLLwNSi8rayLraEGERtM53Mp91HzHN5ePmODbG56ymHSstnBEbRubx8reNa
-         royNt0lqw3KDwLjrw/AcEWNx9n3XQHOcNSlLLd3oc/r2upxFhfFi8QkY8bjLDoss8a+7
-         13lNlh1b2yo9aAwIUP6nQ39u/wsUbeZggzpTW0LibRAX/R8SXBBTmsuIAjIXXfzxy7bt
-         b/k/a66oSC6CEeH0T9K/gTBFiPiaZNUMiypnBLdVaxQfaWNJlQgIqIrJ0wTcXiNgBc7K
-         pkeluKPCcmsZtSA9Fvjvk0msGJ//RldzC24nesu6jwsar5wquD4JJU/V9ok0RMIbtaU5
-         A+UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=OJVdbc4/URe+WGm2RIHS01C+7ItQ2Hr946YFGhM+r6Q=;
-        b=X8lmB1SNiV88n8koLGajvFe1HqH64fSxmEicJ0rM1T08ldG0+5sDpRHjcHjy1wJDv8
-         mThErgnGbbyBzhVJIoPFhC71RsrbdAFfbu+N2GVk1R5jy8DbmBm8jsPZhB7HmiNUhmrM
-         XGzs/xRWSJEPEW0Xg9v0ob5FpdULO0afZOxFygsBgT698ynuCrdjCsebLDr3/ReNvsBO
-         gWogJCYFZF5PHqZudtdjCq0BmmSgav08nfZHHz1KjnocEL5BHHsuMlj96nIhkSXvOWwK
-         e3jcmlQchs+WIhsqvJGOObVXM+kIvb+mYIUU2HbXg+FfORYcOmJnfYmppSsY6i9rb1yX
-         Da2Q==
-X-Gm-Message-State: AGi0PuYiZaQ5wwg7paaPRTWX30y0fjsuIRM6gPDCpJeomdpVASi/pbby
-        2PFvwp94N9LJHorIhMu4RYHssS1vxj0Cuyj2fA8=
-X-Google-Smtp-Source: APiQypKi+rVw7Yx3tuLfh/w9IDdOMDAcQDOY1nccoBuxFkH975v+GT9qKuQMZQBbgq5YPrSWScSrivupcGdAfyxbwsk=
-X-Received: by 2002:ac8:1a8a:: with SMTP id x10mr8463923qtj.154.1586170650053;
- Mon, 06 Apr 2020 03:57:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200405082451.694910-1-jiaxun.yang@flygoat.com>
- <alpine.LFD.2.21.2004051738000.4156324@eddie.linux-mips.org>
- <96C9B1A0-2F89-4650-B0A4-6A6242A2AA0A@flygoat.com> <alpine.LFD.2.21.2004051817310.4156324@eddie.linux-mips.org>
-In-Reply-To: <alpine.LFD.2.21.2004051817310.4156324@eddie.linux-mips.org>
-From:   YunQiang Su <wzssyqa@gmail.com>
-Date:   Mon, 6 Apr 2020 18:57:18 +0800
-Message-ID: <CAKcpw6U=VW+h4sU1fzrsqXU9z-zVfcFsENKHgAD4paqtndip2w@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: malta: Set load address for 32bit kernel correctly
-To:     "Maciej W. Rozycki" <macro@linux-mips.org>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        Fangrui Song <maskray@google.com>,
+        Mon, 6 Apr 2020 06:57:52 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37749 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726841AbgDFK5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 06:57:52 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48wnYz5X2Pz9sQx;
+        Mon,  6 Apr 2020 20:57:43 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1586170668;
+        bh=3T/Sm1A0E9UPY5qOETqeF8SyVeK3inqT1uc8wO3uPEM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=UgSmH10Uu3lHOI0JliHDuckF5cdxdt2wxO1Hc+gsFghZJ3qGxUrd2rS5O8hy7upoY
+         y7ojnOs5snp4BeJoHkfEXuJT7fVOLK+pTuxDc5ScQMstyeV8AEHnk2g8PshC/yHhnB
+         wmNmaNLqIxvNTbjSGhvtV1kv2jTYsfAewG3ZAg661qUBw7nwMAEfoWCvKg8K459JUz
+         3UN4iAZG7+IyYGuk89I2GslVHzKuXyeeiIDlj+C4ag1EPdKtN7e8Yi0598/C0K+4Aa
+         MTUTT/9gc26h3QfDOfUQb8vqZu7hj/nVP7EjYEw0iW36wKqZQcTAhe0P9bPenUFJKp
+         3DytM7CwoFx+Q==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     afzal.mohd.ma@gmail.com, agust@denx.de, aik@ozlabs.ru,
+        alistair@popple.id.au,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, bala24@linux.ibm.com,
+        Bjorn Helgaas <bhelgaas@google.com>, chenzhou10@huawei.com,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Christophe Leroy <christophe.leroy@c-s.fr>, clg@kaod.org,
+        courbet@google.com, Daniel Axtens <dja@axtens.net>,
+        dougmill@linux.vnet.ibm.com, farosas@linux.ibm.com,
+        ganeshgr@linux.ibm.com, Grant Likely <grant.likely@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        gustavold@linux.ibm.com, Ilie Halip <ilie.halip@gmail.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Joe Perches <joe@perches.com>, kjain@linux.ibm.com,
+        laurentiu.tudor@nxp.com, leonardo@linux.ibm.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, lpechacek@suse.cz,
+        maddy@linux.ibm.com, maskray@google.com,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        nathanl@linux.ibm.com,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Oliver O'Halloran <oohall@gmail.com>, oss@buserror.net,
+        po-hsu.lin@canonical.com, psampat@linux.ibm.com,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        shilpa.bhat@linux.vnet.ibm.com, sourabhjain@linux.ibm.com,
+        srikar@linux.vnet.ibm.com, tyreld@linux.ibm.com,
+        vaibhav@linux.ibm.com, YueHaibing <yuehaibing@huawei.com>
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.7-1 tag
+In-Reply-To: <CAHk-=wgkkmNV5tMzQDmPAQuNJBuMcry--Jb+h8H1o4RA3kF7QQ@mail.gmail.com>
+References: <87h7xyrt5d.fsf@mpe.ellerman.id.au> <CAHk-=wgkkmNV5tMzQDmPAQuNJBuMcry--Jb+h8H1o4RA3kF7QQ@mail.gmail.com>
+Date:   Mon, 06 Apr 2020 20:57:53 +1000
+Message-ID: <87blo4swy6.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maciej W. Rozycki <macro@linux-mips.org> =E4=BA=8E2020=E5=B9=B44=E6=9C=886=
-=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8A=E5=8D=881:23=E5=86=99=E9=81=93=EF=BC=
-=9A
+Linus Torvalds <torvalds@linux-foundation.org> writes:
+> On Sun, Apr 5, 2020 at 5:53 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>>
+>> There is one conflict in fs/sysfs/group.c, between our:
+>>
+>>   9255782f7061 ("sysfs: Wrap __compat_only_sysfs_link_entry_to_kobj function to change the symlink name")
+> [...]
 >
-> On Mon, 6 Apr 2020, Jiaxun Yang wrote:
+> The conflict was trivial.
 >
-> > > Given the description above I think it should be done uniformly and
-> > >automatically across all platforms by trimming the address supplied
-> > >with
-> > >$(load-y) to low 8 digits in a single place, that is at the place wher=
-e
-> > >
-> > >the variable is consumed.  This will reduce clutter across Makefile
-> > >fragments, avoid inconsistencies and extra work to handle individual
-> > >platforms as the problem is triggered over and over again, and limit
-> > >the
-> > >risk of mistakes.
-> >
-> > I was intended to do like this but failed to find a proper way.
-> >
-> > Makefile isn't designed for any kind of calculation.
-> > And shell variables are 64-bit signed so it can't hold such a huge vari=
-able.
-> >
-> > Just wish somebody can give me a way to do like:
-> >
-> > ifndef CONFIG_64BIT
-> > load-y =3D $(load-y) & 0xffffffff
-> > endif
+> But I want to kvetch a bit about that commit. It's doing some odd stuff.
 >
->  Use the usual shell tools like `sed', `cut', `awk', or whatever we use i=
-n
-
-perl may be the easiest to use tool here.
-
-ifndef CONFIG_64BIT
-  load-y :=3D $(shell $(PERL) -e 'print $(load-y) & 0xffffffff')
-endif
-
-Note that it is `:=3D' instead of '=3D'.
-
-> the kernel build already for other purposes.  There's no need to do any
-> actual calculation here to extract the last 8 characters (and the leading
-> `0x' prefix).  At worst you can write a small C program, compile it with
-> the build system compiler and run, as we already do for some stuff.
+> In particular, it's wrapping things "the wrong way". Our naming rules
+> are that the double underscore versions are the internal helper
+> functions that you generally shouldn't use unless you have some extra
+> reason for it, and then the non-underscore versions are the preferred
+> and simpler user interface to those internal implementations.
 >
->   Maciej
+> IOW, the _wrapper_ doesn't have double underscores, it's the _wrappee_
+> that has the underscores.
+>
+> That commit does the exact reverse of that usual pattern, which is
+> very confusing.
+>
+> Now, I see _why_ you do that - normally the non-underscore version is
+> the "real" interface and the one we've always exported, and then the
+> double underscore is the special internal thing that maybe exposes
+> some internal detail (or maybe only does one special case of it and
+> leaves out locking or whatever).
+>
+> In this case, for hysterical raisins, we only _had_ that
+> double-underscore version, and you basically added the new case and
+> did it without the underscores.
+>
+> So I see why it happened the way it did, but I do think the end result
+> makes no sense and is odd and surprising.
 
+Yeah, that's fair.
 
+I was a bit unsure about taking a fs/sysfs patch to begin with, so I
+thought leaving the existing function unchanged was the least risky in
+terms of causing any other breakage.
 
---=20
-YunQiang Su
+But in hindsight that was the wrong choice, the end result is not
+actually what we want.
+
+So we should have done the right patch and then either asked Greg to
+take it or put it in a topic branch of my own.
+
+> The thing is, we have exactly *one* user of that double-underscore
+> version: tpm-chip.c (ok, there are two calls in that file, but it's a
+> single user).
+>
+> So I think it should just have removed the __ version entirely. Make
+> tpm-chip just use the new semantics, and pass in the extra NULL
+> argument.
+>
+> I guess I'll just do that as a cleanup patch on top, but it feels a
+> bit odd to have to do that cleanup when the original patch could have
+> just done the obvious thing.
+
+Thanks.
+
+cheers
