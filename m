@@ -6,62 +6,60 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE10C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54681C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1B221835
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B05820769
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgDFM2v (ORCPT
+        id S1727993AbgDFM3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:28:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59901 "EHLO
+        Mon, 6 Apr 2020 08:29:53 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59948 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgDFM2v (ORCPT
+        with ESMTP id S1727884AbgDFM3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:28:51 -0400
-Received: from mail-qv1-f71.google.com ([209.85.219.71])
+        Mon, 6 Apr 2020 08:29:53 -0400
+Received: from mail-qk1-f197.google.com ([209.85.222.197])
         by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <gpiccoli@canonical.com>)
-        id 1jLQrw-0005wp-RX
-        for linux-kernel@vger.kernel.org; Mon, 06 Apr 2020 12:28:49 +0000
-Received: by mail-qv1-f71.google.com with SMTP id d2so13248652qve.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 05:28:48 -0700 (PDT)
+        id 1jLQsx-00060m-Jd
+        for linux-kernel@vger.kernel.org; Mon, 06 Apr 2020 12:29:51 +0000
+Received: by mail-qk1-f197.google.com with SMTP id w124so14096807qkd.19
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 05:29:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
         bh=OF5+/9Hx0SVxloqW+AsVqfRADYJTfKE7xEAXHE0ATtQ=;
-        b=pICwvlUfyNuekhgS9MGVOmHHsuNIc08Cfdh3jwiPLkeXJMus5HGteUx+gnbMl0O7m5
-         lLeLN0MgHiGXf6koG3gUNmbvvMF9ij8dvLsoJz6iD7xTsmy0D+5WVmntzAo56YYZ5CsN
-         MMqTIfhnbqkqcdA9uFx+o6dKiC1+PRg0S6gxA6pKzJDsBcyUA67dzAZ/MyTKwyQsb3vo
-         WYGcpVVEcLCGhjtb7ohsIwXSCqwg3kB4OGhcbT27aUxYOkq/NgGa8FCL+ACSgt8ufhOE
-         2u904Phxm9L452wNquyYvJ5/OqpwCc6QiGYKYwkQR9CvjA/zVcS/TlbUkBX/5Yqv3Ymv
-         Mwbw==
-X-Gm-Message-State: AGi0PuYJMii7nwmYqwPKx2jrAGVl7GMpZ+n9yQrKz/4ZtvwP6XBPTkw5
-        yuB/LgohYoM8AuY7XoXqPPrEwgPFJkM/R5wQQRSylLrvxjiLZfWJj1QNIUw7gEh8GphdgZo+6Xw
-        NgiL+2ksTNJPWy5D+i+x8qypvw/FwcuA+zA5O+Y9jRw==
-X-Received: by 2002:a05:620a:48:: with SMTP id t8mr9118375qkt.21.1586176128009;
-        Mon, 06 Apr 2020 05:28:48 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJYLiXAu6E02kHBhfDM1nCHxnL13FHkbN3p7Z/eOEFCi3eXhdf202hvNJRK1IZo1qiltey8FA==
-X-Received: by 2002:a05:620a:48:: with SMTP id t8mr9118359qkt.21.1586176127806;
-        Mon, 06 Apr 2020 05:28:47 -0700 (PDT)
+        b=XfJdIWL/AodHp08a9JGr1rgZG4Z3LpUoZGRjTiA1pU2YPHt8+va2HIkaQwC6sIjcWc
+         x4400mhm/6+Y1o0L8EpJV1mk3whGa0IUQJ7aaUCfCEKxa1fk/r3Rg7B+pmE0sAcZBU+u
+         aOTcMWlb6sD2SWQhR9ce+nyx2qjY7zlxKGgcs7a2M3IEVZeh4jgMujb+f1LJVwsXZgoq
+         kZ6NaTgbxPonLuFerQBh2kTLqxcDsmDZSgmdiD0fSjImvyVkU1M1AI94Vy87E0LQH+pr
+         FOBMBC/2DfbTI1Aownus2bR5XXjl9DtTgM2hDmlfxlYjYNwMrK6YfTABd7ATyyllJstV
+         w94A==
+X-Gm-Message-State: AGi0PubHY1iZY758/QmhAy0Z9v3oZ6XgzxKL8XuCcvETfYAIWs3lV0Nt
+        +qtL9N0lckqaoVCa0awSDUNWKEf7NQgxO71rkYraWhOC6dEqFQRE4qibl53+LdNAoKPYcbe1igh
+        7WMTxivgEEDQ9surDQPNoRWgAD2TrgGGfPr/Eztno2Q==
+X-Received: by 2002:a05:6214:b8e:: with SMTP id fe14mr20926377qvb.44.1586176190788;
+        Mon, 06 Apr 2020 05:29:50 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIFzhFbMp0Mc44zEb42FJlJTJPveQx3ILgrcP5rWAHivUCkkwOrdkiZvWqvKm7FEtjLJMVxzA==
+X-Received: by 2002:a05:6214:b8e:: with SMTP id fe14mr20926359qvb.44.1586176190595;
+        Mon, 06 Apr 2020 05:29:50 -0700 (PDT)
 Received: from [192.168.1.75] (201-27-34-233.dsl.telesp.net.br. [201.27.34.233])
-        by smtp.gmail.com with ESMTPSA id g187sm14076243qkf.115.2020.04.06.05.28.43
+        by smtp.gmail.com with ESMTPSA id q15sm15131081qtj.83.2020.04.06.05.29.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Apr 2020 05:28:47 -0700 (PDT)
-Subject: Re: [PATCH V3] kernel/hung_task.c: Introduce sysctl to print all
- traces when a hung task is detected
+        Mon, 06 Apr 2020 05:29:49 -0700 (PDT)
+Subject: Re: [PATCH V3] panic: Add sysctl to dump all CPUs backtraces on oops
+ event
 To:     akpm@linux-foundation.org, keescook@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        mcgrof@kernel.org, yzaikin@google.com, tglx@linutronix.de,
-        penguin-kernel@I-love.SAKURA.ne.jp, vbabka@suse.cz,
-        rdunlap@infradead.org, willy@infradead.org, kernel@gpiccoli.net,
-        dvyukov@google.com
-References: <20200327223646.20779-1-gpiccoli@canonical.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-doc@vger.kernel.org, mcgrof@kernel.org, yzaikin@google.com,
+        tglx@linutronix.de, vbabka@suse.cz, rdunlap@infradead.org,
+        willy@infradead.org, kernel@gpiccoli.net
+References: <20200327224116.21030-1-gpiccoli@canonical.com>
 From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
@@ -88,12 +86,12 @@ Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
  Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
  kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
  X18zwLgdiQ==
-Message-ID: <d4888de4-5748-a1d0-4a45-d1ecebe6f2a9@canonical.com>
-Date:   Mon, 6 Apr 2020 09:28:41 -0300
+Message-ID: <2eda78ca-6a0e-7a70-d800-13fbe0038ebb@canonical.com>
+Date:   Mon, 6 Apr 2020 09:29:45 -0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200327223646.20779-1-gpiccoli@canonical.com>
+In-Reply-To: <20200327224116.21030-1-gpiccoli@canonical.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
