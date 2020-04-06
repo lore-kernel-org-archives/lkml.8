@@ -2,283 +2,116 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1B4C2BABC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC716C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682A221D94
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:14:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="sBXySGlU"
+	by mail.kernel.org (Postfix) with ESMTP id 9ABD622955
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgDFNOs (ORCPT
+        id S1728348AbgDFNPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:14:48 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:18091 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728193AbgDFNOs (ORCPT
+        Mon, 6 Apr 2020 09:15:39 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:38139 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728193AbgDFNPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:14:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586178886; x=1617714886;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=3Hr6eCFUJGmr0peeA91u4VbTBCp2QEbtkR27QSCgsmY=;
-  b=sBXySGlUgd7OCQ9XCwkyqbCj6G9cBLS0l36BwT5giU6Y37kuBm4lsXr8
-   YCqbjGOeTbjtvcUDjPJOyZoAFLbxMIQ0RMTXE7deddXDMstV80ohCNlMH
-   loLeSnTlm2dyqDq7s1rb4IhGPTB4JV7zG5YXfHOKTpEgw4RhmFnXj7Clp
-   M=;
-IronPort-SDR: PnvmSjbBTUahDHOeAzqD7W6iFI9Xk/cGePXbXpH0agNpeIGcSFYsZmbFXdr2Yx3I3LPGWFfwQR
- sE7Lum2L7jGw==
-X-IronPort-AV: E=Sophos;i="5.72,351,1580774400"; 
-   d="scan'208";a="24290850"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 06 Apr 2020 13:14:45 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 6637EA24B6;
-        Mon,  6 Apr 2020 13:14:34 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:14:33 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.65) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:14:19 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 08/15] mm/damon: Implement access pattern recording
-Date:   Mon, 6 Apr 2020 15:09:31 +0200
-Message-ID: <20200406130938.14066-9-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200406130938.14066-1-sjpark@amazon.com>
-References: <20200406130938.14066-1-sjpark@amazon.com>
+        Mon, 6 Apr 2020 09:15:39 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MQ5jC-1jhWor11UG-00M5t0; Mon, 06 Apr 2020 15:15:37 +0200
+Received: by mail-qt1-f177.google.com with SMTP id z12so12722257qtq.5;
+        Mon, 06 Apr 2020 06:15:36 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua2eAG1q45ORCf6QKN97fvEUVaM7Wev7gS2YJmZ0T9alRSZaIZi
+        R4JJNha7ZUvzZ/aX35KjJt1OgusXw2ULcuV+tLs=
+X-Google-Smtp-Source: APiQypLa5L7CKwlGZNhn/7xAjUoLc+7MSyvfCvi3f7raJ3Pm4QCoa8xTD4iijCH0Ufx8gGRQ4K6mPgVfCzePn/2MrKM=
+X-Received: by 2002:ac8:12c2:: with SMTP id b2mr379999qtj.7.1586178935967;
+ Mon, 06 Apr 2020 06:15:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D11UWB003.ant.amazon.com (10.43.161.206) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <20200406121233.109889-1-mst@redhat.com> <20200406121233.109889-3-mst@redhat.com>
+ <CAK8P3a1nce31itwMKbmXoNZh-Y68m3GX_WwzNiaBuk280VFh-Q@mail.gmail.com> <20200406085707-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200406085707-mutt-send-email-mst@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 6 Apr 2020 15:15:20 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1=-rhiMyAh6=6EwhxSmNnYaXR9NWhh+ZGh4Hh=U_gEuA@mail.gmail.com>
+Message-ID: <CAK8P3a1=-rhiMyAh6=6EwhxSmNnYaXR9NWhh+ZGh4Hh=U_gEuA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] vhost: disable for OABI
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "richard.henderson@linaro.org" <richard.henderson@linaro.org>,
+        "christophe.lyon@st.com" <christophe.lyon@st.com>,
+        kbuild test robot <lkp@intel.com>,
+        "daniel.santos@pobox.com" <daniel.santos@pobox.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Richard Earnshaw <Richard.Earnshaw@arm.com>,
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        kvm list <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:eOGOvwDewauxKWRDEnPVWf5EDRque1mRx2tHK0CCdFO0/T32fwP
+ jQxBIk34uZzQ7k0wZY9g7R6UAVBvVBoNL+NRz4LOpAzBJW2wCckUPV7qamp0ue6eB0pUspg
+ 3UXQ6e6bHEE2DxDKEs0sO3N+fBI6+DSdtvT41xtgUjlDuUz7CVo2Z/Pae6+0WHakBg7Ogfl
+ e8IT7NxxG1cWjOQfuzsbg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gaqzuPgItbY=:jaYoCVrNlG+E/xXN6wtuV9
+ Rgr9tN6wO1eoGvuqdCKp6NpLQZ2+EGfqLrCAMueSpYtXG1wN1SFECQjyRnMKmGNTfwnYgf3KU
+ iBhD+x8zSHx0TcWMWI5RC0S3zlMAsm+IVkBYVm+tiS+wSomaLyLUDQIH91Cp3+WTGlOfL1zQG
+ fOJKCYEPgK/tMLMpDUlgzR7Cs32AqVHgc16H2YxRwLXfpVCjnvDqOqZ4dLyEAqtN9tCJg/b/R
+ p9pMzwhNhS1bU29LJl7FGn4xYmzb+dnibbtVHWXPNev5nEyB3ns8Mh4cLXnqH0AWSI+ACp5zC
+ HmImnZQ66T+arEi2xTygH3/hcf4o+dv3fXphtmfZ/1l6S+CUAHsAPYnWxmv7N57l34iYJ/sT8
+ SJG0gdCUXTugCcxdBAZ3Cdc3tuE1mPcjybDUJywymi43O6oz47itN1Nzwzlr1h15CeNuBvyu2
+ +jflbl4ytueSdoSRseYrKjZK8EPVX/0uF6gaj2tVGUMHGXhJ3PDdIzDlVim0d/99swoocQTln
+ Ai9/gxkHFiykCyFZ9q/uAfojsm+MjOQvjzAMpbHuqoJllpXfME0xd1tWym54uHXRXx9TTFFI9
+ wBrys2OmuEeOQapioghOCg+P5ffo0CNsHC7Fe+8pLYuy8PeHhVLwfuGLssYjDErmrNnJakEk8
+ x+0JptYnpqteN3hhi3raMJ0hRy4/m3bMrSXL0LbBYQoGjYzW4PD3HiU9Yk4buGOOrxYWYJB0N
+ XznDa0FlrlCxswh88MnolbyPhqWwQfMbJZr5izyFqHBBc6bAJ0jHpNMfISjcGS1D/2rYZN0xt
+ 3ULwwPOas6WUlQX4L2JTF3llMtlf6dAxkxYvlq1Hj59slx4Lis=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Mon, Apr 6, 2020 at 3:02 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>
+> On Mon, Apr 06, 2020 at 02:50:32PM +0200, Arnd Bergmann wrote:
+> > On Mon, Apr 6, 2020 at 2:12 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >
+> > >
+> > > +config VHOST_DPN
+> > > +       bool "VHOST dependencies"
+> > > +       depends on !ARM || AEABI
+> > > +       default y
+> > > +       help
+> > > +         Anything selecting VHOST or VHOST_RING must depend on VHOST_DPN.
+> > > +         This excludes the deprecated ARM ABI since that forces a 4 byte
+> > > +         alignment on all structs - incompatible with virtio spec requirements.
+> > > +
+> >
+> > This should not be a user-visible option, so just make this 'def_bool
+> > !ARM || AEABI'
+> >
+>
+> I like keeping some kind of hint around for when one tries to understand
+> why is a specific symbol visible.
 
-This commit implements the recording feature of DAMON. If this feature
-is enabled, DAMON writes the monitored access patterns in its binary
-format into a file which specified by the user. This is already able to
-be implemented by each user using the callbacks.  However, as the
-recording is expected to be used widely, this commit implements the
-feature in the DAMON, for more convenience and efficiency.
+I meant you should remove the "VHOST dependencies" prompt, not the
+help text, which is certainly useful here. You can also use the three lines
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |   7 +++
- mm/damon.c            | 120 ++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 124 insertions(+), 3 deletions(-)
+     bool
+     depends on !ARM || AEABI
+     default y
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index cad3ee3d78db..47fb0ec03030 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -50,6 +50,11 @@ struct damon_ctx {
- 	struct timespec64 last_aggregation;
- 	struct timespec64 last_regions_update;
- 
-+	unsigned char *rbuf;
-+	unsigned int rbuf_len;
-+	unsigned int rbuf_offset;
-+	char *rfile_path;
-+
- 	struct task_struct *kdamond;
- 	struct mutex kdamond_lock;
- 
-@@ -66,6 +71,8 @@ int damon_set_pids(struct damon_ctx *ctx, unsigned long *pids, ssize_t nr_pids);
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg);
-+int damon_set_recording(struct damon_ctx *ctx,
-+				unsigned int rbuf_len, char *rfile_path);
- int damon_start(struct damon_ctx *ctx);
- int damon_stop(struct damon_ctx *ctx);
- 
-diff --git a/mm/damon.c b/mm/damon.c
-index 608787e88118..b1363e4fdab8 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -41,6 +41,8 @@
- #define damon_for_each_task_safe(ctx, t, next) \
- 	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
- 
-+#define MAX_RFILE_PATH_LEN	256
-+
- /* Get a random number in [l, r) */
- #define damon_rand(ctx, l, r) (l + prandom_u32_state(&ctx->rndseed) % (r - l))
- 
-@@ -569,16 +571,81 @@ static bool kdamond_aggregate_interval_passed(struct damon_ctx *ctx)
- }
- 
- /*
-- * Reset the aggregated monitoring results
-+ * Flush the content in the result buffer to the result file
-+ */
-+static void damon_flush_rbuffer(struct damon_ctx *ctx)
-+{
-+	ssize_t sz;
-+	loff_t pos;
-+	struct file *rfile;
-+
-+	while (ctx->rbuf_offset) {
-+		pos = 0;
-+		rfile = filp_open(ctx->rfile_path, O_CREAT | O_RDWR | O_APPEND,
-+				0644);
-+		if (IS_ERR(rfile)) {
-+			pr_err("Cannot open the result file %s\n",
-+					ctx->rfile_path);
-+			return;
-+		}
-+
-+		sz = kernel_write(rfile, ctx->rbuf, ctx->rbuf_offset, &pos);
-+		filp_close(rfile, NULL);
-+
-+		ctx->rbuf_offset -= sz;
-+	}
-+}
-+
-+/*
-+ * Write a data into the result buffer
-+ */
-+static void damon_write_rbuf(struct damon_ctx *ctx, void *data, ssize_t size)
-+{
-+	if (!ctx->rbuf_len || !ctx->rbuf)
-+		return;
-+	if (ctx->rbuf_offset + size > ctx->rbuf_len)
-+		damon_flush_rbuffer(ctx);
-+
-+	memcpy(&ctx->rbuf[ctx->rbuf_offset], data, size);
-+	ctx->rbuf_offset += size;
-+}
-+
-+/*
-+ * Flush the aggregated monitoring results to the result buffer
-+ *
-+ * Stores current tracking results to the result buffer and reset 'nr_accesses'
-+ * of each regions.  The format for the result buffer is as below:
-+ *
-+ *   <time> <number of tasks> <array of task infos>
-+ *
-+ *   task info: <pid> <number of regions> <array of region infos>
-+ *   region info: <start address> <end address> <nr_accesses>
-  */
- static void kdamond_reset_aggregated(struct damon_ctx *c)
- {
- 	struct damon_task *t;
--	struct damon_region *r;
-+	struct timespec64 now;
-+	unsigned int nr;
-+
-+	ktime_get_coarse_ts64(&now);
-+
-+	damon_write_rbuf(c, &now, sizeof(struct timespec64));
-+	nr = nr_damon_tasks(c);
-+	damon_write_rbuf(c, &nr, sizeof(nr));
- 
- 	damon_for_each_task(c, t) {
--		damon_for_each_region(r, t)
-+		struct damon_region *r;
-+
-+		damon_write_rbuf(c, &t->pid, sizeof(t->pid));
-+		nr = nr_damon_regions(t);
-+		damon_write_rbuf(c, &nr, sizeof(nr));
-+		damon_for_each_region(r, t) {
-+			damon_write_rbuf(c, &r->vm_start, sizeof(r->vm_start));
-+			damon_write_rbuf(c, &r->vm_end, sizeof(r->vm_end));
-+			damon_write_rbuf(c, &r->nr_accesses,
-+					sizeof(r->nr_accesses));
- 			r->nr_accesses = 0;
-+		}
- 	}
- }
- 
-@@ -839,6 +906,7 @@ static int kdamond_fn(void *data)
- 		if (kdamond_need_update_regions(ctx))
- 			kdamond_update_regions(ctx);
- 	}
-+	damon_flush_rbuffer(ctx);
- 	damon_for_each_task(ctx, t) {
- 		damon_for_each_region_safe(r, next, t)
- 			damon_destroy_region(r);
-@@ -940,6 +1008,52 @@ int damon_set_pids(struct damon_ctx *ctx, unsigned long *pids, ssize_t nr_pids)
- 	return 0;
- }
- 
-+/**
-+ * damon_set_recording() - Set attributes for the recording.
-+ * @ctx:	target kdamond context
-+ * @rbuf_len:	length of the result buffer
-+ * @rfile_path:	path to the monitor result files
-+ *
-+ * Setting 'rbuf_len' 0 disables recording.
-+ *
-+ * This function should not be called while the kdamond is running.
-+ *
-+ * Return: 0 on success, negative error code otherwise.
-+ */
-+int damon_set_recording(struct damon_ctx *ctx,
-+				unsigned int rbuf_len, char *rfile_path)
-+{
-+	size_t rfile_path_len;
-+
-+	if (rbuf_len > 4 * 1024 * 1024) {
-+		pr_err("too long (>%d) result buffer length\n",
-+				4 * 1024 * 1024);
-+		return -EINVAL;
-+	}
-+	rfile_path_len = strnlen(rfile_path, MAX_RFILE_PATH_LEN);
-+	if (rfile_path_len >= MAX_RFILE_PATH_LEN) {
-+		pr_err("too long (>%d) result file path %s\n",
-+				MAX_RFILE_PATH_LEN, rfile_path);
-+		return -EINVAL;
-+	}
-+	ctx->rbuf_len = rbuf_len;
-+	kfree(ctx->rbuf);
-+	kfree(ctx->rfile_path);
-+	ctx->rfile_path = NULL;
-+	if (!rbuf_len) {
-+		ctx->rbuf = NULL;
-+	} else {
-+		ctx->rbuf = kvmalloc(rbuf_len, GFP_KERNEL);
-+		if (!ctx->rbuf)
-+			return -ENOMEM;
-+	}
-+	ctx->rfile_path = kmalloc(rfile_path_len + 1, GFP_KERNEL);
-+	if (!ctx->rfile_path)
-+		return -ENOMEM;
-+	strncpy(ctx->rfile_path, rfile_path, rfile_path_len + 1);
-+	return 0;
-+}
-+
- /**
-  * damon_set_attrs() - Set attributes for the monitoring.
-  * @ctx:		monitoring context
--- 
-2.17.1
+in front of the help text, but those are equivalent to the one-line version
+I suggested.
 
+     Arnd
