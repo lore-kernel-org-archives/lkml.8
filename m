@@ -2,153 +2,111 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F97C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27740C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B600A20748
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D94206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:06:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EuecmqN+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VNG6cwoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgDFVFy (ORCPT
+        id S1726467AbgDFVGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:05:54 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:18186 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726254AbgDFVFx (ORCPT
+        Mon, 6 Apr 2020 17:06:42 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33162 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgDFVGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:05:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586207153; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=ffx5EV2Q8Tn2RVpOX/tVF4K3DHDlYVftRrtuWmnjmPo=; b=EuecmqN+iYYlfCqASBwfjEBNHXUaj+VeqwtASLOcCEswCV4yzuX5f+9wXlIMzclPeBokUcef
- ftsGN6yDP/b6gEYuvMNND1pfJ/dDvvXvF1XrTvSdFTnRitE/Mf596P7e1WMRptM0bmGt3448
- EnkvI1RpWaXR2yU+DOQkTt68rME=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b99ac.7fc1dadfe0d8-smtp-out-n01;
- Mon, 06 Apr 2020 21:05:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A13BFC43637; Mon,  6 Apr 2020 21:05:47 +0000 (UTC)
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C347DC43636;
-        Mon,  6 Apr 2020 21:05:46 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C347DC43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org, hemantk@codeaurora.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH 3/3] bus: mhi: core: Remove link_status() callback
-Date:   Mon,  6 Apr 2020 15:04:37 -0600
-Message-Id: <1586207077-22361-4-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1586207077-22361-1-git-send-email-jhugo@codeaurora.org>
-References: <1586207077-22361-1-git-send-email-jhugo@codeaurora.org>
+        Mon, 6 Apr 2020 17:06:42 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay1so364360plb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:06:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=F7oyQrycdBGvwHlAg5l8DJr2cSrN+vxfu/5R7n9PHnM=;
+        b=VNG6cwohDXNRbJGMuO22h1hA4687il974YFacYVjjW0YaZFR++a3HGfBJJ7qYyat6E
+         Pqlj+VbHwHV5dgg4V3abZvK3Jx7HPojHNnppBCGjRmy5zttmIJEFyNmrgYnSlX32hMra
+         3yXr+RSEkAemaAarNl/R7E2W+XqlWrwkrZ/jic14gRTFGVhiuH5wte6NfiUD7YqHiRRz
+         nMsqJ/TPb0p0LRYuqFU6gnBkw7sHpqIXM6WIR13FaknYRtX1Vkxc7xonlfLQ2D/jHtDh
+         Zks1+3n/eKOHAbsFpvOjiIML7IcRhrRuBzyGI2up5/9vtpyFnNp5mxH2BQ4a4JGo7Qt/
+         Rtrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=F7oyQrycdBGvwHlAg5l8DJr2cSrN+vxfu/5R7n9PHnM=;
+        b=fl1W7k2NDpEaBlYa8Wv5nkvqgqv+ZjnXU6AsZ9wn0IcZ9O8mwUzSKIMvygegF5+Var
+         ZLsfm4aKcaDWsiD1I5GIT25l8o/PlpojxC0swywI45enYPDvxxLLNVcSeDu4g6WbxGQX
+         Tm4K0+XvLTn+WMZ+I/0liM9UFF6s/3naSxpWsCyzgSbCH4NHjKL20ol+Pk+7vEeNH+vD
+         aMLHEKALwa0uIXGs3fQRB8RbeFTzNX0IqcaTU8iQeBuhBrjtyqQ1hynTUDo5ClZ6CNYx
+         Zcl+JzNorHMeyrcM1tNlhlmFZiAc66y1c6iT32HSFJc43mntUfyPMBIFq43MabCm6TxU
+         dgmA==
+X-Gm-Message-State: AGi0PuYmPn96jad1DCr7TwTO3K6SDy1pRWS44DqpylewrUihEkxWYt4Y
+        EHpV8uNhwcxQkBHbainI10E=
+X-Google-Smtp-Source: APiQypKJbIkLMaBwh90y6jKxYqWc9V67C01F47EfkGfkWEkFa7Vx6ItiZnoObiuN7fiA/whRFXG+Dg==
+X-Received: by 2002:a17:902:bd02:: with SMTP id p2mr22035795pls.67.1586207201046;
+        Mon, 06 Apr 2020 14:06:41 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id d71sm12427134pfd.46.2020.04.06.14.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 14:06:40 -0700 (PDT)
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     robin.murphy@arm.com, m.szyprowski@samsung.com, hch@lst.de
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [RFC/RFT][PATCH v2] dma-mapping: set default segment_boundary_mask to ULONG_MAX
+Date:   Mon,  6 Apr 2020 14:06:43 -0700
+Message-Id: <20200406210643.20665-1-nicoleotsuka@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the MHI core detects invalid data due to a PCI read, it calls into
-the controller via link_status() to double check that the link is infact
-down.  All in all, this is pretty pointless, and racy.  There are no good
-reasons for this, and only drawbacks.
+The default segment_boundary_mask was set to DMA_BIT_MAKS(32)
+a decade ago by referencing SCSI/block subsystem, as a 32-bit
+mask was good enough for most of the devices.
 
-Its pointless because chances are, the controller is going to do the same
-thing to determine if the link is down - attempt a PCI access and compare
-the result.  This does not make the link status decision any smarter.
+Now more and more drivers set dma_masks above DMA_BIT_MAKS(32)
+while only a handful of them call dma_set_seg_boundary(). This
+means that most drivers have a 4GB segmention boundary because
+DMA API returns a 32-bit default value, though they might not
+really have such a limit.
 
-Its racy because its possible that the link was down at the time of the
-MHI core access, but then recovered before the controller access.  In this
-case, the controller will indicate the link is not down, and the MHI core
-will precede to use a bad value as the MHI core does not attempt to retry
-the access.
+The default segment_boundary_mask should mean "no limit" since
+the device doesn't explicitly set the mask. But a 32-bit mask
+certainly limits those devices capable of 32+ bits addressing.
 
-Retrying the access in the MHI core is a bad idea because again, it is
-racy - what if the link is down again?  Furthermore, there may be some
-higher level state associated with the link status, that is now invalid
-because the link went down.
+So this patch sets default segment_boundary_mask to ULONG_MAX.
 
-The only reason why the MHI core could see "invalid" data when doing a PCI
-access, that is actually valid, is if the register actually contained the
-PCI spec defined sentinel for an invalid access.  In this case, it is
-arguable that the MHI implementation broken, and should be fixed, not
-worked around.
-
-Therefore, remove the link_status() callback before anyone attempts to
-implement it.
-
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 ---
- drivers/bus/mhi/core/init.c | 6 ++----
- drivers/bus/mhi/core/main.c | 5 ++---
- include/linux/mhi.h         | 2 --
- 3 files changed, 4 insertions(+), 9 deletions(-)
+Changelog:
+v1->v2
+ * Followed Robin's comments to revise the commit message by
+   dropping one paragraph of not-entirely-true justification
+   (no git-diff level change, so please ack if you tested v1)
 
-diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
-index b38359c..2af08d57 100644
---- a/drivers/bus/mhi/core/init.c
-+++ b/drivers/bus/mhi/core/init.c
-@@ -812,10 +812,8 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
- 	if (!mhi_cntrl)
- 		return -EINVAL;
- 
--	if (!mhi_cntrl->runtime_get || !mhi_cntrl->runtime_put)
--		return -EINVAL;
--
--	if (!mhi_cntrl->status_cb || !mhi_cntrl->link_status)
-+	if (!mhi_cntrl->runtime_get || !mhi_cntrl->runtime_put ||
-+	    !mhi_cntrl->status_cb)
- 		return -EINVAL;
- 
- 	ret = parse_config(mhi_cntrl, config);
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index eb4256b..473278b8 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -20,9 +20,8 @@ int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
+ include/linux/dma-mapping.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 330ad58fbf4d..ff8cefe85f30 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -736,7 +736,7 @@ static inline unsigned long dma_get_seg_boundary(struct device *dev)
  {
- 	u32 tmp = readl(base + offset);
+ 	if (dev->dma_parms && dev->dma_parms->segment_boundary_mask)
+ 		return dev->dma_parms->segment_boundary_mask;
+-	return DMA_BIT_MASK(32);
++	return ULONG_MAX;
+ }
  
--	/* If there is any unexpected value, query the link status */
--	if (PCI_INVALID_READ(tmp) &&
--	    mhi_cntrl->link_status(mhi_cntrl))
-+	/* If the value is invalid, the link is down */
-+	if (PCI_INVALID_READ(tmp))
- 		return -EIO;
- 
- 	*out = tmp;
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index ad19960..be704a4 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -335,7 +335,6 @@ struct mhi_controller_config {
-  * @syserr_worker: System error worker
-  * @state_event: State change event
-  * @status_cb: CB function to notify power states of the device (required)
-- * @link_status: CB function to query link status of the device (required)
-  * @wake_get: CB function to assert device wake (optional)
-  * @wake_put: CB function to de-assert device wake (optional)
-  * @wake_toggle: CB function to assert and de-assert device wake (optional)
-@@ -417,7 +416,6 @@ struct mhi_controller {
- 
- 	void (*status_cb)(struct mhi_controller *mhi_cntrl,
- 			  enum mhi_callback cb);
--	int (*link_status)(struct mhi_controller *mhi_cntrl);
- 	void (*wake_get)(struct mhi_controller *mhi_cntrl, bool override);
- 	void (*wake_put)(struct mhi_controller *mhi_cntrl, bool override);
- 	void (*wake_toggle)(struct mhi_controller *mhi_cntrl);
+ static inline int dma_set_seg_boundary(struct device *dev, unsigned long mask)
 -- 
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.17.1
+
