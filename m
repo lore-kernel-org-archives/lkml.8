@@ -2,161 +2,100 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D166C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96248C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD25206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60591206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wh907092"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vy3ZrVa/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgDFXTp (ORCPT
+        id S1726446AbgDFXUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 19:19:45 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:38478 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbgDFXTp (ORCPT
+        Mon, 6 Apr 2020 19:20:15 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41812 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgDFXUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 19:19:45 -0400
-Received: by mail-pj1-f66.google.com with SMTP id m15so578641pje.3;
-        Mon, 06 Apr 2020 16:19:43 -0700 (PDT)
+        Mon, 6 Apr 2020 19:20:15 -0400
+Received: by mail-pf1-f196.google.com with SMTP id a24so8367555pfc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 16:20:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qiEMQ3MnZPBtfcN59NTsvK6kDONkxcqt/LljkK1BS58=;
-        b=Wh9070924djEGtjlOfMWm3UFGyjc2B4vmxZxdcBAFkiAc1QiSjxqTx9d0m8DBopdP7
-         HuDT/VhNJC+8tM727HYCqdlOtJZVUQ8xhLKP2twBf5CUd4KQ15FMv7A9rkzcX3JPOUpe
-         MV6It+FIRA2BIRSbq/bI6iw3+sXW8cqRPbwa7Y9KrRro2K3Nv0TiNBsKtmLZ2SErQfJl
-         YJcpMjKVh/0EVzznKwspgZgcDJLvG/D4bnd9eBi1I62eZKe5iKtbub4+5EnPwyRRTtC5
-         TIZskK/zQ/mhyIhM7l8BYnFwGJTpp6KELsy9FFTvN0Uq67B2kLRPOSKlceAnBHUE/iAw
-         sPGQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Zy9jOR3FEHibqt+rwh6SfI22BV7Ing5bU84+BN00rNw=;
+        b=Vy3ZrVa/Ni/8KnrxqiUwWfKPPhdXuDRGfUImo5iYAADPRayaJ+EUfF37ttrOwVRcWP
+         bWT3PuAEHyYlL7rT0ylAoFAmthfWjqZjby+RPm88xojLHEy2Ih2ong0+3AOVmz1/s4Kn
+         NGe6JAqA9FnKdPJnDMNWXHSVzW+UFJGofnJqMqiXNIkuKTnaNK/Zf0FjB+Db5P82JVNd
+         qOP6n6cb5yVnUlnNjBg+ZklcqkDUWXxwXZwBPsLQp2zETZPewlXOjDTnDzGwbjsIaomN
+         pgOh96a/mMXIX5tcHKxyenKzvWKRXYg4gHRXJRm8Flz9q7colzH3b+7kImcTXlJE+Dl2
+         KXGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qiEMQ3MnZPBtfcN59NTsvK6kDONkxcqt/LljkK1BS58=;
-        b=TSh3PiWv1LzwJqWZsgj28/aMCpuG8lHq+uBmARDvGVrIXTaYUW9ykXVZVFFX/N9N1J
-         uo8bys8HfdJzBJQ/qWOaFqgEuhRTpyH8EFuuguqq52kZVCLCzs7po+R6xf66nDPW6y2R
-         6of6x+gNxY8H8DTdxzPqQPfXWAbf47mOxwqxkWlmHKvmams+9stpLrM+/EW/ncnjqE3I
-         SGrhiXj6bUsiEK7GVXOSp33Y7PCdW5sCxWGYfh1ZplOszxMdGny+W1cnk63U7JjjqpEp
-         Pm6I1EfcwV4soqCFjwN78PUBqK8mQLUcAH9cFT2RyB3QgXRYfECz+jqVs5jWvP2bNeiF
-         BEIQ==
-X-Gm-Message-State: AGi0Puak77a+QwFBIjD2VOAWde+5uj74a0OxLc2Uagy5rtiRT40nuJhf
-        E/z4nwngd3eOJR0dDZT1eJ4=
-X-Google-Smtp-Source: APiQypKNp8VZ9mr4GVNmcAt4ce9e6kNxf3ZHvIuLkebI0RqZykks7BQ7hyl/mOXDC3laCG4n/sp25w==
-X-Received: by 2002:a17:90a:324b:: with SMTP id k69mr1963136pjb.50.1586215183169;
-        Mon, 06 Apr 2020 16:19:43 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id c126sm12625459pfb.83.2020.04.06.16.19.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 16:19:43 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 16:19:45 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/7] ASoC: fsl_asrc: Support new property
- fsl,asrc-format
-Message-ID: <20200406231945.GA20945@Asurada-Nvidia.nvidia.com>
-References: <cover.1585726761.git.shengjiu.wang@nxp.com>
- <496f49f1fe20b969f4456b591f62223d430c6d74.1585726761.git.shengjiu.wang@nxp.com>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Zy9jOR3FEHibqt+rwh6SfI22BV7Ing5bU84+BN00rNw=;
+        b=FFuf3KSCRZlqqRaUslwMw/YfO1pft0gg/zqb59tNw+0iGjfZ5Y9OWPByRitsl/1DUW
+         2cPFxlS4xylx9LSQQfZX/NBfqMqDkbAbefl3H0D548YGd016Y/owme44Jgd9eKXwzT/9
+         Ud6ZB0U03T9QLkQNu+XZ5+w5weP7QS35VefrvPSa05QlEDHbfG8Fyki6e/FUNmZTQapo
+         yU2hxJqDBxwrnxAtmqbQ36H+orkYoVx6jYZLKOGIAH4k3zeh+pwvSyoa6HjsJTVbifp6
+         RaISzE2OiI0Ncao5hbgz+rdJoeGX5DS6ERu53zF3Xedc5lZh6x3uXbPL9IKIpK6Cxs1b
+         EZcw==
+X-Gm-Message-State: AGi0PuZRoE08ZM7jlX1q3ke3Hh0lu9XlhtdbFSYuxzGuP/aOMO72SSNW
+        SMBu1hLVfOA4WhXLdt1NKGsScQ==
+X-Google-Smtp-Source: APiQypLsaTUFaOPT9CXZo9RFi5Ei4O5u7vftOcbwlI7jEvEVk+ydbIpJPPLduNdR9tBuA3ImrEDjDA==
+X-Received: by 2002:a62:520a:: with SMTP id g10mr1757591pfb.271.1586215213567;
+        Mon, 06 Apr 2020 16:20:13 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id c190sm12367290pfa.66.2020.04.06.16.20.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 16:20:12 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 16:20:12 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     David Howells <dhowells@redhat.com>
+cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] mm: Add kvfree_sensitive() for freeing sensitive data
+ objects
+In-Reply-To: <6504.1586159053@warthog.procyon.org.uk>
+Message-ID: <alpine.DEB.2.21.2004061618580.45667@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.2004052119530.243304@chino.kir.corp.google.com> <20200406023700.1367-1-longman@redhat.com> <6504.1586159053@warthog.procyon.org.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <496f49f1fe20b969f4456b591f62223d430c6d74.1585726761.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just some small comments.
+On Mon, 6 Apr 2020, David Howells wrote:
 
-On Wed, Apr 01, 2020 at 04:45:37PM +0800, Shengjiu Wang wrote:
-> In order to align with new ESARC, we add new property fsl,asrc-format.
-> The fsl,asrc-format can replace the fsl,asrc-width, driver
-> can accept format from devicetree, don't need to convert it to
-> format through width.
+> David Rientjes <rientjes@google.com> wrote:
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
->  sound/soc/fsl/fsl_asrc.c     | 40 ++++++++++++++++++++++--------------
->  sound/soc/fsl/fsl_asrc.h     |  4 ++--
->  sound/soc/fsl/fsl_asrc_dma.c | 15 +++++++++++---
->  3 files changed, 39 insertions(+), 20 deletions(-)
+> > > +static inline void kvfree_sensitive(const void *addr, size_t len)
+> > > +{
+> > > +	if (addr) {
+> > 
+> > Shouldn't this be if (unlikely(ZERO_OR_NULL_PTR(addr))?
 > 
-> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> index 4d3e51bfa949..eea19e2b723b 100644
-> --- a/sound/soc/fsl/fsl_asrc.c
-> +++ b/sound/soc/fsl/fsl_asrc.c
-> @@ -1052,16 +1047,31 @@ static int fsl_asrc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	ret = of_property_read_u32(np, "fsl,asrc-width",
-> -				   &asrc->asrc_width);
-> +	ret = of_property_read_u32(np, "fsl,asrc-format", &asrc->asrc_format);
->  	if (ret) {
-> -		dev_err(&pdev->dev, "failed to get output width\n");
-> -		return ret;
-> +		ret = of_property_read_u32(np, "fsl,asrc-width", &width);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "failed to get output width\n");
+> You've reversed the logic - it needs a '!' there.
+> 
 
-Similar to the comments against sound card driver:
-"failed to decide output format"
+Ah lol, yeah.  Probably just better to do
 
-> +			return ret;
-> +		}
-> +
-> +		switch (width) {
-> +		case 16:
-> +			asrc->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
-> +			break;
-> +		case 24:
-> +			asrc->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
-> +			break;
-> +		default:
-> +			dev_warn(&pdev->dev, "unsupported width, switching to 24bit\n");
+	if (unlikely(ZERO_OR_NULL_PTR(addr)))
+		return;
 
-Should match what the code does after the change:
-+			dev_warn(&pdev->dev,
-+				 "unsupported width, use default S24_LE\n");
-
-> +			asrc->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
-> +			break;
-> +		}
->  	}
->  
-> -	if (asrc->asrc_width != 16 && asrc->asrc_width != 24) {
-> -		dev_warn(&pdev->dev, "unsupported width, switching to 24bit\n");
-> -		asrc->asrc_width = 24;
-> +	if (!(FSL_ASRC_FORMATS & (1ULL << asrc->asrc_format))) {
-> +		dev_warn(&pdev->dev, "unsupported format, switching to S24_LE\n");
-
-Could fit 80 characters:
-+		dev_warn(&pdev->dev, "unsupported width, use default S24_LE\n");
-
-> diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-> index 5fe83aece25b..b15946e03380 100644
-> --- a/sound/soc/fsl/fsl_asrc_dma.c
-> +++ b/sound/soc/fsl/fsl_asrc_dma.c
-> @@ -230,10 +230,19 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
->  		return -EINVAL;
->  	}
->  
-> -	if (asrc->asrc_width == 16)
-> +	bits = snd_pcm_format_physical_width(asrc->asrc_format);
-
-Can we just use 'width' to match the function name?
+but I agree that mm.h is likely not the right spot.
