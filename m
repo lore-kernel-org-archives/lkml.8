@@ -2,109 +2,108 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E21C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCF8C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2447A2064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586196387;
-	bh=ItpFslEAysnniGgOGIyv0Ga3hUuMVLyO3EMtZ1VdRKo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mwpI8WGlt4fp+6tGKRasXlgQ9F9qf2Ejl0iNxd7AxIO52SPYoenl9p9Ib+8V1apmV
-	 l/btcXHbZxqsGvuUTDdgoaqqm+JwasS+XtwAC/4MWrrjecaMsgus5i+3S7DgJWxFh8
-	 uwIGB5asi4YhM7JBCqBn6Q0iSJ5T1fAu70vacDr8=
+	by mail.kernel.org (Postfix) with ESMTP id 0C471206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:09:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3hh1cS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgDFSGZ (ORCPT
+        id S1726642AbgDFSJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:06:25 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37050 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgDFSGX (ORCPT
+        Mon, 6 Apr 2020 14:09:09 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:38002 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgDFSJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:06:23 -0400
-Received: by mail-lj1-f194.google.com with SMTP id r24so720497ljd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:06:21 -0700 (PDT)
+        Mon, 6 Apr 2020 14:09:08 -0400
+Received: by mail-yb1-f194.google.com with SMTP id 204so347425ybw.5;
+        Mon, 06 Apr 2020 11:09:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BisFcRtdDqZDWx9x/qe3YqGCVBMdPDBaYv2iQPpKZGk=;
-        b=hycTOvQuFUOqWorRTq3COTwoQhv5QArTInVPi3BJzNZEYA8ClFHnf/Pog4SwnExpqW
-         O0t2iPzj1sC3CqfuWGAAmBs3m/sWjxm/70oydN4qonvFZVSKIYy24kF2rhRlFk/itgBj
-         OXm3JM0/7A+VH/EVB7RjlP5C0H9ZpQ3DCrkLc=
+        bh=YerZdcxcQmsmPmbc7x3l9FNg9tmvbjAIdH163TSG1LM=;
+        b=C3hh1cS14KFIfA2sbb6OW61jKT6Zea0KasgKyB/5198Mh0GTyceREUQ3TXh1fJoy60
+         aqmMe+gR+t3Dt0EER1JxbS4MdKJGWi4dVaX/TUL+ye28lSgk1mgGVT9boLVvLMSx2L8y
+         Vg7uqev+kgFvU46OX16LWH2RWg9DCSCYtNvspZAVTxHu6/o2p96pmo9xBryiQ9f8cnBi
+         cNdRV359X/j2lCSFrbjMr4OIK3J6oEDoCk7sELPLvjv+2CrYfBsdar1rPFsiIknc5yVt
+         mvXiO11tk1AIye2stB2lE/Pvst7v56WhBZdW7fsmhBcbDlhew1SqVZcwOZBjlSuVaRtK
+         z1pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BisFcRtdDqZDWx9x/qe3YqGCVBMdPDBaYv2iQPpKZGk=;
-        b=DKfC2lxE2Fcp/13FObzfjVZNANoXcfrYKEPWXgh+SsAyzU1pAEf4ZkehEE1gBUtn0q
-         of69a1H4q5tx4IUhrZIOO4+caJymxLMpX36YmyZfKJot2Cn7J42ppOl9ySx6rWqHOTMI
-         bpoBwl9NPKZ+070iTLsvgjO3mERtFnvLRqHChJVoqIZORxRstk6mMo/E2UkTaJVkfiLG
-         fEI9Hit278WlpgHY/VGnoWQYJ4ZGS3jF4c27Dh2FAnvf+wmiOesF3BPcCS7V5c9AKBaZ
-         9DYUqs7JxyiVSAjU2pej89SXzktFqytzr5KHF5vkNgrX8/F8iWtGODGuNuhEXPe2kRlK
-         Mrpg==
-X-Gm-Message-State: AGi0PuZusTa/yh4d4EvrukwEM3Rp77B3JNB/BDqNWQyZsSYAanat8eVr
-        L3qZfOL13ss/DMxiT6w5WbZO7GdcXVU=
-X-Google-Smtp-Source: APiQypJk2RQB5JdBwUoI9NsyVZdVncAn5bo1kjLN2pRlJGZ7bDV3sbSRAHzwkzr2epdLHVb6buryYQ==
-X-Received: by 2002:a05:651c:200c:: with SMTP id s12mr305827ljo.30.1586196380083;
-        Mon, 06 Apr 2020 11:06:20 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id v9sm10358687lji.11.2020.04.06.11.06.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 11:06:18 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id p14so660816lji.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:06:18 -0700 (PDT)
-X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr319344lji.150.1586196377903;
- Mon, 06 Apr 2020 11:06:17 -0700 (PDT)
+        bh=YerZdcxcQmsmPmbc7x3l9FNg9tmvbjAIdH163TSG1LM=;
+        b=Gc6UuhEVh82b4GgcaCEFs2Q+EG+rBNz8fxCaJejz06aYMI33IOgVxqASNAyh9jtGKX
+         NqOlse9IzOL879sledZqgRv2FdWKvhJXYHyg+7+KK8azzi+da8/p3pBzwqwogSU1aykM
+         i1KDh1pZsZ7NUKa4Gwn917DXvk0yHqudk+RAuogW3qAzB/Eil6i6L6HZQmqMQEi4udwm
+         3KieRfKPo3woFQvBbwMeuU+s+OxFIPOQOfa7RlmCYiTc1c3lWnDnh0QfkyP2513nHZSL
+         vqKiy6cCdtIOZ9G0zwsVHNSUeO05/Hvd+wJgnJ4h6b0g8a95EwYPkseMtLXtigl92Cnt
+         8FwA==
+X-Gm-Message-State: AGi0PuZES+9N8uB01LEkmjl0M9uNjT0rHjpSyPPmDccAViSJSG9an2wY
+        k2AO9ltIspqCHOTXt6h+tWNK4krnSol2Vvaytuc=
+X-Google-Smtp-Source: APiQypJNh0gfrRG+aUIvtwyV5pyFGfJIwXgdUOU3PFRpUCcp7aUGELXyXGkqfsUeqnbL0YixSStkauVyExmNu0ZwAhk=
+X-Received: by 2002:a25:bb0b:: with SMTP id z11mr35630837ybg.400.1586196545618;
+ Mon, 06 Apr 2020 11:09:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <a291cce3ff1ba978e7ad231a8e1b7d82f6164e86.camel@perches.com>
- <20200406023700.1367-1-longman@redhat.com> <319765.1586188840@warthog.procyon.org.uk>
- <d509771b7e08fff0d18654b746e413e93ed62fe8.camel@perches.com> <19cbf3b1-2c3f-dd0f-a5c6-69ca3f77dd68@redhat.com>
-In-Reply-To: <19cbf3b1-2c3f-dd0f-a5c6-69ca3f77dd68@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 6 Apr 2020 11:06:02 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgjiHUWLZWKZJ4eU+RrOc2xNZCHn4ETmJ0S+H=Eig28Cw@mail.gmail.com>
-Message-ID: <CAHk-=wgjiHUWLZWKZJ4eU+RrOc2xNZCHn4ETmJ0S+H=Eig28Cw@mail.gmail.com>
-Subject: Re: [PATCH] mm: Add kvfree_sensitive() for freeing sensitive data objects
-To:     Waiman Long <longman@redhat.com>
-Cc:     Joe Perches <joe@perches.com>, David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
+ <87ftdgokao.fsf@tynnyri.adurom.net> <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+ <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com> <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
+ <87imiczrwm.fsf@kamboji.qca.qualcomm.com> <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
+ <CAFA6WYOjU_iDyAn5PMGe=usg-2sPtupSQEYwcomUcHZBAPnURA@mail.gmail.com>
+ <87v9mcycbf.fsf@kamboji.qca.qualcomm.com> <CABPxzYKs3nj0AUX4L-j87Db8v3WnM4uGif9nRTGgx1m2HNN8Rg@mail.gmail.com>
+ <35cadbaff1239378c955014f9ad491bc68dda028.camel@sipsolutions.net>
+ <CABPxzY++YMBPTV4quAkYvEAMfULjMXLkVfNzwocwubno5HO2Bw@mail.gmail.com> <5575dfe84aa745a3c2a61e240c3d150dc8d9446f.camel@sipsolutions.net>
+In-Reply-To: <5575dfe84aa745a3c2a61e240c3d150dc8d9446f.camel@sipsolutions.net>
+From:   Krishna Chaitanya <chaitanya.mgit@gmail.com>
+Date:   Mon, 6 Apr 2020 23:38:54 +0530
+Message-ID: <CABPxzYJHjaLH+ozyFZx1hwXrNxdHgJaardk-kn7d72y7RC-=hw@mail.gmail.com>
+Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
+        <matthias.schoepfer@ithinx.io>,
+        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
+        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 10:59 AM Waiman Long <longman@redhat.com> wrote:
+On Mon, Apr 6, 2020 at 8:36 PM Johannes Berg <johannes@sipsolutions.net> wrote:
 >
-> I have actually been thinking about that. I saw a couple of cases in the
-> crypto code where a memzero_explicit() is followed by kfree(). Those can
-> be replaced by kfree_sensitive.
+> On Mon, 2020-04-06 at 19:55 +0530, Krishna Chaitanya wrote:
+>
+> > > iw phy0 interface add wlan0 type station
+> > > ip link set wlan0 up
+> > Ah okay, got it, thanks. Very narrow window though :-) as the
+> > alloc_ordered_workqueue
+> > doesn't need RTNL and there is a long way to go to do if_add() from
+> > user and setup
+> > the driver for interrupts.
+>
+> True, I do wonder how this is hit. Maybe something with no preempt and a
+> uevent triggering things?
+Probably, it might be specific to the dragonboard410c configuration
 
-Ack.
+> > Again depends on the driver though, it
+> > should properly handle
+> > pending ieee80211_register_hw() with start().
 
-Doing that (and renaming kvzfree) should be a fairly straightforward
-coccinelle patch.
-
-Somebody (maybe you) asked whether we could just use
-kvfree_sensitive() for everything, We probably could. The extra test
-is cheap - much cheaper than the memzero_explicit().
-
-That said, _there_ I think that consistency with regular kfree/kvfree
-naming means that we might as well keep separate names, and keep the
-kmalloc->kfree_sensitive and kvmalloc->kvfree_sensitive pairing. Even
-if technically we could do with just the one function that works for
-both cases.
-
-            Linus
+> It could, but it'd be really tricky. Much better to fix mac80211.
+Sure, anyways it is a good change.
