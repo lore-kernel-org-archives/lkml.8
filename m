@@ -2,107 +2,143 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0556C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D241C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848B12075E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586169984;
-	bh=VeFFXsuWR9uPnSwDIxLT71XI7ZXHdNrRVMRE7hUENAI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=orpDmBOucGOqHx2l3IqIsakOAhEeCzRJxtAlLNmSmHw+NgUJ3ZJkC5pLQpN/yQiJh
-	 ooKN6p0hLPzv4Jgr7yAjaFIwGqFwRcnbT+H/dglKysNLgzGoZabCEa1mu00oa2fibH
-	 YoIArmnIFCr+VEoXBhzDy9TT+LdzLhIG09Zl3R1g=
+	by mail.kernel.org (Postfix) with ESMTP id 5AD6F20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:47:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzqsCjvy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgDFKqX (ORCPT
+        id S1727307AbgDFKrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:46:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbgDFKqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:46:23 -0400
-Received: from linux-8ccs (p3EE2C7AC.dip0.t-ipconnect.de [62.226.199.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E0512072A;
-        Mon,  6 Apr 2020 10:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586169982;
-        bh=VeFFXsuWR9uPnSwDIxLT71XI7ZXHdNrRVMRE7hUENAI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mJZCbwkbRogcgKRxcNXZSbRnvT9QZHFNAxjiSFYxhNorCHA1rUD8O4fgrVgumj6rG
-         B1zu+ds1Fy+WIm8V6c39ZkyoQmwmHHeJ48uqi61gWhJcP/7Z4VWlE1ufTIkoK2MZT2
-         E2cLhUEUhqSxw9nQRr0gSgGCZ69kh/CGEt+ge1Ts=
-Date:   Mon, 6 Apr 2020 12:46:17 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        keescook@chromium.org
-Subject: Re: [PATCH] module: Harden STRICT_MODULE_RWX
-Message-ID: <20200406104615.GA9629@linux-8ccs>
-References: <20200403163716.GV20730@hirez.programming.kicks-ass.net>
- <20200403165631.hrxxm3pnzqa4vxln@treble>
- <alpine.LSU.2.21.2004061146590.26870@pobox.suse.cz>
+        Mon, 6 Apr 2020 06:47:13 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41102 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgDFKrM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 06:47:12 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h9so16835457wrc.8;
+        Mon, 06 Apr 2020 03:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=kd6c2N25HEZts+YP+jU82vZlm0XB3hI9StV8Q2SYi18=;
+        b=KzqsCjvyQeXsFJpe6vy3m8t2XIt52zRT6r7HP+tdSEHioDTBvZTmk3Owaez8ITWsq4
+         ZnVhfue9kEp7ctIk92PhIauoCQ6/Z8tK90PmlVBDD7GuERISRaXD7Gwp9dE0nh/xoyy8
+         ye2oDibBh55XD1CRiXY0TERLmm1xzXiusAbmgXbYWrQ6pz5N5aUS/VxcC4nWnmNXHVmc
+         y69WfOzf4a+D7MYGCZqKWBdGNDgXhwunOh0d8GXvlLolSEFxqTx/pvqh987Id+63fMXq
+         sw9fLVuORf0jEcIuTsS9MEdvqKHfUB/uzHN3THEUVYnmEoUwhRyhuy0g7kphJ7+RQAPI
+         8K3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=kd6c2N25HEZts+YP+jU82vZlm0XB3hI9StV8Q2SYi18=;
+        b=O261Otp+UCYDxJ/tKEewPCxaWCv/pmp2tQDHQwmesymqxhmFjkPjqugPqojJD7vLS2
+         XiMo3zQMznCwCE78GGqSqpBp1VCwZ51e/EsurPN3rTvaAdE/bxpX8HAxtFiKC2A/B7oX
+         iLzoFxXuQ15wrKBUSA1q/+IUWsgW1bU7gc7ubfiF4Ylhccut6xh0cNHVWlIbZP9EvCcM
+         eCMRRA0Fsi6fD3681UVVRwke8xX2Hw+E57sOritHEnFJxOMA3PZ5r3WfGZP2mp5u7SFP
+         Touv8l48sejOlU13g+myyI/IYNgN0j4SX89Oz9HDkxyXi9IQjv/PsBByYW3Cwfo2PUdl
+         gG+A==
+X-Gm-Message-State: AGi0PuZaB7xpGviON4DkE7GRBeAOn4c9ra65S8ERBOMlXUpnvBeQEQU+
+        fFANAGViinNR8XvGwGbfujEQ83Q7fXNZh5Tnl78=
+X-Google-Smtp-Source: APiQypJ5GHPxzMFVraMUiKVhD3OACRC2/EACvph11iACbw5clZBFSXVxVdy+pE2tdp5sbmAHWtN0YvnmoCqfimB2rjE=
+X-Received: by 2002:adf:ef51:: with SMTP id c17mr23091048wrp.130.1586170030510;
+ Mon, 06 Apr 2020 03:47:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2004061146590.26870@pobox.suse.cz>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200401053913.216783-1-nickrterrell@gmail.com>
+ <20200401053913.216783-7-nickrterrell@gmail.com> <20200401093310.GA13748@zn.tnic>
+ <D45F637D-6BB0-4F08-BEBE-FAB9B56F36F6@fb.com> <20200402155810.GD9352@zn.tnic> <2370741E-FE5A-44C1-8BF3-24A03E321F4E@fb.com>
+In-Reply-To: <2370741E-FE5A-44C1-8BF3-24A03E321F4E@fb.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 6 Apr 2020 12:47:30 +0200
+Message-ID: <CA+icZUWP0HR5ZiWq438bpcyu71cxmkv2HPqeuR2EwUAz5CjwBg@mail.gmail.com>
+Subject: Re: [PATCH v4 6/8] x86: bump ZO_z_extra_bytes margin for zstd
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>,
+        Michael van der Westhuizen <rmikey@fb.com>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        Patrick Williams <patrick@stwcx.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Miroslav Benes [06/04/20 11:55 +0200]:
->On Fri, 3 Apr 2020, Josh Poimboeuf wrote:
+On Thu, Apr 2, 2020 at 10:26 PM Nick Terrell <terrelln@fb.com> wrote:
 >
->> On Fri, Apr 03, 2020 at 06:37:16PM +0200, Peter Zijlstra wrote:
->> > +{
->> > +	int i;
->> > +
->> > +	for (i = 0; i < hdr->e_shnum; i++) {
->> > +		if (sechdrs[i].sh_flags & (SHF_EXECINSTR|SHF_WRITE))
->> > +			return -ENOEXEC;
->>
->> I think you only want the error when both are set?
->>
->> 		if (sechdrs[i].sh_flags & (SHF_EXECINSTR|SHF_WRITE) == (SHF_EXECINSTR|SHF_WRITE))
 >
->A section with SHF_EXECINSTR and SHF_WRITE but without SHF_ALLOC would be
->strange though, no? It wouldn't be copied to the final module later
->anyway.
+>
+> > On Apr 2, 2020, at 8:58 AM, Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Wed, Apr 01, 2020 at 05:33:03PM +0000, Nick Terrell wrote:
+> >> The code is currently written so that all the compression algorithms u=
+se the
+> >> same ZO_z_extra_bytes. It is taken to be the maximum of the growth rat=
+e
+> >> plus the maximum fixed overhead. Just a few lines above is the comment=
+:
+> >>
+> >> # =E2=80=A6 Hence safety
+> >> # margin should be updated to cover all decompressors so that we don't
+> >> # need to deal with each of them separately. Please check
+> >> # the description in lib/decompressor_xxx.c for specific information.
+> >>
+> >> So I was been following the guidance in the comments.
+> >
+> > Please state that in the commit message when you send your next
+> > revision.
+>
+> Will do.
+>
+> >> Does it matter? I=E2=80=99m not an expert here,
+> >
+> > Huh, you're only sending the code then? Or what do you mean with not
+> > being an expert?
+>
+> I mean that while I=E2=80=99ve read and understood this piece of the code=
+, have tested
+> the patches, have followed the template of other compression methods
+> added, and am confident in the correctness of the code, I=E2=80=99m not a=
+ regular
+> contributor to the pre-boot x86 kernel code. So it is possible that there=
+ is a
+> use case for kernel compression that I=E2=80=99m not aware of where RAM i=
+s extremely
+> tight and within 64 KB of the current limits.
+>
+> It seems to me that adding 64KB to the memory requirement for kernel
+> decompression is not going to break anyone. If it did the kernel image is=
+ taking
+> up nearly all available RAM, which doesn=E2=80=99t seem likely. But, I do=
+n=E2=80=99t know all
+> use cases. If it does break someone, we can put up a separate patch that
+> switches all the compression methods over a per-method ZO_z_extra_bytes.
+>
 
-That's right - move_module() ignores !SHF_ALLOC sections and does not
-copy them over to their final location. So I think we want to look for
-SHF_EXECINSTR|SHF_WRITE|SHF_ALLOC here..
+Hi Nick,
 
->Looking at layout_sections()... a section with
->SHF_EXECINSTR|SHF_WRITE|SHF_ALLOC would not be counted at all.
+are you planning a zstd-v5?
+If yes, please CC me, thanks.
 
-Also correct, a section with SHF_EXECINSTR|SHF_WRITE|SHF_ALLOC would
-be ignored as it matches none of the masks listed in
-layout_sections() - its section->sh_entsize will stay ~0UL.
-
->However,
->move_module() later copies everything with SHF_ALLOC flag to the final
->module. If there is WXA section, there would be a bug because the
->allocation there would not get the correct size. In that case it is
->important to error out early as you're proposing.
-
-That would be a bug indeed, - we'd get a completely wrong offset to
-copy into since sh_entsize was never initialized. Actually, there
-should probably be a check for that in move_module() :-/
-
->Am I missing something?
-
-Nope, thanks for double checking everything!
-
-Jessica
+Regards,
+- Sedat -
