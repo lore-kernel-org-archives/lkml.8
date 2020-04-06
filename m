@@ -2,110 +2,57 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2339EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7DAC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99CF22273
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ICzTBwcS"
+	by mail.kernel.org (Postfix) with ESMTP id 10D722228A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgDFNFN (ORCPT
+        id S1728357AbgDFNFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:05:13 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:42807 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728177AbgDFNFL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:05:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586178311; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=TXoCw5GkV+IZIhQrsD2drq5aTCEc6Wa8f+KDKz8AGtc=; b=ICzTBwcSJ3JWokKFOl4ON1Rx9w2VWu7UlHZZOEnV9ADDDzRwaLqwMLb58XUnjxljT2ZNq6ZK
- u9Zo/5j2pxorE+F+KNAqKYxir2efXaO6ME05cdjWZ26cjfZeAiIhbHEjotMEeXJlq6ds0P0j
- DmVmNcPx36ILxnYdLFqMePt7dGM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b28ff.7f7f4c9a95e0-smtp-out-n01;
- Mon, 06 Apr 2020 13:05:03 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 64193C43637; Mon,  6 Apr 2020 13:05:03 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A0849C433D2;
-        Mon,  6 Apr 2020 13:04:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A0849C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Sumit Garg <sumit.garg@linaro.org>, linux-wireless@vger.kernel.org,
-        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, matthias.schoepfer@ithinx.io,
-        Philipp.Berg@liebherr.com, Michael.Weitner@liebherr.com,
-        daniel.thompson@linaro.org, loic.poulain@linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
-References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
-        <87ftdgokao.fsf@tynnyri.adurom.net>
-        <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
-        <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com>
-        <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
-Date:   Mon, 06 Apr 2020 16:04:57 +0300
-In-Reply-To: <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
-        (Johannes Berg's message of "Mon, 06 Apr 2020 14:53:49 +0200")
-Message-ID: <87imiczrwm.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 6 Apr 2020 09:05:38 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58059 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728077AbgDFNFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:05:37 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 48wrPV2nPkz9sSJ; Mon,  6 Apr 2020 23:05:34 +1000 (AEST)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: 60083063b755e29685902609e024ecd0c4a1a7d9
+In-Reply-To: <20200213083804.24315-1-geert+renesas@glider.be>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-clk@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/time: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+Message-Id: <48wrPV2nPkz9sSJ@ozlabs.org>
+Date:   Mon,  6 Apr 2020 23:05:34 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes Berg <johannes@sipsolutions.net> writes:
+On Thu, 2020-02-13 at 08:38:04 UTC, Geert Uytterhoeven wrote:
+> The PowerPC time code is not a clock provider, and just needs to call
+> of_clk_init().
+> 
+> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
+> 
+> Remove the #ifdef protecting the of_clk_init() call, as a stub is
+> available for the !CONFIG_COMMON_CLK case.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
-> On Mon, 2020-04-06 at 15:52 +0300, Kalle Valo wrote:
->> Johannes Berg <johannes@sipsolutions.net> writes:
->> 
->> > On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
->> > > >     user-space  ieee80211_register_hw()  RX IRQ
->> > > >     +++++++++++++++++++++++++++++++++++++++++++++
->> > > >        |                    |             |
->> > > >        |<---wlan0---wiphy_register()      |
->> > > >        |----start wlan0---->|             |
->> > > >        |                    |<---IRQ---(RX packet)
->> > > >        |              Kernel crash        |
->> > > >        |              due to unallocated  |
->> > > >        |              workqueue.          |
->> > 
->> > [snip]
->> > 
->> > > I have understood that no frames should be received until mac80211 calls
->> > > struct ieee80211_ops::start:
->> > > 
->> > >  * @start: Called before the first netdevice attached to the hardware
->> > >  *         is enabled. This should turn on the hardware and must turn on
->> > >  *         frame reception (for possibly enabled monitor interfaces.)
->> > 
->> > True, but I think he's saying that you can actually add and configure an
->> > interface as soon as the wiphy is registered?
->> 
->> With '<---IRQ---(RX packet)' I assumed wcn36xx is delivering a frame to
->> mac80211 using ieee80211_rx(), but of course I'm just guessing here.
->
-> Yeah, but that could be legitimate?
+Applied to powerpc next, thanks.
 
-Ah, I misunderstood then. The way I have understood is that no rx frames
-should be delivered (= calling ieee80211_rx()_ before start() is called,
-but if that's not the case please ignore me :)
+https://git.kernel.org/powerpc/c/60083063b755e29685902609e024ecd0c4a1a7d9
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+cheers
