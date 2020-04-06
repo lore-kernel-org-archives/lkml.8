@@ -2,119 +2,71 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B453C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF11C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C263249C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:18:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="ZKEhpMG/"
+	by mail.kernel.org (Postfix) with ESMTP id 207B520769
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgDFRSr (ORCPT
+        id S1728569AbgDFRTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:18:47 -0400
-Received: from mail-pf1-f176.google.com ([209.85.210.176]:41363 "EHLO
-        mail-pf1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgDFRSr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:18:47 -0400
-Received: by mail-pf1-f176.google.com with SMTP id a24so7859055pfc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jQ7wuQYMHaQVCn9LchHaEkgqYpnoZVng6rOoAsTh9Cc=;
-        b=ZKEhpMG/upRDhp3GHIZt5gCyoWSvcY+BsBj1x5wDuZuOKR6vBd2aOjI9rvXWFSXI8q
-         +rBm2wiDSx9zbQSu1OGSIZXoHq+QjaylFSu8+mJlsfl7SL+NbqAnbWOkE8y8aQtceW8c
-         CR3WgK9H7jvA+R7F9dQneLneOv4eEjeXPN0Vad/BXtKP/xqz7pVyP72FY6Yro2RZAs9d
-         4VZ7gZM5jlwTH23AXISqGU9cCFgoNMZcR6GHAb5Kb2fLmMUBvtWer7PDsDyrvrDrEi+T
-         je9ihQEtHmJzAge/j9G2QHymxcqenuJYuVgpDI7MVNl9mjrYPg5aqe0SpL3dA2aLLln1
-         0Aig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jQ7wuQYMHaQVCn9LchHaEkgqYpnoZVng6rOoAsTh9Cc=;
-        b=CzIFNuznAgFJbJJgOwsmpHT5k8lr+uvoftYPnF0hrQg25/WyWKn8+4cwu3fr9rDvWa
-         NJTjHJtGmGKx/NCxKOUQxPvD1qvs1Dv5U6OC8YkC/aSdFuTuPpzFFws9wDk0JXgEUSse
-         dvudrYILMvAMrrnCw0YqgnLe2unEHG+2TIh97AkZFj595+4RA+U/gf2WgPQ0tZAUmQs7
-         jaaZ94Vn0NBjAe4rzx6BBcOU1WXl5w9Bhrl+hXZ2ZY/92SC5zX9xrIoXmHXqDqx6phKZ
-         uGgwTqFhEtjmGyS6jsbjcH8eWtYw7mL9HkV8J3Rbb9rCk1KcEmceqDJKToCjBqEk7+cK
-         garw==
-X-Gm-Message-State: AGi0PuYTXr0StWpiPjKZKknBQz6H/2bNhkMdOL0qbbixsHeNY1yS2Bt9
-        0EkMrC7ZUU1wucnXn7QRR76xbg==
-X-Google-Smtp-Source: APiQypK1JZ1nn/eL3UlA6iCL0x97ec19UzaTBAGbpW5pRjNVVRRI4p+QVV+ElIpmuLGiI9Fakj+gjA==
-X-Received: by 2002:aa7:8750:: with SMTP id g16mr461126pfo.83.1586193524779;
-        Mon, 06 Apr 2020 10:18:44 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id x71sm11812328pfd.129.2020.04.06.10.18.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 10:18:44 -0700 (PDT)
-Subject: Re: /proc/sys/user/max_time_namespaces?
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Andrey Vagin <avagin@openvz.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>
-References: <0fbcb669-33a8-9730-f7fa-639707532611@gmail.com>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <027226a2-f77c-0c1c-ee70-54a6c9194437@arista.com>
-Date:   Mon, 6 Apr 2020 18:18:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <0fbcb669-33a8-9730-f7fa-639707532611@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 6 Apr 2020 13:19:49 -0400
+Received: from nautica.notk.org ([91.121.71.147]:42588 "EHLO nautica.notk.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726837AbgDFRTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:19:49 -0400
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id 9E6C7C01D; Mon,  6 Apr 2020 19:19:47 +0200 (CEST)
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     v9fs-developer@lists.sourceforge.net,
+        Sergey Alirzaev <l29ah@cock.li>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Dominique Martinet <dominique.martinet@cea.fr>
+Subject: [PATCH] 9p: document short read behaviour with O_NONBLOCK
+Date:   Mon,  6 Apr 2020 19:19:32 +0200
+Message-Id: <1586193572-1375-1-git-send-email-asmadeus@codewreck.org>
+X-Mailer: git-send-email 1.7.10.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+From: Dominique Martinet <dominique.martinet@cea.fr>
 
-On 4/3/20 1:21 PM, Michael Kerrisk (man-pages) wrote:
-> Dmitry, Andrei
-> 
-> [Andrei, I mistyped your openvz address in an email of a few minutes
-> ago ("[PATCH] ns: Fix time_for_children symlink"). You were CCed
-> on your gmail address though.]
-> 
-> In the namespaces(7) manual page there is documentation for 
-> these files:
-> 
-> $ ls -1 /proc/sys/user/*namespaces
-> /proc/sys/user/max_cgroup_namespaces
-> /proc/sys/user/max_ipc_namespaces
-> /proc/sys/user/max_mnt_namespaces
-> /proc/sys/user/max_net_namespaces
-> /proc/sys/user/max_pid_namespaces
-> /proc/sys/user/max_user_namespaces
-> /proc/sys/user/max_uts_namespaces
-> 
-> These files allow one to limit on the number of namespaces
-> of each type.
-> 
-> However, there is no /proc/sys/user/max_time_namespaces file.
-> Was this deliberate, or an oversight?
+Regular files opened with O_NONBLOCK allow read to return after a single
+round-trip with the server instead of trying to fill buffer.
+Add a few lines in 9p documentation to describe that.
 
-Thanks a lot for noticing this!
-Yes, it's an oversight and examining the code I can see that it's an
-actual user-visible regression: max_inotify_instances controls time
-namespaces limit.
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+---
+ Documentation/filesystems/9p.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-I've just sent a patch to fix the issue, Cc'ing @stable:
-https://lore.kernel.org/linux-api/20200406171342.128733-1-dima@arista.com/
+diff --git a/Documentation/filesystems/9p.txt b/Documentation/filesystems/9p.txt
+index fec7144e817c..3fb780ffdf23 100644
+--- a/Documentation/filesystems/9p.txt
++++ b/Documentation/filesystems/9p.txt
+@@ -133,6 +133,16 @@ OPTIONS
+ 		cache tags for existing cache sessions can be listed at
+ 		/sys/fs/9p/caches. (applies only to cache=fscache)
+ 
++BEHAVIOR
++========
++
++This section aims at describing 9p 'quirks' that can be different
++from a local filesystem behaviors.
++
++ - Setting O_NONBLOCK on a file will make client reads return as early
++   as the server returns some data instead of trying to fill the read
++   buffer with the requested amount of bytes or end of file is reached.
++
+ RESOURCES
+ =========
+ 
+-- 
+2.26.0
 
-Thanks again,
-          Dmitry
