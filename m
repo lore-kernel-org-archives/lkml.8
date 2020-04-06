@@ -2,108 +2,104 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AFFC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F71C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351D623105
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5DA248E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R+/6szKZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTtf3Lcu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgDFPui (ORCPT
+        id S1729075AbgDFPxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:50:38 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24538 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728945AbgDFPui (ORCPT
+        Mon, 6 Apr 2020 11:53:36 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37659 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728945AbgDFPxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:50:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586188236;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AiVdsmv3/2P/Q7pF5E5kmgygaZDYlx3kJKogFXNLWtA=;
-        b=R+/6szKZrLlmavEi1ic8T1i4WC7miRmmBfjBCkx0xRDQFVAHxcmONrgf8vYHHkIBxe1Dhh
-        Q4NTefNn8qQWsQCQC6UdAON6bIBipPtzOpREu5UFxb7Eb5h8TwKXpuyUfMcrPSMkg32Xsp
-        7L8ieu/c+gY8hv14wWiiAmrb+X2XzVk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-PYxQaaAqNfepKPXUEFjMsg-1; Mon, 06 Apr 2020 11:50:34 -0400
-X-MC-Unique: PYxQaaAqNfepKPXUEFjMsg-1
-Received: by mail-wr1-f70.google.com with SMTP id v14so6178wrq.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:50:34 -0700 (PDT)
+        Mon, 6 Apr 2020 11:53:36 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u65so7723565pfb.4;
+        Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PvwW/9sQV91GxFUMxx/QXPp3Z+S4dWs0vj3Jf2cw5SI=;
+        b=dTtf3LcuHq9DVSUmTHwwFyk0GqNwJ8mmft/rvyPrytkiB+AE7if1Ewt4ZChTfA9cwa
+         urTa9BVMKk/fjtxmdlXnZ+UrSYyLSK9CBgax/QDFF/cOGdoy2EHOTcNkjmQ/LbTLsPeE
+         XyXvdVn8Sd2KiANJECpKl2aO3BCUkqtIp93IZb9M/sK7VrEqBM4RBHwotf52k+tAgh89
+         /BARescvH5q+Jid5Y7T4jb/+mktcyTP7C3A9yRplOJXKMJ9Ib28xpnew2k1qr2LdkUbF
+         rdeUy1niAO9oA27ZDtaVtz5bi7oyUWH5atxERg7CSNPJTp9S4AeBVsaHkmwfJ9hxcP1k
+         m73g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=AiVdsmv3/2P/Q7pF5E5kmgygaZDYlx3kJKogFXNLWtA=;
-        b=rPwImEgjOZ3d6phRFdMwgX0KBi5aSjcnUjsSbrlDwE4lCi8kuEniuS/SAJTuHKaxPw
-         +C6XglKDMcidn+FG+hA+zPNhSnzvmoksjI9IroZKYTok0wniyHwU/WHhC7yd+EXnUr+F
-         5eBF8rVAKvUQSBK/qrafDKGxT2pTee/yHRVCS7h9fnlwEsjPWRfT645gIypbr4udAo6u
-         7Hwo2KiqB6MpkWOCQfSxUm/eD2q6rYpcG/tWC4kEheTVOr8rDmaK1DngpuvoN/GBORie
-         yKZBDj0wf0gvt7YjhDMJc6kFOS/iyvZVpmfK3zw6QSibdmG9TX7HPowZVoe9Y6jJqEEW
-         bxaA==
-X-Gm-Message-State: AGi0PuZuWS4nJ7DNoRXHYlNp8pKLFOnAqhdlH8yAQMscxBfB02rBEFyl
-        OHzXWNbG84jJmSzOxEHqhcLogmYCfFOHggEb3kZlTo+BhLwJTP/lKYpzG+9diOmzPviTYSD2nkV
-        fifDIviLse+g/IZNFfCWPJHrE
-X-Received: by 2002:a1c:4346:: with SMTP id q67mr29832wma.162.1586188233612;
-        Mon, 06 Apr 2020 08:50:33 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJ7Gd3nZkL9uo5+Ou7XIdYwJB7yp+v4e5QytAmqs3y0Z2zBCFk8WkkT0EaCqevxA8KNcArUAA==
-X-Received: by 2002:a1c:4346:: with SMTP id q67mr29819wma.162.1586188233457;
-        Mon, 06 Apr 2020 08:50:33 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id y33sm12153096wrd.84.2020.04.06.08.50.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 08:50:32 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 11:50:30 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH] vdpa-sim: depend on HAS_DMA
-Message-ID: <20200406115000-mutt-send-email-mst@kernel.org>
-References: <20200405081355.2870-1-mst@redhat.com>
- <20200406130927.GA20291@infradead.org>
- <20200406095931-mutt-send-email-mst@kernel.org>
- <0f4f2502-e810-e87a-2fba-dc887d2f4272@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0f4f2502-e810-e87a-2fba-dc887d2f4272@redhat.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PvwW/9sQV91GxFUMxx/QXPp3Z+S4dWs0vj3Jf2cw5SI=;
+        b=c8MMQo3l/+Gi5QdD9IDbFqVLPOXJgGEZ6gpbJSxjWuCNG9tI0kufCsRaGseZKgOWJ5
+         D+DagIJkwQ1x4KSFJIJXJJA/GLWsyWzzG/BjBUfG2Z/O22+HVf/LfeHrylAg5ISxodch
+         OOBF3tQqvC/kib8E6WT9kE1Y1zEEQx3h1+4k1fCzwFNm/MWkFv/p4ncQZ7TBD4+55R/2
+         URy4iRK9ij5b4GuITjkooSkeSUrCIRiMhCsp1/Ii7Z/wuLA96PbbN0d4aWfoaEy9/uRH
+         CZsLbMJKxpyW6y356gScWRg1mu+aCxWubvkEYiVtXejh0n7JKxWvWfwOU3r3VJMHqUPt
+         OBOw==
+X-Gm-Message-State: AGi0PuYkqCK5Ei2kmEEwf4S1eMSQ/lNCdALoONGimY4yuAfDsPkaf2Al
+        +6/J/6HGA1eZvzm+h2yHvxj1d9+b
+X-Google-Smtp-Source: APiQypLlXZ9/q2dQeTVcu9eqF5ReVI3oGbpaCb79uKaT6u+hpkBbBGhfqjEIbl7GsUqZMbAn53jo+Q==
+X-Received: by 2002:aa7:9f12:: with SMTP id g18mr120263pfr.262.1586188415045;
+        Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([131.107.160.210])
+        by smtp.googlemail.com with ESMTPSA id 79sm11823275pfz.23.2020.04.06.08.53.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 08:53:34 -0700 (PDT)
+From:   ltykernel@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, arnd@arndb.de,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, linux-arch@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkuznets@redhat.com
+Subject: [PATCH V4 0/6] x86/Hyper-V: Panic code path fixes
+Date:   Mon,  6 Apr 2020 08:53:25 -0700
+Message-Id: <20200406155331.2105-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 10:12:56PM +0800, Jason Wang wrote:
-> 
-> On 2020/4/6 下午10:02, Michael S. Tsirkin wrote:
-> > On Mon, Apr 06, 2020 at 06:09:27AM -0700, Christoph Hellwig wrote:
-> > > Pleae just drop the code - we should not add new drivers with custom
-> > > DMA ops.
-> > I'm not sure there's another way to do this: this not a driver, it's a
-> > software emulator that pretends to be an actual device. We can't
-> > have the platform supply DMA ops here since the platform is a regular
-> > x86 or whatever.
-> 
-> 
-> Yes, actually vdpa-sim does not depends on HAS_DMA. Maybe we can do shortcut
-> like dev->dma_ops = vdpasim_dma_ops;
-> 
-> Thanks
-> 
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-We can do that - does it them actually work - and not just compile?
+This patchset fixes some issues in the Hyper-V panic code path.
+Patch 1 resolves issue that panic system still responses network
+packets.
+Patch 2-3,5-6 resolves crash enlightenment issues.
+Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
+VM in order to report crash data or kmsg to host before running
+kdump kernel.
+
+Tianyu Lan (6):
+  x86/Hyper-V: Unload vmbus channel in hv panic callback
+  x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
+  x86/Hyper-V: Trigger crash enlightenment only once during
+    0;136;0c0;136;0c system crash.
+  x86/Hyper-V: Report crash register data or kmsg before  running crash
+    kernel
+  x86/Hyper-V: Report crash register data when sysctl_record_panic_msg
+    is not set
+  x86/Hyper-V: Report crash data in die() when panic_on_oops is set
+
+ arch/x86/hyperv/hv_init.c      |  6 +++-
+ arch/x86/kernel/cpu/mshyperv.c | 10 +++++++
+ drivers/hv/channel_mgmt.c      |  3 ++
+ drivers/hv/vmbus_drv.c         | 62 ++++++++++++++++++++++++++++++------------
+ include/asm-generic/mshyperv.h |  2 +-
+ 5 files changed, 63 insertions(+), 20 deletions(-)
 
 -- 
-MST
+2.14.5
 
