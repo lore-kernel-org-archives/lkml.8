@@ -2,114 +2,107 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B63C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58E3C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A07E2206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:17:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Eqi2YJpN"
+	by mail.kernel.org (Postfix) with ESMTP id 70930206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgDFJRP (ORCPT
+        id S1727003AbgDFJSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:17:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21258 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726663AbgDFJRP (ORCPT
+        Mon, 6 Apr 2020 05:18:16 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55960 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbgDFJSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:17:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586164633;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NEV7TR1aEEGU9BOd+7WjT2xwDzuljghXSkqCe1NlNsM=;
-        b=Eqi2YJpNDhiYyJay6FqjX6ZdxeyiTg/Fo13Jd5D+Rm/vLnJL+fDId0gG+IUiSSi36oqMdv
-        W3547tRt61ZAIw5z3DE26e8Q60d07zA4xLXk7Rop+M6ur29Xt3fvVnk7DuUOLC9SvdLhGM
-        SnsokAvWBN10ryzjxGV0nM83pcThajM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-mxPGqf0zPReDwLyoyVPcDA-1; Mon, 06 Apr 2020 05:17:10 -0400
-X-MC-Unique: mxPGqf0zPReDwLyoyVPcDA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04F15100551A;
-        Mon,  6 Apr 2020 09:17:08 +0000 (UTC)
-Received: from ws.net.home (unknown [10.40.194.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1334A60BFB;
-        Mon,  6 Apr 2020 09:17:03 +0000 (UTC)
-Date:   Mon, 6 Apr 2020 11:17:01 +0200
-From:   Karel Zak <kzak@redhat.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-Message-ID: <20200406091701.q7ctdek2grzryiu3@ws.net.home>
-References: <CAJfpegs3uDzFTE4PCjZ7aZsEh8b=iy_LqO1DBJoQzkP+i4aBmw@mail.gmail.com>
- <2590640.1585757211@warthog.procyon.org.uk>
- <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
- <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
- <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
- <27994c53034c8f769ea063a54169317c3ee62c04.camel@themaw.net>
- <20200403111144.GB34663@gardel-login>
- <CAJfpeguQAw+Mgc8QBNd+h3KV8=Y-SOGT7TB_N_54wa8MCoOSzg@mail.gmail.com>
- <20200403151223.GB34800@gardel-login>
- <20200403203024.GB27105@fieldses.org>
+        Mon, 6 Apr 2020 05:18:16 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 752A51C452C; Mon,  6 Apr 2020 11:18:14 +0200 (CEST)
+Date:   Mon, 6 Apr 2020 11:18:13 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Chen Yu <yu.c.chen@intel.com>, Linux PM <linux-pm@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH][v3] PM / sleep: Add pm_debug_messages boot command
+ control
+Message-ID: <20200406091813.GG31120@duo.ucw.cz>
+References: <20200402075652.13289-1-yu.c.chen@intel.com>
+ <CAJZ5v0j2W5MYJnb4hiDn0OgR1xJZwm4TxVm9o-iw+epXPTp82g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="E69HUUNAyIJqGpVn"
 Content-Disposition: inline
-In-Reply-To: <20200403203024.GB27105@fieldses.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <CAJZ5v0j2W5MYJnb4hiDn0OgR1xJZwm4TxVm9o-iw+epXPTp82g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 04:30:24PM -0400, J. Bruce Fields wrote:
-> On Fri, Apr 03, 2020 at 05:12:23PM +0200, Lennart Poettering wrote:
-> > BTW, while we are at it: one more thing I'd love to see exposed by
-> > statx() is a simple flag whether the inode is a mount point. There's
-> > plenty code that implements a test like this all over the place, and
-> > it usually isn't very safe. There's one implementation in util-linux
-> > for example (in the /usr/bin/mountpoint binary), and another one in
-> > systemd. Would be awesome to just have a statx() return flag for that,
-> > that would make things *so* much easier and more robust. because in
-> > fact most code isn't very good that implements this, as much of it
-> > just compares st_dev of the specified file and its parent. Better code
-> > compares the mount ID, but as mentioned that's not as pretty as it
-> > could be so far...
-> 
-> nfs-utils/support/misc/mountpoint.c:check_is_mountpoint() stats the file
-> and ".." and returns true if they have different st_dev or the same
-> st_ino.  Comparing mount ids sounds better.
 
-BTW, this traditional st_dev+st_ino way is not reliable for bind mounts.
-For mountpoint(1) we search the directory in /proc/self/mountinfo.
+--E69HUUNAyIJqGpVn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> So anyway, yes, everybody reinvents the wheel here, and this would be
-> useful.
+Hi!
 
- +1
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Document=
+ation/admin-guide/kernel-parameters.txt
+> > index ed73df5f1369..3fb9cbee8d28 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -3720,6 +3720,9 @@
+> >                         Override pmtimer IOPort with a hex value.
+> >                         e.g. pmtmr=3D0x508
+> >
+> > +       pm_debug_messages       [SUSPEND,KNL]
+> > +                       Enable suspend/resume debug messages during boo=
+t up.
+> > +
+> >         pnp.debug=3D1     [PNP]
+> >                         Enable PNP debug messages (depends on the
+> >                         CONFIG_PNP_DEBUG_MESSAGES option).  Change at r=
+un-time
 
-    Karel
+> Applied (as 5.7-rc material) with modified subject and changelog,
+  thanks!
 
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+Please don't.
 
+We have pnp.debug, i8042.debug, acpi.debug_*, lsm.debug... It makes
+sense to do pm.debug... we want to have some consistency.
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--E69HUUNAyIJqGpVn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXorz1QAKCRAw5/Bqldv6
+8tirAKCUkyHPVgDiMckfb40fMCX03KTXZQCgiI3vObBYdWvXEnTyBLT4zT9uoOs=
+=9YRC
+-----END PGP SIGNATURE-----
+
+--E69HUUNAyIJqGpVn--
