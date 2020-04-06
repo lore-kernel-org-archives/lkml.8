@@ -2,53 +2,51 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75DFC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8899C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90DD92064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDDFE2064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:16:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgDFSQO (ORCPT
+        id S1726922AbgDFSQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:16:14 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:56950 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgDFSQO (ORCPT
+        Mon, 6 Apr 2020 14:16:17 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:48127 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgDFSQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:16:14 -0400
-Received: by mail-il1-f199.google.com with SMTP id 191so15830377ilb.23
+        Mon, 6 Apr 2020 14:16:15 -0400
+Received: by mail-il1-f198.google.com with SMTP id a15so303907ild.14
         for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:16:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ZJqNZn8LEubj1nzduXSuA2Dna6rbbp3U6TLqK8HEJm8=;
-        b=mW8Aff6L/M4Olg20/JFNN/1wDWgjfi9C38d0OOAb/K5i3dghZ+68/i9F73/JyZlg9R
-         5eGKsIrVCuVLfay6tmn19Z2DjPYVEmuXYatvpW/rggeCA/ZrA3MY9L0GA4nPxWOuu0Rn
-         BanwI5/Cqw5aACwlOOhCRpwNT424QekPvRgsB7aVl6dXGcGI+33KtrirPl5ZCL6fjcJJ
-         LeHKYnDIeXZjNKE2a7ctO5CNZdsd+prS98YEuM1ApOBjZwH4CPuTADcMdt7+qnYQHOAX
-         BgQ3xDQAoMN+DfxnTJmJxC36FTWLp3hJYOimOemJY5sz1lYzKqdVIoflTrr4Sfp/PL2x
-         th2w==
-X-Gm-Message-State: AGi0PuZMWHhQ8Ah/hrvn/wrutW+GvXVfX/VmuRsx8X1MPTA27oXDOrua
-        xhtOAysmiZ3j1vCaveJkRqjz3G7O7tjT09V+Rrg6jHIwow5d
-X-Google-Smtp-Source: APiQypL4+QSe/MgeSLSE1bofXL2FFuFiqWpUKjOZwV45cWKksWyjWgBnRov9afCG8lwmxhCKWvQhwESESc/Hf4m1TMd28QTp45C1
+        bh=zB2Pul4O3CZEdfX+FknGpoFpPmJ28DN3NmrYEX8GLIY=;
+        b=HCckr3HZHWdd896IW18R0gHSeJsjBAD+wP0d2P5O/jvv7iPqSJMhoKPQJYcSj9fiwP
+         l+III8GSNus5rskAyjo9CUXsoOqHJFHPGLAWqXlSSNGx138go4p/76e+ygrkw/aIhVTI
+         eJibqbmN6SiQbiSPCWYmPNWGPdBIFXD6W9k02hLywbmI4625lPgaQFx+n8oAkHwY6iDT
+         geRBEqlm6+AALS36kJzwhG4WyICiRJiTXYalHxGVw7w6Uk+lL7aZ+ropJfVGi1Vqk46A
+         ITxNJ84zO2+drQ0HX9ImDjEEEGKLCxlJpaD2H7wJbL6NYrFePUd2FKypumg8B2o2IM9E
+         IO4A==
+X-Gm-Message-State: AGi0PuZkfvFXI8Ij/1o+3KDFWcJ2nwlPt+TdWQPge16smgUOTt+R/0Vt
+        1JjAsQKP2LqNCBnOyhZ8xpXWGP5+DVfZb+dflDaJVjDivCAm
+X-Google-Smtp-Source: APiQypJ93U4Y/7M+URA5MQp73cNseNFmj41V0xx14yE9AAAt9D7ywvfR5mKxr0bACRwKYycHzC//moVWA6jhFaIB3vz6ZelBsTt3
 MIME-Version: 1.0
-X-Received: by 2002:a02:a49a:: with SMTP id d26mr561686jam.117.1586196973157;
+X-Received: by 2002:a02:cac4:: with SMTP id f4mr566095jap.51.1586196973505;
  Mon, 06 Apr 2020 11:16:13 -0700 (PDT)
 Date:   Mon, 06 Apr 2020 11:16:13 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000021008f05a2a34336@google.com>
-Subject: KASAN: user-memory-access Read in put_page
-From:   syzbot <syzbot+b4501d3e966ff59f6090@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, bgeffon@google.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        peterx@redhat.com, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org
+Message-ID: <0000000000002656a605a2a34356@google.com>
+Subject: WARNING: refcount bug in crypto_destroy_tfm
+From:   syzbot <syzbot+fc0674cde00b66844470@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,56 +57,93 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16940efbe00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f72ba8a207627d60
-dashboard link: https://syzkaller.appspot.com/bug?extid=b4501d3e966ff59f6090
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d79efbe00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1705901be00000
+HEAD commit:    468c2a10 mlxsw: spectrum_trap: fix unintention integer ove..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=11089cb3e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
+dashboard link: https://syzkaller.appspot.com/bug?extid=fc0674cde00b66844470
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115f2a43e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141ea0ede00000
 
 The bug was bisected to:
 
-commit 4426e945df588f2878affddf88a51259200f7e29
-Author: Peter Xu <peterx@redhat.com>
-Date:   Thu Apr 2 04:08:49 2020 +0000
+commit 4f87ee118d16b4b2116a477229573ed5003b0d78
+Author: Herbert Xu <herbert@gondor.apana.org.au>
+Date:   Sat Dec 7 14:15:17 2019 +0000
 
-    mm/gup: allow VM_FAULT_RETRY for multiple times
+    crypto: api - Do not zap spawn->alg
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1441b1fbe00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1641b1fbe00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1241b1fbe00000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10ffbc2be00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=12ffbc2be00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14ffbc2be00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b4501d3e966ff59f6090@syzkaller.appspotmail.com
-Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
+Reported-by: syzbot+fc0674cde00b66844470@syzkaller.appspotmail.com
+Fixes: 4f87ee118d16 ("crypto: api - Do not zap spawn->alg")
 
-==================================================================
-BUG: KASAN: user-memory-access in atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
-BUG: KASAN: user-memory-access in page_ref_count include/linux/page_ref.h:67 [inline]
-BUG: KASAN: user-memory-access in put_page_testzero include/linux/mm.h:675 [inline]
-BUG: KASAN: user-memory-access in put_page+0x110/0x1d0 include/linux/mm.h:1136
-Read of size 4 at addr 00003fbf7e8680b0 by task syz-executor574/7201
-
-CPU: 0 PID: 7201 Comm: syz-executor574 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- __kasan_report+0x122/0x190 mm/kasan/report.c:507
- kasan_report+0x4d/0x80 mm/kasan/common.c:648
-==================================================================
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 0 PID: 7174 at lib/refcount.c:28 refcount_warn_saturate+0x1d1/0x1e0 lib/refcount.c:28
 Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 7201 Comm: syz-executor574 Tainted: G    B             5.6.0-syzkaller #0
+CPU: 0 PID: 7174 Comm: syz-executor413 Not tainted 5.6.0-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1e9/0x30e lib/dump_stack.c:118
- panic+0x264/0x7a0 kernel/panic.c:221
- end_report mm/kasan/report.c:96 [inline]
- __kasan_report+0x187/0x190 mm/kasan/report.c:510
- kasan_report+0x4d/0x80 mm/kasan/common.c:648
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x35 kernel/panic.c:582
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ fixup_bug arch/x86/kernel/traps.c:170 [inline]
+ do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:refcount_warn_saturate+0x1d1/0x1e0 lib/refcount.c:28
+Code: e9 db fe ff ff 48 89 df e8 2c 95 1e fe e9 8a fe ff ff e8 c2 81 e1 fd 48 c7 c7 40 c6 71 88 c6 05 82 bd f1 06 01 e8 17 f6 b2 fd <0f> 0b e9 af fe ff ff 0f 1f 84 00 00 00 00 00 41 56 41 55 41 54 55
+RSP: 0018:ffffc90001a17b18 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ca861 RDI: fffff52000342f55
+RBP: 0000000000000003 R08: ffff8880949fe300 R09: ffffed1015cc66a1
+R10: ffffed1015cc66a0 R11: ffff8880ae633507 R12: ffff88809a6d187c
+R13: ffff8880a40eb000 R14: 0000000000000000 R15: ffff8880a40eb010
+ refcount_sub_and_test include/linux/refcount.h:261 [inline]
+ refcount_dec_and_test include/linux/refcount.h:281 [inline]
+ crypto_alg_put crypto/internal.h:93 [inline]
+ crypto_mod_put crypto/api.c:45 [inline]
+ crypto_destroy_tfm+0x2a1/0x310 crypto/api.c:566
+ crypto_exit_ops crypto/api.c:308 [inline]
+ crypto_destroy_tfm+0xb1/0x310 crypto/api.c:565
+ crypto_free_aead include/crypto/aead.h:185 [inline]
+ aead_release+0x2d/0x50 crypto/algif_aead.c:506
+ alg_do_release crypto/af_alg.c:114 [inline]
+ alg_sock_destruct+0x85/0xe0 crypto/af_alg.c:358
+ __sk_destruct+0x4b/0x7c0 net/core/sock.c:1696
+ sk_destruct+0xc6/0x100 net/core/sock.c:1740
+ __sk_free+0xef/0x3d0 net/core/sock.c:1751
+ sk_free+0x78/0xa0 net/core/sock.c:1762
+ sock_put include/net/sock.h:1778 [inline]
+ af_alg_release+0xdb/0x110 crypto/af_alg.c:121
+ __sock_release+0xcd/0x280 net/socket.c:605
+ sock_close+0x18/0x20 net/socket.c:1283
+ __fput+0x2e9/0x860 fs/file_table.c:280
+ task_work_run+0xf4/0x1b0 kernel/task_work.c:123
+ exit_task_work include/linux/task_work.h:22 [inline]
+ do_exit+0xb34/0x2dd0 kernel/exit.c:793
+ do_group_exit+0x125/0x340 kernel/exit.c:891
+ __do_sys_exit_group kernel/exit.c:902 [inline]
+ __se_sys_exit_group kernel/exit.c:900 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:900
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x43ff78
+Code: 00 00 be 3c 00 00 00 eb 19 66 0f 1f 84 00 00 00 00 00 48 89 d7 89 f0 0f 05 48 3d 00 f0 ff ff 77 21 f4 48 89 d7 44 89 c0 0f 05 <48> 3d 00 f0 ff ff 76 e0 f7 d8 64 41 89 01 eb d8 0f 1f 84 00 00 00
+RSP: 002b:00007ffe423e1db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ff78
+RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+RBP: 00000000004bf850 R08: 00000000000000e7 R09: ffffffffffffffd0
+R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000000001
+R13: 00000000006d1180 R14: 0000000000000000 R15: 0000000000000000
 Kernel Offset: disabled
 Rebooting in 86400 seconds..
 
