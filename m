@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62FFC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4141C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8F5248DC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88902248DD
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m3/NFZit"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fmv6RyJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgDFPxm (ORCPT
+        id S1729177AbgDFPxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:53:42 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34604 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728972AbgDFPxi (ORCPT
+        Mon, 6 Apr 2020 11:53:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42161 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729113AbgDFPxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:53:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l14so121202pgb.1;
-        Mon, 06 Apr 2020 08:53:36 -0700 (PDT)
+        Mon, 6 Apr 2020 11:53:41 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 22so7700062pfa.9;
+        Mon, 06 Apr 2020 08:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+9KjE0gcagaW6BknUsMHTQZDdHRFKr6puOdlVuQED7Y=;
-        b=m3/NFZitU17lODZBp2pchvapYrneFUQ0huYm9dHIs7f2U9CHd9wESHPBOPwjjZu7qQ
-         Zgl3gQyPTIAfIJjN8lywUUKh3nqOpyaTQyPjA7dK8u8Fbih4W6XxxpOsYK16toHI8NO5
-         6jmET8qrlop/wm1zjEKemjbwo/DtHd3iTeTbMP/kCYmd0XwpXz9Fk1pLgvMm5q+oEzVj
-         7395xyyVR5A1LZQ8T4FPNYuKUfw0U30WZMe6b2bpYxy52O7dKtYFVyL5t1A6hSHiBkFx
-         8rED9K8B8GhoWkksxb7Ush9pJfBu245gjJm5mLmJZHZxe9o4xG+wlvihseHTgy7bzlwV
-         JiJA==
+        bh=8eQoSe2M/BULPKm6rT4KkJz9rHpLzA8oR8K4h6ArKs8=;
+        b=Fmv6RyJy69p1jnLwXZSETpPwyqLmL3CXQEGqcV7c9Qut2x6fVsSibS1N8SZ7HrSDGd
+         9Uxw0MAYpzKT08tSPmcdmBHZCGrcZCwlfWY/YBPpWz59Is4BKO9PbgrWzAqiaAq9MLL2
+         fCVsUhtlQJkk09wqYqSl7+YVtQ9bmGgpjqVVP7Us/fwmmyJuqnMBUxEVK6TVM/8U6cZa
+         Nse+a3HY5J9btTJzzg8Q0IBAI9rcgLt7BcngHfAStAqfczA+KeWBWS+0VpmjPMFI7hrI
+         /4aeVtOp4ILMJJH+tXCrq92dOoPhX6kbyHSGP0v3kDXmljcCmFkRZJwlXlRgmYuFNfP0
+         WDgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=+9KjE0gcagaW6BknUsMHTQZDdHRFKr6puOdlVuQED7Y=;
-        b=Ag5+RC+JTE2fhD2T1RkOK3/BDKYo+EyJT3gItlVHAQXwQCOsp+fAlCS8EP800A3MMp
-         VGWzifZg1mVlx/KOBmcWO76GV2+Bm63oT3c1fX3EMx63nIVAYQ4QvzPeKsFnw0pgIzqb
-         ZezWHVUiPalHi7lAiBJJfi7eUhEcpUHIeUSFu2HLViTY/byX7Ry2+nn3DyXJHOHdDNI0
-         +zjAaxcaFHB3dfikwgVPH8smW+POOe8mdLRUq9gh5Z81wOZxKvtirfCjAAf9wii9PLig
-         06QZtXiUU7c1v8FbGz9sYu5BpcLpaCOP6v0iWjFj8KiAPvD8/0vRl1sC5wVJL+TZ/zIv
-         57ew==
-X-Gm-Message-State: AGi0PuYud7fkK2sXkpM4ZZvNaw5OuzqASo+2/ubdyhs+GieWwnrK1APj
-        LfMw7lvaWlWM04AVT6KDS4M=
-X-Google-Smtp-Source: APiQypIVSdiqfXCR9ZUhGagiar8jl8iy5SIFWVSyhMtZwpDn+z5l5p7ZtK8al+Ee92teHthmrWJ82w==
-X-Received: by 2002:a62:ce48:: with SMTP id y69mr135671pfg.178.1586188415916;
-        Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
+        bh=8eQoSe2M/BULPKm6rT4KkJz9rHpLzA8oR8K4h6ArKs8=;
+        b=cDrXMvjeXNudjQT37E2K0yu5YNVuBf/rF/IOZb0RWzTgT/HqhvCBpFk72p0nzOe2xH
+         xAHzrLga4xnzg7vl6FpNo4nPuFobzGaCCFB2FBEWU/jKv07uevj9mC6lJZ2SjdMRftUY
+         z2ZVgDdj8Cdz71JZe9QhhQhKFvTRjU2zUvbQ/rouQr8Vkj/CAJ9PQ00vgkBy92xLtyVa
+         iY1wB5WlFCbtubB4IjqQ5a1/zF94Xljku4LZeDUfcCbEzgaMF9sRgQg0s9Bm6wEBXPQz
+         Bo018YZ3KaXSLxlWifnRZsxLeORMvD8+NwFofMbB76iTVihxGsHgE5VCCS7RTuZzIYzF
+         tzzA==
+X-Gm-Message-State: AGi0PuZCfxx0V09Ky6Lq1XvAkh28WXPN7WkkG236/6TepVgDsm9QBt+7
+        s7Fosef17RtwfZ1UfqCCsU8=
+X-Google-Smtp-Source: APiQypKcbocApIfduaFaeNXg5AUesFEAxP8JcjHgJ/l8LdMfUbt9UNZfVUT3Wb/1fexunRtGokzDeA==
+X-Received: by 2002:a62:687:: with SMTP id 129mr103400pfg.209.1586188419798;
+        Mon, 06 Apr 2020 08:53:39 -0700 (PDT)
 Received: from localhost.corp.microsoft.com ([131.107.160.210])
-        by smtp.googlemail.com with ESMTPSA id 79sm11823275pfz.23.2020.04.06.08.53.35
+        by smtp.googlemail.com with ESMTPSA id 79sm11823275pfz.23.2020.04.06.08.53.38
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
+        Mon, 06 Apr 2020 08:53:39 -0700 (PDT)
 From:   ltykernel@gmail.com
 X-Google-Original-From: Tianyu.Lan@microsoft.com
 To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
@@ -65,9 +65,9 @@ To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
 Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org, vkuznets@redhat.com
-Subject: [PATCH V4 1/6] x86/Hyper-V: Unload vmbus channel in hv panic callback
-Date:   Mon,  6 Apr 2020 08:53:26 -0700
-Message-Id: <20200406155331.2105-2-Tianyu.Lan@microsoft.com>
+Subject: [PATCH V4 5/6] x86/Hyper-V: Report crash register data when sysctl_record_panic_msg is not set
+Date:   Mon,  6 Apr 2020 08:53:30 -0700
+Message-Id: <20200406155331.2105-6-Tianyu.Lan@microsoft.com>
 X-Mailer: git-send-email 2.14.5
 In-Reply-To: <20200406155331.2105-1-Tianyu.Lan@microsoft.com>
 References: <20200406155331.2105-1-Tianyu.Lan@microsoft.com>
@@ -78,114 +78,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-When kdump is not configured, a Hyper-V VM might still respond to
-network traffic after a kernel panic when kernel parameter panic=0.
-The panic CPU goes into an infinite loop with interrupts enabled,
-and the VMbus driver interrupt handler still works because the
-VMbus connection is unloaded only in the kdump path.  The network
-responses make the other end of the connection think the VM is
-still functional even though it has panic'ed, which could affect any
-failover actions that should be taken.
-
-Fix this by unloading the VMbus connection during the panic process.
-vmbus_initiate_unload() could then be called twice (e.g., by
-hyperv_panic_event() and hv_crash_handler(), so reset the connection
-state in vmbus_initiate_unload() to ensure the unload is done only
-once.
+When sysctl_record_panic_msg is not set, the panic will
+not be reported to Hyper-V via hyperv_report_panic_msg().
+So the crash should be reported via hyperv_report_panic().
 
 Fixes: 81b18bce48af ("Drivers: HV: Send one page worth of kmsg dump over Hyper-V during panic")
 Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
 ---
-Change since v1:
-	- Update change log
-	- Use xchg() to change vmbus connection status
-Change since v2:
-	- Update comment of registering panic callback.
 Change since v3:
-        - Add fix commit in the change log.
+        - Add fix commit in the change log
 ---
- drivers/hv/channel_mgmt.c |  3 +++
- drivers/hv/vmbus_drv.c    | 21 +++++++++++++--------
- 2 files changed, 16 insertions(+), 8 deletions(-)
+ drivers/hv/vmbus_drv.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
-index 0370364169c4..501c43c5851d 100644
---- a/drivers/hv/channel_mgmt.c
-+++ b/drivers/hv/channel_mgmt.c
-@@ -839,6 +839,9 @@ void vmbus_initiate_unload(bool crash)
- {
- 	struct vmbus_channel_message_header hdr;
- 
-+	if (xchg(&vmbus_connection.conn_state, DISCONNECTED) == DISCONNECTED)
-+		return;
-+
- 	/* Pre-Win2012R2 hosts don't support reconnect */
- 	if (vmbus_proto_version < VERSION_WIN8_1)
- 		return;
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 029378c27421..6478240d11ab 100644
+index 333dad39b1c1..172ceae69abb 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -53,9 +53,12 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+@@ -48,6 +48,18 @@ static int hyperv_cpuhp_online;
+ 
+ static void *hv_panic_page;
+ 
++/*
++ * Boolean to control whether to report panic messages over Hyper-V.
++ *
++ * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
++ */
++static int sysctl_record_panic_msg = 1;
++
++static int hyperv_report_reg(void)
++{
++	return !sysctl_record_panic_msg || !hv_panic_page;
++}
++
+ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+ 			      void *args)
  {
- 	struct pt_regs *regs;
- 
--	regs = current_pt_regs();
-+	vmbus_initiate_unload(true);
- 
--	hyperv_report_panic(regs, val);
-+	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
-+		regs = current_pt_regs();
-+		hyperv_report_panic(regs, val);
-+	}
+@@ -61,7 +73,7 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+ 	 * the notification here.
+ 	 */
+ 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
+-	    && !hv_panic_page) {
++	    && hyperv_report_reg()) {
+ 		regs = current_pt_regs();
+ 		hyperv_report_panic(regs, val);
+ 	}
+@@ -79,7 +91,7 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
+ 	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
+ 	 * the notification here.
+ 	 */
+-	if (!hv_panic_page)
++	if (hyperv_report_reg())
+ 		hyperv_report_panic(regs, val);
  	return NOTIFY_DONE;
  }
+@@ -1267,13 +1279,6 @@ static void vmbus_isr(void)
+ 	add_interrupt_randomness(HYPERVISOR_CALLBACK_VECTOR, 0);
+ }
  
-@@ -1391,10 +1394,16 @@ static int vmbus_bus_init(void)
- 		}
- 
- 		register_die_notifier(&hyperv_die_block);
--		atomic_notifier_chain_register(&panic_notifier_list,
--					       &hyperv_panic_block);
- 	}
- 
-+	/*
-+	 * Always register the panic notifier because we need to unload
-+	 * the VMbus channel connection to prevent any VMbus
-+	 * activity after the VM panics.
-+	 */
-+	atomic_notifier_chain_register(&panic_notifier_list,
-+			       &hyperv_panic_block);
-+
- 	vmbus_request_offers();
- 
- 	return 0;
-@@ -2204,8 +2213,6 @@ static int vmbus_bus_suspend(struct device *dev)
- 
- 	vmbus_initiate_unload(false);
- 
--	vmbus_connection.conn_state = DISCONNECTED;
+-/*
+- * Boolean to control whether to report panic messages over Hyper-V.
+- *
+- * It can be set via /proc/sys/kernel/hyperv/record_panic_msg
+- */
+-static int sysctl_record_panic_msg = 1;
 -
- 	/* Reset the event for the next resume. */
- 	reinit_completion(&vmbus_connection.ready_for_resume_event);
- 
-@@ -2289,7 +2296,6 @@ static void hv_kexec_handler(void)
- {
- 	hv_stimer_global_cleanup();
- 	vmbus_initiate_unload(false);
--	vmbus_connection.conn_state = DISCONNECTED;
- 	/* Make sure conn_state is set as hv_synic_cleanup checks for it */
- 	mb();
- 	cpuhp_remove_state(hyperv_cpuhp_online);
-@@ -2306,7 +2312,6 @@ static void hv_crash_handler(struct pt_regs *regs)
- 	 * doing the cleanup for current CPU only. This should be sufficient
- 	 * for kdump.
- 	 */
--	vmbus_connection.conn_state = DISCONNECTED;
- 	cpu = smp_processor_id();
- 	hv_stimer_cleanup(cpu);
- 	hv_synic_disable_regs(cpu);
+ /*
+  * Callback from kmsg_dump. Grab as much as possible from the end of the kmsg
+  * buffer and call into Hyper-V to transfer the data.
 -- 
 2.14.5
 
