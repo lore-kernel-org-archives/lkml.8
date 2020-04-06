@@ -2,91 +2,113 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB9EC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F25C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2D0206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:43:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMCuX59W"
+	by mail.kernel.org (Postfix) with ESMTP id 60CA9206F7
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:45:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586137550;
+	bh=aN2DS/fQEmLf3lfUJIBt8g5jqpadQvzWquAGRtRgpGI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wINvZb+rYBy9ufHyq3NBeoRd9HCLgu3M0G3EtNaep/85mh3aiy9LKE9BGDYt32hYY
+	 x2d+pXocVabD1WPt41lUzoLsAjx791u9SAAPtkqXRbS1ALZ6M3t0Q5SExjV/WDg2QV
+	 Z5VZ5ewLyw7U/HX+25izxzgX68cbnMu3IHMBZe6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgDFBnQ (ORCPT
+        id S1726491AbgDFBpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 21:43:16 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34754 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgDFBnP (ORCPT
+        Sun, 5 Apr 2020 21:45:49 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:34525 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgDFBpt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 21:43:15 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l14so6813450pgb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 18:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=SlwKZhggJtXqNs7Yrk3WMQWVP3iUpdR4maR08x43Blc=;
-        b=GMCuX59Wzs8NCxiqc2qUvtMtD+1VUPi9wR9ZGS4RyrTfZ5AVkbpnW/NFGBJaIlSc75
-         g/tKe9kLNx98ZcJ2EspzedBVpVQkpoGqols/azIRWBBqFRHI5uSZ+vFT8Vcm1kO/tiCa
-         5XflQwEhsGgED444d1iMaRH7WJc3uvC6CEQlqsdP5YpD8FuEfujI2YnWwXGIBDjgaZWP
-         G/EBZUo0DolixLtDsW/PbvLjJy5IpALpB0dghhKRtZrwB4I2LbjY2BoTRJcSh+QN9Guj
-         lUokaIm6MOZYieb+HprdmtLswu5oSzOO7HswqJpCuxPdsLOSwKEe7v9IFtY1HjwSPDst
-         jgUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=SlwKZhggJtXqNs7Yrk3WMQWVP3iUpdR4maR08x43Blc=;
-        b=S/hlpVcZU0hy/QRPNocJddrnB2jNKxSKtP6LxkZVowW9sdO9ed7DU6ochTMHgfxAYw
-         VaY4lF0Wy9w2aTTe8msVBT0W2rT+pTUvIKZcbq/L6/N/836f3iySmPiClqnuzIpEP9Bc
-         /Py1FGhqKfwks2sAQVun00S0ozJ0gjuEIp97woLaXceuAkFahiyRanhOf0KTJc/Tr1Z7
-         Le7aPKIVc5PJCbmV0i5Zjpj8jU5dtDM1+kbtAR8Qjx3iYToMYylKmLMFZVh7hlOoWk3/
-         AjuW2s5tNhDU6xuOc7xYjIbCNd071zf6WHUaeZjSI0nXsltCLhB0Srnad3xoDHF7NJz6
-         ySjQ==
-X-Gm-Message-State: AGi0Pubi+zfUR+kvR5QbHH+OOMKiKZhs6f/fRUEjoTCd1lz1c2dWsRx+
-        swy2AcIc9O4X41Fsm3j3Q5E=
-X-Google-Smtp-Source: APiQypK787EqE6ngINs5TXiIV+FU46w5wMuCQfPQ5zgBdP6BwTRdtKCUfE+c/fI77Ac1O+R+BpZnXA==
-X-Received: by 2002:a63:f502:: with SMTP id w2mr19256994pgh.423.1586137394697;
-        Sun, 05 Apr 2020 18:43:14 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id j96sm10611992pje.32.2020.04.05.18.43.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 18:43:14 -0700 (PDT)
-Date:   Mon, 06 Apr 2020 11:42:06 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH v2 05/13] powerpc/syscall: Rename syscall_64.c into
- syscall.c
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
-        <cacbc62ded444e26e15ca67e0ec91b05b7de6459.1586108649.git.christophe.leroy@c-s.fr>
-In-Reply-To: <cacbc62ded444e26e15ca67e0ec91b05b7de6459.1586108649.git.christophe.leroy@c-s.fr>
+        Sun, 5 Apr 2020 21:45:49 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 0361jd9P013273;
+        Mon, 6 Apr 2020 10:45:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 0361jd9P013273
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586137540;
+        bh=t1XbmubotdqxWQiJUtEmVVmLD3QtFzYtfXS6eKsOjqA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JJoh7W4D3xXNlBUBOyJoKb52THf5gc3KPF6ePUqzF2UyzZucECBoKQZng43N9midv
+         4/zVoGccZ90Yf4Dd0uMppWex45oHbUktl8qUnY4ggHD7OjReYQLFldVTRLc7fVjCZZ
+         RPricLYAybvutnGYMT9Tmn+YTEUwobmAg4btkg4ssvRq+BHazVgQX+7Qz8bhyeUEfi
+         9lvff67EBT6wLXjGR3+0x2PxMNhQqNkIwxYQBGqCPFzcpdO+j7fwgkFszyZkSwEr4H
+         07W5ALtyd17GZhgyuUWOE7svdWsK7AGy15n+KNS4VZ/WSeBPOnhU5M/Rqmy5AgvrGq
+         WlVkxwRbkuQtg==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id l18so4928998uak.4;
+        Sun, 05 Apr 2020 18:45:40 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYKMzvLLaQiO24vJMDVqETXnPHKdHG1nQjdtcoAlQChEKmjXiLH
+        gWMRb84hnJW9z6SEyy4tL8TJnlqF6OXE1ASjnnk=
+X-Google-Smtp-Source: APiQypIme//LwwgDhWdl23pH0ig14cQer/hMjepL0+AGooHh0rxFpP7g9QwIcB1KYEeAWqnvnWA/n5ux8B3PbibpFH8=
+X-Received: by 2002:ab0:2085:: with SMTP id r5mr14017632uak.95.1586137538961;
+ Sun, 05 Apr 2020 18:45:38 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1586137301.c2ssus5vmb.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200405163052.18942-1-masahiroy@kernel.org> <alpine.LFD.2.21.2004051813150.4156324@eddie.linux-mips.org>
+In-Reply-To: <alpine.LFD.2.21.2004051813150.4156324@eddie.linux-mips.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 6 Apr 2020 10:45:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATKLcCPYxQZNbrS-jMPg+_BETU0dGv0qYvLqUkJ2fMt5w@mail.gmail.com>
+Message-ID: <CAK7LNATKLcCPYxQZNbrS-jMPg+_BETU0dGv0qYvLqUkJ2fMt5w@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: fw: arc: add __weak to prom_meminit and prom_free_prom_memory
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux-MIPS <linux-mips@linux-mips.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org,
+        =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on April 6, 2020 3:44 am:
-> syscall_64.c will be reused almost as is for PPC32.
->=20
-> Rename it syscall.c
+On Mon, Apr 6, 2020 at 2:16 AM Maciej W. Rozycki <macro@linux-mips.org> wrote:
+>
+> On Mon, 6 Apr 2020, Masahiro Yamada wrote:
+>
+> > As far as I understood, prom_meminit() in arch/mips/fw/arc/memory.c
+> > is overridden by the one in arch/mips/sgi-ip32/ip32-memory.c if
+> > CONFIG_SGI_IP32 is enabled.
+> >
+> > The use of EXPORT_SYMBOL in static libraries potentially causes a
+> > problem for the llvm linker [1]. So, I want to forcibly link lib-y
+> > objects to vmlinux when CONFIG_MODULES=y.
+>
+>  It looks to me like a bug in the linker in the handling of the EXTERN
+> command.  Why not fix the linker instead?
+>
+>   Maciej
 
-Don't mind this, but I wonder if we can rename it to interrupt.c.
 
-A system call is a type of interrupt.
+I am not sure if this is a bug.
+Anyway, they decided to not change ld.lld
 
-Thanks,
-Nick
-=
+
+MIPS code is so confusing.
+There are multiple definitions,
+and lib.a is (ab)used to hide them.
+
+I fixed another one for MIPS before, and
+0-day bot reported this recently.
+
+
+There are lots of prom_meminit() definitions
+in arch/mips/.
+
+Making the intention clearer is a good thing, IMHO.
+
+
+-- 
+Best Regards
+Masahiro Yamada
