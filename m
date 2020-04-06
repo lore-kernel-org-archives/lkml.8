@@ -2,1476 +2,802 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C51EC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D78C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FDE20719
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A29220753
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:32:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="Bk7hBlnf"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PoiRmgBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgDFEcR (ORCPT
+        id S1726551AbgDFEcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 00:32:17 -0400
-Received: from mout02.posteo.de ([185.67.36.66]:60831 "EHLO mout02.posteo.de"
+        Mon, 6 Apr 2020 00:32:42 -0400
+Received: from ozlabs.org ([203.11.71.1]:57143 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbgDFEcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 00:32:15 -0400
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id D83472400FD
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Apr 2020 06:32:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-        t=1586147525; bh=cK319W5AuajClIwEnOcTFdZH3bJKf3Pa1oL4sJ7+Mvc=;
+        id S1726408AbgDFEcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 00:32:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48wd1X2SKxz9sQx;
+        Mon,  6 Apr 2020 14:32:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1586147552;
+        bh=vYvLTIj5Espf+KpeMSI83pzEaWK1crAnhndadtkS2GU=;
         h=Date:From:To:Cc:Subject:From;
-        b=Bk7hBlnf9wfyzmKqybBEpELFtQ1TtZ2j80u+LreOacgt9p26YBhMLGnTddlN3CWFP
-         XEKiheqm0WZZlwg3RDw/xaM8hNiqWSdegdOgvF5cP1UUIFmofPF6Uch/mv/qxYOqnm
-         Inw8wHS8TJOmvqPxgfyAPTvo0OBm+Y7IRvju/kRBWI72p4W8cpwy6sG+ZVSCOLWHA/
-         eonCnv6L1SkutgJJnryJdWQhIPyeRBYOd3RfgzVxqeFHGoGFC74BNOYdlCmuZ91ht0
-         OPR5scNLGJOjLowdO7x2/gigW3bmpN0fAB7O1Nq2oaglJCJdwxC1v9P9QIGG7pEcgW
-         JsdThHsLTlWYA==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 48wd0w3vTZz9rxL;
-        Mon,  6 Apr 2020 06:32:00 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 00:31:57 -0400
-From:   Kevyn-Alexandre =?utf-8?B?UGFyw6k=?= <kapare@posteo.net>
-To:     Alex Belits <abelits@marvell.com>
-Cc:     "frederic@kernel.org" <frederic@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "will@kernel.org" <will@kernel.org>
-Subject: Re: [PATCH v2 03/12] task_isolation: userspace hard isolation from
- kernel
-Message-ID: <20200406043157.x4bovr6qxcs3gw5c@x1>
-References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
- <aed12dd15ea2981bc9554cfa8b5e273c1342c756.camel@marvell.com>
- <105f17f25e90a9a58299a7ed644bdd0f36434c87.camel@marvell.com>
+        b=PoiRmgBFrRt1GjwoyeJJ5wGoGseaQSID2h728tsS/yOVPndW75kiHr0YEsPjJap8i
+         Qky36PVSJKlPaHsOhJ3M+9eyt1pmuhxrDi3y6CTXQgmn8tfKZc73eWMw8slDlzx+kJ
+         lZGoAlEvaowkEyMnCIFks1eW385HBRG3er9DtTE1o1dChhNiyQkEfdUZ3UPxNxa1XK
+         tMKhEoivDw1NQHbHKyyAr61vcMQYeB/Z96xduuV0xqAWf9VeXr6z9UgWAg1VPzuVIX
+         aJ4VQClfR/GTQOrqG/wV+KtBO23lkKvzk26YTsFccUb0YVHgHyQPbf6r6dzW/e8kUt
+         lNKYplLEWcI8Q==
+Date:   Mon, 6 Apr 2020 14:32:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Apr 6
+Message-ID: <20200406143230.21c2d40a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <105f17f25e90a9a58299a7ed644bdd0f36434c87.camel@marvell.com>
+Content-Type: multipart/signed; boundary="Sig_/IEma9R/uwDZ28q75jjc23ie";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 08, 2020 at 03:47:08AM +0000, Alex Belits wrote:
-> The existing nohz_full mode is designed as a "soft" isolation mode
-> that makes tradeoffs to minimize userspace interruptions while
-> still attempting to avoid overheads in the kernel entry/exit path,
-> to provide 100% kernel semantics, etc.
-> 
-> However, some applications require a "hard" commitment from the
-> kernel to avoid interruptions, in particular userspace device driver
-> style applications, such as high-speed networking code.
-> 
-> This change introduces a framework to allow applications
-> to elect to have the "hard" semantics as needed, specifying
-> prctl(PR_TASK_ISOLATION, PR_TASK_ISOLATION_ENABLE) to do so.
-> 
-> The kernel must be built with the new TASK_ISOLATION Kconfig flag
-> to enable this mode, and the kernel booted with an appropriate
-> "isolcpus=nohz,domain,CPULIST" boot argument to enable
-> nohz_full and isolcpus. The "task_isolation" state is then indicated
-> by setting a new task struct field, task_isolation_flag, to the
-> value passed by prctl(), and also setting a TIF_TASK_ISOLATION
-> bit in the thread_info flags. When the kernel is returning to
-> userspace from the prctl() call and sees TIF_TASK_ISOLATION set,
-> it calls the new task_isolation_start() routine to arrange for
-> the task to avoid being interrupted in the future.
-> 
-> With interrupts disabled, task_isolation_start() ensures that kernel
-> subsystems that might cause a future interrupt are quiesced. If it
-> doesn't succeed, it adjusts the syscall return value to indicate that
-> fact, and userspace can retry as desired. In addition to stopping
-> the scheduler tick, the code takes any actions that might avoid
-> a future interrupt to the core, such as a worker thread being
-> scheduled that could be quiesced now (e.g. the vmstat worker)
-> or a future IPI to the core to clean up some state that could be
-> cleaned up now (e.g. the mm lru per-cpu cache).
-> 
-> Once the task has returned to userspace after issuing the prctl(),
-> if it enters the kernel again via system call, page fault, or any
-> other exception or irq, the kernel will kill it with SIGKILL.
-> In addition to sending a signal, the code supports a kernel
-> command-line "task_isolation_debug" flag which causes a stack
-> backtrace to be generated whenever a task loses isolation.
-> 
-> To allow the state to be entered and exited, the syscall checking
-> test ignores the prctl(PR_TASK_ISOLATION) syscall so that we can
-> clear the bit again later, and ignores exit/exit_group to allow
-> exiting the task without a pointless signal being delivered.
-> 
-> The prctl() API allows for specifying a signal number to use instead
-> of the default SIGKILL, to allow for catching the notification
-> signal; for example, in a production environment, it might be
-> helpful to log information to the application logging mechanism
-> before exiting. Or, the signal handler might choose to reset the
-> program counter back to the code segment intended to be run isolated
-> via prctl() to continue execution.
-> 
-> In a number of cases we can tell on a remote cpu that we are
-> going to be interrupting the cpu, e.g. via an IPI or a TLB flush.
-> In that case we generate the diagnostic (and optional stack dump)
-> on the remote core to be able to deliver better diagnostics.
-> If the interrupt is not something caught by Linux (e.g. a
-> hypervisor interrupt) we can also request a reschedule IPI to
-> be sent to the remote core so it can be sure to generate a
-> signal to notify the process.
-> 
-> Separate patches that follow provide these changes for x86, arm,
-> and arm64.
-> 
-> Signed-off-by: Alex Belits <abelits@marvell.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |   6 +
->  include/linux/hrtimer.h                       |   4 +
->  include/linux/isolation.h                     | 229 ++++++
->  include/linux/sched.h                         |   4 +
->  include/linux/tick.h                          |   3 +
->  include/uapi/linux/prctl.h                    |   6 +
->  init/Kconfig                                  |  28 +
->  kernel/Makefile                               |   2 +
->  kernel/context_tracking.c                     |   2 +
->  kernel/isolation.c                            | 774 ++++++++++++++++++
->  kernel/signal.c                               |   2 +
->  kernel/sys.c                                  |   6 +
->  kernel/time/hrtimer.c                         |  27 +
->  kernel/time/tick-sched.c                      |  18 +
->  14 files changed, 1111 insertions(+)
->  create mode 100644 include/linux/isolation.h
->  create mode 100644 kernel/isolation.c
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c07815d230bc..e4a2d6e37645 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4808,6 +4808,12 @@
->  			neutralize any effect of /proc/sys/kernel/sysrq.
->  			Useful for debugging.
->  
-> +	task_isolation_debug	[KNL]
-> +			In kernels built with CONFIG_TASK_ISOLATION, this
-> +			setting will generate console backtraces to
-> +			accompany the diagnostics generated about
-> +			interrupting tasks running with task isolation.
-> +
->  	tcpmhash_entries= [KNL,NET]
->  			Set the number of tcp_metrics_hash slots.
->  			Default value is 8192 or 16384 depending on total
-> diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-> index 15c8ac313678..e81252eb4f92 100644
-> --- a/include/linux/hrtimer.h
-> +++ b/include/linux/hrtimer.h
-> @@ -528,6 +528,10 @@ extern void __init hrtimers_init(void);
->  /* Show pending timers: */
->  extern void sysrq_timer_list_show(void);
->  
-> +#ifdef CONFIG_TASK_ISOLATION
-> +extern void kick_hrtimer(void);
-> +#endif
-> +
->  int hrtimers_prepare_cpu(unsigned int cpu);
->  #ifdef CONFIG_HOTPLUG_CPU
->  int hrtimers_dead_cpu(unsigned int cpu);
-> diff --git a/include/linux/isolation.h b/include/linux/isolation.h
-> new file mode 100644
-> index 000000000000..6bd71c67f10f
-> --- /dev/null
-> +++ b/include/linux/isolation.h
-> @@ -0,0 +1,229 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Task isolation support
-> + *
-> + * Authors:
-> + *   Chris Metcalf <cmetcalf@mellanox.com>
-> + *   Alex Belits <abelits@marvell.com>
-> + *   Yuri Norov <ynorov@marvell.com>
-> + */
-> +#ifndef _LINUX_ISOLATION_H
-> +#define _LINUX_ISOLATION_H
-> +
-> +#include <stdarg.h>
-> +#include <linux/errno.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/prctl.h>
-> +#include <linux/types.h>
-> +
-> +struct task_struct;
-> +
-> +#ifdef CONFIG_TASK_ISOLATION
-> +
-> +int task_isolation_message(int cpu, int level, bool supp, const char *fmt, ...);
-> +
-> +#define pr_task_isol_emerg(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_EMERG, false, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_alert(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_ALERT, false, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_crit(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_CRIT, false, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_err(cpu, fmt, ...)				\
-> +	task_isolation_message(cpu, LOGLEVEL_ERR, false, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_warn(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_WARNING, false, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_notice(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_NOTICE, false, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_info(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_INFO, false, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_debug(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_DEBUG, false, fmt, ##__VA_ARGS__)
-> +
-> +#define pr_task_isol_emerg_supp(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_EMERG, true, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_alert_supp(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_ALERT, true, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_crit_supp(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_CRIT, true, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_err_supp(cpu, fmt, ...)				\
-> +	task_isolation_message(cpu, LOGLEVEL_ERR, true, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_warn_supp(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_WARNING, true, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_notice_supp(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_NOTICE, true, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_info_supp(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_INFO, true, fmt, ##__VA_ARGS__)
-> +#define pr_task_isol_debug_supp(cpu, fmt, ...)			\
-> +	task_isolation_message(cpu, LOGLEVEL_DEBUG, true, fmt, ##__VA_ARGS__)
-> +DECLARE_PER_CPU(unsigned long, tsk_thread_flags_copy);
+--Sig_/IEma9R/uwDZ28q75jjc23ie
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-gcc output:
+Hi all,
 
-In file included from ./arch/x86/include/asm/apic.h:6,
-                 from arch/x86/kernel/apic/apic_noop.c:14:
-./include/linux/isolation.h:58:32: error: unknown type name 'tsk_thread_flags_copy'
- DECLARE_PER_CPU(unsigned long, tsk_thread_flags_copy);
-                                ^~~~~~~~~~~~~~~~~~~~~
+The merge window has opened, so please do not add any material for the
+next release into your linux-next included trees/branches until after
+the merge window closes.
 
-My fix:
+Changes since 20200405:
 
-iff --git a/include/linux/isolation.h b/include/linux/isolation.h
-index 6bd71c67f10f..a392abed304b 100644
---- a/include/linux/isolation.h
-+++ b/include/linux/isolation.h
-@@ -55,7 +55,7 @@ int task_isolation_message(int cpu, int level, bool supp, const char *fmt, ...);
-        task_isolation_message(cpu, LOGLEVEL_INFO, true, fmt, ##__VA_ARGS__)
- #define pr_task_isol_debug_supp(cpu, fmt, ...)                 \
-        task_isolation_message(cpu, LOGLEVEL_DEBUG, true, fmt, ##__VA_ARGS__)
--DECLARE_PER_CPU(unsigned long, tsk_thread_flags_copy);
-+//DECLARE_PER_CPU(unsigned long, tsk_thread_flags_copy);
- extern cpumask_var_t task_isolation_map;
- 
- /**
+The ide tree lost its build failure.
 
-> +extern cpumask_var_t task_isolation_map;
-> +
-> +/**
-> + * task_isolation_request() - prctl hook to request task isolation
-> + * @flags:	Flags from <linux/prctl.h> PR_TASK_ISOLATION_xxx.
-> + *
-> + * This is called from the generic prctl() code for PR_TASK_ISOLATION.
-> + *
-> + * Return: Returns 0 when task isolation enabled, otherwise a negative
-> + * errno.
-> + */
-> +extern int task_isolation_request(unsigned int flags);
-> +extern void task_isolation_cpu_cleanup(void);
-> +/**
-> + * task_isolation_start() - attempt to actually start task isolation
-> + *
-> + * This function should be invoked as the last thing prior to returning to
-> + * user space if TIF_TASK_ISOLATION is set in the thread_info flags.  It
-> + * will attempt to quiesce the core and enter task-isolation mode.  If it
-> + * fails, it will reset the system call return value to an error code that
-> + * indicates the failure mode.
-> + */
-> +extern void task_isolation_start(void);
-> +
-> +/**
-> + * is_isolation_cpu() - check if CPU is intended for running isolated tasks.
-> + * @cpu:	CPU to check.
-> + */
-> +static inline bool is_isolation_cpu(int cpu)
-> +{
-> +	return task_isolation_map != NULL &&
-> +		cpumask_test_cpu(cpu, task_isolation_map);
-> +}
-> +
-> +/**
-> + * task_isolation_on_cpu() - check if the cpu is running isolated task
-> + * @cpu:	CPU to check.
-> + */
-> +extern int task_isolation_on_cpu(int cpu);
-> +extern void task_isolation_check_run_cleanup(void);
-> +
-> +/**
-> + * task_isolation_cpumask() - set CPUs currently running isolated tasks
-> + * @mask:	Mask to modify.
-> + */
-> +extern void task_isolation_cpumask(struct cpumask *mask);
-> +
-> +/**
-> + * task_isolation_clear_cpumask() - clear CPUs currently running isolated tasks
-> + * @mask:      Mask to modify.
-> + */
-> +extern void task_isolation_clear_cpumask(struct cpumask *mask);
-> +
-> +/**
-> + * task_isolation_syscall() - report a syscall from an isolated task
-> + * @nr:		The syscall number.
-> + *
-> + * This routine should be invoked at syscall entry if TIF_TASK_ISOLATION is
-> + * set in the thread_info flags.  It checks for valid syscalls,
-> + * specifically prctl() with PR_TASK_ISOLATION, exit(), and exit_group().
-> + * For any other syscall it will raise a signal and return failure.
-> + *
-> + * Return: 0 for acceptable syscalls, -1 for all others.
-> + */
-> +extern int task_isolation_syscall(int nr);
-> +
-> +/**
-> + * _task_isolation_interrupt() - report an interrupt of an isolated task
-> + * @fmt:	A format string describing the interrupt
-> + * @...:	Format arguments, if any.
-> + *
-> + * This routine should be invoked at any exception or IRQ if
-> + * TIF_TASK_ISOLATION is set in the thread_info flags.  It is not necessary
-> + * to invoke it if the exception will generate a signal anyway (e.g. a bad
-> + * page fault), and in that case it is preferable not to invoke it but just
-> + * rely on the standard Linux signal.  The macro task_isolation_syscall()
-> + * wraps the TIF_TASK_ISOLATION flag test to simplify the caller code.
-> + */
-> +extern void _task_isolation_interrupt(const char *fmt, ...);
-> +#define task_isolation_interrupt(fmt, ...)				\
-> +	do {								\
-> +		if (current_thread_info()->flags & _TIF_TASK_ISOLATION)	\
-> +			_task_isolation_interrupt(fmt, ## __VA_ARGS__);	\
-> +	} while (0)
-> +
-> +/**
-> + * task_isolation_remote() - report a remote interrupt of an isolated task
-> + * @cpu:	The remote cpu that is about to be interrupted.
-> + * @fmt:	A format string describing the interrupt
-> + * @...:	Format arguments, if any.
-> + *
-> + * This routine should be invoked any time a remote IPI or other type of
-> + * interrupt is being delivered to another cpu. The function will check to
-> + * see if the target core is running a task-isolation task, and generate a
-> + * diagnostic on the console if so; in addition, we tag the task so it
-> + * doesn't generate another diagnostic when the interrupt actually arrives.
-> + * Generating a diagnostic remotely yields a clearer indication of what
-> + * happened then just reporting only when the remote core is interrupted.
-> + *
-> + */
-> +extern void task_isolation_remote(int cpu, const char *fmt, ...);
-> +
-> +/**
-> + * task_isolation_remote_cpumask() - report interruption of multiple cpus
-> + * @mask:	The set of remotes cpus that are about to be interrupted.
-> + * @fmt:	A format string describing the interrupt
-> + * @...:	Format arguments, if any.
-> + *
-> + * This is the cpumask variant of _task_isolation_remote().  We
-> + * generate a single-line diagnostic message even if multiple remote
-> + * task-isolation cpus are being interrupted.
-> + */
-> +extern void task_isolation_remote_cpumask(const struct cpumask *mask,
-> +					  const char *fmt, ...);
-> +
-> +/**
-> + * _task_isolation_signal() - disable task isolation when signal is pending
-> + * @task:	The task for which to disable isolation.
-> + *
-> + * This function generates a diagnostic and disables task isolation; it
-> + * should be called if TIF_TASK_ISOLATION is set when notifying a task of a
-> + * pending signal.  The task_isolation_interrupt() function normally
-> + * generates a diagnostic for events that just interrupt a task without
-> + * generating a signal; here we need to hook the paths that correspond to
-> + * interrupts that do generate a signal.  The macro task_isolation_signal()
-> + * wraps the TIF_TASK_ISOLATION flag test to simplify the caller code.
-> + */
-> +extern void _task_isolation_signal(struct task_struct *task);
-> +#define task_isolation_signal(task)					\
-> +	do {								\
-> +		if (task_thread_info(task)->flags & _TIF_TASK_ISOLATION) \
-> +			_task_isolation_signal(task);			\
-> +	} while (0)
-> +
-> +/**
-> + * task_isolation_user_exit() - debug all user_exit calls
-> + *
-> + * By default, we don't generate an exception in the low-level user_exit()
-> + * code, because programs lose the ability to disable task isolation: the
-> + * user_exit() hook will cause a signal prior to task_isolation_syscall()
-> + * disabling task isolation.  In addition, it means that we lose all the
-> + * diagnostic info otherwise available from task_isolation_interrupt() hooks
-> + * later in the interrupt-handling process.  But you may enable it here for
-> + * a special kernel build if you are having undiagnosed userspace jitter.
-> + */
-> +static inline void task_isolation_user_exit(void)
-> +{
-> +#ifdef DEBUG_TASK_ISOLATION
-> +	task_isolation_interrupt("user_exit");
-> +#endif
-> +}
-> +
-> +#else /* !CONFIG_TASK_ISOLATION */
-> +static inline int task_isolation_request(unsigned int flags) { return -EINVAL; }
-> +static inline void task_isolation_start(void) { }
-> +static inline bool is_isolation_cpu(int cpu) { return 0; }
-> +static inline int task_isolation_on_cpu(int cpu) { return 0; }
-> +static inline void task_isolation_cpumask(struct cpumask *mask) { }
-> +static inline void task_isolation_clear_cpumask(struct cpumask *mask) { }
-> +static inline void task_isolation_cpu_cleanup(void) { }
-> +static inline void task_isolation_check_run_cleanup(void) { }
-> +static inline int task_isolation_syscall(int nr) { return 0; }
-> +static inline void task_isolation_interrupt(const char *fmt, ...) { }
-> +static inline void task_isolation_remote(int cpu, const char *fmt, ...) { }
-> +static inline void task_isolation_remote_cpumask(const struct cpumask *mask,
-> +						 const char *fmt, ...) { }
-> +static inline void task_isolation_signal(struct task_struct *task) { }
-> +static inline void task_isolation_user_exit(void) { }
-> +#endif
-> +
-> +#endif /* _LINUX_ISOLATION_H */
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 04278493bf15..52fdb32aa3b9 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1280,6 +1280,10 @@ struct task_struct {
->  	unsigned long			lowest_stack;
->  	unsigned long			prev_lowest_stack;
->  #endif
-> +#ifdef CONFIG_TASK_ISOLATION
-> +	unsigned short			task_isolation_flags;  /* prctl */
-> +	unsigned short			task_isolation_state;
-> +#endif
->  
->  	/*
->  	 * New fields for task_struct should be added above here, so that
-> diff --git a/include/linux/tick.h b/include/linux/tick.h
-> index 7340613c7eff..27c7c033d5a8 100644
-> --- a/include/linux/tick.h
-> +++ b/include/linux/tick.h
-> @@ -268,6 +268,9 @@ static inline void tick_dep_clear_signal(struct signal_struct *signal,
->  extern void tick_nohz_full_kick_cpu(int cpu);
->  extern void __tick_nohz_task_switch(void);
->  extern void __init tick_nohz_full_setup(cpumask_var_t cpumask);
-> +#ifdef CONFIG_TASK_ISOLATION
-> +extern int try_stop_full_tick(void);
-> +#endif
->  #else
->  static inline bool tick_nohz_full_enabled(void) { return false; }
->  static inline bool tick_nohz_full_cpu(int cpu) { return false; }
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> index 07b4f8131e36..f4848ed2a069 100644
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -238,4 +238,10 @@ struct prctl_mm_map {
->  #define PR_SET_IO_FLUSHER		57
->  #define PR_GET_IO_FLUSHER		58
->  
-> +/* Enable task_isolation mode for TASK_ISOLATION kernels. */
-> +#define PR_TASK_ISOLATION		48
-> +# define PR_TASK_ISOLATION_ENABLE	(1 << 0)
-> +# define PR_TASK_ISOLATION_SET_SIG(sig)	(((sig) & 0x7f) << 8)
-> +# define PR_TASK_ISOLATION_GET_SIG(bits) (((bits) >> 8) & 0x7f)
-> +
->  #endif /* _LINUX_PRCTL_H */
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 20a6ac33761c..ecdf567f6bd4 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -576,6 +576,34 @@ config CPU_ISOLATION
->  
->  source "kernel/rcu/Kconfig"
->  
-> +config HAVE_ARCH_TASK_ISOLATION
-> +	bool
-> +
-> +config TASK_ISOLATION
-> +	bool "Provide hard CPU isolation from the kernel on demand"
-> +	depends on NO_HZ_FULL && HAVE_ARCH_TASK_ISOLATION
-> +	help
-> +
-> +	Allow userspace processes that place themselves on cores with
-> +	nohz_full and isolcpus enabled, and run prctl(PR_TASK_ISOLATION),
-> +	to "isolate" themselves from the kernel.  Prior to returning to
-> +	userspace, isolated tasks will arrange that no future kernel
-> +	activity will interrupt the task while the task is running in
-> +	userspace.  Attempting to re-enter the kernel while in this mode
-> +	will cause the task to be terminated with a signal; you must
-> +	explicitly use prctl() to disable task isolation before resuming
-> +	normal use of the kernel.
-> +
-> +	This "hard" isolation from the kernel is required for userspace
-> +	tasks that are running hard real-time tasks in userspace, such as
-> +	a high-speed network driver in userspace.  Without this option, but
-> +	with NO_HZ_FULL enabled, the kernel will make a best-faith, "soft"
-> +	effort to shield a single userspace process from interrupts, but
-> +	makes no guarantees.
-> +
-> +	You should say "N" unless you are intending to run a
-> +	high-performance userspace driver or similar task.
-> +
->  config BUILD_BIN2C
->  	bool
->  	default n
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index 4cb4130ced32..2f2ae91f90d5 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -122,6 +122,8 @@ obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
->  KASAN_SANITIZE_stackleak.o := n
->  KCOV_INSTRUMENT_stackleak.o := n
->  
-> +obj-$(CONFIG_TASK_ISOLATION) += isolation.o
-> +
->  $(obj)/configs.o: $(obj)/config_data.gz
->  
->  targets += config_data.gz
-> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-> index 0296b4bda8f1..e9206736f219 100644
-> --- a/kernel/context_tracking.c
-> +++ b/kernel/context_tracking.c
-> @@ -21,6 +21,7 @@
->  #include <linux/hardirq.h>
->  #include <linux/export.h>
->  #include <linux/kprobes.h>
-> +#include <linux/isolation.h>
->  
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/context_tracking.h>
-> @@ -157,6 +158,7 @@ void __context_tracking_exit(enum ctx_state state)
->  			if (state == CONTEXT_USER) {
->  				vtime_user_exit(current);
->  				trace_user_exit(0);
-> +				task_isolation_user_exit();
->  			}
->  		}
->  		__this_cpu_write(context_tracking.state, CONTEXT_KERNEL);
-> diff --git a/kernel/isolation.c b/kernel/isolation.c
-> new file mode 100644
-> index 000000000000..ae29732c376c
-> --- /dev/null
-> +++ b/kernel/isolation.c
-> @@ -0,0 +1,774 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + *  linux/kernel/isolation.c
-> + *
-> + *  Implementation of task isolation.
-> + *
-> + * Authors:
-> + *   Chris Metcalf <cmetcalf@mellanox.com>
-> + *   Alex Belits <abelits@marvell.com>
-> + *   Yuri Norov <ynorov@marvell.com>
-> + */
-> +
-> +#include <linux/mm.h>
-> +#include <linux/swap.h>
-> +#include <linux/vmstat.h>
-> +#include <linux/sched.h>
-> +#include <linux/isolation.h>
-> +#include <linux/syscalls.h>
-> +#include <linux/smp.h>
-> +#include <linux/tick.h>
-> +#include <asm/unistd.h>
-> +#include <asm/syscall.h>
-> +#include <linux/hrtimer.h>
-> +
-> +/*
-> + * These values are stored in task_isolation_state.
-> + * Note that STATE_NORMAL + TIF_TASK_ISOLATION means we are still
-> + * returning from sys_prctl() to userspace.
-> + */
-> +enum {
-> +	STATE_NORMAL = 0,	/* Not isolated */
-> +	STATE_ISOLATED = 1	/* In userspace, isolated */
-> +};
-> +
-> +/*
-> + * This variable contains thread flags copied at the moment
-> + * when schedule() switched to the task on a given CPU,
-> + * or 0 if no task is running.
-> + */
-> +DEFINE_PER_CPU(unsigned long, tsk_thread_flags_cache);
-> +
-> +/*
-> + * Counter for isolation state on a given CPU, increments when entering
-> + * isolation and decrements when exiting isolation (before or after the
-> + * cleanup). Multiple simultaneously running procedures entering or
-> + * exiting isolation are prevented by checking the result of
-> + * incrementing or decrementing this variable. This variable is both
-> + * incremented and decremented by CPU that caused isolation entering or
-> + * exit.
-> + *
-> + * This is necessary because multiple isolation-breaking events may happen
-> + * at once (or one as the result of the other), however isolation exit
-> + * may only happen once to transition from isolated to non-isolated state.
-> + * Therefore, if decrementing this counter results in a value less than 0,
-> + * isolation exit procedure can't be started -- it already happened, or is
-> + * in progress, or isolation is not entered yet.
-> + */
-> +DEFINE_PER_CPU(atomic_t, isol_counter);
-> +
-> +/*
-> + * Description of the last two tasks that ran isolated on a given CPU.
-> + * This is intended only for messages about isolation breaking. We
-> + * don't want any references to actual task while accessing this from
-> + * CPU that caused isolation breaking -- we know nothing about timing
-> + * and don't want to use locking or RCU.
-> + */
-> +struct isol_task_desc {
-> +	atomic_t curr_index;
-> +	atomic_t curr_index_wr;
-> +	bool	warned[2];
-> +	pid_t	pid[2];
-> +	pid_t	tgid[2];
-> +	char	comm[2][TASK_COMM_LEN];
-> +};
-> +static DEFINE_PER_CPU(struct isol_task_desc, isol_task_descs);
-> +
-> +/*
-> + * Counter for isolation exiting procedures (from request to the start of
-> + * cleanup) being attempted at once on a CPU. Normally incrementing of
-> + * this counter is performed from the CPU that caused isolation breaking,
-> + * however decrementing is done from the cleanup procedure, delegated to
-> + * the CPU that is exiting isolation, not from the CPU that caused isolation
-> + * breaking.
-> + *
-> + * If incrementing this counter while starting isolation exit procedure
-> + * results in a value greater than 0, isolation exiting is already in
-> + * progress, and cleanup did not start yet. This means, counter should be
-> + * decremented back, and isolation exit that is already in progress, should
-> + * be allowed to complete. Otherwise, a new isolation exit procedure should
-> + * be started.
-> + */
-> +DEFINE_PER_CPU(atomic_t, isol_exit_counter);
-> +
-> +/*
-> + * Descriptor for isolation-breaking SMP calls
-> + */
-> +DEFINE_PER_CPU(call_single_data_t, isol_break_csd);
-> +
-> +cpumask_var_t task_isolation_map;
-> +cpumask_var_t task_isolation_cleanup_map;
-> +static DEFINE_SPINLOCK(task_isolation_cleanup_lock);
-> +
-> +/* We can run on cpus that are isolated from the scheduler and are nohz_full. */
-> +static int __init task_isolation_init(void)
-> +{
-> +	alloc_bootmem_cpumask_var(&task_isolation_cleanup_map);
-> +	if (alloc_cpumask_var(&task_isolation_map, GFP_KERNEL))
-> +		/*
-> +		 * At this point task isolation should match
-> +		 * nohz_full. This may change in the future.
-> +		 */
-> +		cpumask_copy(task_isolation_map, tick_nohz_full_mask);
-> +	return 0;
-> +}
-> +core_initcall(task_isolation_init)
-> +
-> +/* Enable stack backtraces of any interrupts of task_isolation cores. */
-> +static bool task_isolation_debug;
-> +static int __init task_isolation_debug_func(char *str)
-> +{
-> +	task_isolation_debug = true;
-> +	return 1;
-> +}
-> +__setup("task_isolation_debug", task_isolation_debug_func);
-> +
-> +/*
-> + * Record name, pid and group pid of the task entering isolation on
-> + * the current CPU.
-> + */
-> +static void record_curr_isolated_task(void)
-> +{
-> +	int ind;
-> +	int cpu = smp_processor_id();
-> +	struct isol_task_desc *desc = &per_cpu(isol_task_descs, cpu);
-> +	struct task_struct *task = current;
-> +
-> +	/* Finish everything before recording current task */
-> +	smp_mb();
-> +	ind = atomic_inc_return(&desc->curr_index_wr) & 1;
-> +	desc->comm[ind][sizeof(task->comm) - 1] = '\0';
-> +	memcpy(desc->comm[ind], task->comm, sizeof(task->comm) - 1);
-> +	desc->pid[ind] = task->pid;
-> +	desc->tgid[ind] = task->tgid;
-> +	desc->warned[ind] = false;
-> +	/* Write everything, to be seen by other CPUs */
-> +	smp_mb();
-> +	atomic_inc(&desc->curr_index);
-> +	/* Everyone will see the new record from this point */
-> +	smp_mb();
-> +}
-> +
-> +/*
-> + * Print message prefixed with the description of the current (or
-> + * last) isolated task on a given CPU. Intended for isolation breaking
-> + * messages that include target task for the user's convenience.
-> + *
-> + * Messages produced with this function may have obsolete task
-> + * information if isolated tasks managed to exit, start and enter
-> + * isolation multiple times, or multiple tasks tried to enter
-> + * isolation on the same CPU at once. For those unusual cases it would
-> + * contain a valid description of the cause for isolation breaking and
-> + * target CPU number, just not the correct description of which task
-> + * ended up losing isolation.
-> + */
-> +int task_isolation_message(int cpu, int level, bool supp, const char *fmt, ...)
-> +{
-> +	struct isol_task_desc *desc;
-> +	struct task_struct *task;
-> +	va_list args;
-> +	char buf_prefix[TASK_COMM_LEN + 20 + 3 * 20];
-> +	char buf[200];
-> +	int curr_cpu, ind_counter, ind_counter_old, ind;
-> +
-> +	curr_cpu = get_cpu();
-> +	desc = &per_cpu(isol_task_descs, cpu);
-> +	ind_counter = atomic_read(&desc->curr_index);
-> +
-> +	if (curr_cpu == cpu) {
-> +		/*
-> +		 * Message is for the current CPU so current
-> +		 * task_struct should be used instead of cached
-> +		 * information.
-> +		 *
-> +		 * Like in other diagnostic messages, if issued from
-> +		 * interrupt context, current will be the interrupted
-> +		 * task. Unlike other diagnostic messages, this is
-> +		 * always relevant because the message is about
-> +		 * interrupting a task.
-> +		 */
-> +		ind = ind_counter & 1;
-> +		if (supp && desc->warned[ind]) {
-> +			/*
-> +			 * If supp is true, skip the message if the
-> +			 * same task was mentioned in the message
-> +			 * originated on remote CPU, and it did not
-> +			 * re-enter isolated state since then (warned
-> +			 * is true). Only local messages following
-> +			 * remote messages, likely about the same
-> +			 * isolation breaking event, are skipped to
-> +			 * avoid duplication. If remote cause is
-> +			 * immediately followed by a local one before
-> +			 * isolation is broken, local cause is skipped
-> +			 * from messages.
-> +			 */
-> +			put_cpu();
-> +			return 0;
-> +		}
-> +		task = current;
-> +		snprintf(buf_prefix, sizeof(buf_prefix),
-> +			 "isolation %s/%d/%d (cpu %d)",
-> +			 task->comm, task->tgid, task->pid, cpu);
-> +		put_cpu();
-> +	} else {
-> +		/*
-> +		 * Message is for remote CPU, use cached information.
-> +		 */
-> +		put_cpu();
-> +		/*
-> +		 * Make sure, index remained unchanged while data was
-> +		 * copied. If it changed, data that was copied may be
-> +		 * inconsistent because two updates in a sequence could
-> +		 * overwrite the data while it was being read.
-> +		 */
-> +		do {
-> +			/* Make sure we are reading up to date values */
-> +			smp_mb();
-> +			ind = ind_counter & 1;
-> +			snprintf(buf_prefix, sizeof(buf_prefix),
-> +				 "isolation %s/%d/%d (cpu %d)",
-> +				 desc->comm[ind], desc->tgid[ind],
-> +				 desc->pid[ind], cpu);
-> +			desc->warned[ind] = true;
-> +			ind_counter_old = ind_counter;
-> +			/* Record the warned flag, then re-read descriptor */
-> +			smp_mb();
-> +			ind_counter = atomic_read(&desc->curr_index);
-> +			/*
-> +			 * If the counter changed, something was updated, so
-> +			 * repeat everything to get the current data
-> +			 */
-> +		} while (ind_counter != ind_counter_old);
-> +	}
-> +
-> +	va_start(args, fmt);
-> +	vsnprintf(buf, sizeof(buf), fmt, args);
-> +	va_end(args);
-> +
-> +	switch (level) {
-> +	case LOGLEVEL_EMERG:
-> +		pr_emerg("%s: %s", buf_prefix, buf);
-> +		break;
-> +	case LOGLEVEL_ALERT:
-> +		pr_alert("%s: %s", buf_prefix, buf);
-> +		break;
-> +	case LOGLEVEL_CRIT:
-> +		pr_crit("%s: %s", buf_prefix, buf);
-> +		break;
-> +	case LOGLEVEL_ERR:
-> +		pr_err("%s: %s", buf_prefix, buf);
-> +		break;
-> +	case LOGLEVEL_WARNING:
-> +		pr_warn("%s: %s", buf_prefix, buf);
-> +		break;
-> +	case LOGLEVEL_NOTICE:
-> +		pr_notice("%s: %s", buf_prefix, buf);
-> +		break;
-> +	case LOGLEVEL_INFO:
-> +		pr_info("%s: %s", buf_prefix, buf);
-> +		break;
-> +	case LOGLEVEL_DEBUG:
-> +		pr_debug("%s: %s", buf_prefix, buf);
-> +		break;
-> +	default:
-> +		/* No message without a valid level */
-> +		return 0;
-> +	}
-> +	return 1;
-> +}
-> +
-> +/*
-> + * Dump stack if need be. This can be helpful even from the final exit
-> + * to usermode code since stack traces sometimes carry information about
-> + * what put you into the kernel, e.g. an interrupt number encoded in
-> + * the initial entry stack frame that is still visible at exit time.
-> + */
-> +static void debug_dump_stack(void)
-> +{
-> +	if (task_isolation_debug)
-> +		dump_stack();
-> +}
-> +
-> +/*
-> + * Set the flags word but don't try to actually start task isolation yet.
-> + * We will start it when entering user space in task_isolation_start().
-> + */
-> +int task_isolation_request(unsigned int flags)
-> +{
-> +	struct task_struct *task = current;
-> +
-> +	/*
-> +	 * The task isolation flags should always be cleared just by
-> +	 * virtue of having entered the kernel.
-> +	 */
-> +	WARN_ON_ONCE(test_tsk_thread_flag(task, TIF_TASK_ISOLATION));
-> +	WARN_ON_ONCE(task->task_isolation_flags != 0);
-> +	WARN_ON_ONCE(task->task_isolation_state != STATE_NORMAL);
-> +
-> +	task->task_isolation_flags = flags;
-> +	if (!(task->task_isolation_flags & PR_TASK_ISOLATION_ENABLE))
-> +		return 0;
-> +
-> +	/* We are trying to enable task isolation. */
-> +	set_tsk_thread_flag(task, TIF_TASK_ISOLATION);
-> +
-> +	/*
-> +	 * Shut down the vmstat worker so we're not interrupted later.
-> +	 * We have to try to do this here (with interrupts enabled) since
-> +	 * we are canceling delayed work and will call flush_work()
-> +	 * (which enables interrupts) and possibly schedule().
-> +	 */
-> +	quiet_vmstat_sync();
-> +
-> +	/* We return 0 here but we may change that in task_isolation_start(). */
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Perform actions that should be done immediately on exit from isolation.
-> + */
-> +static void fast_task_isolation_cpu_cleanup(void *info)
-> +{
-> +	atomic_dec(&per_cpu(isol_exit_counter, smp_processor_id()));
-> +	/* At this point breaking isolation from other CPUs is possible again */
-> +
-> +	/*
-> +	 * This task is no longer isolated (and if by any chance this
-> +	 * is the wrong task, it's already not isolated)
-> +	 */
-> +	current->task_isolation_flags = 0;
-> +	clear_tsk_thread_flag(current, TIF_TASK_ISOLATION);
-> +
-> +	/* Run the rest of cleanup later */
-> +	set_tsk_thread_flag(current, TIF_NOTIFY_RESUME);
-> +
-> +	/* Copy flags with task isolation disabled */
-> +	this_cpu_write(tsk_thread_flags_cache,
-> +		       READ_ONCE(task_thread_info(current)->flags));
-> +}
-> +
-> +/* Disable task isolation for the specified task. */
-> +static void stop_isolation(struct task_struct *p)
-> +{
-> +	int cpu, this_cpu;
-> +	unsigned long flags;
-> +
-> +	this_cpu = get_cpu();
-> +	cpu = task_cpu(p);
-> +	if (atomic_inc_return(&per_cpu(isol_exit_counter, cpu)) > 1) {
-> +		/* Already exiting isolation */
-> +		atomic_dec(&per_cpu(isol_exit_counter, cpu));
-> +		put_cpu();
-> +		return;
-> +	}
-> +
-> +	if (p == current) {
-> +		p->task_isolation_state = STATE_NORMAL;
-> +		fast_task_isolation_cpu_cleanup(NULL);
-> +		task_isolation_cpu_cleanup();
-> +		if (atomic_dec_return(&per_cpu(isol_counter, cpu)) < 0) {
-> +			/* Is not isolated already */
-> +			atomic_inc(&per_cpu(isol_counter, cpu));
-> +		}
-> +		put_cpu();
-> +	} else {
-> +		if (atomic_dec_return(&per_cpu(isol_counter, cpu)) < 0) {
-> +			/* Is not isolated already */
-> +			atomic_inc(&per_cpu(isol_counter, cpu));
-> +			atomic_dec(&per_cpu(isol_exit_counter, cpu));
-> +			put_cpu();
-> +			return;
-> +		}
-> +		/*
-> +		 * Schedule "slow" cleanup. This relies on
-> +		 * TIF_NOTIFY_RESUME being set
-> +		 */
-> +		spin_lock_irqsave(&task_isolation_cleanup_lock, flags);
-> +		cpumask_set_cpu(cpu, task_isolation_cleanup_map);
-> +		spin_unlock_irqrestore(&task_isolation_cleanup_lock, flags);
-> +		/*
-> +		 * Setting flags is delegated to the CPU where
-> +		 * isolated task is running
-> +		 * isol_exit_counter will be decremented from there as well.
-> +		 */
-> +		per_cpu(isol_break_csd, cpu).func =
-> +		    fast_task_isolation_cpu_cleanup;
-> +		per_cpu(isol_break_csd, cpu).info = NULL;
-> +		per_cpu(isol_break_csd, cpu).flags = 0;
-> +		smp_call_function_single_async(cpu,
-> +					       &per_cpu(isol_break_csd, cpu));
-> +		put_cpu();
-> +	}
-> +}
-> +
-> +/*
-> + * This code runs with interrupts disabled just before the return to
-> + * userspace, after a prctl() has requested enabling task isolation.
-> + * We take whatever steps are needed to avoid being interrupted later:
-> + * drain the lru pages, stop the scheduler tick, etc.  More
-> + * functionality may be added here later to avoid other types of
-> + * interrupts from other kernel subsystems.
-> + *
-> + * If we can't enable task isolation, we update the syscall return
-> + * value with an appropriate error.
-> + */
-> +void task_isolation_start(void)
-> +{
-> +	int error;
-> +
-> +	/*
-> +	 * We should only be called in STATE_NORMAL (isolation disabled),
-> +	 * on our way out of the kernel from the prctl() that turned it on.
-> +	 * If we are exiting from the kernel in another state, it means we
-> +	 * made it back into the kernel without disabling task isolation,
-> +	 * and we should investigate how (and in any case disable task
-> +	 * isolation at this point).  We are clearly not on the path back
-> +	 * from the prctl() so we don't touch the syscall return value.
-> +	 */
-> +	if (WARN_ON_ONCE(current->task_isolation_state != STATE_NORMAL)) {
-> +		/* Increment counter, this will allow isolation breaking */
-> +		if (atomic_inc_return(&per_cpu(isol_counter,
-> +					      smp_processor_id())) > 1) {
-> +			atomic_dec(&per_cpu(isol_counter, smp_processor_id()));
-> +		}
-> +		atomic_inc(&per_cpu(isol_counter, smp_processor_id()));
-> +		stop_isolation(current);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Must be affinitized to a single core with task isolation possible.
-> +	 * In principle this could be remotely modified between the prctl()
-> +	 * and the return to userspace, so we have to check it here.
-> +	 */
-> +	if (current->nr_cpus_allowed != 1 ||
-> +	    !is_isolation_cpu(smp_processor_id())) {
-> +		error = -EINVAL;
-> +		goto error;
-> +	}
-> +
-> +	/* If the vmstat delayed work is not canceled, we have to try again. */
-> +	if (!vmstat_idle()) {
-> +		error = -EAGAIN;
-> +		goto error;
-> +	}
-> +
-> +	/* Try to stop the dynamic tick. */
-> +	error = try_stop_full_tick();
-> +	if (error)
-> +		goto error;
-> +
-> +	/* Drain the pagevecs to avoid unnecessary IPI flushes later. */
-> +	lru_add_drain();
-> +
-> +	/* Increment counter, this will allow isolation breaking */
-> +	if (atomic_inc_return(&per_cpu(isol_counter,
-> +				      smp_processor_id())) > 1) {
-> +		atomic_dec(&per_cpu(isol_counter, smp_processor_id()));
-> +	}
-> +
-> +	/* Record isolated task IDs and name */
-> +	record_curr_isolated_task();
-> +
-> +	/* Copy flags with task isolation enabled */
-> +	this_cpu_write(tsk_thread_flags_cache,
-> +		       READ_ONCE(task_thread_info(current)->flags));
-> +
-> +	current->task_isolation_state = STATE_ISOLATED;
-> +	return;
-> +
-> +error:
-> +	/* Increment counter, this will allow isolation breaking */
-> +	if (atomic_inc_return(&per_cpu(isol_counter,
-> +				      smp_processor_id())) > 1) {
-> +		atomic_dec(&per_cpu(isol_counter, smp_processor_id()));
-> +	}
-> +	stop_isolation(current);
-> +	syscall_set_return_value(current, current_pt_regs(), error, 0);
-> +}
-> +
-> +/* Stop task isolation on the remote task and send it a signal. */
-> +static void send_isolation_signal(struct task_struct *task)
-> +{
-> +	int flags = task->task_isolation_flags;
-> +	kernel_siginfo_t info = {
-> +		.si_signo = PR_TASK_ISOLATION_GET_SIG(flags) ?: SIGKILL,
-> +	};
-> +
-> +	stop_isolation(task);
-> +	send_sig_info(info.si_signo, &info, task);
-> +}
-> +
-> +/* Only a few syscalls are valid once we are in task isolation mode. */
-> +static bool is_acceptable_syscall(int syscall)
-> +{
-> +	/* No need to incur an isolation signal if we are just exiting. */
-> +	if (syscall == __NR_exit || syscall == __NR_exit_group)
-> +		return true;
-> +
-> +	/* Check to see if it's the prctl for isolation. */
-> +	if (syscall == __NR_prctl) {
-> +		unsigned long arg[SYSCALL_MAX_ARGS];
-> +
-> +		syscall_get_arguments(current, current_pt_regs(), arg);
-> +		if (arg[0] == PR_TASK_ISOLATION)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +/*
-> + * This routine is called from syscall entry, prevents most syscalls
-> + * from executing, and if needed raises a signal to notify the process.
-> + *
-> + * Note that we have to stop isolation before we even print a message
-> + * here, since otherwise we might end up reporting an interrupt due to
-> + * kicking the printk handling code, rather than reporting the true
-> + * cause of interrupt here.
-> + *
-> + * The message is not suppressed by previous remotely triggered
-> + * messages.
-> + */
-> +int task_isolation_syscall(int syscall)
-> +{
-> +	struct task_struct *task = current;
-> +
-> +	if (is_acceptable_syscall(syscall)) {
-> +		stop_isolation(task);
-> +		return 0;
-> +	}
-> +
-> +	send_isolation_signal(task);
-> +
-> +	pr_task_isol_warn(smp_processor_id(),
-> +			  "task_isolation lost due to syscall %d\n",
-> +			  syscall);
-> +	debug_dump_stack();
-> +
-> +	syscall_set_return_value(task, current_pt_regs(), -ERESTARTNOINTR, -1);
-> +	return -1;
-> +}
-> +
-> +/*
-> + * This routine is called from any exception or irq that doesn't
-> + * otherwise trigger a signal to the user process (e.g. page fault).
-> + *
-> + * Messages will be suppressed if there is already a reported remote
-> + * cause for isolation breaking, so we don't generate multiple
-> + * confusingly similar messages about the same event.
-> + */
-> +void _task_isolation_interrupt(const char *fmt, ...)
-> +{
-> +	struct task_struct *task = current;
-> +	va_list args;
-> +	char buf[100];
-> +
-> +	/* RCU should have been enabled prior to this point. */
-> +	RCU_LOCKDEP_WARN(!rcu_is_watching(), "kernel entry without RCU");
-> +
-> +	/* Are we exiting isolation already? */
-> +	if (atomic_read(&per_cpu(isol_exit_counter, smp_processor_id())) != 0) {
-> +		task->task_isolation_state = STATE_NORMAL;
-> +		return;
-> +	}
-> +	/*
-> +	 * Avoid reporting interrupts that happen after we have prctl'ed
-> +	 * to enable isolation, but before we have returned to userspace.
-> +	 */
-> +	if (task->task_isolation_state == STATE_NORMAL)
-> +		return;
-> +
-> +	va_start(args, fmt);
-> +	vsnprintf(buf, sizeof(buf), fmt, args);
-> +	va_end(args);
-> +
-> +	/* Handle NMIs minimally, since we can't send a signal. */
-> +	if (in_nmi()) {
-> +		pr_task_isol_err(smp_processor_id(),
-> +				 "isolation: in NMI; not delivering signal\n");
-> +	} else {
-> +		send_isolation_signal(task);
-> +	}
-> +
-> +	if (pr_task_isol_warn_supp(smp_processor_id(),
-> +				   "task_isolation lost due to %s\n", buf))
-> +		debug_dump_stack();
-> +}
-> +
-> +/*
-> + * Called before we wake up a task that has a signal to process.
-> + * Needs to be done to handle interrupts that trigger signals, which
-> + * we don't catch with task_isolation_interrupt() hooks.
-> + *
-> + * This message is also suppressed if there was already a remotely
-> + * caused message about the same isolation breaking event.
-> + */
-> +void _task_isolation_signal(struct task_struct *task)
-> +{
-> +	struct isol_task_desc *desc;
-> +	int ind, cpu;
-> +	bool do_warn = (task->task_isolation_state == STATE_ISOLATED);
-> +
-> +	cpu = task_cpu(task);
-> +	desc = &per_cpu(isol_task_descs, cpu);
-> +	ind = atomic_read(&desc->curr_index) & 1;
-> +	if (desc->warned[ind])
-> +		do_warn = false;
-> +
-> +	stop_isolation(task);
-> +
-> +	if (do_warn) {
-> +		pr_warn("isolation: %s/%d/%d (cpu %d): task_isolation lost due to signal\n",
-> +			task->comm, task->tgid, task->pid, cpu);
-> +		debug_dump_stack();
-> +	}
-> +}
-> +
-> +/*
-> + * Generate a stack backtrace if we are going to interrupt another task
-> + * isolation process.
-> + */
-> +void task_isolation_remote(int cpu, const char *fmt, ...)
-> +{
-> +	struct task_struct *curr_task;
-> +	va_list args;
-> +	char buf[200];
-> +
-> +	if (!is_isolation_cpu(cpu) || !task_isolation_on_cpu(cpu))
-> +		return;
-> +
-> +	curr_task = current;
-> +
-> +	va_start(args, fmt);
-> +	vsnprintf(buf, sizeof(buf), fmt, args);
-> +	va_end(args);
-> +	if (pr_task_isol_warn(cpu,
-> +			      "task_isolation lost due to %s by %s/%d/%d on cpu %d\n",
-> +			      buf,
-> +			      curr_task->comm, curr_task->tgid,
-> +			      curr_task->pid, smp_processor_id()))
-> +		debug_dump_stack();
-> +}
-> +
-> +/*
-> + * Generate a stack backtrace if any of the cpus in "mask" are running
-> + * task isolation processes.
-> + */
-> +void task_isolation_remote_cpumask(const struct cpumask *mask,
-> +				   const char *fmt, ...)
-> +{
-> +	struct task_struct *curr_task;
-> +	cpumask_var_t warn_mask;
-> +	va_list args;
-> +	char buf[200];
-> +	int cpu, first_cpu;
-> +
-> +	if (task_isolation_map == NULL ||
-> +		!zalloc_cpumask_var(&warn_mask, GFP_KERNEL))
-> +		return;
-> +
-> +	first_cpu = -1;
-> +	for_each_cpu_and(cpu, mask, task_isolation_map) {
-> +		if (task_isolation_on_cpu(cpu)) {
-> +			if (first_cpu < 0)
-> +				first_cpu = cpu;
-> +			else
-> +				cpumask_set_cpu(cpu, warn_mask);
-> +		}
-> +	}
-> +
-> +	if (first_cpu < 0)
-> +		goto done;
-> +
-> +	curr_task = current;
-> +
-> +	va_start(args, fmt);
-> +	vsnprintf(buf, sizeof(buf), fmt, args);
-> +	va_end(args);
-> +
-> +	if (cpumask_weight(warn_mask) == 0)
-> +		pr_task_isol_warn(first_cpu,
-> +				  "task_isolation lost due to %s by %s/%d/%d on cpu %d\n",
-> +				  buf, curr_task->comm, curr_task->tgid,
-> +				  curr_task->pid, smp_processor_id());
-> +	else
-> +		pr_task_isol_warn(first_cpu,
-> +				  " and cpus %*pbl: task_isolation lost due to %s by %s/%d/%d on cpu %d\n",
-> +				  cpumask_pr_args(warn_mask),
-> +				  buf, curr_task->comm, curr_task->tgid,
-> +				  curr_task->pid, smp_processor_id());
-> +	debug_dump_stack();
-> +
-> +done:
-> +	free_cpumask_var(warn_mask);
-> +}
-> +
-> +/*
-> + * Check if given CPU is running isolated task.
-> + */
-> +int task_isolation_on_cpu(int cpu)
-> +{
-> +	return test_bit(TIF_TASK_ISOLATION,
-> +			&per_cpu(tsk_thread_flags_cache, cpu));
-> +}
-> +
-> +/*
-> + * Set CPUs currently running isolated tasks in CPU mask.
-> + */
-> +void task_isolation_cpumask(struct cpumask *mask)
-> +{
-> +	int cpu;
-> +
-> +	if (task_isolation_map == NULL)
-> +		return;
-> +
-> +	for_each_cpu(cpu, task_isolation_map)
-> +		if (task_isolation_on_cpu(cpu))
-> +			cpumask_set_cpu(cpu, mask);
-> +}
-> +
-> +/*
-> + * Clear CPUs currently running isolated tasks in CPU mask.
-> + */
-> +void task_isolation_clear_cpumask(struct cpumask *mask)
-> +{
-> +	int cpu;
-> +
-> +	if (task_isolation_map == NULL)
-> +		return;
-> +
-> +	for_each_cpu(cpu, task_isolation_map)
-> +		if (task_isolation_on_cpu(cpu))
-> +			cpumask_clear_cpu(cpu, mask);
-> +}
-> +
-> +/*
-> + * Cleanup procedure. The call to this procedure may be delayed.
-> + */
-> +void task_isolation_cpu_cleanup(void)
-> +{
-> +	kick_hrtimer();
-> +}
-> +
-> +/*
-> + * Check if cleanup is scheduled on the current CPU, and if so, run it.
-> + * Intended to be called from notify_resume() or another such callback
-> + * on the target CPU.
-> + */
-> +void task_isolation_check_run_cleanup(void)
-> +{
-> +	int cpu;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&task_isolation_cleanup_lock, flags);
-> +
-> +	cpu = smp_processor_id();
-> +
-> +	if (cpumask_test_cpu(cpu, task_isolation_cleanup_map)) {
-> +		cpumask_clear_cpu(cpu, task_isolation_cleanup_map);
-> +		spin_unlock_irqrestore(&task_isolation_cleanup_lock, flags);
-> +		task_isolation_cpu_cleanup();
-> +	} else
-> +		spin_unlock_irqrestore(&task_isolation_cleanup_lock, flags);
-> +}
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index 5b2396350dd1..1df57e38c361 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -46,6 +46,7 @@
->  #include <linux/livepatch.h>
->  #include <linux/cgroup.h>
->  #include <linux/audit.h>
-> +#include <linux/isolation.h>
->  
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/signal.h>
-> @@ -758,6 +759,7 @@ static int dequeue_synchronous_signal(kernel_siginfo_t *info)
->   */
->  void signal_wake_up_state(struct task_struct *t, unsigned int state)
->  {
-> +	task_isolation_signal(t);
->  	set_tsk_thread_flag(t, TIF_SIGPENDING);
->  	/*
->  	 * TASK_WAKEKILL also means wake it up in the stopped/traced/killable
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index f9bc5c303e3f..0a4059a8c4f9 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -42,6 +42,7 @@
->  #include <linux/syscore_ops.h>
->  #include <linux/version.h>
->  #include <linux/ctype.h>
-> +#include <linux/isolation.h>
->  
->  #include <linux/compat.h>
->  #include <linux/syscalls.h>
-> @@ -2513,6 +2514,11 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->  
->  		error = (current->flags & PR_IO_FLUSHER) == PR_IO_FLUSHER;
->  		break;
-> +	case PR_TASK_ISOLATION:
-> +		if (arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +		error = task_isolation_request(arg2);
-> +		break;
->  	default:
->  		error = -EINVAL;
->  		break;
-> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-> index 3a609e7344f3..5bb98f39bde6 100644
-> --- a/kernel/time/hrtimer.c
-> +++ b/kernel/time/hrtimer.c
-> @@ -30,6 +30,7 @@
->  #include <linux/syscalls.h>
->  #include <linux/interrupt.h>
->  #include <linux/tick.h>
-> +#include <linux/isolation.h>
->  #include <linux/err.h>
->  #include <linux/debugobjects.h>
->  #include <linux/sched/signal.h>
-> @@ -721,6 +722,19 @@ static void retrigger_next_event(void *arg)
->  	raw_spin_unlock(&base->lock);
->  }
->  
-> +#ifdef CONFIG_TASK_ISOLATION
-> +void kick_hrtimer(void)
-> +{
-> +	unsigned long flags;
-> +
-> +	preempt_disable();
-> +	local_irq_save(flags);
-> +	retrigger_next_event(NULL);
-> +	local_irq_restore(flags);
-> +	preempt_enable();
-> +}
-> +#endif
-> +
->  /*
->   * Switch to high resolution mode
->   */
-> @@ -868,8 +882,21 @@ static void hrtimer_reprogram(struct hrtimer *timer, bool reprogram)
->  void clock_was_set(void)
->  {
->  #ifdef CONFIG_HIGH_RES_TIMERS
-> +#ifdef CONFIG_TASK_ISOLATION
-> +	struct cpumask mask;
-> +
-> +	cpumask_clear(&mask);
-> +	task_isolation_cpumask(&mask);
-> +	cpumask_complement(&mask, &mask);
-> +	/*
-> +	 * Retrigger the CPU local events everywhere except CPUs
-> +	 * running isolated tasks.
-> +	 */
-> +	on_each_cpu_mask(&mask, retrigger_next_event, NULL, 1);
-> +#else
->  	/* Retrigger the CPU local events everywhere */
->  	on_each_cpu(retrigger_next_event, NULL, 1);
-> +#endif
->  #endif
->  	timerfd_clock_was_set();
->  }
-> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-> index a792d21cac64..1d4dec9d3ee7 100644
-> --- a/kernel/time/tick-sched.c
-> +++ b/kernel/time/tick-sched.c
-> @@ -882,6 +882,24 @@ static void tick_nohz_full_update_tick(struct tick_sched *ts)
->  #endif
->  }
->  
-> +#ifdef CONFIG_TASK_ISOLATION
-> +int try_stop_full_tick(void)
-> +{
-> +	int cpu = smp_processor_id();
-> +	struct tick_sched *ts = this_cpu_ptr(&tick_cpu_sched);
-> +
-> +	/* For an unstable clock, we should return a permanent error code. */
-> +	if (atomic_read(&tick_dep_mask) & TICK_DEP_MASK_CLOCK_UNSTABLE)
-> +		return -EINVAL;
-> +
-> +	if (!can_stop_full_tick(cpu, ts))
-> +		return -EAGAIN;
-> +
-> +	tick_nohz_stop_sched_tick(ts, cpu);
-> +	return 0;
-> +}
-> +#endif
-> +
->  static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
->  {
->  	/*
-> -- 
-> 2.20.1
-> 
+The kbuild tree gained a build failure for which I reverted a commit.
+
+The rcu tree lost its build failure.
+
+Non-merge commits (relative to Linus' tree): 1739
+ 1692 files changed, 54015 insertions(+), 16820 deletions(-)
+
+----------------------------------------------------------------------------
+
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
+
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf. After
+the final fixups (if any), I do an x86_64 modules_install followed by
+builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+and sparc64 defconfig and htmldocs. And finally, a simple boot test
+of the powerpc pseries_le_defconfig kernel in qemu (with and without
+kvm enabled).
+
+Below is a summary of the state of the merge.
+
+I am currently merging 316 trees (counting Linus' and 78 trees of bug
+fix patches pending for the current merge release).
+
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+$ git checkout master
+$ git reset --hard stable
+Merging origin/master (a10c9c710f9e Merge tag 'for-v5.7' of git://git.kerne=
+l.org/pub/scm/linux/kernel/git/sre/linux-power-supply)
+Merging fixes/master (a10c9c710f9e Merge tag 'for-v5.7' of git://git.kernel=
+.org/pub/scm/linux/kernel/git/sre/linux-power-supply)
+Merging kbuild-current/fixes (e595dd94515e Merge git://git.kernel.org/pub/s=
+cm/linux/kernel/git/netdev/net)
+Merging arc-current/for-curr (f09d3174f002 ARC: allow userspace DSP applica=
+tions to use AGU extensions)
+Merging arm-current/fixes (89604523a76e ARM: 8961/2: Fix Kbuild issue cause=
+d by per-task stack protector GCC plugin)
+Merging arm-soc-fixes/arm/fixes (c8042d1e5cb3 soc: samsung: chipid: Fix ret=
+urn value on non-Exynos platforms)
+Merging arm64-fixes/for-next/fixes (6f5459da2b87 arm64: alternative: fix bu=
+ild with clang integrated assembler)
+Merging m68k-current/for-linus (86cded5fc525 m68k: defconfig: Update defcon=
+figs for v5.6-rc4)
+Merging powerpc-fixes/fixes (1d0c32ec3b86 KVM: PPC: Fix kernel crash with P=
+R KVM)
+Merging s390-fixes/fixes (16fbf79b0f83 Linux 5.6-rc7)
+Merging sparc/master (255a69a94b8c sparc32: use per-device dma_ops)
+Merging fscrypt-current/for-stable (2b4eae95c736 fscrypt: don't evict dirty=
+ inodes after removing key)
+Merging net/master (0452800f6db4 net: dsa: mt7530: fix null pointer derefer=
+encing in port5 setup)
+Merging bpf/master (5222d69642a0 bpf, lsm: Fix the file_mprotect LSM test.)
+Merging ipsec/master (0141317611ab Merge branch 'hns3-fixes')
+Merging netfilter/master (0452800f6db4 net: dsa: mt7530: fix null pointer d=
+ereferencing in port5 setup)
+Merging ipvs/master (0141317611ab Merge branch 'hns3-fixes')
+Merging wireless-drivers/master (0433ae556ec8 iwlwifi: don't send GEO_TX_PO=
+WER_LIMIT if no wgds table)
+Merging mac80211/master (0452800f6db4 net: dsa: mt7530: fix null pointer de=
+referencing in port5 setup)
+Merging rdma-fixes/for-rc (7111951b8d49 Linux 5.6)
+Merging sound-current/for-linus (fd60e0683e8e ALSA: usb-audio: Add registra=
+tion quirk for Kingston HyperX Cloud Alpha S)
+Merging sound-asoc-fixes/for-linus (2f107b222208 Merge branch 'asoc-5.7' in=
+to asoc-linus)
+Merging regmap-fixes/for-linus (87fc8230f7aa Merge branch 'regmap-5.6' into=
+ regmap-linus)
+Merging regulator-fixes/for-linus (bae4cb90541a Merge branch 'regulator-5.6=
+' into regulator-linus)
+Merging spi-fixes/for-linus (b3027f88cffb Merge branch 'spi-5.7' into spi-l=
+inus)
+Merging pci-current/for-linus (5901b51f3e5d MAINTAINERS: Correct Cadence PC=
+I driver path)
+Merging driver-core.current/driver-core-linus (bef7b2a7be28 Merge tag 'devi=
+cetree-for-5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux)
+Merging tty.current/tty-linus (bef7b2a7be28 Merge tag 'devicetree-for-5.7' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux)
+Merging usb.current/usb-linus (bef7b2a7be28 Merge tag 'devicetree-for-5.7' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux)
+Merging usb-gadget-fixes/fixes (42cd5ffe46c1 usb: dwc3: debug: fix string p=
+osition formatting mixup with ret and len)
+Merging usb-serial-fixes/usb-linus (16fbf79b0f83 Linux 5.6-rc7)
+Merging usb-chipidea-fixes/ci-for-usb-stable (7cbf3dd3139a usb: chipidea: u=
+dc: fix sleeping function called from invalid context)
+Merging phy/fixes (be4e3c737eeb phy: mapphone-mdm6600: Fix timeouts by addi=
+ng wake-up handling)
+Merging staging.current/staging-linus (4c205c84e249 Merge tag 'keys-fixes-2=
+0200329' of git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs)
+Merging char-misc.current/char-misc-linus (5364abc57993 Merge tag 'arc-5.7-=
+rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc)
+Merging soundwire-fixes/fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging thunderbolt-fixes/fixes (16fbf79b0f83 Linux 5.6-rc7)
+Merging input-current/for-linus (4134252ab7e2 Input: fix stale timestamp on=
+ key autorepeat events)
+Merging crypto-current/master (755bddd1e4ea crypto: marvell/octeontx - fix =
+double free of ptr)
+Merging ide/master (78a515f9faf3 drivers/ide: Fix build regression.)
+Merging vfio-fixes/for-linus (95f89e090618 vfio/type1: Initialize resv_msi_=
+base)
+Merging kselftest-fixes/fixes (f3a60268f5ce selftest/lkdtm: Use local .giti=
+gnore)
+Merging modules-fixes/modules-linus (57baec7b1b04 scripts/nsdeps: make sure=
+ to pass all module source files to spatch)
+Merging slave-dma-fixes/fixes (018af9be3dd5 dmaengine: ti: k3-udma-glue: Fi=
+x an error handling path in 'k3_udma_glue_cfg_rx_flow()')
+Merging backlight-fixes/for-backlight-fixes (219d54332a09 Linux 5.4)
+Merging mtd-fixes/mtd/fixes (def9d2780727 Linux 5.5-rc7)
+Merging mfd-fixes/for-mfd-fixes (603d9299da32 mfd: mt6397: Fix probe after =
+changing mt6397-core)
+Merging v4l-dvb-fixes/fixes (2632e7b618a7 media: venus: firmware: Ignore se=
+cure call error on first resume)
+Merging reset-fixes/reset/fixes (b460e0a9e240 reset: intel: add unspecified=
+ HAS_IOMEM dependency)
+Merging mips-fixes/mips-fixes (f7d5f5655ef7 MAINTAINERS: Correct MIPS patch=
+work URL)
+Merging at91-fixes/at91-fixes (54ecb8f7028c Linux 5.4-rc1)
+Merging omap-fixes/fixes (07bdc492cff6 ARM: dts: OMAP3: disable RNG on N950=
+/N9)
+Merging kvm-fixes/master (e1be9ac8e601 KVM: X86: Narrow down the IPI fastpa=
+th to single target IPI)
+Merging kvms390-fixes/master (e93fc7b4544a KVM: s390: Also reset registers =
+in sync regs for initial cpu reset)
+Merging hwmon-fixes/hwmon (4eb981e97679 hwmon: (pmbus/isl68137) Fix up chip=
+ IDs)
+Merging nvdimm-fixes/libnvdimm-fixes (f84afbdd3a9e libnvdimm: Out of bounds=
+ read in __nd_ioctl())
+Merging btrfs-fixes/next-fixes (f5bf9a8fa525 Merge branch 'misc-5.6' into n=
+ext-fixes)
+Merging vfs-fixes/fixes (d9a9f4849fe0 cifs_atomic_open(): fix double-put on=
+ late allocation failure)
+Merging dma-mapping-fixes/for-linus (9c24eaf81cc4 iommu/vt-d: Return the co=
+rrect dma mask when we are bypassing the IOMMU)
+Merging i3c-fixes/master (6fbc7275c7a9 Linux 5.2-rc7)
+Merging drivers-x86-fixes/fixes (1a323ea5356e x86: get rid of 'errret' argu=
+ment to __get_user_xyz() macross)
+Merging samsung-krzk-fixes/fixes (0d935f0bf77d ARM: dts: exynos: Fix regula=
+tor node aliasing on Midas-based boards)
+Merging pinctrl-samsung-fixes/pinctrl-fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging devicetree-fixes/dt/linus (e33a814e772c scripts/dtc: Remove redunda=
+nt YYLOC global declaration)
+Merging scsi-fixes/fixes (ea697a8bf5a4 scsi: sd: Fix optimal I/O size for d=
+evices that change reported values)
+Merging drm-fixes/drm-fixes (c4b979ebcafe Merge tag 'amd-drm-fixes-5.6-2020=
+-03-26' of git://people.freedesktop.org/~agd5f/linux into drm-fixes)
+Merging amdgpu-fixes/drm-fixes (2c409ba81be2 drm/radeon: fix si_enable_smc_=
+cac() failed issue)
+Merging drm-intel-fixes/for-linux-next-fixes (7111951b8d49 Linux 5.6)
+Merging mmc-fixes/fixes (2a7e3035f89d mmc: core: make mmc_interrupt_hpi() s=
+tatic)
+Merging rtc-fixes/rtc-fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging gnss-fixes/gnss-linus (f8788d86ab28 Linux 5.6-rc3)
+Merging hyperv-fixes/hyperv-fixes (032d4a480220 hv: hyperv_vmbus.h: Replace=
+ zero-length array with flexible-array member)
+Merging soc-fsl-fixes/fix (fe8fe7723a3a soc: fsl: dpio: register dpio irq h=
+andlers after dpio create)
+Merging risc-v-fixes/fixes (2191b4f298fa RISC-V: Move all address space def=
+inition macros to one place)
+Merging pidfd-fixes/fixes (10dab84caf40 pid: make ENOMEM return value more =
+obvious)
+Merging fpga-fixes/fixes (3c2760b78f90 fpga: dfl: pci: fix return value of =
+cci_pci_sriov_configure)
+Merging spdx/spdx-linus (5364abc57993 Merge tag 'arc-5.7-rc1' of git://git.=
+kernel.org/pub/scm/linux/kernel/git/vgupta/arc)
+Merging gpio-intel-fixes/fixes (bb6d3fb354c5 Linux 5.6-rc1)
+Merging pinctrl-intel-fixes/fixes (16fbf79b0f83 Linux 5.6-rc7)
+Merging erofs-fixes/fixes (d1eef1c61974 Linux 5.5-rc2)
+Merging drm-misc-fixes/for-linux-next-fixes (83a196773b8b drm/bridge: analo=
+gix_dp: Split bind() into probe() and real bind())
+Merging kspp-gustavo/for-next/kspp (90e5d84c7b06 xattr.h: Replace zero-leng=
+th array with flexible-array member)
+Merging kbuild/for-next (d49e72ada0b9 kbuild: remove -I$(srctree)/tools/inc=
+lude from scripts/Makefile)
+Merging compiler-attributes/compiler-attributes (98d54f81e36b Linux 5.6-rc4)
+Merging leaks/leaks-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging dma-mapping/for-next (fd27a526bb38 ARM/dma-mapping: merge __dma_sup=
+ported into arm_dma_supported)
+Merging asm-generic/master (060dc911501f nds32: fix build failure caused by=
+ page table folding updates)
+Merging arc/for-next (def9d2780727 Linux 5.5-rc7)
+Merging arm/for-next (52d3b2f98483 Merge branch 'devel-stable' into for-nex=
+t)
+Merging arm64/for-next/core (e16e65a02913 arm64: remove CONFIG_DEBUG_ALIGN_=
+RODATA feature)
+Merging arm-perf/for-next/perf (8673e02e5841 arm64: perf: Add support for A=
+RMv8.5-PMU 64-bit counters)
+Merging arm-soc/for-next (d9725e56e1d8 soc: document merges)
+Merging amlogic/for-next (e304af8727dd Merge branch 'v5.7/drivers' into tmp=
+/aml-rebuild)
+Merging aspeed/for-next (de285b938cf3 ARM: dts: aspeed: ast2600: Fix SCU IR=
+Q controller nodes)
+Merging at91/at91-next (ec539e70d882 Merge branches 'at91-soc', 'at91-dt' a=
+nd 'at91-defconfig' into at91-next)
+Merging imx-mxs/for-next (e506dba69a5e Merge branch 'imx/defconfig' into fo=
+r-next)
+Merging keystone/next (560b4d4691b0 Merge branch 'for_5.7/keystone-dts' int=
+o next)
+Merging mediatek/for-next (6906847e14b5 Merge branch 'v5.6-next/soc' into f=
+or-next)
+Merging mvebu/for-next (9d32706f8aa8 Merge branch 'mvebu/dt64' into mvebu/f=
+or-next)
+Merging omap/for-next (e90f16cc1a48 Merge branch 'fixes' into for-next)
+Merging qcom/for-next (8dc3769c8a68 Merge branches 'arm64-for-5.7', 'arm64-=
+defconfig-for-5.7', 'defconfig-for-5.7', 'drivers-for-5.7' and 'dts-for-5.7=
+' into for-next)
+Merging raspberrypi/for-next (e7b7daeb48e0 ARM: dts: bcm283x: Use firmware =
+PM driver for V3D)
+CONFLICT (content): Merge conflict in arch/arm/configs/bcm2835_defconfig
+Merging realtek/for-next (45698e00d5a9 Merge branch 'v5.6/dt' into next)
+Merging renesas/next (bf4540d5148c Merge branch 'renesas-arm64-dt-for-v5.7'=
+ into renesas-next)
+Merging reset/reset/next (2ebf89fd4ecf reset: hi6220: Add support for AO re=
+set controller)
+Merging rockchip/for-next (c018aff1a201 Merge branch 'v5.7-armsoc/dts64' in=
+to for-next)
+Merging samsung-krzk/for-next (5c1cb4ae848e Merge branch 'next/dt-late' int=
+o for-next)
+Merging scmi/for-linux-next (7111951b8d49 Linux 5.6)
+Merging sunxi/sunxi/for-next (8afff9da61ea Merge branch 'sunxi/dt-for-5.7' =
+into sunxi/for-next)
+Merging tegra/for-next (df0a178cf2df Merge branch for-5.7/usb into for-next)
+Merging clk/clk-next (28ecaf1c30fe Merge branches 'clk-unisoc', 'clk-tegra'=
+, 'clk-qcom' and 'clk-imx' into clk-next)
+Merging clk-samsung/for-next (54ecb8f7028c Linux 5.4-rc1)
+Merging c6x/for-linux-next (8adcc59974b8 Merge branch 'work.misc' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/viro/vfs)
+Merging csky/linux-next (a7a966e2d2e7 csky: Fixup cpu speculative execution=
+ to IO area)
+CONFLICT (content): Merge conflict in arch/csky/include/asm/Kbuild
+Merging h8300/h8300-next (a5de8865cb3e h8300: move definition of __kernel_s=
+ize_t etc. to posix_types.h)
+Merging ia64/next (172e7890406d tty/serial: cleanup after ioc*_serial drive=
+r removal)
+Merging m68k/for-next (86cded5fc525 m68k: defconfig: Update defconfigs for =
+v5.6-rc4)
+Merging m68knommu/for-next (ba000760eb0f m68k: Replace setup_irq() by reque=
+st_irq())
+Merging microblaze/next (9fd1a1c9b3f2 microblaze: Replace setup_irq() by re=
+quest_irq())
+Merging mips/mips-next (ba15533275dd Merge tag 'v5.6' into mips-next)
+Merging nds32/next (d785c5a324cd nds32: configs: Cleanup CONFIG_CROSS_COMPI=
+LE)
+Merging nios2/for-next (051d75d3bb31 MAINTAINERS: Update Ley Foon Tan's ema=
+il address)
+Merging openrisc/for-next (9737e2c5f0bc openrisc: Remove obsolete show_trac=
+e_task function)
+Merging parisc-hd/for-next (106c90922e1e parisc: remove nargs from __SYSCAL=
+L)
+Merging powerpc/next (6ba4a2d35910 selftests/powerpc: Always build the tm-p=
+oison test 64-bit)
+Merging fsl/next (a76bea0287ce powerpc/kmcent2: add ranges to the pci bridg=
+es)
+Merging soc-fsl/next (461c3ac0dc46 soc: fsl: qe: fix sparse warnings for uc=
+c_slow.c)
+Merging risc-v/for-next (37809df4b1c8 riscv: create a loader.bin boot image=
+ for Kendryte SoC)
+CONFLICT (content): Merge conflict in arch/riscv/include/asm/pgtable.h
+CONFLICT (content): Merge conflict in arch/riscv/Kconfig.socs
+Merging sifive/for-next (467e050e9760 Merge branch 'i2c/for-current' of git=
+://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux)
+Merging s390/features (1058c163dc31 s390/mm: cleanup init_new_context() cal=
+lback)
+Merging sh/sh-next (a193018e5290 sh: add missing EXPORT_SYMBOL() for __dela=
+y)
+Merging sparc-next/master (b71acb0e3721 Merge branch 'linus' of git://git.k=
+ernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6)
+Merging uml/linux-next (4a7c46247f9c um: Remove some unnecessary NULL check=
+s in vector_user.c)
+Merging xtensa/xtensa-for-next (adc044bf2320 Merge branch 'xtensa-5.7-fixes=
+' into xtensa-for-next)
+Merging fscrypt/master (861261f2a9cc ubifs: wire up FS_IOC_GET_ENCRYPTION_N=
+ONCE)
+Merging afs/afs-next (4fe171bb81b1 afs: Remove set but not used variable 'r=
+et')
+Merging btrfs/for-next (5a7ef5cb05dc Merge branch 'for-next-current-v5.6-20=
+200331' into for-next-20200331)
+Merging ceph/master (3e10eb7331c7 rbd: don't mess with a page vector in rbd=
+_notify_op_lock())
+Merging cifs/for-next (712f1dac6209 cifs: ignore cached share root handle c=
+losing errors)
+Merging configfs/for-next (e2f238f7d5a1 configfs: calculate the depth of pa=
+rent item)
+Merging ecryptfs/next (8b614cb8f1dc Merge tag '5.6-rc4-smb3-fixes' of git:/=
+/git.samba.org/sfrench/cifs-2.6)
+Merging erofs/dev (20741a6e146c MAINTAINERS: erofs: update my email address)
+Merging ext3/for_next (a32f0ecd79b4 Merge fanotify fix from Nathan Chancell=
+or.)
+Merging ext4/dev (54d3adbc29f0 ext4: save all error info in save_error_info=
+() and drop ext4_set_errno())
+Merging f2fs/dev (531dfae52e8c f2fs: keep inline_data when compression conv=
+ersion)
+Merging fsverity/fsverity (98d54f81e36b Linux 5.6-rc4)
+Merging fuse/for-next (3e8cb8b2eaeb fuse: fix stack use after return)
+Merging jfs/jfs-next (7aba5dcc2346 jfs: Replace zero-length array with flex=
+ible-array member)
+Merging nfs/linux-next (1fab7dc47724 SUNRPC: Don't start a timer on an alre=
+ady queued rpc task)
+Merging nfs-anna/linux-next (55dee1bc0d72 nfs: add minor version to nfs_ser=
+ver_key for fscache)
+Merging nfsd/nfsd-next (2653de9f0398 fs: nfsd: fileache.c: Use built-in RCU=
+ list checking)
+CONFLICT (content): Merge conflict in net/sunrpc/cache.c
+Merging orangefs/for-next (9f198a2ac543 help_next should increase position =
+index)
+Merging overlayfs/overlayfs-next (2eda9eaa6d7e ovl: document xino expected =
+behavior)
+Merging ubifs/linux-next (3676f32a98cd ubi: ubi-media.h: Replace zero-lengt=
+h array with flexible-array member)
+Merging v9fs/9p-next (43657496e466 net/9p: remove unused p9_req_t aux field)
+Merging xfs/for-next (d9fdd0adf932 xfs: fix inode number overflow in ifree =
+cluster helper)
+Merging zonefs/for-next (0dda2ddb7ded zonefs: select FS_IOMAP)
+Merging iomap/iomap-for-next (457df33e035a iomap: Handle memory allocation =
+failure in readahead)
+Merging djw-vfs/vfs-for-next (56939e014a6c hibernate: Allow uswsusp to writ=
+e to swap)
+Merging file-locks/locks-next (dbdaf6a3250b locks: reinstate locks_delete_b=
+lock optimization)
+Merging vfs/for-next (ffca8b2a77f2 Merge branch 'work.exfat' into for-next)
+Merging printk/for-next (d34f14ae521f Merge branch 'for-5.7-preferred-conso=
+le' into for-next)
+Merging pci/next (86ce3c90c910 Merge branch 'remotes/lorenzo/pci/vmd')
+Merging pstore/for-next/pstore (8128d3aac0ee pstore/ram: Replace zero-lengt=
+h array with flexible-array member)
+Merging hid/for-next (31ce1c81f672 Merge branch 'for-5.7/upstream-fixes' in=
+to for-next)
+Merging i2c/i2c/for-next (ae7a83a5275b Merge branch 'i2c/for-5.7' into i2c/=
+for-next)
+Merging i3c/i3c/next (c4b9de11d010 i3c: convert to use i2c_new_client_devic=
+e())
+Merging dmi/master (12028f913eb9 firmware/dmi: Report DMI Bios & EC firmwar=
+e release)
+Merging hwmon-staging/hwmon-next (5b10a8194664 docs: hwmon: Update document=
+ation for isl68137 pmbus driver)
+Merging jc_docs/docs-next (abcb1e021ae5 Documentation: x86: exception-table=
+s: document CONFIG_BUILDTIME_TABLE_SORT)
+Merging v4l-dvb/master (2632e7b618a7 media: venus: firmware: Ignore secure =
+call error on first resume)
+Merging v4l-dvb-next/master (54ecb8f7028c Linux 5.4-rc1)
+Merging fbdev/fbdev-for-next (732146a3f1dc video: fbdev: imxfb: fix a typo =
+in imxfb_probe())
+Merging pm/linux-next (8a378171d0e1 Merge branch 'pm-acpi' into linux-next)
+Merging cpufreq-arm/cpufreq/arm/linux-next (a8811ec764f9 cpufreq: qcom: Add=
+ support for krait based socs)
+Merging cpupower/cpupower (2de7fb60a474 cpupower: avoid multiple definition=
+ with gcc -fno-common)
+Merging opp/opp/linux-next (03758d60265c opp: Replace list_kref with a loca=
+l counter)
+Merging thermal/thermal/linux-next (76a5c400aae5 thermal: imx8mm: Fix build=
+ warning of incorrect argument type)
+CONFLICT (content): Merge conflict in drivers/thermal/cpufreq_cooling.c
+Merging thermal-rzhang/next (54ecb8f7028c Linux 5.4-rc1)
+Merging thermal-soc/next (6c375eccded4 thermal: db8500: Rewrite to be a pur=
+e OF sensor)
+Merging ieee1394/for-next (67f8e65e4fc1 firewire: net: remove set but not u=
+sed variable 'guid')
+Merging dlm/next (a48f9721e6db dlm: no need to check return value of debugf=
+s_create functions)
+Merging swiotlb/linux-next (4cdfb27ba80d xen/swiotlb: remember having calle=
+d xen_create_contiguous_region())
+Merging rdma/for-next (b4d8ddf8356d RDMA/bnxt_re: make bnxt_re_ib_init stat=
+ic)
+Merging net-next/master (1a323ea5356e x86: get rid of 'errret' argument to =
+__get_user_xyz() macross)
+Merging bpf-next/master (1a323ea5356e x86: get rid of 'errret' argument to =
+__get_user_xyz() macross)
+Merging ipsec-next/master (308491755f36 xfrm: add prep for esp beet mode of=
+fload)
+Merging mlx5-next/mlx5-next (826096d84f50 mlx5: Remove uninitialized use of=
+ key in mlx5_core_create_mkey)
+Merging netfilter-next/master (1a323ea5356e x86: get rid of 'errret' argume=
+nt to __get_user_xyz() macross)
+Merging ipvs-next/master (d54725cd11a5 netfilter: nf_tables: support for mu=
+ltiple devices per netdev hook)
+Merging wireless-drivers-next/master (5988b8ec7132 Merge tag 'iwlwifi-next-=
+for-kalle-2020-03-27' of git://git.kernel.org/pub/scm/linux/kernel/git/iwlw=
+ifi/iwlwifi-next)
+Merging bluetooth/master (d2a3f5f4635b Bluetooth: Add HCI device identifier=
+ for VIRTIO devices)
+Merging mac80211-next/master (1e8f471425f4 mac80211_hwsim: notify wmediumd =
+of used MAC addresses)
+Merging gfs2/for-next (75b46c437f6b gfs2: Fix oversight in gfs2_ail1_flush)
+Merging mtd/mtd/next (025a06c1104c mtd: Convert fallthrough comments into s=
+tatements)
+Merging nand/nand/next (fca88925d769 mtd: rawnand: toshiba: Support reading=
+ the number of bitflips for BENAND (Built-in ECC NAND))
+Merging spi-nor/spi-nor/next (f3f2b7eb2f1c mtd: spi-nor: Enable locking for=
+ n25q512ax3/n25q512a)
+Merging crypto/master (fcb90d51c375 crypto: af_alg - bool type cosmetics)
+Merging drm/drm-next (0e7e6198af28 Merge branch 'ttm-transhuge' of git://pe=
+ople.freedesktop.org/~thomash/linux into drm-next)
+Merging amdgpu/drm-next (f7c9c5d47481 PCI/P2PDMA: Add additional AMD ZEN ro=
+ot ports to the whitelist)
+Merging drm-intel/for-linux-next (17d0c1062a0c Merge tag 'gvt-next-fixes-20=
+20-03-31' of https://github.com/intel/gvt-linux into drm-intel-next-fixes)
+Merging drm-tegra/drm/tegra/for-next (e32c8c2a5fbe drm/tegra: hdmi: Silence=
+ deferred-probe error)
+Merging drm-misc/for-linux-next (c0f83d164fb8 drm/prime: fix extracting of =
+the DMA addresses from a scatterlist)
+Merging drm-msm/msm-next (a5fb8b918920 drm/msm/a6xx: Use the DMA API for GM=
+U memory objects)
+Merging mali-dp/for-upstream/mali-dp (f634c6a80287 dt/bindings: display: Ad=
+d optional property node define for Mali DP500)
+Merging imx-drm/imx-drm/next (2c76b324c794 drm/imx: parallel-display: Adjus=
+t bus_flags handling)
+Merging etnaviv/etnaviv/next (f232d9ec029c drm/etnaviv: fix TS cache flushi=
+ng on GPUs with BLT engine)
+Merging regmap/for-next (2060986f04ad Merge branch 'regmap-5.7' into regmap=
+-next)
+Merging sound/for-next (fd60e0683e8e ALSA: usb-audio: Add registration quir=
+k for Kingston HyperX Cloud Alpha S)
+Merging sound-asoc/for-next (2f107b222208 Merge branch 'asoc-5.7' into asoc=
+-linus)
+Merging modules/modules-next (0f74226649fb kernel: module: Replace zero-len=
+gth array with flexible-array member)
+Merging input/next (3a8579629665 Input: update SPDX tag for input-event-cod=
+es.h)
+Merging block/for-next (fac87b794e64 Merge branch 'io_uring-5.7' into for-n=
+ext)
+Merging device-mapper/for-next (8267d8fb4819 dm integrity: fix logic bug in=
+ integrity tag testing)
+Merging pcmcia/pcmcia-next (a8c122f72d94 pcmcia: remove some unused space c=
+haracters)
+Merging mmc/next (92075d98abf0 mmc: cavium-octeon: remove nonsense variable=
+ coercion)
+Merging md/for-next (e820d55cb99d md: fix raid10 hang issue caused by barri=
+er)
+Merging mfd/for-mfd-next (d2923aa45356 mfd: intel-lpss: Fix Intel Elkhart L=
+ake LPSS I2C input clock)
+Merging backlight/for-backlight-next (ee0c8e494cc3 backlight: corgi: Conver=
+t to use GPIO descriptors)
+Merging battery/for-next (f78c55e3b480 power: reset: sc27xx: Allow the SC27=
+XX poweroff driver building into a module)
+Merging regulator/for-next (24bd2afda8ce Merge branch 'regulator-5.7' into =
+regulator-next)
+Merging security/next-testing (3e27a33932df security: remove duplicated inc=
+lude from security.h)
+Merging apparmor/apparmor-next (01df52d726b5 apparmor: remove duplicate che=
+ck of xattrs on profile attachment.)
+Merging integrity/next-integrity (9e2b4be377f0 ima: add a new CONFIG for lo=
+ading arch-specific policies)
+Merging keys/keys-next (43672cf93c6d Merge branch 'notifications-pipe-core'=
+ into keys-next)
+CONFLICT (content): Merge conflict in include/linux/lsm_hooks.h
+CONFLICT (content): Merge conflict in fs/pipe.c
+Applying: io_uring: fix up for get_pipe_info() API change
+Applying: security: keys: fixup for "security: Refactor declaration of LSM =
+hooks"
+Merging selinux/next (c753924b6285 selinux: clean up indentation issue with=
+ assignment statement)
+Merging smack/for-next (92604e825304 smack: use GFP_NOFS while holding inod=
+e_smack::smk_lock)
+Merging tomoyo/master (9efcc4a12936 afs: Fix unpinned address list during p=
+robing)
+Merging tpmdd/next (2e356101e72a KEYS: reaching the keys quotas correctly)
+Merging watchdog/master (2d63908bdbfb watchdog: Add K3 RTI watchdog support)
+Merging iommu/next (ff68eb23308e Merge branches 'iommu/fixes', 'arm/qcom', =
+'arm/omap', 'arm/smmu', 'x86/amd', 'x86/vt-d', 'virtio' and 'core' into nex=
+t)
+Merging vfio/next (f44efca0493d vfio: Ignore -ENODEV when getting MSI cooki=
+e)
+Merging audit/next (1320a4052ea1 audit: trigger accompanying records when n=
+o rules present)
+Merging devicetree/for-next (8967918e7cee MAINTAINERS: drop an old referenc=
+e to stm32 pwm timers doc)
+Merging mailbox/mailbox-for-next (0a67003b1985 mailbox: imx: add SCU MU sup=
+port)
+Merging spi/for-next (b3027f88cffb Merge branch 'spi-5.7' into spi-linus)
+Merging tip/auto-latest (ee8bac724cc7 Merge branch 'irq/urgent')
+CONFLICT (content): Merge conflict in arch/x86/Kconfig
+Merging clockevents/timers/drivers/next (c1ac28a4de6f Revert "clocksource: =
+Avoid creating dead devices")
+Merging edac/edac-for-next (ad49d9a8228e Merge branch 'edac-misc' into edac=
+-for-next)
+Merging irqchip/irq/irqchip-next (4cea749d56be Revert "irqchip/xilinx: Enab=
+le generic irq multi handler")
+Merging ftrace/for-next (8e99cf91b99b tracing: Do not allocate buffer in tr=
+ace_find_next_entry() in atomic)
+Merging rcu/rcu/next (aa93ec620be3 Merge branches 'doc.2020.02.27a', 'fixes=
+.2020.03.21a', 'kfree_rcu.2020.02.20a', 'locktorture.2020.02.20a', 'ovld.20=
+20.02.20a', 'rcu-tasks.2020.02.20a', 'srcu.2020.02.20a' and 'torture.2020.0=
+2.20a' into HEAD)
+Merging kvm/linux-next (514ccc194971 x86/kvm: fix a missing-prototypes "vmr=
+ead_error")
+Merging kvm-arm/next (463050599742 Merge tag 'kvm-arm-removal' into kvmarm-=
+master/next)
+Merging kvm-ppc/kvm-ppc-next (9a5788c615f5 KVM: PPC: Book3S HV: Add a capab=
+ility for enabling secure guests)
+Merging kvms390/next (7a2653612bb6 s390/gmap: return proper error code on k=
+sm unsharing)
+Merging xen-tip/linux-next (c3881eb58d56 x86/xen: Make the secondary CPU id=
+le tasks reliable)
+Merging percpu/for-next (dedac37ea96b Merge branch 'for-5.7' into for-next)
+Merging workqueues/for-next (4acf8a423cd3 Merge branch 'for-5.7' into for-n=
+ext)
+Merging drivers-x86/for-next (1a323ea5356e x86: get rid of 'errret' argumen=
+t to __get_user_xyz() macross)
+Merging chrome-platform/for-next (317a0ebe53f4 iio: cros_ec: Use Hertz as u=
+nit for sampling frequency)
+Merging hsi/for-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging leds/for-next (10a6cce3c1a1 Group LED functions according to functi=
+onality, and add some explaining comments.)
+Merging ipmi/for-next (562bf7705885 ipmi: Add missing annotation for ipmi_s=
+sif_lock_cond() and ipmi_ssif_unlock_cond())
+Merging driver-core/driver-core-next (bef7b2a7be28 Merge tag 'devicetree-fo=
+r-5.7' of git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux)
+Merging usb/usb-next (bef7b2a7be28 Merge tag 'devicetree-for-5.7' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/robh/linux)
+Merging usb-gadget/next (4a5dbd900957 dt-bindings: usb: add documentation f=
+or aspeed usb-vhub)
+Merging usb-serial/usb-next (57aa9f294b09 USB: serial: io_edgeport: fix sla=
+b-out-of-bounds read in edge_interrupt_callback)
+Merging usb-chipidea-next/ci-for-usb-next (86b17c7f14ed usb: chipidea: core=
+: show the real pointer value for register)
+Merging phy-next/next (89d715371a05 phy: qcom-qusb2: Add new overriding tun=
+ing parameters in QUSB2 V2 PHY)
+Merging tty/tty-next (bef7b2a7be28 Merge tag 'devicetree-for-5.7' of git://=
+git.kernel.org/pub/scm/linux/kernel/git/robh/linux)
+Merging char-misc/char-misc-next (5364abc57993 Merge tag 'arc-5.7-rc1' of g=
+it://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc)
+Merging extcon/extcon-next (9c94553099ef extcon: axp288: Add wakeup support)
+Merging soundwire/next (39ec6f992131 soundwire: qcom: add support for get_s=
+dw_stream())
+Merging thunderbolt/next (3010518964dc thunderbolt: Use scnprintf() for avo=
+iding potential buffer overflow)
+Merging staging/staging-next (4c205c84e249 Merge tag 'keys-fixes-20200329' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs)
+Merging mux/for-next (f356d58c3a04 Merge branch 'i2c-mux/for-next' into for=
+-next)
+Merging icc/icc-next (03c4e6186bbb interconnect: qcom: Add OSM L3 support o=
+n SC7180)
+Merging slave-dma/next (cea582b5ee56 dt-bindings: dma: renesas,usb-dmac: ad=
+d r8a77961 support)
+Merging cgroup/for-next (ee3d5a56f262 Merge branch 'for-5.7' into for-next)
+Merging scsi/for-next (c128052e6991 Merge branch 'misc' into for-next)
+Merging scsi-mkp/for-next (1b55940b9bcc scsi: core: Add DID_ALLOC_FAILURE a=
+nd DID_MEDIUM_ERROR to hostbyte_table)
+Merging vhost/linux-next (c9b9f5f8c0f3 vdpa: move to drivers/vdpa)
+CONFLICT (modify/delete): arch/arm/kvm/Kconfig deleted in HEAD and modified=
+ in vhost/linux-next. Version vhost/linux-next of arch/arm/kvm/Kconfig left=
+ in tree.
+$ git rm -f arch/arm/kvm/Kconfig
+Applying: Revert "virtio-balloon: Switch back to OOM handler for VIRTIO_BAL=
+LOON_F_DEFLATE_ON_OOM"
+Merging rpmsg/for-next (45c2824de341 Merge branches 'hwspinlock-next', 'rpm=
+sg-next' and 'rproc-next' into for-next)
+Merging gpio/for-next (4ed7d7dd4890 Revert "gpio: eic-sprd: Use devm_platfo=
+rm_ioremap_resource()")
+Merging gpio-brgl/gpio/for-next (975516250253 tools: gpio: Fix typo in gpio=
+-utils)
+Merging gpio-intel/for-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging pinctrl/for-next (c42f69b4207e pinctrl: qcom: fix compilation error)
+Merging pinctrl-intel/for-next (16fbf79b0f83 Linux 5.6-rc7)
+Merging pinctrl-samsung/for-next (bb6d3fb354c5 Linux 5.6-rc1)
+Merging pwm/for-next (9cc5f232a4b6 pwm: pca9685: Fix PWM/GPIO inter-operati=
+on)
+Merging userns/for-next (d1e7fd6462ca signal: Extend exec_id to 64bits)
+Merging ktest/for-next (1091c8fce8aa ktest: Fix typos in ktest.pl)
+Merging random/dev (ab9a7e27044b random: avoid warnings for !CONFIG_NUMA bu=
+ilds)
+Merging kselftest/next (1056d3d2c97e selftests: enforce local header depend=
+ency in lib.mk)
+Merging y2038/y2038 (c4e71212a245 Revert "drm/etnaviv: reject timeouts with=
+ tv_nsec >=3D NSEC_PER_SEC")
+Merging livepatching/for-next (d28b4c1b2b3d Merge branch 'for-5.6/selftests=
+' into for-next)
+Merging coresight/next (ed0efaa66ad8 docs: trace: coresight-ect.rst: fix a =
+build warning)
+Merging rtc/rtc-next (1821b79d6a7d rtc: ds1307: check for failed memory all=
+ocation on wdt)
+Merging nvdimm/libnvdimm-for-next (f6d2b802f80d Merge branch 'for-5.7/libnv=
+dimm' into libnvdimm-for-next)
+Merging at24/at24/for-next (4837621cd61e eeprom: at24: add TPF0001 ACPI ID =
+for 24c1024 device)
+Merging ntb/ntb-next (b9fc54c38e2e NTB: ntb_test: Fix bug when counting rem=
+ote files)
+Merging kspp/for-next/kspp (2e8993d77697 gcc-plugins/stackleak: Avoid assig=
+nment for unused macro argument)
+Merging cisco/for-next (9e98c678c2d6 Linux 5.1-rc1)
+Merging gnss/gnss-next (f8788d86ab28 Linux 5.6-rc3)
+Merging fsi/next (2c01397b71c5 fsi: aspeed: Fix OPB0 byte order register va=
+lues)
+CONFLICT (content): Merge conflict in drivers/fsi/Kconfig
+Merging slimbus/for-next (ba1589ff458e slimbus: ngd: add v2.1.0 compatible)
+Merging nvmem/for-next (990df6402752 nvmem: mxs-ocotp: Use devm_add_action_=
+or_reset() for cleanup)
+CONFLICT (modify/delete): drivers/nvmem/nvmem-sysfs.c deleted in HEAD and m=
+odified in nvmem/for-next. Version nvmem/for-next of drivers/nvmem/nvmem-sy=
+sfs.c left in tree.
+$ git rm -f drivers/nvmem/nvmem-sysfs.c
+Merging xarray/xarray (27586ca786a7 XArray: Handle retry entries within xas=
+_find_marked)
+Merging hyperv/hyperv-next (86fd319b9240 x86/Hyper-V: Report crash register=
+ data when sysctl_record_panic_msg is not set)
+Merging auxdisplay/auxdisplay (2f920c0f0e29 auxdisplay: charlcd: replace ze=
+ro-length array with flexible-array member)
+Merging kgdb/kgdb/for-next (5ea771abd5a3 kdb: Censor attempts to set PROMPT=
+ without ENABLE_MEM_READ)
+Merging pidfd/for-next (6952a4f64644 selftests: add pid namespace ENOMEM re=
+gression test)
+Merging devfreq/devfreq-next (19b5622d849b PM / devfreq: tegra30: Delete an=
+ error message in tegra_devfreq_probe())
+Merging hmm/hmm (bd5d3587b218 mm/hmm: return error for non-vma snapshots)
+Merging fpga/for-next (cef0ca6417de fpga: dfl: afu: support debug access to=
+ memory-mapped afu regions)
+Merging kunit/test (bb6d3fb354c5 Linux 5.6-rc1)
+Merging cel/cel-next (1a33d8a284b1 svcrdma: Fix leak of transport addresses)
+Merging generic-ioremap/for-next (4bdc0d676a64 remove ioremap_nocache and d=
+evm_ioremap_nocache)
+Merging cfi/cfi/next (b6fe8bc67d2d mtd: hyperbus: move direct mapping setup=
+ to AM654 HBMC driver)
+Merging kunit-next/kunit (e23349af9ee2 kunit: tool: add missing test data f=
+ile content)
+Merging trivial/for-next (fad7c9020948 err.h: remove deprecated PTR_RET for=
+ good)
+Merging zx2c4/for-next (16fbf79b0f83 Linux 5.6-rc7)
+Applying: Revert "x86: update AS_* macros to binutils >=3D2.23, supporting =
+ADX and AVX2"
+Merging akpm-current/current (04604a3939a6 ipc/shm.c: make compat_ksys_shmc=
+tl() static)
+$ git checkout -b akpm remotes/origin/akpm/master
+Applying: Change email address for Pali Roh=C3=A1r
+Applying: mm/kmemleak: silence KCSAN splats in checksum
+Applying: drivers/dma/tegra20-apb-dma.c: fix platform_get_irq.cocci warnings
+Applying: mm/frontswap: mark various intentional data races
+Applying: mm/page_io: mark various intentional data races
+Applying: mm-page_io-mark-various-intentional-data-races-v2
+Applying: mm/swap_state: mark various intentional data races
+Applying: mm/filemap.c: fix a data race in filemap_fault()
+Applying: mm/swapfile: fix and annotate various data races
+Applying: mm-swapfile-fix-and-annotate-various-data-races-v2
+Applying: mm/page_counter: fix various data races at memsw
+Applying: mm/memcontrol: fix a data race in scan count
+Applying: mm/list_lru: fix a data race in list_lru_count_one
+Applying: mm/mempool: fix a data race in mempool_free()
+Applying: mm/util.c: annotate an data race at vm_committed_as
+Applying: mm/rmap: annotate a data race at tlb_flush_batched
+Applying: mm: annotate a data race in page_zonenum()
+Applying: mm/swap.c: annotate data races for lru_rotate_pvecs
+Applying: mm/memory.c: refactor insert_page to prepare for batched-lock ins=
+ert
+Applying: mm: bring sparc pte_index() semantics inline with other platforms
+Applying: mm: define pte_index as macro for x86
+Applying: mm/memory.c: add vm_insert_pages()
+Applying: mm-add-vm_insert_pages-fix
+Applying: add missing page_count() check to vm_insert_pages().
+Applying: mm: vm_insert_pages() checks if pte_index defined.
+Applying: net-zerocopy: use vm_insert_pages() for tcp rcv zerocopy
+Applying: net-zerocopy-use-vm_insert_pages-for-tcp-rcv-zerocopy-fix
+Applying: mm/vma: define a default value for VM_DATA_DEFAULT_FLAGS
+Applying: mm/vma: introduce VM_ACCESS_FLAGS
+Applying: mm/special: create generic fallbacks for pte_special() and pte_mk=
+special()
+Applying: mm-special-create-generic-fallbacks-for-pte_special-and-pte_mkspe=
+cial-v3
+Applying: mm/debug: add tests validating architecture page table helpers
+Applying: mm/memory_hotplug: drop the flags field from struct mhp_restricti=
+ons
+Applying: mm/memory_hotplug: rename mhp_restrictions to mhp_params
+Applying: x86/mm: thread pgprot_t through init_memory_mapping()
+Applying: x86/mm: introduce __set_memory_prot()
+Applying: powerpc/mm: thread pgprot_t through create_section_mapping()
+Applying: mm/memory_hotplug: add pgprot_t to mhp_params
+Applying: mm/memremap: set caching mode for PCI P2PDMA memory to WC
+Applying: mm/madvise: pass task and mm to do_madvise
+Applying: mm/madvise: introduce process_madvise() syscall: an external memo=
+ry hinting API
+Applying: fix process_madvise build break for arm64
+Applying: mm/madvise: check fatal signal pending of target process
+Applying: pid: move pidfd_get_pid() to pid.c
+Applying: mm/madvise: support both pid and pidfd for process_madvise
+Applying: mm/madvise: employ mmget_still_valid() for write lock
+Applying: mm/madvise: allow KSM hints for remote API
+Applying: kmod: make request_module() return an error when autoloading is d=
+isabled
+Applying: fs/filesystems.c: downgrade user-reachable WARN_ONCE() to pr_warn=
+_once()
+Applying: docs: admin-guide: document the kernel.modprobe sysctl
+Applying: docs-admin-guide-document-the-kernelmodprobe-sysctl-v5
+Applying: selftests: kmod: fix handling test numbers above 9
+Applying: selftests: kmod: test disabling module autoloading
+Applying: kexec: prevent removal of memory in use by a loaded kexec image
+Applying: mm/memory_hotplug: allow arch override of non boot memory resourc=
+e names
+Applying: arm64: memory: give hotplug memory a different resource name
+Applying: fs/seq_file.c: seq_read(): add info message about buggy .next fun=
+ctions
+Applying: seq_read-info-message-about-buggy-next-functions-fix
+Applying: kernel/gcov/fs.c: gcov_seq_next() should increase position index
+Applying: ipc/util.c: sysvipc_find_ipc() should increase position index
+Applying: drivers/media/platform/sti/delta/delta-ipc.c: fix read buffer ove=
+rflow
+Merging akpm/master (9845c5492531 drivers/media/platform/sti/delta/delta-ip=
+c.c: fix read buffer overflow)
+
+--Sig_/IEma9R/uwDZ28q75jjc23ie
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6KsN4ACgkQAVBC80lX
+0GxJvwf/YxS85pjrspeZ5/BRYR9X/ArEE1aCR/KKtL7MrJ4id1W/zfxgcuMgC5RL
+HcOnoXWkDuIImCKhr6SZU8isJfxB6PROU/ykETgmcTnvN2EqkKX1VIFkFOL5Gth3
+uCiaeaxVMeG1PPEnxQHAvYXJCJJWp+mW7nrM8u79UsBsKiZAC82UhMzeaSD2CUcb
+uYUa+mMxjO5JHHG1ADlfdyd0aXbvJtNerh3repuS+E/LC5WEhV0xQSO+HKz870Qo
+UwIQo0e79zpGNZ75F2ad8KTq4qfDIb2bQDXvroOLEQoAEnTk5xnd/G1i6taJcbJE
+2G46mId3c8vH3doblMc48b22ZQ6gBA==
+=QbLI
+-----END PGP SIGNATURE-----
+
+--Sig_/IEma9R/uwDZ28q75jjc23ie--
