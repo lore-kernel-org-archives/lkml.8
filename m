@@ -2,215 +2,148 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A794EC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09DDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FDC22B51
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC2A2486B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:56:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhWTacfj"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NhKTH29b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgDFOy5 (ORCPT
+        id S1728792AbgDFO4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:54:57 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40072 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728749AbgDFOy5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:54:57 -0400
-Received: by mail-qk1-f193.google.com with SMTP id z15so10228945qki.7;
-        Mon, 06 Apr 2020 07:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M23T+RlbcFsbtA7Sovrhqv9by3/H6FQN5gpwGHKT+78=;
-        b=dhWTacfjpbySADGww+Zja+PC3Ota7SokYvGZ+y3mYZeFWamGYKCndbhuETtNF24T2t
-         Hwqvpe9YRmxz00ZJsYtvBC9aBJ1wHHYUO0B0IuT8vP0rEvPESikszeMbgW0RSVad9n6b
-         XpThsaNNgHQWo/g7uYr5leM63vdJTX60wcnl4f5Ut18EwEef/t51/B9oArF3ahYf2hLn
-         3TWdoThlvLlpEmuBUs/5yoDIkNXoGIPFX+zbJ9BwrxenidQ1qsS7pjc3FXm0YHgSi45F
-         9Gvv2TMUBTYl9ETC1sIqb6iQBmZ9Oma8tWQEIlUEQSBSyspMxPm/X0AXOVpnVijilnPo
-         JdGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M23T+RlbcFsbtA7Sovrhqv9by3/H6FQN5gpwGHKT+78=;
-        b=sXSTkjXNrjzIpeyFZrCdLMSx+QnzyNXrO7CfeZF88nEhMYF5plW+IYd6a9n8/F3q5G
-         UOBy+ikis83Z7TyLcjN9xLES+c74EsRUfDya2RRVVidTgvSFmous61Aio8tPbAvfM4JW
-         iW7ThQ5IS7Bt9jGEbRmD5IOtQjpMdaTN4/dJOrX0BUWhfSMHDqZmWBvzahQinbYKSwYY
-         +DmprCwDOyZyoi/RuJ4ZgUqCI4FObJMKM8nGjWuSP9smbHs4Kk7WNSVFwHgYBNhPcqFQ
-         5cVtM42Pf4bOIf0N2QjZCpaPF7f4esXXcgbr/oTMNkXdQwMhwj+Xt+31eQR2qMs8Ykqh
-         o6Jg==
-X-Gm-Message-State: AGi0PubxKkZ2Jvi0T4q4xQUWw6riokI4kvLfNAus27AcKfUWnrgbJUJW
-        DYst2LOTfa6TeTL4unXBz/k=
-X-Google-Smtp-Source: APiQypKsuE1vepPJTGsxQ9J78O1tFcHjGdH8bdqJjJemQIBm9QadF/6t5K65jeTwjsc02gFh+1JZJg==
-X-Received: by 2002:a37:7846:: with SMTP id t67mr20921218qkc.77.1586184895676;
-        Mon, 06 Apr 2020 07:54:55 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id o6sm8349232qkd.113.2020.04.06.07.54.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 07:54:55 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2A6AD409A3; Mon,  6 Apr 2020 11:54:53 -0300 (-03)
-Date:   Mon, 6 Apr 2020 11:54:53 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: perf probe + uprobes missing events
-Message-ID: <20200406145453.GB32649@kernel.org>
-References: <20200406145356.GA32649@kernel.org>
+        Mon, 6 Apr 2020 10:56:50 -0400
+Received: from mout.web.de ([212.227.17.12]:48533 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728689AbgDFO4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 10:56:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586184997;
+        bh=pLz/LsV8AU7v9pBmvODpUyRCAG40qhdMJASvG8MdKkU=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=NhKTH29bFE5BlYXxaLeBn5Un/TS/KxgTmjuI9VdyDe1NH3k9x/UrITM5JOze7p0xg
+         6hHZq9CHYlIl1x04TQEImENysqugOJQdtLfukdYTIjM5ndMV6aPVrfvHzHlkjkcG63
+         rkjaYCPf65NJ4YmsDqU9isOsdtOj0E1v1tnONcDE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.243.176.200]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Ls8xf-1jArIw0DRn-013sl9; Mon, 06
+ Apr 2020 16:56:37 +0200
+Subject: Re: [PATCH v5 1/2] powerpc/powernv: Return directly after a failed
+ of_property_read_u64_array() in opal_add_one_export()
+To:     Qiujun Huang <hqjagain@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20200406125242.4973-1-hqjagain@gmail.com>
+ <20200406125242.4973-2-hqjagain@gmail.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <5b8b22bb-8236-1c88-5335-a0444aed79a4@web.de>
+Date:   Mon, 6 Apr 2020 16:56:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406145356.GA32649@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200406125242.4973-2-hqjagain@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:N3FYNfKmLhG/CmC/EVv3z0v4cgCRnS1WJQFabLg9w3V2As5N5hg
+ J/5R7MJvUZlfBmtFO2dHuU+ooMxvZ1T3I6QMS9xbIU1TMDHntv6cZHLhxBlL9vKA2WW475Q
+ 5WpmD49659wtFs6EMk1fJhi2j5gzVODKniXfJHXQJk5PS9Ena4sk7ILABNxpVjU4glsL0OQ
+ B5pcLvhusvxAXLh7MOXbQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7ERyUtTMWEA=:q5+TEOX/2iYRwb2O9m5gog
+ clwVow4sq48csyHfjoohXPTn6AEkIECWL85NsVZlz+lCiYNox+k244N13Ih5Kahib6CLTr3uV
+ sxAJGVmnc+xdiYzzS3GNcCV6w15iIZsVOsBUpU1O6JBz3MLanUtKuXcIydyP8MFrVSDRxLxhs
+ YcBL8zCscdrOJIs7XMniZoTgOaBR+Ch/CATjefwFT2INO+1V9n2wtsVM5ffM2L4EWJsanjqLJ
+ PAqEMzxr75+Oen+TTdoR0EjtgWdhT4poXyGLliEsdJhORbTWaTizZK+bqhrb7Oaix0fzZ+ykV
+ o9OKZdZn6TQqoZLRr8uHnO1BqCWeIdKq20gJmCdmLeD1HiM+vGH+YQYbQ+SdpW8BUaPTYUNtI
+ jWeMo64dOPvcMJKVOBlG+/xOIQ0tqNdTmg/Epyz5TalFjMSijrWHr2DUWSt35bS4mMFCV+SXf
+ 6ALJdXN8xplgaRaa7Qr2TgKUNBxozNDkWf3dNzw/xKs7eIhJwio67Y1Fu42N2GklF1SwOCWvs
+ uiftl2sJqD5L8E7+YP65kYuW4KYvDPv+dHZgYnnuB5Tkfh34WgOsZ6RqCi5M4KutWlfyNnFlb
+ eYH5tjEw+IT45rNxwVS9cZrEb5X/iZFr6UVoyAxBq7R7kujqNJ6iInSyN0H+pGm+Eg9z50PnR
+ yeAck0UdYWd+EcydBClUZO1wMOK7+y4DOPunM+cThFSNa5voa9JDYZWQj2+XHTGsJyZfjLnqb
+ SBPlaCykC/m9PJFtKyIM1tNgXNedxwCVTpopEbuPUn1j0oxyp/GI3KSRG6EkWkaibd7g7LXJj
+ DWKhOaY6t0ZuwKlxzSNnDkm4ZgacweZY3sGlh2TCLtjl1t9ppyRG5Kl+tppy0OAtUVsh/y4A6
+ JwNt0OcXMAqWZpyF/m8bWIjPOCHQBr9/yYsilz5dezlQ8IIhvIUnjAmCdUU/Rv/WxqaYoUqjP
+ p5NYwJrwCgCGFQgmMx5nWMq/ZGEow853efiJz0nU+sGDvEHjjnlBPvoYTpjTyyZR71s2ZsKUr
+ YT0O4t3d/JMlyoT4H5MQt9NSugkK52hkPnoXi+qv1R8C0z5X56HkC/Wrg1DqwQl2n61llnT+k
+ M1yO9IWdTlasK24rX7u20YeFVA1Tyx+nJPBJN58nTi4T4qP0cfAfib4gT6WachXYGTYzJ0ppL
+ tDIC5Hb8DK7Co+CkkXfCn+RNek1RWobUnyDfT0dTu+BE+5CIu6MeG1ar6+UQlecPngyu8rBn8
+ S+FuPdXrMSZfTExz6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Apr 06, 2020 at 11:53:56AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Hi Masami,
+> We don't need to go to the labal of out =E2=80=A6
 
-Sorry, details about the system:
+Please avoid a typo for this change description.
 
-[root@five ~]# uname -a
-Linux five 5.5.10-200.fc31.x86_64 #1 SMP Wed Mar 18 14:21:38 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-[root@five ~]# perf -vv
-perf version 5.6.gea05cf482862
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-                  gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-[root@five ~]# rpm -q elfutils
-elfutils-0.178-7.fc31.x86_64
-[root@five ~]#
- 
-> 	I'm trying to use 'perf probe' to debug 'perf test', but I'm not
-> getting repeatable results, take a look:
-> 
-> I'm trying to figure out which expresssions are _really_ being tested
-> byu the 'perf test expr' testcase, so I added a probe to the
-> expr__parse() routine, asking for the expr string to be printed:
-> 
-> [root@five ~]# perf probe -x ~/bin/perf -L expr__parse
-> <expr__parse@/home/acme/git/perf/tools/perf/util/expr.c:0>
->       0  int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr, int runtime)
->       1  {
->       2         return __expr__parse(final_val, ctx, expr, EXPR_PARSE, runtime) ? -1 : 0;
->       3  }
-> 
->          static bool
->          already_seen(const char *val, const char *one, const char **other,
-> 
-> [root@five ~]#
-> 
-> [root@five ~]# perf probe -x ~/bin/perf expr__parse expr:string
-> Target program is compiled without optimization. Skipping prologue.
-> Probe on address 0x5cb11b to force probing at the function entry.
-> 
-> Added new event:
->   probe_perf:expr__parse (on expr__parse in /home/acme/bin/perf with expr:string)
-> 
-> You can now use it in all perf tools, such as:
-> 
-> 	perf record -e probe_perf:expr__parse -aR sleep 1
-> 
-> [root@five ~]#
-> 
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.015 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.018 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.020 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.023 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.026 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.029 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
->      0.031 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
->      0.034 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
->      0.036 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
->      0.039 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
->      0.041 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.021 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.025 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.029 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.033 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.041 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.044 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.020 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.025 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.029 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.032 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.037 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.040 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
->      0.043 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
->      0.046 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
->      0.049 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
->      0.053 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
->      0.056 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.014 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.017 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.021 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.024 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.030 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.032 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
->      0.035 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
->      0.038 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
->      0.040 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
->      0.044 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
->      0.046 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
-> [root@five ~]#
-> 
-> 
-> Do you have any idea why that happens?
-> 
-> - Arnaldo
 
--- 
+> fails, as there is nothing to do. Just return.
 
-- Arnaldo
+I suggest to reconsider also this wording.
+
+  Return directly after a call of the function =E2=80=9Cof_property_read_u=
+64_array=E2=80=9D
+  failed at the beginning.
+
+
+> And we can =E2=80=A6
+
+Do such words indicate that even this patch approach should be split
+into further update steps?
+
+Regards,
+Markus
