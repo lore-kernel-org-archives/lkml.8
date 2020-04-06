@@ -2,104 +2,105 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F46FC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBD0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 338C820CC7
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A5220CC7
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="ujI1zcWP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gKY15jJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgDFMKu (ORCPT
+        id S1727901AbgDFMMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:10:50 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37529 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727614AbgDFMKu (ORCPT
+        Mon, 6 Apr 2020 08:12:46 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31330 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727614AbgDFMMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:10:50 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u65so7430134pfb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 05:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N6mLhtlmWMVTR84nfQkFj0UeiYqI/lAWABfPtUwxRcg=;
-        b=ujI1zcWP42qZdIINh84ie1npEVP76g1qKpX2ZlvJVuv9SsmVgX4HQSsfhuLPeqzQAe
-         z8YhIWc/Dc/xiPMHlr2cYJT4OWouiK8DXszrwIm1kLo+tiCrD7rqFEs3X8udwq51EDWO
-         4M533RhNUxRzapSz2T36ulJVfFnqt+a7nQIPgxkrtJSRuIEFPUHOF9GRNF7WZUrqVyc9
-         /u4hWJF3Cjt0FpMf4VIgVsGcR9MCckGF/iMx80+znle11QRgNovkbIXyaXYbScvPYrET
-         wvAyo1lIk/9wSKtLSKF7TiIYd5FL4sM6dYSIlTbrwymGcSXLoomwnsApaYnZzGVJl0KU
-         3v1Q==
+        Mon, 6 Apr 2020 08:12:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586175164;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=SPcP2t8lgIVNaWgLkTC+5LiUSA3IkB94hHSuyx8Ua+A=;
+        b=gKY15jJ8dlkZlMvDqqTUeie+Ue7iiOgD3Z3rqz9UHlYHa6AqJ5aAiQz8bek/vzKDw3Zi7A
+        1Hk3lSNtx4vsI1XX7/0gWzgGaPxSO4bknlBMefUBmpcWfLrVh4ffLGZ9fzSurSEYu1kV2R
+        8oCpKEyL4JorUaI+q7yClp0nhu1v8+M=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-201-vHDfwDdiOwim-G5Eu2lGBA-1; Mon, 06 Apr 2020 08:12:43 -0400
+X-MC-Unique: vHDfwDdiOwim-G5Eu2lGBA-1
+Received: by mail-wr1-f71.google.com with SMTP id 91so7409590wro.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 05:12:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N6mLhtlmWMVTR84nfQkFj0UeiYqI/lAWABfPtUwxRcg=;
-        b=MAxG8QLsInb4tQSoSTxT2ukQXHTco90OCtOu/9+XCtueY8EW1v2CehPv3aQ4zJeBW8
-         160SmDg7j8Dh2g3ffyPWHkKsCNOW96cw1ci1QBZW42QdlC9cqaBGX1rCaYsaWUcTGGmU
-         TGMghDCbxfmp309lqWl2D6lIP88bu/jhq+Cpy6OB/kL7IWU6PEs4FOmRQv+C7T3OMYK8
-         eV7OgxRmBZaENPZcsTp/YZeKz8OXEPgjA8rgC4zO00C/b3fTYco3Y8ut9o1+6MavDYy3
-         r17Xfg0A7Xov13dkGkRcN3CKcOQYs8hb4AbeePx4aCqcz/1Q2lFi/2a2Fd9hOWCib9A+
-         i79g==
-X-Gm-Message-State: AGi0PuYDNAPShdXbLD/VwwtuvVWMHD64EJI/GNLySgr3NIxFhZwlwujk
-        Ty7GLt5Qlhplae/TGsJkqOV0QA==
-X-Google-Smtp-Source: APiQypIqMxQdjz6IFp4hpRLcqO4fbN8fpr4BxiklLRQ/t5C9ZnUZpOqDHpHnv3vNqX8IwrLjLae5rA==
-X-Received: by 2002:aa7:8659:: with SMTP id a25mr20399012pfo.173.1586175047658;
-        Mon, 06 Apr 2020 05:10:47 -0700 (PDT)
-Received: from Smcdef-MBP.lan ([103.136.221.70])
-        by smtp.gmail.com with ESMTPSA id ne16sm12012966pjb.11.2020.04.06.05.10.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Apr 2020 05:10:47 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     mingo@kernel.org, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-Cc:     linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] sched/fair: Fix call walk_tg_tree_from() without hold rcu_lock
-Date:   Mon,  6 Apr 2020 20:10:08 +0800
-Message-Id: <20200406121008.62903-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=SPcP2t8lgIVNaWgLkTC+5LiUSA3IkB94hHSuyx8Ua+A=;
+        b=g1IqLff7NXPjOfg5i6s+sJ9NUDpayVdosG/i1OBaE1auDxXDAlqU96+hChY4YxuMH6
+         CzeDk3B9I7+j5+CWYyRXBSVxNDJuMf61HoW35spLTYD86urjahhJfWcodt1zi086zh4R
+         i3nNMbA96TQoGxxV1K+MZQT8n0PnROpiot/nplXWZ9PM15ZRkH1j0GDrgFMvuJr5xyHP
+         jXZEnYBn3LdINZaqLnQCpd7CVwBK1EWMnAt9xKwqxADC7N2hRDneDxrVgSVmcTEfsLzt
+         D2U3jfvDQSXFzWhvYktJFogb3Tg22742mpuDlWu36T9K8xqrAZpt9rmLqWGqejwYQyFO
+         jThQ==
+X-Gm-Message-State: AGi0PubhQ5R2BoRb3vKf+H2H+4awtxrT8GtTj10PjQQdejrbnMQt2jaQ
+        cPDbTiVS+LeTRYnYQh4zuHvdWNAkqX7+b3IYcFrAC8xI2FvcGGT3fKG3F5He1P1uo7efAGW85/J
+        LK+EgLHw6eNuvIzNTwHZDYi4t
+X-Received: by 2002:adf:a448:: with SMTP id e8mr22701984wra.238.1586175162022;
+        Mon, 06 Apr 2020 05:12:42 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJtoKJNCJ63tLTQ6tdgF03knUbStVYMzzh9MJmBNZHx9ZArp5aMDNwqhctJfhSn0f4QzwKBZw==
+X-Received: by 2002:adf:a448:: with SMTP id e8mr22701965wra.238.1586175161880;
+        Mon, 06 Apr 2020 05:12:41 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id h5sm25309277wro.83.2020.04.06.05.12.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 05:12:41 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 08:12:39 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        "richard.henderson@linaro.org" <richard.henderson@linaro.org>,
+        "christophe.lyon@st.com" <christophe.lyon@st.com>,
+        kbuild test robot <lkp@intel.com>,
+        "daniel.santos@pobox.com" <daniel.santos@pobox.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v2 0/2] vhost: add kconfig dependencies
+Message-ID: <20200406121233.109889-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The walk_tg_tree_from() caller must hold rcu_lock, but the caller
-do not call rcu_read_lock() in the unthrottle_cfs_rq(). The
-unthrottle_cfs_rq() is used in 3 places. There are
-distribute_cfs_runtime(), unthrottle_offline_cfs_rqs() and
-tg_set_cfs_bandwidth(). The former 2 already hold the rcu lock,
-but the last one does not. So fix it with calling rcu_read_lock()
-in the unthrottle_cfs_rq().
+Add kconfig dependencies to disable vhost on configs where build
+currently fails.  It might be worth it to go back and fix the build
+there down the road.
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- kernel/sched/fair.c | 2 ++
- 1 file changed, 2 insertions(+)
+Changes from v1:
+	add patch to disable build with ARM OABI
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 6f05843c76d7d..870853c47b63c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4782,7 +4782,9 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 	raw_spin_unlock(&cfs_b->lock);
- 
- 	/* update hierarchical throttle state */
-+	rcu_read_lock();
- 	walk_tg_tree_from(cfs_rq->tg, tg_nop, tg_unthrottle_up, (void *)rq);
-+	rcu_read_unlock();
- 
- 	if (!cfs_rq->load.weight)
- 		return;
+Michael S. Tsirkin (2):
+  vdpa-sim: depend on HAS_DMA
+  vhost: disable for OABI
+
+ drivers/misc/mic/Kconfig |  2 +-
+ drivers/net/caif/Kconfig |  2 +-
+ drivers/vdpa/Kconfig     |  2 +-
+ drivers/vhost/Kconfig    | 17 +++++++++++++----
+ 4 files changed, 16 insertions(+), 7 deletions(-)
+
 -- 
-2.11.0
+MST
 
