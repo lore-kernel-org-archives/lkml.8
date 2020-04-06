@@ -2,91 +2,128 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76CEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A189C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79482233FE
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD0A23433
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GcSEy5+q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XI16osb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgDFODA (ORCPT
+        id S1728574AbgDFODO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:03:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58796 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726436AbgDFODA (ORCPT
+        Mon, 6 Apr 2020 10:03:14 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:56283 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726436AbgDFODO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:03:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586181778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wIE9VGUaKQC5F+nmzjS1d1+OM5IgOo8Xu+l1owRvgOQ=;
-        b=GcSEy5+q/otUnSc9YYtKwRI+RlCcJV9utIh3YKcqgsBER14SBxgsSAciZ5b6DWZcA8o+p2
-        kreZPJxloDbArEC0ZhAzRB2TcKNsW7K/hTH6qRHFyvFcK2i325iOUa5g4gni1s8v4h9eBr
-        +H34VBDBuxHVinoHGbsJ0LjV5uQDFFE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-ViNYe1yUOd-I7HiCpbt6sw-1; Mon, 06 Apr 2020 10:02:57 -0400
-X-MC-Unique: ViNYe1yUOd-I7HiCpbt6sw-1
-Received: by mail-wm1-f72.google.com with SMTP id o5so4940105wmo.6
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 07:02:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wIE9VGUaKQC5F+nmzjS1d1+OM5IgOo8Xu+l1owRvgOQ=;
-        b=eDWdiTtwXsCVY46bVBLdWGGaPZssMm5vJUp5q80k1zCOYPoZYVqiknUZEAAO38qq+L
-         dypSc81/cB9M1Zj/TwIaKj4BS2x/YkV8EmBUj5pJBSxgOVL3VmfdD3AoZm6Nt4oQ4mlm
-         m3Kyitf8ryDyL1Ekrwv53VR78ol2Rud/bJppIelh6xzKVFrQtEliHSWB3H4fGwi32Obz
-         2nVZ4EYXpC6FzqS4N5l4bonIXhrVl+Vdb5WLsBx4nRgW1rcg1zBdyfBqVG3ukiwq8X5U
-         E6uFkwgdDvc4sU9W+Gw692I1JCZOFIm8lm9FpSngT4VYccAEU9LoMrPIFlX2L3if2/Q0
-         t1pQ==
-X-Gm-Message-State: AGi0PuZvutP6AxA3IsVvCl5eWJEE+EuTMBdnBg4pd0Zaa0pEDvN3nCaZ
-        z6zCW/qy9r0pNW2LV69fQt+2msM3iNHEkEyfCwrorDA4aUM6I58yzKOyFenKWbzAtTrL7W7xAl4
-        s+sHMiTX6OvTnGdB/QMHJ2tvI
-X-Received: by 2002:a5d:4c42:: with SMTP id n2mr7789700wrt.178.1586181776086;
-        Mon, 06 Apr 2020 07:02:56 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKL4+xmI91KCjCdHW6Iun/ZVCiNm2oeP85iziYNrPA4EWRYx4/NJvVV0PiOVKVLUwLXmlPIyQ==
-X-Received: by 2002:a5d:4c42:: with SMTP id n2mr7789686wrt.178.1586181775941;
-        Mon, 06 Apr 2020 07:02:55 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id h2sm24497540wmb.16.2020.04.06.07.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 07:02:55 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 10:02:53 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH] vdpa-sim: depend on HAS_DMA
-Message-ID: <20200406095931-mutt-send-email-mst@kernel.org>
-References: <20200405081355.2870-1-mst@redhat.com>
- <20200406130927.GA20291@infradead.org>
+        Mon, 6 Apr 2020 10:03:14 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586181793; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=ddRHNrTYuHRZ9Qp05MVsdiWN86Gi1Yd/jbkzWd681IA=; b=XI16osb7s2AfVebSEw38+RbBgPt8LmZq3ab2EDaKjUu1I/hoA4FHKhR7bLnETk/o+5rPz2ga
+ brWF9EVaIHXx4aBpZCmVYBLiGP7OMMrBsTCTGjHNUBifxNLl5krQ8DKjInA5MSmPUZRayqbR
+ fxeSj+wtHkvZbTtWxhv0Q7mgtXo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b369a.7fc899cd3998-smtp-out-n02;
+ Mon, 06 Apr 2020 14:03:06 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 50DCBC43636; Mon,  6 Apr 2020 14:03:05 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0FBE0C433D2;
+        Mon,  6 Apr 2020 14:03:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0FBE0C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Tony Chuang <yhchuang@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list\:REALTEK WIRELESS DRIVER \(rtw88\)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list\:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rtw88: Add delay on polling h2c command status bit
+References: <20200406093623.3980-1-kai.heng.feng@canonical.com>
+        <87v9mczu4h.fsf@kamboji.qca.qualcomm.com>
+        <94EAAF7E-66C5-40E2-B6A9-0787CB13A3A9@canonical.com>
+        <87zhboycfr.fsf@kamboji.qca.qualcomm.com>
+        <83B3A3D8-833A-42BE-9EB0-59C95B349B01@canonical.com>
+Date:   Mon, 06 Apr 2020 17:03:00 +0300
+In-Reply-To: <83B3A3D8-833A-42BE-9EB0-59C95B349B01@canonical.com> (Kai-Heng
+        Feng's message of "Mon, 6 Apr 2020 21:35:29 +0800")
+Message-ID: <87k12syanf.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406130927.GA20291@infradead.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 06:09:27AM -0700, Christoph Hellwig wrote:
-> Pleae just drop the code - we should not add new drivers with custom
-> DMA ops.
+Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
 
-I'm not sure there's another way to do this: this not a driver, it's a
-software emulator that pretends to be an actual device. We can't
-have the platform supply DMA ops here since the platform is a regular
-x86 or whatever.
+>> On Apr 6, 2020, at 21:24, Kalle Valo <kvalo@codeaurora.org> wrote:
+>> 
+>> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+>> 
+>>>> On Apr 6, 2020, at 20:17, Kalle Valo <kvalo@codeaurora.org> wrote:
+>>>> 
+>>>> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+>>>> 
+>>>>> --- a/drivers/net/wireless/realtek/rtw88/hci.h
+>>>>> +++ b/drivers/net/wireless/realtek/rtw88/hci.h
+>>>>> @@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32
+>>>>> addr, u32 mask, u8 data)
+>>>>> 	rtw_write8(rtwdev, addr, set);
+>>>>> }
+>>>>> 
+>>>>> +#define rr8(addr)      rtw_read8(rtwdev, addr)
+>>>>> +#define rr16(addr)     rtw_read16(rtwdev, addr)
+>>>>> +#define rr32(addr)     rtw_read32(rtwdev, addr)
+>>>> 
+>>>> For me these macros reduce code readability, not improve anything. They
+>>>> hide the use of rtwdev variable, which is evil, and a name like rr8() is
+>>>> just way too vague. Please keep the original function names as is.
+>>> 
+>>> The inspiration is from another driver.
+>>> readx_poll_timeout macro only takes one argument for the op.
+>>> Some other drivers have their own poll_timeout implementation,
+>>> and I guess it makes sense to make one specific for rtw88.
+>> 
+>> I'm not even understanding the problem you are tying to fix with these
+>> macros. The upstream philosopyhy is to have the source code readable and
+>> maintainable, not to use minimal number of characters. There's a reason
+>> why we don't name our functions a(), b(), c() and so on.
+>
+> The current h2c polling doesn't have delay between each interval, so
+> the polling is too fast and the following logic considers it's a
+> timeout.
+> The readx_poll_timeout() macro provides a generic mechanism to setup
+> an interval delay and timeout which is what we need here.
+> However readx_poll_timeout only accepts one parameter which usually is
+> memory address, while we need to pass both rtwdev and address.
+>
+> So if hiding rtwdev is evil, we can roll our own variant of
+> readx_poll_timeout() to make the polling readable.
+
+Can't you do:
+
+ret = read_poll_timeout(rtw_read8, box_state,
+                        !((box_state >> box) & 0x1), 100,
+                        3000, false, rtw_dev, REG_HMETFR);
+
+No ugly macros needed and it should function the same. But I did not
+test this in any way, so no idea if it even compiles.
 
 -- 
-MST
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
