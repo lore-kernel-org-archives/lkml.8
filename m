@@ -2,201 +2,194 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228E8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E047C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3CF206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4797206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:51:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Ptf/YAC+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ETEKmsik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgDFJqo (ORCPT
+        id S1726817AbgDFJv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:46:44 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:41269 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726721AbgDFJqo (ORCPT
+        Mon, 6 Apr 2020 05:51:29 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50556 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgDFJv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:46:44 -0400
-Received: from surfplank2.hierzo ([IPv6:2001:981:a812:0:b62e:99ff:fe92:5264])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id LOL1jiCw4Lu1fLOL3jjo6u; Mon, 06 Apr 2020 11:46:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1586166401; bh=JK8ANuMb/TGXm73xBW/3ZFVSzSDmBIWiHZYKLgj5PHY=;
-        h=To:From:Subject:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Ptf/YAC+qq6JoMlpMWWFDC3rBSfpdoRYAHeVtURZW2h984qdMWdJpYrhWDkR757cW
-         Si+BqfOl+OrBDQa144ZyDAMu+rcRneI8bnryQvt3p8EP5W8zS0SYdY2pTQYUdpBcyn
-         w6i63RJyP+PJQVqLGBJDL+AlDqMUfgVGVvmT+4OEjPv4rIzYJWGAa653dyKV1OCvaR
-         Daci/5mVkei6Tcg3uhY2RPawucEMXDpRpzl+vuwelEK4K9WYgGkZMZk5chSCiuQiGg
-         jFHUgxHOJQhT/FKYVKvnBHL1uGOsS0Mjom8yHmkcAQMef9CkLEFPspifFnBIGLvs7l
-         QIRcEQqwdgm8Q==
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Udo van den Heuvel <udovdh@xs4all.nl>
-Subject: 5.6.2: BUG: kernel NULL pointer dereference, address:
- 0000000000000000
-Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
- 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
- JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
-Organization: hierzo
-Message-ID: <cc420f6a-5ba6-c598-b09e-5107332315d1@xs4all.nl>
-Date:   Mon, 6 Apr 2020 11:46:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 05:51:29 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x25so2918602wmc.0;
+        Mon, 06 Apr 2020 02:51:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5VM8BXPopEtF/vWMO6fH4OBxYXzchIKT+rdSCRSo1hE=;
+        b=ETEKmsikJ7lNFax7fOsUxRzi5ybSvI9m3Ia2HjDWRVIYXlCGjP17IanQ/eOg4VQyfC
+         +0PzrRtw7jpxn+SgX+OHxqGwHNWAqSXvFzGqXlfElOdSYgVVZNxVJNS9nFXHYAu/GhEc
+         63xlMnvUvT0jHUipg9GgKYJICFjQhb7LVSQ/tnFSx9CJ/StAXxaZEaw5vel+g0lrSBWg
+         Ghj1nA41ky3OBPjP+Feqb64MYrhWafhhchC2ltvwaror65/IpDUEWSOTeobsnsWSBbQw
+         mPgVuaUmASzy4/oGLPsEDJWJwFzCECmkmIbFR44sAYChgQJt15tbQaeqAvXkVgFOwn9S
+         cSpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5VM8BXPopEtF/vWMO6fH4OBxYXzchIKT+rdSCRSo1hE=;
+        b=oCz/DSJYkwPk+6XEeasoxgDreMK5yGfFLCi8bl/R00c3EoL/kyjjdXGljiw6HRtTcY
+         f4RakM1cpm6rpq3pY6rdl8atYX1iJvKCymMvqF0IwZJ5QYO/GBhWp4BIdBypY5+68yRf
+         js+kWOACTSG36xaHE/vj2fKEk9buZOesl7uZs3Gtru9euYMII/fHtoovNOhQZuM6AheA
+         GW0D5oWNMeUzb/rmWIHbhJoZ8UPmAhizbRS5y6wWvSA98H/9dxKBS9w3NoJH9N7y+Tts
+         Nac5J/t0RrlT8yfgWMmUCT7yO/fzprqR2G6u+3hYt6SNrwd8dYpzwMYnGUAQ7mCiqDt2
+         XHaQ==
+X-Gm-Message-State: AGi0PuatCpQF88QiWyBI+sHqqCpbLqSywkGyxpu2GoCaQ4ZYk7jKwteC
+        IsiXYy2LIYj/7MMTVnBePNs=
+X-Google-Smtp-Source: APiQypKHLa6tX6IVcch/Q0+KCyUEc5LV6iQn8Mv+dkUDCEh4ACEjxzAq5d5bMU9TnSMpsN6uBZoH3w==
+X-Received: by 2002:a7b:c24a:: with SMTP id b10mr21808723wmj.84.1586166686663;
+        Mon, 06 Apr 2020 02:51:26 -0700 (PDT)
+Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
+        by smtp.gmail.com with ESMTPSA id l185sm24394718wml.44.2020.04.06.02.51.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 02:51:25 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 11:51:24 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Clemens Gruber <clemens.gruber@pqgruber.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: (EXT) Re: [PATCH 1/4] pwm: pca9685: remove unused duty_cycle
+ struct element
+Message-ID: <20200406095124.GA475759@ulmo>
+References: <20200226135229.24929-1-matthias.schiffer@ew.tq-group.com>
+ <20200226151034.7i3h5blmrwre2yzg@pengutronix.de>
+ <32ec35c2b3da119dd2c7bc09742796a0d8a9607e.camel@ew.tq-group.com>
+ <20200330151231.GA1650@workstation.tuxnet>
+ <CAGngYiUe-tihBJUcXQ738_5aA9pzgp_-NSs4iCrz3eWO6rMukA@mail.gmail.com>
+ <20200404173546.GA55833@workstation.tuxnet>
+ <CAGngYiWpO_N+t74k-==RNaXkZcp6TZvVOJzXPOi84cpQ6PHbhw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBseAAOGLTDiAygYedM/AfhTPg94sLzpFKNvdl+U5G0+TcVDQJPbSRLNZy8YJQHd3kTsU0curXCU2nMAN9LevPRnUCVgELXmSOJsyCne+rdZ8mpUtvhJ
- HPrIrf9xinATd9pWywfhi+96HRyg3E/2qfeojphoGtQfQf+F2PcWs9XWjAlQHCF2tlym9ORe9koEKh88bjtm9xVOI+PhknecQ+8EHVemh205jrlPwuQMVnpn
- xqFrDLjWk6GOctRdC5m6RA==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Content-Disposition: inline
+In-Reply-To: <CAGngYiWpO_N+t74k-==RNaXkZcp6TZvVOJzXPOi84cpQ6PHbhw@mail.gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-Found this in dmesg. What can I do?
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Apr 04, 2020 at 04:17:00PM -0400, Sven Van Asbroeck wrote:
+> On Sat, Apr 4, 2020 at 1:35 PM Clemens Gruber
+> <clemens.gruber@pqgruber.com> wrote:
+> >
+> > As the user is setting the duty cycle in nanoseconds, it makes sense
+> > that the relative duty cycle decreases in an absolute period increase.
+> > As for the behavior that the other channels remain at the same relative
+> > duty cycle: Not sure how we can avoid this, other than reprogramming all
+> > 15 other channels if one of them is changed and that's not really
+> > acceptable, I think.
+>=20
+> Thank you for the explanation, Clemens.
+>=20
+> Yes, it does make sense that the relative duty cycle changes when we chan=
+ge
+> the period. A relative duty cycle of duty_cycle / period is what the user=
+ would
+> expect to see.
+>=20
+> It also kind-of makes sense that the relative duty cycles of the other
+> pwm channels
+> do not change: after all, the user is not touching them, so would not exp=
+ect
+> them to change.
+>=20
+> However, the following does not make sense to me. Imagine pwm0 and pwm1
+> are both active and at 50%: period=3D5000000, duty_cycle=3D2500000. Then,=
+ change
+> the period on pwm0:
+>=20
+> $ echo 10000000 > pwm0/period
+>=20
+> Then pwm0 gets dimmer (makes sense) and pwm1 keeps the same relative duty
+> cycle (makes sense). However, if we now read out sysfs for pwm1, we get:
+>=20
+> $ echo pwm1/period
+> 5000000 (wrong!)
+> $ echo pwm1/duty_cycle
+> 2500000 (wrong! although relative duty cycle is correct)
+>=20
+> Although the pwm1 period has changed, the API calls do not reflect this.
+> This makes it next to impossible for users to know what the current period
+> is set to.
+>=20
+> Moving to the atomic API won't help, because .get_state is called only
+> once, when the chip is registered.
 
-[167263.584468] BUG: kernel NULL pointer dereference, address:
-0000000000000000
-[167263.668969] #PF: supervisor write access in kernel mode
-[167263.732609] #PF: error_code(0x0002) - not-present page
-[167263.795210] PGD 0 P4D 0
-[167263.826574] Oops: 0002 [#1] PREEMPT SMP NOPTI
-[167263.879805] CPU: 2 PID: 412735 Comm: firefox Not tainted 5.6.2 #4
-[167263.953850] Hardware name: Gigabyte Technology Co., Ltd. X570 AORUS
-PRO/X570 AORUS PRO, BIOS F11 12/06/2019
-[167264.071668] RIP: 0010:mutex_lock+0xb/0x20
-[167264.120722] Code: e8 da 30 98 ff 66 2e 0f 1f 84 00 00 00 00 00 be 02
-00 00 00 e9 d6 fa ff ff 66 0f 1f 44 00 00 31 c0 65 48 8b 14 25 00 7c 01
-00 <f0> 48 0f b1 17 74 02 eb dc c3 66 66 2e 0f 1f 84 00 00 00 00 00 41
-[167264.346852] RSP: 0018:ffffade84043fd88 EFLAGS: 00010246
-[167264.410496] RAX: 0000000000000000 RBX: 0000000000000038 RCX:
-0000000000000001
-[167264.497056] RDX: ffff8f5e8512a0c0 RSI: 0000000000000010 RDI:
-0000000000000000
-[167264.583613] RBP: ffff8f5c99e55078 R08: 0000000000000000 R09:
-0000000000000000
-[167264.670174] R10: ffff8f5c99c55010 R11: ffff8f5eb32cdcc0 R12:
-0000000000000000
-[167264.756738] R13: ffff8f5c99c550d0 R14: ffff8f5e90e22420 R15:
-ffff8f5eace7fcc0
-[167264.756742] FS:  00007f39a81cb780(0000) GS:ffff8f5edf080000(0000)
-knlGS:0000000000000000
-[167264.756745] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[167264.756747] CR2: 0000000000000000 CR3: 00000003df78e000 CR4:
-00000000003406e0
-[167264.756749] Call Trace:
-[167264.756759]  eventpoll_release_file+0x3c/0x80
-[167264.756766]  __fput+0x1c7/0x230
-[167264.756772]  task_work_run+0x8e/0xb0
-[167264.756778]  do_exit+0x329/0xa40
-[167264.756782]  do_group_exit+0x35/0x90
-[167264.756787]  __x64_sys_exit_group+0xf/0x10
-[167264.756792]  do_syscall_64+0x63/0x430
-[167265.442334]  ? handle_mm_fault+0x4b/0xc0
-[167265.442338]  ? do_page_fault+0x1c1/0x41a
-[167265.538373]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[167265.538377] RIP: 0033:0x7f39a829e466
-[167265.643781] Code: Bad RIP value.
-[167265.683469] RSP: 002b:00007ffeb46371c8 EFLAGS: 00000246 ORIG_RAX:
-00000000000000e7
-[167265.683477] RAX: ffffffffffffffda RBX: 00007f39a8394470 RCX:
-00007f39a829e466
-[167265.861797] RDX: 0000000000000000 RSI: 000000000000003c RDI:
-0000000000000000
-[167265.861800] RBP: 0000000000000000 R08: 00000000000000e7 R09:
-ffffffffffffff48
-[167265.861804] R10: 00007f39a839a84e R11: 0000000000000246 R12:
-00007f39a8394470
-[167266.121467] R13: 0000000000000770 R14: 00007f39a8397e68 R15:
-0000000000000000
-[167266.121470] Modules linked in: cp210x usbserial fuse mq_deadline
-xt_MASQUERADE iptable_nat nf_nat ipt_REJECT nf_reject_ipv4 xt_u32
-xt_multiport iptable_filter nf_conntrack_netbios_ns
-nf_conntrack_broadcast ip6t_REJECT nf_reject_ipv6 xt_tcpudp xt_state
-xt_conntrack nf_conntrack it87 hwmon_vid nf_defrag_ipv6 nf_defrag_ipv4
-ip6table_filter msr ip6_tables uvcvideo videobuf2_vmalloc
-videobuf2_memops videobuf2_v4l2 snd_usb_audio videodev
-snd_hda_codec_realtek snd_hwdep snd_hda_codec_generic snd_usbmidi_lib
-snd_hda_intel videobuf2_common snd_rawmidi snd_intel_dspcfg cdc_acm
-snd_hda_codec snd_hda_core snd_seq snd_seq_device snd_pcm snd_timer snd
-k10temp i2c_piix4 bfq evdev acpi_cpufreq binfmt_misc ip_tables x_tables
-aesni_intel amdgpu gpu_sched ttm sr_mod cdrom hid_generic usbhid i2c_dev
-autofs4
-[167267.045596] CR2: 0000000000000000
-[167267.086324] ---[ end trace 61fa72f5201dad20 ]---
-[167267.142678] RIP: 0010:mutex_lock+0xb/0x20
-[167267.191737] Code: e8 da 30 98 ff 66 2e 0f 1f 84 00 00 00 00 00 be 02
-00 00 00 e9 d6 fa ff ff 66 0f 1f 44 00 00 31 c0 65 48 8b 14 25 00 7c 01
-00 <f0> 48 0f b1 17 74 02 eb dc c3 66 66 2e 0f 1f 84 00 00 00 00 00 41
-[167267.417871] RSP: 0018:ffffade84043fd88 EFLAGS: 00010246
-[167267.481510] RAX: 0000000000000000 RBX: 0000000000000038 RCX:
-0000000000000001
-[167267.568071] RDX: ffff8f5e8512a0c0 RSI: 0000000000000010 RDI:
-0000000000000000
-[167267.654626] RBP: ffff8f5c99e55078 R08: 0000000000000000 R09:
-0000000000000000
-[167267.741187] R10: ffff8f5c99c55010 R11: ffff8f5eb32cdcc0 R12:
-0000000000000000
-[167267.827743] R13: ffff8f5c99c550d0 R14: ffff8f5e90e22420 R15:
-ffff8f5eace7fcc0
-[167267.914304] FS:  00007f39a81cb780(0000) GS:ffff8f5edf080000(0000)
-knlGS:0000000000000000
-[167268.012322] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[167268.082218] CR2: 00007f39a829e43c CR3: 00000003df78e000 CR4:
-00000000003406e0
-[167268.168775] Fixing recursive fault but reboot is needed!
+The .get_state() callback is actually called when the PWM is requested,
+which could be much later than when the chip is registered. That doesn't
+change the fact that it would be useless for this case, though.
 
+> It does look like we have a square peg (this chip) in a round hole (the
+> standard assumptions the pwm core makes) ?
 
+There are other chips where a single period is shared across multiple
+PWM channels. Typically what we do there is once a period is configured
+for a given channel, all subsequent PWM channel configurations must use
+the same period, or otherwise the driver will return an error code.
 
-Udo
+See for example:
+
+  - stm32_pwm_config() in drivers/pwm/pwm-stm32.c
+  - lpc18xx_pwm_config() in drivers/pwm/pwm-lpc18xx-sct.c
+  - pwm_imx_tpm_apply_hw() in drivers/pwm/pwm-imx-tpm.c
+  - fsl_pwm_apply_config() in drivers/pwm/pwm-fsl-ftm.c
+
+The rationale behind that is that we must not change a PWM configuration
+without a consumer having explicitly requested it.
+
+It seems like PCA9685 is somewhere halfway between in that it will
+actually keep the same duty-cycle/period ratio, but that doesn't mean it
+is automatically okay to do this. The problem is that the duty-cycle to
+period ratio is only relevant in some cases. If all you care about is
+the power output of the PWM signal, which admittedly seems to be about
+95% of all cases, then yes, this behaviour would be okay. But what if we
+have a consumer that relies on a particular width of the PWM pulse in
+absolute terms rather than relative to the period?
+
+Thierry
+
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6K+5kACgkQ3SOs138+
+s6HhFA/+PEiXL6s/Cq43Hd4WNCKlr04FsvoDJM6O5IuLU1Juh8TT2IZImpKY/BKD
+J6xXeqCkuOHbeWNpV4w8TM/ZD8UJ4JLM95l9fVs363tFZ/+UG34Oem3pSzLAv793
+gtGz5gQXgCBWcoe3dvKXdADVwuhhveigg/W0dINZJ90lwW+nfYTQKRveQTa73+EG
+1J/D7vHORq7d3Lmfa6clKNTuz/mtZ+OizAZK02a9YUJiZ9ZTB9T2UItNIZBJzjsg
+B00O/NE7siC/un37QUYgb68fryLCcRfDnuVkZGTAjx1lIXPMWID162oGhlyHqaKC
+s6rD1f7VwGOZZDaXmlj6a+gnkoGdArnOhTc4NzNiLOl5opuJjMXWTarxsP411oW5
+v31nksb37+Nr2rTbyvhUEqmeCbqiNoYFvFXsleJsF2LIrroYGTU0GrucCzXh5v7U
+Z+phxutOZMAW0OrhVS26/kNr8oOKgyVX2UHi2KI+c6n9/ccwv7LBDtgVC7/1/r0B
+ZChU1ymVrBNLSyDgclBc5DnR4FTYYiOBE5Mh/jRkccHu8HMUHCdpw6DPerrcIMil
+hxkz9CPn6tgVUgXdMNxDM/J8zn5t6IY27PP0S96ZejCZZqot7SzyxnuF25UaMeqL
+xmuRlJjDF0X2yCn/+6FflGG4Rm3RfIMfj+Zo6v5iYMtj7CmXCpo=
+=0CGN
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
