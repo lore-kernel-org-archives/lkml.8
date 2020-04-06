@@ -2,167 +2,149 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A32F9C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0868C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FDA206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y1M5oJ3U"
+	by mail.kernel.org (Postfix) with ESMTP id 8C5E2206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgDFLAp (ORCPT
+        id S1727378AbgDFLBo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:00:45 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33026 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbgDFLAo (ORCPT
+        Mon, 6 Apr 2020 07:01:44 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:60770 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgDFLBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:00:44 -0400
-Received: by mail-lf1-f66.google.com with SMTP id h6so6927621lfc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 04:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dxopcs2TULMnqy9F8WEV0bdgNBrNp58ORmPnzPaTfFs=;
-        b=y1M5oJ3Utzf2ol3jjghz/S+YPN8tidN0SnBCLeLcgJYlfB6awxhlVPJuck86wz6RzB
-         SsbuZ20qJ5UyLeM7yJC5qalSj8zanv441z2agyFzJ7Z4AVLjTyp41yaW8JgRspGRngyn
-         2QgSGGSz2yTXr/dFfd9ebmMHfXgBXXEfVcAfsBxSEaDz1ZZY2XLsZ1DpCz9Ty/gs56J7
-         Z1qdzX1BToTL4Z1QJ0Z5X6bDPsryiTvtDbUV5HH6ZKX5gW5nX45vHBtGzYHrHaEXPycK
-         vO9ZcgP32VRnOJjjTccTOL0BWX+TMbXAD/9sQPr2FbZfCgquTOqlk+HaUedMR2eQib+a
-         hPyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dxopcs2TULMnqy9F8WEV0bdgNBrNp58ORmPnzPaTfFs=;
-        b=BoLKrQE6pxGNC+j29/vvCec8pXE/9izbCn94WGbbW3gsdl4LKTM655zm4N4Zm6o/9/
-         pM14zR+qwbEUV2dSA1gsRpnK33xxa8jMnq2cpqq1ZopXkdLZ2oYjTm1XcAywcIkXfp0f
-         DctmsgloerJM4nSEFoF/87wde5VCUt4P6seKES+VBknHtwBVe/JG/BTHfgHRn6PzAfWn
-         KBGA+x9vdj4f6l+RrlqS3WaNF4rYrExV6LH2uNGgMzeu89JirQ6LN6acWqrcNeZlyFWX
-         0Eggj1xo3pqKKZCFk4uG1Zj5cUcCcQnVZCfcyw79ZmwrlzJXgWLF/En3iL02JJn8pCI5
-         ZL9g==
-X-Gm-Message-State: AGi0PubcfP/x2oUA9i2bI47Wtcv1PR0iktXJ7lTMVZuTEUvhNcMIRD+U
-        oBKBSU7L2/pYOEfcjHR8q9Ep4kceSxnWx9ymQ4w/yg==
-X-Google-Smtp-Source: APiQypLZx4lGfRvdM1iN8xH3oMXlCylKvoscHREtWVAlwfQ+t5ekB/8oqyPtv7CIXY68xdfCvvFTPf7GlB6K8F+uj54=
-X-Received: by 2002:ac2:44c6:: with SMTP id d6mr9164020lfm.26.1586170842336;
- Mon, 06 Apr 2020 04:00:42 -0700 (PDT)
+        Mon, 6 Apr 2020 07:01:44 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 036B1KSr8017517, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 036B1KSr8017517
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 6 Apr 2020 19:01:20 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 6 Apr 2020 19:01:20 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 6 Apr 2020 19:01:20 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Mon, 6 Apr 2020 19:01:20 +0800
+From:   Tony Chuang <yhchuang@realtek.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+CC:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:REALTEK WIRELESS DRIVER (rtw88)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] rtw88: Add delay on polling h2c command status bit
+Thread-Topic: [PATCH] rtw88: Add delay on polling h2c command status bit
+Thread-Index: AQHWC/bdJYgYrtvTIE2p2Ip9l+r986hr7Eug
+Date:   Mon, 6 Apr 2020 11:01:20 +0000
+Message-ID: <3b815e889a934491bca23593a84532d7@realtek.com>
+References: <20200406093623.3980-1-kai.heng.feng@canonical.com>
+In-Reply-To: <20200406093623.3980-1-kai.heng.feng@canonical.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.68.175]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200405234639.AU1f3x3Xg%akpm@linux-foundation.org> <CA+G9fYsUsGS6ybozk3A=8aG5VFpF-+DJGNAim4o=Xi9CB43tDA@mail.gmail.com>
-In-Reply-To: <CA+G9fYsUsGS6ybozk3A=8aG5VFpF-+DJGNAim4o=Xi9CB43tDA@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 6 Apr 2020 16:30:29 +0530
-Message-ID: <CA+G9fYssZg-BZSe3_m4NpiVE1-RYsOR_Fpm2i1JT6uGTphaheg@mail.gmail.com>
-Subject: Re: mmotm 2020-04-05-16-45 uploaded
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        mhocko@suse.cz, mm-commits@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 16:13, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Mon, 6 Apr 2020 at 05:16, <akpm@linux-foundation.org> wrote:
-> >
-> > The mm-of-the-moment snapshot 2020-04-05-16-45 has been uploaded to
-> >
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> >
-> > mmotm-readme.txt says
-> >
-> > README for mm-of-the-moment:
-> >
-> > http://www.ozlabs.org/~akpm/mmotm/
-> >
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> >
-> > You will need quilt to apply these patches to the latest Linus release (5.x
-> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> > http://ozlabs.org/~akpm/mmotm/series
-> >
-> > The file broken-out.tar.gz contains two datestamp files: .DATE and
-> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> > followed by the base kernel version against which this patch series is to
-> > be applied.
-> >
-> > This tree is partially included in linux-next.  To see which patches are
-> > included in linux-next, consult the `series' file.  Only the patches
-> > within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-> > linux-next.
-> >
-> >
-> > A full copy of the full kernel tree with the linux-next and mmotm patches
-> > already applied is available through git within an hour of the mmotm
-> > release.  Individual mmotm releases are tagged.  The master branch always
-> > points to the latest release, so it's constantly rebasing.
-> >
-> >         https://github.com/hnaz/linux-mm
-> >
-> > The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-> > contains daily snapshots of the -mm tree.  It is updated more frequently
-> > than mmotm, and is untested.
-> >
-> > A git copy of this tree is also available at
-> >
-> >         https://github.com/hnaz/linux-mm
-> >
-> >
-> >
-> > This mmotm tree contains the following patches against 5.6:
-> > (patches marked "*" will be included in linux-next)
-> >
-> >   origin.patch
-> <>
-> > * mm-hugetlb-optionally-allocate-gigantic-hugepages-using-cma.patch
-> > * mm-hugetlb-optionally-allocate-gigantic-hugepages-using-cma-fix.patch
-> > * mm-hugetlb-optionally-allocate-gigantic-hugepages-using-cma-fix-2.patch
->
-> While building Linux-next master for arm beagle board x15 the following
-> build error was noticed.
->
-> mm/hugetlb.c: In function 'hugetlb_cma_reserve':
-> mm/hugetlb.c:5580:3: error: implicit declaration of function
-> 'for_each_mem_pfn_range'; did you mean 'for_each_mem_range'?
-> [-Werror=implicit-function-declaration]
->    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
->    ^~~~~~~~~~~~~~~~~~~~~~
->    for_each_mem_range
-> mm/hugetlb.c:5580:62: error: expected ';' before '{' token
->    for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
->                                                               ^
->
-
-Few more details about build test,
-
-CONFIG_HUGETLBFS=y
-CONFIG_HUGETLB_PAGE=y
-CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE=y
-CONFIG_ARCH_WANT_HUGE_PMD_SHARE=y
-
-# CONFIG_TRANSPARENT_HUGEPAGE is not set
-# CONFIG_CMA is not set
-
-
-Kernel config link,
-http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-core2-32/lkft/linux-mainline/2591/config
-
-Build log,
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/743/consoleText
-
-
+> Subject: [PATCH] rtw88: Add delay on polling h2c command status bit
+> 
+> On some systems we can constanly see rtw88 complains:
+> [39584.721375] rtw_pci 0000:03:00.0: failed to send h2c command
+> 
+> Increase interval of each check to wait the status bit really changes.
+> 
+> While at it, add some helpers so we can use standarized
+> readx_poll_timeout() macro.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  drivers/net/wireless/realtek/rtw88/fw.c  | 12 ++++++------
+>  drivers/net/wireless/realtek/rtw88/hci.h |  4 ++++
+>  2 files changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtw88/fw.c
+> b/drivers/net/wireless/realtek/rtw88/fw.c
+> index 05c430b3489c..bc9982e77524 100644
+> --- a/drivers/net/wireless/realtek/rtw88/fw.c
+> +++ b/drivers/net/wireless/realtek/rtw88/fw.c
+> @@ -2,6 +2,8 @@
+>  /* Copyright(c) 2018-2019  Realtek Corporation
+>   */
+> 
+> +#include <linux/iopoll.h>
+> +
+>  #include "main.h"
+>  #include "coex.h"
+>  #include "fw.h"
+> @@ -193,8 +195,8 @@ static void rtw_fw_send_h2c_command(struct
+> rtw_dev *rtwdev,
+>  	u8 box;
+>  	u8 box_state;
+>  	u32 box_reg, box_ex_reg;
+> -	u32 h2c_wait;
+>  	int idx;
+> +	int ret;
+> 
+>  	rtw_dbg(rtwdev, RTW_DBG_FW,
+>  		"send H2C content %02x%02x%02x%02x %02x%02x%02x%02x\n",
+> @@ -226,12 +228,10 @@ static void rtw_fw_send_h2c_command(struct
+> rtw_dev *rtwdev,
+>  		goto out;
+>  	}
+> 
+> -	h2c_wait = 20;
+> -	do {
+> -		box_state = rtw_read8(rtwdev, REG_HMETFR);
+> -	} while ((box_state >> box) & 0x1 && --h2c_wait > 0);
+> +	ret = readx_poll_timeout(rr8, REG_HMETFR, box_state,
+> +				 !((box_state >> box) & 0x1), 100, 3000);
+> 
+> -	if (!h2c_wait) {
+> +	if (ret) {
+>  		rtw_err(rtwdev, "failed to send h2c command\n");
+>  		goto out;
+>  	}
+> diff --git a/drivers/net/wireless/realtek/rtw88/hci.h
+> b/drivers/net/wireless/realtek/rtw88/hci.h
+> index 2cba327e6218..24062c7079c6 100644
+> --- a/drivers/net/wireless/realtek/rtw88/hci.h
+> +++ b/drivers/net/wireless/realtek/rtw88/hci.h
+> @@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32 addr,
+> u32 mask, u8 data)
+>  	rtw_write8(rtwdev, addr, set);
+>  }
+> 
+> +#define rr8(addr)      rtw_read8(rtwdev, addr)
+> +#define rr16(addr)     rtw_read16(rtwdev, addr)
+> +#define rr32(addr)     rtw_read32(rtwdev, addr)
+> +
+>  static inline enum rtw_hci_type rtw_hci_type(struct rtw_dev *rtwdev)
+>  {
+>  	return rtwdev->hci.type;
 > --
-> Linaro LKFT
-> https://lkft.linaro.org
+
+I think the timeout is because the H2C is triggered when the lower 4 bytes are written.
+So, we probably should write h2c[4] ~ h2c[7] before h2c[0] ~ h2c[3].
+
+But this delay still works, I think you can keep it, and reorder the h2c write sequence.
+
+Yen-Hsuan
