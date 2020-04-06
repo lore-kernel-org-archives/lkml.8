@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1971C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64947C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A58C2075E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3486C2074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 06:33:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jaPtcpQE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tBPqvChm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDFGdc (ORCPT
+        id S1726691AbgDFGdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 02:33:32 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:39882 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726559AbgDFGdb (ORCPT
+        Mon, 6 Apr 2020 02:33:46 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:45147 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726549AbgDFGdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 02:33:31 -0400
+        Mon, 6 Apr 2020 02:33:46 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586154811; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1586154825; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=4bJi4JEDnESDw+Er3mBINuXgiBGygtcrxXmJvHwbTz8=; b=jaPtcpQEZJHv2AyAkSjI6MzAJL+SsKQuuZKYhhjgVHokFfz1d0Pmm0w8AF8GpLcLw53+kJNR
- B+iFne4IGqhRVjeIVitXvhrpXvAKyCGjQwTSbQXCUBuKVH4WgwKcF6+2BPPBbwDiq2FPnrd6
- WccGldO0TrKmGJxXiSd86I+V37Q=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=GHPkfZdKpWokGkMHpjNdxNE7lxqzRlwomEdxFWcpnmE=; b=tBPqvChmS5DrvnhSb6CSFVAwcQVk9IgNWcKDnrnHHC2Ma/roqArxfmG/IUHOpzqL5lrelUbx
+ nRvWrLF+WclNhasUJ+iYmQ+oGrPQEAXzZFCWh2NRBTTyU1+emxhTyzCg+RrWnnQW4JewDDyD
+ 5qRm2XMXUedTfpgmW1PCB99jyng=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8acd2a.7fbdc56b9928-smtp-out-n04;
- Mon, 06 Apr 2020 06:33:14 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e8acd32.7fc47178e030-smtp-out-n01;
+ Mon, 06 Apr 2020 06:33:22 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A5C65C433BA; Mon,  6 Apr 2020 06:33:14 +0000 (UTC)
+        id EDA88C433BA; Mon,  6 Apr 2020 06:33:21 +0000 (UTC)
 Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9B23CC433D2;
-        Mon,  6 Apr 2020 06:33:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B23CC433D2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EA6EEC433F2;
+        Mon,  6 Apr 2020 06:33:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EA6EEC433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
 From:   Maulik Shah <mkshah@codeaurora.org>
@@ -51,11 +51,10 @@ To:     swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
         ilina@codeaurora.org, lsrao@codeaurora.org,
-        "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>,
         Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v16 5/6] soc: qcom: rpmh-rsc: Clear active mode configuration for wake TCS
-Date:   Mon,  6 Apr 2020 12:02:20 +0530
-Message-Id: <1586154741-8293-6-git-send-email-mkshah@codeaurora.org>
+Subject: [PATCH v16 6/6] soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
+Date:   Mon,  6 Apr 2020 12:02:21 +0530
+Message-Id: <1586154741-8293-7-git-send-email-mkshah@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586154741-8293-1-git-send-email-mkshah@codeaurora.org>
 References: <1586154741-8293-1-git-send-email-mkshah@codeaurora.org>
@@ -64,144 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
+When there are more than one WAKE TCS available and there is no dedicated
+ACTIVE TCS available, invalidating all WAKE TCSes and waiting for current
+transfer to complete in first WAKE TCS blocks using another free WAKE TCS
+to complete current request.
 
-For RSCs that have sleep & wake TCS but no dedicated active TCS, wake
-TCS can be re-purposed to send active requests. Once the active requests
-are sent and response is received, the active mode configuration needs
-to be cleared so that controller can use wake TCS for sending wake
-requests.
-
-Introduce enable_tcs_irq() to enable completion IRQ for repurposed TCSes.
+Remove rpmh_rsc_invalidate() to happen from tcs_write() when WAKE TCSes
+is re-purposed to be used for Active mode. Clear only currently used
+WAKE TCS's register configuration.
 
 Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
-Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
-[mkshah: call enable_tcs_irq() within drv->lock, update commit message]
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
- drivers/soc/qcom/rpmh-rsc.c | 77 +++++++++++++++++++++++++++++++--------------
- 1 file changed, 54 insertions(+), 23 deletions(-)
+ drivers/soc/qcom/rpmh-rsc.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index fbe1f3e..5128e13 100644
+index 5128e13..34b0e14 100644
 --- a/drivers/soc/qcom/rpmh-rsc.c
 +++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -207,6 +207,42 @@ static const struct tcs_request *get_req_from_tcs(struct rsc_drv *drv,
- 	return NULL;
- }
- 
-+static void __tcs_set_trigger(struct rsc_drv *drv, int tcs_id, bool trigger)
-+{
-+	u32 enable;
-+
-+	/*
-+	 * HW req: Clear the DRV_CONTROL and enable TCS again
-+	 * While clearing ensure that the AMC mode trigger is cleared
-+	 * and then the mode enable is cleared.
-+	 */
-+	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, 0);
-+	enable &= ~TCS_AMC_MODE_TRIGGER;
-+	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-+	enable &= ~TCS_AMC_MODE_ENABLE;
-+	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-+
-+	if (trigger) {
-+		/* Enable the AMC mode on the TCS and then trigger the TCS */
-+		enable = TCS_AMC_MODE_ENABLE;
-+		write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-+		enable |= TCS_AMC_MODE_TRIGGER;
-+		write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-+	}
-+}
-+
-+static void enable_tcs_irq(struct rsc_drv *drv, int tcs_id, bool enable)
-+{
-+	u32 data;
-+
-+	data = read_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, 0);
-+	if (enable)
-+		data |= BIT(tcs_id);
-+	else
-+		data &= ~BIT(tcs_id);
-+	write_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, data);
-+}
-+
- /**
-  * tcs_tx_done: TX Done interrupt handler
-  */
-@@ -243,6 +279,14 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
- 		}
- 
- 		trace_rpmh_tx_done(drv, i, req, err);
-+
-+		/*
-+		 * If wake tcs was re-purposed for sending active
-+		 * votes, clear AMC trigger & enable modes and
-+		 * disable interrupt for this TCS
-+		 */
-+		if (!drv->tcs[ACTIVE_TCS].num_tcs)
-+			__tcs_set_trigger(drv, i, false);
- skip:
- 		/* Reclaim the TCS */
- 		write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, i, 0);
-@@ -250,6 +294,13 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
- 		write_tcs_reg(drv, RSC_DRV_IRQ_CLEAR, 0, BIT(i));
- 		spin_lock(&drv->lock);
- 		clear_bit(i, drv->tcs_in_use);
-+		/*
-+		 * Disable interrupt for WAKE TCS to avoid being
-+		 * spammed with interrupts coming when the solver
-+		 * sends its wake votes.
-+		 */
-+		if (!drv->tcs[ACTIVE_TCS].num_tcs)
-+			enable_tcs_irq(drv, i, false);
- 		spin_unlock(&drv->lock);
- 		if (req)
- 			rpmh_tx_done(req, err);
-@@ -291,28 +342,6 @@ static void __tcs_buffer_write(struct rsc_drv *drv, int tcs_id, int cmd_id,
- 	write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, tcs_id, cmd_enable);
- }
- 
--static void __tcs_trigger(struct rsc_drv *drv, int tcs_id)
--{
--	u32 enable;
--
--	/*
--	 * HW req: Clear the DRV_CONTROL and enable TCS again
--	 * While clearing ensure that the AMC mode trigger is cleared
--	 * and then the mode enable is cleared.
--	 */
--	enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, 0);
--	enable &= ~TCS_AMC_MODE_TRIGGER;
--	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
--	enable &= ~TCS_AMC_MODE_ENABLE;
--	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
--
--	/* Enable the AMC mode on the TCS and then trigger the TCS */
--	enable = TCS_AMC_MODE_ENABLE;
--	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
--	enable |= TCS_AMC_MODE_TRIGGER;
--	write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
--}
--
- static int check_for_req_inflight(struct rsc_drv *drv, struct tcs_group *tcs,
- 				  const struct tcs_request *msg)
+@@ -154,7 +154,7 @@ int rpmh_rsc_invalidate(struct rsc_drv *drv)
+ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+ 					 const struct tcs_request *msg)
  {
-@@ -383,10 +412,12 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
+-	int type, ret;
++	int type;
+ 	struct tcs_group *tcs;
+ 
+ 	switch (msg->state) {
+@@ -175,19 +175,10 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
+ 	 * If we are making an active request on a RSC that does not have a
+ 	 * dedicated TCS for active state use, then re-purpose a wake TCS to
+ 	 * send active votes.
+-	 * NOTE: The driver must be aware that this RSC does not have a
+-	 * dedicated AMC, and therefore would invalidate the sleep and wake
+-	 * TCSes before making an active state request.
+ 	 */
+ 	tcs = get_tcs_of_type(drv, type);
+-	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
++	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs)
+ 		tcs = get_tcs_of_type(drv, WAKE_TCS);
+-		if (tcs->num_tcs) {
+-			ret = rpmh_rsc_invalidate(drv);
+-			if (ret)
+-				return ERR_PTR(ret);
+-		}
+-	}
+ 
+ 	return tcs;
+ }
+@@ -412,8 +403,16 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
  
  	tcs->req[tcs_id - tcs->offset] = msg;
  	set_bit(tcs_id, drv->tcs_in_use);
-+	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS)
-+		enable_tcs_irq(drv, tcs_id, true);
+-	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS)
++	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS) {
++		/*
++		 * Clear previously programmed WAKE commands in selected
++		 * repurposed TCS to avoid triggering them. tcs->slots will be
++		 * cleaned from rpmh_flush() by invoking rpmh_rsc_invalidate()
++		 */
++		write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
++		write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, 0);
+ 		enable_tcs_irq(drv, tcs_id, true);
++	}
  	spin_unlock(&drv->lock);
  
  	__tcs_buffer_write(drv, tcs_id, 0, msg);
--	__tcs_trigger(drv, tcs_id);
-+	__tcs_set_trigger(drv, tcs_id, true);
- 
- done_write:
- 	spin_unlock_irqrestore(&tcs->lock, flags);
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
