@@ -4,157 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36DCC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84FFC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F2421D94
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF8522247
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586189084;
-	bh=L00ZAAyRSvCuvRMJNJwKNL2bzR9DRu4/YFAzVqmfZwU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=R0RbzsihjUx7eTzjQZyO5j0+m7ULc5Mk4utW+cvYk8RX+WNbqsEQNntvZV1e+eCXD
-	 xUoGrV50z7G9loIy8/EAn6a5rtjku3wkURJC1nS/vER8X2trBp108fb6A/8VrX/w8I
-	 DnyG6grINQ/yitV+2l3P78alCdLopmXr/qPcWP4o=
+	s=default; t=1586189089;
+	bh=JCCRj+vTlJ1LFyWa+rT0OROC+0/HKpKiFVbCrYYqdOM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2msgMsLOKbECtBRzUvv9FMiGznxg1g1/hvSwuXeZ9xKoiky9OqtIcGQ7Vv3i99NGi
+	 THWrKEl5zkPxd5Ij9BqgE8yMVb9p1XpAwQBZCVmoJE8vQ/Vr6hN2lQpUTBM01+EyVI
+	 w5VDxepqSSwlbF5+hKt8/AUzcAsI9RrEl2RH0saw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgDFQEn (ORCPT
+        id S1729289AbgDFQEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:04:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36410 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 12:04:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729256AbgDFQEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:04:40 -0400
-Received: from linux-8ccs.suse.de (p3EE2C7AC.dip0.t-ipconnect.de [62.226.199.172])
+        id S1728983AbgDFQEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:04:32 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9FC22265;
-        Mon,  6 Apr 2020 16:04:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C10D21D94;
+        Mon,  6 Apr 2020 16:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586189080;
-        bh=L00ZAAyRSvCuvRMJNJwKNL2bzR9DRu4/YFAzVqmfZwU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=duQ7kAQ1XnHbc4ULmasMoaHWa5OKdZnMGKhICVc77O+1JDe1CZ6ZKdYeW44rIQGVP
-         Qiw9X/v5lIpDn0of+n6fO8FIcBVoXA/LSWMzM3FwpkmOorCUM9HOtIcwNTSUdoogwz
-         vGTGYKYuwBXrJfshxV8Q14jQ74DC5BfdbZ6PDFlk=
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH] module: expose load_info to arch module loader code
-Date:   Mon,  6 Apr 2020 18:04:20 +0200
-Message-Id: <20200406160420.14407-1-jeyu@kernel.org>
-X-Mailer: git-send-email 2.16.4
+        s=default; t=1586189071;
+        bh=JCCRj+vTlJ1LFyWa+rT0OROC+0/HKpKiFVbCrYYqdOM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=d++QJHEIoKstE88mhR+p+cY0L2sSbBJgHFcDUeFF9z91vKIJ4DS2riNmcqsLiekgV
+         Lrnv8gj2IyusKIARrwmjirnhcfnxhShg2GfXWA1jGCmEYsdwGbhgNjJV5GetisbvLa
+         SDr5mGPiVl3iYo3opNc49hRLi/NA32CiNog19KLE=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-clk@vger.kernel.org
+Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, sboyd@kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Subject: [PATCHv6 2/5] clk: socfpga: remove clk_ops enable/disable methods
+Date:   Mon,  6 Apr 2020 11:04:15 -0500
+Message-Id: <20200406160418.27476-3-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200406160418.27476-1-dinguyen@kernel.org>
+References: <20200406160418.27476-1-dinguyen@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The x86 module loader wants to check the value of a modinfo flag
-(sld_safe), before proceeding to scan the module text for VMX
-instructions. Unfortunately the arch module code currently does not have
-access to load_info, but we can easily expose that via moduleloader.h,
-which every arch module code must already include.
+The enable/disable clock ops are already defined in the standard clock
+ops, so we don't need to assign them.
 
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 ---
+v6: no changes
+v5: no changes
+v4: no changes
+v3: no changes
+v2: created
+---
+ drivers/clk/socfpga/clk-pll-a10.c | 2 --
+ drivers/clk/socfpga/clk-pll-s10.c | 2 --
+ drivers/clk/socfpga/clk-pll.c     | 2 --
+ 3 files changed, 6 deletions(-)
 
-Does this help? You may also need to implement a new arch-specific hook
-in check_modinfo() to check for sld_safe, and I guess we might need to
-expose get_modinfo() too. I realize that the detect-VMX-modules patchset
-[1] is still very much in-flight, so if you do end up needing this, feel
-free to just add this patch to the patchset.
-
-[1] http://lore.kernel.org/r/20200402123258.895628824@linutronix.de
-
- include/linux/moduleloader.h | 20 ++++++++++++++++++++
- kernel/module-internal.h     | 23 -----------------------
- kernel/module_signing.c      |  2 +-
- 3 files changed, 21 insertions(+), 24 deletions(-)
-
-diff --git a/include/linux/moduleloader.h b/include/linux/moduleloader.h
-index ca92aea8a6bd..2ca0bb783d1e 100644
---- a/include/linux/moduleloader.h
-+++ b/include/linux/moduleloader.h
-@@ -6,6 +6,26 @@
- #include <linux/module.h>
- #include <linux/elf.h>
+diff --git a/drivers/clk/socfpga/clk-pll-a10.c b/drivers/clk/socfpga/clk-pll-a10.c
+index 3816fc04b274..6d9395106c0c 100644
+--- a/drivers/clk/socfpga/clk-pll-a10.c
++++ b/drivers/clk/socfpga/clk-pll-a10.c
+@@ -102,8 +102,6 @@ static struct clk * __init __socfpga_pll_init(struct device_node *node,
+ 	pll_clk->hw.hw.init = &init;
  
-+struct load_info {
-+	const char *name;
-+	/* pointer to module in temporary copy, freed at end of load_module() */
-+	struct module *mod;
-+	Elf_Ehdr *hdr;
-+	unsigned long len;
-+	Elf_Shdr *sechdrs;
-+	char *secstrings, *strtab;
-+	unsigned long symoffs, stroffs, init_typeoffs, core_typeoffs;
-+	struct _ddebug *debug;
-+	unsigned int num_debug;
-+	bool sig_ok;
-+#ifdef CONFIG_KALLSYMS
-+	unsigned long mod_kallsyms_init_off;
-+#endif
-+	struct {
-+		unsigned int sym, str, mod, vers, info, pcpu;
-+	} index;
-+};
-+
- /* These may be implemented by architectures that need to hook into the
-  * module loader code.  Architectures that don't need to do anything special
-  * can just rely on the 'weak' default hooks defined in kernel/module.c.
-diff --git a/kernel/module-internal.h b/kernel/module-internal.h
-index 33783abc377b..98a873691f1b 100644
---- a/kernel/module-internal.h
-+++ b/kernel/module-internal.h
-@@ -5,27 +5,4 @@
-  * Written by David Howells (dhowells@redhat.com)
-  */
+ 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
+-	clk_pll_ops.enable = clk_gate_ops.enable;
+-	clk_pll_ops.disable = clk_gate_ops.disable;
  
--#include <linux/elf.h>
--#include <asm/module.h>
--
--struct load_info {
--	const char *name;
--	/* pointer to module in temporary copy, freed at end of load_module() */
--	struct module *mod;
--	Elf_Ehdr *hdr;
--	unsigned long len;
--	Elf_Shdr *sechdrs;
--	char *secstrings, *strtab;
--	unsigned long symoffs, stroffs, init_typeoffs, core_typeoffs;
--	struct _ddebug *debug;
--	unsigned int num_debug;
--	bool sig_ok;
--#ifdef CONFIG_KALLSYMS
--	unsigned long mod_kallsyms_init_off;
--#endif
--	struct {
--		unsigned int sym, str, mod, vers, info, pcpu;
--	} index;
--};
--
- extern int mod_verify_sig(const void *mod, struct load_info *info);
-diff --git a/kernel/module_signing.c b/kernel/module_signing.c
-index 9d9fc678c91d..2de41a3ab8a8 100644
---- a/kernel/module_signing.c
-+++ b/kernel/module_signing.c
-@@ -8,11 +8,11 @@
- #include <linux/kernel.h>
- #include <linux/errno.h>
- #include <linux/module.h>
-+#include <linux/moduleloader.h>
- #include <linux/module_signature.h>
- #include <linux/string.h>
- #include <linux/verification.h>
- #include <crypto/public_key.h>
--#include "module-internal.h"
+ 	clk = clk_register(NULL, &pll_clk->hw.hw);
+ 	if (WARN_ON(IS_ERR(clk))) {
+diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
+index bcd3f14e9145..9faa80ff3b53 100644
+--- a/drivers/clk/socfpga/clk-pll-s10.c
++++ b/drivers/clk/socfpga/clk-pll-s10.c
+@@ -138,8 +138,6 @@ struct clk *s10_register_pll(const struct stratix10_pll_clock *clks,
+ 	pll_clk->hw.hw.init = &init;
  
- /*
-  * Verify the signature on a module.
+ 	pll_clk->hw.bit_idx = SOCFPGA_PLL_POWER;
+-	clk_pll_ops.enable = clk_gate_ops.enable;
+-	clk_pll_ops.disable = clk_gate_ops.disable;
+ 
+ 	clk = clk_register(NULL, &pll_clk->hw.hw);
+ 	if (WARN_ON(IS_ERR(clk))) {
+diff --git a/drivers/clk/socfpga/clk-pll.c b/drivers/clk/socfpga/clk-pll.c
+index dc65cc0fd3bd..a001641b2f42 100644
+--- a/drivers/clk/socfpga/clk-pll.c
++++ b/drivers/clk/socfpga/clk-pll.c
+@@ -105,8 +105,6 @@ static __init struct clk *__socfpga_pll_init(struct device_node *node,
+ 	pll_clk->hw.hw.init = &init;
+ 
+ 	pll_clk->hw.bit_idx = SOCFPGA_PLL_EXT_ENA;
+-	clk_pll_ops.enable = clk_gate_ops.enable;
+-	clk_pll_ops.disable = clk_gate_ops.disable;
+ 
+ 	clk = clk_register(NULL, &pll_clk->hw.hw);
+ 	if (WARN_ON(IS_ERR(clk))) {
 -- 
-2.16.4
+2.25.1
 
