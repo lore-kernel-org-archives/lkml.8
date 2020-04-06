@@ -2,164 +2,129 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98202C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8C5C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623CB249ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:21:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="I8zkg3wJ";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kafzyQnk"
+	by mail.kernel.org (Postfix) with ESMTP id C8F9B249EE
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:21:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586193716;
+	bh=7XxtwAxLTHDhADD534ziekkcah86Bk+g2voCfpWi3Ps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ELSuy8Xj4ww+kVvIhlcZBnNmauYCub+2MwCI3y4P/dMtOOiSxLHnZGuIoRqdTaGYV
+	 9TXzShd+IfMRrT5d6iVDQjYwdvkP8fgSnDWIX/qslwB7po6cQVCxaLL8Gql8hXXmFk
+	 o7ExWZq+w/kEjU4/jqLspv5q6/wiX+xtb06sqGNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgDFRVu (ORCPT
+        id S1729882AbgDFRV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:21:50 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:53688 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728634AbgDFRVu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:21:50 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036HKqKp019092;
-        Mon, 6 Apr 2020 10:20:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=gIBIaZgdtmerVDU58JBeQ83Y+T/JnjlqXqtVi45k8f4=;
- b=I8zkg3wJXVRRm4Q2CiDsI/VYyu6CqxLtTa9nu/E7oqTmdqvWUMasNqrr6l7POxw4QFRC
- b9v/G6X4/jIOhNSN2i+B1wLC9LXa5kdbS4RG9z5fCGKMSPUDduY3fYOwMELvBtpCfpAJ
- e9xhK0Yxk0UBflnelZNTC7QYtegqBQn0NSE= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 307a8q3rs6-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 06 Apr 2020 10:20:55 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Mon, 6 Apr 2020 10:20:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HVL4c6F102FcNmacvideHaeiPHWhcvpKmA84qtDLjOyrPQFb4mqvj+i0HBZhrIlYbRpKMGyOOS/tzZY+LlrzVYDuc+vEMXw2XUBI4UfGS08jB3r2GlEZkVUw22MPzifU8Af+EMH5KLKKcY8P+iRuBQRILB8LS9B9PA83LR5/1LKYZ73oOWaYrhAx6F1palTcGEwT77CPiCOvLrqiowt5yyxvQej4Ws6INrx5Qhe/cjug6Epkqxo/Gn1UzQRd/awxOr0yzPeK2ZrbgGxtfb2qVG7XvxpHrzloNgbhAC/tQ1mXrVxbuchyME9Z/XKAVbwh8DLHWow27s5CW1kD0RxDHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gIBIaZgdtmerVDU58JBeQ83Y+T/JnjlqXqtVi45k8f4=;
- b=ciQLlFmNbIYOt/IJu8zGGUBOKb4u6ZmRNI7QAcSs5yUAxAvWYXKmiAwQG++ekrxia3NYj5avBcyzlP1uznqy/nOCvSrQrzFG3DDozV/TokCmePw21hr5FtU0FE5S7/XamCHxxuBXshw7LJp1yh/Bv+/7A6s0MDPzp7Nt5GBoQYoGcVZo2LdsblPU7ZvMm458JDlTTW+hnXvkKAlk+4kT/cV5JXPGDSjrWGdSJj17z0yGA7WldfsMkBAwbH4Pi1tLbtZjGyhpfkZrsVeUC1nzCR9LJ7KwFZA13ikU5x6ja0A7SLbMyHgroT9irbFqSy4oYhcsq8baYlhWXudh7rnq6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gIBIaZgdtmerVDU58JBeQ83Y+T/JnjlqXqtVi45k8f4=;
- b=kafzyQnkQx5ubfY6Cn+XX1O1z2qEc9O0XF+dW7AIytGVI25DfZuJeNTx3VDEbQuXVcT5OGGTnkC2BXAycXPZ52wMaU2plo19jKXB3lWt5J4EhaeEpEwe4A25WeIPfF031VrVfqBbqfnTtgMaOZ7Y04o8O+mATywKfx2mRnbqOl0=
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB3239.namprd15.prod.outlook.com (2603:10b6:a03:10f::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Mon, 6 Apr
- 2020 17:20:42 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2878.018; Mon, 6 Apr 2020
- 17:20:42 +0000
-Date:   Mon, 6 Apr 2020 10:20:33 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Theodore Ts'o <tytso@mit.edu>
-CC:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Perepechko <andrew.perepechko@seagate.com>,
-        <adilger@dilger.ca>, Gioh Kim <gioh.kim@lge.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v2] ext4: use non-movable memory for superblock readahead
-Message-ID: <20200406172033.GA336570@carbon.DHCP.thefacebook.com>
-References: <20200229001411.128010-1-guro@fb.com>
- <26E49EB9-DAD4-4BAB-A7A7-7DC6B45CD2B8@dilger.ca>
+        Mon, 6 Apr 2020 13:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728634AbgDFRVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:21:55 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57D41249ED;
+        Mon,  6 Apr 2020 17:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586193715;
+        bh=7XxtwAxLTHDhADD534ziekkcah86Bk+g2voCfpWi3Ps=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cGccNQvDJBIaDD04k8fJND630HZeD/YcLmbuZIOYWl4GtluGmyZlzBI4Bvm9hK7vU
+         fTrdI4yNLtrkh8Is4iM8cB+ER51L2uN4FDpWeDzh5LYDEt9JMIysbF1JvhL66uXDfc
+         A7V89HPCKZwoDAwJ8ID7tqkdG8/uIoY58bWciRwc=
+Date:   Mon, 6 Apr 2020 20:21:51 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>
+Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in ib_umad_kill_port
+Message-ID: <20200406172151.GJ80989@unreal>
+References: <00000000000075245205a2997f68@google.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <26E49EB9-DAD4-4BAB-A7A7-7DC6B45CD2B8@dilger.ca>
-X-ClientProxiedBy: CO2PR04CA0185.namprd04.prod.outlook.com
- (2603:10b6:104:5::15) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:e5af) by CO2PR04CA0185.namprd04.prod.outlook.com (2603:10b6:104:5::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend Transport; Mon, 6 Apr 2020 17:20:41 +0000
-X-Originating-IP: [2620:10d:c090:400::5:e5af]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4caa3b2f-d011-4856-3e9d-08d7da4ed591
-X-MS-TrafficTypeDiagnostic: BYAPR15MB3239:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB3239716167578B7E29C39AAEBEC20@BYAPR15MB3239.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0365C0E14B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(376002)(136003)(366004)(346002)(396003)(39860400002)(478600001)(9686003)(55016002)(8676002)(81156014)(81166006)(1076003)(8936002)(16526019)(54906003)(33656002)(5660300002)(6666004)(186003)(66556008)(66476007)(2906002)(66946007)(52116002)(7696005)(4326008)(316002)(86362001)(53546011)(6506007)(6916009);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2F7qk8bFCe/ina5aGqJ7cg3q6H9lDTGj0L3NpO2OMwetefzRMHkIT5d1fDqciCAD/bsK+22bYliRN5naeJAFwPAEfdhe2THporWgzS6wPLykBQlOKSbPAsx2youSmsT4afCyIh+9TcQhLlJEzn9qSQ++hIpS3FHXoPp5OzoIi8mZ2bAu9HuUaVh+8oFRtLqXxdxOYNy8CIkL3YpAqUf8Lah9qu09W+ByhjN85bWpxpxhxoSzy7Mde6zKyGiuZRl3F7Kryvi8qpfwMffBR27vq7m8rzpWg3NoG1z3PZVUwyeBup4ID7l7snv71XaXp1peS0YGfBcweuqIuD36BCk1QVoDV+qgBweMJnRtD6ggKoYj1bXlcMZwwmD2JqRUfBUWINFnIr5BfTDdQNYwXmLdawreVZFKP27h8/dW/tJZA0ZMpk2z71bceygvZXGWmihB
-X-MS-Exchange-AntiSpam-MessageData: CdKe9L0rWBdwf2JnCNUjuKrHtXRW4YS71lVt7S8cVZxIKsSM6IRLPk9QlolX+iK2W44ol6/wqnB1UUru1uZ1ftNWwOSkkFkDUfHy8xJEiuKnJhzXqh/5WOi+FH9DsN7VAjcv0JSnOBgrB1NUkTknhIieCZ2cH+6btLsH70Popz/V3k66I0tNm80gBVlVnwMF
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4caa3b2f-d011-4856-3e9d-08d7da4ed591
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 17:20:42.3893
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mPzOa/IIwoscrcXhVq1KziXzPWnw9wb5llFtxgfLEiLap6BgpwHpg/8YmlPOW8Mu
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3239
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-06_08:2020-04-06,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- malwarescore=0 impostorscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0
- phishscore=0 suspectscore=1 mlxlogscore=965 priorityscore=1501 mlxscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004060137
-X-FB-Internal: deliver
+In-Reply-To: <00000000000075245205a2997f68@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 12:49:13AM -0700, Andreas Dilger wrote:
-> On Feb 28, 2020, at 5:14 PM, Roman Gushchin <guro@fb.com> wrote:
-> > 
-> > Since commit a8ac900b8163 ("ext4: use non-movable memory for the
-> > superblock") buffers for ext4 superblock were allocated using
-> > the sb_bread_unmovable() helper which allocated buffer heads
-> > out of non-movable memory blocks. It was necessarily to not block
-> > page migrations and do not cause cma allocation failures.
-> > 
-> > However commit 85c8f176a611 ("ext4: preload block group descriptors")
-> > broke this by introducing pre-reading of the ext4 superblock.
-> > The problem is that __breadahead() is using __getblk() underneath,
-> > which allocates buffer heads out of movable memory.
-> > 
-> > It resulted in page migration failures I've seen on a machine
-> > with an ext4 partition and a preallocated cma area.
-> > 
-> > Fix this by introducing sb_breadahead_unmovable() and
-> > __breadahead_gfp() helpers which use non-movable memory for buffer
-> > head allocations and use them for the ext4 superblock readahead.
-> > 
-> > v2: found a similar issue in __ext4_get_inode_loc()
-> > 
-> > Fixes: 85c8f176a611 ("ext4: preload block group descriptors")
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> 
-> Reviewed-by: Andreas Dilger <adilger@dilger.ca>
++ RDMA
 
-Hello, Theodore!
-
-Can you, please, pick this patch?
-
-We've some changes on the mm side (more actively using a cma area for movable
-allocations), which might bring a regression without this ext4 change.
-
-Thank you!
-
-Roman
+On Sun, Apr 05, 2020 at 11:37:15PM -0700, syzbot wrote:
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    304e0242 net_sched: add a temporary refcnt for struct tcin..
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=119dd16de00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9627a92b1f9262d5d30c
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> sysfs group 'power' not found for kobject 'umad1'
+> WARNING: CPU: 1 PID: 31308 at fs/sysfs/group.c:279 sysfs_remove_group fs/sysfs/group.c:279 [inline]
+> WARNING: CPU: 1 PID: 31308 at fs/sysfs/group.c:279 sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 31308 Comm: kworker/u4:10 Not tainted 5.6.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: events_unbound ib_unregister_work
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:221
+>  __warn.cold+0x2f/0x35 kernel/panic.c:582
+>  report_bug+0x27b/0x2f0 lib/bug.c:195
+>  fixup_bug arch/x86/kernel/traps.c:175 [inline]
+>  fixup_bug arch/x86/kernel/traps.c:170 [inline]
+>  do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+>  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+>  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> RIP: 0010:sysfs_remove_group fs/sysfs/group.c:279 [inline]
+> RIP: 0010:sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
+> Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c 01 00 75 41 48 8b 33 48 c7 c7 60 c3 39 88 e8 93 c3 5f ff <0f> 0b eb 95 e8 22 62 cb ff e9 d2 fe ff ff 48 89 df e8 15 62 cb ff
+> RSP: 0018:ffffc90001d97a60 EFLAGS: 00010282
+> RAX: 0000000000000000 RBX: ffffffff88915620 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff815ca861 RDI: fffff520003b2f3e
+> RBP: 0000000000000000 R08: ffff8880a78fc2c0 R09: ffffed1015ce66a1
+> R10: ffffed1015ce66a0 R11: ffff8880ae733507 R12: ffff88808e5ba070
+> R13: ffffffff88915bc0 R14: ffff88808e5ba008 R15: dffffc0000000000
+>  dpm_sysfs_remove+0x97/0xb0 drivers/base/power/sysfs.c:794
+>  device_del+0x18b/0xd30 drivers/base/core.c:2687
+>  cdev_device_del+0x15/0x80 fs/char_dev.c:570
+>  ib_umad_kill_port+0x45/0x250 drivers/infiniband/core/user_mad.c:1327
+>  ib_umad_remove_one+0x18a/0x220 drivers/infiniband/core/user_mad.c:1409
+>  remove_client_context+0xbe/0x110 drivers/infiniband/core/device.c:724
+>  disable_device+0x13b/0x230 drivers/infiniband/core/device.c:1270
+>  __ib_unregister_device+0x91/0x180 drivers/infiniband/core/device.c:1437
+>  ib_unregister_work+0x15/0x30 drivers/infiniband/core/device.c:1547
+>  process_one_work+0x965/0x16a0 kernel/workqueue.c:2266
+>  worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+>  kthread+0x388/0x470 kernel/kthread.c:268
+>  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
