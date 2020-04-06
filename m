@@ -2,127 +2,153 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6985EC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7DDC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B554206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A816206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:40:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZCaQK6kR"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r+R7nWJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgDFXkF (ORCPT
+        id S1726421AbgDFXkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 19:40:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41618 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726254AbgDFXkF (ORCPT
+        Mon, 6 Apr 2020 19:40:41 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11601 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgDFXkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 19:40:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586216404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WM8xDoDQ9iS/jeeUYD4yS2C0/dqqITfA49gu7xf3zpk=;
-        b=ZCaQK6kRrM+dNYaeYmJlZ5CLB/VZqCIF63UFZGIaTZZ5Maw47aWj9INpjx5DXujeEzESui
-        YwOQ6yL41yL49DfJZov/TL27kq6/dGtmCDxZzmQA40+WhrY2UeTJtCa64IIzwPFwje84y6
-        Eq3ugvU8M5YOtwJpnWxBUS091w64mjE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-21-IKF6aZ_eNCy6plDcCa3dfQ-1; Mon, 06 Apr 2020 19:40:02 -0400
-X-MC-Unique: IKF6aZ_eNCy6plDcCa3dfQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40E43800D5C;
-        Mon,  6 Apr 2020 23:40:00 +0000 (UTC)
-Received: from localhost (unknown [10.36.110.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CEC265D9C5;
-        Mon,  6 Apr 2020 23:39:56 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 01:39:51 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nft_set_pipapo: remove unused pointer lt
-Message-ID: <20200407013951.77a6409f@redhat.com>
-In-Reply-To: <20200406232031.657615-1-colin.king@canonical.com>
-References: <20200406232031.657615-1-colin.king@canonical.com>
-Organization: Red Hat
+        Mon, 6 Apr 2020 19:40:40 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8bbdeb0000>; Mon, 06 Apr 2020 16:40:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Apr 2020 16:40:40 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 16:40:40 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
+ 2020 23:40:39 +0000
+Received: from [10.2.60.145] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
+ 23:40:39 +0000
+Subject: Re: [PATCH 1/2] mm: clarify __GFP_MEMALLOC usage
+To:     David Rientjes <rientjes@google.com>
+CC:     Michal Hocko <mhocko@kernel.org>, NeilBrown <neilb@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200403083543.11552-1-mhocko@kernel.org>
+ <20200403083543.11552-2-mhocko@kernel.org>
+ <alpine.DEB.2.21.2004031238571.230548@chino.kir.corp.google.com>
+ <87blo8xnz2.fsf@notabene.neil.brown.name>
+ <20200406070137.GC19426@dhcp22.suse.cz>
+ <4f861f07-4b47-8ddc-f783-10201ea302d3@nvidia.com>
+ <alpine.DEB.2.21.2004061626540.45667@chino.kir.corp.google.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <efbdbe8f-f4fe-cfc8-4f15-1e19ee0bf416@nvidia.com>
+Date:   Mon, 6 Apr 2020 16:40:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <alpine.DEB.2.21.2004061626540.45667@chino.kir.corp.google.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586216427; bh=8aqbNQI9RcmnwWJRUQnWv9wtbfsMthod/bREPW0Ma1E=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=r+R7nWJR9LVbcyF4mliSlFAKiBkSthlsczleItsy2w1i2/cKh3co5vk5BxG5Lo5fm
+         N7y2Z8E9+W4up8NYgL4v+bejZtBFZZOqueqmcF1jPGmA1W2VyRl1XeS+kd8LJKvps+
+         Re0qZq5B9+vuM5ZBqegl5aLioUjJrCksVYEWCch+vtPmyMwv05ENVUl96Pi52oqLyA
+         oXsxFI9f0fyeesTg6DmEeIZ2iVdScEwLBvDCbEaPtpJk15pvdyBDD+4Yc0a71zfKWZ
+         isBRfUZE0K4jbx9w62TbE7pJLM8I5IPR7wWkfZW/oKA+gBjdGh8fOVWk+BkMWC3Tdh
+         B5zee0XyYDsNg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
-
-On Tue,  7 Apr 2020 00:20:31 +0100
-Colin King <colin.king@canonical.com> wrote:
-
-> From: Colin Ian King <colin.king@canonical.com>
+On 4/6/20 4:32 PM, David Rientjes wrote:
+> On Mon, 6 Apr 2020, John Hubbard wrote:
 > 
-> Pointer lt being assigned with a value that is never read and
-> the pointer is redundant and can be removed.
+>> Hi Michal and all,
+>>
+>> How about using approximately this wording instead? I found Neil's wording to
+>> be
+>> especially helpful so I mixed it in. (Also fixed a couple of slight 80-col
+>> overruns.)
+>>
+>> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+>> index be2754841369..c247a911d8c7 100644
+>> --- a/include/linux/gfp.h
+>> +++ b/include/linux/gfp.h
+>> @@ -111,6 +111,15 @@ struct vm_area_struct;
+>>    * very shortly e.g. process exiting or swapping. Users either should
+>>    * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
+>>    *
+>> + * To be extra clear: users of __GFP_MEMALLOC must be working to free other
+>> + * memory, and that other memory needs to be freed "soon"; specifically,
+>> before
+>> + * the reserve is exhausted. This generally implies a throttling mechanism
+>> that
+>> + * balances the amount of __GFP_MEMALLOC memory used against the amount that
+>> the
+>> + * caller is about to free.
+>> + *
+>> + * Usage of a pre-allocated pool (e.g. mempool) should be always considered
+>> + * before using this flag.
+>> + *
+>>    * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency
+>> reserves.
+>>    * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
+>>    */
 > 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  net/netfilter/nft_set_pipapo_avx2.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> I agree this looks better, but if a developer is reading this and is
+> unfamiliar with the implementation of memory reserves or __GFP_MEMALLOC,
+> how do they take any action that memory allocated with this bit is freed
+> before the reserve is exhausted?
 > 
-> diff --git a/net/netfilter/nft_set_pipapo_avx2.c b/net/netfilter/nft_set_pipapo_avx2.c
-> index d65ae0e23028..9458c6b6ea04 100644
-> --- a/net/netfilter/nft_set_pipapo_avx2.c
-> +++ b/net/netfilter/nft_set_pipapo_avx2.c
-> @@ -1049,11 +1049,9 @@ static int nft_pipapo_avx2_lookup_slow(unsigned long *map, unsigned long *fill,
->  					struct nft_pipapo_field *f, int offset,
->  					const u8 *pkt, bool first, bool last)
->  {
-> -	unsigned long *lt = f->lt, bsize = f->bsize;
-> +	unsigned long bsize = f->bsize;
->  	int i, ret = -1, b;
->  
-> -	lt += offset * NFT_PIPAPO_LONGS_PER_M256;
-> -
->  	if (first)
->  		memset(map, 0xff, bsize * sizeof(*map));
->  
-        for (i = offset; i < bsize; i++) {
-                if (f->bb == 8)
-                        pipapo_and_field_buckets_8bit(f, map, pkt);
-                else
-                        pipapo_and_field_buckets_4bit(f, map, pkt);
 
-Now, this function should never be called, it's provided as a safety net
-in case this algorithm is ever run with some strange packet field size,
-still, your clean-up shows another "issue" here: as
-pipapo_and_field_buckets_*() functions use the full buckets in lookup
-tables, not just starting from an offset, there's no need to repeat
-those operations starting from offset up to bsize.
+In order to make it even possible to write documentation, I'd like to constrain
+what "a developer" means a bit more. Someone who comes decides to use this
+flag will at least get a clear indication of what's involved, and I would
+expect that if it's still not clear, they would take a slightly deeper look.
 
-It's fine to ignore the offset (which is just a "hint" here for faster
-lookups) -- this function isn't supposed to be optimised in any way.
+So "a developer unfamiliar with the implementation of memory reserves" is
+probably going to get into trouble if they remain unfamiliar. This documentation
+should inspire them to learn what they need to learn.
 
-That is, this for loop should go away altogether, and the 'offset'
-argument should be dropped as well. Let me know if you're comfortable
-taking care of that as well, or if you prefer that I send a patch.
 
+> It seems like it's simply saying "don't allocate a lot of this before you
+> free it."  That may be very well how it goes, but any discussion of
+> depletion of the reserve seems to imply we'd want to quantify it and I
+> agree that's not what we want the user to do.
+> 
+> So maybe simply state that reserves can be extremely limited and thus it's
+> best to assume there is very little reserve left?
+> 
+
+Well...but now we're sort of back to the original documentation anyway. I
+like the idea of putting in a bit about "you're supposed to be doing something
+that frees up memory" in the comments, because it is a lot more concrete.
+
+Because it's pretty hard to figure out what "be careful, there's not much
+left" really means, in terms of code that one writes. :)
+
+thanks,
 -- 
-Stefano
-
+John Hubbard
+NVIDIA
