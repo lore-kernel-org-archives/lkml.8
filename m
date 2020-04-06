@@ -2,111 +2,111 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27740C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13C4C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D94206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:06:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VNG6cwoh"
+	by mail.kernel.org (Postfix) with ESMTP id 80509206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgDFVGm (ORCPT
+        id S1726352AbgDFVHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:06:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33162 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFVGm (ORCPT
+        Mon, 6 Apr 2020 17:07:35 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:53083 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgDFVHe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:06:42 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay1so364360plb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=F7oyQrycdBGvwHlAg5l8DJr2cSrN+vxfu/5R7n9PHnM=;
-        b=VNG6cwohDXNRbJGMuO22h1hA4687il974YFacYVjjW0YaZFR++a3HGfBJJ7qYyat6E
-         Pqlj+VbHwHV5dgg4V3abZvK3Jx7HPojHNnppBCGjRmy5zttmIJEFyNmrgYnSlX32hMra
-         3yXr+RSEkAemaAarNl/R7E2W+XqlWrwkrZ/jic14gRTFGVhiuH5wte6NfiUD7YqHiRRz
-         nMsqJ/TPb0p0LRYuqFU6gnBkw7sHpqIXM6WIR13FaknYRtX1Vkxc7xonlfLQ2D/jHtDh
-         Zks1+3n/eKOHAbsFpvOjiIML7IcRhrRuBzyGI2up5/9vtpyFnNp5mxH2BQ4a4JGo7Qt/
-         Rtrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=F7oyQrycdBGvwHlAg5l8DJr2cSrN+vxfu/5R7n9PHnM=;
-        b=fl1W7k2NDpEaBlYa8Wv5nkvqgqv+ZjnXU6AsZ9wn0IcZ9O8mwUzSKIMvygegF5+Var
-         ZLsfm4aKcaDWsiD1I5GIT25l8o/PlpojxC0swywI45enYPDvxxLLNVcSeDu4g6WbxGQX
-         Tm4K0+XvLTn+WMZ+I/0liM9UFF6s/3naSxpWsCyzgSbCH4NHjKL20ol+Pk+7vEeNH+vD
-         aMLHEKALwa0uIXGs3fQRB8RbeFTzNX0IqcaTU8iQeBuhBrjtyqQ1hynTUDo5ClZ6CNYx
-         Zcl+JzNorHMeyrcM1tNlhlmFZiAc66y1c6iT32HSFJc43mntUfyPMBIFq43MabCm6TxU
-         dgmA==
-X-Gm-Message-State: AGi0PuYmPn96jad1DCr7TwTO3K6SDy1pRWS44DqpylewrUihEkxWYt4Y
-        EHpV8uNhwcxQkBHbainI10E=
-X-Google-Smtp-Source: APiQypKJbIkLMaBwh90y6jKxYqWc9V67C01F47EfkGfkWEkFa7Vx6ItiZnoObiuN7fiA/whRFXG+Dg==
-X-Received: by 2002:a17:902:bd02:: with SMTP id p2mr22035795pls.67.1586207201046;
-        Mon, 06 Apr 2020 14:06:41 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id d71sm12427134pfd.46.2020.04.06.14.06.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 14:06:40 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     robin.murphy@arm.com, m.szyprowski@samsung.com, hch@lst.de
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [RFC/RFT][PATCH v2] dma-mapping: set default segment_boundary_mask to ULONG_MAX
-Date:   Mon,  6 Apr 2020 14:06:43 -0700
-Message-Id: <20200406210643.20665-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 6 Apr 2020 17:07:34 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MCbR7-1jTZSQ1KSJ-009fZ9 for <linux-kernel@vger.kernel.org>; Mon, 06 Apr
+ 2020 23:07:33 +0200
+Received: by mail-qt1-f176.google.com with SMTP id s30so1068998qth.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:07:33 -0700 (PDT)
+X-Gm-Message-State: AGi0PuaJFNRJ9ONkviZnrWdzXCbpgxHEu5RsBIl1A2lIiHUtudGOnLey
+        Fau0AEzAJdnPL8+0pD+5tItE7vXO/kwZbyAEokk=
+X-Google-Smtp-Source: APiQypJvklR62BVRGmCZcvjKj2DUR396sO33hXiHjlqoLa5XgLlgK1Lmk/ehDPxtINzw/SMzw9QCa/BxrvxJYEp+N5w=
+X-Received: by 2002:aed:3b4c:: with SMTP id q12mr1557697qte.18.1586207252117;
+ Mon, 06 Apr 2020 14:07:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190205133821.1a243836@gandalf.local.home> <20190206021611.2nsqomt6a7wuaket@treble>
+ <20190206121638.3d2230c1@gandalf.local.home>
+In-Reply-To: <20190206121638.3d2230c1@gandalf.local.home>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 6 Apr 2020 23:07:15 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1hsca02=jPQmBG68RTUAt-jDR-qo=UFwf13nZ0k-nDgA@mail.gmail.com>
+Message-ID: <CAK8P3a1hsca02=jPQmBG68RTUAt-jDR-qo=UFwf13nZ0k-nDgA@mail.gmail.com>
+Subject: Re: libelf-0.175 breaks objtool
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Q8bdLmC5tEAIZFp9/SOoK1IX+IJYkawfUsrp3gONHw2Vmpchyj1
+ tKKGao3nbFICBfP7KV9/UOTc9TsiYCd7BAPelScioSxF/dBJ+pbLuDjnh6JO9L2uAz3ypzx
+ gTW6/yUTPHx/nxw3i3n9d6Z2HlPeX+Ay3iueI+M/pTpGBJVi+JaOaS8TboZMeGbXGTTm5ko
+ 2TvEeSMuczXFv1m+nwFcA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3rERGaLmkAE=:9RXn0pg/y+LS+zVhhdQlcG
+ Zlt3pXqX7qsAVQd/U0e6cqyWq3/+SBjxm/bucyrUVjzclLAORE6/A3qGzEjiGuBENYEQV9fep
+ uK3ICiZgwCccCk0N9KDkpgWNofWn3RUFfxK2bQXCYOogK9kpIh/4SUsMxhbMtKg9ZninMgV7A
+ NxK+LFs+D/bBS1cGNRlHgu260sWi9v/C5Ekztn5u/RsX3EMi3k5AjNNjx/wdvxOFPGNBpUFut
+ iywfQe6Ywps5YeYgaMpxd4L2Gl2vUbZSpR6TA1bM43WxU1FhoGQB7Oe0iD+f1pBxVz6TcvCkq
+ aulD42J1R+4Xgxh/dux16OqK+Ir66X/+5zu6Jgbx0OGMHKjbe7Sm2+f+B1xB1HjFatH1dTh99
+ kHTfYtHyaiegN4wk7GJff+D/VGH8Ft89615RFQO/2BTlKJwQfc7pDyCDbscPYuH26D7anL8uE
+ l+fXHzzqlCA4dWLaZMlMAyBgPhQLlE8bw1izZRCzNtptqKwRAHyVm3Hoh27TIn6RY1JbAMtJ/
+ FXoxBGP5taY2lX5kmjgM8sGbkmdIYmI1x0zq5ghQ81thhr9CdyNYl0Z9hzZuyi3xoqqCxbKDW
+ E5KSBhzxVWIIPOxlaI3DkXqgwKEHGoyP1FbAO7mAtFmB2AyAdGSTpQCOqn9MKGZkgVTb1JGvX
+ pSRNjeK3+QvSIJXh7ZfsPS9cXJj4lbykqd5glCTl5LaGXffI/Cx0I12EqTyeuda8FeJxdSnXx
+ LsfWTzDBY2C5u1NfSLTB/aW47e+2HozfxX/cKzZhwoRBeiUxp2obc5TgWy/1K0kJzjuGgOzIM
+ /v1Lr085oG9iqbbE7n2yglTTQp4LuOG9QpWDV/kV4jFYvPC1z4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default segment_boundary_mask was set to DMA_BIT_MAKS(32)
-a decade ago by referencing SCSI/block subsystem, as a 32-bit
-mask was good enough for most of the devices.
+On Wed, Feb 6, 2019 at 7:32 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Tue, 5 Feb 2019 20:16:11 -0600 Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> > On Tue, Feb 05, 2019 at 01:38:21PM -0500, Steven Rostedt wrote:
+> > > Just a FYI.
+> > >
+> > > After a recent upgrade in debian testing, I was not able to build the
+> > > kernel. I have a custom build of gcc, so I thought it was strange that
+> > > I was getting something like this (took this from the web, as I don't
+> > > have the error anymore with the work around, and currently doing a full
+> > > build):
+> > >
+> > > objdump: kernel/.tmp_signal.o: unable to initialize decompress status for section .debug_info
+> > > objdump: kernel/.tmp_signal.o: unable to initialize decompress status for section .debug_info
+> > > objdump: kernel/.tmp_signal.o: file format not recognized
+> > >   CC      arch/x86/kernel/platform-quirks.o
+> > > objdump: arch/x86/kernel/.tmp_ebda.o: unable to initialize decompress status for section .debug_info
+> > > objdump: arch/x86/kernel/.tmp_ebda.o: unable to initialize decompress status for section .debug_info
+> > > objdump: arch/x86/kernel/.tmp_ebda.o: file format not recognized
+> > > objdump: mm/.tmp_swap_slots.o: unable to initialize decompress status for section .debug_info
+> > > objdump: mm/.tmp_swap_slots.o: unable to initialize decompress status for section .debug_info
+> > > objdump: mm/.tmp_swap_slots.o: file format not recognized
+> >
+> > I installed debian testing on a VM, which has libelf 0.175-2, but I
+>
+> Hmm, I only have libelf-0.175 (no -2)
+>
+> > can't recreate.  Can you share your config?
+> >
+>
+> It's just a distro config. Ah, I think it's because I'm compiling my
+> own home built gcc. There seems to be an incompatibility with the
+> binutils that I used and with libelf-0.175. If I build with just the
+> distro gcc, it works.
+>
+> Bah, this means I need to recreate my gcc that I use to build my
+> kernels with :-p As I like to control which gcc I use.
 
-Now more and more drivers set dma_masks above DMA_BIT_MAKS(32)
-while only a handful of them call dma_set_seg_boundary(). This
-means that most drivers have a 4GB segmention boundary because
-DMA API returns a 32-bit default value, though they might not
-really have such a limit.
+I now see the same problem that you reported using the gcc-9
+toolchain I provide on https://kernel.org/pub/tools/crosstool/.
 
-The default segment_boundary_mask should mean "no limit" since
-the device doesn't explicitly set the mask. But a 32-bit mask
-certainly limits those devices capable of 32+ bits addressing.
+Do you have any other information that might help me fix it?
 
-So this patch sets default segment_boundary_mask to ULONG_MAX.
-
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
-Changelog:
-v1->v2
- * Followed Robin's comments to revise the commit message by
-   dropping one paragraph of not-entirely-true justification
-   (no git-diff level change, so please ack if you tested v1)
-
- include/linux/dma-mapping.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 330ad58fbf4d..ff8cefe85f30 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -736,7 +736,7 @@ static inline unsigned long dma_get_seg_boundary(struct device *dev)
- {
- 	if (dev->dma_parms && dev->dma_parms->segment_boundary_mask)
- 		return dev->dma_parms->segment_boundary_mask;
--	return DMA_BIT_MASK(32);
-+	return ULONG_MAX;
- }
- 
- static inline int dma_set_seg_boundary(struct device *dev, unsigned long mask)
--- 
-2.17.1
-
+       Arnd
