@@ -2,139 +2,226 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF04C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A67E9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FC0206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A1B1206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:49:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTHkPi9p"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="dC65Usoc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbgDFTsG (ORCPT
+        id S1726396AbgDFTtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:48:06 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36810 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgDFTsF (ORCPT
+        Mon, 6 Apr 2020 15:49:12 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45377 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgDFTtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:48:05 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w145so490950lff.3;
-        Mon, 06 Apr 2020 12:48:04 -0700 (PDT)
+        Mon, 6 Apr 2020 15:49:12 -0400
+Received: by mail-il1-f193.google.com with SMTP id x16so684935ilp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 12:49:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/big40mQJPZUYL0hhY2GKn9zAZBw853eJB7EhVN3kls=;
-        b=lTHkPi9pxKic893EROuyYqPWfUKg2oKaYoWvm3Hrp7vu339wkQ90dFBQYtVP666+MW
-         tM2E1296dcsOlp/MpS2ve1zYtQiBXr4oV9yMVIy6tWglZgt9GI1+28wt6tVxzI2amihT
-         +CoHVCkSqmGy9yME32O5E/2Hp3ES7aiZYk1NGXGiRZ8Bxc0M7giaNod7wTIKXWa/wPbd
-         hHLpcsagFF6EDCQOpb40zIkCJncbSZdlIMpxboFG4pE1LCpxK7xHkArfug6Y5QhVWFZ6
-         CgoBCarhUdfyIHN9Lq5rtQeOgz8Dn1ToLhjPA3ubT2LLpVs/xE23QRbC/Wyz475ZhAcV
-         gjrg==
+        d=poorly.run; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GhiJnLkPCog87xcd0QbX7Ukmz7B9K91Y4lcbxRM4PwA=;
+        b=dC65UsoclV5SJSavPY9/ekwH+KupIATDfcVMHqYy5vkbYdlW3CqsEpSyWyf5G/5VZ5
+         54dOsqpCRSsih3zf4sYYodRtSrF+6jyfbS2/Ru+RV3v4sgxi4zDctlTqZkugbmHdFOuM
+         dVRTojsfBekOyLDm/FjEvGrZYeyzPc///xwUjUjCT65vAZKla98VKdBLZ8VTz79GH4o2
+         92JMbZPau4jrnzuqpnEHGjkgEDuGr3taYAqRIDa9LbgthAkOarXym1rJNzO1hDJJYtwv
+         Qo26vHSP4XpLCxUcu5I/mZVlqQltHBQ0mecg4noq/darXIH7D4MUdp+gCGz1MUs7J83d
+         GOsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/big40mQJPZUYL0hhY2GKn9zAZBw853eJB7EhVN3kls=;
-        b=BeZ9L4nNjyH+E/tfp0L9S0yKciqAnv9GoD9lJdQABRUxw2w953F95LiGihOzBPR8By
-         Dt3TWuriCCDCZ0Ux2qxkGdcfILyzIu84zNSm5zPfLNblUgza/09da0UMRYGMUTam8riB
-         fxGE4KjODOVPM1lPEQxkl6EPa35vXeED0zvR8/0hSRQKVQ3NWKLOTnI9YrBzjNOBhMuM
-         SZYDhsHdJ/TvOOiEtLogZDR6KlSjlEBhBYBF85gBgLXDd5tHs6K0l42vF5Yy5gju1TR5
-         5c1oPZBpGbztgv/Iv7dr6g8jx1IPy0/nfQt9Ele7WrlBUKoXXlDp7jsF0b+UbBbQ/aMx
-         AxAw==
-X-Gm-Message-State: AGi0PuZpMGSUuLIkT3KC3Rj1iogJHtpPPl6WOJMa/gjGuDZB3UDvqQ2W
-        XDN55qqSrKpfZv7kmL1jNhN7ScG8
-X-Google-Smtp-Source: APiQypLc0DzWmpYVQ7ZS0j1d6Qu2tF5kjftU7L0BXVhpviK8HwXpSiXlObhxjZU1wRwK4IKZisBOcQ==
-X-Received: by 2002:ac2:4466:: with SMTP id y6mr2394099lfl.125.1586202483170;
-        Mon, 06 Apr 2020 12:48:03 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id h23sm8817640ljg.13.2020.04.06.12.48.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 12:48:02 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0809c1ae-57c9-508e-2959-724acc4ae068@gmail.com>
-Date:   Mon, 6 Apr 2020 22:48:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GhiJnLkPCog87xcd0QbX7Ukmz7B9K91Y4lcbxRM4PwA=;
+        b=LMp7A5JTqrtMfCv0SkW8QbFdTkHbaV2I52AROEhxD+Iof2MoTeoU0cQQdXcyZG2JW1
+         4qJS9NWRiYwzwQVBRTuX5IfAepcln15a6tAUmdAdktrdgA7z6Z8KzMYdfY6W5U8DghJu
+         GtZQuagR5Stup5wpyBRhGbJgDCFnZp42NdEmrtZi/Ab5o9MKZ542q2S3ZyFW1f2sjIQE
+         eN1GhVYhFyz/+hiEmlOu6rW8qp/MKDvlaNcvY7KHLXw3w4+9TFOBF7OOS2qOLwlrLS+W
+         sQkcTsbpCNYbDDYBnKMTSTIx4n5N51qN42ZMC7gDOLP4N7EcDsIu/Yx4+n8KouiTlwYh
+         V12A==
+X-Gm-Message-State: AGi0PuYbQYk6HvSL6v7x6tMaQY6Zm769IF4EST+0FBiN/D4tqude8g2Q
+        DV5n3xoK0cTCnx5e2XyNeAah6tjAlwlxQPPBrwlBHg==
+X-Google-Smtp-Source: APiQypIyzTB/RjlY+sJEU5dPf6dbdqhacd2IztQ3y9a+Fw0TAzaCPbxSpgCUfwT2Yl26XpHlcZrKwZVmvz6I3n5zhLU=
+X-Received: by 2002:a92:91d6:: with SMTP id e83mr1069130ill.165.1586202550664;
+ Mon, 06 Apr 2020 12:49:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200403200757.886443-1-lyude@redhat.com> <20200403200757.886443-4-lyude@redhat.com>
+ <CAMavQK+yVxFYNUR1wdfwB_UhRS2ziy0N5k+WTwAqUwRovX3GMA@mail.gmail.com> <3eccd492237ee8797a8af2ea757594bc13ae055f.camel@redhat.com>
+In-Reply-To: <3eccd492237ee8797a8af2ea757594bc13ae055f.camel@redhat.com>
+From:   Sean Paul <sean@poorly.run>
+Date:   Mon, 6 Apr 2020 15:48:34 -0400
+Message-ID: <CAMavQKJdh22Xa82W19UuQ+6P-XYgK-f+VV9maTFO7kE0Zs+hwg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] drm/dp_mst: Increase ACT retry timeout to 3s
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        stable <stable@vger.kernel.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Todd Previte <tprevite@gmail.com>,
+        Dave Airlie <airlied@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.04.2020 04:25, Sowjanya Komatineni пишет:
-...
-> +static int tegra_channel_capture_frame(struct tegra_vi_channel *chan,
-> +				       struct tegra_channel_buffer *buf)
-> +{
-> +	int err = 0;
-> +	u32 thresh, value, frame_start, mw_ack_done;
-> +	int bytes_per_line = chan->format.bytesperline;
-> +
-> +	/* program buffer address by using surface 0 */
-> +	vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_OFFSET_MSB,
-> +		     (u64)buf->addr >> 32);
-> +	vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_OFFSET_LSB, buf->addr);
-> +	vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_STRIDE, bytes_per_line);
-> +
-> +	/*
-> +	 * Tegra VI block interacts with host1x syncpt for synchronizing
-> +	 * programmed condition of capture state and hardware operation.
-> +	 * Frame start and Memory write acknowledge syncpts has their own
-> +	 * FIFO of depth 2.
-> +	 *
-> +	 * Syncpoint trigger conditions set through VI_INCR_SYNCPT register
-> +	 * are added to HW syncpt FIFO and when the HW triggers, syncpt
-> +	 * condition is removed from the FIFO and counter at syncpoint index
-> +	 * will be incremented by the hardware and software can wait for
-> +	 * counter to reach threshold to synchronize capturing frame with the
-> +	 * hardware capture events.
-> +	 */
-> +
-> +	/* increase channel syncpoint threshold for FRAME_START */
-> +	thresh = host1x_syncpt_incr_max(chan->frame_start_sp, 1);
-> +
-> +	/* Program FRAME_START trigger condition syncpt request */
-> +	frame_start = VI_CSI_PP_FRAME_START(chan->portno);
-> +	value = VI_CFG_VI_INCR_SYNCPT_COND(frame_start) |
-> +		host1x_syncpt_id(chan->frame_start_sp);
-> +	tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYNCPT, value);
-> +
-> +	/* increase channel syncpoint threshold for MW_ACK_DONE */
-> +	buf->mw_ack_sp_thresh = host1x_syncpt_incr_max(chan->mw_ack_sp, 1);
-> +
-> +	/* Program MW_ACK_DONE trigger condition syncpt request */
-> +	mw_ack_done = VI_CSI_MW_ACK_DONE(chan->portno);
-> +	value = VI_CFG_VI_INCR_SYNCPT_COND(mw_ack_done) |
-> +		host1x_syncpt_id(chan->mw_ack_sp);
-> +	tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYNCPT, value);
-> +
-> +	/* enable single shot capture */
-> +	vi_csi_write(chan, TEGRA_VI_CSI_SINGLE_SHOT, SINGLE_SHOT_CAPTURE);
-> +	chan->capture_reqs++;
-> +
-> +	/* wait for syncpt counter to reach frame start event threshold */
-> +	err = host1x_syncpt_wait(chan->frame_start_sp, thresh,
-> +				 TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
+On Mon, Apr 6, 2020 at 3:43 PM Lyude Paul <lyude@redhat.com> wrote:
+>
+> On Mon, 2020-04-06 at 15:41 -0400, Sean Paul wrote:
+> > On Fri, Apr 3, 2020 at 4:08 PM Lyude Paul <lyude@redhat.com> wrote:
+> > > Currently we only poll for an ACT up to 30 times, with a busy-wait de=
+lay
+> > > of 100=C2=B5s between each attempt - giving us a timeout of 2900=C2=
+=B5s. While
+> > > this might seem sensible, it would appear that in certain scenarios i=
+t
+> > > can take dramatically longer then that for us to receive an ACT. On o=
+ne
+> > > of the EVGA MST hubs that I have available, I observed said hub
+> > > sometimes taking longer then a second before signalling the ACT. Thes=
+e
+> > > delays mostly seem to occur when previous sideband messages we've sen=
+t
+> > > are NAKd by the hub, however it wouldn't be particularly surprising i=
+f
+> > > it's possible to reproduce times like this simply by introducing bran=
+ch
+> > > devices with large LCTs since payload allocations have to take effect=
+ on
+> > > every downstream device up to the payload's target.
+> > >
+> > > So, instead of just retrying 30 times we poll for the ACT for up to 3=
+ms,
+> > > and additionally use usleep_range() to avoid a very long and rude
+> > > busy-wait. Note that the previous retry count of 30 appears to have b=
+een
+> > > arbitrarily chosen, as I can't find any mention of a recommended time=
+out
+> > > or retry count for ACTs in the DisplayPort 2.0 specification. This al=
+so
+> > > goes for the range we were previously using for udelay(), although I
+> > > suspect that was just copied from the recommended delay for link
+> > > training on SST devices.
+> > >
+> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper
+> > > (v0.6)")
+> > > Cc: Sean Paul <sean@poorly.run>
+> > > Cc: <stable@vger.kernel.org> # v3.17+
+> > > ---
+> > >  drivers/gpu/drm/drm_dp_mst_topology.c | 26 +++++++++++++++++++------=
+-
+> > >  1 file changed, 19 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > index 7aaf184a2e5f..f313407374ed 100644
+> > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > @@ -4466,17 +4466,30 @@ static int drm_dp_dpcd_write_payload(struct
+> > > drm_dp_mst_topology_mgr *mgr,
+> > >   * @mgr: manager to use
+> > >   *
+> > >   * Tries waiting for the MST hub to finish updating it's payload tab=
+le by
+> > > - * polling for the ACT handled bit.
+> > > + * polling for the ACT handled bit for up to 3 seconds (yes-some hub=
+s
+> > > really
+> > > + * take that long).
+> > >   *
+> > >   * Returns:
+> > >   * 0 if the ACT was handled in time, negative error code on failure.
+> > >   */
+> > >  int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
+> > >  {
+> > > -       int count =3D 0, ret;
+> > > +       /*
+> > > +        * There doesn't seem to be any recommended retry count or ti=
+meout
+> > > in
+> > > +        * the MST specification. Since some hubs have been observed =
+to
+> > > take
+> > > +        * over 1 second to update their payload allocations under ce=
+rtain
+> > > +        * conditions, we use a rather large timeout value.
+> > > +        */
+> > > +       const int timeout_ms =3D 3000;
+> > > +      unsigned long timeout =3D jiffies + msecs_to_jiffies(timeout_m=
+s);
+> > > +       int ret;
+> > > +       bool retrying =3D false;
+> > >         u8 status;
+> > >
+> > >         do {
+> > > +               if (retrying)
+> > > +                       usleep_range(100, 1000);
+> > > +
+> > >                 ret =3D drm_dp_dpcd_readb(mgr->aux,
+> > >                                         DP_PAYLOAD_TABLE_UPDATE_STATU=
+S,
+> > >                                         &status);
+> > > @@ -4488,13 +4501,12 @@ int drm_dp_check_act_status(struct
+> > > drm_dp_mst_topology_mgr *mgr)
+> > >
+> > >                 if (status & DP_PAYLOAD_ACT_HANDLED)
+> > >                         break;
+> > > -               count++;
+> > > -               udelay(100);
+> > > -       } while (count < 30);
+> > > +               retrying =3D true;
+> > > +       } while (jiffies < timeout);
+> >
+> > Somewhat academic, but I think there's an overflow possibility here if
+> > timeout is near ulong_max and jiffies overflows during the usleep. In
+> > that case we'll be retrying for a very loong time.
+> >
+> > I wish we had i915's wait_for() macro available to all drm...
+>
+> Maybe we could add it to the kernel library somewhere? I don't see why we=
+'d
+> need to stop at DRM
 
-What is the point of waiting for the frame-start? Why just not to wait
-for the frame-end?
+So You Want To Build A Bikeshed...
+
+Seriously though, I'd be very happy with that. Alternatively you could
+shoehorn this into readx_poll_timeout as well.
+
+Sean
+
+>
+> >
+> > Sean
+> >
+> > >         if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
+> > > -               DRM_DEBUG_KMS("failed to get ACT bit %d after %d
+> > > retries\n",
+> > > -                             status, count);
+> > > +               DRM_DEBUG_KMS("failed to get ACT bit %d after %dms\n"=
+,
+> > > +                             status, timeout_ms);
+> > >                 return -EINVAL;
+> > >         }
+> > >         return 0;
+> > > --
+> > > 2.25.1
+> > >
+> --
+> Cheers,
+>         Lyude Paul (she/her)
+>         Associate Software Engineer at Red Hat
+>
