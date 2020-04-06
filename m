@@ -2,141 +2,155 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027AAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5E5C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE56D24930
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE57120768
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:10:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Y25sN394"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cd1Bchu2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbgDFQH1 (ORCPT
+        id S1729279AbgDFQKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:07:27 -0400
-Received: from mail-dm6nam11on2044.outbound.protection.outlook.com ([40.107.223.44]:12512
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729075AbgDFQH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:07:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i+TPPssuICou4asJ99Iym++kRBk9BR24hS6K3EEj2ofCsZhuLo+4/ruwhH62sopFoDaksRFBwg6zylN1YScHKjUpf1vhtai8OxWyFvU+h4Y1Pjs10x7pqWXJOmgQzs/lMbH1TqUK6P+RHwZv2dlcMvxt7SbMMI24NzGn1Tuv1zXnkpsSuqdwPteqvyqomIiHPiGidIc1lohFELDCVJ6cPzcHSNF7N6km2MH7CG+BZX/I3r5IAZPpsrRoMqNojovfXJ1UGRmEoehh0dtIRm5Q5yFvlpDd7gVsISPJUX74XJzX2FEqDUBBJFJzBbBek3wZpvO5Fx1eAkr5krrqOL3FgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KPRCsXgiEQCnrUqfgzdvarNZU7OswuG8ikb7f/mDN3w=;
- b=nS/nqqYic67ekypLzf7zaVMV80R87XHJRin43y4/mCF6IG9yup8CWav3SdcEwIp3ZhpPVZiYC8HfMoh5g/8vQBg8y1AQLojoF/X1mC3w4ojoViiHMBvefQ31R+sAWPUD2yTpnQg20PSKJhwcrXvFUgue+5xbLtqyNpeT18sLV1V6Db+Zzr984xUWV/btbvu4Z9/oPrEQUyfK3tguKSdELB4yUN2s3SiqOh1ldsyl1kgTy6aGV31JO7Si61oskFYuLY3pq5uPNGQ/xlRtz5OewiLEFcpdercstjJJ2poXmUfuDRlpUT7LbB6d/WAoutnGoDh76VBWAmyshVu2enUbaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Mon, 6 Apr 2020 12:10:02 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35457 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728863AbgDFQKC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:10:02 -0400
+Received: by mail-pj1-f67.google.com with SMTP id g9so49953pjp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 09:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KPRCsXgiEQCnrUqfgzdvarNZU7OswuG8ikb7f/mDN3w=;
- b=Y25sN394Xv+emUnzMORL+CLVLl0xmjZPJ7z/DT6AyN960RhyR64JiY322WiyZgrDtmhykBHdX+FchEy31CpC3Vju3ELaI646ucOVQTABOl03MFajqUEgj0h+Us0mpJIbxXA9/3IsP8LX6sIPOKMb3/eRt1K4oQo1Ly2UKuonso8=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Felix.Kuehling@amd.com; 
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
- by SN1PR12MB2509.namprd12.prod.outlook.com (2603:10b6:802:29::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Mon, 6 Apr
- 2020 16:07:22 +0000
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::38ef:1510:9525:f806]) by SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::38ef:1510:9525:f806%7]) with mapi id 15.20.2878.018; Mon, 6 Apr 2020
- 16:07:22 +0000
-Subject: Re: [PATCH 1/6] amdgpu: a NULL ->mm does not mean a thread is a
- kthread
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200404094101.672954-1-hch@lst.de>
- <20200404094101.672954-2-hch@lst.de>
-From:   Felix Kuehling <felix.kuehling@amd.com>
-Message-ID: <b5eaf9dd-fc20-cf56-9efb-e6be848964bf@amd.com>
-Date:   Mon, 6 Apr 2020 12:07:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200404094101.672954-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: YQBPR0101CA0019.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00::32) To SN1PR12MB2414.namprd12.prod.outlook.com
- (2603:10b6:802:2e::31)
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1WkoK9eOo3jxX/ZMr07VW5CQfweVLKsOKrOBu3dllxs=;
+        b=cd1Bchu2c9ROFaCpeTSYw8aDQj9D/amAIE3E5AJ2sk4uajkqPr0368tcgzvZNw/gd5
+         A5KYbrIqj/6UHQdd420rCelaobfdCCx4exj75OWcKjgo9FWDqLL86GXRqLr/REYm7agu
+         yQaexJqpfpP4jwbfEng5PlTVd8EWJ4g7mmxmotOdgL71Nn4cd68f2DIL6NYQNH0/Xw1S
+         QLGYGGRfSDmUPLI1yI9Ga1IVA4OTZS/2QltXrHv4zRhsAzILKPbfzYUpOgfgRrBiZupF
+         hKK8GHidAfqbbaYqeEqJtbwkxSJbFiWGvptuwMeIAxHUNHkw6W+aOozPmVkYo6V/h8yG
+         +Hjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1WkoK9eOo3jxX/ZMr07VW5CQfweVLKsOKrOBu3dllxs=;
+        b=BDci9y5TbJp58OCJBDwIx7aT+xQZrQdDW+E+ulDBLffSMS/iuEVyww4ND2zBfsWlkM
+         z7nO5Pkoi/CqTBdqDWlVIszQtRgo7gfhsL+eQzCu9Of/CiSUlt83OHjWl5Fv2KD+HoIQ
+         xXeQ1fj/RcUD21Rt/DhMbp6oA1Ml+t4xwTYqFVmakmkoRYyu7VHCHS7jTi3wRbh1Rali
+         5cosCGcgZ0gjf8mqNzlz0XUx3l8EMwdGwyrZrIjRo09RnzX49R7fkIzbgsTkhLwBDomJ
+         QcFqx5fpCKTZw9yr6m4tDkx3gRySR07teEcfYVgoh15WlrrnY9Sc64Q6DBAbIEL+LrnI
+         CrJA==
+X-Gm-Message-State: AGi0PuakDIsd9PS2asCuqU1ZoFHQdJC3LLQBNFwnYQDxEaZ3qiAiocgH
+        J+LugvcYHrW+eDOqVQcRKAI=
+X-Google-Smtp-Source: APiQypLW2+hk2HRhI7Td9Jl9Sdkz5Z5glDoXOKZEYa0pW703MJ9vJ5kxV4E+ghEwKkJw4Cv7ZtixkA==
+X-Received: by 2002:a17:90a:8909:: with SMTP id u9mr3007pjn.149.1586189401046;
+        Mon, 06 Apr 2020 09:10:01 -0700 (PDT)
+Received: from minnich.svl.corp.google.com ([2620:15c:2c5:3:65f9:fd8e:a0b8:2917])
+        by smtp.googlemail.com with ESMTPSA id y3sm5242416pfy.6.2020.04.06.09.10.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 09:10:00 -0700 (PDT)
+From:   "Ronald G. Minnich" <rminnich@gmail.com>
+X-Google-Original-From: "Ronald G. Minnich" <rminnich@google.com>
+To:     miquel.raynal@bootlin.com, rminnich@google.com, richard@nod.at,
+        vigneshr@ti.com, linus.walleij@linaro.org,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mtd: parsers: Support '[]' for id in mtdparts
+Date:   Mon,  6 Apr 2020 09:09:14 -0700
+Message-Id: <20200406160914.14698-1-rminnich@google.com>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.2.100] (142.116.63.128) by YQBPR0101CA0019.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c00::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 16:07:20 +0000
-X-Originating-IP: [142.116.63.128]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8ec83d35-d9de-4ce4-b45f-08d7da4496c3
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2509:|SN1PR12MB2509:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2509CFEDC2DB956DAC2152A192C20@SN1PR12MB2509.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
-X-Forefront-PRVS: 0365C0E14B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(136003)(396003)(366004)(376002)(39860400002)(81166006)(316002)(86362001)(5660300002)(8676002)(16576012)(26005)(31696002)(81156014)(31686004)(186003)(16526019)(478600001)(2906002)(7416002)(956004)(52116002)(66476007)(36756003)(44832011)(110136005)(2616005)(4326008)(6486002)(54906003)(8936002)(66946007)(4744005)(66556008);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oXT4CzxYLxfRtUgiJSDkDJ5qwTdap1X/p/bOJzG9xmImd0CPuEtB2nPxQK+VbV/wk7YXgFlCwvE7HQ31PpkqyOrbNYqado2VUhvUIaRdoDjegk7xh9KdC3x7bYcai0oQGfwOX0eHKi01FpLgNINd0Sjp4f4eoEZHZoVbc6mBKHLgzS3nMM6iRlXkAOfU9QCB+m7X/cTYcSs2DeQTv3+595/E/G84v9EoYPdSxW0rhVe53E09Xm+SOBkdkTDV+y2Pwe0Z8lBf3oQ5D1k3Brlu6nCrN07t5t9KgugzgAzKcxamX2ldyUNIL/k2F1kVYzwXNLEhQdlzFelUYCIPLLmc3tRPta6R0Eho5AFnXELv793HcbeBgeXc8ABxdL4G2nX4zIOyEsw0m47JOEmV7h35tfnSRubSJvu8yOefDnnr4d0/TLZ/uzQ0WWIYuecgb3dT
-X-MS-Exchange-AntiSpam-MessageData: un4gxw7F1dOsGh+k0Kc/z29dspwSHGdGXMVtKlpTx7HhJ0ndosig+lreZ3L98sKhY20baX3/Ma3inLz7rUE+Kd/bFFP2Ad22aH/WqCzTHJjfJ4EInS1HGv6iQE6gSwJZXNFZHRN9IuWuiqAb7/xoGg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ec83d35-d9de-4ce4-b45f-08d7da4496c3
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 16:07:22.0322
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iERg53t9//jWQtbRLwIbJEZWuW7hv5+K7UxGSrCIHBFYj19TPWnbwtU+GqpcKee2Y/kmjNQp0ic8o2fPrKl7LA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2509
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-04 um 5:40 a.m. schrieb Christoph Hellwig:
-> Use the proper API instead.
->
-> Fixes: 70539bd795002 ("drm/amd: Update MEC HQD loading code for KFD")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+The MTD subsystem can support command-line defined partitions
+for one or more MTD devices.
 
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+The format is:
+ * mtdparts=<mtddef>[;<mtddef]
+ * <mtddef>  := <mtd-id>:<partdef>[,<partdef>]
 
+The ':' separates the id from the partdef.
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-> index 13feb313e9b3..4db143c19dcc 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
-> @@ -190,7 +190,7 @@ uint8_t amdgpu_amdkfd_get_xgmi_hops_count(struct kgd_dev *dst, struct kgd_dev *s
->  			pagefault_disable();				\
->  			if ((mmptr) == current->mm) {			\
->  				valid = !get_user((dst), (wptr));	\
-> -			} else if (current->mm == NULL) {		\
-> +			} else if (current->flags & PF_KTHREAD) {	\
->  				use_mm(mmptr);				\
->  				valid = !get_user((dst), (wptr));	\
->  				unuse_mm(mmptr);			\
+On PCI MTD devices, the name can be the PCI slot name,
+e.g. 0000:00:1f.5. There are two ':' in the name alone.
+
+Change the definition of <mtd-id> so it can be bracketed
+with '[]' and hence contain any number of ':'.
+An opening '[' must be matched with a closing ']'.
+The ':' continues to separate the mtd-id from the <partdef>.
+
+Signed-off-by: Ronald G. Minnich <rminnich@google.com>
+Change-Id: I17a757e65f532b11606c7bb104f08837bcd444b9
+---
+ drivers/mtd/parsers/cmdlinepart.c | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mtd/parsers/cmdlinepart.c b/drivers/mtd/parsers/cmdlinepart.c
+index c86f2db8c882..ef9dc0bd7724 100644
+--- a/drivers/mtd/parsers/cmdlinepart.c
++++ b/drivers/mtd/parsers/cmdlinepart.c
+@@ -10,7 +10,8 @@
+  * mtdparts=<mtddef>[;<mtddef]
+  * <mtddef>  := <mtd-id>:<partdef>[,<partdef>]
+  * <partdef> := <size>[@<offset>][<name>][ro][lk]
+- * <mtd-id>  := unique name used in mapping driver/device (mtd->name)
++ * <mtd-id>  := unique name used in mapping driver/device (mtd->name) |
++ *              '[' unique name as above, not including a "]" ']'
+  * <size>    := standard linux memsize OR "-" to denote all remaining space
+  *              size is automatically truncated at end of device
+  *              if specified or truncated size is 0 the part is skipped
+@@ -221,14 +222,38 @@ static int mtdpart_setup_real(char *s)
+ 		char *p, *mtd_id;
+ 
+ 		mtd_id = s;
++		mtd_id_len = 0;
++		p = s;
+ 
+-		/* fetch <mtd-id> */
++		/*
++		 * fetch <mtd-id>
++		 * If the first char is '[',
++		 * the form is [mtd-id]:
++		 * otherwise it is mtd-id:
++		 */
++		if (*s == '[') {
++			mtd_id++;
++			p = strchr(s, ']');
++			if (!p) {
++				pr_err("mtd (%s) has '[' but no ']'", s);
++				return -EINVAL;
++			}
++			mtd_id_len = p - mtd_id;
++		}
++
++		/* There is always a : following mtd-id. */
+ 		p = strchr(s, ':');
+ 		if (!p) {
+ 			pr_err("no mtd-id\n");
+ 			return -EINVAL;
+ 		}
+-		mtd_id_len = p - mtd_id;
++
++		/*
++		 * If the mtd-id was bracketed, mtd_id_len will be valid.
++		 * If it is still 0, we must set it here.
++		 */
++		if (mtd_id_len == 0)
++			mtd_id_len = p - mtd_id;
+ 
+ 		dbg(("parsing <%s>\n", p+1));
+ 
+-- 
+2.26.0.292.g33ef6b2f38-goog
+
