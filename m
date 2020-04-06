@@ -2,143 +2,113 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D241C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFF1C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD6F20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:47:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzqsCjvy"
+	by mail.kernel.org (Postfix) with ESMTP id D40C1206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:47:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586170039;
+	bh=u/X6i+pwbj4Go4hz551p6d+YJfNGL+983Ma99T64H9g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MksHiDF2RU6I9qTzVJnrTmmtbRSSWqUZZ8byFOtgbZZ2KFmMqRWaj2yNa9VVYpgTe
+	 tsR8HnSQsvQBkNRR0nsU+XRi7G/CJhMMq8jl/xv7d33+geiaYA7h4y5DdLjwCGaIYk
+	 9MPtexWRiCACs6YFytntZ98rXOrb5nxQ1faDg/4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbgDFKrN (ORCPT
+        id S1727349AbgDFKrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:47:13 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41102 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgDFKrM (ORCPT
+        Mon, 6 Apr 2020 06:47:18 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42890 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgDFKrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:47:12 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h9so16835457wrc.8;
-        Mon, 06 Apr 2020 03:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=kd6c2N25HEZts+YP+jU82vZlm0XB3hI9StV8Q2SYi18=;
-        b=KzqsCjvyQeXsFJpe6vy3m8t2XIt52zRT6r7HP+tdSEHioDTBvZTmk3Owaez8ITWsq4
-         ZnVhfue9kEp7ctIk92PhIauoCQ6/Z8tK90PmlVBDD7GuERISRaXD7Gwp9dE0nh/xoyy8
-         ye2oDibBh55XD1CRiXY0TERLmm1xzXiusAbmgXbYWrQ6pz5N5aUS/VxcC4nWnmNXHVmc
-         y69WfOzf4a+D7MYGCZqKWBdGNDgXhwunOh0d8GXvlLolSEFxqTx/pvqh987Id+63fMXq
-         sw9fLVuORf0jEcIuTsS9MEdvqKHfUB/uzHN3THEUVYnmEoUwhRyhuy0g7kphJ7+RQAPI
-         8K3Q==
+        Mon, 6 Apr 2020 06:47:18 -0400
+Received: by mail-ed1-f67.google.com with SMTP id cw6so18588492edb.9;
+        Mon, 06 Apr 2020 03:47:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=kd6c2N25HEZts+YP+jU82vZlm0XB3hI9StV8Q2SYi18=;
-        b=O261Otp+UCYDxJ/tKEewPCxaWCv/pmp2tQDHQwmesymqxhmFjkPjqugPqojJD7vLS2
-         XiMo3zQMznCwCE78GGqSqpBp1VCwZ51e/EsurPN3rTvaAdE/bxpX8HAxtFiKC2A/B7oX
-         iLzoFxXuQ15wrKBUSA1q/+IUWsgW1bU7gc7ubfiF4Ylhccut6xh0cNHVWlIbZP9EvCcM
-         eCMRRA0Fsi6fD3681UVVRwke8xX2Hw+E57sOritHEnFJxOMA3PZ5r3WfGZP2mp5u7SFP
-         Touv8l48sejOlU13g+myyI/IYNgN0j4SX89Oz9HDkxyXi9IQjv/PsBByYW3Cwfo2PUdl
-         gG+A==
-X-Gm-Message-State: AGi0PuZaB7xpGviON4DkE7GRBeAOn4c9ra65S8ERBOMlXUpnvBeQEQU+
-        fFANAGViinNR8XvGwGbfujEQ83Q7fXNZh5Tnl78=
-X-Google-Smtp-Source: APiQypJ5GHPxzMFVraMUiKVhD3OACRC2/EACvph11iACbw5clZBFSXVxVdy+pE2tdp5sbmAHWtN0YvnmoCqfimB2rjE=
-X-Received: by 2002:adf:ef51:: with SMTP id c17mr23091048wrp.130.1586170030510;
- Mon, 06 Apr 2020 03:47:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UAxqYdPL6az1VgPFrfxQ/rn+ZWBqyWdcAzok87Z4u2E=;
+        b=LCyDFq6iTs1cx9oMAN6SI8W2jQYULe2C9YZszMNwTbZjL5scjRXcFeOnQZmtf0dH5n
+         wL/wKInrZ9TI9SbAe+sjnbWcG8cs3ha3iI8hnDe7jO3NbJeWHLyy4IMr6699UHKS3hU/
+         w1Ofq5SXXln9EyhM6MHKl1xd7D8fCo1K8pbagLqiPqkGIvvZHJuQWBIp/RKYB+VyIncR
+         9kRY4Id4qgwNjV+wFFrvQ23/Z8i10+vC41kEd+5RcpxomZl3bqD7eoYMMY5Py8y8o65y
+         ml9WCgwkuhxSipor65YyEeja5/1V5PHORWAXxkpXiILBWhJXVG4GuM/Mw6RByudfw1+m
+         HP6A==
+X-Gm-Message-State: AGi0Pub7BGaFOCx5l2mHAOCldNE2ArNr0djCTWMAQwKwxEB8/KnrXnvt
+        3VRCTe645wKJ3uib9mNuaG0=
+X-Google-Smtp-Source: APiQypKkmi8CBCaysXUslPpenLVQu3HtftW3JIysFyeclM2AJ0m49d4QSlRgMy7XSMhhvzq1JOaQ1w==
+X-Received: by 2002:a50:e107:: with SMTP id h7mr19285192edl.124.1586170035816;
+        Mon, 06 Apr 2020 03:47:15 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id r25sm2422181edy.77.2020.04.06.03.47.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 03:47:15 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 12:47:13 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Hyunki Koo <hyunki00.koo@samsung.com>
+Cc:     gregkh@linuxfoundation.org, Rob Herring <robh+dt@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: serial: Add reg-io-width compatible
+Message-ID: <20200406104713.GB16798@kozik-lap>
+References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+ <20200406103127.17105-1-hyunki00.koo@samsung.com>
+ <CGME20200406103206epcas2p2bf3c65f96d94cc91fcdcd3e6db75e2a3@epcas2p2.samsung.com>
+ <20200406103127.17105-2-hyunki00.koo@samsung.com>
 MIME-Version: 1.0
-References: <20200401053913.216783-1-nickrterrell@gmail.com>
- <20200401053913.216783-7-nickrterrell@gmail.com> <20200401093310.GA13748@zn.tnic>
- <D45F637D-6BB0-4F08-BEBE-FAB9B56F36F6@fb.com> <20200402155810.GD9352@zn.tnic> <2370741E-FE5A-44C1-8BF3-24A03E321F4E@fb.com>
-In-Reply-To: <2370741E-FE5A-44C1-8BF3-24A03E321F4E@fb.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 6 Apr 2020 12:47:30 +0200
-Message-ID: <CA+icZUWP0HR5ZiWq438bpcyu71cxmkv2HPqeuR2EwUAz5CjwBg@mail.gmail.com>
-Subject: Re: [PATCH v4 6/8] x86: bump ZO_z_extra_bytes margin for zstd
-To:     Nick Terrell <terrelln@fb.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Nick Terrell <nickrterrell@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>,
-        Michael van der Westhuizen <rmikey@fb.com>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        Patrick Williams <patrick@stwcx.xyz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200406103127.17105-2-hyunki00.koo@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 10:26 PM Nick Terrell <terrelln@fb.com> wrote:
->
->
->
-> > On Apr 2, 2020, at 8:58 AM, Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Wed, Apr 01, 2020 at 05:33:03PM +0000, Nick Terrell wrote:
-> >> The code is currently written so that all the compression algorithms u=
-se the
-> >> same ZO_z_extra_bytes. It is taken to be the maximum of the growth rat=
-e
-> >> plus the maximum fixed overhead. Just a few lines above is the comment=
-:
-> >>
-> >> # =E2=80=A6 Hence safety
-> >> # margin should be updated to cover all decompressors so that we don't
-> >> # need to deal with each of them separately. Please check
-> >> # the description in lib/decompressor_xxx.c for specific information.
-> >>
-> >> So I was been following the guidance in the comments.
-> >
-> > Please state that in the commit message when you send your next
-> > revision.
->
-> Will do.
->
-> >> Does it matter? I=E2=80=99m not an expert here,
-> >
-> > Huh, you're only sending the code then? Or what do you mean with not
-> > being an expert?
->
-> I mean that while I=E2=80=99ve read and understood this piece of the code=
-, have tested
-> the patches, have followed the template of other compression methods
-> added, and am confident in the correctness of the code, I=E2=80=99m not a=
- regular
-> contributor to the pre-boot x86 kernel code. So it is possible that there=
- is a
-> use case for kernel compression that I=E2=80=99m not aware of where RAM i=
-s extremely
-> tight and within 64 KB of the current limits.
->
-> It seems to me that adding 64KB to the memory requirement for kernel
-> decompression is not going to break anyone. If it did the kernel image is=
- taking
-> up nearly all available RAM, which doesn=E2=80=99t seem likely. But, I do=
-n=E2=80=99t know all
-> use cases. If it does break someone, we can put up a separate patch that
-> switches all the compression methods over a per-method ZO_z_extra_bytes.
->
+On Mon, Apr 06, 2020 at 07:31:26PM +0900, Hyunki Koo wrote:
+> Add a description for reg-io-width options for the samsung serial
+> UART peripheral.
+> 
+> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/serial/samsung_uart.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/samsung_uart.yaml b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> index 9d2ce347875b..a57b1233c691 100644
+> --- a/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> +++ b/Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> @@ -29,6 +29,14 @@ properties:
+>    reg:
+>      maxItems: 1
+>  
+> +  reg-io-width:
+> +    description: |
+> +      The size (in bytes) of the IO accesses that should be performed
+> +      on the device.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [ 1, 4 ]
 
-Hi Nick,
+I just noticed that the allOf is not needed. Just enum [1, 2] is enough.
 
-are you planning a zstd-v5?
-If yes, please CC me, thanks.
+With that change:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Regards,
-- Sedat -
+Best regards,
+Krzysztof
+
+> +
+>    clocks:
+>      minItems: 2
+>      maxItems: 5
+> -- 
+> 2.15.0.rc1
+> 
