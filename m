@@ -2,104 +2,94 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F71C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFDCC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5DA248E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1722F248DC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTtf3Lcu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IKlSzMZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgDFPxg (ORCPT
+        id S1729100AbgDFPxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:53:36 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37659 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728945AbgDFPxg (ORCPT
+        Mon, 6 Apr 2020 11:53:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46002 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728945AbgDFPxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:53:36 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u65so7723565pfb.4;
-        Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
+        Mon, 6 Apr 2020 11:53:37 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t4so6058917plq.12;
+        Mon, 06 Apr 2020 08:53:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=PvwW/9sQV91GxFUMxx/QXPp3Z+S4dWs0vj3Jf2cw5SI=;
-        b=dTtf3LcuHq9DVSUmTHwwFyk0GqNwJ8mmft/rvyPrytkiB+AE7if1Ewt4ZChTfA9cwa
-         urTa9BVMKk/fjtxmdlXnZ+UrSYyLSK9CBgax/QDFF/cOGdoy2EHOTcNkjmQ/LbTLsPeE
-         XyXvdVn8Sd2KiANJECpKl2aO3BCUkqtIp93IZb9M/sK7VrEqBM4RBHwotf52k+tAgh89
-         /BARescvH5q+Jid5Y7T4jb/+mktcyTP7C3A9yRplOJXKMJ9Ib28xpnew2k1qr2LdkUbF
-         rdeUy1niAO9oA27ZDtaVtz5bi7oyUWH5atxERg7CSNPJTp9S4AeBVsaHkmwfJ9hxcP1k
-         m73g==
+        bh=rN6eY9Qrqp2MyzcIySN26tQrPMmoMDpY4puhGFyM5mw=;
+        b=IKlSzMZCcVNTRiuuJTREdvQ0DQozB3+Tcxbfc0oOwCUd1mnh8GBsQGphFBawZ5p1+e
+         s+HTWu1zS0a2esb+KXnN83Qqf4k2nNPuiBnCgxO2jC4T5LwcwkEsLoMs+cS6sP2+oyY8
+         Ul6nUy11tEihE31ZV8128jkd3iYQ5Gai3QE7pyGE/A2MWryA7fNFPp2yKounLBFtzBkz
+         xzTKXuUGB2jsoz4KGE8fCqAx3mF4wic7bMTQQxV3E0IUF8AogHkG0ckdhb0OV9eVb5dT
+         JSUSKF95gMC6Z/juaRIFCQOG0tZCeIpZYVqSFqOhDkhS9fKlj5VNlR5Leh8wCAkIU+1v
+         h5VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PvwW/9sQV91GxFUMxx/QXPp3Z+S4dWs0vj3Jf2cw5SI=;
-        b=c8MMQo3l/+Gi5QdD9IDbFqVLPOXJgGEZ6gpbJSxjWuCNG9tI0kufCsRaGseZKgOWJ5
-         D+DagIJkwQ1x4KSFJIJXJJA/GLWsyWzzG/BjBUfG2Z/O22+HVf/LfeHrylAg5ISxodch
-         OOBF3tQqvC/kib8E6WT9kE1Y1zEEQx3h1+4k1fCzwFNm/MWkFv/p4ncQZ7TBD4+55R/2
-         URy4iRK9ij5b4GuITjkooSkeSUrCIRiMhCsp1/Ii7Z/wuLA96PbbN0d4aWfoaEy9/uRH
-         CZsLbMJKxpyW6y356gScWRg1mu+aCxWubvkEYiVtXejh0n7JKxWvWfwOU3r3VJMHqUPt
-         OBOw==
-X-Gm-Message-State: AGi0PuYkqCK5Ei2kmEEwf4S1eMSQ/lNCdALoONGimY4yuAfDsPkaf2Al
-        +6/J/6HGA1eZvzm+h2yHvxj1d9+b
-X-Google-Smtp-Source: APiQypLlXZ9/q2dQeTVcu9eqF5ReVI3oGbpaCb79uKaT6u+hpkBbBGhfqjEIbl7GsUqZMbAn53jo+Q==
-X-Received: by 2002:aa7:9f12:: with SMTP id g18mr120263pfr.262.1586188415045;
+        bh=rN6eY9Qrqp2MyzcIySN26tQrPMmoMDpY4puhGFyM5mw=;
+        b=ZTVZrLkBUV9j7UXzp+n1rO1F5Cba8re+tiisggBBN7DdXnBPcLyeQnPLUYivzutYDM
+         0uQpGqhuSpZodDQUY6JaWh7zgjlWcJUXWVedEjYzp+5t9lRkuPTJijgTM6fbIcEdv0Hh
+         baeJk25QhB3j+QHdyzMKXlT55Fxl9bw983NotLyOGCJ+H+qe68qJPp9gzYrmcOnK+asr
+         CrZDbVtcOVD+wydJjey1ZyW3M6n29lJNMNDOZEsfCq47iGmzrHk3kQAzouCLyjeDJZQU
+         gagzPNzhSiDfnoKRBF8TkpIjWuKzIEQD0tcTvZ0ekRgaKIAQdzQ362oePf+KEEnNoqhX
+         g0+Q==
+X-Gm-Message-State: AGi0PuZoZ4gJT3BhejTWEDhSEXLfFL3+uIeq4CRPULCzqkAo9cr6hvqM
+        WlNVRJfRosNghng+2P+f5Ho=
+X-Google-Smtp-Source: APiQypKEwHakGNo5xil/xnae82hio7J68wiouyjW1GRU7CpJavnsLPkfCIeBBEPCBzw8SA9wgDdOUg==
+X-Received: by 2002:a17:902:b598:: with SMTP id a24mr19607934pls.230.1586188416657;
+        Mon, 06 Apr 2020 08:53:36 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:89a:e705:d50:b01b:c4e4:35ad])
+        by smtp.gmail.com with ESMTPSA id q43sm3851pjc.40.2020.04.06.08.53.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
-Received: from localhost.corp.microsoft.com ([131.107.160.210])
-        by smtp.googlemail.com with ESMTPSA id 79sm11823275pfz.23.2020.04.06.08.53.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 08:53:34 -0700 (PDT)
-From:   ltykernel@gmail.com
-X-Google-Original-From: Tianyu.Lan@microsoft.com
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, arnd@arndb.de,
-        michael.h.kelley@microsoft.com
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, linux-arch@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkuznets@redhat.com
-Subject: [PATCH V4 0/6] x86/Hyper-V: Panic code path fixes
-Date:   Mon,  6 Apr 2020 08:53:25 -0700
-Message-Id: <20200406155331.2105-1-Tianyu.Lan@microsoft.com>
-X-Mailer: git-send-email 2.14.5
+From:   Aishwarya R <aishwaryarj100@gmail.com>
+X-Google-Original-From: Aishwarya R <raishwar@visteon.com>
+Cc:     raishwar@visteon.com, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: spi-sh-msiof: Fix checkpatch error Complex macros should use ()
+Date:   Mon,  6 Apr 2020 21:23:01 +0530
+Message-Id: <20200406155301.21768-1-raishwar@visteon.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Fixed checkpatch error "Macros with complex values should be enclosed
+in parentheses"
 
-This patchset fixes some issues in the Hyper-V panic code path.
-Patch 1 resolves issue that panic system still responses network
-packets.
-Patch 2-3,5-6 resolves crash enlightenment issues.
-Patch 4 is to set crash_kexec_post_notifiers to true for Hyper-V
-VM in order to report crash data or kmsg to host before running
-kdump kernel.
+Signed-off-by: Aishwarya R <raishwar@visteon.com>
+---
+ drivers/spi/spi-sh-msiof.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tianyu Lan (6):
-  x86/Hyper-V: Unload vmbus channel in hv panic callback
-  x86/Hyper-V: Free hv_panic_page when fail to register kmsg dump
-  x86/Hyper-V: Trigger crash enlightenment only once during
-    0;136;0c0;136;0c system crash.
-  x86/Hyper-V: Report crash register data or kmsg before  running crash
-    kernel
-  x86/Hyper-V: Report crash register data when sysctl_record_panic_msg
-    is not set
-  x86/Hyper-V: Report crash data in die() when panic_on_oops is set
-
- arch/x86/hyperv/hv_init.c      |  6 +++-
- arch/x86/kernel/cpu/mshyperv.c | 10 +++++++
- drivers/hv/channel_mgmt.c      |  3 ++
- drivers/hv/vmbus_drv.c         | 62 ++++++++++++++++++++++++++++++------------
- include/asm-generic/mshyperv.h |  2 +-
- 5 files changed, 63 insertions(+), 20 deletions(-)
-
+diff --git a/drivers/spi/spi-sh-msiof.c b/drivers/spi/spi-sh-msiof.c
+index 1c11a00a2c36..b2579af0e3eb 100644
+--- a/drivers/spi/spi-sh-msiof.c
++++ b/drivers/spi/spi-sh-msiof.c
+@@ -1398,7 +1398,7 @@ static int sh_msiof_spi_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(sh_msiof_spi_pm_ops, sh_msiof_spi_suspend,
+ 			 sh_msiof_spi_resume);
+-#define DEV_PM_OPS	&sh_msiof_spi_pm_ops
++#define DEV_PM_OPS	(&sh_msiof_spi_pm_ops)
+ #else
+ #define DEV_PM_OPS	NULL
+ #endif /* CONFIG_PM_SLEEP */
 -- 
-2.14.5
+2.17.1
 
