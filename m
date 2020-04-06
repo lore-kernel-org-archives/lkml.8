@@ -2,115 +2,138 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB453C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665F1C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A36D206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47663206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gI0o6wTc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJMQ7+j0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgDFTxE (ORCPT
+        id S1726477AbgDFTxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:53:04 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15699 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFTxE (ORCPT
+        Mon, 6 Apr 2020 15:53:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43010 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbgDFTxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:53:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8b886b0001>; Mon, 06 Apr 2020 12:52:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 12:53:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 12:53:03 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 19:53:03 +0000
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 19:53:02 +0000
-Subject: Re: [PATCHv2 2/8] khugepaged: Do not stop collapse if less than half
- PTEs are referenced
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        <akpm@linux-foundation.org>, Andrea Arcangeli <aarcange@redhat.com>
-CC:     Zi Yan <ziy@nvidia.com>, Yang Shi <yang.shi@linux.alibaba.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
- <20200403112928.19742-3-kirill.shutemov@linux.intel.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <7d3af6a4-b0ee-9497-da0b-b93e050c5a4c@nvidia.com>
-Date:   Mon, 6 Apr 2020 12:53:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 6 Apr 2020 15:53:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w15so956340wrv.10;
+        Mon, 06 Apr 2020 12:53:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=cLKnKuTpDDcnnvckRKd8EsE8Je/PkHgph1cfVvzxLuk=;
+        b=jJMQ7+j0gvWZrDFhqYqsdxda6c9tMvnWSTCseMEXWqiglzwpm24miH2hSvj+JeP2+h
+         3Yb1LEmu5SM/BQLHBJE7VtMJgDTnVmTpoZRf8YU/mObl+K3hO4TbqI4QU7wa2GpKD545
+         xEx0513G3lXUeQsbCmMaV5ugfSHPW6cE47ruF/YsGdCFbMVJak9kuUjZZX/Dx4bhOHGT
+         IEwrAf31+S9Wi7p7qNCacdxrkeYYiQI75tTiSmJYkjHKD6J7ygODrK/7f6P6Zb0nDMCh
+         PrjS2o2ee4d8OU43dU0zKN5iO9rn91HrSnOM+QJ2WtO/vzb5lz8yZMGrLD1RBXPgE11P
+         VkOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=cLKnKuTpDDcnnvckRKd8EsE8Je/PkHgph1cfVvzxLuk=;
+        b=lG6VohdD+cKWy3ANp8LcXbv07qKi/352ELN6sG9v4gF0LiPbvBYMYqAeuHCp/wk9Ba
+         2FDv0To3D4+6Go0MaZx9+xscDVP82b2R1/7sEhyxamtRkmOIFwU34pcrbO7WOMHFPz7Q
+         2lXdTcEIX92AvjkOs21MN2JoMOc6ZOluUkeYj3BOI46GybQ4/ql47e38l7lt1G+OC9Oa
+         vT9z//bIhlLSBahYSFSa08PXnUrxIBiBPfbGkl3l/GrOtnhUcb193e722/Ieej2iij1u
+         ZMj0kK01Gn1+J06xBFgBasU+dqUdXl4cBJMVJOBfCan05hsO7B8A87zYOSg13h6t0ewe
+         /XVQ==
+X-Gm-Message-State: AGi0PuZuRMgyXIEx7I3GtWrcADoR9xCXD6nQNsu0kgXm8zD0ZL3xCoHk
+        NS7nyepja45qXZPknPY4vl5u8WClzXpB9RxOl6E9DuGqu4k=
+X-Google-Smtp-Source: APiQypLSV1ZoyA8Vopu8CC9juJ2Xs3xUcrjwFHtw9Cr0w7PDYiUVKbIb1hV7mra2/vPb2XQ2ZWP2a6vk2SDoXpf01eI=
+X-Received: by 2002:adf:b64f:: with SMTP id i15mr941499wre.351.1586202783518;
+ Mon, 06 Apr 2020 12:53:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200403112928.19742-3-kirill.shutemov@linux.intel.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586202731; bh=DvhlY5W4PXWEH3pnbcXqK6BlG8sFGpdOhRkDNLGqOvE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gI0o6wTcoa+UOczpur1kIXv5XkhV9G7xCU4Y2pZE/NwHUQe+OG5TshRXXSPlK19qU
-         xGL3dN442ie8JWkfGF9auMunUF3YhXLOkpSqaZ8gCW75EJyT0Z6xAew+IbwRe+YoeI
-         Req9FDjVjBv531GfC7iSt2Z69lmxnFHC1PSTfjs5T6OHYK3jNzIZ6wzxLb1waWXenx
-         Ey7S3+J4yzJzJ5rQE5l/hkOEvGrNKPdpqOya/iF0ToyROpxQcgqAO2owjD9N6Nor/0
-         7kOUyPSzkCqP6BDgSOxSAfgS2TlUM/tGlOf73NArd5EQlGVYZfjy8dzHhdu/75V5cU
-         rulG/KpxVYKuA==
+References: <20200402050219.4842-1-chris@rorvick.com> <20200406141058.29895C43637@smtp.codeaurora.org>
+In-Reply-To: <20200406141058.29895C43637@smtp.codeaurora.org>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 6 Apr 2020 21:53:24 +0200
+Message-ID: <CA+icZUUOQ0KTJM6w7yfj=g3BprQqJtTQjCjiXRb9dTTeoQL8KA@mail.gmail.com>
+Subject: Re: [PATCH] iwlwifi: actually check allocated conf_tlv pointer
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Chris Rorvick <chris@rorvick.com>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 6, 2020 at 4:11 PM Kalle Valo <kvalo@codeaurora.org> wrote:
+>
+> Chris Rorvick <chris@rorvick.com> wrote:
+>
+> > Commit 71bc0334a637 ("iwlwifi: check allocated pointer when allocating
+> > conf_tlvs") attempted to fix a typoe introduced by commit 17b809c9b22e
+> > ("iwlwifi: dbg: move debug data to a struct") but does not implement the
+> > check correctly.
+> >
+> > This can happen in OOM situations and, when it does, we will potentially try to
+> > dereference a NULL pointer.
+> >
+> > Tweeted-by: @grsecurity
+> > Signed-off-by: Chris Rorvick <chris@rorvick.com>
+>
+> Fails to build, please rebase on top of wireless-drivers.
+>
+> drivers/net/wireless/intel/iwlwifi/iwl-drv.c: In function 'iwl_req_fw_callback':
+> drivers/net/wireless/intel/iwlwifi/iwl-drv.c:1470:16: error: 'struct iwl_fw' has no member named 'dbg_conf_tlv'
+>     if (!drv->fw.dbg_conf_tlv[i])
+>                 ^
+> make[5]: *** [drivers/net/wireless/intel/iwlwifi/iwl-drv.o] Error 1
+> make[5]: *** Waiting for unfinished jobs....
+> make[4]: *** [drivers/net/wireless/intel/iwlwifi] Error 2
+> make[3]: *** [drivers/net/wireless/intel] Error 2
+> make[2]: *** [drivers/net/wireless] Error 2
+> make[1]: *** [drivers/net] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+> make: *** [drivers] Error 2
+>
 
-On 4/3/20 4:29 AM, Kirill A. Shutemov wrote:
-> __collapse_huge_page_swapin() check number of referenced PTE to decide
-> if the memory range is hot enough to justify swapin.
-> 
-> The problem is that it stops collapse altogether if there's not enough
-> referenced pages, not only swappingin.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Fixes: 0db501f7a34c ("mm, thp: convert from optimistic swapin collapsing to conservative")
-> Reviewed-by: Zi Yan <ziy@nvidia.com> ---
->   mm/khugepaged.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 99bab7e4d05b..14d7afc90786 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -905,7 +905,8 @@ static bool __collapse_huge_page_swapin(struct mm_struct *mm,
->   	/* we only decide to swapin, if there is enough young ptes */
->   	if (referenced < HPAGE_PMD_NR/2) {
->   		trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, 0);
+Should be:
 
-The trace point is recording the return value. Shouldn't you s/0/1 to match?
+$ git diff
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+index 0481796f75bc..c24350222133 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
+@@ -1467,7 +1467,7 @@ static void iwl_req_fw_callback(const struct
+firmware *ucode_raw, void *context)
+                                kmemdup(pieces->dbg_conf_tlv[i],
+                                        pieces->dbg_conf_tlv_len[i],
+                                        GFP_KERNEL);
+-                       if (!pieces->dbg_conf_tlv[i])
++                       if (!drv->fw.dbg.conf_tlv[i])
+                                goto out_free_fw;
+                }
+        }
 
-> -		return false;
-> +		/* Do not block collapse, only skip swapping in */
-> +		return true;
->   	}
->   	vmf.pte = pte_offset_map(pmd, address);
->   	for (; vmf.address < address + HPAGE_PMD_NR*PAGE_SIZE;
-> 
+"fw.dbg.conf" with a dot not underscore.
 
-So "referenced < HPAGE_PMD_NR/2" means swapped out pages aren't faulted back in
-but there could still be no swapped out pages, just "old" pages so collapse could
-succeed. Seems like this check could have been made in khugepaged_scan_pmd() when
-"referenced" is being computed and "unmapped" is available. Just skip setting
-"ret = 1" if unmapped > 0 && referenced < HPAGE_PMD_NR/2.
+- Sedat -
+
+
+
+> Patch set to Changes Requested.
+>
+> --
+> https://patchwork.kernel.org/patch/11470125/
+>
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
