@@ -2,146 +2,97 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AA1C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089A1C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0EF0206F7
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586136870;
-	bh=Ht6WcVZw6CxkMCuOWs+I+nyOlrVAodGyMSMwOYnpKuE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PMT30xtlCKGka+jD6lWrXRFSuZ4sqeeWUX3ww1DREkUWgVDOHk5hhyYCjUrlYrMlX
-	 GcUwPtThPeId9RyRA3zdxVbDUSgiCsuSqJT5OCN0ci0a//YaF+aTZAKvb4D5cwxKEs
-	 0gjun5A/yVjJ3OIgRfkFt+1xQM7JjEjCrb3kg5P0=
+	by mail.kernel.org (Postfix) with ESMTP id CFE86206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:40:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Db1mD337"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgDFBea (ORCPT
+        id S1726475AbgDFBk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 21:34:30 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:16616 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgDFBe3 (ORCPT
+        Sun, 5 Apr 2020 21:40:28 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39565 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbgDFBk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 21:34:29 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 0361YHe5027913;
-        Mon, 6 Apr 2020 10:34:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0361YHe5027913
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586136858;
-        bh=WggtXRihTH+Wz5QBc889jtnhJke76W/cxwCtqWHtd04=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bMm9k1daHMzkHhg5is8BX38kKAJ0WFkzJrfNeP7PlxYViVbSh9UoVN1GgB0CWjwMw
-         rLDDLCR3SxHbP8ozgi+cCvc5mKLqPJYoz3LkgqTq6B6ZPVfL5nGBfDdIt2nIDarR19
-         7xi67pDvFe6z4VTK//Rej0c5xSMzp1HfrIs5YDFerlBrYM5Gi7VUWz8Qz6dZMjdfsj
-         0ZHLTqLKoNRbXj1hqWx0R6M5reDK7a2ozPZTfIjLhq+cDmebugCqKxyEo2k5zE4ibL
-         z06lWpBcwMqkSEwIU2fUPXfGZVG6rKWzhxmoQw39Y52eUYkiPh2eZG008RhcFmDi32
-         7+L/HGdp/whPQ==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id g10so4928788uae.5;
-        Sun, 05 Apr 2020 18:34:17 -0700 (PDT)
-X-Gm-Message-State: AGi0PublqpKT37TTyTmIzrpjD7iCAb4EfKkT15zSBqrtN1n79zbAFrPL
-        mTbwJXsZmr1Psg21gwTQb2zW0p4I9g12N496c+M=
-X-Google-Smtp-Source: APiQypIcMplsadH3z84yNAuKQGfFCQbbX6ctwDwhT2ytsTfzrhFdcvKfTpH9UVUIN3vG+xTJxurABv8/OBALFHZl+Jk=
-X-Received: by 2002:ab0:2790:: with SMTP id t16mr13453216uap.40.1586136856501;
- Sun, 05 Apr 2020 18:34:16 -0700 (PDT)
+        Sun, 5 Apr 2020 21:40:28 -0400
+Received: by mail-pg1-f195.google.com with SMTP id g32so6794889pgb.6
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 18:40:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=JfqoETVUbeVhuWCheUwvSsR2etx95rp9fIXx0CAktnU=;
+        b=Db1mD337TDZnTFi/Tz73h/PVt4R2aQ1DYIK0G8QvmocwEW5tlUl1tlDREyJyzjZ5SQ
+         1YzVCx7wvDtmYmYnfKkcR9F0FlN+CeErACSUwUqfTIHsq4tjv02yFfE/RL8TxcosgLVn
+         W8Q+mt16/0FYjQHTdWW+qG9kKZfMzNWIb5yDifxtA+wpJ3Ps8UU0QFgTvdm/zhDh/dkm
+         hqYWSd3RQWQhkh0eS6CfWFWNs4TPgc0mahNUlsv7TPIm9ySpO+vOZa+MnD8JXFS/2r8o
+         Ciej7DSXJx5KA4BtnFnWTXDoFQx5JC9vdlf3Tfnh0KKYRKJJprxAhs9z94D+O6vkKydE
+         XHkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=JfqoETVUbeVhuWCheUwvSsR2etx95rp9fIXx0CAktnU=;
+        b=U629dim6wwoOWgfA78pHQD9qjQbNMvLwqtTOCGUDYgCP0V1mgLbd2RRn85tz6/eOKE
+         Ghe9oqbNPFUBBWGdOflSyM43Xyl0KkIVlidpGn76c5oetm0qJLOAHnduE4cBKnRnNjBI
+         8M5JQUrZE5ukhkmRWxojTU0ezpP3t2UlGvCiomu7187WZIEnz68tgUF7R0NbwQG/OA1S
+         0+sBPQPRhc0JI3jrTo7vHO/wbZ1ouT2wIi4GOv9kGDOmXgbtqlemUyyWSM1T1ImuPTgo
+         ouCTrfIuPROhU9AB3nGr8DgC/MhD7sHJvsOs9fty/n0lsC9dmqfr1eY/NV3hHsGzaphS
+         Pxkw==
+X-Gm-Message-State: AGi0PuY4hMz3Y7lIgektwMppuTT8WGWI5a3GK1yS6TT2QyN2CINsWO/+
+        NqW03QpG2b8Z3pE/gnUOxQE=
+X-Google-Smtp-Source: APiQypLNW+UjSKA27NgGh3BBUC9+7L3ENfp9aWDYv0xjAvUXTTfG6+lCmp2h+1lXbOHFzeuojRpYSw==
+X-Received: by 2002:a63:e558:: with SMTP id z24mr18572992pgj.368.1586137227327;
+        Sun, 05 Apr 2020 18:40:27 -0700 (PDT)
+Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
+        by smtp.gmail.com with ESMTPSA id 21sm9761512pgf.41.2020.04.05.18.40.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 18:40:26 -0700 (PDT)
+Date:   Mon, 06 Apr 2020 11:39:19 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH v2 13/13] powerpc/kernel: Do not use READ_ONCE() to
+ access current thread_info flags
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
+        <3b9257ea1f3e107b81437671fa9d3942e31c6735.1586108649.git.christophe.leroy@c-s.fr>
+In-Reply-To: <3b9257ea1f3e107b81437671fa9d3942e31c6735.1586108649.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-References: <20200403051709.22407-1-masahiroy@kernel.org> <CAKwvOdnaZ6qDVxaPY-GEH8pdUkzH6eqm16ok9_wzRSVRG-1kiQ@mail.gmail.com>
- <CAK7LNAQybfcYiosNU+ybd-Q7-Y2dbLqBVN2XA00wCRnFAoqdew@mail.gmail.com> <20200405235507.psjjhqa3cxw57xra@google.com>
-In-Reply-To: <20200405235507.psjjhqa3cxw57xra@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 6 Apr 2020 10:33:40 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS_SQg2nhJ8HKBTq3+dziGpaJZ87fOBRS-ZMdUpKGhX9Q@mail.gmail.com>
-Message-ID: <CAK7LNAS_SQg2nhJ8HKBTq3+dziGpaJZ87fOBRS-ZMdUpKGhX9Q@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
-To:     Fangrui Song <maskray@google.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Matthias_M=C3=A4nnich?= <maennich@google.com>,
-        Sandeep Patil <sspatil@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1586137083.v4cw2k5x9e.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 8:55 AM 'Fangrui Song' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
->
-> On 2020-04-06, Masahiro Yamada wrote:
-> >On Sat, Apr 4, 2020 at 3:24 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >>
-> >> On Thu, Apr 2, 2020 at 10:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >> >
-> >> > As Documentation/kbuild/llvm.rst implies, building the kernel with a
-> >> > full set of LLVM tools gets very verbose and unwieldy.
-> >> >
-> >> > Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
-> >> > GCC and Binutils. You can pass LLVM=1 from the command line or as an
-> >> > environment variable. Then, Kbuild will use LLVM toolchains in your
-> >> > PATH environment.
-> >> >
-> >> > Please note LLVM=1 does not turn on the LLVM integrated assembler.
-> >> > You need to explicitly pass AS=clang to use it. When the upstream
-> >> > kernel is ready for the integrated assembler, I think we can make
-> >> > it default.
-> >>
-> >> Having this behavior change over time may be surprising.  I'd rather
-> >> that if you want to not use the integrated assembler, you explicitly
-> >> negate it, or just don't use the LLVM=1 syntax, ie. `make CC=clang
-> >> LD=ld.lld ...`.
-> >>
-> >> We could modify how `-no-integrated-as` is chosen when LLVM=1.
-> >>
-> >> make LLVM=1 LLVMIA=0 ... # add `-no-integrated-as`
-> >> # what the flag is doesn't really matter to me, something shorter might be nice.
-> >> make LLVM=1 # use all LLVM tools
-> >>
-> >> Since we got rid of $(AS), it would be appropriate to remove/change it
-> >> there, since no one really relies on AS=clang right now. (We do have 1
-> >> of our 60+ CI targets using it, but we can also change that trivially.
-> >> So I think we have a lot of freedom to change how `-no-integrated-as`
-> >> is set.
-> >>
-> >> This could even be independent of this patch.
-> >
-> >
-> >I also thought a boolean flag is preferred.
-> >
-> >AS=clang will not live long anyway, and
-> >I hesitated to break the compatibility
-> >for the short-term workaround.
-> >
-> >But, if this is not a big deal, I can
-> >replace AS=clang with LLVMIA=1.
->
-> My mere complaint is that it may be difficult to infer the intention (integrated
-> assembler) from the abbreviation "IA" in "LLVMIA" :/
->
-> Something with "AS" in the name may be easier for a user to understand,
-> e.g. CLANG_AS or LLVM_AS.
+Christophe Leroy's on April 6, 2020 3:44 am:
+> current is a volatile pointer hold by r2 register.
+>=20
+> READ_ONCE() is not required.
+>=20
+> Before: 327 cycles on null_syscall
+> Before: 325 cycles on null_syscall
 
+Patches against Michael's next-test branch have a few small changes=20
+here. I need to look at the fallout on 64-bit code, although most
+likely it's not measurable so if it saves you a few cycles we can
+lean toward what ppc32 prefers.
 
+Same with the compat test.
 
-
-I see 'llvm-as' in my PATH,
-but it is a different kind of tool, right?
-(converter from LLVM assembler *.ll to LLVM bit code *.bc)
-
-So, I thought "LLVM_AS" might be confusing.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks,
+Nick
+=
