@@ -2,87 +2,52 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C30C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BC1C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C57BE22273
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PHPHD7F5"
+	by mail.kernel.org (Postfix) with ESMTP id D230F22262
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgDFNCW (ORCPT
+        id S1728299AbgDFNCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:02:22 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:15198 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728184AbgDFNCV (ORCPT
+        Mon, 6 Apr 2020 09:02:55 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:53142 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728154AbgDFNCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:02:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586178141; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
- To: From: Sender; bh=9tdkGmLU02zbWVLGYy5PSq5hUqznxpWzvhiGLCd+WxU=; b=PHPHD7F5iV/9XLu+ktllJkG/YqwfVXeT/GNqiukILWOlULfRydUZE3OCVeseOE3nvxCkHc/1
- xViWn0yqj9XCgdvQJSFvbgZt3Z5Qkw5+2A2HksBNsR6k+n3Cn8fZuIIF7uloz5Vmdf+tA02l
- OFXgnVkheGMZLzkUxf9z67HpmWI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b2855.7f0ef81547d8-smtp-out-n03;
- Mon, 06 Apr 2020 13:02:13 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 75195C433F2; Mon,  6 Apr 2020 13:02:13 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28F6BC433D2;
-        Mon,  6 Apr 2020 13:02:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28F6BC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <davem@davemloft.net>, <pradeepc@codeaurora.org>,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ath11k: thermal: Fix build error without CONFIG_THERMAL
-References: <20200403083414.31392-1-yuehaibing@huawei.com>
-Date:   Mon, 06 Apr 2020 16:02:07 +0300
-In-Reply-To: <20200403083414.31392-1-yuehaibing@huawei.com>
-        (yuehaibing@huawei.com's message of "Fri, 3 Apr 2020 16:34:14 +0800")
-Message-ID: <87mu7ozs1c.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 6 Apr 2020 09:02:55 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLROg-00CA1y-Gz; Mon, 06 Apr 2020 13:02:38 +0000
+Date:   Mon, 6 Apr 2020 14:02:38 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] binfmt_elf: remove the set_fs(KERNEL_DS) in
+ elf_core_dump
+Message-ID: <20200406130238.GT23230@ZenIV.linux.org.uk>
+References: <20200406120312.1150405-1-hch@lst.de>
+ <20200406120312.1150405-4-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406120312.1150405-4-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> writes:
+On Mon, Apr 06, 2020 at 02:03:09PM +0200, Christoph Hellwig wrote:
+> There is no logic in elf_core_dump itself that uses uaccess routines
+> on kernel pointers, the file writes are nicely encapsulated in dump_emit
+> which does its own set_fs.
 
-> drivers/net/wireless/ath/ath11k/thermal.h:45:1:
->  warning: no return statement in function returning non-void [-Wreturn-ty=
-pe]
-> drivers/net/wireless/ath/ath11k/core.c:416:28: error:
->  passing argument 1 of =E2=80=98ath11k_thermal_unregister=E2=80=99 from i=
-ncompatible pointer type [-Werror=3Dincompatible-pointer-types]
->
-> Add missing return 0 in ath11k_thermal_set_throttling,
-> and fix ath11k_thermal_unregister param type.
-
-These are warnings, no? "build error" and "compiler warning" are
-different things, the former breaks the whole build which is super
-critical, but I'll queue this to v5.7 nevertheless. And I'll change the
-title to:
-
-ath11k: fix compiler warning without CONFIG_THERMAL
-
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+... assuming you've checked the asm/elf.h to see that nobody is playing
+silly buggers in these forests of macros and the stuff called from those.
+Which is a feat that ought to be mentioned in commit message...
