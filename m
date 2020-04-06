@@ -2,106 +2,143 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F2CC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 00:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF23BC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 00:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2DE20731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 00:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E142068E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 00:16:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TXrwlpTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgDFAO3 (ORCPT
+        id S1727923AbgDFAQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 20:14:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34064 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbgDFAO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 20:14:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 83147AC2D;
-        Mon,  6 Apr 2020 00:14:24 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Michal Hocko <mhocko@kernel.org>, Jan Kara <jack@suse.cz>
-Date:   Mon, 06 Apr 2020 10:14:16 +1000
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2 - v2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK instead.
-In-Reply-To: <20200403110358.GB22681@dhcp22.suse.cz>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87sghmyd8v.fsf@notabene.neil.brown.name> <87pncqyd7k.fsf@notabene.neil.brown.name> <20200402151009.GA14130@infradead.org> <87h7y1y0ra.fsf@notabene.neil.brown.name> <20200403094220.GA29920@quack2.suse.cz> <20200403110358.GB22681@dhcp22.suse.cz>
-Message-ID: <87pnclwjvr.fsf@notabene.neil.brown.name>
+        Sun, 5 Apr 2020 20:16:37 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44946 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgDFAQg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 5 Apr 2020 20:16:36 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m17so15284463wrw.11;
+        Sun, 05 Apr 2020 17:16:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ilLIZZY1ZTef+uy+Q7pfKbP5pegyvZMVI25fKVDA1p0=;
+        b=TXrwlpTlaPpc2Y+d7kJaMaxhnHhTDv7UubglkvvMdxhoHLU6mX2fEJhex9PzTWb3Lh
+         wiOwPTITEZR2g0y1IB/k08ycYjqhPVQY+XqgKq7TMI49gZw8udF41A3mZZMfeJnV2tN4
+         sEkQsoCdilkCsRuQUl2/wcpM96caYZXiMLTThUqOM1i8Ap1kM6cW/N3zPVfM0GJ6nP7k
+         WStAZyUYVi+K560H4dWAKV7f/kPaCYGRdD7/5cHrQMx6DMUevlI6eDQpbaYNR03LiORv
+         mdlrK0fj4vG47pt+AXiEvhdPy6j5zJ2hlqvEYhcYCnW87Pt/z0Bjd82qnWY7BcZyw3Jo
+         qqzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ilLIZZY1ZTef+uy+Q7pfKbP5pegyvZMVI25fKVDA1p0=;
+        b=MvhZ4QByH7yURGz6a64RmAXkvmIzjwwB8KeQ2HBnyMVr15Com5eyCCMPP3QfIkGP7i
+         7zcwg2/lcqncEgbduuItKSqkg4Pz/3dupLBMvig0F5DwYill7LgiXTuk0LOu0NEGCMKo
+         InglyKgby1ojDRdGYQCdBjvAI2Y0J7dfBMgtXVpzBrgvzPBWSylJVIWEjoebXm16Frkh
+         /alRBCB2RHEYjmiVZeUClgWyffQunC5JXPbOZr7WijOzvLpFdHpiph/tuqgBWjhMNMeL
+         zg5dt0Jm+xyov3AWRFXT5oq2skccAmFbb3q3TMfqcBWwRmzKHvbXAmjFYqYPXZTRkMut
+         AqCQ==
+X-Gm-Message-State: AGi0PuZjeGc7LQwfx9QD5t1aIbwirI68BhPD3VMT7eWLI6PJtgezgxHC
+        b1W+sw2oeDRjwMOHTOWHzxlCbryGR8m+Qg==
+X-Google-Smtp-Source: APiQypLNJ1X/3/73bJYhaIgJorgfuSgNQqL/G8ATwZmq09esJO03yj9NOUF/DNacYHVuIlEVK4YCbw==
+X-Received: by 2002:adf:fdc6:: with SMTP id i6mr21491009wrs.252.1586132193213;
+        Sun, 05 Apr 2020 17:16:33 -0700 (PDT)
+Received: from andrea.corp.microsoft.com ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id j9sm817432wrn.59.2020.04.05.17.16.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 17:16:32 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 00/11] VMBus channel interrupt reassignment
+Date:   Mon,  6 Apr 2020 02:15:03 +0200
+Message-Id: <20200406001514.19876-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi all,
 
-On Fri, Apr 03 2020, Michal Hocko wrote:
-
-> On Fri 03-04-20 11:42:20, Jan Kara wrote:
-> [...]
->> > diff --git a/mm/vmstat.c b/mm/vmstat.c
->> > index 78d53378db99..d1291537bbb9 100644
->> > --- a/mm/vmstat.c
->> > +++ b/mm/vmstat.c
->> > @@ -1162,7 +1162,6 @@ const char * const vmstat_text[] =3D {
->> >  	"nr_file_hugepages",
->> >  	"nr_file_pmdmapped",
->> >  	"nr_anon_transparent_hugepages",
->> > -	"nr_unstable",
->> >  	"nr_vmscan_write",
->> >  	"nr_vmscan_immediate_reclaim",
->> >  	"nr_dirtied",
->>=20
->> This is probably the most tricky to deal with given how /proc/vmstat is
->> formatted. OTOH for this file there's good chance we'd get away with just
->> deleting nr_unstable line because there are entries added to it in the
->> middle (e.g. in 60fbf0ab5da1 last September) and nobody complained yet.
->>=20
->> What do mm people think? How were changes to vmstat counters handled in =
-the
->> past?
->
-> Adding new counters in the middle seems to be generally OK. I would be
-> more worried about removing counters though. So if we can simply print a
-> phone value at the very end then this should be a reasonable workaround.
-
-At the very end?
-Do you mean not have "nr_unstable 0" appear at all, but having "dummy 0"
-appear at the end just so that the number of lines doesn't decrease?
-Am I misunderstanding?
+This is a follow-up on the RFC submission [1].  The series introduces
+changes in the VMBus drivers to reassign the CPU that a VMbus channel
+will interrupt.  This feature can be used for load balancing or other
+purposes (e.g. CPU offlining).  The submission integrates feedback in
+the RFC to amend the handling of the 'array of channels' (patch #3).
 
 Thanks,
-NeilBrown
+  Andrea
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+[1] https://lkml.kernel.org/r/20200325225505.23998-1-parri.andrea@gmail.com
 
------BEGIN PGP SIGNATURE-----
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6KdFgACgkQOeye3VZi
-gbk9eRAAgpuSPME4j7VuvpAzToqgPRWUqCepTVE70zZqQHFCfaVdhSnZZPPW6qhi
-vrup/0wKoQBzB3zHQDDX9vEeIiwO5wyC3FTTN4moD8LhJ3i+hsixC3GPBw4Ptr1p
-V5scdcdecrGMOsAXcOIV9VFLpHe+Jn1ScakAPPU7mWi7mhUQ34U1vjTBTlPzzOQC
-0mWJtmD4i8IIPDwX5W0g6cbDQNRmgFnwmPrNLIw62knSZgOZHb7tjG2MZ4HS73E5
-xle7reCfleLezyB7HbJwBY352Oz6kUhb8ogiXcDk2iP8c7CqciUvkp20yPM2IkLB
-sjx62r5PKer719o0BdB+ISCJmQJ6IycMHXB9aptLoWi0Xw3JvOwWvY5C/bgDq96E
-R6R7Ekb77H8mhZmBNGYjOqJTib9QY19nhrp9PcAzlD8g2/5fw6KI1kW/K11ucaGa
-QBErUxFm5dreRivJZklhgLUStMd68i6ALdiNu8XQLoVILfVCGDaLJo5tNK9nWzGr
-sJ//OTsSa5/qw522j9EWHju8SB1jDgmG5upoyhxzTbNXhGLYbfwbVRjtZQdEwtU+
-HmLHW7w/EGBcK4XaMZHp1uKUClxwwCRR4y+0pj51mNtfu8zZ+KqHXsNo+SZjJ8fX
-GQ05sBO9+Iayuy+Todsgcy5MXerd2nETnq0HNJBdo8gpZZkbURk=
-=znt9
------END PGP SIGNATURE-----
---=-=-=--
+Andrea Parri (Microsoft) (11):
+  Drivers: hv: vmbus: Always handle the VMBus messages on CPU0
+  Drivers: hv: vmbus: Don't bind the offer&rescind works to a specific
+    CPU
+  Drivers: hv: vmbus: Replace the per-CPU channel lists with a global
+    array of channels
+  hv_netvsc: Disable NAPI before closing the VMBus channel
+  hv_utils: Always execute the fcopy and vss callbacks in a tasklet
+  Drivers: hv: vmbus: Use a spin lock for synchronizing channel
+    scheduling vs. channel removal
+  PCI: hv: Prepare hv_compose_msi_msg() for the
+    VMBus-channel-interrupt-to-vCPU reassignment functionality
+  Drivers: hv: vmbus: Remove the unused HV_LOCALIZED channel affinity
+    logic
+  Drivers: hv: vmbus: Synchronize init_vp_index() vs. CPU hotplug
+  Drivers: hv: vmbus: Introduce the CHANNELMSG_MODIFYCHANNEL message
+    type
+  scsi: storvsc: Re-init stor_chns when a channel interrupt is
+    re-assigned
+
+ drivers/hv/channel.c                |  58 +++--
+ drivers/hv/channel_mgmt.c           | 347 +++++++++++++++-------------
+ drivers/hv/connection.c             |  58 +----
+ drivers/hv/hv.c                     |  16 +-
+ drivers/hv/hv_fcopy.c               |   2 +-
+ drivers/hv/hv_snapshot.c            |   2 +-
+ drivers/hv/hv_trace.h               |  19 ++
+ drivers/hv/hyperv_vmbus.h           |  32 ++-
+ drivers/hv/vmbus_drv.c              | 241 +++++++++++++++----
+ drivers/net/hyperv/netvsc.c         |   7 +-
+ drivers/pci/controller/pci-hyperv.c |  44 ++--
+ drivers/scsi/storvsc_drv.c          |  95 +++++++-
+ include/linux/hyperv.h              |  51 ++--
+ 13 files changed, 620 insertions(+), 352 deletions(-)
+
+-- 
+2.24.0
+
