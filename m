@@ -2,191 +2,197 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5C4C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDE5C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716CE24673
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884DF22206
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586186049;
-	bh=fVB6J0mjEeSZ099/vu/0h+JsJA+JX28G73glOZ2vAeo=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=R8gbsyJ2EfOr9RCYanwblan4447Kb4EPLBSgX7Mrikri8p0JSjBjR/vmOZ40UFY8z
-	 Ny91Nd3HY+iQ4QJiqq3tPoIysEG/3XKm1IqAza68ZDMTwtNGVGcRfsRXQlTSFlxJqa
-	 Wtrhkw7xLXE62caTNbu6jLUzudCr7NbuidMDtT1I=
+	s=default; t=1586186069;
+	bh=j+CN69lefkVNiF8b7o10Y9BP3J7X531gcJQcYOP0EWA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=swywHoVqFkXbgn6yTo3ajUWNWVxe363TR2sb54bY+wtZvQnvxP4e0N0gQgT0nunJu
+	 9gijPGmyqbO87JIbuPxmU2srSUs1ol2kQqRSyk0EwMXOb5kqzRgqVfHVZcs71Uwlnc
+	 1jSrIA0hXXSkO6wR6KKQubrVNhOTpdVcwGlIg3V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgDFPOI convert rfc822-to-8bit (ORCPT
+        id S1728909AbgDFPO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:14:08 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35049 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728826AbgDFPOH (ORCPT
+        Mon, 6 Apr 2020 11:14:28 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43121 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728826AbgDFPO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:14:07 -0400
-Received: by mail-oi1-f194.google.com with SMTP id t25so13359991oij.2;
-        Mon, 06 Apr 2020 08:14:07 -0700 (PDT)
+        Mon, 6 Apr 2020 11:14:28 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s4so43372pgk.10;
+        Mon, 06 Apr 2020 08:14:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=QnGJpUcnr/LV52LUQSsfc6dIRSvEfNk579Oi3E4BtZw=;
-        b=Xoi49p/6iRzhLdT6hx1V/WWCjj5dkxuc6Hd092rD6T7urHGKeqFUnQm1WL7uNaMVNE
-         BLOOHSBue8XCUJjZ28ItIjsFcM+YUV/a3/8J0ZpeYJBUVaQvEeP7NH9ouooIfkcIPhOy
-         pjp861gY+R1re/Mc8H+0eGoanzz45DTMbFB046+0fumSi32tP6JGneduoPHoKPYnWJfd
-         zepok9cpI0PtjekWHGUXEQ5VntXurM5qjVOt4BBc3DeGFbVPANnrPWJZPTUZ+WR4KH5P
-         Lh1dt/bw2zMa6v1vZ+fw3JatrJqd2m2+ChQlV8nPkkU/0SreUDdrHYdZMOuVeVSdI8pA
-         BT3A==
-X-Gm-Message-State: AGi0PuZcm2+0GdyDdAUo88LufYk9kSB//fgbgopwihtxsjan2iM3Gh9x
-        F6crbfaOQjbOqz6xLrctMZwzyRwgUveKzyX9+5PPKtV/
-X-Google-Smtp-Source: APiQypIvLhm4CgDSPv6mQsDS2leEsn8gXORXQlDxnq7+kZLH4nFyJJVQTQSogX/C6SWU6St1GIg5J+C3YfETlGEQQo0=
-X-Received: by 2002:a05:6808:8f:: with SMTP id s15mr13524853oic.110.1586186046794;
- Mon, 06 Apr 2020 08:14:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C1rj6tqouMSzYr123O6MG7Kb2JqCCN96dtKjirMsApo=;
+        b=G2HTg+7C/uYDd+HC2P1uzdm4RzbvrsPnDh4/CHz0eRv9AR14+UgPxPTmLKCL/yoTzi
+         kjM9DUp4cQ5wLv3YMXfxZvAMTi/mk+WOIu8qXCItNlevNXJX2gXTfGHW4707G5GZwiQr
+         j+s0u02NTvGSGbjmCqCl70ZFJ/fWdV/r7oqpqpRGOMwAy2aSOYzGoRoTD0pbH2rexn8t
+         9pm+Psq4cHaQZVpZX04bZ/+/46MiRF1HVVDrqTdEEkbDzA3pvk9/IsHKMY6CIueItiH6
+         GiVg3Br0gMFH6lFSM10HnvZr88aGJoGI4cRTL5/SqZLxN+7y+qgF1DNe8Rew7VgUdO1+
+         CPMg==
+X-Gm-Message-State: AGi0Pub6nL9WJF3s3MMGi9sbpeHMRhtL33p2eZw3BjFPnqPUOA68OqKP
+        9fDPA77tp4TM4dphC6WyY0E=
+X-Google-Smtp-Source: APiQypIc2HttsxKQxguvtP/5pcNclwUmIYd7LwuujxsGlIkCzwp/T9+mNTtdb2Y3OGmhZhRkuqdyyw==
+X-Received: by 2002:a63:c345:: with SMTP id e5mr1399506pgd.403.1586186064972;
+        Mon, 06 Apr 2020 08:14:24 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id g11sm11850281pjs.17.2020.04.06.08.14.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 08:14:22 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 43FAF40246; Mon,  6 Apr 2020 15:14:22 +0000 (UTC)
+Date:   Mon, 6 Apr 2020 15:14:22 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
+        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
+        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
+        mhocko@suse.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Subject: Re: [RFC 2/3] blktrace: fix debugfs use after free
+Message-ID: <20200406151422.GC11244@42.do-not-panic.com>
+References: <20200402000002.7442-1-mcgrof@kernel.org>
+ <20200402000002.7442-3-mcgrof@kernel.org>
+ <3640b16b-abda-5160-301a-6a0ee67365b4@acm.org>
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 6 Apr 2020 17:13:55 +0200
-Message-ID: <CAJZ5v0j8rEiD0uv+LQoAQyfdXORF+joz-vLVH4ryH9_xvZebOQ@mail.gmail.com>
-Subject: [GIT PULL] More ACPI updates for v5.7-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3640b16b-abda-5160-301a-6a0ee67365b4@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sat, Apr 04, 2020 at 08:39:47PM -0700, Bart Van Assche wrote:
+> On 2020-04-01 17:00, Luis Chamberlain wrote:
+> > korg#205713 then was used to create CVE-2019-19770 and claims that
+> > the bug is in a use-after-free in the debugfs core code. The
+> > implications of this being a generic UAF on debugfs would be
+> > much more severe, as it would imply parent dentries can sometimes
+> > not be possitive, which is something claim is not possible.
+>          ^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>          positive?  is there perhaps a word missing here?
 
-Please pull from the tag
+Sorry yeah, this was supposed to say:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-5.7-rc1-2
+it would imply parent dentries can sometimes not be positive, which
+is just not possible.
 
-with top-most commit 33ae7f715e30a674599c7f57dce0512b6051edbf
+> > It turns out that the issue actually is a mis-use of debugfs for
+> > the multiqueue case, and the fragile nature of how we free the
+> > directory used to keep track of blktrace debugfs files. Omar's
+> > commit assumed the parent directory would be kept with
+> > debugfs_lookup() but this is not the case, only the dentry is
+> > kept around. We also special-case a solution for multiqueue
+> > given that for multiqueue code we always instantiate the debugfs
+> > directory for the request queue. We were leaving it only to chance,
+> > if someone happens to use blktrace, on single queue block devices
+> > for the respective debugfs directory be created.
+> 
+> Since the legacy block layer is gone, the above explanation may have to
+> be rephrased.
 
- Merge branches 'acpi-cppc', 'acpi-video' and 'acpi-drivers'
+Will do.
 
-on top of commit 2ce94bc4e056d3e48291aac87a95ebd2a86348ba
+> > We can fix the UAF by simply using a debugfs directory which is
+> > always created for singlequeue and multiqueue block devices. This
+> > simplifies the code considerably, with the only penalty now being
+> > that we're always creating the request queue directory debugfs
+> > directory for the block device on singlequeue block devices.
+> 
+> Same comment here - the legacy block layer is gone. I think that today
+> all block drivers are either request-based and multiqueue or so-called
+> make_request drivers. See also the output of git grep -nHw
+> blk_alloc_queue for examples of the latter category.
 
- Merge tag 'pnp-5.7-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+Will adjust.
 
-to receive additional ACPI updates for 5.7-rc1.
+> > This patch then also contends the severity of CVE-2019-19770 as
+> > this issue is only possible using root to shoot yourself in the
+> > foot by also misuing blktrace.
+>                ^^^^^^^
+>                misusing?
+> 
+> > diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+> > index b3f2ba483992..bda9378eab90 100644
+> > --- a/block/blk-mq-debugfs.c
+> > +++ b/block/blk-mq-debugfs.c
+> > @@ -823,9 +823,6 @@ void blk_mq_debugfs_register(struct request_queue *q)
+> >  	struct blk_mq_hw_ctx *hctx;
+> >  	int i;
+> >  
+> > -	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
+> > -					    blk_debugfs_root);
+> > -
+> >  	debugfs_create_files(q->debugfs_dir, q, blk_mq_debugfs_queue_attrs);
+> >  
+> >  	/*
+> 
+> [ ... ]
+> 
+> >  static void blk_mq_debugfs_register_ctx(struct blk_mq_hw_ctx *hctx,
+> > diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+> > index fca9b158f4a0..20f20b0fa0b9 100644
+> > --- a/block/blk-sysfs.c
+> > +++ b/block/blk-sysfs.c
+> > @@ -895,6 +895,7 @@ static void __blk_release_queue(struct work_struct *work)
+> >  
+> >  	blk_trace_shutdown(q);
+> >  
+> > +	blk_q_debugfs_unregister(q);
+> >  	if (queue_is_mq(q))
+> >  		blk_mq_debugfs_unregister(q);
+> 
+> Does this patch change the behavior of the block layer from only
+> registering a debugfs directory for request-based block devices to
+> registering a debugfs directory for request-based and make_request based
+> block devices? Is that behavior change an intended behavior change?
 
-These update the ACPICA code in the kernel to the 20200326 upstream
-revision, fix an ACPI-related CPU hotplug deadlock on x86, update
-Intel Tiger Lake device IDs in some places, add a new ACPI backlight
-blacklist entry, update the "acpi_backlight" kernel command line
-switch documentation and clean up a CPPC library routine.
+Yes, specifically this was already done, however for request-based block
+devices this was done upon init, and for make_request based devices this
+was only instantiated *iff* blktrace was used at least once. It is
+actually a bit difficult to see the later, given the rq->debugfs_dir was
+not used per se for make_request based block devices, but instead
+the debugfs_create_dir(buts->name, blk_debugfs_root) call was made
+directly, which happens to end up being the same directory as
+debugfs_create_dir(kobject_name(q->kobj.parent), blk_debugfs_root)
+called on block/blk-mq-debugfs.c.
 
-Specifics:
+This changes the block layer so that the rq->debugfs_dir is always created
+now if debugfs is enabled.
 
- - Update the ACPICA code in the kernel to upstream revision 20200326
-   including:
+Note that blktrace already depends on debugfs. What was missing in this
+patch too was this hunk:
 
-   * Fix for a typo in a comment field (Bob Moore).
-   * acpiExec namespace init file fixes (Bob Moore).
-   * Addition of NHLT to the known tables list (Cezary Rojewski).
-   * Conversion of PlatformCommChannel ASL keyword to PCC (Erik
-     Kaneda).
-   * acpiexec cleanup (Erik Kaneda).
-   * WSMT-related typo fix (Erik Kaneda).
-   * sprintf() utility function fix (John Levon).
-   * IVRS IVHD type 11h parsing implementation (Michał Żygowski).
-   * IVRS IVHD type 10h reserved field name fix (Michał Żygowski).
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -569,8 +569,10 @@ struct request_queue {
+	struct list_head        tag_set_list;
+	struct bio_set          bio_split;
 
- - Fix ACPI-related CPU hotplug deadlock on x86 (Qian Cai).
+-#ifdef CONFIG_BLK_DEBUG_FS
++#ifdef CONFIG_DEBUG_FS
+	struct dentry           *debugfs_dir;
++#endif
++#ifdef CONFIG_BLK_DEBUG_FS
+	struct dentry
+	*sched_debugfs_dir;
+	struct dentry
+	*rqos_debugfs_dir;
+#endif
 
- - Fix Intel Tiger Lake ACPI device IDs in several places (Gayatri
-   Kammela).
-
- - Add ACPI backlight blacklist entry for Acer Aspire 5783z (Hans
-   de Goede).
-
- - Fix documentation of the "acpi_backlight" kernel command line
-   switch (Randy Dunlap).
-
- - Clean up the acpi_get_psd_map() CPPC library routine (Liguang
-   Zhang).
-
-Thanks!
-
-
----------------
-
-Bob Moore (3):
-      ACPICA: Fix a typo in a comment field
-      ACPICA: Fixes for acpiExec namespace init file
-      ACPICA: Update version 20200326
-
-Cezary Rojewski (1):
-      ACPICA: Add NHLT table signature
-
-Erik Kaneda (3):
-      ACPICA: Change PlatformCommChannel ASL keyword to PCC
-      ACPICA: acpiexec: remove redeclaration of
-acpi_gbl_db_opt_no_region_support
-      ACPICA: WSMT: Fix typo, no functional change
-
-Gayatri Kammela (3):
-      ACPI: Update Tiger Lake ACPI device IDs
-      platform/x86: intel-hid: fix: Update Tiger Lake ACPI device ID
-      thermal: int340x_thermal: fix: Update Tiger Lake ACPI device IDs
-
-Hans de Goede (1):
-      ACPI: video: Use native backlight on Acer Aspire 5783z
-
-John Levon (1):
-      ACPICA: utilities: fix sprintf()
-
-Liguang Zhang (1):
-      ACPI: CPPC: clean up acpi_get_psd_map()
-
-Michał Żygowski (2):
-      ACPICA: Implement IVRS IVHD type 11h parsing
-      ACPICA: Fix IVRS IVHD type 10h reserved field name
-
-Qian Cai (1):
-      x86: ACPI: fix CPU hotplug deadlock
-
-Randy Dunlap (1):
-      ACPI: video: Docs update for "acpi_backlight" kernel parameter options
-
----------------
-
- Documentation/admin-guide/kernel-parameters.txt    |  8 +++--
- arch/x86/kernel/acpi/cstate.c                      |  3 +-
- drivers/acpi/acpica/acnamesp.h                     |  2 ++
- drivers/acpi/acpica/dbinput.c                      | 16 +++++-----
- drivers/acpi/acpica/dbxface.c                      |  1 +
- drivers/acpi/acpica/dswexec.c                      | 33 ++++++++++++++++++++
- drivers/acpi/acpica/dswload.c                      |  2 --
- drivers/acpi/acpica/dswload2.c                     | 35 ++++++++++++++++++++++
- drivers/acpi/acpica/nsnames.c                      |  6 +---
- drivers/acpi/acpica/utdecode.c                     |  2 +-
- drivers/acpi/acpica/utdelete.c                     |  9 +++---
- drivers/acpi/acpica/utprint.c                      |  7 ++++-
- drivers/acpi/cppc_acpi.c                           | 33 +++++---------------
- drivers/acpi/device_pm.c                           |  2 +-
- drivers/acpi/dptf/dptf_power.c                     |  2 +-
- drivers/acpi/dptf/int340x_thermal.c                |  8 ++---
- drivers/acpi/processor_throttling.c                |  7 -----
- drivers/acpi/tables.c                              |  2 +-
- drivers/acpi/video_detect.c                        |  9 ++++++
- drivers/platform/x86/intel-hid.c                   |  2 +-
- .../intel/int340x_thermal/int3400_thermal.c        |  2 +-
- .../intel/int340x_thermal/int3403_thermal.c        |  2 +-
- include/acpi/acpixf.h                              |  2 +-
- include/acpi/actbl2.h                              | 21 +++++++++++--
- include/acpi/actbl3.h                              |  6 ++--
- include/acpi/acuuid.h                              |  2 +-
- include/acpi/processor.h                           |  8 +++++
- 27 files changed, 155 insertions(+), 77 deletions(-)
