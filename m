@@ -2,144 +2,187 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F546C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 03:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AE7C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0986120780
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 03:51:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vE41NK3R"
+	by mail.kernel.org (Postfix) with ESMTP id A844A2074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726520AbgDFDvP (ORCPT
+        id S1726474AbgDFEHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 23:51:15 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46178 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgDFDvO (ORCPT
+        Mon, 6 Apr 2020 00:07:40 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:63907 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgDFEHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 23:51:14 -0400
-Received: by mail-qt1-f196.google.com with SMTP id g7so11777333qtj.13;
-        Sun, 05 Apr 2020 20:51:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WV8R6FeJvyF9DBdnPAm34qcEm1BtCICmBxz3iuDazCI=;
-        b=vE41NK3RbjgCStbTVodJesrPs91H70K9nrdXIU8R6Lz+qqxgy43Hb+nYjVY+Mn06Oz
-         Uqjt3OhZqmLqmKdd6Hwi7V288FkfdueXA82Yq1t947f2Izwo0vexU09e8boozekSfWu7
-         ue5VgBGx+UkwDu2ivUv23NxGf5vmNeVLEzMcoy18XgURHmHC5vP+Vx2HfzABAAqL6me8
-         78QWPHRbZccoInJXFoD5xW6sT6nYoxX3RzTVi4K2Ot7IGQJICZykN1Yqw3ZbdlmhcsnY
-         8GcAqovW71pa5Lt+TKAto4SGw2BYgGqS3kXo+lZC/eBVG3g2R4lNHn6ww8/7JUaL0qvp
-         f3zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=WV8R6FeJvyF9DBdnPAm34qcEm1BtCICmBxz3iuDazCI=;
-        b=TQXdQRvBhuuMC58/Meq7EE6dE4glE0Sj2Td7s42oU5hIPNgAWwfQM87zS/HfwSZzwC
-         gF7wvYaah3RO1KYpNZK3TPrpCQJCkyofqG//Pk0uY/WwddODSiPM0hN7dN4GN/BKTinw
-         McYPaoXNAtk+3LBYJzmWGae3dD42aLYM0v33pgEyye7TqfyfphCauLFbCZUr6iz82WYm
-         Q85lfbMOD9Z64Zru4khvoRlnB3u+6DF5DasYWXNEfl2DgHlfJBtcH9la0uH9L6Am3NTz
-         F89VIoEvIq9V6xGdjUYAGsr79/DLlmvJJUhvOoXQJ3C7Uh44viy+0WEBlHZTl50kyvir
-         4upw==
-X-Gm-Message-State: AGi0PuYmuCb0wCvobQf39MJvY5gFG8PPwe/ll5B2U89hA48/n1FLxlgt
-        VPkk6W9YIlTuJxzFQQUOlWA=
-X-Google-Smtp-Source: APiQypJa/k2QgcvR8h5j8+MSkiGDQZlvlxwZXadcxQ6mYtNsTqbDHGoLmZc/E1t7Ktq8otAgCL1odA==
-X-Received: by 2002:ac8:1a2b:: with SMTP id v40mr19269089qtj.364.1586145073323;
-        Sun, 05 Apr 2020 20:51:13 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id p1sm13904678qkf.73.2020.04.05.20.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 20:51:12 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Sun, 5 Apr 2020 23:51:10 -0400
-To:     Sergey Shatunov <me@prok.pw>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>, bp@alien8.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>, initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
- bzImage
-Message-ID: <20200406035110.GA3241052@rani.riverdale.lan>
-References: <20200109150218.16544-1-nivedita@alum.mit.edu>
- <20200405154245.11972-1-me@prok.pw>
- <20200405231845.GA3095309@rani.riverdale.lan>
- <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
+        Mon, 6 Apr 2020 00:07:40 -0400
+IronPort-SDR: xU+VbEKldOlnKkVcx+JEOjZ8T1FbRj0/omO4mNtzlZtQp/YRaF/LcJ3tnnXk1KxJBJobvPnPlf
+ XtIqI4w46vVt9D/aI4Mzs/gWDv06tnNeKGgnzXvEhhg8VHDAKJQQBF1C1F15W/p6hj2SNkLxFU
+ s+EHl3OpFZk6JUhd4HEnj4Q7Oh32YvnwIvJTciD7nZccvzP/R+iK4rR/ULk4IcfpJS5qcCngtc
+ GwFxFIR+X8aVDp8F3v3/T/z+j+KWJOcll7Oyk+MaGmsqf0pzn22zw3YDcYoDrco4JMPEL6q16s
+ muM=
+X-IronPort-AV: E=Sophos;i="5.72,349,1580803200"; 
+   d="scan'208";a="47461306"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa3.mentor.iphmx.com with ESMTP; 05 Apr 2020 20:07:39 -0800
+IronPort-SDR: zofhbpvw1FMAY96LhnFDLug/QL2Adiu8gPR23GZo0AuxoVZyJ+N0MTl/cBxR+Uv1PCiC0/fyMr
+ yntkhrPMBKU9RqrliWOP7r4cyicBeCFGnSLGaUMxmlr3tPEKPCgmoLSdffP1VY3Rs8EVY+MC8O
+ +hfkpm5YVQWE+ZOt9psgiPYtQpF4BnVz1E9B3WIbB/3ohxR9m7yhaxs9baUFQl5aw9ei7470Ix
+ l4rKoMfCM1BRm5CnTHb+UTuhAwLxYgQAFtvN+g9GBDCdD/1TOPl/3/rKX72C3tj0ktetdM1EGI
+ 2x0=
+Subject: Re: [PATCH v10 54/55] Input: atmel_mxt_ts: Implement synchronization
+ during various operation
+To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
+        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-55-jiada_wang@mentor.com>
+ <c53637ef-8e5d-3243-7236-5da360021f21@gmail.com>
+ <b06c7915-562f-ec68-766a-2118cfe57a0f@mentor.com>
+ <b9a8865c-7754-16f7-8f66-9cd70dc42d3c@gmail.com>
+ <12b913cd-cc0e-73b3-7ae5-8589ad5e968b@gmail.com>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <7f5435d1-27b0-c337-224c-c78acd989d9e@mentor.com>
+Date:   Mon, 6 Apr 2020 13:07:33 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
+In-Reply-To: <12b913cd-cc0e-73b3-7ae5-8589ad5e968b@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 07:00:39AM +0700, Sergey Shatunov wrote:
-> On Sun, 2020-04-05 at 19:18 -0400, Arvind Sankar wrote:
-> > I'm not familiar with systemd-boot: when you say systemd-boot stub,
-> > is
-> > that something different from the kernel's EFI_STUB option? Or is it
-> > just a kernel with EFI_STUB enabled and with builtin initramfs +
-> > builtin
-> > cmdline?
-> Basicaly systemd-boot stub is efi application with packed EFI_STUB-
-> enabled kernel, initrd and cmdline into single file. Source can be
-> found here: 
-> https://github.com/systemd/systemd/blob/master/src/boot/efi/stub.c
+Hi Dmitrij
+
+On 2020/04/02 22:44, Dmitry Osipenko wrote:
+> 02.04.2020 16:24, Dmitry Osipenko пишет:
+>> 02.04.2020 14:50, Wang, Jiada пишет:
+>>> Hi Dmitry
+>>>
+>>> On 2020/04/02 1:04, Dmitry Osipenko wrote:
+>>>> 31.03.2020 13:50, Jiada Wang пишет:
+>>>>> From: Sanjeev Chugh <sanjeev_chugh@mentor.com>
+>>>>>
+>>>>> There could be scope of race conditions when sysfs is being handled
+>>>>> and at the same time, device removal is occurring. For example,
+>>>>> we don't want the device removal to begin if the Atmel device
+>>>>> cfg update is going on or firmware update is going on. In such
+>>>>> cases, wait for device update to be completed before the removal
+>>>>> continues.
+>>>>>
+>>>>>       Thread                                          Thread 2:
+>>>>> =========================
+>>>>> =========================
+>>>>> mxt_update_fw_store()                           mxt_remove()
+>>>>> mutex_lock(&data->lock)                         ...
+>>>>> mxt_initialize()                                //Tries to acquire lock
+>>>>>     request_firmware_nowait()                     mutex_lock(&data->lock)
+>>>>> ...                                             ==>waits for lock()
+>>>>> ...                                             .
+>>>>> ...                                             .
+>>>>> mutex_unlock(&data->lock)                       .
+>>>>>                                                   //Gets lock and
+>>>>> proceeds
+>>>>>                                                  
+>>>>> mxt_free_input_device();
+>>>>>                                                   ...
+>>>>>                                                  
+>>>>> mutex_unlock(&data->lock)
+>>>>>                                                   //Frees atmel driver
+>>>>> data
+>>>>>                                                   kfree(data)
+>>>>>
+>>>>> If the request_firmware_nowait() completes after the driver removal,
+>>>>> and callback is triggered. But kernel crashes since the module is
+>>>>> already removed.
+>>>>>
+>>>>> This commit adds state machine to serialize such scenarios.
+>>>>
+>>>> Won't it be easier to bump driver's module use-count by __module_get()
+>>>> while firmware is updating? Or remove sysfs during of mxt_remove()? >
+>>>
+>>> thanks for your inspiration, I will replace state machine with module
+>>> use-count.
+>>
+>> I'm actually now thinking that the suggestion about the module-count
+>> wasn't very correct because this won't really help in regards to
+>> mxt_update_fw_store() / mxt_remove() racing.
+>>
+>> I see that mxt_remove() already invokes the mxt_sysfs_remove(), which
+>> should block until mxt_update_fw_store() is completed, shouldn't it?
+>>
+>> I guess the kfree(data) isn't the real cause of the problem and
+>> something like this should help:
+>>
+>> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c
+>> b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> index b2edf51e1595..4e66106feeb9 100644
+>> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+>> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> @@ -4254,6 +4254,7 @@ static void mxt_sysfs_remove(struct mxt_data *data)
+>>   	struct i2c_client *client = data->client;
+>>
+>>   	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
+>> +	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
+>>   }
+>>
+>>   static void mxt_reset_slots(struct mxt_data *data)
+>> @@ -4649,31 +4650,19 @@ static int mxt_remove(struct i2c_client *client)
+>>   {
+>>   	struct mxt_data *data = i2c_get_clientdata(client);
+>>
+>> -	mutex_lock(&data->lock);
+>> -	if (data->e_state == MXT_STATE_UPDATING_CONFIG_ASYNC ||
+>> -	    data->e_state == MXT_STATE_UPDATING_CONFIG) {
+>> -		data->e_state = MXT_STATE_GOING_AWAY;
+>> -		mutex_unlock(&data->lock);
+>> -		mxt_wait_for_completion(data, &data->update_cfg_completion,
+>> -					MXT_CONFIG_TIMEOUT);
+>> -	} else {
+>> -		data->e_state = MXT_STATE_GOING_AWAY;
+>> -		mutex_unlock(&data->lock);
+>> -	}
+>> +	mxt_sysfs_remove(data);
+>>
+>> -	disable_irq(data->irq);
+>> -	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
+>>   	if (data->reset_gpio) {
+>>   		sysfs_remove_link(&client->dev.kobj, "reset");
+>>   		gpiod_unexport(data->reset_gpio);
+>>   	}
+>> +
+>>   	mxt_debug_msg_remove(data);
+>> -	mxt_sysfs_remove(data);
+>>   	mxt_free_input_device(data);
+>>   	mxt_free_object_table(data);
+>>
+>> 	if (debug_state)
+>> 		cancel_delayed_work_sync(&data->watchdog_work);
+>> +	disable_irq(data->irq);
+>>
+>>   	return 0;
+>>   }
+>>
 > 
-> It doesn't do anything unusual, just extracting data from sections and
-> calling efi handover.
-> 
-> Final image created by objcopy'ing precompiled stub and adding sections with that stuff:
-> 
->     objcopy \
->         --add-section .osrel=os_release --change-section-vma
-> '.osrel=0x20000' \
->         --add-section .cmdline=cmdline --change-section-vma
-> '.cmdline=0x30000' \
->         --add-section .linux=vmlinuz --change-section-vma
-> '.linux=0x2000000' \
->         --add-section .initrd=initrd --change-section-vma
-> '.initrd=0x3000000' \
->         /usr/lib/systemd/boot/efi/linuxx64.efi.stub output.efi
+> I'm also wondering why dev_attr_update_fw needs a separate
+> attribute_group, couldn't it be moved into mxt_attrs[]
+Separate sysfs into different groups are done by commit
+"Input: atmel_mxt_ts - rework sysfs init/remove"
+I think the main purpose,
+is to remove other sysfs entries when firmware is being updated.
 
-So this embeds the bzImage which is a PE executable inside another PE
-executable. Before my patch, the bss section was explicitly part of the
-bzImage and so would have been zero, now it isn't any more and the PE
-loader is expected to zero it out before executing. systemd-boot's stub
-loader doesn't do that prior to jumping to the EFI handover entry, so
-the issue must be because bss contains garbage.  I'm not 100% sure why
-that leads to a crash, as the only variables in bss in the EFI stub are
-for some boolean EFI command line arguments, so it ought to still have
-worked, just as though it was invoked with random arguments. Anyway we
-need to handle an uninitialized bss to get this to work properly.
+Thanks,
+Jiada
 
-I also see from systemd [0] and dracut source [1] that these VMA's seem
-to be hardcoded with no checking for how big the files actually are, and
-objcopy doesn't seem to complain if sections end up overlapping.
-
-So since [2] in dracut, the space available for the .linux section
-containing the bzImage shrank from ~48MiB to 16MiB. This will hopefully
-still fit the compressed kernel (although an allyesconfig bzImage is far
-bigger than even 48MiB), but in-place decompression is unlikely to be
-possible even for a normal config, which will break another patchset
-that got merged into mainline for 5.7 [3,4], which tries to avoid
-copying the kernel unless necessary, and has a good chance of triggering
-in-place decompression if kaslr is disabled.
-
-I'll get systemd-boot installed here so I can reproduce and implement
-some workarounds for both issues. I should hopefully have a fix in a day
-or two.
-
-[0] https://github.com/systemd/systemd/blob/9fac14980df8dcce922e1fe8856a88b09590d2c3/test/test-efi-create-disk.sh#L30
-[1] https://git.kernel.org/pub/scm/boot/dracut/dracut.git/tree/dracut.sh#n2039
-[2] https://git.kernel.org/pub/scm/boot/dracut/dracut.git/commit/?id=4237aeb040c276722b528001bdea31e6eb994d06
-[3] https://lore.kernel.org/linux-efi/20200303221205.4048668-1-nivedita@alum.mit.edu/
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d5cdf4cfeac914617ca22866bd4685fd7f876dec
