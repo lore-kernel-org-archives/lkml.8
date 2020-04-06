@@ -7,69 +7,68 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02ABC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355A3C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782E7206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A93C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:35:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BvSzKhFH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hGDva9WH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgDFVf1 (ORCPT
+        id S1727018AbgDFVfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:35:27 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37747 "EHLO
+        Mon, 6 Apr 2020 17:35:32 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55612 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726937AbgDFVfY (ORCPT
+        by vger.kernel.org with ESMTP id S1726885AbgDFVfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:35:24 -0400
+        Mon, 6 Apr 2020 17:35:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586208923;
+        s=mimecast20190719; t=1586208920;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=p1zo9E/0T2RBJhS0NHCftwHqPvc0s/jKRL4zh5KiBdQ=;
-        b=BvSzKhFHJQdJtlrI65qQyc+uWumxBkPxX7C2sbSzV28vXavSY8ov8BXkEnKXq7HlCl5CNr
-        D04yXpKP+ddCpbspkaCUYVcClm2vOa40T2cRo46YSKelOJkn7vAinTscao+SQKx68k3Wah
-        yFHDq0ZKaugI/cT2+/TgmE/2jIw0WEg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-YDXr2jKoMUm_kMoabCpHeQ-1; Mon, 06 Apr 2020 17:35:21 -0400
-X-MC-Unique: YDXr2jKoMUm_kMoabCpHeQ-1
-Received: by mail-wm1-f72.google.com with SMTP id f81so417842wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:35:21 -0700 (PDT)
+        bh=1aA96KgFgaIj2U2msrh3/QyeM1jNTu3MJRWpUI5kTTY=;
+        b=hGDva9WHED6EhQFBoI647CpMwFENeeUkrHXOwCdzna1lHbsOrCC37eZN3dLLBCSqZFAGYe
+        MaLWMb5eCtMhINRBtjM7Xc7HSuJ7U91NwwEIiY+D7v83E/sWshEsjifaD2kdPvN+qYLpK3
+        8Odm5hXGT8wcwKYzmQOwjHXJEHb1x0w=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-366-70a91reLOT-6LIrl5OVNgw-1; Mon, 06 Apr 2020 17:35:19 -0400
+X-MC-Unique: 70a91reLOT-6LIrl5OVNgw-1
+Received: by mail-wm1-f69.google.com with SMTP id r8so154623wmn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:35:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=p1zo9E/0T2RBJhS0NHCftwHqPvc0s/jKRL4zh5KiBdQ=;
-        b=CTdzFKYzGh6i/DLxUa2dfBonkTgzsc0Pk42PgGDTh9lDqS7vTRN6VxZCFPRexC09yU
-         znmokARDH1W+f22SNK9i0nADLJZzlNlcqSaN9CZk6cP7CNdD9e9m6QTb3OoFO8V5a7OF
-         IBRHLmd9BvktlXYEM7c1BLNuPYu0IX6UQHUVE3CSzK31AOqvzNLpUB6bo4Z5W9u2X+nE
-         YQaK9xpky60IKnfqNBPLlYckVhHUYPUy0eInLtD+eZxzby8aaO8gLbItmkBieZSGx3Ct
-         9DlN71ytrBExWezfWc1uHmviECYanHD8jFG8S0qRmUFY3zUKyEOAE7KwJVS5pWvSFrBW
-         bGIA==
-X-Gm-Message-State: AGi0PubHqN5CC3DIiFhpQ3UYxlztNB5t0P43k+mIJj5SLO8hqwPGsgD2
-        5OXiD0uWuapJneDSMKPHW4mqoCPAtzOwuAtVbU/0PaTeCVwcHTxz2ZudHebQW2jSKSCoQ8mlZQU
-        HTp2GZJXtyn6vPPg4jD3e3hjv
-X-Received: by 2002:adf:e98a:: with SMTP id h10mr1328612wrm.370.1586208919960;
-        Mon, 06 Apr 2020 14:35:19 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKFsjTJU6wZbFct97kHV2BeMmwhQkfVOIaQ+Y5VpGC+kCzeP6ryUgMDqGqdvs1NHdN2FLH2hA==
-X-Received: by 2002:adf:e98a:: with SMTP id h10mr1328592wrm.370.1586208919806;
-        Mon, 06 Apr 2020 14:35:19 -0700 (PDT)
+        bh=1aA96KgFgaIj2U2msrh3/QyeM1jNTu3MJRWpUI5kTTY=;
+        b=WjzDZZwnkBiHTv2d3jIHOBb6HRAleM8gXrC8sReI+84k0wJrb3w5311oFsm5wE7UIx
+         3K/Q+zeNvd7tOqJBok9+OmaLYbT3VLJFlVLkm2ZT8wTT5fracd0rJWwWSH7J6K15xiAj
+         yRuc7HZ9Dq9QatcG583+15jYcPyRlaecrzwrRYhCGwBTTIkfXH1/TxxsU6a56Vu6qpyq
+         /3mYh9O4chMVe4ZXY9yewldJeC3w2FsnMc7kZK+CZNnlGBWCKKApSLn+pB9zwO1ehNS9
+         aLDTwIV6gvANNyG+3ODEKBBrELHLlXre9cEdxi8ekpq83VbXB0ufI1pwVfQJRxeUHyuG
+         VTFw==
+X-Gm-Message-State: AGi0PuYlSq/M3vqC5NJNwwtQPtrT5H8k2baq0zWAatPJ/B3gsBq60Dml
+        ihX1jiY4RKSNx23hzCIOQ+K0qeff7y9jmWK2aSZbB9qpMnncSBat0ODngbblSzfMIdA1rZo/2Kb
+        YVl2MapPZ9HSNbhKFpGLvVesq
+X-Received: by 2002:a7b:cb45:: with SMTP id v5mr1335910wmj.17.1586208917729;
+        Mon, 06 Apr 2020 14:35:17 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKHBE9kKX63pgbMP3pjCKoJHM/e8bwVo/gQ4w7SHS7x5DBizLjnjROi7qHhV5To0pZbVsHmIA==
+X-Received: by 2002:a7b:cb45:: with SMTP id v5mr1335889wmj.17.1586208917509;
+        Mon, 06 Apr 2020 14:35:17 -0700 (PDT)
 Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id r20sm950812wmh.46.2020.04.06.14.35.18
+        by smtp.gmail.com with ESMTPSA id m21sm1071211wmc.6.2020.04.06.14.35.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 14:35:19 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 17:35:17 -0400
+        Mon, 06 Apr 2020 14:35:17 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 17:35:15 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v5 12/12] mellanox: switch to virtio_legacy_init/size
-Message-ID: <20200406213314.248038-13-mst@redhat.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH v5 11/12] remoteproc: switch to virtio_legacy_init/size
+Message-ID: <20200406213314.248038-12-mst@redhat.com>
 References: <20200406213314.248038-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -91,40 +90,22 @@ Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 maintainers, pls ack merging this through virtio tree due to dependency
 on previous patches in the patchset.
 
- drivers/platform/mellanox/mlxbf-tmfifo.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/remoteproc/remoteproc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index 5739a9669b29..f42b1fb713f1 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -214,7 +214,7 @@ static void mlxbf_tmfifo_free_vrings(struct mlxbf_tmfifo *fifo,
- 	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
- 		vring = &tm_vdev->vrings[i];
- 		if (vring->va) {
--			size = vring_size(vring->num, vring->align);
-+			size = vring_legacy_size(vring->num, vring->align);
- 			dma_free_coherent(tm_vdev->vdev.dev.parent, size,
- 					  vring->va, vring->dma);
- 			vring->va = NULL;
-@@ -245,7 +245,7 @@ static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
- 		vring->vdev_id = tm_vdev->vdev.id.device;
- 		dev = &tm_vdev->vdev.dev;
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 097f33e4f1f3..c350a01e6c4e 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -322,7 +322,7 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
+ 	struct rproc_mem_entry *mem;
  
--		size = vring_size(vring->num, vring->align);
-+		size = vring_legacy_size(vring->num, vring->align);
- 		va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
- 		if (!va) {
- 			mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
-@@ -935,7 +935,7 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
- 		vring = &tm_vdev->vrings[i];
+ 	/* actual size of vring (in bytes) */
+-	size = PAGE_ALIGN(vring_size(rvring->len, rvring->align));
++	size = PAGE_ALIGN(vring_legacy_size(rvring->len, rvring->align));
  
- 		/* zero vring */
--		size = vring_size(vring->num, vring->align);
-+		size = vring_legacy_size(vring->num, vring->align);
- 		memset(vring->va, 0, size);
- 		vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
- 					 false, false, vring->va,
+ 	rsc = (void *)rproc->table_ptr + rvdev->rsc_offset;
+ 
 -- 
 MST
 
