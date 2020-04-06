@@ -2,111 +2,79 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B48C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D552C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429B7206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ph8eoJCS"
+	by mail.kernel.org (Postfix) with ESMTP id 5DC952072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgDFU26 (ORCPT
+        id S1726272AbgDFUaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 16:28:58 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38956 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFU26 (ORCPT
+        Mon, 6 Apr 2020 16:30:52 -0400
+Received: from www62.your-server.de ([213.133.104.62]:53188 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgDFUaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 16:28:58 -0400
-Received: by mail-lj1-f193.google.com with SMTP id i20so1182784ljn.6;
-        Mon, 06 Apr 2020 13:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lJzB2qZkJhYdfThuvVVq+84k4SnINb0Pufm3PfivT+U=;
-        b=ph8eoJCSZbKOljhrDczfxooijkzZxrANpq0PkWABZ73QdojoixxG9sPBDfj4LKWY1T
-         ddQw6UMM3cx/BoQmfsFDLuuQMC8aziPTJibwZJNDaJcLUETmUOPJ8jgoIfE6A26UpUtH
-         oNAsGk6P3h2TwW9CJFUmVM5OOiuh3ICYvs1k/YQ76unIuUU7tX4+RHoaxAVJQVqB5RJa
-         NE+3Y5LJLJnyy+hzgwrJmTe1EMxLCT61sYrw+ZzivveoVTKoXivecgm5ht2eiydgxHPs
-         r9XHpBfzLnaI52GNO7jDhHDVCgP9r8qqsggwOFObaMVS6eEmfWrvbTBX7rvh8ocCd/Ir
-         3ZhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lJzB2qZkJhYdfThuvVVq+84k4SnINb0Pufm3PfivT+U=;
-        b=gVkog2OeTFkPxMtyXHg30h03oQYXAK9fPmL1uCh7IasJ8C66coxKmYNbpsfw+wjjgQ
-         fu0WWG4D8CKrUEzQEvXYOF/KLDdiiAoXfgr3/9Y3sV1k8T5/2IZFaHRgvnagyMt/OOxB
-         l6DY0oUER+oPdjbMHdIs77Krh751yLIceX2APOQQVGZ3jV8SX7LlsXL6CR06H9F5XhHD
-         phctx1JzJLvV7+fjW/zxPTsik6LmBkUK2IZLIKCvNdW3l3qqeypqw70fYmsNsyI14uUX
-         HrLTxoXzIHQEdcfNKZcaVXYaaG8Opw4pQCU0laMLgTuKN7N7QUbzJjfKWLGZpAkUVBP5
-         7GhQ==
-X-Gm-Message-State: AGi0PuYF8V7qw82qiTRfqXnf9XrwIJrn8ueAK121vmWoQVXT/RaV5sNX
-        kTk78cDRl+NDtkIhXdDuL75uqOPs
-X-Google-Smtp-Source: APiQypKDf+gQwAn3HM92Vomnfc7TfHznh8qKbDGFmMNsgPo+nPQp6uQixmPQ3wh+5l3PYzX6xlRyew==
-X-Received: by 2002:a2e:7513:: with SMTP id q19mr637081ljc.221.1586204933160;
-        Mon, 06 Apr 2020 13:28:53 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id v3sm12214514lfq.16.2020.04.06.13.28.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 13:28:52 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <38d921a7-5cdf-8d0a-2772-4399dd1a96a0@gmail.com>
- <9b8cf37b-d2ad-9df2-aad8-216c2c954e69@nvidia.com>
- <1a12974a-7cc7-2c3a-3995-076b9956714d@gmail.com>
- <66cc8646-43d3-3fc8-c31d-d0d2efac505f@nvidia.com>
- <f000f6b9-0f05-b2a5-6dad-37b09803711d@gmail.com>
- <fe6a17c1-fae2-a365-4dd6-6d3a25d47d54@nvidia.com>
- <9038ce90-ac53-93e7-ce65-57f6ff1e9b30@nvidia.com>
- <abe82fd1-0464-0627-6c97-39c896e53dd0@gmail.com>
- <36b5627a-8639-6244-8620-4f23828e0638@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1c2c921e-daef-ba0f-5d1a-b58aa0b940fb@gmail.com>
-Date:   Mon, 6 Apr 2020 23:28:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Apr 2020 16:30:52 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLYOQ-0002uT-5R; Mon, 06 Apr 2020 22:30:50 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLYOP-0003f1-Rk; Mon, 06 Apr 2020 22:30:49 +0200
+Subject: Re: [PATCH] device_cgroup: Cleanup cgroup eBPF device filter code
+To:     Roman Gushchin <guro@fb.com>, Odin Ugedal <odin@ugedal.com>
+Cc:     bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tj@kernel.org,
+        Harish.Kasiviswanathan@amd.com, amd-gfx@lists.freedesktop.org
+References: <20200403175528.225990-1-odin@ugedal.com>
+ <20200403223704.GA306670@carbon.dhcp.thefacebook.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <4264eb59-920e-20da-a256-23b6f0bbc95e@iogearbox.net>
+Date:   Mon, 6 Apr 2020 22:30:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <36b5627a-8639-6244-8620-4f23828e0638@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200403223704.GA306670@carbon.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25774/Mon Apr  6 14:53:25 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.04.2020 23:05, Sowjanya Komatineni пишет:
-..
->>> Wait time for HW syncpt to reach threshold is tuned to work for all
->>> frame rates. So if increment doesn't happen by then, its definitely
->>> missed event.
->> This is questionable. Technically, speculating about whether the tuned
->> value is good for all possible cases is incorrect thing to do.
+On 4/4/20 12:37 AM, Roman Gushchin wrote:
+> On Fri, Apr 03, 2020 at 07:55:28PM +0200, Odin Ugedal wrote:
+>> Original cgroup v2 eBPF code for filtering device access made it
+>> possible to compile with CONFIG_CGROUP_DEVICE=n and still use the eBPF
+>> filtering. Change
+>> commit 4b7d4d453fc4 ("device_cgroup: Export devcgroup_check_permission")
+>> reverted this, making it required to set it to y.
 >>
->> Although, I guess in practice it should be good enough for the starter
->> and could be improved later on, once the host1x driver will be improved.
+>> Since the device filtering (and all the docs) for cgroup v2 is no longer
+>> a "device controller" like it was in v1, someone might compile their
+>> kernel with CONFIG_CGROUP_DEVICE=n. Then (for linux 5.5+) the eBPF
+>> filter will not be invoked, and all processes will be allowed access
+>> to all devices, no matter what the eBPF filter says.
+>>
+>> Signed-off-by: Odin Ugedal <odin@ugedal.com>
 > 
-> By tuned value I meant about 200ms wait timeout for frame event to
-> happen is what we have been using in downstream and with BSP release
-> images which works good for all sensors and bridges we supported so far.
+> The patch makes perfect sense to me.
+> 
+> Acked-by: Roman Gushchin <guro@fb.com>
 
-I don't know anything about the state of today's downstream, but
-downstream of older Tegra SoCs was pretty awful in regards to the host1x
-syncing, unfortunately it was borrowed into the upstream host1x years
-ago and nothing was done about it so far. I'd suggest to be careful
-about it.
+Tejun, I presume you'll pick this up (given the files this fix touches)?
+
+Thanks,
+Daniel
