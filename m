@@ -2,137 +2,158 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B209CC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F45C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8305F214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586179773;
-	bh=cT5aiBiaDN+mknjSAU1YJCKd3LpD4afmF92dqiFWPcs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q05bElb5ppj7gzFsox7m7qN8Q+adKx2nv2mZAXJN0vXfD2PcY4yEIc26HzCIusjX4
-	 7R1NwEPF3yuxFJZkzBvhtlQUPcRcGahSL8XaEodNNceXVNZRvD1mtMiXZ+vq1BgJjm
-	 aVbUNrLkMyhiPl3/LBXAbMo/UnZP6HmsNUsZricw=
+	by mail.kernel.org (Postfix) with ESMTP id 608D9222C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgDFN3c (ORCPT
+        id S1728446AbgDFNaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:29:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36232 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 09:30:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:45722 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbgDFN3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:29:32 -0400
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76F74221EC;
-        Mon,  6 Apr 2020 13:29:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586179770;
-        bh=cT5aiBiaDN+mknjSAU1YJCKd3LpD4afmF92dqiFWPcs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OpaU/fdXCVzLI+98p0c4cHjYadRosyr2ugnFykx08WKOfHe2O+mFvPzbxT3GEbUDx
-         V+74Gj1UWcxUc+ZAbUtKKViEOhCJ8hzXrxE1DcUnqhiZs+TPSSreflaI+K594kxDxH
-         kpp4vjzOcjkRbilKMjZUCN7a8kNNfCjcve7/Ps28=
-Received: by mail-il1-f169.google.com with SMTP id 7so14651210ill.2;
-        Mon, 06 Apr 2020 06:29:30 -0700 (PDT)
-X-Gm-Message-State: AGi0PubWlV7oMk7W6r6wF0YRS7C8N7SdI4IadCo7Z82NyIihRM0HDDyv
-        FBBtTr5TWrwxvT6xKQEfdKQ5C5Cc6X/wn+9r55o=
-X-Google-Smtp-Source: APiQypIH8pqcrpa4MStCjFoM4SH24wHLsQ4ZYOb1ESUETqsi+cwlgr5EuTIHH9XorE01jrk7eab0+NnibTOsSHLypMU=
-X-Received: by 2002:a05:6e02:4c:: with SMTP id i12mr21180329ilr.211.1586179769792;
- Mon, 06 Apr 2020 06:29:29 -0700 (PDT)
+        id S1728200AbgDFNaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:30:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 313E231B;
+        Mon,  6 Apr 2020 06:30:09 -0700 (PDT)
+Received: from [10.37.12.4] (unknown [10.37.12.4])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC4473F7D8;
+        Mon,  6 Apr 2020 06:29:58 -0700 (PDT)
+Subject: Re: [PATCH v5 1/5] PM / EM: add devices to Energy Model
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
+        javi.merino@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200318114548.19916-1-lukasz.luba@arm.com>
+ <20200318114548.19916-2-lukasz.luba@arm.com>
+ <09b680a5-a118-8c6e-0ae1-03ab5f10c573@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <cb7f670a-a04f-ba6f-1486-0421f3cce2e9@arm.com>
+Date:   Mon, 6 Apr 2020 14:29:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200109150218.16544-1-nivedita@alum.mit.edu> <20200405154245.11972-1-me@prok.pw>
- <20200405231845.GA3095309@rani.riverdale.lan> <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
- <20200406035110.GA3241052@rani.riverdale.lan> <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
- <20200406084738.GA2520@zn.tnic> <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
- <20200406112042.GC2520@zn.tnic> <20200406132215.GA113388@rani.riverdale.lan>
-In-Reply-To: <20200406132215.GA113388@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 6 Apr 2020 15:29:18 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG+34-bK1XuxX5VopkRt1SV1ewUAEmif+aQj5cJQ=9vbA@mail.gmail.com>
-Message-ID: <CAMj1kXG+34-bK1XuxX5VopkRt1SV1ewUAEmif+aQj5cJQ=9vbA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
-        hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <09b680a5-a118-8c6e-0ae1-03ab5f10c573@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 15:22, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Mon, Apr 06, 2020 at 01:20:42PM +0200, Borislav Petkov wrote:
-> > On Mon, Apr 06, 2020 at 11:11:21AM +0200, Ard Biesheuvel wrote:
-> > > Yes, it is in the PE/COFF specification. [0]
-> > >
-> > > The whole problem is that we are conflating 'loading a PE/COFF image'
-> > > with 'copying a PE/COFF image into memory', which are not the same
-> > > thing. It is not just the layout issue, we are running into other
-> > > problems with things like UEFI secure boot and TPM-based measured
-> > > boot, where the fact that omitting the standard LoadImage() boot
-> > > service (which takes care of these things under the hood) means that
-> > > you now have to do your own checks and measurements. These things are
-> > > literally all over the place at the moment, shim, GRUB, systemd-boot
-> > > etc, with no authoritative spec that describes which component should
-> > > be doing what.
-> >
-> > Sounds to me like what LoadImage() does is what the authoritative spec
-> > should be. Perhaps we should write it down as "Do what LoadImage()
-> > does... " and then enumerate the requirements.
-> >
-> > > Commit ec93fc371f014a6fb483e3556061ecad4b40735c has the background, but ...
-> >
-> > Nice, I like the aspect of letting firmware do only a minimum amount of
-> > work. :)
-> >
-> > > ... I'll look into updating the documentation as well.
-> >
-> > Thanks!
-> >
-> > > Note that this stuff is hot off the press, so there may be some issues
-> > > lurking (like this one) that we hadn't thought of yet.
-> >
-> > Right.
-> >
-> > > Actually, it may be sufficient to #define __efistub_global to
-> > > __section(.data) like we already do for ARM, to ensure that these
-> > > global flags are always initialized correctly. (I'll wait for Sergey
-> > > to confirm that the spurious enabling of the PCI DMA protection
-> > > resulting from this BSS issue is causing the boot regression)
->
-> Yeah I thought of that as the easiest fix, but it might be safer to
-> explicitly zero-init in efi_main to avoid future problems in case
-> someone adds another variable in bss and isn't aware of this obscure
-> requirement. We actually already have sys_table in bss, but that one is
-> always initialized. There's also other globals that aren't annotated
-> (but not in bss by virtue of having initializers). What do you think?
->
+Hi Daniel,
 
-*If* we zero init BSS, I'd prefer for it to be done in the EFI
-handover protocol entrypoint only. But does that fix the issue that
-BSS lives outside of the memory footprint of the kernel image?
+Thank you for the review.
+
+On 4/3/20 5:05 PM, Daniel Lezcano wrote:
+> 
+> Hi Lukasz,
+> 
+> 
+> On 18/03/2020 12:45, Lukasz Luba wrote:
+>> Add support of other devices into the Energy Model framework not only the
+>> CPUs. Change the interface to be more unified which can handle other
+>> devices as well.
+> 
+> thanks for taking care of that. Overall I like the changes in this patch
+> but it hard to review in details because the patch is too big :/
+> 
+> Could you split this patch into smaller ones?
+> 
+> eg. (at your convenience)
+> 
+>   - One patch renaming s/cap/perf/
+> 
+>   - One patch adding a new function:
+> 
+>      em_dev_register_perf_domain(struct device *dev,
+> 				unsigned int nr_states,
+> 				struct em_data_callback *cb);
+> 
+>     (+ EXPORT_SYMBOL_GPL)
+> 
+>      And em_register_perf_domain() using it.
+> 
+>   - One converting the em_register_perf_domain() user to
+> 	em_dev_register_perf_domain
+> 
+>   - One adding the different new 'em' functions
+> 
+>   - And finally one removing em_register_perf_domain().
+
+I agree and will do the split. I could also break the dependencies
+for future easier merge.
+
+> 
+> 
+>> Acked-by: Quentin Perret <qperret@google.com>
+>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>> ---
+> 
+> [ ... ]
+> 
+>>   2. Core APIs
+>> @@ -70,14 +72,16 @@ CONFIG_ENERGY_MODEL must be enabled to use the EM framework.
+>>   Drivers are expected to register performance domains into the EM framework by
+>>   calling the following API::
+>>   
+>> -  int em_register_perf_domain(cpumask_t *span, unsigned int nr_states,
+>> -			      struct em_data_callback *cb);
+>> +  int em_register_perf_domain(struct device *dev, unsigned int nr_states,
+>> +		struct em_data_callback *cb, cpumask_t *cpus);
+> 
+> Isn't possible to get rid of this cpumask by using
+> cpufreq_cpu_get() which returns the cpufreq's policy and from their get
+> the related cpus ?
+
+We had similar thoughts with Quentin and I've checked this.
+Unfortunately, if the policy is a 'new policy' [1] it gets
+allocated and passed into cpufreq driver ->init(policy) [2].
+Then that policy is set into per_cpu pointer for each related_cpu [3]:
+
+for_each_cpu(j, policy->related_cpus)
+	per_cpu(cpufreq_cpu_data, j) = policy;
 
 
-> What do you think of the other problem -- that's actually worse to fix,
-> as it won't just be when kaslr is disabled, the startup_64 code will do
-> relocation to the end of init_size and clobber the initrd before getting
-> to the kaslr code, so it will break as soon as the firmware loads the
-> "unified kernel image" at a 2Mb-aligned address. The only thing I can
-> think of is to just unconditionally call efi_relocate_kernel if we were
-> entered via handover_entry?
->
+Thus, any calls of functions (i.e. cpufreq_cpu_get()) which try to
+take this ptr before [3] won't work.
 
-Yes, that seems to be the most robust approach.
+We are trying to register EM from cpufreq_driver->init(policy) and the
+per_cpu policy is likely to be not populated at that phase.
+
+Regards,
+Lukasz
+
+[1] 
+https://elixir.bootlin.com/linux/latest/source/drivers/cpufreq/cpufreq.c#L1328
+[2] 
+https://elixir.bootlin.com/linux/latest/source/drivers/cpufreq/cpufreq.c#L1350
+[3] 
+https://elixir.bootlin.com/linux/latest/source/drivers/cpufreq/cpufreq.c#L1374
+
+
