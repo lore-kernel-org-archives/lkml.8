@@ -2,168 +2,201 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78BEC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228E8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 947ED206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3CF206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Ptf/YAC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgDFJqh (ORCPT
+        id S1726918AbgDFJqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:46:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35203 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726721AbgDFJqh (ORCPT
+        Mon, 6 Apr 2020 05:46:44 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:41269 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726721AbgDFJqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:46:37 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0369X42t012565
-        for <linux-kernel@vger.kernel.org>; Mon, 6 Apr 2020 05:46:35 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 306pcycwh3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 05:46:35 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Mon, 6 Apr 2020 10:46:12 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 Apr 2020 10:46:08 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0369kSTs60817466
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Apr 2020 09:46:28 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4869BA405F;
-        Mon,  6 Apr 2020 09:46:28 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A009EA405C;
-        Mon,  6 Apr 2020 09:46:27 +0000 (GMT)
-Received: from pomme.local (unknown [9.145.52.152])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Apr 2020 09:46:27 +0000 (GMT)
-Subject: Re: [PATCH 7/8] mmap locking API: add MMAP_LOCK_INITIALIZER
-To:     Michel Lespinasse <walken@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>
-References: <20200326070236.235835-1-walken@google.com>
- <20200326070236.235835-8-walken@google.com>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Mon, 6 Apr 2020 11:46:27 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.6.0
+        Mon, 6 Apr 2020 05:46:44 -0400
+Received: from surfplank2.hierzo ([IPv6:2001:981:a812:0:b62e:99ff:fe92:5264])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id LOL1jiCw4Lu1fLOL3jjo6u; Mon, 06 Apr 2020 11:46:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1586166401; bh=JK8ANuMb/TGXm73xBW/3ZFVSzSDmBIWiHZYKLgj5PHY=;
+        h=To:From:Subject:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Ptf/YAC+qq6JoMlpMWWFDC3rBSfpdoRYAHeVtURZW2h984qdMWdJpYrhWDkR757cW
+         Si+BqfOl+OrBDQa144ZyDAMu+rcRneI8bnryQvt3p8EP5W8zS0SYdY2pTQYUdpBcyn
+         w6i63RJyP+PJQVqLGBJDL+AlDqMUfgVGVvmT+4OEjPv4rIzYJWGAa653dyKV1OCvaR
+         Daci/5mVkei6Tcg3uhY2RPawucEMXDpRpzl+vuwelEK4K9WYgGkZMZk5chSCiuQiGg
+         jFHUgxHOJQhT/FKYVKvnBHL1uGOsS0Mjom8yHmkcAQMef9CkLEFPspifFnBIGLvs7l
+         QIRcEQqwdgm8Q==
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Udo van den Heuvel <udovdh@xs4all.nl>
+Subject: 5.6.2: BUG: kernel NULL pointer dereference, address:
+ 0000000000000000
+Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
+ 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
+ JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
+Organization: hierzo
+Message-ID: <cc420f6a-5ba6-c598-b09e-5107332315d1@xs4all.nl>
+Date:   Mon, 6 Apr 2020 11:46:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200326070236.235835-8-walken@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040609-4275-0000-0000-000003BA9033
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040609-4276-0000-0000-000038CFED5A
-Message-Id: <1c463464-1d72-287e-e785-f077a95ccf20@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-06_05:2020-04-03,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 clxscore=1015
- impostorscore=0 suspectscore=0 phishscore=0 mlxscore=0 spamscore=0
- mlxlogscore=999 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004060083
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBseAAOGLTDiAygYedM/AfhTPg94sLzpFKNvdl+U5G0+TcVDQJPbSRLNZy8YJQHd3kTsU0curXCU2nMAN9LevPRnUCVgELXmSOJsyCne+rdZ8mpUtvhJ
+ HPrIrf9xinATd9pWywfhi+96HRyg3E/2qfeojphoGtQfQf+F2PcWs9XWjAlQHCF2tlym9ORe9koEKh88bjtm9xVOI+PhknecQ+8EHVemh205jrlPwuQMVnpn
+ xqFrDLjWk6GOctRdC5m6RA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 26/03/2020 à 08:02, Michel Lespinasse a écrit :
-> Define a new initializer for the mmap locking api.
-> Initially this just evaluates to __RWSEM_INITIALIZER as the API
-> is defined as wrappers around rwsem.
+Hello,
 
-I can't see the benefit of this change.
-The overall idea is to hide the mmap_sem name. Here the macro 
-MMAP_LOCK_INITIALIZER() doesn't hide the name.
+Found this in dmesg. What can I do?
 
-I think we can keep that in place until the real change of the mmap_sem to 
-something else.
 
-Cheers,
-Laurent.
+[167263.584468] BUG: kernel NULL pointer dereference, address:
+0000000000000000
+[167263.668969] #PF: supervisor write access in kernel mode
+[167263.732609] #PF: error_code(0x0002) - not-present page
+[167263.795210] PGD 0 P4D 0
+[167263.826574] Oops: 0002 [#1] PREEMPT SMP NOPTI
+[167263.879805] CPU: 2 PID: 412735 Comm: firefox Not tainted 5.6.2 #4
+[167263.953850] Hardware name: Gigabyte Technology Co., Ltd. X570 AORUS
+PRO/X570 AORUS PRO, BIOS F11 12/06/2019
+[167264.071668] RIP: 0010:mutex_lock+0xb/0x20
+[167264.120722] Code: e8 da 30 98 ff 66 2e 0f 1f 84 00 00 00 00 00 be 02
+00 00 00 e9 d6 fa ff ff 66 0f 1f 44 00 00 31 c0 65 48 8b 14 25 00 7c 01
+00 <f0> 48 0f b1 17 74 02 eb dc c3 66 66 2e 0f 1f 84 00 00 00 00 00 41
+[167264.346852] RSP: 0018:ffffade84043fd88 EFLAGS: 00010246
+[167264.410496] RAX: 0000000000000000 RBX: 0000000000000038 RCX:
+0000000000000001
+[167264.497056] RDX: ffff8f5e8512a0c0 RSI: 0000000000000010 RDI:
+0000000000000000
+[167264.583613] RBP: ffff8f5c99e55078 R08: 0000000000000000 R09:
+0000000000000000
+[167264.670174] R10: ffff8f5c99c55010 R11: ffff8f5eb32cdcc0 R12:
+0000000000000000
+[167264.756738] R13: ffff8f5c99c550d0 R14: ffff8f5e90e22420 R15:
+ffff8f5eace7fcc0
+[167264.756742] FS:  00007f39a81cb780(0000) GS:ffff8f5edf080000(0000)
+knlGS:0000000000000000
+[167264.756745] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[167264.756747] CR2: 0000000000000000 CR3: 00000003df78e000 CR4:
+00000000003406e0
+[167264.756749] Call Trace:
+[167264.756759]  eventpoll_release_file+0x3c/0x80
+[167264.756766]  __fput+0x1c7/0x230
+[167264.756772]  task_work_run+0x8e/0xb0
+[167264.756778]  do_exit+0x329/0xa40
+[167264.756782]  do_group_exit+0x35/0x90
+[167264.756787]  __x64_sys_exit_group+0xf/0x10
+[167264.756792]  do_syscall_64+0x63/0x430
+[167265.442334]  ? handle_mm_fault+0x4b/0xc0
+[167265.442338]  ? do_page_fault+0x1c1/0x41a
+[167265.538373]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[167265.538377] RIP: 0033:0x7f39a829e466
+[167265.643781] Code: Bad RIP value.
+[167265.683469] RSP: 002b:00007ffeb46371c8 EFLAGS: 00000246 ORIG_RAX:
+00000000000000e7
+[167265.683477] RAX: ffffffffffffffda RBX: 00007f39a8394470 RCX:
+00007f39a829e466
+[167265.861797] RDX: 0000000000000000 RSI: 000000000000003c RDI:
+0000000000000000
+[167265.861800] RBP: 0000000000000000 R08: 00000000000000e7 R09:
+ffffffffffffff48
+[167265.861804] R10: 00007f39a839a84e R11: 0000000000000246 R12:
+00007f39a8394470
+[167266.121467] R13: 0000000000000770 R14: 00007f39a8397e68 R15:
+0000000000000000
+[167266.121470] Modules linked in: cp210x usbserial fuse mq_deadline
+xt_MASQUERADE iptable_nat nf_nat ipt_REJECT nf_reject_ipv4 xt_u32
+xt_multiport iptable_filter nf_conntrack_netbios_ns
+nf_conntrack_broadcast ip6t_REJECT nf_reject_ipv6 xt_tcpudp xt_state
+xt_conntrack nf_conntrack it87 hwmon_vid nf_defrag_ipv6 nf_defrag_ipv4
+ip6table_filter msr ip6_tables uvcvideo videobuf2_vmalloc
+videobuf2_memops videobuf2_v4l2 snd_usb_audio videodev
+snd_hda_codec_realtek snd_hwdep snd_hda_codec_generic snd_usbmidi_lib
+snd_hda_intel videobuf2_common snd_rawmidi snd_intel_dspcfg cdc_acm
+snd_hda_codec snd_hda_core snd_seq snd_seq_device snd_pcm snd_timer snd
+k10temp i2c_piix4 bfq evdev acpi_cpufreq binfmt_misc ip_tables x_tables
+aesni_intel amdgpu gpu_sched ttm sr_mod cdrom hid_generic usbhid i2c_dev
+autofs4
+[167267.045596] CR2: 0000000000000000
+[167267.086324] ---[ end trace 61fa72f5201dad20 ]---
+[167267.142678] RIP: 0010:mutex_lock+0xb/0x20
+[167267.191737] Code: e8 da 30 98 ff 66 2e 0f 1f 84 00 00 00 00 00 be 02
+00 00 00 e9 d6 fa ff ff 66 0f 1f 44 00 00 31 c0 65 48 8b 14 25 00 7c 01
+00 <f0> 48 0f b1 17 74 02 eb dc c3 66 66 2e 0f 1f 84 00 00 00 00 00 41
+[167267.417871] RSP: 0018:ffffade84043fd88 EFLAGS: 00010246
+[167267.481510] RAX: 0000000000000000 RBX: 0000000000000038 RCX:
+0000000000000001
+[167267.568071] RDX: ffff8f5e8512a0c0 RSI: 0000000000000010 RDI:
+0000000000000000
+[167267.654626] RBP: ffff8f5c99e55078 R08: 0000000000000000 R09:
+0000000000000000
+[167267.741187] R10: ffff8f5c99c55010 R11: ffff8f5eb32cdcc0 R12:
+0000000000000000
+[167267.827743] R13: ffff8f5c99c550d0 R14: ffff8f5e90e22420 R15:
+ffff8f5eace7fcc0
+[167267.914304] FS:  00007f39a81cb780(0000) GS:ffff8f5edf080000(0000)
+knlGS:0000000000000000
+[167268.012322] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[167268.082218] CR2: 00007f39a829e43c CR3: 00000003df78e000 CR4:
+00000000003406e0
+[167268.168775] Fixing recursive fault but reboot is needed!
 
-> 
-> Signed-off-by: Michel Lespinasse <walken@google.com>
-> ---
->   arch/x86/kernel/tboot.c    | 2 +-
->   drivers/firmware/efi/efi.c | 2 +-
->   include/linux/mmap_lock.h  | 2 ++
->   mm/init-mm.c               | 2 +-
->   4 files changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/tboot.c b/arch/x86/kernel/tboot.c
-> index b89f6ac6a0c0..4b79335624b1 100644
-> --- a/arch/x86/kernel/tboot.c
-> +++ b/arch/x86/kernel/tboot.c
-> @@ -90,7 +90,7 @@ static struct mm_struct tboot_mm = {
->   	.pgd            = swapper_pg_dir,
->   	.mm_users       = ATOMIC_INIT(2),
->   	.mm_count       = ATOMIC_INIT(1),
-> -	.mmap_sem       = __RWSEM_INITIALIZER(init_mm.mmap_sem),
-> +	.mmap_sem       = MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
->   	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
->   	.mmlist         = LIST_HEAD_INIT(init_mm.mmlist),
->   };
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 21ea99f65113..5bdfe698cd7f 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -60,7 +60,7 @@ struct mm_struct efi_mm = {
->   	.mm_rb			= RB_ROOT,
->   	.mm_users		= ATOMIC_INIT(2),
->   	.mm_count		= ATOMIC_INIT(1),
-> -	.mmap_sem		= __RWSEM_INITIALIZER(efi_mm.mmap_sem),
-> +	.mmap_sem		= MMAP_LOCK_INITIALIZER(efi_mm.mmap_sem),
->   	.page_table_lock	= __SPIN_LOCK_UNLOCKED(efi_mm.page_table_lock),
->   	.mmlist			= LIST_HEAD_INIT(efi_mm.mmlist),
->   	.cpu_bitmap		= { [BITS_TO_LONGS(NR_CPUS)] = 0},
-> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
-> index 00d6cc02581d..7474b15bba38 100644
-> --- a/include/linux/mmap_lock.h
-> +++ b/include/linux/mmap_lock.h
-> @@ -1,6 +1,8 @@
->   #ifndef _LINUX_MMAP_LOCK_H
->   #define _LINUX_MMAP_LOCK_H
->   
-> +#define MMAP_LOCK_INITIALIZER(name) __RWSEM_INITIALIZER(name)
-> +
->   static inline void mmap_init_lock(struct mm_struct *mm)
->   {
->   	init_rwsem(&mm->mmap_sem);
-> diff --git a/mm/init-mm.c b/mm/init-mm.c
-> index 19603302a77f..3c128bd6a30c 100644
-> --- a/mm/init-mm.c
-> +++ b/mm/init-mm.c
-> @@ -31,7 +31,7 @@ struct mm_struct init_mm = {
->   	.pgd		= swapper_pg_dir,
->   	.mm_users	= ATOMIC_INIT(2),
->   	.mm_count	= ATOMIC_INIT(1),
-> -	.mmap_sem	= __RWSEM_INITIALIZER(init_mm.mmap_sem),
-> +	.mmap_sem	= MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
->   	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
->   	.arg_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.arg_lock),
->   	.mmlist		= LIST_HEAD_INIT(init_mm.mmlist),
-> 
 
+
+Udo
