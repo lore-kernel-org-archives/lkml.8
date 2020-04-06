@@ -2,107 +2,108 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F2FC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A70C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2491D20672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23E5A206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="aIXMTl0c"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Tnve/r/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgDFSRc (ORCPT
+        id S1726595AbgDFSSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:17:32 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:38379 "EHLO pegase1.c-s.fr"
+        Mon, 6 Apr 2020 14:18:36 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:55938 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726699AbgDFSQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:16:41 -0400
+        id S1726521AbgDFSSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:18:36 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wzJS5VDmz9tyd4;
-        Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 48wzLg3hsJz9v0BM;
+        Mon,  6 Apr 2020 20:18:35 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=aIXMTl0c; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=Tnve/r/w; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id TGiJ8bsEBvz7; Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
+        with ESMTP id sh5LVu4Zz_PJ; Mon,  6 Apr 2020 20:18:35 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJS4R7Jz9tycr;
-        Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzLg2H6kz9v0BL;
+        Mon,  6 Apr 2020 20:18:35 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586197000; bh=/9XgCX7ZNJJPrUF+WQ+S9CCuMlj+u/mt4LD/Anh8LO4=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=aIXMTl0ci/qJ/Zg5T2BGlqvBO1C1o9yWOJW4tbot1k/1Vxo24G2LGIOlcCU1B366H
-         jdhFCo7arjVZtaC8L4xtkAVwtcv46BaH55AHk+6olCmzyhT2HZ3vH+4AHL0l6L7U24
-         TFoQh+jeUwZvMvk38AEVDc7Vw0SbtWwFXvtTwdIQ=
+        t=1586197115; bh=eo4TdLmuuA8DaXdbgpPkyf6SowdS8w6IgKKi5skgu/8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Tnve/r/wvjFnyXjUemjEM6sCiOY/gChrZ2rnjZnpLKOkXZMHxrUsLj7rBMpK/mZXt
+         IN3fDuau70xMtUcXiYqaXpz5BbemKDAfRbLkkIHXZCqEg/mzhtZcIV0XX6MGMlM50D
+         EQv4SBw7ESa1RtDn30ilTKkMjnIGRWwD12AoZBMo=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8ECBB8B784;
-        Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 415DA8B784;
+        Mon,  6 Apr 2020 20:18:35 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Tb15_YGivxb0; Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 59D4F8B775;
-        Mon,  6 Apr 2020 20:16:40 +0200 (CEST)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 30558656E9; Mon,  6 Apr 2020 18:16:40 +0000 (UTC)
-Message-Id: <fe868bea1741c4d902543842726fca1671dc7ef5.1586196948.git.christophe.leroy@c-s.fr>
-In-Reply-To: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
-References: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v3 04/15] powerpc/8xx: Create C version of kuap_restore()
- and kuap_check()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        msuchanek@suse.de
+        with ESMTP id fDH1qkHOVEY2; Mon,  6 Apr 2020 20:18:35 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BF4838B775;
+        Mon,  6 Apr 2020 20:18:34 +0200 (CEST)
+Subject: Re: [RFC PATCH v2 12/13] powerpc/kernel: Do not inconditionally save
+ non volatile registers on system call
+To:     Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
+        Paul Mackerras <paulus@samba.org>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon,  6 Apr 2020 18:16:40 +0000 (UTC)
+References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
+ <4ef6d617cfd34e09e9bf5a456b2e0b6d2a8a3c96.1586108649.git.christophe.leroy@c-s.fr>
+ <1586135554.pnqaj0giue.astroid@bobo.none>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <48d3e2e5-318f-011e-a59b-ec89bd7b76d2@c-s.fr>
+Date:   Mon, 6 Apr 2020 20:18:29 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <1586135554.pnqaj0giue.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation of porting PPC32 to C syscall entry/exit,
-create C version of kuap_restore() and kuap_check() on 8xx
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/include/asm/nohash/32/kup-8xx.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/nohash/32/kup-8xx.h b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-index 85ed2390fb99..1918d2e55da3 100644
---- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-@@ -34,6 +34,19 @@
- 
- #include <asm/reg.h>
- 
-+static inline void kuap_restore(struct pt_regs *regs)
-+{
-+	mtspr(SPRN_MD_AP, regs->kuap);
-+}
-+
-+static inline void kuap_check(void)
-+{
-+	if (!IS_ENABLED(CONFIG_PPC_KUAP_DEBUG))
-+		return;
-+
-+	WARN_ON_ONCE((mfspr(SPRN_MD_AP) & 0xffff0000) != (MD_APG_KUAP & 0xffff0000));
-+}
-+
- static inline void allow_user_access(void __user *to, const void __user *from,
- 				     unsigned long size, unsigned long dir)
- {
--- 
-2.25.0
+Le 06/04/2020 à 03:25, Nicholas Piggin a écrit :
+> Christophe Leroy's on April 6, 2020 3:44 am:
+>> Before : 347 cycles on null_syscall
+>> After  : 327 cycles on null_syscall
+> 
+> The problem I had doing this is that signal delivery wnats full regs,
+> and you don't know if you have a signal pending ahead of time if you
+> have interrupts enabled.
+> 
+> I began to try bailing out back to asm to save nvgprs and call again.
+> I think that can be made to work, but it is more complication in asm,
+> and I soon found that 64s CPUs don't care about NVGPRs too much so it's
+> nice to get rid of the !fullregs state.
 
+I tried a new way in v3, please have a look. I split 
+syscall_exit_prepare() in 3 parts and the result is unexpected: it is 
+better than before the series (307 cycles now versus 311 cycles with 
+full ASM syscall entry/exit).
+
+> 
+> Possibly another approach would be to leave interrupts disabled for the
+> case where you have no work to do. You could create a small
+> syscall_exit_prepare_nowork fastpath for that case for 32-bit, perhaps?
+> 
+> Thanks,
+> Nick
+> 
+
+Christophe
