@@ -2,154 +2,145 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE397C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D813C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8760C2072F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E2C206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 19:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QwlBA16h"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="bOB0LqZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbgDFTCH (ORCPT
+        id S1726277AbgDFTEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 15:02:07 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:10803 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgDFTCH (ORCPT
+        Mon, 6 Apr 2020 15:04:31 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:36762 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgDFTEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 15:02:07 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8b7ca10000>; Mon, 06 Apr 2020 12:01:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 12:02:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 06 Apr 2020 12:02:06 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 19:02:05 +0000
-Received: from [10.2.56.115] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 19:02:05 +0000
-Subject: Re: [PATCH 1/2] mm: clarify __GFP_MEMALLOC usage
-To:     Michal Hocko <mhocko@kernel.org>, NeilBrown <neilb@suse.de>
-CC:     David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200403083543.11552-1-mhocko@kernel.org>
- <20200403083543.11552-2-mhocko@kernel.org>
- <alpine.DEB.2.21.2004031238571.230548@chino.kir.corp.google.com>
- <87blo8xnz2.fsf@notabene.neil.brown.name>
- <20200406070137.GC19426@dhcp22.suse.cz>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <4f861f07-4b47-8ddc-f783-10201ea302d3@nvidia.com>
-Date:   Mon, 6 Apr 2020 12:02:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 15:04:30 -0400
+Received: by mail-ua1-f65.google.com with SMTP id m15so363948uao.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 12:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dKSOuUapGnWf3Hq2VKiORYvF7/gi1e0olK/3vh44kQQ=;
+        b=bOB0LqZRTfAo6bdJQM33HQTyFUvLOR2z0Foi8Jb7TOSz1Og4RBWGZeKA4kZ/KpEEAp
+         lAEpgpzt0q6aG5DTLjV4xRZnSYIp0ZzUTqyGwsDsiCON6vSw4wMh362yvErfWIEjIFtE
+         Wa+l+6HD1L6snPqXyu03v/xIPeJB9BnUfoLrY6RgTLjRXZdnoRb04+OZOWBvFSzLCXmG
+         Lczq/lgonbLYzFjzZZBUwzc41Ae9iurYnVUxNbq3GDCxYejuuHJkSx8X/MQ2/WEHfbVC
+         Y/gPn+28cj89NxAFAFKPa/J8wNu1zga0PppWe0Z6j9DtuYOUV0tBIJCUQnHtf0qtUtqy
+         mRVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dKSOuUapGnWf3Hq2VKiORYvF7/gi1e0olK/3vh44kQQ=;
+        b=c3pVGkP5rW7is+57pBiiAr6qfhnd/p0xjyNg9g5G+Ulz7gCIUe0oWGWWh2harATAoT
+         VMLHU4VGLN8OvxpKFqclziHRXh2r4YPN0+Cp0qunVflHJtBoP9qx/QdUDJKE+pJC+rj+
+         40TQEaDAxGwZs2ETPQihCnOn7nX2CiD/5vPfsrexGdBggqmRBdugc4lDl97MJ69JfdfQ
+         wvQhFpk00Bq0akyWD00RqQv9Pio1M1f3wK1b/7gCMfu/5BjoN6cwVkdaIUdRlp14Sh9T
+         4N19b13BD0KgN9/XeiEWZLP3td9VlijmwnO9+Y4Pca4pgJLOpKJ/YMggBHATse4BW8h+
+         MKjA==
+X-Gm-Message-State: AGi0Pubq661NHLOYvCVNsYMbri2E1elIxqsZa4C/I1+FFG4SNfF6SNAu
+        pBdsioCQzYL0gPN5+ipVShQrt0A6BjLrlJzfnatvaQ==
+X-Google-Smtp-Source: APiQypIK/YDmw7c24JNIRU7dH38DelSt/uLu7XVUJgDjKlcvdhZlf2ykNjo+z5hkGjCXR2mqiEa0SbEjT9HPUmZGtmU=
+X-Received: by 2002:ab0:5f90:: with SMTP id b16mr805358uaj.77.1586199867533;
+ Mon, 06 Apr 2020 12:04:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200406070137.GC19426@dhcp22.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586199713; bh=qqIagahZ8DDUVZjQFUcg1ElI28hwEI0fMAZ7/LsRukU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=QwlBA16h2D+ju7OlUihZ+T1QjkFLn7SmhlvkVp0UAszXqAXFqG6hOvTaMGyC8kEMv
-         2Bwp8DReIQmyzNvzYLEMkZk6Of3WrGsdc6ekAFuiHv6Y+OE5NEIyfASD0M+XKnE7K1
-         RRW59KqyDHfbZgc4xDXn7CQEMIa8qHcZU9VjN1dEBfI8H3IoAEwIe1gmO1cjg8tFYV
-         7APrla5bTSEE76b0grIPPluxmWdv7avTTP+wXZaWnSDwQshqAKJfjoc3TW7pwyXZn1
-         V7hrmPYdjTn+taq5vCRuDHRPjAn8uy/6zyWCqYE3XW1zD2tsaGoVeqUJtNfrBsi6c6
-         fgLnMMOdhREeQ==
+References: <20200331075356.19171-1-j-keerthy@ti.com> <20200331075356.19171-4-j-keerthy@ti.com>
+In-Reply-To: <20200331075356.19171-4-j-keerthy@ti.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 7 Apr 2020 00:34:16 +0530
+Message-ID: <CAHLCerP3usTcNeRwGekWG6xGdAQedZfoegtfsda8O-OHW9i-oQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] arm64: dts: ti: am654: Add thermal zones
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>, t-kristo@ti.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/6/20 12:01 AM, Michal Hocko wrote:
-...
->  From 6c90b0a19a07c87d24ad576e69b33c6e19c2f9a2 Mon Sep 17 00:00:00 2001
-> From: Michal Hocko <mhocko@suse.com>
-> Date: Wed, 1 Apr 2020 14:00:56 +0200
-> Subject: [PATCH] mm: clarify __GFP_MEMALLOC usage
-> 
-> It seems that the existing documentation is not explicit about the
-> expected usage and potential risks enough. While it is calls out
-> that users have to free memory when using this flag it is not really
-> apparent that users have to careful to not deplete memory reserves
-> and that they should implement some sort of throttling wrt. freeing
-> process.
-> 
-> This is partly based on Neil's explanation [1].
-> 
-> Let's also call out that a pre allocated pool allocator should be
-> considered.
-> 
-> [1] http://lkml.kernel.org/r/877dz0yxoa.fsf@notabene.neil.brown.name
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
+On Tue, Mar 31, 2020 at 1:24 PM Keerthy <j-keerthy@ti.com> wrote:
+>
+> The am654 SoC has three thermal zones namely MPU0, MPU1 and MCU
+> zones
+>
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
 > ---
->   include/linux/gfp.h | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> index e5b817cb86e7..9cacef1a3ee0 100644
-> --- a/include/linux/gfp.h
-> +++ b/include/linux/gfp.h
-> @@ -110,6 +110,11 @@ struct vm_area_struct;
->    * the caller guarantees the allocation will allow more memory to be freed
->    * very shortly e.g. process exiting or swapping. Users either should
->    * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
-> + * Users of this flag have to be extremely careful to not deplete the reserve
-> + * completely and implement a throttling mechanism which controls the consumption
-> + * of the reserve based on the amount of freed memory.
-> + * Usage of a pre-allocated pool (e.g. mempool) should be always considered before
-> + * using this flag.
->    *
->    * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency reserves.
->    * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
-> 
+>  .../dts/ti/k3-am654-industrial-thermal.dtsi   | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
+> new file mode 100644
+> index 000000000000..cdc3d40c3f60
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
+> @@ -0,0 +1,45 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <dt-bindings/thermal/thermal.h>
+> +
+> +mpu0_thermal: mpu0_thermal {
+> +       polling-delay-passive = <250>; /* milliseconds */
+> +       polling-delay = <500>; /* milliseconds */
+> +       thermal-sensors = <&wkup_vtm0 0>;
 
-Hi Michal and all,
+You are referencing the wkup_vtm0 node before defining it in the next patch.
 
-How about using approximately this wording instead? I found Neil's wording to be
-especially helpful so I mixed it in. (Also fixed a couple of slight 80-col overruns.)
+Swap the order of the patches and move the include for thermal zones
+to this patch.
 
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index be2754841369..c247a911d8c7 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -111,6 +111,15 @@ struct vm_area_struct;
-   * very shortly e.g. process exiting or swapping. Users either should
-   * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
-   *
-+ * To be extra clear: users of __GFP_MEMALLOC must be working to free other
-+ * memory, and that other memory needs to be freed "soon"; specifically, before
-+ * the reserve is exhausted. This generally implies a throttling mechanism that
-+ * balances the amount of __GFP_MEMALLOC memory used against the amount that the
-+ * caller is about to free.
-+ *
-+ * Usage of a pre-allocated pool (e.g. mempool) should be always considered
-+ * before using this flag.
-+ *
-   * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency reserves.
-   * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
-   */
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+> +
+> +       trips {
+> +               mpu0_crit: mpu0_crit {
+> +                       temperature = <125000>; /* milliCelsius */
+> +                       hysteresis = <2000>; /* milliCelsius */
+> +                       type = "critical";
+> +               };
+> +       };
+> +};
+> +
+> +mpu1_thermal: mpu1_thermal {
+> +       polling-delay-passive = <250>; /* milliseconds */
+> +       polling-delay = <500>; /* milliseconds */
+> +       thermal-sensors = <&wkup_vtm0 1>;
+> +
+> +       trips {
+> +               mpu1_crit: mpu1_crit {
+> +                       temperature = <125000>; /* milliCelsius */
+> +                       hysteresis = <2000>; /* milliCelsius */
+> +                       type = "critical";
+> +               };
+> +       };
+> +};
+> +
+> +mcu_thermal: mcu_thermal {
+> +       polling-delay-passive = <250>; /* milliseconds */
+> +       polling-delay = <500>; /* milliseconds */
+> +       thermal-sensors = <&wkup_vtm0 2>;
+> +
+> +       trips {
+> +               mcu_crit: mcu_crit {
+> +                       temperature = <125000>; /* milliCelsius */
+> +                       hysteresis = <2000>; /* milliCelsius */
+> +                       type = "critical";
+> +               };
+> +       };
+> +};
+> --
+> 2.17.1
+>
