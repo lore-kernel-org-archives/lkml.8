@@ -2,88 +2,114 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA27C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589B0C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8E2206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:40:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A14JlXhD"
+	by mail.kernel.org (Postfix) with ESMTP id 3166620672
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:42:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgDFRj7 (ORCPT
+        id S1727547AbgDFRmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:39:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46898 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbgDFRj7 (ORCPT
+        Mon, 6 Apr 2020 13:42:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51238 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726735AbgDFRmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:39:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ighi/oMVp9tFTOBbBxmTii0DJ49JmSpk0alZtgjwyEE=; b=A14JlXhDhbCpugXDKFmJjxkAR1
-        3FxwFK0ASLf1JXMVK3NNyPLaPDT/3cSBQAbIvS9KC/HcKlUt0tR9PJd0dduozFawoDCEsaiog7woQ
-        MVk6pjT8OFvdUKVaP5Pa0RUm0nQ9vgnr0R+2HwysLODLyNYep2w2v55KnJ7jUHnz311KCyPZ2wdv/
-        xu5Dw5wZewwIBA3kerLLfXnC0y8tVljROTKczdG1OIHFpmgYzbJ4EE1Xh4gmfaIf8zVwsucwE4q7H
-        GfUL7yOaJr/KNw0T91jZm7VyqfkznbFBJZXE3XaNyKpAE3YSBxo4B8J6XIoRH1txvvJOkCeN0IfvZ
-        +DPzvOJg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLVj3-0006Ck-Jn; Mon, 06 Apr 2020 17:39:57 +0000
-Date:   Mon, 6 Apr 2020 10:39:57 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dominique Martinet <asmadeus@codewreck.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        Sergey Alirzaev <l29ah@cock.li>
-Subject: Re: [GIT PULL] 9p update for 5.7
-Message-ID: <20200406173957.GI21484@bombadil.infradead.org>
-References: <20200406110702.GA13469@nautica>
- <CAHk-=whVEPEsKhU4w9y_sjbg=4yYHKDfgzrpFdy=-f9j+jTO3w@mail.gmail.com>
- <20200406164057.GA18312@nautica>
- <20200406164641.GF21484@bombadil.infradead.org>
- <CAHk-=wiAiGMH=bw5N1nOVWYkE9=Pcx+mxyMwjYfGEt+14hFOVQ@mail.gmail.com>
+        Mon, 6 Apr 2020 13:42:23 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036HXmLs007702;
+        Mon, 6 Apr 2020 13:41:47 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 306nvv0ra9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 13:41:47 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 036HYHa8008849;
+        Mon, 6 Apr 2020 13:41:46 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 306nvv0r9y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 13:41:46 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 036HfUPn021250;
+        Mon, 6 Apr 2020 17:41:45 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma05wdc.us.ibm.com with ESMTP id 306hv69tb0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 17:41:45 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 036Hfi2X52560280
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Apr 2020 17:41:45 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3B1CAC062;
+        Mon,  6 Apr 2020 17:41:44 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48305AC05B;
+        Mon,  6 Apr 2020 17:41:41 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.85.165.246])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Apr 2020 17:41:41 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] powerpc/crash: Use NMI context for printk after crashing other CPUs
+Date:   Mon,  6 Apr 2020 14:40:59 -0300
+Message-Id: <20200406174058.686436-1-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiAiGMH=bw5N1nOVWYkE9=Pcx+mxyMwjYfGEt+14hFOVQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_08:2020-04-06,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 mlxscore=0 priorityscore=1501 adultscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=731 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004060136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 10:04:11AM -0700, Linus Torvalds wrote:
-> On Mon, Apr 6, 2020 at 9:46 AM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > POSIX may well "allow" short reads, but userspace programmers basically
-> > never check the return value from read().  Short reads aren't actually
-> > allowed.  That's why signals are only allowed to interrupt syscalls if
-> > they're fatal (and the application will never see the returned value
-> > because it's already dead).
-> 
-> Well, that's true for some applications.
-> 
-> But look at anybody who ever worked more with NFS mounts, and they got
-> used to having the 'intr' mount flag set and incomplete reads and
-> -EAGAIN as a result.
+Currently, if printk lock (logbuf_lock) is held by other thread during
+crash, there is a chance of deadlocking the crash on next printk, and
+blocking a possibly desired kdump.
 
-That's why you had me implement TASK_KILLABLE ;-)
+After sending IPI to all other CPUs, make printk enter in NMI context,
+as it will use per-cpu buffers to store the message, and avoid locking
+logbuf_lock.
 
-> Are there apps that react badly? I'm sure - but they also wouldn't
-> have O_NONBLOCK set on a regular file. The only reason to set
-> O_NONBLOCK is because you think the fd might be a pipe or something,
-> and you _are_ ready to get partial reads.
-> 
-> So the 9p behavior certainly isn't outrageously out of line for a
-> network filesystem. In fact, because of O_NONBLOCK rather than a mount
-> option, I think it's a lot safer than a fairly standard NFS option.
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+---
+ arch/powerpc/kexec/crash.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The NFS option has been a no-op for over a decade ;-)  I agree with you
-that O_NONBLOCK is a good indicator the application is willing to handle
-short reads (or indeed writes).
+diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+index d488311efab1..9b73e3991bf4 100644
+--- a/arch/powerpc/kexec/crash.c
++++ b/arch/powerpc/kexec/crash.c
+@@ -115,6 +115,7 @@ static void crash_kexec_prepare_cpus(int cpu)
+ 
+ 	crash_send_ipi(crash_ipi_callback);
+ 	smp_wmb();
++	printk_nmi_enter();
+ 
+ again:
+ 	/*
+-- 
+2.25.1
+
