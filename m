@@ -2,145 +2,115 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB56C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041ABC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F184E206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD1AF2072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:44:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H73+pt7B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UAAKjx9G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgDFKnm (ORCPT
+        id S1727121AbgDFKoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:43:42 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38200 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbgDFKnk (ORCPT
+        Mon, 6 Apr 2020 06:44:39 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39775 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgDFKoj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:43:40 -0400
-Received: by mail-il1-f196.google.com with SMTP id n13so14185899ilm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 03:43:40 -0700 (PDT)
+        Mon, 6 Apr 2020 06:44:39 -0400
+Received: by mail-pf1-f194.google.com with SMTP id k15so7338073pfh.6;
+        Mon, 06 Apr 2020 03:44:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2BZ8kYXiM1BuTjCJPDJWq064ZRhtYcG64ceYL8l4ZHI=;
-        b=H73+pt7BbqZdfpJ4kn3Pz3eASUQ7E5K5n+u66xAH7oKU9x7IgwRKopHEYLN767ajR/
-         JkMwOzBwNM0r+bDxpTVBuKpdc1ICpyVg7WK9BY73ENYPloSGUB+E3WaWzD7yepBQnXGP
-         eMSixej2ld7yfU5izyuXLdJnoWuWxJ9aLdQ/yJLXLJKqhtt82tSOHZfEBBi+G01dNLoH
-         LD0xGohfeYyXYVStttxxd6hR0nnDBz1qoQSq7rFfY4WfcIUmgO6MGmgNbNN5HoTt+3m3
-         r4b+DP3TC/ED9tfLdWnZlrjVKt3iyLcULgbb8I+zm/gU+NX3Ob27ytnUb1TyiQDHGjnQ
-         5THQ==
+        bh=xpsSm03PNhhxTrDlHzFJiusW57aSpekqQTtY3BOaBJM=;
+        b=UAAKjx9GNKdrzDHCWGjcfG41gX/Cbvy7YW/ZDTHOCFMSnTDLchGMzaZssW3ScDGV/Z
+         7xchbKVwU0h/QPo1jv8RAxe5RxVcjUPD53V97HNIiPvht7dfc+zCDKwkcES05y/PEtcJ
+         rAg9Ae8Xo+ud9jnCybuOAMh4CNwue3K2HYxbG27mWvt9yKfXUcPcaS6xcjuzQ8ulKDvC
+         KIyQgQAo+c3WbeESfa6Vq+e6Apnszf/AWiZRxO5elgadEPGV4l3sV10OmnSeWfDDmNSY
+         Em2V4dRFPNjfWO03MliMwvxHo6lpw6Vnq/29y40ardOztBxJlJp5++zzfo/YXPNqEom1
+         KrLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2BZ8kYXiM1BuTjCJPDJWq064ZRhtYcG64ceYL8l4ZHI=;
-        b=tqn6jX2FuaoF5McbL6QasdciSNKlXmPu8FrZHrzMABVXlwqFBpR8O5VlZMF3dwWGYc
-         o1V8daFlR4fqwYJS1D1E8fXEpWE4Qg6NzfYHN8oO3kWsAYoB2Bz/jmghTK67UIMtHhAT
-         j2Unf8JRnJU0PWGhotiXHniEi5zhWy8jGQjYobDiFZLb+nFYb4zRsBOY+f1LYE9f3Ed4
-         rw2L64yz5TA40HI2kIKgfgKw55PaYaa2FqAr81/KHMMmFiBkJFgQb6AMq87ze+9DsZgZ
-         XUWPo6Hn/Ej6vxuAZYVSPT7K53EH+zj7YhnRpVyX+YqCxdaqXY8ns0YnznBcwEEwJZ+Y
-         MiQw==
-X-Gm-Message-State: AGi0PuZ02pz+7YYGF3x2GARBMgZyzGLWixK0Tmh7bwrFab30wpLY0eOT
-        dSoW+jbSVXk/7Wa+2B0CkE9dM6aafDoBF0aKWGw=
-X-Google-Smtp-Source: APiQypJyrlEDFj+pXJzHS3MWEdJ04ArtFK1ZoHOVPrqWHQHCzochugDXZMIBGthwFew57upW4dM31ZUO7Ew7VgwzFYE=
-X-Received: by 2002:a92:83ca:: with SMTP id p71mr19104698ilk.278.1586169820155;
- Mon, 06 Apr 2020 03:43:40 -0700 (PDT)
+        bh=xpsSm03PNhhxTrDlHzFJiusW57aSpekqQTtY3BOaBJM=;
+        b=XwHe5Ywnbw0sfDM4gbQ9NaQvl+QahJLoSGnKJNynsfjii94FugyMU7DoKs+K3SX3BX
+         V7D3oun34EoffqBsA9e0W3n0rZuYWBY8l81ktQpBwlR+wNPXsgZd9tHbXNqeAcEVowP3
+         3kM+nGnOpzP1yZHmaqWMI0LWFbt7VlEdKif7kH5kp4mkJf1Jqn3Hv9GjjESmeoJQ6g0g
+         VfFPPdcxIa0J2/0wUj4LrU3wmtW4FuG0O5OW639fVS3CmNXZ/YMBPCFxFdXXyMrE0G8/
+         1o5HehrJlGlFjtClllYFuqNIkG4y+j0Kr7Lj15t27Eihg8VXPtm7eSfonM0Q3eFRIqyL
+         hd8w==
+X-Gm-Message-State: AGi0PubUTGYaICDcGaf/jmc6rzOX4rkrLPfkyUz1bPsiNLWctBEVh47W
+        OMKXNcpTMZ6IBOjnYHdtye5wSudGasmrNIsuka4=
+X-Google-Smtp-Source: APiQypLVSCmp8W0PDDGXSdgvI9VwsRklH3NMg3fhaSk4LJ3JUwswPj1zXOnxcgmDKNT+oXenNn+9hpYhOP+QXuhOQUU=
+X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr21324803pfs.36.1586169878219;
+ Mon, 06 Apr 2020 03:44:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200406093944.4174-1-hqjagain@gmail.com> <87eet0sy79.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87eet0sy79.fsf@mpe.ellerman.id.au>
-From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Mon, 6 Apr 2020 18:43:27 +0800
-Message-ID: <CAJRQjoeTYg6NnxwvXusU6fdOFOmOiceokYJZQ23-0YQo_yqZ5w@mail.gmail.com>
-Subject: Re: [PATCH v4] powerpc/powernv: add NULL check after kzalloc in opal_add_one_export
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
+ <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk> <b1e6213ba9f67da8278dd5c5f5e4def8ab927c83.camel@perches.com>
+ <20200403193242.38611906@coco.lan> <2751400ae13b25d8259a8a9d7b36caf98ec2d367.camel@perches.com>
+ <CAHp75Vf+m_qzOwZb38dObLpKV2N27-J_7beqffhFVoSHaNV2vg@mail.gmail.com> <20200406094645.5f96457a@coco.lan>
+In-Reply-To: <20200406094645.5f96457a@coco.lan>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 6 Apr 2020 13:44:30 +0300
+Message-ID: <CAHp75Vdp+PXaJxrm99DgpJSS+6PcD1FfAfE3U1auFr2oxk5-tA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
+ DRM fourccs
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 6:30 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
->
-> Qiujun Huang <hqjagain@gmail.com> writes:
-> > Here needs a NULL check as kzalloc may fail returning NULL.
+On Mon, Apr 6, 2020 at 10:46 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+> Em Fri, 3 Apr 2020 21:32:42 +0300
+> Andy Shevchenko <andy.shevchenko@gmail.com> escreveu:
+> > On Fri, Apr 3, 2020 at 8:54 PM Joe Perches <joe@perches.com> wrote:
+> > > On Fri, 2020-04-03 at 19:32 +0200, Mauro Carvalho Chehab wrote:
+> > > > Em Fri, 03 Apr 2020 09:56:42 -0700
+> > > > Joe Perches <joe@perches.com> escreveu:
 > >
-> > Issue was found by coccinelle.
-> > Generated by: scripts/coccinelle/null/kmerr.cocci
+> > > It _might_ be useful to use a CONFIG_MEDIA_SUPPORT guard
+> > > in lib/vsprintf for this.
 > >
-> > Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> > Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
+> > No need. FourCC, if Sakari makes it more generic, can be used for
+> > other purposes, e.g. printing component names from the chips (not
+> > related to media at all).
 > >
-> > ---
 >
-> Thanks for putting up with all the review comments :)
->
-> But I think this should actually be two patches now.
->
-> The first patch should change the goto after
-> of_property_read_u64_array() into a return and drop the redundant
-> assignments.
->
-> Then the second patch can add the NULL check for attr.
+> Hmm... not 100% sure about what you're meaning with "component names".
 
-Get that, I'll separate them.
+4cc is pretty much wide standard, media is just one of (famous) users of it.
 
->
-> cheers
->
-> > v3->v4:
-> >       Added the information about coccinelle script.
-> >       Added change log.
-> >       Added Oliver's Reviewed-by.
-> > v2->v3:
-> >       Removed redundant assignment to 'attr' and 'name'.
-> > v1->v2:
-> >       Just return -ENOMEM if attr is NULL.
-> > ---
-> >  arch/powerpc/platforms/powernv/opal.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-> > index 2b3dfd0b6cdd..908d749bcef5 100644
-> > --- a/arch/powerpc/platforms/powernv/opal.c
-> > +++ b/arch/powerpc/platforms/powernv/opal.c
-> > @@ -801,16 +801,19 @@ static ssize_t export_attr_read(struct file *fp, struct kobject *kobj,
-> >  static int opal_add_one_export(struct kobject *parent, const char *export_name,
-> >                              struct device_node *np, const char *prop_name)
-> >  {
-> > -     struct bin_attribute *attr = NULL;
-> > -     const char *name = NULL;
-> > +     struct bin_attribute *attr;
-> > +     const char *name;
-> >       u64 vals[2];
-> >       int rc;
-> >
-> >       rc = of_property_read_u64_array(np, prop_name, &vals[0], 2);
-> >       if (rc)
-> > -             goto out;
-> > +             return rc;
-> >
-> >       attr = kzalloc(sizeof(*attr), GFP_KERNEL);
-> > +     if (!attr)
-> > +             return -ENOMEM;
-> > +
-> >       name = kstrdup(export_name, GFP_KERNEL);
-> >       if (!name) {
-> >               rc = -ENOMEM;
-> > --
-> > 2.17.1
+As I emphasized the example I referring to has nothing to do with media.
+
+Now, I have already two examples:
+- component name inside hardware register (used by Synopsys DesignWare)
+- CSRT table in ACPI uses this code for vendor ID.
+
+-- 
+With Best Regards,
+Andy Shevchenko
