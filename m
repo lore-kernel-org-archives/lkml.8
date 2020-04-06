@@ -2,125 +2,110 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D098C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D3EC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D1E248C5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E1F7248C5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:41:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UhuyLID1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbgDFPla (ORCPT
+        id S1729051AbgDFPlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:41:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26824 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726723AbgDFPla (ORCPT
+        Mon, 6 Apr 2020 11:41:32 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8227 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgDFPlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:41:30 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036FYack057517;
-        Mon, 6 Apr 2020 11:41:11 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 306n24eudc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 11:41:10 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 036FZV37015214;
-        Mon, 6 Apr 2020 15:41:10 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01wdc.us.ibm.com with ESMTP id 306hv5s2v6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 15:41:10 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 036Ff9O254460904
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Apr 2020 15:41:09 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 978E0AE062;
-        Mon,  6 Apr 2020 15:41:09 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 13345AE05F;
-        Mon,  6 Apr 2020 15:41:07 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.165.246])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Apr 2020 15:41:06 +0000 (GMT)
-Message-ID: <6c09a6e1a1f790ad87a2591ff8f8a6e1c7d6b079.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 1/1] powerpc/kernel: Enables memory hot-remove after
- reboot on pseries guests
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     bharata@linux.ibm.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
-Date:   Mon, 06 Apr 2020 12:41:01 -0300
-In-Reply-To: <20200403143831.GA12662@in.ibm.com>
-References: <20200402195156.626430-1-leonardo@linux.ibm.com>
-         <20200403143831.GA12662@in.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-9qOAwFiqOabJT4Un+oxn"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Mon, 6 Apr 2020 11:41:31 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8b4d450000>; Mon, 06 Apr 2020 08:39:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Apr 2020 08:41:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 08:41:30 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
+ 2020 15:41:30 +0000
+Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
+ 15:41:29 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <40102767-ecdb-e958-66f4-45d11464069c@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <b7b77258-6309-7ed2-489d-337cf273ba1e@nvidia.com>
+Date:   Mon, 6 Apr 2020 08:41:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-06_08:2020-04-06,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=537
- priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
- suspectscore=1 lowpriorityscore=0 adultscore=0 mlxscore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004060124
+In-Reply-To: <40102767-ecdb-e958-66f4-45d11464069c@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586187589; bh=yaEffBsy3QjkHNhjq0LUVqspbBmXRTztsEwoU5cqhXY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=UhuyLID18HHRqhwyeddyzNGO/WYE7hdtJAQ4IVcQfKq5mtaUAkjrezIfV6vonRB7S
+         FKC03gRUrQHdm3V7EIBaz4Qjm2rlNoVz5je12uwC/KvmylAiNcE0QlOIeGJzzZWFeQ
+         T3svN4g6UdJh+XlKVdWxBmx0g+X8KRZsUfykrs3RbLbx/vMtycBhBqFMNvYNMU2FXj
+         DA744DeWWukiUhDzilOoyjo+VbIAOB6KBLwseOif4UnIsAwOLmk2KONGuag3lsA7zA
+         XCeXJfdOYYY/wmkrK1J3rKQrxAI4jp68X+opCtLPzW2K1KcDhfDK/gsFMZH8FGHYDG
+         FUoChbmg8bLHw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-9qOAwFiqOabJT4Un+oxn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 4/5/20 2:11 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 04.04.2020 04:25, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>> +static int tegra_vi_tpg_channels_alloc(struct tegra_vi *vi)
+>> +{
+>> +     struct tegra_vi_channel *chan, *tmp;
+>> +     unsigned int port_num;
+>> +     unsigned int nchannels =3D vi->soc->vi_max_channels;
+>> +     int ret =3D 0;
+>> +
+>> +     for (port_num =3D 0; port_num < nchannels; port_num++) {
+>> +             /*
+>> +              * Do not use devm_kzalloc as memory is freed immediately
+>> +              * when device instance is unbound but application might s=
+till
+>> +              * be holding the device node open. Channel memory allocat=
+ed
+>> +              * with kzalloc is freed during video device release callb=
+ack.
+>> +              */
+>> +             chan =3D kzalloc(sizeof(*chan), GFP_KERNEL);
+> Why anyone would want to unbind this driver in practice?
+>
+> I think it should make more sense to set suppress_bind_attrs=3Dtrue.
 
-Hello Bharata,
-
-On Fri, 2020-04-03 at 20:08 +0530, Bharata B Rao wrote:
-> The patch would be more complete with the following change that ensures
-> that DRCONF_MEM_HOTREMOVABLE flag is set for non-boot-time hotplugged
-> memory too. This will ensure that ibm,dynamic-memory-vN property
-> reflects the right flags value for memory that gets hotplugged
-> post boot.
->=20
-
-You just sent that on a separated patchset, so I think it's dealt with.
-Do you have any other comments on the present patch?
-
-Best regards,
-
---=-9qOAwFiqOabJT4Un+oxn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6LTY0ACgkQlQYWtz9S
-ttTE0xAAwC4OgrLJoU37JGHUVnbtvnDoM/soV+/MjQz128yoydIeASSL9FZJBa9I
-py00+2vLjFXtLyOqv/JQPLaZmhwmNLJFgykmdVFM2zsM6pWIpASNZ86eSYhbzASn
-iw4T38IYMp8BHgb7ajO8R5nUAmPZhDAZCjlXMGgsxOkxfP0Cn2nymoznQAoEy2zf
-/Vlzs/8eDHNj6msFXEnTjXt4liG9jp6itoQaLQjGWiXDlAFPvXVcn5pxvu/culPU
-sdWmwbo+PHJxEtAarZ95iJH8rbWgtJVUheGsyEILFojhk4yzKp2r5rq/JLMUy96+
-3tfxUom7V3tqfEPvfrC5LzFx/Dxr/SPod9mEu6whjcJVK1QJW8s5CBgmA1XBLnWP
-fSyUQNCMZCl2S7l1ucqqcNyDXDX3DSHYbbJVOcKkafIhczitLriRJR/fp43s6ysd
-4RejaK1Eh+KRc2nkHGvah/p5X7io00fU6WQeXyQGz+EEvTZ7NeUSPV22VDnhfZXN
-3v1chC7v8066KkU86fj8N0D//srfnkxEaA1jRgRQ6Sc4YkQPhuprrqqilsVo3dNP
-onlowpsjXcMoKFckXYu4d2DC+n++Rb0q4fnX+sEHLAB3r+9LGLwL1yH13MVEI96Q
-b/HOVSm2+hTWo/R294Z1YaCDHZjz2ez0gO8KDVitodS1ez3YV7Q=
-=VJEq
------END PGP SIGNATURE-----
-
---=-9qOAwFiqOabJT4Un+oxn--
+ From the previous feedback of patch series, we need to support=20
+unbind/bind and looks like this driver should also support to built as a=20
+module.
 
