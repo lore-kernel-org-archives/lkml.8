@@ -2,124 +2,106 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43940C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F83C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B35024939
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:11:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrynkiAy"
+	by mail.kernel.org (Postfix) with ESMTP id 28C4D24939
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbgDFQLh (ORCPT
+        id S1729419AbgDFQME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:11:37 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35729 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728707AbgDFQLg (ORCPT
+        Mon, 6 Apr 2020 12:12:04 -0400
+Received: from smtprelay0164.hostedemail.com ([216.40.44.164]:42242 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728707AbgDFQMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:11:36 -0400
-Received: by mail-lf1-f66.google.com with SMTP id r17so8755304lff.2;
-        Mon, 06 Apr 2020 09:11:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qhOUGpjPKASmxoCysFaxbtOB2AHvvFDFpDiOJXOBlNo=;
-        b=UrynkiAylxjENx/BTXAnxsXfsPXLlbFbVf9NAYsIXircg3qbDqGgXpl0Agz7FjWxYV
-         o23532+gFX5nUrvt45ZV+JltPlf69OMbNpqjzTuosCOt+1TThYRgyYXYgYMkj+bUQNsG
-         C69GB+hmlKc3cCgePelBhWBhuChb5+qwFpoG4xSqLYRjBNPx6x+CFL965NRxL6Us8zd4
-         Wf/pi01y6+iKV4sj4gOGgXO+LjmCb6gg+SeknB1wc28TVxBs8RbprSXCBwbecK0DCmuy
-         PR1s0hQt4uSC473SJAESyeCrMUqIFMusJ/MdF888X8m4l9XMR0JNA8DN1/oIaDaGHcDb
-         w/cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qhOUGpjPKASmxoCysFaxbtOB2AHvvFDFpDiOJXOBlNo=;
-        b=SyVsXx2wOx8e6TxCr7c4OkNuOUldRLwD8Z5UcQzotf3BSofN0+UaVW3ir/sPbcY4yY
-         rSTbBJNEsDm91I4LlOgSDKnXMxl9brXyHwsl4gJuTG4B3FJ123pXCWKOmj9gwOy9r8FQ
-         eXLQXCLorQjFY61mMwXKsA6KMgJKe9RxTvqstbcRDpJVeCgCPtO8m2LeZwT5Xd2Wiyct
-         leNygLt8hyJDUvd9OFOmVKOEZV3YpS4UITRSXHPRj7hJ/Q+nVKdaTFkvKQaYwilEKZ/6
-         gN8KtCa5FxOD9KHG3h67I8igd0HsD4vANE/nNnYdUfSEv9AuMqXIs5FuesBY1wBcaLed
-         BXZw==
-X-Gm-Message-State: AGi0PuZFjZi1OYxPf1OvTmPLtMfiWqHeROEBCaLGnXMYkH92axsYZqSo
-        nea+beupW+tVkcZQoaP8eTCrZTG1
-X-Google-Smtp-Source: APiQypJjSmNNCPDM8/uvaTTUFwGwmlSABQOaKn62Vzpr2BzuKzoLuemeS08xNpG1PBcFQFtRQNlQHQ==
-X-Received: by 2002:a05:6512:686:: with SMTP id t6mr14141091lfe.163.1586189492891;
-        Mon, 06 Apr 2020 09:11:32 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id o18sm1360571lfb.13.2020.04.06.09.11.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 09:11:31 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <40102767-ecdb-e958-66f4-45d11464069c@gmail.com>
- <b7b77258-6309-7ed2-489d-337cf273ba1e@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <6014fee9-ce97-7ced-f2ba-82176b8b36db@gmail.com>
-Date:   Mon, 6 Apr 2020 19:11:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Apr 2020 12:12:03 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 37DF0100E7B72;
+        Mon,  6 Apr 2020 16:12:02 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rest46_4bb8419fa601a
+X-Filterd-Recvd-Size: 3233
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Mon,  6 Apr 2020 16:12:00 +0000 (UTC)
+Message-ID: <d509771b7e08fff0d18654b746e413e93ed62fe8.camel@perches.com>
+Subject: Re: [PATCH] mm: Add kvfree_sensitive() for freeing sensitive data
+ objects
+From:   Joe Perches <joe@perches.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 06 Apr 2020 09:10:02 -0700
+In-Reply-To: <319765.1586188840@warthog.procyon.org.uk>
+References: <a291cce3ff1ba978e7ad231a8e1b7d82f6164e86.camel@perches.com>
+         <20200406023700.1367-1-longman@redhat.com>
+         <319765.1586188840@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <b7b77258-6309-7ed2-489d-337cf273ba1e@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.04.2020 18:41, Sowjanya Komatineni пишет:
+On Mon, 2020-04-06 at 17:00 +0100, David Howells wrote:
+> Joe Perches <joe@perches.com> wrote:
 > 
-> On 4/5/20 2:11 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 04.04.2020 04:25, Sowjanya Komatineni пишет:
->> ...
->>> +static int tegra_vi_tpg_channels_alloc(struct tegra_vi *vi)
->>> +{
->>> +     struct tegra_vi_channel *chan, *tmp;
->>> +     unsigned int port_num;
->>> +     unsigned int nchannels = vi->soc->vi_max_channels;
->>> +     int ret = 0;
->>> +
->>> +     for (port_num = 0; port_num < nchannels; port_num++) {
->>> +             /*
->>> +              * Do not use devm_kzalloc as memory is freed immediately
->>> +              * when device instance is unbound but application
->>> might still
->>> +              * be holding the device node open. Channel memory
->>> allocated
->>> +              * with kzalloc is freed during video device release
->>> callback.
->>> +              */
->>> +             chan = kzalloc(sizeof(*chan), GFP_KERNEL);
->> Why anyone would want to unbind this driver in practice?
->>
->> I think it should make more sense to set suppress_bind_attrs=true.
+> > > This patch introduces a new kvfree_sensitive() for freeing those
+> > > sensitive data objects allocated by kvmalloc(). The relevnat places
+> > > where kvfree_sensitive() can be used are modified to use it.
+> > 
+> > Why isn't this called kvzfree like the existing kzfree?
 > 
-> From the previous feedback of patch series, we need to support
-> unbind/bind and looks like this driver should also support to built as a
-> module.
+> To quote Linus:
+> 
+> 	We have a function for clearing sensitive information: it's called
+> 	"memclear_explicit()", and it's about forced (explicit) clearing even
+> 	if the data might look dead afterwards.
+> 
+> 	The other problem with that function is the name: "__kvzfree()" is not
+> 	a useful name for this function. We use the "__" format for internal
+> 	low-level helpers, and it generally means that it does *less* than the
+> 	full function. This does more, not less, and "__" is not following any
+> 	sane naming model.
+> 
+> 	So the name should probably be something like "kvfree_sensitive()" or
+> 	similar. Or maybe it could go even further, and talk about _why_ it's
+> 	sensitive, and call it "kvfree_cleartext()" or something like that.
+> 
+> 	Because the clearing is really not what even matters. It might choose
+> 	other patterns to overwrite things with, but it might do other things
+> 	too, like putting special barriers for data leakage (or flags to tell
+> 	return-to-user-mode to do so).
+> 
+> 	And yes, kzfree() isn't a good name either, and had that same
+> 	memset(), but at least it doesn't do the dual-underscore mistake.
+> 
+> 	Including some kzfree()/crypto people explicitly - I hope we can get
+> 	away from this incorrect and actively wrong pattern of thinking that
+> 	"sensitive data should be memset(), and then we should add a random
+> 	'z' in the name somewhere to 'document' that".
 
-If module unloading is also affected, then perhaps you should use
-get/put_device() to not allow freeing the resources until they're still
-in-use.
+Thanks.
 
-I suppose that it should be up to the V4L core to keep the device alive
-while needed, rather than to put the burden to the individual drivers.
+While I agree with Linus about the __ prefix,
+the z is pretty common and symmetric to all
+the <foo>zalloc uses.
+
+And if _sensitive is actually used, it'd be
+good to do a s/kzfree/kfree_sensitive/ one day
+sooner than later.
+
+
