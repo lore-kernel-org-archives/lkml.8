@@ -2,88 +2,117 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D229C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BD7C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430B92072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198682072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxJuXYIN"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="KxaaQIbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbgDFKB5 (ORCPT
+        id S1726964AbgDFKB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 6 Apr 2020 06:01:58 -0400
+Received: from mail-eopbgr1400110.outbound.protection.outlook.com ([40.107.140.110]:6357
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726784AbgDFKB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Apr 2020 06:01:57 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36324 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbgDFKB5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:01:57 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k1so7251486wrm.3;
-        Mon, 06 Apr 2020 03:01:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WKclT8SSW6xUw9or9LUyOec48tuwvzOnzubgTBKeiREX2o3rO+vzh3rvK4uVnDmXfzadUQYsW+KeV1zE1kYjwYKWRhxxUoTDJAfhu88LtKF1nhUUFGPweUpjEjGr+LfU5LieDwL6Vjbu27xpej9FHBTf3iWrv+Yki85gmv23pWkjAItt2nU/wRZbEhcWUcE3t9AU2o552sRYIcIawrjcu/Bm5vdeZrki2YLycNobM4jmh2eO+dMKGR89Sm99BMEMQE7Vvk9NRS9t6dxnHRG/mpjei/wpyiLnocV/xiV3J02tDFlbhqA0D8V+BX+cMrsZJUDlzwpbwMVPLAE2sqpXsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RuxuSojrTZ5mrYPsKKNEW1NuQt6W3hfYbPkPqQ6lCdM=;
+ b=FMWlQn3fc1/5yiM9KM4PJ5h6lPSLGV2A0qSNtw0389Gdd/appHnB+W1nECv1zBptFWioYBuLsf/sK6XRXKCen9yQbizsp4qF5vVNCPXHzwQUSiDPSsEfhGAbpfvQmJA+xwwvfXlkSLzPbNJ6NJkLJDNeY8V/shJKqpk9S0sLcXykR80HFsxxvW1gQOs4dqqknlzB9iNyrUS8ti56qPZHQHNoLhrW1gECmYrB3Uyi35kMUTmYXFoTxSazavVAHrfPqfo8RcZ6id+tIMzXSEo9p+8sJQJo6FKoK4Z5n6m20al3jq/G10siFsLFFdcFFquIS29lHXvr/+52AeIM+biqJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
-        bh=YzmMXR5rNZPtC86zvMRgp4oCyOtVaABF9wgIVshKUW4=;
-        b=gxJuXYINMA6TTC8wuTzGOaWVvfdkcVLMnRKU1Ii1lnkAsnPz2965x29SwCgMv225Si
-         O4O5QPrC9jqsgfivQfknFkPHpINpRhBLVdC+1zWF2zYzBiha3FzPKTIidV/1GaAexobV
-         GSfDZO88re0FoVr3BLwGlZAM9DAnXzIK/C8BoxXfeLPEaVUfEIHETy01Umg3//1qCr4p
-         VDCn1gY/yWFa4qqTqBerWz9V0rshhKg5pHfXzOOFY2ORojh0YlKagWaEgtqRzaR7L99x
-         1poKuZHTJ7RRZlx4z4n9oLYqdS/P46mMysw3s8yaAOF6J90UewZMfZINfnUszhnTdSMi
-         080Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=YzmMXR5rNZPtC86zvMRgp4oCyOtVaABF9wgIVshKUW4=;
-        b=tOu5TgLZX1dRRoFuEEfVd4aHdGSJjSRMx+7Nr/dQMGmvHbCgYvQ6aDDebT7HMqU1DF
-         cQGACsLdFB1+AZvWhGlmJ4PEp1694FUCVYoAOPS7kBxO9NJRidHmv6NI33ALJN7qtMbP
-         xzbObMjtcb0M4XPKwomQ8Ec8M7y6NYqAZ+heVDq9Gcst+jsYUrWis7tKbzJMC6q2JS2r
-         IR+VgKI4kAi+lZbYxwvA7z7XLGm3fthcYtSLJgTnQXbbLDYzczTHBr8Bd04YVmEjJo3k
-         nDVrrg0WbSJ4nRK83nP9dN9cVPAWh/XUj+UXIpQ1P3LMdBuH3T0/l2rsYGHHTxcwt1sI
-         BUNw==
-X-Gm-Message-State: AGi0PubcOONZRmbpVcAPBtlV2jMo+y3RIvdyUIA8kMCy3RWWQMwYYQ7D
-        bj/sHO2AXjG2U2QqcIgjoDKDIh8hYrvRScE+IKA=
-X-Google-Smtp-Source: APiQypKdiuOwo8naTpsrSPB5xSBWnI12Pc8gnVs1udE3VqYTg+4byJnBdfF7ALwaBDV5QRhywnpO473osUYaBiMEbSw=
-X-Received: by 2002:adf:bb94:: with SMTP id q20mr8443986wrg.179.1586167315127;
- Mon, 06 Apr 2020 03:01:55 -0700 (PDT)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RuxuSojrTZ5mrYPsKKNEW1NuQt6W3hfYbPkPqQ6lCdM=;
+ b=KxaaQIbtQw9284Sw/VARVf/MUo4Irfa0/n3HzO6qYBgy7WMbY/ZSAY92ob7ew7ZjSPCHh+U9Rk4CClFpSz4PsZw4vzxHyxbPFNDpx27vnvQX4NWllM2iT0WQfCX6e5sGWYPTEzZkPv8YqCadHrHdVuhmuQeAVXkq/AS4bODcnRs=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB3856.jpnprd01.prod.outlook.com (20.178.140.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.17; Mon, 6 Apr 2020 10:01:54 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2878.017; Mon, 6 Apr 2020
+ 10:01:54 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     John Stultz <john.stultz@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Subject: RE: How to fix WARN from drivers/base/dd.c in next-20200401 if
+ CONFIG_MODULES=y?
+Thread-Topic: How to fix WARN from drivers/base/dd.c in next-20200401 if
+ CONFIG_MODULES=y?
+Thread-Index: AdYI1eHeE+d8Du49RZSXfyqelir+RgAPcQ+AACaCwgAAIpzUAABtUcqgAAMnEZA=
+Date:   Mon, 6 Apr 2020 10:01:54 +0000
+Message-ID: <TYAPR01MB45443FA43152C0091D6EBF9AD8C20@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <TYAPR01MB45443DF63B9EF29054F7C41FD8C60@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <CALAqxLWopjCkiM=NR868DTcX-apPc1MPnONJMppm1jzCboAheg@mail.gmail.com>
+ <CAMuHMdVtHhq9Nef1pBtBUKfRU2L-KgDffiOv28VqhrewR_j1Dw@mail.gmail.com>
+ <CALAqxLX2AEFJxqXXXKPs8SU7Su2FqNjwbSt5BxwmQJqYQuST9A@mail.gmail.com>
+ <TYAPR01MB45447DFE9E81D77CA867DEC8D8C20@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYAPR01MB45447DFE9E81D77CA867DEC8D8C20@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 04893ba5-4c5b-4ce4-c177-08d7da1188e1
+x-ms-traffictypediagnostic: TYAPR01MB3856:
+x-microsoft-antispam-prvs: <TYAPR01MB38563D264B942DA6C6B27FC0D8C20@TYAPR01MB3856.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0365C0E14B
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(2940100002)(54906003)(2906002)(8936002)(7696005)(5660300002)(55016002)(66556008)(66476007)(64756008)(110136005)(66446008)(9686003)(52536014)(86362001)(33656002)(76116006)(4744005)(478600001)(66946007)(71200400001)(8676002)(81166006)(81156014)(6506007)(4326008)(316002)(186003)(55236004)(26005);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mlai7qN/Z0vAZR072P+hQbZnvEBxwrx/SNyOPurdKT6AR0CJuzhY4USEYzNITl0FEECdWNmNdz28Q46QCh17JSOqSKW5yzvXN9rOpMk1aWdgCGoavRvwKDDLAT/QhAFyoFhvfxhL/6rOvD3zhDKQs5dJ/LF81lB92WqxJL/MSh2gxoleBxyoyjXq0u+42+eWmhA3PWNzaumYTsr+hitC71evIiZMtZIU4ZSBWOXWrUbwGJAlF2bwfSad8k0DEQfFqco4o4WYXakk+AVJT5ZBK71mtHWnBjup50oZuEZPw6R8x3Utb9Cs4Wgggvcf/JCLdVFQ6/pwrRllhv5Naoq7nfZ1ENb1XG6z00jH6dEJADSDLSFoEpyNzUc3b0XzF3UzZUQDg7pfKRKgHKlvVfIquQJQkkFwMAbxhiCGvOs5rk9XCLupR+tJQmvSwfEkE1w1
+x-ms-exchange-antispam-messagedata: syDBZF21Si1AS472cmz891iQdvDcJivLnEl0JTJvDbErvxiTkSLbApAYq6fG2e3nCDRb9lSOGfwXgmBh+8YeGodtaeiudl3LTxjMq8IaECOriiI5gxd3KnUDemeqNZmxeQUcePY+bvVAKdHw/vSfZA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Mon, 6 Apr 2020 12:02:15 +0200
-Message-ID: <CA+icZUWnZwaNooj4WLvS7FKhkDgq3R3xUaQ8hFjuDgZTSj0s2Q@mail.gmail.com>
-Subject: kbuild: do not pass $(KBUILD_CFLAGS) to scripts/mkcompile_h
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04893ba5-4c5b-4ce4-c177-08d7da1188e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2020 10:01:54.0820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lSTa1cBryjOlJMrAhIT/X8bCGujjGH6hKb50T5ntCI5h8A62/PM93miU9XlonwhaCcr9tp4cZ+AXM/fXQO04IADZvHolxsOrec9e5b6UWvFLLPvaBkYHJQDEvB8StXXt
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3856
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Please CC me I am not subscribed to this mailing-list ]
-
-Hi,
-
-I think with your patch in [1] line #56 can go away, too?
-
-[ scripts/mkcompile_h ]
-
-53 # Generate a temporary compile.h
-54
-55 { echo /\* This file is auto generated, version $VERSION \*/
-56   if [ -n "$CONFIG_FLAGS" ] ; then echo "/* $CONFIG_FLAGS */"; fi
-
-Thanks.
-
-Regards,
-- Sedat -
-
-[1] https://patchwork.kernel.org/patch/11473667/
+SGkgYWdhaW4sDQoNCjxzbmlwPg0KPiBJJ20gZ3Vlc3Npbmcgd2Ugc2hvdWxkIGFkZCB0aGUgZm9s
+bG93aW5nIGZsdXNoX3dvcmsgZm9yIGRlZmVycmVkX3Byb2JlX3RpbWVvdXRfd29yaygpLg0KPiAj
+IFNvcnJ5LCBJIGRpZG4ndCB0ZXN0IHRoaXMgZm9yIHNvbWUgcmVhc29ucyB5ZXQgdGhvdWdoLi4u
+DQo+IA0KPiArICAgICAgIC8qIHdhaXQgZm9yIHRoZSBkZWZlcnJlZCBwcm9iZSB0aW1lb3V0IHdv
+cmtxdWV1ZSB0byBmaW5pc2ggKi8NCj4gKyAgICAgICBpZiAoZHJpdmVyX2RlZmVycmVkX3Byb2Jl
+X3RpbWVvdXQgPiAwKQ0KPiArICAgICAgICAgICAgICAgZmx1c2hfd29yaygmZGVmZXJyZWRfcHJv
+YmVfdGltZW91dF93b3JrKTsNCg0KSSdtIHNvcnJ5LiBUaGlzIGNvZGUgY2F1c2VkIGJ1aWxkIGVy
+cm9yIGJlY2F1c2UgdGhlIGRlZmVycmVkX3Byb2JlX3RpbWVvdXRfd29yaw0KaXMgc3RydWN0IGRl
+bGF5ZWRfd29yay4gQWxzbywgSSBkb24ndCB0aGluayB1c2luZyBmbHVzaF9kZWxheWVkX3dvcmso
+KSBpcw0KbXkgZXhwZWN0YXRpb24gKHdhaXQgdW50aWwgdGhlIHRpbWVvdXQgb2YgZGVmZXJyZWQp
+Li4uDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCg==
