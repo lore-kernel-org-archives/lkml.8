@@ -2,86 +2,206 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910ECC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5650C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AAF22240
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A4922240
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eM0qDVJK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T7SyR2U7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgDFOJf (ORCPT
+        id S1728658AbgDFOJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:09:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34072 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgDFOJe (ORCPT
+        Mon, 6 Apr 2020 10:09:42 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27439 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728611AbgDFOJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:09:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ohj/i/ogLT7GicyCIBoF5EnAvSBG2ciFGJNg8Qu9r/8=; b=eM0qDVJKBgxNmEu5HlJnfeNy5e
-        UlumaPrTinMvTgddkfe7mW9Y/ZZ6FJbP+zwMJWO6YWtpI5tFPxG6M3TowfnET9lfRkgcUowWEXISv
-        UcJEC+4kxb3hbsMKN1pPl2hJWpewrgsI7bBmf5oJYc0XFkh6JOHepeOIJDOp4HrciPM36PikXbqJL
-        O43iywfTgOM3zpGHgBFQdr5lqmwa/mrn1TI9q2nYBlBVZ3CLCNvGlYaDTDpWkI16znEbVKESLafK7
-        dTxUQvDNolhLkhgM+w0i0peLkkXLFRa2L3WTC8s8/jqoIo0tDoaglxDrDTCcVpyi5JcJFyxNVQllr
-        hJbJYoiw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLSRP-0001tn-N5; Mon, 06 Apr 2020 14:09:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 390CF3010C8;
-        Mon,  6 Apr 2020 16:09:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 270EC2BAC7486; Mon,  6 Apr 2020 16:09:30 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 16:09:30 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        dbueso@suse.de, juri.lelli@redhat.com,
-        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v2] locking/percpu-rwsem: fix a task_struct refcount
-Message-ID: <20200406140930.GN20730@hirez.programming.kicks-ass.net>
-References: <20200330213002.2374-1-cai@lca.pw>
- <C6D137A2-15A9-49BC-BCE2-DA1202B5AC3A@lca.pw>
+        Mon, 6 Apr 2020 10:09:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586182179;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wl9a4vsMx6popLEQnps/1oTIMHKzOVah2HdwSj1HK4k=;
+        b=T7SyR2U7n4VBR9Bh2c9woIcfyTHUtAtFbAW97hOYzPisY8dtsUonr83TsEVbNEBt4H7zBX
+        +iXOnvqGaXcyuW297tsU71Miyzv+in//Fq4k6NaEYsrWyj8Rd5bp7AnAJK+odSE1mPbE1P
+        SQ6u8NKdbmp2wBKgkc2bHSkZatKH+KI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-506-20pdoNKkNzyFdMakHIAuLg-1; Mon, 06 Apr 2020 10:09:35 -0400
+X-MC-Unique: 20pdoNKkNzyFdMakHIAuLg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DE5313F6;
+        Mon,  6 Apr 2020 14:09:34 +0000 (UTC)
+Received: from [10.72.12.191] (ovpn-12-191.pek2.redhat.com [10.72.12.191])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 115529D352;
+        Mon,  6 Apr 2020 14:09:28 +0000 (UTC)
+Subject: Re: [PATCH] vhost: force spec specified alignment on types
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20200406124931.120768-1-mst@redhat.com>
+ <045c84ed-151e-a850-9c72-5079bd2775e6@redhat.com>
+ <20200406095424-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d171447e-eabc-60ab-6de7-41ac9b82d7d1@redhat.com>
+Date:   Mon, 6 Apr 2020 22:09:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C6D137A2-15A9-49BC-BCE2-DA1202B5AC3A@lca.pw>
+In-Reply-To: <20200406095424-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 09:31:18AM -0400, Qian Cai wrote:
-> 
-> 
-> > On Mar 30, 2020, at 5:30 PM, Qian Cai <cai@lca.pw> wrote:
-> > 
-> > The commit 7f26482a872c ("locking/percpu-rwsem: Remove the embedded
-> > rwsem") introduced some task_struct memory leaks due to messing up with
-> > a task_struct refcount. At the beginning of
-> > percpu_rwsem_wake_function(), it calls get_task_struct(), but if the
-> > trylock failed, it will remain in the waitqueue. However, it will run
-> > percpu_rwsem_wake_function() again with get_task_struct() to increase
-> > the refcount but then only call put_task_struct() once the trylock
-> > succeeded.
-> > 
-> > Fix it by adjusting percpu_rwsem_wake_function() a bit to guard against
-> > when percpu_rwsem_wait() observing !private, terminating the wait and
-> > doing a quick exit() while percpu_rwsem_wake_function() then doing
-> > wake_up_process(p) as a use-after-free.
-> > 
-> > Fixes: 7f26482a872c ("locking/percpu-rwsem: Remove the embedded rwsem")
-> 
-> Peter, Ingo, can you take a look at this patch when you have a chance?
 
-I have it queued for urgent, should probably hit tip soon.
+On 2020/4/6 =E4=B8=8B=E5=8D=889:55, Michael S. Tsirkin wrote:
+> On Mon, Apr 06, 2020 at 09:34:00PM +0800, Jason Wang wrote:
+>> On 2020/4/6 =E4=B8=8B=E5=8D=888:50, Michael S. Tsirkin wrote:
+>>> The ring element addresses are passed between components with differe=
+nt
+>>> alignments assumptions. Thus, if guest/userspace selects a pointer an=
+d
+>>> host then gets and dereferences it, we might need to decrease the
+>>> compiler-selected alignment to prevent compiler on the host from
+>>> assuming pointer is aligned.
+>>>
+>>> This actually triggers on ARM with -mabi=3Dapcs-gnu - which is a
+>>> deprecated configuration, but it seems safer to handle this
+>>> generally.
+>>>
+>>> I verified that the produced binary is exactly identical on x86.
+>>>
+>>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+>>> ---
+>>>
+>>> This is my preferred way to handle the ARM incompatibility issues
+>>> (in preference to kconfig hacks).
+>>> I will push this into next now.
+>>> Comments?
+>>
+>> I'm not sure if it's too late to fix. It would still be still problema=
+tic
+>> for the userspace that is using old uapi headers?
+>>
+>> Thanks
+> It's not a problem in userspace. The problem is when
+> userspace/guest uses 2 byte alignment and passes it to kernel
+> assuming 8 byte alignment. The fix is for host not to
+> make these assumptions.
+
+
+Yes, but I meant when userspace is complied with apcs-gnu, then it still=20
+assumes 8 byte alignment?
+
+Thanks
+
+
+>
+>>>    drivers/vhost/vhost.h            |  6 ++---
+>>>    include/uapi/linux/virtio_ring.h | 41 ++++++++++++++++++++++++----=
+----
+>>>    2 files changed, 34 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+>>> index cc82918158d2..a67bda9792ec 100644
+>>> --- a/drivers/vhost/vhost.h
+>>> +++ b/drivers/vhost/vhost.h
+>>> @@ -74,9 +74,9 @@ struct vhost_virtqueue {
+>>>    	/* The actual ring of buffers. */
+>>>    	struct mutex mutex;
+>>>    	unsigned int num;
+>>> -	struct vring_desc __user *desc;
+>>> -	struct vring_avail __user *avail;
+>>> -	struct vring_used __user *used;
+>>> +	vring_desc_t __user *desc;
+>>> +	vring_avail_t __user *avail;
+>>> +	vring_used_t __user *used;
+>>>    	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
+>>>    	struct vhost_desc *descs;
+>>> diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/vi=
+rtio_ring.h
+>>> index 559f42e73315..cd6e0b2eaf2f 100644
+>>> --- a/include/uapi/linux/virtio_ring.h
+>>> +++ b/include/uapi/linux/virtio_ring.h
+>>> @@ -118,16 +118,6 @@ struct vring_used {
+>>>    	struct vring_used_elem ring[];
+>>>    };
+>>> -struct vring {
+>>> -	unsigned int num;
+>>> -
+>>> -	struct vring_desc *desc;
+>>> -
+>>> -	struct vring_avail *avail;
+>>> -
+>>> -	struct vring_used *used;
+>>> -};
+>>> -
+>>>    /* Alignment requirements for vring elements.
+>>>     * When using pre-virtio 1.0 layout, these fall out naturally.
+>>>     */
+>>> @@ -164,6 +154,37 @@ struct vring {
+>>>    #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
+>>>    #define vring_avail_event(vr) (*(__virtio16 *)&(vr)->used->ring[(v=
+r)->num])
+>>> +/*
+>>> + * The ring element addresses are passed between components with dif=
+ferent
+>>> + * alignments assumptions. Thus, we might need to decrease the compi=
+ler-selected
+>>> + * alignment, and so must use a typedef to make sure the __aligned a=
+ttribute
+>>> + * actually takes hold:
+>>> + *
+>>> + * https://gcc.gnu.org/onlinedocs//gcc/Common-Type-Attributes.html#C=
+ommon-Type-Attributes
+>>> + *
+>>> + * When used on a struct, or struct member, the aligned attribute ca=
+n only
+>>> + * increase the alignment; in order to decrease it, the packed attri=
+bute must
+>>> + * be specified as well. When used as part of a typedef, the aligned=
+ attribute
+>>> + * can both increase and decrease alignment, and specifying the pack=
+ed
+>>> + * attribute generates a warning.
+>>> + */
+>>> +typedef struct vring_desc __attribute__((aligned(VRING_DESC_ALIGN_SI=
+ZE)))
+>>> +	vring_desc_t;
+>>> +typedef struct vring_avail __attribute__((aligned(VRING_AVAIL_ALIGN_=
+SIZE)))
+>>> +	vring_avail_t;
+>>> +typedef struct vring_used __attribute__((aligned(VRING_USED_ALIGN_SI=
+ZE)))
+>>> +	vring_used_t;
+>>> +
+>>> +struct vring {
+>>> +	unsigned int num;
+>>> +
+>>> +	vring_desc_t *desc;
+>>> +
+>>> +	vring_avail_t *avail;
+>>> +
+>>> +	vring_used_t *used;
+>>> +};
+>>> +
+>>>    static inline void vring_init(struct vring *vr, unsigned int num, =
+void *p,
+>>>    			      unsigned long align)
+>>>    {
+
