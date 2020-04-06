@@ -2,113 +2,120 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F94C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF33C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AA720672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39326206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JsHGdIDX"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ZHSeZuKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgDFSRZ (ORCPT
+        id S1727728AbgDFSRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:17:25 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40755 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbgDFSRX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:17:23 -0400
-Received: by mail-pj1-f65.google.com with SMTP id kx8so190292pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=9b9hEkLgJW0u89MdK2XsWTuR5aijAVAWLv2chqGomps=;
-        b=JsHGdIDXuwjmPSHJjLEDK8zgvfdd3hjUDRu5wKMGvXq1VAnqBSMdZqWSqosI8khfY4
-         oE7p1A6ocFhiN8J5PbtrntkttDAy5bwjyyV+zhZ6n7R4pyqsq2ZlwYqp2Jj9Pr3H4iWw
-         yjjxQnVjzYa0EN8gv6ursR3nykwcAZX87QBeKKWSOqoNYFCTg3M02R2tGXnSFUh2g7wp
-         mHZZKwfoypGCcoY7S/RgpL0qAamQnASkCogjwdZ1q13bQH/mphjLvOBfeANpWYYwEnsd
-         yJVZb6avJbAy7kaOWajvsajd22wSvf6ymxRVPLp+QOrMhL/AnmvJ1tCvVzqzg/zhBJoH
-         z0eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=9b9hEkLgJW0u89MdK2XsWTuR5aijAVAWLv2chqGomps=;
-        b=sV2VbSQKtVEb1h2B7mgkRGWd1IjGI4S8v7o30J+EMlgqg02H84NbCDjT3yWfM+RKHN
-         sAfVIWHuIFVKJK4qDBtU7sERgGzgeR6suoAyVPUctbKX8Pbtw3zg1VPzCu/gayDsI7f1
-         JLQqwntl4uW+O/fyUrA5URvpsMOPDk5eXqyW21WRDsNCT7K7/vUPr03s1yiKLDkNg2s1
-         S9d/KF3Ep5qB85eQ8y2kaBt4dQsxy3e2q+GCDcMFhfjEbvD2RUmbSHrUaAL6qzxNlJMA
-         spK7d68WaBfe/4zj6LZkjGKzp+4LwVVcjL/megaLw2Dvxj3gAaH99HhhHv+swqSh4MGH
-         QlAg==
-X-Gm-Message-State: AGi0PuZEgB9BYchx8dBuStl0Shcx9Gk80Zcc2YDSpY9b8hnNBEDlM5k/
-        h+BIYRegHOkID35py1iHTz43ww==
-X-Google-Smtp-Source: APiQypKRMesRGHVSwEHWEWMOhGBkXtbS0emQ0GQwosoNU3Fhzn6Eu5sENDsWslhvhf0HXX4J0ehcDA==
-X-Received: by 2002:a17:902:7e05:: with SMTP id b5mr19413098plm.253.1586197041855;
-        Mon, 06 Apr 2020 11:17:21 -0700 (PDT)
-Received: from bsegall-glaptop.localhost (c-73-71-82-80.hsd1.ca.comcast.net. [73.71.82.80])
-        by smtp.gmail.com with ESMTPSA id y13sm11957859pfp.88.2020.04.06.11.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 11:17:20 -0700 (PDT)
-From:   bsegall@google.com
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     mingo@kernel.org, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de
-Subject: Re: [PATCH] sched/fair: Fix call walk_tg_tree_from() without hold rcu_lock
-References: <20200406121008.62903-1-songmuchun@bytedance.com>
-Date:   Mon, 06 Apr 2020 11:17:19 -0700
-In-Reply-To: <20200406121008.62903-1-songmuchun@bytedance.com> (Muchun Song's
-        message of "Mon, 6 Apr 2020 20:10:08 +0800")
-Message-ID: <xm26imico4wg.fsf@google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 6 Apr 2020 14:17:21 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:1992 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726705AbgDFSQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:16:43 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48wzJV6Bqfz9v01G;
+        Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=ZHSeZuKF; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id cz3nR_S0gR3m; Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJV59VGz9v016;
+        Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586197002; bh=HNyUM5qFo9XY5Fj+Oqj6ESs8K40UJCokKbJOCnivcsk=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=ZHSeZuKFaBV9IcvbK1E1aGjNT86Od/h24R4j1KBn3xWTmwQCS9846agJqIqsMSi7O
+         pxOw+4t4mqZCTsPBfniEAi26eOcwZA7/PMVljXQ3FLhZOg4MYH59AEd+jswAX0CQBI
+         6E2xpDAIX1oPGjs8WeUPt0iSwA/fZtYytF0k68bk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A11448B78D;
+        Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 49VM5QD-CMdi; Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 67FCE8B775;
+        Mon,  6 Apr 2020 20:16:42 +0200 (CEST)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 3E7A6656E9; Mon,  6 Apr 2020 18:16:42 +0000 (UTC)
+Message-Id: <40bc753eaf6f82ce7c8dee219fa730bf00c0974d.1586196948.git.christophe.leroy@c-s.fr>
+In-Reply-To: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
+References: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v3 06/15] powerpc/irq: Add new helpers to play with MSR_EE
+ and MSR_RI on PPC32
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
+        msuchanek@suse.de
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon,  6 Apr 2020 18:16:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Muchun Song <songmuchun@bytedance.com> writes:
+In preparation of porting PPC32 to C syscall entry/exit,
+add PPC32 version of following helpers:
+	__hard_irq_enable()
+	__hard_irq_disable()
+	__hard_EE_RI_disable()
+	__hard_RI_enable()
 
-> The walk_tg_tree_from() caller must hold rcu_lock, but the caller
-> do not call rcu_read_lock() in the unthrottle_cfs_rq(). The
-> unthrottle_cfs_rq() is used in 3 places. There are
-> distribute_cfs_runtime(), unthrottle_offline_cfs_rqs() and
-> tg_set_cfs_bandwidth(). The former 2 already hold the rcu lock,
-> but the last one does not. So fix it with calling rcu_read_lock()
-> in the unthrottle_cfs_rq().
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/hw_irq.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-It might be a tiny bit better to put it in the tg_set_cfs_bandwidth
-instead, but the other two sources were kinda by accident, so this is
-reasonable too.
+diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
+index e69466867d5f..8c30a72262fd 100644
+--- a/arch/powerpc/include/asm/hw_irq.h
++++ b/arch/powerpc/include/asm/hw_irq.h
+@@ -330,6 +330,16 @@ static inline void arch_local_irq_disable(void)
+ 		mtmsr(mfmsr() & ~MSR_EE);
+ }
+ 
++static inline void arch_local_recovery_disable(void)
++{
++	if (IS_ENABLED(CONFIG_BOOKE))
++		wrtee(0);
++	else if (IS_ENABLED(CONFIG_PPC_8xx))
++		wrtspr(SPRN_NRI);
++	else
++		mtmsr(mfmsr() & ~(MSR_EE | MSR_RI));
++}
++
+ static inline void arch_local_irq_enable(void)
+ {
+ 	if (IS_ENABLED(CONFIG_BOOKE))
+@@ -352,6 +362,11 @@ static inline bool arch_irqs_disabled(void)
+ 
+ #define hard_irq_disable()		arch_local_irq_disable()
+ 
++#define __hard_irq_enable()		arch_local_irq_enable()
++#define __hard_irq_disable()		arch_local_irq_disable()
++#define __hard_EE_RI_disable()		arch_local_recovery_disable()
++#define __hard_RI_enable()		arch_local_irq_disable()
++
+ static inline bool arch_irq_disabled_regs(struct pt_regs *regs)
+ {
+ 	return !(regs->msr & MSR_EE);
+-- 
+2.25.0
 
-Reviewed-by: Ben Segall <bsegall@google.com>
-
->
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> ---
->  kernel/sched/fair.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 6f05843c76d7d..870853c47b63c 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4782,7 +4782,9 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
->  	raw_spin_unlock(&cfs_b->lock);
->  
->  	/* update hierarchical throttle state */
-> +	rcu_read_lock();
->  	walk_tg_tree_from(cfs_rq->tg, tg_nop, tg_unthrottle_up, (void *)rq);
-> +	rcu_read_unlock();
->  
->  	if (!cfs_rq->load.weight)
->  		return;
