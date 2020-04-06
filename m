@@ -4,71 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3201C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97958C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C6920753
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F0320753
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:36:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eS2iEsHM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDFF/r12"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgDFVen (ORCPT
+        id S1726520AbgDFVen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 6 Apr 2020 17:34:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56671 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726483AbgDFVel (ORCPT
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60679 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726477AbgDFVek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:34:41 -0400
+        Mon, 6 Apr 2020 17:34:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586208880;
+        s=mimecast20190719; t=1586208878;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=qWI++drUheRLgJRLP25chFJvpGmbc+MWUzzhPso8aKg=;
-        b=eS2iEsHMzm9ZmBP6Ua5zNRksvzk81IrHQuM5e3ZnV5mBaW2SoATu+aDMY9xyzvF2t8efKD
-        2E/eSmO7w8s971AIKYb4pqSMz2oibr+HRpHv5kUGRfW4EJJz0IiN3vYJ8Fy0byOyqHWRLn
-        Q5ZBIsU7MwZ161W0dWeLtcFv5/ou5vI=
+        bh=avaeRkZ1JnKDUOT0Z2Dx4o4wqMo2IiZX1JaGDR9LW2A=;
+        b=KDFF/r12yuTXWqHbz8i/fPKqKyeWeFJiMW5BcKWR1wO8xIPqhWEfEY+FrRcUQJWqCL6uDe
+        fpdV2F4VIsNu11/luFoMWgRbF/S/qkPne8SxUst9Q9BvIooL2P9d8SG9o0cMUywuetJZ3V
+        6zAbwbXsydEuZyQUR6+6JUu41t91dfg=
 Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
  [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-253-SCXHc7dsMPqYce9c6WSivQ-1; Mon, 06 Apr 2020 17:34:36 -0400
-X-MC-Unique: SCXHc7dsMPqYce9c6WSivQ-1
-Received: by mail-wm1-f72.google.com with SMTP id z24so408304wml.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:34:36 -0700 (PDT)
+ us-mta-95-usBq063ANYqw0RUWQEEsFQ-1; Mon, 06 Apr 2020 17:34:34 -0400
+X-MC-Unique: usBq063ANYqw0RUWQEEsFQ-1
+Received: by mail-wm1-f72.google.com with SMTP id f9so409874wme.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:34:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qWI++drUheRLgJRLP25chFJvpGmbc+MWUzzhPso8aKg=;
-        b=JeyAlbcs3lTsf4sJtgW4hb7rbqlFf9js/OplK35ap+5biWakqsxyKha444L4uDHQfu
-         zYSMEzOE/NTJAhO7kg979z1NIcRNvdAQoYBQfDKH0FnygFF36zESrQYMAq6r6s5LVJ47
-         XMIzbDxbodBURNw/lpB//enmM3azO77/xJibZhohpQHrW5Ugm5wwk78ymZl8rnCn67NO
-         zcaW6gGYqvPEnPKtxsEPY/r15FrxdztgZlDPoxchTbJAWtmRvn7RVYoGV6oAKGHEhObT
-         Ymj0/iS/+DbYPCsHZyY0e4SlTLZITQF+y8fd/9ROD2TAnJqJjj8VOzBsAdQVCwTZAe+2
-         n2Tg==
-X-Gm-Message-State: AGi0Pub+idS5tlU19YcLU3nocQ/5eJ9gnOFXM2YYyONVbdshjHbB5PGB
-        ho7bpWXNyS+jo/tBmDAx5c5NL7h2D/opvyPSFeQY+41Pf5pmwX9e7CDR/VrlsShyQ4D/FTzy7g/
-        MQ8gkvZiKc2kDwjEJafrHSj6k
-X-Received: by 2002:a7b:c402:: with SMTP id k2mr1101238wmi.21.1586208875349;
-        Mon, 06 Apr 2020 14:34:35 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLyqEDlE/IL49G3Pxv/kJijKYUNeWb/9wixH2WnadTfCvyxI9caTl+yxyLpMNSiBi9358S8Fg==
-X-Received: by 2002:a7b:c402:: with SMTP id k2mr1101230wmi.21.1586208875148;
-        Mon, 06 Apr 2020 14:34:35 -0700 (PDT)
+        bh=avaeRkZ1JnKDUOT0Z2Dx4o4wqMo2IiZX1JaGDR9LW2A=;
+        b=qKNwysfS9zB7YE/We2nznJy5mhYMbnnhRMDvvVBOW1G9UtOigfIU3LKHKF9XnbrXOr
+         DNvnGR9dmyHpUz5WLO8Ej2eoUAHiQm/AJuv/0ZRZpHvWcdlc8PTia82BmC7qOIh4INyI
+         iH2unfbX6OaMHtveR5mYa7eiltqA/RlbDLAm515R1+cdWT8yzRjCcOnXK7u/Z0AvL824
+         ka75dWRwwH3CVV3JcuR4ssguC1M8+4Zvjo+K/+iWUMO7avM1/Ge1t2VNjR6UTY1sAT7m
+         w6haFtUnbW0UKXvMI1IsDjWueOw6l3uv7Y2Cuf6Cn9/Sx934+SPmMGU86jGkXyma8j/i
+         hB7Q==
+X-Gm-Message-State: AGi0PuY3RDiPC0IFud+eFQzaiMli0Ydv6Mqsv1/+YJ2dMCPjek/3ovDz
+        zgxCff9Zsk9Dp8h/Qq5pFxRJI1IemcwXwft7UX3NMlK9/c+pg7ZdNfi7D4vl7VNP3S4Yf6i6q98
+        CPY0MA8+PhJPjyanFIvY2bQIg
+X-Received: by 2002:a7b:cbd2:: with SMTP id n18mr1068233wmi.74.1586208872976;
+        Mon, 06 Apr 2020 14:34:32 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKsDLUhGQC/Tn+0qnGfmRAOsV6x9/Q1yC0yzxYjjrHjRbm6CASil7gnkQZHykkq9cDFgqyFnw==
+X-Received: by 2002:a7b:cbd2:: with SMTP id n18mr1068219wmi.74.1586208872813;
+        Mon, 06 Apr 2020 14:34:32 -0700 (PDT)
 Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id v21sm994848wmh.26.2020.04.06.14.34.33
+        by smtp.gmail.com with ESMTPSA id f16sm992072wmc.37.2020.04.06.14.34.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 14:34:34 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 17:34:33 -0400
+        Mon, 06 Apr 2020 14:34:31 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 17:34:30 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Matej Genci <matej.genci@nutanix.com>,
-        Jason Wang <jasowang@redhat.com>,
+Cc:     Jason Wang <jasowang@redhat.com>,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v4 04/12] virtio: add VIRTIO_RING_NO_LEGACY
-Message-ID: <20200406210108.148131-5-mst@redhat.com>
+Subject: [PATCH v4 03/12] tools/virtio: define __KERNEL__
+Message-ID: <20200406210108.148131-4-mst@redhat.com>
 References: <20200406210108.148131-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -80,54 +79,28 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200406213433.VUB_g4fWLezg91cjLPIKB3xmTcGY1aokrNoYj76XchU@z>
+Message-ID: <20200406213430.0cMyWmqz-gAbTHMs4AnqbspIEzMzMkvzsSwLBx3jmqc@z>
 
-From: Matej Genci <matej.genci@nutanix.com>
+Even though we are building in userspace, we are emulating kernel bits.
 
-Add macro to disable legacy vring functions.
-
-Signed-off-by: Matej Genci <matej.genci@nutanix.com>
-Link: https://lore.kernel.org/r/20190911124942.243713-1-matej.genci@nutanix.com
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/virtio/virtio_pci_modern.c | 1 +
- include/uapi/linux/virtio_ring.h   | 4 ++++
- 2 files changed, 5 insertions(+)
+ tools/virtio/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-index 7abcc50838b8..db93cedd262f 100644
---- a/drivers/virtio/virtio_pci_modern.c
-+++ b/drivers/virtio/virtio_pci_modern.c
-@@ -16,6 +16,7 @@
+diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
+index b587b9a7a124..ea6674307507 100644
+--- a/tools/virtio/Makefile
++++ b/tools/virtio/Makefile
+@@ -4,7 +4,7 @@ test: virtio_test vringh_test
+ virtio_test: virtio_ring.o virtio_test.o
+ vringh_test: vringh_test.o vringh.o virtio_ring.o
  
- #include <linux/delay.h>
- #define VIRTIO_PCI_NO_LEGACY
-+#define VIRTIO_RING_NO_LEGACY
- #include "virtio_pci_common.h"
- 
- /*
-diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
-index 559f42e73315..9223c3a5c46a 100644
---- a/include/uapi/linux/virtio_ring.h
-+++ b/include/uapi/linux/virtio_ring.h
-@@ -135,6 +135,8 @@ struct vring {
- #define VRING_USED_ALIGN_SIZE 4
- #define VRING_DESC_ALIGN_SIZE 16
- 
-+#ifndef VIRTIO_RING_NO_LEGACY
-+
- /* The standard layout for the ring is a continuous chunk of memory which looks
-  * like this.  We assume num is a power of 2.
-  *
-@@ -181,6 +183,8 @@ static inline unsigned vring_size(unsigned int num, unsigned long align)
- 		+ sizeof(__virtio16) * 3 + sizeof(struct vring_used_elem) * num;
- }
- 
-+#endif /* VIRTIO_RING_NO_LEGACY */
-+
- /* The following is used with USED_EVENT_IDX and AVAIL_EVENT_IDX */
- /* Assuming a given event_idx value from the other side, if
-  * we have just incremented index from old to new_idx,
+-CFLAGS += -g -O2 -Werror -Wall -I. -I../include/ -I ../../usr/include/ -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-common -MMD -U_FORTIFY_SOURCE -include ../../include/linux/kconfig.h
++CFLAGS += -g -O2 -Werror -Wall -I. -I../include/ -I ../../usr/include/ -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-common -MMD -U_FORTIFY_SOURCE -include ../../include/linux/kconfig.h -D__KERNEL__
+ vpath %.c ../../drivers/virtio ../../drivers/vhost
+ mod:
+ 	${MAKE} -C `pwd`/../.. M=`pwd`/vhost_test V=${V}
 -- 
 MST
 
