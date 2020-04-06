@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B428C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD09C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3055206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CBB206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LPWwbOXf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I4DQw0nb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbgDFKmE (ORCPT
+        id S1727199AbgDFKmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:42:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38401 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726883AbgDFKmD (ORCPT
+        Mon, 6 Apr 2020 06:42:07 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:42330 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727104AbgDFKmG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:42:03 -0400
+        Mon, 6 Apr 2020 06:42:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586169722;
+        s=mimecast20190719; t=1586169725;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IbIlbCAOndT/p1zcHoZ374KLh6U88poeeD1HrBvG9E4=;
-        b=LPWwbOXfrollBY3avjTdFWYFC33DZRK2QkPfDWUYpXTElO+3sfLDvB6Qpjgu5VWYaWoHbD
-        ahpFBQa+7qd0ZI74yADNLdXOvtzKTBcBidXOnovcdxd7xXs3uOQ4Wl2uloU40dAb51NZXh
-        es+5q/BjUURvG9atF0yTx6Ist6H1Mig=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-Rf8kApVBPk-ga5P8dMT1Gw-1; Mon, 06 Apr 2020 06:42:00 -0400
-X-MC-Unique: Rf8kApVBPk-ga5P8dMT1Gw-1
-Received: by mail-wr1-f71.google.com with SMTP id h95so8112293wrh.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 03:41:59 -0700 (PDT)
+        bh=4zpfxaqb0ccFa0yBKaxqDnNFpT31vP53ONi1El8rscc=;
+        b=I4DQw0nbMa19pEjVTUdKdszubFItbue12StEtnjoskoXndT4wPyI9q8HKDRhqySpLGq8nq
+        iHNYoBKcd5zORoxDVCW3Gq3drhbC9gi5GeBOMLjwPZQkj2/l5sKs3ji4VgTnh8sCf8f3p/
+        G75xXMGbX4KuVpVTe0GKOxq97O7JeHk=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-hC8pipdyOY2kAyhh8aRkDA-1; Mon, 06 Apr 2020 06:42:03 -0400
+X-MC-Unique: hC8pipdyOY2kAyhh8aRkDA-1
+Received: by mail-wm1-f69.google.com with SMTP id f8so4751799wmh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 03:42:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IbIlbCAOndT/p1zcHoZ374KLh6U88poeeD1HrBvG9E4=;
-        b=DFEfGyghwSKMABIWDuSpbgrsuZe2XB6z0wie+Htwi1QHqzeYdynyU5uxXPJrLgYDoV
-         N1yBIsmsBChEgelAoGHumE85xLJE1dcB4LZG5TuZ0ZG6caIsL4U84+lmhztFfH2C+xCs
-         VMpAaK+y7KC1/e+0J6dUnlh16rVoPo9bmUJrnJdLPs2rxUBU7eJ/8PO3uriIlhoUtfxR
-         dJykTLcyIitbsVdjbGvfbdFPiuH0fs3yaaMVw6KxjmKkF4pvMJYKQvycH2e3XC4Q9/TD
-         oT8QwR/QX4yeavlDoTZ22YMxN+CA9k3DNtbmRcT/ogecmsPwXnIYYLKA7eCjFLe3l3Zd
-         XwHw==
-X-Gm-Message-State: AGi0PuanQAjdMmBXKJWndsmr+dbbyuQjdloXITyvgXUfnexHAkzixfFo
-        tXXMhe4XfNYpdKRZQ7vQ5RZiFx+JeJHU6E4/9l/U8+SnKspRBrrrBWlN5jmTIr/GaVlLdcjBjhd
-        lTBch8vftI9DytN7X4FyUpbqk
-X-Received: by 2002:adf:df8a:: with SMTP id z10mr22265707wrl.278.1586169718867;
-        Mon, 06 Apr 2020 03:41:58 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJ8Kwp2LMDv2jWv5I1+owW1KhVa8HnP1k5r/OndJsHc/EXWEVpdq3UeZBeqhWQrXxT9poQ/CA==
-X-Received: by 2002:adf:df8a:: with SMTP id z10mr22265687wrl.278.1586169718558;
-        Mon, 06 Apr 2020 03:41:58 -0700 (PDT)
+        bh=4zpfxaqb0ccFa0yBKaxqDnNFpT31vP53ONi1El8rscc=;
+        b=T+lQ/j8Qm/TiZT+cdpuztqJDuiPoTCC1w+otcYFP9HItl1EIk9/lsVjWIwOkSjyZKf
+         byEbdGrt2HjRtEyLjyx78ax96FvqB2JoLQbNz0YE46BuJp7uOCin1mmApoW0Ui+eV2j8
+         O8mecZ30sL45+rh0rcvrQcv0aooKIlmlYCGkfyPc97uUnpUy3MmCvtePm6B/UDQWCFuo
+         Bnm2mSw/tGnPGHlPVrwc6rq3vYjRTRtiVWrOTFzpiA4cPxsLJ1L1PUy6QOD8q8VcFkZH
+         oD2J1tq6tcFFWMFOWfq4gE9v28x5lL9VDfQvQPVPeBP/UTDntW11OYOXTwBBWZXHA0X/
+         XK1w==
+X-Gm-Message-State: AGi0PubI8f+GcYckPVQQ+pzemOhMdcixUX3l6uWIPrQTU7KO8Y76wTB8
+        1vpoSnkUpEM5wxq8z9eq/95rjppUtZ+5e4nk1/WPL2VsoQbH2eF1fk3alIOgwDYWvk7EpgDOI84
+        hvzKmpQjPloXG6wsUjTWtck35
+X-Received: by 2002:a1c:ed18:: with SMTP id l24mr14825721wmh.122.1586169721599;
+        Mon, 06 Apr 2020 03:42:01 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI1nM9tk1MDjQ788b8Qefr1ElToMYsfjXmapNT4bDFxpXcKeT+Kkypyy+XDjssU2Hb5gJePfw==
+X-Received: by 2002:a1c:ed18:: with SMTP id l24mr14825709wmh.122.1586169721401;
+        Mon, 06 Apr 2020 03:42:01 -0700 (PDT)
 Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id a2sm17305337wra.71.2020.04.06.03.41.57
+        by smtp.gmail.com with ESMTPSA id a2sm17305337wra.71.2020.04.06.03.42.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 03:41:58 -0700 (PDT)
+        Mon, 06 Apr 2020 03:42:00 -0700 (PDT)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     linux-hyperv@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
@@ -71,9 +71,9 @@ Cc:     linux-kernel@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
         Haiyang Zhang <haiyangz@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [PATCH v2 1/5] Drivers: hv: copy from message page only what's needed
-Date:   Mon,  6 Apr 2020 12:41:50 +0200
-Message-Id: <20200406104154.45010-2-vkuznets@redhat.com>
+Subject: [PATCH v2 3/5] Drivers: hv: avoid passing opaque pointer to vmbus_onmessage()
+Date:   Mon,  6 Apr 2020 12:41:52 +0200
+Message-Id: <20200406104154.45010-4-vkuznets@redhat.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200406104154.45010-1-vkuznets@redhat.com>
 References: <20200406104154.45010-1-vkuznets@redhat.com>
@@ -84,59 +84,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hyper-V Interrupt Message Page (SIMP) has 16 256-byte slots for
-messages. Each message comes with a header (16 bytes) which specifies the
-payload length (up to 240 bytes). vmbus_on_msg_dpc(), however, doesn't
-look at the real message length and copies the whole slot to a temporary
-buffer before passing it to message handlers. This is potentially dangerous
-as hypervisor doesn't have to clean the whole slot when putting a new
-message there and a message handler can get access to some data which
-belongs to a previous message.
-
-Note, this is not currently a problem because all message handlers are
-in-kernel but eventually we may e.g. get this exported to userspace.
-
-Note also, that this is not a performance critical path: messages (unlike
-events) represent rare events so it doesn't really matter (from performance
-point of view) if we copy too much.
-
-Fix the issue by taking into account the real message length. The temporary
-buffer allocated by vmbus_on_msg_dpc() remains fixed size for now. Also,
-check that the supplied payload length is valid (<= 240 bytes).
+vmbus_onmessage() doesn't need the header of the message, it only
+uses it to get to the payload, we can pass the pointer to the
+payload directly.
 
 Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 ---
- drivers/hv/vmbus_drv.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/hv/channel_mgmt.c | 7 +------
+ drivers/hv/vmbus_drv.c    | 3 ++-
+ include/linux/hyperv.h    | 2 +-
+ 3 files changed, 4 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+index 0370364169c4..c6bcfee6ac99 100644
+--- a/drivers/hv/channel_mgmt.c
++++ b/drivers/hv/channel_mgmt.c
+@@ -1360,13 +1360,8 @@ channel_message_table[CHANNELMSG_COUNT] = {
+  *
+  * This is invoked in the vmbus worker thread context.
+  */
+-void vmbus_onmessage(void *context)
++void vmbus_onmessage(struct vmbus_channel_message_header *hdr)
+ {
+-	struct hv_message *msg = context;
+-	struct vmbus_channel_message_header *hdr;
+-
+-	hdr = (struct vmbus_channel_message_header *)msg->u.payload;
+-
+ 	trace_vmbus_on_message(hdr);
+ 
+ 	/*
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 029378c27421..943b23beb992 100644
+index b114bb411d7e..4ab2f1511dcb 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -1032,6 +1032,12 @@ void vmbus_on_msg_dpc(unsigned long data)
- 		goto msg_handled;
- 	}
+@@ -1007,7 +1007,8 @@ static void vmbus_onmessage_work(struct work_struct *work)
  
-+	if (msg->header.payload_size > HV_MESSAGE_PAYLOAD_BYTE_COUNT) {
-+		WARN_ONCE(1, "payload size is too large (%d)\n",
-+			  msg->header.payload_size);
-+		goto msg_handled;
-+	}
-+
- 	entry = &channel_message_table[hdr->msgtype];
+ 	ctx = container_of(work, struct onmessage_work_context,
+ 			   work);
+-	vmbus_onmessage(&ctx->msg);
++	vmbus_onmessage((struct vmbus_channel_message_header *)
++			&ctx->msg.payload);
+ 	kfree(ctx);
+ }
  
- 	if (!entry->message_handler)
-@@ -1043,7 +1049,8 @@ void vmbus_on_msg_dpc(unsigned long data)
- 			return;
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 692c89ccf5df..cbd24f4e68d1 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1017,7 +1017,7 @@ static inline void clear_low_latency_mode(struct vmbus_channel *c)
+ 	c->low_latency = false;
+ }
  
- 		INIT_WORK(&ctx->work, vmbus_onmessage_work);
--		memcpy(&ctx->msg, msg, sizeof(*msg));
-+		memcpy(&ctx->msg, msg, sizeof(msg->header) +
-+		       msg->header.payload_size);
+-void vmbus_onmessage(void *context);
++void vmbus_onmessage(struct vmbus_channel_message_header *hdr);
  
- 		/*
- 		 * The host can generate a rescind message while we
+ int vmbus_request_offers(void);
+ 
 -- 
 2.25.1
 
