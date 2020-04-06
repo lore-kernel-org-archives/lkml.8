@@ -2,189 +2,146 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A89C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AA1C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A04206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxxcUclJ"
+	by mail.kernel.org (Postfix) with ESMTP id A0EF0206F7
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586136870;
+	bh=Ht6WcVZw6CxkMCuOWs+I+nyOlrVAodGyMSMwOYnpKuE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PMT30xtlCKGka+jD6lWrXRFSuZ4sqeeWUX3ww1DREkUWgVDOHk5hhyYCjUrlYrMlX
+	 GcUwPtThPeId9RyRA3zdxVbDUSgiCsuSqJT5OCN0ci0a//YaF+aTZAKvb4D5cwxKEs
+	 0gjun5A/yVjJ3OIgRfkFt+1xQM7JjEjCrb3kg5P0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgDFBag (ORCPT
+        id S1727928AbgDFBea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 21:30:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43441 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgDFBag (ORCPT
+        Sun, 5 Apr 2020 21:34:30 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:16616 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbgDFBe3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 21:30:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id g20so6772880pgk.10
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 18:30:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=648EAhn9hTOhllyK3oVrEDDOYCSilIvDFvIjAPE8GhI=;
-        b=bxxcUclJf8+lji8sagKNvnK4HTPxHYNA7JPK4mbJf7kx1s940XWv0qeKm3DFkgIsKa
-         oDz+R6IA+vGnR2XyHg+dJe8qXlFk6k/lMrl9ZlZBrEcIAhoDJ2cXrBhFIedyVYq+HCFf
-         iM+aTBqU42HhZ2HhJFBEsjK+AWyx4RZZZ9+SdWdYbN4HEV7pJ0JdsIZYvVXpEah78VbT
-         jQ35jEcC5zIwkQjSVhvfcU9PK0T3BZHIuhgNByOLibxeptbYhNlNtFzIA7g6TlK8LzCf
-         QLCEcbI4QYrz7SAyYCSHlztGHje/rHPc/WDI/d1SW4yURWC7Nqz+dfDs715M5+oHGgPC
-         r+WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=648EAhn9hTOhllyK3oVrEDDOYCSilIvDFvIjAPE8GhI=;
-        b=EMzXAkUn5w0QA4KMLiGg9h1VecqN7Hl1HWrflJsQGun2nP4brBvWOYlOoDXygIrk/r
-         2+Xs5CQ0KTwL5Sk44XPhu1PRnxV0H8PgHdBXqFUsyu2kumfUK5PkFs/Zo83i1R6yCbT+
-         nHpRIXdDy8tdcQtEb918RYm/1qmAMaYmxQEcj9PsXHV7jaOM58GlRr8Obe1T60YQu+TO
-         AvY4gstZq3nDLgxXrR5d7K5AXsBZRs5Zm45D60hsFH8mhXFil+FvUxXhUqAAra0BwGCZ
-         4F7OngSR06ps4KqIn0qnpj5KK60f/pwFD3Hyvxq31TJq9Z+DiHKblH3C2KhiI8eytzNn
-         bahQ==
-X-Gm-Message-State: AGi0PuYXQM5Y9i7zuYeeQtF60NUORXN+LJ1gdBF8OxE/CPk25mJYdGQb
-        cgSlMJnIzACpdW/XqG9QnWA=
-X-Google-Smtp-Source: APiQypLycg7rmddIB5cNO7bQaKa8vS5cjqEx0U87WncWxwPgJatFRyY7oXCv0uSj/o0G//6ZmjDBXA==
-X-Received: by 2002:a63:a556:: with SMTP id r22mr6770647pgu.429.1586136634359;
-        Sun, 05 Apr 2020 18:30:34 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id y30sm10381405pff.67.2020.04.05.18.30.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 18:30:33 -0700 (PDT)
-Date:   Mon, 06 Apr 2020 11:29:27 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH v2 11/13] powerpc/syscall: Avoid stack frame in likely
- part of syscall_call_exception()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
-        <fc0109635dbca7464d13451ce648ee49893711df.1586108649.git.christophe.leroy@c-s.fr>
-In-Reply-To: <fc0109635dbca7464d13451ce648ee49893711df.1586108649.git.christophe.leroy@c-s.fr>
+        Sun, 5 Apr 2020 21:34:29 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 0361YHe5027913;
+        Mon, 6 Apr 2020 10:34:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0361YHe5027913
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586136858;
+        bh=WggtXRihTH+Wz5QBc889jtnhJke76W/cxwCtqWHtd04=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bMm9k1daHMzkHhg5is8BX38kKAJ0WFkzJrfNeP7PlxYViVbSh9UoVN1GgB0CWjwMw
+         rLDDLCR3SxHbP8ozgi+cCvc5mKLqPJYoz3LkgqTq6B6ZPVfL5nGBfDdIt2nIDarR19
+         7xi67pDvFe6z4VTK//Rej0c5xSMzp1HfrIs5YDFerlBrYM5Gi7VUWz8Qz6dZMjdfsj
+         0ZHLTqLKoNRbXj1hqWx0R6M5reDK7a2ozPZTfIjLhq+cDmebugCqKxyEo2k5zE4ibL
+         z06lWpBcwMqkSEwIU2fUPXfGZVG6rKWzhxmoQw39Y52eUYkiPh2eZG008RhcFmDi32
+         7+L/HGdp/whPQ==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id g10so4928788uae.5;
+        Sun, 05 Apr 2020 18:34:17 -0700 (PDT)
+X-Gm-Message-State: AGi0PublqpKT37TTyTmIzrpjD7iCAb4EfKkT15zSBqrtN1n79zbAFrPL
+        mTbwJXsZmr1Psg21gwTQb2zW0p4I9g12N496c+M=
+X-Google-Smtp-Source: APiQypIcMplsadH3z84yNAuKQGfFCQbbX6ctwDwhT2ytsTfzrhFdcvKfTpH9UVUIN3vG+xTJxurABv8/OBALFHZl+Jk=
+X-Received: by 2002:ab0:2790:: with SMTP id t16mr13453216uap.40.1586136856501;
+ Sun, 05 Apr 2020 18:34:16 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1586136357.atgut3zasc.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200403051709.22407-1-masahiroy@kernel.org> <CAKwvOdnaZ6qDVxaPY-GEH8pdUkzH6eqm16ok9_wzRSVRG-1kiQ@mail.gmail.com>
+ <CAK7LNAQybfcYiosNU+ybd-Q7-Y2dbLqBVN2XA00wCRnFAoqdew@mail.gmail.com> <20200405235507.psjjhqa3cxw57xra@google.com>
+In-Reply-To: <20200405235507.psjjhqa3cxw57xra@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 6 Apr 2020 10:33:40 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS_SQg2nhJ8HKBTq3+dziGpaJZ87fOBRS-ZMdUpKGhX9Q@mail.gmail.com>
+Message-ID: <CAK7LNAS_SQg2nhJ8HKBTq3+dziGpaJZ87fOBRS-ZMdUpKGhX9Q@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
+To:     Fangrui Song <maskray@google.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Matthias_M=C3=A4nnich?= <maennich@google.com>,
+        Sandeep Patil <sspatil@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on April 6, 2020 3:44 am:
-> When r3 is not modified, reload it from regs->orig_r3 to free
-> volatile registers. This avoids a stack frame for the likely part
-> of syscall_call_exception()
->=20
-> Before : 353 cycles on null_syscall
-> After  : 347 cycles on null_syscall
->=20
-> Before the patch:
->=20
-> c000b4d4 <system_call_exception>:
-> c000b4d4:	7c 08 02 a6 	mflr    r0
-> c000b4d8:	94 21 ff e0 	stwu    r1,-32(r1)
-> c000b4dc:	93 e1 00 1c 	stw     r31,28(r1)
-> c000b4e0:	90 01 00 24 	stw     r0,36(r1)
-> c000b4e4:	90 6a 00 88 	stw     r3,136(r10)
-> c000b4e8:	81 6a 00 84 	lwz     r11,132(r10)
-> c000b4ec:	69 6b 00 02 	xori    r11,r11,2
-> c000b4f0:	55 6b ff fe 	rlwinm  r11,r11,31,31,31
-> c000b4f4:	0f 0b 00 00 	twnei   r11,0
-> c000b4f8:	81 6a 00 a0 	lwz     r11,160(r10)
-> c000b4fc:	55 6b 07 fe 	clrlwi  r11,r11,31
-> c000b500:	0f 0b 00 00 	twnei   r11,0
-> c000b504:	7c 0c 42 e6 	mftb    r0
-> c000b508:	83 e2 00 08 	lwz     r31,8(r2)
-> c000b50c:	81 82 00 28 	lwz     r12,40(r2)
-> c000b510:	90 02 00 24 	stw     r0,36(r2)
-> c000b514:	7d 8c f8 50 	subf    r12,r12,r31
-> c000b518:	7c 0c 02 14 	add     r0,r12,r0
-> c000b51c:	90 02 00 08 	stw     r0,8(r2)
-> c000b520:	7c 10 13 a6 	mtspr   80,r0
-> c000b524:	81 62 00 70 	lwz     r11,112(r2)
-> c000b528:	71 60 86 91 	andi.   r0,r11,34449
-> c000b52c:	40 82 00 34 	bne     c000b560 <system_call_exception+0x8c>
-> c000b530:	2b 89 01 b6 	cmplwi  cr7,r9,438
-> c000b534:	41 9d 00 64 	bgt     cr7,c000b598 <system_call_exception+0xc4>
-> c000b538:	3d 40 c0 5c 	lis     r10,-16292
-> c000b53c:	55 29 10 3a 	rlwinm  r9,r9,2,0,29
-> c000b540:	39 4a 41 e8 	addi    r10,r10,16872
-> c000b544:	80 01 00 24 	lwz     r0,36(r1)
-> c000b548:	7d 2a 48 2e 	lwzx    r9,r10,r9
-> c000b54c:	7c 08 03 a6 	mtlr    r0
-> c000b550:	7d 29 03 a6 	mtctr   r9
-> c000b554:	83 e1 00 1c 	lwz     r31,28(r1)
-> c000b558:	38 21 00 20 	addi    r1,r1,32
-> c000b55c:	4e 80 04 20 	bctr
->=20
-> After the patch:
->=20
-> c000b4d4 <system_call_exception>:
-> c000b4d4:	81 6a 00 84 	lwz     r11,132(r10)
-> c000b4d8:	90 6a 00 88 	stw     r3,136(r10)
-> c000b4dc:	69 6b 00 02 	xori    r11,r11,2
-> c000b4e0:	55 6b ff fe 	rlwinm  r11,r11,31,31,31
-> c000b4e4:	0f 0b 00 00 	twnei   r11,0
-> c000b4e8:	80 6a 00 a0 	lwz     r3,160(r10)
-> c000b4ec:	54 63 07 fe 	clrlwi  r3,r3,31
-> c000b4f0:	0f 03 00 00 	twnei   r3,0
-> c000b4f4:	7d 6c 42 e6 	mftb    r11
-> c000b4f8:	81 82 00 08 	lwz     r12,8(r2)
-> c000b4fc:	80 02 00 28 	lwz     r0,40(r2)
-> c000b500:	91 62 00 24 	stw     r11,36(r2)
-> c000b504:	7c 00 60 50 	subf    r0,r0,r12
-> c000b508:	7d 60 5a 14 	add     r11,r0,r11
-> c000b50c:	91 62 00 08 	stw     r11,8(r2)
-> c000b510:	7c 10 13 a6 	mtspr   80,r0
-> c000b514:	80 62 00 70 	lwz     r3,112(r2)
-> c000b518:	70 6b 86 91 	andi.   r11,r3,34449
-> c000b51c:	40 82 00 28 	bne     c000b544 <system_call_exception+0x70>
-> c000b520:	2b 89 01 b6 	cmplwi  cr7,r9,438
-> c000b524:	41 9d 00 84 	bgt     cr7,c000b5a8 <system_call_exception+0xd4>
-> c000b528:	80 6a 00 88 	lwz     r3,136(r10)
-> c000b52c:	3d 40 c0 5c 	lis     r10,-16292
-> c000b530:	55 29 10 3a 	rlwinm  r9,r9,2,0,29
-> c000b534:	39 4a 41 e4 	addi    r10,r10,16868
-> c000b538:	7d 2a 48 2e 	lwzx    r9,r10,r9
-> c000b53c:	7d 29 03 a6 	mtctr   r9
-> c000b540:	4e 80 04 20 	bctr
->=20
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  arch/powerpc/kernel/syscall.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.=
-c
-> index 69d75fc4a5eb..630c423e089a 100644
-> --- a/arch/powerpc/kernel/syscall.c
-> +++ b/arch/powerpc/kernel/syscall.c
-> @@ -91,6 +91,8 @@ notrace long system_call_exception(long r3, long r4, lo=
-ng r5,
-> =20
->  	} else if (unlikely(r0 >=3D NR_syscalls)) {
->  		return -ENOSYS;
-> +	} else {
-> +		r3 =3D regs->orig_gpr3;
->  	}
+On Mon, Apr 6, 2020 at 8:55 AM 'Fangrui Song' via Clang Built Linux
+<clang-built-linux@googlegroups.com> wrote:
+>
+> On 2020-04-06, Masahiro Yamada wrote:
+> >On Sat, Apr 4, 2020 at 3:24 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >>
+> >> On Thu, Apr 2, 2020 at 10:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >> >
+> >> > As Documentation/kbuild/llvm.rst implies, building the kernel with a
+> >> > full set of LLVM tools gets very verbose and unwieldy.
+> >> >
+> >> > Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
+> >> > GCC and Binutils. You can pass LLVM=1 from the command line or as an
+> >> > environment variable. Then, Kbuild will use LLVM toolchains in your
+> >> > PATH environment.
+> >> >
+> >> > Please note LLVM=1 does not turn on the LLVM integrated assembler.
+> >> > You need to explicitly pass AS=clang to use it. When the upstream
+> >> > kernel is ready for the integrated assembler, I think we can make
+> >> > it default.
+> >>
+> >> Having this behavior change over time may be surprising.  I'd rather
+> >> that if you want to not use the integrated assembler, you explicitly
+> >> negate it, or just don't use the LLVM=1 syntax, ie. `make CC=clang
+> >> LD=ld.lld ...`.
+> >>
+> >> We could modify how `-no-integrated-as` is chosen when LLVM=1.
+> >>
+> >> make LLVM=1 LLVMIA=0 ... # add `-no-integrated-as`
+> >> # what the flag is doesn't really matter to me, something shorter might be nice.
+> >> make LLVM=1 # use all LLVM tools
+> >>
+> >> Since we got rid of $(AS), it would be appropriate to remove/change it
+> >> there, since no one really relies on AS=clang right now. (We do have 1
+> >> of our 60+ CI targets using it, but we can also change that trivially.
+> >> So I think we have a lot of freedom to change how `-no-integrated-as`
+> >> is set.
+> >>
+> >> This could even be independent of this patch.
+> >
+> >
+> >I also thought a boolean flag is preferred.
+> >
+> >AS=clang will not live long anyway, and
+> >I hesitated to break the compatibility
+> >for the short-term workaround.
+> >
+> >But, if this is not a big deal, I can
+> >replace AS=clang with LLVMIA=1.
+>
+> My mere complaint is that it may be difficult to infer the intention (integrated
+> assembler) from the abbreviation "IA" in "LLVMIA" :/
+>
+> Something with "AS" in the name may be easier for a user to understand,
+> e.g. CLANG_AS or LLVM_AS.
 
-So this just gives enough volatiles to avoid spilling to stack? I wonder
-about other various options here if they would cause a spill anyway.
 
-Interesting optimisation, it would definitely need a comment. Would be
-nice if we had a way to tell the compiler that a local can be reloaded
-from a particular address.
 
-Thanks,
-Nick
 
-=
+I see 'llvm-as' in my PATH,
+but it is a different kind of tool, right?
+(converter from LLVM assembler *.ll to LLVM bit code *.bc)
+
+So, I thought "LLVM_AS" might be confusing.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
