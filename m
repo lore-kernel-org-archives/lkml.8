@@ -3,120 +3,186 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382B6C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F54C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7A024924
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A142492B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbgDFQHI (ORCPT
+        id S1729413AbgDFQHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:07:08 -0400
-Received: from fieldses.org ([173.255.197.46]:51964 "EHLO fieldses.org"
+        Mon, 6 Apr 2020 12:07:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:47474 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbgDFQHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:07:07 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id E97F01513; Mon,  6 Apr 2020 12:07:06 -0400 (EDT)
-Date:   Mon, 6 Apr 2020 12:07:06 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
-Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
-Message-ID: <20200406160706.GC2147@fieldses.org>
-References: <2590640.1585757211@warthog.procyon.org.uk>
- <CAJfpegsXqxizOGwa045jfT6YdUpMxpXET-yJ4T8qudyQbCGkHQ@mail.gmail.com>
- <36e45eae8ad78f7b8889d9d03b8846e78d735d28.camel@themaw.net>
- <CAJfpegsCDWehsTRQ9UJYuQnghnE=M8L0_bJBTTPA+Upu87t90w@mail.gmail.com>
- <27994c53034c8f769ea063a54169317c3ee62c04.camel@themaw.net>
- <20200403111144.GB34663@gardel-login>
- <CAJfpeguQAw+Mgc8QBNd+h3KV8=Y-SOGT7TB_N_54wa8MCoOSzg@mail.gmail.com>
- <20200403151223.GB34800@gardel-login>
- <20200403203024.GB27105@fieldses.org>
- <CAJfpegvxnp8N-o-iTXzj0UnYZbDPfms1zpwcHf1tdhRJ4au3Og@mail.gmail.com>
+        id S1729075AbgDFQHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:07:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D1B01FB;
+        Mon,  6 Apr 2020 09:07:23 -0700 (PDT)
+Received: from [10.37.12.4] (unknown [10.37.12.4])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C9D73F68F;
+        Mon,  6 Apr 2020 09:07:13 -0700 (PDT)
+Subject: Re: [PATCH v5 1/5] PM / EM: add devices to Energy Model
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
+        javi.merino@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200318114548.19916-1-lukasz.luba@arm.com>
+ <20200318114548.19916-2-lukasz.luba@arm.com>
+ <09b680a5-a118-8c6e-0ae1-03ab5f10c573@linaro.org>
+ <cb7f670a-a04f-ba6f-1486-0421f3cce2e9@arm.com>
+ <6b980e2a-c15c-0718-14b8-e8aa7510c832@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <2a70b4ed-f18f-c1e6-1e8c-e4747807f276@arm.com>
+Date:   Mon, 6 Apr 2020 17:07:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <6b980e2a-c15c-0718-14b8-e8aa7510c832@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJfpegvxnp8N-o-iTXzj0UnYZbDPfms1zpwcHf1tdhRJ4au3Og@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch makes sense to me, thanks!
 
-In the NFS case it's implementing the "mountpoint" export option:
 
-       mountpoint=path
-
-       mp     This option makes it possible to only export a directory  if  it
-              has  successfully  been  mounted.   If  no  path  is given (e.g.
-              mountpoint or mp) then the export point must  also  be  a  mount
-              point.  If it isn't then the export point is not exported.  This
-              allows you to be sure that the directory underneath a mountpoint
-              will never be exported by accident if, for example, the filesys‐
-              tem failed to mount due to a disc error.
-
-              If a path is given (e.g.  mountpoint=/path or mp=/path) then the
-              nominated  path  must  be a mountpoint for the exportpoint to be
-              exported.
-
---b.
-
-On Mon, Apr 06, 2020 at 10:35:55AM +0200, Miklos Szeredi wrote:
-> From: Miklos Szeredi <mszeredi@redhat.com>
-> Subject: statx: add mount_root
+On 4/6/20 3:58 PM, Daniel Lezcano wrote:
 > 
-> Determining whether a path or file descriptor refers to a mountpoint (or
-> more precisely a mount root) is not trivial using current tools.
+> Hi Lukasz,
 > 
-> Add a flag to statx that indicates whether the path or fd refers to the
-> root of a mount or not.
 > 
-> Reported-by: Lennart Poettering <mzxreary@0pointer.de>
-> Reported-by: J. Bruce Fields <bfields@fieldses.org>
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-> ---
->  fs/stat.c                 |    3 +++
->  include/uapi/linux/stat.h |    1 +
->  2 files changed, 4 insertions(+)
+> On 06/04/2020 15:29, Lukasz Luba wrote:
+>> Hi Daniel,
+>>
+>> Thank you for the review.
+>>
+>> On 4/3/20 5:05 PM, Daniel Lezcano wrote:
+>>>
+>>> Hi Lukasz,
+>>>
+>>>
+>>> On 18/03/2020 12:45, Lukasz Luba wrote:
+>>>> Add support of other devices into the Energy Model framework not only
+>>>> the
+>>>> CPUs. Change the interface to be more unified which can handle other
+>>>> devices as well.
+>>>
+>>> thanks for taking care of that. Overall I like the changes in this patch
+>>> but it hard to review in details because the patch is too big :/
+>>>
+>>> Could you split this patch into smaller ones?
+>>>
+>>> eg. (at your convenience)
+>>>
+>>>    - One patch renaming s/cap/perf/
+>>>
+>>>    - One patch adding a new function:
+>>>
+>>>       em_dev_register_perf_domain(struct device *dev,
+>>>                  unsigned int nr_states,
+>>>                  struct em_data_callback *cb);
+>>>
+>>>      (+ EXPORT_SYMBOL_GPL)
+>>>
+>>>       And em_register_perf_domain() using it.
+>>>
+>>>    - One converting the em_register_perf_domain() user to
+>>>      em_dev_register_perf_domain
+>>>
+>>>    - One adding the different new 'em' functions
+>>>
+>>>    - And finally one removing em_register_perf_domain().
+>>
+>> I agree and will do the split. I could also break the dependencies
+>> for future easier merge.
+>>
+>>>
+>>>
+>>>> Acked-by: Quentin Perret <qperret@google.com>
+>>>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>>>> ---
+>>>
+>>> [ ... ]
+>>>
+>>>>    2. Core APIs
+>>>> @@ -70,14 +72,16 @@ CONFIG_ENERGY_MODEL must be enabled to use the EM
+>>>> framework.
+>>>>    Drivers are expected to register performance domains into the EM
+>>>> framework by
+>>>>    calling the following API::
+>>>>    -  int em_register_perf_domain(cpumask_t *span, unsigned int
+>>>> nr_states,
+>>>> -                  struct em_data_callback *cb);
+>>>> +  int em_register_perf_domain(struct device *dev, unsigned int
+>>>> nr_states,
+>>>> +        struct em_data_callback *cb, cpumask_t *cpus);
+>>>
+>>> Isn't possible to get rid of this cpumask by using
+>>> cpufreq_cpu_get() which returns the cpufreq's policy and from their get
+>>> the related cpus ?
+>>
+>> We had similar thoughts with Quentin and I've checked this.
 > 
-> --- a/include/uapi/linux/stat.h
-> +++ b/include/uapi/linux/stat.h
-> @@ -172,6 +172,7 @@ struct statx {
->  #define STATX_ATTR_NODUMP		0x00000040 /* [I] File is not to be dumped */
->  #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
->  #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
-> +#define STATX_ATTR_MOUNT_ROOT		0x00002000 /* Root of a mount */
->  #define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
->  
->  
-> --- a/fs/stat.c
-> +++ b/fs/stat.c
-> @@ -202,6 +202,9 @@ int vfs_statx(int dfd, const char __user
->  	error = vfs_getattr(&path, stat, request_mask, flags);
->  	stat->mnt_id = real_mount(path.mnt)->mnt_id;
->  	stat->result_mask |= STATX_MNT_ID;
-> +	if (path.mnt->mnt_root == path.dentry)
-> +		stat->attributes |= STATX_ATTR_MOUNT_ROOT;
-> +	stat->attributes_mask |= STATX_ATTR_MOUNT_ROOT;
->  	path_put(&path);
->  	if (retry_estale(error, lookup_flags)) {
->  		lookup_flags |= LOOKUP_REVAL;
+> Yeah, I suspected you already think about that :)
+> 
+>> Unfortunately, if the policy is a 'new policy' [1] it gets
+>> allocated and passed into cpufreq driver ->init(policy) [2].
+>> Then that policy is set into per_cpu pointer for each related_cpu [3]:
+>>
+>> for_each_cpu(j, policy->related_cpus)
+>>      per_cpu(cpufreq_cpu_data, j) = policy;
+>>
+>>   
+>> Thus, any calls of functions (i.e. cpufreq_cpu_get()) which try to
+>> take this ptr before [3] won't work.
+>>
+>> We are trying to register EM from cpufreq_driver->init(policy) and the
+>> per_cpu policy is likely to be not populated at that phase.
+> 
+> What is the problem of registering at the end of the cpufreq_online ?
 
+We want to enable driver developers to choose one of two options for the
+registration of Energy Model:
+1. a simple one via dev_pm_opp_of_register_em(), which uses default
+    callback function calculating power based on: voltage, freq
+    and DT entry 'dynamic-power-coefficient' for each OPP
+2. a more sophisticated, when driver provides callback function, which
+   will be called from EM for each OPP to ask for related power;
+   This interface could also be used by devices which relay not only
+   on one source of 'voltage', i.e. manipulate body bias or have
+   other controlling voltage for gates in the new 3D transistors. They
+   might provide custom callback function in their cpufreq driver.
+   This is used i.e. in cpufreq drivers which use firmware to get power,
+   like scmi-cpufreq.c;
+
+To meet this requirement the registration of EM is moved into cpufreq
+drivers, not in the framework i.e cpufreq_online(). If we could limit
+the support for only option 1. then we could move the registration
+call into cpufreq framework and clean the cpufreq drivers.
+
+Regards,
+Lukasz
