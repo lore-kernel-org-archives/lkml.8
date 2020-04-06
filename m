@@ -2,222 +2,139 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1389C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB54C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0EE2072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90C6206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ABcnJlFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgDFWUT (ORCPT
+        id S1726310AbgDFW0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 18:20:19 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:35886 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFWUS (ORCPT
+        Mon, 6 Apr 2020 18:26:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46050 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726130AbgDFW0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 18:20:18 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jLa6L-0007a2-Ah; Mon, 06 Apr 2020 16:20:17 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jLa6J-0004ZD-QZ; Mon, 06 Apr 2020 16:20:17 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
-        <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
-        <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
-        <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
-        <87lfnda3w3.fsf@x220.int.ebiederm.org>
-        <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
-Date:   Mon, 06 Apr 2020 17:17:27 -0500
-In-Reply-To: <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
-        (Linus Torvalds's message of "Fri, 3 Apr 2020 12:26:51 -0700")
-Message-ID: <87blo45keg.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 6 Apr 2020 18:26:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586211992;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=iZFgKkz0QCkMCePst5Xuy/AmzY50YNGDctVrJzdrtEA=;
+        b=ABcnJlFi6he8TVY1RXkAyjIZL73cKdJdTBx5qcpEFjFPXRQyER9K3Wg0LkP9RuhXLICipF
+        wtxBP+SoLDH4vmn+/iXc+51JrOxQ9kLmXFBJjOEhq7yjeYO35oV1/1ywHiHIdMbRZs0Ryg
+        WJnsRs2x1gIJygtbTGStB1NLGQY4b5Y=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-163-GFrvpWp6MZSvx06IWld6eQ-1; Mon, 06 Apr 2020 18:26:30 -0400
+X-MC-Unique: GFrvpWp6MZSvx06IWld6eQ-1
+Received: by mail-wr1-f72.google.com with SMTP id y1so653276wrp.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 15:26:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=iZFgKkz0QCkMCePst5Xuy/AmzY50YNGDctVrJzdrtEA=;
+        b=QRDbxW8Ltxh9x5JIghP3Ll4Ls1z0WjeJEYoPY8meQzlZn3WFNziZAOU73C9/AU3PY2
+         JaeSjYl7v76mJPeBS1pOeAFdN6qpgqAbMRAk76wY7Quy63nLBENalnG4e/N0qnrgs6r3
+         Gzovcr3hYxvcf60FUrLO0N3bel7srnQFjhtvPQiSs3lPAibkqhAVGSwZxNoeFZN/EZWv
+         AmxCpyc2dyOE4cKhIabGp04Lz8GLHL36iAK+fXnG3uINuKFTZr9vPIUdVRqUJUnNO1Q7
+         nLfdfpezSjRaeLu7SayFvAz9tqC3v70YDO8Jbc18JLjd5VzcFKWTsGHhqh343m0+Rjk4
+         +iQg==
+X-Gm-Message-State: AGi0PubqenT6I+ygild2WafHLx/QXx3R02xJIy118hHOzt4UrvDuQLfV
+        Wz81yEZbmKupuXhMt7oiPU6uxF96MZo3BeBuwqTPpk/74+JAMLt8QVHyOG9CuRldD5CLMuH2KO1
+        L2fCvX1v1MO0YMxgO6mAvoSuh
+X-Received: by 2002:adf:bc12:: with SMTP id s18mr1617093wrg.220.1586211989687;
+        Mon, 06 Apr 2020 15:26:29 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJX2C7Rw+ThjHeodQvuD1Mogzb4F56ms0JFCnvh5DLAbPjOfFM4wzY7V2MjZtVUV7UPlMzQLA==
+X-Received: by 2002:adf:bc12:: with SMTP id s18mr1617086wrg.220.1586211989511;
+        Mon, 06 Apr 2020 15:26:29 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id j31sm21556719wre.36.2020.04.06.15.26.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 15:26:28 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 18:26:27 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH v6 00/12] virtio: alignment issues
+Message-ID: <20200406222507.281867-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jLa6J-0004ZD-QZ;;;mid=<87blo45keg.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/Hw6BC0R8d+nTg64OR2vW+KvY7sHH/xm8=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+This is an alternative to
+	vhost: force spec specified alignment on types
+which is a bit safer as it does not change UAPI.
+I still think it's best to change the UAPI header as well,
+we can do that as a follow-up cleanup.
 
-> [ For Waiman & co - the problem is that the current cred_guard_mutex
-> is horrendous and has problems with execve() deadlocking against
-> various users. We've had this bug before, there's a new one, it's just
-> nasty ]
->
-> On Thu, Apr 2, 2020 at 4:04 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>
->> That is not the direction I intend to take either.
->>
->> I was hoping I could put off replying to this thread for a bit because
->> I only managed to get 4 hours of sleep last night and I am not as alert
->> to technical details as I would like to be.
->
-> Hmm.. So I've been looking at this cred_guard_mutex, and I wonder...
->
-> This is a bit hand-wavy, because I haven't walker through all the
-> paths, but could we perhaps work around a lot of the problems a
-> different way., namely:
->
->  - make the "cred_guard_mutex" an rwsem-like thing instead of being a mutex.
->
->  - make the ptrace_attach() case get it for writing - not because
-> ptrace changes the creds, but because ptrace changes 'task->ptrace'
-> and depends on dumpability etc.
->
->  - change the *name* of that damn thing. Not because it's now
-> rwsem'ish rather than a mutex, but because it was never really about
-> just "creds". It was about creds+ptrace+dumpable flags etc.
->
->  - make all the ones that read the creds to just take it for reading
-> (IOW, the cases that were basically switched over to
-> exec_update_mutex).
->
->  - and finally: make "execve()" take it just for reading too, but
-> introduce a "upgrade to write" at the very end (when it actually is
-> all done and then finally changes the creds and dumpability)
->
-> Wouldn't that solve all problems? We wouldn't get deadlocks wrt
-> execve(), simply because execve() doesn't need it to be writable, and
-> the things execve() does and can deadlock all only want readability.
->
-> But hear me out, because the above is fundamentally broken in a couple
-> of ways, so let me address that brokenness before you tell me I'm a
-> complete nincompoop and an idiot.
->
-> I'm including some locking people here because of these issues, so
-> that they can maybe verify my thinking.
->
->  (a) our rwsem's are fair
->
->      So the whole "execve takes it for reading, so now others can take
-> it for reading too without deadlocks" is simply not true - if you use
-> the existing rwsem.
->
->      Because a concurrent (blocked) writer will then block other
-> readers for fairness reasons, and holding it for reading doesn't
-> guarantee that others can get it for reading.
->
->      So clearly, the above doesn't even *fix* the deadlocks - unless
-> we have an unfair mode (or just a special lock for just this that is
-> not our standard rwsem, but a special unfair one).
->
->      So I'm suggesting we use a special unfair rwsem here (we can make
-> a simple spinlock-based one - it doesn't need to be as clever or
-> optimized as the real rwsems are)
->
->  (b) similarly, our rwsem's don't actually have a "upgrade from read
-> to write", because that's also a fundamentally deadlocky operation.
->
->      Again, that's true. Except execve() is special, and we know
-> there's only _one_ execve() at a time that will complete, since we're
-> serializing them. So for this particular use, "upgrade to write" would
-> be possible without the general-case deadlock issues.
->
->  (c) I didn't think things through, and even with these special
-> semantics, my idea is complete garbage
->
->      Ok, this may well be true.
->
-> Anyway, the advantage of this (if it works) is that it would allow us
-> to go back to the _really_ simple original model of just taking this
-> lock for reading at the beginning of execve(), and not worrying so
-> much about complex nesting or very complex rules for exactly when we
-> got the lock and error handling.
->
-> The final part when we actually update the credentials and dumpability
-> and stuff in execve() is actually fairly simple. So the "upgrade to a
-> write lock" phase doesn't worry me too much.  It's the interaction
-> with all the previous parts (which happen with it held just for
-> reading) that tend to be the nastier ones.
->
-> And ptrace_attach() really is special, and I think it would be the
-> only one that really needs that write lock.
->
-> The disadvantage, of course, is that it would require that
-> special-case lock semantic, and I might also be missing some thing
-> that makes it not work anyway.
->
-> Comments? Am I just dreaming of a simpler model without my medications
-> again?
+changes from v5:
+	ack for mellanox patch
+	fixup to remoteproc
+changes from v4:
+	fixup to issues reported by kbuild
+changes from v3:
+	tools/virtio fixes
+	a bunch more cleanups that now become possible
 
-Withough reading everything through at least.
+Changes from v2:
+	don't change struct name, instead add ifndef
+	so kernel does not see the legacy UAPI version.
 
-* There is also security_setprocattr which needs ptrace and nnp state not to
-  change it needs to set something that at least selinux's cred
-  calculations needs to remain constant (like nnp and ptrace).
-
-  Which means one thread calling security_setprocattr and another thread
-  calling exec can deadlock in de_thread.
-
-* Even with your lock and just the ptrace case I can deadlock.
-  Ptracer:                  Thread A               Tread B
-     ptrace_attach A
-                                                   exec
-     ptrace_attach B
-                                                   uprade R to RW
-     ---------------------- DEADLOCKED -------------------------
-
-Those are the first two cases I have thought of.  There are probably
-more.
+Jason, can you pls ack one of the approaches?
 
 
+Matej Genci (1):
+  virtio: add VIRTIO_RING_NO_LEGACY
 
-But fundamentally the only reason we need this information stable
-before the point of no return is so that we can return a nice error
-code to the process calling exec.  Instead of terminating the
-process with SIGSEGV.
+Michael S. Tsirkin (11):
+  tools/virtio: define aligned attribute
+  tools/virtio: make asm/barrier.h self contained
+  tools/virtio: define __KERNEL__
+  virtio: stop using legacy struct vring in kernel
+  vhost: force spec specified alignment on types
+  virtio: add legacy init/size APIs
+  virtio_ring: switch to virtio_legacy_init/size
+  tools/virtio: switch to virtio_legacy_init/size
+  vop: switch to virtio_legacy_init/size
+  remoteproc: switch to virtio_legacy_init/size
+  mellanox: switch to virtio_legacy_init/size
 
-These are for the most part unlikely scenarios or people would have been
-complaining much more loudly about deadlock.
+ drivers/block/virtio_blk.c               |  1 +
+ drivers/misc/mic/vop/vop_main.c          |  5 +--
+ drivers/misc/mic/vop/vop_vringh.c        |  8 +++--
+ drivers/platform/mellanox/mlxbf-tmfifo.c |  6 ++--
+ drivers/remoteproc/remoteproc_core.c     |  2 +-
+ drivers/remoteproc/remoteproc_virtio.c   |  2 +-
+ drivers/vhost/vhost.h                    |  6 ++--
+ drivers/virtio/virtio_pci_modern.c       |  1 +
+ drivers/virtio/virtio_ring.c             | 15 ++++----
+ include/linux/virtio.h                   |  1 -
+ include/linux/virtio_ring.h              | 46 ++++++++++++++++++++++++
+ include/linux/vringh.h                   |  1 +
+ include/uapi/linux/virtio_ring.h         | 30 ++++++++++------
+ tools/virtio/Makefile                    |  2 +-
+ tools/virtio/asm/barrier.h               |  1 +
+ tools/virtio/linux/compiler.h            |  1 +
+ tools/virtio/ringtest/virtio_ring_0_9.c  |  6 ++--
+ tools/virtio/virtio_test.c               |  6 ++--
+ tools/virtio/vringh_test.c               | 18 +++++-----
+ 19 files changed, 112 insertions(+), 46 deletions(-)
 
-So my plan is to perform the relevant calculations effectively twice.
-Once just before the point of no return, and give a graceful return code
-if necessary and possible.  Once just afer the point of no return, and
-SIGSEGV if necessary.
-
-
-
-Of course this all only applies to LSMs that refuse to continue under
-NNP or ptrace without changing the cred.  Linux without those LSMs
-enabled will just continue with the original credentials.
-
-
-So I don't think we will noticably be sacraficing the quality of
-the user experience with my plan.  In the worst case a deadlock
-will become a SIGSEGV killing the execing program.
-
-Eric
-
-p.s. Yes we can do better than a mutex that makes everything mutually
-     exclusive. I am just starting there for simplicity, and to
-     see if we need anything better.  Unfortuantely too many things are
-     changing simultaneously for rcu to cover all of the read side
-     cases.
+-- 
+MST
 
