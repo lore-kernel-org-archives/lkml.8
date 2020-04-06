@@ -2,97 +2,84 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FBBC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE233C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78AB6206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vQ3F4e20"
+	by mail.kernel.org (Postfix) with ESMTP id C8CB120731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgDFSMR (ORCPT
+        id S1726659AbgDFSNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:12:17 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38697 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgDFSMR (ORCPT
+        Mon, 6 Apr 2020 14:13:42 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:34057 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726520AbgDFSNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:12:17 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w3so136913plz.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ver6n6MUoiKJ9YQThw8+RbAg+VfgvE+bRaGA1TEZ9VE=;
-        b=vQ3F4e20+rPDeXfCEpsaDzx4gn2vua9DgaFCprSToBwI20LZ5YB4UsBIJfyfRVCQw/
-         Ink+pTcBBewybEaXx8NhUDqYX8w1Dw/rPVxpaIcMBOJUv/wyf3ZSTAsysrxDoksvoQSO
-         fIQ4fEdj10/Ux4gC4Dwl6bekkG5P3XmylDoxXB/x1CZNeuPgacxGKd0niIyMFLCM0lw6
-         n4KXDQTbJXV2JO2k6TDP7q2ntBK6053pabIyqsUvJS+migpswwmAjIk2FFPdLbXpEZ21
-         Zn0OdSBc+7IDjqFnbKm82vd0w9UMPwNmD1cDMyreHkwtazMNAyR+RfJnBTfsPRxlF3Lk
-         vwqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ver6n6MUoiKJ9YQThw8+RbAg+VfgvE+bRaGA1TEZ9VE=;
-        b=SPEv1cfnn+nJ+ibvYdRDbu2rMEYiGV/at7hNLStK0aFzcsGJvnZgF4WLpz1Ky9SEAd
-         NcY2OpR5WplDTwHpAKZVXLrWgIwdLbEzXtBlwX+pf9QzJLGNXiM6QAiCaoVF5MTuX7um
-         UKLr6xhv92gZ5EpjHFplc+Y1RjyQYvJ0dFpkd2qGED3KlWYO/daToZlp1oAhyPH35TbH
-         AhJw1cywTKKwayaFUryNsjrM5cvGX0qCciJs/ODQfGFmSMdbb6sJiC+8qV1MV/seTQMq
-         w9dj9rJQXHFQ1uT6+cFEsaImy+seJ3uPgIqYWB8rubYSblfXK6/CT9BOHDipwZfs8kSu
-         LbZw==
-X-Gm-Message-State: AGi0PuafWHi4QN+2GFbADq2GjmCVGv1VipdKNEfCxtI8GqYljF6qWyWp
-        Og1UToHFf5olXULXEKbVISdtko7zT/ws2PrDrYAChg==
-X-Google-Smtp-Source: APiQypKrJQ4k0jrnTIHHGTaNBKzi/QJwJ+B536oRq/t8JvxDSa97hNj3Szu7UByf6aPQ0mNLznHy80PVB1X5w5GHgBU=
-X-Received: by 2002:a17:90a:9f03:: with SMTP id n3mr639147pjp.29.1586196735041;
- Mon, 06 Apr 2020 11:12:15 -0700 (PDT)
+        Mon, 6 Apr 2020 14:13:42 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TuqA70k_1586196816;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TuqA70k_1586196816)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 07 Apr 2020 02:13:38 +0800
+Subject: Re: [PATCHv2 2/8] khugepaged: Do not stop collapse if less than half
+ PTEs are referenced
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
+ <20200403112928.19742-3-kirill.shutemov@linux.intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <238a9a53-cf9b-7729-46f1-9b2a5e37571a@linux.alibaba.com>
+Date:   Mon, 6 Apr 2020 11:13:35 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20200401013639.16388-1-vitor@massaru.org>
-In-Reply-To: <20200401013639.16388-1-vitor@massaru.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 6 Apr 2020 11:12:03 -0700
-Message-ID: <CAFd5g47Ot-MfxzYmU8kfxpfv2pWhgb_2WigouuHnPT+20Ejk_w@mail.gmail.com>
-Subject: Re: [PATCH v2] kunit: Fix kunit.py run --build_dir='<foo>' fails on
- "unclean" trees
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200403112928.19742-3-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 31, 2020 at 6:36 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
->
-> Fix this bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
->
-> For some reason, the environment variable ARCH is used instead of ARCH
-> passed as an argument, this patch uses a copy of the env, but using
-> ARCH=um and CROSS_COMPILER='' to avoid this problem.
->
-> This patch doesn't change the user's environment variables, avoiding
-> side effects.
->
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
 
-Sorry for the delayed reply. I had two people finish up on my team
-last week and I needed to do some things for that. You now have my
-undivided attention.
 
-So, I tried to apply this patch and it still doesn't apply on
-kselftest/kunit. At this point, basing your changes on torvalds/master
-would be fine since kselftest/kunit just got merged for 5.7.
+On 4/3/20 4:29 AM, Kirill A. Shutemov wrote:
+> __collapse_huge_page_swapin() check number of referenced PTE to decide
+> if the memory range is hot enough to justify swapin.
+>
+> The problem is that it stops collapse altogether if there's not enough
+> referenced pages, not only swappingin.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Fixes: 0db501f7a34c ("mm, thp: convert from optimistic swapin collapsing to conservative")
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+> ---
+>   mm/khugepaged.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 
-Can you use the --base branch option when you send your next revision
-so I know what branch you are working against (just to be sure)?
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
+
+>
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 99bab7e4d05b..14d7afc90786 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -905,7 +905,8 @@ static bool __collapse_huge_page_swapin(struct mm_struct *mm,
+>   	/* we only decide to swapin, if there is enough young ptes */
+>   	if (referenced < HPAGE_PMD_NR/2) {
+>   		trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, 0);
+> -		return false;
+> +		/* Do not block collapse, only skip swapping in */
+> +		return true;
+>   	}
+>   	vmf.pte = pte_offset_map(pmd, address);
+>   	for (; vmf.address < address + HPAGE_PMD_NR*PAGE_SIZE;
+
