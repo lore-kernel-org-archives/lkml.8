@@ -2,194 +2,245 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D4D2C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1B2C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C0F20672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:22:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="niNBguzV"
+	by mail.kernel.org (Postfix) with ESMTP id 99CB2206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgDFSWA (ORCPT
+        id S1726692AbgDFSXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:22:00 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:40040 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbgDFSV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:21:59 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wzQY5jkMz9twdW;
-        Mon,  6 Apr 2020 20:21:57 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=niNBguzV; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id WtuRjlw8CWYP; Mon,  6 Apr 2020 20:21:57 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzQY4SPgz9twdL;
-        Mon,  6 Apr 2020 20:21:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586197317; bh=VXmMovTR7szrUn+dOnA7aSwBzyNCJw4deqwcK+8rHWo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=niNBguzVn3dxAlaCqfcRFoPs8iHx1jrJCmFEHfpSz+GC4mFtM9v4Y+JX2bDjvfI0L
-         gMmRGASJxpVBURurbRxULzyvT3eF1CE3FIbDvBgtRl0D61q8CX8c39g+JG5o0CGU36
-         ENdEbaT5NtpAI8TPb94SkTXh0WjtvlpHzRjwEaOw=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 92F188B784;
-        Mon,  6 Apr 2020 20:21:57 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 7BQ58JlTLiHG; Mon,  6 Apr 2020 20:21:57 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F20498B775;
-        Mon,  6 Apr 2020 20:21:56 +0200 (CEST)
-Subject: Re: [RFC PATCH v2 06/13] powerpc/syscall: Make syscall_64.c buildable
- on PPC32
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
- <923ab2df9d4a4d0f3a072421e054028c18d614d8.1586108649.git.christophe.leroy@c-s.fr>
- <1586137334.pcovkdryot.astroid@bobo.none>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <3b9f9335-3390-6439-81a7-196c883cb35f@c-s.fr>
-Date:   Mon, 6 Apr 2020 20:21:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <1586137334.pcovkdryot.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        Mon, 6 Apr 2020 14:23:02 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:57942 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgDFSXC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:23:02 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7F49215DADD19;
+        Mon,  6 Apr 2020 11:23:01 -0700 (PDT)
+Date:   Mon, 06 Apr 2020 11:22:58 -0700 (PDT)
+Message-Id: <20200406.112258.20998915860758260.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 06 Apr 2020 11:23:01 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+1) Slave bond and team devices should not be assigned ipv6 link local
+   addresses, from Jarod Wilson.
 
-Le 06/04/2020 à 03:52, Nicholas Piggin a écrit :
-> Christophe Leroy's on April 6, 2020 3:44 am:
->> ifdef out specific PPC64 stuff to allow building
->> syscall_64.c on PPC32.
->>
->> Modify Makefile to always build syscall.o
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   arch/powerpc/kernel/Makefile  |  5 ++---
->>   arch/powerpc/kernel/syscall.c | 10 ++++++++++
->>   2 files changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
->> index 8cc3c831dccd..e4be425b7718 100644
->> --- a/arch/powerpc/kernel/Makefile
->> +++ b/arch/powerpc/kernel/Makefile
->> @@ -45,11 +45,10 @@ obj-y				:= cputable.o syscalls.o \
->>   				   signal.o sysfs.o cacheinfo.o time.o \
->>   				   prom.o traps.o setup-common.o \
->>   				   udbg.o misc.o io.o misc_$(BITS).o \
->> -				   of_platform.o prom_parse.o
->> +				   of_platform.o prom_parse.o syscall.o
->>   obj-y				+= ptrace/
->>   obj-$(CONFIG_PPC64)		+= setup_64.o sys_ppc32.o signal_64.o \
->> -				   paca.o nvram_64.o firmware.o note.o \
->> -				   syscall.o
->> +				   paca.o nvram_64.o firmware.o note.o
->>   obj-$(CONFIG_VDSO32)		+= vdso32/
->>   obj-$(CONFIG_PPC_WATCHDOG)	+= watchdog.o
->>   obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
->> diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
->> index 72f3d2f0a823..28bd43db8755 100644
->> --- a/arch/powerpc/kernel/syscall.c
->> +++ b/arch/powerpc/kernel/syscall.c
->> @@ -25,8 +25,10 @@ notrace long system_call_exception(long r3, long r4, long r5,
->>   	unsigned long ti_flags;
->>   	syscall_fn f;
->>   
->> +#ifdef CONFIG_PPC64
->>   	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
->>   		BUG_ON(irq_soft_mask_return() != IRQS_ALL_DISABLED);
->> +#endif
->>   
->>   	trace_hardirqs_off(); /* finish reconciling */
->>   
->> @@ -34,7 +36,9 @@ notrace long system_call_exception(long r3, long r4, long r5,
->>   		BUG_ON(!(regs->msr & MSR_RI));
->>   	BUG_ON(!(regs->msr & MSR_PR));
->>   	BUG_ON(!FULL_REGS(regs));
->> +#ifdef CONFIG_PPC64
->>   	BUG_ON(regs->softe != IRQS_ENABLED);
->> +#endif
->>   
->>   	account_cpu_user_entry();
->>   
->> @@ -56,7 +60,9 @@ notrace long system_call_exception(long r3, long r4, long r5,
->>   	 * frame, or if the unwinder was taught the first stack frame always
->>   	 * returns to user with IRQS_ENABLED, this store could be avoided!
->>   	 */
->> +#ifdef CONFIG_PPC64
->>   	regs->softe = IRQS_ENABLED;
->> +#endif
->>   
->>   	local_irq_enable();
->>   
->> @@ -148,7 +154,9 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
->>   		ret |= _TIF_RESTOREALL;
->>   	}
->>   
->> +#ifdef CONFIG_PPC64
->>   again:
->> +#endif
->>   	local_irq_disable();
->>   	ti_flags = READ_ONCE(*ti_flagsp);
->>   	while (unlikely(ti_flags & (_TIF_USER_WORK_MASK & ~_TIF_RESTORE_TM))) {
->> @@ -191,6 +199,7 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
->>   
->>   	/* This pattern matches prep_irq_for_idle */
->>   	__hard_EE_RI_disable();
->> +#ifdef CONFIG_PPC64
->>   	if (unlikely(lazy_irq_pending())) {
->>   		__hard_RI_enable();
->>   		trace_hardirqs_off();
->> @@ -201,6 +210,7 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
->>   	}
->>   	local_paca->irq_happened = 0;
->>   	irq_soft_mask_set(IRQS_ENABLED);
->> +#endif
->>   
->>   #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
->>   	local_paca->tm_scratch = regs->msr;
->> -- 
->> 2.25.0
->>
->>
-> 
-> The #ifdefs disappoint me!
+2) Fix clock sink config on some at803x PHY devices, from Oleksij
+   Rempel.
 
-They disappoint me as well. I tried to removed most of them in v3, I 
-also took your patch up front the series.
+3) Uninitialized stack space transmitted in slcan frames, fix from
+   Richard Palethorpe.
 
-> 
-> Here is (unested) something that should help 32-bit avoid several ifdefs
-> in the main part of the function. I should have done this as part of the
-> merged series, but that's okay I'll submit as a cleanup.
-> 
-> The rest looks okay for now. Maybe we grow some helpers to manage the
-> soft-mask state, though I'm not really sure it would make sense for
-> 32-bit code to ever call them. Maybe just confined to this file would be
-> okay but for now the ifdefs are okay.
+4) Guard HW VLAN ops properly in stmmac driver, from Jose Abreu.
 
-Thanks
-Christophe
+5) "=" --> "|=" fix in aquantia driver, from Colin Ian King.
+
+6) Fix TCP fallback in mptcp, from Florian Westphal.  (accessing
+   a plain tcp_sk as if it were an mptcp socket).
+
+7) Fix cavium driver in some configurations wrt. PTP, from Yue
+   Haibing.
+
+8) Make ipv6 and ipv4 consistent in the lower bound allowed for
+   neighbour entry retrans_time, from Hangbin Liu.
+
+9) Don't use private workqueue in pegasus usb driver, from Petko
+   Manolov.
+
+10) Fix integer overflow in mlxsw, from Colin Ian King.
+
+11) Missing refcnt init in cls_tcindex, from Cong Wang.
+
+12) One too many loop iterations when processing cmpri entries in
+    ipv6 rpl code, from Alexander Aring.
+
+13) Disable SG and TSO by default in r8169, from Heiner Kallweit.
+
+14) NULL deref in macsec, from Davide Caratti.
+
+Please pull, thanks a lot!
+
+The following changes since commit 1a323ea5356edbb3073dc59d51b9e6b86908857d:
+
+  x86: get rid of 'errret' argument to __get_user_xyz() macross (2020-03-31 18:23:47 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git 
+
+for you to fetch changes up to aa81700cf2326e288c9ca1fe7b544039617f1fc2:
+
+  macsec: fix NULL dereference in macsec_upd_offload() (2020-04-06 10:26:08 -0700)
+
+----------------------------------------------------------------
+Alexander Aring (1):
+      ipv6: rpl: fix loop iteration
+
+Chuanhong Guo (1):
+      net: dsa: mt7530: fix null pointer dereferencing in port5 setup
+
+Colin Ian King (5):
+      net: atlantic: fix missing | operator when assigning rec->llc
+      net: ipv6: rpl_iptunnel: remove redundant assignments to variable err
+      mlxsw: spectrum_trap: fix unintention integer overflow on left shift
+      wimax: remove some redundant assignments to variable result
+      qed: remove redundant assignment to variable 'rc'
+
+Cong Wang (2):
+      net_sched: add a temporary refcnt for struct tcindex_data
+      net_sched: fix a missing refcnt in tcindex_init()
+
+David S. Miller (2):
+      Merge branch 'mptcp-various-bugfixes-and-improvements'
+      Merge branch 'mlxsw-fixes'
+
+Davide Caratti (1):
+      macsec: fix NULL dereference in macsec_upd_offload()
+
+Dexuan Cui (1):
+      skbuff.h: Improve the checksum related comments
+
+Florian Fainelli (2):
+      net: dsa: bcm_sf2: Do not register slave MDIO bus with OF
+      net: dsa: bcm_sf2: Ensure correct sub-node is parsed
+
+Florian Westphal (3):
+      mptcp: fix tcp fallback crash
+      mptcp: subflow: check parent mptcp socket on subflow state change
+      mptcp: re-check dsn before reading from subflow
+
+Geliang Tang (1):
+      mptcp: add some missing pr_fmt defines
+
+Hangbin Liu (1):
+      neigh: support smaller retrans_time settting
+
+Heiner Kallweit (1):
+      r8169: change back SG and TSO to be disabled by default
+
+Herat Ramani (1):
+      cxgb4: fix MPS index overwrite when setting MAC address
+
+Hu Haowen (2):
+      net/faraday: fix grammar in function ftgmac100_setup_clk() in ftgmac100.c
+      bnx2x: correct a comment mistake in grammar
+
+Jarod Wilson (1):
+      ipv6: don't auto-add link-local address to lag ports
+
+Jisheng Zhang (1):
+      net: stmmac: dwmac1000: fix out-of-bounds mac address reg setting
+
+Jose Abreu (2):
+      net: stmmac: Fix VLAN filtering when HW does not support it
+      net: stmmac: xgmac: Fix VLAN register handling
+
+Matthieu Baerts (1):
+      mptcp: fix "fn parameter not described" warnings
+
+Oleksij Rempel (2):
+      net: phy: at803x: fix clock sink configuration on ATH8030 and ATH8035
+      net: phy: micrel: kszphy_resume(): add delay after genphy_resume() before accessing PHY registers
+
+Petko Manolov (1):
+      pegasus: Remove pegasus' own workqueue
+
+Petr Machata (2):
+      mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_PRIORITY
+      mlxsw: spectrum_flower: Do not stop at FLOW_ACTION_VLAN_MANGLE
+
+Rahul Lakkireddy (1):
+      cxgb4: free MQPRIO resources in shutdown path
+
+Richard Palethorpe (1):
+      slcan: Don't transmit uninitialized stack data in padding
+
+Rob Herring (1):
+      dt-bindings: net: mvusb: Fix example errors
+
+Subash Abhinov Kasiviswanathan (1):
+      net: qualcomm: rmnet: Allow configuration updates to existing devices
+
+Tonghao Zhang (1):
+      net: openvswitch: use hlist_for_each_entry_rcu instead of hlist_for_each_entry
+
+Vincent Bernat (1):
+      net: core: enable SO_BINDTODEVICE for non-root users
+
+Will Deacon (1):
+      tun: Don't put_page() for all negative return values from XDP program
+
+YueHaibing (2):
+      crypto/chcr: Add missing include file <linux/highmem.h>
+      net: cavium: Fix build errors due to 'imply CAVIUM_PTP'
+
+kbuild test robot (1):
+      net: dsa: dsa_bridge_mtu_normalization() can be static
+
+ Documentation/devicetree/bindings/net/marvell,mvusb.yaml   |  29 ++++++++++----------
+ drivers/crypto/chelsio/chcr_ktls.c                         |   1 +
+ drivers/net/can/slcan.c                                    |   4 +--
+ drivers/net/dsa/bcm_sf2.c                                  |   9 +++++--
+ drivers/net/dsa/mt7530.c                                   |   3 +++
+ drivers/net/ethernet/aquantia/atlantic/macsec/macsec_api.c |   2 +-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c           |   3 ++-
+ drivers/net/ethernet/cavium/common/cavium_ptp.h            |   2 +-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c            |   5 +++-
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.c       |  23 ++++++++++++++++
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_mqprio.h       |   1 +
+ drivers/net/ethernet/faraday/ftgmac100.c                   |   2 +-
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c      |  18 ++++++++-----
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_trap.c        |   2 +-
+ drivers/net/ethernet/qlogic/qed/qed_l2.c                   |   2 +-
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c         |  31 ++++++++++++---------
+ drivers/net/ethernet/realtek/r8169_main.c                  |  29 ++++++++++----------
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c       |   2 +-
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c        |  11 ++++++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c          |  17 ++++++++----
+ drivers/net/macsec.c                                       |   3 +++
+ drivers/net/phy/at803x.c                                   |   4 +--
+ drivers/net/phy/micrel.c                                   |   7 +++++
+ drivers/net/tun.c                                          |  10 ++++---
+ drivers/net/usb/pegasus.c                                  |  38 +++++---------------------
+ drivers/net/wimax/i2400m/driver.c                          |   7 ++---
+ include/linux/skbuff.h                                     |  38 +++++++++++++-------------
+ net/core/neighbour.c                                       |  10 ++++---
+ net/core/sock.c                                            |   2 +-
+ net/dsa/slave.c                                            |   2 +-
+ net/ipv6/addrconf.c                                        |  11 +++++---
+ net/ipv6/ndisc.c                                           |   4 +--
+ net/ipv6/rpl.c                                             |   6 ++---
+ net/ipv6/rpl_iptunnel.c                                    |   2 +-
+ net/mptcp/options.c                                        |   2 ++
+ net/mptcp/pm.c                                             |   2 ++
+ net/mptcp/pm_netlink.c                                     |   2 ++
+ net/mptcp/protocol.c                                       | 109 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ net/mptcp/protocol.h                                       |   2 ++
+ net/mptcp/subflow.c                                        |   3 +--
+ net/mptcp/token.c                                          |   9 ++++---
+ net/openvswitch/flow_table.c                               |  10 ++++---
+ net/sched/cls_tcindex.c                                    |  45 ++++++++++++++++++++++++++-----
+ 43 files changed, 361 insertions(+), 163 deletions(-)
