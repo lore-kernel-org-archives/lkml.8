@@ -2,210 +2,168 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592D6C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78BEC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9E3206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:45:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bs1CDKGv"
+	by mail.kernel.org (Postfix) with ESMTP id 947ED206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgDFJpQ (ORCPT
+        id S1726841AbgDFJqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:45:16 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36293 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgDFJpP (ORCPT
+        Mon, 6 Apr 2020 05:46:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35203 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726721AbgDFJqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:45:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id k1so7185030wrm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 02:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/tAldBf8G4P8zLxLg45vHYhasSD0RWL4EXZe8LNxOmk=;
-        b=Bs1CDKGvtaL3YuqnE22w7H1CiaBIfDjxL1m17ETo9LLPVuQXPJOUPTOa66YSUqS9wg
-         zEBp4r88NOGWETG934877OOzkOpHpVtQiRIReeb8B6KZtQ6ZHDdYbbb1fFdNljgP9Dm5
-         TRT3s5wbiK4nQvngNSCs8Ie3iQ8CioAxql6pl+7gl6pxwUH1iD/2AILlo9nLIPYGhRX6
-         762chlNkdodPxCtLCd7bZ7ci6OxcxQiB0KhLqfReCRcB4hHFm9PtA8bGTBzKZT290VvZ
-         3xWGoo+S/2O+19WiMpn0Ud8HuLHT9+WUNe4Y+ackea1NrR7qTv+pU8G2fGI0XoVZMgFa
-         8xtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=/tAldBf8G4P8zLxLg45vHYhasSD0RWL4EXZe8LNxOmk=;
-        b=D/Lcbs7q1BPOintLlKq5axqcIEyDUmEnm5R9U8/3ZoYDun6VH/ENRY3C7YWSp5MMOD
-         rJDIFwXtoBc0LtRsejGQqLm6vWrbQRgy4YCazlS8qoiQKojVPForyO5ZIGo1Ng715ijS
-         q6+IpUfxSeHNxJkbm7b6a9oMnvfUetEOZNEIZYAh2fqVEg1UuUORwQFWaDy/AugbA4ze
-         PRd5dIeN7dZcS1fkoIcV8OxRP90oorQetBSBFwGIJWYsSeaTsMZM5zv/xxTKiTP1a9zR
-         12YGhe1Nqi6+z/Geo98zFIUeB+qOqHBKMjLrTaQwGsmmg1u/2Vqb3n8zEBkRSq1LKwLc
-         C5eA==
-X-Gm-Message-State: AGi0PuaoS5ne3Yy1YZG3htidwSO2NeU96z2oVC2h9R3yt4q3d7JNl63Z
-        hZcjGT/nnTREpdcQkVWeCXaCyAYvwt4=
-X-Google-Smtp-Source: APiQypJFm0mX9OvGjd7tv7at0Nn+E0BhUS33ZRGbzsFhYfxlNTqRquWtriNOyNWJ/gYRKzSWLfhj0A==
-X-Received: by 2002:adf:9168:: with SMTP id j95mr22186195wrj.145.1586166312081;
-        Mon, 06 Apr 2020 02:45:12 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:b51c:42dc:1499:2880? ([2a01:e34:ed2f:f020:b51c:42dc:1499:2880])
-        by smtp.googlemail.com with ESMTPSA id f12sm25965374wrm.94.2020.04.06.02.45.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 02:45:11 -0700 (PDT)
-Subject: Re: [PATCH] thermal: core: Send a sysfs notification on trip points
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <a7e8287d-72be-7ab0-697a-9de40eb3f81f@linaro.org>
- <20200402142116.22869-1-daniel.lezcano@linaro.org>
- <20200403144009.szjoss5ecleisg2f@axis.com>
- <e0c819ce-31f4-cee1-c7cc-7ecb73d374a3@linaro.org>
- <20200406074525.2bhseq3n5bw7dd2t@axis.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <62f5e0d0-155a-7520-cb1b-2113a2b711b3@linaro.org>
-Date:   Mon, 6 Apr 2020 11:45:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 6 Apr 2020 05:46:37 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0369X42t012565
+        for <linux-kernel@vger.kernel.org>; Mon, 6 Apr 2020 05:46:35 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 306pcycwh3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 05:46:35 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Mon, 6 Apr 2020 10:46:12 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 Apr 2020 10:46:08 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0369kSTs60817466
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Apr 2020 09:46:28 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4869BA405F;
+        Mon,  6 Apr 2020 09:46:28 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A009EA405C;
+        Mon,  6 Apr 2020 09:46:27 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.52.152])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Apr 2020 09:46:27 +0000 (GMT)
+Subject: Re: [PATCH 7/8] mmap locking API: add MMAP_LOCK_INITIALIZER
+To:     Michel Lespinasse <walken@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>
+References: <20200326070236.235835-1-walken@google.com>
+ <20200326070236.235835-8-walken@google.com>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Date:   Mon, 6 Apr 2020 11:46:27 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200406074525.2bhseq3n5bw7dd2t@axis.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200326070236.235835-8-walken@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040609-4275-0000-0000-000003BA9033
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040609-4276-0000-0000-000038CFED5A
+Message-Id: <1c463464-1d72-287e-e785-f077a95ccf20@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_05:2020-04-03,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 malwarescore=0 clxscore=1015
+ impostorscore=0 suspectscore=0 phishscore=0 mlxscore=0 spamscore=0
+ mlxlogscore=999 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004060083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2020 09:45, Vincent Whitchurch wrote:
-> On Fri, Apr 03, 2020 at 05:26:39PM +0200, Daniel Lezcano wrote:
->> On 03/04/2020 16:40, Vincent Whitchurch wrote:
->>> Normally sysfs_notify() is used to notify userspace that the
->>> value of the sysfs file has changed, but in this case it's
->>> being used on a sysfs file whose value never changes.  I don't
->>> know if there are other drivers that do something similar.
->>
->> I think so:
->>
->> eg.
->>
->> drivers/hwmon/adt7x10.c: sysfs_notify(&dev->kobj, NULL,
->> "temp1_max_alarm"); drivers/hwmon/adt7x10.c:
->> sysfs_notify(&dev->kobj, NULL, "temp1_min_alarm");
->> drivers/hwmon/adt7x10.c: sysfs_notify(&dev->kobj, NULL,
->> "temp1_crit_alarm");
->>
->> drivers/hwmon/abx500.c: sysfs_notify(&data->pdev->dev.kobj, NULL,
->> alarm_node); drivers/hwmon/abx500.c:
->> sysfs_notify(&data->pdev->dev.kobj, NULL, alarm_node);
->>
->> drivers/hwmon/stts751.c: sysfs_notify(&priv->dev->kobj, NULL,
->> "temp1_max_alarm"); drivers/hwmon/stts751.c:
->> sysfs_notify(&priv->dev->kobj, NULL, "temp1_min_alarm");
->>
->> There are also some other places I believe they are doing the
->> same like:
->>
->> drivers/md/md.c: sysfs_notify(&mddev->kobj, NULL,
->> "sync_completed"); drivers/md/md.c: sysfs_notify(&mddev->kobj,
->> NULL, "degraded");
->
-> AFAICS all these drivers (including the hwmon ones) use
-> sysfs_notify() to notify that the value of the sysfs file has
-> changed, unlike your proposed patch.
+Le 26/03/2020 à 08:02, Michel Lespinasse a écrit :
+> Define a new initializer for the mmap locking api.
+> Initially this just evaluates to __RWSEM_INITIALIZER as the API
+> is defined as wrappers around rwsem.
 
-Sorry, I don't have the same understanding:
+I can't see the benefit of this change.
+The overall idea is to hide the mmap_sem name. Here the macro 
+MMAP_LOCK_INITIALIZER() doesn't hide the name.
 
-drivers/hwmon/adt7x10.c:
+I think we can keep that in place until the real change of the mmap_sem to 
+something else.
 
- - receives an interrupt because one of the programmed temperature is
-reached
- - reads the status to know which one and sends a sysfs notification
+Cheers,
+Laurent.
 
-drivers/hwmon/stts751.c:
+> 
+> Signed-off-by: Michel Lespinasse <walken@google.com>
+> ---
+>   arch/x86/kernel/tboot.c    | 2 +-
+>   drivers/firmware/efi/efi.c | 2 +-
+>   include/linux/mmap_lock.h  | 2 ++
+>   mm/init-mm.c               | 2 +-
+>   4 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/tboot.c b/arch/x86/kernel/tboot.c
+> index b89f6ac6a0c0..4b79335624b1 100644
+> --- a/arch/x86/kernel/tboot.c
+> +++ b/arch/x86/kernel/tboot.c
+> @@ -90,7 +90,7 @@ static struct mm_struct tboot_mm = {
+>   	.pgd            = swapper_pg_dir,
+>   	.mm_users       = ATOMIC_INIT(2),
+>   	.mm_count       = ATOMIC_INIT(1),
+> -	.mmap_sem       = __RWSEM_INITIALIZER(init_mm.mmap_sem),
+> +	.mmap_sem       = MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
+>   	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
+>   	.mmlist         = LIST_HEAD_INIT(init_mm.mmlist),
+>   };
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 21ea99f65113..5bdfe698cd7f 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -60,7 +60,7 @@ struct mm_struct efi_mm = {
+>   	.mm_rb			= RB_ROOT,
+>   	.mm_users		= ATOMIC_INIT(2),
+>   	.mm_count		= ATOMIC_INIT(1),
+> -	.mmap_sem		= __RWSEM_INITIALIZER(efi_mm.mmap_sem),
+> +	.mmap_sem		= MMAP_LOCK_INITIALIZER(efi_mm.mmap_sem),
+>   	.page_table_lock	= __SPIN_LOCK_UNLOCKED(efi_mm.page_table_lock),
+>   	.mmlist			= LIST_HEAD_INIT(efi_mm.mmlist),
+>   	.cpu_bitmap		= { [BITS_TO_LONGS(NR_CPUS)] = 0},
+> diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+> index 00d6cc02581d..7474b15bba38 100644
+> --- a/include/linux/mmap_lock.h
+> +++ b/include/linux/mmap_lock.h
+> @@ -1,6 +1,8 @@
+>   #ifndef _LINUX_MMAP_LOCK_H
+>   #define _LINUX_MMAP_LOCK_H
+>   
+> +#define MMAP_LOCK_INITIALIZER(name) __RWSEM_INITIALIZER(name)
+> +
+>   static inline void mmap_init_lock(struct mm_struct *mm)
+>   {
+>   	init_rwsem(&mm->mmap_sem);
+> diff --git a/mm/init-mm.c b/mm/init-mm.c
+> index 19603302a77f..3c128bd6a30c 100644
+> --- a/mm/init-mm.c
+> +++ b/mm/init-mm.c
+> @@ -31,7 +31,7 @@ struct mm_struct init_mm = {
+>   	.pgd		= swapper_pg_dir,
+>   	.mm_users	= ATOMIC_INIT(2),
+>   	.mm_count	= ATOMIC_INIT(1),
+> -	.mmap_sem	= __RWSEM_INITIALIZER(init_mm.mmap_sem),
+> +	.mmap_sem	= MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
+>   	.page_table_lock =  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
+>   	.arg_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.arg_lock),
+>   	.mmlist		= LIST_HEAD_INIT(init_mm.mmlist),
+> 
 
- - receives an I2C alert message, checks if it is a temperature alert
-and then sends a sysfs notification
-
-drivers/hwmon/abx500:
-
- - This one is probably sending a notification on a change
-
-The documentation also is giving the semantic for sysfs_notify for
-certain sysfs nodes:
-
-Documentation/misc-devices/apds990x.txt:             sysfs_notify
-called when threshold interrupt occurs
-Documentation/misc-devices/bh1770glc.txt:            sysfs_notify
-called when threshold interrupt occurs
-
-AFAICT, it is a matter of documenting the notification for
-trip_point_*_temp.
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
