@@ -2,119 +2,145 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9CCC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9910C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7559F2490A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 837712490C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="QmqwCirH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MqZtb3hM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgDFQBm (ORCPT
+        id S1729275AbgDFQBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:01:42 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43887 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728976AbgDFQBm (ORCPT
+        Mon, 6 Apr 2020 12:01:52 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36147 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728789AbgDFQBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:01:42 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a5so61601qtw.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 09:01:41 -0700 (PDT)
+        Mon, 6 Apr 2020 12:01:52 -0400
+Received: by mail-qk1-f194.google.com with SMTP id l25so8632344qkk.3;
+        Mon, 06 Apr 2020 09:01:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=5ic27BW1iJdYbTNtKyKXQRX9PLP/1hCKUgIGplcjrCI=;
-        b=QmqwCirHzsR+Uyk8WaHKfjq+sq2vfOyKw9KbAE7sieNsEvyGwomVYk++XbfoS8RGm6
-         ATqw+gTBF8zJ+3wy7eNcwoTqmls7wHLw7zIOV1Bb5ER0anB2tB3bA0dqVAPMSYP2UWId
-         K3+AhBPPKXNqWsi6WLI549jkTq9iDFQ/DZWNw=
+        bh=v8sY9Xkdl7Zpf9zVZC6h28QfbTQvTzqE7X+PThoReM4=;
+        b=MqZtb3hME1C/jw7Y/Z8Ei7/63dsMUiVXrCQJJGb2Wn5vs9bYJSGvbgaH04f1HLKTnf
+         WBhMe4uP527R4DbNStmAQTvWck7QvMLj4Ce6N49a4YOCN153ZMSIEGNGjf4b2YkDH6Ub
+         eevQdIHJSjSPwUgjbNmY7Tv0A6kgVLyS4u7Gu+EcpT8VWU/PyjSWJolYuIDo28Q3d6PA
+         6r79bIFXJQ1C1whIZne+HikrpeQGBerDHrSRrtthHutgGG2gT8yKKLc9Zn2X4igEFH7e
+         8Aww2mp33LHk9bsZpRxfc/F01vQAcUWxR7yVe3siTbT7ImfA1jt3SDSbZRWkE5NRowzx
+         /dyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5ic27BW1iJdYbTNtKyKXQRX9PLP/1hCKUgIGplcjrCI=;
-        b=bh/Bj3RqImhzXbe6FQxHn66VA83jDOl0EZO81yl0tLdrVJdVIDgCCbZNBFlTZTLzAy
-         dAgXAncnVIdWWLuRcQDxkJK7trOPPR8HfJAzIwL5Zt/EqhvqTq9CQLgAub5saVpwyZmS
-         RFpZ5iTc/tdZc0tI50pWcjuFyYDlISHQ2oaAP8lP/18WWggFfMiI9KkOtWI9TJ4GZ+Tr
-         Ir+M690NkcXEaN8Wq+nRj7rY5AvEG2q2ikkb21Ck2Imif0v40pJzfljdco44yUgUzASl
-         3l9J0BmVFnhPVQ2UmKb+SwmoV9ZflVyc4PMy/6S7FfoX1/A5nEYEOm9Yj6lwtls/A8Fz
-         NEgQ==
-X-Gm-Message-State: AGi0PuatedQJodbnUqxk1/AGepOZ/PqNbC1k6nGNzmathMQDFvB+8hpQ
-        uK+toPDWPEWVBqaf1n77+h4QUA==
-X-Google-Smtp-Source: APiQypJgmtrZ1yaRJ/1cOD03beiLocPbNaNQJ5bjoMe8Nmmo1LJvnynZ/CD8Fr7rTsSq/8IZJ7h+KA==
-X-Received: by 2002:aed:2b27:: with SMTP id p36mr78735qtd.322.1586188899127;
-        Mon, 06 Apr 2020 09:01:39 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id y127sm14938249qkb.76.2020.04.06.09.01.38
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=v8sY9Xkdl7Zpf9zVZC6h28QfbTQvTzqE7X+PThoReM4=;
+        b=KeXbMlnUtN8E3YrDd6fx1t9GzE1xxj5BEBoRsXtwj2EXgOK04lMvmGDvl4tR9CB1DF
+         FManuMlTnJ/UmIHEGOjiW9BTJoiP6VQ+EJgBLm8qng7QvzTbwkTGrehFVnlZGhTr+Wel
+         3zywOgPGzHpZRn3r5Bz3Ny1MOo+ZT19OrTceMXb7WIxBkeQ6lU/BP0n73naLfqvJklz5
+         BEGYg3yS4OrxiVytJfNPmJ1SLbdxqXNk7meHcyBjMbAIJhOe1X2ZHmmT/Qjjjl+7xpPJ
+         q7azLg5TnQfTVgbvIHabYUGmLI9+Q7RajMclWFc9U12I77mxaQzRBrR18wCy3GK9h5dd
+         g97g==
+X-Gm-Message-State: AGi0Pua6LfMG8WqIc/6r3hJkGn1Z7HSBJHJM7v7YyxJsdF+EsMTBEMBy
+        r21EB+O2D/As+3LcFroXhcM=
+X-Google-Smtp-Source: APiQypKxMNsxaiVsWaEOK9tvQ0sUTI3D+DHfY2UbWcUYsjW7uUurZJglzqKLSCLeYl7/a833O+NSjg==
+X-Received: by 2002:a37:9d14:: with SMTP id g20mr7334650qke.166.1586188910814;
+        Mon, 06 Apr 2020 09:01:50 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id g10sm15356471qkb.9.2020.04.06.09.01.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 09:01:38 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 12:01:38 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Amol Grover <frextrite@gmail.com>,
-        linux-kernel@vger.kernel.org, philip.li@intel.com
-Subject: Re: db4ead2cd5 ("Default enable RCU list lockdep debugging with
- .."): WARNING: suspicious RCU usage
-Message-ID: <20200406160138.GJ83565@google.com>
-References: <5e89ae97.XlZ1PbIKMXWOOfLI%lkp@intel.com>
- <20200405145232.GY19865@paulmck-ThinkPad-P72>
- <20200406025056.GA13310@madhuparna-HP-Notebook>
- <20200406152259.GG83565@google.com>
- <20200406153237.GF19865@paulmck-ThinkPad-P72>
+        Mon, 06 Apr 2020 09:01:49 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 6 Apr 2020 12:01:48 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
+        hpa@zytor.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
+ bzImage
+Message-ID: <20200406160148.GB113388@rani.riverdale.lan>
+References: <20200405154245.11972-1-me@prok.pw>
+ <20200405231845.GA3095309@rani.riverdale.lan>
+ <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
+ <20200406035110.GA3241052@rani.riverdale.lan>
+ <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
+ <20200406084738.GA2520@zn.tnic>
+ <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
+ <20200406112042.GC2520@zn.tnic>
+ <20200406132215.GA113388@rani.riverdale.lan>
+ <CAMj1kXG+34-bK1XuxX5VopkRt1SV1ewUAEmif+aQj5cJQ=9vbA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200406153237.GF19865@paulmck-ThinkPad-P72>
+In-Reply-To: <CAMj1kXG+34-bK1XuxX5VopkRt1SV1ewUAEmif+aQj5cJQ=9vbA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:32:37AM -0700, Paul E. McKenney wrote:
-> On Mon, Apr 06, 2020 at 11:22:59AM -0400, Joel Fernandes wrote:
-> > On Mon, Apr 06, 2020 at 08:20:57AM +0530, Madhuparna Bhowmik wrote:
-> > > On Sun, Apr 05, 2020 at 07:52:32AM -0700, Paul E. McKenney wrote:
-> > > > On Sun, Apr 05, 2020 at 06:10:31PM +0800, kernel test robot wrote:
-> > > > > Greetings,
-> > > > > 
-> > > > > 0day kernel testing robot got the below dmesg and the first bad commit is
-> > > > > 
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.03.21a
-> > > > 
-> > > > Is some of the required conversion still left to be done?  Or on its
-> > > > way up some other tree?
-> > > > 
-> > > > If either of these two, my normal approach would be to hold this commit
-> > > > back in order to give the fixes time to hit mainline.
-> > > > 
-> > > > But either way, please let me know!
-> > > >
-> > > Yes, some of the patches are not yet reviewed by maintainers and we will
-> > > resend them. Also, this report reports a few new ones that we haven't
-> > > fixed yet (need some help from maintainers to do so).
-> > > We are working on fixing them. May be holding the commit is a
-> > > good idea.
-> > 
-> > I am Ok with holding on to the commit for mainline. But I would like it into
-> > linux-next so that we and others can get some more velocity on fixing the
-> > remaining issues (and any maintainers who have not yet accepted patches to
-> > review those). We fixed most of them but there could be some more lurking.
-> > Paul, how does that sound?
+On Mon, Apr 06, 2020 at 03:29:18PM +0200, Ard Biesheuvel wrote:
+> > >
+> > > > Actually, it may be sufficient to #define __efistub_global to
+> > > > __section(.data) like we already do for ARM, to ensure that these
+> > > > global flags are always initialized correctly. (I'll wait for Sergey
+> > > > to confirm that the spurious enabling of the PCI DMA protection
+> > > > resulting from this BSS issue is causing the boot regression)
+> >
+> > Yeah I thought of that as the easiest fix, but it might be safer to
+> > explicitly zero-init in efi_main to avoid future problems in case
+> > someone adds another variable in bss and isn't aware of this obscure
+> > requirement. We actually already have sys_table in bss, but that one is
+> > always initialized. There's also other globals that aren't annotated
+> > (but not in bss by virtue of having initializers). What do you think?
+> >
 > 
-> Once v5.7-rc1 comes out, it sounds great!
+> *If* we zero init BSS, I'd prefer for it to be done in the EFI
+> handover protocol entrypoint only. But does that fix the issue that
+> BSS lives outside of the memory footprint of the kernel image?
 > 
-> (Just got my knuckles rapped (gently) for forgetting to pull this stuff
-> out of -next for all of last week.)
+
+Yes, I was thinking of only doing it if we didn't come through the
+pe_entry. We could also avoid re-parsing the command line if we add a
+global flag to indicate that.
+
+Regarding the memory footprint, if there's no initrd that might be a
+problem, since in that case ImageSize will only cover the actual data
+from the bzImage, so it would be safer to move them to data (including
+sys_table).
+
+We could just pull the stub's bss section all into data with objcopy
+similar to what ARM64 does [1]? i.e. rename .bss to .bss.efistub and
+then pull that into .data in the linker script for the compressed
+kernel?
+
+There is also this scary looking comment in gnu-efi's linker script:
+	/* the EFI loader doesn't seem to like a .bss section, so we stick
+	   it all into .data: */
+I don't know what the history of that is.
+
+[1] As an aside, why doesn't ARM do this as well rather than using the
+section(.data) annotation?
+
 > 
-> So early next week it returns to -next.
-
-Perfect, thanks!
-
- - Joel
-
+> > What do you think of the other problem -- that's actually worse to fix,
+> > as it won't just be when kaslr is disabled, the startup_64 code will do
+> > relocation to the end of init_size and clobber the initrd before getting
+> > to the kaslr code, so it will break as soon as the firmware loads the
+> > "unified kernel image" at a 2Mb-aligned address. The only thing I can
+> > think of is to just unconditionally call efi_relocate_kernel if we were
+> > entered via handover_entry?
+> >
+> 
+> Yes, that seems to be the most robust approach.
