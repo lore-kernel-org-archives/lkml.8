@@ -2,81 +2,153 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52EDC2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2742CC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7222072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8AE206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:00:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nPqNqzLG"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OkVibJfM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgDFUAX (ORCPT
+        id S1726407AbgDFUAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 16:00:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44326 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgDFUAX (ORCPT
+        Mon, 6 Apr 2020 16:00:30 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14025 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgDFUAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 16:00:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kqzeiCoDoOQ3qJWZZp8tCPOkIcKx/AKK5dlo5OJFP3g=; b=nPqNqzLGmw3vq6hNA7s5ptUQr3
-        uWDbaBu34UYbHaVwjlyp6TjveDEcBGTJ6jCF8Vc4JBtQJhdLPqa70GxSQFYeRgktCVTUcitQp1zmd
-        BaXdpg300jsfEkWPpQyA62uY2fVEttWsDdZWLMFH40+PEPNsrZTqiqx4PxJ+Dzdy3VXX81MoTmC7f
-        S9SUYQJsDdZx5mOAUU97DMKDEOZIuO0COqNxU9sv3j6iosr3mbizsk2MJ/q6Ovta8fb1LiomLnzro
-        S6DP+2ApMWRMuwmVZJiZLpMGFrWzVcndIMXNqtiKijryle8Daut1hUUw7yIVCtAX5oFQWeS2+QMcO
-        MeG8g8vA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLXuq-0006Gj-Nk; Mon, 06 Apr 2020 20:00:16 +0000
-Date:   Mon, 6 Apr 2020 13:00:16 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive data
- objects
-Message-ID: <20200406200016.GJ21484@bombadil.infradead.org>
-References: <20200406185827.22249-1-longman@redhat.com>
+        Mon, 6 Apr 2020 16:00:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8b8a500001>; Mon, 06 Apr 2020 13:00:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Apr 2020 13:00:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 13:00:29 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
+ 2020 20:00:29 +0000
+Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
+ 20:00:27 +0000
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <0809c1ae-57c9-508e-2959-724acc4ae068@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <378f0327-c5cd-6910-7d30-533354e89e7c@nvidia.com>
+Date:   Mon, 6 Apr 2020 13:00:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406185827.22249-1-longman@redhat.com>
+In-Reply-To: <0809c1ae-57c9-508e-2959-724acc4ae068@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586203216; bh=a+B6toPknxL+WZOxNj0oDHih81hp/Y5Auh402g2jYb8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=OkVibJfMkE97WaSQikxdiNt2CxvlYQJiuDU+50dmhHRAhQ/HUs5g2OTg1/FJNVZHs
+         +DOwlzkOY0x0M5OrIyjg/XLhsD4u5ngTnPJ07OXiqMlARZ+mB14xhKUU5hACZzXDav
+         oosatc90HiYPfPsY6gQcZHaOGcfz2jtOiezvJ9fNWKaZnEkUGEpivM7mygCFQcV287
+         Z77kO2bRCobMVWqD76GojdjYTujckIGe2PzjkQn4Nz4LuI/x+jJnYkKOzdvV5oEOtK
+         IWZa12wS6RP/UvSUItQvQtWna06N3/jWQwZJBUVvovh+saMDaeRSjvA65tvfL/WL+h
+         sQdqg9MNWc0uw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 02:58:27PM -0400, Waiman Long wrote:
-> +/**
-> + * kvfree_sensitive - free a data object containing sensitive information
-> + * @addr - address of the data object to be freed
-> + * @len  - length of the data object
 
-Did you try building this with W=1?  I believe this is incorrect kerneldoc.
-It should be @addr: and @len:
+On 4/6/20 12:48 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 04.04.2020 04:25, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>> +static int tegra_channel_capture_frame(struct tegra_vi_channel *chan,
+>> +                                    struct tegra_channel_buffer *buf)
+>> +{
+>> +     int err =3D 0;
+>> +     u32 thresh, value, frame_start, mw_ack_done;
+>> +     int bytes_per_line =3D chan->format.bytesperline;
+>> +
+>> +     /* program buffer address by using surface 0 */
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_OFFSET_MSB,
+>> +                  (u64)buf->addr >> 32);
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_OFFSET_LSB, buf->addr);
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_SURFACE0_STRIDE, bytes_per_line);
+>> +
+>> +     /*
+>> +      * Tegra VI block interacts with host1x syncpt for synchronizing
+>> +      * programmed condition of capture state and hardware operation.
+>> +      * Frame start and Memory write acknowledge syncpts has their own
+>> +      * FIFO of depth 2.
+>> +      *
+>> +      * Syncpoint trigger conditions set through VI_INCR_SYNCPT registe=
+r
+>> +      * are added to HW syncpt FIFO and when the HW triggers, syncpt
+>> +      * condition is removed from the FIFO and counter at syncpoint ind=
+ex
+>> +      * will be incremented by the hardware and software can wait for
+>> +      * counter to reach threshold to synchronize capturing frame with =
+the
+>> +      * hardware capture events.
+>> +      */
+>> +
+>> +     /* increase channel syncpoint threshold for FRAME_START */
+>> +     thresh =3D host1x_syncpt_incr_max(chan->frame_start_sp, 1);
+>> +
+>> +     /* Program FRAME_START trigger condition syncpt request */
+>> +     frame_start =3D VI_CSI_PP_FRAME_START(chan->portno);
+>> +     value =3D VI_CFG_VI_INCR_SYNCPT_COND(frame_start) |
+>> +             host1x_syncpt_id(chan->frame_start_sp);
+>> +     tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYNCPT, value);
+>> +
+>> +     /* increase channel syncpoint threshold for MW_ACK_DONE */
+>> +     buf->mw_ack_sp_thresh =3D host1x_syncpt_incr_max(chan->mw_ack_sp, =
+1);
+>> +
+>> +     /* Program MW_ACK_DONE trigger condition syncpt request */
+>> +     mw_ack_done =3D VI_CSI_MW_ACK_DONE(chan->portno);
+>> +     value =3D VI_CFG_VI_INCR_SYNCPT_COND(mw_ack_done) |
+>> +             host1x_syncpt_id(chan->mw_ack_sp);
+>> +     tegra_vi_write(chan, TEGRA_VI_CFG_VI_INCR_SYNCPT, value);
+>> +
+>> +     /* enable single shot capture */
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_SINGLE_SHOT, SINGLE_SHOT_CAPTURE);
+>> +     chan->capture_reqs++;
+>> +
+>> +     /* wait for syncpt counter to reach frame start event threshold */
+>> +     err =3D host1x_syncpt_wait(chan->frame_start_sp, thresh,
+>> +                              TEGRA_VI_SYNCPT_WAIT_TIMEOUT, &value);
+> What is the point of waiting for the frame-start? Why just not to wait
+> for the frame-end?
 
-Also, it reads better in the htmldocs if you capitalise the first letter
-of each sentence and finish with a full stop.
+Tegra vi supports double buffering where up on receiving frame start=20
+before HW received frame end and finish writing capture data to memory,=20
+we can issue next frame as well a head.
 
-> @@ -914,7 +911,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
->  		 */
->  		if (ret > key_data_len) {
->  			if (unlikely(key_data))
-> -				__kvzfree(key_data, key_data_len);
-> +				kvfree_sensitive(key_data, key_data_len);
+Also MW_ACK timeout can happen incase of HDMI2CSI bridges as well when=20
+hdmi hot plug happens.
 
-I'd drop the test of key_data here.
+For some sensors down the road we may need to skip few frames in case of=20
+frame start timeout as well which comes later with subsequent patch series.
 
