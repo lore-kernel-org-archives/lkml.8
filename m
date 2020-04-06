@@ -2,124 +2,157 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2E4C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BFDC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C8320672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC37206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZnUnwZQ"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pIMXjGrj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Fyyi3KV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgDFI1Y (ORCPT
+        id S1726671AbgDFI1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:27:24 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:32796 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgDFI1Y (ORCPT
+        Mon, 6 Apr 2020 04:27:36 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33203 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbgDFI1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 04:27:24 -0400
-Received: by mail-wr1-f43.google.com with SMTP id a25so16359054wrd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 01:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=55a3ErFUzwi21OsaY2azC2jkNniTZaL9xFoaJMyXUts=;
-        b=vZnUnwZQ1qXHKPZWX9+n3t/3eu+4bLYPi6ploQCBGr2mO6XDyM+5moogDuVDP5C2E0
-         0fWMGbfcau+ZSAOFIMEtSHXueEnHV++vJN+YCDqRJyiF2EuYCIWyOpzLYn1U4aFLSuzM
-         rOR75n4gmmGORVuj3EQgVQFfBJmtjls9BN4lixj3Pf7rzDSoQzhLh3MCdS+lQct3KzGX
-         4dCXSxEt0ATG1uiz1vQcMavWBrh9LtDK8/VPJefOXf1COF7IuGnhHz1hy/OQ5tfbvreU
-         yQdz6C1+IeKUnmNLrxF3RwVQKZPsVW+3foLqVTM4EMnDrlzlNcOMbFlT0EFxMuhk/M/K
-         GHJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=55a3ErFUzwi21OsaY2azC2jkNniTZaL9xFoaJMyXUts=;
-        b=C1gKj4XQKDr+xQaYFA16ePBii+0d5YAU9aP6qU2oOtRSVTtpDdYVnMZP7DnylwM5cZ
-         yzGKl8XvYg4hGPx9rCDZO78XfDhUsM1gLTJotZCGc+mB8fWEq7o9zW27iJgS0aX1Ojfe
-         tRkHa0xm9HxXtsy4G3k9Aceu9LLhcxlE4b3fNHrV6U6d7I28OD4J2dzbXJUH8sUfdr8E
-         sutnVf6gsCxKxVwZW/0How05LzSY7XI9zkfOMBtozkNlW5hgBgfe6BA9SPvX01klOTmS
-         cu+o/v7uCYR1EjkPzD4zKvN6uvHubyEM4hVsecGCPlL0eB+iAib9fudiZExauGXcuUcS
-         2t2g==
-X-Gm-Message-State: AGi0Pua0SqtFC0K97lVFWleIuGCZ6+eFz+liyycDiKFWE7tsqwongl9a
-        fN0ETlfHhxSFxWMsuWofzFYNHaMP
-X-Google-Smtp-Source: APiQypJLN67xNTSrQ/sLaRRm40PviBXbgVl5KjikszA4PoZlueozEyPgWcG4LCvJHjec39ZOyIFK2Q==
-X-Received: by 2002:a05:6000:1205:: with SMTP id e5mr24179604wrx.73.1586161642322;
-        Mon, 06 Apr 2020 01:27:22 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id f3sm24957862wmj.24.2020.04.06.01.27.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 01:27:21 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 10:27:20 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     ebiederm@xmission.com, kexec@lists.infradead.org
-Cc:     mripard@kernel.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Trying to kexec on Allwinner A80
-Message-ID: <20200406082720.GA31279@Red>
+        Mon, 6 Apr 2020 04:27:36 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 273DE5800E5;
+        Mon,  6 Apr 2020 04:27:35 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 06 Apr 2020 04:27:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=f9JBRr+XhbC+CvGSQhNRe2L/ERw
+        IGY84ZpI4+IQemfM=; b=pIMXjGrj8l2gSjLhTowqJmg7cVKQfqQQNt7JH5RcSJm
+        525J+EbU3EjWe1RfHZKli13PSS+kuMRl5UmgyAJRLT04uiEAyCW992YS77jZJQlv
+        +rKHmvMMkkGM323eZBDxE0i4KejgnvxwFTbtvOvn8eYeBx6Vt9roYtaYeFxuwwGR
+        ntELBKF5gXG5ZFAPe9Xmh5NpT3VEX5qWzW4gHRUctnBFfq6EsvA7IzvLvKi5f6ft
+        Th/J7u+AO8wvG7KJbt8VE2/IU7GPJ0KWU5ObV7oy6HqN6N4l/T2JuV5SjXCOZqVI
+        I3aarBglXwIs3TCwi1S8a+0o+57zuOqHlrI8z++kiTw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=f9JBRr
+        +XhbC+CvGSQhNRe2L/ERwIGY84ZpI4+IQemfM=; b=Fyyi3KV32nrPIy5vKGKxZS
+        IPq6wIkkMSPOYi3wHBbzrFi4xMfDJAt/HL21FD4ZqqqX6Kp3SA+KCmXewcLFFhni
+        wzcg+bdztWsQlxbLIa85taJokNN+PvZ2+Yv+aQZi202x7Krrdysg1/2TkwGR1Qxy
+        dBF8NCoTdTClJP7bRojjClayTFD2NfEw+0NwRD6Xc4x4jWej7NLBkyVsBdq2GGL3
+        bLa4oLsOB5xpPkLlRybtCT5Q8TyFf2Ul+UbWSnrtg+o3+YeRgxPs0bMdt8juNDJJ
+        DoUsKIC7NTC+1wQxL+qrq8gqgzCkUjvr/ikPXG5io3scq/dpdfq8NT0xNpN1I7Mw
+        ==
+X-ME-Sender: <xms:9ueKXgHAd-e8n3CVwVMaAsGp9RwZEzFn6T02Txh1Tcs6FfzeXmoyCg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefgddthecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmpdgrrhhmsghirghnrdgtohhmnecukfhppeeltddrkeelrdei
+    kedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:9ueKXjTHNe2AxKtGcT-xwXSuJYwf7qgEPNS-ODthj-q8CV2sROePSw>
+    <xmx:9ueKXgez-eoeh12lrwjYhPKHWA_mlW6Bc9RvN24HMxqMYGVEJ_WtXQ>
+    <xmx:9ueKXokawD1_rDrtS5Bt-hUvRn2gDnrKqpoU4Qjg4wlFb56TEBgIqQ>
+    <xmx:9-eKXoLhLrHQKi8juWiUQl6jMggIZQ8QIY1ToWq_i4HFyzgrZ2cd2g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E8DB8328005D;
+        Mon,  6 Apr 2020 04:27:33 -0400 (EDT)
+Date:   Mon, 6 Apr 2020 10:27:32 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [RFC PATCH] PCI: dwc: add support for Allwinner SoCs' PCIe
+ controller
+Message-ID: <20200406082732.nt5d7puwn65j4nvl@gilmour.lan>
+References: <20200402160549.296203-1-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bxu46sevqgfhv5v4"
 Content-Disposition: inline
+In-Reply-To: <20200402160549.296203-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
 
-I am trying to add the last missing Allwinner Soc in kernelci: the A80.
-But this SoC does not have any way to be used in kernelci, no USB nor network in uboot.
-So I have tried to fake uboot since the kernel has network support and run the new kernel via kexec.
+--bxu46sevqgfhv5v4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-But kexec 2.0.18 fail to work:
-kexec --force /tmp/kernel --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
-syscall kexec_file_load not available.
-Try gzip decompression.
-kernel: 0xb6535008 kernel_size: 0x853200
-MEMORY RANGES
-0000000020000000-000000009fffffff (0)
-zImage header: 0x016f2818 0x00000000 0x00853200
-zImage size 0x853200, file size 0x853200
-zImage requires 0x00864200 bytes
-  offset 0x0000bae4 tag 0x5a534c4b size 8
-Decompressed kernel sizes:
- text+data 0x0158b3a0 bss 0x000632f0 total 0x015ee690
-Resulting kernel space: 0x01def5a0
-Kernel: address=0x20008000 size=0x01def5a0
-Initrd: address=0x21df8000 size=0x0090b6fa
-DT    : address=0x22704000 size=0x00005c09
-kexec_load: entry = 0x20008000 flags = 0x280000
-nr_segments = 3
-segment[0].buf   = 0xb6535008
-segment[0].bufsz = 0x853204
-segment[0].mem   = 0x20008000
-segment[0].memsz = 0x854000
-segment[1].buf   = 0xb5c29008
-segment[1].bufsz = 0x90b6fa
-segment[1].mem   = 0x21df8000
-segment[1].memsz = 0x90c000
-segment[2].buf   = 0x4db50
-segment[2].bufsz = 0x5c09
-segm[   71.039126] kexec_core: Starting new kernel
-ent[2].mem   = 0[   71.044712] Disabling non-boot CPUs ...
-x22704000
-segment[2].memsz = 0x6000
-[   71.489070] Bye!
+Hi,
 
+On Fri, Apr 03, 2020 at 12:05:49AM +0800, Icenowy Zheng wrote:
+> The Allwinner H6 SoC uses DesignWare's PCIe controller to provide a PCIe
+> host.
+>
+> However, on Allwinner H6, the PCIe host has bad MMIO, which needs to be
+> workarounded. A workaround with the EL2 hypervisor functionality of ARM
+> Cortex cores is now available, which wraps MMIO operations.
+>
+> This patch is going to add a driver for the DWC PCIe controller
+> available in Allwinner SoCs, either the H6 one when wrapped by the
+> hypervisor (so that the driver can consider it as an ordinary PCIe
+> controller) or further not buggy ones.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> There's no device tree binding patch available, because I still have
+> questions on the device tree compatible string. I want to use it to
+> describe that this driver doesn't support the "native Allwinner H6 PCIe
+> controller", but a wrapped version with my hypervisor.
+>
+> I think supporting a "para-physical" device is some new thing, so this
+> patch is RFC.
+>
+> My hypervisor is at [1], and some basic usage documentation is at [2].
+>
+> [1] https://github.com/Icenowy/aw-el2-barebone
+> [2] https://forum.armbian.com/topic/13529-a-try-on-utilizing-h6-pcie-with-virtualization/
 
-I have tried also kexec-2.0.20
-Try gzip decompression.
-zImage header: 0x00000000 0x000019b4 0x00001000
-zImage requires 0x008641c0 bytes
-Could not find a free area of memory of 0x86c1c0 bytes...
-Cannot load /tmp/kernel
+I'm a bit concerned to throw yet another mandatory, difficult to
+update, component in the already quite long boot chain.
 
-What can I do for made it working ? I probably need to give it some memory address, but I am a bit loss.
+Getting fixes deployed in ATF or U-Boot is already pretty long, having
+another component in there will just make it worse, and it's another
+hard to debug component that we throw into the mix.
 
-Thanks
-Regards
+And this prevents any use of virtualisation on the platform.
+
+I haven't found an explanation on what that hypervisor is doing
+exactly, but from a look at it it seems that it will trap all the
+accesses to the PCIe memory region to emulate a regular space on top
+of the restricted one we have?
+
+If so, can't we do that from the kernel directly by using a memory
+region that always fault with a fault handler like Framebuffer's
+deferred_io is doing (drivers/video/fbdev/core/fb_defio.c) ?
+
+Maxime
+
+--bxu46sevqgfhv5v4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorn9AAKCRDj7w1vZxhR
+xdV6AP4y+CTh2KPAJf/qouRZrEmCvj19E23Xp9w67VLU9qZHBQD7BVzW6hD0E0oG
+LnBT9kYGbeef7keRU4XuDbLzxH3hzQc=
+=0eCj
+-----END PGP SIGNATURE-----
+
+--bxu46sevqgfhv5v4--
