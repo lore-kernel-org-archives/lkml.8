@@ -2,128 +2,93 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09A7C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12726C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93FA206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:11:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="HWFrAsg7"
+	by mail.kernel.org (Postfix) with ESMTP id CDF952072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586171572;
+	bh=MtJm1ZXy274Rt4S8/t5pgen0tFyzkY5ae3KXw6x6In4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c1qhiBFHXIKQBHeEoUXmQNi/hD2ADLVT2iJX12mQLgwxUk9BSYdM7IZrRWWmBI4Ht
+	 KiZHzP9IkkCo6yD/EZDPhL2/CG557dHKFPRMoKMzUocOjdKiUM+Eem4LCa4apaB6Wi
+	 Uw/LgCXrnYgx2CKTiOBVWxTRIZBbG+0pUYb10qdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgDFLLq (ORCPT
+        id S1727409AbgDFLMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:11:46 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17841 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726873AbgDFLLq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:11:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586171466;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=Y6H0UZ+rUE7MyyGuh8+kpzPUZz7EvzhkzLuIA8Y0cbg=;
-        b=HWFrAsg7jj35y2hzV4v4EB/Vet6MmdhW8rHbiJqCjULfMr4nsnIZ5ptGmbdFJmDk
-        dIcucmWMia4qv2vFhFt5xI3ACXET5zYtyeDZK1Rz1aw+8JCKFDtX1J6oWZwQDOqfrvP
-        oK6FPcbPjG5XBHjV95efIMLBYsAo5PNICq63hU3o=
-Received: from [26.26.26.1] (115.193.87.168 [115.193.87.168]) by mx.zoho.com.cn
-        with SMTPS id 1586171461806156.29970469650766; Mon, 6 Apr 2020 19:11:01 +0800 (CST)
-Date:   Mon, 06 Apr 2020 19:10:58 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAKcpw6U=VW+h4sU1fzrsqXU9z-zVfcFsENKHgAD4paqtndip2w@mail.gmail.com>
-References: <20200405082451.694910-1-jiaxun.yang@flygoat.com> <alpine.LFD.2.21.2004051738000.4156324@eddie.linux-mips.org> <96C9B1A0-2F89-4650-B0A4-6A6242A2AA0A@flygoat.com> <alpine.LFD.2.21.2004051817310.4156324@eddie.linux-mips.org> <CAKcpw6U=VW+h4sU1fzrsqXU9z-zVfcFsENKHgAD4paqtndip2w@mail.gmail.com>
+        Mon, 6 Apr 2020 07:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726873AbgDFLMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:12:51 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 711A9206F8;
+        Mon,  6 Apr 2020 11:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586171571;
+        bh=MtJm1ZXy274Rt4S8/t5pgen0tFyzkY5ae3KXw6x6In4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lNHthtXXVAZNLmOMZ96NGSDiYyfoZhPYjEMJKtUifhay6eh9SXGgyIehffxgM+sxh
+         B8Rs4JGbzAnLTxPe1UErYuV9SemkVmkobtrBLQ96RC1+maODilYaeozsPW6/X7gyCb
+         dJrTUI2RhDh+0wHqRGtnSahzuWKdo2K5t+GZz32U=
+Date:   Mon, 6 Apr 2020 12:12:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
+Subject: Re: [PATCH] ASoC: qcom: common: Silence EPROBE_DEFER messages
+Message-ID: <20200406111248.GB6837@sirena.org.uk>
+References: <20200406003656.2383978-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] MIPS: malta: Set load address for 32bit kernel correctly
-To:     YunQiang Su <wzssyqa@gmail.com>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-CC:     linux-mips <linux-mips@vger.kernel.org>,
-        Fangrui Song <maskray@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <079F408B-9C44-4317-8DD3-7A1896564960@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Content-Disposition: inline
+In-Reply-To: <20200406003656.2383978-1-bjorn.andersson@linaro.org>
+X-Cookie: Serfs up!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-=E4=BA=8E 2020=E5=B9=B44=E6=9C=886=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=886:=
-57:18, YunQiang Su <wzssyqa@gmail=2Ecom> =E5=86=99=E5=88=B0:
->Maciej W=2E Rozycki <macro@linux-mips=2Eorg> =E4=BA=8E2020=E5=B9=B44=E6=
-=9C=886=E6=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8A=E5=8D=881:23=E5=86=99=E9=81=93=
-=EF=BC=9A
->>
->> On Mon, 6 Apr 2020, Jiaxun Yang wrote:
->>
->> > > Given the description above I think it should be done uniformly
->and
->> > >automatically across all platforms by trimming the address
->supplied
->> > >with
->> > >$(load-y) to low 8 digits in a single place, that is at the place
->where
->> > >
->> > >the variable is consumed=2E  This will reduce clutter across
->Makefile
->> > >fragments, avoid inconsistencies and extra work to handle
->individual
->> > >platforms as the problem is triggered over and over again, and
->limit
->> > >the
->> > >risk of mistakes=2E
->> >
->> > I was intended to do like this but failed to find a proper way=2E
->> >
->> > Makefile isn't designed for any kind of calculation=2E
->> > And shell variables are 64-bit signed so it can't hold such a huge
->variable=2E
->> >
->> > Just wish somebody can give me a way to do like:
->> >
->> > ifndef CONFIG_64BIT
->> > load-y =3D $(load-y) & 0xffffffff
->> > endif
->>
->>  Use the usual shell tools like `sed', `cut', `awk', or whatever we
->use in
->
->perl may be the easiest to use tool here=2E
->
->ifndef CONFIG_64BIT
->  load-y :=3D $(shell $(PERL) -e 'print $(load-y) & 0xffffffff')
->endif
->
->Note that it is `:=3D' instead of '=3D'=2E
+On Sun, Apr 05, 2020 at 05:36:56PM -0700, Bjorn Andersson wrote:
+> The Qualcomm sound card typically depends on several other drivers,
+> resulting in plenty of noise in the kernel log due to probe deferral.
+> Silence these errors.
 
-It seems like perl is not one of kernel's build dependencies=2E[1]
-I'm comsidering a alternative solution,
-write a small hostprog in C to deal with that=2E
+This then means that if something is missing a depdenceny it becomes
+impossible to tell what the problem is from the logs.  Please at most
+reduce these to a dev_dbg().
 
-Thanks=2E
+--oC1+HKm2/end4ao3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[1]: https://www=2Ekernel=2Eorg/doc/html/v5=2E6/process/changes=2Ehtml
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6LDq8ACgkQJNaLcl1U
+h9AnqAf/WP5/shM+o0NVDoSTzFDUIwsFx0+zD0HAUSjwRszIvxR7LzYmyk4crsOI
+izVV3xQVPYb1Ra+nGtGTEdJbU5UqJ5H7GDAHFCE0D4/eb2VP8qPCWYv+GWt9ipZz
+lopYieoo8ws+7qnd6l/DMfSjj2Ik7eSsIPUMmL4YOiUACTF1ypqtAzG0NF5bs0pR
+jtgllpDgeOwJwHKel+Lz7edKrHxqaQtPk5LdlxOqGbQU4Mm3isGP6oRAROn0p+iG
+P08qGMACi1nUfCe31/lym4z0bTOd9QCy7OXe/oIqJ2DvLdnZ/ASbRweGUWSbnxBU
+JljNw+dvdosofc2QP/WFVlg2jC9p+w==
+=gEl1
+-----END PGP SIGNATURE-----
 
->
->> the kernel build already for other purposes=2E  There's no need to do
->any
->> actual calculation here to extract the last 8 characters (and the
->leading
->> `0x' prefix)=2E  At worst you can write a small C program, compile it
->with
->> the build system compiler and run, as we already do for some stuff=2E
->>
->>   Maciej
-
---=20
-Jiaxun Yang
+--oC1+HKm2/end4ao3--
