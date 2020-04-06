@@ -2,152 +2,230 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3442EC2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CAAC2BA18
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF87D20719
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B5A206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Fe0PliU9";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="f1sZnWZ9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLeI6KcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgDFFbi (ORCPT
+        id S1726520AbgDFFdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 01:31:38 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:61308 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgDFFbi (ORCPT
+        Mon, 6 Apr 2020 01:33:09 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41417 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgDFFdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 01:31:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1586151098; x=1617687098;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=rEVo8awS9PFxy8otrsqLyO6CH4zUofRhBdNyX92y23U=;
-  b=Fe0PliU9vIoorksevycsYO1sJFNtc40KP6gNGqU3IzR8lBrIUKuDpQsS
-   g5J0hkbrTM/VT9Z/wxxW3FMeJv51h98cUNPXyYAZgrom1lelOxbJwlFiw
-   m8KMqTNWPmD8UCeKjkrP1A01POCjXSD8wrh5zr6kvhYSUvydFTyFYzx36
-   MZvXzwjfVJhfrCbSvSNEtk+gW6QF/HBJg3oZYqEab3G5IXOng5pwoiUjE
-   av4PIhgW8bRsuRd3UVexg4RoZlfEvYY08Satgvl18kllu+OG5NRPkkITS
-   Vhra8NI5e92KYBUVPaqdkXTbgTA0D44bkAtZq67xcfXgh4KrJvLTxJyxb
-   A==;
-IronPort-SDR: Vg0wVTbzaigO/dFugHiQG2x19oTzlw17Xx9x2EIi3YCp+rF6BXEqc+o8pzR1Xze4DQcn49Gpvz
- 6fcnz6XeoQh/sjsnjM9jensvWtWgHHdALGpiIukPPxWF3QOM0k8P3fo7p9W6R+8/uOQKwi7z7H
- V+p8d4cOUTO91QNLTpwZLXeMR22Oq9mwzm9C7P3vamcBp2p++lXm4qnVb7pbUiS7epYkRUbGJX
- q25ZbW7Cgo9nJEQhS7f/8eNRR3RAYe7q70+G1j7hSk3YIGVZfwxHmjjT5XvF7dpELgz1ZJUl4L
- aOQ=
-X-IronPort-AV: E=Sophos;i="5.72,350,1580799600"; 
-   d="scan'208";a="71508858"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Apr 2020 22:31:38 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 5 Apr 2020 22:31:37 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Sun, 5 Apr 2020 22:31:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h8LXu9us0iuHPD+ZG2xNAZani2WC6JcsVjZmKO4oHQdQ+YKOQrFg4cUVVMqZXWUrhA7XVmJokTGRPz6AiTybO35HXyc+CH5ICRUEqhqGqZcaT++kqAzvTP96mHddYfI5gNAKiUKHacabDABNyQtzI/032ZbIdchBSwSRmua+gZL007sMVrxcVnTA6M1f0LPj8B2x1Cbm1NyjDTCC1WDhekUw66BS0T3suKZ9GqMvXZ7ZGnYBQOM8Z+0PXhU+jIugos4b8gmQNw+virEwWZ777jxhVVIBUlHS9qqzFrBA4wyTKEjlYC+ujsD2Rx3jN7ZzLP4OKkaMCo202SlZrnjFMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5BKY2ttueTi4th5yzdv7hEFWGPkw9ZzF+mkmvNrhYL4=;
- b=hxtHFlH5EUYwhHbn+pf0xOyhKR0dTbs3Sj73EXNQbhYjuJAFXm27KzO/KrOkd13NpXMUrCq01Zmkn4hkjbJoSp0tTNm44SN/PWU1rYxo6vww71HX9/CS+AiYjHwWVSJx0XO9Y5y6u6ubJ7qG+MrLyXSST6rUV8nL/aj4JthmC2Ehguy6xnbjQhWSAEQyuufG3vW65MMZL2xb1FhYLRfgPT2UMjFTp4/JLOlShzFfSYgW0oGLqwHSElRm167rmQsFBb6EZBj16gdjS/G2Tt+5If70ZPtQig926gDNuf26f3EdbzUH58RfJQ6v7XgOHIf27rYs3/kM2RtsGB5CbOtIVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+        Mon, 6 Apr 2020 01:33:08 -0400
+Received: by mail-lj1-f193.google.com with SMTP id n17so13230733lji.8
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 22:33:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5BKY2ttueTi4th5yzdv7hEFWGPkw9ZzF+mkmvNrhYL4=;
- b=f1sZnWZ91Kt95Z+gh93AuClfOkMevRCoAn8y/knj9SDq7cSYFyMIcffIEMPTzJywa3AyMG7xOGHlPu8ORp5STyWol90tP18Hb/SXMDvTLXrOwcQm+ciOrD+cvCOQHwhYMXCQ2sL+xjhukw64PdUwcbDe3T1yI2BdCI7bstJb0es=
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
- by BY5PR11MB4258.namprd11.prod.outlook.com (2603:10b6:a03:1c2::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Mon, 6 Apr
- 2020 05:31:33 +0000
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::e918:9196:b47e:9692]) by BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::e918:9196:b47e:9692%3]) with mapi id 15.20.2878.018; Mon, 6 Apr 2020
- 05:31:33 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <linux-mtd@lists.infradead.org>, <linux@roeck-us.net>
-CC:     <vigneshr@ti.com>, <bbrezillon@kernel.org>, <richard@nod.at>,
-        <linux-kernel@vger.kernel.org>, <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH] mtd: spi-nor: Compile files in controllers/ directory
-Thread-Topic: [PATCH] mtd: spi-nor: Compile files in controllers/ directory
-Thread-Index: AQHWCpbheDXg/soJeESDZN/ft7XJMKhrlBQA
-Date:   Mon, 6 Apr 2020 05:31:33 +0000
-Message-ID: <1671412.OU26QM6KFd@192.168.0.120>
-References: <20200404153631.103549-1-linux@roeck-us.net>
-In-Reply-To: <20200404153631.103549-1-linux@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Tudor.Ambarus@microchip.com; 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b0fcea1f-118f-460d-7ed7-08d7d9ebc4a2
-x-ms-traffictypediagnostic: BY5PR11MB4258:
-x-microsoft-antispam-prvs: <BY5PR11MB4258D4153DBBB872B14924C5F0C20@BY5PR11MB4258.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0365C0E14B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(346002)(396003)(39850400004)(136003)(366004)(376002)(110136005)(66946007)(64756008)(66556008)(66446008)(81166006)(66476007)(53546011)(6506007)(5660300002)(76116006)(6512007)(478600001)(2906002)(9686003)(4326008)(4744005)(14286002)(6486002)(81156014)(8936002)(8676002)(54906003)(71200400001)(91956017)(26005)(316002)(86362001)(186003);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lvieLi75VynzYNZgi1cdOMmHEprRKoOpeE1MGEln9wVtTVhh2jjyuHp00zc4U197xIY9u32xBaJVVbceKOPkAr0VfYDQ+dFtb10VP0jQE7syzpTe6TvSfHQuGuf+UhU4McapQqxYguS8uQbSTzBz5+ZbUcsUpJixOiYrH1DFmUx37tHauHwGccY/Sk/PAMy2ZwiwV8a9AMyGds+HvBJePZBnviaChd7TqENh7kTBCd+pTjP/7MrfgkK+VYF2hp0Sm6EglV3/UPC8Ea6X6qwl3YpdIJfmH2ZjgsLaTHzlPUeeoRgG6V1heYv+Fe/C9sQTu2WA506zYPxID89aOHK+vlhz8GyvKP0rMZcB+rIX2FBEfUxMF0lvhLNHVggq2bdrwbCa+y/O9Z8MAkh0wi8JBk/NROYv48/sSvPjINlC9qA2vK6ZEwFvD03rJSN67Cp5
-x-ms-exchange-antispam-messagedata: vqJ8Uf/wsjpTR8OhWc6pN6XGRhO2m2FWAbvTRStkI18XZqNz3aqeyXeYAZjn5VgflbVHo09wPMyNC7z7iOwjt6ExAXnxZ6Pf3Aole6bJyfI72KV0yancSuzURkzN7jx5kyopMem0/1eiW/ewY1J2GQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <099568A3620FF145BBF31887C201726E@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=Vy4sPe40TgmNn9QaQzfa5wOoqy2O7KW0J1Zr/o5gzHw=;
+        b=WLeI6KcQCXZxgYY9fnWxwa+NEvHn/rkhh3atkX/ys6V5VKLXvICyOsUg1wMv36mGHy
+         wPMJRzQ6kP1rj/Q3yPZpTK8Za4vTlbH6dZz0BFbA4e2WBNsBrTl++QIllh6WELEbaxua
+         dmS2ArM+zomG12E00pc/td/7g8NFXrhlq/D2T3s+Kh/UyEbKDuKKUI4drr7hzqR9p0fA
+         ALvi2atQ0DxvruLBNGrcGWLhEoU6ID3RtQOn2PjxC4Snx19wdxq/zxvSc1aAItaVwhic
+         ayw3WBuQ5w3RGs8ylznPUow9wXGpNjKq4pSQhl/iodbdLHs2H1eqVyDdf7P6HBNkdCK1
+         oqDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=Vy4sPe40TgmNn9QaQzfa5wOoqy2O7KW0J1Zr/o5gzHw=;
+        b=rl3cYcika/+3MolZ/GlHW+yfST+fQFGF19yZmRJl4+V+dXAk19l04M4qaAx4gaU3oG
+         KXeAHbpXlqPHahfUOGKMYjGfmj4VndXW/aMRBNY8vB538m4qf5Jc7sDrta1aQea2cr7X
+         O2g2ymk9TNG9m2NualoX547qVThK40MXiI40Xl/Qk9pOzkFsw39GrWPvQ5qw4xhfQD+F
+         9vYbwPDSi6ELtXMBO55dh47eTfqUOS3Nt2FKEFMCijFyjPMiqkBOii9oY6v/S5KoTzyc
+         CX2SRuO1S+qdFRK4T+nlUhKE0aWdTm6tGxsksM4AcflPZ47cPTPvpouBT7Mhs1JFHVZN
+         nhyA==
+X-Gm-Message-State: AGi0PuYsbAWX8NQmchynOWtihRyDSwsjTr3xyX5kKiLvIm0jOhYu6h4t
+        /nT/ordBtEbiDflUvKFeCwhkeHUMQTH73Igird4=
+X-Google-Smtp-Source: APiQypIZ08IdPbNWdhQyjbv8MazVODb/SRGCa8fRPaoAsI3S3eHysg89+WYymxTviToAWG2k8Y13c6qqS9FK2Nz8Cmk=
+X-Received: by 2002:a2e:8105:: with SMTP id d5mr11035910ljg.196.1586151184392;
+ Sun, 05 Apr 2020 22:33:04 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0fcea1f-118f-460d-7ed7-08d7d9ebc4a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2020 05:31:33.4081
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MTibZuLHc+F41PIcEhZ9aVLiCGwe5QXO4Bo5SyPW9M/MXsAZeGudMNTBzsEr0pFw2grUf8bKD6vVJ/e2hpKsnsPOxB00Z6IWhq/kWUtcw8U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4258
+Received: by 2002:ac2:4a77:0:0:0:0:0 with HTTP; Sun, 5 Apr 2020 22:33:03 -0700 (PDT)
+In-Reply-To: <20200405164006.GA1582475@kroah.com>
+References: <1586102749-3364-1-git-send-email-zhangfeionline@gmail.com> <20200405164006.GA1582475@kroah.com>
+From:   Fei Zhang <zhangfeionline@gmail.com>
+Date:   Mon, 6 Apr 2020 13:33:03 +0800
+Message-ID: <CAC_binJNLLxfOm0W2TuVTJZxJRTZTvPPocSDNQMU=21XO37oZg@mail.gmail.com>
+Subject: Re: [PATCH] driver core: Fix possible use after free on name
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        songmuchun@bytedance.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday, April 4, 2020 6:36:31 PM EEST Guenter Roeck wrote:
-> Commit a0900d0195d2 ("mtd: spi-nor: Prepare core / manufacturer code
-> split") moved various files into a new directory, but did not add the new
-> directory to its parent directory Makefile. The moved files no longer
-> build, and affected flash chips no longer instantiate.
->=20
-> Adding the new directory to the parent directory Makefile fixes the
-> problem.
->=20
-> Fixes: a0900d0195d2 ("mtd: spi-nor: Prepare core / manufacturer code spli=
-t")
-> Cc: Boris Brezillon <bbrezillon@kernel.org>
-> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  drivers/mtd/spi-nor/Makefile | 2 ++
->  1 file changed, 2 insertions(+)
+Dear Greg,
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Please refer to below for the crash. If you are fine with it, I will
+submit another patch with correcting the error mentioned.
 
-I missed that somehow, sorry. Thank you for the fix, Guenter!
+When writing a kernel driver module, we may use it like this:
 
+static int frv_init(int index)
+{
+...
+	char name [128]={0};
+	sprintf(name,"test_%d",index);
+	mount_dev_p->pci_class =class_create(THIS_MODULE,name);
+	classdev = device_create(mount_dev_p->pci_class, NULL, devno,
+	NULL, "PCIE_%x",index);
+...
+}
+
+static void frv_exit(void)
+{
+...
+	device_destroy(mount_dev_p->pci_class,mount_dev_p->devno);
+	class_destroy(mount_dev_p->pci_class );
+...
+}
+
+But when we remove the module, a crash occurres when calling
+device_destroy.
+
+Call Trace:
+ vsnprintf+0x2b2/0x4e0
+ add_uevent_var+0x7d/0x110
+ kobject_uevent_env+0x23f/0x770
+ kobject_uevent+0xb/0x10
+ device_del+0x23b/0x360
+ device_unregister+0x1a/0x60
+ device_destroy+0x3c/0x50
+
+I traced the code and found that an invalid local variable was called
+in "kobject_uevent_env()", and triggered further crash as followed:
+
+kobject_uevent_env(...)
+{
+...
+struct kset_uevent_ops *uevent_ops;
+uevent_ops = kset->uevent_ops;
+subsystem = uevent_ops->name(kset, kobj);
+add_uevent_var(env, "SUBSYSTEM=%s", subsystem);
+...
+}
+
+What is the "subsystem" value, continue to track.
+
+static const struct kset_uevent_ops device_uevent_ops = {
+	.name =		dev_uevent_name,
+};
+
+static const char *dev_uevent_name(struct kset *kset, struct kobject *kobj)
+{
+	struct device *dev = kobj_to_dev(kobj);
+	if (dev->class)
+		return dev->class->name;
+	return NULL;
+}
+
+Everything becomes clear: "class->name" and "subsystem" value is local
+variable array address of start module function inside "char name [128]".
+Used released local variable in device_destroy's kobject_uevent_env, an
+error occurred.
+
+Thanks,
+Fei
+
+2020-04-06 0:40 GMT+08:00, Greg KH <gregkh@linuxfoundation.org>:
+> On Sun, Apr 05, 2020 at 09:05:49AM -0700, zhangfeionline@gmail.com wrote:
+>> From: PengfeiZhang <zhangfeionline@gmail.com>
+>>
+>> __class_create() copies the pointer to the name passed as an
+>> argument only to be used later. But there's a chance the caller
+>> could immediately free the passed string(e.g., local variable).
+>> This could trigger a use after free when we use class name(e.g.,
+>> dev_uevent_name()called by device_destroy(),class_create_release()).
+>>
+>> To be on the safe side: duplicate the string with kstrdup_const()
+>> so that if an unaware user passes an address to a stack-allocated
+>> buffer, we won't get the arbitrary name and crash.
+>
+> Where are you seeing this happen?
+>
+>>
+>> Signed-off-by: PengfeiZhang <zhangfeionline@gmail.com>
+>> ---
+>>  drivers/base/class.c | 17 +++++++++++++++--
+>>  1 file changed, 15 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/base/class.c b/drivers/base/class.c
+>> index bcd410e..770b3b3 100644
+>> --- a/drivers/base/class.c
+>> +++ b/drivers/base/class.c
+>> @@ -206,6 +206,7 @@ void class_unregister(struct class *cls)
+>>  static void class_create_release(struct class *cls)
+>>  {
+>>  	pr_debug("%s called for %s\n", __func__, cls->name);
+>> +	kfree_const(cls->name);
+>>  	kfree(cls);
+>>  }
+>>
+>> @@ -227,7 +228,10 @@ struct class *__class_create(struct module *owner,
+>> const char *name,
+>>  			     struct lock_class_key *key)
+>>  {
+>>  	struct class *cls;
+>> -	int retval;
+>> +	int retval = -EINVAL;
+>> +
+>> +	if (!name)
+>> +		goto done;
+>
+> This is a new change, who calls this function with name not being set?
+>
+>
+>>
+>>  	cls = kzalloc(sizeof(*cls), GFP_KERNEL);
+>>  	if (!cls) {
+>> @@ -235,18 +239,27 @@ struct class *__class_create(struct module *owner,
+>> const char *name,
+>>  		goto error;
+>>  	}
+>>
+>> +	name = kstrdup_const(name, GFP_KERNEL);
+>> +	if (!name) {
+>> +		retval = -ENOMEM;
+>> +		goto error;
+>> +	}
+>
+> and overwriting the pointer like that is bad-form, try doing something
+> else here instead.
+>
+>> +
+>>  	cls->name = name;
+>>  	cls->owner = owner;
+>>  	cls->class_release = class_create_release;
+>>
+>>  	retval = __class_register(cls, key);
+>>  	if (retval)
+>> -		goto error;
+>> +		goto error_class_register;
+>>
+>>  	return cls;
+>>
+>> +error_class_register:
+>> +	kfree(cls->name);
+>
+> kfree_const()?
+>
+> thanks,
+>
+> greg k-h
+>
