@@ -2,113 +2,104 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07484C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AFFC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86A924876
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E013F2311C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nAkqWlSX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="REJcxGWS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgDFPfS (ORCPT
+        id S1729008AbgDFPf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:35:18 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:37979 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728843AbgDFPfS (ORCPT
+        Mon, 6 Apr 2020 11:35:29 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24459 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728843AbgDFPf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:35:18 -0400
-Received: by mail-yb1-f194.google.com with SMTP id 204so65146ybw.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+MduM/9HJVy6bkh8pxzs1OTdZ7KT0AQSI+WZ1X2yWzE=;
-        b=nAkqWlSXVzfD2OyrsJv+DJCzxxvRXhc2u3dO5RWOKYsugkUEH3VVSUI1BilNYk9C31
-         WRP9tVM7eYAvgL4lTtuvt7yJmwSsHFVBG+n6Img5X2LgDmDxIHTtoNkagE+qRKFDL7Jb
-         o+zyIsJpA2SZeW5NOfkMTrCIHulQ6XoCM+SeJE+AG32lUgPjKxVD74Sq5lv3dqlkAv8v
-         ecG7O17JF8MUs+UxoEq16pqhCUws/LIaFZKpipYOngeFqnCpAnAn5OWwmw7oFMU6Qef/
-         UUjov5qUBTajxiSQQ7XCNObeYX+liBiTRAnw04gUAUy28YW9E7btXfKk42fFXhwtIt3H
-         FpOA==
+        Mon, 6 Apr 2020 11:35:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586187327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type;
+        bh=U9FPI4YqTuvhUVUIJ1WaAsAFx+IRK/5JQT6MEVHh44M=;
+        b=REJcxGWSzBwP3A/kPkpKZc+AHWLUkRczioXGo1V5SQF4pPp/UCxomTmbVP7hOeiE2l7Ymp
+        rAb+IkUavpShM185eJtbG20OPB5JFz6/gwyr7QXVAvCMzTNQ2SfaSQsEo+gOcI+7kpq6x3
+        kirP8JWfAC5dbQOVHfdrYLFxxnzNBsc=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-6AVUUpLkMgaIq09uEVPHVA-1; Mon, 06 Apr 2020 11:35:25 -0400
+X-MC-Unique: 6AVUUpLkMgaIq09uEVPHVA-1
+Received: by mail-wr1-f71.google.com with SMTP id y1so8545546wrp.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:35:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+MduM/9HJVy6bkh8pxzs1OTdZ7KT0AQSI+WZ1X2yWzE=;
-        b=udb5kP5iIHNBY4c8ivBsP/cL743JgXOgMomKcRd7CBq+MMrSL2U7/TBGEiz267npCf
-         30V64SXz8l1FjJu0ONiOTH5u8JralqB3PV0QM7XzixbreQKefTIxFe4Nxlu83bMRsIYU
-         6lOonP4EaFsxUB1JHqAQcPouJbJLFbiBQDNpqYYuetF5rRKH7pkjrMDbfcjzEDDhpYiW
-         zwKYwwvzZoOQ9pEYnTzW1wbS2Dznf7bUOgcLdhgOCecbYUzc+OiKcVY1ElV3t1v+eqBF
-         rvet+oduzjho7fBRBaSkMviuRiTpck6fCznd4kq5Nlvc/HodLPxCLpI5iKMWJPz+sjpx
-         pTFA==
-X-Gm-Message-State: AGi0Pub68XQWps9Bx9AIRIwuI9nMqMQ9ubS7t2UMYrjAW7hHU13ATkUx
-        hxeihPH98fMBRVzO0JZVQ6vP/9/GyEUPBVoIZJx0RTFZPk8=
-X-Google-Smtp-Source: APiQypK4wWH0C6H6p51kRfIEovjLl5GRkWHPGwq1kBpRoJFoPHWOoWfvf1XDtP7x6tZMrnw9T7I5tse3rXnBcHoVtQ8=
-X-Received: by 2002:a25:d382:: with SMTP id e124mr33930648ybf.162.1586187316742;
- Mon, 06 Apr 2020 08:35:16 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=U9FPI4YqTuvhUVUIJ1WaAsAFx+IRK/5JQT6MEVHh44M=;
+        b=PkabvZ3b2YJViTyQuZearZd/Yl376y4FGNXrSz/UZtfqRSs0cv+ledaEGILJZ9FuBH
+         xR1ysIknnyX/ny6KZxRQ4SiuxUr1vaZHfp7aM/H8EOAKWyvWoILOuC+Kpvhe8RRHKhfe
+         Reip36ux5zAH5RwIH1MOgkNp6WhZ10S9cwU/ChvZ6AF+boCbwbAjC7MUgecpb1nAjmtH
+         Zv/vxm5ckzfifbf0+X5K0NV94Rf+UzyugS6Lhj0UXi5hxHtz/UvZHbFoVVWkT2N+wEnX
+         np3XFicBIuLU3rQ5opMSunlIXPGQOWqWfjM3E+EmXQlKOHMrHLCf05P0ZbemgffESVYz
+         G/jw==
+X-Gm-Message-State: AGi0PuZT6FlGw6xGcEl3w08clzPBHrmc/vYQfygDx/Mc5Q8JnR44PNjw
+        vfTuzCnDEstZLwl2yS07Z3l8amoz/zTZwU6BTVZ36QdQquurU8b/EwClwF1S37r2UDdl5sw2uQO
+        qag6SoxloczVOtpG4jk0dDNUR
+X-Received: by 2002:a05:600c:2206:: with SMTP id z6mr263951wml.188.1586187323701;
+        Mon, 06 Apr 2020 08:35:23 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKhj4TivWftTw1bB2oE6mwrZ5BkHsKdX2BUKyCnCZ90lN34C1uBMaBQtKpx7zoKOuhBqm2uFQ==
+X-Received: by 2002:a05:600c:2206:: with SMTP id z6mr263929wml.188.1586187323423;
+        Mon, 06 Apr 2020 08:35:23 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id s66sm26355199wme.40.2020.04.06.08.35.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 08:35:22 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 11:35:21 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] virtio: alignment issues
+Message-ID: <20200406153245.127680-1-mst@redhat.com>
 MIME-Version: 1.0
-References: <20200327225102.25061-1-walken@google.com> <20200327225102.25061-7-walken@google.com>
- <20200401134234.GR20696@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200401134234.GR20696@hirez.programming.kicks-ass.net>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Mon, 6 Apr 2020 08:35:03 -0700
-Message-ID: <CANN689H1VjW4aC8HuLEtb8YrVyAJ0t6OVM6w2_o1+P2=9Mt6Gw@mail.gmail.com>
-Subject: Re: [PATCH v3 06/10] mmap locking API: convert nested write lock sites
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Markus Elfring <Markus.Elfring@web.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 1, 2020 at 6:42 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Mar 27, 2020 at 03:50:58PM -0700, Michel Lespinasse wrote:
->
-> > @@ -26,6 +31,12 @@ static inline void mmap_write_unlock(struct mm_struct *mm)
-> >       up_write(&mm->mmap_sem);
-> >  }
-> >
-> > +/* Pairs with mmap_write_lock_nested() */
-> > +static inline void mmap_write_unlock_nested(struct mm_struct *mm)
-> > +{
-> > +     up_write(&mm->mmap_sem);
-> > +}
-> > +
-> >  static inline void mmap_downgrade_write_lock(struct mm_struct *mm)
-> >  {
-> >       downgrade_write(&mm->mmap_sem);
->
-> Why does unlock_nested() make sense ?
+This is an alternative to
+	vhost: force spec specified alignment on types
+which is a bit safer as it does not change UAPI.
+I still think it's best to change the UAPI header as well,
+we can do that as a follow-up cleanup.
 
-I thought it would make things more explicit to match the nested lock
-with the corresponding unlock site; however this information is not
-used at the moment (i.e. the nested unlock is implemented identically
-to the regular unlock).
+Jason, can you pls ack one of the approaches?
 
-Having the matching sites explicitly identified may help when
-implementing lock instrumentation, or when changing the lock type
-(another patchset I am working on needs to pass an explicit lock range
-to the nested lock and unlock sites).
+Michael S. Tsirkin (2):
+  virtio: stop using legacy struct vring
+  vhost: force spec specified alignment on types
 
-I'll admit this is not a super strong argument, and can be deferred to
-when an actual need shows up in the future.
+ drivers/misc/mic/vop/vop_main.c          |  2 +-
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 10 +++---
+ drivers/vhost/vhost.h                    |  6 ++--
+ drivers/virtio/virtio_ring.c             | 10 +++---
+ include/linux/virtio.h                   |  2 +-
+ include/linux/virtio_ring.h              | 46 ++++++++++++++++++++++++
+ include/linux/vringh.h                   |  2 +-
+ tools/virtio/ringtest/virtio_ring_0_9.c  |  6 ++--
+ tools/virtio/virtio_test.c               |  2 +-
+ tools/virtio/vringh_test.c               | 20 +++++------
+ 10 files changed, 76 insertions(+), 30 deletions(-)
+
+-- 
+MST
+
