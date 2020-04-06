@@ -2,93 +2,87 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12726C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73123C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF952072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:12:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586171572;
-	bh=MtJm1ZXy274Rt4S8/t5pgen0tFyzkY5ae3KXw6x6In4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c1qhiBFHXIKQBHeEoUXmQNi/hD2ADLVT2iJX12mQLgwxUk9BSYdM7IZrRWWmBI4Ht
-	 KiZHzP9IkkCo6yD/EZDPhL2/CG557dHKFPRMoKMzUocOjdKiUM+Eem4LCa4apaB6Wi
-	 Uw/LgCXrnYgx2CKTiOBVWxTRIZBbG+0pUYb10qdk=
+	by mail.kernel.org (Postfix) with ESMTP id 4D80A206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbgDFLMv (ORCPT
+        id S1727331AbgDFLOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:12:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48592 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 07:14:02 -0400
+Received: from nautica.notk.org ([91.121.71.147]:36170 "EHLO nautica.notk.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgDFLMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:12:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 711A9206F8;
-        Mon,  6 Apr 2020 11:12:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586171571;
-        bh=MtJm1ZXy274Rt4S8/t5pgen0tFyzkY5ae3KXw6x6In4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lNHthtXXVAZNLmOMZ96NGSDiYyfoZhPYjEMJKtUifhay6eh9SXGgyIehffxgM+sxh
-         B8Rs4JGbzAnLTxPe1UErYuV9SemkVmkobtrBLQ96RC1+maODilYaeozsPW6/X7gyCb
-         dJrTUI2RhDh+0wHqRGtnSahzuWKdo2K5t+GZz32U=
-Date:   Mon, 6 Apr 2020 12:12:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org
-Subject: Re: [PATCH] ASoC: qcom: common: Silence EPROBE_DEFER messages
-Message-ID: <20200406111248.GB6837@sirena.org.uk>
-References: <20200406003656.2383978-1-bjorn.andersson@linaro.org>
+        id S1727125AbgDFLOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:14:01 -0400
+X-Greylist: delayed 402 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Apr 2020 07:14:00 EDT
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id 9C620C009; Mon,  6 Apr 2020 13:07:17 +0200 (CEST)
+Date:   Mon, 6 Apr 2020 13:07:02 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net
+Subject: [GIT PULL] 9p update for 5.7
+Message-ID: <20200406110702.GA13469@nautica>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200406003656.2383978-1-bjorn.andersson@linaro.org>
-X-Cookie: Serfs up!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---oC1+HKm2/end4ao3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not much new, but a few patches for this cycle.
 
-On Sun, Apr 05, 2020 at 05:36:56PM -0700, Bjorn Andersson wrote:
-> The Qualcomm sound card typically depends on several other drivers,
-> resulting in plenty of noise in the kernel log due to probe deferral.
-> Silence these errors.
+Thanks,
+Dominique
 
-This then means that if something is missing a depdenceny it becomes
-impossible to tell what the problem is from the logs.  Please at most
-reduce these to a dev_dbg().
 
---oC1+HKm2/end4ao3
-Content-Type: application/pgp-signature; name="signature.asc"
+The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
 
------BEGIN PGP SIGNATURE-----
+  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl6LDq8ACgkQJNaLcl1U
-h9AnqAf/WP5/shM+o0NVDoSTzFDUIwsFx0+zD0HAUSjwRszIvxR7LzYmyk4crsOI
-izVV3xQVPYb1Ra+nGtGTEdJbU5UqJ5H7GDAHFCE0D4/eb2VP8qPCWYv+GWt9ipZz
-lopYieoo8ws+7qnd6l/DMfSjj2Ik7eSsIPUMmL4YOiUACTF1ypqtAzG0NF5bs0pR
-jtgllpDgeOwJwHKel+Lz7edKrHxqaQtPk5LdlxOqGbQU4Mm3isGP6oRAROn0p+iG
-P08qGMACi1nUfCe31/lym4z0bTOd9QCy7OXe/oIqJ2DvLdnZ/ASbRweGUWSbnxBU
-JljNw+dvdosofc2QP/WFVlg2jC9p+w==
-=gEl1
------END PGP SIGNATURE-----
+are available in the Git repository at:
 
---oC1+HKm2/end4ao3--
+  https://github.com/martinetd/linux tags/9p-for-5.7
+
+for you to fetch changes up to 43657496e46672fe63bccc1fcfb5b68de6e1e2f4:
+
+  net/9p: remove unused p9_req_t aux field (2020-03-27 09:29:57 +0000)
+
+----------------------------------------------------------------
+9p pull request for inclusion in 5.7
+
+- Fix read with O_NONBLOCK to allow incomplete read and return
+immediately
+- Rest is just cleanup (indent, unused field in struct, extra semicolon)
+
+----------------------------------------------------------------
+Dominique Martinet (1):
+      net/9p: remove unused p9_req_t aux field
+
+Krzysztof Kozlowski (1):
+      9p: Fix Kconfig indentation
+
+Sergey Alirzaev (2):
+      9pnet: allow making incomplete read requests
+      9p: read only once on O_NONBLOCK
+
+zhengbin (1):
+      9p: Remove unneeded semicolon
+
+ fs/9p/Kconfig           |  18 +++++++++---------
+ fs/9p/vfs_file.c        |   5 ++++-
+ fs/9p/vfs_inode.c       |   2 +-
+ include/net/9p/client.h |   4 ++--
+ net/9p/client.c         | 144 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------------------------------------------------------
+ 5 files changed, 94 insertions(+), 79 deletions(-)
