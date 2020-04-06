@@ -2,263 +2,110 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC0AC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226BFC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98FC4206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:45:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pGJxT/+1"
+	by mail.kernel.org (Postfix) with ESMTP id F37DC206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586195196;
+	bh=CAJQD3Oeb0M48e9GfBTfea0ZryRLkjnlT6tG9pQHdV8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=csWMskyxr0sQQM4dFLEq7/7yuT0f996rhxLoG0lGo1yZsm7RQQF1RC0r5JPXStjDs
+	 FTWLJ+DvwDtcqE6koE8gMtqsG9T0XDpJKM+fKFUG+rRzWbhWZ3i68aFXn2Mqvm2bu7
+	 BHOG+5udXFGwD00yWK1yM0Dt7DHGd9DcQXR+Ju1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgDFRpj (ORCPT
+        id S1727136AbgDFRqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:45:39 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34882 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbgDFRpj (ORCPT
+        Mon, 6 Apr 2020 13:46:35 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36373 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbgDFRqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:45:39 -0400
-Received: by mail-ed1-f66.google.com with SMTP id c7so589078edl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:45:38 -0700 (PDT)
+        Mon, 6 Apr 2020 13:46:34 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w145so201193lff.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:46:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7RXoohFvXLaoEKx3R14gPI97or8iyID+gO/ke9YZLZk=;
-        b=pGJxT/+1b5N0eaXPQ8MD+apq1vM1MKAp+Icn53TKKJ0KGEnm05VOa5Y1PXrdWJnued
-         R9YUUUBFQ3SAx68o4tq3gsy3sganiQ/LSMuSCuL8zeRVyMPSVBMwijQ+zyheaSWAu3xJ
-         M+OPJMGhw6A30yvpkCR1omLvF+gJmffGC2W/3lpB316ys6wZpTVSfHDp9wusrVxG+kTJ
-         8QhIM3+WDSWjrfsSpPJlWmuFuQJHkBccKMwVYR+437mDuaT39nIrHtpckrkXjLc15TLB
-         3ZQ6bg5krSgAE+jYAaOpI2wf8bRjMTc6TzFNGjCyuxtK4inqkOZaPt0bxepRj/sXaXhc
-         GF5g==
+        bh=nNmBf+GRC0EIGToMk4/t6rTIUh9OjAdpy4aFeKb4Rqc=;
+        b=hfU2c40KDKDREWI3c/+ZfwIxoUGC8kXZ7TPtVMQl00LsrJlpHdN1scbOc8M0YueuXz
+         vQC0UqJcUs6XJVxo1sj6tZnoGwiW1ExbjzQZ41FY0L479xo0CkFn4/T04xa6mC5BTQ8Q
+         g43VaoZI2VXzPbpA7qyuFqiAMi6P/SZuMDO8k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7RXoohFvXLaoEKx3R14gPI97or8iyID+gO/ke9YZLZk=;
-        b=STt23aD7RVpYhd77F+yS9LfJkcUfVAm7fk4l+HgPk1C+oDelYJqUBe+qEz4YTWhJIA
-         okh63Wss0V7ngc5SOHwAiy6/L9bXR0lqwBVv4KnQyz3G1WKUZVxhQU0HVLQdeTXBJn/1
-         gupvwryKj7NaWskMaFcWgMy2PVtYyhTPWXrcMHmtRj6bDLayiFYjbVRlWIkFEC1IVwId
-         3bNLIEAPeHJT4dd89MUdiwDAOdxaw7uxat1Ss+AVo6qcjEf6QvlZFDsuT4WHVNUzzQvq
-         iSA+OFeNvqydyqpiuFboD3nDXKyONQB6tiBNg5XO1ppybahvNWuN4bVYVOb3YbIjXPoX
-         rvvg==
-X-Gm-Message-State: AGi0Puagk5Dz21jI2MKZX+W6MtmK3bku0w3OgiutA/deI9IUo1plJlZa
-        VrLNe5hEW+szGi+zybqt18oBC8rMGPDoke9JNOA=
-X-Google-Smtp-Source: APiQypIaHtJ4hn23pa/NkZ7zj/dGv/ZlRU8kWcFi0fx8qH8eIA32EcKufiVaVgryZZ59IaKMiOdYUiH5qzK3Hj5fT5s=
-X-Received: by 2002:a50:ed93:: with SMTP id h19mr19481900edr.255.1586195137719;
- Mon, 06 Apr 2020 10:45:37 -0700 (PDT)
+        bh=nNmBf+GRC0EIGToMk4/t6rTIUh9OjAdpy4aFeKb4Rqc=;
+        b=SghouxzpPwyrkgMIR9PWzXZ3guKw+lfgbZHA0hDyznkQBav1BIhGhWCtmnggBSJr2Q
+         yUVgCz7GJ8v44F9TkSSClYo6LZMqy2CkjtOGPHCE8Rovp6RYXgzsQaOysH5sw5mJ5JSa
+         uhFugvMisZnDBSfTTP2Gasxx1xvSfo9QD3LhwL8h/8JgOlYk7nFFjRPAhnh0DGhVacnh
+         ZdkdUFI5OE5wOmrMGsyQ8OpdEUjHC9qiMpxcmVnoEgyxyVvDNuCxz/tEtFT5elL5jHse
+         PhCLPbMPsv8OV6Ut6AdHXB6C71QAn7zJRV16RXHJxUhCuW4TdZ9rEVPwC/2w3uxqymSh
+         HSvg==
+X-Gm-Message-State: AGi0PuZqIXWR2ZIjS/z+LskuZj/fzAh9DUNlPTFuZpIQZQxXqSXLWP1A
+        fN0bw+A/BWnsNYCNfPvoBpSraVytkio=
+X-Google-Smtp-Source: APiQypK5682obYGcJjs2W3GUtFumA4qRi0CpUbV8wHmVnoYMX/Ekwo/3QtGsD3X6gKqh6rrca0QOdw==
+X-Received: by 2002:ac2:43b1:: with SMTP id t17mr3125519lfl.9.1586195191468;
+        Mon, 06 Apr 2020 10:46:31 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id d27sm12057810lfq.73.2020.04.06.10.46.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 10:46:30 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id h6so220709lfc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:46:30 -0700 (PDT)
+X-Received: by 2002:ac2:4466:: with SMTP id y6mr2122522lfl.125.1586195189986;
+ Mon, 06 Apr 2020 10:46:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <a809feb7d7153a92e323416f744f1565e995da01.1586180592.git.angelo.ribeiro@synopsys.com>
-In-Reply-To: <a809feb7d7153a92e323416f744f1565e995da01.1586180592.git.angelo.ribeiro@synopsys.com>
-From:   Adrian Pop <pop.adrian61@gmail.com>
-Date:   Mon, 6 Apr 2020 20:45:26 +0300
-Message-ID: <CAP-HsdQtdSeiSe3O8P6Pe587PYAqO48pGJLwf+Tvq20sY_nh=A@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/bridge: dw-mipi-dsi.c: Add VPG runtime config
- through debugfs
-To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-Cc:     yannick.fertre@st.com, philippe.cornu@st.com,
-        benjamin.gaignard@st.com, airlied@linux.ie,
-        Daniel Vetter <daniel@ffwll.ch>, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>
+References: <20200406110702.GA13469@nautica> <CAHk-=whVEPEsKhU4w9y_sjbg=4yYHKDfgzrpFdy=-f9j+jTO3w@mail.gmail.com>
+ <20200406164057.GA18312@nautica> <20200406164641.GF21484@bombadil.infradead.org>
+ <CAHk-=wiAiGMH=bw5N1nOVWYkE9=Pcx+mxyMwjYfGEt+14hFOVQ@mail.gmail.com> <20200406173957.GI21484@bombadil.infradead.org>
+In-Reply-To: <20200406173957.GI21484@bombadil.infradead.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 6 Apr 2020 10:46:14 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjh0szm+btaHptV1_XMMih=c1zP5wU8MQmREVKmJSYUcA@mail.gmail.com>
+Message-ID: <CAHk-=wjh0szm+btaHptV1_XMMih=c1zP5wU8MQmREVKmJSYUcA@mail.gmail.com>
+Subject: Re: [GIT PULL] 9p update for 5.7
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Dominique Martinet <asmadeus@codewreck.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        v9fs-developer@lists.sourceforge.net,
+        Sergey Alirzaev <l29ah@cock.li>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Angelo,
+On Mon, Apr 6, 2020 at 10:40 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > But look at anybody who ever worked more with NFS mounts, and they got
+> > used to having the 'intr' mount flag set and incomplete reads and
+> > -EAGAIN as a result.
+>
+> That's why you had me implement TASK_KILLABLE ;-)
 
-Tested OK on STM32F769i-DISCO, DSI v1.30, on next-20200406. I guess
-there is no horizontal for BER.
+Oh, absolutely. We can *NOT* do this in general. Applications _will_
+break if you end up just randomly breaking POSIX behavior.
 
-Regards,
-Adrian
+But network filesystems are almost never fully POSIX anyway. And yes,
+they do break some apps.  'intr' may not be a thing any more, but
+other differences wrt various atomicity guarantees (or file locking)
+etc still exist.
 
-On Mon, Apr 6, 2020 at 4:49 PM Angelo Ribeiro
-<Angelo.Ribeiro@synopsys.com> wrote:
->
-> Add support for the video pattern generator (VPG) BER pattern mode and
-> configuration in runtime.
->
-> This enables using the debugfs interface to manipulate the VPG after
-> the pipeline is set.
-> Also, enables the usage of the VPG BER pattern.
->
-> Changes in v2:
->   - Added VID_MODE_VPG_MODE
->   - Solved incompatible return type on __get and __set
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Adrian Pop <pop.adrian61@gmail.com>
-> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Cc: Joao Pinto <jpinto@synopsys.com>
-> Cc: Jose Abreu <jose.abreu@synopsys.com>
-> Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-> ---
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 98 ++++++++++++++++++++++++---
->  1 file changed, 90 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-> index b18351b..9de3645 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-> @@ -91,6 +91,7 @@
->  #define VID_MODE_TYPE_BURST                    0x2
->  #define VID_MODE_TYPE_MASK                     0x3
->  #define VID_MODE_VPG_ENABLE            BIT(16)
-> +#define VID_MODE_VPG_MODE              BIT(20)
->  #define VID_MODE_VPG_HORIZONTAL                BIT(24)
->
->  #define DSI_VID_PKT_SIZE               0x3c
-> @@ -221,6 +222,21 @@
->  #define PHY_STATUS_TIMEOUT_US          10000
->  #define CMD_PKT_STATUS_TIMEOUT_US      20000
->
-> +#ifdef CONFIG_DEBUG_FS
-> +#define VPG_DEFS(name, dsi) \
-> +       ((void __force *)&((*dsi).vpg_defs.name))
-> +
-> +#define REGISTER(name, mask, dsi) \
-> +       { #name, VPG_DEFS(name, dsi), mask, dsi }
-> +
-> +struct debugfs_entries {
-> +       const char                              *name;
-> +       bool                                    *reg;
-> +       u32                                     mask;
-> +       struct dw_mipi_dsi                      *dsi;
-> +};
-> +#endif /* CONFIG_DEBUG_FS */
-> +
->  struct dw_mipi_dsi {
->         struct drm_bridge bridge;
->         struct mipi_dsi_host dsi_host;
-> @@ -238,9 +254,12 @@ struct dw_mipi_dsi {
->
->  #ifdef CONFIG_DEBUG_FS
->         struct dentry *debugfs;
-> -
-> -       bool vpg;
-> -       bool vpg_horizontal;
-> +       struct debugfs_entries *debugfs_vpg;
-> +       struct {
-> +               bool vpg;
-> +               bool vpg_horizontal;
-> +               bool vpg_ber_pattern;
-> +       } vpg_defs;
->  #endif /* CONFIG_DEBUG_FS */
->
->         struct dw_mipi_dsi *master; /* dual-dsi master ptr */
-> @@ -530,9 +549,11 @@ static void dw_mipi_dsi_video_mode_config(struct dw_mipi_dsi *dsi)
->                 val |= VID_MODE_TYPE_NON_BURST_SYNC_EVENTS;
->
->  #ifdef CONFIG_DEBUG_FS
-> -       if (dsi->vpg) {
-> +       if (dsi->vpg_defs.vpg) {
->                 val |= VID_MODE_VPG_ENABLE;
-> -               val |= dsi->vpg_horizontal ? VID_MODE_VPG_HORIZONTAL : 0;
-> +               val |= dsi->vpg_defs.vpg_horizontal ?
-> +                      VID_MODE_VPG_HORIZONTAL : 0;
-> +               val |= dsi->vpg_defs.vpg_ber_pattern ? VID_MODE_VPG_MODE : 0;
->         }
->  #endif /* CONFIG_DEBUG_FS */
->
-> @@ -961,6 +982,68 @@ static const struct drm_bridge_funcs dw_mipi_dsi_bridge_funcs = {
->
->  #ifdef CONFIG_DEBUG_FS
->
-> +int dw_mipi_dsi_debugfs_write(void *data, u64 val)
-> +{
-> +       struct debugfs_entries *vpg = data;
-> +       struct dw_mipi_dsi *dsi;
-> +       u32 mode_cfg;
-> +
-> +       if (!vpg)
-> +               return -ENODEV;
-> +
-> +       dsi = vpg->dsi;
-> +
-> +       *vpg->reg = (bool)val;
-> +
-> +       mode_cfg = dsi_read(dsi, DSI_VID_MODE_CFG);
-> +
-> +       if (*vpg->reg)
-> +               mode_cfg |= vpg->mask;
-> +       else
-> +               mode_cfg &= ~vpg->mask;
-> +
-> +       dsi_write(dsi, DSI_VID_MODE_CFG, mode_cfg);
-> +
-> +       return 0;
-> +}
-> +
-> +int dw_mipi_dsi_debugfs_show(void *data, u64 *val)
-> +{
-> +       struct debugfs_entries *vpg = data;
-> +
-> +       if (!vpg)
-> +               return -ENODEV;
-> +
-> +       *val = *vpg->reg;
-> +
-> +       return 0;
-> +}
-> +
-> +DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_mipi_dsi_debugfs_show,
-> +                        dw_mipi_dsi_debugfs_write, "%llu\n");
-> +
-> +static void debugfs_create_files(void *data)
-> +{
-> +       struct dw_mipi_dsi *dsi = data;
-> +       struct debugfs_entries debugfs[] = {
-> +               REGISTER(vpg, VID_MODE_VPG_ENABLE, dsi),
-> +               REGISTER(vpg_horizontal, VID_MODE_VPG_HORIZONTAL, dsi),
-> +               REGISTER(vpg_ber_pattern, VID_MODE_VPG_MODE, dsi),
-> +       };
-> +       int i;
-> +
-> +       dsi->debugfs_vpg = kmalloc(sizeof(debugfs), GFP_KERNEL);
-> +       if (!dsi->debugfs_vpg)
-> +               return;
-> +
-> +       memcpy(dsi->debugfs_vpg, debugfs, sizeof(debugfs));
-> +
-> +       for (i = 0; i < ARRAY_SIZE(debugfs); i++)
-> +               debugfs_create_file(dsi->debugfs_vpg[i].name, 0644,
-> +                                   dsi->debugfs, &dsi->debugfs_vpg[i],
-> +                                   &fops_x32);
-> +}
-> +
->  static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi)
->  {
->         dsi->debugfs = debugfs_create_dir(dev_name(dsi->dev), NULL);
-> @@ -969,14 +1052,13 @@ static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi)
->                 return;
->         }
->
-> -       debugfs_create_bool("vpg", 0660, dsi->debugfs, &dsi->vpg);
-> -       debugfs_create_bool("vpg_horizontal", 0660, dsi->debugfs,
-> -                           &dsi->vpg_horizontal);
-> +       debugfs_create_files(dsi);
->  }
->
->  static void dw_mipi_dsi_debugfs_remove(struct dw_mipi_dsi *dsi)
->  {
->         debugfs_remove_recursive(dsi->debugfs);
-> +       kfree(dsi->debugfs_vpg);
->  }
->
->  #else
-> --
-> 2.7.4
->
+So the whole "network filesystems do odd things in corner cases" isn't
+exactly unusual.
+
+I think the O_NONBLOCK difference is one of the more benign ones.
+
+I just think it should be documented more.
+
+             Linus
