@@ -2,131 +2,109 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9ACC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E21C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 531982064A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2447A2064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586196387;
+	bh=ItpFslEAysnniGgOGIyv0Ga3hUuMVLyO3EMtZ1VdRKo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mwpI8WGlt4fp+6tGKRasXlgQ9F9qf2Ejl0iNxd7AxIO52SPYoenl9p9Ib+8V1apmV
+	 l/btcXHbZxqsGvuUTDdgoaqqm+JwasS+XtwAC/4MWrrjecaMsgus5i+3S7DgJWxFh8
+	 uwIGB5asi4YhM7JBCqBn6Q0iSJ5T1fAu70vacDr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbgDFSGW (ORCPT
+        id S1726586AbgDFSGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:06:22 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36978 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgDFSGU (ORCPT
+        Mon, 6 Apr 2020 14:06:25 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37050 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgDFSGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:06:20 -0400
-Received: by mail-qk1-f196.google.com with SMTP id 130so2050761qke.4;
-        Mon, 06 Apr 2020 11:06:18 -0700 (PDT)
+        Mon, 6 Apr 2020 14:06:23 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r24so720497ljd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BisFcRtdDqZDWx9x/qe3YqGCVBMdPDBaYv2iQPpKZGk=;
+        b=hycTOvQuFUOqWorRTq3COTwoQhv5QArTInVPi3BJzNZEYA8ClFHnf/Pog4SwnExpqW
+         O0t2iPzj1sC3CqfuWGAAmBs3m/sWjxm/70oydN4qonvFZVSKIYy24kF2rhRlFk/itgBj
+         OXm3JM0/7A+VH/EVB7RjlP5C0H9ZpQ3DCrkLc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Cvg3whVQVAqqlVvqOZl3uLW5HgEWpclGCuhQ2YcgjRY=;
-        b=ZXORiSjktGzng5GOwaaomOc+sqqFWx3e95yZ5ZcxQ8xEU+CIcOtf6AGjK2TtGDSKO4
-         k4Q9Y+3a1VRynxa+Hb1CoeMz5Tx94tm/ZZcobm14p/2DYT93nctSPd+bfPtDb8stDhcK
-         qJeuYijVYLi6azpj5Js1nnz7EDuLrrwIO3zEv1t1S16ck2wzUDDws6IX8b3cfUhJZWdj
-         C73CWZY5McHccdJTl7F2ZuMPbUfxvaJIveihbEC6zskb13V9llIQm9ghrPGVn/Pz10Am
-         ZZI1W9Ns+TVt3Ixk4SZDsCI3Xi5zSo1cQs7CVe6okBNz8nHaNrhkaetLqzTW8nkSeG9x
-         iKmw==
-X-Gm-Message-State: AGi0PuYSbARN1DLc2C8VPOdvNhitKakbM2PYiMzoFuGcruEAB2uSvBUf
-        3d8FH4eCUUeUsridqEFcNhA=
-X-Google-Smtp-Source: APiQypLuA1RvXa3qTFL/Z2cWoE6mihW4wAocrADNP0Wws3ruz0vwV/5ow4uaekkSs2FoM1c2ZDPGMA==
-X-Received: by 2002:a37:9c8b:: with SMTP id f133mr23159866qke.482.1586196377975;
-        Mon, 06 Apr 2020 11:06:17 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id a136sm10548473qkc.75.2020.04.06.11.06.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 11:06:17 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
-        hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Subject: [PATCH 2/2] efi/x86: Always relocate the kernel for EFI handover entry
-Date:   Mon,  6 Apr 2020 14:06:14 -0400
-Message-Id: <20200406180614.429454-2-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200406180614.429454-1-nivedita@alum.mit.edu>
-References: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
- <20200406180614.429454-1-nivedita@alum.mit.edu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BisFcRtdDqZDWx9x/qe3YqGCVBMdPDBaYv2iQPpKZGk=;
+        b=DKfC2lxE2Fcp/13FObzfjVZNANoXcfrYKEPWXgh+SsAyzU1pAEf4ZkehEE1gBUtn0q
+         of69a1H4q5tx4IUhrZIOO4+caJymxLMpX36YmyZfKJot2Cn7J42ppOl9ySx6rWqHOTMI
+         bpoBwl9NPKZ+070iTLsvgjO3mERtFnvLRqHChJVoqIZORxRstk6mMo/E2UkTaJVkfiLG
+         fEI9Hit278WlpgHY/VGnoWQYJ4ZGS3jF4c27Dh2FAnvf+wmiOesF3BPcCS7V5c9AKBaZ
+         9DYUqs7JxyiVSAjU2pej89SXzktFqytzr5KHF5vkNgrX8/F8iWtGODGuNuhEXPe2kRlK
+         Mrpg==
+X-Gm-Message-State: AGi0PuZusTa/yh4d4EvrukwEM3Rp77B3JNB/BDqNWQyZsSYAanat8eVr
+        L3qZfOL13ss/DMxiT6w5WbZO7GdcXVU=
+X-Google-Smtp-Source: APiQypJk2RQB5JdBwUoI9NsyVZdVncAn5bo1kjLN2pRlJGZ7bDV3sbSRAHzwkzr2epdLHVb6buryYQ==
+X-Received: by 2002:a05:651c:200c:: with SMTP id s12mr305827ljo.30.1586196380083;
+        Mon, 06 Apr 2020 11:06:20 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id v9sm10358687lji.11.2020.04.06.11.06.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 11:06:18 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id p14so660816lji.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:06:18 -0700 (PDT)
+X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr319344lji.150.1586196377903;
+ Mon, 06 Apr 2020 11:06:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <a291cce3ff1ba978e7ad231a8e1b7d82f6164e86.camel@perches.com>
+ <20200406023700.1367-1-longman@redhat.com> <319765.1586188840@warthog.procyon.org.uk>
+ <d509771b7e08fff0d18654b746e413e93ed62fe8.camel@perches.com> <19cbf3b1-2c3f-dd0f-a5c6-69ca3f77dd68@redhat.com>
+In-Reply-To: <19cbf3b1-2c3f-dd0f-a5c6-69ca3f77dd68@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 6 Apr 2020 11:06:02 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgjiHUWLZWKZJ4eU+RrOc2xNZCHn4ETmJ0S+H=Eig28Cw@mail.gmail.com>
+Message-ID: <CAHk-=wgjiHUWLZWKZJ4eU+RrOc2xNZCHn4ETmJ0S+H=Eig28Cw@mail.gmail.com>
+Subject: Re: [PATCH] mm: Add kvfree_sensitive() for freeing sensitive data objects
+To:     Waiman Long <longman@redhat.com>
+Cc:     Joe Perches <joe@perches.com>, David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit
+On Mon, Apr 6, 2020 at 10:59 AM Waiman Long <longman@redhat.com> wrote:
+>
+> I have actually been thinking about that. I saw a couple of cases in the
+> crypto code where a memzero_explicit() is followed by kfree(). Those can
+> be replaced by kfree_sensitive.
 
-  d5cdf4cfeac9 ("efi/x86: Don't relocate the kernel unless necessary")
+Ack.
 
-tries to avoid relocating the kernel in the EFI stub as far as possible.
+Doing that (and renaming kvzfree) should be a fairly straightforward
+coccinelle patch.
 
-However, when systemd-boot is used to boot a unified kernel image [1],
-the image is constructed by embedding the bzImage as a .linux section in
-a PE executable that contains a small stub loader from systemd that will
-call the EFI stub handover entry, together with additional sections and
-potentially an initrd. When this image is constructed, by for example
-dracut, the initrd is placed after the bzImage without ensuring that at
-least init_size bytes are available for the bzImage. If the kernel is
-not relocated by the EFI stub, this could result in the compressed
-kernel's startup code in head_{32,64}.S overwriting the initrd.
+Somebody (maybe you) asked whether we could just use
+kvfree_sensitive() for everything, We probably could. The extra test
+is cheap - much cheaper than the memzero_explicit().
 
-To prevent this, unconditionally relocate the kernel if the EFI stub was
-entered via the handover entry point.
+That said, _there_ I think that consistency with regular kfree/kvfree
+naming means that we might as well keep separate names, and keep the
+kmalloc->kfree_sensitive and kvmalloc->kvfree_sensitive pairing. Even
+if technically we could do with just the one function that works for
+both cases.
 
-[1] https://systemd.io/BOOT_LOADER_SPECIFICATION/#type-2-efi-unified-kernel-images
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Reported-by: Sergey Shatunov <me@prok.pw>
-Fixes: d5cdf4cfeac9 ("efi/x86: Don't relocate the kernel unless necessary")
----
- drivers/firmware/efi/libstub/x86-stub.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-index e7af6d2eddbf..7583e908852f 100644
---- a/drivers/firmware/efi/libstub/x86-stub.c
-+++ b/drivers/firmware/efi/libstub/x86-stub.c
-@@ -742,8 +742,15 @@ unsigned long efi_main(efi_handle_t handle,
- 	 * now use KERNEL_IMAGE_SIZE, which will be 512MiB, the same as what
- 	 * KASLR uses.
- 	 *
--	 * Also relocate it if image_offset is zero, i.e. we weren't loaded by
--	 * LoadImage, but we are not aligned correctly.
-+	 * Also relocate it if image_offset is zero, i.e. the kernel wasn't
-+	 * loaded by LoadImage, but rather by a bootloader that called the
-+	 * handover entry. The reason we must always relocate in this case is
-+	 * to handle the case of systemd-boot booting a unified kernel image,
-+	 * which is a PE executable that contains the bzImage and an initrd as
-+	 * COFF sections. The initrd section is placed after the bzImage
-+	 * without ensuring that there are at least init_size bytes available
-+	 * for the bzImage, and thus the compressed kernel's startup code may
-+	 * overwrite the initrd unless it is moved out of the way.
- 	 */
- 
- 	buffer_start = ALIGN(bzimage_addr - image_offset,
-@@ -753,8 +760,7 @@ unsigned long efi_main(efi_handle_t handle,
- 	if ((buffer_start < LOAD_PHYSICAL_ADDR)				     ||
- 	    (IS_ENABLED(CONFIG_X86_32) && buffer_end > KERNEL_IMAGE_SIZE)    ||
- 	    (IS_ENABLED(CONFIG_X86_64) && buffer_end > MAXMEM_X86_64_4LEVEL) ||
--	    (image_offset == 0 && !IS_ALIGNED(bzimage_addr,
--					      hdr->kernel_alignment))) {
-+	    (image_offset == 0)) {
- 		status = efi_relocate_kernel(&bzimage_addr,
- 					     hdr->init_size, hdr->init_size,
- 					     hdr->pref_address,
--- 
-2.24.1
-
+            Linus
