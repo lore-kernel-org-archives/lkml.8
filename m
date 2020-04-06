@@ -2,220 +2,128 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C95BC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2632C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3827206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUh+H+vB"
+	by mail.kernel.org (Postfix) with ESMTP id 94FF1206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgDFSsp (ORCPT
+        id S1726464AbgDFSsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:48:45 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33230 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725887AbgDFSsp (ORCPT
+        Mon, 6 Apr 2020 14:48:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63392 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726269AbgDFSsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:48:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586198923;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GBxc/UOt7N77hE2XxSjkwyDVeXjdx20svvUF7qLf7RU=;
-        b=OUh+H+vBSWaOVYpdK0tyDKJiifxG3Q9qIixkbp4ovmqiCpOZUqHQcVuwJpFuTdjpmyZb3W
-        pUH1OsoLf4iHjBmVYYvWM2eoo8B4WnqsmQRWyhVNFCPIZRdg0n/K4gD1TZXpGBHPS/6TVq
-        oNqzEBQOtsRyv/lNdn3h+9zvorczDQA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-269-u5wcsLN4OVyg__JkDyq_uQ-1; Mon, 06 Apr 2020 14:48:41 -0400
-X-MC-Unique: u5wcsLN4OVyg__JkDyq_uQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6185800D4E;
-        Mon,  6 Apr 2020 18:48:36 +0000 (UTC)
-Received: from redhat.com (ovpn-112-68.phx2.redhat.com [10.3.112.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B04690CE0;
-        Mon,  6 Apr 2020 18:48:35 +0000 (UTC)
-Date:   Mon, 6 Apr 2020 14:48:33 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [POC 19/23] module/livepatch: Allow to use exported symbols from
- livepatch module for "vmlinux"
-Message-ID: <20200406184833.GA6023@redhat.com>
-References: <20200117150323.21801-1-pmladek@suse.com>
- <20200117150323.21801-20-pmladek@suse.com>
+        Mon, 6 Apr 2020 14:48:54 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036IYQGw137647;
+        Mon, 6 Apr 2020 14:47:36 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3082k26cce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 14:47:36 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 036IiZlZ015752;
+        Mon, 6 Apr 2020 18:47:35 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma03dal.us.ibm.com with ESMTP id 306hv6er63-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 18:47:35 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 036IlY0h45744596
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Apr 2020 18:47:35 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E0A56AC062;
+        Mon,  6 Apr 2020 18:47:34 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE465AC05B;
+        Mon,  6 Apr 2020 18:47:31 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.165.246])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Apr 2020 18:47:31 +0000 (GMT)
+Message-ID: <bd01a908addbb9050bbbe1cff81401f3bb7ed841.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 1/1] ppc/crash: Reset spinlocks during crash
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Enrico Weigelt <info@metux.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        peterz@infradead.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <871rp6t9di.fsf@mpe.ellerman.id.au>
+References: <20200401000020.590447-1-leonardo@linux.ibm.com>
+         <871rp6t9di.fsf@mpe.ellerman.id.au>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-H9cEVCgKCXK7x0ewIdQK"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200117150323.21801-20-pmladek@suse.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Date:   Mon, 06 Apr 2020 15:46:58 -0300
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_08:2020-04-06,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 clxscore=1015 mlxscore=0 phishscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004060143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 04:03:19PM +0100, Petr Mladek wrote:
-> HINT: Get some coffee before reading this commit message.
-> 
->       Stop reading when it gets too complicated. It is possible that we
->       will need to resolve symbols from livepatch modules another way.
->       Livepatches need to access also non-exported symbols anyway.
-> 
->       Or just ask me to explain the problem a better way. I have
->       ended in many cycles when thinking about it. And it might
->       be much easier from another point of view.
-> 
-> The split per-object livepatches brings even more types of module
-> dependencies. Let's split them into few categories:
-> 
-> A. Livepatch module using an exported symbol from "vmlinux".
-> 
->    It is quite common and works by definition. Livepatch module is just
->    a module from this point of view.
-> 
 
-Hi Petr,
+--=-H9cEVCgKCXK7x0ewIdQK
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If only all the cases were so easy :)
+On Thu, 2020-04-02 at 22:28 +1100, Michael Ellerman wrote:
+> Leonardo Bras <leonardo@linux.ibm.com>=20
+> TBH I think we could just drop that printk() entirely.
+>=20
+> Or we could tell printk() that we're in NMI context so that it uses the
+> percpu buffers.
+>=20
+> We should probably do the latter anyway, in case there's any other code
+> we call that inadvertently calls printk().
 
-> B. Livepatch module using an exported symbol from the patched module.
-> 
->    It should be avoided even with the non-split livepatch module. The module
->    loader automatically takes reference to make sure the modules are
->    unloaded in the right order. This would basically prevent the livepatched
->    module from unloading.
-> 
->    Note that it would be perfectly safe to remove this automatic
->    dependency. The livepatch framework makes sure that the livepatch
->    module is loaded only when the patched one is loaded. But it cannot
->    be implemented easily, see below.
+Done:
+http://patchwork.ozlabs.org/patch/1266956/
 
-Do you envision klp-convert providing this functionality?
+About the rtas-call, I think it will take more time, because I have to
+study it properly.
 
-For reference, kpatch-build will take this example input patch:
+Thank you,
 
-  diff -U 15 -Nupr linux-3.10.0-1133.el7.x86_64.old/drivers/cdrom/cdrom.c linux-3.10.0-1133.el7.x86_64/drivers/cdrom/cdrom.c
-  --- linux-3.10.0-1133.el7.x86_64.old/drivers/cdrom/cdrom.c      2020-04-06 11:58:34.470969120 -0400
-  +++ linux-3.10.0-1133.el7.x86_64/drivers/cdrom/cdrom.c  2020-04-06 12:01:07.882719611 -0400
-  @@ -1429,30 +1429,32 @@ unsigned int cdrom_check_events(struct c
-   EXPORT_SYMBOL(cdrom_check_events);
-  
-   /* We want to make media_changed accessible to the user through an
-    * ioctl. The main problem now is that we must double-buffer the
-    * low-level implementation, to assure that the VFS and the user both
-    * see a medium change once.
-    */
-  
-   static
-   int media_changed(struct cdrom_device_info *cdi, int queue)
-   {
-          unsigned int mask = (1 << (queue & 1));
-          int ret = !!(cdi->mc_flags & mask);
-          bool changed;
-  
-  +pr_info("%lx\n", (unsigned long) cdrom_check_events);
-  +
-          if (!CDROM_CAN(CDC_MEDIA_CHANGED))
-                  return ret;
-  
-          /* changed since last call? */
-          if (cdi->ops->check_events) {
-                  BUG_ON(!queue); /* shouldn't be called from VFS path */
-                  cdrom_update_events(cdi, DISK_EVENT_MEDIA_CHANGE);
-                  changed = cdi->ioctl_events & DISK_EVENT_MEDIA_CHANGE;
-                  cdi->ioctl_events = 0;
-          } else
-                  changed = cdi->ops->media_changed(cdi, CDSL_CURRENT);
-  
-          if (changed) {
-                  cdi->mc_flags = 0x3;    /* set bit on both queues */
-                  ret |= 1;
+--=-H9cEVCgKCXK7x0ewIdQK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-and you'll have the original cdrom.ko, owner of exported
-cdrom_check_events, and a new livepatch-cdrom.ko that references it.
-kpatch-build converts the symbol/rela combination like so:
+-----BEGIN PGP SIGNATURE-----
 
-  % readelf --wide --symbols livepatch-test.ko | grep cdrom_check_events
-      79: 0000000000000000     0 FUNC    GLOBAL DEFAULT OS [0xff20] .klp.sym.cdrom.cdrom_check_events,0
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6LeRIACgkQlQYWtz9S
+ttTtkxAAgcj1HnOp231sVwNiekotD/Q6j7wrz05YDPEiOksAZZ8y3mR0aS+WKrtK
+k4ZYbe/wPU9+6vDOYDzN/ydcFIs8oWoKAbZh+2g/VXb0gEbC6HT4ZNP7+093cLCw
+tW0Ab2HxjYKfOLqWa8RxUb9Yg6NgDXsZPhJpjwT2jWzo4Er3GEzatF4l2w87Yz77
+4YagpTt7+xzYnPuymmw6cNFXYrCuXeLEVVEjevxFpg+nLlrbyuq/rWjttGNlRCxZ
+NEb6P84r0KqNvT0kQKWVJkkyLSZLtB2QPJOQsQUxa57rRFCfneEFIa//jyRyJwyp
+p2kKOHXy+0evRAVa0UDqpR0WOBDg9nfk8MGsusb4GcCMXb0lArhzPS7MVmFpVof+
+IbO9NOXxFzXKMgtw48/8LIKy/dV5Jg1Z1Amfr+uOGXMRdQ7+jdXjErozqmLwwaV7
+v6td5S8b/UcmC08jwDFiXVq3svxie7yzYACWwQ396Ndl3+gGwo2cAqX4agtW7F4B
+NQWKsIJGHzPXt8daEZn592hIsnt4SDHUF3WQWoAhh4qLh4bDlzKsAJ1fV3oRZvFX
+Q1sNGcKOw0bOyTmL0UOICYcBsmGDLazSv4JuizgS4y1IZ7eaI41AJGYpJx9sXnOG
+NN1OpQaEnhocgxPVWm5sSKHjGk6eGnOSECbizCRLfTcq801bOoA=
+=6kFn
+-----END PGP SIGNATURE-----
 
-  % readelf --wide --relocs livepatch-test.ko | awk '/cdrom_check_events/' RS="\n\n" ORS="\n\n"
-  Relocation section '.klp.rela.cdrom..text.media_changed' at offset 0x97fc0 contains 1 entries:
-      Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
-  0000000000000016  0000004f0000000b R_X86_64_32S           0000000000000000 .klp.sym.cdrom.cdrom_check_events,0 + 0
-
-That dodges the implicit module reference on cdrom.ko, but would it
-still be safe in this klp-split POC?
-
-FWIW, I have been working an updated klp-convert for v5.6 that includes
-a bunch of fixes and such... modifying it to convert module-export
-references like this was quite easy.
-
-> C. Livepatch module using an exported symbol from the main livepatch module
->    for "vmlinux".
-> 
->    It is the 2nd most realistic variant. It even exists in current
->    selftests. Namely, test_klp_callback_demo* modules share
->    the implementation of callbacks. It avoids code duplication.
->    And it is actually needed to make module parameters working.
-
-I had to double check this and the exports were introduced by this POC
-just to avoid code duplication, right?  If so, would it be worth the
-extra code to avoid providing bad example usage?  Or at least do so for
-sample/livepatch/ and not selftests.
-
->    Note that the current implementation allows to pass module parameters
->    only to the main livepatch module for "vmlinux". It should not be a real
->    life problem. The parameters are used in selftests. But they are
->    not used in practice.
-
-Yeah, we don't use module parameters for kpatch either, AFAIK they are
-only useful as a quick and easy method to poke those selftests.
-
-On a related note, one possible work around for case C is to use shadow
-variables created by the main livepatch module to store symbol
-locations or the values themselves.  This might get tedious for real
-kernel API, but has been reasonable for livepatch bookkeeping states,
-counts, etc.
-
-> D. Livepatch modules might depend on each other. Note that dependency on
->    the main livepatch module for "vmlinux" has got a separate category 'C'.
-> 
->    The dependencies between modules are quite rare. But they exist.
->    One can assume that this might be useful also on the livepatching
->    level.
-> 
->    To keep it sane, the livepatch modules should just follow
->    the dependencies of the related patched modules. By other words,
->    the livepatch modules might or should have the same dependencies
->    as the patched counter parts but nothing more.
-> 
-
-I agree, I think this is the only sane way to approach case D.
-
-> Do these dependencies need some special handling?
-> 
-> [ ... snip ... ]
-> 
-
-This is the multiple-coffee cup section that I'm still trying to wrap my
-brain around.
-
-In the meantime, could we simplify or avoid any of these by enforcing
-things on the build side?  I don't know if these are even detectable,
-but perhaps we could prevent them from even occuring.  /shrugs
-
--- Joe
+--=-H9cEVCgKCXK7x0ewIdQK--
 
