@@ -7,315 +7,413 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A832BC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EB8C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F46320672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5282064A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Z0ZFZdi0"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QPs4tZnc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgDFSQ7 (ORCPT
+        id S1727528AbgDFSRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:16:59 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31946 "EHLO pegase1.c-s.fr"
+        Mon, 6 Apr 2020 14:17:00 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:10542 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgDFSQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:16:53 -0400
+        id S1727237AbgDFSQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 14:16:52 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48wzJh3PgRz9v0BQ;
-        Mon,  6 Apr 2020 20:16:52 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 48wzJf1ypHz9v0BN;
+        Mon,  6 Apr 2020 20:16:50 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Z0ZFZdi0; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=QPs4tZnc; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id DH1v5XkC13le; Mon,  6 Apr 2020 20:16:52 +0200 (CEST)
+        with ESMTP id 3A62NwA7wnsJ; Mon,  6 Apr 2020 20:16:50 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJh2N6Hz9v0BL;
-        Mon,  6 Apr 2020 20:16:52 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48wzJf0wQ3z9v0BL;
+        Mon,  6 Apr 2020 20:16:50 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1586197012; bh=1AidArci8N5KuTg0CDLz4W+BdoHzlnqPCtXks34VgCU=;
+        t=1586197010; bh=DeHOMI7BiGmDQtIzBqdQKP9nmxijvSk0qQyVXvdXeKQ=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=Z0ZFZdi0MY/Mi37SDq1vJ8IQJCL9f6dSCDOWBUrHCp9/a268u3P1d92fD9lu9IeGo
-         On7sbCHFYn/XPkmmOl76SRfFE5RImhpx8YSwi5NEe9NFiQxRIMmZcBPBxVLWlfsYHy
-         AIcMhYJDUDSGWEcRUmKEfbZlHRP/DT6Zef8qbCUg=
+        b=QPs4tZncvi0NRZR6mHjbqI0Y4luaVqkymw08bSEnkUS7EOiHRBmuHRkeZBylo2gaO
+         Taxw5nAyhsgcnMpab4RwDAvYdfmBV+yK8Ieb/omzfDD0IItkCk9mrDj4e7PJRbQPOm
+         IutaTd8gCku7XMr5wBBCfMCVC1Te9rnN/n0+VSc0=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 40F658B784;
-        Mon,  6 Apr 2020 20:16:52 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 024A18B784;
+        Mon,  6 Apr 2020 20:16:50 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 02kfsZkVfoFr; Mon,  6 Apr 2020 20:16:52 +0200 (CEST)
+        with ESMTP id 2DxRDIbKXTib; Mon,  6 Apr 2020 20:16:49 +0200 (CEST)
 Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BB9348B775;
-        Mon,  6 Apr 2020 20:16:51 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F9018B775;
+        Mon,  6 Apr 2020 20:16:49 +0200 (CEST)
 Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 90BC0656E9; Mon,  6 Apr 2020 18:16:51 +0000 (UTC)
-Message-Id: <1299b6b50facf78458e7db265fb9936595ea009a.1586196948.git.christophe.leroy@c-s.fr>
+        id 74CB9656E9; Mon,  6 Apr 2020 18:16:49 +0000 (UTC)
+Message-Id: <ed0405486afb50b8ce2542cfdd8a6d9a2638a406.1586196948.git.christophe.leroy@c-s.fr>
 In-Reply-To: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
 References: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH v3 15/15] powerpc/kernel: Do not inconditionally save non
- volatile registers on system call
+Subject: [RFC PATCH v3 13/15] powerpc/syscall: system call implement
+ entry/exit logic in C for PPC32
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
         msuchanek@suse.de
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon,  6 Apr 2020 18:16:51 +0000 (UTC)
+Date:   Mon,  6 Apr 2020 18:16:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To allow that, syscall_exit_prepare() gets split in 3 parts.
-On PPC32, the three parts are called from entry_32.S
-On PPC64, we keep a syscall_exit_prepare() function which
-concatenates the three parts.
+That's port of PPC64 syscall entry/exit logic in C to PPC32.
 
-One benefit is also that the likely part of
-syscall_exit_prepare_begin() and the syscall_exit_prepare_end()
-functions are frameless whereas there was no way to get the
-likely part of syscall_exit_prepare() frameless.
+Performancewise:
+Before : 311 cycles on null_syscall
+After  : 353 cycles on null_syscall
 
-Before : 347 cycles on null_syscall
-After  : 307 cycles on null_syscall, ie better than before C porting.
+Note: before the patch, if calling NVGPRS all the time as well,
+we have 335 cycles on null_syscall
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/asm-prototypes.h | 11 +++
- arch/powerpc/kernel/entry_32.S            | 25 ++++++-
- arch/powerpc/kernel/head_32.h             |  3 +-
- arch/powerpc/kernel/syscall.c             | 83 +++++++++++++++--------
- 4 files changed, 92 insertions(+), 30 deletions(-)
+ arch/powerpc/kernel/entry_32.S | 259 ++++-----------------------------
+ arch/powerpc/kernel/head_32.h  |  16 +-
+ 2 files changed, 29 insertions(+), 246 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/asm-prototypes.h b/arch/powerpc/include/asm/asm-prototypes.h
-index 7d81e86a1e5d..eea5133733bb 100644
---- a/arch/powerpc/include/asm/asm-prototypes.h
-+++ b/arch/powerpc/include/asm/asm-prototypes.h
-@@ -98,6 +98,17 @@ unsigned long __init early_init(unsigned long dt_ptr);
- void __init machine_init(u64 dt_ptr);
- #endif
- long system_call_exception(long r3, long r4, long r5, long r6, long r7, long r8, unsigned long r0, struct pt_regs *regs);
-+#ifdef CONFIG_PPC64
-+#define static64 static
-+#else
-+#define static64
-+#endif
-+static64 notrace unsigned long
-+syscall_exit_prepare_begin(unsigned long r3, struct pt_regs *regs, unsigned long ti_flags);
-+static64 notrace unsigned long
-+syscall_exit_prepare_loop(unsigned long ret, struct pt_regs *regs, unsigned long ti_flags);
-+static64 notrace unsigned long
-+syscall_exit_prepare_end(unsigned long ret, struct pt_regs *regs, unsigned long ti_flags);
- notrace unsigned long syscall_exit_prepare(unsigned long r3, struct pt_regs *regs);
- notrace unsigned long interrupt_exit_user_prepare(struct pt_regs *regs, unsigned long msr);
- notrace unsigned long interrupt_exit_kernel_prepare(struct pt_regs *regs, unsigned long msr);
 diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-index 103f5158bc44..b9287fd0fcc6 100644
+index a6371fb8f761..103f5158bc44 100644
 --- a/arch/powerpc/kernel/entry_32.S
 +++ b/arch/powerpc/kernel/entry_32.S
-@@ -315,14 +315,37 @@ stack_ovf:
+@@ -315,162 +315,37 @@ stack_ovf:
  	RFI
  #endif
  
-+save_nvgprs:
-+	lwz	r11, _TRAP(r1)
-+	andi.	r12, r11, 1
-+	rlwinm	r11, r11, 0, ~1
-+	beqlr
-+	SAVE_NVGPRS(r1)
-+	stw	r11, _TRAP(r1)
-+	blr
-+
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-trace_syscall_entry_irq_off:
+-	/*
+-	 * Syscall shouldn't happen while interrupts are disabled,
+-	 * so let's do a warning here.
+-	 */
+-0:	trap
+-	EMIT_BUG_ENTRY 0b,__FILE__,__LINE__, BUGFLAG_WARNING
+-	bl	trace_hardirqs_on
+-
+-	/* Now enable for real */
+-	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL | MSR_EE)
+-	mtmsr	r10
+-
+-	REST_GPR(0, r1)
+-	REST_4GPRS(3, r1)
+-	REST_2GPRS(7, r1)
+-	b	DoSyscall
+-#endif /* CONFIG_TRACE_IRQFLAGS */
+-
  	.globl	transfer_to_syscall
  transfer_to_syscall:
-+	lwz     r10, TI_FLAGS(r2)
- 	mr	r9, r0
-+	andi.   r10, r10, _TIF_SYSCALL_DOTRACE
- 	addi	r10, r1, STACK_FRAME_OVERHEAD
-+	bnel-	save_nvgprs
- 	bl	system_call_exception
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	andi.	r12,r9,MSR_EE
+-	beq-	trace_syscall_entry_irq_off
+-#endif /* CONFIG_TRACE_IRQFLAGS */
+-
+-/*
+- * Handle a system call.
+- */
+-	.stabs	"arch/powerpc/kernel/",N_SO,0,0,0f
+-	.stabs	"entry_32.S",N_SO,0,0,0f
+-0:
+-
+-_GLOBAL(DoSyscall)
+-	stw	r3,ORIG_GPR3(r1)
+-	li	r12,0
+-	stw	r12,RESULT(r1)
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	/* Make sure interrupts are enabled */
+-	mfmsr	r11
+-	andi.	r12,r11,MSR_EE
+-	/* We came in with interrupts disabled, we WARN and mark them enabled
+-	 * for lockdep now */
+-0:	tweqi	r12, 0
+-	EMIT_BUG_ENTRY 0b,__FILE__,__LINE__, BUGFLAG_WARNING
+-#endif /* CONFIG_TRACE_IRQFLAGS */
+-	lwz	r11,TI_FLAGS(r2)
+-	andi.	r11,r11,_TIF_SYSCALL_DOTRACE
+-	bne-	syscall_dotrace
+-syscall_dotrace_cont:
+-	cmplwi	0,r0,NR_syscalls
+-	lis	r10,sys_call_table@h
+-	ori	r10,r10,sys_call_table@l
+-	slwi	r0,r0,2
+-	bge-	66f
+-
+-	barrier_nospec_asm
+-	/*
+-	 * Prevent the load of the handler below (based on the user-passed
+-	 * system call number) being speculatively executed until the test
+-	 * against NR_syscalls and branch to .66f above has
+-	 * committed.
+-	 */
+-
+-	lwzx	r10,r10,r0	/* Fetch system call handler [ptr] */
+-	mtlr	r10
+-	addi	r9,r1,STACK_FRAME_OVERHEAD
+-	PPC440EP_ERR42
+-	blrl			/* Call handler */
+-	.globl	ret_from_syscall
++	mr	r9, r0
++	addi	r10, r1, STACK_FRAME_OVERHEAD
++	bl	system_call_exception
  ret_from_syscall:
-+	lwz     r5, TI_FLAGS(r2)
- 	addi    r4, r1, STACK_FRAME_OVERHEAD
--	bl	syscall_exit_prepare
-+	andi.   r0, r5, _TIF_SYSCALL_DOTRACE | _TIF_SINGLESTEP | _TIF_USER_WORK_MASK
-+	bnel-	save_nvgprs
-+	bl	syscall_exit_prepare_begin
-+1:	lwz	r5, TI_FLAGS(r2)
+-#ifdef CONFIG_DEBUG_RSEQ
+-	/* Check whether the syscall is issued inside a restartable sequence */
+-	stw	r3,GPR3(r1)
+-	addi    r3,r1,STACK_FRAME_OVERHEAD
+-	bl      rseq_syscall
+-	lwz	r3,GPR3(r1)
+-#endif
+-	mr	r6,r3
+-	/* disable interrupts so current_thread_info()->flags can't change */
+-	LOAD_REG_IMMEDIATE(r10,MSR_KERNEL)	/* doesn't include MSR_EE */
+-	/* Note: We don't bother telling lockdep about it */
+-	SYNC
+-	mtmsr	r10
+-	lwz	r9,TI_FLAGS(r2)
+-	li	r8,-MAX_ERRNO
+-	andi.	r0,r9,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP|_TIF_USER_WORK_MASK|_TIF_PERSYSCALL_MASK)
+-	bne-	syscall_exit_work
+-	cmplw	0,r3,r8
+-	blt+	syscall_exit_cont
+-	lwz	r11,_CCR(r1)			/* Load CR */
+-	neg	r3,r3
+-	oris	r11,r11,0x1000	/* Set SO bit in CR */
+-	stw	r11,_CCR(r1)
+-syscall_exit_cont:
+-	lwz	r8,_MSR(r1)
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	/* If we are going to return from the syscall with interrupts
+-	 * off, we trace that here. It shouldn't normally happen.
+-	 */
+-	andi.	r10,r8,MSR_EE
+-	bne+	1f
+-	stw	r3,GPR3(r1)
+-	bl      trace_hardirqs_off
+-	lwz	r3,GPR3(r1)
+-1:
+-#endif /* CONFIG_TRACE_IRQFLAGS */
+-#if defined(CONFIG_4xx) || defined(CONFIG_BOOKE)
+-	/* If the process has its own DBCR0 value, load it up.  The internal
+-	   debug mode bit tells us that dbcr0 should be loaded. */
+-	lwz	r0,THREAD+THREAD_DBCR0(r2)
+-	andis.	r10,r0,DBCR0_IDM@h
+-	bnel-	load_dbcr0
+-#endif
+-#ifdef CONFIG_44x
+-BEGIN_MMU_FTR_SECTION
+-	lis	r4,icache_44x_need_flush@ha
+-	lwz	r5,icache_44x_need_flush@l(r4)
+-	cmplwi	cr0,r5,0
+-	bne-	2f
+-1:
+-END_MMU_FTR_SECTION_IFCLR(MMU_FTR_TYPE_47x)
+-#endif /* CONFIG_44x */
+-BEGIN_FTR_SECTION
+-	lwarx	r7,0,r1
+-END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+-	stwcx.	r0,0,r1			/* to clear the reservation */
+-	ACCOUNT_CPU_USER_EXIT(r2, r5, r7)
+-#ifdef CONFIG_PPC_BOOK3S_32
+-	kuep_unlock r5, r7
+-#endif
+-	kuap_check r2, r4
+-	lwz	r4,_LINK(r1)
+-	lwz	r5,_CCR(r1)
+-	mtlr	r4
+-	mtcr	r5
+-	lwz	r7,_NIP(r1)
+-	lwz	r2,GPR2(r1)
+-	lwz	r1,GPR1(r1)
+-#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
+-	mtspr	SPRN_NRI, r0
+-#endif
+-	mtspr	SPRN_SRR0,r7
+-	mtspr	SPRN_SRR1,r8
+-	SYNC
+-	RFI
+-#ifdef CONFIG_44x
+-2:	li	r7,0
+-	iccci	r0,r0
+-	stw	r7,icache_44x_need_flush@l(r4)
 +	addi    r4, r1, STACK_FRAME_OVERHEAD
-+	andi.	r0, r5, _TIF_USER_WORK_MASK & ~_TIF_RESTORE_TM
-+	beq+	1f
-+	bl	save_nvgprs
-+	bl	syscall_exit_prepare_loop
-+	b	1b
-+1:	bl	syscall_exit_prepare_end
- 	lwz	r2, _CCR(r1)
- 	lwz	r4, _NIP(r1)
- 	lwz	r5, _MSR(r1)
++	bl	syscall_exit_prepare
++	lwz	r2, _CCR(r1)
++	lwz	r4, _NIP(r1)
++	lwz	r5, _MSR(r1)
++	lwz	r6, _LINK(r1)
++	mtspr	SPRN_SRR0, r4
++	mtspr	SPRN_SRR1, r5
++	mtlr	r6
++	cmpwi	r3, 0
++	bne	2f
++1:	mtcr	r2
++	REST_GPR(2, r1)
++	REST_GPR(3, r1)
++	REST_GPR(1, r1)
++	rfi
++2:	lwz	r3, _CTR(r1)
++	lwz	r4, _XER(r1)
++	REST_NVGPRS(r1)
++	mtctr	r3
++	mtspr	SPRN_XER, r4
++	REST_GPR(0, r1)
++	REST_8GPRS(4, r1)
++	REST_GPR(12, r1)
+ 	b	1b
+-#endif  /* CONFIG_44x */
+-
+-66:	li	r3,-ENOSYS
+-	b	ret_from_syscall
+ 
+ 	.globl	ret_from_fork
+ ret_from_fork:
+@@ -490,86 +365,6 @@ ret_from_kernel_thread:
+ 	li	r3,0
+ 	b	ret_from_syscall
+ 
+-/* Traced system call support */
+-syscall_dotrace:
+-	SAVE_NVGPRS(r1)
+-	li	r0,0xc00
+-	stw	r0,_TRAP(r1)
+-	addi	r3,r1,STACK_FRAME_OVERHEAD
+-	bl	do_syscall_trace_enter
+-	/*
+-	 * Restore argument registers possibly just changed.
+-	 * We use the return value of do_syscall_trace_enter
+-	 * for call number to look up in the table (r0).
+-	 */
+-	mr	r0,r3
+-	lwz	r3,GPR3(r1)
+-	lwz	r4,GPR4(r1)
+-	lwz	r5,GPR5(r1)
+-	lwz	r6,GPR6(r1)
+-	lwz	r7,GPR7(r1)
+-	lwz	r8,GPR8(r1)
+-	REST_NVGPRS(r1)
+-
+-	cmplwi	r0,NR_syscalls
+-	/* Return code is already in r3 thanks to do_syscall_trace_enter() */
+-	bge-	ret_from_syscall
+-	b	syscall_dotrace_cont
+-
+-syscall_exit_work:
+-	andi.	r0,r9,_TIF_RESTOREALL
+-	beq+	0f
+-	REST_NVGPRS(r1)
+-	b	2f
+-0:	cmplw	0,r3,r8
+-	blt+	1f
+-	andi.	r0,r9,_TIF_NOERROR
+-	bne-	1f
+-	lwz	r11,_CCR(r1)			/* Load CR */
+-	neg	r3,r3
+-	oris	r11,r11,0x1000	/* Set SO bit in CR */
+-	stw	r11,_CCR(r1)
+-
+-1:	stw	r6,RESULT(r1)	/* Save result */
+-	stw	r3,GPR3(r1)	/* Update return value */
+-2:	andi.	r0,r9,(_TIF_PERSYSCALL_MASK)
+-	beq	4f
+-
+-	/* Clear per-syscall TIF flags if any are set.  */
+-
+-	li	r11,_TIF_PERSYSCALL_MASK
+-	addi	r12,r2,TI_FLAGS
+-3:	lwarx	r8,0,r12
+-	andc	r8,r8,r11
+-#ifdef CONFIG_IBM405_ERR77
+-	dcbt	0,r12
+-#endif
+-	stwcx.	r8,0,r12
+-	bne-	3b
+-	
+-4:	/* Anything which requires enabling interrupts? */
+-	andi.	r0,r9,(_TIF_SYSCALL_DOTRACE|_TIF_SINGLESTEP)
+-	beq	ret_from_except
+-
+-	/* Re-enable interrupts. There is no need to trace that with
+-	 * lockdep as we are supposed to have IRQs on at this point
+-	 */
+-	ori	r10,r10,MSR_EE
+-	SYNC
+-	mtmsr	r10
+-
+-	/* Save NVGPRS if they're not saved already */
+-	lwz	r4,_TRAP(r1)
+-	andi.	r4,r4,1
+-	beq	5f
+-	SAVE_NVGPRS(r1)
+-	li	r4,0xc00
+-	stw	r4,_TRAP(r1)
+-5:
+-	addi	r3,r1,STACK_FRAME_OVERHEAD
+-	bl	do_syscall_trace_leave
+-	b	ret_from_except_full
+-
+ 	/*
+ 	 * System call was called from kernel. We get here with SRR1 in r9.
+ 	 * Mark the exception as recoverable once we have retrieved SRR0,
 diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-index c301d666a3e5..1cc9a67cb42c 100644
+index 9abec6cd099c..c301d666a3e5 100644
 --- a/arch/powerpc/kernel/head_32.h
 +++ b/arch/powerpc/kernel/head_32.h
-@@ -174,13 +174,12 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
+@@ -174,12 +174,13 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
  	stw	r2,GPR2(r11)
  	addi	r10,r10,STACK_FRAME_REGS_MARKER@l
  	stw	r9,_MSR(r11)
--	li	r2, \trapno
-+	li	r2, \trapno + 1
+-	li	r2, \trapno + 1
++	li	r2, \trapno
  	stw	r10,8(r11)
  	stw	r2,_TRAP(r11)
  	SAVE_GPR(0, r11)
  	SAVE_4GPRS(3, r11)
  	SAVE_2GPRS(7, r11)
--	SAVE_NVGPRS(r11)
++	SAVE_NVGPRS(r11)
  	addi	r11,r1,STACK_FRAME_OVERHEAD
  	addi	r2,r12,-THREAD
  	stw	r11,PT_REGS(r12)
-diff --git a/arch/powerpc/kernel/syscall.c b/arch/powerpc/kernel/syscall.c
-index af449a4a8e8f..b15f19c00ccb 100644
---- a/arch/powerpc/kernel/syscall.c
-+++ b/arch/powerpc/kernel/syscall.c
-@@ -37,7 +37,7 @@ notrace long system_call_exception(long r3, long r4, long r5,
- 	if (!IS_ENABLED(CONFIG_PPC_BOOK3E))
- 		BUG_ON(!(regs->msr & MSR_RI));
- 	BUG_ON(IS_ENABLED(CONFIG_PPC64) && !(regs->msr & MSR_PR));
--	BUG_ON(!FULL_REGS(regs));
-+	BUG_ON(IS_ENABLED(CONFIG_PPC64) && !FULL_REGS(regs));
- 	BUG_ON(IS_ENABLED(CONFIG_PPC64) && get_softe(regs) != IRQS_ENABLED);
- 
- 	account_cpu_user_entry();
-@@ -145,11 +145,9 @@ static notrace inline bool prep_irq_for_enabled_exit(void)
-  * The function graph tracer can not trace the return side of this function,
-  * because RI=0 and soft mask state is "unreconciled", so it is marked notrace.
-  */
--notrace unsigned long syscall_exit_prepare(unsigned long r3,
--					   struct pt_regs *regs)
-+static64 notrace unsigned long
-+syscall_exit_prepare_begin(unsigned long r3, struct pt_regs *regs, unsigned long ti_flags)
- {
--	unsigned long *ti_flagsp = &current_thread_info()->flags;
--	unsigned long ti_flags;
- 	unsigned long ret = 0;
- 
- 	regs->result = r3;
-@@ -157,8 +155,6 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
- 	/* Check whether the syscall is issued inside a restartable sequence */
- 	rseq_syscall(regs);
- 
--	ti_flags = *ti_flagsp;
--
- 	if (unlikely(r3 >= (unsigned long)-MAX_ERRNO)) {
- 		if (likely(!(ti_flags & (_TIF_NOERROR | _TIF_RESTOREALL)))) {
- 			r3 = -r3;
-@@ -171,7 +167,7 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
- 			ret = _TIF_RESTOREALL;
- 		else
- 			regs->gpr[3] = r3;
--		clear_bits(_TIF_PERSYSCALL_MASK, ti_flagsp);
-+		clear_bits(_TIF_PERSYSCALL_MASK, &current_thread_info()->flags);
- 	} else {
- 		regs->gpr[3] = r3;
- 	}
-@@ -181,27 +177,35 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
- 		ret |= _TIF_RESTOREALL;
- 	}
- 
--again:
- 	local_irq_disable();
--	ti_flags = READ_ONCE(*ti_flagsp);
--	while (unlikely(ti_flags & (_TIF_USER_WORK_MASK & ~_TIF_RESTORE_TM))) {
--		local_irq_enable();
--		if (ti_flags & _TIF_NEED_RESCHED) {
--			schedule();
--		} else {
--			/*
--			 * SIGPENDING must restore signal handler function
--			 * argument GPRs, and some non-volatiles (e.g., r1).
--			 * Restore all for now. This could be made lighter.
--			 */
--			if (ti_flags & _TIF_SIGPENDING)
--				ret |= _TIF_RESTOREALL;
--			do_notify_resume(regs, ti_flags);
--		}
--		local_irq_disable();
--		ti_flags = READ_ONCE(*ti_flagsp);
-+
-+	return ret;
-+}
-+
-+static64 notrace unsigned long
-+syscall_exit_prepare_loop(unsigned long ret, struct pt_regs *regs, unsigned long ti_flags)
-+{
-+	local_irq_enable();
-+	if (ti_flags & _TIF_NEED_RESCHED) {
-+		schedule();
-+	} else {
-+		/*
-+		 * SIGPENDING must restore signal handler function
-+		 * argument GPRs, and some non-volatiles (e.g., r1).
-+		 * Restore all for now. This could be made lighter.
-+		 */
-+		if (ti_flags & _TIF_SIGPENDING)
-+			ret |= _TIF_RESTOREALL;
-+		do_notify_resume(regs, ti_flags);
- 	}
-+	local_irq_disable();
-+
-+	return ret;
-+}
- 
-+static64 notrace unsigned long
-+syscall_exit_prepare_end(unsigned long ret, struct pt_regs *regs, unsigned long ti_flags)
-+{
- 	if (IS_ENABLED(CONFIG_PPC_BOOK3S) && IS_ENABLED(CONFIG_PPC_FPU)) {
- 		if (IS_ENABLED(CONFIG_PPC_TRANSACTIONAL_MEM) &&
- 				unlikely((ti_flags & _TIF_RESTORE_TM))) {
-@@ -221,7 +225,8 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
- 
- 	if (unlikely(!prep_irq_for_enabled_exit())) {
- 		local_irq_enable();
--		goto again;
-+		local_irq_disable();
-+		return ret | 0x80000000;
- 	}
- 
- #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
-@@ -235,6 +240,30 @@ notrace unsigned long syscall_exit_prepare(unsigned long r3,
- 	return ret;
- }
- 
-+#ifdef CONFIG_PPC64
-+notrace unsigned long syscall_exit_prepare(unsigned long r3, struct pt_regs *regs)
-+{
-+	unsigned long ret;
-+	unsigned long *ti_flagsp = &current_thread_info()->flags;
-+	unsigned long ti_flags = *ti_flagsp;
-+
-+	ret = syscall_exit_prepare_begin(r3, regs, ti_flags);
-+
-+again:
-+	ti_flags = READ_ONCE(*ti_flagsp);
-+	if (unlikely(ti_flags & (_TIF_USER_WORK_MASK & ~_TIF_RESTORE_TM))) {
-+		ret = syscall_exit_prepare_loop(ret, regs, ti_flags);
-+		goto again;
-+	}
-+	ret = syscall_exit_prepare_end(ret, regs, ti_flags);
-+	if (unlikely(ret & 0x80000000)) {
-+		ret &= ~0x80000000;
-+		goto again;
-+	}
-+	return ret;
-+}
-+#endif
-+
- #ifdef CONFIG_PPC_BOOK3S_64 /* BOOK3E not yet using this */
- notrace unsigned long interrupt_exit_user_prepare(struct pt_regs *regs, unsigned long msr)
- {
+@@ -188,9 +189,6 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
+ 	   internal debug mode bit to do this. */
+ 	lwz	r12,THREAD_DBCR0(r12)
+ 	andis.	r12,r12,DBCR0_IDM@h
+-#endif
+-	ACCOUNT_CPU_USER_ENTRY(r2, r11, r12)
+-#if defined(CONFIG_40x)
+ 	beq+	3f
+ 	/* From user and task is ptraced - load up global dbcr0 */
+ 	li	r12,-1			/* clear all pending debug events */
+@@ -209,17 +207,7 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
+ 	tovirt_novmstack r2, r2 	/* set r2 to current */
+ 	lis	r11, transfer_to_syscall@h
+ 	ori	r11, r11, transfer_to_syscall@l
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	/*
+-	 * If MSR is changing we need to keep interrupts disabled at this point
+-	 * otherwise we might risk taking an interrupt before we tell lockdep
+-	 * they are enabled.
+-	 */
+ 	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL)
+-	rlwimi	r10, r9, 0, MSR_EE
+-#else
+-	LOAD_REG_IMMEDIATE(r10, MSR_KERNEL | MSR_EE)
+-#endif
+ #if defined(CONFIG_PPC_8xx) && defined(CONFIG_PERF_EVENTS)
+ 	mtspr	SPRN_NRI, r0
+ #endif
 -- 
 2.25.0
 
