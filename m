@@ -2,115 +2,173 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1553C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10738C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7855A206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FoP7Z2BY"
+	by mail.kernel.org (Postfix) with ESMTP id E17A7206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgDFLqL (ORCPT
+        id S1727779AbgDFLq3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:46:11 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:23474 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727481AbgDFLqL (ORCPT
+        Mon, 6 Apr 2020 07:46:29 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:47057 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727476AbgDFLq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:46:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586173570; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=fwS8B2ZENTJa//1JM/Tb3FQEjJEuwZJOlzrKeFY+6hA=; b=FoP7Z2BYzo9e3+b4+ERF7Ax/AcMgqRsFpRvKVKdSSHrekZB7+7yKjsECTnxS8c0MLlzLizIh
- 91z4xjykbNgxXutcxM/k+D2C5LRmKgTQym53ahYuW7wNE7Wqw0mWacvohcX/vhfwyedAU1sr
- maRKiXSyxvnitdMcG51sjWOW77M=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b1676.7fa8d21966f8-smtp-out-n04;
- Mon, 06 Apr 2020 11:45:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1F0FFC4478F; Mon,  6 Apr 2020 11:45:58 +0000 (UTC)
-Received: from [192.168.1.100] (unknown [157.44.182.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A8662C433D2;
-        Mon,  6 Apr 2020 11:45:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A8662C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
-Subject: Re: [PATCH 2/3] iio: adc: Add PMIC7 ADC bindings
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
- <1585064650-16235-3-git-send-email-jprakash@codeaurora.org>
- <CAHLCerO6GY4pNAxZucCOv3wSDweA1MsuPh5bGjSWoEUauv0iFA@mail.gmail.com>
-From:   Jishnu Prakash <jprakash@codeaurora.org>
-Message-ID: <a8d02f55-ef32-82e5-d261-f644d4c725ed@codeaurora.org>
-Date:   Mon, 6 Apr 2020 17:15:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <CAHLCerO6GY4pNAxZucCOv3wSDweA1MsuPh5bGjSWoEUauv0iFA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Mon, 6 Apr 2020 07:46:28 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 0E3E1CECC3;
+        Mon,  6 Apr 2020 13:56:01 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v1] Bluetooth: debugfs option to unset MITM flag
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200406165542.v1.1.Ibfc500cbf0bf2dc8429b17f064e960e95bb228e9@changeid>
+Date:   Mon, 6 Apr 2020 13:46:26 +0200
+Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Archie Pusaka <apusaka@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <9673F164-A14E-4DD6-88FB-277694C50328@holtmann.org>
+References: <20200406165542.v1.1.Ibfc500cbf0bf2dc8429b17f064e960e95bb228e9@changeid>
+To:     Archie Pusaka <apusaka@google.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amit,
+Hi Archie,
 
-On 4/3/2020 5:41 PM, Amit Kucheria wrote:
-> Hi Jishnu,
->
-> On Tue, Mar 24, 2020 at 9:15 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
->> Add documentation for PMIC7 ADC peripheral. For PMIC7 ADC, all SW
->> communication to ADC goes through PMK8350, which communicates with
->> other PMICs through PBS.
-> What is PMK8350? What is PBS? Please expand the acronyms and describe
-> more verbosely.
-PMK8350 is just the name of one of the PMIC7 family of PMICs. I'll 
-expand the description in the next post.
->
->> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
->> ---
->>   .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 28 ++++++++++++++++------
->>   1 file changed, 21 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
->> index 72db14c..20f010c 100644
->> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
->> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
->> @@ -13,7 +13,7 @@ maintainers:
->>   description: |
->>     SPMI PMIC voltage ADC (VADC) provides interface to clients to read
->>     voltage. The VADC is a 15-bit sigma-delta ADC.
->> -  SPMI PMIC5 voltage ADC (ADC) provides interface to clients to read
->> +  SPMI PMIC5/PMIC7 voltage ADC (ADC) provides interface to clients to read
->>     voltage. The VADC is a 16-bit sigma-delta ADC.
->>
->>
+> The BT qualification test SM/MAS/PKE/BV-01-C needs us to turn off
+> the MITM flag when pairing, and at the same time also set the io
+> capability to something other than no input no output.
+> 
+> Currently the MITM flag is only unset when the io capability is set
+> to no input no output, therefore the test cannot be executed.
+> 
+> This patch introduces a debugfs option for controlling whether MITM
+> flag should be set based on io capability.
+> 
+> Signed-off-by: Archie Pusaka <apusaka@chromium.org>
+> ---
+> 
+> include/net/bluetooth/hci.h |  1 +
+> net/bluetooth/smp.c         | 52 ++++++++++++++++++++++++++++++++++++-
+> 2 files changed, 52 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> index 79de2a659dd69..5e183487c7479 100644
+> --- a/include/net/bluetooth/hci.h
+> +++ b/include/net/bluetooth/hci.h
+> @@ -298,6 +298,7 @@ enum {
+> 	HCI_FORCE_STATIC_ADDR,
+> 	HCI_LL_RPA_RESOLUTION,
+> 	HCI_CMD_PENDING,
+> +	HCI_ENFORCE_MITM_SMP,
+
+actually don’t you mean HCI_FORCE_NO_MITM? From your description, you want a toggle that disables MITM no matter what.
+
+> 	__HCI_NUM_FLAGS,
+> };
+> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+> index d0b695ee49f63..4fa8b112fb607 100644
+> --- a/net/bluetooth/smp.c
+> +++ b/net/bluetooth/smp.c
+> @@ -2396,7 +2396,8 @@ int smp_conn_security(struct hci_conn *hcon, __u8 sec_level)
+> 	/* Require MITM if IO Capability allows or the security level
+> 	 * requires it.
+> 	 */
+> -	if (hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT ||
+> +	if ((hci_dev_test_flag(hcon->hdev, HCI_ENFORCE_MITM_SMP) &&
+> +	     hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT) ||
+> 	    hcon->pending_sec_level > BT_SECURITY_MEDIUM)
+> 		authreq |= SMP_AUTH_MITM;
+
+	/* New comment for this case ..
+	if (!hci_dev_test_flag(hcon->hdev, HCI_FORCE_NO_MITM)) {
+		/* Move comment here ..
+		if (hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT ||
+		    hcon->pending_sec_level > BT_SECURITY_MEDIUM)
+			authreq |= SMP_AUTH_MITM;
+	}
+
+> 
+> @@ -3402,6 +3403,50 @@ static const struct file_operations force_bredr_smp_fops = {
+> 	.llseek		= default_llseek,
+> };
+> 
+> +static ssize_t enforce_mitm_smp_read(struct file *file,
+> +				     char __user *user_buf,
+> +				     size_t count, loff_t *ppos)
+> +{
+> +	struct hci_dev *hdev = file->private_data;
+> +	char buf[3];
+> +
+> +	buf[0] = hci_dev_test_flag(hdev, HCI_ENFORCE_MITM_SMP) ? 'Y' : 'N';
+> +	buf[1] = '\n';
+> +	buf[2] = '\0';
+> +	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
+> +}
+> +
+> +static ssize_t enforce_mitm_smp_write(struct file *file,
+> +				      const char __user *user_buf,
+> +				      size_t count, loff_t *ppos)
+> +{
+> +	struct hci_dev *hdev = file->private_data;
+> +	char buf[32];
+> +	size_t buf_size = min(count, (sizeof(buf) - 1));
+> +	bool enable;
+> +
+> +	if (copy_from_user(buf, user_buf, buf_size))
+> +		return -EFAULT;
+> +
+> +	buf[buf_size] = '\0';
+> +	if (strtobool(buf, &enable))
+> +		return -EINVAL;
+> +
+> +	if (enable == hci_dev_test_flag(hdev, HCI_ENFORCE_MITM_SMP))
+> +		return -EALREADY;
+> +
+> +	hci_dev_change_flag(hdev, HCI_ENFORCE_MITM_SMP);
+> +
+> +	return count;
+> +}
+> +
+> +static const struct file_operations enforce_mitm_smp_fops = {
+> +	.open		= simple_open,
+> +	.read		= enforce_mitm_smp_read,
+> +	.write		= enforce_mitm_smp_write,
+> +	.llseek		= default_llseek,
+> +};
+> +
+> int smp_register(struct hci_dev *hdev)
+> {
+> 	struct l2cap_chan *chan;
+> @@ -3426,6 +3471,11 @@ int smp_register(struct hci_dev *hdev)
+> 
+> 	hdev->smp_data = chan;
+> 
+> +	/* Enforce the policy of determining MITM flag by io capabilities. */
+> +	hci_dev_set_flag(hdev, HCI_ENFORCE_MITM_SMP);
+
+No. Lets keep the current behavior the default.
+
+> +	debugfs_create_file("enforce_mitm_smp", 0644, hdev->debugfs, hdev,
+> +			    &enforce_mitm_smp_fops);
+> +
+
+And this needs to move into hci_debugfs.c.
+
+Regards
+
+Marcel
+
