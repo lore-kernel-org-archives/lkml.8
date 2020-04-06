@@ -5,57 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FE4C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1106EC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F67120787
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB9A20787
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:13:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eeEIAlYX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OQSSHqaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgDFWNQ (ORCPT
+        id S1726421AbgDFWNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 18:13:16 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24301 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726453AbgDFWNO (ORCPT
+        Mon, 6 Apr 2020 18:13:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53642 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726130AbgDFWNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 18:13:14 -0400
+        Mon, 6 Apr 2020 18:13:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586211193;
+        s=mimecast20190719; t=1586211189;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=D7FAESrU1cyyiP4ssSlJ0zFYn42hCfuVnZNataCYmDk=;
-        b=eeEIAlYXVCpbE1IWHbRhBkdMmamj51mUV69RIYAPqbsZEdUUJprxPdty4pm8TcaH5dIg4K
-        GFZrUlpgNX2c0ts6/HiSDA+/4WFadfo7LZCB01s0zNxTvDIIBIQMA+IKr5kYtYxvcq2uy1
-        pGz2xPTgUB/lMFgeqIyInwKqQxbkeWM=
+        bh=61pSeHFI0mHGhKeOKlyyVpQ4t+B+NWcRA1rpl6V74kU=;
+        b=OQSSHqaZBEdM5XiTiJcD6R9zlxEYsQdCCfRN70XLZlQs77Aj5W3bMgV5jpEFXGhZkkpFcr
+        RwCFX8a6yB/84IFvfj2oIkUHDwngyfW25FVTRuQ/R/ki4JYkGxfMbq3bQTvrBujQWvAtTh
+        TDrQUnvHZ4/EcPKdnLP+XMYk68vXnJE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-jJmSxJ7mMIaTv0zYg4PmEQ-1; Mon, 06 Apr 2020 18:13:11 -0400
-X-MC-Unique: jJmSxJ7mMIaTv0zYg4PmEQ-1
+ us-mta-257-ygKCmBA-PjC_Bdt7SrkVcw-1; Mon, 06 Apr 2020 18:13:08 -0400
+X-MC-Unique: ygKCmBA-PjC_Bdt7SrkVcw-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 874AF801A0D;
-        Mon,  6 Apr 2020 22:13:09 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61FEE18AB2CC;
+        Mon,  6 Apr 2020 22:13:06 +0000 (UTC)
 Received: from Ruby.redhat.com (ovpn-117-12.rdu2.redhat.com [10.10.117.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8BEA4608E1;
-        Mon,  6 Apr 2020 22:13:08 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FB4E608E1;
+        Mon,  6 Apr 2020 22:13:05 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org
-Cc:     Sean Paul <sean@poorly.run>,
+Cc:     Sean Paul <sean@poorly.run>, stable@vger.kernel.org,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] drm/dp_mst: Print errors on ACT timeouts
-Date:   Mon,  6 Apr 2020 18:12:53 -0400
-Message-Id: <20200406221253.1307209-5-lyude@redhat.com>
+        Daniel Vetter <daniel@ffwll.ch>,
+        Todd Previte <tprevite@gmail.com>,
+        Dave Airlie <airlied@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/4] drm/dp_mst: Reformat drm_dp_check_act_status() a bit
+Date:   Mon,  6 Apr 2020 18:12:51 -0400
+Message-Id: <20200406221253.1307209-3-lyude@redhat.com>
 In-Reply-To: <20200406221253.1307209-1-lyude@redhat.com>
 References: <20200406221253.1307209-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -66,41 +68,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although it's not unexpected for drm_dp_check_act_status() to fail due
-to DPCD read failures (as the hub may have just been unplugged
-suddenly), timeouts are a bit more worrying as they either mean we need
-a longer timeout value, or we aren't setting up payload allocations
-properly. So, let's start printing errors on timeouts.
+Just add a bit more line wrapping, get rid of some extraneous
+whitespace, remove an unneeded goto label, and move around some variable
+declarations. No functional changes here.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
+[this isn't a fix, but it's needed for the fix that comes after this]
+Fixes: ad7f8a1f9ced ("drm/helper: add Displayport multi-stream helper (v0=
+.6)")
 Cc: Sean Paul <sean@poorly.run>
+Cc: <stable@vger.kernel.org> # v3.17+
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
 dp_mst_topology.c
-index ce61964baa7c..0cbeb0f5c834 100644
+index 828ca63cc576..c83adbdfc1cd 100644
 --- a/drivers/gpu/drm/drm_dp_mst_topology.c
 +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -4499,10 +4499,14 @@ int drm_dp_check_act_status(struct drm_dp_mst_top=
-ology_mgr *mgr)
- 				 status & DP_PAYLOAD_ACT_HANDLED || status < 0,
- 				 100, timeout_ms * USEC_PER_MSEC);
- 	if (ret < 0 && status >=3D 0) {
--		DRM_DEBUG_KMS("Failed to get ACT bit %d after %dms\n",
--			      status, timeout_ms);
-+		DRM_ERROR("Failed to get ACT after %dms, last status: %02x\n",
-+			  timeout_ms, status);
- 		return -EINVAL;
- 	} else if (status < 0) {
-+		/*
-+		 * Failure here isn't unexpected - the hub may have
-+		 * just been unplugged
-+		 */
- 		DRM_DEBUG_KMS("Failed to read payload table status: %d\n",
- 			      status);
- 		return status;
+@@ -4473,33 +4473,31 @@ static int drm_dp_dpcd_write_payload(struct drm_d=
+p_mst_topology_mgr *mgr,
+  */
+ int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
+ {
++	int count =3D 0, ret;
+ 	u8 status;
+-	int ret;
+-	int count =3D 0;
+=20
+ 	do {
+-		ret =3D drm_dp_dpcd_readb(mgr->aux, DP_PAYLOAD_TABLE_UPDATE_STATUS, &s=
+tatus);
+-
++		ret =3D drm_dp_dpcd_readb(mgr->aux,
++					DP_PAYLOAD_TABLE_UPDATE_STATUS,
++					&status);
+ 		if (ret < 0) {
+-			DRM_DEBUG_KMS("failed to read payload table status %d\n", ret);
+-			goto fail;
++			DRM_DEBUG_KMS("failed to read payload table status %d\n",
++				      ret);
++			return ret;
+ 		}
+=20
+ 		if (status & DP_PAYLOAD_ACT_HANDLED)
+ 			break;
+ 		count++;
+ 		udelay(100);
+-
+ 	} while (count < 30);
+=20
+ 	if (!(status & DP_PAYLOAD_ACT_HANDLED)) {
+-		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n", status, c=
+ount);
+-		ret =3D -EINVAL;
+-		goto fail;
++		DRM_DEBUG_KMS("failed to get ACT bit %d after %d retries\n",
++			      status, count);
++		return -EINVAL;
+ 	}
+ 	return 0;
+-fail:
+-	return ret;
+ }
+ EXPORT_SYMBOL(drm_dp_check_act_status);
+=20
 --=20
 2.25.1
 
