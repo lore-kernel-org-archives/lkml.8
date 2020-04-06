@@ -2,174 +2,68 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B24C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6B3C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F122078A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CE02078A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:02:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="aPF4UsVE"
+	dkim=pass (1024-bit key) header.d=protonmail.ch header.i=@protonmail.ch header.b="o8wQl2YY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbgDFMAb (ORCPT
+        id S1727755AbgDFMCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:00:31 -0400
-Received: from mout.web.de ([217.72.192.78]:51229 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgDFMAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:00:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586174417;
-        bh=aT+GoHz8EU0Xuk1glzSyos3tix2HwJQpv2+cwNsQqOw=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=aPF4UsVEzECJrWfA6SrRpyUVTqu9Es1MDaPAB3vDPISacd4myeRN/BA29+KYIyt/v
-         yZfOqq8gZkrRrSW0LsyKoLmaHYHpCPun3Mf0CMgacNya+2pmbA7Ln532LZ9pv4oZgc
-         32mU5La+ax/MVl2VgtN0Trv1cNDkiFcg1fo9NLg0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.243.176.200]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MfHk6-1jeics3JsI-00OnR9; Mon, 06
- Apr 2020 14:00:16 +0200
-Subject: Re: [PATCH v4] powerpc/powernv: add NULL check after kzalloc in
- opal_add_one_export
-To:     Qiujun Huang <hqjagain@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mon, 6 Apr 2020 08:02:35 -0400
+Received: from mail-40130.protonmail.ch ([185.70.40.130]:25187 "EHLO
+        mail-40130.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgDFMCf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 08:02:35 -0400
+Date:   Mon, 06 Apr 2020 12:02:27 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.ch;
+        s=default; t=1586174552;
+        bh=5WZ5+FLUh3mc2UsRwK/MWjgcY03tO2vIuA2n/70q2tk=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=o8wQl2YYnR8Gw0Lm3uYAL71gdAmvUeBjqXXf/X9DJmgauW1cM3LknS3QI1/qJ0VN3
+         BxRzfZFTAy99T2RAGySkh2+Z1qkDndj9u6bfnOobcE5bZ/cFaGO4lwjKZMPE+VbBT/
+         fPHQBjYCIRIgn1x9P2tqmozf7xIxOIssD8dWTSwg=
+To:     LSM List <linux-security-module@vger.kernel.org>
+From:   Jordan Glover <Golden_Miller83@protonmail.ch>
+Cc:     "SMACK-discuss@lists.01.org" <SMACK-discuss@lists.01.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "Schaufler, Casey" <casey.schaufler@intel.com>,
         LKML <linux-kernel@vger.kernel.org>
-References: <20200406093944.4174-1-hqjagain@gmail.com>
- <87eet0sy79.fsf@mpe.ellerman.id.au>
- <CAJRQjoeTYg6NnxwvXusU6fdOFOmOiceokYJZQ23-0YQo_yqZ5w@mail.gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <b7d64d4a-74dd-ee21-db7b-018070f1295f@web.de>
-Date:   Mon, 6 Apr 2020 14:00:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Reply-To: Jordan Glover <Golden_Miller83@protonmail.ch>
+Subject: =?UTF-8?Q?[SMACK]_Build-time_warning_from_Linux_5.6.2:_unused_variable_?=
+ =?UTF-8?Q?=E2=80=98sip=E2=80=99?=
+Message-ID: <lTqravVBK9-oBbja6fvn3DqA3lv42gF_wg4Q9fC0FhfG1DbinZb4oKl7JV_meJYykJtkvN2gXhy-bCAgIlRglRT2z-oQ6wFF6aPx2vo-ZAs=@protonmail.ch>
 MIME-Version: 1.0
-In-Reply-To: <CAJRQjoeTYg6NnxwvXusU6fdOFOmOiceokYJZQ23-0YQo_yqZ5w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MIrbXLldFHhN1dFqtAD7lfwsCiuObMJvbL5nCfgLfRWR81OvnWK
- /gr5hvWcJkcqqsdLuUz5xCq5j46548CRDAFUa6iTMMJ/HgGuWltL6s//zZPIEBW9mEFQjQY
- hKcVNV4JJoLNkNQfHT41jCWCG9BxV4NCWyXPUZwh5IHYWtZllEv48Ceh4K9zOZwnzuqdL76
- Y4ViTMInscENY54zkH5zg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DDx9Oxc4dOs=:iBu+oIxMSXjXX4lDsS9KdV
- QHyFdaB7LikOgZ8VExTOTbzxH/pS+cbe4Y8OT4moYdfAykwcvY5PsN5oTlXboq2Mcjjx3GZko
- 1blpLAWJdX6qbPnqGtOofbAd2yc5mWI3MQsKN0HUOp/SQYyQ6Hv0iUzpl28sqhaGcFXpZ8fk0
- XlNMB7rGrLqS9+2zZ1gZzKH376Xjo+/NGLR9wg2uYgjFiSehm4Hnk/uMQPYpNXoalAq7dg6fa
- TGZzB5k2G+TdbUV/xWiOIidF1wbETIpk8Mj3JGgisqmPb47NQMOdlB1q797e8jZbsK0/Bs1jT
- o6lUke+PeVZVYx0mn8zvqJ3h07ijwOPMvTPlZPE3JU0PKcxDbSA4MsczMaI/cO6exOXtvJMIW
- 7T6qRJLQ6Pe6+HyTazh1Nk3YNKILAFXH4ZEVgx+B91XQqyETLmekEJ7PoZ3zrabI+RISkKqAD
- VZkP7d+PkKZGunhr2p64MxeVD3xEatJ1L5gWx5Gws2JAZ2NQJQoITmHbmuMl4EhZRistdjNSR
- SeDm+6JxsjRmModZuy5Y1e9oaewwB9IUYAQn2xpJxMBGjtgIUmLusG6+77Zdp+feHFI7r5GtW
- jeJ9s1GqG2hI6DwK0Lv19jrw7NNqh+lic7whXzfqxIOrsVnkt0KHLqpBEBl0R/4HTRepUsKMv
- pVx/BmmxX4bFdCZVIpPfzc8Iyy4uSOTaYEAReqoBDr5Fha0RrAJJJ1KSRNs3uMTD6QXoPvwDi
- 2Qkdnk43grCUEVfoW48RDjOot6FQL+Usopqb7DPYeaKY4+JOxdSNnoXImco5q+2GfdMwn0ell
- 7N8awBmC5qiebRXok04jTgdDPhZdV5AvhJPDmOnHf4rnB6RkRZAjjfSFUg2x03ju6RaFS+RR2
- 6O2ukrZdM/Z2tC/AGpBWkdJ5SMKwa3C2pvjlBhd7g3QJD1vSF6Y06IEjf4uG0CBmXY0C08c/B
- QMkdZ0I+1vOHdBnqCzY85RIbGSjGQDknYtcYsvengBwpR6sJirgEkfpKc2BNDiQRNPkev2LH+
- bDPTDoLntHDhpE3vHZtr3BuLMv8r/6SzVx7Ro3pEvZiK7YBGLGSowi+176oMdnPm0bC4Prk0C
- M/gXcYgpquWcu8xECuh82aZfdYblY6tLxWjofl/U4MjIMIK2AFMyk6Vki95ycb/vIaIARFjjH
- EojgwJzIiGSZ/2AssbL+O9a00XJWblMXKnTbQCB+UwTE9PoI/yP42Y5S7uBZfcs7cbBKSzmM+
- VOt0ht6QM5iMrDSve
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>> Here needs a NULL check as kzalloc may fail returning NULL.
+Hello, during build of Linux 5.6.2 (also happened on 5.5.x series)
+gcc (9.3) prints following warning:
 
-I find this wording potentially confusing.
+security/smack/smack_lsm.c: In function =E2=80=98smack_socket_connect=
+=E2=80=99:
+security/smack/smack_lsm.c:2838:24: warning: unused variable =E2=80=98sip=
+=E2=80=99 [-Wunused-variable]
+ 2838 |   struct sockaddr_in6 *sip =3D (struct sockaddr_in6 *)sap;
 
-* Such function calls will usually succeed to return a pointer.
+My kernel has set CONFIG_IPV6=3Dn during build.
 
-* The desired memory allocation can fail.
-
-* Please choose an imperative wording for the change description.
-
-
->>> Issue was found by coccinelle.
-
-Please omit this line after the addition for the reference to the SmPL scr=
-ipt.
+Jordan
 
 
->>> Generated by: scripts/coccinelle/null/kmerr.cocci
-=E2=80=A6
->>> Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
-
-I wonder about this tag because of requested changes for the shown patch a=
-pproach.
-
-I recommend to add the tag =E2=80=9CFixes=E2=80=9D.
 
 
->> Thanks for putting up with all the review comments :)
 
-This seems to become challenging here.
-
-
->> But I think this should actually be two patches now.
-=E2=80=A6
-
-> Get that, I'll separate them.
-
-I wonder why it was not directly tried in this patch version.
-
-
->>> v3->v4:
-
-I suggest to apply a shorter version numbering format (without an arrow).
-
-Regards,
-Markus
