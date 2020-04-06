@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355A3C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FDCC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A93C206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8A1206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hGDva9WH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BIQdkNq/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgDFVfc (ORCPT
+        id S1727072AbgDFVfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:35:32 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55612 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726885AbgDFVfV (ORCPT
+        Mon, 6 Apr 2020 17:35:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39547 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726860AbgDFVfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Apr 2020 17:35:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -28,47 +28,48 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=1aA96KgFgaIj2U2msrh3/QyeM1jNTu3MJRWpUI5kTTY=;
-        b=hGDva9WHED6EhQFBoI647CpMwFENeeUkrHXOwCdzna1lHbsOrCC37eZN3dLLBCSqZFAGYe
-        MaLWMb5eCtMhINRBtjM7Xc7HSuJ7U91NwwEIiY+D7v83E/sWshEsjifaD2kdPvN+qYLpK3
-        8Odm5hXGT8wcwKYzmQOwjHXJEHb1x0w=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-366-70a91reLOT-6LIrl5OVNgw-1; Mon, 06 Apr 2020 17:35:19 -0400
-X-MC-Unique: 70a91reLOT-6LIrl5OVNgw-1
-Received: by mail-wm1-f69.google.com with SMTP id r8so154623wmn.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:35:18 -0700 (PDT)
+        bh=nyoiGemXvXpEt4ED7nhnG2yhASqK8hx21hXdXEJe9tU=;
+        b=BIQdkNq/m46RSkJpZ+jt22ToJ8ZIC36vaCc5m37RjAQrjWrNjkxIi6sAM/1su8pJoqlW8h
+        sTkOeLO7SRASxceMDXwCuyQBRquRLVY68X4bOfDJrFxUwWvnGuVmcDTjk3JvGsPt716Aak
+        Y0GQdtpF3+viVE10MQsXibEnFElAesU=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-265-XvWcyVBzOZG0xObg28Lclg-1; Mon, 06 Apr 2020 17:35:16 -0400
+X-MC-Unique: XvWcyVBzOZG0xObg28Lclg-1
+Received: by mail-wm1-f71.google.com with SMTP id y1so79302wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:35:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1aA96KgFgaIj2U2msrh3/QyeM1jNTu3MJRWpUI5kTTY=;
-        b=WjzDZZwnkBiHTv2d3jIHOBb6HRAleM8gXrC8sReI+84k0wJrb3w5311oFsm5wE7UIx
-         3K/Q+zeNvd7tOqJBok9+OmaLYbT3VLJFlVLkm2ZT8wTT5fracd0rJWwWSH7J6K15xiAj
-         yRuc7HZ9Dq9QatcG583+15jYcPyRlaecrzwrRYhCGwBTTIkfXH1/TxxsU6a56Vu6qpyq
-         /3mYh9O4chMVe4ZXY9yewldJeC3w2FsnMc7kZK+CZNnlGBWCKKApSLn+pB9zwO1ehNS9
-         aLDTwIV6gvANNyG+3ODEKBBrELHLlXre9cEdxi8ekpq83VbXB0ufI1pwVfQJRxeUHyuG
-         VTFw==
-X-Gm-Message-State: AGi0PuYlSq/M3vqC5NJNwwtQPtrT5H8k2baq0zWAatPJ/B3gsBq60Dml
-        ihX1jiY4RKSNx23hzCIOQ+K0qeff7y9jmWK2aSZbB9qpMnncSBat0ODngbblSzfMIdA1rZo/2Kb
-        YVl2MapPZ9HSNbhKFpGLvVesq
-X-Received: by 2002:a7b:cb45:: with SMTP id v5mr1335910wmj.17.1586208917729;
-        Mon, 06 Apr 2020 14:35:17 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKHBE9kKX63pgbMP3pjCKoJHM/e8bwVo/gQ4w7SHS7x5DBizLjnjROi7qHhV5To0pZbVsHmIA==
-X-Received: by 2002:a7b:cb45:: with SMTP id v5mr1335889wmj.17.1586208917509;
-        Mon, 06 Apr 2020 14:35:17 -0700 (PDT)
+        bh=nyoiGemXvXpEt4ED7nhnG2yhASqK8hx21hXdXEJe9tU=;
+        b=lg/qHP173U/iM7UZpAfTC8R7CEell5m6aC0mGemyOM5gh3R6aTFlwkKT772iGqJXKc
+         HP9p71XA23OdaGNsBnzD6hJCtpxiKR9pRNep1VGx5ov+wsndn2grrueYw/3BYU0bqhkb
+         OstZjeILJGPmrBqr0L/hrqef+s4v5GTvc8AInZEiS3/zVNdi4jC66o8Nb2BmiLyIqnJ+
+         4lIRoTGCBFJ+UwlA153h36NKfAlNParT116YJEEw+aL8Zxqyq8IBEintvbBzpbmyiBWO
+         Kze0DswRYdcXsYww2wgboAHyTtLugW6A5Ja99wRDn04CGe1A6oEu16qqmEPViQGKBxb+
+         OefA==
+X-Gm-Message-State: AGi0PubrgxD1Mzi4qxvuvogp30jcrzEBRupufJvxgHeU1jTCYQKgrlUu
+        HN1c4qnqWmSxg8FPScomgijTe+JRKz7XUeC4PUX5QwFz/Q3gKnM3hexq/NBiKHRNBuGTTptoHPF
+        TBsZTrWgt0eW51MLxZbqq1kVw
+X-Received: by 2002:a1c:7415:: with SMTP id p21mr1024833wmc.93.1586208915664;
+        Mon, 06 Apr 2020 14:35:15 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL4GuRrYUwJciJb7p5n4u82sqER064jqytOfazTBkvkOPnUWpHqTGZuhx/QeD+k2BSUgy/iiQ==
+X-Received: by 2002:a1c:7415:: with SMTP id p21mr1024820wmc.93.1586208915483;
+        Mon, 06 Apr 2020 14:35:15 -0700 (PDT)
 Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id m21sm1071211wmc.6.2020.04.06.14.35.16
+        by smtp.gmail.com with ESMTPSA id q187sm980306wma.41.2020.04.06.14.35.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 14:35:17 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 17:35:15 -0400
+        Mon, 06 Apr 2020 14:35:15 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 17:35:13 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org
-Subject: [PATCH v5 11/12] remoteproc: switch to virtio_legacy_init/size
-Message-ID: <20200406213314.248038-12-mst@redhat.com>
+Cc:     Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v5 10/12] vop: switch to virtio_legacy_init/size
+Message-ID: <20200406213314.248038-11-mst@redhat.com>
 References: <20200406213314.248038-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -90,22 +91,66 @@ Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 maintainers, pls ack merging this through virtio tree due to dependency
 on previous patches in the patchset.
 
- drivers/remoteproc/remoteproc_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/mic/vop/vop_main.c   | 5 +++--
+ drivers/misc/mic/vop/vop_vringh.c | 8 +++++---
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 097f33e4f1f3..c350a01e6c4e 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -322,7 +322,7 @@ int rproc_alloc_vring(struct rproc_vdev *rvdev, int i)
- 	struct rproc_mem_entry *mem;
+diff --git a/drivers/misc/mic/vop/vop_main.c b/drivers/misc/mic/vop/vop_main.c
+index 85942f6717c5..829b3b14b1d7 100644
+--- a/drivers/misc/mic/vop/vop_main.c
++++ b/drivers/misc/mic/vop/vop_main.c
+@@ -283,7 +283,7 @@ static struct virtqueue *vop_new_virtqueue(unsigned int index,
+ 	bool weak_barriers = false;
+ 	struct vring vring;
  
- 	/* actual size of vring (in bytes) */
--	size = PAGE_ALIGN(vring_size(rvring->len, rvring->align));
-+	size = PAGE_ALIGN(vring_legacy_size(rvring->len, rvring->align));
+-	vring_init(&vring, num, pages, MIC_VIRTIO_RING_ALIGN);
++	vring_legacy_init(&vring, num, pages, MIC_VIRTIO_RING_ALIGN);
+ 	vring.used = used;
  
- 	rsc = (void *)rproc->table_ptr + rvdev->rsc_offset;
+ 	return __vring_new_virtqueue(index, vring, vdev, weak_barriers, context,
+@@ -320,7 +320,8 @@ static struct virtqueue *vop_find_vq(struct virtio_device *dev,
+ 	/* First assign the vring's allocated in host memory */
+ 	vqconfig = _vop_vq_config(vdev->desc) + index;
+ 	memcpy_fromio(&config, vqconfig, sizeof(config));
+-	_vr_size = vring_size(le16_to_cpu(config.num), MIC_VIRTIO_RING_ALIGN);
++	_vr_size = vring_legacy_size(le16_to_cpu(config.num),
++				     MIC_VIRTIO_RING_ALIGN);
+ 	vr_size = PAGE_ALIGN(_vr_size + sizeof(struct _mic_vring_info));
+ 	va = vpdev->hw_ops->remap(vpdev, le64_to_cpu(config.address), vr_size);
+ 	if (!va)
+diff --git a/drivers/misc/mic/vop/vop_vringh.c b/drivers/misc/mic/vop/vop_vringh.c
+index 30eac172f017..0535c02d637d 100644
+--- a/drivers/misc/mic/vop/vop_vringh.c
++++ b/drivers/misc/mic/vop/vop_vringh.c
+@@ -296,7 +296,8 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
  
+ 		num = le16_to_cpu(vqconfig[i].num);
+ 		mutex_init(&vvr->vr_mutex);
+-		vr_size = PAGE_ALIGN(vring_size(num, MIC_VIRTIO_RING_ALIGN) +
++		vr_size = PAGE_ALIGN(vring_legacy_size(num,
++						       MIC_VIRTIO_RING_ALIGN) +
+ 			sizeof(struct _mic_vring_info));
+ 		vr->va = (void *)
+ 			__get_free_pages(GFP_KERNEL | __GFP_ZERO,
+@@ -308,7 +309,8 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
+ 			goto err;
+ 		}
+ 		vr->len = vr_size;
+-		vr->info = vr->va + vring_size(num, MIC_VIRTIO_RING_ALIGN);
++		vr->info = vr->va + vring_legacy_size(num,
++						      MIC_VIRTIO_RING_ALIGN);
+ 		vr->info->magic = cpu_to_le32(MIC_MAGIC + vdev->virtio_id + i);
+ 		vr_addr = dma_map_single(&vpdev->dev, vr->va, vr_size,
+ 					 DMA_BIDIRECTIONAL);
+@@ -321,7 +323,7 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
+ 		}
+ 		vqconfig[i].address = cpu_to_le64(vr_addr);
+ 
+-		vring_init(&vr->vr, num, vr->va, MIC_VIRTIO_RING_ALIGN);
++		vring_legacy_init(&vr->vr, num, vr->va, MIC_VIRTIO_RING_ALIGN);
+ 		ret = vringh_init_kern(&vvr->vrh,
+ 				       *(u32 *)mic_vq_features(vdev->dd),
+ 				       num, false, vr->vr.desc, vr->vr.avail,
 -- 
 MST
 
