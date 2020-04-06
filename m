@@ -2,125 +2,323 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF28C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1050C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1A5223FB
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8537B22B4E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586180146;
+	bh=+9OLpbCWgabkd5QGYom6qAzlc/KhMbEWoliL/vpH1kQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=zyw8+o7/A4M09i/17CvOSHRao6RFELqLRk9LVI2coWTvdHztkWZCIJxW4+kPIuJCa
+	 E6dE7GzyXIdoAJJ/rIXPap+rlk0/YszjSbYrfGc6f6ZpjZKAH4UBC18zvzKSOhQt6b
+	 viKglRl35G0uiKEJmOzTbaP7Uy22RzrZFrXIz5VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgDFNfg convert rfc822-to-8bit (ORCPT
+        id S1728532AbgDFNfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:35:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33904 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728318AbgDFNfg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:35:36 -0400
-Received: from mail-pj1-f72.google.com ([209.85.216.72])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jLRuX-0001tv-PN
-        for linux-kernel@vger.kernel.org; Mon, 06 Apr 2020 13:35:33 +0000
-Received: by mail-pj1-f72.google.com with SMTP id p14so14847876pjp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:35:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=CSKUSqRfNTXzOLX6+efSm/2vYgKbSyfaW2ix36hULHI=;
-        b=jA6hWxTgIyHBR/TonfjYPuuXneWPVkQJGeA70mFhqmn0GIy+oOO2LlWBWbQjT28MUN
-         vIRrCLeD2yHFaMX5b0kdlIkeqs9p07NVldHfx4qMwLheSgwqNdZngXkWwRy2Pp55+Gin
-         CbzTEQgIFAbRW3oxlbJ6wV9Vte1Qg5mYVMcs5QTqw6hHxh8beIccGesvVA7la4bH0c1R
-         pdtXSsh4wMEWCJIUZr9XlqHgyeToGV6qB7GjbF7O/sfUpX27bWq/AxLRpvXzTIeaSeM1
-         Lw8xaI+C8dC17ApnO4U+DGKUfsOgjdoSljcwFjHUBGAWxF2LaSSTrX//dctDt1wdLU9d
-         9aNg==
-X-Gm-Message-State: AGi0PuZOu2CFznvOmw6K1svj8IkefwpKG6Q850J+VZHNXwtaPzdXR5Jz
-        7U+K8mSlLsCt4MrBuLOlmiF974VvZ/AkY6x4ScH0gAI3dUB0ASFdxi7jBs6OcTAayx//GRF8mYL
-        d9GJelt5mT3WP70TH1tSH+4PEgLfrf66EjVkfh8V/GA==
-X-Received: by 2002:a17:90a:db02:: with SMTP id g2mr26642888pjv.49.1586180132472;
-        Mon, 06 Apr 2020 06:35:32 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJcF25kagP8I8oRos42bmY0H7Bwv4yxtPEGXfY1khLT0S5/ecXXfz8/hbPT1o2+s7NVDz0CPA==
-X-Received: by 2002:a17:90a:db02:: with SMTP id g2mr26642844pjv.49.1586180132092;
-        Mon, 06 Apr 2020 06:35:32 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id a8sm10783890pgg.79.2020.04.06.06.35.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Apr 2020 06:35:31 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] rtw88: Add delay on polling h2c command status bit
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <87zhboycfr.fsf@kamboji.qca.qualcomm.com>
-Date:   Mon, 6 Apr 2020 21:35:29 +0800
-Cc:     Tony Chuang <yhchuang@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:REALTEK WIRELESS DRIVER (rtw88)" 
-        <linux-wireless@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <83B3A3D8-833A-42BE-9EB0-59C95B349B01@canonical.com>
-References: <20200406093623.3980-1-kai.heng.feng@canonical.com>
- <87v9mczu4h.fsf@kamboji.qca.qualcomm.com>
- <94EAAF7E-66C5-40E2-B6A9-0787CB13A3A9@canonical.com>
- <87zhboycfr.fsf@kamboji.qca.qualcomm.com>
-To:     Kalle Valo <kvalo@codeaurora.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 6 Apr 2020 09:35:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726996AbgDFNfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:35:44 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D73422B4E;
+        Mon,  6 Apr 2020 13:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586180143;
+        bh=+9OLpbCWgabkd5QGYom6qAzlc/KhMbEWoliL/vpH1kQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=pz6Up9F+Wk/8hs5Ff9zr/ZX8TQvnp0i11MCUvUVlopIbYAGtabNlnk3PVesofQUfY
+         l1U+Do2A9b0VUl7xwkZL0DKwiwo8AVWMfgoHvOw9BfM/mn9kya9Syv6POCq2m5TXHh
+         wd3o6bAqTpDjtodTXHeV1l0hgN/YlbUIMcgtdy+k=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 250783522726; Mon,  6 Apr 2020 06:35:43 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 06:35:43 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH v3] kcsan: Add option for verbose reporting
+Message-ID: <20200406133543.GB19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200221231027.230147-1-elver@google.com>
+ <6A08FE59-AD3B-4209-AF57-D4CEF7E94B56@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6A08FE59-AD3B-4209-AF57-D4CEF7E94B56@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Apr 6, 2020, at 21:24, Kalle Valo <kvalo@codeaurora.org> wrote:
+On Mon, Apr 06, 2020 at 08:59:58AM -0400, Qian Cai wrote:
 > 
-> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
 > 
->>> On Apr 6, 2020, at 20:17, Kalle Valo <kvalo@codeaurora.org> wrote:
->>> 
->>> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
->>> 
->>>> --- a/drivers/net/wireless/realtek/rtw88/hci.h
->>>> +++ b/drivers/net/wireless/realtek/rtw88/hci.h
->>>> @@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32
->>>> addr, u32 mask, u8 data)
->>>> 	rtw_write8(rtwdev, addr, set);
->>>> }
->>>> 
->>>> +#define rr8(addr)      rtw_read8(rtwdev, addr)
->>>> +#define rr16(addr)     rtw_read16(rtwdev, addr)
->>>> +#define rr32(addr)     rtw_read32(rtwdev, addr)
->>> 
->>> For me these macros reduce code readability, not improve anything. They
->>> hide the use of rtwdev variable, which is evil, and a name like rr8() is
->>> just way too vague. Please keep the original function names as is.
->> 
->> The inspiration is from another driver.
->> readx_poll_timeout macro only takes one argument for the op.
->> Some other drivers have their own poll_timeout implementation,
->> and I guess it makes sense to make one specific for rtw88.
+> > On Feb 21, 2020, at 6:10 PM, Marco Elver <elver@google.com> wrote:
+> > 
+> > Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
+> > Currently information about the reporting task's held locks and IRQ
+> > trace events are shown, if they are enabled.
 > 
-> I'm not even understanding the problem you are tying to fix with these
-> macros. The upstream philosopyhy is to have the source code readable and
-> maintainable, not to use minimal number of characters. There's a reason
-> why we don't name our functions a(), b(), c() and so on.
-
-The current h2c polling doesn't have delay between each interval, so the polling is too fast and the following logic considers it's a timeout.
-The readx_poll_timeout() macro provides a generic mechanism to setup an interval delay and timeout which is what we need here.
-However readx_poll_timeout only accepts one parameter which usually is memory address, while we need to pass both rtwdev and address.
-
-So if hiding rtwdev is evil, we can roll our own variant of readx_poll_timeout() to make the polling readable.
-
-Kai-Heng
-
+> This patch is no longer in today’s linux-next. I suppose that it is because Paul had sent
+> the initial pull request without this one that I had missed dearly.
 > 
-> -- 
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> Is there a way to get it back there?
 
+It goes back in in seven days, after -rc1 is released.  The fact that
+it was there last week was a mistake on my part, and I did eventually
+get my hand slapped for it.  ;-)
+
+In the meantime, if it would help, I could group the KCSAN commits
+on top of those in -tip to allow you to get them with one "git pull"
+command.
+
+							Thanx, Paul
+
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > Suggested-by: Qian Cai <cai@lca.pw>
+> > ---
+> > v3:
+> > * Typos
+> > v2:
+> > * Rework obtaining 'current' for the "other thread" -- it now passes
+> >  'current' and ensures that we stall until the report was printed, so
+> >  that the lockdep information contained in 'current' is accurate. This
+> >  was non-trivial but testing so far leads me to conclude this now
+> >  reliably prints the held locks for the "other thread" (please test
+> >  more!).
+> > ---
+> > kernel/kcsan/core.c   |   4 +-
+> > kernel/kcsan/kcsan.h  |   3 ++
+> > kernel/kcsan/report.c | 103 +++++++++++++++++++++++++++++++++++++++++-
+> > lib/Kconfig.kcsan     |  13 ++++++
+> > 4 files changed, 120 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+> > index e7387fec66795..065615df88eaa 100644
+> > --- a/kernel/kcsan/core.c
+> > +++ b/kernel/kcsan/core.c
+> > @@ -18,8 +18,8 @@
+> > #include "kcsan.h"
+> > 
+> > static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
+> > -static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
+> > -static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
+> > +unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
+> > +unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
+> > static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
+> > static bool kcsan_interrupt_watcher = IS_ENABLED(CONFIG_KCSAN_INTERRUPT_WATCHER);
+> > 
+> > diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
+> > index 892de5120c1b6..e282f8b5749e9 100644
+> > --- a/kernel/kcsan/kcsan.h
+> > +++ b/kernel/kcsan/kcsan.h
+> > @@ -13,6 +13,9 @@
+> > /* The number of adjacent watchpoints to check. */
+> > #define KCSAN_CHECK_ADJACENT 1
+> > 
+> > +extern unsigned int kcsan_udelay_task;
+> > +extern unsigned int kcsan_udelay_interrupt;
+> > +
+> > /*
+> >  * Globally enable and disable KCSAN.
+> >  */
+> > diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+> > index 11c791b886f3c..7bdb515e3662f 100644
+> > --- a/kernel/kcsan/report.c
+> > +++ b/kernel/kcsan/report.c
+> > @@ -1,5 +1,7 @@
+> > // SPDX-License-Identifier: GPL-2.0
+> > 
+> > +#include <linux/debug_locks.h>
+> > +#include <linux/delay.h>
+> > #include <linux/jiffies.h>
+> > #include <linux/kernel.h>
+> > #include <linux/lockdep.h>
+> > @@ -31,7 +33,26 @@ static struct {
+> > 	int			cpu_id;
+> > 	unsigned long		stack_entries[NUM_STACK_ENTRIES];
+> > 	int			num_stack_entries;
+> > -} other_info = { .ptr = NULL };
+> > +
+> > +	/*
+> > +	 * Optionally pass @current. Typically we do not need to pass @current
+> > +	 * via @other_info since just @task_pid is sufficient. Passing @current
+> > +	 * has additional overhead.
+> > +	 *
+> > +	 * To safely pass @current, we must either use get_task_struct/
+> > +	 * put_task_struct, or stall the thread that populated @other_info.
+> > +	 *
+> > +	 * We cannot rely on get_task_struct/put_task_struct in case
+> > +	 * release_report() races with a task being released, and would have to
+> > +	 * free it in release_report(). This may result in deadlock if we want
+> > +	 * to use KCSAN on the allocators.
+> > +	 *
+> > +	 * Since we also want to reliably print held locks for
+> > +	 * CONFIG_KCSAN_VERBOSE, the current implementation stalls the thread
+> > +	 * that populated @other_info until it has been consumed.
+> > +	 */
+> > +	struct task_struct	*task;
+> > +} other_info;
+> > 
+> > /*
+> >  * Information about reported races; used to rate limit reporting.
+> > @@ -245,6 +266,16 @@ static int sym_strcmp(void *addr1, void *addr2)
+> > 	return strncmp(buf1, buf2, sizeof(buf1));
+> > }
+> > 
+> > +static void print_verbose_info(struct task_struct *task)
+> > +{
+> > +	if (!task)
+> > +		return;
+> > +
+> > +	pr_err("\n");
+> > +	debug_show_held_locks(task);
+> > +	print_irqtrace_events(task);
+> > +}
+> > +
+> > /*
+> >  * Returns true if a report was generated, false otherwise.
+> >  */
+> > @@ -319,6 +350,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+> > 				  other_info.num_stack_entries - other_skipnr,
+> > 				  0);
+> > 
+> > +		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
+> > +		    print_verbose_info(other_info.task);
+> > +
+> > 		pr_err("\n");
+> > 		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
+> > 		       get_access_type(access_type), ptr, size,
+> > @@ -340,6 +374,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
+> > 	stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
+> > 			  0);
+> > 
+> > +	if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
+> > +		print_verbose_info(current);
+> > +
+> > 	/* Print report footer. */
+> > 	pr_err("\n");
+> > 	pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
+> > @@ -357,6 +394,67 @@ static void release_report(unsigned long *flags, enum kcsan_report_type type)
+> > 	spin_unlock_irqrestore(&report_lock, *flags);
+> > }
+> > 
+> > +/*
+> > + * Sets @other_info.task and awaits consumption of @other_info.
+> > + *
+> > + * Precondition: report_lock is held.
+> > + * Postcondition: report_lock is held.
+> > + */
+> > +static void
+> > +set_other_info_task_blocking(unsigned long *flags, const volatile void *ptr)
+> > +{
+> > +	/*
+> > +	 * We may be instrumenting a code-path where current->state is already
+> > +	 * something other than TASK_RUNNING.
+> > +	 */
+> > +	const bool is_running = current->state == TASK_RUNNING;
+> > +	/*
+> > +	 * To avoid deadlock in case we are in an interrupt here and this is a
+> > +	 * race with a task on the same CPU (KCSAN_INTERRUPT_WATCHER), provide a
+> > +	 * timeout to ensure this works in all contexts.
+> > +	 *
+> > +	 * Await approximately the worst case delay of the reporting thread (if
+> > +	 * we are not interrupted).
+> > +	 */
+> > +	int timeout = max(kcsan_udelay_task, kcsan_udelay_interrupt);
+> > +
+> > +	other_info.task = current;
+> > +	do {
+> > +		if (is_running) {
+> > +			/*
+> > +			 * Let lockdep know the real task is sleeping, to print
+> > +			 * the held locks (recall we turned lockdep off, so
+> > +			 * locking/unlocking @report_lock won't be recorded).
+> > +			 */
+> > +			set_current_state(TASK_UNINTERRUPTIBLE);
+> > +		}
+> > +		spin_unlock_irqrestore(&report_lock, *flags);
+> > +		/*
+> > +		 * We cannot call schedule() since we also cannot reliably
+> > +		 * determine if sleeping here is permitted -- see in_atomic().
+> > +		 */
+> > +
+> > +		udelay(1);
+> > +		spin_lock_irqsave(&report_lock, *flags);
+> > +		if (timeout-- < 0) {
+> > +			/*
+> > +			 * Abort. Reset other_info.task to NULL, since it
+> > +			 * appears the other thread is still going to consume
+> > +			 * it. It will result in no verbose info printed for
+> > +			 * this task.
+> > +			 */
+> > +			other_info.task = NULL;
+> > +			break;
+> > +		}
+> > +		/*
+> > +		 * If @ptr nor @current matches, then our information has been
+> > +		 * consumed and we may continue. If not, retry.
+> > +		 */
+> > +	} while (other_info.ptr == ptr && other_info.task == current);
+> > +	if (is_running)
+> > +		set_current_state(TASK_RUNNING);
+> > +}
+> > +
+> > /*
+> >  * Depending on the report type either sets other_info and returns false, or
+> >  * acquires the matching other_info and returns true. If other_info is not
+> > @@ -388,6 +486,9 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
+> > 		other_info.cpu_id		= cpu_id;
+> > 		other_info.num_stack_entries	= stack_trace_save(other_info.stack_entries, NUM_STACK_ENTRIES, 1);
+> > 
+> > +		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
+> > +			set_other_info_task_blocking(flags, ptr);
+> > +
+> > 		spin_unlock_irqrestore(&report_lock, *flags);
+> > 
+> > 		/*
+> > diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+> > index 081ed2e1bf7b1..0f1447ff8f558 100644
+> > --- a/lib/Kconfig.kcsan
+> > +++ b/lib/Kconfig.kcsan
+> > @@ -20,6 +20,19 @@ menuconfig KCSAN
+> > 
+> > if KCSAN
+> > 
+> > +config KCSAN_VERBOSE
+> > +	bool "Show verbose reports with more information about system state"
+> > +	depends on PROVE_LOCKING
+> > +	help
+> > +	  If enabled, reports show more information about the system state that
+> > +	  may help better analyze and debug races. This includes held locks and
+> > +	  IRQ trace events.
+> > +
+> > +	  While this option should generally be benign, we call into more
+> > +	  external functions on report generation; if a race report is
+> > +	  generated from any one of them, system stability may suffer due to
+> > +	  deadlocks or recursion.  If in doubt, say N.
+> > +
+> > config KCSAN_DEBUG
+> > 	bool "Debugging of KCSAN internals"
+> > 
+> > -- 
+> > 2.25.0.265.gbab2e86ba0-goog
+> > 
+> 
