@@ -2,120 +2,128 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC031C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D2CC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A439206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:50:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eW0SjJUW"
+	by mail.kernel.org (Postfix) with ESMTP id 1C107206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 20:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726331AbgDFUuo (ORCPT
+        id S1726396AbgDFUvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 16:50:44 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15856 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgDFUuo (ORCPT
+        Mon, 6 Apr 2020 16:51:03 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:41673 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726225AbgDFUvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 16:50:44 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8b96110000>; Mon, 06 Apr 2020 13:50:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 13:50:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 06 Apr 2020 13:50:38 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 20:50:37 +0000
-Received: from [10.2.164.193] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 20:50:36 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
-Date:   Mon, 6 Apr 2020 13:50:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 16:51:02 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TuqY52Z_1586206257;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TuqY52Z_1586206257)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 07 Apr 2020 04:51:00 +0800
+Subject: Re: [PATCHv2 5/8] khugepaged: Allow to callapse a page shared across
+ fork
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        akpm@linux-foundation.org, Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200403112928.19742-1-kirill.shutemov@linux.intel.com>
+ <20200403112928.19742-6-kirill.shutemov@linux.intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <b03643ba-8411-8486-737c-1bc29dd10a74@linux.alibaba.com>
+Date:   Mon, 6 Apr 2020 13:50:56 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200403112928.19742-6-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586206225; bh=8bgqt/b8PFGRRWeo2lSm+TauOYvCItBjw9sgUHK/CCA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=eW0SjJUWjSpJ63g3bAqvYcAqqMzlz9T5IuBL2jGGZ+Rkgf+7rkdy4NT7EW4Wop3bU
-         1wN6eAohMi1UlBbpAypJo4WbG1IByczvedNpPY5WAJHiSLWCQ4BZVNgqelLVaWpwBL
-         A02b4lsucmpMcC98w7bOg46Oz82Xn3Vbky2h2OcRjEKO59eGsouQpDt5ciwJkRWxpu
-         Jzg0kv2WyRTDFUk54qdDd6ciXwfPZlXSR0vp32dEavzeBwds5gFUNH9cxfom3a1N3p
-         r/j5nr9nkR9sng1W7SAWCbL7H+p7dHpwpuezI192cKsoZtylvS7RECx7+SpJMn7+cw
-         gJJlWDGWxs8hA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 4/6/20 1:45 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
+
+On 4/3/20 4:29 AM, Kirill A. Shutemov wrote:
+> The page can be included into collapse as long as it doesn't have extra
+> pins (from GUP or otherwise).
 >
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>   mm/khugepaged.c | 25 ++++++++++++++-----------
+>   1 file changed, 14 insertions(+), 11 deletions(-)
 >
-> 04.04.2020 04:25, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> +static int chan_capture_kthread_start(void *data)
->> +{
->> +     struct tegra_vi_channel *chan =3D data;
->> +     struct tegra_channel_buffer *buf;
->> +     int err =3D 0;
->> +     int caps_inflight;
->> +
->> +     set_freezable();
->> +
->> +     while (1) {
->> +             try_to_freeze();
->> +
->> +             wait_event_interruptible(chan->start_wait,
->> +                                      !list_empty(&chan->capture) ||
->> +                                      kthread_should_stop());
->> +             /*
->> +              * Frame start and MW_ACK_DONE syncpoint condition FIFOs a=
-re
->> +              * of max depth 2. So make sure max 2 capture requests are
->> +              * in process by the hardware at a time.
->> +              */
->> +             while (!(kthread_should_stop() || list_empty(&chan->captur=
-e))) {
->> +                     caps_inflight =3D chan->capture_reqs - chan->seque=
-nce;
->> +                     /*
->> +                      * Source is not streaming if error is non-zero.
->> +                      * So, do not dequeue buffers on capture error or =
-when
->> +                      * syncpoint requests in FIFO are full.
->> +                      */
->> +                     if (err || caps_inflight >=3D SYNCPT_FIFO_DEPTH)
->> +                             break;
-> Am I understanding correctly that this thread will take 100% CPU,
-> spinning here, if more than 2 frame-captures queued?
-on more than 2 frames captures, it breaks thread and on next wakeup it=20
-continues
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 57ff287caf6b..1e7e6543ebca 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -581,11 +581,18 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   		}
+>   
+>   		/*
+> -		 * cannot use mapcount: can't collapse if there's a gup pin.
+> -		 * The page must only be referenced by the scanned process
+> -		 * and page swap cache.
+> +		 * Check if the page has any GUP (or other external) pins.
+> +		 *
+> +		 * The page table that maps the page has been already unlinked
+> +		 * from the page table tree and this process cannot get
+> +		 * additinal pin on the page.
+> +		 *
+> +		 * New pins can come later if the page is shared across fork,
+> +		 * but not for the this process. It is fine. The other process
+> +		 * cannot write to the page, only trigger CoW.
+>   		 */
+> -		if (page_count(page) != 1 + PageSwapCache(page)) {
+> +		if (total_mapcount(page) + PageSwapCache(page) !=
+> +				page_count(page)) {
+
+This check looks fine for base page, but what if the page is PTE-mapped 
+THP? The following patch made this possible.
+
+If it is PTE-mapped THP and the page is in swap cache, the refcount 
+would be 512 + the number of PTE-mapped pages.
+
+Shall we do the below change in the following patch?
+
+extra_pins = PageSwapCache(page) ? nr_ccompound(page) - 1 : 0;
+if (total_mapcount(page) + PageSwapCache(page) != page_count(page) - 
+extra_pins) {
+...
+}
+
+>   			unlock_page(page);
+>   			result = SCAN_PAGE_COUNT;
+>   			goto out;
+> @@ -672,7 +679,6 @@ static void __collapse_huge_page_copy(pte_t *pte, struct page *page,
+>   		} else {
+>   			src_page = pte_page(pteval);
+>   			copy_user_highpage(page, src_page, address, vma);
+> -			VM_BUG_ON_PAGE(page_mapcount(src_page) != 1, src_page);
+>   			release_pte_page(src_page);
+>   			/*
+>   			 * ptl mostly unnecessary, but preempt has to
+> @@ -1206,12 +1212,9 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>   			goto out_unmap;
+>   		}
+>   
+> -		/*
+> -		 * cannot use mapcount: can't collapse if there's a gup pin.
+> -		 * The page must only be referenced by the scanned process
+> -		 * and page swap cache.
+> -		 */
+> -		if (page_count(page) != 1 + PageSwapCache(page)) {
+> +		/* Check if the page has any GUP (or other external) pins */
+> +		if (total_mapcount(page) + PageSwapCache(page) !=
+> +				page_count(page)) {
+>   			result = SCAN_PAGE_COUNT;
+>   			goto out_unmap;
+>   		}
+
