@@ -2,89 +2,110 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B018C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74582C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41462335A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC1623B44
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="csvfltUQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="MsNi9wpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbgDFONJ (ORCPT
+        id S1728621AbgDFOOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:13:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48684 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728558AbgDFONI (ORCPT
+        Mon, 6 Apr 2020 10:14:00 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:24086 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728558AbgDFOOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:13:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586182387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=N2MelgTXjhlw+4fjd+9b4cGKMxMyBiqW0h/JEEsI35s=;
-        b=csvfltUQK7MBBWfZHkW6BICUzzertUmsIFVafuhkIJM9rKp/DzdBkEAv4MOlMVmi9pkrZi
-        MYs4PolmjoW6g3lBr8QeUGs8qidLT6Olh2I4RzO8Hto6BSDZTHCK5jvGX7ymLeSFtitiWy
-        kLhXo0yjtXN52QFk/39RDFzCxeAxGmk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-RKD7ZMzPMS2c2KNW3jdqbQ-1; Mon, 06 Apr 2020 10:13:03 -0400
-X-MC-Unique: RKD7ZMzPMS2c2KNW3jdqbQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C83201935780;
-        Mon,  6 Apr 2020 14:13:02 +0000 (UTC)
-Received: from [10.72.12.191] (ovpn-12-191.pek2.redhat.com [10.72.12.191])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 937DD2637B;
-        Mon,  6 Apr 2020 14:12:58 +0000 (UTC)
-Subject: Re: [PATCH] vdpa-sim: depend on HAS_DMA
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20200405081355.2870-1-mst@redhat.com>
- <20200406130927.GA20291@infradead.org>
- <20200406095931-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <0f4f2502-e810-e87a-2fba-dc887d2f4272@redhat.com>
-Date:   Mon, 6 Apr 2020 22:12:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 10:14:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1586182440; x=1617718440;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=VxBfFZSMnzPlZNHz2TtxxRNY5T+Ta8nxtKmyydIYbJ8=;
+  b=MsNi9wpVJ4LPhBvYoZhg6lnl58RjzTiawO2AS6+GZpB+CUIfYkREpqwf
+   R7DPgqIaWtPjoUpSnkGEmNeT/f1Zlr00MlXCEWGXMLbnqPvO/U+/K1mCa
+   nrPQUmqH1cV9YDwllJzVMptx5mLD349jQnHBx0bkYKjPOrWnsQw++DSad
+   h6xdZNaUGZcq94f8sBgfXR+nUuYH9Wee5qzB+MHavDUaue7GYR+UEM/q+
+   kdG8Unx9vMZhEEfDeniBR638acPt91jx1+5BrMPxJuli3r2Tov084axhE
+   T5U0o8gAxipYCqI5Q0fcUPlSH9g4VDdYBSYGn95jdOMK9yqGfEBNGT9+/
+   w==;
+IronPort-SDR: 3dhHBhElSxHQC59mGMY0HVh7OBNkgad/SlfGf8LOeUnqPpr8jm+FFOjg8EX/1MI5BisywgXgYc
+ pdPi4XsnSPa3UOej5f/VB5P14Sv9FOvnpQ6byLPegzF5YxnjLX3CwErHzBFsaCBJk1PRz6kL03
+ l4Kgs29BkGfq6w4xZ+OapMJJDSJHi1IFkVcvlpIEymygXGyUROheYBIq8bgUuu4pNxuXib6TRp
+ 9AF9NC1IutFhGz1I5nyb0CDM41BulqXLEWvVxc6Jg/cDzE82ULYI7cOdKTuwQHC7swyYNfoTZd
+ Ejc=
+X-IronPort-AV: E=Sophos;i="5.72,351,1580799600"; 
+   d="scan'208";a="71546329"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Apr 2020 07:13:59 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 6 Apr 2020 07:13:57 -0700
+Received: from [10.205.29.84] (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Mon, 6 Apr 2020 07:14:05 -0700
+Subject: Re: [PATCH] video: fbdev: don't print error message on
+ platform_get_irq() failure
+To:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        <b.zolnierkie@samsung.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <linux-fbdev@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200406053450.8380-1-tangbin@cmss.chinamobile.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+Message-ID: <d6c8f07c-a57e-45ef-429a-d627ba7d7ce0@microchip.com>
+Date:   Mon, 6 Apr 2020 16:13:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200406095931-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200406053450.8380-1-tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/04/2020 at 07:34, Tang Bin wrote:
+> The platform_get_irq() can print error message,so remove the redundant
+> dev_err() here.
+> 
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 
-On 2020/4/6 =E4=B8=8B=E5=8D=8810:02, Michael S. Tsirkin wrote:
-> On Mon, Apr 06, 2020 at 06:09:27AM -0700, Christoph Hellwig wrote:
->> Pleae just drop the code - we should not add new drivers with custom
->> DMA ops.
-> I'm not sure there's another way to do this: this not a driver, it's a
-> software emulator that pretends to be an actual device. We can't
-> have the platform supply DMA ops here since the platform is a regular
-> x86 or whatever.
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> ---
+>   drivers/video/fbdev/atmel_lcdfb.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/video/fbdev/atmel_lcdfb.c b/drivers/video/fbdev/atmel_lcdfb.c
+> index d567f5d56..1e2521925 100644
+> --- a/drivers/video/fbdev/atmel_lcdfb.c
+> +++ b/drivers/video/fbdev/atmel_lcdfb.c
+> @@ -1114,7 +1114,6 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
+> 
+>          sinfo->irq_base = platform_get_irq(pdev, 0);
+>          if (sinfo->irq_base < 0) {
+> -               dev_err(dev, "unable to get irq\n");
+>                  ret = sinfo->irq_base;
+>                  goto stop_clk;
+>          }
+> --
+> 2.20.1.windows.1
+> 
+> 
+> 
 
 
-Yes, actually vdpa-sim does not depends on HAS_DMA. Maybe we can do=20
-shortcut like dev->dma_ops =3D vdpasim_dma_ops;
-
-Thanks
-
-
->
-
+-- 
+Nicolas Ferre
