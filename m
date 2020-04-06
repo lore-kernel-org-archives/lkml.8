@@ -2,229 +2,245 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300BEC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4037C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F10E206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A576206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:26:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LNSvxDZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgDFIZ4 (ORCPT
+        id S1726687AbgDFI0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:25:56 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51755 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgDFIZz (ORCPT
+        Mon, 6 Apr 2020 04:26:05 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43985 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgDFI0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 04:25:55 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jLN4o-0007J7-Ta; Mon, 06 Apr 2020 10:25:50 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jLN4j-0007px-FF; Mon, 06 Apr 2020 10:25:45 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH net-next v2] net: phy: micrel: add phy-mode support for the KSZ9031 PHY
-Date:   Mon,  6 Apr 2020 10:25:44 +0200
-Message-Id: <20200406082544.28924-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.0.rc2
+        Mon, 6 Apr 2020 04:26:05 -0400
+Received: by mail-ot1-f68.google.com with SMTP id a6so14420387otb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 01:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vOURNP/+1sHn2/oMAz9DpyrmfncIc+Lque59yZC/+5w=;
+        b=LNSvxDZjUIJxP4/R0gUjwWEcoIXjaM14W0yLZVSrDlbz182T85YKg9jbdKtsDv4lSw
+         CJiAmks7NsnTkIghjBXK8DlURDeKnUSzJHYlN+12DuAULHbIVlDN8ppxELEfYm4zwqBs
+         aw/ZeWuSYt776wwjblNiwil1Cb3zzS0HMTuWr4qv/qliIlcRDXzDzrT9gX+SGuK3v/KQ
+         SyvKYC+rBZ/4QqGchMam2id0O6G1vGyw3EkfvK4wIoXf3OQ9eMKwadXJfYRiD2FLFq/W
+         QUHuyHh4ngh+RtAjWUyHyUabXwCzTo0oYRE1r8ouVeIQ7FxN8oMye+v/vqt+KJHyEl5z
+         t9mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vOURNP/+1sHn2/oMAz9DpyrmfncIc+Lque59yZC/+5w=;
+        b=EeK1KrXFaQIypCBb267J/BzlzwM4uJMv+gbwUIv5P96eHK2cz7nXRPoAFeeewHD78D
+         +5fMUGG0rE8zhdwrd1uPdeDg+9Co15OsZ3nHcxlMn9iQNlhE7gxijUU9b7+rZjEQbKrC
+         2UIF8VLlPIgbtBSqtlJQaNw5P0EdY5G8scXScYU8MTMSvz0zRZcIKrjnZfacPRcABnGe
+         5cYV+vPS6AGUwE+jBbSRZnojox/N2BxwHWdb7eBYFMrxM5gMOdBkMjMeaRvbToqw8wbx
+         5CxlngU8ziuq+KsSh3ORzhKv/N6ka7e8REXIdPefiTsanJXdOjFE4c6E7xoN64WBpocb
+         WGOA==
+X-Gm-Message-State: AGi0Puai0gHO660ZIJu3F0cv+qUjtu68eEhcDYksTADgvId/i0frG4WY
+        x2pQOckJbuvaa9a9WHNkIMcSHPRxpLuSj4+H6wHrfw==
+X-Google-Smtp-Source: APiQypIkuoFfBZNbSuH6xY0DqxdXdxWr0AqNxKMHvTzBtHBZP9ZPw+ZzMKWrTKGg9oy2VTppKuGgJcpLQV7RZVDW/2Y=
+X-Received: by 2002:a4a:e495:: with SMTP id s21mr16488515oov.79.1586161562627;
+ Mon, 06 Apr 2020 01:26:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-2-robert.foss@linaro.org> <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
+ <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
+ <20200403232736.GA6127@valkosipuli.retiisi.org.uk> <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
+In-Reply-To: <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Mon, 6 Apr 2020 10:25:50 +0200
+Message-ID: <CAG3jFytX19r4FCateVtcd6C7mHNHUF4NA24mGTrogs6DWiE1pQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for following phy-modes: rgmii, rgmii-id, rgmii-txid, rgmii-rxid.
+Hey Maxime,
 
-This PHY has an internal RX delay of 1.2ns and no delay for TX.
+On Sat, 4 Apr 2020 at 11:34, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi,
+>
+> On Sat, Apr 04, 2020 at 02:27:36AM +0300, Sakari Ailus wrote:
+> > Hi Robert,
+> >
+> > On Thu, Apr 02, 2020 at 12:10:00PM +0200, Robert Foss wrote:
+> > > Hey Maxime,
+> > >
+> > > On Wed, 1 Apr 2020 at 10:07, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Tue, Mar 31, 2020 at 03:33:44PM +0200, Robert Foss wrote:
+> > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > >
+> > > > > This patch adds documentation of device tree in YAML schema for the
+> > > > > OV8856 CMOS image sensor.
+> > > > >
+> > > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> > > > > ---
+> > > > >
+> > > > > - Changes since v5:
+> > > > >   * Add assigned-clocks and assigned-clock-rates
+> > > > >   * robher: dt-schema errors
+> > > > >
+> > > > > - Changes since v4:
+> > > > >   * Fabio: Change reset-gpio to GPIO_ACTIVE_LOW, explain in description
+> > > > >   * Add clock-lanes property to example
+> > > > >   * robher: Fix syntax error in devicetree example
+> > > > >
+> > > > > - Changes since v3:
+> > > > >   * robher: Fix syntax error
+> > > > >   * robher: Removed maxItems
+> > > > >   * Fixes yaml 'make dt-binding-check' errors
+> > > > >
+> > > > > - Changes since v2:
+> > > > >   Fixes comments from from Andy, Tomasz, Sakari, Rob.
+> > > > >   * Convert text documentation to YAML schema.
+> > > > >
+> > > > > - Changes since v1:
+> > > > >   Fixes comments from Sakari, Tomasz
+> > > > >   * Add clock-frequency and link-frequencies in DT
+> > > > >
+> > > > >  .../devicetree/bindings/media/i2c/ov8856.yaml | 150 ++++++++++++++++++
+> > > > >  MAINTAINERS                                   |   1 +
+> > > > >  2 files changed, 151 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8856.yaml b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > > > new file mode 100644
+> > > > > index 000000000000..beeddfbb8709
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov8856.yaml
+> > > > > @@ -0,0 +1,150 @@
+> > > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > > +# Copyright (c) 2019 MediaTek Inc.
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > > > +$id: http://devicetree.org/schemas/media/i2c/ov8856.yaml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > +
+> > > > > +title: Omnivision OV8856 CMOS Sensor Device Tree Bindings
+> > > > > +
+> > > > > +maintainers:
+> > > > > +  - Ben Kao <ben.kao@intel.com>
+> > > > > +  - Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > +
+> > > > > +description: |-
+> > > > > +  The Omnivision OV8856 is a high performance, 1/4-inch, 8 megapixel, CMOS
+> > > > > +  image sensor that delivers 3264x2448 at 30fps. It provides full-frame,
+> > > > > +  sub-sampled, and windowed 10-bit MIPI images in various formats via the
+> > > > > +  Serial Camera Control Bus (SCCB) interface. This chip is programmable
+> > > > > +  through I2C and two-wire SCCB. The sensor output is available via CSI-2
+> > > > > +  serial data output (up to 4-lane).
+> > > > > +
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    const: ovti,ov8856
+> > > > > +
+> > > > > +  reg:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  clocks:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  clock-names:
+> > > > > +    description:
+> > > > > +      Input clock for the sensor.
+> > > > > +    items:
+> > > > > +      - const: xvclk
+> > > > > +
+> > > > > +  clock-frequency:
+> > > > > +    description:
+> > > > > +      Frequency of the xvclk clock in Hertz.
+> > > >
+> > > > We also had that discussion recently for another omnivision sensor
+> > > > (ov5645 iirc), but what is clock-frequency useful for?
+> > > >
+> > > > It seems that the sensor is passed in clocks, so if you need to
+> > > > retrieve the clock rate you should use the clock API instead.
+> > > >
+> > > > Looking at the driver, it looks like it first retrieves the clock, set
+> > > > it to clock-frequency, and then checks that this is OV8856_XVCLK_19_2
+> > > > (19.2 MHz).
+> > >
+> > > As far as I understand it, 19.2MHz is requirement for the sensor mode
+> > > that currently defaults to. Some modes require higher clock speeds
+> > > than this however.
+> >
+> > It's very system specific. Either way, bindings should not assume a
+> > particular driver implementation.
+> >
+> > >
+> > > >
+> > > > The datasheet says that the sensor can have any frequency in the 6 -
+> > > > 27 MHz range, so this is a driver limitation and should be set in the
+> > > > driver using the clock API, and you can always bail out if it doesn't
+> > > > provide a rate that is not acceptable for the drivers assumption.
+> > > >
+> > > > In any case, you don't need clock-frequency here...
+> > >
+> > > So your suggestion is that we remove all clocks-rate properties, and
+> > > replace the clk_get_rate() calls in the driver with clk_set_rate()
+> > > calls for the desired frequencies?
+> >
+> > The driver shouldn't set the rate here unless it gets it from DT (but that
+> > was not the intention). So the driver should get the frequency instead.
+>
+> I'm actually saying the opposite :)
+>
+> Like you were saying, the binding (or DT, for that matter) shouldn't
+> assume a particular driver implementation.
+>
+> So one corollary is that if the driver has some restrictions in Linux,
+> it shouldn't be part of the binding, right?
+>
+> This binding uses multiple clock properties but as far as I can see,
+> the driver retrieves a clock using clocks and makes sure that its rate
+> match its limitation of 19.2MHz using clock-frequency (which is
+> redundant on a clk_get_rate on the clocks provided earlier).
+>
+> I'm suspecting that the parent clock on multiple SoCs can be
+> configured and is not a fixed rate crystal, so assigned-clocks-rate is
+> here just to make sure we set the frequency at the one being checked
+> in the driver's probe so that it all works.
+>
+> But that 19.2MHz is not a limitation of the device itself, it's a
+> limitation of our implementation, so we can instead implement
+> something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
+> sure that our parent clock is configured at the right rate) and the
+> clk_get_rate and compare that to 19.2MHz (to make sure that it's not
+> been rounded too far apart from the frequency we expect).
+>
+> This is doing exactly the same thing, except that we don't encode our
+> implementation limitations in the DT, but in the driver instead.
+>
 
-The pad skew registers allow to set the total TX delay to max 1.38ns and
-the total RX delay to max of 2.58ns (configurable 1.38ns + build in
-1.2ns) and a minimal delay of 0ns.
-
-According to the RGMII v2 specification the delay provided by PCB traces
-should be between 1.5ns and 2.0ns. As this PHY can provide max delay of
-only 1.38ns on the TX line, in RGMII-ID mode a symmetric delay of 1.38ns
-for both the RX and TX lines is chosen, even if the RX line could be
-configured with the 1.5ns according to the standard.
-
-The phy-modes can still be fine tuned/overwritten by *-skew-ps
-device tree properties described in:
-Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-changes v2:
-- change RX_ID value from 0x1a to 0xa. The overflow bit was detected by
-  FIELD_PREP() build check.
-  Reported-by: kbuild test robot <lkp@intel.com>
-
- drivers/net/phy/micrel.c | 109 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
-
-diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-index 05d20343b8161..8b5907a9a4c0f 100644
---- a/drivers/net/phy/micrel.c
-+++ b/drivers/net/phy/micrel.c
-@@ -19,6 +19,7 @@
-  *			 ksz9477
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/phy.h>
-@@ -490,9 +491,50 @@ static int ksz9021_config_init(struct phy_device *phydev)
- 
- /* MMD Address 0x2 */
- #define MII_KSZ9031RN_CONTROL_PAD_SKEW	4
-+#define MII_KSZ9031RN_RX_CTL_M		GENMASK(7, 4)
-+#define MII_KSZ9031RN_TX_CTL_M		GENMASK(3, 0)
-+
- #define MII_KSZ9031RN_RX_DATA_PAD_SKEW	5
-+#define MII_KSZ9031RN_RXD3		GENMASK(15, 12)
-+#define MII_KSZ9031RN_RXD2		GENMASK(11, 8)
-+#define MII_KSZ9031RN_RXD1		GENMASK(7, 4)
-+#define MII_KSZ9031RN_RXD0		GENMASK(3, 0)
-+
- #define MII_KSZ9031RN_TX_DATA_PAD_SKEW	6
-+#define MII_KSZ9031RN_TXD3		GENMASK(15, 12)
-+#define MII_KSZ9031RN_TXD2		GENMASK(11, 8)
-+#define MII_KSZ9031RN_TXD1		GENMASK(7, 4)
-+#define MII_KSZ9031RN_TXD0		GENMASK(3, 0)
-+
- #define MII_KSZ9031RN_CLK_PAD_SKEW	8
-+#define MII_KSZ9031RN_GTX_CLK		GENMASK(9, 5)
-+#define MII_KSZ9031RN_RX_CLK		GENMASK(4, 0)
-+
-+/* KSZ9031 has internal RGMII_IDRX = 1.2ns and RGMII_IDTX = 0ns. To
-+ * provide different RGMII options we need to configure delay offset
-+ * for each pad relative to build in delay.
-+ */
-+/* set rx to +0.18ns and rx_clk to "No delay adjustment" value to get delays of
-+ * 1.38ns
-+ */
-+#define RX_ID				0xa
-+#define RX_CLK_ID			0xf
-+
-+/* set rx to +0.30ns and rx_clk to -0.90ns to compensate the
-+ * internal 1.2ns delay.
-+ */
-+#define RX_ND				0xc
-+#define RX_CLK_ND			0x0
-+
-+/* set tx to -0.42ns and tx_clk to +0.96ns to get 1.38ns delay */
-+#define TX_ID				0x0
-+#define TX_CLK_ID			0x1f
-+
-+/* set tx and tx_clk to "No delay adjustment" to keep 0ns
-+ * dealy
-+ */
-+#define TX_ND				0x7
-+#define TX_CLK_ND			0xf
- 
- /* MMD Address 0x1C */
- #define MII_KSZ9031RN_EDPD		0x23
-@@ -565,6 +607,67 @@ static int ksz9031_enable_edpd(struct phy_device *phydev)
- 			     reg | MII_KSZ9031RN_EDPD_ENABLE);
- }
- 
-+static int ksz9031_config_rgmii_delay(struct phy_device *phydev)
-+{
-+	u16 rx, tx, rx_clk, tx_clk;
-+	int ret;
-+
-+	switch (phydev->interface) {
-+	case PHY_INTERFACE_MODE_RGMII:
-+		tx = TX_ND;
-+		tx_clk = TX_CLK_ND;
-+		rx = RX_ND;
-+		rx_clk = RX_CLK_ND;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+		tx = TX_ID;
-+		tx_clk = TX_CLK_ID;
-+		rx = RX_ID;
-+		rx_clk = RX_CLK_ID;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+		tx = TX_ND;
-+		tx_clk = TX_CLK_ND;
-+		rx = RX_ID;
-+		rx_clk = RX_CLK_ID;
-+		break;
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
-+		tx = TX_ID;
-+		tx_clk = TX_CLK_ID;
-+		rx = RX_ND;
-+		rx_clk = RX_CLK_ND;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_CONTROL_PAD_SKEW,
-+			    FIELD_PREP(MII_KSZ9031RN_RX_CTL_M, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TX_CTL_M, tx));
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_RX_DATA_PAD_SKEW,
-+			    FIELD_PREP(MII_KSZ9031RN_RXD3, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_RXD2, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_RXD1, rx) |
-+			    FIELD_PREP(MII_KSZ9031RN_RXD0, rx));
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = phy_write_mmd(phydev, 2, MII_KSZ9031RN_TX_DATA_PAD_SKEW,
-+			    FIELD_PREP(MII_KSZ9031RN_TXD3, tx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TXD2, tx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TXD1, tx) |
-+			    FIELD_PREP(MII_KSZ9031RN_TXD0, tx));
-+	if (ret < 0)
-+		return ret;
-+
-+	return phy_write_mmd(phydev, 2, MII_KSZ9031RN_CLK_PAD_SKEW,
-+			     FIELD_PREP(MII_KSZ9031RN_GTX_CLK, tx_clk) |
-+			     FIELD_PREP(MII_KSZ9031RN_RX_CLK, rx_clk));
-+}
-+
- static int ksz9031_config_init(struct phy_device *phydev)
- {
- 	const struct device *dev = &phydev->mdio.dev;
-@@ -597,6 +700,12 @@ static int ksz9031_config_init(struct phy_device *phydev)
- 	} while (!of_node && dev_walker);
- 
- 	if (of_node) {
-+		if (phy_interface_is_rgmii(phydev)) {
-+			result = ksz9031_config_rgmii_delay(phydev);
-+			if (result < 0)
-+				return result;
-+		}
-+
- 		ksz9031_of_load_skew_values(phydev, of_node,
- 				MII_KSZ9031RN_CLK_PAD_SKEW, 5,
- 				clk_skews, 2);
--- 
-2.26.0.rc2
-
+Thanks for taking the time to explain this.
+I'll spin a new revision that moves the clock rate handling into the driver.
