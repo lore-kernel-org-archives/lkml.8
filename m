@@ -2,166 +2,408 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B14C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5789FC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F2220753
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F02D206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="iQaybejU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vGJISjtW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgDFRo3 (ORCPT
+        id S1727920AbgDFRoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:44:29 -0400
-Received: from mail-eopbgr760085.outbound.protection.outlook.com ([40.107.76.85]:8848
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726670AbgDFRo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:44:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oS+rS8n4KK6Wa4U7Hg9+KJg3oWiA8N72zZ/MAZMuCjyv49IqqoF7RGBmsR6IP7TFs9fhyc2HaYgWdo+HNhNAyuKk+TzG7CrSpxAU0tHPm7e49hHcfzcxSlbU2w22bk435mAYPffSmOSf5P8reBQZkZ7Gays3OjFW7HikPTDV8BDi3u8oa8Q8krAuBLtFj4Q4oJqAUf86iklZUlsh1AXBinmJWh/ZGeVZGvPO9aSrNZkT/PBiZXF5HUtt/38JicojgwPkE3pdenk9GDL/0ftHmhpqtAwhrokkn61xA9kSeFk/hlXz26KGVQCU2KFd6hqAL0eSAdsW9JY3JqgapQ/bEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b7FWgjq0okTM2/qyCwHbOuT0Q6wJ7iF9RKpJVx5Xbk0=;
- b=fUBh6cyvzAtRzai1NUiatwPLW7qD/n6bUEYIdsgyEbKfX8nPZFDkNyV5FlKF9SVcq8SfqhqlWFsXUg67SbbEgm+hc84PHKkh4UPTO4Mu30JmYje9xrHR4GxllI9Xye8KqHH+h0MOzRK7oVbR10u8WTVF5eAXvvwB9Z0fxaJyN/hncyWe3x8qTqi2X7DrGCAfZcCgrbqiVpj17FW7H/b4m46bdJASG9i8JtVt2ESee1oagP6igvsZ0D//q4CSNR3+6rF/KFiG8H9rbc+D30qAvUpw6OhsXVnV3nDWLKb/gtuUhYn30eQ3OI9uhhqWtSPEDQnOPn7DyzzkmHGA14VXnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 6 Apr 2020 13:44:32 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40001 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727905AbgDFRoa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:44:30 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h11so86156plk.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:44:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b7FWgjq0okTM2/qyCwHbOuT0Q6wJ7iF9RKpJVx5Xbk0=;
- b=iQaybejULtegKD9ivzCqmw4XHjBWRJ6Q7azOhOVNZz0T5hwK6UU1UZ9xphDNdiUNQDgjTjw83AHw6qX+bDHxBfpWbXLG/NZpVT00gBYKqxE8pQ1BRvgMc1zJ3oV1a1NqKC1L2e5GBDuzSt8xcYUEsUnyL7LEFhTOlaUezmIQjnM=
-Received: from SN4PR0401CA0016.namprd04.prod.outlook.com
- (2603:10b6:803:21::26) by SN6PR02MB5168.namprd02.prod.outlook.com
- (2603:10b6:805:78::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Mon, 6 Apr
- 2020 17:44:25 +0000
-Received: from SN1NAM02FT003.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:21:cafe::d2) by SN4PR0401CA0016.outlook.office365.com
- (2603:10b6:803:21::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend
- Transport; Mon, 6 Apr 2020 17:44:25 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT003.mail.protection.outlook.com (10.152.73.29) with Microsoft SMTP
- Server id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 17:44:24
- +0000
-Received: from [149.199.38.66] (port=46069 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1jLVn4-0007ak-U6; Mon, 06 Apr 2020 10:44:06 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1jLVnM-0001ge-GF; Mon, 06 Apr 2020 10:44:24 -0700
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 036HiK5K017991;
-        Mon, 6 Apr 2020 10:44:20 -0700
-Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <mnarani@xilinx.com>)
-        id 1jLVnI-0001g6-4a; Mon, 06 Apr 2020 10:44:20 -0700
-Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
-        id 2CE8E121246; Mon,  6 Apr 2020 23:13:39 +0530 (IST)
-From:   Manish Narani <manish.narani@xilinx.com>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        adrian.hunter@intel.com, michal.simek@xilinx.com
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        git@xilinx.com, Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v3 3/6] mmc: sdhci-of-arasan: Rename sdhci_arasan_data to avoid confusion
-Date:   Mon,  6 Apr 2020 23:13:32 +0530
-Message-Id: <1586195015-128992-4-git-send-email-manish.narani@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
-References: <1586195015-128992-1-git-send-email-manish.narani@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(376002)(346002)(46966005)(2616005)(316002)(82740400003)(6636002)(44832011)(336012)(36756003)(42186006)(6266002)(26005)(70206006)(70586007)(2906002)(186003)(4326008)(5660300002)(478600001)(107886003)(356004)(81156014)(426003)(81166006)(47076004)(6666004)(8676002)(8936002);DIR:OUT;SFP:1101;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=9mmQaEU7pWx/GoSk4QgZnyNRh/7RdOmSGmaGx7v/l+8=;
+        b=vGJISjtWQ4U+UiA8t/ymiaZ8byzNHWi/9V011RGN+CheDP2E1A68vUqC8/IYWQX7Sc
+         0A6nw3jAE0vsk6UMMS8h2V7jIBCHG0I1sDj5inpQPmvzbdlRyae521SOj+jQBhghh7eo
+         rRPI8vgBiosfUPmj0f4AQNUXRizl5HDbp12EagTemx6QPJS6JP5UugRaGq8LALY5P2RX
+         JgCwy5JZQdrX/WNspNvibpWV0uhL5rNpUbUOhNtCzDbi4H1Ny+8p1KUabdQMB9I7QC/F
+         Wg0UmLM1VU9PEyzoROg/eMIW7iMbACkn7v/TN60n0euTwSCtrkLE5nOxGvKJA7NzQwHe
+         eMjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=9mmQaEU7pWx/GoSk4QgZnyNRh/7RdOmSGmaGx7v/l+8=;
+        b=OAa79FWkjbgghOsQ/gHpv8iyzvdxb952o0RUdtxFJrtbbQYWk4XR2FyoZtDSmWAuEJ
+         tfUJj0ZvDRN6eHqL7QOQgZDEc5dMdVwYMm5ShRU1eT0ktsO/AgpCHlvtgpAS+UnvzDwZ
+         dPW1tSEIB0feYC7+6hNHktcJRT6EIrnt+CaYVtSh0o/TknBrRzvO0xY6e2LQf1kBJqOY
+         58XbeXH/i9J1AgiklKdyqQi67aDs3PQoEQdjPGogOdQQQzWSJWYDyZyaMjsOw8ePc1Xr
+         RCTYzAYiIgxfsB8wDN5ffYPI+i02td3vi9cDX9C58Sq4f6YvKw1tdpXIquMHHP0ti4Fp
+         J4fA==
+X-Gm-Message-State: AGi0PuZet2LGjhSSrqZSRYNah8q7UPfHoATEVzKmoFIbDnrDc6DspInl
+        q/KbBnf1WMvJxbz01Xg2ob5EqpF7NTpxm3Yrl8r2VQ==
+X-Google-Smtp-Source: APiQypLB2lCK1RdTSQbXSqXQj/SrstWc3/SdaHl8AoR4Pfl5Q7WWqEDo0Nb1U5el09Lr17EA9BKxxHbXC6jyrsxB67s=
+X-Received: by 2002:a17:902:8c94:: with SMTP id t20mr20830697plo.336.1586195068761;
+ Mon, 06 Apr 2020 10:44:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c2af3971-a4e9-4999-ec28-08d7da52258e
-X-MS-TrafficTypeDiagnostic: SN6PR02MB5168:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB51689008EA987F5C4CF8FCF5C1C20@SN6PR02MB5168.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1079;
-X-Forefront-PRVS: 0365C0E14B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4zeOhq+ReGhO/SKObqhdBgoSyieZN8BpZZqFfbas+Ye3P/fN2OkiRw+BnaxLin0fEDIJ/WPTdRo4JH9XfDikc7T4AkGCT8wlV5n9/5JpJbQLrYq2/+B9OajCwO6uh4Nel71ZTui5RdrKJVQxtyVq29nYwnqOsiY7KKKOVSGmldC9j+6NnvwAN9ovczOlZlVD8pf4CZHcH3c76CF6QVyfXXa37JNmkuaqLygKPmyxl1zuN7jw2WH0ZR11ADmMj35dUR+oh88KdXceXPiBo+jDpa6BTUzUHqeba6w5ds/OqJNXbhoAHKm4GbDeENi6nyhS9k8ob9R+d4K1nXAnTwBQ0rfpAcFS8Da4SIEmi3ev6aFdGmWXco1AWxFthLpMnLbEEI//SyUKhMHS5FJw0Xrv1XaDmMeh/6IrR2xSHzJyGv+CnOK/n+bgHlu/xCxiFAnGLRYq/ZWXNv9i8ZvLsolJhkpvhQwPYTWMvKUwwIgi/kSmnuicmCHcJdSJLMnYqWn/cba/ZjbF+2vKxEUCujHG6A==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 17:44:24.8391
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2af3971-a4e9-4999-ec28-08d7da52258e
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5168
+References: <20200402204639.161637-1-trishalfonso@google.com>
+ <20200402204639.161637-2-trishalfonso@google.com> <CAAeHK+xFLmnAHPPCrmmqb1of7+cZmvKKPgAMACjArrLChG=xDw@mail.gmail.com>
+ <CAKFsvUKZFiiLFGcFykLoXhK1ehc-T=c6EkHf1UNmQRJc=uBQXg@mail.gmail.com>
+In-Reply-To: <CAKFsvUKZFiiLFGcFykLoXhK1ehc-T=c6EkHf1UNmQRJc=uBQXg@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 6 Apr 2020 19:44:17 +0200
+Message-ID: <CAAeHK+y=apWCBPPG7MiBF7qq57a4b4GGXfLVSEukQ4DKOY-ZNg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] KUnit: KASAN Integration
+To:     Patricia Alfonso <trishalfonso@google.com>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is 'struct sdhci_arasan_data' but also
-'struct sdhci_arasan_of_data sdhci_arasan_data'. Rename the latter to
-avoid confusion with the name of the struct.
+On Fri, Apr 3, 2020 at 7:17 PM Patricia Alfonso <trishalfonso@google.com> w=
+rote:
+>
+> On Fri, Apr 3, 2020 at 6:20 AM Andrey Konovalov <andreyknvl@google.com> w=
+rote:
+> >
+> > On Thu, Apr 2, 2020 at 10:46 PM 'Patricia Alfonso' via kasan-dev
+> > <kasan-dev@googlegroups.com> wrote:
+> > >
+> > > Integrate KASAN into KUnit testing framework.
+> > >         - Fail tests when KASAN reports an error that is not expected
+> > >         - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASA=
+N
+> > >         tests
+> > >         - Expected KASAN reports pass tests and are still printed whe=
+n run
+> > >         without kunit_tool (kunit_tool still bypasses the report due =
+to the
+> > >         test passing)
+> > >         - KUnit struct in current task used to keep track of the curr=
+ent
+> > >         test from KASAN code
+> > >
+> > > Make use of "[PATCH v3 kunit-next 1/2] kunit: generalize
+> > > kunit_resource API beyond allocated resources" and "[PATCH v3
+> > > kunit-next 2/2] kunit: add support for named resources" from Alan
+> > > Maguire [1]
+> > >         - A named resource is added to a test when a KASAN report is
+> > >          expected
+> > >         - This resource contains a struct for kasan_data containing
+> > >         booleans representing if a KASAN report is expected and if a
+> > >         KASAN report is found
+> > >
+> > > [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-s=
+end-email-alan.maguire@oracle.com/T/#t)
+> > >
+> > > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> > > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> > > ---
+> > >  include/kunit/test.h  |  5 ++++
+> > >  include/linux/kasan.h |  6 +++++
+> > >  lib/kunit/test.c      | 13 ++++++----
+> > >  lib/test_kasan.c      | 56 +++++++++++++++++++++++++++++++++++++++--=
+--
+> > >  mm/kasan/report.c     | 30 +++++++++++++++++++++++
+> > >  5 files changed, 101 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > > index ac59d18e6bab..1dc3d118f64b 100644
+> > > --- a/include/kunit/test.h
+> > > +++ b/include/kunit/test.h
+> > > @@ -225,6 +225,11 @@ struct kunit {
+> > >         struct list_head resources; /* Protected by lock. */
+> > >  };
+> > >
+> > > +static inline void kunit_set_failure(struct kunit *test)
+> > > +{
+> > > +       WRITE_ONCE(test->success, false);
+> > > +}
+> > > +
+> > >  void kunit_init_test(struct kunit *test, const char *name, char *log=
+);
+> > >
+> > >  int kunit_run_tests(struct kunit_suite *suite);
+> > > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> > > index 5cde9e7c2664..148eaef3e003 100644
+> > > --- a/include/linux/kasan.h
+> > > +++ b/include/linux/kasan.h
+> > > @@ -14,6 +14,12 @@ struct task_struct;
+> > >  #include <asm/kasan.h>
+> > >  #include <asm/pgtable.h>
+> > >
+> > > +/* kasan_data struct is used in KUnit tests for KASAN expected failu=
+res */
+> > > +struct kunit_kasan_expectation {
+> > > +       bool report_expected;
+> > > +       bool report_found;
+> > > +};
+> > > +
+> > >  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
+> > >  extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
+> > >  extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
+> > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> > > index 2cb7c6220a00..030a3281591e 100644
+> > > --- a/lib/kunit/test.c
+> > > +++ b/lib/kunit/test.c
+> > > @@ -10,16 +10,12 @@
+> > >  #include <linux/kernel.h>
+> > >  #include <linux/kref.h>
+> > >  #include <linux/sched/debug.h>
+> > > +#include <linux/sched.h>
+> > >
+> > >  #include "debugfs.h"
+> > >  #include "string-stream.h"
+> > >  #include "try-catch-impl.h"
+> > >
+> > > -static void kunit_set_failure(struct kunit *test)
+> > > -{
+> > > -       WRITE_ONCE(test->success, false);
+> > > -}
+> > > -
+> > >  static void kunit_print_tap_version(void)
+> > >  {
+> > >         static bool kunit_has_printed_tap_version;
+> > > @@ -288,6 +284,10 @@ static void kunit_try_run_case(void *data)
+> > >         struct kunit_suite *suite =3D ctx->suite;
+> > >         struct kunit_case *test_case =3D ctx->test_case;
+> > >
+> > > +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+> > > +       current->kunit_test =3D test;
+> > > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
+> > > +
+> > >         /*
+> > >          * kunit_run_case_internal may encounter a fatal error; if it=
+ does,
+> > >          * abort will be called, this thread will exit, and finally t=
+he parent
+> > > @@ -603,6 +603,9 @@ void kunit_cleanup(struct kunit *test)
+> > >                 spin_unlock(&test->lock);
+> > >                 kunit_remove_resource(test, res);
+> > >         }
+> > > +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+> > > +       current->kunit_test =3D NULL;
+> > > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(kunit_cleanup);
+> > >
+> > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> > > index 3872d250ed2c..dbfa0875ee09 100644
+> > > --- a/lib/test_kasan.c
+> > > +++ b/lib/test_kasan.c
+> > > @@ -23,12 +23,60 @@
+> > >
+> > >  #include <asm/page.h>
+> > >
+> > > -/*
+> > > - * Note: test functions are marked noinline so that their names appe=
+ar in
+> > > - * reports.
+> > > +#include <kunit/test.h>
+> > > +
+> > > +static struct kunit_resource resource;
+> > > +static struct kunit_kasan_expectation fail_data;
+> > > +static bool multishot;
+> > > +static int orig_panic_on_warn;
+> > > +
+> > > +static int kasan_test_init(struct kunit *test)
+> > > +{
+> > > +       /*
+> > > +        * Temporarily enable multi-shot mode and set panic_on_warn=
+=3D0.
+> > > +        * Otherwise, we'd only get a report for the first case.
+> > > +        */
+> > > +       multishot =3D kasan_save_enable_multi_shot();
+> > > +
+> > > +       orig_panic_on_warn =3D panic_on_warn;
+> > > +       panic_on_warn =3D 0;
+> > > +
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +static void kasan_test_exit(struct kunit *test)
+> > > +{
+> > > +       kasan_restore_multi_shot(multishot);
+> > > +
+> > > +       /* Restore panic_on_warn */
+> >
+> > Nit: no need for this comment, I think it's clear that here we're
+> > restoring stuff we saved in kasan_test_init().
+> >
+> Okay!
+>
+> > > +       panic_on_warn =3D orig_panic_on_warn;
+> > > +}
+> > > +
+> > > +/**
+> > > + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expres=
+sion does
+> > > + * not cause a KASAN error. This uses a KUnit resource named "kasan_=
+data." Do
+> > > + * Do not use this name for a KUnit resource outside here.
+> > > + *
+> > >   */
+> > > +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
+> > > +       struct kunit_resource *res; \
+> > > +       struct kunit_kasan_expectation *kasan_data; \
+> > > +       fail_data.report_expected =3D true; \
+> > > +       fail_data.report_found =3D false; \
+> > > +       kunit_add_named_resource(test, \
+> > > +                               NULL, \
+> > > +                               NULL, \
+> > > +                               &resource, \
+> > > +                               "kasan_data", &fail_data); \
+> > > +       condition; \
+> > > +       res =3D kunit_find_named_resource(test, "kasan_data"); \
+> >
+> > Is res going to be =3D=3D &resource here? If so, no need to call
+> > kunit_find_named_resource().
+> >
+>
+> You're right. Thanks for the suggestion!
+>
+> > > +       kasan_data =3D res->data; \
+> > > +       KUNIT_EXPECT_EQ(test, \
+> > > +                       kasan_data->report_expected, \
+> > > +                       kasan_data->report_found); \
+> >
+> > Nit: no need to add kasan_data var, just use resource.data->report_expe=
+cted.
+> >
+>
+> I can probably just use fail_data->report_expected, actually.
+>
+> > > +       kunit_put_resource(res); \
+> > > +} while (0)
+> > >
+> > > -static noinline void __init kmalloc_oob_right(void)
+> > >  {
+> > >         char *ptr;
+> > >         size_t size =3D 123;
+> > > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> > > index 5ef9f24f566b..497477c4b679 100644
+> > > --- a/mm/kasan/report.c
+> > > +++ b/mm/kasan/report.c
+> > > @@ -32,6 +32,8 @@
+> > >
+> > >  #include <asm/sections.h>
+> > >
+> > > +#include <kunit/test.h>
+> > > +
+> > >  #include "kasan.h"
+> > >  #include "../slab.h"
+> > >
+> > > @@ -455,12 +457,35 @@ static bool report_enabled(void)
+> > >         return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
+> > >  }
+> > >
+> > > +#if IS_ENABLED(CONFIG_KUNIT)
+> > > +void kasan_update_kunit_status(struct kunit *cur_test)
+> >
+> > This isn't used outside of report.c, right? Then _static_ void
+> > kasan_update_kunit_status().
+> >
+>
+> Correct.
+>
+> > > +{
+> > > +       struct kunit_resource *resource;
+> > > +       struct kunit_kasan_expectation *kasan_data;
+> > > +
+> > > +       if (!kunit_find_named_resource(cur_test, "kasan_data")) {
+> > > +               kunit_set_failure(cur_test);
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       resource =3D kunit_find_named_resource(cur_test, "kasan_data"=
+);
+> >
+> > Do this before the if above, and then check if (!resource), will save
+> > you a call to kunit_find_named_resource().
+> >
+> > > +       kasan_data =3D resource->data;
+> > > +       kasan_data->report_found =3D true;
+> >
+> > No need for kasan_data var (if it can't be NULL or something), just do:
+> >
+> > resource->data->report_found =3D true;
+> >
+>
+> The compiler seems to really hate this...
+> mm/kasan/report.c: In function =E2=80=98kasan_update_kunit_status=E2=80=
+=99:
+> mm/kasan/report.c:471:16: warning: dereferencing =E2=80=98void *=E2=80=99=
+ pointer
+>   471 |  resource->data->report_found =3D true;
+>       |                ^~
+> mm/kasan/report.c:471:16: error: request for member =E2=80=98report_found=
+=E2=80=99 in
+> something not a structure or union
+>
+> Do you know how to fix this? I don't think I fully understand the error.
 
-Reported-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
----
- drivers/mmc/host/sdhci-of-arasan.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Ah, resource->data is a void *, missed that. Let's keep the kasan_data
+var then, but do explicit casting:
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index 34403b2..72f5d83 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -365,7 +365,7 @@ static const struct sdhci_pltfm_data sdhci_arasan_pdata = {
- 			SDHCI_QUIRK2_STOP_WITH_TC,
- };
- 
--static struct sdhci_arasan_of_data sdhci_arasan_data = {
-+static struct sdhci_arasan_of_data sdhci_arasan_generic_data = {
- 	.pdata = &sdhci_arasan_pdata,
- };
- 
-@@ -563,15 +563,15 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
- 	/* Generic compatible below here */
- 	{
- 		.compatible = "arasan,sdhci-8.9a",
--		.data = &sdhci_arasan_data,
-+		.data = &sdhci_arasan_generic_data,
- 	},
- 	{
- 		.compatible = "arasan,sdhci-5.1",
--		.data = &sdhci_arasan_data,
-+		.data = &sdhci_arasan_generic_data,
- 	},
- 	{
- 		.compatible = "arasan,sdhci-4.9a",
--		.data = &sdhci_arasan_data,
-+		.data = &sdhci_arasan_generic_data,
- 	},
- 	{
- 		.compatible = "xlnx,zynqmp-8.9a",
--- 
-2.1.1
+kasan_data =3D (struct kunit_kasan_expectation *)resource->data;
+kasan_data->report_found =3D true;
 
+>
+> > > +}
+> > > +#endif /* IS_ENABLED(CONFIG_KUNIT) */
+> > > +
+> > >  void kasan_report_invalid_free(void *object, unsigned long ip)
+> > >  {
+> > >         unsigned long flags;
+> > >         u8 tag =3D get_tag(object);
+> > >
+> > >         object =3D reset_tag(object);
+> > > +
+> > > +#if IS_ENABLED(CONFIG_KUNIT)
+> > > +       if (current->kunit_test)
+> > > +               kasan_update_kunit_status(current->kunit_test);
+> > > +#endif /* IS_ENABLED(CONFIG_KUNIT) */
+> > > +
+> > >         start_report(&flags);
+> > >         pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (v=
+oid *)ip);
+> > >         print_tags(tag, object);
+> > > @@ -481,6 +506,11 @@ void __kasan_report(unsigned long addr, size_t s=
+ize, bool is_write, unsigned lon
+> > >         if (likely(!report_enabled()))
+> > >                 return;
+> > >
+> > > +#if IS_ENABLED(CONFIG_KUNIT)
+> > > +       if (current->kunit_test)
+> > > +               kasan_update_kunit_status(current->kunit_test);
+> > > +#endif /* IS_ENABLED(CONFIG_KUNIT) */
+> > > +
+> > >         disable_trace_on_warning();
+> > >
+> > >         tagged_addr =3D (void *)addr;
+>
+> --
+> Best,
+> Patricia
