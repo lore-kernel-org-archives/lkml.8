@@ -2,268 +2,201 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A29C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3DCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E122822582
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D0E2251E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:14:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="I7B1AcUr"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="i3fcfFQl";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="lHmXFjd4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgDFNOB (ORCPT
+        id S1728207AbgDFNOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:14:01 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:36781 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728018AbgDFNOA (ORCPT
+        Mon, 6 Apr 2020 09:14:03 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:48254 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728167AbgDFNOB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:14:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586178839; x=1617714839;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=/FGvBbfaXiivpU/0tuD5XY5igmRHofLaXcdYGxdbhvw=;
-  b=I7B1AcUrejo67EBcofUHeT7hZv4lMSk5PqPLoutONhVxZkDG9sYcnhn4
-   rUBo0iccSxrqEjTUqvW6Vc+3wiWAbWiCaN4IdtrlwnWFo3+yNWb0hGNhN
-   WkvkF77PkFHuW02sm0cyZ+fKF1JK+n+yjrCqzC/ME7T/iUmkBjWEIGBea
-   k=;
-IronPort-SDR: ZdYtChsjVIbk/9EmEHhObWwE/EfprbPevIMAaHBSSb2pHC2C3SoretWVvK08PbSPfz76g4srM/
- hWZEpR9SZ/mw==
-X-IronPort-AV: E=Sophos;i="5.72,351,1580774400"; 
-   d="scan'208";a="27146568"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 06 Apr 2020 13:13:56 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 2A223A0520;
-        Mon,  6 Apr 2020 13:13:45 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:13:45 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.65) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:13:31 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 06/15] mm/damon: Apply dynamic memory mapping changes
-Date:   Mon, 6 Apr 2020 15:09:29 +0200
-Message-ID: <20200406130938.14066-7-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200406130938.14066-1-sjpark@amazon.com>
-References: <20200406130938.14066-1-sjpark@amazon.com>
+        Mon, 6 Apr 2020 09:14:01 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036D58nm016507;
+        Mon, 6 Apr 2020 06:13:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=2et/XuZug6kjmJtkLC+ntwLPkH6Re+U+W7JzYghvQpQ=;
+ b=i3fcfFQla0rdSBuMf4gOB6ozrxAVcQa2yKRVJUbUttVnBuEdpkpbEE+W76wONMu9CPGL
+ qZx4tvANfQdTDfUb4G3RVRBT/Jq5b4+J4nuBQhecqqecEYtvChl6X+Tdib/T/8UDjmr0
+ 86ui4dOEuean66S2YPmlZfKPcE3HOc4UrbESWiPKZ5vK27miBiMAjUdi+WeGCY84drjc
+ WO19HteV9Oeedt7ho3CS5sMGoMGvndvPm3V9PZu+rxmofHyfyfts6DbKJKrG1BXYfGOA
+ iY1ZNQdoUYvJrnEAnv24uI380ut/gpJ2fib4Dnjg78E68f0QGE6XjeWDpvctqAJqi44R 1A== 
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2171.outbound.protection.outlook.com [104.47.58.171])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 306ntxxmbj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Apr 2020 06:13:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TcSNRki2OtDljn8P7hGu9O71mGVYvwwlywCbFuGYPhyOfQ2IAzi2q240wqrsn+aqW6JwfjTgwBwEo1/HzhRSOD0zN3jk1IOfDxa2IQHuwJRW+eYMGBPb3zsxtQFY9IHEcfHThPg1+Bh5SEqSbUmS2BABZ4D5DBJ8cOFZHpiKxMfx5ha2AYSdChrrlqdOdKi7Zr1AY1MCNvSzM4h2DAQrrlVikabfElsODc3x8mFEzFqykxNfrBhiKTe9VWkDW/LjXJcfzxZRlhxvjDUzL1WmI1PxsbpZ3wpM1eJxE8uhRJxSeJi0wR76Vvay61wyoyDknMIdOcgt+rUzvVihslKPOA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2et/XuZug6kjmJtkLC+ntwLPkH6Re+U+W7JzYghvQpQ=;
+ b=nCw1PfJ9DPtg123YPv8Z3Xbu9wzc9c6WZFnqkphJJs3QxhjtHH5q39NX70ADVCQRCtHSgXU0zCasaglr4Gyswf9fBeRW5f5mzi4Y9q6qmgBdOwqSbfnY6skHNtaoDPA8azCAjNrj4esn9R6QGfzi1j20lay60h9hSKhebxNPS3V/adGSB01rKvCpLFaxCzSXNcEiNEMBApd0Kwxs4hHen2DOxO4mKq3LADGC9i2oaSFFvED15I242WKjvdWNEGNsx5dJXOz+3mbx8X12Ptsflg0O+0+Al+cT9YqkmJpBjmoTES7FqnHhFdlSzI2Vkz6LWW7Y27wItEHIQ3lJbftDiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 158.140.1.148) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2et/XuZug6kjmJtkLC+ntwLPkH6Re+U+W7JzYghvQpQ=;
+ b=lHmXFjd4hzEmzxa8EJnMPZnMC4GxfnKXqEsxJXDS4piv5f/Ak9P9YeLEGcIf9+MFnJawIskz70Ss8HnRE+GOd5ZBKzw/0reM7N/mu3xB00r8h2Y1n+lYvw79kQyHcycIrMf4dBAbiI6ogkL3bhc4KLswS7yyAyaIy3BuMHR1k9k=
+Received: from DM6PR03CA0026.namprd03.prod.outlook.com (2603:10b6:5:40::39) by
+ BYAPR07MB4999.namprd07.prod.outlook.com (2603:10b6:a03:15::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.21; Mon, 6 Apr 2020 13:13:49 +0000
+Received: from DM6NAM12FT057.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:5:40:cafe::26) by DM6PR03CA0026.outlook.office365.com
+ (2603:10b6:5:40::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19 via Frontend
+ Transport; Mon, 6 Apr 2020 13:13:48 +0000
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 158.140.1.148 as permitted sender) receiver=protection.outlook.com;
+ client-ip=158.140.1.148; helo=sjmaillnx2.cadence.com;
+Received: from sjmaillnx2.cadence.com (158.140.1.148) by
+ DM6NAM12FT057.mail.protection.outlook.com (10.13.178.73) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.9 via Frontend Transport; Mon, 6 Apr 2020 13:13:48 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id 036DDiTd018857
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Mon, 6 Apr 2020 06:13:47 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Mon, 6 Apr 2020 15:13:44 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 6 Apr 2020 15:13:44 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 036DDion001337;
+        Mon, 6 Apr 2020 15:13:44 +0200
+Received: (from dkangude@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 036DDirY001336;
+        Mon, 6 Apr 2020 15:13:44 +0200
+From:   Dhananjay Kangude <dkangude@cadence.com>
+To:     <linux-edac@vger.kernel.org>
+CC:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
+        <james.morse@arm.com>, <linux-kernel@vger.kernel.org>,
+        <mparab@cadence.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Dhananjay Kangude <dkangude@cadence.com>
+Subject: [PATCH v3 1/2] dt-bindings: edac: Add cadence ddr mc support
+Date:   Mon, 6 Apr 2020 15:13:40 +0200
+Message-ID: <20200406131341.1253-2-dkangude@cadence.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200406131341.1253-1-dkangude@cadence.com>
+References: <20200406131341.1253-1-dkangude@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D11UWB003.ant.amazon.com (10.43.161.206) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.148;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:sjmaillnx2.cadence.com;PTR:unknown.cadence.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(36092001)(46966005)(82740400003)(36756003)(246002)(86362001)(5660300002)(8676002)(47076004)(8936002)(2906002)(6916009)(7636002)(356004)(6666004)(966005)(107886003)(426003)(54906003)(316002)(36906005)(1076003)(2616005)(70586007)(70206006)(26005)(42186006)(478600001)(4326008)(26826003)(186003)(336012);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a88dbcc6-997a-465a-dad9-08d7da2c57f7
+X-MS-TrafficTypeDiagnostic: BYAPR07MB4999:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB49996A43E6243A8A778B99BBCDC20@BYAPR07MB4999.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-Forefront-PRVS: 0365C0E14B
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8VMcJeuyxsiX02GbQ/iN2Ui4ACNv4i35VZFxHozMj7Y3i2PHc0oSqCfrTZpUnXRtfHKX/1wsY24K/eojPn4XjZFddJOGgZIU1pj4biNigThIVpo96AnLWXJOfsikXBGgGqtLzUMtQhvJCynq9w1jDWtYHbZA/sy0aune3/jT1FPHNIGfXSC/cy3FM3IjbWr+7t4KQu7H6vkaeRjFKohs5Bhht7vSAMCdGii/DDIlNxSGhcpfGjiQguXaCzcuT6zLUDn4d8FXw2ROzca4VzDfmaCBd6gjt+RMeh97nsauMlE5hUbgvnGi7dj/gb3Sv0Pt/PpvMHAMoSYcy93lvWHyeQHALomCJzEHZ84VgHYoEcBi2vYXG4kMnf/Eg1WoRL/uHohoQQjx+P7+Ea6atZiuZ1vJDYoQJlyyzMh3ZiZ5kYYdGoTdIqX7lBZ0kx1+BY7EdhpY26Eq8wXVmFGgllZaL3Xevwhu1AlFJ/tb8YRRY0G0pzxmjohylw/xGvGD0iLgOUJlCPEsbKTOoFVC5jIU9EduhpBDI+nbEm2ckQ8r5CjPiTyrSwtPb0+GT9wxRIPuhaianRe/pDDMZXOn/zYUEHuztstM2wQczt79/boBbCei2Z7fR7hjJhBhqsJbf9nO
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 13:13:48.4412
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a88dbcc6-997a-465a-dad9-08d7da2c57f7
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.148];Helo=[sjmaillnx2.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB4999
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_07:2020-04-06,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 bulkscore=0
+ adultscore=0 clxscore=1015 mlxscore=0 malwarescore=0 mlxlogscore=961
+ spamscore=0 suspectscore=1 phishscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004060112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+Add documentation for cadence ddr memory controller EDAC DTS bindings
 
-Only a number of parts in the virtual address space of the processes is
-mapped to physical memory and accessed.  Thus, tracking the unmapped
-address regions is just wasteful.  However, tracking every memory
-mapping change might incur an overhead.  For the reason, DAMON applies
-the dynamic memory mapping changes to the tracking regions only for each
-of a user-specified time interval (``regions update interval``).
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Signed-off-by: Dhananjay Kangude <dkangude@cadence.com>
 ---
- include/linux/damon.h | 10 +++--
- mm/damon.c            | 92 +++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 96 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/edac/cdns,ddr-edac.yaml    |   47 ++++++++++++++++++++
+ 1 files changed, 47 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 7562b85b1ec0..64e327400749 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -34,17 +34,21 @@ struct damon_task {
- /*
-  * For each 'sample_interval', DAMON checks whether each region is accessed or
-  * not.  It aggregates and keeps the access information (number of accesses to
-- * each region) for each 'aggr_interval' time.
-+ * each region) for 'aggr_interval' time.  DAMON also checks whether the memory
-+ * mapping of the target tasks has changed (e.g., by mmap() calls from the
-+ * application) and applies the changes. for each 'regions_update_interval'.
-  *
-  * All time intervals are in micro-seconds.
-  */
- struct damon_ctx {
- 	unsigned long sample_interval;
- 	unsigned long aggr_interval;
-+	unsigned long regions_update_interval;
- 	unsigned long min_nr_regions;
- 	unsigned long max_nr_regions;
- 
- 	struct timespec64 last_aggregation;
-+	struct timespec64 last_regions_update;
- 
- 	struct task_struct *kdamond;
- 	struct mutex kdamond_lock;
-@@ -55,8 +59,8 @@ struct damon_ctx {
- };
- 
- int damon_set_pids(struct damon_ctx *ctx, unsigned long *pids, ssize_t nr_pids);
--int damon_set_attrs(struct damon_ctx *ctx,
--		unsigned long sample_int, unsigned long aggr_int,
-+int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-+		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg);
- int damon_start(struct damon_ctx *ctx);
- int damon_stop(struct damon_ctx *ctx);
-diff --git a/mm/damon.c b/mm/damon.c
-index bc68491a1b1d..acbcd702ef0c 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -697,6 +697,87 @@ static void kdamond_split_regions(struct damon_ctx *ctx)
- 		damon_split_regions_of(ctx, t);
- }
- 
-+/*
-+ * Check whether it is time to check and apply the dynamic mmap changes
-+ *
-+ * Returns true if it is.
-+ */
-+static bool kdamond_need_update_regions(struct damon_ctx *ctx)
-+{
-+	return damon_check_reset_time_interval(&ctx->last_regions_update,
-+			ctx->regions_update_interval);
-+}
+diff --git a/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+new file mode 100644
+index 0000000..30ea757
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/cdns,ddr-edac.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/edac/cdns,ddr-edac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static bool damon_intersect(struct damon_region *r, struct region *re)
-+{
-+	return !(r->vm_end <= re->start || re->end <= r->vm_start);
-+}
++title: Cadence DDR IP with ECC support (EDAC)
 +
-+/*
-+ * Update damon regions for the three big regions of the given task
-+ *
-+ * t		the given task
-+ * bregions	the three big regions of the task
-+ */
-+static void damon_apply_three_regions(struct damon_ctx *ctx,
-+		struct damon_task *t, struct region bregions[3])
-+{
-+	struct damon_region *r, *next;
-+	unsigned int i = 0;
++description:
++  This binding describes the Cadence DDR/LPDDR IP with ECC feature enabled
++  to detect and correct CE/UE errors.
 +
-+	/* Remove regions which isn't in the three big regions now */
-+	damon_for_each_region_safe(r, next, t) {
-+		for (i = 0; i < 3; i++) {
-+			if (damon_intersect(r, &bregions[i]))
-+				break;
-+		}
-+		if (i == 3)
-+			damon_destroy_region(r);
-+	}
++maintainers:
++  - Dhananjay Kangdue <dkangude@cadence.com>
 +
-+	/* Adjust intersecting regions to fit with the three big regions */
-+	for (i = 0; i < 3; i++) {
-+		struct damon_region *first = NULL, *last;
-+		struct damon_region *newr;
-+		struct region *br;
++properties:
++  compatible:
++    enum:
++      - cdns,ddr4-mc
 +
-+		br = &bregions[i];
-+		/* Get the first and last regions which intersects with br */
-+		damon_for_each_region(r, t) {
-+			if (damon_intersect(r, br)) {
-+				if (!first)
-+					first = r;
-+				last = r;
-+			}
-+			if (r->vm_start >= br->end)
-+				break;
-+		}
-+		if (!first) {
-+			/* no damon_region intersects with this big region */
-+			newr = damon_new_region(ctx, br->start, br->end);
-+			damon_insert_region(newr, damon_prev_region(r), r);
-+		} else {
-+			first->vm_start = br->start;
-+			last->vm_end = br->end;
-+		}
-+	}
-+}
++  reg:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description:
++          Register block of DDR/LPDDR apb registers up to mapped area.
++          Mapped area contains the register set for memory controller,
++          phy and PI module register set doesn't part of this mapping.
 +
-+/*
-+ * Update regions for current memory mappings
-+ */
-+static void kdamond_update_regions(struct damon_ctx *ctx)
-+{
-+	struct region three_regions[3];
-+	struct damon_task *t;
++  interrupts:
++    maxItems: 1
 +
-+	damon_for_each_task(ctx, t) {
-+		if (damon_three_regions_of(t, three_regions))
-+			continue;
-+		damon_apply_three_regions(ctx, t, three_regions);
-+	}
-+}
++required:
++  - compatible
++  - reg
++  - interrupts
 +
- /*
-  * Check whether current monitoring should be stopped
-  *
-@@ -750,6 +831,9 @@ static int kdamond_fn(void *data)
- 			kdamond_reset_aggregated(ctx);
- 			kdamond_split_regions(ctx);
- 		}
++additionalProperties: false
 +
-+		if (kdamond_need_update_regions(ctx))
-+			kdamond_update_regions(ctx);
- 	}
- 	damon_for_each_task(ctx, t) {
- 		damon_for_each_region_safe(r, next, t)
-@@ -856,6 +940,7 @@ int damon_set_pids(struct damon_ctx *ctx, unsigned long *pids, ssize_t nr_pids)
-  * damon_set_attrs() - Set attributes for the monitoring.
-  * @ctx:		monitoring context
-  * @sample_int:		time interval between samplings
-+ * @regions_update_int:	time interval between vma update checks
-  * @aggr_int:		time interval between aggregations
-  * @min_nr_reg:		minimal number of regions
-  * @max_nr_reg:		maximum number of regions
-@@ -865,9 +950,9 @@ int damon_set_pids(struct damon_ctx *ctx, unsigned long *pids, ssize_t nr_pids)
-  *
-  * Return: 0 on success, negative error code otherwise.
-  */
--int damon_set_attrs(struct damon_ctx *ctx,
--			unsigned long sample_int, unsigned long aggr_int,
--			unsigned long min_nr_reg, unsigned long max_nr_reg)
-+int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
-+		unsigned long aggr_int, unsigned long regions_update_int,
-+		unsigned long min_nr_reg, unsigned long max_nr_reg)
- {
- 	if (min_nr_reg < 3) {
- 		pr_err("min_nr_regions (%lu) should be bigger than 2\n",
-@@ -882,6 +967,7 @@ int damon_set_attrs(struct damon_ctx *ctx,
- 
- 	ctx->sample_interval = sample_int;
- 	ctx->aggr_interval = aggr_int;
-+	ctx->regions_update_interval = regions_update_int;
- 	ctx->min_nr_regions = min_nr_reg;
- 	ctx->max_nr_regions = max_nr_reg;
- 
++examples:
++  - |
++    edac: edac@fd100000 {
++        compatible = "cdns,ddr4-mc-edac";
++        reg = <0xfd100000 0x4000>;
++        interrupts = <0x00 0x01 0x04>;
++    };
++...
 -- 
-2.17.1
+1.7.1
 
