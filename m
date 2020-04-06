@@ -2,142 +2,154 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B125AC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE9EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 826252078A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586164295;
-	bh=IEKnLroPOXhZZoEjwk2Sy7qHL1p/3PpX8cAZjySktEg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MYzaRVb154Mz+A7e7DhEVFfIHnsa4l7QL0wbIfz9mZKzVdQG1M9LSTbAg8WlHV9Kj
-	 yeMwFGALOM1a1b4YAzJmtDqqaKnpE64/FBQAsTFU+q1Bp6nU6u6ljIFbYEvAV1Zpez
-	 9ffLMYeaEbm4hcpdXNLvQgCzzXUhhjNlmA8G1C5Y=
+	by mail.kernel.org (Postfix) with ESMTP id 945672078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:12:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUr0f/B6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgDFJLe (ORCPT
+        id S1726706AbgDFJMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbgDFJLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:11:34 -0400
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C6E12078A;
-        Mon,  6 Apr 2020 09:11:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586164293;
-        bh=IEKnLroPOXhZZoEjwk2Sy7qHL1p/3PpX8cAZjySktEg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=x9/XnaHxSYASdAnWEA1KJzzEgemj3vDGBjEXM3ZS/mXiYMEt9DQ0mPtb0MiA+/29Y
-         +kCeLxo9TBIfyZSeU3y51QeFqzPHoFJwv+7AsMuW4PnVgUifoqVMoKIWZOPhq55kOi
-         pVVdq0uKWDmwPU73ZYVXd9jmL6nD/cuzCdeXqVa8=
-Received: by mail-io1-f47.google.com with SMTP id o3so15016926ioh.2;
-        Mon, 06 Apr 2020 02:11:33 -0700 (PDT)
-X-Gm-Message-State: AGi0PuapjANHW4VO8VO6oiRiB4Y98aWNUuCGaZXoWBGpkzkewu0xYMuV
-        jkaTDn8/aNZH+I6KsID7rmIvziKT/7zZJSP6ztA=
-X-Google-Smtp-Source: APiQypJ08+HDD3z4MBXBa9W9lMQHNod6bQSMdsaxyTfs2CUw/1PrNMe5MnrwEhdaeSq/8Hso8MUAfaqal+pRLZa+9IU=
-X-Received: by 2002:a6b:f413:: with SMTP id i19mr18808491iog.203.1586164292977;
- Mon, 06 Apr 2020 02:11:32 -0700 (PDT)
+        Mon, 6 Apr 2020 05:12:22 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39205 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgDFJMW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 05:12:22 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p10so16476230wrt.6;
+        Mon, 06 Apr 2020 02:12:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=glkaDM5M1FoM2GQRJ0fDDMF/MejHXymIl6X4UtEi45w=;
+        b=hUr0f/B6PpAktI3a6eoaU1zTcfOcHxV89tvP0kcd8jZBbI7WT++ehVaWsh9HeIrZtG
+         xuu1c3/b6aKj7y4S7ruK7DQjOBZcGxwIgUJkDaydRCD4JgcMvW7pfjXw4s3Oz2Eq68vi
+         D+4DwMwsW86NI/dHuQZd5+25ZWJZ+ixQhGqrxnoHHCe1f50CodifbOg5k/bRpOry19D+
+         UD54aw4U8pfdtQ9v+19UqvUIuiwE/k9t9yJf+y1TCqQ9raRJdYvMS8YLvj/yGs6K0ATk
+         OUbnPJUY3mkDGNK0zDUt1BEQfxs5pFBDHSN553zkHXpVfbgg8WuxYWP3DL4Q0sCfiNbo
+         LfLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=glkaDM5M1FoM2GQRJ0fDDMF/MejHXymIl6X4UtEi45w=;
+        b=fEPDOkpH585NibyKzLkQsQMM79nWQSLMvou6xqkcrtULgpgPqBkRWcp15ACi7g+W+P
+         Qklbv+BvfY62XdBY+pDWfRV/gbX/diU9LpsCh/K5dmnMnGrV4POKcuKHVd7APqAWC7+4
+         GtbioIomSl99vXGnSQ4nhefMTrwrNEY18FGcR0H8taonLRXBC+J+J3vX8mk6UdM2ud5m
+         gg3AlaqzLW2h4fFhjmZRPxa4gKjWpOV7qr5Ry46LVN5tNzfsUJoT2hqjFtGxD4DZkH0e
+         ryUwZjB8R8hi5e1wR/WM5Z0P1K25LZm6dqZA8rSgrzmIafz1baOMK8+3ov54XYND+30M
+         IMuQ==
+X-Gm-Message-State: AGi0PuZMXfmCWAPQ75I85tVflTsQvBI/K9p7P09wyq8vK3AfzHJ3c+ed
+        5cBni40z5OzEPi3HXdzEbRKyckXvmEf59DNoECU=
+X-Google-Smtp-Source: APiQypL24y4fJaGtGW9gRNAz9pUa7fkp7hOrxC5pazn4QZ+0m+JtSdUti/oau1CdKKN+mr2AASvDWC3HNFJREEErwpM=
+X-Received: by 2002:adf:b64f:: with SMTP id i15mr3772042wre.351.1586164339736;
+ Mon, 06 Apr 2020 02:12:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200109150218.16544-1-nivedita@alum.mit.edu> <20200405154245.11972-1-me@prok.pw>
- <20200405231845.GA3095309@rani.riverdale.lan> <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
- <20200406035110.GA3241052@rani.riverdale.lan> <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
- <20200406084738.GA2520@zn.tnic>
-In-Reply-To: <20200406084738.GA2520@zn.tnic>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 6 Apr 2020 11:11:21 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
-Message-ID: <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Sergey Shatunov <me@prok.pw>, hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
+References: <20200403051709.22407-1-masahiroy@kernel.org> <CAKwvOdnaZ6qDVxaPY-GEH8pdUkzH6eqm16ok9_wzRSVRG-1kiQ@mail.gmail.com>
+ <CAK7LNAQybfcYiosNU+ybd-Q7-Y2dbLqBVN2XA00wCRnFAoqdew@mail.gmail.com>
+ <20200405235507.psjjhqa3cxw57xra@google.com> <CAK7LNAS_SQg2nhJ8HKBTq3+dziGpaJZ87fOBRS-ZMdUpKGhX9Q@mail.gmail.com>
+In-Reply-To: <CAK7LNAS_SQg2nhJ8HKBTq3+dziGpaJZ87fOBRS-ZMdUpKGhX9Q@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 6 Apr 2020 11:12:39 +0200
+Message-ID: <CA+icZUU5YmFJispXy8Ax7gzxv__LfFMwUX-cGO_kaNXv_RHO7w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Fangrui Song <maskray@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Matthias_M=C3=A4nnich?= <maennich@google.com>,
+        Sandeep Patil <sspatil@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 10:47, Borislav Petkov <bp@alien8.de> wrote:
+On Mon, Apr 6, 2020 at 3:34 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> On Mon, Apr 06, 2020 at 09:32:47AM +0200, Ard Biesheuvel wrote:
-> > The EFI handover protocol strikes again :-(
+> On Mon, Apr 6, 2020 at 8:55 AM 'Fangrui Song' via Clang Built Linux
+> <clang-built-linux@googlegroups.com> wrote:
 > >
-> > It seems we did not include any guidance in the documentation in
-> > Documentation/x86/boot.rst regarding zero-initializing BSS, and come
-> > to think of it, we don't include any other requirements either, i.e.,
-> > regarding placement wrt section alignment etc. This is a serious bug.
-> > Even though EFI usually lays out PE/COFF images in files the exact way
-> > they appear in memory, this is not actually required by the spec. Most
-> > notably, the virtual size can be smaller than the file size, and the
-> > loader is expected to zero-initialize the difference as well.
+> > On 2020-04-06, Masahiro Yamada wrote:
+> > >On Sat, Apr 4, 2020 at 3:24 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > >>
+> > >> On Thu, Apr 2, 2020 at 10:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >> >
+> > >> > As Documentation/kbuild/llvm.rst implies, building the kernel with a
+> > >> > full set of LLVM tools gets very verbose and unwieldy.
+> > >> >
+> > >> > Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
+> > >> > GCC and Binutils. You can pass LLVM=1 from the command line or as an
+> > >> > environment variable. Then, Kbuild will use LLVM toolchains in your
+> > >> > PATH environment.
+> > >> >
+> > >> > Please note LLVM=1 does not turn on the LLVM integrated assembler.
+> > >> > You need to explicitly pass AS=clang to use it. When the upstream
+> > >> > kernel is ready for the integrated assembler, I think we can make
+> > >> > it default.
+> > >>
+> > >> Having this behavior change over time may be surprising.  I'd rather
+> > >> that if you want to not use the integrated assembler, you explicitly
+> > >> negate it, or just don't use the LLVM=1 syntax, ie. `make CC=clang
+> > >> LD=ld.lld ...`.
+> > >>
+> > >> We could modify how `-no-integrated-as` is chosen when LLVM=1.
+> > >>
+> > >> make LLVM=1 LLVMIA=0 ... # add `-no-integrated-as`
+> > >> # what the flag is doesn't really matter to me, something shorter might be nice.
+> > >> make LLVM=1 # use all LLVM tools
+> > >>
+> > >> Since we got rid of $(AS), it would be appropriate to remove/change it
+> > >> there, since no one really relies on AS=clang right now. (We do have 1
+> > >> of our 60+ CI targets using it, but we can also change that trivially.
+> > >> So I think we have a lot of freedom to change how `-no-integrated-as`
+> > >> is set.
+> > >>
+> > >> This could even be independent of this patch.
+> > >
+> > >
+> > >I also thought a boolean flag is preferred.
+> > >
+> > >AS=clang will not live long anyway, and
+> > >I hesitated to break the compatibility
+> > >for the short-term workaround.
+> > >
+> > >But, if this is not a big deal, I can
+> > >replace AS=clang with LLVMIA=1.
+> >
+> > My mere complaint is that it may be difficult to infer the intention (integrated
+> > assembler) from the abbreviation "IA" in "LLVMIA" :/
+> >
+> > Something with "AS" in the name may be easier for a user to understand,
+> > e.g. CLANG_AS or LLVM_AS.
 >
-> Is that expectation stated explicitly somewhere?
+>
+>
+>
+> I see 'llvm-as' in my PATH,
+> but it is a different kind of tool, right?
+> (converter from LLVM assembler *.ll to LLVM bit code *.bc)
+>
+> So, I thought "LLVM_AS" might be confusing.
 >
 
-Yes, it is in the PE/COFF specification. [0]
+Indeed LLVM_AS is confusing as llvm-as is different to Clang's
+integrated assembler.
+So CLANG_AS might be a better choice.
 
-The whole problem is that we are conflating 'loading a PE/COFF image'
-with 'copying a PE/COFF image into memory', which are not the same
-thing. It is not just the layout issue, we are running into other
-problems with things like UEFI secure boot and TPM-based measured
-boot, where the fact that omitting the standard LoadImage() boot
-service (which takes care of these things under the hood) means that
-you now have to do your own checks and measurements. These things are
-literally all over the place at the moment, shim, GRUB, systemd-boot
-etc, with no authoritative spec that describes which component should
-be doing what.
-
-> > Since the EFI handover protocol should be considered deprecated at
-> > this point (and is never going to be supported in upstream GRUB
-> > either, for instance), I would recommend the systemd-boot developers
-> > to start looking into deprecating this as well, and switch to the
-> > ordinary PE/COFF entry point, and use the new initrd callback protocol
-> > for initrd loading.
->
-> Any pointers to that new initrd callback protocol?
->
-
-Commit ec93fc371f014a6fb483e3556061ecad4b40735c has the background, but ...
-
-> In any case, I'd really appreciate a patch to boot.rst formulating those
-> requirements so that they're written down and people can find them.
->
-
-... I'll look into updating the documentation as well. Note that this
-stuff is hot off the press, so there may be some issues lurking (like
-this one) that we hadn't thought of yet.
-
-OVMF and u-boot already have implementations of this initrd loading
-approach. A GRUB version is under discussion.
-
-> > On the Linux/x86 side, we should at least add some code to the EFI
-> > handover protocol entry point to zero initialize BSS, and ensure that
-> > it is either not needed in other places, or add the code to deal with
-> > those as well.
->
-> Sounds like a simple fix, if that would fix it.
->
-
-Actually, it may be sufficient to #define __efistub_global to
-__section(.data) like we already do for ARM, to ensure that these
-global flags are always initialized correctly. (I'll wait for Sergey
-to confirm that the spurious enabling of the PCI DMA protection
-resulting from this BSS issue is causing the boot regression)
-
-
-
-[0] https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
+- sed@ -
