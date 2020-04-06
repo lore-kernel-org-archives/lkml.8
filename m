@@ -2,131 +2,615 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C99C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC50AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E15F20731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586159214;
-	bh=y1V0y5qByl604OEH2YnRM/oaDhSWbRYnOBO3/Q8sV1g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=i2W7woCel8C7ql2Akccf35qZB4lfm0xPtcvGWvHEc/M0MZgO52K7tzTAe6yGTeAlu
-	 xoiq/fYn/odkAYRd3Ibzqx66Evi+6kqu7ElB/3mvDB3xG2r4jpcgPj1xTKhCpGX2FS
-	 UQq8j2eRCA2OsO8dY9BTi+QL40oIVWiRyiAlEoi0=
+	by mail.kernel.org (Postfix) with ESMTP id 8C3BB206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:48:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TGEztmhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgDFHqx (ORCPT
+        id S1726616AbgDFHsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 03:46:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56310 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbgDFHqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 03:46:53 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26D85206F5;
-        Mon,  6 Apr 2020 07:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586159212;
-        bh=y1V0y5qByl604OEH2YnRM/oaDhSWbRYnOBO3/Q8sV1g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AkF8viHMnjwxIIQDLRi8bLfelyOx5KL02q8bMWh4XEhGRpSk8BtJMuDhz76aIvqix
-         12PQNXmLNtmvsDBto0D6NU7yWjEKTpRXkDbzOfebECj47JWsJzAjEbeZ90grjMzzq0
-         BxJY/i4R+hzAA6x9VeDTajqkhPMHa54InTzsNxw0=
-Date:   Mon, 6 Apr 2020 09:46:45 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v2 1/1] lib/vsprintf: Add support for printing V4L2 and
- DRM fourccs
-Message-ID: <20200406094645.5f96457a@coco.lan>
-In-Reply-To: <CAHp75Vf+m_qzOwZb38dObLpKV2N27-J_7beqffhFVoSHaNV2vg@mail.gmail.com>
-References: <20200403091156.7814-1-sakari.ailus@linux.intel.com>
-        <1105bfe5-88f1-040e-db40-54d7761747d5@rasmusvillemoes.dk>
-        <b1e6213ba9f67da8278dd5c5f5e4def8ab927c83.camel@perches.com>
-        <20200403193242.38611906@coco.lan>
-        <2751400ae13b25d8259a8a9d7b36caf98ec2d367.camel@perches.com>
-        <CAHp75Vf+m_qzOwZb38dObLpKV2N27-J_7beqffhFVoSHaNV2vg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 6 Apr 2020 03:48:08 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37945 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726575AbgDFHsH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 03:48:07 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z12so12105575qtq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 00:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=amAF0/6ZAlncZUHeVlhe3w2Ki3z4fhffTcU8qEplQgI=;
+        b=TGEztmhV4iB7KyI5BPf8WoTfqW3RCZUlDikAjrf1SR+nN1ZsXwXw2LRG86FQfm7Vmk
+         yf7DjN8owLtSCpXTYmdNKugl6ddHr5UviVK0DWckTC+8BSgi4oKm2WkuR1cOfxw1ejTk
+         b0sfFieGzMsxgNCHBn7I9YXMZL/47t1Rr/Wh6WRw/08nhG+/naUtTien/aMtfPkJvEp2
+         +JSy8a8tR3cOr7obFkgvuGtURmTRVYq++sadK9pcZtZVhgd3ah+/FCTiT6bOhVdZ9R7T
+         sJOW+IFFQBDi9XJCU/Wf11AQfeluJniuWM0IZhDfPafDVPHlY5jdVrW1kFw060cL6RgB
+         EjRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=amAF0/6ZAlncZUHeVlhe3w2Ki3z4fhffTcU8qEplQgI=;
+        b=npgpQbUozPyLujYcwaTEhkNj+WVYtXJJnLVd2/EiaNXODeoFL1er/ixHOWWu53RRiL
+         v6wEYeHWGZZMydsAHXZDt9cHK3nFl6ZswdpIWGDDD5NsV30J0YknfodWsm/P6FZl0gGS
+         vcYzOkFawGfAlHeZkLaHDLnvxWmD/ahFsgbQgd+OWBFolhzEJue5dCne8IxUGUbARzWI
+         7wDE0khRORdLBNpSfL2zFlUdyvheTL56U6DpEUGfavu3tcfoBwaH8WamdRwHZIjaOyhC
+         W5wlJQjChd9HZ3WEB1TbychrgVHo0lBoLifidkxGwHFtQYwOzg5B27FFuZM53fS0VtVB
+         d/fA==
+X-Gm-Message-State: AGi0PuYNIgMh3jr/ZBrMGpjLoyVLAxXfX/1fduywUycQl5xdCAdKqRs9
+        9GLnB20/TXOnXmKUs1Hp9LvNM7n4DXuRY9JsqqCJtv1W
+X-Google-Smtp-Source: APiQypIZh9O39IoVlyPxAsvhWgOsBERW3TzNwd/djolltb8HgtlAHalS0On8dowlQ6zkrSLVBqEdY6ashXn19IuDVN0=
+X-Received: by 2002:ac8:5318:: with SMTP id t24mr3914516qtn.208.1586159284935;
+ Mon, 06 Apr 2020 00:48:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200402203656.27047-1-michael@walle.cc> <20200402203656.27047-11-michael@walle.cc>
+In-Reply-To: <20200402203656.27047-11-michael@walle.cc>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 6 Apr 2020 09:47:54 +0200
+Message-ID: <CAMpxmJVE3PgVCxkQ-ryc5=KSrKcpdmk1cnJUxJBz9QFCx-e_+A@mail.gmail.com>
+Subject: Re: [PATCH v2 10/16] gpio: add a reusable generic gpio_chip using regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
+        linux-pwm@vger.kernel.org,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 3 Apr 2020 21:32:42 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> escreveu:
+czw., 2 kwi 2020 o 22:37 Michael Walle <michael@walle.cc> napisa=C5=82(a):
+>
+> There are quite a lot simple GPIO controller which are using regmap to
+> access the hardware. This driver tries to be a base to unify existing
+> code into one place. This won't cover everything but it should be a good
+> starting point.
+>
+> It does not implement its own irq_chip because there is already a
+> generic one for regmap based devices. Instead, the irq_chip will be
+> instanciated in the parent driver and its irq domain will be associate
+> to this driver.
+>
+> For now it consists of the usual registers, like set (and an optional
+> clear) data register, an input register and direction registers.
+> Out-of-the-box, it supports consecutive register mappings and mappings
+> where the registers have gaps between them with a linear mapping between
+> GPIO offset and bit position. For weirder mappings the user can register
+> its own .xlate().
+>
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-> On Fri, Apr 3, 2020 at 8:54 PM Joe Perches <joe@perches.com> wrote:
-> > On Fri, 2020-04-03 at 19:32 +0200, Mauro Carvalho Chehab wrote:  
-> > > Em Fri, 03 Apr 2020 09:56:42 -0700
-> > > Joe Perches <joe@perches.com> escreveu:  
-> 
-> > It _might_ be useful to use a CONFIG_MEDIA_SUPPORT guard
-> > in lib/vsprintf for this.  
-> 
-> No need. FourCC, if Sakari makes it more generic, can be used for
-> other purposes, e.g. printing component names from the chips (not
-> related to media at all).
-> 
+Hi Michael,
 
-Hmm... not 100% sure about what you're meaning with "component names".
+Thanks for doing this! When looking at other generic drivers:
+gpio-mmio and gpio-reg I can see there are some corner-cases and more
+specific configuration options we could add but it's not a blocker,
+we'll probably be extending this one as we convert more drivers to
+using it. Personally I'd love to see gpio-mmio and gpio-reg removed
+and replaced by a single, generic regmap interface eventually.
 
-At media, some vendors use a cc-like code to allow identifying the
-name of the chip, retrieved on a common register via an I2C bus.
-Omnivision uses, for example, uses a 2 bytes code:
+> ---
+>  drivers/gpio/Kconfig        |   4 +
+>  drivers/gpio/Makefile       |   1 +
+>  drivers/gpio/gpio-regmap.c  | 320 ++++++++++++++++++++++++++++++++++++
+>  include/linux/gpio-regmap.h |  88 ++++++++++
+>  4 files changed, 413 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-regmap.c
+>  create mode 100644 include/linux/gpio-regmap.h
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 1b96169d84f7..a8e148f4b2e0 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -73,6 +73,10 @@ config GPIO_GENERIC
+>         depends on HAS_IOMEM # Only for IOMEM drivers
+>         tristate
+>
+> +config GPIO_REGMAP
+> +       depends on REGMAP
+> +       tristate
+> +
+>  # put drivers in the right section, in alphabetical order
+>
+>  # This symbol is selected by both I2C and SPI expanders
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index b2cfc21a97f3..93e139fdfa57 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_GPIO_SYSFS)      +=3D gpiolib-sysfs.o
+>  obj-$(CONFIG_GPIO_ACPI)                +=3D gpiolib-acpi.o
+>
+>  # Device drivers. Generally keep list sorted alphabetically
+> +obj-$(CONFIG_GPIO_REGMAP)      +=3D gpio-regmap.o
+>  obj-$(CONFIG_GPIO_GENERIC)     +=3D gpio-generic.o
+>
+>  # directly supported by gpio-generic
+> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+> new file mode 100644
+> index 000000000000..cc4437dc0521
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-regmap.c
+> @@ -0,0 +1,320 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * regmap based generic GPIO driver
+> + *
+> + * Copyright 2019 Michael Walle <michael@walle.cc>
+> + */
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio-regmap.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +
+> +struct gpio_regmap_data {
+> +       struct gpio_chip gpio_chip;
+> +       struct gpio_regmap *gpio;
+> +};
+> +
+> +/**
+> + * gpio_regmap_simple_xlate() - translate base/offset to reg/mask
+> + *
+> + * Use a simple linear mapping to translate the offset to the bitmask.
+> + */
+> +int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int base=
+,
+> +                            unsigned int offset,
+> +                            unsigned int *reg, unsigned int *mask)
+> +{
+> +       unsigned int line =3D offset % gpio->ngpio_per_reg;
+> +       unsigned int stride =3D offset / gpio->ngpio_per_reg;
+> +
+> +       *reg =3D base + stride * gpio->reg_stride;
+> +       *mask =3D BIT(line);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(gpio_regmap_simple_xlate);
 
-	OV5670_CHIP_ID			0x5670
-	OV5675_CHIP_ID			0x5675
-	OV2680_CHIP_ID			0x2680
-	OV5670_CHIP_ID			0x5670
-	OV5675_CHIP_ID			0x5675
+Why does this need to be exported?
 
-We used this at the em28xx driver to detect a camera sensor, and give
-a name for the chip (see drivers/media/usb/em28xx/em28xx-camera.c):
+> +
+> +static int gpio_regmap_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
+> +       struct gpio_regmap *gpio =3D data->gpio;
+> +       unsigned int base;
+> +       unsigned int val, reg, mask;
 
-		switch (id) {
-		case 0x2642:
-			name = "OV2640";
-			dev->em28xx_sensor = EM28XX_OV2640;
-			break;
-		case 0x7648:
-			name = "OV7648";
-			break;
-		case 0x7660:
-			name = "OV7660";
-			break;
+This can fit on a single line with base. Same elsewhere.
 
-Yet, this is not too reliable, as, for some products, they use something
-different:
+> +       int ret;
+> +
+> +       /* we might not have an output register if we are input only */
+> +       if (gpio->reg_dat_base.valid)
+> +               base =3D gpio->reg_dat_base.addr;
+> +       else
+> +               base =3D gpio->reg_set_base.addr;
+> +
+> +       ret =3D gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D regmap_read(gpio->regmap, reg, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return (val & mask) ? 1 : 0;
+> +}
+> +
+> +static void gpio_regmap_set(struct gpio_chip *chip, unsigned int offset,
+> +                           int val)
+> +{
+> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
+> +       struct gpio_regmap *gpio =3D data->gpio;
+> +       unsigned int base =3D gpio->reg_set_base.addr;
+> +       unsigned int reg, mask;
+> +
+> +       gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
+> +       if (val)
+> +               regmap_update_bits(gpio->regmap, reg, mask, mask);
+> +       else
+> +               regmap_update_bits(gpio->regmap, reg, mask, 0);
+> +}
+> +
+> +static void gpio_regmap_set_with_clear(struct gpio_chip *chip,
+> +                                      unsigned int offset, int val)
+> +{
+> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
+> +       struct gpio_regmap *gpio =3D data->gpio;
+> +       unsigned int base;
+> +       unsigned int reg, mask;
+> +
+> +       if (val)
+> +               base =3D gpio->reg_set_base.addr;
+> +       else
+> +               base =3D gpio->reg_clr_base.addr;
+> +
+> +       gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
+> +       regmap_write(gpio->regmap, reg, mask);
+> +}
+> +
+> +static int gpio_regmap_get_direction(struct gpio_chip *chip,
+> +                                    unsigned int offset)
+> +{
+> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
+> +       struct gpio_regmap *gpio =3D data->gpio;
+> +       unsigned int val, reg, mask;
+> +       unsigned int base;
+> +       int invert;
+> +       int ret;
+> +
+> +       if (gpio->reg_dir_out_base.valid) {
+> +               base =3D gpio->reg_dir_out_base.addr;
+> +               invert =3D 0;
+> +       } else if (gpio->reg_dir_in_base.valid) {
+> +               base =3D gpio->reg_dir_in_base.addr;
+> +               invert =3D 1;
+> +       } else {
+> +               return GPIO_LINE_DIRECTION_IN;
+> +       }
+> +
+> +       ret =3D gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D regmap_read(gpio->regmap, reg, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (!!(val & mask) ^ invert)
+> +               return GPIO_LINE_DIRECTION_OUT;
+> +       else
+> +               return GPIO_LINE_DIRECTION_IN;
+> +}
+> +
+> +static int gpio_regmap_set_direction(struct gpio_chip *chip,
+> +                                    unsigned int offset, bool output)
+> +{
+> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
+> +       struct gpio_regmap *gpio =3D data->gpio;
+> +       unsigned int val, reg, mask;
+> +       unsigned int base;
+> +       int invert;
+> +       int ret;
+> +
+> +       if (gpio->reg_dir_out_base.valid) {
+> +               base =3D gpio->reg_dir_out_base.addr;
+> +               invert =3D 0;
+> +       } else if (gpio->reg_dir_in_base.valid) {
+> +               base =3D gpio->reg_dir_in_base.addr;
+> +               invert =3D 1;
+> +       } else {
+> +               return 0;
+> +       }
+> +
+> +       ret =3D gpio->reg_mask_xlate(gpio, base, offset, &reg, &mask);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (!invert)
+> +               val =3D (output) ? mask : 0;
+> +       else
+> +               val =3D (output) ? 0 : mask;
+> +
+> +       return regmap_update_bits(gpio->regmap, reg, mask, val);
+> +}
+> +
+> +static int gpio_regmap_direction_input(struct gpio_chip *chip,
+> +                                      unsigned int offset)
+> +{
+> +       return gpio_regmap_set_direction(chip, offset, false);
+> +}
+> +
+> +static int gpio_regmap_direction_output(struct gpio_chip *chip,
+> +                                       unsigned int offset, int value)
+> +{
+> +       gpio_regmap_set(chip, offset, value);
+> +       return gpio_regmap_set_direction(chip, offset, true);
+> +}
+> +
+> +static int gpio_regmap_to_irq(struct gpio_chip *chip, unsigned int offse=
+t)
+> +{
+> +       struct gpio_regmap_data *data =3D gpiochip_get_data(chip);
+> +       struct gpio_regmap *gpio =3D data->gpio;
+> +
+> +       /* the user might have its own .to_irq callback */
+> +       if (gpio->to_irq)
+> +               return gpio->to_irq(gpio, offset);
+> +
+> +       return irq_create_mapping(gpio->irq_domain, offset);
+> +}
+> +
+> +/**
+> + * gpio_regmap_register() - Register a generic regmap GPIO controller
+> + *
+> + * @gpio: gpio_regmap device to register
+> + *
+> + * Returns 0 on success or an errno on failure.
+> + */
+> +int gpio_regmap_register(struct gpio_regmap *gpio)
+> +{
+> +       struct gpio_regmap_data *d;
+> +       struct gpio_chip *chip;
+> +       int ret;
+> +
+> +       if (!gpio->parent)
+> +               return -EINVAL;
+> +
+> +       if (!gpio->ngpio)
+> +               return -EINVAL;
+> +
+> +       /* we need at least one */
+> +       if (!gpio->reg_dat_base.valid && !gpio->reg_set_base.valid)
+> +               return -EINVAL;
+> +
+> +       /* we don't support having both registers simulaniously for now *=
+/
+> +       if (gpio->reg_dir_out_base.valid && gpio->reg_dir_in_base.valid)
+> +               return -EINVAL;
+> +
+> +       /* if not set, assume they are consecutive */
+> +       if (!gpio->reg_stride)
+> +               gpio->reg_stride =3D 1;
+> +
+> +       /* if not set, assume there is only one register */
+> +       if (!gpio->ngpio_per_reg)
+> +               gpio->ngpio_per_reg =3D gpio->ngpio;
+> +
+> +       if (!gpio->reg_mask_xlate)
+> +               gpio->reg_mask_xlate =3D gpio_regmap_simple_xlate;
+> +
+> +       d =3D kzalloc(sizeof(*d), GFP_KERNEL);
+> +       if (!d)
+> +               return -ENOMEM;
+> +
+> +       gpio->data =3D d;
+> +       d->gpio =3D gpio;
+> +
+> +       chip =3D &d->gpio_chip;
+> +       chip->parent =3D gpio->parent;
+> +       chip->label =3D gpio->label;
+> +       chip->base =3D -1;
+> +       chip->ngpio =3D gpio->ngpio;
+> +       chip->can_sleep =3D true;
+> +       chip->get =3D gpio_regmap_get;
+> +
+> +       if (!chip->label)
+> +               chip->label =3D dev_name(gpio->parent);
+> +
+> +       if (gpio->reg_set_base.valid && gpio->reg_clr_base.valid)
+> +               chip->set =3D gpio_regmap_set_with_clear;
+> +       else if (gpio->reg_set_base.valid)
+> +               chip->set =3D gpio_regmap_set;
+> +
+> +       if (gpio->reg_dir_in_base.valid || gpio->reg_dir_out_base.valid) =
+{
+> +               chip->get_direction =3D gpio_regmap_get_direction;
+> +               chip->direction_input =3D gpio_regmap_direction_input;
+> +               chip->direction_output =3D gpio_regmap_direction_output;
+> +       }
+> +
+> +       if (gpio->irq_domain)
+> +               chip->to_irq =3D gpio_regmap_to_irq;
+> +
+> +       ret =3D gpiochip_add_data(chip, d);
+> +       if (ret < 0)
+> +               goto err_alloc;
+> +
+> +       return 0;
+> +
+> +err_alloc:
+> +       kfree(d);
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(gpio_regmap_register);
+> +
+> +/**
+> + * gpio_regmap_unregister() - Unregister a generic regmap GPIO controlle=
+r
+> + *
+> + * @gpio: gpio_regmap device to unregister
+> + */
+> +void gpio_regmap_unregister(struct gpio_regmap *gpio)
+> +{
+> +       gpiochip_remove(&gpio->data->gpio_chip);
+> +       kfree(gpio->data);
+> +}
+> +EXPORT_SYMBOL_GPL(gpio_regmap_unregister);
+> +
+> +static void devm_gpio_regmap_unregister(struct device *dev, void *res)
+> +{
+> +       gpio_regmap_unregister(*(struct gpio_regmap **)res);
+> +}
+> +
+> +/**
+> + * devm_gpio_regmap_register() - resource managed gpio_regmap_register()
+> + *
+> + * @dev: device that is registering this GPIO device
+> + * @gpio: gpio_regmap device to register
+> + *
+> + * Managed gpio_regmap_register(). For generic regmap GPIO device regist=
+ered by
+> + * this function, gpio_regmap_unregister() is automatically called on dr=
+iver
+> + * detach. See gpio_regmap_register() for more information.
+> + */
+> +int devm_gpio_regmap_register(struct device *dev, struct gpio_regmap *gp=
+io)
+> +{
+> +       struct gpio_regmap **ptr;
+> +       int ret;
+> +
+> +       ptr =3D devres_alloc(devm_gpio_regmap_unregister, sizeof(*ptr),
+> +                          GFP_KERNEL);
+> +       if (!ptr)
+> +               return -ENOMEM;
+> +
+> +       ret =3D gpio_regmap_register(gpio);
+> +       if (ret) {
+> +               devres_free(ptr);
+> +               return ret;
+> +       }
+> +
+> +       *ptr =3D gpio;
+> +       devres_add(dev, ptr);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_gpio_regmap_register);
+> +
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_DESCRIPTION("GPIO generic regmap driver core");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/gpio-regmap.h b/include/linux/gpio-regmap.h
+> new file mode 100644
+> index 000000000000..ad63955e0e43
+> --- /dev/null
+> +++ b/include/linux/gpio-regmap.h
+> @@ -0,0 +1,88 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef _LINUX_GPIO_REGMAP_H
+> +#define _LINUX_GPIO_REGMAP_H
+> +
+> +struct gpio_regmap_addr {
+> +       unsigned int addr;
+> +       bool valid;
+> +};
 
-	OV8856_CHIP_ID			0x885a
-	OV13858_CHIP_ID		0xd855
+I'm not quite sure what the meaning behind the valid field here is.
+When would we potentially set it to false?
 
-	OV9640 can either be 0x9648 or 0x9649, depending on its revision.
+> +#define GPIO_REGMAP_ADDR(_addr) \
+> +       ((struct gpio_regmap_addr) { .addr =3D _addr, .valid =3D true })
+> +
+> +/**
+> + * struct gpio_regmap - Description of a generic regmap gpio_chip.
+> + *
+> + * @parent:            The parent device
+> + * @regmap:            The regmap use to access the registers
 
-If you're referring to this kind of code, I don't think we can have
-something generic.
+s/use/used/
 
-Thanks,
-Mauro
+> + *                     given, the name of the device is used
+> + * @label:             (Optional) Descriptive name for GPIO controller.
+> + *                     If not given, the name of the device is used.
+> + * @ngpio:             Number of GPIOs
+> + * @reg_dat_base:      (Optional) (in) register base address
+> + * @reg_set_base:      (Optional) set register base address
+> + * @reg_clr_base:      (Optional) clear register base address
+> + * @reg_dir_in_base:   (Optional) out setting register base address
+> + * @reg_dir_out_base:  (Optional) in setting register base address
+> + * @reg_stride:                (Optional) May be set if the registers (o=
+f the
+> + *                     same type, dat, set, etc) are not consecutive.
+> + * @ngpio_per_reg:     Number of GPIOs per register
+> + * @irq_domain:                (Optional) IRQ domain if the controller i=
+s
+> + *                     interrupt-capable
+> + * @reg_mask_xlate:     (Optional) Translates base address and GPIO
+> + *                     offset to a register/bitmask pair. If not
+> + *                     given the default gpio_regmap_simple_xlate()
+> + *                     is used.
+> + * @to_irq:            (Optional) Maps GPIO offset to a irq number.
+> + *                     By default assumes a linear mapping of the
+> + *                     given irq_domain.
+> + * @driver_data:       Pointer to the drivers private data. Not used by
+> + *                     gpio-regmap.
+> + *
+> + * The reg_mask_xlate translates a given base address and GPIO offset to
+> + * register and mask pair. The base address is one of the given reg_*_ba=
+se.
+> + */
+> +struct gpio_regmap {
+
+I'd prefer to follow a pattern seen in other such APIs of calling this
+structure gpio_regmap_config and creating another private structure
+called gpio_regmap used in callbacks that would only contain necessary
+fields.
+
+> +       struct device *parent;
+> +       struct regmap *regmap;
+> +       struct gpio_regmap_data *data;
+> +
+> +       const char *label;
+> +       int ngpio;
+> +
+> +       struct gpio_regmap_addr reg_dat_base;
+> +       struct gpio_regmap_addr reg_set_base;
+> +       struct gpio_regmap_addr reg_clr_base;
+> +       struct gpio_regmap_addr reg_dir_in_base;
+> +       struct gpio_regmap_addr reg_dir_out_base;
+> +       int reg_stride;
+> +       int ngpio_per_reg;
+> +       struct irq_domain *irq_domain;
+> +
+> +       int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base=
+,
+> +                             unsigned int offset, unsigned int *reg,
+> +                             unsigned int *mask);
+> +       int (*to_irq)(struct gpio_regmap *gpio, unsigned int offset);
+> +
+> +       void *driver_data;
+> +};
+> +
+> +static inline void gpio_regmap_set_drvdata(struct gpio_regmap *gpio,
+> +                                          void *data)
+> +{
+> +       gpio->driver_data =3D data;
+> +}
+> +
+> +static inline void *gpio_regmap_get_drvdata(struct gpio_regmap *gpio)
+> +{
+> +       return gpio->driver_data;
+> +}
+> +
+> +int gpio_regmap_register(struct gpio_regmap *gpio);
+> +void gpio_regmap_unregister(struct gpio_regmap *gpio);
+> +int devm_gpio_regmap_register(struct device *dev, struct gpio_regmap *gp=
+io);
+> +int gpio_regmap_simple_xlate(struct gpio_regmap *gpio, unsigned int base=
+,
+> +                            unsigned int offset,
+> +                            unsigned int *reg, unsigned int *mask);
+> +
+> +#endif /* _LINUX_GPIO_REGMAP_H */
+> --
+> 2.20.1
+>
+
+Overall looks really nice. I'm happy we'll have it in v5.8.
+
+Best regards,
+Bartosz Golaszewski
