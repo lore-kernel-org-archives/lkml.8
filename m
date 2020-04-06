@@ -2,122 +2,137 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D92FC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665D8C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60528206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:16:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RHXDjsof"
+	by mail.kernel.org (Postfix) with ESMTP id 394BB206F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586171813;
+	bh=DBLgYA2jJe29u2yG1zEKM15bBvyYd8p0FiFATN1DXaE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=17zb8EnSBbfWEbtAVHutrG3N9dmWEMLHSwpX/2EeV3YLWgOY2WeGP6OA4Qxhm6bis
+	 gx3AiM3ZLFlRbMOHD6Vi9/kb5q9MNK1nkFWN6xW2Vm2vZTz17CfVUvXVlin3ZFQRtC
+	 nMDhgFRVQ96jWX3Jgdl5FhUgwrQhgrcz+iSweRt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbgDFLQl (ORCPT
+        id S1727387AbgDFLQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:16:41 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56386 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgDFLQk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:16:40 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036BEsm1027462;
-        Mon, 6 Apr 2020 11:16:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=ilwv4Ed7O2Ujkx8B7MXNeINOP9n9d6qmP9wV8mhqvWc=;
- b=RHXDjsof0ah063H+WqxSHhFQ++LnlaPENIAHsRn/5jOagJC9ZRLk6kyHxScqqr9Iud0p
- Z2DAzrF4US94qt5TUAeO6EPJisUALt/y5Bhhd1OgG29yxMptCzJC8wNIn3RrjpGLq1ek
- KsgQlQGJDa17WPyUNr8mcr+WESSeSx9MkcUCRkh34nlrUHAgXK2Cr7qkmd5FYc+xwdiP
- WTJBRs2VCxVbkmFlCvYbE1t8NOFLP8xt6PEA6RKwcAIJqYoTBzmP7SvzTrWqkOOgVkh1
- Q8m3XL+w1k64UxbCO586kPRAUgLVGH+vaeENDnXdKipfAqW1TCpWVIUL1vkB33N39W+A cQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 306j6m66d0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Apr 2020 11:16:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036BDDVn161280;
-        Mon, 6 Apr 2020 11:16:32 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 3073qcu8s0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Apr 2020 11:16:32 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 036BGTxJ017931;
-        Mon, 6 Apr 2020 11:16:29 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 06 Apr 2020 04:16:29 -0700
-Date:   Mon, 6 Apr 2020 14:16:22 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
+        Mon, 6 Apr 2020 07:16:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726873AbgDFLQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:16:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C521206F5;
+        Mon,  6 Apr 2020 11:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586171810;
+        bh=DBLgYA2jJe29u2yG1zEKM15bBvyYd8p0FiFATN1DXaE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MFmK3wx8/lBjaM/xGWW23dhl/t3LtuG5v7nX2lLnNOMp2ISLziWTJ5nFbRCl8H6pz
+         j95wUXBqd5JYWCp1KtJ4j3GCwg1klnSk84Yojezi9AYwuNAkQMSuJPuuR7WX+UEhBK
+         jBuZKNPBn5CqrheEocCA5Y4urLKN8HwbJ2EhnEKg=
+Date:   Mon, 6 Apr 2020 13:16:48 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     =?utf-8?B?5a6L54mn5pil?= <songmuchun@bytedance.com>
+Cc:     Fei Zhang <zhangfeionline@gmail.com>, rafael@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] staging: vt6656: Use define instead of magic number
- for tx_rate
-Message-ID: <20200406111622.GE2001@kadam>
-References: <20200404141400.3772-1-oscar.carter@gmx.com>
- <20200404141400.3772-3-oscar.carter@gmx.com>
+Subject: Re: [External] Re: [PATCH] driver core: Fix possible use after free
+ on name
+Message-ID: <20200406111648.GA1797430@kroah.com>
+References: <1586102749-3364-1-git-send-email-zhangfeionline@gmail.com>
+ <20200405164006.GA1582475@kroah.com>
+ <CAC_binJNLLxfOm0W2TuVTJZxJRTZTvPPocSDNQMU=21XO37oZg@mail.gmail.com>
+ <20200406054110.GA1638548@kroah.com>
+ <CAC_binJMn-uRNy1dwp=2fhF54R8DpaTZYskwEz3GNE-U0pShDQ@mail.gmail.com>
+ <20200406082857.GA1646464@kroah.com>
+ <CAMZfGtURi4KDijw1=2JuTWxufcjypzS2_fEe0sGwXoAOUKbT5Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200404141400.3772-3-oscar.carter@gmx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9582 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 mlxlogscore=999
- spamscore=0 bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004060098
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9582 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 spamscore=0
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 malwarescore=0
- impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004060098
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMZfGtURi4KDijw1=2JuTWxufcjypzS2_fEe0sGwXoAOUKbT5Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 04, 2020 at 04:13:59PM +0200, Oscar Carter wrote:
-> Use the define RATE_11M present in the file "device.h" instead of the
-> magic number 3. So the code is more clear.
+On Mon, Apr 06, 2020 at 06:42:46PM +0800, 宋牧春 wrote:
+> Hi Greg,
 > 
-> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> ---
->  drivers/staging/vt6656/baseband.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Greg KH <gregkh@linuxfoundation.org> 于2020年4月6日周一 下午4:29写道：
+> >
+> > A: http://en.wikipedia.org/wiki/Top_post
+> > Q: Were do I find info about this thing called top-posting?
+> > A: Because it messes up the order in which people normally read text.
+> > Q: Why is top-posting such a bad thing?
+> > A: Top-posting.
+> > Q: What is the most annoying thing in e-mail?
+> >
+> > A: No.
+> > Q: Should I include quotations after my reply?
+> >
+> > http://daringfireball.net/2007/07/on_top
+> >
+> > On Mon, Apr 06, 2020 at 03:40:41PM +0800, Fei Zhang wrote:
+> > > Dear Greg,
+> > >
+> > > Mostly, "class_creat" is used in kernel driver module, basically
+> > > read-only strings,
+> > > but it is easier to use a local variable string. When writing drive module,
+> > > it fails to judge the local variable string which cannot be passed in
+> > > only via interface.
+> > > I found that someone else may also face the same problem.
+> >
+> > An individual driver should NOT be creating a class, that is not what it
+> > is there for.
 > 
-> diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/baseband.c
-> index 3e4bd637849a..a785f91c1566 100644
-> --- a/drivers/staging/vt6656/baseband.c
-> +++ b/drivers/staging/vt6656/baseband.c
-> @@ -24,6 +24,7 @@
-> 
->  #include <linux/bits.h>
->  #include <linux/kernel.h>
-> +#include "device.h"
->  #include "mac.h"
->  #include "baseband.h"
->  #include "rf.h"
-> @@ -141,7 +142,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 pkt_type,
-> 
->  	rate = (unsigned int)vnt_frame_time[tx_rate];
-> 
-> -	if (tx_rate <= 3) {
-> +	if (tx_rate <= RATE_11M) {
+> If someone want to create a virtual device, someone can call device_create().
+> But the first argument is type of 'struct class *class', so we have to
+> call class_create()
+> before create device. So an individual driver may be creating a class, right?
 
-This is nice.  And if we don't apply patch 1 then it's even nicer
-because then "tx_rate" is treated consistently.
+Again, they should not be, as classes are not what a driver creates.  It
+is what a subsystem creates, as a class is a type of common devices that
+all talk to userspace in the same way.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Class names are very "rare" and should not be dynamically created at
+> > all.
+> 
+> I have reviewed the code of the kstrdup_const() which is just below.
+> 
+> const char *kstrdup_const(const char *s, gfp_t gfp)
+> {
+>         if (is_kernel_rodata((unsigned long)s))
+>                 return s;
+> 
+>         return kstrdup(s, gfp);
+> }
+> 
+> A readonly string which is in the kernel rodata, so we do not need to
+> dynamically allocate
+> memory to store the name. So with this patch applied, there is nothing
+> changed which
+> means that we did not waste memory. But it can prevent someone from
+> reading stale name
+> if an unaware user passes an address to a stack-allocated buffer.
+> 
+> So I think it is worth fixing, right?
 
-regards,
-dan carpenter
+Again, there is nothing to "fix" here as there is no code in the kernel
+tree today calling this api with a class name that is not static.
 
+If we have code that does need to do this, and it is submitted for
+merging, and I agree with how it is creating the class names, I will be
+glad to take a patch at that time to make this change.  Until then, this
+is just added complexity for no benefit at all.
+
+thanks,
+
+greg k-h
