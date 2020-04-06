@@ -2,116 +2,186 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1521C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CF6C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8768420672
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D800206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:18:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="YrgcxlpE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Va1mcUBG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e+t0jx7+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726633AbgDFIQt (ORCPT
+        id S1726650AbgDFISL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:16:49 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:40165 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726535AbgDFIQt (ORCPT
+        Mon, 6 Apr 2020 04:18:11 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:55244 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgDFISL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 04:16:49 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E2A195C0135;
-        Mon,  6 Apr 2020 04:16:47 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 06 Apr 2020 04:16:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=CF2JGTX2lmYm+0Luc5WMUbWddfh
-        IiV6ykRb8Y5fDHqM=; b=YrgcxlpEV+FnnI5895p6Lwb9khHPqURxLlAO7YElv3j
-        gZkCFfOzNqzQ1iFn7hMkzeWh4j05kYn4uwF6NpsLMU0tolXDG48A48l80mb6LTyo
-        al8RDFrCul/dHpqZkQEW4fBmpLP59xpW4KYJYcRWMIS+BBEJLrQqGLA7vYulaJlg
-        9E+SNBOlXLr96ngSsD/AdORiLsx9nxrPL+/9IMOuIOYonKHd5AuAzigFPv2u2+dx
-        RtT55/n8ONl2k9PiPuZhVXxVwihUC0f2ew4ppfotBwbeBjNIS/W+jbSuzlzFbQV8
-        UL/3F6NoTLW3ZyA3TF8mTrFcov6tF5BTCMwHFSBnK1w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=CF2JGT
-        X2lmYm+0Luc5WMUbWddfhIiV6ykRb8Y5fDHqM=; b=Va1mcUBGzXRRkRTHUPmoKN
-        nmPshwoihcqx6sFvYm0G5vh1JoEw+vxShJ7Ob9T8SXla0+5dvFAxOEJ6rjquqNHQ
-        FhTxJM5wDMpu18cOCiEe62RnjkjnEtxpFZR0J5mYH8xjuVzCj/JQIPu8nMklRfUU
-        vBQYiS9TMdgPz3Ly5iz0djp7nYuJ6wRD/i6SjXkhQtZhNw/hTh9IncjjeUfZ8jDX
-        OSTmUTHDMUYuE5t5kImLLtBn3Fy6k+JE0shwQ+F+YYb9nwtqdvzjyxNE75Y6RsiW
-        N9/iUK3NieCEh+xmckgdyTjXQAD81TXNLiHgxslNmxkJaTKSjos0JQXKQnSlL+3w
-        ==
-X-ME-Sender: <xms:b-WKXkOQ3NPMe67cT8I1n7HOKrYgwt99J-uEztzpNXZT05TlGWFH9Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefgddtfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkphepledtrd
-    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:b-WKXnRoyyMh9zzFKwWagheeuHcMN_LeHC_v8P7ickj-UfoQS1Axvg>
-    <xmx:b-WKXs5TWZo9U2buvYAIKLYpiC-G_gH5iOaCb1aj0bxketnUxShoFA>
-    <xmx:b-WKXp2BgChCwiv8M42X7H-Sio_qUYA3z5rAXLcixdydOFA3fNUeyA>
-    <xmx:b-WKXsxndKMi8PyqnHrT_unl-ZjzMV9478ouGnnOphKYRDNk63HMbA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8486C306D37B;
-        Mon,  6 Apr 2020 04:16:47 -0400 (EDT)
-Date:   Mon, 6 Apr 2020 10:16:46 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Subject: Re: [PATCH v2 5/7] arm64: configs: Enable sun50i cpufreq nvmem
-Message-ID: <20200406081646.yduso2velulbedku@gilmour.lan>
-References: <20200405173601.24331-1-peron.clem@gmail.com>
- <20200405173601.24331-6-peron.clem@gmail.com>
+        Mon, 6 Apr 2020 04:18:11 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0368HUvb124787;
+        Mon, 6 Apr 2020 03:17:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586161050;
+        bh=dBNRdO4qjuUg0RS1p/z67TE2khhRn2hu1uvilxmf+c0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=e+t0jx7+2BdPzDD4c47L46lozlZZaC6OkEtj7jZUFAFnIPnRjvA0pHPGSmJv0jA2t
+         tolAaqWvl4UhUHzaIardb8IELE8ZbCfwEFoBcCnuszVl4SkYKtJpnPN8K1ko4R+dS9
+         xODVjfifgPDKo+MIQt52PzzLlCguJKaWHHWh9M/g=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0368HUom120221;
+        Mon, 6 Apr 2020 03:17:30 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Apr
+ 2020 03:17:29 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 6 Apr 2020 03:17:29 -0500
+Received: from [10.250.133.125] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0368HMcQ118835;
+        Mon, 6 Apr 2020 03:17:23 -0500
+Subject: Re: [PATCH] thermal: Delete an error message in four functions
+To:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        Markus Elfring <Markus.Elfring@web.de>
+CC:     Linux PM list <linux-pm@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-omap@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Allison Randal <allison@lohutok.net>,
+        Clark Williams <williams@redhat.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Pascal Paillet <p.paillet@st.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+References: <05f49ae7-5cc7-d6a0-fc3d-abaf2a0b373c@web.de>
+ <CAHLCerMS5ghVXhOD7RAd5unxEe7w1W4_8hBP5Tf9HvuMEh5Lqg@mail.gmail.com>
+From:   "J, KEERTHY" <j-keerthy@ti.com>
+Message-ID: <ac59c663-18a5-5bbf-09da-2cd8d034138c@ti.com>
+Date:   Mon, 6 Apr 2020 13:47:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="d3h3r5s2altjvdpi"
-Content-Disposition: inline
-In-Reply-To: <20200405173601.24331-6-peron.clem@gmail.com>
+In-Reply-To: <CAHLCerMS5ghVXhOD7RAd5unxEe7w1W4_8hBP5Tf9HvuMEh5Lqg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---d3h3r5s2altjvdpi
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 05, 2020 at 07:35:59PM +0200, Cl=E9ment P=E9ron wrote:
-> Allwinner H6 needs this driver to be able to get
-> the correct speed_bin required for DVFS.
->
-> Enable this option in arm64 defconfig.
->
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+On 4/6/2020 1:00 PM, Amit Kucheria wrote:
+> On Sun, Apr 5, 2020 at 10:21 PM Markus Elfring <Markus.Elfring@web.de> wrote:
+>>
+>> From: Markus Elfring <elfring@users.sourceforge.net>
+>> Date: Sun, 5 Apr 2020 18:35:16 +0200
+>>
+>> The function “platform_get_irq” can log an error already.
+>> Thus omit redundant messages for the exception handling in the
+>> calling functions.
+>>
+>> This issue was detected by using the Coccinelle software.
+>>
+>> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-In general, it's better to put anything in arm64 defconfig as a
-module, this defconfig is used by everyone.
+Reviewed-by: Keerthy <j-keerthy@ti.com>
 
-Maxime
-
---d3h3r5s2altjvdpi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorlbgAKCRDj7w1vZxhR
-xXYHAQCYFche+fruhs7HL9PcB8Ws7GcpaL1wGd0FzELeszvbbQEA4PpN1F2lYa81
-QGyoZJ0c34qJBd5u34lOzcl+NB1frgU=
-=t4/j
------END PGP SIGNATURE-----
-
---d3h3r5s2altjvdpi--
+> 
+> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+> 
+>> ---
+>>   drivers/thermal/rockchip_thermal.c          | 4 +---
+>>   drivers/thermal/st/st_thermal_memmap.c      | 4 +---
+>>   drivers/thermal/st/stm_thermal.c            | 4 +---
+>>   drivers/thermal/ti-soc-thermal/ti-bandgap.c | 5 ++---
+>>   4 files changed, 5 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+>> index 7c1a8bccdcba..15a71ecc916c 100644
+>> --- a/drivers/thermal/rockchip_thermal.c
+>> +++ b/drivers/thermal/rockchip_thermal.c
+>> @@ -1241,10 +1241,8 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+>>                  return -ENXIO;
+>>
+>>          irq = platform_get_irq(pdev, 0);
+>> -       if (irq < 0) {
+>> -               dev_err(&pdev->dev, "no irq resource?\n");
+>> +       if (irq < 0)
+>>                  return -EINVAL;
+>> -       }
+>>
+>>          thermal = devm_kzalloc(&pdev->dev, sizeof(struct rockchip_thermal_data),
+>>                                 GFP_KERNEL);
+>> diff --git a/drivers/thermal/st/st_thermal_memmap.c b/drivers/thermal/st/st_thermal_memmap.c
+>> index a824b78dabf8..a0114452d11f 100644
+>> --- a/drivers/thermal/st/st_thermal_memmap.c
+>> +++ b/drivers/thermal/st/st_thermal_memmap.c
+>> @@ -94,10 +94,8 @@ static int st_mmap_register_enable_irq(struct st_thermal_sensor *sensor)
+>>          int ret;
+>>
+>>          sensor->irq = platform_get_irq(pdev, 0);
+>> -       if (sensor->irq < 0) {
+>> -               dev_err(dev, "failed to register IRQ\n");
+>> +       if (sensor->irq < 0)
+>>                  return sensor->irq;
+>> -       }
+>>
+>>          ret = devm_request_threaded_irq(dev, sensor->irq,
+>>                                          NULL, st_mmap_thermal_trip_handler,
+>> diff --git a/drivers/thermal/st/stm_thermal.c b/drivers/thermal/st/stm_thermal.c
+>> index 9314e3df6a42..331e2b768df5 100644
+>> --- a/drivers/thermal/st/stm_thermal.c
+>> +++ b/drivers/thermal/st/stm_thermal.c
+>> @@ -385,10 +385,8 @@ static int stm_register_irq(struct stm_thermal_sensor *sensor)
+>>          int ret;
+>>
+>>          sensor->irq = platform_get_irq(pdev, 0);
+>> -       if (sensor->irq < 0) {
+>> -               dev_err(dev, "%s: Unable to find IRQ\n", __func__);
+>> +       if (sensor->irq < 0)
+>>                  return sensor->irq;
+>> -       }
+>>
+>>          ret = devm_request_threaded_irq(dev, sensor->irq,
+>>                                          NULL,
+>> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+>> index 263b0420fbe4..ab19ceff6e2a 100644
+>> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+>> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+>> @@ -772,10 +772,9 @@ static int ti_bandgap_talert_init(struct ti_bandgap *bgp,
+>>          int ret;
+>>
+>>          bgp->irq = platform_get_irq(pdev, 0);
+>> -       if (bgp->irq < 0) {
+>> -               dev_err(&pdev->dev, "get_irq failed\n");
+>> +       if (bgp->irq < 0)
+>>                  return bgp->irq;
+>> -       }
+>> +
+>>          ret = request_threaded_irq(bgp->irq, NULL,
+>>                                     ti_bandgap_talert_irq_handler,
+>>                                     IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+>> --
+>> 2.26.0
+>>
