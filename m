@@ -2,133 +2,78 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1775C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE6EC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73DD249C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586192906;
-	bh=deFR8Mz1hEdCuIMqWoT749pGW5dFQXvGA6ghCNIw7gc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bpVrHzvXYKJbCAaiY9WTxSY4of75Nu+yLKwZXhrhUSsEQBSWMD+GWtUovcUF79Xp5
-	 /Ntgc2Cd9VQxBSIZsr4clhMdo8Kb+pbNl/GSMndHTkbOU8V/2yJO9sAnxuYbVD4paU
-	 2xOm1reMA/uLPaZbZD/MT7PeT2ff9TtCvNN5nYyM=
+	by mail.kernel.org (Postfix) with ESMTP id 1CCFE249BC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgDFRI0 (ORCPT
+        id S1729790AbgDFRI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:08:26 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34245 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbgDFRIZ (ORCPT
+        Mon, 6 Apr 2020 13:08:29 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:57220 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgDFRI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:08:25 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v23so24219pfm.1;
-        Mon, 06 Apr 2020 10:08:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zaXeCIKa/04xAB8MmodjJgT7JeJhzRdAxQcRW/0TGww=;
-        b=ep11HTvELnApaXEor0llp2j6bK2197HT6th9uB59sWES/zsm0R/ToZc/e7T1RjVIZE
-         EQv/6JLS9duXmFbV1qBVCX7rsl332QvP63vqXOiEx1Gwi7bZyZ8uUuRWFdWyyYg0DZ8Q
-         Vm85hrUvzQXsbIeXGWIuK+NQ4t2pe4KWg1OgbNl9BH6vYCsdKzCb9fGk3MurZ0vM/Zl6
-         u/6NdjyrM9LrfJEI8BUioEwxL60Q4pEfzzugKl70CLl9W6HPvU36wNVfbLUxST/vGwEd
-         /SntJO+jH+3CWj1/+fdJwGTkgJid5l0lAM1gIh5W4v6orxQSRWmZxPzLBMac0QlJn2TV
-         E+CA==
-X-Gm-Message-State: AGi0PubwF+tQ5B1gd8JruPuRdmClCZlzY0rfr4W8n7KPHqfAzTQzDYEW
-        ZLXF2BGo8ex/miRbs5A0gko=
-X-Google-Smtp-Source: APiQypJ9XkDYt38q2mJtSLza4PVdlKnHbUCkqeIRzEJCfTivTo/drR4DFb5YNsn2t8LPMWqmhBrWTg==
-X-Received: by 2002:a62:76c3:: with SMTP id r186mr408779pfc.303.1586192904248;
-        Mon, 06 Apr 2020 10:08:24 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id o192sm8883072pfg.196.2020.04.06.10.08.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 10:08:23 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 5269C40246; Mon,  6 Apr 2020 17:08:22 +0000 (UTC)
-Date:   Mon, 6 Apr 2020 17:08:22 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <20200406170822.GE11244@42.do-not-panic.com>
-References: <20200330115535.3215-1-vbabka@suse.cz>
- <20200330115535.3215-2-vbabka@suse.cz>
- <20200330224422.GX11244@42.do-not-panic.com>
- <287ac6ae-a898-3e68-c7d8-4c1d17a40db9@suse.cz>
- <20200402160442.GA11244@42.do-not-panic.com>
- <202004021017.3A23B759@keescook>
- <20200402205932.GM11244@42.do-not-panic.com>
- <202004031654.C4389A04EF@keescook>
- <20200406140836.GA11244@42.do-not-panic.com>
- <202004060856.6BC17C5C99@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202004060856.6BC17C5C99@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 6 Apr 2020 13:08:26 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6EC4415DA0AE6;
+        Mon,  6 Apr 2020 10:08:25 -0700 (PDT)
+Date:   Mon, 06 Apr 2020 10:08:23 -0700 (PDT)
+Message-Id: <20200406.100823.2156599779063686930.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, kuba@kernel.org, andrew@lunn.ch,
+        vivien.didelot@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: bcm_sf2: Do not register slave MDIO bus
+ with OF
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200404213517.12783-1-f.fainelli@gmail.com>
+References: <20200404213517.12783-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 06 Apr 2020 10:08:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:58:50AM -0700, Kees Cook wrote:
-> On Mon, Apr 06, 2020 at 02:08:36PM +0000, Luis Chamberlain wrote:
-> > > Yes. Doing an internal extension isn't testing the actual code.
-> > 
-> > But it would.
-> > 
-> > [...]
-> > > I don't think anything is needed for this series. It can be boot tested
-> > > manually.
-> > 
-> > Why test it manually when it could be tested automatically with a new kconfig?
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Sat,  4 Apr 2020 14:35:17 -0700
+
+> We were registering our slave MDIO bus with OF and doing so with
+> assigning the newly created slave_mii_bus of_node to the master MDIO bus
+> controller node. This is a bad thing to do for a number of reasons:
 > 
-> So, my impression is that adding code to the internals to test the
-> internals isn't a valid test (or at least makes it fragile) because the
-> test would depend on the changes to the internals (or at least depend on
-> non-default non-production CONFIGs).
+> - we are completely lying about the slave MII bus is arranged and yet we
+>   still want to control which MDIO devices it probes. It was attempted
+>   before to play tricks with the bus_mask to perform that:
+>   https://www.spinics.net/lists/netdev/msg429420.html but the approach
+>   was rightfully rejected
+> 
+> - the device_node reference counting is messed up and we are effectively
+>   doing a double probe on the devices we already probed using the
+>   master, this messes up all resources reference counts (such as clocks)
+> 
+> The proper fix for this as indicated by David in his reply to the
+> thread above is to use a platform data style registration so as to
+> control exactly which devices we probe:
+> https://www.spinics.net/lists/netdev/msg430083.html
+> 
+> By using mdiobus_register(), our slave_mii_bus->phy_mask value is used
+> as intended, and all the PHY addresses that must be redirected towards
+> our slave MDIO bus is happening while other addresses get redirected
+> towards the master MDIO bus.
+> 
+> Fixes: 461cd1b03e32 ("net: dsa: bcm_sf2: Register our slave MDIO bus")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-The *internal* aspect here is an extension to boot params under a
-kconfig which would simply append to it, as if the user would have
-added some more params. Since we already have test sysctl params the
-only one we'd need to add on the test driver would be a dummy one which
-tests the alias, on the second patch. We should have enough sysctls to
-already test dummy values.
-
-Nothing else would be needed as the sysctl test driver would just need
-to test that the values expected when this is enabled is set.
-
-> Can you send a patch for what you think this should look like? Perhaps
-> I'm not correctly imagining what you're describing?
-
-I rather get the person involved in the changes to do the testing so
-as they're the ones designing the feature. If however it is not clear
-what I mean I'm happy to elaborate.
-
-Vlastimil do you get what I mean?
-
-> Regardless of testing, I think this series is ready for -mm.
-
-I'm happy for it to go in provided we at least devise a follow up plan
-for testing. Otherwise -- like other things, it won't get done.
-
-  Luis
+Applied and queued up for -stable.
