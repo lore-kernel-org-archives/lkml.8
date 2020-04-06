@@ -2,89 +2,69 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94998C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5B2C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 614B8206C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39942072F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:40:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aSOq2Thc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DU7X6AEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgDFOja (ORCPT
+        id S1728739AbgDFOkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:39:30 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34456 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728566AbgDFOja (ORCPT
+        Mon, 6 Apr 2020 10:40:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53176 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728566AbgDFOkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:39:30 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 036EdPGB060058;
-        Mon, 6 Apr 2020 09:39:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586183965;
-        bh=Mv9f2/SpVcCjK44c4OSC4J10mXtBoBKAIa6WVzJmjN8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aSOq2ThcWUWgAYsv82oD+RoDrRY77LUBG5h0Y8S2ARwnMOvEw0pstORLh7b61o8jM
-         bwKsWMIfCPsF45RKqJynM/zD8iJ1vAM6zXFvvJ8UIqrmtSjE99Dzq5CRbgqdIlVRw8
-         EOPupvkgYn/7XOPX1v0+NQNHP+wJwjOtuXQ+lm2U=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 036EdO15012727;
-        Mon, 6 Apr 2020 09:39:24 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Apr
- 2020 09:39:24 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 6 Apr 2020 09:39:24 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 036EdOfs111481;
-        Mon, 6 Apr 2020 09:39:24 -0500
-Subject: Re: [PATCH v19 04/18] leds: multicolor: Introduce a multicolor class
- definition
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200402204311.14998-1-dmurphy@ti.com>
- <20200402204311.14998-5-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <6f8623ea-4f00-9521-e8d3-89d261c2a25e@ti.com>
-Date:   Mon, 6 Apr 2020 09:33:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 6 Apr 2020 10:40:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3AZQaHvV6HY7ZEgP+flSvFuWBowXtcYeUgk6HyT0388=; b=DU7X6AEW4T91imZK6UpDtwkFoc
+        AOtXF/9J/iSX/VJH8KlWNJUJdhnL2vOr3RilPx/Y2HzGNpxfgw8o4cQB62sJQcwqmoBG+uGRgaoud
+        txDnk7BS96aR2TOZYWccnZIpi2eak+eXOKWNluYvUEVyU1d3/5+cxYsg/M7XGZQ8dKVpxCOwdjg28
+        4Vmm0fyCcNd+hjGT4UJbvNOiT/UUE3XBbwR7e7onP/JZUPLbrYMSQBLfZDNftRYj9hvpfk3xS0McY
+        aVmmJgTdDskhFp3YXT/zf5LxXWZyI4/CE08Jgul3AZwYlGklZrhEJLtxLn9ck1ACrkJsT0MYlxyVA
+        vvi8bTMA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLSul-0005uy-I5; Mon, 06 Apr 2020 14:39:51 +0000
+Date:   Mon, 6 Apr 2020 07:39:51 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] mm: Add kvfree_sensitive() for freeing sensitive data
+ objects
+Message-ID: <20200406143951.GD21484@bombadil.infradead.org>
+References: <20200406023700.1367-1-longman@redhat.com>
+ <alpine.DEB.2.21.2004052119530.243304@chino.kir.corp.google.com>
+ <3f6658e5-0082-7759-1d08-eda9cb3eba2f@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200402204311.14998-5-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f6658e5-0082-7759-1d08-eda9cb3eba2f@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pavel
+On Mon, Apr 06, 2020 at 10:36:07AM -0400, Waiman Long wrote:
+> ZERO_OR_NULL_PTR is defined in slab.h. Using it may cause some header
+> file dependency problem. To guard against the possibility of 0-length
+> allocation request, how about just
 
-On 4/2/20 3:42 PM, Dan Murphy wrote:
-> Introduce a multicolor class that groups colored LEDs
-> within a LED node.
->
-> The multi color class groups monochrome LEDs and allows controlling two
-> aspects of the final combined color: hue and lightness. The former is
-> controlled via <color>_intensity files and the latter is controlled
-> via brightness file.
->
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-
-Still looking for comments and reviews from you on this specific patch 
-and implementation
-
-Dan
-
+Why is all the kvalloc/kvfree crap in mm.h to begin with?  slab.h is
+a more sensible place to put it.  I had a patch to do that once, but I
+think it went stale before I posted it.
