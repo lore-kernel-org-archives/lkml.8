@@ -2,108 +2,97 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCF8C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FBBC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C471206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AB6206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:12:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3hh1cS1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vQ3F4e20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbgDFSJJ (ORCPT
+        id S1726633AbgDFSMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 14:09:09 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:38002 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgDFSJI (ORCPT
+        Mon, 6 Apr 2020 14:12:17 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38697 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgDFSMR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 14:09:08 -0400
-Received: by mail-yb1-f194.google.com with SMTP id 204so347425ybw.5;
-        Mon, 06 Apr 2020 11:09:06 -0700 (PDT)
+        Mon, 6 Apr 2020 14:12:17 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w3so136913plz.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:12:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YerZdcxcQmsmPmbc7x3l9FNg9tmvbjAIdH163TSG1LM=;
-        b=C3hh1cS14KFIfA2sbb6OW61jKT6Zea0KasgKyB/5198Mh0GTyceREUQ3TXh1fJoy60
-         aqmMe+gR+t3Dt0EER1JxbS4MdKJGWi4dVaX/TUL+ye28lSgk1mgGVT9boLVvLMSx2L8y
-         Vg7uqev+kgFvU46OX16LWH2RWg9DCSCYtNvspZAVTxHu6/o2p96pmo9xBryiQ9f8cnBi
-         cNdRV359X/j2lCSFrbjMr4OIK3J6oEDoCk7sELPLvjv+2CrYfBsdar1rPFsiIknc5yVt
-         mvXiO11tk1AIye2stB2lE/Pvst7v56WhBZdW7fsmhBcbDlhew1SqVZcwOZBjlSuVaRtK
-         z1pQ==
+        bh=ver6n6MUoiKJ9YQThw8+RbAg+VfgvE+bRaGA1TEZ9VE=;
+        b=vQ3F4e20+rPDeXfCEpsaDzx4gn2vua9DgaFCprSToBwI20LZ5YB4UsBIJfyfRVCQw/
+         Ink+pTcBBewybEaXx8NhUDqYX8w1Dw/rPVxpaIcMBOJUv/wyf3ZSTAsysrxDoksvoQSO
+         fIQ4fEdj10/Ux4gC4Dwl6bekkG5P3XmylDoxXB/x1CZNeuPgacxGKd0niIyMFLCM0lw6
+         n4KXDQTbJXV2JO2k6TDP7q2ntBK6053pabIyqsUvJS+migpswwmAjIk2FFPdLbXpEZ21
+         Zn0OdSBc+7IDjqFnbKm82vd0w9UMPwNmD1cDMyreHkwtazMNAyR+RfJnBTfsPRxlF3Lk
+         vwqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YerZdcxcQmsmPmbc7x3l9FNg9tmvbjAIdH163TSG1LM=;
-        b=Gc6UuhEVh82b4GgcaCEFs2Q+EG+rBNz8fxCaJejz06aYMI33IOgVxqASNAyh9jtGKX
-         NqOlse9IzOL879sledZqgRv2FdWKvhJXYHyg+7+KK8azzi+da8/p3pBzwqwogSU1aykM
-         i1KDh1pZsZ7NUKa4Gwn917DXvk0yHqudk+RAuogW3qAzB/Eil6i6L6HZQmqMQEi4udwm
-         3KieRfKPo3woFQvBbwMeuU+s+OxFIPOQOfa7RlmCYiTc1c3lWnDnh0QfkyP2513nHZSL
-         vqKiy6cCdtIOZ9G0zwsVHNSUeO05/Hvd+wJgnJ4h6b0g8a95EwYPkseMtLXtigl92Cnt
-         8FwA==
-X-Gm-Message-State: AGi0PuZES+9N8uB01LEkmjl0M9uNjT0rHjpSyPPmDccAViSJSG9an2wY
-        k2AO9ltIspqCHOTXt6h+tWNK4krnSol2Vvaytuc=
-X-Google-Smtp-Source: APiQypJNh0gfrRG+aUIvtwyV5pyFGfJIwXgdUOU3PFRpUCcp7aUGELXyXGkqfsUeqnbL0YixSStkauVyExmNu0ZwAhk=
-X-Received: by 2002:a25:bb0b:: with SMTP id z11mr35630837ybg.400.1586196545618;
- Mon, 06 Apr 2020 11:09:05 -0700 (PDT)
+        bh=ver6n6MUoiKJ9YQThw8+RbAg+VfgvE+bRaGA1TEZ9VE=;
+        b=SPEv1cfnn+nJ+ibvYdRDbu2rMEYiGV/at7hNLStK0aFzcsGJvnZgF4WLpz1Ky9SEAd
+         NcY2OpR5WplDTwHpAKZVXLrWgIwdLbEzXtBlwX+pf9QzJLGNXiM6QAiCaoVF5MTuX7um
+         UKLr6xhv92gZ5EpjHFplc+Y1RjyQYvJ0dFpkd2qGED3KlWYO/daToZlp1oAhyPH35TbH
+         AhJw1cywTKKwayaFUryNsjrM5cvGX0qCciJs/ODQfGFmSMdbb6sJiC+8qV1MV/seTQMq
+         w9dj9rJQXHFQ1uT6+cFEsaImy+seJ3uPgIqYWB8rubYSblfXK6/CT9BOHDipwZfs8kSu
+         LbZw==
+X-Gm-Message-State: AGi0PuafWHi4QN+2GFbADq2GjmCVGv1VipdKNEfCxtI8GqYljF6qWyWp
+        Og1UToHFf5olXULXEKbVISdtko7zT/ws2PrDrYAChg==
+X-Google-Smtp-Source: APiQypKrJQ4k0jrnTIHHGTaNBKzi/QJwJ+B536oRq/t8JvxDSa97hNj3Szu7UByf6aPQ0mNLznHy80PVB1X5w5GHgBU=
+X-Received: by 2002:a17:90a:9f03:: with SMTP id n3mr639147pjp.29.1586196735041;
+ Mon, 06 Apr 2020 11:12:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
- <87ftdgokao.fsf@tynnyri.adurom.net> <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
- <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com> <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
- <87imiczrwm.fsf@kamboji.qca.qualcomm.com> <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
- <CAFA6WYOjU_iDyAn5PMGe=usg-2sPtupSQEYwcomUcHZBAPnURA@mail.gmail.com>
- <87v9mcycbf.fsf@kamboji.qca.qualcomm.com> <CABPxzYKs3nj0AUX4L-j87Db8v3WnM4uGif9nRTGgx1m2HNN8Rg@mail.gmail.com>
- <35cadbaff1239378c955014f9ad491bc68dda028.camel@sipsolutions.net>
- <CABPxzY++YMBPTV4quAkYvEAMfULjMXLkVfNzwocwubno5HO2Bw@mail.gmail.com> <5575dfe84aa745a3c2a61e240c3d150dc8d9446f.camel@sipsolutions.net>
-In-Reply-To: <5575dfe84aa745a3c2a61e240c3d150dc8d9446f.camel@sipsolutions.net>
-From:   Krishna Chaitanya <chaitanya.mgit@gmail.com>
-Date:   Mon, 6 Apr 2020 23:38:54 +0530
-Message-ID: <CABPxzYJHjaLH+ozyFZx1hwXrNxdHgJaardk-kn7d72y7RC-=hw@mail.gmail.com>
-Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
-        netdev <netdev@vger.kernel.org>,
+References: <20200401013639.16388-1-vitor@massaru.org>
+In-Reply-To: <20200401013639.16388-1-vitor@massaru.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 6 Apr 2020 11:12:03 -0700
+Message-ID: <CAFd5g47Ot-MfxzYmU8kfxpfv2pWhgb_2WigouuHnPT+20Ejk_w@mail.gmail.com>
+Subject: Re: [PATCH v2] kunit: Fix kunit.py run --build_dir='<foo>' fails on
+ "unclean" trees
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
-        <matthias.schoepfer@ithinx.io>,
-        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
-        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 8:36 PM Johannes Berg <johannes@sipsolutions.net> wrote:
+On Tue, Mar 31, 2020 at 6:36 PM Vitor Massaru Iha <vitor@massaru.org> wrote:
 >
-> On Mon, 2020-04-06 at 19:55 +0530, Krishna Chaitanya wrote:
+> Fix this bug: https://bugzilla.kernel.org/show_bug.cgi?id=205219
 >
-> > > iw phy0 interface add wlan0 type station
-> > > ip link set wlan0 up
-> > Ah okay, got it, thanks. Very narrow window though :-) as the
-> > alloc_ordered_workqueue
-> > doesn't need RTNL and there is a long way to go to do if_add() from
-> > user and setup
-> > the driver for interrupts.
+> For some reason, the environment variable ARCH is used instead of ARCH
+> passed as an argument, this patch uses a copy of the env, but using
+> ARCH=um and CROSS_COMPILER='' to avoid this problem.
 >
-> True, I do wonder how this is hit. Maybe something with no preempt and a
-> uevent triggering things?
-Probably, it might be specific to the dragonboard410c configuration
+> This patch doesn't change the user's environment variables, avoiding
+> side effects.
+>
+> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
 
-> > Again depends on the driver though, it
-> > should properly handle
-> > pending ieee80211_register_hw() with start().
+Sorry for the delayed reply. I had two people finish up on my team
+last week and I needed to do some things for that. You now have my
+undivided attention.
 
-> It could, but it'd be really tricky. Much better to fix mac80211.
-Sure, anyways it is a good change.
+So, I tried to apply this patch and it still doesn't apply on
+kselftest/kunit. At this point, basing your changes on torvalds/master
+would be fine since kselftest/kunit just got merged for 5.7.
+
+Can you use the --base branch option when you send your next revision
+so I know what branch you are working against (just to be sure)?
