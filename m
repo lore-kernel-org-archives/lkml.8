@@ -2,130 +2,156 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91FAC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E42C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E3120678
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F38220678
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 18:02:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sq2aEGd9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VKzVFvDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727136AbgDFR7E (ORCPT
+        id S1726808AbgDFSCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:59:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35500 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726608AbgDFR7E (ORCPT
+        Mon, 6 Apr 2020 14:02:41 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42516 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgDFSCl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:59:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586195942;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kMP/HJwuG1cl3KldZk1VTYBaQUCRZ/n/2fyeOu3dz1k=;
-        b=Sq2aEGd9BO4doadWIFj3mnfImxLcdIju/Nw9BEEapkcfJFFjF3iU9DPgPhlVfJYhDddxuh
-        tTw/ndiHycUIvARIEJ5yg19eVXI2PoP/ph7Vg52OsUCvZvZCIzm/fFYeVXGvuJ1B1IUaRT
-        ZXOlFyBOoWMYv4rOrGF2BAoescbIYbc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-317-IIrjofGuObiNKxRVYGeJNw-1; Mon, 06 Apr 2020 13:58:58 -0400
-X-MC-Unique: IIrjofGuObiNKxRVYGeJNw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D93AD8024E6;
-        Mon,  6 Apr 2020 17:58:56 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-115-20.rdu2.redhat.com [10.10.115.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C763019C4F;
-        Mon,  6 Apr 2020 17:58:54 +0000 (UTC)
-Subject: Re: [PATCH] mm: Add kvfree_sensitive() for freeing sensitive data
- objects
-To:     Joe Perches <joe@perches.com>, David Howells <dhowells@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <a291cce3ff1ba978e7ad231a8e1b7d82f6164e86.camel@perches.com>
- <20200406023700.1367-1-longman@redhat.com>
- <319765.1586188840@warthog.procyon.org.uk>
- <d509771b7e08fff0d18654b746e413e93ed62fe8.camel@perches.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <19cbf3b1-2c3f-dd0f-a5c6-69ca3f77dd68@redhat.com>
-Date:   Mon, 6 Apr 2020 13:58:54 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 6 Apr 2020 14:02:41 -0400
+Received: by mail-pg1-f195.google.com with SMTP id g6so332446pgs.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 11:02:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6e1Q4vKzJzmKGtNiNjd8gFNJAJWEC5ayrvQVjXOX/iA=;
+        b=VKzVFvDbHxCrHuz1BGNeFLrQzjOqXm308/UzV4dy7t/94/5o8Eqc32uFmFoYw1GhVv
+         YL/PJrZ5wYaWlf09YP/5Cw9aVe6InMX/KFrOUrgH1YJZJlWiq0Opcgr8ReG8QawTI274
+         WKtN/MWOtTpvlpHUdwxVT22pAxgnoaRhgG6I2tYHtL7RiZpTtHHQ4uZytoqFsV3Ar8ar
+         ITcWYla8llaWu6JMF/9m/uIk+0Gwo3dkQMaEfnRI4dV96O34aZcV0bQr0GRy9DktfRs3
+         TkQw9r5uzIm1fP0iGYUwFSotBFCkb0R1wjfvHieZvIKI/5/QkP4n26nnVJRvQ5geQ51+
+         8Uvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6e1Q4vKzJzmKGtNiNjd8gFNJAJWEC5ayrvQVjXOX/iA=;
+        b=TkxLG7Xue/e1ZaAaPT1+viohAJMxJbHCyLE0RGEcs30DawRUMwwSV8QYeom528sult
+         LYTQAOjsYb3BhU2fFgJ1xE8Dg3X1Er63vhybI1t65tBhBJ8IMFxWfxaEeMsmhgnM8nBN
+         4eUo1lqj6aiRgwp66xFyWEfzAR4TJnWuMK0VQUvpSk9Fey3T3A6nMpInFvpRHXYMLY5B
+         3xDWmsWamq9Tad5BTksqQRFyAPz5IsiyHFAZEFQ8QPiYpYNlO5OpH/9Gqni7P293GX27
+         Z0QWnbmASiMS0PkY6o8JJBgT0vumRpY9hrd17JIFzvmKSXNk2n8YUiHCZ+ZciWl6OHCq
+         3edg==
+X-Gm-Message-State: AGi0PuZS32SrqCgLkZ2h0BbGJ93tlH2bCV6lcLaiworhg/SD/fAcPaJ2
+        ll7QG73vGqNk68bk796mFnxfI1WjTTTJQHzRjDx/zw==
+X-Google-Smtp-Source: APiQypKM2PYCFQ6CoF0zH+mGNXOYzfT9ZqJG+BVP9vjjtE7Ws2bYfTPeukVx527QNaPkITHuCZ24GDQU95IlK8Bm80M=
+X-Received: by 2002:a63:b954:: with SMTP id v20mr264508pgo.381.1586196157861;
+ Mon, 06 Apr 2020 11:02:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d509771b7e08fff0d18654b746e413e93ed62fe8.camel@perches.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200405163052.18942-1-masahiroy@kernel.org> <alpine.LFD.2.21.2004051813150.4156324@eddie.linux-mips.org>
+ <CAK7LNATKLcCPYxQZNbrS-jMPg+_BETU0dGv0qYvLqUkJ2fMt5w@mail.gmail.com> <alpine.LFD.2.21.2004061240060.4156324@eddie.linux-mips.org>
+In-Reply-To: <alpine.LFD.2.21.2004061240060.4156324@eddie.linux-mips.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 6 Apr 2020 11:02:27 -0700
+Message-ID: <CAKwvOdkAXuTPR7Bm4+ai3GcKv+ytes3S2UZxOxqSrRtqkt485Q@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: fw: arc: add __weak to prom_meminit and prom_free_prom_memory
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux-MIPS <linux-mips@linux-mips.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org,
+        =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/6/20 12:10 PM, Joe Perches wrote:
-> On Mon, 2020-04-06 at 17:00 +0100, David Howells wrote:
->> Joe Perches <joe@perches.com> wrote:
->>
->>>> This patch introduces a new kvfree_sensitive() for freeing those
->>>> sensitive data objects allocated by kvmalloc(). The relevnat places
->>>> where kvfree_sensitive() can be used are modified to use it.
->>> Why isn't this called kvzfree like the existing kzfree?
->> To quote Linus:
->>
->> 	We have a function for clearing sensitive information: it's called
->> 	"memclear_explicit()", and it's about forced (explicit) clearing even
->> 	if the data might look dead afterwards.
->>
->> 	The other problem with that function is the name: "__kvzfree()" is not
->> 	a useful name for this function. We use the "__" format for internal
->> 	low-level helpers, and it generally means that it does *less* than the
->> 	full function. This does more, not less, and "__" is not following any
->> 	sane naming model.
->>
->> 	So the name should probably be something like "kvfree_sensitive()" or
->> 	similar. Or maybe it could go even further, and talk about _why_ it's
->> 	sensitive, and call it "kvfree_cleartext()" or something like that.
->>
->> 	Because the clearing is really not what even matters. It might choose
->> 	other patterns to overwrite things with, but it might do other things
->> 	too, like putting special barriers for data leakage (or flags to tell
->> 	return-to-user-mode to do so).
->>
->> 	And yes, kzfree() isn't a good name either, and had that same
->> 	memset(), but at least it doesn't do the dual-underscore mistake.
->>
->> 	Including some kzfree()/crypto people explicitly - I hope we can get
->> 	away from this incorrect and actively wrong pattern of thinking that
->> 	"sensitive data should be memset(), and then we should add a random
->> 	'z' in the name somewhere to 'document' that".
-> Thanks.
+On Mon, Apr 6, 2020 at 4:54 AM Maciej W. Rozycki <macro@linux-mips.org> wrote:
 >
-> While I agree with Linus about the __ prefix,
-> the z is pretty common and symmetric to all
-> the <foo>zalloc uses.
+> On Mon, 6 Apr 2020, Masahiro Yamada wrote:
 >
-> And if _sensitive is actually used, it'd be
-> good to do a s/kzfree/kfree_sensitive/ one day
-> sooner than later.
+> > > > As far as I understood, prom_meminit() in arch/mips/fw/arc/memory.c
+> > > > is overridden by the one in arch/mips/sgi-ip32/ip32-memory.c if
+> > > > CONFIG_SGI_IP32 is enabled.
+> > > >
+> > > > The use of EXPORT_SYMBOL in static libraries potentially causes a
+> > > > problem for the llvm linker [1]. So, I want to forcibly link lib-y
+> > > > objects to vmlinux when CONFIG_MODULES=y.
+> > >
+> > >  It looks to me like a bug in the linker in the handling of the EXTERN
+> > > command.  Why not fix the linker instead?
+> [...]
+> > I am not sure if this is a bug.
+> > Anyway, they decided to not change ld.lld
 >
->
-I have actually been thinking about that. I saw a couple of cases in the
-crypto code where a memzero_explicit() is followed by kfree(). Those can
-be replaced by kfree_sensitive.
+>  Well, maybe that was a conscious decision, however it's a linker feature
+> that has been there since forever and projects like Linux can legitimately
+> rely on it.  In this case perhaps sticking to other linkers, which have
+> the right features, is the right solution rather than trying to turn a
+> complex and mature project like Linux upside down (and quite possibly
+> introducing bugs and pessimisations on the way) just to match an inferior
+> tool.  Adapt your tool to the task, not the task to your tool.
 
-Cheers,
-Longman
+The feature you refer to and the feature Masahiro is referring to are
+two separate issues.  If you care to understand the issue Masahiro is
+trying to fix, please take the time to read the full discussion:
+https://github.com/ClangBuiltLinux/linux/issues/515 and particularly
+https://reviews.llvm.org/D63564
 
+>
+> > MIPS code is so confusing.
+> > There are multiple definitions,
+> > and lib.a is (ab)used to hide them.
+>
+>  It's a standard feature of libraries that a symbol reference is satisfied
+> by the first symbol definition encountered.  Any extra ones provided later
+> in the link order are ignored.  And we have control over the link order.
+
+Relying on link order is terribly brittle. Renaming a file can cause
+your implementation to change, and ties your hands from ever using
+things like LTO or newer build systems like ninja.  Static
+initialization order is a plague to C and C++.  It's explicitly
+undefined behavior you've just admitted you prefer to rely on.  (A
+Google search for "static initialization order" wants to autocomplete
+to "static initialization order fiasco" which is also an interesting
+read; https://www.cryptopp.com/wiki/Static_Initialization_Order_Fiasco).
+
+Masahiro is right that this case has some questionable choices in
+terms of redefining symbols with different implementations.  I think
+__HAVE_ARCH_STRCPY and friends in lib/string.c is actually the best
+pattern for not providing multiple definitions of a symbol, followed
+by marking symbols meant to be overridden at link time based on config
+as __weak.  He's just trying to help clean this up.
+
+>
+> > I fixed another one for MIPS before, and
+> > 0-day bot reported this recently.
+> >
+> >
+> > There are lots of prom_meminit() definitions
+> > in arch/mips/.
+>
+>  Naturally, many platforms will have its own, in addition to some generic
+> (possibly dummy) one.
+>
+> > Making the intention clearer is a good thing, IMHO.
+>
+>  Hmm, what intention?  Can you please be more specific?
+
+That prom_meminit and prom_free_prom_memory are meant to be overridden
+by other configs.
+
+-- 
+Thanks,
+~Nick Desaulniers
