@@ -2,111 +2,85 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED68C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCC1C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5662494C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6744A22277
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bL2vMupb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbgDFQSq (ORCPT
+        id S1729130AbgDFQUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:18:46 -0400
-Received: from serv1.kernkonzept.com ([159.69.200.6]:57691 "EHLO
-        mx.kernkonzept.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728802AbgDFQSp (ORCPT
+        Mon, 6 Apr 2020 12:20:08 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49309 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729017AbgDFQUI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:18:45 -0400
-Received: from muedsl-82-207-238-172.citykom.de ([82.207.238.172] helo=x1c.dd1.int.kernkonzept.com)
-        by mx.kernkonzept.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256) (Exim 4.92)
-        id 1jLUSN-0000KQ-Ou; Mon, 06 Apr 2020 18:18:39 +0200
-From:   Benjamin Lamowski <benjamin.lamowski@kernkonzept.com>
-To:     xiaoyao.li@intel.com
-Cc:     bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        nivedita@alum.mit.edu, pbonzini@redhat.com, peterz@infradead.org,
-        philipp.eppelt@kernkonzept.com, sean.j.christopherson@intel.com,
-        tglx@linutronix.de, tony.luck@intel.com, x86@kernel.org,
-        Benjamin Lamowski <benjamin.lamowski@kernkonzept.com>
-Subject: [PATCH v3 1/1] x86/split_lock: check split lock support on initialization
-Date:   Mon,  6 Apr 2020 18:17:37 +0200
-Message-Id: <20200406161737.258840-1-benjamin.lamowski@kernkonzept.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200406160247.208004-1-benjamin.lamowski@kernkonzept.com>
-References: <20200406160247.208004-1-benjamin.lamowski@kernkonzept.com>
+        Mon, 6 Apr 2020 12:20:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586190007; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=q7MmcoHC+B5JqjEAn7yzTdc9VcYGuDPtoB3Hpi1mfCo=;
+ b=bL2vMupbS0FO/OP/sL0JS+Dbce1m6WEaxFyzbrcdCMbkEhHEoKL2/DfkyKNeOjuszB+AfrQp
+ sC3U8GJxv9oTAWc5X6lP5UbxknobcDVL//YqyzdgJWTwAfpAS6fCK7tZ49Ek2dVIfDsZbqfj
+ nL1fiE0cGJz5gDZyua1wEIXVy+M=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b5695.7f58e71649d0-smtp-out-n03;
+ Mon, 06 Apr 2020 16:19:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 72BDCC433F2; Mon,  6 Apr 2020 16:19:33 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12A15C433D2;
+        Mon,  6 Apr 2020 16:19:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 12A15C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] ath11k: fix error message to correctly report the
+ command that failed
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200327192639.363354-1-colin.king@canonical.com>
+References: <20200327192639.363354-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        John Crispin <john@phrozen.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200406161933.72BDCC433F2@smtp.codeaurora.org>
+Date:   Mon,  6 Apr 2020 16:19:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the sld setup code is run only if the TEST_CTRL MSR is available,
-the current sld initialization code unconditionally resets it even on
-systems where this architectural MSR is not available.
+Colin King <colin.king@canonical.com> wrote:
 
-This commit introduces a new default sld state sld_unsupported, which is
-changed in split_lock_setup() only if sld is available; and checks for
-split lock detect support before initializing it.
+> Currently the error message refers to the command WMI_TWT_DIeABLE_CMDID
+> which looks like a cut-n-paste mangled typo. Fix the message to match
+> the command WMI_BSS_COLOR_CHANGE_ENABLE_CMDID that failed.
+> 
+> Fixes: 5a032c8d1953 ("ath11k: add WMI calls required for handling BSS color")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Fixes: dbaba47085b0c ("x86/split_lock: Rework the initialization flow of split lock detection")
-Signed-off-by: Benjamin Lamowski <benjamin.lamowski@kernkonzept.com>
-Suggested-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- arch/x86/kernel/cpu/intel.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+Patch applied to ath-next branch of ath.git, thanks.
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 9a26e972cdea..de45ba1089c1 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -34,17 +34,18 @@
- #endif
- 
- enum split_lock_detect_state {
--	sld_off = 0,
-+	sld_unsupported = 0,
-+	sld_off,
- 	sld_warn,
- 	sld_fatal,
- };
- 
- /*
-- * Default to sld_off because most systems do not support split lock detection
-- * split_lock_setup() will switch this to sld_warn on systems that support
-- * split lock detect, unless there is a command line override.
-+ * Default to sld_unsupported because most systems do not support split lock
-+ * detection. split_lock_setup() will switch this to sld_warn on systems that
-+ * support split lock detect, unless there is a command line override.
-  */
--static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
-+static enum split_lock_detect_state sld_state __ro_after_init = sld_unsupported;
- static u64 msr_test_ctrl_cache __ro_after_init;
- 
- /*
-@@ -1033,6 +1034,9 @@ static void __init split_lock_setup(void)
- 	case sld_fatal:
- 		pr_info("sending SIGBUS on user-space split_locks\n");
- 		break;
-+	case sld_unsupported:
-+		/* Can't happen, just to keep the compiler happy */
-+		break;
- 	}
- 
- 	rdmsrl(MSR_TEST_CTRL, msr_test_ctrl_cache);
-@@ -1063,7 +1067,8 @@ static void sld_update_msr(bool on)
- 
- static void split_lock_init(void)
- {
--	split_lock_verify_msr(sld_state != sld_off);
-+	if (sld_state != sld_unsupported)
-+		split_lock_verify_msr(sld_state != sld_off);
- }
- 
- bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+9a8074e3bcd7 ath11k: fix error message to correctly report the command that failed
+
 -- 
-2.25.1
+https://patchwork.kernel.org/patch/11462997/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
