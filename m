@@ -2,121 +2,87 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EECC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C30C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A94522263
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57BE22273
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LIVgOdOL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PHPHD7F5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgDFNCK (ORCPT
+        id S1728286AbgDFNCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:02:10 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24568 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728138AbgDFNCK (ORCPT
+        Mon, 6 Apr 2020 09:02:22 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:15198 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728184AbgDFNCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:02:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586178129;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VPjD/qOa5eohxkp3ciJYq8E962y8rH1Z+TEQ1dfdaNU=;
-        b=LIVgOdOL/H71WNHI6o90ZKZ+LyhODZU3q3afogGyvFjRXlAPPvL3ipCXzVo2FfjBG6GkAQ
-        g9216cAy+xzFi+rIOBohXTlybg5OX3Nl73WkqmalatmzM9WhNoggwaClz7i7YOmnb9Upwh
-        4aEol6VgOQiLIpykmU8hxnvHAzs5nl8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-69-iTxUDT34MsOH4jM5WxR21A-1; Mon, 06 Apr 2020 09:02:07 -0400
-X-MC-Unique: iTxUDT34MsOH4jM5WxR21A-1
-Received: by mail-wm1-f70.google.com with SMTP id z24so4079742wml.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:02:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VPjD/qOa5eohxkp3ciJYq8E962y8rH1Z+TEQ1dfdaNU=;
-        b=dVtlIRjxiGmt68EjeBBjSNp36/D2KZTkUQ0iBWtJvksvw2gf9AgnDMATS+i5fj9+Po
-         w4FM5dH4d62MNCu8Q5R5zhkxwf0Uip0xHUVU7FpRnMiwhKrbaAXyImnmQdwOaSLzct/c
-         uR+luBdEl4F/5upgkPtmQGXhIRhXmzW0Ta/b1elQUaRM/Ht0/fcZzwGfhv3eTCFBq6cL
-         ZHpmysp9m4RdZEQNcHijlPOMFkxi5qOhVcAB+LYi227VEp6OdiSaHrRk4G6CVgg7CpYe
-         PsoSqdkCRtbuFmGTNEZLN2Zt7Q5Yv5fP7osYn++MRKtcThXl0o/vQDqhugYhXUtGNw5H
-         jQwg==
-X-Gm-Message-State: AGi0PuY/RylneGyGkMear6q3XKK2nx6VYx4hTcCIVAaOBdeycQgBi4RE
-        xq7k5uwqEZOFjs5mk0HEctx7CHv5JgHoIF/8LNbNp7k1uxZODcfMoGk9ygLdhaAxAlPy0m7dWvc
-        qMVH8Kmn/g58N3VjNW+NJQ8x3
-X-Received: by 2002:adf:a350:: with SMTP id d16mr23217854wrb.277.1586178126528;
-        Mon, 06 Apr 2020 06:02:06 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKzhJTMgG+3y4mdFbTRg4CPv7sYAgX9HM+UKNa2TYFJhIuv1nrWp08PsZCLMr3COjkc520wRg==
-X-Received: by 2002:adf:a350:: with SMTP id d16mr23217808wrb.277.1586178126236;
-        Mon, 06 Apr 2020 06:02:06 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id n1sm13731659wrw.52.2020.04.06.06.02.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 06:02:05 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 09:02:02 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "richard.henderson@linaro.org" <richard.henderson@linaro.org>,
-        "christophe.lyon@st.com" <christophe.lyon@st.com>,
-        kbuild test robot <lkp@intel.com>,
-        "daniel.santos@pobox.com" <daniel.santos@pobox.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Richard Earnshaw <Richard.Earnshaw@arm.com>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        kvm list <kvm@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] vhost: disable for OABI
-Message-ID: <20200406085707-mutt-send-email-mst@kernel.org>
-References: <20200406121233.109889-1-mst@redhat.com>
- <20200406121233.109889-3-mst@redhat.com>
- <CAK8P3a1nce31itwMKbmXoNZh-Y68m3GX_WwzNiaBuk280VFh-Q@mail.gmail.com>
+        Mon, 6 Apr 2020 09:02:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586178141; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=9tdkGmLU02zbWVLGYy5PSq5hUqznxpWzvhiGLCd+WxU=; b=PHPHD7F5iV/9XLu+ktllJkG/YqwfVXeT/GNqiukILWOlULfRydUZE3OCVeseOE3nvxCkHc/1
+ xViWn0yqj9XCgdvQJSFvbgZt3Z5Qkw5+2A2HksBNsR6k+n3Cn8fZuIIF7uloz5Vmdf+tA02l
+ OFXgnVkheGMZLzkUxf9z67HpmWI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b2855.7f0ef81547d8-smtp-out-n03;
+ Mon, 06 Apr 2020 13:02:13 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 75195C433F2; Mon,  6 Apr 2020 13:02:13 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28F6BC433D2;
+        Mon,  6 Apr 2020 13:02:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28F6BC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <davem@davemloft.net>, <pradeepc@codeaurora.org>,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ath11k: thermal: Fix build error without CONFIG_THERMAL
+References: <20200403083414.31392-1-yuehaibing@huawei.com>
+Date:   Mon, 06 Apr 2020 16:02:07 +0300
+In-Reply-To: <20200403083414.31392-1-yuehaibing@huawei.com>
+        (yuehaibing@huawei.com's message of "Fri, 3 Apr 2020 16:34:14 +0800")
+Message-ID: <87mu7ozs1c.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1nce31itwMKbmXoNZh-Y68m3GX_WwzNiaBuk280VFh-Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 02:50:32PM +0200, Arnd Bergmann wrote:
-> On Mon, Apr 6, 2020 at 2:12 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> 
-> >
-> > +config VHOST_DPN
-> > +       bool "VHOST dependencies"
-> > +       depends on !ARM || AEABI
-> > +       default y
-> > +       help
-> > +         Anything selecting VHOST or VHOST_RING must depend on VHOST_DPN.
-> > +         This excludes the deprecated ARM ABI since that forces a 4 byte
-> > +         alignment on all structs - incompatible with virtio spec requirements.
-> > +
-> 
-> This should not be a user-visible option, so just make this 'def_bool
-> !ARM || AEABI'
-> 
->       Arnd
+YueHaibing <yuehaibing@huawei.com> writes:
 
-I like keeping some kind of hint around for when one tries to understand
-why is a specific symbol visible.
+> drivers/net/wireless/ath/ath11k/thermal.h:45:1:
+>  warning: no return statement in function returning non-void [-Wreturn-ty=
+pe]
+> drivers/net/wireless/ath/ath11k/core.c:416:28: error:
+>  passing argument 1 of =E2=80=98ath11k_thermal_unregister=E2=80=99 from i=
+ncompatible pointer type [-Werror=3Dincompatible-pointer-types]
+>
+> Add missing return 0 in ath11k_thermal_set_throttling,
+> and fix ath11k_thermal_unregister param type.
 
--- 
-MST
+These are warnings, no? "build error" and "compiler warning" are
+different things, the former breaks the whole build which is super
+critical, but I'll queue this to v5.7 nevertheless. And I'll change the
+title to:
 
+ath11k: fix compiler warning without CONFIG_THERMAL
+
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
