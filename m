@@ -2,57 +2,117 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7DAC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F55C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D722228A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27832228A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:06:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xXF6AYFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgDFNFi (ORCPT
+        id S1728358AbgDFNGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:05:38 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58059 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728077AbgDFNFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:05:37 -0400
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48wrPV2nPkz9sSJ; Mon,  6 Apr 2020 23:05:34 +1000 (AEST)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 60083063b755e29685902609e024ecd0c4a1a7d9
-In-Reply-To: <20200213083804.24315-1-geert+renesas@glider.be>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-clk@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc/time: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-Message-Id: <48wrPV2nPkz9sSJ@ozlabs.org>
-Date:   Mon,  6 Apr 2020 23:05:34 +1000 (AEST)
+        Mon, 6 Apr 2020 09:06:20 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35891 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728118AbgDFNGU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:06:20 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w145so11753581lff.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:06:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7GN1YoLzsFU98PWBZxI+qjFmWQa/AZo0+frFBCofsJg=;
+        b=xXF6AYFcB3ozl4D4kdHrr50LF1ZbAzFYv2AWyEbx3VdXDZdEgAFF7g0GDyLvkZ+X7j
+         9M/LLUMmEvEJ+qwYkX6OKJl8UnuYxFGk4437Ue0Ul/SYyGtNWU7yTlR+xtE+DeHL70uz
+         o/zUDbyphURIF0pjMrhsCPT56gpy6uSvJGGicPccenUoejHO1g+XCkhVV/i9rx+YuZ5I
+         K+mVTdeE1Wfk1fuHpjfF9cqq8xZEiCTxBUeIO7f8sAiH5NUd6zch0P4a/7lr1XXvWGOj
+         +3RM5Q/rtssVNH9lNrYeJ3ZVOEt5xNEfo2PQLvqeK27IvWeb8CsbnBf9e1uDbuPgiyEr
+         jnTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7GN1YoLzsFU98PWBZxI+qjFmWQa/AZo0+frFBCofsJg=;
+        b=N8aPtLuO+xSlCKUZWdiIT2WeEWDA+FtHvRaJDFpIwmpo9tcDRXgGdsGRvh2hVGVys8
+         0jD9PbEwUXATHNFL3QR5mIPKWIgXmkgXXBzNFUmQ855G72+0dJ/OpGKS/tfDnyVIt1Li
+         mR6oBDXBAaeAGL6qjqAhKF1J6aueYFC6HtG6PYflDVFGUxM4ZrDOx0v6/9TNWklyAYPY
+         nVwUxyKB3KtY5DpbMQo5vzj7KOvMNhPawzU9Tz+s9HwdzGibqAaQNMUxerXhHbsSqR3C
+         dU9Mi3V0/Ba+ZimKs8IjbJx1krfUhwpCc6cGeMSbWVLd9D9u3/FnzTqMVNdFRE0R/WCT
+         ngKw==
+X-Gm-Message-State: AGi0PuYl4CYc8qoBIxMRNOqPkLitEj0k7yB1V+qUSMzEdJ1YEeXTvp1Q
+        NvBwKMsRirTTVZxlmG+t0JLpqUQe/HCevxneHcIYJg==
+X-Google-Smtp-Source: APiQypIK+bczDzGTeHW+lSUpdUeHqY1a2BN2ay+VHidmedYNAGHtBDA28bQ7bJLCQZwbaQ8u6riJa2KPaTes9V8Xvos=
+X-Received: by 2002:ac2:5f63:: with SMTP id c3mr12844845lfc.15.1586178378339;
+ Mon, 06 Apr 2020 06:06:18 -0700 (PDT)
+MIME-Version: 1.0
+References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
+ <87ftdgokao.fsf@tynnyri.adurom.net> <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+In-Reply-To: <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Mon, 6 Apr 2020 18:36:06 +0530
+Message-ID: <CAFA6WYMxKUXjhAfK6pTu9merNwUaKmQp6_FaTmW4e=kfTMthmw@mail.gmail.com>
+Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Kalle Valo <kvalo@codeaurora.org>, linux-wireless@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        netdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Matthias=2DPeter_Sch=C3=B6pfer?= 
+        <matthias.schoepfer@ithinx.io>,
+        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
+        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-13 at 08:38:04 UTC, Geert Uytterhoeven wrote:
-> The PowerPC time code is not a clock provider, and just needs to call
-> of_clk_init().
-> 
-> Hence it can include <linux/of_clk.h> instead of <linux/clk-provider.h>.
-> 
-> Remove the #ifdef protecting the of_clk_init() call, as a stub is
-> available for the !CONFIG_COMMON_CLK case.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+On Mon, 6 Apr 2020 at 18:17, Johannes Berg <johannes@sipsolutions.net> wrote:
+>
+> On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
+> >
+> > >     user-space  ieee80211_register_hw()  RX IRQ
+> > >     +++++++++++++++++++++++++++++++++++++++++++++
+> > >        |                    |             |
+> > >        |<---wlan0---wiphy_register()      |
+> > >        |----start wlan0---->|             |
+> > >        |                    |<---IRQ---(RX packet)
+> > >        |              Kernel crash        |
+> > >        |              due to unallocated  |
+> > >        |              workqueue.          |
+>
+> [snip]
+>
+> > I have understood that no frames should be received until mac80211 calls
+> > struct ieee80211_ops::start:
+> >
+> >  * @start: Called before the first netdevice attached to the hardware
+> >  *         is enabled. This should turn on the hardware and must turn on
+> >  *         frame reception (for possibly enabled monitor interfaces.)
+>
+> True, but I think he's saying that you can actually add and configure an
+> interface as soon as the wiphy is registered?
 
-Applied to powerpc next, thanks.
+Indeed, it's a call to "struct ieee80211_ops::start" just after wiphy
+is registered that causes the frame to be received leading to RX IRQ.
 
-https://git.kernel.org/powerpc/c/60083063b755e29685902609e024ecd0c4a1a7d9
+>
+> The "wlan0" is kinda wrong there, should be "phy0" I guess, and then
+> interface added from iw?
 
-cheers
+Okay, will update the sequence diagram.
+
+-Sumit
+
+>
+> johannes
+>
