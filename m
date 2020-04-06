@@ -2,104 +2,88 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67B0C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D229C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808EA2063A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430B92072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 10:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxJuXYIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgDFKAI (ORCPT
+        id S1726890AbgDFKB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 06:00:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36166 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726784AbgDFKAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 06:00:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7CFCCADCC;
-        Mon,  6 Apr 2020 10:00:05 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 354011E1244; Mon,  6 Apr 2020 12:00:05 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 12:00:05 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations V5
-Message-ID: <20200406100005.GB1143@quack2.suse.cz>
-References: <20200316095224.GF12783@quack2.suse.cz>
- <20200316095509.GA13788@lst.de>
- <20200401040021.GC56958@magnolia>
- <20200401102511.GC19466@quack2.suse.cz>
- <20200402085327.GA19109@lst.de>
- <20200402205518.GF3952565@iweiny-DESK2.sc.intel.com>
- <20200403072731.GA24176@lst.de>
- <20200403154828.GJ3952565@iweiny-DESK2.sc.intel.com>
- <20200403170338.GD29920@quack2.suse.cz>
- <20200403181843.GK3952565@iweiny-DESK2.sc.intel.com>
+        Mon, 6 Apr 2020 06:01:57 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36324 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbgDFKB5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 06:01:57 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k1so7251486wrm.3;
+        Mon, 06 Apr 2020 03:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to:cc;
+        bh=YzmMXR5rNZPtC86zvMRgp4oCyOtVaABF9wgIVshKUW4=;
+        b=gxJuXYINMA6TTC8wuTzGOaWVvfdkcVLMnRKU1Ii1lnkAsnPz2965x29SwCgMv225Si
+         O4O5QPrC9jqsgfivQfknFkPHpINpRhBLVdC+1zWF2zYzBiha3FzPKTIidV/1GaAexobV
+         GSfDZO88re0FoVr3BLwGlZAM9DAnXzIK/C8BoxXfeLPEaVUfEIHETy01Umg3//1qCr4p
+         VDCn1gY/yWFa4qqTqBerWz9V0rshhKg5pHfXzOOFY2ORojh0YlKagWaEgtqRzaR7L99x
+         1poKuZHTJ7RRZlx4z4n9oLYqdS/P46mMysw3s8yaAOF6J90UewZMfZINfnUszhnTdSMi
+         080Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=YzmMXR5rNZPtC86zvMRgp4oCyOtVaABF9wgIVshKUW4=;
+        b=tOu5TgLZX1dRRoFuEEfVd4aHdGSJjSRMx+7Nr/dQMGmvHbCgYvQ6aDDebT7HMqU1DF
+         cQGACsLdFB1+AZvWhGlmJ4PEp1694FUCVYoAOPS7kBxO9NJRidHmv6NI33ALJN7qtMbP
+         xzbObMjtcb0M4XPKwomQ8Ec8M7y6NYqAZ+heVDq9Gcst+jsYUrWis7tKbzJMC6q2JS2r
+         IR+VgKI4kAi+lZbYxwvA7z7XLGm3fthcYtSLJgTnQXbbLDYzczTHBr8Bd04YVmEjJo3k
+         nDVrrg0WbSJ4nRK83nP9dN9cVPAWh/XUj+UXIpQ1P3LMdBuH3T0/l2rsYGHHTxcwt1sI
+         BUNw==
+X-Gm-Message-State: AGi0PubcOONZRmbpVcAPBtlV2jMo+y3RIvdyUIA8kMCy3RWWQMwYYQ7D
+        bj/sHO2AXjG2U2QqcIgjoDKDIh8hYrvRScE+IKA=
+X-Google-Smtp-Source: APiQypKdiuOwo8naTpsrSPB5xSBWnI12Pc8gnVs1udE3VqYTg+4byJnBdfF7ALwaBDV5QRhywnpO473osUYaBiMEbSw=
+X-Received: by 2002:adf:bb94:: with SMTP id q20mr8443986wrg.179.1586167315127;
+ Mon, 06 Apr 2020 03:01:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200403181843.GK3952565@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Mon, 6 Apr 2020 12:02:15 +0200
+Message-ID: <CA+icZUWnZwaNooj4WLvS7FKhkDgq3R3xUaQ8hFjuDgZTSj0s2Q@mail.gmail.com>
+Subject: kbuild: do not pass $(KBUILD_CFLAGS) to scripts/mkcompile_h
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 03-04-20 11:18:43, Ira Weiny wrote:
-> Ok For 5.8 why don't we not allow FS_XFLAG_DAX to be changed on files _at_
-> _all_...
-> 
-> In summary:
-> 
->  - Applications must call statx to discover the current S_DAX state.
-> 
->  - There exists an advisory file inode flag FS_XFLAG_DAX that is set based on
->    the parent directory FS_XFLAG_DAX inode flag.  (There is no way to change
->    this flag after file creation.)
-> 
->    If FS_XFLAG_DAX is set and the fs is on pmem then it will enable S_DAX at
->    inode load time; if FS_XFLAG_DAX is not set, it will not enable S_DAX.
->    Unless overridden...
+[ Please CC me I am not subscribed to this mailing-list ]
 
-OK, after considering all the options we were hashing out here, I think
-this is the best API. There isn't the confusing "S_DAX will magically
-switch on inode eviction" and although the functionality is limited, I
-think 90% of users would end up using the functionality like this anyway.
+Hi,
 
->  - There exists a dax= mount option.
-> 
->    "-o dax=off" means "never set S_DAX, ignore FS_XFLAG_DAX"
->    	"-o nodax" means "dax=off"
->    "-o dax=always" means "always set S_DAX (at least on pmem), ignore FS_XFLAG_DAX"
->    	"-o dax" by itself means "dax=always"
->    "-o dax=iflag" means "follow FS_XFLAG_DAX" and is the default
-> 
->  - There exists an advisory directory inode flag FS_XFLAG_DAX that can be
->    changed at any time.  The flag state is copied into any files or
->    subdirectories when they are created within that directory.  If programs
->    require file access runs in S_DAX mode, they'll have to create those files
->    inside a directory with FS_XFLAG_DAX set, or mount the fs with an
->    appropriate dax mount option.
+I think with your patch in [1] line #56 can go away, too?
 
-								Honza
+[ scripts/mkcompile_h ]
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+53 # Generate a temporary compile.h
+54
+55 { echo /\* This file is auto generated, version $VERSION \*/
+56   if [ -n "$CONFIG_FLAGS" ] ; then echo "/* $CONFIG_FLAGS */"; fi
+
+Thanks.
+
+Regards,
+- Sedat -
+
+[1] https://patchwork.kernel.org/patch/11473667/
