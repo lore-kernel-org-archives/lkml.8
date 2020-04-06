@@ -2,140 +2,179 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10AFC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DB4C2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7612B20719
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:53:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9ZOrLIe"
+	by mail.kernel.org (Postfix) with ESMTP id 86F2C206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgDFRxY (ORCPT
+        id S1726808AbgDFRyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:53:24 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36856 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbgDFRxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:53:24 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g2so111589plo.3;
-        Mon, 06 Apr 2020 10:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9JXoqzYzLIC3HrCv8vGdYmXOyoyfoEov4G2A1bmXZ20=;
-        b=D9ZOrLIetSDZnCJTTM9zng7QJ3DDJPCZe2Mm3mEs46k8iZXhGisG4DnOVsSZR3GAse
-         BHFGoVJCrHXT74p3vRpy9VUQkihmXEbevEoVAVB0FE4qOVlh27M641YBw/KAejoyfNbK
-         Hqje3oAgs4uHmGQorr+TdYBkplSFvlWxvvUsNFU6ZgZ5pCzMBE4lmUjNCgLH0l3otQWG
-         fSdHerh/y8vIvlmRoEoThb8Y3es/AHoY3Aox4F1U3kPrRzDlbZjm2rspR0eEE1EUpPZO
-         IFze42OpFrfD/ya+q/NXjxozrOChY2abgSugfghI6NJ5lBHMD2lXUhIJO6s7wQ6TjWWu
-         yW9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9JXoqzYzLIC3HrCv8vGdYmXOyoyfoEov4G2A1bmXZ20=;
-        b=tPtvntky3nKhsxKK9MbyhPa2Zmuj6LpRA4sOwadPNZLv4uUwi/wZgmSdjB3kctxhlg
-         RjredWpBjc78tFdRfrM0EI2hGsQmJlrrEZhKlZKWqs6Qj/8HUoISCyJ1kX2vGlzB6tiJ
-         myBAvACTk7Ooc1LV9FHZER+X540gHu5+gMuQ2HcnOnx+fQVHMwwDtZCEl6n1GOK5avdW
-         2oNRKb7irZFgkUOfSLSXe93KN3VGDRAH4TFreRaB0b1pGkEEuip5B4YWkDNR4Wb7P3jf
-         WgExyBQywckoVgFgGEJOwQWOHkKY/jQ3jU8IaYJMclsUs6/97GtTsb3gSytiPnkC8HbI
-         +X/w==
-X-Gm-Message-State: AGi0PuZc069xlBbLE39XdbetsqgdW+8AdhooBHyeCdEg5ntKaAY7VabB
-        hpGp2PlK1veJI1P9uMom3o6kA+UTahkszKOPCDXOHdjAQkQ=
-X-Google-Smtp-Source: APiQypLNnHDZujZTJTpiHGYT9JZbdlvicmlk4ENHnxdkWhZoNN9zP2vmOzam5C22tguI5FtKiI1ElgkrLPri5ASUnjg=
-X-Received: by 2002:a17:90a:e982:: with SMTP id v2mr401914pjy.1.1586195600993;
- Mon, 06 Apr 2020 10:53:20 -0700 (PDT)
+        Mon, 6 Apr 2020 13:54:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49438 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbgDFRyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 13:54:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3CC8AAFF2;
+        Mon,  6 Apr 2020 17:53:57 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Zheng Yan <zyan@redhat.com>
+Cc:     Frank Schilder <frans@dtu.dk>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luis Henriques <lhenriques@suse.com>
+Subject: [PATCH 2/2] ceph: allow rename operation under different quota realms
+Date:   Mon,  6 Apr 2020 16:12:01 +0100
+Message-Id: <20200406151201.32432-3-lhenriques@suse.com>
+In-Reply-To: <20200406151201.32432-1-lhenriques@suse.com>
+References: <20200406151201.32432-1-lhenriques@suse.com>
 MIME-Version: 1.0
-References: <20200406172002.18028-1-i.mikhaylov@yadro.com>
-In-Reply-To: <20200406172002.18028-1-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 6 Apr 2020 20:53:13 +0300
-Message-ID: <CAHp75Vck19yEDsu7Sq9qMkzey+cRxw_zwFzYrh30YXJG=DqE3g@mail.gmail.com>
-Subject: Re: [PATCH v8 0/2] iio: proximity: driver for vcnl3020
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 8:19 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
->
-> Add proximity sensor driver for Vishay vcnl3020. Only on-demand
-> measurement is supported for now.
->
+Returning -EXDEV when trying to 'mv' files/directories from different
+quota realms results in copy+unlink operations instead of the faster
+CEPH_MDS_OP_RENAME.  This will occur even when there aren't any quotas
+set in the destination directory, or if there's enough space left for
+the new file(s).
 
-Thank you!
+This patch adds a new helper function to be called on rename operations
+which will allow these operations if they can be executed.  This patch
+mimics userland fuse client commit b8954e5734b3 ("client:
+optimize rename operation under different quota root").
 
-> Changes from v7:
->    1. forgot to add Reviewed-by tag.
->
-> Changes from v6:
->    1. minor changes
->      1.1 remove VCNL_DRV_NAME
->      1.2 add braces in get_and_apply_property
->
-> Changes from v5:
->    1. add get_and_apply_property function for optional parameters.
->    2. minor changes.
->
-> Changes from v4:
->    1. add vdd-supply,vddio-supply,interrupts properties into yaml.
->    2. led-current -> vishay,led-current-milliamp in yaml.
->    3. add possible values enum list.
->    4. add bulk_read for result hi/lo registers.
->    5. add description of vcnl3020_data structure.
->    6. vcnl3020 id table is removed.
->    7. make "vishay,led-current-milliamp" optional in yaml and code.
->
-> Changes from v3:
->    1. minor changes.
->    2. add i2c block to fix dts section in yaml.
->
-> Changes from v2:
->    1. using regmap_read_poll_timeout instead of do-while in measurement
->       function.
->    2. change struct i2client* in vcnl3020_data to struct dev*
->    3. enable REGMAP_I2C in Kconfig
->
-> Changes from v1:
->    1. using regmap interface instead of i2c_smbus_* calls.
->    2. switch from probe to probe_new.
->    3. s32/int32_t -> int
->
-> Ivan Mikhaylov (2):
->   iio: proximity: provide device tree binding document
->   iio: proximity: Add driver support for vcnl3020 proximity sensor
->
->  .../bindings/iio/proximity/vcnl3020.yaml      |  65 +++++
->  drivers/iio/proximity/Kconfig                 |  11 +
->  drivers/iio/proximity/Makefile                |   1 +
->  drivers/iio/proximity/vcnl3020.c              | 234 ++++++++++++++++++
->  4 files changed, 311 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
->  create mode 100644 drivers/iio/proximity/vcnl3020.c
->
-> --
-> 2.21.1
->
+Since ceph_quota_is_same_realm() is now called only from this new
+helper, make it static.
 
+URL: https://tracker.ceph.com/issues/44791
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+---
+ fs/ceph/dir.c   |  9 ++++----
+ fs/ceph/quota.c | 58 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ fs/ceph/super.h |  3 ++-
+ 3 files changed, 64 insertions(+), 6 deletions(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
+index d0cd0aba5843..9d3f0062d800 100644
+--- a/fs/ceph/dir.c
++++ b/fs/ceph/dir.c
+@@ -1099,11 +1099,12 @@ static int ceph_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 			op = CEPH_MDS_OP_RENAMESNAP;
+ 		else
+ 			return -EROFS;
++	} else {
++		err = ceph_quota_check_rename(mdsc, d_inode(old_dentry),
++					      new_dir);
++		if (err)
++			return err;
+ 	}
+-	/* don't allow cross-quota renames */
+-	if ((old_dir != new_dir) &&
+-	    (!ceph_quota_is_same_realm(old_dir, new_dir)))
+-		return -EXDEV;
+ 
+ 	dout("rename dir %p dentry %p to dir %p dentry %p\n",
+ 	     old_dir, old_dentry, new_dir, new_dentry);
+diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
+index c5c8050f0f99..a6dd1a528c70 100644
+--- a/fs/ceph/quota.c
++++ b/fs/ceph/quota.c
+@@ -264,7 +264,7 @@ static struct ceph_snap_realm *get_quota_realm(struct ceph_mds_client *mdsc,
+ 	return NULL;
+ }
+ 
+-bool ceph_quota_is_same_realm(struct inode *old, struct inode *new)
++static bool ceph_quota_is_same_realm(struct inode *old, struct inode *new)
+ {
+ 	struct ceph_mds_client *mdsc = ceph_inode_to_client(old)->mdsc;
+ 	struct ceph_snap_realm *old_realm, *new_realm;
+@@ -516,3 +516,59 @@ bool ceph_quota_update_statfs(struct ceph_fs_client *fsc, struct kstatfs *buf)
+ 	return is_updated;
+ }
+ 
++/*
++ * ceph_quota_check_rename - check if a rename can be executed
++ * @mdsc:	MDS client instance
++ * @old:	inode to be copied
++ * @new:	destination inode (directory)
++ *
++ * This function verifies if a rename (e.g. moving a file or directory) can be
++ * executed.  It forces an rstat update in the @new target directory (and in the
++ * source @old as well, if it's a directory).  The actual check is done both for
++ * max_files and max_bytes.
++ *
++ * This function returns 0 if it's OK to do the rename, or, if quotas are
++ * exceeded, -EXDEV (if @old is a directory) or -EDQUOT.
++ */
++int ceph_quota_check_rename(struct ceph_mds_client *mdsc,
++			    struct inode *old, struct inode *new)
++{
++	struct ceph_inode_info *ci_old = ceph_inode(old);
++	int ret = 0;
++
++	if ((old == new) || (ceph_quota_is_same_realm(old, new)))
++		return 0;
++
++	/*
++	 * Get the latest rstat for target directory (and for source, if a
++	 * directory)
++	 */
++	ret = ceph_do_getattr(new, CEPH_STAT_RSTAT, false);
++	if (ret)
++		return ret;
++
++	if (S_ISDIR(old->i_mode)) {
++		ret = ceph_do_getattr(old, CEPH_STAT_RSTAT, false);
++		if (ret)
++			return ret;
++		ret = check_quota_exceeded(new, QUOTA_CHECK_MAX_BYTES_OP,
++					   ci_old->i_rbytes);
++		if (!ret)
++			ret = check_quota_exceeded(new,
++						   QUOTA_CHECK_MAX_FILES_OP,
++						   ci_old->i_rfiles +
++						   ci_old->i_rsubdirs);
++		if (ret)
++			ret = -EXDEV;
++	} else {
++		ret = check_quota_exceeded(new, QUOTA_CHECK_MAX_BYTES_OP,
++					   i_size_read(old));
++		if (!ret)
++			ret = check_quota_exceeded(new,
++						   QUOTA_CHECK_MAX_FILES_OP, 1);
++		if (ret)
++			ret = -EDQUOT;
++	}
++
++	return ret;
++}
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 037cdfb2ad4f..d5853831a6b5 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -1175,13 +1175,14 @@ extern void ceph_handle_quota(struct ceph_mds_client *mdsc,
+ 			      struct ceph_mds_session *session,
+ 			      struct ceph_msg *msg);
+ extern bool ceph_quota_is_max_files_exceeded(struct inode *inode);
+-extern bool ceph_quota_is_same_realm(struct inode *old, struct inode *new);
+ extern bool ceph_quota_is_max_bytes_exceeded(struct inode *inode,
+ 					     loff_t newlen);
+ extern bool ceph_quota_is_max_bytes_approaching(struct inode *inode,
+ 						loff_t newlen);
+ extern bool ceph_quota_update_statfs(struct ceph_fs_client *fsc,
+ 				     struct kstatfs *buf);
++extern int ceph_quota_check_rename(struct ceph_mds_client *mdsc,
++				   struct inode *old, struct inode *new);
+ extern void ceph_cleanup_quotarealms_inodes(struct ceph_mds_client *mdsc);
+ 
+ #endif /* _FS_CEPH_SUPER_H */
