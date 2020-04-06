@@ -2,116 +2,99 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409D7C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B6EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E95206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF48520644
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="epaSpNY0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smLxfdnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgDFJZX (ORCPT
+        id S1726766AbgDFJZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:25:23 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:44767 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbgDFJZX (ORCPT
+        Mon, 6 Apr 2020 05:25:44 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43984 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbgDFJZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:25:23 -0400
-Received: by mail-vk1-f196.google.com with SMTP id s194so3764489vkb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 02:25:23 -0700 (PDT)
+        Mon, 6 Apr 2020 05:25:44 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w15so10286418wrv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 02:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+Jkl5CwkBjT6BLZjWifTBiWjf1dpkao6vvkn1JtNrnw=;
-        b=epaSpNY0AlXvZtQT8gmSkq7YCfCu+H9+4NsGD1EHtUBhiLj7GDKMDP1ju49fLI5pyq
-         pCfSD8KQrN8wMk0FTuTi2fnZ4h0Pl8oDK+75YZP2xKILvVSQ3minilK9OH1HY/2YgtYm
-         pUJ/DhYHYK9Dc6Ak3LSqf7BfvYkxmegzELpkt/yCCPAC6ry0lHe2lNsC/shqs5Rez1SL
-         v/rQ54yfzAVQjvCw8wjwJ/enwXxnVSh+emOgr25K8vE6pmslN3F88JkGQ6h987Qe5lZ+
-         9in6Ft3/bkoh+LkqRPVXSvCoGTJD1LDrdL0hZucIf+Rm8VUlfZMDXFwICxkBeNpRXcwh
-         KHdA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tWjzg+BVrz3TNNIkAGcAPM3G1GTTyThKxry/5V7utII=;
+        b=smLxfdnrwlbOaIv5M/k3oW4eMRWpaErrmcjTYxdTlW6dTt4uoklsAsspG0o+iKjoEr
+         6IX1hf3EMvtGOa2XM9/WtTl3RgRIv2RQbXtuMZbE4IIyZc8Vt9JVEAwh5fWAeRhjQf4F
+         43pkmDEhlo1bViU/N2Q4/9YATxjB6ix6DfZtAh5z8UdyfojtrQk7nnPYuhLmG21OwUb6
+         Iwnn1KdAvEZyVXGp3avOU+cg/VmrNttm6GqiZps0YzwI+kGupXCrTPJOJpGYGaHvlvyG
+         DMQzYvoaCtQP8ww1Qy/r6CO6QlCGUfhC9sddAn2khZCgzUsw277rkD8DuupgSVt36y1A
+         agJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+Jkl5CwkBjT6BLZjWifTBiWjf1dpkao6vvkn1JtNrnw=;
-        b=nzddxZCG4XbcH59mCZ6vjJalmz3YJv5bFAoRMh/8GtkwHZK4dHPochNzhRNETcqM1e
-         DPeP2MKXuPRstUIWSD/CdyCI16zlqvyic3OFv/pFOE/+uZHlj9ms15tBGsJx0tjRSARO
-         ltv8Pq/Oy/9/HKxac953+/cprfM2ooCSr/ts/UPIJB4piI+p0RwsOqjDi7t/W4pw+jFV
-         IA6oskszXPe9fVUQnwacyQlmLCr7ouubaUUFs9kGobuwAf/5EJfgoDSVycV0mOS2D90g
-         jC9tZXcXcYN7tXWB/sDZxaq7fuNfmixStRL21BnIDsJn8yBJ4c+IC9jwCd3vesf6GXFp
-         ZYuw==
-X-Gm-Message-State: AGi0PuYkcSK4L1pIICQfq2mFdxmo+i3akrnmvB4xnQOwYtwj2nI8Psmu
-        TSmhpzvK4IfH02swJpxd4721ETQEC3jWxVjkmBr6Tw==
-X-Google-Smtp-Source: APiQypKpm1gkz/VBP6SAjtAx9r42DgH9i0s4xigEtfNsRFSmfNHG/Q1uFdvjjIAzSO9t3OLqXNPvmud55FNmNrc1fSk=
-X-Received: by 2002:a1f:1e11:: with SMTP id e17mr2996833vke.73.1586165122498;
- Mon, 06 Apr 2020 02:25:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tWjzg+BVrz3TNNIkAGcAPM3G1GTTyThKxry/5V7utII=;
+        b=KCxlmA3RDJxzY4aSWO6cRCt2df+/kCzO4yS6DjQI7xo8L0sbLCLvetA+9GwF+sbaaB
+         GKwPremBwcoBkDKKrb6/03vsfLkNZ7WhXih0+apbMrjQG2noDxWEvQh4myp3y5qOF+F7
+         onUDUJ2Ao3MrVsNdj0VXUySH5iTGwh1P4T20+OSwxVAaqAxyuuy4H1zTLoTPYGd1VGTc
+         TBptyV9IaV5S6Fjy47p2D7OZRH+FKGwL0r1d+3zf7PNZyooPLoerO7vA6rJFHOQsHKPI
+         M/CGhNz27SGXIIx375gVWO1PO4O0G6ASLgt5vsrCk/bEidql95o46KrMB8dJdorTD1kX
+         OZsw==
+X-Gm-Message-State: AGi0PubYUewLgLn7wPr66gLIXTDZha5kX4YRCAMgqYss+jv7TS5q4utD
+        VBR0aD8dYpZFaGhU7zu6IINHh0kN
+X-Google-Smtp-Source: APiQypJr80FWnUWhXdf19n79QpElYuaGdiscr01AfN/mEfARb35P67bfTbUVDJCeH2vTKkDWoE+6aw==
+X-Received: by 2002:adf:f1ce:: with SMTP id z14mr23069597wro.68.1586165142423;
+        Mon, 06 Apr 2020 02:25:42 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id v186sm24100784wme.24.2020.04.06.02.25.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 02:25:41 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 11:25:40 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     ebiederm@xmission.com, kexec@lists.infradead.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, mripard@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Trying to kexec on Allwinner A80
+Message-ID: <20200406092540.GB31279@Red>
+References: <20200406082720.GA31279@Red>
+ <20200406091600.GF25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-References: <a7e8287d-72be-7ab0-697a-9de40eb3f81f@linaro.org> <20200402142116.22869-1-daniel.lezcano@linaro.org>
-In-Reply-To: <20200402142116.22869-1-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Mon, 6 Apr 2020 14:55:11 +0530
-Message-ID: <CAHLCerPOVouQfK4iqMc4xQpok=XTHj4d1hsLTsb9N5r=ZUBs8Q@mail.gmail.com>
-Subject: Re: [PATCH] thermal: core: Send a sysfs notification on trip points
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>, vincent.whitchurch@axis.com,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406091600.GF25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 2, 2020 at 7:53 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> Currently the userspace has no easy way to get notified when a
-> specific trip point was crossed. There are a couple of approaches:
->
-> - the userspace polls the sysfs temperature with usually an
->   unacceptable delay between the trip temperature point crossing and
->   the moment it is detected, or a high polling rate with an
->   unacceptable number of wakeup events.
->
-> - the thermal zone is set to be managed by an userspace governor in
->   order to receive the uevent even if the thermal zone needs to be
->   managed by another governor.
->
-> These changes allow to send a sysfs notification on the
-> trip_point_*_temp when the temperature is getting higher than the trip
-> point temperature. By this way, the userspace can be notified
-> everytime when the trip point is crossed, this is useful for the
-> thermal Android HAL or for notification to be sent via d-bus.
->
-> That allows the userspace to manage the applications based on specific
-> alerts on different thermal zones to mitigate the skin temperature,
-> letting the kernel governors handle the high temperature for hardware
-> like the CPU, the GPU or the modem.
->
-> The temperature can be oscillating around a trip point and the event
-> will be sent multiple times. It is up to the userspace to deal with
-> this situation.
+On Mon, Apr 06, 2020 at 10:16:00AM +0100, Russell King - ARM Linux admin wrote:
+> On Mon, Apr 06, 2020 at 10:27:20AM +0200, Corentin Labbe wrote:
+> > Hello
+> > 
+> > I am trying to add the last missing Allwinner Soc in kernelci: the A80.
+> > But this SoC does not have any way to be used in kernelci, no USB nor network in uboot.
+> > So I have tried to fake uboot since the kernel has network support and run the new kernel via kexec.
+> > 
+> > But kexec 2.0.18 fail to work:
+> > kexec --force /tmp/kernel --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
+> 
+> What happens if you omit the dtb argument?
+> 
 
-Thinking about this a bit more, userspace might want a notification
-when the temperature reduces and crosses the threshold on its way down
-too.
+No change without dtb
 
-Currently, we're only sending the notification on the way up. How
-should userspace know when to stop mitigation activity other than
-constantly polling the TZ temperature?
-
-> The following userspace program allows to monitor those events:
->
-> struct trip_data {
->        int fd;
->        int temperature;
->        const char *path;
-> };
->
-
-[snip]
+I have also tried to add --mem-mim and --mem-max without any change.
+I given mem according to what I saw in /proc/iomem
+20000000-9fffffff : System RAM
+  20008000-207fffff : Kernel code
+  20900000-209a0c87 : Kernel data
+So I gave --mem-min 0x30000000 --mem-max 0x9fffffff
+Anyway, the result is always the same.
