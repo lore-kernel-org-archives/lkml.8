@@ -2,129 +2,115 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7132C2BA18
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3205C2BA18
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 947532074F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B142074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dcDygH+3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nr+vWYNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgDFFMC (ORCPT
+        id S1726608AbgDFFNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 01:12:02 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34764 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgDFFMB (ORCPT
+        Mon, 6 Apr 2020 01:13:06 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:23058 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726455AbgDFFNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 01:12:01 -0400
-Received: by mail-pl1-f195.google.com with SMTP id a23so5468945plm.1
-        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 22:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E6G7y8QFHpxPoNxMI7C/eKVE0aY7FMH8n0m08py+N9o=;
-        b=dcDygH+3H7RfJ8k3R9ugCj5Hu0PXxS2To/zA0WK7GU/A/MQo9xuqp2ojj5PJIpWcUa
-         wtz5YOxKZA3vTWb7f4arNcS8lhf6CjzI2pDNTSmxr+VZFdX15TsG3B2NoSixDhezYpxo
-         eWnEEkkOmHM9HB/RD/iD01J7tktIBu4CBba5Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E6G7y8QFHpxPoNxMI7C/eKVE0aY7FMH8n0m08py+N9o=;
-        b=T+vBuqr/8BLoiOarGpbvuRZKIDYv3TvlNq3XZl5PHuqphZUULbyW1oElfquHzRb4kR
-         +RSv25rs/JLNdzP6CeCzNaYi/dnlB2c/UGDqtcdOr8LV8uMC60aScistV9hRvlJNUqGl
-         esTPzeF53lU+2/XiZjoQKFb3uOq5WdJ8Axh82OUpywN19PoO9drD2oUrAB8doiAP6TLx
-         8CmbMLfcuueAh3BNUZFBX13OctGlnHvpaYtv/NUW6mi9w2dQlfYsomXFiKQZ0axCplwM
-         d5IzYqQA/vNn6XcotOh0WL+En/+daLjcBA9C0zsVB7Hq9mcklZJJsHWkQl2hk60HWL31
-         STig==
-X-Gm-Message-State: AGi0PuZoOfRd9gFythxysWzchZ7IzIqE2109T8G9HvrQpGMCfeFp6lgq
-        Dl/gCvlFC+pPmDYXg5WWEhy7DA==
-X-Google-Smtp-Source: APiQypIIXfPCYmCJ6Az4vd/oeMZuklz0Lp206sJXppbut8+ldlWVk5HoXoCqx3VSKUh3QlHRXs0OSQ==
-X-Received: by 2002:a17:902:9f8e:: with SMTP id g14mr18309768plq.289.1586149920348;
-        Sun, 05 Apr 2020 22:12:00 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id r63sm10727776pfr.42.2020.04.05.22.11.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Apr 2020 22:11:59 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: mediatek: fix device passed to cmdq
-Date:   Mon,  6 Apr 2020 13:11:32 +0800
-Message-Id: <20200406051131.225748-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+        Mon, 6 Apr 2020 01:13:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586149985; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=tANryGArsikEbRKGuh59UuK8NiPOtSWy4smmXqPMdlM=; b=nr+vWYNrVnZrtw6o5y31dw36XypTQqgo+/NZVXHnmmYz6wWWr37k/8iIp+4x+q9Z6zwuDXYT
+ rVgAOdX7z1zAZ6Dw4PSof787+MqemyqBi/xX1yjAeY36DG66fI3huClWpoj2BLNVGUwMgIPn
+ kM9c2r9TUgPPH79y5IiqDIc4CU0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8aba5a.7fdc353a9ed8-smtp-out-n05;
+ Mon, 06 Apr 2020 05:12:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7911BC43637; Mon,  6 Apr 2020 05:12:58 +0000 (UTC)
+Received: from [192.168.43.137] (unknown [106.213.172.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 00075C433D2;
+        Mon,  6 Apr 2020 05:12:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 00075C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v15 7/7] soc: qcom: rpmh-rsc: Allow using free WAKE TCS
+ for active request
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <1585660782-23416-1-git-send-email-mkshah@codeaurora.org>
+ <1585660782-23416-8-git-send-email-mkshah@codeaurora.org>
+ <CAD=FV=X_JJWAb9BBkhWGZJ+jUvtO3ipf-OxFRYo38YY25cA42Q@mail.gmail.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <dd447c2a-c2b7-c40f-e3e9-27a9ba9614c7@codeaurora.org>
+Date:   Mon, 6 Apr 2020 10:42:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=X_JJWAb9BBkhWGZJ+jUvtO3ipf-OxFRYo38YY25cA42Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm device is now probed from mmsys. We need to use mmsys device to get gce
-nodes. Fix following errors:
+Hi,
 
-[    0.740068] mediatek-drm mediatek-drm.1.auto: error -2 can't parse gce-client-reg property (0)
-[    0.748721] mediatek-drm mediatek-drm.1.auto: error -2 can't parse gce-client-reg property (0)
-...
-[    2.659645] mediatek-drm mediatek-drm.1.auto: failed to request channel
-[    2.666270] mediatek-drm mediatek-drm.1.auto: failed to request channel
+On 4/3/2020 1:43 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Tue, Mar 31, 2020 at 6:21 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+>> When there are more than one WAKE TCS available and there is no dedicated
+>> ACTIVE TCS available, invalidating all WAKE TCSes and waiting for current
+>> transfer to complete in first WAKE TCS blocks using another free WAKE TCS
+>> to complete current request.
+>>
+>> Remove rpmh_rsc_invalidate() to happen from tcs_write() when WAKE TCSes
+>> is re-purposed to be used for Active mode. Clear only currently used
+>> WAKE TCS's register configuration.
+>>
+>> Mark the caches as dirty so next time when rpmh_flush() is invoked it
+>> can invalidate and program cached sleep and wake sets again.
+> Comment above is no longer right now that you've removed the place
+> that marks caches as dirty.
+>
+>
+>> Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>   drivers/soc/qcom/rpmh-rsc.c | 23 +++++++++++------------
+>>   1 file changed, 11 insertions(+), 12 deletions(-)
+> Other than the comment nit:
+>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-Fixes: 1d367541aded ("soc / drm: mediatek: Fix mediatek-drm device probing")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 6 ++++--
- drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 3 ++-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+Thanks Doug for the review.
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 615a54e60fe2..8621f0289399 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -822,14 +822,16 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 
- #if IS_REACHABLE(CONFIG_MTK_CMDQ)
- 	mtk_crtc->cmdq_client =
--			cmdq_mbox_create(dev, drm_crtc_index(&mtk_crtc->base),
-+			cmdq_mbox_create(mtk_crtc->mmsys_dev,
-+					 drm_crtc_index(&mtk_crtc->base),
- 					 2000);
- 	if (IS_ERR(mtk_crtc->cmdq_client)) {
- 		dev_dbg(dev, "mtk_crtc %d failed to create mailbox client, writing register by CPU now\n",
- 			drm_crtc_index(&mtk_crtc->base));
- 		mtk_crtc->cmdq_client = NULL;
- 	}
--	ret = of_property_read_u32_index(dev->of_node, "mediatek,gce-events",
-+	ret = of_property_read_u32_index(mtk_crtc->mmsys_dev->of_node,
-+					 "mediatek,gce-events",
- 					 drm_crtc_index(&mtk_crtc->base),
- 					 &mtk_crtc->cmdq_event);
- 	if (ret)
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index e2bb0d19ef99..dc78e86bccc0 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -517,7 +517,8 @@ static int mtk_drm_probe(struct platform_device *pdev)
- 				goto err_node;
- 			}
- 
--			ret = mtk_ddp_comp_init(dev, node, comp, comp_id, NULL);
-+			ret = mtk_ddp_comp_init(dev->parent, node, comp,
-+						comp_id, NULL);
- 			if (ret) {
- 				of_node_put(node);
- 				goto err_node;
+I will remove last paragraph from commit message.
+
+Thanks,
+Maulik
+
 -- 
-2.26.0.292.g33ef6b2f38-goog
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
