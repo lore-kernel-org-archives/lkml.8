@@ -2,143 +2,122 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA0BC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DFFC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A9F2224E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:00:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="a9nQTTv5"
+	by mail.kernel.org (Postfix) with ESMTP id 5F2B323436
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:01:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgDFOAW (ORCPT
+        id S1728566AbgDFOBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:00:22 -0400
-Received: from mout.web.de ([212.227.17.11]:50321 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgDFOAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:00:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586181609;
-        bh=0Kcnfxa21mYpuQP9XeAG9Rvuf7115OKkh8c8w4idOGM=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=a9nQTTv5QHX3yOiVOHQ51LFjhtJZ1055h264HIBApJlGpEdni2InNa4iCAIRKnycj
-         LIt31mFv5xl566MLno2Yy0Th+4YJagexKRNZqbUYm6GzSh9Ft0HgTzm8OaP4fBh4zm
-         a2Nxx+Rwvsn1cB8OBuWZnVeaZVmsxHUC3Z5nZpgY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.243.176.200]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LhvyA-1iyzhy3lXG-00n5QO; Mon, 06
- Apr 2020 16:00:09 +0200
-Subject: Re: [PATCH v5 2/2] powerpc/powernv: Add NULL check after kzalloc in
- opal_add_one_export
-To:     Qiujun Huang <hqjagain@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200406125242.4973-1-hqjagain@gmail.com>
- <20200406125242.4973-3-hqjagain@gmail.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <ca341087-6407-eac8-6c33-9a434ceb7a98@web.de>
-Date:   Mon, 6 Apr 2020 16:00:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 10:01:34 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:59186 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgDFOBe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 10:01:34 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.93)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1jLSJI-009wY9-PS; Mon, 06 Apr 2020 16:01:08 +0200
+Message-ID: <35cadbaff1239378c955014f9ad491bc68dda028.camel@sipsolutions.net>
+Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Krishna Chaitanya <chaitanya.mgit@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Sumit Garg <sumit.garg@linaro.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, kuba@kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias-Peter =?ISO-8859-1?Q?Sch=F6pfer?= 
+        <matthias.schoepfer@ithinx.io>,
+        "Berg Philipp (HAU-EDS)" <Philipp.Berg@liebherr.com>,
+        "Weitner Michael (HAU-EDS)" <Michael.Weitner@liebherr.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Loic Poulain <loic.poulain@linaro.org>, stable@vger.kernel.org
+Date:   Mon, 06 Apr 2020 16:01:06 +0200
+In-Reply-To: <CABPxzYKs3nj0AUX4L-j87Db8v3WnM4uGif9nRTGgx1m2HNN8Rg@mail.gmail.com> (sfid-20200406_155543_424615_2CB4AD8F)
+References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
+         <87ftdgokao.fsf@tynnyri.adurom.net>
+         <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+         <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com>
+         <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
+         <87imiczrwm.fsf@kamboji.qca.qualcomm.com>
+         <ee168acb768d87776db2be4e978616f9187908d0.camel@sipsolutions.net>
+         <CAFA6WYOjU_iDyAn5PMGe=usg-2sPtupSQEYwcomUcHZBAPnURA@mail.gmail.com>
+         <87v9mcycbf.fsf@kamboji.qca.qualcomm.com>
+         <CABPxzYKs3nj0AUX4L-j87Db8v3WnM4uGif9nRTGgx1m2HNN8Rg@mail.gmail.com>
+         (sfid-20200406_155543_424615_2CB4AD8F)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200406125242.4973-3-hqjagain@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:U/GoD/Jwo9MyiiC0iO37FfqwNUL2pw6qxW/ZkETc1xyjY/5oJgr
- 579EOarRDglJ0zCLj1DbF2FQi9RNA+Svd/3lgX+e3Vq7cRhHk8z0UZwtlG3bWGkoW0KyPbw
- fWt8rnbbLjyta76/Dp8Z/7IGVvQPDMTfV3Ki/oVMt1AlMHVTdDc2ukLttxHN7ILX085x5jq
- 8bVwtWXuD4wEOX/YHzKHA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xtIgWn53RFQ=:vd1ZKPDzgea5ooovNpNThO
- pbHBUwq6slhSVHpTni2iON2+r0i3UgQ8aGIt+XLDYadwCaJWwDQSO5YFwpUDkopVM7aPHMAoC
- bxsa8k5MS3eNOgGbTNFWOKOmvrK2sRTq3+5XSKXVPszATMZdaDtEWI79zwBv/Nlia99zO/Uqy
- +Fqx0m4UqAPFwCWgK9whlg+umWKeMO38y4jfXl/2ASsvSIcJL3I7k7oxhISy8GEiQevUsZoxV
- QYDq/ev1QJNwvbYwFThN66fwtSwP99N3Vpq29ZSn+APuhWZv/ukR9VbBt+pCkv5LY9GeRzpTF
- 09nqiRrcMUSUSzl/G+yD7PtuarMkjelEsmdEqDdNiasTIuxP4qxCyvVLiIGHKvqOIxrefw7gi
- dj+bnGtL0+xit1L9a8PAolfGLmHiA9P7ek6jBV3PgYqvqhI6U4PgvCrngRAAswp4Rb1NU9d03
- l+qT2sV/4pA/dBGBYWyOim6DFDSwnENlSPEzZbbEQVKA9TKgOcWMfgIe0zgjDmbentkhR+wiB
- F68iqqz6HGOC1IwQz3q+r5z+YM0/uPccnHXQUYKH2bwyb9XqtDVOzt6LxvxGxhV1iLt2JjYWl
- 6w/YxqdDtzHe9x1zROqK/1qqeJsJzM60ep8C1z2c/y9rwe12nDnGfjjAzZXn7am8QVnQRUZof
- 5WMFlJrIvPhf2v5vEE1Nc9AbjsVvlj9DvYKL/u/dV1P+UIZbqU0pEjhGmm4K1qCgb4XEHzXaC
- 8P1f1Pdz92LwSh0Y5nIyvz7IB0xnw6508F8fSKo1aVmp0Sj7An0YSxofRi6lKSXGMliOnt7iQ
- QP9rRiEVnnXsEOE4jMs3VxvNwSNiqeG2pCX6UyLcAw00BV8iyKcrJGdQR4oNQmK5rdbtqT4xE
- 0xJRRifZopJiOfYtps3NR8Km+4IH6zffuOYF+8h6fKx44j54lw3pk4BF0SZFcWlbnn2L3JmBa
- Iwq5BTgc/wT93WPDVOorKGy65XMhz0jK6gsF2F3+kTJlPU0yzH5jMjVE6GiIkcv31YG+9vao+
- Qyw05e/kPTRcawZTtGt9VwgvPIuooiGtil6910GToziZ2zcxMw8c2kYd7JPYGWIRu0yDHjhPT
- 6HT/LUltOwKEm0MXEimfP+9BzAiQDnFyv/j0MxA5dzrnuIS4BXBRz/Sqmn97YAjY5a2z8bjWt
- 5kupXWwYjQcRjnQVtpWF80ck9ZFkiRoyi6Am3fW1Og4fsRveIPkPoz+7RBe3F6o5WymLcSgHo
- oXYwA8zsJ4hx6r6/q
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Here needs a NULL check, as kzalloc may fail returning NULL.
->
-> Issue was found by coccinelle.
+On Mon, 2020-04-06 at 19:25 +0530, Krishna Chaitanya wrote:
+> On Mon, Apr 6, 2020 at 6:57 PM Kalle Valo <kvalo@codeaurora.org> wrote:
+> > Sumit Garg <sumit.garg@linaro.org> writes:
+> > 
+> > > On Mon, 6 Apr 2020 at 18:38, Johannes Berg <johannes@sipsolutions.net> wrote:
+> > > > On Mon, 2020-04-06 at 16:04 +0300, Kalle Valo wrote:
+> > > > > Johannes Berg <johannes@sipsolutions.net> writes:
+> > > > > 
+> > > > > > On Mon, 2020-04-06 at 15:52 +0300, Kalle Valo wrote:
+> > > > > > > Johannes Berg <johannes@sipsolutions.net> writes:
+> > > > > > > 
+> > > > > > > > On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
+> > > > > > > > > >     user-space  ieee80211_register_hw()  RX IRQ
+> > > > > > > > > >     +++++++++++++++++++++++++++++++++++++++++++++
+> > > > > > > > > >        |                    |             |
+> > > > > > > > > >        |<---wlan0---wiphy_register()      |
+> > > > > > > > > >        |----start wlan0---->|             |
+> > > > > > > > > >        |                    |<---IRQ---(RX packet)
+> > > > > > > > > >        |              Kernel crash        |
+> > > > > > > > > >        |              due to unallocated  |
+> > > > > > > > > >        |              workqueue.          |
+> > > > > > > > 
+> > > > > > > > [snip]
+> > > > > > > > 
+> > > > > > > > > I have understood that no frames should be received until mac80211 calls
+> > > > > > > > > struct ieee80211_ops::start:
+> > > > > > > > > 
+> > > > > > > > >  * @start: Called before the first netdevice attached to the hardware
+> > > > > > > > >  *         is enabled. This should turn on the hardware and must turn on
+> > > > > > > > >  *         frame reception (for possibly enabled monitor interfaces.)
+> > > > > > > > 
+> > > > > > > > True, but I think he's saying that you can actually add and configure an
+> > > > > > > > interface as soon as the wiphy is registered?
+> > > > > > > 
+> > > > > > > With '<---IRQ---(RX packet)' I assumed wcn36xx is delivering a frame to
+> > > > > > > mac80211 using ieee80211_rx(), but of course I'm just guessing here.
+> > > > > > 
+> > > > > > Yeah, but that could be legitimate?
+> > > > > 
+> > > > > Ah, I misunderstood then. The way I have understood is that no rx frames
+> > > > > should be delivered (= calling ieee80211_rx()_ before start() is called,
+> > > > > but if that's not the case please ignore me :)
+> > > > 
+> > > > No no, that _is_ the case. But I think the "start wlan0" could end up
+> > > > calling it?
 
-* Do you really try to ignore (my) specific patch review comments
-  (for a moment)?
-  https://lore.kernel.org/linuxppc-dev/b7d64d4a-74dd-ee21-db7b-018070f1295=
-f@web.de/
-  https://lore.kernel.org/patchwork/comment/1414845/
-  https://lkml.org/lkml/2020/4/6/279
+> I am still confused, without ieee80211_if_add how can the userspace
+> bring up the interface?
 
-* Would you like to integrate further adjustments with a varying delay?
-  (Are you waiting on nicer feedback by any software maintainers?)
+It can add its own interface. Maybe that won't be 'wlan0' but something
+else?
 
-Regards,
-Markus
+like
+
+iw phy0 interface add wlan0 type station
+ip link set wlan0 up
+
+johannes
+
