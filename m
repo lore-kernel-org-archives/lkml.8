@@ -2,152 +2,139 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30549C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE290C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB97206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F48F206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 09:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNSAOniF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgDFJFl (ORCPT
+        id S1726784AbgDFJH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 05:05:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33358 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726622AbgDFJFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 05:05:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 732E3AB5F;
-        Mon,  6 Apr 2020 09:05:37 +0000 (UTC)
-Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
- commands
-To:     Christoph Hellwig <hch@infradead.org>,
-        John Garry <john.garry@huawei.com>
-Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        ming.lei@redhat.com, bvanassche@acm.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
-        Hannes Reinecke <hare@suse.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-3-git-send-email-john.garry@huawei.com>
- <20200310183243.GA14549@infradead.org>
- <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
- <20200311062228.GA13522@infradead.org>
-From:   Hannes Reinecke <hare@suse.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
- 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
- azzYF4VRJsdl+d0MCaSy8mUh
-Message-ID: <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
-Date:   Mon, 6 Apr 2020 11:05:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 6 Apr 2020 05:07:57 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44377 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbgDFJH5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 05:07:57 -0400
+Received: by mail-il1-f193.google.com with SMTP id j69so13881527ila.11;
+        Mon, 06 Apr 2020 02:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/9j8DdZJYyLVGpLvuhYgYAvXmfCc0kHfDTcnuG7viz0=;
+        b=HNSAOniFzM6jm6vp0c57iOa9y0/X3uZ2z5tkjrwiIng1IfKsrxBzQ0hhjx3XuZZ/u2
+         6hLtPhK9VhleZ1LllosidRlLXtoSbp6R7Vr3okE/i94RO7FVsmvnjqon+5zEYHwdYAeM
+         Mk5i+86U7o50T/KDGfFAAeSlxyR6QwXvOyFrEOeJQKH4j7U5wUNtBfq4toVis7WZlTfA
+         UwGyi5mXfJ/ZDv3sWnLbmiupP80JSFKlYxmq1PjyMUITzZwcxVW8Vv8ijJHF2kICYfc8
+         C9IqSAekroHkP5mYGQDSXWbT9DOxRcpZt3aw9vEiPEiF9nfZKvo1BtNlUZleKXptI0sk
+         kPKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/9j8DdZJYyLVGpLvuhYgYAvXmfCc0kHfDTcnuG7viz0=;
+        b=KFZeL56O/E8RzA794Q0Zs9thzlvv/6lLBWZnm84cslhTiO/o7sytCtbxZv52VScoeS
+         uWeYUelRry3SDYgIOJNSHMssaQLfyOWur/DBRXA+FnoponqqKF2jJ6uAHuchYfaVDUdi
+         gEi+f+YopVLjQlC4vaiC9MnoFqFIfmRSnT61iBiDrUAm2faC0btKa2AoYWPyDm3wdkC8
+         5IxyfKQh8OKY829qdtflvPabvUQF1I4kfaykALdkWMO9d18mBxoMUzv+hV8WpeJXU6/6
+         ipHp5tHFP73GjdkNo8g2nAJjvvfEL6vPeSlDwRY76qz7tWivMneVF3/wJ9MoSP3nqhfc
+         AQDA==
+X-Gm-Message-State: AGi0PuYY5ZQUBW6/SG+pbkmZIvBoaHVl8UcOHMfQNQ2MUbUxdU0ip2vI
+        ifIogM3Pbt22XLKeZYLbMdC77amyBQlizmnTt64=
+X-Google-Smtp-Source: APiQypI5S4sx/nuC+BoUUIBngD3kJd8k+mZEAdHCy9UHtWhnWg7WVKqBk4l0p1gpmHZya6fVvlPa6dwh5Lw7jJAZmyc=
+X-Received: by 2002:a92:5ccd:: with SMTP id d74mr18764377ilg.59.1586164076003;
+ Mon, 06 Apr 2020 02:07:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200311062228.GA13522@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200405173601.24331-1-peron.clem@gmail.com> <20200406081007.k6wlaampgbe46yts@gilmour.lan>
+In-Reply-To: <20200406081007.k6wlaampgbe46yts@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 6 Apr 2020 11:07:44 +0200
+Message-ID: <CAJiuCccPxnW-YMjENr5-_XMMu_gs5pRnCtYvpXQtHTAVj1QQqw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] Add support for Allwinner H6 DVFS
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/20 7:22 AM, Christoph Hellwig wrote:
-> On Tue, Mar 10, 2020 at 09:08:56PM +0000, John Garry wrote:
->> On 10/03/2020 18:32, Christoph Hellwig wrote:
->>> On Wed, Mar 11, 2020 at 12:25:28AM +0800, John Garry wrote:
->>>> From: Hannes Reinecke <hare@suse.com>
->>>>
->>>> Allocate a separate 'reserved_cmd_q' for sending reserved commands.
->>>
->>> Why?  Reserved command specifically are not in any way tied to queues.
->>> .
->>>
->>
->> So the v1 series used a combination of the sdev queue and the per-host
->> reserved_cmd_q. Back then you questioned using the sdev queue for virtio
->> scsi, and the unconfirmed conclusion was to use a common per-host q. This is
->> the best link I can find now:
->>
->> https://www.mail-archive.com/linux-scsi@vger.kernel.org/msg83177.html
-> 
-> That was just a question on why virtio uses the per-device tags, which
-> didn't look like it made any sense.  What I'm worried about here is
-> mixing up the concept of reserved tags in the tagset, and queues to use
-> them.  Note that we already have the scsi_get_host_dev to allocate
-> a scsi_device and thus a request_queue for the host itself.  That seems
-> like the better interface to use a tag for a host wide command vs
-> introducing a parallel path.
-> 
-Thinking about it some more, I don't think that scsi_get_host_dev() is
-the best way of handling it.
-Problem is that it'll create a new scsi_device with <hostno:this_id:0>,
-which will then show up via eg 'lsscsi'.
-This would be okay if 'this_id' would have been defined by the driver;
-sadly, most drivers which are affected here do set 'this_id' to -1.
-So we wouldn't have a nice target ID to allocate the device from, let
-alone the problem that we would have to emulate a complete scsi device
-with all required minimal command support etc.
-And I'm not quite sure how well that would play with the exising SCSI
-host template; the device we'll be allocating would have basically
-nothing in common with the 'normal' SCSI devices.
+Hi Maxime,
 
-What we could do, though, is to try it the other way round:
-Lift the request queue from scsi_get_host_dev() into the scsi host
-itself, so that scsi_get_host_dev() can use that queue, but we also
-would be able to use it without a SCSI device attached.
+On Mon, 6 Apr 2020 at 10:10, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi,
+>
+> On Sun, Apr 05, 2020 at 07:35:54PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > Now that required drivers are merged we can contibute on DVFS
+> > support for Allwinner H6.
+> >
+> > This serie is based on Yangtao Li serie[0] and Ond=C5=99ej Jirman work[=
+1].
+> >
+> > Most of the OPP tables are taken from original vendor kernel[2].
+> > Plus there is a new CPU frequencies at 1.6GHz, 1.7GHz and 1.8GHz.
+> >
+> > I wrote a simple script to randomly set a frequency during
+> > a random time[3].
+>
+> If you ever need to do that ever again, cpufreq-ljt-stress-test (found
+> here https://github.com/ssvb/cpuburn-arm) has proven to be very
+> reliable to detect cpufreq related issues. stress-ng might not be
+> enough since the (at least older) Allwinner SoCs tend to create cache
+> corruption when undervolted, and that might not be unnoticed by
+> stress-ng but will be catched by cpufreq-ljt-stress-test.
 
-Cheers,
+Thanks for the tool and explanation. I will test the v3 with this one.
 
-Hannes
--- 
-Dr. Hannes Reinecke		           Kernel Storage Architect
-hare@suse.de			                  +49 911 74053 688
-SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
+>
+> Also, it will test each frequency, while random frequencies might skip
+> a few.
+
+I didn't count them but there was more than 2000lines, probability to miss
+a frequency is really low. Also changing from 500MHz to 1.8GHz could have
+trigger some out-of-spec issue.
+
+But just to be sure I will add an init phase before doing random stuff.
+
+>
+> > With this script and using stress-ng during several hours, I didn't
+> > see any issue. Moreover I have tested specifically the 1.8GHz on my
+> > Beelink GS1, max thermal 85=C2=B0C is reached very quickly and then the
+> > SoC oscillates quickly between 1.5 and 1.8GHz. So i have added
+> > 1.6GHz and 1.7GHz my board now oscillate slower between 1.5GHz and
+> > 1.6GHz swapping every second and temperature is also morestable.
+> >
+> > I also test that that offlining CPU0 and doing DVFS on other CPUs
+> > works. As CPU regulator is only set for CPU0.
+> >
+> > But maybe it doesn't cost much to set the regulator for all the CPUs?
+> >
+> > Jernej test the GPU devfreq on several H6 board particulary the
+> > Tanix TX6 which doesn't have a proper dedicated PMIC and doesn't
+> > had any trouble with it.
+> >
+> > Do you think I can enable GPU OPP for all H6 Boards?
+>
+> It seems you're doing it?
+No I don't, see my answer on patch 4/7.
+
+Thanks for your review,
+Cl=C3=A9ment
+
+>
+> Maxime
