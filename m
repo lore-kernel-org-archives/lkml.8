@@ -2,187 +2,141 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F54C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 027AAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2A142492B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE56D24930
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:07:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Y25sN394"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgDFQHY (ORCPT
+        id S1729430AbgDFQH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:07:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:47474 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729075AbgDFQHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:07:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D1B01FB;
-        Mon,  6 Apr 2020 09:07:23 -0700 (PDT)
-Received: from [10.37.12.4] (unknown [10.37.12.4])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C9D73F68F;
-        Mon,  6 Apr 2020 09:07:13 -0700 (PDT)
-Subject: Re: [PATCH v5 1/5] PM / EM: add devices to Energy Model
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
-        javi.merino@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200318114548.19916-1-lukasz.luba@arm.com>
- <20200318114548.19916-2-lukasz.luba@arm.com>
- <09b680a5-a118-8c6e-0ae1-03ab5f10c573@linaro.org>
- <cb7f670a-a04f-ba6f-1486-0421f3cce2e9@arm.com>
- <6b980e2a-c15c-0718-14b8-e8aa7510c832@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <2a70b4ed-f18f-c1e6-1e8c-e4747807f276@arm.com>
-Date:   Mon, 6 Apr 2020 17:07:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <6b980e2a-c15c-0718-14b8-e8aa7510c832@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 6 Apr 2020 12:07:27 -0400
+Received: from mail-dm6nam11on2044.outbound.protection.outlook.com ([40.107.223.44]:12512
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729075AbgDFQH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:07:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i+TPPssuICou4asJ99Iym++kRBk9BR24hS6K3EEj2ofCsZhuLo+4/ruwhH62sopFoDaksRFBwg6zylN1YScHKjUpf1vhtai8OxWyFvU+h4Y1Pjs10x7pqWXJOmgQzs/lMbH1TqUK6P+RHwZv2dlcMvxt7SbMMI24NzGn1Tuv1zXnkpsSuqdwPteqvyqomIiHPiGidIc1lohFELDCVJ6cPzcHSNF7N6km2MH7CG+BZX/I3r5IAZPpsrRoMqNojovfXJ1UGRmEoehh0dtIRm5Q5yFvlpDd7gVsISPJUX74XJzX2FEqDUBBJFJzBbBek3wZpvO5Fx1eAkr5krrqOL3FgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KPRCsXgiEQCnrUqfgzdvarNZU7OswuG8ikb7f/mDN3w=;
+ b=nS/nqqYic67ekypLzf7zaVMV80R87XHJRin43y4/mCF6IG9yup8CWav3SdcEwIp3ZhpPVZiYC8HfMoh5g/8vQBg8y1AQLojoF/X1mC3w4ojoViiHMBvefQ31R+sAWPUD2yTpnQg20PSKJhwcrXvFUgue+5xbLtqyNpeT18sLV1V6Db+Zzr984xUWV/btbvu4Z9/oPrEQUyfK3tguKSdELB4yUN2s3SiqOh1ldsyl1kgTy6aGV31JO7Si61oskFYuLY3pq5uPNGQ/xlRtz5OewiLEFcpdercstjJJ2poXmUfuDRlpUT7LbB6d/WAoutnGoDh76VBWAmyshVu2enUbaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KPRCsXgiEQCnrUqfgzdvarNZU7OswuG8ikb7f/mDN3w=;
+ b=Y25sN394Xv+emUnzMORL+CLVLl0xmjZPJ7z/DT6AyN960RhyR64JiY322WiyZgrDtmhykBHdX+FchEy31CpC3Vju3ELaI646ucOVQTABOl03MFajqUEgj0h+Us0mpJIbxXA9/3IsP8LX6sIPOKMb3/eRt1K4oQo1Ly2UKuonso8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Felix.Kuehling@amd.com; 
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
+ by SN1PR12MB2509.namprd12.prod.outlook.com (2603:10b6:802:29::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Mon, 6 Apr
+ 2020 16:07:22 +0000
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::38ef:1510:9525:f806]) by SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::38ef:1510:9525:f806%7]) with mapi id 15.20.2878.018; Mon, 6 Apr 2020
+ 16:07:22 +0000
+Subject: Re: [PATCH 1/6] amdgpu: a NULL ->mm does not mean a thread is a
+ kthread
+To:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200404094101.672954-1-hch@lst.de>
+ <20200404094101.672954-2-hch@lst.de>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+Message-ID: <b5eaf9dd-fc20-cf56-9efb-e6be848964bf@amd.com>
+Date:   Mon, 6 Apr 2020 12:07:18 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+In-Reply-To: <20200404094101.672954-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YQBPR0101CA0019.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00::32) To SN1PR12MB2414.namprd12.prod.outlook.com
+ (2603:10b6:802:2e::31)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.2.100] (142.116.63.128) by YQBPR0101CA0019.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c00::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Mon, 6 Apr 2020 16:07:20 +0000
+X-Originating-IP: [142.116.63.128]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8ec83d35-d9de-4ce4-b45f-08d7da4496c3
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2509:|SN1PR12MB2509:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB2509CFEDC2DB956DAC2152A192C20@SN1PR12MB2509.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
+X-Forefront-PRVS: 0365C0E14B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(136003)(396003)(366004)(376002)(39860400002)(81166006)(316002)(86362001)(5660300002)(8676002)(16576012)(26005)(31696002)(81156014)(31686004)(186003)(16526019)(478600001)(2906002)(7416002)(956004)(52116002)(66476007)(36756003)(44832011)(110136005)(2616005)(4326008)(6486002)(54906003)(8936002)(66946007)(4744005)(66556008);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oXT4CzxYLxfRtUgiJSDkDJ5qwTdap1X/p/bOJzG9xmImd0CPuEtB2nPxQK+VbV/wk7YXgFlCwvE7HQ31PpkqyOrbNYqado2VUhvUIaRdoDjegk7xh9KdC3x7bYcai0oQGfwOX0eHKi01FpLgNINd0Sjp4f4eoEZHZoVbc6mBKHLgzS3nMM6iRlXkAOfU9QCB+m7X/cTYcSs2DeQTv3+595/E/G84v9EoYPdSxW0rhVe53E09Xm+SOBkdkTDV+y2Pwe0Z8lBf3oQ5D1k3Brlu6nCrN07t5t9KgugzgAzKcxamX2ldyUNIL/k2F1kVYzwXNLEhQdlzFelUYCIPLLmc3tRPta6R0Eho5AFnXELv793HcbeBgeXc8ABxdL4G2nX4zIOyEsw0m47JOEmV7h35tfnSRubSJvu8yOefDnnr4d0/TLZ/uzQ0WWIYuecgb3dT
+X-MS-Exchange-AntiSpam-MessageData: un4gxw7F1dOsGh+k0Kc/z29dspwSHGdGXMVtKlpTx7HhJ0ndosig+lreZ3L98sKhY20baX3/Ma3inLz7rUE+Kd/bFFP2Ad22aH/WqCzTHJjfJ4EInS1HGv6iQE6gSwJZXNFZHRN9IuWuiqAb7/xoGg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ec83d35-d9de-4ce4-b45f-08d7da4496c3
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 16:07:22.0322
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iERg53t9//jWQtbRLwIbJEZWuW7hv5+K7UxGSrCIHBFYj19TPWnbwtU+GqpcKee2Y/kmjNQp0ic8o2fPrKl7LA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2509
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am 2020-04-04 um 5:40 a.m. schrieb Christoph Hellwig:
+> Use the proper API instead.
+>
+> Fixes: 70539bd795002 ("drm/amd: Update MEC HQD loading code for KFD")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
 
 
-On 4/6/20 3:58 PM, Daniel Lezcano wrote:
-> 
-> Hi Lukasz,
-> 
-> 
-> On 06/04/2020 15:29, Lukasz Luba wrote:
->> Hi Daniel,
->>
->> Thank you for the review.
->>
->> On 4/3/20 5:05 PM, Daniel Lezcano wrote:
->>>
->>> Hi Lukasz,
->>>
->>>
->>> On 18/03/2020 12:45, Lukasz Luba wrote:
->>>> Add support of other devices into the Energy Model framework not only
->>>> the
->>>> CPUs. Change the interface to be more unified which can handle other
->>>> devices as well.
->>>
->>> thanks for taking care of that. Overall I like the changes in this patch
->>> but it hard to review in details because the patch is too big :/
->>>
->>> Could you split this patch into smaller ones?
->>>
->>> eg. (at your convenience)
->>>
->>>    - One patch renaming s/cap/perf/
->>>
->>>    - One patch adding a new function:
->>>
->>>       em_dev_register_perf_domain(struct device *dev,
->>>                  unsigned int nr_states,
->>>                  struct em_data_callback *cb);
->>>
->>>      (+ EXPORT_SYMBOL_GPL)
->>>
->>>       And em_register_perf_domain() using it.
->>>
->>>    - One converting the em_register_perf_domain() user to
->>>      em_dev_register_perf_domain
->>>
->>>    - One adding the different new 'em' functions
->>>
->>>    - And finally one removing em_register_perf_domain().
->>
->> I agree and will do the split. I could also break the dependencies
->> for future easier merge.
->>
->>>
->>>
->>>> Acked-by: Quentin Perret <qperret@google.com>
->>>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->>>> ---
->>>
->>> [ ... ]
->>>
->>>>    2. Core APIs
->>>> @@ -70,14 +72,16 @@ CONFIG_ENERGY_MODEL must be enabled to use the EM
->>>> framework.
->>>>    Drivers are expected to register performance domains into the EM
->>>> framework by
->>>>    calling the following API::
->>>>    -  int em_register_perf_domain(cpumask_t *span, unsigned int
->>>> nr_states,
->>>> -                  struct em_data_callback *cb);
->>>> +  int em_register_perf_domain(struct device *dev, unsigned int
->>>> nr_states,
->>>> +        struct em_data_callback *cb, cpumask_t *cpus);
->>>
->>> Isn't possible to get rid of this cpumask by using
->>> cpufreq_cpu_get() which returns the cpufreq's policy and from their get
->>> the related cpus ?
->>
->> We had similar thoughts with Quentin and I've checked this.
-> 
-> Yeah, I suspected you already think about that :)
-> 
->> Unfortunately, if the policy is a 'new policy' [1] it gets
->> allocated and passed into cpufreq driver ->init(policy) [2].
->> Then that policy is set into per_cpu pointer for each related_cpu [3]:
->>
->> for_each_cpu(j, policy->related_cpus)
->>      per_cpu(cpufreq_cpu_data, j) = policy;
->>
->>   
->> Thus, any calls of functions (i.e. cpufreq_cpu_get()) which try to
->> take this ptr before [3] won't work.
->>
->> We are trying to register EM from cpufreq_driver->init(policy) and the
->> per_cpu policy is likely to be not populated at that phase.
-> 
-> What is the problem of registering at the end of the cpufreq_online ?
-
-We want to enable driver developers to choose one of two options for the
-registration of Energy Model:
-1. a simple one via dev_pm_opp_of_register_em(), which uses default
-    callback function calculating power based on: voltage, freq
-    and DT entry 'dynamic-power-coefficient' for each OPP
-2. a more sophisticated, when driver provides callback function, which
-   will be called from EM for each OPP to ask for related power;
-   This interface could also be used by devices which relay not only
-   on one source of 'voltage', i.e. manipulate body bias or have
-   other controlling voltage for gates in the new 3D transistors. They
-   might provide custom callback function in their cpufreq driver.
-   This is used i.e. in cpufreq drivers which use firmware to get power,
-   like scmi-cpufreq.c;
-
-To meet this requirement the registration of EM is moved into cpufreq
-drivers, not in the framework i.e cpufreq_online(). If we could limit
-the support for only option 1. then we could move the registration
-call into cpufreq framework and clean the cpufreq drivers.
-
-Regards,
-Lukasz
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
+> index 13feb313e9b3..4db143c19dcc 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.h
+> @@ -190,7 +190,7 @@ uint8_t amdgpu_amdkfd_get_xgmi_hops_count(struct kgd_dev *dst, struct kgd_dev *s
+>  			pagefault_disable();				\
+>  			if ((mmptr) == current->mm) {			\
+>  				valid = !get_user((dst), (wptr));	\
+> -			} else if (current->mm == NULL) {		\
+> +			} else if (current->flags & PF_KTHREAD) {	\
+>  				use_mm(mmptr);				\
+>  				valid = !get_user((dst), (wptr));	\
+>  				unuse_mm(mmptr);			\
