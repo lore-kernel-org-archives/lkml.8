@@ -2,199 +2,214 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A9DC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602BEC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CF22075E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBAE2074F
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 04:20:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZDsfwluE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgDFES2 (ORCPT
+        id S1726492AbgDFEUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 00:18:28 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:28337 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgDFES1 (ORCPT
+        Mon, 6 Apr 2020 00:20:21 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38549 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgDFEUV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 00:18:27 -0400
-IronPort-SDR: Ni8MtU0rJJpVR4l9FjeVfxTyuH1oSMqr3+kyLKYYjvYauQfwfkAFdVFfENMCnsjbElQnTBUVuj
- mbXDudO+ScuhjqW3GyPCONzkUZYDqitNilICWPZmA8g6zRlvCNmAS3F/sRghbhuql0/kJS50fC
- 9uHkOcjdYYS6WX0ZWjanBjOCglfrRRHg7N3HpSVbQ/M+LVvVOElxLORsSpKuwz4/kAkxUNHbW6
- OlnR0UkINdFnkVF0iSG+rWod0UiugDz6O9W+w2RMQiuLFaD1WQQ+t/wjtDjql00ZgIo2KlxBeL
- LPY=
-X-IronPort-AV: E=Sophos;i="5.72,349,1580803200"; 
-   d="scan'208";a="47376664"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 05 Apr 2020 20:18:26 -0800
-IronPort-SDR: DBR+18PDclapNTKp4JqtQltGoJHolxARNGD5NY7LCmWz+dXxDjHa/TY6XMEBYCDWnuwCohZQAh
- cdLrXIWc0hdH+WHUcS6DFotq9di5G00ZLMt/lP8fo0x9Bl+PP8xEi2X3L+rTxMhQeSoWVvP7O2
- 0h/tzHcnpn/l5EZLps8bLc/UmUSePbtjIoZYXBvRPKtd0zruZ4JOeYkjHV3G2iWKkhb0gw8bt7
- LgMsPBBmiVe7EO61VYQ7XNjpcT4+4cZ/jTOC9MF1u/eROgufi/dfD918f1/DC/zKgvShVdoT6d
- 85w=
-Subject: Re: [PATCH v10 54/55] Input: atmel_mxt_ts: Implement synchronization
- during various operation
-To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
-        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-55-jiada_wang@mentor.com>
- <c53637ef-8e5d-3243-7236-5da360021f21@gmail.com>
- <b06c7915-562f-ec68-766a-2118cfe57a0f@mentor.com>
- <b9a8865c-7754-16f7-8f66-9cd70dc42d3c@gmail.com>
- <c5e7dc2d-08c7-e55e-352d-b9b0d86fe63e@gmail.com>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <500c814a-b0f4-db9f-30f6-bc6ac985c5e2@mentor.com>
-Date:   Mon, 6 Apr 2020 13:18:20 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 6 Apr 2020 00:20:21 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w3so5412075plz.5
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 21:20:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=/HcoQgZiE9Pv1rBqK3LLTaPK3g2aKD5HOOnSnhG2gxw=;
+        b=ZDsfwluEmMK067gw+2Je0s0vfQ/XUsMaIRb9LDK9nvdEf14r3PGX9eLKtSlUEjmocE
+         0ytImzDDo08wtYIVUCRhhJ8vMavngxXSZWLHgHfkpDdnxMt6tkS3xlXDcsQuSkMvKeDz
+         1RxRTdhFXv3fYadf9MWoeGNHhkyJFAxB2yRyfXE7bZ0uz+G8WrH/yvm+pT8wEMiqAPxO
+         r8SHij9QSvJMHT2L0hxirj24S1Fgyr364zW32utrka1wOA+0X6KKx/nXajpRwMo2Y5MZ
+         ifRS2EbVjGtO3K+rkH8HAc8e8Hij2eNV7D0r1hbbvUNAvWQarM10kNMvLv04XWGUKgFr
+         0MRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=/HcoQgZiE9Pv1rBqK3LLTaPK3g2aKD5HOOnSnhG2gxw=;
+        b=kPraSUwZTQqfDnh8UqQlEWaaP8XZ7/f4VbEN/ZvFdRKkDreSJg9ip9dF3HUBssR9sI
+         2vyBP+1F9NZ91kHAcjD6zSWYZH+FfyQQ1ah5xyjUv3JX7vFWDEdzVEfZKWjn7ZsUMSVw
+         Nue7PwH8WYZYMDGADc0wtnq0YhL4Vr2pWBZOxVeOpcOBhN3+IUu202jNHbAWs0JI+QH8
+         VEsuvtVyuycnKkzIIo0P0wBAn91Jojbg9YSq3OmqywBRnKr92YZNDEWVMSdxZKtSCCIA
+         3LMdwFf4WHtwIuE8OynGcaKhkD11F/RW+ptayYUBO2963ZmESfgDsj3bSByXIUBxMO/K
+         Yb/w==
+X-Gm-Message-State: AGi0PubwB1I2o31QoZwDranZH87AqXsShbrtwwKQZTThLlE66uE8N2Ye
+        MYa5jzFxB+LQiuPvRIwfpF5rBg==
+X-Google-Smtp-Source: APiQypL+DURskNXslDx34UEjspJ3/iPYy2jfCqgiYyc9DYTgtIKJNU3ptIh+yrVdsV9Wg8Ttv2kR6Q==
+X-Received: by 2002:a17:90a:a484:: with SMTP id z4mr24579608pjp.77.1586146819733;
+        Sun, 05 Apr 2020 21:20:19 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id 198sm10616957pfa.87.2020.04.05.21.20.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Apr 2020 21:20:19 -0700 (PDT)
+Date:   Sun, 5 Apr 2020 21:20:18 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Waiman Long <longman@redhat.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] mm: Add kvfree_sensitive() for freeing sensitive data
+ objects
+In-Reply-To: <20200406023700.1367-1-longman@redhat.com>
+Message-ID: <alpine.DEB.2.21.2004052119530.243304@chino.kir.corp.google.com>
+References: <20200406023700.1367-1-longman@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <c5e7dc2d-08c7-e55e-352d-b9b0d86fe63e@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
+On Sun, 5 Apr 2020, Waiman Long wrote:
 
-On 2020/04/02 23:00, Dmitry Osipenko wrote:
-> 02.04.2020 16:24, Dmitry Osipenko пишет:
->> 02.04.2020 14:50, Wang, Jiada пишет:
->>> Hi Dmitry
->>>
->>> On 2020/04/02 1:04, Dmitry Osipenko wrote:
->>>> 31.03.2020 13:50, Jiada Wang пишет:
->>>>> From: Sanjeev Chugh <sanjeev_chugh@mentor.com>
->>>>>
->>>>> There could be scope of race conditions when sysfs is being handled
->>>>> and at the same time, device removal is occurring. For example,
->>>>> we don't want the device removal to begin if the Atmel device
->>>>> cfg update is going on or firmware update is going on. In such
->>>>> cases, wait for device update to be completed before the removal
->>>>> continues.
->>>>>
->>>>>       Thread                                          Thread 2:
->>>>> =========================
->>>>> =========================
->>>>> mxt_update_fw_store()                           mxt_remove()
->>>>> mutex_lock(&data->lock)                         ...
->>>>> mxt_initialize()                                //Tries to acquire lock
->>>>>     request_firmware_nowait()                     mutex_lock(&data->lock)
->>>>> ...                                             ==>waits for lock()
->>>>> ...                                             .
->>>>> ...                                             .
->>>>> mutex_unlock(&data->lock)                       .
->>>>>                                                   //Gets lock and
->>>>> proceeds
->>>>>                                                  
->>>>> mxt_free_input_device();
->>>>>                                                   ...
->>>>>                                                  
->>>>> mutex_unlock(&data->lock)
->>>>>                                                   //Frees atmel driver
->>>>> data
->>>>>                                                   kfree(data)
->>>>>
->>>>> If the request_firmware_nowait() completes after the driver removal,
->>>>> and callback is triggered. But kernel crashes since the module is
->>>>> already removed.
->>>>>
->>>>> This commit adds state machine to serialize such scenarios.
->>>>
->>>> Won't it be easier to bump driver's module use-count by __module_get()
->>>> while firmware is updating? Or remove sysfs during of mxt_remove()? >
->>>
->>> thanks for your inspiration, I will replace state machine with module
->>> use-count.
->>
->> I'm actually now thinking that the suggestion about the module-count
->> wasn't very correct because this won't really help in regards to
->> mxt_update_fw_store() / mxt_remove() racing.
->>
->> I see that mxt_remove() already invokes the mxt_sysfs_remove(), which
->> should block until mxt_update_fw_store() is completed, shouldn't it?
->>
->> I guess the kfree(data) isn't the real cause of the problem and
->> something like this should help:
->>
->> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c
->> b/drivers/input/touchscreen/atmel_mxt_ts.c
->> index b2edf51e1595..4e66106feeb9 100644
->> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
->> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
->> @@ -4254,6 +4254,7 @@ static void mxt_sysfs_remove(struct mxt_data *data)
->>   	struct i2c_client *client = data->client;
->>
->>   	sysfs_remove_group(&client->dev.kobj, &mxt_attr_group);
->> +	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
->>   }
->>
->>   static void mxt_reset_slots(struct mxt_data *data)
->> @@ -4649,31 +4650,19 @@ static int mxt_remove(struct i2c_client *client)
->>   {
->>   	struct mxt_data *data = i2c_get_clientdata(client);
->>
->> -	mutex_lock(&data->lock);
->> -	if (data->e_state == MXT_STATE_UPDATING_CONFIG_ASYNC ||
->> -	    data->e_state == MXT_STATE_UPDATING_CONFIG) {
->> -		data->e_state = MXT_STATE_GOING_AWAY;
->> -		mutex_unlock(&data->lock);
->> -		mxt_wait_for_completion(data, &data->update_cfg_completion,
->> -					MXT_CONFIG_TIMEOUT);
->> -	} else {
->> -		data->e_state = MXT_STATE_GOING_AWAY;
->> -		mutex_unlock(&data->lock);
->> -	}
->> +	mxt_sysfs_remove(data);
->>
->> -	disable_irq(data->irq);
->> -	sysfs_remove_group(&client->dev.kobj, &mxt_fw_attr_group);
->>   	if (data->reset_gpio) {
->>   		sysfs_remove_link(&client->dev.kobj, "reset");
->>   		gpiod_unexport(data->reset_gpio);
->>   	}
->> +
->>   	mxt_debug_msg_remove(data);
->> -	mxt_sysfs_remove(data);
->>   	mxt_free_input_device(data);
->>   	mxt_free_object_table(data);
->>
->> 	if (debug_state)
->> 		cancel_delayed_work_sync(&data->watchdog_work);
->> +	disable_irq(data->irq);
->>
->>   	return 0;
->>   }
->>
+> For kvmalloc'ed data object that contains sensitive information like
+> cryptographic key, we need to make sure that the buffer is always
+> cleared before freeing it. Using memset() alone for buffer clearing may
+> not provide certainty as the compiler may compile it away. To be sure,
+> the special memzero_explicit() has to be used.
 > 
-> I'm looking at this again and the original tear-down order of the
-> mxt_remove() looks okay, so no need to change it.
+> This patch introduces a new kvfree_sensitive() for freeing those
+> sensitive data objects allocated by kvmalloc(). The relevnat places
+> where kvfree_sensitive() can be used are modified to use it.
 > 
-> Reading the commit message, it says that request_firmware_nowait() races
-> with kfree(data), but that can't happen because the data is
-> resource-managed and request_firmware_nowait() bumps device's use-count.
+> Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  include/linux/mm.h       | 17 +++++++++++++++++
+>  security/keys/internal.h | 11 -----------
+>  security/keys/keyctl.c   | 16 +++++-----------
+>  3 files changed, 22 insertions(+), 22 deletions(-)
 > 
-> https://elixir.bootlin.com/linux/v5.6.2/source/drivers/base/firmware_loader/main.c#L1043
-> 
-> I think this patch was ported from some very old kernel version and it's
-> simply not applicable to the upstream anymore.
-> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 7dd5c4ccbf85..c26f279f1956 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -758,6 +758,23 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
+>  
+>  extern void kvfree(const void *addr);
+>  
+> +/**
+> + * kvfree_sensitive - free a data object containing sensitive information
+> + * @addr - address of the data object to be freed
+> + * @len  - length of the data object
+> + *
+> + * Use the special memzero_explicit() function to clear the content of a
+> + * kvmalloc'ed object containing sensitive data to make sure that the
+> + * compiler won't optimize out the data clearing.
+> + */
+> +static inline void kvfree_sensitive(const void *addr, size_t len)
+> +{
+> +	if (addr) {
 
-I had some test,
-and confirmed you are right,
-this commit is no longer applicable to upstream,
-but as discussed in another patch,
-disable_irq() need to be moved after remove of mxt_fw_attr_group.
-I will add this change in a new commit.
+Shouldn't this be if (unlikely(ZERO_OR_NULL_PTR(addr))?
 
-Thanks,
-Jiada
+> +		memzero_explicit((void *)addr, len);
+> +		kvfree(addr);
+> +	}
+> +}
+> +
+>  static inline int compound_mapcount(struct page *page)
+>  {
+>  	VM_BUG_ON_PAGE(!PageCompound(page), page);
+> diff --git a/security/keys/internal.h b/security/keys/internal.h
+> index 6d0ca48ae9a5..153d35c20d3d 100644
+> --- a/security/keys/internal.h
+> +++ b/security/keys/internal.h
+> @@ -350,15 +350,4 @@ static inline void key_check(const struct key *key)
+>  #define key_check(key) do {} while(0)
+>  
+>  #endif
+> -
+> -/*
+> - * Helper function to clear and free a kvmalloc'ed memory object.
+> - */
+> -static inline void __kvzfree(const void *addr, size_t len)
+> -{
+> -	if (addr) {
+> -		memset((void *)addr, 0, len);
+> -		kvfree(addr);
+> -	}
+> -}
+>  #endif /* _INTERNAL_H */
+> diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+> index 5e01192e222a..edde63a63007 100644
+> --- a/security/keys/keyctl.c
+> +++ b/security/keys/keyctl.c
+> @@ -142,10 +142,7 @@ SYSCALL_DEFINE5(add_key, const char __user *, _type,
+>  
+>  	key_ref_put(keyring_ref);
+>   error3:
+> -	if (payload) {
+> -		memzero_explicit(payload, plen);
+> -		kvfree(payload);
+> -	}
+> +	kvfree_sensitive(payload, plen);
+>   error2:
+>  	kfree(description);
+>   error:
+> @@ -360,7 +357,7 @@ long keyctl_update_key(key_serial_t id,
+>  
+>  	key_ref_put(key_ref);
+>  error2:
+> -	__kvzfree(payload, plen);
+> +	kvfree_sensitive(payload, plen);
+>  error:
+>  	return ret;
+>  }
+> @@ -914,7 +911,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+>  		 */
+>  		if (ret > key_data_len) {
+>  			if (unlikely(key_data))
+> -				__kvzfree(key_data, key_data_len);
+> +				kvfree_sensitive(key_data, key_data_len);
+>  			key_data_len = ret;
+>  			continue;	/* Allocate buffer */
+>  		}
+> @@ -923,7 +920,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
+>  			ret = -EFAULT;
+>  		break;
+>  	}
+> -	__kvzfree(key_data, key_data_len);
+> +	kvfree_sensitive(key_data, key_data_len);
+>  
+>  key_put_out:
+>  	key_put(key);
+> @@ -1225,10 +1222,7 @@ long keyctl_instantiate_key_common(key_serial_t id,
+>  		keyctl_change_reqkey_auth(NULL);
+>  
+>  error2:
+> -	if (payload) {
+> -		memzero_explicit(payload, plen);
+> -		kvfree(payload);
+> -	}
+> +	kvfree_sensitive(payload, plen);
+>  error:
+>  	return ret;
+>  }
+> -- 
+> 2.18.1
+> 
+> 
+> 
