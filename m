@@ -2,157 +2,125 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B23C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E23C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC3F20768
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3A920768
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 21:02:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GFnoW0Zc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NFSSmi+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgDFVCZ (ORCPT
+        id S1726310AbgDFVC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 17:02:25 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18516 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgDFVCX (ORCPT
+        Mon, 6 Apr 2020 17:02:29 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22276 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726663AbgDFVCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 17:02:23 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8b98780001>; Mon, 06 Apr 2020 14:00:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 14:02:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 14:02:22 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 21:02:22 +0000
-Received: from [10.2.164.193] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 21:02:20 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
- <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
- <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
- <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
- <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
-Date:   Mon, 6 Apr 2020 14:02:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 17:02:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586206943;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=c0TsndpJVTVi+maigb4wqF83+v7IC6vuTnjCeLiosRo=;
+        b=NFSSmi+/cfeX8LSNJYZoRa01FAfMatZ9O5vahKxXEJcFYeSnGt1XsL9B/MLBbGMnBxoU5M
+        FemcW1v28pQbHUwkEBKv9lIz4s8CChiRRwSGtVvj5al1Lb+agXVrAuhoutng32gLoi3DAV
+        pyerZBJPnhcODbS5Uq1Dcjl3WFKalXM=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-504-KHp3wko3NymMNVJYrFjNiw-1; Mon, 06 Apr 2020 17:02:21 -0400
+X-MC-Unique: KHp3wko3NymMNVJYrFjNiw-1
+Received: by mail-wr1-f71.google.com with SMTP id y6so510327wrq.21
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 14:02:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c0TsndpJVTVi+maigb4wqF83+v7IC6vuTnjCeLiosRo=;
+        b=cYMY3EBztiR03l+fr2X7YJj69Ztlx8B/LW0j89FsASG4rV9PgHR8hlS0ecmp7+LN3O
+         knbwc2AFk9jlLmPEcwM9JOXigW9UA7/1KAhBa7mx0OylxR8CgISy43JVYCVmD+I/bEq/
+         DqnnvxiuCKSPmtRDaHn7I8frpKxT/0enmFQYei0MKh/KIj63EZwO3QH89SQZrOEpHGrR
+         HrCZkofHMkxOtiRn8kJxq3M6RgKPSVuJRgf7qgpoKsdlqBaVNAyycX5rsNKEpGaIx4ei
+         h9GVo/HtPikBPJ5tz79eTUIyyRnBfs5Gtw1rdxXRY8SkwBopztSL+iiatz6xPONId3Bf
+         VsNA==
+X-Gm-Message-State: AGi0Pua5tkTdtbhqGZRHWOp6Nyvvl3vkkPs4Jh3pjw8uq/m9FBYNqWJ4
+        hL5RFqP0qCn7MKp7yL+0ctEGIyWCrqNSaKv4W55I65HbJaFrIMtba+dBT3UHhnFZnxXSAALQjDa
+        ZOQWVbwVFYf5E0N8jpxg4/XQl
+X-Received: by 2002:a05:6000:105:: with SMTP id o5mr1140872wrx.395.1586206940298;
+        Mon, 06 Apr 2020 14:02:20 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKIrPYFPbzjPlWje3cehQSPwSKmpRF4J8aJ0cjsFyb5G1zSVTqx+JyfqOMTdrfebQUwk8AetQ==
+X-Received: by 2002:a05:6000:105:: with SMTP id o5mr1140841wrx.395.1586206939931;
+        Mon, 06 Apr 2020 14:02:19 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id z3sm922928wma.22.2020.04.06.14.02.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 14:02:18 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 17:02:17 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v4 12/12] mellanox: switch to virtio_legacy_init/size
+Message-ID: <20200406210108.148131-13-mst@redhat.com>
+References: <20200406210108.148131-1-mst@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586206840; bh=LQXwr464PKLkjQc2JsoYa1G97YL2u32MHMj5ekn3DUU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=GFnoW0ZchKsXuQEVljP/q6rNBTeuZ8TFD7OPOXLXgF2TcIGeMngQG1a4AUrpCeMhT
-         MOXkPVGm0YEFAm0e1r5Skb4h5D9840DKi37WZfZUW283MfRbTgBo+9QQvzfbC96LLx
-         2BI75bFW44qcXx0A40n1wehEounnWLu2G5K5LGyeR9Cav39zkgSh+XlEEovhCyI4Vh
-         qKHc+dLKhbUk2qcl2uhv3q6hgTRdPIb8uU5G5LYDiTv1dlGJ5zNGI17lMyFTF/A2Vf
-         yBGlHcErTUa1H+xcOMPhFdahdeaNeAYWUF6jCB/4lJigKpCwaH9ceqTSR/2F7StgZ8
-         I/OFZ19xF97iQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406210108.148131-1-mst@redhat.com>
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These are used for legacy ring format, switch to APIs that make this
+explicit.
 
-On 4/6/20 1:56 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 06.04.2020 23:55, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/6/20 1:53 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 06.04.2020 23:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> On 4/6/20 1:45 PM, Dmitry Osipenko wrote:
->>>>> External email: Use caution opening links or attachments
->>>>>
->>>>>
->>>>> 04.04.2020 04:25, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> +static int chan_capture_kthread_start(void *data)
->>>>>> +{
->>>>>> +     struct tegra_vi_channel *chan =3D data;
->>>>>> +     struct tegra_channel_buffer *buf;
->>>>>> +     int err =3D 0;
->>>>>> +     int caps_inflight;
->>>>>> +
->>>>>> +     set_freezable();
->>>>>> +
->>>>>> +     while (1) {
->>>>>> +             try_to_freeze();
->>>>>> +
->>>>>> +             wait_event_interruptible(chan->start_wait,
->>>>>> +                                      !list_empty(&chan->capture) |=
-|
->>>>>> +                                      kthread_should_stop());
->>>>>> +             /*
->>>>>> +              * Frame start and MW_ACK_DONE syncpoint condition
->>>>>> FIFOs are
->>>>>> +              * of max depth 2. So make sure max 2 capture
->>>>>> requests are
->>>>>> +              * in process by the hardware at a time.
->>>>>> +              */
->>>>>> +             while (!(kthread_should_stop() ||
->>>>>> list_empty(&chan->capture))) {
->>>>>> +                     caps_inflight =3D chan->capture_reqs -
->>>>>> chan->sequence;
->>>>>> +                     /*
->>>>>> +                      * Source is not streaming if error is non-zer=
-o.
->>>>>> +                      * So, do not dequeue buffers on capture error
->>>>>> or when
->>>>>> +                      * syncpoint requests in FIFO are full.
->>>>>> +                      */
->>>>>> +                     if (err || caps_inflight >=3D SYNCPT_FIFO_DEPT=
-H)
->>>>>> +                             break;
->>>>> Am I understanding correctly that this thread will take 100% CPU,
->>>>> spinning here, if more than 2 frame-captures queued?
->>>> on more than 2 frames captures, it breaks thread and on next wakeup it
->>>> continues
->>> The wait_event() won't wait if condition is true.
->> condition is checked when waitqueue is woken up
-> https://elixir.bootlin.com/linux/v5.6.2/source/include/linux/wait.h#L462
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+---
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-process is put to sleep until the condition evaluates to true or signal=20
-is received.
-
-condition is checked each time the waitqueue head is woken up.
-
-Also capture list may keep on getting updated with buffers from userspace.
-
-but at a time we only limit 2 frames as VI supports double buffering and=20
-syncpt fifo's max depth is 2
-
-Any more buffers waiting will be processing on subsequent iterations.
-
-So basically thread run time is depending on buffers getting queued from=20
-userspace.
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index 5739a9669b29..f42b1fb713f1 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -214,7 +214,7 @@ static void mlxbf_tmfifo_free_vrings(struct mlxbf_tmfifo *fifo,
+ 	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
+ 		vring = &tm_vdev->vrings[i];
+ 		if (vring->va) {
+-			size = vring_size(vring->num, vring->align);
++			size = vring_legacy_size(vring->num, vring->align);
+ 			dma_free_coherent(tm_vdev->vdev.dev.parent, size,
+ 					  vring->va, vring->dma);
+ 			vring->va = NULL;
+@@ -245,7 +245,7 @@ static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
+ 		vring->vdev_id = tm_vdev->vdev.id.device;
+ 		dev = &tm_vdev->vdev.dev;
+ 
+-		size = vring_size(vring->num, vring->align);
++		size = vring_legacy_size(vring->num, vring->align);
+ 		va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
+ 		if (!va) {
+ 			mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
+@@ -935,7 +935,7 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
+ 		vring = &tm_vdev->vrings[i];
+ 
+ 		/* zero vring */
+-		size = vring_size(vring->num, vring->align);
++		size = vring_legacy_size(vring->num, vring->align);
+ 		memset(vring->va, 0, size);
+ 		vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
+ 					 false, false, vring->va,
+-- 
+MST
 
