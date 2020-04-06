@@ -2,44 +2,44 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F34C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94851C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821C220769
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6054220769
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:24:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="OdUaNn8A"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Utfh/hGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgDFNYc (ORCPT
+        id S1728337AbgDFNYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:24:32 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37542 "EHLO
+        Mon, 6 Apr 2020 09:24:31 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:37512 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728262AbgDFNYb (ORCPT
+        by vger.kernel.org with ESMTP id S1728212AbgDFNYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 6 Apr 2020 09:24:31 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 27286404C3;
-        Mon,  6 Apr 2020 13:24:30 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EE867404B8;
+        Mon,  6 Apr 2020 13:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1586179471; bh=kO6bVcAz100KA27JSJXzLR1/q1Cun0xk/nxnhMvtHEM=;
+        t=1586179470; bh=kt8evzJkOaxQDaYu4nFK9ua9wL2bvCfFsHU7SFJRk2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=OdUaNn8AWpn3+D0gxKe1APO8OBe4MWXyGjHAWJ4pLwCRSd7I3r4ZP8hy0bh4xYUC3
-         Qn/5mQDHROxsvVLJu6QrXyKWCekXPbocBlK3oAFGZ7FAdCfUj41E7cG/MgIBJmOWDH
-         XRgg0zL+e1jOTGzCj6ZpiffOR0xPh1FIG+wwj76zbCq1gtT5CYfx51BDd5GdHL8UB5
-         F1qi1Uj/JqVN4oivAnuStzCY9Wm8SzmoCmfasEgFYf4qR5lpQRtTeOWZKWoW4D5Hnw
-         s5sgiTDc+3VoNCUu1nhiUDItU5HMI+2QmS9LMaMGS9I000pKEb0GFoJZRXsdnnkmhZ
-         mlP5fAAUFrUGQ==
+        b=Utfh/hGaTGR/ZvuXsODj/Z2c2frvQwPmprQRehI+JxyB8xDLobXD2y2CWWvWxLMAq
+         unj9msBjQrJZh11w881cFY3NeXrPR8a1DJ1IErKIS7K/0QP9DYHPai6IfWvNTzlRjO
+         vezMWo1BDdAMTn8lz36/VJ90wTrsBC3Q6OQI3PGOjCHVyv8u2p1hQAQH3nZVBv9/22
+         xqpEZy3uqtWxj4ekMd3M+rP+rWi4DnZtA1yyKehN39MBdur7iX/VcZw8eDyMYWeQE9
+         VqWdEZXlBv24yspK5lMSytGwk7kohYIcDuSW0yaBxi+RN4OSnZJkssyweUZeh0zTgG
+         fHZ/0YHwEeJFA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id DB0FAA006D;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 67430A005D;
         Mon,  6 Apr 2020 13:24:28 +0000 (UTC)
 From:   Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
 To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
@@ -47,10 +47,11 @@ To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         maarten.lankhorst@linux.intel.com, mripard@kernel.org,
         airlied@linux.ie, daniel@ffwll.ch, Gustavo.Pimentel@synopsys.com,
         Joao.Pinto@synopsys.com
-Cc:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-Subject: [PATCH v2 4/4] MAINTAINERS: Add IPK MIPI DSI Host driver entry
-Date:   Mon,  6 Apr 2020 15:24:14 +0200
-Message-Id: <197608bb7875677a0e61238f0434cc31f37737ba.1586174459.git.angelo.ribeiro@synopsys.com>
+Cc:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2 1/4] dt-bindings: display: Add IPK DSI subsystem bindings
+Date:   Mon,  6 Apr 2020 15:24:11 +0200
+Message-Id: <e32fdd83d135da8617ba46d53eb95329589ae07d.1586174459.git.angelo.ribeiro@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1586174459.git.angelo.ribeiro@synopsys.com>
 References: <cover.1586174459.git.angelo.ribeiro@synopsys.com>
@@ -61,39 +62,279 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Creates entry for Synopsys DesignWare IPK MIPI DSI host driver and
-adds myself as maintainer.
+Add dt-bindings for Synopsys DesignWare MIPI DSI Host and VPG (Video
+Pattern Generator) support in the IPK display subsystem.
 
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
+The Synopsys DesignWare IPK display video pipeline is composed by a DSI
+controller (snps,dw-ipk-dsi) and a VPG (snps,dw-ipk-vpg) as DPI
+stimulus. Typically is used the Raspberry Pi
+(raspberrypi,7inch-touchscreen-panel) as DSI panel that requires a
+I2C controller (snps,designware-i2c).
+
+Reported-by: Rob Herring <robh+dt@kernel.org>
 Cc: David Airlie <airlied@linux.ie>
 Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
 Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
 ---
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../bindings/display/snps,dw-ipk-dsi.yaml          | 162 +++++++++++++++++++++
+ .../bindings/display/snps,dw-ipk-vpg.yaml          |  75 ++++++++++
+ 2 files changed, 237 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aff76a7..ffc678e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5445,6 +5445,14 @@ S:	Maintained
- F:	drivers/gpu/drm/mcde/
- F:	Documentation/devicetree/bindings/display/ste,mcde.txt
- 
-+DRM DRIVER FOR SYNOPSYS DESIGNWARE IPK
-+M:	Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-+L:	dri-devel@lists.freedesktop.org
-+S:	Maintained
-+F:	drivers/gpu/drm/ipk/
-+F:	Documentation/devicetree/bindings/display/ipk/
-+T:	git git://anongit.freedesktop.org/drm/drm-misc
+diff --git a/Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml b/Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
+new file mode 100644
+index 0000000..92b313c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/snps,dw-ipk-dsi.yaml
+@@ -0,0 +1,162 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/snps,dw-ipk-dsi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- DRM DRIVER FOR TDFX VIDEO CARDS
- S:	Orphan / Obsolete
- F:	drivers/gpu/drm/tdfx/
++title: Synopsys DesignWare IPK specific extensions for the Synopsys DSI host
++       controller.
++
++maintainers:
++  - Angelo Ribeiro <angelo.ribeiro@synopsys.com>
++
++description:
++  The Synopsys DesignWare IPK DSI controller uses the Synopsys DesignWare MIPI
++  DSI host controller.
++  For more info please refer to
++  Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt.
++
++properties:
++  compatible:
++    const: snps,dw-ipk-dsi
++
++  reg:
++    minItems: 2
++    items:
++      - description: DW MIPI DSI Host registers
++      - description: DW Phy registers
++
++  reg-names:
++    items:
++     - const: dsi
++     - const: phy
++
++  clocks:
++    minItems: 2
++    maxItems: 3
++    items:
++      - description: Peripheral clock
++      - description: PLL clock
++      - description: Pixel clock
++
++  clock-names:
++    items:
++      - const: pclk
++      - const: ref
++      - const: px_clk
++
++  resets:
++    minItems: 1
++    items:
++      - description: APB reset line
++
++  reset-names:
++    items:
++      - const: apb
++
++  ports:
++    type: object
++    description:
++      A port node as defined in
++      Documentation/devicetree/bindings/media/video-interfaces.txt and
++      Documentation/devicetree/bindings/graph.txt.
++    properties:
++      port@0:
++        type: object
++        description:
++          Input endpoint of the controller, connects to a DPI source.
++
++      port@1:
++        type: object
++        description:
++          Output endpoint of the controller, connects to a panel or a bridge
++          input port.
++
++patternProperties:
++  "^(panel|panel-dsi)@[0-9]$":
++    type: object
++    description:
++      A node containing the panel or bridge description as defined in
++      Documentation/devicetree/bindings/display/mipi-dsi-bus.txt.
++    properties:
++      port:
++        type: object
++        description:
++          Panel or bridge port node connected to the DSI output port (port@1).
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++required:
++  - "#address-cells"
++  - "#size-cells"
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - reset
++  - reset-names
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    dsi1: dw-ipk-dsi@0x02000 {
++        compatible = "snps,dw-ipk-dsi";
++        reg = <0x02000 0xfff>, <0x05000 0xfff>;
++        reg-names = "dsi", "phy";
++        clocks = <&apb_clk>, <&pll_clk>;
++        clock-names = "pclk", "ref";
++        resets = <&ipk_rst 1>;
++        reset-names = "apb";
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            port@0 {
++                reg = <0>;
++                dsi1_in: endpoint@0 {
++                    remote-endpoint = <&vbridge_out>;
++                };
++            };
++
++            port@1 {
++                reg = <1>;
++                dsi_out_port: endpoint {
++                    remote-endpoint = <&panel_dsi_port>;
++                };
++            };
++        };
++    };
++
++    i2c@0x01000 {
++        compatible = "snps,designware-i2c";
++        reg = <0x01000 0x100>;
++        clock-frequency = <400000>;
++        clocks = <&i2cclk>;
++        interrupts = <0>;
++        resets = <&ipk_rst 0>;
++        reset-names = "i2c";
++
++        lcd@45 {
++            compatible = "raspberrypi,7inch-touchscreen-panel";
++            reg = <0x45>;
++
++            port {
++                panel_dsi_port: endpoint {
++                    remote-endpoint = <&dsi_out_port>;
++                };
++            };
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml b/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
+new file mode 100644
+index 0000000..b74b02e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/snps,dw-ipk-vpg.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/snps,dw-ipk-vpg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Synopsys DesignWare Video Pattern Generator (VPG) for MIPI DSI HOST
++
++maintainers:
++  - Angelo Ribeiro <angelo.ribeiro@synopsys.com>
++
++properties:
++  compatible:
++    const: snps,dw-ipk-vpg
++
++  reg:
++    minItems: 2
++    items:
++      - description: Video Pattern Generator registers
++      - description: Clock generator (MMCM) registers
++
++  reg-names:
++   items:
++     - const: vpg
++     - const: mmcm
++
++  resets:
++    minItems: 2
++    items:
++      - description: The VPG reset line
++      - description: The MMCM reset line
++
++  reset-names:
++    items:
++      - const: vpg
++      - const: mmcm
++
++  port:
++    type: object
++    description:
++      Video port for DPI output.
++      The VPG has one video port for internal DPI stimulus over the MIPI
++      DSI host controller.
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - resets
++  - reset-names
++  - port
++
++additionalProperties: false
++
++examples:
++  - |
++    dsi_vpg: dw-dsi-vpg@0x03000 {
++        compatible = "snps,dw-ipk-vpg";
++        reg = <0x03000 0xfff>, <0x07000 0xfff>;
++        reg-names = "vpg", "mmcm";
++        resets = <&ipk_rst 2>, <&ipk_rst 3>;
++        reset-names = "vpg", "mmcm";
++        status = "okay";
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        port {
++            vpg_out: endpoint {
++                remote-endpoint = <&dsi1_in>;
++            };
++        };
++    };
++
++...
 -- 
 2.7.4
 
