@@ -2,173 +2,134 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10738C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 919B0C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17A7206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649D9206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:46:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xSIAZLmC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgDFLq3 convert rfc822-to-8bit (ORCPT
+        id S1727817AbgDFLqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:46:29 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:47057 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727476AbgDFLq2 (ORCPT
+        Mon, 6 Apr 2020 07:46:51 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:23474 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727795AbgDFLqu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:46:28 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 0E3E1CECC3;
-        Mon,  6 Apr 2020 13:56:01 +0200 (CEST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v1] Bluetooth: debugfs option to unset MITM flag
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200406165542.v1.1.Ibfc500cbf0bf2dc8429b17f064e960e95bb228e9@changeid>
-Date:   Mon, 6 Apr 2020 13:46:26 +0200
-Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Archie Pusaka <apusaka@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9673F164-A14E-4DD6-88FB-277694C50328@holtmann.org>
-References: <20200406165542.v1.1.Ibfc500cbf0bf2dc8429b17f064e960e95bb228e9@changeid>
-To:     Archie Pusaka <apusaka@google.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 6 Apr 2020 07:46:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586173610; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=21Usv+7OlYJnY+NURtDJjs/B1ZBay7aqmLhPGZSU41c=; b=xSIAZLmCpTD2NsQybjgIDyzSGjM+gOUuyn0XLn1XOTlkXnYfY4X/JxVBEuyNSMpiZeSyNhp4
+ 7DVqJoSSOT30Od3pn/xlrcc1QQPw6RGSdIskdE0AcMZN+7wsF48IBmlqHSUUda5uR/JD5FDl
+ /xYV4WtJuV7UPrrXzvVYVPJR+lo=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b1691.7f5dc86ee0d8-smtp-out-n01;
+ Mon, 06 Apr 2020 11:46:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B3441C4478F; Mon,  6 Apr 2020 11:46:23 +0000 (UTC)
+Received: from [192.168.1.100] (unknown [157.44.182.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jprakash)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C61FCC43636;
+        Mon,  6 Apr 2020 11:46:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C61FCC43636
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
+Subject: Re: [PATCH 3/3] iio: adc: Add support for PMIC7 ADC
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
+ <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
+ <CAHp75Vfk1DZ+bz6h_prm6Tp7kXos6jio5JCpg6=wvGRmDPTBsw@mail.gmail.com>
+From:   Jishnu Prakash <jprakash@codeaurora.org>
+Message-ID: <6bf90d8c-48e6-9a07-7688-aa3890ebcd0d@codeaurora.org>
+Date:   Mon, 6 Apr 2020 17:16:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75Vfk1DZ+bz6h_prm6Tp7kXos6jio5JCpg6=wvGRmDPTBsw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Archie,
+Hi Andy,
 
-> The BT qualification test SM/MAS/PKE/BV-01-C needs us to turn off
-> the MITM flag when pairing, and at the same time also set the io
-> capability to something other than no input no output.
-> 
-> Currently the MITM flag is only unset when the io capability is set
-> to no input no output, therefore the test cannot be executed.
-> 
-> This patch introduces a debugfs option for controlling whether MITM
-> flag should be set based on io capability.
-> 
-> Signed-off-by: Archie Pusaka <apusaka@chromium.org>
-> ---
-> 
-> include/net/bluetooth/hci.h |  1 +
-> net/bluetooth/smp.c         | 52 ++++++++++++++++++++++++++++++++++++-
-> 2 files changed, 52 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index 79de2a659dd69..5e183487c7479 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -298,6 +298,7 @@ enum {
-> 	HCI_FORCE_STATIC_ADDR,
-> 	HCI_LL_RPA_RESOLUTION,
-> 	HCI_CMD_PENDING,
-> +	HCI_ENFORCE_MITM_SMP,
-
-actually don’t you mean HCI_FORCE_NO_MITM? From your description, you want a toggle that disables MITM no matter what.
-
-> 	__HCI_NUM_FLAGS,
-> };
-> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
-> index d0b695ee49f63..4fa8b112fb607 100644
-> --- a/net/bluetooth/smp.c
-> +++ b/net/bluetooth/smp.c
-> @@ -2396,7 +2396,8 @@ int smp_conn_security(struct hci_conn *hcon, __u8 sec_level)
-> 	/* Require MITM if IO Capability allows or the security level
-> 	 * requires it.
-> 	 */
-> -	if (hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT ||
-> +	if ((hci_dev_test_flag(hcon->hdev, HCI_ENFORCE_MITM_SMP) &&
-> +	     hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT) ||
-> 	    hcon->pending_sec_level > BT_SECURITY_MEDIUM)
-> 		authreq |= SMP_AUTH_MITM;
-
-	/* New comment for this case ..
-	if (!hci_dev_test_flag(hcon->hdev, HCI_FORCE_NO_MITM)) {
-		/* Move comment here ..
-		if (hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT ||
-		    hcon->pending_sec_level > BT_SECURITY_MEDIUM)
-			authreq |= SMP_AUTH_MITM;
-	}
-
-> 
-> @@ -3402,6 +3403,50 @@ static const struct file_operations force_bredr_smp_fops = {
-> 	.llseek		= default_llseek,
-> };
-> 
-> +static ssize_t enforce_mitm_smp_read(struct file *file,
-> +				     char __user *user_buf,
-> +				     size_t count, loff_t *ppos)
-> +{
-> +	struct hci_dev *hdev = file->private_data;
-> +	char buf[3];
-> +
-> +	buf[0] = hci_dev_test_flag(hdev, HCI_ENFORCE_MITM_SMP) ? 'Y' : 'N';
-> +	buf[1] = '\n';
-> +	buf[2] = '\0';
-> +	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-> +}
-> +
-> +static ssize_t enforce_mitm_smp_write(struct file *file,
-> +				      const char __user *user_buf,
-> +				      size_t count, loff_t *ppos)
-> +{
-> +	struct hci_dev *hdev = file->private_data;
-> +	char buf[32];
-> +	size_t buf_size = min(count, (sizeof(buf) - 1));
-> +	bool enable;
-> +
-> +	if (copy_from_user(buf, user_buf, buf_size))
-> +		return -EFAULT;
-> +
-> +	buf[buf_size] = '\0';
-> +	if (strtobool(buf, &enable))
-> +		return -EINVAL;
-> +
-> +	if (enable == hci_dev_test_flag(hdev, HCI_ENFORCE_MITM_SMP))
-> +		return -EALREADY;
-> +
-> +	hci_dev_change_flag(hdev, HCI_ENFORCE_MITM_SMP);
-> +
-> +	return count;
-> +}
-> +
-> +static const struct file_operations enforce_mitm_smp_fops = {
-> +	.open		= simple_open,
-> +	.read		= enforce_mitm_smp_read,
-> +	.write		= enforce_mitm_smp_write,
-> +	.llseek		= default_llseek,
-> +};
-> +
-> int smp_register(struct hci_dev *hdev)
-> {
-> 	struct l2cap_chan *chan;
-> @@ -3426,6 +3471,11 @@ int smp_register(struct hci_dev *hdev)
-> 
-> 	hdev->smp_data = chan;
-> 
-> +	/* Enforce the policy of determining MITM flag by io capabilities. */
-> +	hci_dev_set_flag(hdev, HCI_ENFORCE_MITM_SMP);
-
-No. Lets keep the current behavior the default.
-
-> +	debugfs_create_file("enforce_mitm_smp", 0644, hdev->debugfs, hdev,
-> +			    &enforce_mitm_smp_fops);
-> +
-
-And this needs to move into hci_debugfs.c.
-
-Regards
-
-Marcel
-
+On 3/24/2020 10:03 PM, Andy Shevchenko wrote:
+> On Tue, Mar 24, 2020 at 5:46 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
+>> major change from PMIC5 is that all SW communication to ADC goes through
+>> PMK8350, which communicates with other PMICs through PBS when the ADC
+>> on PMK8350 works in master mode. The SID register is used to identify the
+>> PMICs with which the PBS needs to communicate. Add support for the same.
+>>
+>> In addition, add definitions for ADC channels and virtual channel
+>> definitions per PMIC, to be used by ADC clients for PMIC7.
+> ...
+>
+>> +#define ADC_CHANNEL_OFFSET                     0x8
+>> +#define ADC_CHANNEL_MASK                       0xff
+> GENMASK()
+I'll fix this and the other simple changes in the next post.
+>
+> ...
+>
+>> +#define ADC_APP_SID                            0x40
+>> +#define ADC_APP_SID_MASK                       0xf
+> GENMASK()
+>
+>> +#define ADC7_CONV_TIMEOUT                      msecs_to_jiffies(10)
+> Useless.
+I'm not sure what you mean by this. It is used in the API 
+adc7_do_conversion.
+> ...
+>
+> + if (of_device_is_compatible(node, "qcom,spmi-adc7")) {
+>> +               indio_dev->info = &adc7_info;
+>> +               adc->is_pmic7 = true;
+>> +       } else {
+>> +               indio_dev->info = &adc5_info;
+>> +       }
+> Hmm... I would rather put this as driver_data in ID structure(s).
+I'll remove the check for the compatible string, using driver data, in 
+the next post.
+>
+> ...
+>
+>> +static int adc5_exit(struct platform_device *pdev)
+>> +{
+>> +       struct adc5_chip *adc = platform_get_drvdata(pdev);
+>> +
+>> +       mutex_destroy(&adc->lock);
+> Are you sure you will have no race conditions? Does this driver use IRQs?
+The driver does use an IRQ. Will fix this in the next post.
+>
+>
