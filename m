@@ -2,121 +2,175 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16659C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BC2C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF5722C9E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E219248A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rM5SW1yc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgDFPZH (ORCPT
+        id S1728947AbgDFP0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:25:07 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55590 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728736AbgDFPZG (ORCPT
+        Mon, 6 Apr 2020 11:26:12 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34936 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728890AbgDFP0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:25:06 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 66E2D293F03
-Subject: Re: [PATCH] drm: mediatek: fix device passed to cmdq
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>
-References: <20200406051131.225748-1-hsinyi@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <095576cb-7124-9b23-fe24-7a91cce57d99@collabora.com>
-Date:   Mon, 6 Apr 2020 17:25:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Apr 2020 11:26:11 -0400
+Received: by mail-ot1-f68.google.com with SMTP id v2so15727478oto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:26:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mLkFZg4uKjsIykk7BTwvQ1u38EFobfLrFUiH9V7o1sk=;
+        b=rM5SW1yckf32vIPkw90xBqCzGHKCy/iHgCoXE6hqaPFebS750iSbilzPRpBtU5Twz1
+         b2EPRdimrtONwJqOGXXuG7cCPfzkuJI8GXEitZW1DZvfdhnT+acAbHbzVSl8DwHhX8eb
+         SApEs/7LmbMvmXeBcvhGT+g+A9YosMhrHBoZRH4R+i6X4axPNRraO1HMVjVhgvOB0GKH
+         WPncSG4ks6mq3alyrF7YtXCdmZfEJzBoLgaNXPzH6SWsiJwYvEENNhoU/8vX/V/x+0az
+         qPVZh46IQouMAk0ky8JWRrmDASEJ5HZtxWIWRo/hnssv1o7eOH9jGhV+0d+i44iYN0/t
+         8uhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mLkFZg4uKjsIykk7BTwvQ1u38EFobfLrFUiH9V7o1sk=;
+        b=BnpTUqv4evclLQQ42cFsJDtMX185DTuHCQO75nxV8hxvoVLlyr07Bjsb6gf8Rf9Xry
+         +sVvpoue3ia01EWeZ7G0rJFYnLV/XPpAm0RiDOQ9qWxIN9PHPnk5Zyb5LMYcFC5IfKVi
+         x0GUZplcRBAiql8lowcYItYUYkz8Bg9aqxHkqDpZQUEyT+0A2o4XTqYeywbCzfLdTYrq
+         EL2V93JJQM6Tl1tkl2IT316nTiofqmNhLvK//ywmthcT5sUphmliEu1YNT9/GA3JftfH
+         sFfEJ5dE3T33INdEjB2VRi6M5s4VoUIhqS+PROupjcljEDicoIdQpF/YhjiPPML1v2Sa
+         efCw==
+X-Gm-Message-State: AGi0PuZuecsrULW+0adIRdIZ6wgroTeXBMdTweJsBZ8/3DI/LLDKrG+r
+        RV7OIETpIJTMGd3jgfs7zVkn7kdwr0oC07sGKnNxBQM8xDCGjg==
+X-Google-Smtp-Source: APiQypKLKKYLmPxZPCftzf+0SBlZXHZMIwDor9EtVAxYxuQ+W8VWcYMwc6GcICK2n6IQIOMhasirVAdBnijIMJ7TltU=
+X-Received: by 2002:a4a:c595:: with SMTP id x21mr17831239oop.10.1586186770118;
+ Mon, 06 Apr 2020 08:26:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200406051131.225748-1-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200331133346.372517-1-robert.foss@linaro.org>
+ <20200331133346.372517-3-robert.foss@linaro.org> <CAHp75VfFKY6nzb8aEWmop73v2haZ0P5+aTsKDEU8M=uUPn0u3g@mail.gmail.com>
+ <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com> <20200406150626.GW3676135@smile.fi.intel.com>
+In-Reply-To: <20200406150626.GW3676135@smile.fi.intel.com>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Mon, 6 Apr 2020 17:25:58 +0200
+Message-ID: <CAG3jFyvRD3MTQHKVgnneNutJ_e-eykrZHNF-GBe1F5c1TjYLqg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] media: ov8856: Add devicetree support
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hsin-Yi
-
-Thanks for sending the patch upstream
-
-On 6/4/20 7:11, Hsin-Yi Wang wrote:
-> drm device is now probed from mmsys. We need to use mmsys device to get gce
-> nodes. Fix following errors:
-> 
-> [    0.740068] mediatek-drm mediatek-drm.1.auto: error -2 can't parse gce-client-reg property (0)
-> [    0.748721] mediatek-drm mediatek-drm.1.auto: error -2 can't parse gce-client-reg property (0)
+On Mon, 6 Apr 2020 at 17:06, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Apr 06, 2020 at 03:37:24PM +0200, Robert Foss wrote:
+> > On Tue, 31 Mar 2020 at 16:01, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > On Tue, Mar 31, 2020 at 4:36 PM Robert Foss <robert.foss@linaro.org> wrote:
+>
 > ...
-> [    2.659645] mediatek-drm mediatek-drm.1.auto: failed to request channel
-> [    2.666270] mediatek-drm mediatek-drm.1.auto: failed to request channel
-> 
-> Fixes: 1d367541aded ("soc / drm: mediatek: Fix mediatek-drm device probing")
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+>
+> > > > +       if (ret < 0) {
+> > >
+> > > Do you need all ' < 0' parts all over the series?
+> >
+> > Some checks are needed due to ACPI and DT support co-existing.
+> > Maybe it would be better to just split the probing into an ACPI path
+> > and a DT path.
+> >
+> > I'll have a look through the series for redundant retval checks.
+>
+> Drop where it is redundant.
+>
+> ...
+>
+> > > > -       ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
+> > > > -       if (ret)
+> > > > -               return ret;
+> > >
+> > > Where is it gone? Why?
+> >
+> > It was replaced by a clk_get_rate call, which as Sakari pointed out,
+> > isn't correct.
+> > I'll rework the clock handling for v4.
+>
+> If it was in the driver it should stay -- properties is an ABI (between firmware and kernel).
 
-Right, the mmsys device is now the parent of the drm device.
+Ack.
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>
+> > > > +       ov8856->xvclk = devm_clk_get_optional(dev, "xvclk");
+> > > > +       if (IS_ERR(ov8856->xvclk)) {
+> > >
+> > > > +               dev_err(dev, "could not get xvclk clock (%ld)\n",
+> > > > +                       PTR_ERR(ov8856->xvclk));
+> > >
+> > > Also you may use %pe here and in similar cases.
+> >
+> > Weirdly checkpatch complains about this.
+> > But it builds and runs cleanly, so I'll add it in v4.
+>
+> %pe requires pointer, PTR_ERR converts pointer to integer.
 
-Also I tested drm with the patch applied and adding the gce client register to
-my device-tree.
+Ack.
 
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>
+> ...
+>
+> > > > +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
+> > > > +                                     ov8856->supplies);
+> > > > +       if (ret) {
+> > >
+> > > > +               dev_warn(dev, "failed to get regulators\n");
+> > >
+> > > If it's a warning, why we return from here?
+> > > Same question to all other places with same issue.
+> >
+> > The issue I was seeing was the driver having to return a EDEFER here,
+> > so this warning sheds some light on which exact component is returning
+> > an EDEFER.
+> >
+> > [   15.962623] ov8856 16-0010: Dropping the link to regulator.29
+> > [   15.968464] ov8856 16-0010: failed to get regulators
+> > [   15.973493] ov8856 16-0010: failed to get HW configuration: -517
+> > [   15.979591] ov8856 16-0010: removing from PM domain titan_top_gdsc
+> > [   15.985855] ov8856 16-0010: genpd_remove_device()
+> > [   15.990672] i2c 16-0010: Driver ov8856 requests probe deferral
+> >
+> > Personally I found it helpful to speed up debugging, but I'll happily
+> > remove it if you prefer no warning.
+>
+> My point is that you have it in align:
+>  - if it is an error, print as an error and bail out, otherwise
+>  - if it is a warning, print it and continue.
 
-Thanks,
- Enric
+I see what you're saying now, let's remove it then :)
+I guess in the specific case of EDEFER, it doesn't fit neatly into
+either of those categories, in the sense that the way you continue is
+to return and then try to probe again later.
 
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 6 ++++--
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 3 ++-
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index 615a54e60fe2..8621f0289399 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -822,14 +822,16 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
->  
->  #if IS_REACHABLE(CONFIG_MTK_CMDQ)
->  	mtk_crtc->cmdq_client =
-> -			cmdq_mbox_create(dev, drm_crtc_index(&mtk_crtc->base),
-> +			cmdq_mbox_create(mtk_crtc->mmsys_dev,
-> +					 drm_crtc_index(&mtk_crtc->base),
->  					 2000);
->  	if (IS_ERR(mtk_crtc->cmdq_client)) {
->  		dev_dbg(dev, "mtk_crtc %d failed to create mailbox client, writing register by CPU now\n",
->  			drm_crtc_index(&mtk_crtc->base));
->  		mtk_crtc->cmdq_client = NULL;
->  	}
-> -	ret = of_property_read_u32_index(dev->of_node, "mediatek,gce-events",
-> +	ret = of_property_read_u32_index(mtk_crtc->mmsys_dev->of_node,
-> +					 "mediatek,gce-events",
->  					 drm_crtc_index(&mtk_crtc->base),
->  					 &mtk_crtc->cmdq_event);
->  	if (ret)
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> index e2bb0d19ef99..dc78e86bccc0 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -517,7 +517,8 @@ static int mtk_drm_probe(struct platform_device *pdev)
->  				goto err_node;
->  			}
->  
-> -			ret = mtk_ddp_comp_init(dev, node, comp, comp_id, NULL);
-> +			ret = mtk_ddp_comp_init(dev->parent, node, comp,
-> +						comp_id, NULL);
->  			if (ret) {
->  				of_node_put(node);
->  				goto err_node;
-> 
+There are some other locations where this is handled wrong, I'll align
+them properly for v4.
+
+>
+> > > > +               return ret;
+> > > >         }
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
