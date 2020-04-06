@@ -2,127 +2,87 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D42C2BA80
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE913C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55C02076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DFB206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="0IKqwrP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbgDFLiv (ORCPT
+        id S1727522AbgDFLjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:38:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55218 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727192AbgDFLiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:38:51 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C68BFAE2D;
-        Mon,  6 Apr 2020 11:38:48 +0000 (UTC)
-Subject: Re: [PATCH 01/11] EDAC/mc: Use int type for parameters of
- edac_mc_alloc()
-To:     Robert Richter <rrichter@marvell.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200306151318.17422-1-rrichter@marvell.com>
- <20200306151318.17422-2-rrichter@marvell.com>
-From:   Matthias Brugger <mbrugger@suse.com>
-Message-ID: <b87a569d-8170-2b8b-d7c8-60bc782f5f2e@suse.com>
-Date:   Mon, 6 Apr 2020 13:38:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Apr 2020 07:39:37 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:45844 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727192AbgDFLjg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:39:36 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id A35072E14E8;
+        Mon,  6 Apr 2020 14:39:33 +0300 (MSK)
+Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
+        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id sX88qFixUn-dXiqsfHL;
+        Mon, 06 Apr 2020 14:39:33 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1586173173; bh=Udgck5hZl7iY8rk7tJBnajnqAtzBoXXAebBFLAw1OM8=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=0IKqwrP0baovIK3RCualDi6GobR3G3k/do+aWVt0ZSJFwKoIV9r1UU4OnMtkPlCHm
+         XCIRM12rKidSHVVoYSArzG+p1ruaguPHCNoCtplLqNfpVaCxmqoNrxa8z2DnKcs7Ae
+         dUjehR169vpBHIAtzv13cL6MWuvG71j7Nl/WyNvA=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:6407::1:5])
+        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id FtB5uheCc4-dWW40PVT;
+        Mon, 06 Apr 2020 14:39:32 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] net: revert default NAPI poll timeout to 2 jiffies
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Dmitry Yakunin <zeil@yandex-team.ru>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthew Whitehead <tedheadster@gmail.com>
+Date:   Mon, 06 Apr 2020 14:39:32 +0300
+Message-ID: <158617317267.1170.12944758673162826206.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-In-Reply-To: <20200306151318.17422-2-rrichter@marvell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/03/2020 16:13, Robert Richter wrote:
-> Most iterators use int type as index. mci->mc_idx is also type int. So
-> use int type for parameters of edac_mc_alloc(). Extend the range check
-> to check for negative values. There is a type cast now when assigning
-> variable n_layers to mci->n_layer, it is safe due to the range check.
-> 
-> While at it, rename the users of edac_mc_alloc() to mc_idx as this
-> fits better here.
-> 
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
+For HZ < 1000 timeout 2000us rounds up to 1 jiffy but expires randomly
+because next timer interrupt could come shortly after starting softirq.
 
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+For commonly used CONFIG_HZ=1000 nothing changes.
 
-> ---
->  drivers/edac/edac_mc.c | 7 +++----
->  drivers/edac/edac_mc.h | 6 +++---
->  2 files changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index 75ede27bdf6a..8bd3d00b4385 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -444,8 +444,7 @@ static int edac_mc_alloc_dimms(struct mem_ctl_info *mci)
->  	return 0;
->  }
->  
-> -struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
-> -				   unsigned int n_layers,
-> +struct mem_ctl_info *edac_mc_alloc(int mc_idx, int n_layers,
->  				   struct edac_mc_layer *layers,
->  				   unsigned int sz_pvt)
->  {
-> @@ -456,7 +455,7 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
->  	void *pvt, *ptr = NULL;
->  	bool per_rank = false;
->  
-> -	if (WARN_ON(n_layers > EDAC_MAX_LAYERS || n_layers == 0))
-> +	if (WARN_ON(mc_idx < 0 || n_layers < 1 || n_layers > EDAC_MAX_LAYERS))
->  		return NULL;
->  
->  	/*
-> @@ -505,7 +504,7 @@ struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
->  	pvt = sz_pvt ? (((char *)mci) + ((unsigned long)pvt)) : NULL;
->  
->  	/* setup index and various internal pointers */
-> -	mci->mc_idx = mc_num;
-> +	mci->mc_idx = mc_idx;
->  	mci->tot_dimms = tot_dimms;
->  	mci->pvt_info = pvt;
->  	mci->n_layers = n_layers;
-> diff --git a/drivers/edac/edac_mc.h b/drivers/edac/edac_mc.h
-> index 881b00eadf7a..4815f50afea0 100644
-> --- a/drivers/edac/edac_mc.h
-> +++ b/drivers/edac/edac_mc.h
-> @@ -98,7 +98,7 @@ do {									\
->  /**
->   * edac_mc_alloc() - Allocate and partially fill a struct &mem_ctl_info.
->   *
-> - * @mc_num:		Memory controller number
-> + * @mc_idx:		Memory controller number
->   * @n_layers:		Number of MC hierarchy layers
->   * @layers:		Describes each layer as seen by the Memory Controller
->   * @sz_pvt:		size of private storage needed
-> @@ -122,8 +122,8 @@ do {									\
->   *	On success, return a pointer to struct mem_ctl_info pointer;
->   *	%NULL otherwise
->   */
-> -struct mem_ctl_info *edac_mc_alloc(unsigned int mc_num,
-> -				   unsigned int n_layers,
-> +struct mem_ctl_info *edac_mc_alloc(int mc_idx,
-> +				   int n_layers,
->  				   struct edac_mc_layer *layers,
->  				   unsigned int sz_pvt);
->  
-> 
+Fixes: 7acf8a1e8a28 ("Replace 2 jiffies with sysctl netdev_budget_usecs to enable softirq tuning")
+Reported-by: Dmitry Yakunin <zeil@yandex-team.ru>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ net/core/dev.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 9c9e763bfe0e..df8097b8e286 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4140,7 +4140,8 @@ EXPORT_SYMBOL(netdev_max_backlog);
+ 
+ int netdev_tstamp_prequeue __read_mostly = 1;
+ int netdev_budget __read_mostly = 300;
+-unsigned int __read_mostly netdev_budget_usecs = 2000;
++/* Must be at least 2 jiffes to guarantee 1 jiffy timeout */
++unsigned int __read_mostly netdev_budget_usecs = 2 * USEC_PER_SEC / HZ;
+ int weight_p __read_mostly = 64;           /* old backlog weight */
+ int dev_weight_rx_bias __read_mostly = 1;  /* bias for backlog weight */
+ int dev_weight_tx_bias __read_mostly = 1;  /* bias for output_queue quota */
 
