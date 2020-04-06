@@ -2,260 +2,157 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE4CC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E765C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C204B24987
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5200E24998
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:43:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MW8/mQve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgDFQnT (ORCPT
+        id S1729745AbgDFQn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:43:19 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:57420 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729533AbgDFQnR (ORCPT
+        Mon, 6 Apr 2020 12:43:27 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:56175 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729609AbgDFQn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:43:17 -0400
-X-IronPort-AV: E=Sophos;i="5.72,351,1580742000"; 
-   d="scan'208";a="43857586"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 07 Apr 2020 01:43:16 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 8C21240065D4;
-        Tue,  7 Apr 2020 01:43:12 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v5 5/5] media: dt-bindings: media: i2c: convert ov5645 bindings to json-schema
-Date:   Mon,  6 Apr 2020 17:42:41 +0100
-Message-Id: <1586191361-16598-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 6 Apr 2020 12:43:26 -0400
+Received: by mail-pj1-f68.google.com with SMTP id fh8so26052pjb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 09:43:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=eP345ArGYnfGAJ4jzoK1LoRsxz9bzdzVl4xTuSWk8YU=;
+        b=MW8/mQveOroeY0x1xpt8gPhQROWiBKBbi6WYW1EvrM+99HqbdYjegbaYgTLHtdhq1J
+         l4QPfHXLUAHwah6DKPElpdCoNk/mzsNS50F//u2UWG7wU5c4a4/GkJczthkimZUpn+qf
+         DQIOFUaCcWiA0jzlGY8FZKr4Mnx0zlemtrO+SWFM+jmsaSw3jNiXjYEgvKJ/Gnr0NwUK
+         MnClJVV3jSNRRkmUx3oKbc74LCCOJEYOHSeGdVPLODh175Xr4qGV0zFy7UPhLe/1NkmS
+         WYcQaq3Ph8aIWWt+Ip0jt0z+671w0Sbq04XPtO1QlMeNjZ7c784pcgA2r2rnYpZcgi/o
+         VlZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=eP345ArGYnfGAJ4jzoK1LoRsxz9bzdzVl4xTuSWk8YU=;
+        b=RGuabHGg8anSowr0Vkg7hwqTzXjTWY2WWplPwbg9+npM02SWa55An5S+Ag50+HVXXW
+         kKt5wWpt7pcqLpWz3ekLjonxC0X1s8o0oq39vcJ/hSkWtB/eB9pcQbwvP6rTYTEAJI62
+         p1b10WstY+VN+8jid9TnIQXS78lClgh7zgSj94Hxe3q9VKBcIWWdGs7rJql72LmbxMYN
+         5dKY0AYhGKhp+ZIeYot0Q+yLDUMlov+GM+c/o5t0+Z9oSXZD7/AgwbkfIbjYs26zh3g3
+         xed8aGFrLvhFZ4U/0H5QLiE4/LoCDa6ocp+On7rp5pXvPI1yh9OsXPmGxtuqAHDn0tNQ
+         2nHw==
+X-Gm-Message-State: AGi0PubSAE7+fAbTLWXhpLZBCZeh3FMo6fhf9Lx/ERL48rlqwBVhZUxK
+        /sISzoDMPfcJOZH9cluPa2rGelJbRHQWog==
+X-Google-Smtp-Source: APiQypKGMyFeOjdTrlkRBPTR6ySLfo8qSkh83qKknt8owxl20zhRTJaNBpZZCNFvk4gJqtcAV7uKiA==
+X-Received: by 2002:a17:90a:fa17:: with SMTP id cm23mr19190pjb.121.1586191404980;
+        Mon, 06 Apr 2020 09:43:24 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id z7sm12001669pfz.24.2020.04.06.09.43.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 09:43:24 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 09:43:21 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     YunQiang Su <wzssyqa@gmail.com>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MIPS: malta: Set load address for 32bit kernel correctly
+Message-ID: <20200406164321.c3377heoqprzwbjc@google.com>
+References: <20200405082451.694910-1-jiaxun.yang@flygoat.com>
+ <alpine.LFD.2.21.2004051738000.4156324@eddie.linux-mips.org>
+ <96C9B1A0-2F89-4650-B0A4-6A6242A2AA0A@flygoat.com>
+ <alpine.LFD.2.21.2004051817310.4156324@eddie.linux-mips.org>
+ <CAKcpw6U=VW+h4sU1fzrsqXU9z-zVfcFsENKHgAD4paqtndip2w@mail.gmail.com>
+ <079F408B-9C44-4317-8DD3-7A1896564960@flygoat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <079F408B-9C44-4317-8DD3-7A1896564960@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert ov5645 bindings to json-schema.
+On 2020-04-06, Jiaxun Yang wrote:
+>
+>
+>于 2020年4月6日 GMT+08:00 下午6:57:18, YunQiang Su <wzssyqa@gmail.com> 写到:
+>>Maciej W. Rozycki <macro@linux-mips.org> 于2020年4月6日周一 上午1:23写道：
+>>>
+>>> On Mon, 6 Apr 2020, Jiaxun Yang wrote:
+>>>
+>>> > > Given the description above I think it should be done uniformly
+>>and
+>>> > >automatically across all platforms by trimming the address
+>>supplied
+>>> > >with
+>>> > >$(load-y) to low 8 digits in a single place, that is at the place
+>>where
+>>> > >
+>>> > >the variable is consumed.  This will reduce clutter across
+>>Makefile
+>>> > >fragments, avoid inconsistencies and extra work to handle
+>>individual
+>>> > >platforms as the problem is triggered over and over again, and
+>>limit
+>>> > >the
+>>> > >risk of mistakes.
+>>> >
+>>> > I was intended to do like this but failed to find a proper way.
+>>> >
+>>> > Makefile isn't designed for any kind of calculation.
+>>> > And shell variables are 64-bit signed so it can't hold such a huge
+>>variable.
+>>> >
+>>> > Just wish somebody can give me a way to do like:
+>>> >
+>>> > ifndef CONFIG_64BIT
+>>> > load-y = $(load-y) & 0xffffffff
+>>> > endif
+>>>
+>>>  Use the usual shell tools like `sed', `cut', `awk', or whatever we
+>>use in
+>>
+>>perl may be the easiest to use tool here.
+>>
+>>ifndef CONFIG_64BIT
+>>  load-y := $(shell $(PERL) -e 'print $(load-y) & 0xffffffff')
+>>endif
+>>
+>>Note that it is `:=' instead of '='.
+>
+>It seems like perl is not one of kernel's build dependencies.[1]
+>I'm comsidering a alternative solution,
+>write a small hostprog in C to deal with that.
+>
+>Thanks.
+>
+>[1]: https://www.kernel.org/doc/html/v5.6/process/changes.html
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- .../devicetree/bindings/media/i2c/ov5645.txt  |  52 --------
- .../devicetree/bindings/media/i2c/ov5645.yaml | 126 ++++++++++++++++++
- 2 files changed, 126 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
+load-y := 0xffffffff80100000
+load-y := 0x$(shell echo "$(load-y)" | rev | head -c 8 | rev)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-deleted file mode 100644
-index a55bb728ea48..000000000000
---- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-+++ /dev/null
-@@ -1,52 +0,0 @@
--* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
--
--The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
--an active array size of 2592H x 1944V. It is programmable through a serial I2C
--interface.
--
--Required Properties:
--- compatible: Value should be "ovti,ov5645".
--- clocks: Reference to the xclk clock.
--- clock-names: Should be "xclk".
--- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
--  to the hardware pin PWDNB which is physically active low.
--- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
--  the hardware pin RESETB.
--- vdddo-supply: Chip digital IO regulator.
--- vdda-supply: Chip analog regulator.
--- vddd-supply: Chip digital core regulator.
--
--The device node must contain one 'port' child node for its digital output
--video port, in accordance with the video interface bindings defined in
--Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Example:
--
--	&i2c1 {
--		...
--
--		ov5645: ov5645@3c {
--			compatible = "ovti,ov5645";
--			reg = <0x3c>;
--
--			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
--			reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&camera_rear_default>;
--
--			clocks = <&clks 200>;
--			clock-names = "xclk";
--
--			vdddo-supply = <&camera_dovdd_1v8>;
--			vdda-supply = <&camera_avdd_2v8>;
--			vddd-supply = <&camera_dvdd_1v2>;
--
--			port {
--				ov5645_ep: endpoint {
--					clock-lanes = <1>;
--					data-lanes = <0 2>;
--					remote-endpoint = <&csi0_ep>;
--				};
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-new file mode 100644
-index 000000000000..d5cdcf9a1c76
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Omnivision 1/4-Inch 5MP CMOS Digital Image Sensor
-+
-+maintainers:
-+  - Sakari Ailus <sakari.ailus@linux.intel.com>
-+  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-+
-+description: |-
-+ The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-+ an active array size of 2592H x 1944V. It is programmable through a serial I2C
-+ interface.
-+
-+properties:
-+  compatible:
-+    const: ovti,ov5645
-+
-+  reg:
-+    description: I2C device address
-+    maxItems: 1
-+
-+  clocks:
-+    description: External clock frequency should range between 6MHz to 27MHz.
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: xclk
-+
-+  enable-gpios:
-+    description: |-
-+      Chip enable GPIO. This corresponds to the hardware pin PWDNB which is
-+      physically active low.
-+
-+  reset-gpios:
-+    description: Chip reset GPIO. This corresponds to the hardware pin RESETB.
-+
-+  vdddo-supply:
-+    description: Chip digital IO regulator.
-+
-+  vdda-supply:
-+    description: Chip analog regulator.
-+
-+  vddd-supply:
-+    description: Chip digital core regulator.
-+
-+  # See ../video-interfaces.txt for more details
-+  port:
-+    type: object
-+    properties:
-+      endpoint:
-+        type: object
-+
-+        properties:
-+          data-lanes:
-+            description: |-
-+              The sensor supports either one-lane, or two-lane operation.
-+              For one-lane operation the property must be set to <1> and
-+              for two-lane operation the property must be set to <1 2>.
-+            items:
-+              - const: 1
-+              - const: 2
-+
-+          clock-lanes:
-+            description:
-+              should be set to <0> (clock lane on hardware lane 0).
-+            items:
-+              - const: 0
-+
-+          remote-endpoint: true
-+
-+        required:
-+          - data-lanes
-+          - clock-lanes
-+          - remote-endpoint
-+
-+        additionalProperties: false
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - enable-gpios
-+  - reset-gpios
-+  - vdddo-supply
-+  - vdda-supply
-+  - vddd-supply
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        ov5645: sensor@3c {
-+            compatible = "ovti,ov5645";
-+            reg = <0x3c>;
-+            clocks = <&ov5645_cl>;
-+            clock-names = "xclk";
-+            enable-gpios = <&gpio1 6 /* GPIO_ACTIVE_HIGH */>;
-+            reset-gpios = <&gpio5 20 /* GPIO_ACTIVE_LOW */>;
-+            vdddo-supply = <&camera_dovdd_1v8>;
-+            vdda-supply = <&camera_avdd_2v8>;
-+            vddd-supply = <&camera_dvdd_1v2>;
-+
-+            port {
-+                ov5645_0: endpoint {
-+                    remote-endpoint = <&csi1_ep>;
-+                    clock-lanes = <0>;
-+                    data-lanes = <1 2>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
--- 
-2.20.1
-
+>>
+>>> the kernel build already for other purposes.  There's no need to do
+>>any
+>>> actual calculation here to extract the last 8 characters (and the
+>>leading
+>>> `0x' prefix).  At worst you can write a small C program, compile it
+>>with
+>>> the build system compiler and run, as we already do for some stuff.
+>>>
+>>>   Maciej
+>
+>-- 
+>Jiaxun Yang
