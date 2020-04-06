@@ -2,1105 +2,609 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F593C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3954C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C35F22B51
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB9D22B51
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:17:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="e03dJu1w"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aszgwj6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgDFNQv (ORCPT
+        id S1728311AbgDFNRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:16:51 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:3563 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728176AbgDFNQv (ORCPT
+        Mon, 6 Apr 2020 09:17:21 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:36309 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728176AbgDFNRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:16:51 -0400
+        Mon, 6 Apr 2020 09:17:21 -0400
+Received: by mail-yb1-f194.google.com with SMTP id i4so8745670ybl.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:17:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586179008; x=1617715008;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=iNjD4+7sTazGkWz1Hp13YYdf889L33kG2Fly0+Ycjac=;
-  b=e03dJu1w/6+dsBXL0yY/ar2roRq4ZvdcUBBcFLM9KIftpsNvGdPp80VF
-   jIUBNGv/VoOCyap1PYGG62rlparaESRtPHLd18z1ixfPI9z3wiLC8kG7r
-   w5/1aCXeVEGlOWJReHXAzY2Vf16t5dhcG4+SYC41ZN15PTpwelvhWRJSW
-   Q=;
-IronPort-SDR: /1/aOjFi3vbgMPPLLjOPR+UjC7FWSVhc6ecKYEXLiFy7HenXZtFtmq0r+3ukVtHZc0+JCPd8PW
- 7YNTi+Pbk3xQ==
-X-IronPort-AV: E=Sophos;i="5.72,351,1580774400"; 
-   d="scan'208";a="25729008"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 06 Apr 2020 13:16:47 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id D95EFA1ED7;
-        Mon,  6 Apr 2020 13:16:36 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:16:36 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.65) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 6 Apr 2020 13:16:22 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 11/15] tools: Add a minimal user-space tool for DAMON
-Date:   Mon, 6 Apr 2020 15:09:34 +0200
-Message-ID: <20200406130938.14066-12-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200406130938.14066-1-sjpark@amazon.com>
-References: <20200406130938.14066-1-sjpark@amazon.com>
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FxqpX+YAu3eb2m5zhAQ8G7U6I6h08imClnzMmoDXeZQ=;
+        b=aszgwj6d4xElM3cBKAFpLg1k4r5vKvnIvJsMCJcMb1lJxyuEtXNypet0uWL+8HEcYR
+         e8DNgVPaq37BmAlhXL1z2kPx614ZZM8Z1APaUW5Y7hnAfa9JiX90fhVnkdU13Kf4OSDy
+         lmYox8jooCVVosm+4jJ3JmkDLeTkGoB319rPHnZffkuO75h5a0z0d/ox82MxhhvTG5o4
+         lvuUb5UtNBB8DgK+ub0iQ0WD5cnpYxdRInB8snrfDxXaFkejn9kGp+i/u+hIL0UC17vY
+         ys24PV5obhJN7P/uS+hll9F6iRFcsiGGb+5Au5KrnKcYVM1DzmrLL1JRYVRzLH7c53+v
+         /SJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FxqpX+YAu3eb2m5zhAQ8G7U6I6h08imClnzMmoDXeZQ=;
+        b=krsq2vkOKVIfxOhDeONKmGiFLUxoMCcqRTb5G4sprT7Q3dNaEcsNCkreW+RLEDlI4W
+         Hy9nQYb9htCV7wxPeNCPPibDWGK9BE9buDpH0vcFcb6WCT3tML94VMwLxp09bYpL7RJg
+         MPbSVPlw+AH6Mr7VGLAyY2Mw7f4HMrwLlq+8on8abQyWe4wIoIt2MTUlSzoc9y3SaxrW
+         vPvmeq3s6elFOZ7j8qkbSLGsRdwDzCNawljtmBDI3bSKiJe+uO4+IH35lJ/YqtBEu/a7
+         zRtLNYa1yoUS8kzNpusV0nXyD228Jkgsmgr2dkDhjUGIN0cL8/AifWuUfSYdOOUb8h/J
+         sR4g==
+X-Gm-Message-State: AGi0PuZCWtxXjinRSylHZBg80brgypiLlXjpF0gMm3scerVEBzULU5Ey
+        NQ00wcJfL7yjzO7SARLS+wxjChUNMnRpm4wjDL6imVdu
+X-Google-Smtp-Source: APiQypJHKS6BZk/nwzPM3o7QqaOcdpoFPH9C4SABj0hd7yg9Un34Dtc3e6Udvhxcs8kTQhSyc+37DA52NAUcYo9tFB0=
+X-Received: by 2002:a25:8052:: with SMTP id a18mr34863478ybn.459.1586179038155;
+ Mon, 06 Apr 2020 06:17:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.65]
-X-ClientProxiedBy: EX13D11UWB003.ant.amazon.com (10.43.161.206) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <20200326070236.235835-1-walken@google.com> <20200326070236.235835-9-walken@google.com>
+ <4eaa33a1-8144-253e-ac99-eeb354b6f871@linux.ibm.com>
+In-Reply-To: <4eaa33a1-8144-253e-ac99-eeb354b6f871@linux.ibm.com>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Mon, 6 Apr 2020 06:17:04 -0700
+Message-ID: <CANN689G+S-SARxkLuebuOdLoRND0u0GsOHfkDnDfC4aEWYuduA@mail.gmail.com>
+Subject: Re: [PATCH 8/8] mmap locking API: rename mmap_sem to mmap_lock
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+Hmmm. The intention was to use a non-specific name - I thought 'lock'
+would work as a generic way to describe any sort of locking primitive,
+not just mutexes. After all, the main push for the mmap locking API is
+to make it easier to change the details of how it's implemented...
 
-This commit adds a shallow wrapper python script, ``/tools/damon/damo``
-that provides more convenient interface.  Note that it is only aimed to
-be used for minimal reference of the DAMON's debugfs interfaces and for
-debugging of the DAMON itself.
+I'm not sure if there would be any better name that conveys that intent ?
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- tools/damon/.gitignore    |   1 +
- tools/damon/_dist.py      |  36 ++++
- tools/damon/bin2txt.py    |  64 +++++++
- tools/damon/damo          |  37 ++++
- tools/damon/heats.py      | 358 ++++++++++++++++++++++++++++++++++++++
- tools/damon/nr_regions.py |  89 ++++++++++
- tools/damon/record.py     | 212 ++++++++++++++++++++++
- tools/damon/report.py     |  45 +++++
- tools/damon/wss.py        |  95 ++++++++++
- 9 files changed, 937 insertions(+)
- create mode 100644 tools/damon/.gitignore
- create mode 100644 tools/damon/_dist.py
- create mode 100644 tools/damon/bin2txt.py
- create mode 100755 tools/damon/damo
- create mode 100644 tools/damon/heats.py
- create mode 100644 tools/damon/nr_regions.py
- create mode 100644 tools/damon/record.py
- create mode 100644 tools/damon/report.py
- create mode 100644 tools/damon/wss.py
+If we can't agree on a non-specific name, one option could be to leave
+the name as mmap_sem for now and sweep through new uses of mmap_sem
+every once in a while to convert these to the new API (which would
+mostly come down to re-running the coccinelle converter).
 
-diff --git a/tools/damon/.gitignore b/tools/damon/.gitignore
-new file mode 100644
-index 000000000000..96403d36ff93
---- /dev/null
-+++ b/tools/damon/.gitignore
-@@ -0,0 +1 @@
-+__pycache__/*
-diff --git a/tools/damon/_dist.py b/tools/damon/_dist.py
-new file mode 100644
-index 000000000000..9851ec964e5c
---- /dev/null
-+++ b/tools/damon/_dist.py
-@@ -0,0 +1,36 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+import os
-+import struct
-+import subprocess
-+
-+def access_patterns(f):
-+    nr_regions = struct.unpack('I', f.read(4))[0]
-+
-+    patterns = []
-+    for r in range(nr_regions):
-+        saddr = struct.unpack('L', f.read(8))[0]
-+        eaddr = struct.unpack('L', f.read(8))[0]
-+        nr_accesses = struct.unpack('I', f.read(4))[0]
-+        patterns.append([eaddr - saddr, nr_accesses])
-+    return patterns
-+
-+def plot_dist(data_file, output_file, xlabel, ylabel):
-+    terminal = output_file.split('.')[-1]
-+    if not terminal in ['pdf', 'jpeg', 'png', 'svg']:
-+        os.remove(data_file)
-+        print("Unsupported plot output type.")
-+        exit(-1)
-+
-+    gnuplot_cmd = """
-+    set term %s;
-+    set output '%s';
-+    set key off;
-+    set xlabel '%s';
-+    set ylabel '%s';
-+    plot '%s' with linespoints;""" % (terminal, output_file, xlabel, ylabel,
-+            data_file)
-+    subprocess.call(['gnuplot', '-e', gnuplot_cmd])
-+    os.remove(data_file)
-+
-diff --git a/tools/damon/bin2txt.py b/tools/damon/bin2txt.py
-new file mode 100644
-index 000000000000..d5ffac60e02c
---- /dev/null
-+++ b/tools/damon/bin2txt.py
-@@ -0,0 +1,64 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+import argparse
-+import os
-+import struct
-+import sys
-+
-+def parse_time(bindat):
-+    "bindat should be 16 bytes"
-+    sec = struct.unpack('l', bindat[0:8])[0]
-+    nsec = struct.unpack('l', bindat[8:16])[0]
-+    return sec * 1000000000 + nsec;
-+
-+def pr_region(f):
-+    saddr = struct.unpack('L', f.read(8))[0]
-+    eaddr = struct.unpack('L', f.read(8))[0]
-+    nr_accesses = struct.unpack('I', f.read(4))[0]
-+    print("%012x-%012x(%10d):\t%d" %
-+            (saddr, eaddr, eaddr - saddr, nr_accesses))
-+
-+def pr_task_info(f):
-+    pid = struct.unpack('L', f.read(8))[0]
-+    print("pid: ", pid)
-+    nr_regions = struct.unpack('I', f.read(4))[0]
-+    print("nr_regions: ", nr_regions)
-+    for r in range(nr_regions):
-+        pr_region(f)
-+
-+def set_argparser(parser):
-+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-+            default='damon.data', help='input file name')
-+
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
-+
-+    file_path = args.input
-+
-+    if not os.path.isfile(file_path):
-+        print('input file (%s) is not exist' % file_path)
-+        exit(1)
-+
-+    with open(file_path, 'rb') as f:
-+        start_time = None
-+        while True:
-+            timebin = f.read(16)
-+            if len(timebin) != 16:
-+                break
-+            time = parse_time(timebin)
-+            if not start_time:
-+                start_time = time
-+                print("start_time: ", start_time)
-+            print("rel time: %16d" % (time - start_time))
-+            nr_tasks = struct.unpack('I', f.read(4))[0]
-+            print("nr_tasks: ", nr_tasks)
-+            for t in range(nr_tasks):
-+                pr_task_info(f)
-+                print("")
-+
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/damo b/tools/damon/damo
-new file mode 100755
-index 000000000000..58e1099ae5fc
---- /dev/null
-+++ b/tools/damon/damo
-@@ -0,0 +1,37 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+import argparse
-+
-+import record
-+import report
-+
-+class SubCmdHelpFormatter(argparse.RawDescriptionHelpFormatter):
-+    def _format_action(self, action):
-+        parts = super(argparse.RawDescriptionHelpFormatter,
-+                self)._format_action(action)
-+        # skip sub parsers help
-+        if action.nargs == argparse.PARSER:
-+            parts = '\n'.join(parts.split('\n')[1:])
-+        return parts
-+
-+parser = argparse.ArgumentParser(formatter_class=SubCmdHelpFormatter)
-+
-+subparser = parser.add_subparsers(title='command', dest='command',
-+        metavar='<command>')
-+subparser.required = True
-+
-+parser_record = subparser.add_parser('record',
-+        help='record data accesses of the given target processes')
-+record.set_argparser(parser_record)
-+
-+parser_report = subparser.add_parser('report',
-+        help='report the recorded data accesses in the specified form')
-+report.set_argparser(parser_report)
-+
-+args = parser.parse_args()
-+
-+if args.command == 'record':
-+    record.main(args)
-+elif args.command == 'report':
-+    report.main(args)
-diff --git a/tools/damon/heats.py b/tools/damon/heats.py
-new file mode 100644
-index 000000000000..48e966c5ca02
---- /dev/null
-+++ b/tools/damon/heats.py
-@@ -0,0 +1,358 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+"""
-+Transform binary trace data into human readable text that can be used for
-+heatmap drawing, or directly plot the data in a heatmap format.
-+
-+Format of the text is:
-+
-+    <time> <space> <heat>
-+    ...
-+
-+"""
-+
-+import argparse
-+import os
-+import struct
-+import subprocess
-+import sys
-+import tempfile
-+
-+class HeatSample:
-+    space_idx = None
-+    sz_time_space = None
-+    heat = None
-+
-+    def __init__(self, space_idx, sz_time_space, heat):
-+        if sz_time_space < 0:
-+            raise RuntimeError()
-+        self.space_idx = space_idx
-+        self.sz_time_space = sz_time_space
-+        self.heat = heat
-+
-+    def total_heat(self):
-+        return self.heat * self.sz_time_space
-+
-+    def merge(self, sample):
-+        "sample must have a space idx that same to self"
-+        heat_sum = self.total_heat() + sample.total_heat()
-+        self.heat = heat_sum / (self.sz_time_space + sample.sz_time_space)
-+        self.sz_time_space += sample.sz_time_space
-+
-+def pr_samples(samples, time_idx, time_unit, region_unit):
-+    display_time = time_idx * time_unit
-+    for idx, sample in enumerate(samples):
-+        display_addr = idx * region_unit
-+        if not sample:
-+            print("%s\t%s\t%s" % (display_time, display_addr, 0.0))
-+            continue
-+        print("%s\t%s\t%s" % (display_time, display_addr, sample.total_heat() /
-+            time_unit / region_unit))
-+
-+def to_idx(value, min_, unit):
-+    return (value - min_) // unit
-+
-+def read_task_heats(f, pid, aunit, amin, amax):
-+    pid_ = struct.unpack('L', f.read(8))[0]
-+    nr_regions = struct.unpack('I', f.read(4))[0]
-+    if pid_ != pid:
-+        f.read(20 * nr_regions)
-+        return None
-+    samples = []
-+    for i in range(nr_regions):
-+        saddr = struct.unpack('L', f.read(8))[0]
-+        eaddr = struct.unpack('L', f.read(8))[0]
-+        eaddr = min(eaddr, amax - 1)
-+        heat = struct.unpack('I', f.read(4))[0]
-+
-+        if eaddr <= amin:
-+            continue
-+        if saddr >= amax:
-+            continue
-+        saddr = max(amin, saddr)
-+        eaddr = min(amax, eaddr)
-+
-+        sidx = to_idx(saddr, amin, aunit)
-+        eidx = to_idx(eaddr - 1, amin, aunit)
-+        for idx in range(sidx, eidx + 1):
-+            sa = max(amin + idx * aunit, saddr)
-+            ea = min(amin + (idx + 1) * aunit, eaddr)
-+            sample = HeatSample(idx, (ea - sa), heat)
-+            samples.append(sample)
-+    return samples
-+
-+def parse_time(bindat):
-+    sec = struct.unpack('l', bindat[0:8])[0]
-+    nsec = struct.unpack('l', bindat[8:16])[0]
-+    return sec * 1000000000 + nsec
-+
-+def apply_samples(target_samples, samples, start_time, end_time, aunit, amin):
-+    for s in samples:
-+        sample = HeatSample(s.space_idx,
-+                s.sz_time_space * (end_time - start_time), s.heat)
-+        idx = sample.space_idx
-+        if not target_samples[idx]:
-+            target_samples[idx] = sample
-+        else:
-+            target_samples[idx].merge(sample)
-+
-+def __pr_heats(f, pid, tunit, tmin, tmax, aunit, amin, amax):
-+    heat_samples = [None] * ((amax - amin) // aunit)
-+
-+    start_time = 0
-+    end_time = 0
-+    last_flushed = -1
-+    while True:
-+        start_time = end_time
-+        timebin = f.read(16)
-+        if (len(timebin)) != 16:
-+            break
-+        end_time = parse_time(timebin)
-+        nr_tasks = struct.unpack('I', f.read(4))[0]
-+        samples_set = {}
-+        for t in range(nr_tasks):
-+            samples = read_task_heats(f, pid, aunit, amin, amax)
-+            if samples:
-+                samples_set[pid] = samples
-+        if not pid in samples_set:
-+            continue
-+        if start_time >= tmax:
-+            continue
-+        if end_time <= tmin:
-+            continue
-+        start_time = max(start_time, tmin)
-+        end_time = min(end_time, tmax)
-+
-+        sidx = to_idx(start_time, tmin, tunit)
-+        eidx = to_idx(end_time - 1, tmin, tunit)
-+        for idx in range(sidx, eidx + 1):
-+            if idx != last_flushed:
-+                pr_samples(heat_samples, idx, tunit, aunit)
-+                heat_samples = [None] * ((amax - amin) // aunit)
-+                last_flushed = idx
-+            st = max(start_time, tmin + idx * tunit)
-+            et = min(end_time, tmin + (idx + 1) * tunit)
-+            apply_samples(heat_samples, samples_set[pid], st, et, aunit, amin)
-+
-+def pr_heats(args):
-+    binfile = args.input
-+    pid = args.pid
-+    tres = args.tres
-+    tmin = args.tmin
-+    ares = args.ares
-+    amin = args.amin
-+
-+    tunit = (args.tmax - tmin) // tres
-+    aunit = (args.amax - amin) // ares
-+
-+    # Compensate the values so that those fit with the resolution
-+    tmax = tmin + tunit * tres
-+    amax = amin + aunit * ares
-+
-+    with open(binfile, 'rb') as f:
-+        __pr_heats(f, pid, tunit, tmin, tmax, aunit, amin, amax)
-+
-+class GuideInfo:
-+    pid = None
-+    start_time = None
-+    end_time = None
-+    lowest_addr = None
-+    highest_addr = None
-+    gaps = None
-+
-+    def __init__(self, pid, start_time):
-+        self.pid = pid
-+        self.start_time = start_time
-+        self.gaps = []
-+
-+    def regions(self):
-+        regions = []
-+        region = [self.lowest_addr]
-+        for gap in self.gaps:
-+            for idx, point in enumerate(gap):
-+                if idx == 0:
-+                    region.append(point)
-+                    regions.append(region)
-+                else:
-+                    region = [point]
-+        region.append(self.highest_addr)
-+        regions.append(region)
-+        return regions
-+
-+    def total_space(self):
-+        ret = 0
-+        for r in self.regions():
-+            ret += r[1] - r[0]
-+        return ret
-+
-+    def __str__(self):
-+        lines = ['pid:%d' % self.pid]
-+        lines.append('time: %d-%d (%d)' % (self.start_time, self.end_time,
-+                    self.end_time - self.start_time))
-+        for idx, region in enumerate(self.regions()):
-+            lines.append('region\t%2d: %020d-%020d (%d)' %
-+                    (idx, region[0], region[1], region[1] - region[0]))
-+        return '\n'.join(lines)
-+
-+def is_overlap(region1, region2):
-+    if region1[1] < region2[0]:
-+        return False
-+    if region2[1] < region1[0]:
-+        return False
-+    return True
-+
-+def overlap_region_of(region1, region2):
-+    return [max(region1[0], region2[0]), min(region1[1], region2[1])]
-+
-+def overlapping_regions(regions1, regions2):
-+    overlap_regions = []
-+    for r1 in regions1:
-+        for r2 in regions2:
-+            if is_overlap(r1, r2):
-+                r1 = overlap_region_of(r1, r2)
-+        if r1:
-+            overlap_regions.append(r1)
-+    return overlap_regions
-+
-+def get_guide_info(binfile):
-+    "Read file, return the set of guide information objects of the data"
-+    guides = {}
-+    with open(binfile, 'rb') as f:
-+        while True:
-+            timebin = f.read(16)
-+            if len(timebin) != 16:
-+                break
-+            monitor_time = parse_time(timebin)
-+            nr_tasks = struct.unpack('I', f.read(4))[0]
-+            for t in range(nr_tasks):
-+                pid = struct.unpack('L', f.read(8))[0]
-+                nr_regions = struct.unpack('I', f.read(4))[0]
-+                if not pid in guides:
-+                    guides[pid] = GuideInfo(pid, monitor_time)
-+                guide = guides[pid]
-+                guide.end_time = monitor_time
-+
-+                last_addr = None
-+                gaps = []
-+                for r in range(nr_regions):
-+                    saddr = struct.unpack('L', f.read(8))[0]
-+                    eaddr = struct.unpack('L', f.read(8))[0]
-+                    f.read(4)
-+
-+                    if not guide.lowest_addr or saddr < guide.lowest_addr:
-+                        guide.lowest_addr = saddr
-+                    if not guide.highest_addr or eaddr > guide.highest_addr:
-+                        guide.highest_addr = eaddr
-+
-+                    if not last_addr:
-+                        last_addr = eaddr
-+                        continue
-+                    if last_addr != saddr:
-+                        gaps.append([last_addr, saddr])
-+                    last_addr = eaddr
-+
-+                if not guide.gaps:
-+                    guide.gaps = gaps
-+                else:
-+                    guide.gaps = overlapping_regions(guide.gaps, gaps)
-+    return sorted(list(guides.values()), key=lambda x: x.total_space(),
-+                    reverse=True)
-+
-+def pr_guide(binfile):
-+    for guide in get_guide_info(binfile):
-+        print(guide)
-+
-+def region_sort_key(region):
-+    return region[1] - region[0]
-+
-+def set_missed_args(args):
-+    if args.pid and args.tmin and args.tmax and args.amin and args.amax:
-+        return
-+    guides = get_guide_info(args.input)
-+    guide = guides[0]
-+    if not args.pid:
-+        args.pid = guide.pid
-+    for g in guides:
-+        if g.pid == args.pid:
-+            guide = g
-+            break
-+
-+    if not args.tmin:
-+        args.tmin = guide.start_time
-+    if not args.tmax:
-+        args.tmax = guide.end_time
-+
-+    if not args.amin or not args.amax:
-+        region = sorted(guide.regions(), key=lambda x: x[1] - x[0],
-+                reverse=True)[0]
-+        args.amin = region[0]
-+        args.amax = region[1]
-+
-+def plot_heatmap(data_file, output_file):
-+    terminal = output_file.split('.')[-1]
-+    if not terminal in ['pdf', 'jpeg', 'png', 'svg']:
-+        os.remove(data_file)
-+        print("Unsupported plot output type.")
-+        exit(-1)
-+
-+    gnuplot_cmd = """
-+    set term %s;
-+    set output '%s';
-+    set key off;
-+    set xrange [0:];
-+    set yrange [0:];
-+    set xlabel 'Time (ns)';
-+    set ylabel 'Virtual Address (bytes)';
-+    plot '%s' using 1:2:3 with image;""" % (terminal, output_file, data_file)
-+    subprocess.call(['gnuplot', '-e', gnuplot_cmd])
-+    os.remove(data_file)
-+
-+def set_argparser(parser):
-+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-+            default='damon.data', help='input file name')
-+    parser.add_argument('--pid', metavar='<pid>', type=int,
-+            help='pid of target task')
-+    parser.add_argument('--tres', metavar='<resolution>', type=int,
-+            default=500, help='time resolution of the output')
-+    parser.add_argument('--tmin', metavar='<time>', type=lambda x: int(x,0),
-+            help='minimal time of the output')
-+    parser.add_argument('--tmax', metavar='<time>', type=lambda x: int(x,0),
-+            help='maximum time of the output')
-+    parser.add_argument('--ares', metavar='<resolution>', type=int, default=500,
-+            help='space address resolution of the output')
-+    parser.add_argument('--amin', metavar='<address>', type=lambda x: int(x,0),
-+            help='minimal space address of the output')
-+    parser.add_argument('--amax', metavar='<address>', type=lambda x: int(x,0),
-+            help='maximum space address of the output')
-+    parser.add_argument('--guide', action='store_true',
-+            help='print a guidance for the min/max/resolution settings')
-+    parser.add_argument('--heatmap', metavar='<file>', type=str,
-+            help='heatmap image file to create')
-+
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
-+
-+    if args.guide:
-+        pr_guide(args.input)
-+    else:
-+        set_missed_args(args)
-+        orig_stdout = sys.stdout
-+        if args.heatmap:
-+            tmp_path = tempfile.mkstemp()[1]
-+            tmp_file = open(tmp_path, 'w')
-+            sys.stdout = tmp_file
-+
-+        pr_heats(args)
-+
-+        if args.heatmap:
-+            sys.stdout = orig_stdout
-+            tmp_file.flush()
-+            tmp_file.close()
-+            plot_heatmap(tmp_path, args.heatmap)
-+
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/nr_regions.py b/tools/damon/nr_regions.py
-new file mode 100644
-index 000000000000..fcc2ce13e5f5
---- /dev/null
-+++ b/tools/damon/nr_regions.py
-@@ -0,0 +1,89 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+"Print out distribution of the number of regions in the given record"
-+
-+import argparse
-+import struct
-+import sys
-+import tempfile
-+
-+import _dist
-+
-+def set_argparser(parser):
-+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-+            default='damon.data', help='input file name')
-+    parser.add_argument('--range', '-r', type=int, nargs=3,
-+            metavar=('<start>', '<stop>', '<step>'),
-+            help='range of percentiles to print')
-+    parser.add_argument('--sortby', '-s', choices=['time', 'size'],
-+            help='the metric to be used for sorting the number of regions')
-+    parser.add_argument('--plot', '-p', type=str, metavar='<file>',
-+            help='plot the distribution to an image file')
-+
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
-+
-+    percentiles = [0, 25, 50, 75, 100]
-+
-+    file_path = args.input
-+    if args.range:
-+        percentiles = range(args.range[0], args.range[1], args.range[2])
-+    nr_regions_sort = True
-+    if args.sortby == 'time':
-+        nr_regions_sort = False
-+
-+    pid_pattern_map = {}
-+    with open(file_path, 'rb') as f:
-+        start_time = None
-+        while True:
-+            timebin = f.read(16)
-+            if len(timebin) != 16:
-+                break
-+            nr_tasks = struct.unpack('I', f.read(4))[0]
-+            for t in range(nr_tasks):
-+                pid = struct.unpack('L', f.read(8))[0]
-+                if not pid in pid_pattern_map:
-+                    pid_pattern_map[pid] = []
-+                pid_pattern_map[pid].append(_dist.access_patterns(f))
-+
-+    orig_stdout = sys.stdout
-+    if args.plot:
-+        tmp_path = tempfile.mkstemp()[1]
-+        tmp_file = open(tmp_path, 'w')
-+        sys.stdout = tmp_file
-+
-+    print('# <percentile> <# regions>')
-+    for pid in pid_pattern_map.keys():
-+        # Skip firs 20 regions as those would not adaptively adjusted
-+        snapshots = pid_pattern_map[pid][20:]
-+        nr_regions_dist = []
-+        for snapshot in snapshots:
-+            nr_regions_dist.append(len(snapshot))
-+        if nr_regions_sort:
-+            nr_regions_dist.sort(reverse=False)
-+
-+        print('# pid\t%s' % pid)
-+        print('# avr:\t%d' % (sum(nr_regions_dist) / len(nr_regions_dist)))
-+        for percentile in percentiles:
-+            thres_idx = int(percentile / 100.0 * len(nr_regions_dist))
-+            if thres_idx == len(nr_regions_dist):
-+                thres_idx -= 1
-+            threshold = nr_regions_dist[thres_idx]
-+            print('%d\t%d' % (percentile, nr_regions_dist[thres_idx]))
-+
-+    if args.plot:
-+        sys.stdout = orig_stdout
-+        tmp_file.flush()
-+        tmp_file.close()
-+        xlabel = 'runtime (percent)'
-+        if nr_regions_sort:
-+            xlabel = 'percentile'
-+        _dist.plot_dist(tmp_path, args.plot, xlabel,
-+                'number of monitoring target regions')
-+
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/record.py b/tools/damon/record.py
-new file mode 100644
-index 000000000000..a547d479a103
---- /dev/null
-+++ b/tools/damon/record.py
-@@ -0,0 +1,212 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+"""
-+Record data access patterns of the target process.
-+"""
-+
-+import argparse
-+import copy
-+import os
-+import signal
-+import subprocess
-+import time
-+
-+debugfs_attrs = None
-+debugfs_record = None
-+debugfs_pids = None
-+debugfs_monitor_on = None
-+
-+def set_target_pid(pid):
-+    return subprocess.call('echo %s > %s' % (pid, debugfs_pids), shell=True,
-+            executable='/bin/bash')
-+
-+def turn_damon(on_off):
-+    return subprocess.call("echo %s > %s" % (on_off, debugfs_monitor_on),
-+            shell=True, executable="/bin/bash")
-+
-+def is_damon_running():
-+    with open(debugfs_monitor_on, 'r') as f:
-+        return f.read().strip() == 'on'
-+
-+def do_record(target, is_target_cmd, attrs, old_attrs):
-+    if os.path.isfile(attrs.rfile_path):
-+        os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
-+
-+    if attrs.apply():
-+        print('attributes (%s) failed to be applied' % attrs)
-+        cleanup_exit(old_attrs, -1)
-+    print('# damon attrs: %s' % attrs)
-+    if is_target_cmd:
-+        p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-+        target = p.pid
-+    if set_target_pid(target):
-+        print('pid setting (%s) failed' % target)
-+        cleanup_exit(old_attrs, -2)
-+    if turn_damon('on'):
-+        print('could not turn on damon' % target)
-+        cleanup_exit(old_attrs, -3)
-+    if is_target_cmd:
-+        p.wait()
-+    while True:
-+        # damon will turn it off by itself if the target tasks are terminated.
-+        if not is_damon_running():
-+            break
-+        time.sleep(1)
-+
-+    cleanup_exit(old_attrs, 0)
-+
-+class Attrs:
-+    sample_interval = None
-+    aggr_interval = None
-+    regions_update_interval = None
-+    min_nr_regions = None
-+    max_nr_regions = None
-+    rbuf_len = None
-+    rfile_path = None
-+
-+    def __init__(self, s, a, r, n, x, l, f):
-+        self.sample_interval = s
-+        self.aggr_interval = a
-+        self.regions_update_interval = r
-+        self.min_nr_regions = n
-+        self.max_nr_regions = x
-+        self.rbuf_len = l
-+        self.rfile_path = f
-+
-+    def __str__(self):
-+        return "%s %s %s %s %s %s %s" % (self.sample_interval, self.aggr_interval,
-+                self.regions_update_interval, self.min_nr_regions,
-+                self.max_nr_regions, self.rbuf_len, self.rfile_path)
-+
-+    def attr_str(self):
-+        return "%s %s %s %s %s " % (self.sample_interval, self.aggr_interval,
-+                self.regions_update_interval, self.min_nr_regions,
-+                self.max_nr_regions)
-+
-+    def record_str(self):
-+        return '%s %s ' % (self.rbuf_len, self.rfile_path)
-+
-+    def apply(self):
-+        ret = subprocess.call('echo %s > %s' % (self.attr_str(), debugfs_attrs),
-+                shell=True, executable='/bin/bash')
-+        if ret:
-+            return ret
-+        return subprocess.call('echo %s > %s' % (self.record_str(),
-+            debugfs_record), shell=True, executable='/bin/bash')
-+
-+def current_attrs():
-+    with open(debugfs_attrs, 'r') as f:
-+        attrs = f.read().split()
-+    attrs = [int(x) for x in attrs]
-+
-+    with open(debugfs_record, 'r') as f:
-+        rattrs = f.read().split()
-+    attrs.append(int(rattrs[0]))
-+    attrs.append(rattrs[1])
-+    return Attrs(*attrs)
-+
-+def cmd_args_to_attrs(args):
-+    "Generate attributes with specified arguments"
-+    sample_interval = args.sample
-+    aggr_interval = args.aggr
-+    regions_update_interval = args.updr
-+    min_nr_regions = args.minr
-+    max_nr_regions = args.maxr
-+    rbuf_len = args.rbuf
-+    if not os.path.isabs(args.out):
-+        args.out = os.path.join(os.getcwd(), args.out)
-+    rfile_path = args.out
-+    return Attrs(sample_interval, aggr_interval, regions_update_interval,
-+            min_nr_regions, max_nr_regions, rbuf_len, rfile_path)
-+
-+def cleanup_exit(orig_attrs, exit_code):
-+    if is_damon_running():
-+        if turn_damon('off'):
-+            print('failed to turn damon off!')
-+    if orig_attrs:
-+        if orig_attrs.apply():
-+            print('original attributes (%s) restoration failed!' % orig_attrs)
-+    exit(exit_code)
-+
-+def sighandler(signum, frame):
-+    print('\nsignal %s received' % signum)
-+    cleanup_exit(orig_attrs, signum)
-+
-+def chk_update_debugfs(debugfs):
-+    global debugfs_attrs
-+    global debugfs_record
-+    global debugfs_pids
-+    global debugfs_monitor_on
-+
-+    debugfs_damon = os.path.join(debugfs, 'damon')
-+    debugfs_attrs = os.path.join(debugfs_damon, 'attrs')
-+    debugfs_record = os.path.join(debugfs_damon, 'record')
-+    debugfs_pids = os.path.join(debugfs_damon, 'pids')
-+    debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
-+
-+    if not os.path.isdir(debugfs_damon):
-+        print("damon debugfs dir (%s) not found", debugfs_damon)
-+        exit(1)
-+
-+    for f in [debugfs_attrs, debugfs_record, debugfs_pids, debugfs_monitor_on]:
-+        if not os.path.isfile(f):
-+            print("damon debugfs file (%s) not found" % f)
-+            exit(1)
-+
-+def chk_permission():
-+    if os.geteuid() != 0:
-+        print("Run as root")
-+        exit(1)
-+
-+def set_argparser(parser):
-+    parser.add_argument('target', type=str, metavar='<target>',
-+            help='the target command or the pid to record')
-+    parser.add_argument('-s', '--sample', metavar='<interval>', type=int,
-+            default=5000, help='sampling interval')
-+    parser.add_argument('-a', '--aggr', metavar='<interval>', type=int,
-+            default=100000, help='aggregate interval')
-+    parser.add_argument('-u', '--updr', metavar='<interval>', type=int,
-+            default=1000000, help='regions update interval')
-+    parser.add_argument('-n', '--minr', metavar='<# regions>', type=int,
-+            default=10, help='minimal number of regions')
-+    parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
-+            default=1000, help='maximum number of regions')
-+    parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-+            default=1024*1024, help='length of record result buffer')
-+    parser.add_argument('-o', '--out', metavar='<file path>', type=str,
-+            default='damon.data', help='output file path')
-+    parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
-+            default='/sys/kernel/debug', help='debugfs mounted path')
-+
-+def main(args=None):
-+    global orig_attrs
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
-+
-+    chk_permission()
-+    chk_update_debugfs(args.debugfs)
-+
-+    signal.signal(signal.SIGINT, sighandler)
-+    signal.signal(signal.SIGTERM, sighandler)
-+    orig_attrs = current_attrs()
-+
-+    new_attrs = cmd_args_to_attrs(args)
-+    target = args.target
-+
-+    target_fields = target.split()
-+    if not subprocess.call('which %s > /dev/null' % target_fields[0],
-+            shell=True, executable='/bin/bash'):
-+        do_record(target, True, new_attrs, orig_attrs)
-+    else:
-+        try:
-+            pid = int(target)
-+        except:
-+            print('target \'%s\' is neither a command, nor a pid' % target)
-+            exit(1)
-+        do_record(target, False, new_attrs, orig_attrs)
-+
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/report.py b/tools/damon/report.py
-new file mode 100644
-index 000000000000..c661c7b2f1af
---- /dev/null
-+++ b/tools/damon/report.py
-@@ -0,0 +1,45 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+import argparse
-+
-+import bin2txt
-+import heats
-+import nr_regions
-+import wss
-+
-+def set_argparser(parser):
-+    subparsers = parser.add_subparsers(title='report type', dest='report_type',
-+            metavar='<report type>', help='the type of the report to generate')
-+    subparsers.required = True
-+
-+    parser_raw = subparsers.add_parser('raw', help='human readable raw data')
-+    bin2txt.set_argparser(parser_raw)
-+
-+    parser_heats = subparsers.add_parser('heats', help='heats of regions')
-+    heats.set_argparser(parser_heats)
-+
-+    parser_wss = subparsers.add_parser('wss', help='working set size')
-+    wss.set_argparser(parser_wss)
-+
-+    parser_nr_regions = subparsers.add_parser('nr_regions',
-+            help='number of regions')
-+    nr_regions.set_argparser(parser_nr_regions)
-+
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
-+
-+    if args.report_type == 'raw':
-+        bin2txt.main(args)
-+    elif args.report_type == 'heats':
-+        heats.main(args)
-+    elif args.report_type == 'wss':
-+        wss.main(args)
-+    elif args.report_type == 'nr_regions':
-+        nr_regions.main(args)
-+
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/wss.py b/tools/damon/wss.py
-new file mode 100644
-index 000000000000..890deee5b9be
---- /dev/null
-+++ b/tools/damon/wss.py
-@@ -0,0 +1,95 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+"Print out the distribution of the working set sizes of the given trace"
-+
-+import argparse
-+import struct
-+import sys
-+import tempfile
-+
-+import _dist
-+
-+def set_argparser(parser):
-+    parser.add_argument('--input', '-i', type=str, metavar='<file>',
-+            default='damon.data', help='input file name')
-+    parser.add_argument('--range', '-r', type=int, nargs=3,
-+            metavar=('<start>', '<stop>', '<step>'),
-+            help='range of wss percentiles to print')
-+    parser.add_argument('--sortby', '-s', choices=['time', 'size'],
-+            help='the metric to be used for the sort of the working set sizes')
-+    parser.add_argument('--plot', '-p', type=str, metavar='<file>',
-+            help='plot the distribution to an image file')
-+
-+def main(args=None):
-+    if not args:
-+        parser = argparse.ArgumentParser()
-+        set_argparser(parser)
-+        args = parser.parse_args()
-+
-+    percentiles = [0, 25, 50, 75, 100]
-+
-+    file_path = args.input
-+    if args.range:
-+        percentiles = range(args.range[0], args.range[1], args.range[2])
-+    wss_sort = True
-+    if args.sortby == 'time':
-+        wss_sort = False
-+
-+    pid_pattern_map = {}
-+    with open(file_path, 'rb') as f:
-+        start_time = None
-+        while True:
-+            timebin = f.read(16)
-+            if len(timebin) != 16:
-+                break
-+            nr_tasks = struct.unpack('I', f.read(4))[0]
-+            for t in range(nr_tasks):
-+                pid = struct.unpack('L', f.read(8))[0]
-+                if not pid in pid_pattern_map:
-+                    pid_pattern_map[pid] = []
-+                pid_pattern_map[pid].append(_dist.access_patterns(f))
-+
-+    orig_stdout = sys.stdout
-+    if args.plot:
-+        tmp_path = tempfile.mkstemp()[1]
-+        tmp_file = open(tmp_path, 'w')
-+        sys.stdout = tmp_file
-+
-+    print('# <percentile> <wss>')
-+    for pid in pid_pattern_map.keys():
-+        # Skip first 20 snapshots as regions may not adjusted yet.
-+        snapshots = pid_pattern_map[pid][20:]
-+        wss_dist = []
-+        for snapshot in snapshots:
-+            wss = 0
-+            for p in snapshot:
-+                # Ignore regions not accessed
-+                if p[1] <= 0:
-+                    continue
-+                wss += p[0]
-+            wss_dist.append(wss)
-+        if wss_sort:
-+            wss_dist.sort(reverse=False)
-+
-+        print('# pid\t%s' % pid)
-+        print('# avr:\t%d' % (sum(wss_dist) / len(wss_dist)))
-+        for percentile in percentiles:
-+            thres_idx = int(percentile / 100.0 * len(wss_dist))
-+            if thres_idx == len(wss_dist):
-+                thres_idx -= 1
-+            threshold = wss_dist[thres_idx]
-+            print('%d\t%d' % (percentile, wss_dist[thres_idx]))
-+
-+    if args.plot:
-+        sys.stdout = orig_stdout
-+        tmp_file.flush()
-+        tmp_file.close()
-+        xlabel = 'runtime (percent)'
-+        if wss_sort:
-+            xlabel = 'percentile'
-+        _dist.plot_dist(tmp_path, args.plot, xlabel,
-+                'working set size (bytes)')
-+
-+if __name__ == '__main__':
-+    main()
--- 
-2.17.1
+On Mon, Apr 6, 2020 at 5:46 AM Laurent Dufour <ldufour@linux.ibm.com> wrote=
+:
+>
+> Le 26/03/2020 =C3=A0 08:02, Michel Lespinasse a =C3=A9crit :
+> > Rename the mmap_sem field to mmap_lock. Any new uses of this lock
+> > should now go through the new mmap locking api. The mmap_lock is
+> > still implemented as a rwsem, though this could change in the future.
+>
+> Since you don't change the type of the mmap_sem, it's still a semaphore, =
+I don't
+> think mmap_lock is a good name. This is not a lock.
+>
+> I'm bad at naming, but what about __map_sem?
+>
+> >
+> > Signed-off-by: Michel Lespinasse <walken@google.com>
+> > ---
+> >   arch/ia64/mm/fault.c                  |  4 ++--
+> >   arch/x86/events/core.c                |  4 ++--
+> >   arch/x86/kernel/tboot.c               |  2 +-
+> >   arch/x86/mm/fault.c                   |  2 +-
+> >   drivers/firmware/efi/efi.c            |  2 +-
+> >   drivers/gpu/drm/etnaviv/etnaviv_gem.c |  2 +-
+> >   include/linux/mm_types.h              |  2 +-
+> >   include/linux/mmap_lock.h             | 30 +++++++++++++-------------=
+-
+> >   mm/hmm.c                              |  2 +-
+> >   mm/init-mm.c                          |  2 +-
+> >   mm/memory.c                           |  2 +-
+> >   mm/mmap.c                             |  4 ++--
+> >   mm/mmu_notifier.c                     | 18 ++++++++--------
+> >   mm/pagewalk.c                         | 15 +++++++-------
+> >   mm/util.c                             |  4 ++--
+> >   15 files changed, 48 insertions(+), 47 deletions(-)
+> >
+> > diff --git a/arch/ia64/mm/fault.c b/arch/ia64/mm/fault.c
+> > index b423f0a970e4..70c7c7909cc5 100644
+> > --- a/arch/ia64/mm/fault.c
+> > +++ b/arch/ia64/mm/fault.c
+> > @@ -70,8 +70,8 @@ ia64_do_page_fault (unsigned long address, unsigned l=
+ong isr, struct pt_regs *re
+> >       mask =3D ((((isr >> IA64_ISR_X_BIT) & 1UL) << VM_EXEC_BIT)
+> >               | (((isr >> IA64_ISR_W_BIT) & 1UL) << VM_WRITE_BIT));
+> >
+> > -     /* mmap_sem is performance critical.... */
+> > -     prefetchw(&mm->mmap_sem);
+> > +     /* mmap_lock is performance critical.... */
+> > +     prefetchw(&mm->mmap_lock);
+> >
+> >       /*
+> >        * If we're in an interrupt or have no user context, we must not =
+take the fault..
+> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > index 3bb738f5a472..ad21924c575e 100644
+> > --- a/arch/x86/events/core.c
+> > +++ b/arch/x86/events/core.c
+> > @@ -2179,10 +2179,10 @@ static void x86_pmu_event_mapped(struct perf_ev=
+ent *event, struct mm_struct *mm)
+> >        * userspace with CR4.PCE clear while another task is still
+> >        * doing on_each_cpu_mask() to propagate CR4.PCE.
+> >        *
+> > -      * For now, this can't happen because all callers hold mmap_sem
+> > +      * For now, this can't happen because all callers hold mmap_lock
+> >        * for write.  If this changes, we'll need a different solution.
+> >        */
+> > -     lockdep_assert_held_write(&mm->mmap_sem);
+> > +     lockdep_assert_held_write(&mm->mmap_lock);
+> >
+> >       if (atomic_inc_return(&mm->context.perf_rdpmc_allowed) =3D=3D 1)
+> >               on_each_cpu_mask(mm_cpumask(mm), refresh_pce, NULL, 1);
+> > diff --git a/arch/x86/kernel/tboot.c b/arch/x86/kernel/tboot.c
+> > index 4b79335624b1..4792e8778b28 100644
+> > --- a/arch/x86/kernel/tboot.c
+> > +++ b/arch/x86/kernel/tboot.c
+> > @@ -90,7 +90,7 @@ static struct mm_struct tboot_mm =3D {
+> >       .pgd            =3D swapper_pg_dir,
+> >       .mm_users       =3D ATOMIC_INIT(2),
+> >       .mm_count       =3D ATOMIC_INIT(1),
+> > -     .mmap_sem       =3D MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
+> > +     .mmap_lock      =3D MMAP_LOCK_INITIALIZER(init_mm.mmap_lock),
+> >       .page_table_lock =3D  __SPIN_LOCK_UNLOCKED(init_mm.page_table_loc=
+k),
+> >       .mmlist         =3D LIST_HEAD_INIT(init_mm.mmlist),
+> >   };
+> > diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> > index 5bb97d2a7d3b..98d413e6fbb2 100644
+> > --- a/arch/x86/mm/fault.c
+> > +++ b/arch/x86/mm/fault.c
+> > @@ -1526,7 +1526,7 @@ dotraplinkage void
+> >   do_page_fault(struct pt_regs *regs, unsigned long hw_error_code,
+> >               unsigned long address)
+> >   {
+> > -     prefetchw(&current->mm->mmap_sem);
+> > +     prefetchw(&current->mm->mmap_lock);
+> >       trace_page_fault_entries(regs, hw_error_code, address);
+> >
+> >       if (unlikely(kmmio_fault(regs, address)))
+> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > index 5bdfe698cd7f..d38e0e85eb0d 100644
+> > --- a/drivers/firmware/efi/efi.c
+> > +++ b/drivers/firmware/efi/efi.c
+> > @@ -60,7 +60,7 @@ struct mm_struct efi_mm =3D {
+> >       .mm_rb                  =3D RB_ROOT,
+> >       .mm_users               =3D ATOMIC_INIT(2),
+> >       .mm_count               =3D ATOMIC_INIT(1),
+> > -     .mmap_sem               =3D MMAP_LOCK_INITIALIZER(efi_mm.mmap_sem=
+),
+> > +     .mmap_lock              =3D MMAP_LOCK_INITIALIZER(efi_mm.mmap_loc=
+k),
+> >       .page_table_lock        =3D __SPIN_LOCK_UNLOCKED(efi_mm.page_tabl=
+e_lock),
+> >       .mmlist                 =3D LIST_HEAD_INIT(efi_mm.mmlist),
+> >       .cpu_bitmap             =3D { [BITS_TO_LONGS(NR_CPUS)] =3D 0},
+> > diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/et=
+naviv/etnaviv_gem.c
+> > index 6adea180d629..3470482d95bc 100644
+> > --- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+> > +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+> > @@ -661,7 +661,7 @@ static int etnaviv_gem_userptr_get_pages(struct etn=
+aviv_gem_object *etnaviv_obj)
+> >       struct etnaviv_gem_userptr *userptr =3D &etnaviv_obj->userptr;
+> >       int ret, pinned =3D 0, npages =3D etnaviv_obj->base.size >> PAGE_=
+SHIFT;
+> >
+> > -     might_lock_read(&current->mm->mmap_sem);
+> > +     might_lock_read(&current->mm->mmap_lock);
+> >
+> >       if (userptr->mm !=3D current->mm)
+> >               return -EPERM;
+> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> > index c28911c3afa8..a168d13b5c44 100644
+> > --- a/include/linux/mm_types.h
+> > +++ b/include/linux/mm_types.h
+> > @@ -431,7 +431,7 @@ struct mm_struct {
+> >               spinlock_t page_table_lock; /* Protects page tables and s=
+ome
+> >                                            * counters
+> >                                            */
+> > -             struct rw_semaphore mmap_sem;
+> > +             struct rw_semaphore mmap_lock;
+> >
+> >               struct list_head mmlist; /* List of maybe swapped mm's. T=
+hese
+> >                                         * are globally strung together =
+off
+> > diff --git a/include/linux/mmap_lock.h b/include/linux/mmap_lock.h
+> > index 7474b15bba38..700dd297f2af 100644
+> > --- a/include/linux/mmap_lock.h
+> > +++ b/include/linux/mmap_lock.h
+> > @@ -5,78 +5,78 @@
+> >
+> >   static inline void mmap_init_lock(struct mm_struct *mm)
+> >   {
+> > -     init_rwsem(&mm->mmap_sem);
+> > +     init_rwsem(&mm->mmap_lock);
+> >   }
+> >
+> >   static inline void mmap_write_lock(struct mm_struct *mm)
+> >   {
+> > -     down_write(&mm->mmap_sem);
+> > +     down_write(&mm->mmap_lock);
+> >   }
+> >
+> >   static inline void mmap_write_lock_nested(struct mm_struct *mm, int s=
+ubclass)
+> >   {
+> > -     down_write_nested(&mm->mmap_sem, subclass);
+> > +     down_write_nested(&mm->mmap_lock, subclass);
+> >   }
+> >
+> >   static inline int mmap_write_lock_killable(struct mm_struct *mm)
+> >   {
+> > -     return down_write_killable(&mm->mmap_sem);
+> > +     return down_write_killable(&mm->mmap_lock);
+> >   }
+> >
+> >   static inline bool mmap_write_trylock(struct mm_struct *mm)
+> >   {
+> > -     return down_write_trylock(&mm->mmap_sem) !=3D 0;
+> > +     return down_write_trylock(&mm->mmap_lock) !=3D 0;
+> >   }
+> >
+> >   static inline void mmap_write_unlock(struct mm_struct *mm)
+> >   {
+> > -     up_write(&mm->mmap_sem);
+> > +     up_write(&mm->mmap_lock);
+> >   }
+> >
+> >   /* Pairs with mmap_write_lock_nested() */
+> >   static inline void mmap_write_unlock_nested(struct mm_struct *mm)
+> >   {
+> > -     up_write(&mm->mmap_sem);
+> > +     up_write(&mm->mmap_lock);
+> >   }
+> >
+> >   static inline void mmap_downgrade_write_lock(struct mm_struct *mm)
+> >   {
+> > -     downgrade_write(&mm->mmap_sem);
+> > +     downgrade_write(&mm->mmap_lock);
+> >   }
+> >
+> >   static inline void mmap_read_lock(struct mm_struct *mm)
+> >   {
+> > -     down_read(&mm->mmap_sem);
+> > +     down_read(&mm->mmap_lock);
+> >   }
+> >
+> >   static inline int mmap_read_lock_killable(struct mm_struct *mm)
+> >   {
+> > -     return down_read_killable(&mm->mmap_sem);
+> > +     return down_read_killable(&mm->mmap_lock);
+> >   }
+> >
+> >   static inline bool mmap_read_trylock(struct mm_struct *mm)
+> >   {
+> > -     return down_read_trylock(&mm->mmap_sem) !=3D 0;
+> > +     return down_read_trylock(&mm->mmap_lock) !=3D 0;
+> >   }
+> >
+> >   static inline void mmap_read_unlock(struct mm_struct *mm)
+> >   {
+> > -     up_read(&mm->mmap_sem);
+> > +     up_read(&mm->mmap_lock);
+> >   }
+> >
+> >   static inline void mmap_read_release(struct mm_struct *mm, unsigned l=
+ong ip)
+> >   {
+> > -     rwsem_release(&mm->mmap_sem.dep_map, ip);
+> > +     rwsem_release(&mm->mmap_lock.dep_map, ip);
+> >   }
+> >
+> >   static inline void mmap_read_unlock_non_owner(struct mm_struct *mm)
+> >   {
+> > -     up_read_non_owner(&mm->mmap_sem);
+> > +     up_read_non_owner(&mm->mmap_lock);
+> >   }
+> >
+> >   static inline bool mmap_is_locked(struct mm_struct *mm)
+> >   {
+> > -     return rwsem_is_locked(&mm->mmap_sem) !=3D 0;
+> > +     return rwsem_is_locked(&mm->mmap_lock) !=3D 0;
+> >   }
+> >
+> >   #endif /* _LINUX_MMAP_LOCK_H */
+> > diff --git a/mm/hmm.c b/mm/hmm.c
+> > index 72e5a6d9a417..4d736a710910 100644
+> > --- a/mm/hmm.c
+> > +++ b/mm/hmm.c
+> > @@ -681,7 +681,7 @@ long hmm_range_fault(struct hmm_range *range, unsig=
+ned int flags)
+> >       struct mm_struct *mm =3D range->notifier->mm;
+> >       int ret;
+> >
+> > -     lockdep_assert_held(&mm->mmap_sem);
+> > +     lockdep_assert_held(&mm->mmap_lock);
+> >
+> >       do {
+> >               /* If range is no longer valid force retry. */
+> > diff --git a/mm/init-mm.c b/mm/init-mm.c
+> > index 3c128bd6a30c..2b16924419b4 100644
+> > --- a/mm/init-mm.c
+> > +++ b/mm/init-mm.c
+> > @@ -31,7 +31,7 @@ struct mm_struct init_mm =3D {
+> >       .pgd            =3D swapper_pg_dir,
+> >       .mm_users       =3D ATOMIC_INIT(2),
+> >       .mm_count       =3D ATOMIC_INIT(1),
+> > -     .mmap_sem       =3D MMAP_LOCK_INITIALIZER(init_mm.mmap_sem),
+> > +     .mmap_lock      =3D MMAP_LOCK_INITIALIZER(init_mm.mmap_lock),
+> >       .page_table_lock =3D  __SPIN_LOCK_UNLOCKED(init_mm.page_table_loc=
+k),
+> >       .arg_lock       =3D  __SPIN_LOCK_UNLOCKED(init_mm.arg_lock),
+> >       .mmlist         =3D LIST_HEAD_INIT(init_mm.mmlist),
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index 5f9a81b2507a..f146f58898f9 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -4648,7 +4648,7 @@ void __might_fault(const char *file, int line)
+> >       __might_sleep(file, line, 0);
+> >   #if defined(CONFIG_DEBUG_ATOMIC_SLEEP)
+> >       if (current->mm)
+> > -             might_lock_read(&current->mm->mmap_sem);
+> > +             might_lock_read(&current->mm->mmap_lock);
+> >   #endif
+> >   }
+> >   EXPORT_SYMBOL(__might_fault);
+> > diff --git a/mm/mmap.c b/mm/mmap.c
+> > index ba51ff516ec0..c81db16c8c23 100644
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -3450,7 +3450,7 @@ static void vm_lock_anon_vma(struct mm_struct *mm=
+, struct anon_vma *anon_vma)
+> >                * The LSB of head.next can't change from under us
+> >                * because we hold the mm_all_locks_mutex.
+> >                */
+> > -             down_write_nest_lock(&anon_vma->root->rwsem, &mm->mmap_se=
+m);
+> > +             down_write_nest_lock(&anon_vma->root->rwsem, &mm->mmap_lo=
+ck);
+> >               /*
+> >                * We can safely modify head.next after taking the
+> >                * anon_vma->root->rwsem. If some other vma in this mm sh=
+ares
+> > @@ -3480,7 +3480,7 @@ static void vm_lock_mapping(struct mm_struct *mm,=
+ struct address_space *mapping)
+> >                */
+> >               if (test_and_set_bit(AS_MM_ALL_LOCKS, &mapping->flags))
+> >                       BUG();
+> > -             down_write_nest_lock(&mapping->i_mmap_rwsem, &mm->mmap_se=
+m);
+> > +             down_write_nest_lock(&mapping->i_mmap_rwsem, &mm->mmap_lo=
+ck);
+> >       }
+> >   }
+> >
+> > diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+> > index cfd0a03bf5cc..6717278d6d49 100644
+> > --- a/mm/mmu_notifier.c
+> > +++ b/mm/mmu_notifier.c
+> > @@ -599,7 +599,7 @@ void __mmu_notifier_invalidate_range(struct mm_stru=
+ct *mm,
+> >   }
+> >
+> >   /*
+> > - * Same as mmu_notifier_register but here the caller must hold the mma=
+p_sem in
+> > + * Same as mmu_notifier_register but here the caller must hold the mma=
+p_lock in
+> >    * write mode. A NULL mn signals the notifier is being registered for=
+ itree
+> >    * mode.
+> >    */
+> > @@ -609,7 +609,7 @@ int __mmu_notifier_register(struct mmu_notifier *su=
+bscription,
+> >       struct mmu_notifier_subscriptions *subscriptions =3D NULL;
+> >       int ret;
+> >
+> > -     lockdep_assert_held_write(&mm->mmap_sem);
+> > +     lockdep_assert_held_write(&mm->mmap_lock);
+> >       BUG_ON(atomic_read(&mm->mm_users) <=3D 0);
+> >
+> >       if (IS_ENABLED(CONFIG_LOCKDEP)) {
+> > @@ -623,7 +623,7 @@ int __mmu_notifier_register(struct mmu_notifier *su=
+bscription,
+> >               /*
+> >                * kmalloc cannot be called under mm_take_all_locks(), bu=
+t we
+> >                * know that mm->notifier_subscriptions can't change whil=
+e we
+> > -              * hold the write side of the mmap_sem.
+> > +              * hold the write side of the mmap_lock.
+> >                */
+> >               subscriptions =3D kzalloc(
+> >                       sizeof(struct mmu_notifier_subscriptions), GFP_KE=
+RNEL);
+> > @@ -655,7 +655,7 @@ int __mmu_notifier_register(struct mmu_notifier *su=
+bscription,
+> >        * readers.  acquire can only be used while holding the mmgrab or
+> >        * mmget, and is safe because once created the
+> >        * mmu_notifier_subscriptions is not freed until the mm is destro=
+yed.
+> > -      * As above, users holding the mmap_sem or one of the
+> > +      * As above, users holding the mmap_lock or one of the
+> >        * mm_take_all_locks() do not need to use acquire semantics.
+> >        */
+> >       if (subscriptions)
+> > @@ -689,7 +689,7 @@ EXPORT_SYMBOL_GPL(__mmu_notifier_register);
+> >    * @mn: The notifier to attach
+> >    * @mm: The mm to attach the notifier to
+> >    *
+> > - * Must not hold mmap_sem nor any other VM related lock when calling
+> > + * Must not hold mmap_lock nor any other VM related lock when calling
+> >    * this registration function. Must also ensure mm_users can't go dow=
+n
+> >    * to zero while this runs to avoid races with mmu_notifier_release,
+> >    * so mm has to be current->mm or the mm should be pinned safely such
+> > @@ -750,7 +750,7 @@ find_get_mmu_notifier(struct mm_struct *mm, const s=
+truct mmu_notifier_ops *ops)
+> >    * are the same.
+> >    *
+> >    * Each call to mmu_notifier_get() must be paired with a call to
+> > - * mmu_notifier_put(). The caller must hold the write side of mm->mmap=
+_sem.
+> > + * mmu_notifier_put(). The caller must hold the write side of mm->mmap=
+_lock.
+> >    *
+> >    * While the caller has a mmu_notifier get the mm pointer will remain=
+ valid,
+> >    * and can be converted to an active mm pointer via mmget_not_zero().
+> > @@ -761,7 +761,7 @@ struct mmu_notifier *mmu_notifier_get_locked(const =
+struct mmu_notifier_ops *ops,
+> >       struct mmu_notifier *subscription;
+> >       int ret;
+> >
+> > -     lockdep_assert_held_write(&mm->mmap_sem);
+> > +     lockdep_assert_held_write(&mm->mmap_lock);
+> >
+> >       if (mm->notifier_subscriptions) {
+> >               subscription =3D find_get_mmu_notifier(mm, ops);
+> > @@ -983,7 +983,7 @@ int mmu_interval_notifier_insert(struct mmu_interva=
+l_notifier *interval_sub,
+> >       struct mmu_notifier_subscriptions *subscriptions;
+> >       int ret;
+> >
+> > -     might_lock(&mm->mmap_sem);
+> > +     might_lock(&mm->mmap_lock);
+> >
+> >       subscriptions =3D smp_load_acquire(&mm->notifier_subscriptions);
+> >       if (!subscriptions || !subscriptions->has_itree) {
+> > @@ -1006,7 +1006,7 @@ int mmu_interval_notifier_insert_locked(
+> >               mm->notifier_subscriptions;
+> >       int ret;
+> >
+> > -     lockdep_assert_held_write(&mm->mmap_sem);
+> > +     lockdep_assert_held_write(&mm->mmap_lock);
+> >
+> >       if (!subscriptions || !subscriptions->has_itree) {
+> >               ret =3D __mmu_notifier_register(NULL, mm);
+> > diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+> > index 928df1638c30..d669a3146c0f 100644
+> > --- a/mm/pagewalk.c
+> > +++ b/mm/pagewalk.c
+> > @@ -373,8 +373,9 @@ static int __walk_page_range(unsigned long start, u=
+nsigned long end,
+> >    * caller-specific data to callbacks, @private should be helpful.
+> >    *
+> >    * Locking:
+> > - *   Callers of walk_page_range() and walk_page_vma() should hold @mm-=
+>mmap_sem,
+> > - *   because these function traverse vma list and/or access to vma's d=
+ata.
+> > + *   Callers of walk_page_range() and walk_page_vma() should hold
+> > + *   @mm->mmap_lock, because these function traverse the vma list
+> > + *   and/or access the vma's data.
+> >    */
+> >   int walk_page_range(struct mm_struct *mm, unsigned long start,
+> >               unsigned long end, const struct mm_walk_ops *ops,
+> > @@ -395,7 +396,7 @@ int walk_page_range(struct mm_struct *mm, unsigned =
+long start,
+> >       if (!walk.mm)
+> >               return -EINVAL;
+> >
+> > -     lockdep_assert_held(&walk.mm->mmap_sem);
+> > +     lockdep_assert_held(&walk.mm->mmap_lock);
+> >
+> >       vma =3D find_vma(walk.mm, start);
+> >       do {
+> > @@ -453,7 +454,7 @@ int walk_page_range_novma(struct mm_struct *mm, uns=
+igned long start,
+> >       if (start >=3D end || !walk.mm)
+> >               return -EINVAL;
+> >
+> > -     lockdep_assert_held(&walk.mm->mmap_sem);
+> > +     lockdep_assert_held(&walk.mm->mmap_lock);
+> >
+> >       return __walk_page_range(start, end, &walk);
+> >   }
+> > @@ -472,7 +473,7 @@ int walk_page_vma(struct vm_area_struct *vma, const=
+ struct mm_walk_ops *ops,
+> >       if (!walk.mm)
+> >               return -EINVAL;
+> >
+> > -     lockdep_assert_held(&walk.mm->mmap_sem);
+> > +     lockdep_assert_held(&walk.mm->mmap_lock);
+> >
+> >       err =3D walk_page_test(vma->vm_start, vma->vm_end, &walk);
+> >       if (err > 0)
+> > @@ -498,11 +499,11 @@ int walk_page_vma(struct vm_area_struct *vma, con=
+st struct mm_walk_ops *ops,
+> >    * Also see walk_page_range() for additional information.
+> >    *
+> >    * Locking:
+> > - *   This function can't require that the struct mm_struct::mmap_sem i=
+s held,
+> > + *   This function can't require that the struct mm_struct::mmap_lock =
+is held,
+> >    *   since @mapping may be mapped by multiple processes. Instead
+> >    *   @mapping->i_mmap_rwsem must be held. This might have implication=
+s in the
+> >    *   callbacks, and it's up tho the caller to ensure that the
+> > - *   struct mm_struct::mmap_sem is not needed.
+> > + *   struct mm_struct::mmap_lock is not needed.
+> >    *
+> >    *   Also this means that a caller can't rely on the struct
+> >    *   vm_area_struct::vm_flags to be constant across a call,
+> > diff --git a/mm/util.c b/mm/util.c
+> > index ea2e15b21446..56c562f7ad19 100644
+> > --- a/mm/util.c
+> > +++ b/mm/util.c
+> > @@ -425,7 +425,7 @@ void arch_pick_mmap_layout(struct mm_struct *mm, st=
+ruct rlimit *rlim_stack)
+> >    * @bypass_rlim: %true if checking RLIMIT_MEMLOCK should be skipped
+> >    *
+> >    * Assumes @task and @mm are valid (i.e. at least one reference on ea=
+ch), and
+> > - * that mmap_sem is held as writer.
+> > + * that mmap_lock is held as writer.
+> >    *
+> >    * Return:
+> >    * * 0       on success
+> > @@ -437,7 +437,7 @@ int __account_locked_vm(struct mm_struct *mm, unsig=
+ned long pages, bool inc,
+> >       unsigned long locked_vm, limit;
+> >       int ret =3D 0;
+> >
+> > -     lockdep_assert_held_write(&mm->mmap_sem);
+> > +     lockdep_assert_held_write(&mm->mmap_lock);
+> >
+> >       locked_vm =3D mm->locked_vm;
+> >       if (inc) {
+> >
+>
 
+
+--=20
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
