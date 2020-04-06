@@ -2,110 +2,97 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49772C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86883C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C75422252
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4D622252
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:01:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bkPu4imx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgDFNBn (ORCPT
+        id S1728256AbgDFNB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:01:43 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:51515 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgDFNBm (ORCPT
+        Mon, 6 Apr 2020 09:01:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60140 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728061AbgDFNB4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:01:42 -0400
-Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N9MlI-1jIKor1ERw-015Lh9; Mon, 06 Apr 2020 15:01:41 +0200
-Received: by mail-qt1-f176.google.com with SMTP id f20so12682135qtq.6;
-        Mon, 06 Apr 2020 06:01:41 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZRqJFzBfGN2kcbOmxTsxVGDR1Ew//AdsEuGdlqjoeFeM6O6XMp
-        XK0D2kcs4tLnZfPliPVGccE1f1+4T+afC+8JkGQ=
-X-Google-Smtp-Source: APiQypKGl0rcjmxPk7LYkIyq/3sFEAQ9JSPbooEo+AQI5dEX6atvP7qavyGi7h4ravOrmygkje1eLWDqMVjJqya7e2s=
-X-Received: by 2002:ac8:d8e:: with SMTP id s14mr20274585qti.204.1586178100052;
- Mon, 06 Apr 2020 06:01:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200406120312.1150405-1-hch@lst.de> <20200406120312.1150405-3-hch@lst.de>
-In-Reply-To: <20200406120312.1150405-3-hch@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 6 Apr 2020 15:01:24 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a02LQNOehukgaCj81wg1D2XhW1=_mQZ72cT6nQdO=mhOw@mail.gmail.com>
-Message-ID: <CAK8P3a02LQNOehukgaCj81wg1D2XhW1=_mQZ72cT6nQdO=mhOw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] binfmt_elf: open code copy_siginfo_to_user to
- kernelspace buffer
-To:     Christoph Hellwig <hch@lst.de>
+        Mon, 6 Apr 2020 09:01:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zNFwdM697I69ZxsCtjPZ0n5v/OJG96sZh4pg4CmQykg=; b=bkPu4imxbhFePpIISA5dVVI3ve
+        hrQewkOpY2Kuo+k2IrrOwjR5jq8r9+N9osdPKRIfENFy0m4qW0bvFozgCbfDlXhUkal2InBY+EK75
+        i3LGusKTGbjzZ7R7/IIetY/CgF4NPThI4Zu91d0NJj8m279Qr4YQbCvDdnHNQPATYu2pfZB8E1NQq
+        Jy4X30m9gCugOuVgHUxi4EgZ4rkJDMheCEzCgQtabp7YoOAOYOKqTmzeIV4vWXoxyOhDVJX5lF3uV
+        qIklpFRsBvRPbd4t73fj3Vsl8gXb/0H5sYeVcNWd1QjPuVtWwXCNp7gV7dgIzk82n+5uHmlRQMeCN
+        jXx0rbMA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLRNz-000587-1y; Mon, 06 Apr 2020 13:01:55 +0000
+Date:   Mon, 6 Apr 2020 06:01:55 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dGr/PTHzNlhAg8nmJiAVpx3qyNykoPFVVfJTEzev2QMu2b+GJt5
- MwseBCwLfebyAuVxIj/eu++fOsT1+89Ai5a1SSOdnXOQxMo6iiUdOEDBKBvBchemFXS/9iM
- ksV7b7Y7iaQmlwq2jnGXyH1a2sQhbvu7Vto269EJGL6tEVzCkJIhvqlL7Wpb9kxOD1Likzp
- EXMzAPOON4rmpwi8DBpEA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:H8nvoPmcBCY=:+2G3Ozxt1Z+SydtUKt6d+5
- nhOaKGkoBaQLlFv/IWC59fP+dHQ2tuwUBpEkkjrzQNh0CBU2b/dcZd8jXcjA6Y2SVn4eiE0hU
- eay14z9qwK4/38FrfqmBY6zLzpomzZHdr5D77TZ5ALRZU380ACuLme1pGarQZ27GoOZ9YvlB3
- C716dVErOAKDR5FlSnHazfCKl2lRPs+vmeTXx5lRpnepmxoI1GJA5D+dCk+crd5UiNZBdOZFs
- BKaX0b/jWX+sqWXxtmMrZo63BsZALqajLIAbTEkPsk4CR05Ii9G9Aq8iYRLu3W3EbLgBYNJLL
- TDukJxQULIYJi658+D3FQ3YaW+RkaihjXBkRTWg2sGUej2jUtFS+v84wwgm6qIsfSPCVzwO8n
- On95rRtx/Zb1qe5WAJJcKNqBbYXJanXtcTr5nGzlfJ5ilNbdM/21+O0UkRvxNYA9VV93FsA3+
- Glr/520GmIxPmtFIBHC0MXy5saL92Xd3BuixvDZsfmJ6hli5jVO7jaOiXm5CGDhU9xousUa96
- jT3xC1Mhi7uz+tSY/JZHfXw3d+JTeV4uoHeTFQzPzKIBg0W1uVLpnTbvI04IFtyJxEfunZC03
- gtJuXf42oijsmYOTbyk8VKTmm/QgIaH0nNtuxMFEaGsHeoZeLHElAJSCBLVKOha5IDxJZheAg
- lp6o2OEcLoYDzRCDCmX7cvqJOWM/gIlgyDQWIS4w0w5bcu3Z0URlSPZpMC6U8t6p9FLtMLNTC
- vFJDGO5KOjV1qEgCXVohXE72xiqlUY/7DCcbqj9ags4/2F1OfuwR2JevtwdR/tGk8UVQ3JFW+
- gB59/5Fpbgxr2cQ13bEcWC5nKoxiXp+dSu50lHipR6kRWDLU+c=
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, jroedel@suse.de,
+        vbabka@suse.cz, urezki@gmail.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Olof Johansson <olof@lixom.net>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH] mm/vmalloc: Sanitize __get_vm_area() arguments
+Message-ID: <20200406130155.GB29306@infradead.org>
+References: <20200403163253.GU20730@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403163253.GU20730@hirez.programming.kicks-ass.net>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 2:03 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> Instead of messing with the address limit just open code the trivial
-> memcpy + memset logic.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Fri, Apr 03, 2020 at 06:32:53PM +0200, Peter Zijlstra wrote:
+> 
+> __get_vm_area() is an exported symbol, make sure the callers stay in
+> the expected memory range. When calling this function with memory
+> ranges outside of the VMALLOC range *bad* things can happen.
+> 
+> (I noticed this when I managed to corrupt the kernel text by accident)
+
+Maybe it is time to unexport it?  There are only two users:
+
+ - staging/media/ipu3 really should be using vmap.  And given that it
+   is a staging driver it really doesn't matter anyway if we break it.
+ - pcmcia/electra_cf.c is actually using it for something that is not
+   a vmalloc address.  But it is so special that I think prohibiting
+   to build it as module seems fine.
+
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  fs/binfmt_elf.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index f4713ea76e82..d744ce9a4b52 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -1556,10 +1556,9 @@ static void fill_auxv_note(struct memelfnote *note, struct mm_struct *mm)
->  static void fill_siginfo_note(struct memelfnote *note, user_siginfo_t *csigdata,
->                 const kernel_siginfo_t *siginfo)
+>  mm/vmalloc.c |    7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2130,6 +2130,13 @@ static struct vm_struct *__get_vm_area_n
+>  struct vm_struct *__get_vm_area(unsigned long size, unsigned long flags,
+>  				unsigned long start, unsigned long end)
 >  {
-> -       mm_segment_t old_fs = get_fs();
-> -       set_fs(KERNEL_DS);
-> -       copy_siginfo_to_user((user_siginfo_t __user *) csigdata, siginfo);
-> -       set_fs(old_fs);
-> +       memcpy(csigdata, siginfo, sizeof(struct kernel_siginfo));
-> +       memset((char *)csigdata + sizeof(struct kernel_siginfo), 0,
-> +               SI_EXPANSION_SIZE);
->         fill_note(note, "CORE", NT_SIGINFO, sizeof(*csigdata), csigdata);
+> +	/*
+> +	 * Ensure callers stay in the vmalloc range.
+> +	 */
+> +	if (WARN_ON(start < VMALLOC_START || start > VMALLOC_END ||
+> +		    end < VMALLOC_START || end > VMALLOC_END))
+> +		return NULL;
+> +
+>  	return __get_vm_area_node(size, 1, flags, start, end, NUMA_NO_NODE,
+>  				  GFP_KERNEL, __builtin_return_address(0));
 >  }
-
-I think this breaks compat binfmt-elf mode, which relies on this trick:
-
-fs/compat_binfmt_elf.c:#define copy_siginfo_to_user     copy_siginfo_to_user32
-fs/compat_binfmt_elf.c#include "binfmt_elf.c"
-
-At least we seem to only have one remaining implementation of
-__copy_siginfo_to_user32(), so fixing this won't require touching all
-architectures, but I don't see an obvious way to do it right. Maybe
-compat-binfmt-elf.c should just override fill_siginfo_note() itself
-rather than overriding copy_siginfo_to_user().
-
-       Arnd
+---end quoted text---
