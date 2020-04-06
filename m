@@ -2,175 +2,141 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DCBC2BABC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE98C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6BB248ED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10FF248DC
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QrYTLNTc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UI1iM/Bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgDFPxj (ORCPT
+        id S1729144AbgDFPxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:53:39 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42695 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729076AbgDFPxh (ORCPT
+        Mon, 6 Apr 2020 11:53:43 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37361 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729108AbgDFPxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:53:37 -0400
-Received: by mail-pl1-f193.google.com with SMTP id e1so6069682plt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:53:37 -0700 (PDT)
+        Mon, 6 Apr 2020 11:53:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id r4so112948pgg.4;
+        Mon, 06 Apr 2020 08:53:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wcnhRTJrKqZe9cHSmG/x1YIdkcTsb9+hzvjah1m+gLU=;
-        b=QrYTLNTcoBTCrSMVW19VcWv0ByKz6+H/37bqjQyrTg4kesqGVzq2Wgfz73C4lswLje
-         dxDZgzi0QyM7rWOy5lpHTOla3P7NFlogJUYlOoFpNTtzBjXYaeEkDoiqoWeA1Phowqys
-         EamnTgsa7EEPlDYtuUdxGe+9I1orrycGdTHEo=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=i4k1s9lIro7kHeb4LhDT7pDDMzLkhHK+1p6OmaLFjeI=;
+        b=UI1iM/BoYfMBNOmSYVXqoYKOkbIP2MvWZoPFYpe0WCmIbolLEND6psMu/6hkWRDlVi
+         rBXqlahoHjuAEtKRXZshf+81+sUuLKeICbOrwh8Fn43kv/BGrhEg1Ax4HB3VLZ6MsEyZ
+         GG8RFuWxFh/t38CkZOpHwKfm4YTdAc877nQIlvcnFNpBNDPdBvr53Uh9KaeK4kaATAg8
+         YrIlLU3d3Ga1k7XZXxaSdQ/vQ5iJiEHlJAsHlldAKsjFGub33MfmJJZfWQOKPPGhCv0V
+         sijyhPtU/s4fMQVIbeUGLIsTcZn3xxSLuGSZRzeHf3vEFP7L0RCGnuU/k1IM1H9gE83/
+         gZFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wcnhRTJrKqZe9cHSmG/x1YIdkcTsb9+hzvjah1m+gLU=;
-        b=Dg4JzizCCBReeg0oFHBox9BtEF+k0EpkwHCooub4H4AvZ7WqY6QbyT6A42TcbmrVVS
-         4O5/8ig4RnnHQneGuEWWLJQqmQ+POOivaeY0NJgpbN2ikYtLj/TnZCOJHwSqsPXgc0KQ
-         vhVg3u3tSTQk1UuormNQzYBabCeHMbfAjey+qs6WQ+5lyAVyZf56GUlz0pmVDaHfma79
-         YMRwEpxrPZw8doRej9eMZgB85CnP8EptV/RAIQA5UHuLokKEKn/qs0PR25qiglwl62BL
-         agDck7e5HmkKg+9uqO4sQccmrhiHNtz1K8HtB9fAiG+XG4gW0f0j9G8nvNv2YIDE+IP9
-         15JQ==
-X-Gm-Message-State: AGi0Pubn4c+EMjzraR28Mp4mkjcsthbozgqhB/GOaCWJ+LEHhccOlxSN
-        eF8f0licX/j8pzicklFh6pF8Kg==
-X-Google-Smtp-Source: APiQypLqIcfMQ3mfXhR8Fc2dFArba08SdCuw59KBYoWtvJ9xxfg3FceQ1q6rQno6xNecJn9lQ4+qGQ==
-X-Received: by 2002:a17:90a:2347:: with SMTP id f65mr30129pje.105.1586188416932;
-        Mon, 06 Apr 2020 08:53:36 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t188sm11935793pfb.102.2020.04.06.08.53.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 08:53:35 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 08:53:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kbuild: mkcompile_h: Include $LD version in /proc/version
-Message-ID: <202004060851.CCB538AD1@keescook>
-References: <202004020117.6E434C035@keescook>
- <CA+icZUW0R9LDGJ1YjJAB2oWkcEQxCO79xYmdVEoh=P8Fy_AL1A@mail.gmail.com>
- <CA+icZUVowLVpAxiWw=FJHfQ38KtU7AXXkVnw46D2XLM41-NCEA@mail.gmail.com>
- <CAK7LNAQ6ji3=2+7R1DL7eFveH7L7No6e3XkqfqgiH5QFyQj==A@mail.gmail.com>
- <CA+icZUV3rhvmBv91KMKCgvGSvJUoWDVfaV+08eC-kTMdThRn6w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+icZUV3rhvmBv91KMKCgvGSvJUoWDVfaV+08eC-kTMdThRn6w@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=i4k1s9lIro7kHeb4LhDT7pDDMzLkhHK+1p6OmaLFjeI=;
+        b=f04FGE9aaTc8WiwlsQhxH50156JUgzb3EYCSjxJSRA94S/FDh+FLHywl9pj7+bcvOB
+         H0POk3O2QRhqrFpcv2QZd4dhmaYguZtpkyZw0Fou6qrZb1v7hXgKBefY+ZtAjZJ4CTea
+         6g/metsppgGesw5k/j7IcjKUuf8SShNUiyxI/IJIDSLO74Oe9SwBu4u5EgqT169LM/jr
+         tmBy+ne9krRB/Jyh4r6oGdfxP+mNjMtK0bq0XvGcD9PMq5i4zHHAJBHitCxcaVLTn/jC
+         5eJJ200Q6+oHuqphAP1CsW1aRNE7yoLzsZDRuIayDZGjx1kdO4uoKaY6dWKeQGYH9aqq
+         erCA==
+X-Gm-Message-State: AGi0PubQKhRWcpnUgnghxWGJHBXyI7w6BFPCfGAL6KfbkzbjIQ9GNnSn
+        cC9Z5Wd55uFLE1GKVRhKNzc=
+X-Google-Smtp-Source: APiQypJfggfsp35tmmMBchANZ6iCpxWGiTy1Wcp7wbXvmszlsdTRlbLS64VECKOZv3wBJxJUuNGWgA==
+X-Received: by 2002:a63:f50c:: with SMTP id w12mr21473698pgh.253.1586188417826;
+        Mon, 06 Apr 2020 08:53:37 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([131.107.160.210])
+        by smtp.googlemail.com with ESMTPSA id 79sm11823275pfz.23.2020.04.06.08.53.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 08:53:37 -0700 (PDT)
+From:   ltykernel@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org, arnd@arndb.de,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, vkuznets@redhat.com
+Subject: [PATCH V4 3/6] x86/Hyper-V: Trigger crash enlightenment only once during 0;136;0c0;136;0c system crash.
+Date:   Mon,  6 Apr 2020 08:53:28 -0700
+Message-Id: <20200406155331.2105-4-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
+In-Reply-To: <20200406155331.2105-1-Tianyu.Lan@microsoft.com>
+References: <20200406155331.2105-1-Tianyu.Lan@microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 12:35:35PM +0200, Sedat Dilek wrote:
-> On Sun, Apr 5, 2020 at 3:56 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > On Sun, Apr 5, 2020 at 8:23 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> > >
-> > > On Thu, Apr 2, 2020 at 4:24 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> > > >
-> > > > On Thu, Apr 2, 2020 at 10:18 AM Kees Cook <keescook@chromium.org> wrote:
-> > > > >
-> > > > > When doing Clang builds of the kernel, it is possible to link with
-> > > > > either ld.bfd (binutils) or ld.lld (LLVM), but it is not possible to
-> > > > > discover this from a running kernel. Add the "$LD -v" output to
-> > > > > /proc/version.
-> > > > >
-> > > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > >
-> > >
-> > > Please feel free and add:
-> > >
-> > > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> >
-> >
-> > Thanks.
-> >
-> > I collected all Reviewed-by and Tested-by.
-> >
-> 
-> How to test scripts/mkcompile_h?
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-There's probably a better way, but I do:
+When a guest VM panics, Hyper-V should be notified only once via the
+crash synthetic MSRs.  Current Linux code might write these crash MSRs
+twice during a system panic:
+1) hyperv_panic/die_event() calling hyperv_report_panic()
+2) hv_kmsg_dump() calling hyperv_report_panic_msg()
 
-$ rm include/generated/compile.h init/version.o
-$ make init/version.o
-$ cat include/generated/compile.h
+Fix this by not calling hyperv_report_panic() if a kmsg dump has been
+successfully registered.  The notification will happen later via
+hyperv_report_panic_msg().
 
--Kees
+Fixes: 7ed4325a44ea ("Drivers: hv: vmbus: Make panic reporting to be more useful")
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+---
+Change since v1:
+	- Update commit log
 
-> 
-> I did:
-> 
-> $ cd /path/to/linux
-> 
-> $ head -10 scripts/mkcompile_h
-> #!/bin/sh
-> # SPDX-License-Identifier: GPL-2.0
-> 
-> TARGET=$1
-> ARCH=$2
-> SMP=$3
-> PREEMPT=$4
-> PREEMPT_RT=$5
-> CC=$6
-> LD=$7
-> 
-> $ scripts/mkcompile_h include/generated/compile.h x86_64 SMP "" ""
-> clang-10 ld.lld-10
->   UPD     include/generated/compile.h
-> 
-> $ cat include/generated/compile.h
-> /* This file is auto generated, version 1 */
-> /* SMP */
-> #define UTS_MACHINE "x86_64"
-> #define UTS_VERSION "#1 SMP Mon Apr 6 12:29:53 CEST 2020"
-> #define LINUX_COMPILE_BY "dileks"
-> #define LINUX_COMPILE_HOST "iniza"
-> #define LINUX_COMPILER "clang version 10.0.0-2, LLD 10.0.0"
-> 
-> This is with clang-10 and ld.lld-10 from Debian/unstable:
-> 
-> $ clang-10 -v
-> clang version 10.0.0-2
-> Target: x86_64-pc-linux-gnu
-> Thread model: posix
-> InstalledDir: /usr/bin
-> Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/10
-> Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/8
-> Found candidate GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/9
-> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
-> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/8
-> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/9
-> Selected GCC installation: /usr/bin/../lib/gcc/x86_64-linux-gnu/10
-> Candidate multilib: .;@m64
-> Candidate multilib: 32;@m32
-> Candidate multilib: x32;@mx32
-> Selected multilib: .;@m64
-> 
-> $ ld.lld-10 -v
-> LLD 10.0.0 (compatible with GNU linkers)
-> 
-> Thanks.
-> 
-> - sed@ -
+Change since v2:
+        - Update comment
+Change since v3:
+        - Add fix commit in the change log.	
+---
+ drivers/hv/vmbus_drv.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 00a511f15926..333dad39b1c1 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -55,7 +55,13 @@ static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
+ 
+ 	vmbus_initiate_unload(true);
+ 
+-	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
++	/*
++	 * Hyper-V should be notified only once about a panic.  If we will be
++	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
++	 * the notification here.
++	 */
++	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
++	    && !hv_panic_page) {
+ 		regs = current_pt_regs();
+ 		hyperv_report_panic(regs, val);
+ 	}
+@@ -68,7 +74,13 @@ static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
+ 	struct die_args *die = (struct die_args *)args;
+ 	struct pt_regs *regs = die->regs;
+ 
+-	hyperv_report_panic(regs, val);
++	/*
++	 * Hyper-V should be notified only once about a panic.  If we will be
++	 * doing hyperv_report_panic_msg() later with kmsg data, don't do
++	 * the notification here.
++	 */
++	if (!hv_panic_page)
++		hyperv_report_panic(regs, val);
+ 	return NOTIFY_DONE;
+ }
+ 
 -- 
-Kees Cook
+2.14.5
+
