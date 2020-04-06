@@ -2,106 +2,145 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AC2C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7312DC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6FE20780
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC8C206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="T6JsH00B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KlcQa7lI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgDFIrp (ORCPT
+        id S1726702AbgDFItb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:47:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57762 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgDFIro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 04:47:44 -0400
-Received: from zn.tnic (p200300EC2F04F600D9A931531DF0897F.dip0.t-ipconnect.de [IPv6:2003:ec:2f04:f600:d9a9:3153:1df0:897f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3FF611EC0273;
-        Mon,  6 Apr 2020 10:47:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1586162863;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=LtQeVXhd6t1VNfge4oRaGKt5hUgdeZfgTsbHMVc4gxI=;
-        b=T6JsH00Bl/7vxIiN+7jxEKxwrZtDHcvOIuls/u6wabFbREOPT8cntND7Nq1pMhie5G5Uvv
-        pI9pNanN0F+G7ajsjHG4QdQwl7iRAnzzQm41lPZBVFefHLTve7GSgkZ1WcrarQh8PAouPt
-        WkQXUGp6jehPSDYnfAqYglHTSz+lmHM=
-Date:   Mon, 6 Apr 2020 10:47:38 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Sergey Shatunov <me@prok.pw>, hpa@zytor.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
- bzImage
-Message-ID: <20200406084738.GA2520@zn.tnic>
-References: <20200109150218.16544-1-nivedita@alum.mit.edu>
- <20200405154245.11972-1-me@prok.pw>
- <20200405231845.GA3095309@rani.riverdale.lan>
- <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
- <20200406035110.GA3241052@rani.riverdale.lan>
- <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
+        Mon, 6 Apr 2020 04:49:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35298 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgDFItb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 04:49:31 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i19so14900241wmb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 01:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=hB/cttD2PIQJrbz4bzuL3i++GH0OSgasFqo3xqjEQAo=;
+        b=KlcQa7lIt+n/wVEV8JdYNkiUDQQp+hGTfkU1Mu02PywtjHqp63UeXe/YmyUw018Kdc
+         lpl1WphuIEEQUPCuEbfiYH37JUXWUTrg26Sf4c64ZSxRRDOVgszt6TP6yfeIKKv4bnBC
+         w3jj2IBcjWCz177Pxk5VvdWa2Y40lDC/vS6pXi98sdU+jDGOH7l9ozbD6p+C4Ah8Nsap
+         AB/D6Od+pOXPDjy792trBcGT+iJ0/81trVcYIVx4YxoA9gCgCvFxxtHf0GNkk09CRmxo
+         BTql6k2kwaGkNcIiaIY/53x86i7F0xHwY9eXlCwZPZzQEaMUhBuLdt9X9dmS8LyJB3ZM
+         EsVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=hB/cttD2PIQJrbz4bzuL3i++GH0OSgasFqo3xqjEQAo=;
+        b=X5e+EIS/cWY1YdICSKm6StpCC1S9CcHOdwfZUE3qkpVD3IyF+Kn+mADtC3AFSWimA3
+         9bTGwdbPlxyVAkuZi1zc3iiIw1Mgyg9xqUfCfGiEqEETo9sxBL3GxLmWSkadZdaOZGfG
+         Yklim5d07+1gDlMYruWFp+hwB1ZL7WVCuT11QGOfdZPMBhRIFbMNOggCWScESZq1gYPw
+         hsmq8+90AM2IsMe8eYBI1eKFF8FnGvA8t31NkeEVPzZObu18+4AQ7SzzwI+n+iERzplU
+         Q3KpNQqZALtj8PgKTN4TmbRdzVSIfgYjXVp0Q/jXXQ1OfHVBV5NvfIlPEE0K2vsNj4Qp
+         /k7w==
+X-Gm-Message-State: AGi0PuaqdD9iLvQOjbdDmmVFFZKXK/K4FMYcQkK5afgAtG7Hv7VailsO
+        oHocV6YxSh2VCgsvmW+CsbPhsy4jfW8=
+X-Google-Smtp-Source: APiQypL6NsZE4UH6W7CHGi4ojlUeqMxw4vdKpXkAYqw432CMd+116S8Nw19uLsayC9FcZNch4FCf5A==
+X-Received: by 2002:a1c:9d84:: with SMTP id g126mr6730754wme.184.1586162968744;
+        Mon, 06 Apr 2020 01:49:28 -0700 (PDT)
+Received: from dell ([2.27.35.179])
+        by smtp.gmail.com with ESMTPSA id t26sm14548888wmj.12.2020.04.06.01.49.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 01:49:27 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 09:50:24 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgunda@codeaurora.org, Rob Herring <robh@kernel.org>,
+        bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-msm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+Subject: Re: [PATCH V4 1/4] backlight: qcom-wled: convert the wled bindings
+ to .yaml format
+Message-ID: <20200406085024.GF30614@dell>
+References: <1584985618-25689-1-git-send-email-kgunda@codeaurora.org>
+ <1584985618-25689-2-git-send-email-kgunda@codeaurora.org>
+ <20200331175401.GA9791@bogus>
+ <ac8f25113a3bb233c11fd7cd9e62c2cf@codeaurora.org>
+ <20200403114651.m6rholzufzqinanc@holly.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200403114651.m6rholzufzqinanc@holly.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 09:32:47AM +0200, Ard Biesheuvel wrote:
-> The EFI handover protocol strikes again :-(
+On Fri, 03 Apr 2020, Daniel Thompson wrote:
+
+> On Fri, Apr 03, 2020 at 04:45:49PM +0530, kgunda@codeaurora.org wrote:
+> > On 2020-03-31 23:24, Rob Herring wrote:
+> > > On Mon, Mar 23, 2020 at 11:16:55PM +0530, Kiran Gunda wrote:
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> > > > b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> > > > new file mode 100644
+> > > > index 0000000..8a388bf
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+> > > > @@ -0,0 +1,184 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0-only
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/leds/backlight/qcom-wled.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Binding for Qualcomm Technologies, Inc. WLED driver
+> > > > +
+> > > > +maintainers:
+> > > > +  - Lee Jones <lee.jones@linaro.org>
+> > > 
+> > > Should be the h/w owner (you), not who applies patches.
+> > > 
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
+> > <snip>
+> > will address in next post.
 > 
-> It seems we did not include any guidance in the documentation in
-> Documentation/x86/boot.rst regarding zero-initializing BSS, and come
-> to think of it, we don't include any other requirements either, i.e.,
-> regarding placement wrt section alignment etc. This is a serious bug.
-> Even though EFI usually lays out PE/COFF images in files the exact way
-> they appear in memory, this is not actually required by the spec. Most
-> notably, the virtual size can be smaller than the file size, and the
-> loader is expected to zero-initialize the difference as well.
+> If you agree on all points raised I doubt there is any need for a point
+> by point reply since everyone who reads it will have to scroll down
+> simply to find out that you agree on all points.
+> 
+> Better just to acknowledge the feedback and reply to the first one
+> saying you'll agree on all points and will address all feedback in the
+> next revision (and then trim the reply to keep it short).
 
-Is that expectation stated explicitly somewhere?
-
-> Since the EFI handover protocol should be considered deprecated at
-> this point (and is never going to be supported in upstream GRUB
-> either, for instance), I would recommend the systemd-boot developers
-> to start looking into deprecating this as well, and switch to the
-> ordinary PE/COFF entry point, and use the new initrd callback protocol
-> for initrd loading.
-
-Any pointers to that new initrd callback protocol?
-
-In any case, I'd really appreciate a patch to boot.rst formulating those
-requirements so that they're written down and people can find them.
-
-> On the Linux/x86 side, we should at least add some code to the EFI
-> handover protocol entry point to zero initialize BSS, and ensure that
-> it is either not needed in other places, or add the code to deal with
-> those as well.
-
-Sounds like a simple fix, if that would fix it.
-
-Thx.
+Or better still, just submit the next revision with all the fixes. :)
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
