@@ -2,112 +2,133 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4FDC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1775C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E00B21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73DD249C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586192672;
-	bh=PZagBnWcfzp+s6eKCPKdihXxtcMkJ5nUu5wMIfH9OiI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EQMqA65W9rgzy/ozD3S0E3MJ/n1JhdrlzoPvbV7nD6BnXTB9zK3aUA1RW2blfSLcY
-	 BJH/4A4tWAUwBYTVYuA1deI8e916ZYNd8DW5TJEo4sTbg/tIfQWqyGCXaVgu1mvDh9
-	 zpjEUukSqUScMCXP+qd2PwpvZY1D47xXO4r08+Y0=
+	s=default; t=1586192906;
+	bh=deFR8Mz1hEdCuIMqWoT749pGW5dFQXvGA6ghCNIw7gc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bpVrHzvXYKJbCAaiY9WTxSY4of75Nu+yLKwZXhrhUSsEQBSWMD+GWtUovcUF79Xp5
+	 /Ntgc2Cd9VQxBSIZsr4clhMdo8Kb+pbNl/GSMndHTkbOU8V/2yJO9sAnxuYbVD4paU
+	 2xOm1reMA/uLPaZbZD/MT7PeT2ff9TtCvNN5nYyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbgDFREb (ORCPT
+        id S1729509AbgDFRI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:04:31 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43131 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728874AbgDFREb (ORCPT
+        Mon, 6 Apr 2020 13:08:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34245 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727126AbgDFRIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:04:31 -0400
-Received: by mail-lf1-f67.google.com with SMTP id k28so57145lfe.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:04:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ar7jflrkNXaeWaLLNE+J/V0wCb3y07I41Vn1cDNa1H0=;
-        b=iAyiGuOhg1NBw6xntWOjfjlwN9HPSP5nDSdo7Jp3I/fwBUQ0KJFRRQOcR/HKfmVC7o
-         qnHtvHaPJgAGeNdQfEkNAtbjCg1eAhwAJJRKbDQ3v/rLuR8aMVuXHQIiAZrb4at4+sBj
-         MTvWffSqk+SyA3JRUrj2Z2o42xS9DNGcGc5MY=
+        Mon, 6 Apr 2020 13:08:25 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v23so24219pfm.1;
+        Mon, 06 Apr 2020 10:08:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ar7jflrkNXaeWaLLNE+J/V0wCb3y07I41Vn1cDNa1H0=;
-        b=ONWQfwgCH5eNzvqjrDgFEay+BmtwuUePJrQiZ4yyWsqEc7Z7XMLbMtdlfpmcGfraci
-         mL94V0zSAGfW6zZ2K+CaXDn0VCgrcTstvS1sUIwrFCjgF8ppCmvD5vq8KhTwVn4Z1Kaa
-         JnkN7hG4MUlxMBHxatrMR9jQucJUle8KVefcu17GlW0TflZL/mS6YmozeIt6dADrwrV9
-         4Obt1oL5Wxh88JYSiiNq0/BKEtFblP+Wdcs3jC0bRHX3WOzEYhuiHIJtFDStM7kTreNP
-         CflApSkON9C/SAnikomHF3+HXTE6yCnDupWDUYPOGHQKP4n23183B2u5C/hbNDQ3ebaB
-         7L2A==
-X-Gm-Message-State: AGi0PuYcS3tXPuT8MG9L4a4gFp72V+YQJgBP3vzmAShJQ9kAOG/2sRPE
-        1qLAXeoDN/pgbCTJfOB+tt5RQK66nLY=
-X-Google-Smtp-Source: APiQypKl9Mi/HozM2ku1OKLPcES8Ik6/x3zUfBdq1k8VEtbuhHCbYrdHbJO0LnUD969Y1xBNQ81ppA==
-X-Received: by 2002:ac2:5dc6:: with SMTP id x6mr1613897lfq.108.1586192669006;
-        Mon, 06 Apr 2020 10:04:29 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id z4sm9958243ljk.51.2020.04.06.10.04.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 10:04:28 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id j17so71878lfe.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:04:28 -0700 (PDT)
-X-Received: by 2002:a05:6512:14a:: with SMTP id m10mr9430308lfo.152.1586192667631;
- Mon, 06 Apr 2020 10:04:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zaXeCIKa/04xAB8MmodjJgT7JeJhzRdAxQcRW/0TGww=;
+        b=ep11HTvELnApaXEor0llp2j6bK2197HT6th9uB59sWES/zsm0R/ToZc/e7T1RjVIZE
+         EQv/6JLS9duXmFbV1qBVCX7rsl332QvP63vqXOiEx1Gwi7bZyZ8uUuRWFdWyyYg0DZ8Q
+         Vm85hrUvzQXsbIeXGWIuK+NQ4t2pe4KWg1OgbNl9BH6vYCsdKzCb9fGk3MurZ0vM/Zl6
+         u/6NdjyrM9LrfJEI8BUioEwxL60Q4pEfzzugKl70CLl9W6HPvU36wNVfbLUxST/vGwEd
+         /SntJO+jH+3CWj1/+fdJwGTkgJid5l0lAM1gIh5W4v6orxQSRWmZxPzLBMac0QlJn2TV
+         E+CA==
+X-Gm-Message-State: AGi0PubwF+tQ5B1gd8JruPuRdmClCZlzY0rfr4W8n7KPHqfAzTQzDYEW
+        ZLXF2BGo8ex/miRbs5A0gko=
+X-Google-Smtp-Source: APiQypJ9XkDYt38q2mJtSLza4PVdlKnHbUCkqeIRzEJCfTivTo/drR4DFb5YNsn2t8LPMWqmhBrWTg==
+X-Received: by 2002:a62:76c3:: with SMTP id r186mr408779pfc.303.1586192904248;
+        Mon, 06 Apr 2020 10:08:24 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id o192sm8883072pfg.196.2020.04.06.10.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 10:08:23 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 5269C40246; Mon,  6 Apr 2020 17:08:22 +0000 (UTC)
+Date:   Mon, 6 Apr 2020 17:08:22 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH 1/3] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <20200406170822.GE11244@42.do-not-panic.com>
+References: <20200330115535.3215-1-vbabka@suse.cz>
+ <20200330115535.3215-2-vbabka@suse.cz>
+ <20200330224422.GX11244@42.do-not-panic.com>
+ <287ac6ae-a898-3e68-c7d8-4c1d17a40db9@suse.cz>
+ <20200402160442.GA11244@42.do-not-panic.com>
+ <202004021017.3A23B759@keescook>
+ <20200402205932.GM11244@42.do-not-panic.com>
+ <202004031654.C4389A04EF@keescook>
+ <20200406140836.GA11244@42.do-not-panic.com>
+ <202004060856.6BC17C5C99@keescook>
 MIME-Version: 1.0
-References: <20200406110702.GA13469@nautica> <CAHk-=whVEPEsKhU4w9y_sjbg=4yYHKDfgzrpFdy=-f9j+jTO3w@mail.gmail.com>
- <20200406164057.GA18312@nautica> <20200406164641.GF21484@bombadil.infradead.org>
-In-Reply-To: <20200406164641.GF21484@bombadil.infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 6 Apr 2020 10:04:11 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiAiGMH=bw5N1nOVWYkE9=Pcx+mxyMwjYfGEt+14hFOVQ@mail.gmail.com>
-Message-ID: <CAHk-=wiAiGMH=bw5N1nOVWYkE9=Pcx+mxyMwjYfGEt+14hFOVQ@mail.gmail.com>
-Subject: Re: [GIT PULL] 9p update for 5.7
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Dominique Martinet <asmadeus@codewreck.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        Sergey Alirzaev <l29ah@cock.li>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202004060856.6BC17C5C99@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 9:46 AM Matthew Wilcox <willy@infradead.org> wrote:
->
-> POSIX may well "allow" short reads, but userspace programmers basically
-> never check the return value from read().  Short reads aren't actually
-> allowed.  That's why signals are only allowed to interrupt syscalls if
-> they're fatal (and the application will never see the returned value
-> because it's already dead).
+On Mon, Apr 06, 2020 at 08:58:50AM -0700, Kees Cook wrote:
+> On Mon, Apr 06, 2020 at 02:08:36PM +0000, Luis Chamberlain wrote:
+> > > Yes. Doing an internal extension isn't testing the actual code.
+> > 
+> > But it would.
+> > 
+> > [...]
+> > > I don't think anything is needed for this series. It can be boot tested
+> > > manually.
+> > 
+> > Why test it manually when it could be tested automatically with a new kconfig?
+> 
+> So, my impression is that adding code to the internals to test the
+> internals isn't a valid test (or at least makes it fragile) because the
+> test would depend on the changes to the internals (or at least depend on
+> non-default non-production CONFIGs).
 
-Well, that's true for some applications.
+The *internal* aspect here is an extension to boot params under a
+kconfig which would simply append to it, as if the user would have
+added some more params. Since we already have test sysctl params the
+only one we'd need to add on the test driver would be a dummy one which
+tests the alias, on the second patch. We should have enough sysctls to
+already test dummy values.
 
-But look at anybody who ever worked more with NFS mounts, and they got
-used to having the 'intr' mount flag set and incomplete reads and
--EAGAIN as a result.
+Nothing else would be needed as the sysctl test driver would just need
+to test that the values expected when this is enabled is set.
 
-So a lot of normal applications are actually used to partial reads
-even from file reads.
+> Can you send a patch for what you think this should look like? Perhaps
+> I'm not correctly imagining what you're describing?
 
-Are there apps that react badly? I'm sure - but they also wouldn't
-have O_NONBLOCK set on a regular file. The only reason to set
-O_NONBLOCK is because you think the fd might be a pipe or something,
-and you _are_ ready to get partial reads.
+I rather get the person involved in the changes to do the testing so
+as they're the ones designing the feature. If however it is not clear
+what I mean I'm happy to elaborate.
 
-So the 9p behavior certainly isn't outrageously out of line for a
-network filesystem. In fact, because of O_NONBLOCK rather than a mount
-option, I think it's a lot safer than a fairly standard NFS option.
+Vlastimil do you get what I mean?
 
-               Linus
+> Regardless of testing, I think this series is ready for -mm.
+
+I'm happy for it to go in provided we at least devise a follow up plan
+for testing. Otherwise -- like other things, it won't get done.
+
+  Luis
