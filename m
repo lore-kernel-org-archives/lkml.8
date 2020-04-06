@@ -2,67 +2,76 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AA6C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF28C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A775A20BED
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1A5223FB
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgDFNfT (ORCPT
+        id S1728308AbgDFNfg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:35:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:45810 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbgDFNfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:35:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEA2F7FA;
-        Mon,  6 Apr 2020 06:35:17 -0700 (PDT)
-Received: from [10.37.12.4] (unknown [10.37.12.4])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8230E3F52E;
-        Mon,  6 Apr 2020 06:35:07 -0700 (PDT)
-Subject: Re: [PATCH v5 4/5] thermal: devfreq_cooling: Refactor code and switch
- to use Energy Model
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
-        javi.merino@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, rostedt@goodmis.org,
-        qperret@google.com, bsegall@google.com, mgorman@suse.de,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
-        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
-References: <20200318114548.19916-1-lukasz.luba@arm.com>
- <20200318114548.19916-5-lukasz.luba@arm.com>
- <f3e9f127-47b1-9f30-2148-3c95a5933a92@linaro.org>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <4bf6cc66-8df4-3224-418d-0549026a3672@arm.com>
-Date:   Mon, 6 Apr 2020 14:35:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <f3e9f127-47b1-9f30-2148-3c95a5933a92@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 6 Apr 2020 09:35:36 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:33904 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728318AbgDFNfg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 09:35:36 -0400
+Received: from mail-pj1-f72.google.com ([209.85.216.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jLRuX-0001tv-PN
+        for linux-kernel@vger.kernel.org; Mon, 06 Apr 2020 13:35:33 +0000
+Received: by mail-pj1-f72.google.com with SMTP id p14so14847876pjp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:35:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=CSKUSqRfNTXzOLX6+efSm/2vYgKbSyfaW2ix36hULHI=;
+        b=jA6hWxTgIyHBR/TonfjYPuuXneWPVkQJGeA70mFhqmn0GIy+oOO2LlWBWbQjT28MUN
+         vIRrCLeD2yHFaMX5b0kdlIkeqs9p07NVldHfx4qMwLheSgwqNdZngXkWwRy2Pp55+Gin
+         CbzTEQgIFAbRW3oxlbJ6wV9Vte1Qg5mYVMcs5QTqw6hHxh8beIccGesvVA7la4bH0c1R
+         pdtXSsh4wMEWCJIUZr9XlqHgyeToGV6qB7GjbF7O/sfUpX27bWq/AxLRpvXzTIeaSeM1
+         Lw8xaI+C8dC17ApnO4U+DGKUfsOgjdoSljcwFjHUBGAWxF2LaSSTrX//dctDt1wdLU9d
+         9aNg==
+X-Gm-Message-State: AGi0PuZOu2CFznvOmw6K1svj8IkefwpKG6Q850J+VZHNXwtaPzdXR5Jz
+        7U+K8mSlLsCt4MrBuLOlmiF974VvZ/AkY6x4ScH0gAI3dUB0ASFdxi7jBs6OcTAayx//GRF8mYL
+        d9GJelt5mT3WP70TH1tSH+4PEgLfrf66EjVkfh8V/GA==
+X-Received: by 2002:a17:90a:db02:: with SMTP id g2mr26642888pjv.49.1586180132472;
+        Mon, 06 Apr 2020 06:35:32 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJcF25kagP8I8oRos42bmY0H7Bwv4yxtPEGXfY1khLT0S5/ecXXfz8/hbPT1o2+s7NVDz0CPA==
+X-Received: by 2002:a17:90a:db02:: with SMTP id g2mr26642844pjv.49.1586180132092;
+        Mon, 06 Apr 2020 06:35:32 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id a8sm10783890pgg.79.2020.04.06.06.35.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Apr 2020 06:35:31 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] rtw88: Add delay on polling h2c command status bit
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <87zhboycfr.fsf@kamboji.qca.qualcomm.com>
+Date:   Mon, 6 Apr 2020 21:35:29 +0800
+Cc:     Tony Chuang <yhchuang@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:REALTEK WIRELESS DRIVER (rtw88)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <83B3A3D8-833A-42BE-9EB0-59C95B349B01@canonical.com>
+References: <20200406093623.3980-1-kai.heng.feng@canonical.com>
+ <87v9mczu4h.fsf@kamboji.qca.qualcomm.com>
+ <94EAAF7E-66C5-40E2-B6A9-0787CB13A3A9@canonical.com>
+ <87zhboycfr.fsf@kamboji.qca.qualcomm.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -70,54 +79,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 4/3/20 6:44 PM, Daniel Lezcano wrote:
-> On 18/03/2020 12:45, Lukasz Luba wrote:
->> The overhauled Energy Model (EM) framework support also devfreq devices.
->> The unified API interface of the EM can be used in the thermal subsystem to
->> not duplicate code. The power table now is taken from EM structure and
->> there is no need to maintain calculation for it locally. In case when the
->> EM is not provided by the device a simple interface for cooling device is
->> used.
->>
->> There is also an improvement in code related to enabling/disabling OPPs,
->> which prevents from race condition with devfreq governors.
->>
->> [lkp: Reported the build warning]
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org> # for tracing code
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> On Apr 6, 2020, at 21:24, Kalle Valo <kvalo@codeaurora.org> wrote:
 > 
-> The changes are too big, please split this patch into smaller chunks.
+> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+> 
+>>> On Apr 6, 2020, at 20:17, Kalle Valo <kvalo@codeaurora.org> wrote:
+>>> 
+>>> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+>>> 
+>>>> --- a/drivers/net/wireless/realtek/rtw88/hci.h
+>>>> +++ b/drivers/net/wireless/realtek/rtw88/hci.h
+>>>> @@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32
+>>>> addr, u32 mask, u8 data)
+>>>> 	rtw_write8(rtwdev, addr, set);
+>>>> }
+>>>> 
+>>>> +#define rr8(addr)      rtw_read8(rtwdev, addr)
+>>>> +#define rr16(addr)     rtw_read16(rtwdev, addr)
+>>>> +#define rr32(addr)     rtw_read32(rtwdev, addr)
+>>> 
+>>> For me these macros reduce code readability, not improve anything. They
+>>> hide the use of rtwdev variable, which is evil, and a name like rr8() is
+>>> just way too vague. Please keep the original function names as is.
+>> 
+>> The inspiration is from another driver.
+>> readx_poll_timeout macro only takes one argument for the op.
+>> Some other drivers have their own poll_timeout implementation,
+>> and I guess it makes sense to make one specific for rtw88.
+> 
+> I'm not even understanding the problem you are tying to fix with these
+> macros. The upstream philosopyhy is to have the source code readable and
+> maintainable, not to use minimal number of characters. There's a reason
+> why we don't name our functions a(), b(), c() and so on.
 
-OK, I will split it and re-base on top of thermal testing.
+The current h2c polling doesn't have delay between each interval, so the polling is too fast and the following logic considers it's a timeout.
+The readx_poll_timeout() macro provides a generic mechanism to setup an interval delay and timeout which is what we need here.
+However readx_poll_timeout only accepts one parameter which usually is memory address, while we need to pass both rtwdev and address.
+
+So if hiding rtwdev is evil, we can roll our own variant of readx_poll_timeout() to make the polling readable.
+
+Kai-Heng
 
 > 
->> ---
->>   drivers/thermal/devfreq_cooling.c | 474 ++++++++++++++++--------------
->>   include/linux/devfreq_cooling.h   |  39 +--
->>   include/trace/events/thermal.h    |  19 +-
->>   3 files changed, 277 insertions(+), 255 deletions(-)
->>
->> diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-> 
-> [ ... ]
-> 
->>   struct devfreq_cooling_device {
->>   	int id;
->>   	struct thermal_cooling_device *cdev;
->>   	struct devfreq *devfreq;
->>   	unsigned long cooling_state;
->> -	u32 *power_table;
->>   	u32 *freq_table;
->> -	size_t freq_table_size;
->> +	size_t max_level;
-> 
-> Could you rename it to 'max_state' ?
-
-Yes.
-
-Thank you for your comments.
-
-Regards,
-Lukasz
+> -- 
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
