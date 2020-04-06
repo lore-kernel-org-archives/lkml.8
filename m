@@ -2,116 +2,150 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA1AC2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426B1C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77249206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 132C320780
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 08:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ng3w+qRe"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="woS3dcHT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ac65Exf1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgDFIGW (ORCPT
+        id S1726559AbgDFIKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 04:06:22 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28869 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726491AbgDFIGV (ORCPT
+        Mon, 6 Apr 2020 04:10:13 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:60551 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726475AbgDFIKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 04:06:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586160380;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ylWquo2AGzDmVpZOhmgLdkn6LoBRG8fV5dTAEgjmlbU=;
-        b=Ng3w+qReOcloNLQQ0JPixuxXMMKOae1akRXoEb2J01muWWI1pZigQkmQdobhDAyjIQaY+6
-        uUsZhC5i6116oLiiPJLKkzBHm1MSGmkSamSleusL9x0jUwAMTv7meZEn0OXmbzF5nG3VGZ
-        pYjkZO23FUzhzr9uuBgFFoCJK8WLZpc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-G1bArSXsOne7i05MQ5n15w-1; Mon, 06 Apr 2020 04:06:15 -0400
-X-MC-Unique: G1bArSXsOne7i05MQ5n15w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0650D14E3;
-        Mon,  6 Apr 2020 08:06:14 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-113-60.ams2.redhat.com [10.36.113.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BA4E5DA81;
-        Mon,  6 Apr 2020 08:06:13 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 69F1816E2C; Mon,  6 Apr 2020 10:06:12 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 10:06:12 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+d3a7951ed361037407db@syzkaller.appspotmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        virtualization@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: upstream boot error: KASAN: slab-out-of-bounds Write in
- virtio_gpu_object_create
-Message-ID: <20200406080612.v5ubxvyliuso6v5h@sirius.home.kraxel.org>
-References: <00000000000091056b05a2999f1e@google.com>
- <CACT4Y+b4RcgG_GrcpaghmqhX47zUVsAcGGd6vb6MYJT=6gf89g@mail.gmail.com>
+        Mon, 6 Apr 2020 04:10:12 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 403D35C015E;
+        Mon,  6 Apr 2020 04:10:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 06 Apr 2020 04:10:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=Lk1XzoQIyt4x3trpA0BOgrOVyDs
+        LWD0uMh01o6xe5MA=; b=woS3dcHTPR0/NMT2vWxjkxPTj9fnof0nct8U0Va6SB8
+        hpWkYiqBUV/NfVjsXkYt/IG5skZ5XpwtLbUoOS7bQf4I97cmEK8SGX+mzpYVSIqF
+        GEkfhtqOL12uVUE0BGCAV9LQEVquP+90ihDdAgouS9l9OKSZSvyUqhmO+MnfkH/8
+        epm03Q9+2zyHvcfjYY3d23LNGt9Vl7t6TroSzpDh8paRYRXei31WqPHhqMmeU/nW
+        FFyikvwpt+IVEoibXlh2c15xUn/TdpnjxqSBoYRChfJzPMAdWM1VjCJTPpjghZdC
+        MHiVWVN7EE5YdTrnQoTPf8rfi7h+FOi7J7EOPRVY3+w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Lk1Xzo
+        QIyt4x3trpA0BOgrOVyDsLWD0uMh01o6xe5MA=; b=ac65Exf1y5rbDZtz/ER0zl
+        DtgDjyiwtCE+r/oJt2RX7jEhQuYKOlIYqFqr6TuT4N9U2iTJg7oYt2xv6+cYOq43
+        LOWTw55qpspbpfq2aJFwL/TUEJ2gcfE6Hn1HjFMcp1C5weaeWDTQmYUlDtcOC8ja
+        I7Bwk9mZtfObOGXFBu8Bs6IuCn71MnzH8nXVC9SZnq2vbM5Q1EFNhgAzEHgKdJPA
+        adUeaozGU1txJ19CaNLetj1d/LV+grWSdxAVi0dLI/wjtJMO4j8DPcegWd7YeggM
+        YSSHeyFmxhmf7i1jXlADAiRZcBzWFVGqr/Pqv/oj38vAeUekodhR81bqEgEIVr5w
+        ==
+X-ME-Sender: <xms:4eOKXiYS_JJQUYUsJV2uLtl3h6Cpe9BIdrjSWQlvxH-XDG3F_wOiKg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudefgddtvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epghhithhhuhgsrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnh
+    hordhtvggthh
+X-ME-Proxy: <xmx:4eOKXsXfPLaYq3GQIaEpON7I69G9F2oAiGU853Atp4_pn3vlMigeuQ>
+    <xmx:4eOKXjbwUvQBZP48DNfpdCN5Pyatlum8y9-nd47fTkjExUWClNVUdw>
+    <xmx:4eOKXjLUWxLfYyviqS5uurImPcPfeBO9_T1GxyeEBTjqpJ-8lxFNLA>
+    <xmx:4-OKXgPHINzjfLhYBYJFoWYX9aOOQ7vkZY4-sVRxGqcGEugWiLwx6g>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 557743280066;
+        Mon,  6 Apr 2020 04:10:09 -0400 (EDT)
+Date:   Mon, 6 Apr 2020 10:10:07 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH v2 0/7] Add support for Allwinner H6 DVFS
+Message-ID: <20200406081007.k6wlaampgbe46yts@gilmour.lan>
+References: <20200405173601.24331-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6je42lpfvpbcwyuc"
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+b4RcgG_GrcpaghmqhX47zUVsAcGGd6vb6MYJT=6gf89g@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200405173601.24331-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 09:07:44AM +0200, Dmitry Vyukov wrote:
-> On Mon, Apr 6, 2020 at 8:46 AM syzbot
-> <syzbot+d3a7951ed361037407db@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    ffc1c20c Merge tag 'for-5.7/dm-changes' of git://git.kerne..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1690471fe00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d6a1e2f9a9986236
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=d3a7951ed361037407db
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+d3a7951ed361037407db@syzkaller.appspotmail.com
-> 
-> 
-> +drivers/gpu/drm/virtio/virtgpu_object.c maintainers
-> Now we have both mainline and linux-next boot broken (linux-next is
-> broken for the past 40 days).
-> No testing of new code happens.
-> 
-> >  virtio_gpu_object_shmem_init drivers/gpu/drm/virtio/virtgpu_object.c:151 [inline]
-> >  virtio_gpu_object_create+0x9f3/0xaa0 drivers/gpu/drm/virtio/virtgpu_object.c:230
 
-Ah, that one.
+--6je42lpfvpbcwyuc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-broken patch: f651c8b05542 ("drm/virtio: factor out the sg_table from virtio_gpu_object")
-fixed by: 0666a8d7f6a4 ("drm/virtio: fix OOB in virtio_gpu_object_create")
+Hi,
 
-Both are in drm-misc-next.  I suspect the fix was added after
-drm-misc-next was closed for the 5.7 merge window and thus should
-have been submitted to drm-misc-next-fixes instead.
+On Sun, Apr 05, 2020 at 07:35:54PM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> Now that required drivers are merged we can contibute on DVFS
+> support for Allwinner H6.
+>
+> This serie is based on Yangtao Li serie[0] and Ond=C5=99ej Jirman work[1].
+>
+> Most of the OPP tables are taken from original vendor kernel[2].
+> Plus there is a new CPU frequencies at 1.6GHz, 1.7GHz and 1.8GHz.
+>
+> I wrote a simple script to randomly set a frequency during
+> a random time[3].
 
-So, what to do now?  Should I cherry-pick 0666a8d7f6a4 into
-drm-misc-next-fixes?  Or should it go into drm-misc-fixes instead?
+If you ever need to do that ever again, cpufreq-ljt-stress-test (found
+here https://github.com/ssvb/cpuburn-arm) has proven to be very
+reliable to detect cpufreq related issues. stress-ng might not be
+enough since the (at least older) Allwinner SoCs tend to create cache
+corruption when undervolted, and that might not be unnoticed by
+stress-ng but will be catched by cpufreq-ljt-stress-test.
 
-thanks,
-  Gerd
+Also, it will test each frequency, while random frequencies might skip
+a few.
 
+> With this script and using stress-ng during several hours, I didn't
+> see any issue. Moreover I have tested specifically the 1.8GHz on my
+> Beelink GS1, max thermal 85=C2=B0C is reached very quickly and then the
+> SoC oscillates quickly between 1.5 and 1.8GHz. So i have added
+> 1.6GHz and 1.7GHz my board now oscillate slower between 1.5GHz and
+> 1.6GHz swapping every second and temperature is also morestable.
+>
+> I also test that that offlining CPU0 and doing DVFS on other CPUs
+> works. As CPU regulator is only set for CPU0.
+>
+> But maybe it doesn't cost much to set the regulator for all the CPUs?
+>
+> Jernej test the GPU devfreq on several H6 board particulary the
+> Tanix TX6 which doesn't have a proper dedicated PMIC and doesn't
+> had any trouble with it.
+>
+> Do you think I can enable GPU OPP for all H6 Boards?
+
+It seems you're doing it?
+
+Maxime
+
+--6je42lpfvpbcwyuc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXorj3wAKCRDj7w1vZxhR
+xSZxAP9kSMVuxQsQgL0XAk5Y63Yvolay8esXWCTPla+PntPdLgEAufE2bGi74D1N
+8qBXuxrI6Oc3uosdriCBWT1mWHokdAI=
+=RqjV
+-----END PGP SIGNATURE-----
+
+--6je42lpfvpbcwyuc--
