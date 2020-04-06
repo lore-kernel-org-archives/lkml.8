@@ -2,154 +2,136 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281D1C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F549C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F083F249B0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0670C22450
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586192226;
-	bh=d5WwVLVFEz/qBX2k9G3pvY8aj9ZG4dDXgjdXesFl72Y=;
+	s=default; t=1586192391;
+	bh=BvXBikF5zktNf7QS73awek+bnt1KyWnIJgoxiHrD7qg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XQ100UcCuhSb/PN7uyUfMYMhEWD486c8JcVJsxVcIIncUoTZN+/zsMOr8J/ZKYM3Y
-	 +U9eZ4RMcHmHYsXZEgN/gtKr3w0wou7IGF2zksBBaxpIERqeFULkMegPu0wT+hZP1G
-	 8ddBHjgxEzk5dMZtx+/QXkVDoxrb/3xd0XJzqvos=
+	b=sNtNctWNBZHBmI+GNbmNufWTtAs4iyR85cdHS8QL2L17G1R+rruct+Eg4aF1o/cl6
+	 s+ggPOozlDiU20S1R0fKdOGDXu0fevmfziNous4fY7Uy4198RxHZloyttdmk9N/Nnj
+	 0h+QpetDT1a0DoaZZuUPNzay5mo5Sj3gkwifCMek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbgDFQ5F (ORCPT
+        id S1729721AbgDFQ7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43022 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 12:59:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728789AbgDFQ5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:57:04 -0400
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+        id S1728690AbgDFQ7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:59:50 -0400
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA6CB249B0
-        for <linux-kernel@vger.kernel.org>; Mon,  6 Apr 2020 16:57:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EBD7224F9;
+        Mon,  6 Apr 2020 16:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586192224;
-        bh=d5WwVLVFEz/qBX2k9G3pvY8aj9ZG4dDXgjdXesFl72Y=;
+        s=default; t=1586192388;
+        bh=BvXBikF5zktNf7QS73awek+bnt1KyWnIJgoxiHrD7qg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2b11M1QLOY7iK7uifO5nBAZ8bvKGbtsHtmiUXVepu4nMWJ0lllOwDjh4fNH5CYNy4
-         vTkOZImNQDJ1CeOeKd3mhstdA7JBPeI9Urm+N6WZdTlN5YpCWrl59BsDqKRB5mTpmF
-         QPESExpSgygqg6+fcOb//HQ/dAxJr5jzbnaJ5orw=
-Received: by mail-ed1-f46.google.com with SMTP id cw6so333692edb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 09:57:03 -0700 (PDT)
-X-Gm-Message-State: AGi0PubauVRZbAK6Gna+N5rAcE4WqA+Ycka7c33gxakoKTFc4688K3g/
-        6x3dfssnC/twuCKs67lYaiWRT2WIjHnjutxg9Q==
-X-Google-Smtp-Source: APiQypJ/iPGF+cvIgkUgfRfcgINI0hY5iZiKWnX6gcKA9lAMAGbU4+kz269vsFd53VBSCqsVJta4Qo1yoqmPd7O1bkg=
-X-Received: by 2002:a05:6402:b70:: with SMTP id cb16mr19702151edb.48.1586192222144;
- Mon, 06 Apr 2020 09:57:02 -0700 (PDT)
+        b=bvojjPgqEM28uYRBkGHErCClmCMsQ2DiE+7Pi978RWpcDGKOVIrwVbaYQnnmWQJZ8
+         dnDWvM7McPg2QPRxpWyQ5OArkZ93zjd5mH7FNw4uKhTsIrpgRtvQXtPE3T2Gt9Pf9k
+         a3AG6dqPpdZOyilBFQm1l+RGnL+1tLbn0SOHNFlU=
+Received: by mail-il1-f181.google.com with SMTP id k29so192672ilg.0;
+        Mon, 06 Apr 2020 09:59:48 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZNSgvfqr249o2Tc+ThHUN4qFnp+zpKMcXCEIGtOoryEAVj+Puy
+        VhmqdhUGwd46mSj9cCnEIwG6WLuSEdHS33Qj7RE=
+X-Google-Smtp-Source: APiQypKa8x2BAEQEzrkycsQqnL3eJ2Mkoh/RIYjWlV17hdjuinwh7FaM5x2U8se97tSF4XGMVvH6B1PrNnc7edkk5oM=
+X-Received: by 2002:a92:443:: with SMTP id 64mr253419ile.258.1586192387909;
+ Mon, 06 Apr 2020 09:59:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200406051131.225748-1-hsinyi@chromium.org>
-In-Reply-To: <20200406051131.225748-1-hsinyi@chromium.org>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 7 Apr 2020 00:56:49 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9zKbSsYmq7BrQdu3h1zTNYcX3WiFjGaiB1=x8eUA4ogg@mail.gmail.com>
-Message-ID: <CAAOTY_9zKbSsYmq7BrQdu3h1zTNYcX3WiFjGaiB1=x8eUA4ogg@mail.gmail.com>
-Subject: Re: [PATCH] drm: mediatek: fix device passed to cmdq
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>, CK Hu <ck.hu@mediatek.com>
+References: <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
+ <20200406035110.GA3241052@rani.riverdale.lan> <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
+ <20200406084738.GA2520@zn.tnic> <CAMj1kXHAieZDvPKfjF=J+G=QVS+=XS-b4RP_=mjCEFEB_E_+Qw@mail.gmail.com>
+ <20200406112042.GC2520@zn.tnic> <20200406132215.GA113388@rani.riverdale.lan>
+ <CAMj1kXG+34-bK1XuxX5VopkRt1SV1ewUAEmif+aQj5cJQ=9vbA@mail.gmail.com>
+ <20200406160148.GB113388@rani.riverdale.lan> <CAMj1kXFKDWB9n0kWhXHLH0XP0O1v_0b=bFJad=kBvx2qVxqDcQ@mail.gmail.com>
+ <20200406165243.GA303819@rani.riverdale.lan>
+In-Reply-To: <20200406165243.GA303819@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Mon, 6 Apr 2020 18:59:36 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
+Message-ID: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
+        hpa@zytor.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Hsin-Yi:
+On Mon, 6 Apr 2020 at 18:52, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Mon, Apr 06, 2020 at 06:22:33PM +0200, Ard Biesheuvel wrote:
+> >
+> > > We could just pull the stub's bss section all into data with objcopy
+> > > similar to what ARM64 does [1]? i.e. rename .bss to .bss.efistub and
+> > > then pull that into .data in the linker script for the compressed
+> > > kernel?
+> > >
+> >
+> > I don't follow. I'm not aware of arm64 doing anything out of the
+> > ordinary with .bss? Note that arm64 does not have a separate
+> > decompressor, so the EFI stub is part of the kernel proper. This is
+> > why sections are renamed to start with .init
+>
+> ARM64 renames the stub sections prefixing them with .init, and that
+> includes .bss. The ARM64 linker script then puts .init.bss into the
+> .init.data section. So I was suggesting doing something similar with the
+> x86 stub, renaming .bss to .bss.efistub, and then putting that into
+> .data via linker script.
+>
 
-Hsin-Yi Wang <hsinyi@chromium.org> =E6=96=BC 2020=E5=B9=B44=E6=9C=886=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=881:12=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> drm device is now probed from mmsys. We need to use mmsys device to get g=
-ce
-> nodes. Fix following errors:
->
-> [    0.740068] mediatek-drm mediatek-drm.1.auto: error -2 can't parse gce=
--client-reg property (0)
-> [    0.748721] mediatek-drm mediatek-drm.1.auto: error -2 can't parse gce=
--client-reg property (0)
-> ...
-> [    2.659645] mediatek-drm mediatek-drm.1.auto: failed to request channe=
-l
-> [    2.666270] mediatek-drm mediatek-drm.1.auto: failed to request channe=
-l
+OK, I see what you mean now. IIRC, putting that into .init.data was
+simply because there was no way to selectively prefix sections, and
+leave .bss alone.
 
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+But I guess we can combine all these different histories and
+rationales into one coherent way of managing the stub's .bss.
 
+
+> Anyway, I'll do the section annotation for now as that will be less
+> churn and we can revisit this after that.
 >
-> Fixes: 1d367541aded ("soc / drm: mediatek: Fix mediatek-drm device probin=
-g")
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 6 ++++--
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 3 ++-
->  2 files changed, 6 insertions(+), 3 deletions(-)
+> >
+> > > There is also this scary looking comment in gnu-efi's linker script:
+> > >         /* the EFI loader doesn't seem to like a .bss section, so we stick
+> > >            it all into .data: */
+> > > I don't know what the history of that is.
+> > >
+> >
+> > I don't remember, to be honest, but I'm pretty sure I copy-pasted that
+> > from elsewhere at the time.
+> >
+> > > [1] As an aside, why doesn't ARM do this as well rather than using the
+> > > section(.data) annotation?
+> > >
+> >
+> > The ARM decompressor has this hideous hack, where text [and rodata]
+> > executes straight from flash, and BSS is relocated into DRAM. In order
+> > for this to work, it actually *requires* GOT indirections for BSS
+> > items, to ensure that all BSS references use absolute addresses, which
+> > can be relocated independently from the rest of the kernel image. This
+> > is the reason ARM does not permit a .data section in the decompressor.
+> > However, the EFI stub does not support execute in place from flash,
+> > and so we can permit a .data section there. At the same time, we don't
+> > support GOT indirections in the EFI stub, so we cannot use the BSS
+> > section. So instead, we just put the few BSS pieces we have into .data
+> > instead.
+> >
 >
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/me=
-diatek/mtk_drm_crtc.c
-> index 615a54e60fe2..8621f0289399 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -822,14 +822,16 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
->
->  #if IS_REACHABLE(CONFIG_MTK_CMDQ)
->         mtk_crtc->cmdq_client =3D
-> -                       cmdq_mbox_create(dev, drm_crtc_index(&mtk_crtc->b=
-ase),
-> +                       cmdq_mbox_create(mtk_crtc->mmsys_dev,
-> +                                        drm_crtc_index(&mtk_crtc->base),
->                                          2000);
->         if (IS_ERR(mtk_crtc->cmdq_client)) {
->                 dev_dbg(dev, "mtk_crtc %d failed to create mailbox client=
-, writing register by CPU now\n",
->                         drm_crtc_index(&mtk_crtc->base));
->                 mtk_crtc->cmdq_client =3D NULL;
->         }
-> -       ret =3D of_property_read_u32_index(dev->of_node, "mediatek,gce-ev=
-ents",
-> +       ret =3D of_property_read_u32_index(mtk_crtc->mmsys_dev->of_node,
-> +                                        "mediatek,gce-events",
->                                          drm_crtc_index(&mtk_crtc->base),
->                                          &mtk_crtc->cmdq_event);
->         if (ret)
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/med=
-iatek/mtk_drm_drv.c
-> index e2bb0d19ef99..dc78e86bccc0 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> @@ -517,7 +517,8 @@ static int mtk_drm_probe(struct platform_device *pdev=
-)
->                                 goto err_node;
->                         }
->
-> -                       ret =3D mtk_ddp_comp_init(dev, node, comp, comp_i=
-d, NULL);
-> +                       ret =3D mtk_ddp_comp_init(dev->parent, node, comp=
-,
-> +                                               comp_id, NULL);
->                         if (ret) {
->                                 of_node_put(node);
->                                 goto err_node;
-> --
-> 2.26.0.292.g33ef6b2f38-goog
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> I see, thanks.
