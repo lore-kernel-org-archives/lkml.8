@@ -2,141 +2,98 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954CDC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127ABC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 716E423AAC
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89C823D3B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:22:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586182936;
+	bh=079T5wNZmSG8ZgElAL/OT/dS/9EsBX27bHZ9pHlhHc8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LTp0YLtbw9GY8yJ8C54nYFvB5GqW+zoDygne+tl+p2xmDFMaYGTHAHcuqmrmbQdKq
+	 fz94ZHUqYCBemCbOLeDzBgNJgaKW9g0OieINs7qRvYS19606XCA2BqP0SHfomTB1Sc
+	 cKGQPx4khz1vTXRQYAD6PViT85K83tJktV5mBv7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgDFOUk (ORCPT
+        id S1728633AbgDFOWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:20:40 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36877 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbgDFOUk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:20:40 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[127.0.0.1])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <a.fatoum@pengutronix.de>)
-        id 1jLScB-0005ab-4w; Mon, 06 Apr 2020 16:20:39 +0200
-Subject: Re: [PATCH v2] nvmem: core: don't consider subnodes not matching
- binding
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     kernel@pengutronix.de, Christian Eggers <CEggers@arri.de>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200323152850.32657-1-a.fatoum@pengutronix.de>
- <d59007d1-f4e3-f550-cecd-64b788a534bc@linaro.org>
-From:   Ahmad Fatoum <a.fatoum@pengutronix.de>
-Message-ID: <bb0dcf33-f67d-7078-9341-08282d8da217@pengutronix.de>
-Date:   Mon, 6 Apr 2020 16:20:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 6 Apr 2020 10:22:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728200AbgDFOWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 10:22:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D50C23D4D;
+        Mon,  6 Apr 2020 14:22:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586182934;
+        bh=079T5wNZmSG8ZgElAL/OT/dS/9EsBX27bHZ9pHlhHc8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ATLYI5tDGQeBumcAM2blpXje1MIDHzL0PJrmYX6l244ju4FDGPaeLvzqYkcItaI8h
+         8YEi/zGP7kQdZFsDpAhji+JYnAOqfzuJsxZvf+w7Vh1pBXjM3V+RTC3rv9S1qQyvUC
+         hmtDvVYkq13RNfTKPTIpQ319x4GJqAb9KERFRg6Q=
+Date:   Mon, 6 Apr 2020 16:22:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Forest Bond <forest@alittletooquiet.net>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] staging: vt6656: Use define instead of magic number
+ for tx_rate
+Message-ID: <20200406142212.GA48502@kroah.com>
+References: <20200404141400.3772-1-oscar.carter@gmx.com>
+ <20200404141400.3772-3-oscar.carter@gmx.com>
 MIME-Version: 1.0
-In-Reply-To: <d59007d1-f4e3-f550-cecd-64b788a534bc@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200404141400.3772-3-oscar.carter@gmx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On 4/6/20 2:33 PM, Srinivas Kandagatla wrote:
+On Sat, Apr 04, 2020 at 04:13:59PM +0200, Oscar Carter wrote:
+> Use the define RATE_11M present in the file "device.h" instead of the
+> magic number 3. So the code is more clear.
 > 
+> Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/staging/vt6656/baseband.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> On 23/03/2020 15:28, Ahmad Fatoum wrote:
->> The nvmem cell binding applies to objects which match "^.*@[0-9a-f]+$",
->> but so far the driver has matched all objects and failed if they didn't
->> have the expected properties.
->>
->> The driver's behavior in this regard precludes future extension of
->> EEPROMs by child nodes other than nvmem and clashes with the barebox
->> bootloader binding that extends the fixed-partitions MTD binding to
->> EEPROMs as it tries to interpret the "fixed-partitions"-compatible
->> partitions node as a nvmem cell.
->>
->> Solve this issue by skipping all subnodes that don't contain an @.
->>
->> This still allows for cell names like `partitions@0,0', but this
-> NACK.. thats nasty hack!
-> Its standard practice as per device tree specs to have nodes name as "node-name@unit-address"
+> diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/baseband.c
+> index 3e4bd637849a..a785f91c1566 100644
+> --- a/drivers/staging/vt6656/baseband.c
+> +++ b/drivers/staging/vt6656/baseband.c
+> @@ -24,6 +24,7 @@
 > 
-> Ref: https://github.com/devicetree-org/devicetree-specification/releases/download/v0.3/devicetree-specification-v0.3.pdf
-
-I didn't say otherwise. I just argued if we verify there's a @ symbol in the
-node name, before considering whether it is a NVMEM cell, we will skip fixed-partitions
-while adhering to the NVMEM cell binding.
-
->> is much less likely to cause future collisions.
+>  #include <linux/bits.h>
+>  #include <linux/kernel.h>
+> +#include "device.h"
+>  #include "mac.h"
+>  #include "baseband.h"
+>  #include "rf.h"
+> @@ -141,7 +142,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 pkt_type,
 > 
-> There have been discussions on this topic in the past at:
+>  	rate = (unsigned int)vnt_frame_time[tx_rate];
 > 
-> https://patchwork.ozlabs.org/patch/890741/
-> 
-> We need to come up with a better solution!
+> -	if (tx_rate <= 3) {
+> +	if (tx_rate <= RATE_11M) {
+>  		if (preamble_type == 1)
+>  			preamble = 96;
+>  		else
+> --
+> 2.20.1
 
-Thanks for the link, I didn't find it when I searched whether this has
-come up before.
+This doesn't apply to my tree :(
 
-As you probably noticed, your suggested approach there wouldn't work for me though,
-because this time it can't be worked around in the MTD driver.
-If the suggestion here is not palatable, how do you think about (in
-my preferred order):
-
-- If the cell has a compatible node, it must be "nvmem-cell".
-  Otherwise, a cell with a compatible node is skipped.
-
-- Adding a nvmem cell container with a compatible and making support for
-  the old binding configurable
-
-- Skipping cells that are malformed and lack a reg = < > property _without_
-  error
-
-Cheers
-Ahmad
-
-> 
-> --srini
-> 
->>
->> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
->> ---
->> v1 -> v2:
->>    use ->full_name instead of ->name as to not break existing correct
->>    cells (Christian)
->> ---
->>   drivers/nvmem/core.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
->> index ef326f243f36..f051051fb1a8 100644
->> --- a/drivers/nvmem/core.c
->> +++ b/drivers/nvmem/core.c
->> @@ -278,6 +278,8 @@ static int nvmem_add_cells_from_of(struct nvmem_device *nvmem)
->>       parent = dev->of_node;
->>         for_each_child_of_node(parent, child) {
->> +        if (!strchr(kbasename(child->full_name), '@'))
->> +            continue;
->>           addr = of_get_property(child, "reg", &len);
->>           if (!addr || (len < 2 * sizeof(u32))) {
->>               dev_err(dev, "nvmem: invalid reg on %pOF\n", child);
->>
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
