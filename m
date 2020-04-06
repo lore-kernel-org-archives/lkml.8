@@ -2,137 +2,93 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9841CC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C65C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F92323EF2
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:32:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bRVTtBIN"
+	by mail.kernel.org (Postfix) with ESMTP id A2CE42415B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586183649;
+	bh=GTATBnUQjHkNYmK08Xo4akxzVeoZee8mUS0AUMxFf4I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Sd++b3DbYh7wVfRz0j9HZTZdUV/11W9XYiXNW7PQIew9JduJPIUO0CE5JdE4DAgkO
+	 pb9kLozwj/glaV5NvUMnAGPHYa5b87qo6Jy9G9j6B5hk6Wm5k9xBa2ygJexdqMbvXr
+	 oFIgy+gCKSpjDgM098EHAoY5EtTaGdsyj9sEUIGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgDFOcZ (ORCPT
+        id S1728718AbgDFOeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:32:25 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51368 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgDFOcZ (ORCPT
+        Mon, 6 Apr 2020 10:34:09 -0400
+Received: from mail-qk1-f177.google.com ([209.85.222.177]:33082 "EHLO
+        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbgDFOeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:32:25 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036ERmb5164674;
-        Mon, 6 Apr 2020 14:32:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=VSir/jwIS86Ti+Bjs0dKhCzkqxS9YJ8FGAa/hLbL5NA=;
- b=bRVTtBINEmWcHUhDlRnrE8XVaBIbv6S9WX3TBCU8hBOXD3+tJzaaK1jy6cK1zoVnPox7
- 1Nk2WQXUwFgnpTImAxKUsJGT6gR7u05HY3AHD80tRNqMAxYR89wjlgMwNHxqpzsut09y
- 8U3o2rEzz7C59E0DhySJKqOc4prbZF3w3oObNyhnB3ctdH04yxcGF0gWsGAr27t5WSnk
- mJ77d7Yjnydfef4+cjLlt1Pwy6/w4j3xj/LAttetfDtrAX3hzx9TVN+xq2pk5No33emG
- dY56QH6zcQMoWhyiVFyNgfr2LWAFABJXebFHHEWyuHZaaRjK1p789hTjoodgXJff/785 Fg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 306hnqy7m7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Apr 2020 14:32:08 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036ESQAx170971;
-        Mon, 6 Apr 2020 14:30:08 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 30839q5pqy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Apr 2020 14:30:08 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 036EU2eN005591;
-        Mon, 6 Apr 2020 14:30:05 GMT
-Received: from linux-1.home (/92.157.90.160)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 06 Apr 2020 07:30:02 -0700
-Subject: Re: [PATCH 4/7] objtool: Add support for return trampoline call
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, tglx@linutronix.de
-References: <20200402082220.808-1-alexandre.chartre@oracle.com>
- <20200402082220.808-5-alexandre.chartre@oracle.com>
- <20200402152717.GE20730@hirez.programming.kicks-ass.net>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <94272807-23c0-3eae-8312-9488607186ca@oracle.com>
-Date:   Mon, 6 Apr 2020 16:34:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 6 Apr 2020 10:34:08 -0400
+Received: by mail-qk1-f177.google.com with SMTP id v7so16385526qkc.0;
+        Mon, 06 Apr 2020 07:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8+jcnJTXIga9mkqHp3/5JxbQM57y376bXrCDo/ExKrY=;
+        b=dGSTYEP5uA6qHfprtplk07U7wkOAEHGJIx4v6hfun7FO8q6S6D4pwPBnwLsU3pP83Y
+         JZRw7+elch1nmfQtGY+9kSnNbjXh6McBm/e0fx3RrW/Osv8pWY9B+UyxwbQMZVjKUIKn
+         FCqsUYZN5mh4h5E4WJw0K3zdisDMMN8hRPTwSPFBkRhVz1oWIlVYDmfqolDvjEo5ppQa
+         jm8M7Kv6g59A7GbX/bJu7CkDzV4nF7paMpVPLN1O0oR70Ama+MZqxv8mXPJcMGPVD41y
+         TXGyslkyDXnz9ABZ99vOb6Byf+vqCpYWwyNK8YGoaWBzygjeJcgfmoth8ZeMTH4hY7a9
+         6E9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=8+jcnJTXIga9mkqHp3/5JxbQM57y376bXrCDo/ExKrY=;
+        b=FY+UMa/K6JsUCk/WjfnHFRu9f1EbN5z/YGVCEWrTnFd18eT7Wx4lsFqgkItR3UTbOz
+         NdoaDA2QHtlO2jY3mGDhUdaNyHy0NiBWjQ9z3xDNEu5E5BL1TyCwVMl13zjPmMeWiCZT
+         BkbuNR4K+bNHmtEpw9jl52eP8mHRv5gCRCBZB7t3p02fJB5+cwDsTc9llWNMtg3JBY4X
+         MtnkNv1l1ctasR58whtcmbiY3QXkiCbaHjb7jy45eb3WUQYmJSc5VpRaF9fw10EII0nO
+         LFOvoIXvF0QRGnuOePIg1V7TxcK1n2iI0F3ceZYtV7pKyJtXpB46hpZaDAK9QzKebtBo
+         G2lQ==
+X-Gm-Message-State: AGi0Pua4KvStMBXucpeanOwiggqkCqUSYJSDQ6nC+V+f+6pr/n9msUih
+        6jaKIzEhc+STc0t4C62ED90=
+X-Google-Smtp-Source: APiQypIl/HBxvhFRvUyRCeNhpPwhQbDSrDTvcnmU7hn232XoQYm2bs0nS7YDyfB6VylVGCsrdlc++g==
+X-Received: by 2002:ae9:c312:: with SMTP id n18mr20722643qkg.472.1586183646991;
+        Mon, 06 Apr 2020 07:34:06 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::eeba])
+        by smtp.gmail.com with ESMTPSA id m5sm13539502qtk.85.2020.04.06.07.34.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 07:34:06 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 10:34:05 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Qian Cai <cai@lca.pw>, Prateek Sood <prsood@codeaurora.org>,
+        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: Deadlock due to "cpuset: Make cpuset hotplug synchronous"
+Message-ID: <20200406143405.GH162390@mtj.duckdns.org>
+References: <F0388D99-84D7-453B-9B6B-EEFF0E7BE4CC@lca.pw>
+ <20200325191922.GM162390@mtj.duckdns.org>
+ <20200326101529.xh763j5frq2r7mqv@e107158-lin>
+ <20200403145523.GC162390@mtj.duckdns.org>
+ <20200406105522.c66p4vzzzylety5d@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200402152717.GE20730@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9582 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004060120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9582 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 adultscore=0
- priorityscore=1501 mlxscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 spamscore=0 impostorscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004060120
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406105522.c66p4vzzzylety5d@e107158-lin.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 06, 2020 at 11:55:23AM +0100, Qais Yousef wrote:
+> What would be the right approach to get a fix in then? We have been skipping
+> this test for a while and we'd like to enable it but this failure is a
+> blocking issue.
 
-On 4/2/20 5:27 PM, Peter Zijlstra wrote:
-> On Thu, Apr 02, 2020 at 10:22:17AM +0200, Alexandre Chartre wrote:
->> With retpoline, the return instruction is used to branch to an address
->> stored on the stack. So, unlike a regular return instruction, when a
->> retpoline return instruction is reached the stack has been modified
->> compared to what we have when the function was entered.
->>
->> Provide the mechanism to explicitly call-out such return instruction
->> so that objtool can correctly handle them.
-> 
-> https://lkml.kernel.org/r/20200331222703.GH2452@worktop.programming.kicks-ass.net
-> 
-> And also, the split out version:
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/commit/?h=core/objtool&id=ec9d9549901dfd2ff411676dfc624e50219e4d5a
-> 
+Update the test so that it accounts for the async nature of the operation?
 
-HINT_RET_OFFSET works fine when an immediate value is pushed on the
-stack. However if the value is pushed from a callee-saved register
-(%rbp, %rbx, %r12-%r15) then we still have a "return with modified
-stack frame" warning. That's because objtool checks callee-saved
-registers pushed/popped on the stack, and we have retpoline functions
-built for each register (see arch/x86/lib/retpoline.S)
-
-So that's why I also added a bool to has_modified_stack_frame() to
-no check registers:
-
-@@ -1432,7 +1478,8 @@ static bool is_fentry_call(struct instruction *insn)
-  	return false;
-  }
-  
--static bool has_modified_stack_frame(struct insn_state *state)
-+static bool has_modified_stack_frame(struct insn_state *state,
-+				     bool check_registers)
-  {
-  	int i;
-  
-@@ -1442,6 +1489,9 @@ static bool has_modified_stack_frame(struct insn_state *state)
-  	    state->drap)
-  		return true;
-  
-+	if (!check_registers)
-+		return false;
-+
-  	for (i = 0; i < CFI_NUM_REGS; i++)
-  		if (state->regs[i].base != initial_func_cfi.regs[i].base ||
-  		    state->regs[i].offset != initial_func_cfi.regs[i].offset)
-
-
-alex.
+-- 
+tejun
