@@ -2,197 +2,123 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDE5C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45549C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884DF22206
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:14:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586186069;
-	bh=j+CN69lefkVNiF8b7o10Y9BP3J7X531gcJQcYOP0EWA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=swywHoVqFkXbgn6yTo3ajUWNWVxe363TR2sb54bY+wtZvQnvxP4e0N0gQgT0nunJu
-	 9gijPGmyqbO87JIbuPxmU2srSUs1ol2kQqRSyk0EwMXOb5kqzRgqVfHVZcs71Uwlnc
-	 1jSrIA0hXXSkO6wR6KKQubrVNhOTpdVcwGlIg3V4=
+	by mail.kernel.org (Postfix) with ESMTP id 1999B2488B
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:18:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="TINLtQtc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgDFPO2 (ORCPT
+        id S1728902AbgDFPS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:14:28 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43121 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728826AbgDFPO2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:14:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s4so43372pgk.10;
-        Mon, 06 Apr 2020 08:14:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=C1rj6tqouMSzYr123O6MG7Kb2JqCCN96dtKjirMsApo=;
-        b=G2HTg+7C/uYDd+HC2P1uzdm4RzbvrsPnDh4/CHz0eRv9AR14+UgPxPTmLKCL/yoTzi
-         kjM9DUp4cQ5wLv3YMXfxZvAMTi/mk+WOIu8qXCItNlevNXJX2gXTfGHW4707G5GZwiQr
-         j+s0u02NTvGSGbjmCqCl70ZFJ/fWdV/r7oqpqpRGOMwAy2aSOYzGoRoTD0pbH2rexn8t
-         9pm+Psq4cHaQZVpZX04bZ/+/46MiRF1HVVDrqTdEEkbDzA3pvk9/IsHKMY6CIueItiH6
-         GiVg3Br0gMFH6lFSM10HnvZr88aGJoGI4cRTL5/SqZLxN+7y+qgF1DNe8Rew7VgUdO1+
-         CPMg==
-X-Gm-Message-State: AGi0Pub6nL9WJF3s3MMGi9sbpeHMRhtL33p2eZw3BjFPnqPUOA68OqKP
-        9fDPA77tp4TM4dphC6WyY0E=
-X-Google-Smtp-Source: APiQypIc2HttsxKQxguvtP/5pcNclwUmIYd7LwuujxsGlIkCzwp/T9+mNTtdb2Y3OGmhZhRkuqdyyw==
-X-Received: by 2002:a63:c345:: with SMTP id e5mr1399506pgd.403.1586186064972;
-        Mon, 06 Apr 2020 08:14:24 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id g11sm11850281pjs.17.2020.04.06.08.14.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 08:14:22 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 43FAF40246; Mon,  6 Apr 2020 15:14:22 +0000 (UTC)
-Date:   Mon, 6 Apr 2020 15:14:22 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        mhocko@suse.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
-Subject: Re: [RFC 2/3] blktrace: fix debugfs use after free
-Message-ID: <20200406151422.GC11244@42.do-not-panic.com>
-References: <20200402000002.7442-1-mcgrof@kernel.org>
- <20200402000002.7442-3-mcgrof@kernel.org>
- <3640b16b-abda-5160-301a-6a0ee67365b4@acm.org>
+        Mon, 6 Apr 2020 11:18:28 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:44520 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728667AbgDFPS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 11:18:27 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 22A19412DD;
+        Mon,  6 Apr 2020 15:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:date:subject:subject:from:from
+        :received:received:received; s=mta-01; t=1586186304; x=
+        1588000705; bh=b78VX+KfoZ1OBoOyTTeff1xSZodd76U9hcyDMh3BFsI=; b=T
+        INLtQtcDmIRWLdUkU2ffIWS8RdYPPWlLC+fdP3yrR6/pmJG04OaZzL+sRNPZfyHo
+        CsLD8miVI3b2u8Vjfj6OgUAA9m/AiU23NU4Rb8CmfHfbY/BSGRJgyaa6JUlSnQo4
+        YCKYYJFsPejtOre4UfOTA3bAREBjMXY3Np4FBsCT2s=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Huy4NrZx28lO; Mon,  6 Apr 2020 18:18:24 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id AA3E84125E;
+        Mon,  6 Apr 2020 18:18:23 +0300 (MSK)
+Received: from localhost.yadro.com (10.199.2.226) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Mon, 6 Apr
+ 2020 18:18:24 +0300
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v7 0/2] iio: proximity: driver for vcnl3020
+Date:   Mon, 6 Apr 2020 18:18:37 +0300
+Message-ID: <20200406151839.13572-1-i.mikhaylov@yadro.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3640b16b-abda-5160-301a-6a0ee67365b4@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.199.2.226]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 04, 2020 at 08:39:47PM -0700, Bart Van Assche wrote:
-> On 2020-04-01 17:00, Luis Chamberlain wrote:
-> > korg#205713 then was used to create CVE-2019-19770 and claims that
-> > the bug is in a use-after-free in the debugfs core code. The
-> > implications of this being a generic UAF on debugfs would be
-> > much more severe, as it would imply parent dentries can sometimes
-> > not be possitive, which is something claim is not possible.
->          ^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->          positive?  is there perhaps a word missing here?
+Add proximity sensor driver for Vishay vcnl3020. Only on-demand
+measurement is supported for now.
 
-Sorry yeah, this was supposed to say:
+Changes from v6:
+   1. minor changes
+     1.1 remove VCNL_DRV_NAME
+     1.2 add braces in get_and_apply_property
 
-it would imply parent dentries can sometimes not be positive, which
-is just not possible.
+Changes from v5:
+   1. add get_and_apply_property function for optional parameters.
+   2. minor changes.
 
-> > It turns out that the issue actually is a mis-use of debugfs for
-> > the multiqueue case, and the fragile nature of how we free the
-> > directory used to keep track of blktrace debugfs files. Omar's
-> > commit assumed the parent directory would be kept with
-> > debugfs_lookup() but this is not the case, only the dentry is
-> > kept around. We also special-case a solution for multiqueue
-> > given that for multiqueue code we always instantiate the debugfs
-> > directory for the request queue. We were leaving it only to chance,
-> > if someone happens to use blktrace, on single queue block devices
-> > for the respective debugfs directory be created.
-> 
-> Since the legacy block layer is gone, the above explanation may have to
-> be rephrased.
+Changes from v4:
+   1. add vdd-supply,vddio-supply,interrupts properties into yaml.
+   2. led-current -> vishay,led-current-milliamp in yaml.
+   3. add possible values enum list.
+   4. add bulk_read for result hi/lo registers.
+   5. add description of vcnl3020_data structure.
+   6. vcnl3020 id table is removed.
+   7. make "vishay,led-current-milliamp" optional in yaml and code.
 
-Will do.
+Changes from v3:
+   1. minor changes.
+   2. add i2c block to fix dts section in yaml.
 
-> > We can fix the UAF by simply using a debugfs directory which is
-> > always created for singlequeue and multiqueue block devices. This
-> > simplifies the code considerably, with the only penalty now being
-> > that we're always creating the request queue directory debugfs
-> > directory for the block device on singlequeue block devices.
-> 
-> Same comment here - the legacy block layer is gone. I think that today
-> all block drivers are either request-based and multiqueue or so-called
-> make_request drivers. See also the output of git grep -nHw
-> blk_alloc_queue for examples of the latter category.
+Changes from v2:
+   1. using regmap_read_poll_timeout instead of do-while in measurement
+      function.
+   2. change struct i2client* in vcnl3020_data to struct dev*
+   3. enable REGMAP_I2C in Kconfig
 
-Will adjust.
+Changes from v1:
+   1. using regmap interface instead of i2c_smbus_* calls.
+   2. switch from probe to probe_new.
+   3. s32/int32_t -> int
 
-> > This patch then also contends the severity of CVE-2019-19770 as
-> > this issue is only possible using root to shoot yourself in the
-> > foot by also misuing blktrace.
->                ^^^^^^^
->                misusing?
-> 
-> > diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
-> > index b3f2ba483992..bda9378eab90 100644
-> > --- a/block/blk-mq-debugfs.c
-> > +++ b/block/blk-mq-debugfs.c
-> > @@ -823,9 +823,6 @@ void blk_mq_debugfs_register(struct request_queue *q)
-> >  	struct blk_mq_hw_ctx *hctx;
-> >  	int i;
-> >  
-> > -	q->debugfs_dir = debugfs_create_dir(kobject_name(q->kobj.parent),
-> > -					    blk_debugfs_root);
-> > -
-> >  	debugfs_create_files(q->debugfs_dir, q, blk_mq_debugfs_queue_attrs);
-> >  
-> >  	/*
-> 
-> [ ... ]
-> 
-> >  static void blk_mq_debugfs_register_ctx(struct blk_mq_hw_ctx *hctx,
-> > diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-> > index fca9b158f4a0..20f20b0fa0b9 100644
-> > --- a/block/blk-sysfs.c
-> > +++ b/block/blk-sysfs.c
-> > @@ -895,6 +895,7 @@ static void __blk_release_queue(struct work_struct *work)
-> >  
-> >  	blk_trace_shutdown(q);
-> >  
-> > +	blk_q_debugfs_unregister(q);
-> >  	if (queue_is_mq(q))
-> >  		blk_mq_debugfs_unregister(q);
-> 
-> Does this patch change the behavior of the block layer from only
-> registering a debugfs directory for request-based block devices to
-> registering a debugfs directory for request-based and make_request based
-> block devices? Is that behavior change an intended behavior change?
+Ivan Mikhaylov (2):
+  iio: proximity: provide device tree binding document
+  iio: proximity: Add driver support for vcnl3020 proximity sensor
 
-Yes, specifically this was already done, however for request-based block
-devices this was done upon init, and for make_request based devices this
-was only instantiated *iff* blktrace was used at least once. It is
-actually a bit difficult to see the later, given the rq->debugfs_dir was
-not used per se for make_request based block devices, but instead
-the debugfs_create_dir(buts->name, blk_debugfs_root) call was made
-directly, which happens to end up being the same directory as
-debugfs_create_dir(kobject_name(q->kobj.parent), blk_debugfs_root)
-called on block/blk-mq-debugfs.c.
+ .../bindings/iio/proximity/vcnl3020.yaml      |  65 +++++
+ drivers/iio/proximity/Kconfig                 |  11 +
+ drivers/iio/proximity/Makefile                |   1 +
+ drivers/iio/proximity/vcnl3020.c              | 234 ++++++++++++++++++
+ 4 files changed, 311 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/vcnl3020.yaml
+ create mode 100644 drivers/iio/proximity/vcnl3020.c
 
-This changes the block layer so that the rq->debugfs_dir is always created
-now if debugfs is enabled.
-
-Note that blktrace already depends on debugfs. What was missing in this
-patch too was this hunk:
-
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -569,8 +569,10 @@ struct request_queue {
-	struct list_head        tag_set_list;
-	struct bio_set          bio_split;
-
--#ifdef CONFIG_BLK_DEBUG_FS
-+#ifdef CONFIG_DEBUG_FS
-	struct dentry           *debugfs_dir;
-+#endif
-+#ifdef CONFIG_BLK_DEBUG_FS
-	struct dentry
-	*sched_debugfs_dir;
-	struct dentry
-	*rqos_debugfs_dir;
-#endif
+-- 
+2.21.1
 
