@@ -2,175 +2,246 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BC2C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ABBC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E219248A3
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:26:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rM5SW1yc"
+	by mail.kernel.org (Postfix) with ESMTP id DEEDF248A3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 15:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgDFP0M (ORCPT
+        id S1728925AbgDFP2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 11:26:12 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34936 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbgDFP0L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 11:26:11 -0400
-Received: by mail-ot1-f68.google.com with SMTP id v2so15727478oto.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 08:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mLkFZg4uKjsIykk7BTwvQ1u38EFobfLrFUiH9V7o1sk=;
-        b=rM5SW1yckf32vIPkw90xBqCzGHKCy/iHgCoXE6hqaPFebS750iSbilzPRpBtU5Twz1
-         b2EPRdimrtONwJqOGXXuG7cCPfzkuJI8GXEitZW1DZvfdhnT+acAbHbzVSl8DwHhX8eb
-         SApEs/7LmbMvmXeBcvhGT+g+A9YosMhrHBoZRH4R+i6X4axPNRraO1HMVjVhgvOB0GKH
-         WPncSG4ks6mq3alyrF7YtXCdmZfEJzBoLgaNXPzH6SWsiJwYvEENNhoU/8vX/V/x+0az
-         qPVZh46IQouMAk0ky8JWRrmDASEJ5HZtxWIWRo/hnssv1o7eOH9jGhV+0d+i44iYN0/t
-         8uhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mLkFZg4uKjsIykk7BTwvQ1u38EFobfLrFUiH9V7o1sk=;
-        b=BnpTUqv4evclLQQ42cFsJDtMX185DTuHCQO75nxV8hxvoVLlyr07Bjsb6gf8Rf9Xry
-         +sVvpoue3ia01EWeZ7G0rJFYnLV/XPpAm0RiDOQ9qWxIN9PHPnk5Zyb5LMYcFC5IfKVi
-         x0GUZplcRBAiql8lowcYItYUYkz8Bg9aqxHkqDpZQUEyT+0A2o4XTqYeywbCzfLdTYrq
-         EL2V93JJQM6Tl1tkl2IT316nTiofqmNhLvK//ywmthcT5sUphmliEu1YNT9/GA3JftfH
-         sFfEJ5dE3T33INdEjB2VRi6M5s4VoUIhqS+PROupjcljEDicoIdQpF/YhjiPPML1v2Sa
-         efCw==
-X-Gm-Message-State: AGi0PuZuecsrULW+0adIRdIZ6wgroTeXBMdTweJsBZ8/3DI/LLDKrG+r
-        RV7OIETpIJTMGd3jgfs7zVkn7kdwr0oC07sGKnNxBQM8xDCGjg==
-X-Google-Smtp-Source: APiQypKLKKYLmPxZPCftzf+0SBlZXHZMIwDor9EtVAxYxuQ+W8VWcYMwc6GcICK2n6IQIOMhasirVAdBnijIMJ7TltU=
-X-Received: by 2002:a4a:c595:: with SMTP id x21mr17831239oop.10.1586186770118;
- Mon, 06 Apr 2020 08:26:10 -0700 (PDT)
+        Mon, 6 Apr 2020 11:28:05 -0400
+Received: from mga07.intel.com ([134.134.136.100]:43337 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728777AbgDFP2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 11:28:04 -0400
+IronPort-SDR: zHIty7vxUn/hVJUDhczAhFXTDq9IRRSKRMzqON1WrM2v1dWUVJvTL87JpSmR6A2bcvGFLp2UGI
+ C/shLbOY/n6g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 08:28:03 -0700
+IronPort-SDR: Efs95U23jeH5LyAWlbkYBzqgSSSM63gsDcZ26TWAsvxc8ljsGjmt2X/LBX0e3+bfhfGMW9dJGT
+ qyqRUyXjC8jg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,351,1580803200"; 
+   d="scan'208";a="254145738"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 06 Apr 2020 08:28:03 -0700
+Date:   Mon, 6 Apr 2020 08:33:53 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 05/10] iommu/ioasid: Create an IOASID set for host SVA
+ use
+Message-ID: <20200406083353.73efda5b@jacob-builder>
+In-Reply-To: <20200401135316.GF882512@myrica>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1585158931-1825-6-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200401135316.GF882512@myrica>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200331133346.372517-1-robert.foss@linaro.org>
- <20200331133346.372517-3-robert.foss@linaro.org> <CAHp75VfFKY6nzb8aEWmop73v2haZ0P5+aTsKDEU8M=uUPn0u3g@mail.gmail.com>
- <CAG3jFyuH5Kad16R7Oit-c_7RasiEfPycOpA68JYLVopbyQ749w@mail.gmail.com> <20200406150626.GW3676135@smile.fi.intel.com>
-In-Reply-To: <20200406150626.GW3676135@smile.fi.intel.com>
-From:   Robert Foss <robert.foss@linaro.org>
-Date:   Mon, 6 Apr 2020 17:25:58 +0200
-Message-ID: <CAG3jFyvRD3MTQHKVgnneNutJ_e-eykrZHNF-GBe1F5c1TjYLqg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] media: ov8856: Add devicetree support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Dongchun Zhu <dongchun.zhu@mediatek.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 17:06, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Apr 06, 2020 at 03:37:24PM +0200, Robert Foss wrote:
-> > On Tue, 31 Mar 2020 at 16:01, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Tue, Mar 31, 2020 at 4:36 PM Robert Foss <robert.foss@linaro.org> wrote:
->
-> ...
->
-> > > > +       if (ret < 0) {
-> > >
-> > > Do you need all ' < 0' parts all over the series?
-> >
-> > Some checks are needed due to ACPI and DT support co-existing.
-> > Maybe it would be better to just split the probing into an ACPI path
-> > and a DT path.
-> >
-> > I'll have a look through the series for redundant retval checks.
->
-> Drop where it is redundant.
->
-> ...
->
-> > > > -       ret = fwnode_property_read_u32(fwnode, "clock-frequency", &mclk);
-> > > > -       if (ret)
-> > > > -               return ret;
-> > >
-> > > Where is it gone? Why?
-> >
-> > It was replaced by a clk_get_rate call, which as Sakari pointed out,
-> > isn't correct.
-> > I'll rework the clock handling for v4.
->
-> If it was in the driver it should stay -- properties is an ABI (between firmware and kernel).
+Hi Jean,
 
-Ack.
+On Wed, 1 Apr 2020 15:53:16 +0200
+Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
 
->
-> > > > +       ov8856->xvclk = devm_clk_get_optional(dev, "xvclk");
-> > > > +       if (IS_ERR(ov8856->xvclk)) {
-> > >
-> > > > +               dev_err(dev, "could not get xvclk clock (%ld)\n",
-> > > > +                       PTR_ERR(ov8856->xvclk));
-> > >
-> > > Also you may use %pe here and in similar cases.
-> >
-> > Weirdly checkpatch complains about this.
-> > But it builds and runs cleanly, so I'll add it in v4.
->
-> %pe requires pointer, PTR_ERR converts pointer to integer.
+> On Wed, Mar 25, 2020 at 10:55:26AM -0700, Jacob Pan wrote:
+> > Bare metal SVA allocates IOASIDs for native process addresses. This
+> > should be separated from VM allocated IOASIDs thus under its own
+> > set.
+> > 
+> > This patch creates a system IOASID set with its quota set to
+> > PID_MAX. This is a reasonable default in that SVM capable devices
+> > can only bind to limited user processes.  
+> 
+> Yes realistically there won't be more than PID_MAX_DEFAULT=0x8000
+> bound address spaces. My machine uses a PID_MAX of 4 million though,
+> so in theory more than 0x8000 processes may want a bond.
+Got it, I assume we can adjust the system set quota as necessary.
 
-Ack.
+> On Arm the
+> limit of shared contexts per VM is currently a little less than
+> 0x10000 (which is the number of CPU ASIDs).
+> 
+I guess shared contexts means shared address? then it makes sense
+#IOASID < #ASID.
 
->
-> ...
->
-> > > > +       ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ov8856_supply_names),
-> > > > +                                     ov8856->supplies);
-> > > > +       if (ret) {
-> > >
-> > > > +               dev_warn(dev, "failed to get regulators\n");
-> > >
-> > > If it's a warning, why we return from here?
-> > > Same question to all other places with same issue.
-> >
-> > The issue I was seeing was the driver having to return a EDEFER here,
-> > so this warning sheds some light on which exact component is returning
-> > an EDEFER.
-> >
-> > [   15.962623] ov8856 16-0010: Dropping the link to regulator.29
-> > [   15.968464] ov8856 16-0010: failed to get regulators
-> > [   15.973493] ov8856 16-0010: failed to get HW configuration: -517
-> > [   15.979591] ov8856 16-0010: removing from PM domain titan_top_gdsc
-> > [   15.985855] ov8856 16-0010: genpd_remove_device()
-> > [   15.990672] i2c 16-0010: Driver ov8856 requests probe deferral
-> >
-> > Personally I found it helpful to speed up debugging, but I'll happily
-> > remove it if you prefer no warning.
->
-> My point is that you have it in align:
->  - if it is an error, print as an error and bail out, otherwise
->  - if it is a warning, print it and continue.
+> But quotas are only necessary for VMs, when the host shares the PASID
+> space with them (which isn't a use-case for Arm systems as far as I
+> know, each VM gets its own PASID space).
+Is there a host-guest PASID translation? or the PASID used by the VM is
+physical PASID? When a page request comes in to SMMU, how does it know
+the owner of the PASID if PASID range can overlap between host and
+guest?
 
-I see what you're saying now, let's remove it then :)
-I guess in the specific case of EDEFER, it doesn't fit neatly into
-either of those categories, in the sense that the way you continue is
-to return and then try to probe again later.
+> Could we have quota-free IOASID sets for the host?
+> 
+Yes, perhaps just add a flag such that the set has its own namespace.
+You mean have this quota-free IOASID set even co-exist with VMs? I still
+don't get how PRQ works.
 
-There are some other locations where this is handled wrong, I'll align
-them properly for v4.
+That is not the use case for VT-d in that we have to have system-wide
+allocation for host PASIDs. We have enqcmd which can take a PASID from
+the per task MSR and deliver to multiple devices, so even though the
+PASID table is per device the PASID name space must be global.
 
->
-> > > > +               return ret;
-> > > >         }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+> For the SMMU I'd like to allocate two sets, one SVA and one private
+> for auxiliary domains, and I don't think giving either a quota makes
+> much sense at the moment.
+I agree we don;t need the quota if we don't support guest SVA at the
+same time.
+
+So the sva set and aux_domain set PASIDs have their own namespaces?
+
+> There can be systems using only SVA and
+> systems using only private PASIDs. I think it should be
+> first-come-first-served until admins want a knob to define a policy
+> themselves, based on cgroups for example.
+> 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  drivers/iommu/intel-iommu.c | 8 +++++++-
+> >  drivers/iommu/ioasid.c      | 9 +++++++++
+> >  include/linux/ioasid.h      | 9 +++++++++
+> >  3 files changed, 25 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iommu/intel-iommu.c
+> > b/drivers/iommu/intel-iommu.c index ec3fc121744a..af7a1ef7b31e
+> > 100644 --- a/drivers/iommu/intel-iommu.c
+> > +++ b/drivers/iommu/intel-iommu.c
+> > @@ -3511,8 +3511,14 @@ static int __init init_dmars(void)
+> >  		goto free_iommu;
+> >  
+> >  	/* PASID is needed for scalable mode irrespective to SVM */
+> > -	if (intel_iommu_sm)
+> > +	if (intel_iommu_sm) {
+> >  		ioasid_install_capacity(intel_pasid_max_id);
+> > +		/* We should not run out of IOASIDs at boot */
+> > +		if (ioasid_alloc_system_set(PID_MAX_DEFAULT)) {
+> > +			pr_err("Failed to enable host PASID
+> > allocator\n");
+> > +			intel_iommu_sm = 0;
+> > +		}
+> > +	}
+> >  
+> >  	/*
+> >  	 * for each drhd
+> > diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> > index 6265d2dbbced..9135af171a7c 100644
+> > --- a/drivers/iommu/ioasid.c
+> > +++ b/drivers/iommu/ioasid.c
+> > @@ -39,6 +39,9 @@ struct ioasid_data {
+> >  static ioasid_t ioasid_capacity;
+> >  static ioasid_t ioasid_capacity_avail;
+> >  
+> > +int system_ioasid_sid;
+> > +static DECLARE_IOASID_SET(system_ioasid);
+> > +
+> >  /* System capacity can only be set once */
+> >  void ioasid_install_capacity(ioasid_t total)
+> >  {
+> > @@ -51,6 +54,12 @@ void ioasid_install_capacity(ioasid_t total)
+> >  }
+> >  EXPORT_SYMBOL_GPL(ioasid_install_capacity);
+> >  
+> > +int ioasid_alloc_system_set(int quota)
+> > +{
+> > +	return ioasid_alloc_set(&system_ioasid, quota,
+> > &system_ioasid_sid); +}
+> > +EXPORT_SYMBOL_GPL(ioasid_alloc_system_set);  
+> 
+> I think this helper could stay in the VT-d driver for the moment. If
+> the SMMU driver ever implements auxiliary domains it will use a
+> private IOASID set, separate from the shared IOASID set managed by
+> iommu-sva. Both could qualify as "system set".
+> 
+Sounds good. Perhaps remove the special "system set". SVA code,
+VFIO, VT-d, or SMMU driver can all allocate their own sets.
+So to meet both SMMU and VT-d requirements, we should do:
+1. add an IOASID_PRIVATE flag to ioasid_alloc_set(), indicating this is
+a private set
+2. All APIs operate on the set_id accordingly, e.g. ioasid_find() will
+only search within the private set. Private set is excluded from from
+global search (VT-d needs this in PRQ).
+
+Since VT-d already needs private PASIDs for guest SVM where
+GPASID!=HPASID, I feel we can just reuse the per ioasid_set Xarray for
+both quota-free private set and guest set.
+
+
+Thanks for the feedback!
+
+Jacob
+
+> Thanks,
+> Jean
+> 
+> > +
+> >  /*
+> >   * struct ioasid_allocator_data - Internal data structure to hold
+> > information
+> >   * about an allocator. There are two types of allocators:
+> > diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> > index 8c82d2625671..097b1cc043a3 100644
+> > --- a/include/linux/ioasid.h
+> > +++ b/include/linux/ioasid.h
+> > @@ -29,6 +29,9 @@ struct ioasid_allocator_ops {
+> >  	void *pdata;
+> >  };
+> >  
+> > +/* Shared IOASID set for reserved for host system use */
+> > +extern int system_ioasid_sid;
+> > +
+> >  #define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
+> >  
+> >  #if IS_ENABLED(CONFIG_IOASID)
+> > @@ -41,6 +44,7 @@ int ioasid_register_allocator(struct
+> > ioasid_allocator_ops *allocator); void
+> > ioasid_unregister_allocator(struct ioasid_allocator_ops
+> > *allocator); int ioasid_attach_data(ioasid_t ioasid, void *data);
+> > void ioasid_install_capacity(ioasid_t total); +int
+> > ioasid_alloc_system_set(int quota); int ioasid_alloc_set(struct
+> > ioasid_set *token, ioasid_t quota, int *sid); void
+> > ioasid_free_set(int sid, bool destroy_set); int
+> > ioasid_find_sid(ioasid_t ioasid); @@ -88,5 +92,10 @@ static inline
+> > void ioasid_install_capacity(ioasid_t total) {
+> >  }
+> >  
+> > +static inline int ioasid_alloc_system_set(int quota)
+> > +{
+> > +	return -ENOTSUPP;
+> > +}
+> > +
+> >  #endif /* CONFIG_IOASID */
+> >  #endif /* __LINUX_IOASID_H */
+> > -- 
+> > 2.7.4
+> >   
+
+[Jacob Pan]
