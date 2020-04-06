@@ -2,100 +2,110 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FDBC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2339EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8724320781
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99CF22273
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 13:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qaBk2+HT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ICzTBwcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgDFNEd (ORCPT
+        id S1728353AbgDFNFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 09:04:33 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:33947 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728077AbgDFNEd (ORCPT
+        Mon, 6 Apr 2020 09:05:13 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:42807 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728177AbgDFNFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 09:04:33 -0400
-Received: by mail-yb1-f193.google.com with SMTP id l84so8730228ybb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 06:04:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Hqays/GgCtOUvwT2vqd65B6v/EdiY+pv7CQuSIyzhwk=;
-        b=qaBk2+HTmwMXeDkQvZgAbChKseeTvOYD0s6k+kZQI+PzqFj6/pTDGTBqkgNXU3TWBA
-         PNuBz09nHXgEmrJb1lJ/db+fFxgHdGEqHbzhkkhDmAADdcs3ujBUL7/fsS9+1yKJrXLP
-         S2RQnTHeZa52m287uOjJUrwkXlGpcsK/n/T02tjoAH/U5o0m/CYnjG5lPCeKeeCrrust
-         3myXYEK6uLDdm2m1eVbNSMXqQiaQQwFHoJKX7OgxfFlheTE6zuInCGSINWcCdW2PbRmD
-         4d0xPAecAxwTiUicAvfOGNS/kJSRGqqjKPjTATFyp/ud4FIUB944l0B8DJ8oo4D9GLPr
-         SZ7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Hqays/GgCtOUvwT2vqd65B6v/EdiY+pv7CQuSIyzhwk=;
-        b=B99PDlxUCDZf+jg1NtUPaJwSWajVYM2BnZH8f1aNkKT7D9hIoLqOooAQJ6kcmhoEKQ
-         pqlK53lRSE1/y7ueIN+DxlUYJig71HDKiLOLkizPWkNOErfbPqgnBtpe4wXEL1gi9Uie
-         dStpDruywf1MzPZV6DD5rCw0wvVPQQWb34V7A91ubNaWyUSGe51pNjV5RWnhrpSiFvTd
-         ag5iIJbhJjNZsDq3bFBksHAWVx1mtcXtosYmMn4zy3/5jEjwjDu6KPQzOzwZR/szyzse
-         nz/+erFQ2sHEsJ3MDoknG4KPCe12QXIaPwoSzFIDAVvP19K6QMDzGa9zBgRMahYz5S1q
-         hJ8g==
-X-Gm-Message-State: AGi0PuYNtzeT2Ug1fvdgui+BnEO/l0vmP+BkhpeY3cWwlFxayyzP9/tJ
-        ihl5Qdg9JZbvPlXvVyLW/vc+CD0cGJSxJyPg/ioLxw==
-X-Google-Smtp-Source: APiQypI2IEkYW9hmYrDfNANzdNQ5jVMW479+9pqFos58Wn9zjkZKryk5SxnCwhVQD+cDhAHP9pSOQmeN/x1cix9yEuk=
-X-Received: by 2002:a5b:cc7:: with SMTP id e7mr35902157ybr.7.1586178270122;
- Mon, 06 Apr 2020 06:04:30 -0700 (PDT)
+        Mon, 6 Apr 2020 09:05:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586178311; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=TXoCw5GkV+IZIhQrsD2drq5aTCEc6Wa8f+KDKz8AGtc=; b=ICzTBwcSJ3JWokKFOl4ON1Rx9w2VWu7UlHZZOEnV9ADDDzRwaLqwMLb58XUnjxljT2ZNq6ZK
+ u9Zo/5j2pxorE+F+KNAqKYxir2efXaO6ME05cdjWZ26cjfZeAiIhbHEjotMEeXJlq6ds0P0j
+ DmVmNcPx36ILxnYdLFqMePt7dGM=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b28ff.7f7f4c9a95e0-smtp-out-n01;
+ Mon, 06 Apr 2020 13:05:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 64193C43637; Mon,  6 Apr 2020 13:05:03 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A0849C433D2;
+        Mon,  6 Apr 2020 13:04:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A0849C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Sumit Garg <sumit.garg@linaro.org>, linux-wireless@vger.kernel.org,
+        davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, matthias.schoepfer@ithinx.io,
+        Philipp.Berg@liebherr.com, Michael.Weitner@liebherr.com,
+        daniel.thompson@linaro.org, loic.poulain@linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] mac80211: fix race in ieee80211_register_hw()
+References: <1586175677-3061-1-git-send-email-sumit.garg@linaro.org>
+        <87ftdgokao.fsf@tynnyri.adurom.net>
+        <1e352e2130e19aec5aa5fc42db397ad50bb4ad05.camel@sipsolutions.net>
+        <87r1x0zsgk.fsf@kamboji.qca.qualcomm.com>
+        <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
+Date:   Mon, 06 Apr 2020 16:04:57 +0300
+In-Reply-To: <a7e3e8cceff1301f5de5fb2c9aac62b372922b3e.camel@sipsolutions.net>
+        (Johannes Berg's message of "Mon, 06 Apr 2020 14:53:49 +0200")
+Message-ID: <87imiczrwm.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <20200326070236.235835-1-walken@google.com> <20200326070236.235835-8-walken@google.com>
- <1c463464-1d72-287e-e785-f077a95ccf20@linux.ibm.com>
-In-Reply-To: <1c463464-1d72-287e-e785-f077a95ccf20@linux.ibm.com>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Mon, 6 Apr 2020 06:04:16 -0700
-Message-ID: <CANN689GOqEnLQHD-VNjwhTCwvLWNsRPLmo+yBumzE_y2_YsoMQ@mail.gmail.com>
-Subject: Re: [PATCH 7/8] mmap locking API: add MMAP_LOCK_INITIALIZER
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 2:46 AM Laurent Dufour <ldufour@linux.ibm.com> wrote=
-:
->
-> Le 26/03/2020 =C3=A0 08:02, Michel Lespinasse a =C3=A9crit :
-> > Define a new initializer for the mmap locking api.
-> > Initially this just evaluates to __RWSEM_INITIALIZER as the API
-> > is defined as wrappers around rwsem.
->
-> I can't see the benefit of this change.
-> The overall idea is to hide the mmap_sem name. Here the macro
-> MMAP_LOCK_INITIALIZER() doesn't hide the name.
+Johannes Berg <johannes@sipsolutions.net> writes:
 
-The idea for the initializer is that it makes it easier to change the
-underlying implementation - if we do, we can change the initializer
-without having to change every place where it is used. I actually do
-that in my other patch series converting the mmap_sem to a range lock.
+> On Mon, 2020-04-06 at 15:52 +0300, Kalle Valo wrote:
+>> Johannes Berg <johannes@sipsolutions.net> writes:
+>> 
+>> > On Mon, 2020-04-06 at 15:44 +0300, Kalle Valo wrote:
+>> > > >     user-space  ieee80211_register_hw()  RX IRQ
+>> > > >     +++++++++++++++++++++++++++++++++++++++++++++
+>> > > >        |                    |             |
+>> > > >        |<---wlan0---wiphy_register()      |
+>> > > >        |----start wlan0---->|             |
+>> > > >        |                    |<---IRQ---(RX packet)
+>> > > >        |              Kernel crash        |
+>> > > >        |              due to unallocated  |
+>> > > >        |              workqueue.          |
+>> > 
+>> > [snip]
+>> > 
+>> > > I have understood that no frames should be received until mac80211 calls
+>> > > struct ieee80211_ops::start:
+>> > > 
+>> > >  * @start: Called before the first netdevice attached to the hardware
+>> > >  *         is enabled. This should turn on the hardware and must turn on
+>> > >  *         frame reception (for possibly enabled monitor interfaces.)
+>> > 
+>> > True, but I think he's saying that you can actually add and configure an
+>> > interface as soon as the wiphy is registered?
+>> 
+>> With '<---IRQ---(RX packet)' I assumed wcn36xx is delivering a frame to
+>> mac80211 using ieee80211_rx(), but of course I'm just guessing here.
+>
+> Yeah, but that could be legitimate?
 
-But you are correct that it does not help with renaming the mmap_sem
-field - my next commit in this series still has to do that in every
-place this initializer is used.
+Ah, I misunderstood then. The way I have understood is that no rx frames
+should be delivered (= calling ieee80211_rx()_ before start() is called,
+but if that's not the case please ignore me :)
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
