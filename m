@@ -2,157 +2,139 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036D7C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E759C2BA18
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD5E20780
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466DB2075E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 05:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="I2aMpEf4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="j2vrjdnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgDFF06 (ORCPT
+        id S1726506AbgDFF2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 01:26:58 -0400
-Received: from mail-bn8nam11on2049.outbound.protection.outlook.com ([40.107.236.49]:64139
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726474AbgDFF06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 01:26:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k4B78RZ12bvnw/3/mYks+xUnXWEiNGzscewwS0PIjq15c1fLU/1rh+bLYAs7/00c1p+AuKWYsZWm60J3OlbWwgkMN0CUVzs32kDPVj3TqwdhbYgiBtWblMkHkyZb4gDQTQfxuJYKW23Y8cB3v80ECqO9KUTpC5tJ3U6XbW3Phyao4MfqkulRyNmvgJU6CcDIOzl8rtC0etWROn6cUuFwnNHsPvNCbSe4JhFuGv4Tg9s947lDVMQugw+jMatKC0ys29P4YMooRDbx+9xy4P595+nXcm7Y5lcO41Jwd+gD36+9GehuRmyber+nqe5PCVz7ghlWMPBZbBq+8+GT3pKjpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ht2vboZnZiRfauaKcfMGnX06q5cpJsmvHlK6kllRLIQ=;
- b=ddCwIp3UxHc3wZRF+2y8dqlv5gdjXqpkEYBepsV/oVUog9Lr3woZwWtBxz7z4LCe9EIfxPcw0ZcglKUOMxb9lla0c8F2LRcF96QGZPAhBYPeMMGa7RBhR0T+V2GWcSO9SxtFObEvIanLmcsVBI8YnRRMPevuHRAWDN4xkjqy7aWN5Umwz4FqFX95wkqfLUCQZQjC6mMUUt50tD3G2yBiDBuKn9uhJz7nENmQkJug9ND9vfNQ2m1cb+uhKE0/HKDW1EU0MQidlQMWLWlEYN5OzHdkYyMpPGKQRWl1iH6YMNnQcTKotEIo8OoVJxlSI1MsAeQs6cn90dM58pz+G4CVLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ht2vboZnZiRfauaKcfMGnX06q5cpJsmvHlK6kllRLIQ=;
- b=I2aMpEf4GaWKdchwjTuzOj1I+9rRMNp324QCMopafU0ubBWzF/F9k6nDuyC1l+LCL41KJGltx0RDdYkcIp9fYguzmcCcZ8NJa1bWDS7RW3TGllffrvVNSdLLZWyDixS/Pj+eEiLcQj9dIRPUv3jfwV1/kB7YxIVaNLFXZhY8cEg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Nehal-bakulchandra.Shah@amd.com; 
-Received: from BN6PR1201MB2467.namprd12.prod.outlook.com (2603:10b6:404:a7::8)
- by BN6PR1201MB0018.namprd12.prod.outlook.com (2603:10b6:405:54::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Mon, 6 Apr
- 2020 05:26:52 +0000
-Received: from BN6PR1201MB2467.namprd12.prod.outlook.com
- ([fe80::8daf:74d4:cbe4:759]) by BN6PR1201MB2467.namprd12.prod.outlook.com
- ([fe80::8daf:74d4:cbe4:759%12]) with mapi id 15.20.2878.016; Mon, 6 Apr 2020
- 05:26:52 +0000
-Subject: Re: [PATCH v4 2/4] SFH: PCI driver to add support of AMD sensor
- fusion Hub using HID framework
-To:     Richard Neumann <mail@richard-neumann.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Sandeep Singh <Sandeep.Singh@amd.com>, Shyam-sundar.S-k@amd.com,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-References: <1582779537-25662-1-git-send-email-Sandeep.Singh@amd.com>
- <1582779537-25662-3-git-send-email-Sandeep.Singh@amd.com>
- <4fe47b0323c1d65d429ee89b000e8bfcd984495f.camel@richard-neumann.de>
- <896f84bc-f0d6-59a5-c894-809695aa348f@amd.com>
- <CAHp75Vfr6q_H6z6tRFfaKedF7oR7nhmZvRWL4mxx3W7uypUFvA@mail.gmail.com>
- <9aea760f9abdd2f90f36642af77de7bfae719485.camel@richard-neumann.de>
-From:   "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>
-Message-ID: <3ffc343e-c44b-1b4e-993e-179a13dc928c@amd.com>
-Date:   Mon, 6 Apr 2020 10:56:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-In-Reply-To: <9aea760f9abdd2f90f36642af77de7bfae719485.camel@richard-neumann.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: BM1PR01CA0082.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:1::22) To BN6PR1201MB2467.namprd12.prod.outlook.com
- (2603:10b6:404:a7::8)
+        Mon, 6 Apr 2020 01:28:51 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:58338 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbgDFF2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 01:28:51 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0365SdiP033304;
+        Mon, 6 Apr 2020 00:28:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586150919;
+        bh=bqsyJFofXwLipd6/kzIlPGP+VpCPYwO8dYIeN4RkzLo=;
+        h=From:To:CC:Subject:Date;
+        b=j2vrjdnRdWbm8zLqfAdyLSAcIR/Dd36bngb3I11pg/aZzwIC01gpLDDhYOGG7HhOT
+         Kh38yUEW8hBNxXc4296O2Av1MOOdm2pMlr0Ltn+Y8Zjhy/GB0IH3ZaeLS9+f+VGAVo
+         PkdWtAvyicg/rYMZMao2NrbrklYMjuOKHp7Dgiq4=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0365SdX5020856
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 6 Apr 2020 00:28:39 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Apr
+ 2020 00:28:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 6 Apr 2020 00:28:39 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0365Sbw8020282;
+        Mon, 6 Apr 2020 00:28:37 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>
+CC:     <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] dma-direct: Fix data truncation in dma_direct_get_required_mask()
+Date:   Mon, 6 Apr 2020 10:58:36 +0530
+Message-ID: <20200406052836.25617-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.31.38.85] (165.204.159.242) by BM1PR01CA0082.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend Transport; Mon, 6 Apr 2020 05:26:47 +0000
-X-Originating-IP: [165.204.159.242]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 196808c4-3724-4781-7310-08d7d9eb1cfe
-X-MS-TrafficTypeDiagnostic: BN6PR1201MB0018:|BN6PR1201MB0018:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR1201MB00185D46B46A54119CE11346A0C20@BN6PR1201MB0018.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0365C0E14B
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1201MB2467.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(346002)(136003)(376002)(39860400002)(396003)(6486002)(5660300002)(966005)(4326008)(16526019)(26005)(81156014)(956004)(2616005)(6666004)(8936002)(36756003)(186003)(8676002)(81166006)(52116002)(16576012)(7416002)(31686004)(110136005)(66946007)(478600001)(66476007)(31696002)(66556008)(54906003)(86362001)(53546011)(2906002)(316002);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8LofnWlv0Of9XvnyvvaNd1LoKUfDu6g3LIglJKaEsKVJsVOP5S5moulG8TyIohgdrWi6W3ONiYVFEGPfo7BB67rcXbQvXIK8GseQQ1797dYixXwRCoBvipaOyv4R3RtLPruDkd6ySqSNWUgqJeXSgZivdrdOabRMJq3sjmhQGDcD6Fiw/oDeMmr08Tnyw0Kb0ZyNNFaY3rBVBZkNka8tEuF09wlFP+9J66TIBty969iM8zKESw/+BrV2TC5UdZgpw7LIhrKYF2Ud1aAx9r69CdiozsxPQUBlAyKG9RWq5UL+NBdnirrAmDnZ9zGfdOcAqGlBu0+MORfrghviEePezq31WquPRICic2WvdjM2eXRs0+lPwtXb6CVBiXIPplXcL+Tb5COlZ9qcGvc/Vg6xi+YQC51Ximl7KOwg3lLO6cY/FMsykhVwb1j0XiQ1RZgLmW+UcRlVYZZsVBkjA4hZfDSqNus/eMHGjpuWOQSFDO8oyw3ZZ6akeIPsKw5s7qvbs3IKsYIh8UpLHGV4ANbfEg==
-X-MS-Exchange-AntiSpam-MessageData: Q7qTfmeCDSSiyS8uh6cST9+4iqBQnlWWBMyWGGn4z9rbmXlPO49guPvhCrRwyxPZ+x1lpEabxtp56TaQiRDJumLlrQTadKURMNk1BlL1pNeD8Y5Nlzi7LEZwyF0djRIT+cArcYMbk3XUbIAwBkpjlw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 196808c4-3724-4781-7310-08d7d9eb1cfe
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 05:26:52.6832
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LuTMvzWAM66uXzsA7QncnUWROhLzkdI9C3MV52Jjdg0p4PuzgNshm/zZl9sLfvAo
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0018
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI
+The upper 32-bit physical address gets truncated inadvertently
+when dma_direct_get_required_mask() invokes phys_to_dma_direct().
+This results in dma_addressing_limited() return incorrect value
+when used in platforms with LPAE enabled.
+Fix it here by explicitly type casting 'max_pfn' to phys_addr_t
+in order to prevent overflow of intermediate value while evaluating
+'(max_pfn - 1) << PAGE_SHIFT'.
 
-On 4/1/2020 9:58 PM, Richard Neumann wrote:
-> Am Dienstag, den 31.03.2020, 20:24 +0300 schrieb Andy Shevchenko:
->> On Tue, Mar 31, 2020 at 4:26 PM Shah, Nehal-bakulchandra
->> <nehal-bakulchandra.shah@amd.com> wrote:
->>> On 3/31/2020 6:01 PM, Richard Neumann wrote:
->>>> Not a real review, but your patch series seems to be repeating a
->>>> lot
->>>> from drivers/i2c/busses/i2c-amd-mp2*.
->>>> Is there any chance we could re-use the code?
->>>> E.g. the AMD_C2P_* definitions from drivers/i2c/busses/i2c-amd-
->>>> mp2.h?
->>> Thanks for the mail. Yes there are some common structures, however
->>> as of now we have kept separately considering both
->>>
->>> are part of different sub systems. But may be will consider this
->>> input for future enhancement.
->> It can be done in a form of shared definitions at least in
->> include/linux/platform_data/x86/amd-mp2.h or alike ...
->>
-> I managed to add support for the AMD SFH PCI device to i2c-amd-mp2* and
-> outsourced the headers to include/linux/i2c-amd-mp2.h. [1]
-> I also refactored the patch series (excluded the documentation) [2] to
-> use the PCI device now provided by i2c_amd_mp2_pci and removed some
-> duplicate and unncessary code.
-> The driver now consist of just one module (amd_sfhtp_hid).
-> Unfortunately I was not able to solve the problem, that I get AMD-Vi
-> IO_PAGE_FAULT errors when not booted with amd_iommu=off.
->
-> [1] https://gist.githubusercontent.com/conqp/4d726f86da8a8397d6e70091a124de67/raw/f97e88a0b44d98bfa1258cb73c8afe4dce7afa87/i2c-amd-mp2.patch
-> [2] https://gist.githubusercontent.com/conqp/67036e690aca89d08b958971edac283d/raw/2a1ef122f9c8c8e07164b6d597962ce7bbad6d45/amd-sfhtp.patch
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+Fixes the following WARN DUMP (and hang thereafter) observed when
+connecting NVMe card to a platform with ARM LPAE enabled
+nvme 0000:01:00.0: overflow 0x000000027b3be000+270336 of DMA mask
+ffffffffffffffff bus limit ffffffff
+-----------[ cut here ]-----------
+WARNING: CPU: 0 PID: 26 at kernel/dma/direct.c:35 report_addr+0xf0/0xf4
+Modules linked in:
+CPU: 0 PID: 26 Comm: kworker/u4:1 Not tainted 5.5.0-00002-g1383adf7b819 #2
+Hardware name: Generic DRA74X (Flattened Device Tree)
+Workqueue: writeback wb_workfn (flush-259:0)
+(unwind_backtrace) from [<c020b494>] (show_stack+0x10/0x14)
+(show_stack) from [<c0a2ae24>] (dump_stack+0x94/0xa8)
+(dump_stack) from [<c022bbd8>] (__warn+0xbc/0xd8)
+(__warn) from [<c022bc54>] (warn_slowpath_fmt+0x60/0xb8)
+(warn_slowpath_fmt) from [<c0299928>] (report_addr+0xf0/0xf4)
+(report_addr) from [<c0299ab8>] (dma_direct_map_page+0x18c/0x19c)
+(dma_direct_map_page) from [<c0299b2c>] (dma_direct_map_sg+0x64/0xb4)
+(dma_direct_map_sg) from [<c071b12c>] (nvme_queue_rq+0x778/0x9ec)
+(nvme_queue_rq) from [<c050c8c8>] (__blk_mq_try_issue_directly+0x130/0x1bc)
+(__blk_mq_try_issue_directly) from [<c050d1b8>]
+(blk_mq_request_issue_directly+0x48/0x78)
+(blk_mq_request_issue_directly) from [<c050d22c>]
+(blk_mq_try_issue_list_directly+0x44/0xb8)
+(blk_mq_try_issue_list_directly) from [<c0511620>]
+(blk_mq_sched_insert_requests+0xe0/0x154)
+(blk_mq_sched_insert_requests) from [<c050d13c>]
+(blk_mq_flush_plug_list+0x150/0x184)
+(blk_mq_flush_plug_list) from [<c0502ec4>] (blk_flush_plug_list+0xc8/0xe4)
+(blk_flush_plug_list) from [<c050cc44>] (blk_mq_make_request+0x24c/0x3f0)
+(blk_mq_make_request) from [<c0501acc>] (generic_make_request+0xb0/0x2d4)
+(generic_make_request) from [<c0501d34>] (submit_bio+0x44/0x180)
+(submit_bio) from [<c039ad10>] (mpage_writepages+0xac/0xe8)
+(mpage_writepages) from [<c02f96dc>] (do_writepages+0x44/0xdc)
+(do_writepages) from [<c0384830>] (__writeback_single_inode+0x2c/0x1bc)
+(__writeback_single_inode) from [<c0384b98>]
+(writeback_sb_inodes+0x1d8/0x404)
+(writeback_sb_inodes) from [<c0384e1c>] (__writeback_inodes_wb+0x58/0x9c)
+(__writeback_inodes_wb) from [<c0384ff4>] (wb_writeback+0x194/0x1d8)
+(wb_writeback) from [<c0386104>] (wb_workfn+0x244/0x33c)
+(wb_workfn) from [<c0244ff8>] (process_one_work+0x204/0x458)
+(process_one_work) from [<c0245290>] (worker_thread+0x44/0x598)
+(worker_thread) from [<c024ab30>] (kthread+0x14c/0x150)
+(kthread) from [<c02010d8>] (ret_from_fork+0x14/0x3c)
+ kernel/dma/direct.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks for the patch and appreciate your efforts. At this point of time, we would like to have our first patch for SFH to be upstreamed and dont want to complicate the
-
-with two sub systems and maintainers. Surely will consider this input for future enhancement. Thanks for your understanding.
-
-Thanks
-
-
-Nehal
-
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index ac7956c38f69..4b24275e306a 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -39,7 +39,8 @@ static inline struct page *dma_direct_to_page(struct device *dev,
+ 
+ u64 dma_direct_get_required_mask(struct device *dev)
+ {
+-	u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
++	phys_addr_t phys = (phys_addr_t)(max_pfn - 1) << PAGE_SHIFT;
++	u64 max_dma = phys_to_dma_direct(dev, phys);
+ 
+ 	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
+ }
+-- 
+2.17.1
 
