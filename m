@@ -2,89 +2,110 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FB8C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC3AC2BA17
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CA620678
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F0220731
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 01:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkHHIbyO"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="HBkyOKI6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgDFBPH (ORCPT
+        id S1727742AbgDFBUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 5 Apr 2020 21:15:07 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34182 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbgDFBPG (ORCPT
+        Sun, 5 Apr 2020 21:20:15 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43259 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgDFBUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 5 Apr 2020 21:15:06 -0400
-Received: by mail-il1-f194.google.com with SMTP id t11so13154972ils.1;
-        Sun, 05 Apr 2020 18:15:06 -0700 (PDT)
+        Sun, 5 Apr 2020 21:20:14 -0400
+Received: by mail-qk1-f196.google.com with SMTP id 13so2415478qko.10
+        for <linux-kernel@vger.kernel.org>; Sun, 05 Apr 2020 18:20:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IbprTDW1u1HJSZmzEjh4jO7mD74iEgUk0lP0fkv1P5U=;
-        b=GkHHIbyOBZRFRpN+beehXEmD1sX8a7TvGoNIJPqJz4BdB4IxJwMEqZNFt9lt95Lewc
-         k+kP9/qc/H0akb0VM1N/pFTzJKtGebCHlxGPab+9fUPwdJvzppoM5MD0BNdxER2KONJS
-         Ps7ZsmbYXpeaf1qVmQ2b8ekmdbTzyuTTeUdQom+Nvup2XVthSRbyduMQeu1D50/mRkNo
-         2YfVErRZ/7MIPh8OmQIroRxNG9Fb51uDv5ThBw43Uz7huaG0zRLbtnQOo2Xvt4yIZiOH
-         r8NR59/akimA+OXb+cO8cHFTn4rT4Ew9CEIvsDqDbJFfuaLL1rxYWSRF/Ok6F28H+Kti
-         JABg==
+        bh=PsmsZgemCvhriIQAgZ8Jrnu1V0u0Uy80i+4ks6YOumc=;
+        b=HBkyOKI64T1XZ3uIg75dUY22JSUM5cbP/qn1UGHhdCmjF6sSrR7GhfznJT9SM18EX/
+         B8iSH7m45ijOV4k+bl14QNVToBrmSm8lS+yfkMmLvmb02xYDo7M1o7hCikdokcKz1pez
+         aOf8ZZ2Os4xtY2wKma46hfx3yoTH4wNjTBwvQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IbprTDW1u1HJSZmzEjh4jO7mD74iEgUk0lP0fkv1P5U=;
-        b=CqN1I6ggk8NqTC7ZhmTRPwLYSE9D7b/orKgWCeoJPsOM/qG+nMwnoxWT4IBJ/PeXug
-         r+6OyqBIjdhGqAFrfp9kqZceJZI9sZBOotD0EuuUxNOWsm0qgKpKn1OOSuO1+iLSjaeM
-         0TXFPJ6qC6NEcvranOtDhCCPBUeH0418imGJOB6BQNL/hEh5k6oSvfnV52602TrazYQl
-         NnSsUVe+6UNgzag94wgV5dbjilRqycEmPf0voNHn46rW3tdERvcSZXcUeatDJYXa6Mo7
-         U8DCx2eHsIv3CkQISelI9ZPbPJUlOFRgTy1dJ7SP6l+owB3GlE6nZR09dzVxWxdM8tEF
-         MlsA==
-X-Gm-Message-State: AGi0PuZqdgLZ14g/10LLPNICw5z3BpTQ9BMFw6oLx4ZNi30cdk6/cEm1
-        RWrVO1bVhmllYdj/j2a2bHTzEDtN3MMs9YVM/0k=
-X-Google-Smtp-Source: APiQypKmuujWglLFGvt6mgZTt0c2Lfo3xvnJLGSPMnshz82WbFzycEx19jZVaLgsryxjZKYQCznynOkynrPgvYkFPSs=
-X-Received: by 2002:a92:5b56:: with SMTP id p83mr19231598ilb.70.1586135705788;
- Sun, 05 Apr 2020 18:15:05 -0700 (PDT)
+        bh=PsmsZgemCvhriIQAgZ8Jrnu1V0u0Uy80i+4ks6YOumc=;
+        b=qaqzQ3gxZiLQkAWfxDEEkaztkCxg8Hmoa3QKmjOkPJoRO61MaITXWArxIBz0Evtb9i
+         xhiL85KMzf38mdT3TeJ1c2sIN8NXVmXLv+5PDCYEfZul3YvF3gMvgqfpl8rHBUxHjZd6
+         oo1h1e9zn/7hPBIopWhBl5M6pfyDiqXQxAazq1AM6J++JpghZbwVitWKPIkO5LiceIDx
+         yjNptvzcqrafgQw9Yo/TJUz/7Zob7F1lHtbaIJaLCqzXBlu30rd+TcX5LjYIgB4XxC1C
+         TgptPfLV1RktzNG0ZQEoIsGC77hrZ26lQJmlfKmKNNyhSEjYD6fOoMFq+ekLKMwCDLTQ
+         m9tQ==
+X-Gm-Message-State: AGi0Puakg4DndxZyYC0PYQlx5agrn68zCO7N58S0FfvX9wh5PhCd3Uq3
+        LeLOjfczrU2UYvnNPtdEW1/+r4cQwJQa0I/4BM8=
+X-Google-Smtp-Source: APiQypJ3e6qTmPGYSNjcv8HM2bboVabW4Mrp2r84r0j7tlusts/GgMm6UHPe2ubJX85/zQRv4hnNIBAI+Hss+FJs/DI=
+X-Received: by 2002:a37:2f43:: with SMTP id v64mr7863822qkh.330.1586136013201;
+ Sun, 05 Apr 2020 18:20:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <a2e4aca0-8e3a-2496-b9a3-ccacf41fd3d9@web.de>
-In-Reply-To: <a2e4aca0-8e3a-2496-b9a3-ccacf41fd3d9@web.de>
-From:   Qiujun Huang <hqjagain@gmail.com>
-Date:   Mon, 6 Apr 2020 09:14:52 +0800
-Message-ID: <CAJRQjod7jVRrAEmk1=qgVf5RH5oedmLC4n7Ujsh-G7sosesGDw@mail.gmail.com>
-Subject: Re: [PATCH] KVM: PPC: Book3S HV: Remove NULL check before kfree
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chen Zhou <chenzhou10@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@ozlabs.org>
+References: <20200404153631.103549-1-linux@roeck-us.net>
+In-Reply-To: <20200404153631.103549-1-linux@roeck-us.net>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 6 Apr 2020 01:20:01 +0000
+Message-ID: <CACPK8Xdmjp0qg0JHHnR1MJp7zmuZHCHTOs7+qn5_16oLbe+r+g@mail.gmail.com>
+Subject: Re: [PATCH] mtd: spi-nor: Compile files in controllers/ directory
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Andrew Jeffery <andrew@aj.id.au>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry about noise, please just ignore it.
+On Sat, 4 Apr 2020 at 15:37, Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> Commit a0900d0195d2 ("mtd: spi-nor: Prepare core / manufacturer code
+> split") moved various files into a new directory, but did not add the new
+> directory to its parent directory Makefile. The moved files no longer
+> build, and affected flash chips no longer instantiate.
+>
+> Adding the new directory to the parent directory Makefile fixes the
+> problem.
+>
+> Fixes: a0900d0195d2 ("mtd: spi-nor: Prepare core / manufacturer code split")
+> Cc: Boris Brezillon <bbrezillon@kernel.org>
+> Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
-On Mon, Apr 6, 2020 at 4:50 AM Markus Elfring <Markus.Elfring@web.de> wrote:
+Thanks Guenter. I just discovered this too.
+
+Acked-by: Joel Stanley <joel@jms.id.au>
+
+> ---
+>  drivers/mtd/spi-nor/Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> > NULL check before kfree is unnecessary, so remove it.
+> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+> index 7ddb742de1fe..653923896205 100644
+> --- a/drivers/mtd/spi-nor/Makefile
+> +++ b/drivers/mtd/spi-nor/Makefile
+> @@ -18,3 +18,5 @@ spi-nor-objs                  += winbond.o
+>  spi-nor-objs                   += xilinx.o
+>  spi-nor-objs                   += xmc.o
+>  obj-$(CONFIG_MTD_SPI_NOR)      += spi-nor.o
+> +
+> +obj-$(CONFIG_MTD_SPI_NOR)      += controllers/
+> --
+> 2.17.1
 >
-> Would you like to take similar update suggestions into account?
-> * 2019-09-04
->   KVM: PPC: Book3S HV: Delete an unnecessary check before kfree() in __kvmhv_nested_page_fault()
->
-> * [-next] KVM: PPC: Book3S HV: remove redundant NULL check
->   https://lkml.kernel.org/lkml/20200401130903.6576-1-chenzhou10@huawei.com/
->   https://lore.kernel.org/patchwork/patch/1218800/
->
-> Regards,
-> Markus
