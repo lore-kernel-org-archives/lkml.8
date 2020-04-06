@@ -2,292 +2,194 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4BDC2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FF9C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1F720719
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3023421D79
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:40:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BrxzIhzV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aNvHE5D6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbgDFQjj (ORCPT
+        id S1729548AbgDFQkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:39:39 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:38699 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729528AbgDFQji (ORCPT
+        Mon, 6 Apr 2020 12:40:12 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42741 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729485AbgDFQkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:39:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586191177; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=p0XtF/zhQFXWOlfW1YKM6MOQlK8lTjQ5wMkXZkRGCnY=; b=BrxzIhzVOa8UKyaxbR3jwpyICwlC5DoHM0zTm4kPGkmMIzIY4Ynt0QOrpYoCzUUkZ73/AIfa
- dIfWMjUeLNEBJM2W/FvBcd7BMl+nQmXedhV4b9MpNcNiscdPejMWsPzyUCH5sOT9JtrVACN4
- mMqzejB0aiN9oOm7i9eHVLOS6uI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8b5b3d.7f0a1db726c0-smtp-out-n05;
- Mon, 06 Apr 2020 16:39:25 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 67E3DC4478C; Mon,  6 Apr 2020 16:39:25 +0000 (UTC)
-Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sanm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01CCEC433D2;
-        Mon,  6 Apr 2020 16:39:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 01CCEC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3
- bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        Mon, 6 Apr 2020 12:40:12 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h15so186128wrx.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 09:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NgLl7HHSoLMH6wWDMAS/slExign8Bsc9NbQ/c/sVCug=;
+        b=aNvHE5D671GXZ8oV3SdiIYeuNCd6IxEYlIYPCTCYq0MmTbXw3gp/BQ0kbVc0zO0XEN
+         8vmpAna2SLdH/vT4Wy5P2I6YgEiZCrWhWv+QSMhsec+5krD80cqLNRHP9WoBXJVf8g3O
+         sijUrTyVkAAkhX6zkx8aZJHE7XlOf+0RiNdCyRZy63a3R1kR6CHJVPdeYgBOyt+dVppm
+         fGc2VExSve5vmHykEsAC6pKnoJ99IZ9pd5gwXS6IQ5lgwIPRNdjUvWNrgDenHw+JT3GA
+         pd0k0LZhn1sr9iVs7S+JSuxC/25O7yPgebagu1JGTxa+eIIZaRlW0wvcNLlROKZLgnoF
+         dNBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=NgLl7HHSoLMH6wWDMAS/slExign8Bsc9NbQ/c/sVCug=;
+        b=nvfcM6laOqwYWk1D2oKghcVlcIzErATj39h9Zv06gyvaK1KpAVDpUi1XmeD3o26d2T
+         OWdIBgSr6ZMVRcE+b9fPle/WNXGgyrsqtACixz7+KsBnitz6e+uQ9HZV5Nq5CthFBY3C
+         y6yH6MSkay6CBDsjba+DsKYORJarTV1LnqbNX1CfrpTfyBCodNm6enOFdl4mxmHpTbKg
+         MIz96JfNBcRgKJwpwOLsEFeV3WLsgRoa9yKMmm/d3gxJm9nYx6GB4hP5sjlGHXkgU9D5
+         U3T2BXsbqHJy4tQtrdx2Nuy1pfm6F2XC3Y+6Iu8SBniS9bxTqttN4eBCA9I4+YtzHMZk
+         OP1Q==
+X-Gm-Message-State: AGi0PuYgT4Me2XV5G6TzZ28sOTPcHlPSN781867/VKz8Z21y4GQsSup2
+        EV5pkOR8nJQ+b6l6P47lJgUnMQ==
+X-Google-Smtp-Source: APiQypLzGRhZvCUulrdZtWRMfjVXOxZf54dtj2/PsNeoJ4slTbBhRzqUC3MaFxUjEqaBkHjrXolDmQ==
+X-Received: by 2002:adf:f841:: with SMTP id d1mr22628wrq.381.1586191209261;
+        Mon, 06 Apr 2020 09:40:09 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:b51c:42dc:1499:2880? ([2a01:e34:ed2f:f020:b51c:42dc:1499:2880])
+        by smtp.googlemail.com with ESMTPSA id u22sm133042wmu.43.2020.04.06.09.40.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 09:40:08 -0700 (PDT)
+Subject: Re: [PATCH v5 2/4] thermal: k3: Add support for bandgap sensors
+To:     Keerthy <j-keerthy@ti.com>, rui.zhang@intel.com, robh+dt@kernel.org
+Cc:     amit.kucheria@verdurent.com, t-kristo@ti.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>
-References: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
- <1585206368-685-2-git-send-email-sanm@codeaurora.org>
- <20200404171700.GA10096@bogus>
-From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
-Message-ID: <5e2eb0a4-ed70-4212-fc70-6ee850507a7e@codeaurora.org>
-Date:   Mon, 6 Apr 2020 22:09:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        mark.rutland@arm.com
+References: <20200331075356.19171-1-j-keerthy@ti.com>
+ <20200331075356.19171-3-j-keerthy@ti.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
+ CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
+ U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
+ UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
+ KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
+ ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
+ 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
+ UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
+ d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
+ 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
+ z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
+ Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
+ 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
+ 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
+ eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
+ NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
+ 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
+ gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
+ qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
+ OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
+ gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
+ 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
+ PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
+ F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
+ WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
+ qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
+ l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
+ BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
+ 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
+ eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
+ t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
+ i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
+ X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
+ fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
+Message-ID: <3dce9790-1414-0768-7e47-07cdfba52aab@linaro.org>
+Date:   Mon, 6 Apr 2020 18:40:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200404171700.GA10096@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200331075356.19171-3-j-keerthy@ti.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 31/03/2020 09:53, Keerthy wrote:
+> The bandgap provides current and voltage reference for its internal
+> circuits and other analog IP blocks. The analog-to-digital
+> converter (ADC) produces an output value that is proportional
+> to the silicon temperature.
+> 
+> Currently reading temperatures only is supported.
+> There are no active/passive cooling agent supported.
+> 
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
 
-On 4/4/2020 10:47 PM, Rob Herring wrote:
-> On Thu, Mar 26, 2020 at 12:36:07PM +0530, Sandeep Maheswaram wrote:
->> Convert USB DWC3 bindings to DT schema format using json-schema.
->>
->> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
->> ---
->>   .../devicetree/bindings/usb/qcom,dwc3.txt          | 104 --------------
->>   .../devicetree/bindings/usb/qcom,dwc3.yaml         | 158 +++++++++++++++++++++
->>   2 files changed, 158 insertions(+), 104 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
->>   create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
->
->> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
->> new file mode 100644
->> index 0000000..0f69475
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
->> @@ -0,0 +1,158 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm SuperSpeed DWC3 USB SoC controller
->> +
->> +maintainers:
->> +  - Manu Gautam <mgautam@codeaurora.org>
->> +
->> +properties:
->> +  compatible:
->> +    items:
->> +      - enum:
->> +          - qcom,msm8996-dwc3
->> +          - qcom,msm8998-dwc3
->> +          - qcom,sdm845-dwc3
->> +      - const: qcom,dwc3
->> +
->> +  reg:
->> +    description: Offset and length of register set for QSCRATCH wrapper
->> +    maxItems: 1
->> +
->> +  "#address-cells":
->> +    enum: [ 1, 2 ]
->> +
->> +  "#size-cells":
->> +    enum: [ 1, 2 ]
->> +
->> +  power-domains:
->> +    description: specifies a phandle to PM domain provider node
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    description:
->> +      A list of phandle and clock-specifier pairs for the clocks
->> +      listed in clock-names.
->> +    items:
->> +      - description: System Config NOC clock.
->> +      - description: Master/Core clock, has to be >= 125 MHz
->> +          for SS operation and >= 60MHz for HS operation.
->> +      - description: System bus AXI clock.
->> +      - description: Mock utmi clock needed for ITP/SOF generation
->> +          in host mode. Its frequency should be 19.2MHz.
->> +      - description: Sleep clock, used for wakeup when
->> +          USB3 core goes into low power mode (U3).
->> +
->> +  clock-names:
->> +    items:
->> +      - const: cfg_noc
->> +      - const: core
->> +      - const: iface
->> +      - const: mock_utmi
->> +      - const: sleep
->> +
->> +  assigned-clocks:
->> +    items:
->> +      - description: Phandle and clock specifier of MOCK_UTMI_CLK.
->> +      - description: Phandle and clock specifoer of MASTER_CLK.
->> +
->> +  assigned-clock-rates:
->> +    maxItems: 2
-> Need to drop this as it is redundant. Soon this will generate an error.
-Will do in next version.
->> +    items:
->> +      - description: Must be 19.2MHz (19200000).
-> Sounds like a constraint:
->
-> - const: 19200000
->
->> +      - description: Must be >= 60 MHz in HS mode, >= 125 MHz in SS mode.
-> - minimum: 60000000
->    maximum: ?
+[ ... ]
 
-Tried  as below but facing errors
+> +static int k3_bandgap_probe(struct platform_device *pdev)
+> +{
+> +	int ret = 0, cnt, val, id, reg_cnt = 0;
 
-assigned-clock-rates:
-     items:
-       - const: 19200000
-       - minimum: 60000000
-         maximum: 150000000
+We missed 'reg_cnt' which is not used.
 
-Errors
+[ ... ]
 
-linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml: 
-usb@a6f8800: assigned-clock-rates: Additional items are not allowed 
-([150000000] was unexpected)
-linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml: 
-usb@a6f8800: assigned-clock-rates:0: [19200000] is too short
-linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml: 
-usb@a6f8800: assigned-clock-rates: [[19200000], [150000000]] is too long
+> +	/* Register the thermal sensors */
+> +	for (id = 0; id < cnt; id++) {
+> +		data[id].sensor_id = id;
+> +		data[id].bgp = bgp;
+> +		data[id].ctrl_offset = K3_VTM_TMPSENS0_CTRL_OFFSET +
+> +					id * K3_VTM_REGS_PER_TS;
+> +		data[id].stat_offset = data[id].ctrl_offset + 0x8;
+> +
+> +		val = readl(data[id].bgp->base + data[id].ctrl_offset);
+> +		val |= (K3_VTM_TMPSENS_CTRL_SOC |
+> +			K3_VTM_TMPSENS_CTRL_CLRZ |
+> +			K3_VTM_TMPSENS_CTRL_CLKON_REQ);
+> +		val &= ~K3_VTM_TMPSENS_CTRL_CBIASSEL;
+> +		writel(val, data[id].bgp->base + data[id].ctrl_offset);
+> +
+> +		data[id].ti_thermal =
+> +		devm_thermal_zone_of_sensor_register(dev, id,
+> +						     &data[id],
+> +						     &k3_of_thermal_ops);
+> +		if (IS_ERR(data[id].ti_thermal)) {
+> +			dev_err(dev, "thermal zone device is NULL\n");
+> +			ret = PTR_ERR(data[id].ti_thermal);
+> +			goto err_alloc;
+> +		}
+> +
+> +		reg_cnt++;
+> +	}
 
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    items:
->> +      - description: The interrupt that is asserted
->> +          when a wakeup event is received on USB2 bus.
->> +      - description: The interrupt that is asserted
->> +          when a wakeup event is received on USB3 bus.
->> +      - description: Wakeup event on DM line.
->> +      - description: Wakeup event on DP line.
->> +
->> +  interrupt-names:
->> +    items:
->> +      - const: hs_phy_irq
->> +      - const: ss_phy_irq
->> +      - const: dm_hs_phy_irq
->> +      - const: dp_hs_phy_irq
->> +
->> +  qcom,select-utmi-as-pipe-clk:
->> +    description:
->> +      If present, disable USB3 pipe_clk requirement.
->> +      Used when dwc3 operates without SSPHY and only
->> +      HS/FS/LS modes are supported.
->> +    type: boolean
->> +
->> +# Required child node:
->> +
->> +patternProperties:
->> +  "^dwc3@[0-9a-f]+$":
->> +    type: object
->> +    description:
->> +      A child node must exist to represent the core DWC3 IP block
->> +      The content of the node is defined in dwc3.txt.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - "#address-cells"
->> +  - "#size-cells"
->> +  - power-domains
->> +  - clocks
->> +  - clock-names
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +    #include <dt-bindings/interrupt-controller/irq.h>
->> +    usb@a6f8800 {
->> +        compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
->> +        reg = <0 0x0a6f8800 0 0x400>;
->> +
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +
->> +        clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
->> +                 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
->> +                 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
->> +                 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
->> +                 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
->> +        clock-names = "cfg_noc", "core", "iface", "mock_utmi",
->> +                      "sleep";
->> +
->> +        assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
->> +                          <&gcc GCC_USB30_PRIM_MASTER_CLK>;
->> +        assigned-clock-rates = <19200000>, <150000000>;
->> +
->> +        interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
->> +                     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
->> +                     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
->> +                     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
->> +        interrupt-names = "hs_phy_irq", "ss_phy_irq",
->> +                          "dm_hs_phy_irq", "dp_hs_phy_irq";
->> +
->> +        power-domains = <&gcc USB30_PRIM_GDSC>;
->> +
->> +        resets = <&gcc GCC_USB30_PRIM_BCR>;
->> +
->> +        dwc3@a600000 {
->> +            compatible = "snps,dwc3";
->> +            reg = <0 0x0a600000 0 0xcd00>;
-> You need 'ranges' in the parent for this address to be translatable.
-Will add in next version.
->
->> +            interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
->> +            iommus = <&apps_smmu 0x740 0>;
->> +            snps,dis_u2_susphy_quirk;
->> +            snps,dis_enblslpm_quirk;
->> +            phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
->> +            phy-names = "usb2-phy", "usb3-phy";
->> +        };
->> +    };
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
+[ ... ]
+
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
