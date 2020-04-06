@@ -2,159 +2,161 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04587C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D166C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD95F206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD25206C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 23:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8El9k9X"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wh907092"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgDFXSK (ORCPT
+        id S1726370AbgDFXTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 19:18:10 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43969 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgDFXSK (ORCPT
+        Mon, 6 Apr 2020 19:19:45 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:38478 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbgDFXTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 19:18:10 -0400
-Received: by mail-lf1-f65.google.com with SMTP id k28so847462lfe.10;
-        Mon, 06 Apr 2020 16:18:07 -0700 (PDT)
+        Mon, 6 Apr 2020 19:19:45 -0400
+Received: by mail-pj1-f66.google.com with SMTP id m15so578641pje.3;
+        Mon, 06 Apr 2020 16:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=chS43n5Rzi5QlXuzujx9Up/J1i2zDWrT898t52vhKwM=;
-        b=C8El9k9Xe+SkBTrIZmw46NaUoXdx8q2vzZ2qLOwqIC3BIoa2ynJ4xkShtIAVG6Ps65
-         5s8USY91DvcarVsY/k9q10+g5qjicoNQuIouYE6p7k5YDKS7nRQOlliAaSdh9nBQlto1
-         XUp7gUmvaTF1yetGDRwZZchQzAnHxsUq9xwyb+S59Qjzpa64YZnKZO8IcrN2vtSyvs+r
-         BYv/2aQfWTJlUc0MhGoL690I3u5V9KLX1koXfURhFYW1IXMhhdNPt3J9QWC6WEK4vKrJ
-         rRug3DMfmCkU9Me3uyNMt6rI1ESrh/TmT+WwAlsYfyNt7+H0X8cWHNe8zu4a6UubeT6i
-         O/lA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qiEMQ3MnZPBtfcN59NTsvK6kDONkxcqt/LljkK1BS58=;
+        b=Wh9070924djEGtjlOfMWm3UFGyjc2B4vmxZxdcBAFkiAc1QiSjxqTx9d0m8DBopdP7
+         HuDT/VhNJC+8tM727HYCqdlOtJZVUQ8xhLKP2twBf5CUd4KQ15FMv7A9rkzcX3JPOUpe
+         MV6It+FIRA2BIRSbq/bI6iw3+sXW8cqRPbwa7Y9KrRro2K3Nv0TiNBsKtmLZ2SErQfJl
+         YJcpMjKVh/0EVzznKwspgZgcDJLvG/D4bnd9eBi1I62eZKe5iKtbub4+5EnPwyRRTtC5
+         TIZskK/zQ/mhyIhM7l8BYnFwGJTpp6KELsy9FFTvN0Uq67B2kLRPOSKlceAnBHUE/iAw
+         sPGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=chS43n5Rzi5QlXuzujx9Up/J1i2zDWrT898t52vhKwM=;
-        b=BjTeodJ7WBrWZYtkxiw/SqSFexjkdBkiLd1vhbDpenuS2Imn5COVDyDGKU+JrDHj97
-         bMc+Ly1v/hrBGjSmHmr6PYw/julEjoOnTi+vnqE2Y+cXFnzN650X668RGHkwWKKe8cJC
-         IvIWwbaKjIoBtnaSHB2AurQL1ZXSnI7FM2Whwe6aoPI5BOGf86B3clBoy3JgXop7MSAr
-         44ifvgxdhcJrfEVPuu9+I4IDEmUcADQpRaWK8QUxD8ktNQB4Gb02NOwVSUtJTBy9s8CZ
-         zCI3Ix/QU2M9OWegv1LmDe0qRFg0RMvYeqG8Jsgm9eks2bwImE6MPAn5vtmQ6UX/tlfd
-         KnyA==
-X-Gm-Message-State: AGi0PuZMihRM8CskxB+aEpzwm2Kcd1TUurFdhe6zAdN5DKjlRPzfiwhM
-        kfIO6QRFsxXdI7irdGR2dc4TtySs
-X-Google-Smtp-Source: APiQypKYg7s05Oo6p5B56gIRuzqS4bQjSQVXLZkNJNbdwWw5ASMZsecvKR7JPKWjof/yi0102iCppQ==
-X-Received: by 2002:a05:6512:14a:: with SMTP id m10mr10185113lfo.152.1586215086411;
-        Mon, 06 Apr 2020 16:18:06 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id d21sm10826594ljc.49.2020.04.06.16.18.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 16:18:05 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
- <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
- <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
- <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
- <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
- <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
- <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
- <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
- <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
- <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
- <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
-Date:   Tue, 7 Apr 2020 02:18:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qiEMQ3MnZPBtfcN59NTsvK6kDONkxcqt/LljkK1BS58=;
+        b=TSh3PiWv1LzwJqWZsgj28/aMCpuG8lHq+uBmARDvGVrIXTaYUW9ykXVZVFFX/N9N1J
+         uo8bys8HfdJzBJQ/qWOaFqgEuhRTpyH8EFuuguqq52kZVCLCzs7po+R6xf66nDPW6y2R
+         6of6x+gNxY8H8DTdxzPqQPfXWAbf47mOxwqxkWlmHKvmams+9stpLrM+/EW/ncnjqE3I
+         SGrhiXj6bUsiEK7GVXOSp33Y7PCdW5sCxWGYfh1ZplOszxMdGny+W1cnk63U7JjjqpEp
+         Pm6I1EfcwV4soqCFjwN78PUBqK8mQLUcAH9cFT2RyB3QgXRYfECz+jqVs5jWvP2bNeiF
+         BEIQ==
+X-Gm-Message-State: AGi0Puak77a+QwFBIjD2VOAWde+5uj74a0OxLc2Uagy5rtiRT40nuJhf
+        E/z4nwngd3eOJR0dDZT1eJ4=
+X-Google-Smtp-Source: APiQypKNp8VZ9mr4GVNmcAt4ce9e6kNxf3ZHvIuLkebI0RqZykks7BQ7hyl/mOXDC3laCG4n/sp25w==
+X-Received: by 2002:a17:90a:324b:: with SMTP id k69mr1963136pjb.50.1586215183169;
+        Mon, 06 Apr 2020 16:19:43 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id c126sm12625459pfb.83.2020.04.06.16.19.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 16:19:43 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 16:19:45 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        broonie@kernel.org, alsa-devel@alsa-project.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/7] ASoC: fsl_asrc: Support new property
+ fsl,asrc-format
+Message-ID: <20200406231945.GA20945@Asurada-Nvidia.nvidia.com>
+References: <cover.1585726761.git.shengjiu.wang@nxp.com>
+ <496f49f1fe20b969f4456b591f62223d430c6d74.1585726761.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <496f49f1fe20b969f4456b591f62223d430c6d74.1585726761.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.04.2020 01:07, Sowjanya Komatineni пишет:
-> 
-> On 4/6/20 3:00 PM, Sowjanya Komatineni wrote:
->>
->> On 4/6/20 2:39 PM, Sowjanya Komatineni wrote:
->>>
->>> On 4/6/20 2:15 PM, Sowjanya Komatineni wrote:
->>>>
->>>> On 4/6/20 2:11 PM, Dmitry Osipenko wrote:
->>>>> External email: Use caution opening links or attachments
->>>>>
->>>>>
->>>>> 07.04.2020 00:02, Sowjanya Komatineni пишет:
->>>>>>>>>>> Am I understanding correctly that this thread will take 100%
->>>>>>>>>>> CPU,
->>>>>>>>>>> spinning here, if more than 2 frame-captures queued?
->>>>>>>>>> on more than 2 frames captures, it breaks thread and on next
->>>>>>>>>> wakeup it
->>>>>>>>>> continues
->>>>>>>>> The wait_event() won't wait if condition is true.
->>>>>>>> condition is checked when waitqueue is woken up
->>>>>>> https://elixir.bootlin.com/linux/v5.6.2/source/include/linux/wait.h#L462
->>>>>>>
->>>>>> process is put to sleep until the condition evaluates to true or
->>>>>> signal
->>>>>> is received.
->>>>>>
->>>>>> condition is checked each time the waitqueue head is woken up.
->>>>> This is a wrong assumption in accordance to the code.
->>
->> process is in sleep until the condition is evaluated and when
->> condition is true wakeup still happens only when wake_up on waitqueue
->> is called
->>
->> This is the reason for using this to prevent blocking while waiting
->> for the buffers.
-> 
-> w.r.t capture list update, wakeup happens when wake_up on waitqueue is
-> called.
-> 
-> wakeup also happens on kthread stop signal event.
-> 
->>
->>
->>>>
->>>> when every buffer is available as long as we are in streaming, we
->>>> should process it.
->>>>
->>>> So if wake up happens when list has buffer, it will be processed but
->>>> at a time we limit processing 2 simultaneous buffer capture starts
->>>> only.
->>>>
->>> Fixing typo.
->>>
->>> I meant when ever buffer is available as long as we are in streaming,
->>> we should process it.
->>>
->>> So capture thread processes as long as buffers are available from
->>> user space limiting 2 simultaneous trigger of captures and thread
->>> will be in sleep when capture buffers list is empty or no stop thread
->>> is signaled.
+Just some small comments.
 
-IIUC, the waiting won't happen if more than 2 captures are queued and
-thread will be spinning until captures are processed.
+On Wed, Apr 01, 2020 at 04:45:37PM +0800, Shengjiu Wang wrote:
+> In order to align with new ESARC, we add new property fsl,asrc-format.
+> The fsl,asrc-format can replace the fsl,asrc-width, driver
+> can accept format from devicetree, don't need to convert it to
+> format through width.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  sound/soc/fsl/fsl_asrc.c     | 40 ++++++++++++++++++++++--------------
+>  sound/soc/fsl/fsl_asrc.h     |  4 ++--
+>  sound/soc/fsl/fsl_asrc_dma.c | 15 +++++++++++---
+>  3 files changed, 39 insertions(+), 20 deletions(-)
+> 
+> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+> index 4d3e51bfa949..eea19e2b723b 100644
+> --- a/sound/soc/fsl/fsl_asrc.c
+> +++ b/sound/soc/fsl/fsl_asrc.c
+> @@ -1052,16 +1047,31 @@ static int fsl_asrc_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	ret = of_property_read_u32(np, "fsl,asrc-width",
+> -				   &asrc->asrc_width);
+> +	ret = of_property_read_u32(np, "fsl,asrc-format", &asrc->asrc_format);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "failed to get output width\n");
+> -		return ret;
+> +		ret = of_property_read_u32(np, "fsl,asrc-width", &width);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "failed to get output width\n");
 
-I think you need a semaphore with resource count = 2.
+Similar to the comments against sound card driver:
+"failed to decide output format"
+
+> +			return ret;
+> +		}
+> +
+> +		switch (width) {
+> +		case 16:
+> +			asrc->asrc_format = SNDRV_PCM_FORMAT_S16_LE;
+> +			break;
+> +		case 24:
+> +			asrc->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
+> +			break;
+> +		default:
+> +			dev_warn(&pdev->dev, "unsupported width, switching to 24bit\n");
+
+Should match what the code does after the change:
++			dev_warn(&pdev->dev,
++				 "unsupported width, use default S24_LE\n");
+
+> +			asrc->asrc_format = SNDRV_PCM_FORMAT_S24_LE;
+> +			break;
+> +		}
+>  	}
+>  
+> -	if (asrc->asrc_width != 16 && asrc->asrc_width != 24) {
+> -		dev_warn(&pdev->dev, "unsupported width, switching to 24bit\n");
+> -		asrc->asrc_width = 24;
+> +	if (!(FSL_ASRC_FORMATS & (1ULL << asrc->asrc_format))) {
+> +		dev_warn(&pdev->dev, "unsupported format, switching to S24_LE\n");
+
+Could fit 80 characters:
++		dev_warn(&pdev->dev, "unsupported width, use default S24_LE\n");
+
+> diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+> index 5fe83aece25b..b15946e03380 100644
+> --- a/sound/soc/fsl/fsl_asrc_dma.c
+> +++ b/sound/soc/fsl/fsl_asrc_dma.c
+> @@ -230,10 +230,19 @@ static int fsl_asrc_dma_hw_params(struct snd_soc_component *component,
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (asrc->asrc_width == 16)
+> +	bits = snd_pcm_format_physical_width(asrc->asrc_format);
+
+Can we just use 'width' to match the function name?
