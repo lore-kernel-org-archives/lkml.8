@@ -2,91 +2,116 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2C8C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B41FC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 166E7206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074802072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="op7BhCUD"
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="cvHQdv9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgDFLRn (ORCPT
+        id S1727481AbgDFLS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:17:43 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42476 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbgDFLRm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:17:42 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036BCs6L171432;
-        Mon, 6 Apr 2020 11:17:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=t/xaaVqoQ/f/LgZxiyUJNJ/HPdDx97I+V6UPT7T73Zw=;
- b=op7BhCUD4O5Hlxxvd7xIJ4LK49myZgaMiGIEvstZRtuaFWhns33Lx6VwfNORKMzC1v4t
- 490nlGGClpFAFDq64tNUZu7oyuJ6EJHyGkqwzXQ7jtdUCa4cexrDlNvQz9L7o8sLidBM
- FdDPjcIlWDtQSTDZxvm1eofypB0MfSjSrl4KgXKETdCpzgXm0TTOgpf5JvrhdXDfRVLI
- mq2e2UVZCcV1dcTf08AfDfwRsDNCciS9mkYpRiMlWPTv0j/UpWdd1bG3h2o2Q7ooq2GJ
- 8BOjgaoEIwo7n7qGZHUk0srv5Kv3lk65/rCiQr91v7ZRigLiZOJ9ZLSO8dlm7u1+tQit Nw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 306jvmx43d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Apr 2020 11:17:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 036BCMIt096403;
-        Mon, 6 Apr 2020 11:17:35 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 30839prnq8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Apr 2020 11:17:35 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 036BHYXX025088;
-        Mon, 6 Apr 2020 11:17:34 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 06 Apr 2020 04:17:33 -0700
-Date:   Mon, 6 Apr 2020 14:17:26 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oscar Carter <oscar.carter@gmx.com>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
+        Mon, 6 Apr 2020 07:18:28 -0400
+Received: from mail-dm6nam11on2071.outbound.protection.outlook.com ([40.107.223.71]:6126
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727125AbgDFLS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 07:18:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S1SvjGEVgGJeT/Xi5oCYPkBnJLHcjRn9dcaA5qYhu8pxKh2F5+ZeKYtlQVcxtBUm9hxzWi3UbKU8zXC/qQXL4bOICafJsiVs0Db25IXEDVgkPs/T5H0o46Qa/BcoR662dPo6c3GLzipxh8z493xUntGa5ZToG7rsfoQqqk4ejJ+n26ZAs95HjGT92DBFrw0Bx7UtyB/mIS2K+2LT8d50iD51cgEG4iaTwMu3z5617LQMwbCRdAtJOkt2LDafS1TGLoh1vVMF1rd8i48PMsVYiRyHLtlSuUp1g0iZP4rluBv1RWzKec2GEHxilm0ab1YvaEGEgPhcoIB36I4tVZsXdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JDUdKC5MG45uXW86FF3QFFtB2tT6J3KT7RhKATBOomQ=;
+ b=go5d+PbFFjE+14mzoSDvyO6CfswhuBPG6uUbBUuW/zN5uojQcRanunyZoP58r+DWQ7MJDVX1kDsIaEnukmHjF0h5qWZ0+WGPZBEknh04kXSYQOW7RCTKeCG311sPX2xUvI4LGtHrOodvdAeIRZ6+jL7WwjjVFBgvZxe15ohsFJ7gc8Qr/yr6xDCd5KaeIfNMBK+LvfY21TzN3xD1+NaYchJSbPb+4ZHXH1A7BiMeSyp84RKuYtw+pjPGYVhkK863lL6QDl8LSoHMz0wRpYt3+LwhqUPnNZnWw9iO7iy9bOAEdDVfap9qZf4lZKi0dnXEliDuFFmBGliSyLNcs2pXzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JDUdKC5MG45uXW86FF3QFFtB2tT6J3KT7RhKATBOomQ=;
+ b=cvHQdv9SI/y0twln6A/gb2A64EaIkyeSJtjGbpwl0QdkjGoJJd87nsCK3R3N//JgknrIfE7sU26X0jcq4mokafN/bqizT1m08ve6yRtGXVOwV8/+S31Kzig617Mq7mGoJJH3jq5Tk9C4FW0rppbCgnO7GcNLENFEWaGJC2Zp7DM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+Received: from BN6PR11MB4052.namprd11.prod.outlook.com (2603:10b6:405:7a::37)
+ by BN6PR11MB3860.namprd11.prod.outlook.com (2603:10b6:405:77::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Mon, 6 Apr
+ 2020 11:18:15 +0000
+Received: from BN6PR11MB4052.namprd11.prod.outlook.com
+ ([fe80::e0af:e9de:ffce:7376]) by BN6PR11MB4052.namprd11.prod.outlook.com
+ ([fe80::e0af:e9de:ffce:7376%3]) with mapi id 15.20.2878.018; Mon, 6 Apr 2020
+ 11:18:15 +0000
+From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
+To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] staging: vt6656: Remove unnecessary local variable
- initialization
-Message-ID: <20200406111726.GF2001@kadam>
-References: <20200404141400.3772-1-oscar.carter@gmx.com>
- <20200404141400.3772-4-oscar.carter@gmx.com>
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>
+Subject: [PATCH 01/11] staging: wfx: drop unused WFX_LINK_ID_GC_TIMEOUT
+Date:   Mon,  6 Apr 2020 13:17:46 +0200
+Message-Id: <20200406111756.154086-2-Jerome.Pouiller@silabs.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200406111756.154086-1-Jerome.Pouiller@silabs.com>
+References: <20200406111756.154086-1-Jerome.Pouiller@silabs.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+X-ClientProxiedBy: DM5PR05CA0010.namprd05.prod.outlook.com
+ (2603:10b6:3:d4::20) To BN6PR11MB4052.namprd11.prod.outlook.com
+ (2603:10b6:405:7a::37)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200404141400.3772-4-oscar.carter@gmx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9582 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004060098
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9582 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 adultscore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 malwarescore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004060098
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc-42.silabs.com (2a01:e35:2435:66a0:544b:f17b:7ae8:fb7) by DM5PR05CA0010.namprd05.prod.outlook.com (2603:10b6:3:d4::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.13 via Frontend Transport; Mon, 6 Apr 2020 11:18:13 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [2a01:e35:2435:66a0:544b:f17b:7ae8:fb7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7b7daadd-0ca9-42a9-9c13-08d7da1c337f
+X-MS-TrafficTypeDiagnostic: BN6PR11MB3860:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN6PR11MB3860BB51D77C207A3BBE723C93C20@BN6PR11MB3860.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:136;
+X-Forefront-PRVS: 0365C0E14B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR11MB4052.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(396003)(39850400004)(346002)(366004)(136003)(376002)(186003)(16526019)(7696005)(52116002)(36756003)(5660300002)(107886003)(316002)(54906003)(66946007)(66476007)(4326008)(2616005)(66556008)(1076003)(66574012)(81166006)(6666004)(6486002)(8936002)(2906002)(86362001)(81156014)(4744005)(8676002)(478600001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: aHXD46as/q4E8cewX6P0gFH2a2vyC38CO6BSpziPxZpVVjHjBk0Y6kk3dpKumWMR/3X6i3a8o8S+8uM79YntUvjCpIaV1MKIBQGwa8sqWHvzn1MmzvvITDTGTGGuYnPPmsh3buApd6FK7vjyXJpHvbloziDjyKb6I8W+UULBnyEevs54E3mpyX8pKJ82WEEOIkmy+/HkKQ+N7akj94l+11Ag39/vor+NcoK1UoZBPyC3SEYWMZg0Hz1jukYpya/vLOdu9xAiDHEOHjE7zwx/RMjlZAlg68QAQR0o3aok9ikuTlcP504iaCmXaFZKcck8W3i3+rDNwwAoU5tuF1pK4hXtcjj2atXxjk20GxFaI/xjSEx/RvVP3l5dVizdmELU3fomwKMWVgw8b7JlEWHTdRkPRuzt0NbGnkErZ6LLjKfJjHJx+1cmk9SZoUVkT/8J
+X-MS-Exchange-AntiSpam-MessageData: LV0iFZwUFuRmZhC/6PW+xAUN88Ge0ZzMIzh5CeVBH/0feHnB+O5IVnTDlFIvljoXup5SblBzQ60W3ma9Y5zUUq3N3wCeAmUVlfIXfqUakRjoGgWvw+16uBKMYv8AF/cCvE6h3oVe42n2+kFGtC3M+fv5q0Qb7FkhrhaxZaiN4u2UEfj+GuYowxhsM/xsrfEWiddXHZfYm0AlieJCghkmVA==
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b7daadd-0ca9-42a9-9c13-08d7da1c337f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2020 11:18:15.7972
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8cnMrzriV2vbn0000dbiCRM/9LaIMsz5pu4ZMygJeF2EaWLUZtjYkMPktfXWJ/Mow9mtNWfEFZUryENeOl0ywQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB3860
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-regards,
-dan carpenter
-
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKVGhl
+IGRlZmluaXRpb24gV0ZYX0xJTktfSURfR0NfVElNRU9VVCBpcyBub3QgdXNlZCBhbnltb3JlIHNp
+bmNlCmNvbW1pdCBkNmFlYmE1NzVmMjcgKCJzdGFnaW5nOiB3Zng6IHNpbXBsaWZ5IHRoZSBsaW5r
+LWlkIGFsbG9jYXRpb24iKQoKU2lnbmVkLW9mZi1ieTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9t
+ZS5wb3VpbGxlckBzaWxhYnMuY29tPgotLS0KIGRyaXZlcnMvc3RhZ2luZy93ZngvZGF0YV90eC5j
+IHwgMSAtCiAxIGZpbGUgY2hhbmdlZCwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvc3RhZ2luZy93ZngvZGF0YV90eC5jIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9kYXRhX3R4LmMK
+aW5kZXggOTNlZDBlZDYzYmIyLi5jODhkMTRmZTYxNGIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3Rh
+Z2luZy93ZngvZGF0YV90eC5jCisrKyBiL2RyaXZlcnMvc3RhZ2luZy93ZngvZGF0YV90eC5jCkBA
+IC0xNyw3ICsxNyw2IEBACiAjaW5jbHVkZSAiaGlmX3R4X21pYi5oIgogCiAjZGVmaW5lIFdGWF9J
+TlZBTElEX1JBVEVfSUQgICAgMTUKLSNkZWZpbmUgV0ZYX0xJTktfSURfR0NfVElNRU9VVCAoKHVu
+c2lnbmVkIGxvbmcpKDEwICogSFopKQogCiBzdGF0aWMgaW50IHdmeF9nZXRfaHdfcmF0ZShzdHJ1
+Y3Qgd2Z4X2RldiAqd2RldiwKIAkJCSAgIGNvbnN0IHN0cnVjdCBpZWVlODAyMTFfdHhfcmF0ZSAq
+cmF0ZSkKLS0gCjIuMjUuMQoK
