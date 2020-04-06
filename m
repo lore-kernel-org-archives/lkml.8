@@ -2,134 +2,175 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898C2C2BA1E
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9821C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EED23D4F
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586183032;
-	bh=sEFsw8MjNaxxL6UouVgj5T3wez3PlOS9Vez445xmNLw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EQz3+dhNCatRyjj42+1XI0V5waAxS/5nf2Co8DDZz+vtM16CQKX5bQrIoyi0nZBoI
-	 1vPF5xzQoyO1zuLVKFWmGh5ucV54H5rkPqP6YdTL5N3ZpsGAqj9z4EevBSF0dZfwZS
-	 6mlaKnHJ8KDQhVu4pExLCJNvFJkWV2Lk6Of3ohn8=
+	by mail.kernel.org (Postfix) with ESMTP id B708D23D3C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:23:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y9S1R0tp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgDFOXv (ORCPT
+        id S1728704AbgDFOX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:23:51 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35298 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728539AbgDFOXv (ORCPT
+        Mon, 6 Apr 2020 10:23:56 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47092 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728539AbgDFOXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:23:51 -0400
-Received: by mail-pg1-f194.google.com with SMTP id k5so7648793pga.2;
-        Mon, 06 Apr 2020 07:23:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l4jUivbNeT/tXISEa3mLl14aIqDVskamynqyyyoeohY=;
-        b=YsU9jbSzp8588IOyvGG+4YHrxffe3iPQeAwpZRZh4dJI6hn59XpIB0vFzvHRetcMWa
-         qH1JDaLYqlmIqMWRsgk60Rlr1+Bfs1EMQshyB7bOcWb4iU9plUGV1kElXNJXVwamhVeF
-         6vFKchI2tetJNWTUzBVreFKGSkuJ/zhf/7bFzP4iQfFdpGbrAvC4Sm0T28thh+UgGMP3
-         2GfqKFhBrqz74NoGL6SNMm57MzprEBmuXxTKKUOu3v/6NzPZhLFK1OoHl0J6wHOGWao2
-         k5If+SIeZfF9N9VpYD+4RIj7yYON8hrFO+aUP5jr0jQLn7fgJCZdzTMVWAp1id+C+q2v
-         Y1vQ==
-X-Gm-Message-State: AGi0PuZlcIPRY0x1C7Kaw87JZ+5MbvMZPnswBrkBmlEe1q1fn/bwVgmk
-        eyTo/sJuFSBaerqSkuMIjCw=
-X-Google-Smtp-Source: APiQypIOvcLGL/Zcaffq3CvgymvIweGawVr0JJIIPq4D6r0SEbYJXtqbU0CFu7sYyeuNreyhJjYWYw==
-X-Received: by 2002:a63:eb15:: with SMTP id t21mr5705274pgh.279.1586183029353;
-        Mon, 06 Apr 2020 07:23:49 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id q71sm11874573pfc.92.2020.04.06.07.23.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 07:23:48 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 8D41C40246; Mon,  6 Apr 2020 14:23:47 +0000 (UTC)
-Date:   Mon, 6 Apr 2020 14:23:47 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk,
-        gregkh@linuxfoundation.org, rostedt@goodmis.org, mingo@redhat.com,
-        jack@suse.cz, ming.lei@redhat.com, nstange@suse.de,
-        mhocko@suse.com, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Omar Sandoval <osandov@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [RFC 1/3] block: move main block debugfs initialization to its
- own file
-Message-ID: <20200406142347.GB11244@42.do-not-panic.com>
-References: <20200402000002.7442-1-mcgrof@kernel.org>
- <20200402000002.7442-2-mcgrof@kernel.org>
- <cef15625-3814-aec2-d10c-1344a6f063a9@acm.org>
+        Mon, 6 Apr 2020 10:23:55 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200406142351euoutp021c36b75fbfe822369dd0a4b6baa22bcc~DQRAyYFp00221902219euoutp02T
+        for <linux-kernel@vger.kernel.org>; Mon,  6 Apr 2020 14:23:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200406142351euoutp021c36b75fbfe822369dd0a4b6baa22bcc~DQRAyYFp00221902219euoutp02T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1586183031;
+        bh=80HiovpSACSa5iKWuDtXEGNMjiGgvGqhBPfk2+6zg2I=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Y9S1R0tpk3yqYW2uH+9884TfpcTEYO2pF84lZFKPXhwoYBc3gkBFO6OqyCH1+jTGC
+         T20P0WZ5F0EYNMBJc42m//fPODIqTgx52+aa81BSoufpKyfLnK3pQQn9XNc+MECcpD
+         i1iSdMn2lfk0sAkq6grWcDGvAnsDJGNU5oTk1MkY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200406142351eucas1p176e16341c0ae5cba40259b3b3b64279e~DQRAfqxZE2343723437eucas1p1r;
+        Mon,  6 Apr 2020 14:23:51 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id F5.1A.61286.77B3B8E5; Mon,  6
+        Apr 2020 15:23:51 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200406142350eucas1p2524f266941cfedd66c0181f2fedcf388~DQRAJGFE81495514955eucas1p2N;
+        Mon,  6 Apr 2020 14:23:50 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200406142350eusmtrp1d2e992634175bcb2ae0fea4a3e778668~DQRAIQ9ax0348903489eusmtrp1a;
+        Mon,  6 Apr 2020 14:23:50 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-ea-5e8b3b77753e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 01.CF.08375.67B3B8E5; Mon,  6
+        Apr 2020 15:23:50 +0100 (BST)
+Received: from [106.210.85.205] (unknown [106.210.85.205]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200406142350eusmtip1eccb47d1871edabd5397fc2de3e805dc~DQQ-biU9_1810518105eusmtip1e;
+        Mon,  6 Apr 2020 14:23:50 +0000 (GMT)
+Subject: Re: [PATCH v5 0/5] Genericize DW MIPI DSI bridge and add i.MX 6
+ driver
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-rockchip@lists.infradead.org, linux-imx@nxp.com,
+        kernel@collabora.com, linux-stm32@st-md-mailman.stormreply.com,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <7b95e129-8035-df7f-3d50-2ae3c2e8af8d@samsung.com>
+Date:   Mon, 6 Apr 2020 16:23:49 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cef15625-3814-aec2-d10c-1344a6f063a9@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200330113542.181752-1-adrian.ratiu@collabora.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: pl
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTYRDH83V3y7ahuBSQEYxiY6JouIIxm6Aoxod9EKM+qQlHkQ0Q21Ja
+        DlEjBJBAOUTw4jAQjoggqFQQiCFQCEiQIkcJJDQQqA8QDsuloIi0i5G338z855v5Tz4SExsI
+        FzJKEcuqFFKZhC/Em7o3BjwS/LKCvUsfiuiNvCaCLu3SE/TI2hKfNvyYxejeeQNOa/XZBJ35
+        uNKGbpgZJWjN5muMHm4t4dPLU9sYrRk1EedtmWZjJWKKMwoJ5nPeEI+ZzOrhMdrKJOb9YjOP
+        ac8pwJmONh9mpeHQFcFN4ZlwVhYVz6q8/EOFkbpOQmnad2ep7SeRjKpsNYgkgToFXYMyDRKS
+        YqoawcJ8H48LVhF8+j2Oc8EKguWhZzYaJLB2mKe6Ma7wCsGX7dJd1RICY043z6JyoK6CfjCd
+        b2FHKgb0jTWERYRRnTxYSa+3iviUO2xpx60iEeUPQ+W1yMI4dRTq5zKt7EQFgX56jOA09tBb
+        aMItLKACYD3dbGWMOgypjcUYx44wNp2GLMOAMtvA8PYIj9v7IhjNjwiOHWCu58Oun4PQV5CN
+        c5wEk9VpGNecgaDxXQvGFfxgQr/Jt5wM29n6basXlw6Aj4YKxF3SDsYW7Lkd7CC/6TnGpUWQ
+        kS7m1Edgsr9x90FnqPq6xs9DkqI9zor2uCna46bo/9wyhNcgZzZOLY9g1T4KNsFTLZWr4xQR
+        nrei5Q1o57P1/elZbkZrQ2E6RJFIYiu6LsgKFhPSeHWiXIeAxCSOIpeczGCxKFyaeJdVRYeo
+        4mSsWodcSVziLPItnw0SUxHSWPY2yypZ1b8qjxS4JKPSXMPZurGZGGX9E8Elj7Jjvxbvvfwu
+        7ovq/+bqWvGipeTCcZt2U8KD0yMzymKnXreClIYws/vTrRSTW5VyK1cwkqqr0cqlvuc2t94I
+        BxbTah0TT3a4pdi1hOYYPZxv3J+A6fzlJEVI3eV1o2v0ag+L9N4Z+xXa1c5A3YGga4GTElwd
+        KfU5ganU0r9uZjfdaAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsVy+t/xu7pl1t1xBr82mFj8nLCN1WL+kXOs
+        Fle+vmezuPr9JbPFyTdXWSw2n+thteicuITdYtPja6wWXb9WMltc3jWHzeLTg//MFl3XnrA6
+        8HjsuLuE0WN2x0xWjxMTLjF53O8+zuSxeUm9x8Z3O5g8DvROZvE4uM/Q4/MmuQDOKD2bovzS
+        klSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSczLLUIn27BL2MQ4dZC57wV7zf
+        94O1gXEpTxcjJ4eEgInExwfHmEFsIYGljBKXe70g4uISu+e/ZYawhSX+XOti62LkAqp5yyix
+        /fE2JpCEsECgxLmLbWwgtohAocSX6xvAipgFDjNJ7F02lR2iYwqjxIemVkaQKjYBTYm/m2+C
+        dfAK2ElcWrQaLM4ioCKx7lUnmC0qECvR37ybEaJGUOLkzCcsIDangKPEt7aPYDazgJnEvM0P
+        mSFseYnmrbOhbBGJG49aGCcwCs1C0j4LScssJC2zkLQsYGRZxSiSWlqcm55bbKhXnJhbXJqX
+        rpecn7uJERjL24793LyD8dLG4EOMAhyMSjy8EZzdcUKsiWXFlbmHGCU4mJVEeKV6O+OEeFMS
+        K6tSi/Lji0pzUosPMZoCPTeRWUo0OR+YZvJK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5ak
+        ZqemFqQWwfQxcXBKNTD61jyd80V46Z2jM0M1Xwufq2LR3dcptittXrc7I3PXbcnnSk/cNvfs
+        2nfkusDU3Q2GcdN7TlxxK7h1Pd3Tr6rmu0+44+9ZftXHtjwISiu3SQ5u99vductMaBWn3p5V
+        pfKLprBp7P9fo2Z2Ri786nqLb0vL3QVPcM0wb1i1z9/7LfPF68+514orsRRnJBpqMRcVJwIA
+        Q/GjXvsCAAA=
+X-CMS-MailID: 20200406142350eucas1p2524f266941cfedd66c0181f2fedcf388
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200330113455eucas1p1441dc79d44de5081e9d90079e2020ca0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200330113455eucas1p1441dc79d44de5081e9d90079e2020ca0
+References: <CGME20200330113455eucas1p1441dc79d44de5081e9d90079e2020ca0@eucas1p1.samsung.com>
+        <20200330113542.181752-1-adrian.ratiu@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 04, 2020 at 08:12:53PM -0700, Bart Van Assche wrote:
-> On 2020-04-01 17:00, Luis Chamberlain wrote:
-> > Single and multiqeueue block devices share some debugfs code. By
->              ^^^^^^^^^^^
->              multiqueue?
-> > moving this into its own file it makes it easier to expand and audit
-> > this shared code.
-> 
-> [ ... ]
-> 
-> > diff --git a/block/blk-debugfs.c b/block/blk-debugfs.c
-> > new file mode 100644
-> > index 000000000000..634dea4b1507
-> > --- /dev/null
-> > +++ b/block/blk-debugfs.c
-> > @@ -0,0 +1,15 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +/*
-> > + * Shared debugfs mq / non-mq functionality
-> > + */
-> 
-> The legacy block layer is gone, so not sure why the above comment refers
-> to non-mq?
+Hi Adrian,
 
-Will adjust the language, thanks.
+Due to different ways of work I use different mail client, so forgive me 
+if there are some misconfugrations.
 
-> 
-> > diff --git a/block/blk.h b/block/blk.h
-> > index 0a94ec68af32..86a66b614f08 100644
-> > --- a/block/blk.h
-> > +++ b/block/blk.h
-> > @@ -487,5 +487,12 @@ struct request_queue *__blk_alloc_queue(int node_id);
-> >  int __bio_add_pc_page(struct request_queue *q, struct bio *bio,
-> >  		struct page *page, unsigned int len, unsigned int offset,
-> >  		bool *same_page);
-> > +#ifdef CONFIG_DEBUG_FS
-> > +void blk_debugfs_register(void);
-> > +#else
-> > +static inline void blk_debugfs_register(void)
-> > +{
-> > +}
-> > +#endif /* CONFIG_DEBUG_FS */
-> 
-> Do we really need a new header file that only declares a single
-> function? How about adding the above into block/blk-mq-debugfs.h?
 
-Moving forward rq->debugfs_dir will created when CONFIG_DEBUG_FS is
-enabled to enable blktrace to use it. This creation won't depend on
-CONFIG_BLK_DEBUG_FS, so we can definitely sprinkly the #ifdef
-CONFIG_DEBUG_FS stuff in block/blk-mq-debugfs.h but it just didn't
-seem the best place. Let me know.
+W dniu 30.03.2020 o 13:35, Adrian Ratiu pisze:
+> Hello everyone,
+>
+> The v5 series is a significantly cleaned up version from v4,
+> started by Ezequiel Garcia's suggestion of splitting out the
+> regmap infrastructure from the drivers (thank you!).
+>
+> Turns out no changes are required to the existing drivers and
+> the bridge can transparently take care of the layout logic,
+> so there's no need to expose the regmap via plat_data anymore.
+>
+> Starting from this version I also opted to add per-patch
+> changelogs. All review comments up to now have been addressed.
+>
+> Tested on IMX6DL.
+>
+> Adrian Ratiu (5):
+>    drm: bridge: dw_mipi_dsi: add initial regmap infrastructure
+>    drm: bridge: dw_mipi_dsi: abstract register access using reg_fields
+>    drm: bridge: synopsis: add dsi v1.01 support
+>    drm: imx: Add i.MX 6 MIPI DSI host platform driver
+>    dt-bindings: display: add i.MX6 MIPI DSI host controller doc
+>
+>   .../display/imx/fsl,mipi-dsi-imx6.yaml        | 134 ++++
+>   drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 683 +++++++++++++-----
 
-  Luis
+
+So we have above 400 lines more just to add slightly different register 
+layout of v1.01.
+
+Quite big linecount for apparently small (?) functional change - I was 
+too lazy to check how many reg fields are really used (some are not used 
+at all), but it does not seem to be big enough to justyfy so big change IMO.
+
+I will add more comments in specific patches.
+
+
+Regards
+
+Andrzej
+
+
+>   drivers/gpu/drm/imx/Kconfig                   |   7 +
+>   drivers/gpu/drm/imx/Makefile                  |   1 +
+>   drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c        | 399 ++++++++++
+>   5 files changed, 1049 insertions(+), 175 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/display/imx/fsl,mipi-dsi-imx6.yaml
+>   create mode 100644 drivers/gpu/drm/imx/dw_mipi_dsi-imx6.c
+>
