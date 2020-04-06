@@ -2,155 +2,84 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F713C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41899C2BA18
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1AD20731
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8F72075E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 07:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586158382;
-	bh=Ms5RsENvJRoFDdb9eiP3YLO9VeSzIi6xAFAgFda9T6o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AbPOdZW/NzimNKNgosjE44rw+6CxPUrNf+LX4izNaPRhixJGLpFTMQtJ4Nfku5ulS
-	 fmoSdjifIp52DYSzRF+EaTyk3Um3pp8gPFU9Y14Vum9/zcRBGcEw/JqYmmZPXHiA5a
-	 0V1PJmXwy0r8vJncbXtdtJAsKsdppHsuxNOBzQR4=
+	s=default; t=1586158548;
+	bh=aNoZkMJveg+ENTUCrIEXfGnyqRiDMSwKqfMcazI1uX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UMKeDb0oSaJ+UCUeib5dKZkxqBzpBE7ZPDAEcPNkr22efQEaNQ/MtAXEvf7dFFjzG
+	 37shYNg6FJam94f4apHcGMcoFmiPg62oPZ3SmNdvt5vuSjCBgZ5+OhXgv3hRoEt/Gl
+	 wehLY7l2B9U3xaMRskGjVtPIUJWkXnpMlmvCSd9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgDFHdB (ORCPT
+        id S1726610AbgDFHfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 03:33:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48266 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 03:35:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgDFHdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 03:33:01 -0400
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726491AbgDFHfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 03:35:46 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B2920731;
-        Mon,  6 Apr 2020 07:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 531B920672;
+        Mon,  6 Apr 2020 07:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586158380;
-        bh=Ms5RsENvJRoFDdb9eiP3YLO9VeSzIi6xAFAgFda9T6o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=b7lVTB5lr9hZ+3dVyig/Cnn0Cs6y0NXNsLNwVL27F91zsnfPU4+X9prGzj0vRt7UE
-         xr9O2/eOICdzw1ybRAOQNInnZ/94cLujisQCsmINUuz6rQDE3WiaknJFVngP+OsFg4
-         4oDI2NOZDX9VvjYSBcBQxsTHE9fAuY/smFeKAvgM=
-Received: by mail-il1-f180.google.com with SMTP id x16so13689772ilp.12;
-        Mon, 06 Apr 2020 00:33:00 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ8JXIOK1uCHvxVfyct9URSI/NvIvsjlQwptwbrfzP3PT6T3RKm
-        ddAEXymQ7FdIWJ0kx8zDPgiZK+m9Yap6YOZIW9Y=
-X-Google-Smtp-Source: APiQypLiaf9UohKxh3Y13jY61LCk2hUM4qVVKLN28RCHu30r14ussVsd2kZGb2FbBMTCwX6hSVz0TUifcWwc1mR+TAM=
-X-Received: by 2002:a92:443:: with SMTP id 64mr20350053ile.258.1586158379626;
- Mon, 06 Apr 2020 00:32:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200109150218.16544-1-nivedita@alum.mit.edu> <20200405154245.11972-1-me@prok.pw>
- <20200405231845.GA3095309@rani.riverdale.lan> <c692eea9213172d8ef937322b02ff585b0dfea82.camel@prok.pw>
- <20200406035110.GA3241052@rani.riverdale.lan>
-In-Reply-To: <20200406035110.GA3241052@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 6 Apr 2020 09:32:47 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
-Message-ID: <CAMj1kXEUhyv886CjyKvjw2F12WaZxZRUWF6t_XzP4C2TJPdpeg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from bzImage
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Sergey Shatunov <me@prok.pw>, bp@alien8.de, hpa@zytor.com,
+        s=default; t=1586158546;
+        bh=aNoZkMJveg+ENTUCrIEXfGnyqRiDMSwKqfMcazI1uX4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XSpweM2BaQ/kOvr21ZEsPsIoVLsacljsyrkv0waCLs5gJx79/0p/8GIHz9MmGubfV
+         NiRjC6QlLl0rvO2Nzq/0ryjJ5aeIJptzVJfGod5fnDdZ5X4HGxXCqcA/j1BRGO/gW4
+         FnqCMuo1bvJn+1EycGq5IojtQ8hoKmRK6t3QgBlw=
+Received: by pali.im (Postfix)
+        id D61CD8A7; Mon,  6 Apr 2020 09:35:43 +0200 (CEST)
+Date:   Mon, 6 Apr 2020 09:35:43 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
-        initramfs@vger.kernel.org,
-        Donovan Tremura <neurognostic@protonmail.ch>,
-        Harald Hoyer <harald@hoyer.xyz>
-Content-Type: text/plain; charset="UTF-8"
+        Greg KH <gregkh@linuxfoundation.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Christoph Hellwig <hch@lst.de>, sj1557.seo@samsung.com,
+        Arnd Bergmann <arnd@arndb.de>, linkinjeon@gmail.com
+Subject: Re: [PATCH v14 11/14] exfat: add Kconfig and Makefile
+Message-ID: <20200406073543.rkxnsgegunlv3lkt@pali>
+References: <CGME20200302062625epcas1p200c53fabe17996e92257a409b7a9c857@epcas1p2.samsung.com>
+ <20200302062145.1719-1-namjae.jeon@samsung.com>
+ <20200302062145.1719-12-namjae.jeon@samsung.com>
+ <CAMuHMdXdGDnvGYi1v1OhjCz=61moVRZQdZOtiKLG3m8q7vwkTg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXdGDnvGYi1v1OhjCz=61moVRZQdZOtiKLG3m8q7vwkTg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 05:51, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Mon, Apr 06, 2020 at 07:00:39AM +0700, Sergey Shatunov wrote:
-> > On Sun, 2020-04-05 at 19:18 -0400, Arvind Sankar wrote:
-> > > I'm not familiar with systemd-boot: when you say systemd-boot stub,
-> > > is
-> > > that something different from the kernel's EFI_STUB option? Or is it
-> > > just a kernel with EFI_STUB enabled and with builtin initramfs +
-> > > builtin
-> > > cmdline?
-> > Basicaly systemd-boot stub is efi application with packed EFI_STUB-
-> > enabled kernel, initrd and cmdline into single file. Source can be
-> > found here:
-> > https://github.com/systemd/systemd/blob/master/src/boot/efi/stub.c
-> >
-> > It doesn't do anything unusual, just extracting data from sections and
-> > calling efi handover.
-> >
-> > Final image created by objcopy'ing precompiled stub and adding sections with that stuff:
-> >
-> >     objcopy \
-> >         --add-section .osrel=os_release --change-section-vma
-> > '.osrel=0x20000' \
-> >         --add-section .cmdline=cmdline --change-section-vma
-> > '.cmdline=0x30000' \
-> >         --add-section .linux=vmlinuz --change-section-vma
-> > '.linux=0x2000000' \
-> >         --add-section .initrd=initrd --change-section-vma
-> > '.initrd=0x3000000' \
-> >         /usr/lib/systemd/boot/efi/linuxx64.efi.stub output.efi
->
-> So this embeds the bzImage which is a PE executable inside another PE
-> executable. Before my patch, the bss section was explicitly part of the
-> bzImage and so would have been zero, now it isn't any more and the PE
-> loader is expected to zero it out before executing. systemd-boot's stub
-> loader doesn't do that prior to jumping to the EFI handover entry, so
-> the issue must be because bss contains garbage.  I'm not 100% sure why
-> that leads to a crash, as the only variables in bss in the EFI stub are
-> for some boolean EFI command line arguments, so it ought to still have
-> worked, just as though it was invoked with random arguments. Anyway we
-> need to handle an uninitialized bss to get this to work properly.
->
+On Monday 06 April 2020 09:27:01 Geert Uytterhoeven wrote:
+> I tried to do it myself:
+> 
+>           Set this to the default input/output character set to use for
+>           converting between the encoding that is used for user visible
+>           filenames, and the UTF-16 character set that the exFAT filesystem
+>           uses.  This can be overridden with the "iocharset" mount option for
+>           the exFAT filesystems.
+> 
+> but then I got puzzled by the _3_ encodings that are part of it:
+>   1. the default input/output character set to use for conversion,
+>   2. encoding that is used for user visible filenames,
+>   3. UTF-16 character set that the exFAT filesystem uses.
+> I assume 1 == 2, but there may be more to it?
 
-The EFI handover protocol strikes again :-(
-
-It seems we did not include any guidance in the documentation in
-Documentation/x86/boot.rst regarding zero-initializing BSS, and come
-to think of it, we don't include any other requirements either, i.e.,
-regarding placement wrt section alignment etc. This is a serious bug.
-Even though EFI usually lays out PE/COFF images in files the exact way
-they appear in memory, this is not actually required by the spec. Most
-notably, the virtual size can be smaller than the file size, and the
-loader is expected to zero-initialize the difference as well.
-
-Since the EFI handover protocol should be considered deprecated at
-this point (and is never going to be supported in upstream GRUB
-either, for instance), I would recommend the systemd-boot developers
-to start looking into deprecating this as well, and switch to the
-ordinary PE/COFF entry point, and use the new initrd callback protocol
-for initrd loading.
-
-On the Linux/x86 side, we should at least add some code to the EFI
-handover protocol entry point to zero initialize BSS, and ensure that
-it is either not needed in other places, or add the code to deal with
-those as well.
-
-> I also see from systemd [0] and dracut source [1] that these VMA's seem
-> to be hardcoded with no checking for how big the files actually are, and
-> objcopy doesn't seem to complain if sections end up overlapping.
->
-> So since [2] in dracut, the space available for the .linux section
-> containing the bzImage shrank from ~48MiB to 16MiB. This will hopefully
-> still fit the compressed kernel (although an allyesconfig bzImage is far
-> bigger than even 48MiB), but in-place decompression is unlikely to be
-> possible even for a normal config, which will break another patchset
-> that got merged into mainline for 5.7 [3,4], which tries to avoid
-> copying the kernel unless necessary, and has a good chance of triggering
-> in-place decompression if kaslr is disabled.
->
-> I'll get systemd-boot installed here so I can reproduce and implement
-> some workarounds for both issues. I should hopefully have a fix in a day
-> or two.
->
-
-Thanks Arvind.
+It is encoding between user visible filenames in VFS and UTF-16, so 1 == 2.
