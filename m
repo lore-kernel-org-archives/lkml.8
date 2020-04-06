@@ -2,133 +2,167 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948D8C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C67C2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62374206F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35824206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 11:04:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NlmLniwP"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="CrDoZta2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbgDFLEz (ORCPT
+        id S1727441AbgDFLE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 07:04:55 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46722 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgDFLEz (ORCPT
+        Mon, 6 Apr 2020 07:04:57 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35466 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbgDFLE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 07:04:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=91jomgqgEShWhxWCDxxUvWHFtjKYAeVic8T17yZiSn8=; b=NlmLniwPmUoH7YNLXVJdXPrK+l
-        BSO/zxAlrDgIJGujl0MsOfF08n+YIxscjpHe/C9oL+Vu7U8axjLxRB/5kcttKWJ+eCdZxE+tW6HUH
-        If1hKl2oaimP6hbVLps5D4MDFT3d4bbFkibKLPmq9qui6MxO4SPzptmtPLYVgAW7d8alHnvRx52ai
-        X5PaXfw+ovZ8oZWzV2yPq0qTgnlFjSWWYFNDKfAQ3lMckmhw16UNGhB7mZeGM3iEGHwsgTq3Owe/m
-        w9ElvyKlI2yDoZl93WASyZTVuln50boW6iBuhck7D826fc/ct9HzvKom8P7DDcUh935dAPmNJ9Wt/
-        f+BUW8rQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLPYX-0005ld-8D; Mon, 06 Apr 2020 11:04:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C6B41304121;
-        Mon,  6 Apr 2020 13:04:38 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AB48F2BAC6A8E; Mon,  6 Apr 2020 13:04:38 +0200 (CEST)
-Date:   Mon, 6 Apr 2020 13:04:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Fangrui Song <maskray@google.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
-        torvalds@linux-foundation.org, tglx@linutronix.de,
-        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
-        clang-built-linux@googlegroups.com, hjl.tools@gmail.com
-Subject: Re: [RESEND][PATCH v3 09/17] x86/static_call: Add out-of-line static
- call implementation
-Message-ID: <20200406110438.GJ20730@hirez.programming.kicks-ass.net>
-References: <20200324135603.483964896@infradead.org>
- <20200324142245.819003994@infradead.org>
- <20200406010859.bcfouhukcgmg2on7@google.com>
+        Mon, 6 Apr 2020 07:04:56 -0400
+Received: by mail-il1-f194.google.com with SMTP id 7so14230410ill.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 04:04:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=eMJr7lybVjckF+p9VXJphA0EDg4AyPvRHBanUGShq5o=;
+        b=CrDoZta2kyrwvDenzvyMsm6AddKZuZYMjesr0jINzK5cJVxgNZDA9RKMoEEJCX+fpt
+         zdWIn+d2cZ7Au/SS8jEVXCM8451FljhFjb9JuA5usXjbPC3nvaqohOlHVoksSrMmxj2R
+         6/P9Hmpwn4qd50mEA3liLtHC+OllndrigknCL3y3FWgpyiLFivSEyj7G69yG6AayplOZ
+         xrpTWXsdAYkmPjcAc6VrvIG0dy9k+PtNyMkarIyMzCLeplg/w/NWxwKCLf0RgVe0Ysk5
+         hMnSOc50sgRSEtN5ZiiXCXZqHKBMGlaw0/BDqpNta9d5xvNj3OWdT/6CReBq0ffZAgLJ
+         4lLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=eMJr7lybVjckF+p9VXJphA0EDg4AyPvRHBanUGShq5o=;
+        b=F6oBoSv1v1m/YfNJqL1+5TcC3Fdy6LK5kWu1lZ3Rx2kvzpHucZDC6oCGxXncDzRaN9
+         mc051KixekP5kZ5Y+30GdK4jbl1lnjm5cf6/yMZk/+fB9IMM7116+1Dat6thYU8DViPe
+         FBG3JNjIIBer4R+BHR+shVO+W6F9zcbXMaDxtK3Mo9F1q/2weZp6mRT2T9jmKhetCEDI
+         ojnOUgjDq7j2KNU0/22fMtmixono1It+lOeQlRhEP4CZL0edgUMYcIAyw7OZCSN9eRBD
+         4zcUAhWWjwv9eYk5O/zOqd8ukajmv0al+ue3J8Ada3B6x3svLpi6AZPvZ7gqNDckkyXz
+         z5KQ==
+X-Gm-Message-State: AGi0PuaFMTuyrbiRj7+5n/4IYz69RPE32WgXtMOZwYcUrMpa5c6j9AIA
+        h1LVDRXyJTOB2XGpkd6KooJKWnKEpnWRaCIjsqvwpg==
+X-Google-Smtp-Source: APiQypKWJs6PHI1hMNLMM3oimdNsa1kWSty3RiXndiBigly0VtAAMGTGpbbSHS6CHAmiJga/4y1ZYRnxDsV6s5hEr1o=
+X-Received: by 2002:a92:d18b:: with SMTP id z11mr20685904ilz.76.1586171095697;
+ Mon, 06 Apr 2020 04:04:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406010859.bcfouhukcgmg2on7@google.com>
+References: <1586102749-3364-1-git-send-email-zhangfeionline@gmail.com> <20200405164006.GA1582475@kroah.com>
+In-Reply-To: <20200405164006.GA1582475@kroah.com>
+From:   =?UTF-8?B?5a6L54mn5pil?= <songmuchun@bytedance.com>
+Date:   Mon, 6 Apr 2020 19:04:14 +0800
+Message-ID: <CAMZfGtUS2_tsf=E3=+O77ooGQUDto0jnt1preWggdar85tb5_A@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] driver core: Fix possible use after free
+ on name
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     zhangfeionline@gmail.com, rafael@kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 06:08:59PM -0700, Fangrui Song wrote:
-> On 2020-03-24, Peter Zijlstra wrote:
+Hi PengfeiZhang,
 
-> > +#define ARCH_DEFINE_STATIC_CALL_TRAMP(name, func)			\
-> > +	asm(".pushsection .text, \"ax\"				\n"	\
-> > +	    ".align 4						\n"	\
-> > +	    ".globl " STATIC_CALL_TRAMP_STR(name) "		\n"	\
-> > +	    STATIC_CALL_TRAMP_STR(name) ":			\n"	\
-> > +	    "	jmp.d32 " #func "				\n"	\
-> > +	    ".type " STATIC_CALL_TRAMP_STR(name) ", @function	\n"	\
-> > +	    ".size " STATIC_CALL_TRAMP_STR(name) ", . - " STATIC_CALL_TRAMP_STR(name) " \n" \
-> > +	    ".popsection					\n")
+Greg KH <gregkh@linuxfoundation.org> =E4=BA=8E2020=E5=B9=B44=E6=9C=886=E6=
+=97=A5=E5=91=A8=E4=B8=80 =E4=B8=8A=E5=8D=8812:40=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Sun, Apr 05, 2020 at 09:05:49AM -0700, zhangfeionline@gmail.com wrote:
+> > From: PengfeiZhang <zhangfeionline@gmail.com>
+> >
+> > __class_create() copies the pointer to the name passed as an
+> > argument only to be used later. But there's a chance the caller
+> > could immediately free the passed string(e.g., local variable).
+> > This could trigger a use after free when we use class name(e.g.,
+> > dev_uevent_name()called by device_destroy(),class_create_release()).
+> >
+> > To be on the safe side: duplicate the string with kstrdup_const()
+> > so that if an unaware user passes an address to a stack-allocated
+> > buffer, we won't get the arbitrary name and crash.
+>
+> Where are you seeing this happen?
+>
+> >
+> > Signed-off-by: PengfeiZhang <zhangfeionline@gmail.com>
+> > ---
+> >  drivers/base/class.c | 17 +++++++++++++++--
+> >  1 file changed, 15 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/base/class.c b/drivers/base/class.c
+> > index bcd410e..770b3b3 100644
+> > --- a/drivers/base/class.c
+> > +++ b/drivers/base/class.c
+> > @@ -206,6 +206,7 @@ void class_unregister(struct class *cls)
+> >  static void class_create_release(struct class *cls)
+> >  {
+> >       pr_debug("%s called for %s\n", __func__, cls->name);
+> > +     kfree_const(cls->name);
+> >       kfree(cls);
+> >  }
+> >
+> > @@ -227,7 +228,10 @@ struct class *__class_create(struct module *owner,=
+ const char *name,
+> >                            struct lock_class_key *key)
+> >  {
+> >       struct class *cls;
+> > -     int retval;
+> > +     int retval =3D -EINVAL;
 > > +
-> > +#endif /* _ASM_STATIC_CALL_H */
-> 
-> Hi Peter,
-> 
-> Coming here from https://github.com/ClangBuiltLinux/linux/issues/974
-> 
-> jmp.d32 is not recognized by clang integrated assembler.
-> The syntax appears to be very rarely used. According to Debian Code Search,
-> u-boot is the only project using this syntax.
+> > +     if (!name)
+> > +             goto done;
+>
+> This is a new change, who calls this function with name not being set?
+>
+>
+> >
+> >       cls =3D kzalloc(sizeof(*cls), GFP_KERNEL);
+> >       if (!cls) {
+> > @@ -235,18 +239,27 @@ struct class *__class_create(struct module *owner=
+, const char *name,
+> >               goto error;
+> >       }
+> >
+> > +     name =3D kstrdup_const(name, GFP_KERNEL);
+> > +     if (!name) {
+> > +             retval =3D -ENOMEM;
+> > +             goto error;
+> > +     }
+>
+> and overwriting the pointer like that is bad-form, try doing something
+> else here instead.
+>
+> > +
+> >       cls->name =3D name;
+> >       cls->owner =3D owner;
+> >       cls->class_release =3D class_create_release;
+> >
+> >       retval =3D __class_register(cls, key);
+> >       if (retval)
+> > -             goto error;
+> > +             goto error_class_register;
+> >
+> >       return cls;
+> >
+> > +error_class_register:
+> > +     kfree(cls->name);
+>
+> kfree_const()?
+>
+> thanks,
+>
+> greg k-h
 
-*groan*... I was going to use it in more places :-/
+Yeah, you have some problem with this fix patch which Greg mentioned.
+Can you fix it? And
+send the fix patch v2 to Greg?
 
-> In March 2017, gas added the pseudo prefix {disp32}
-> https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=86fa6981e7487e2c2df4337aa75ed2d93c32eaf2
-> which generalizes jmp.d32  ({disp32} jmp foo)
-
-That's all well and cute, but I can't use that because its too new. Not
-until we raise the minimum gcc/bintils version to something that
-includes that.
-
-> I wonder whether the instruction jmp.d32 can be replaced with the trick in
-> arch/x86/include/asm/jump_label.h for clang portability.
-> 
-> % grep -A2 'jmp.d32' arch/x86/include/asm/jump_label.h
->         /* Equivalent to "jmp.d32 \target" */
->         .byte           0xe9
->         .long           \target - .Lstatic_jump_after_\@
-
-Sure, but I was hoping to move away from that since all assemblers
-should now support jmp.d32. Except of course, you have to go ruin
-things.
-
-The thing is, jmp.d32 reads so much nicer than the above crap.
-
-Also, I still need a meta instruction like:
-
-	nopjmp $label
-
-what works just like 'jmp' but instead emits either a nop2 or a nop5.
-I tried various hacks to get GAS to emit that, but no luck :/
-
-The only up-side from that new syntax is that I suppose we can go write:
-
-  {disp8} push \vec
-
-without gas shitting itself and emitting a 5 byte push just because..
-Except of course we can't, for the same reason I can't go around and
-use:
-
-  {disp32} jmp
-
-in the above code.
+--=20
+Yours,
+Muchun
