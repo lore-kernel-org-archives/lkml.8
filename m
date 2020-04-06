@@ -2,93 +2,119 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C65C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FCCC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CE42415B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586183649;
-	bh=GTATBnUQjHkNYmK08Xo4akxzVeoZee8mUS0AUMxFf4I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sd++b3DbYh7wVfRz0j9HZTZdUV/11W9XYiXNW7PQIew9JduJPIUO0CE5JdE4DAgkO
-	 pb9kLozwj/glaV5NvUMnAGPHYa5b87qo6Jy9G9j6B5hk6Wm5k9xBa2ygJexdqMbvXr
-	 oFIgy+gCKSpjDgM098EHAoY5EtTaGdsyj9sEUIGw=
+	by mail.kernel.org (Postfix) with ESMTP id 6FDAC20BED
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:34:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ejYdqtCA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgDFOeJ (ORCPT
+        id S1728727AbgDFOed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:34:09 -0400
-Received: from mail-qk1-f177.google.com ([209.85.222.177]:33082 "EHLO
-        mail-qk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgDFOeI (ORCPT
+        Mon, 6 Apr 2020 10:34:33 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34056 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbgDFOec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:34:08 -0400
-Received: by mail-qk1-f177.google.com with SMTP id v7so16385526qkc.0;
-        Mon, 06 Apr 2020 07:34:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8+jcnJTXIga9mkqHp3/5JxbQM57y376bXrCDo/ExKrY=;
-        b=dGSTYEP5uA6qHfprtplk07U7wkOAEHGJIx4v6hfun7FO8q6S6D4pwPBnwLsU3pP83Y
-         JZRw7+elch1nmfQtGY+9kSnNbjXh6McBm/e0fx3RrW/Osv8pWY9B+UyxwbQMZVjKUIKn
-         FCqsUYZN5mh4h5E4WJw0K3zdisDMMN8hRPTwSPFBkRhVz1oWIlVYDmfqolDvjEo5ppQa
-         jm8M7Kv6g59A7GbX/bJu7CkDzV4nF7paMpVPLN1O0oR70Ama+MZqxv8mXPJcMGPVD41y
-         TXGyslkyDXnz9ABZ99vOb6Byf+vqCpYWwyNK8YGoaWBzygjeJcgfmoth8ZeMTH4hY7a9
-         6E9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=8+jcnJTXIga9mkqHp3/5JxbQM57y376bXrCDo/ExKrY=;
-        b=FY+UMa/K6JsUCk/WjfnHFRu9f1EbN5z/YGVCEWrTnFd18eT7Wx4lsFqgkItR3UTbOz
-         NdoaDA2QHtlO2jY3mGDhUdaNyHy0NiBWjQ9z3xDNEu5E5BL1TyCwVMl13zjPmMeWiCZT
-         BkbuNR4K+bNHmtEpw9jl52eP8mHRv5gCRCBZB7t3p02fJB5+cwDsTc9llWNMtg3JBY4X
-         MtnkNv1l1ctasR58whtcmbiY3QXkiCbaHjb7jy45eb3WUQYmJSc5VpRaF9fw10EII0nO
-         LFOvoIXvF0QRGnuOePIg1V7TxcK1n2iI0F3ceZYtV7pKyJtXpB46hpZaDAK9QzKebtBo
-         G2lQ==
-X-Gm-Message-State: AGi0Pua4KvStMBXucpeanOwiggqkCqUSYJSDQ6nC+V+f+6pr/n9msUih
-        6jaKIzEhc+STc0t4C62ED90=
-X-Google-Smtp-Source: APiQypIl/HBxvhFRvUyRCeNhpPwhQbDSrDTvcnmU7hn232XoQYm2bs0nS7YDyfB6VylVGCsrdlc++g==
-X-Received: by 2002:ae9:c312:: with SMTP id n18mr20722643qkg.472.1586183646991;
-        Mon, 06 Apr 2020 07:34:06 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::eeba])
-        by smtp.gmail.com with ESMTPSA id m5sm13539502qtk.85.2020.04.06.07.34.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 07:34:06 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 10:34:05 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Qian Cai <cai@lca.pw>, Prateek Sood <prsood@codeaurora.org>,
-        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: Deadlock due to "cpuset: Make cpuset hotplug synchronous"
-Message-ID: <20200406143405.GH162390@mtj.duckdns.org>
-References: <F0388D99-84D7-453B-9B6B-EEFF0E7BE4CC@lca.pw>
- <20200325191922.GM162390@mtj.duckdns.org>
- <20200326101529.xh763j5frq2r7mqv@e107158-lin>
- <20200403145523.GC162390@mtj.duckdns.org>
- <20200406105522.c66p4vzzzylety5d@e107158-lin.cambridge.arm.com>
+        Mon, 6 Apr 2020 10:34:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wr0uZpRzGVA7T8oUC8PL/uBRO2k1Ka9BIzBlz9pMP2A=; b=ejYdqtCAmo0OOTalawEY93to8L
+        IkiAEaDmYzOw7FOOD62IgZoVmwZzUI9I8saFArRIZj1erVrWnSbSE5rGnkDhEd0VB60/15oKiernY
+        aZ8nO+vaqhJnj18sDAtdGbsxroSP1ugUvL07Des8/PRIXCLs9OaFxviDL2XHPCjUglMkQtIG76teE
+        Qp6bekEhqff6215Z5pJ3BpWflGjJ6MUzNVHflFZ1cA0/njJ784WRG430wsr3Jl0SfV6oSqTVfjugt
+        16xcTCbe0/UglB5lzfjR69h08yNyJ0Cs4y+b5h5BZ/2WI2F8wEd3+ZM31nl0TwPuzxVmCxnrmsa/m
+        Uk3gfoTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLSpF-0006Xq-H7; Mon, 06 Apr 2020 14:34:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5FB9B300478;
+        Mon,  6 Apr 2020 16:34:05 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B3A082BAC74D6; Mon,  6 Apr 2020 16:34:05 +0200 (CEST)
+Date:   Mon, 6 Apr 2020 16:34:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Laight <David.Laight@aculab.com>,
+        Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [RFC PATCH] x86/split_lock: Disable SLD if an unaware
+ (out-of-tree) module enables VMX
+Message-ID: <20200406143405.GM20760@hirez.programming.kicks-ass.net>
+References: <20200403163007.6463-1-sean.j.christopherson@intel.com>
+ <20200406125010.GA29306@infradead.org>
+ <20200406140403.GL20730@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200406105522.c66p4vzzzylety5d@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200406140403.GL20730@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 11:55:23AM +0100, Qais Yousef wrote:
-> What would be the right approach to get a fix in then? We have been skipping
-> this test for a while and we'd like to enable it but this failure is a
-> blocking issue.
+On Mon, Apr 06, 2020 at 04:04:04PM +0200, Peter Zijlstra wrote:
+> diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+> index 65c2ecd730c5..0bd5ea46f1d2 100644
+> --- a/arch/x86/include/asm/pgtable_types.h
+> +++ b/arch/x86/include/asm/pgtable_types.h
+> @@ -274,6 +274,11 @@ typedef struct pgprot { pgprotval_t pgprot; } pgprot_t;
+>  
+>  typedef struct { pgdval_t pgd; } pgd_t;
+>  
 
-Update the test so that it accounts for the async nature of the operation?
+This lost:
 
--- 
-tejun
+#define pgprot_nx pgprot_nx
+
+> +static inline pgprot_t pgprot_nx(pgprot_t prot)
+> +{
+> +	return __pgprot(pgprot_val(prot) | _PAGE_NX);
+> +}
+> +
+>  #ifdef CONFIG_X86_PAE
+>  
+>  /*
+
+> diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+> index e2e2bef07dd2..ee66c1f8b141 100644
+> --- a/include/asm-generic/pgtable.h
+> +++ b/include/asm-generic/pgtable.h
+> @@ -490,6 +490,10 @@ static inline int arch_unmap_one(struct mm_struct *mm,
+>  #define flush_tlb_fix_spurious_fault(vma, address) flush_tlb_page(vma, address)
+>  #endif
+>  
+> +#ifndef pgprot_nx
+> +#define pgprot_nx(prot)	(prot)
+> +#endif
+> +
+>  #ifndef pgprot_noncached
+>  #define pgprot_noncached(prot)	(prot)
+>  #endif
