@@ -2,130 +2,292 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A706C2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4BDC2BA1E
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3221024965
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1F720719
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 16:39:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="MFG6rXiR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BrxzIhzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbgDFQiu (ORCPT
+        id S1729539AbgDFQjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 12:38:50 -0400
-Received: from mout.gmx.net ([212.227.15.18]:52519 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728962AbgDFQit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 12:38:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586191118;
-        bh=w3UbNz9WVDwj6f3Rz/KrSMUxNxensD50y9LU7VpbUH4=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=MFG6rXiRYWZ5jJOIQ2v2u3TyXoeKqAxwr31m6KEa8u+Vg38sgECa7kKwXLEvK6CCP
-         VT4Xcy7WLWbDdhaR+fe+1uzqpUdhrMdzA3zqzx+5MiPC/emBNFRONEAo0xfuYzM5pg
-         Txd1drXg4mxQboOYsOXE23E5qbPwAbBvR39otjMU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MV67o-1jmPaS1XSY-00SAmV; Mon, 06
- Apr 2020 18:38:38 +0200
-Date:   Mon, 6 Apr 2020 18:38:36 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Forest Bond <forest@alittletooquiet.net>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH 2/3] staging: vt6656: Use define instead of magic number
- for tx_rate
-Message-ID: <20200406163835.GB3230@ubuntu>
-References: <20200404141400.3772-1-oscar.carter@gmx.com>
- <20200404141400.3772-3-oscar.carter@gmx.com>
- <20200406142212.GA48502@kroah.com>
+        Mon, 6 Apr 2020 12:39:39 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:38699 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729528AbgDFQji (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 12:39:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586191177; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=p0XtF/zhQFXWOlfW1YKM6MOQlK8lTjQ5wMkXZkRGCnY=; b=BrxzIhzVOa8UKyaxbR3jwpyICwlC5DoHM0zTm4kPGkmMIzIY4Ynt0QOrpYoCzUUkZ73/AIfa
+ dIfWMjUeLNEBJM2W/FvBcd7BMl+nQmXedhV4b9MpNcNiscdPejMWsPzyUCH5sOT9JtrVACN4
+ mMqzejB0aiN9oOm7i9eHVLOS6uI=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8b5b3d.7f0a1db726c0-smtp-out-n05;
+ Mon, 06 Apr 2020 16:39:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 67E3DC4478C; Mon,  6 Apr 2020 16:39:25 +0000 (UTC)
+Received: from [10.206.24.160] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sanm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01CCEC433D2;
+        Mon,  6 Apr 2020 16:39:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 01CCEC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sanm@codeaurora.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: usb: qcom,dwc3: Convert USB DWC3
+ bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>
+References: <1585206368-685-1-git-send-email-sanm@codeaurora.org>
+ <1585206368-685-2-git-send-email-sanm@codeaurora.org>
+ <20200404171700.GA10096@bogus>
+From:   "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Message-ID: <5e2eb0a4-ed70-4212-fc70-6ee850507a7e@codeaurora.org>
+Date:   Mon, 6 Apr 2020 22:09:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406142212.GA48502@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:PWcb7TKfBCjP5J41/evS8VzfKGQ2NGhrEqncwMb6FiIoe5Qb1jC
- AqQ31UAA1NB0izfHGaooW2w2y9qJElbSqwzM8IQgb9fhskxE3X+owYUQYW/s95Y8YWE0z4k
- m1qL2r7TM4OAC/7Zw4g9F5fHTmTPhIivmLJi4VRL0x+SN5rTNQslCF9xF4Gi5yVIIuUaK5W
- f0H/EKVRXo4LADs3sehLg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HFUHSZHedLg=:UjzjxrjYYVrfeFH7TeXf+3
- Ijgl9/R6JH2rIYaKzE4XOa7a0ZvbpNhRAoLDAN8v5mDMqzr32iuWAm02/I0ux3gCeuBo0BoRW
- k0n5E7BAbMupYO1YBYG7Fmim65BV8zhyRSWtLB2CR11wsBsRL3VYcQyQTCajwb/HDqM6aN599
- RfoWlSMwyPYU0DpOI0PQrktNSdOmPSiTJjkpbG2AC+hAf12VtXkB0G7zpRlqHme7sB7RjW7vf
- IfbQrocGo7O14DZo3a8PG6+3k/aIS/ikOAUsza0ja3acL7nYE1lXE8WRk0kh1Zl0sP67EqRuf
- pVL9Eb6pcLePwe3CTuSHZ/wfQfEj+dpoYWNPTn9L6zPb2ZGJfa3VoqFc6MGDD0sbvXQ/xdoaw
- MPCWAewsdllrDYAqeCid1ZHxR4Oksj78Fw48ykuVwXhy19+lpk3HO9/ptSZgdYO2PnJ83M9yw
- n8Y7nZsaZM9+vOgm7ss4Jah1lNJ5D5TpzJWMY9aMiwgQ29P9AROLUNsPEXAlIFRyI3+SLPEsI
- tRJ9eTE9gwk914IYMkyAzKzQSCRgaZe8ywY7JpN716+Ss/k+2gJKuZFQ0MF0urDQ6V+rFO8vf
- m+B+7pgwQWDTJqRwDfxEEBpvIStmlSetHUg27W963gAcOY9g6++wCmMfQQZ1rMJrlWFKWkWNd
- A8RX25KbRtaYa0b7wKp4eqZpNAxgDKV+v3ixMwdemA3uGhEYaEWnU4HJIR4Hxj72DAK8dFMh6
- dVakVsaC4AZF/XV6js0Y7dOkxNvXOzLVgx0jkiniF/sk7VMFMihJJWn8oQtjuEd2DqP/ocvpI
- hwdedmcrDWmC7uj3WJTaRFXkrM4noZjZShBoBwacyaKx7oRTCiGBDJDjffxn3qxXuE8Gls9x6
- R4Pxw6c+OyCDMPG5toWSaDyAY32ApmbasYxgZIrXNDvrnBLD4NahisWzNpQpJJtkHzu/a2Mpx
- urdxx+8qQldKUK/qcPBcyqm9t3ETgtV3toms1Tz96Sxbh/KcObQgX2iZilJ+9XbYdfQZ9iPgR
- 0LNXk26hL+u7Imu3rwmsAcE6XTFzGg4kgchjIN2vR/qbia5a0dZx7v9BkLHhXFgea1nZy4v5Y
- Lqy+3Rz49H+61U3SeHS1aAvDv+3/gnfNl/8Y0Ahg9M4J3mdE2G5s+pQV7Wg9hiYVlmut0dA8t
- X2lTkL6kiXJ7N5FfF+9RNzJkHo+Ewbok6DLdal/c2yunCkSjM9pb0Di860YdPsNp+yYwZGoUP
- 924G6EjxKc0w8URVt
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200404171700.GA10096@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 04:22:12PM +0200, Greg Kroah-Hartman wrote:
-> On Sat, Apr 04, 2020 at 04:13:59PM +0200, Oscar Carter wrote:
-> > Use the define RATE_11M present in the file "device.h" instead of the
-> > magic number 3. So the code is more clear.
-> >
-> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-> > Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > ---
-> >  drivers/staging/vt6656/baseband.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt665=
-6/baseband.c
-> > index 3e4bd637849a..a785f91c1566 100644
-> > --- a/drivers/staging/vt6656/baseband.c
-> > +++ b/drivers/staging/vt6656/baseband.c
-> > @@ -24,6 +24,7 @@
-> >
-> >  #include <linux/bits.h>
-> >  #include <linux/kernel.h>
-> > +#include "device.h"
-> >  #include "mac.h"
-> >  #include "baseband.h"
-> >  #include "rf.h"
-> > @@ -141,7 +142,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, =
-u8 pkt_type,
-> >
-> >  	rate =3D (unsigned int)vnt_frame_time[tx_rate];
-> >
-> > -	if (tx_rate <=3D 3) {
-> > +	if (tx_rate <=3D RATE_11M) {
-> >  		if (preamble_type =3D=3D 1)
-> >  			preamble =3D 96;
-> >  		else
-> > --
-> > 2.20.1
->
-> This doesn't apply to my tree :(
->
-Sorry, but I don't understand what it means. This meant that I need to reb=
-ase
-this patch against your staging-next branch of your staging tree ? Or it m=
-eans
-something else ?
+Hi Rob,
 
-Thanks,
-oscar carter
+On 4/4/2020 10:47 PM, Rob Herring wrote:
+> On Thu, Mar 26, 2020 at 12:36:07PM +0530, Sandeep Maheswaram wrote:
+>> Convert USB DWC3 bindings to DT schema format using json-schema.
+>>
+>> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/usb/qcom,dwc3.txt          | 104 --------------
+>>   .../devicetree/bindings/usb/qcom,dwc3.yaml         | 158 +++++++++++++++++++++
+>>   2 files changed, 158 insertions(+), 104 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+>>   create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+>
+>> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+>> new file mode 100644
+>> index 0000000..0f69475
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+>> @@ -0,0 +1,158 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm SuperSpeed DWC3 USB SoC controller
+>> +
+>> +maintainers:
+>> +  - Manu Gautam <mgautam@codeaurora.org>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - enum:
+>> +          - qcom,msm8996-dwc3
+>> +          - qcom,msm8998-dwc3
+>> +          - qcom,sdm845-dwc3
+>> +      - const: qcom,dwc3
+>> +
+>> +  reg:
+>> +    description: Offset and length of register set for QSCRATCH wrapper
+>> +    maxItems: 1
+>> +
+>> +  "#address-cells":
+>> +    enum: [ 1, 2 ]
+>> +
+>> +  "#size-cells":
+>> +    enum: [ 1, 2 ]
+>> +
+>> +  power-domains:
+>> +    description: specifies a phandle to PM domain provider node
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    description:
+>> +      A list of phandle and clock-specifier pairs for the clocks
+>> +      listed in clock-names.
+>> +    items:
+>> +      - description: System Config NOC clock.
+>> +      - description: Master/Core clock, has to be >= 125 MHz
+>> +          for SS operation and >= 60MHz for HS operation.
+>> +      - description: System bus AXI clock.
+>> +      - description: Mock utmi clock needed for ITP/SOF generation
+>> +          in host mode. Its frequency should be 19.2MHz.
+>> +      - description: Sleep clock, used for wakeup when
+>> +          USB3 core goes into low power mode (U3).
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: cfg_noc
+>> +      - const: core
+>> +      - const: iface
+>> +      - const: mock_utmi
+>> +      - const: sleep
+>> +
+>> +  assigned-clocks:
+>> +    items:
+>> +      - description: Phandle and clock specifier of MOCK_UTMI_CLK.
+>> +      - description: Phandle and clock specifoer of MASTER_CLK.
+>> +
+>> +  assigned-clock-rates:
+>> +    maxItems: 2
+> Need to drop this as it is redundant. Soon this will generate an error.
+Will do in next version.
+>> +    items:
+>> +      - description: Must be 19.2MHz (19200000).
+> Sounds like a constraint:
+>
+> - const: 19200000
+>
+>> +      - description: Must be >= 60 MHz in HS mode, >= 125 MHz in SS mode.
+> - minimum: 60000000
+>    maximum: ?
+
+Tried  as below but facing errors
+
+assigned-clock-rates:
+     items:
+       - const: 19200000
+       - minimum: 60000000
+         maximum: 150000000
+
+Errors
+
+linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml: 
+usb@a6f8800: assigned-clock-rates: Additional items are not allowed 
+([150000000] was unexpected)
+linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml: 
+usb@a6f8800: assigned-clock-rates:0: [19200000] is too short
+linux-next/Documentation/devicetree/bindings/usb/qcom,dwc3.example.dt.yaml: 
+usb@a6f8800: assigned-clock-rates: [[19200000], [150000000]] is too long
+
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    items:
+>> +      - description: The interrupt that is asserted
+>> +          when a wakeup event is received on USB2 bus.
+>> +      - description: The interrupt that is asserted
+>> +          when a wakeup event is received on USB3 bus.
+>> +      - description: Wakeup event on DM line.
+>> +      - description: Wakeup event on DP line.
+>> +
+>> +  interrupt-names:
+>> +    items:
+>> +      - const: hs_phy_irq
+>> +      - const: ss_phy_irq
+>> +      - const: dm_hs_phy_irq
+>> +      - const: dp_hs_phy_irq
+>> +
+>> +  qcom,select-utmi-as-pipe-clk:
+>> +    description:
+>> +      If present, disable USB3 pipe_clk requirement.
+>> +      Used when dwc3 operates without SSPHY and only
+>> +      HS/FS/LS modes are supported.
+>> +    type: boolean
+>> +
+>> +# Required child node:
+>> +
+>> +patternProperties:
+>> +  "^dwc3@[0-9a-f]+$":
+>> +    type: object
+>> +    description:
+>> +      A child node must exist to represent the core DWC3 IP block
+>> +      The content of the node is defined in dwc3.txt.
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - "#address-cells"
+>> +  - "#size-cells"
+>> +  - power-domains
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    usb@a6f8800 {
+>> +        compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
+>> +        reg = <0 0x0a6f8800 0 0x400>;
+>> +
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
+>> +                 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
+>> +                 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
+>> +                 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+>> +                 <&gcc GCC_USB30_PRIM_SLEEP_CLK>;
+>> +        clock-names = "cfg_noc", "core", "iface", "mock_utmi",
+>> +                      "sleep";
+>> +
+>> +        assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
+>> +                          <&gcc GCC_USB30_PRIM_MASTER_CLK>;
+>> +        assigned-clock-rates = <19200000>, <150000000>;
+>> +
+>> +        interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
+>> +        interrupt-names = "hs_phy_irq", "ss_phy_irq",
+>> +                          "dm_hs_phy_irq", "dp_hs_phy_irq";
+>> +
+>> +        power-domains = <&gcc USB30_PRIM_GDSC>;
+>> +
+>> +        resets = <&gcc GCC_USB30_PRIM_BCR>;
+>> +
+>> +        dwc3@a600000 {
+>> +            compatible = "snps,dwc3";
+>> +            reg = <0 0x0a600000 0 0xcd00>;
+> You need 'ranges' in the parent for this address to be translatable.
+Will add in next version.
+>
+>> +            interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+>> +            iommus = <&apps_smmu 0x740 0>;
+>> +            snps,dis_u2_susphy_quirk;
+>> +            snps,dis_enblslpm_quirk;
+>> +            phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
+>> +            phy-names = "usb2-phy", "usb3-phy";
+>> +        };
+>> +    };
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
