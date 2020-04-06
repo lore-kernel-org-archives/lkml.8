@@ -2,150 +2,124 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFB1C2BB54
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A02FC2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5449E2078C
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 720682078C
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 22:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Y/WMbuTz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S27HT0kR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726353AbgDFWH5 (ORCPT
+        id S1726396AbgDFWIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 18:07:57 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1158 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgDFWH5 (ORCPT
+        Mon, 6 Apr 2020 18:08:22 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46285 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgDFWIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 18:07:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8ba8070000>; Mon, 06 Apr 2020 15:07:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Apr 2020 15:07:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Apr 2020 15:07:55 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr
- 2020 22:07:55 +0000
-Received: from [10.2.164.193] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Apr 2020
- 22:07:54 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
- <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
- <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
- <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
- <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
- <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
- <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
- <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
- <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
- <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
-Message-ID: <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
-Date:   Mon, 6 Apr 2020 15:07:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 18:08:22 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r7so1394437ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 15:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i6EPio+XqTmpQjx6tkaBsOwcW96ts+qCKKJEhZ/lpb4=;
+        b=S27HT0kRUdBCzrJLgfx+SkwGDQLYpyIto7d00PNS7hLwxJh/ClU0q1RlYyaint7PYr
+         HUonR9NLwPPWfmIGavWmeBmH5R0xosim3Sswl1hErVIjwQ3qvL/VjzxSoHyv9tPwSzxz
+         43RHm7N7zOlDDjw0va+5fGlq7y/gA3QUxAd+srWFYsuEhwBdmSxX6Gj2vO9J8lL5RWPd
+         HKe2lFSF609Iu1Mg6qKk6/2fX7TckJZ+FHmIpVFXKzE19TD26DVX/E/A58L5XNcEzKqw
+         XTqJ7RCFA1+omhgw+jD+g+doai2/qgS7VgjXXRcrnfW0zxehbMHxQTeog3qXHfVODJvE
+         ku9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i6EPio+XqTmpQjx6tkaBsOwcW96ts+qCKKJEhZ/lpb4=;
+        b=N4Bg4/RCdhDJV3aUcuVxHe0dPHcNO04AVqPnUtbOJAHxUZaJUIXZy1zEK6VKjtGVNY
+         wHPF7kC0vByeA6r22w3uPPYa9MMRjh+vjJmJLdBGRfTMA87F736Zp+og6/SYODncw+FZ
+         l0U2iiifAV1zpvCMFiMYLC8IqgMUaGpsZwOi/PTzAhk2fZRvTAAEKAYRRYjHpMPTZCuG
+         ot3RkADpDXAo6HVAFp86VAl7fvlEDmKTJmsC2IM8Fo6hwpNL8sQJz6aF6dEJJ2DoawLy
+         YdJM8dNwhSZqbW3QRfuSlrFYnEOf8WwDsoko4lrwoz2ZjOMCuzY9Wn2vAcNlu4ziq5Iq
+         QghQ==
+X-Gm-Message-State: AGi0PuY4j7btWyxNxiHR9M2MBrRHAXl6iH608ex+scvwIOujo0o9bz0D
+        am+fT31VdbJljnnwLYtWf2iNDIhaE/jp1XjIHr1kfg==
+X-Google-Smtp-Source: APiQypJutuComtXjTAg4KhcKwjrBIchyTWTtR4JrsI2316VMEl8qDs4azgKK5SaZ74yqUigstDXM5vPRH7iEL3UdZBM=
+X-Received: by 2002:a2e:9616:: with SMTP id v22mr779863ljh.107.1586210899428;
+ Mon, 06 Apr 2020 15:08:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586210823; bh=HpwSmhwcv0DQ/SMY/515qVkKZ6WeiMUhqqpKIo4nZuE=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Y/WMbuTziPO5+ZL/2ukt1TSrFKEQXnqx2rlUk2QM3l2SCZ6K3o4Cs3Ubx4A/EU6BC
-         nyj4U/1BM0DsBSfrcwtIPKhTFoqi19r6hYcHAeTGIP0cjPTvS08Bs8WgVfvfv+mPeN
-         JbEAqo0ITJ8Sd7V/8ulFf2IuIoL7mD/WveyHOOqWHosxzlhIeUKaqWrq0XM2ceDhqQ
-         zJhOFJfbMSFOrtmR4Gy0qaJdvEVE2gJdRTr1bDmDgVzK0NOYev0ETUpYexXMK3X/gS
-         9MQhtNRrUdhEx1poKESQzf0yh85VbkbXqzIyvoBCw9Fq1qJI38QZRm8QE/dQgtHZtB
-         pvWVwMmw/+RYg==
+References: <20200310000617.20662-1-rajatja@google.com> <20200310000617.20662-5-rajatja@google.com>
+ <CACK8Z6FsN2WNF8z0OrKv-1sPPwJFeJVYf8taHMZn0QpwLj+t=Q@mail.gmail.com>
+ <CACK8Z6F7CZckWP_98h=WERmnDgQL3e65VSiLpaks+biWQ1nk7A@mail.gmail.com> <87v9n9n7dp.fsf@intel.com>
+In-Reply-To: <87v9n9n7dp.fsf@intel.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Mon, 6 Apr 2020 15:07:42 -0700
+Message-ID: <CACK8Z6FubonFJFts-Ymri8_zdeQJ1OFq3bfrizEXhMPnDXVJaQ@mail.gmail.com>
+Subject: Re: [PATCH v7 4/4] drm/i915: Add support for integrated privacy screen
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mat King <mathewk@google.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        Sean Paul <seanpaul@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Nitin Joshi1 <njoshi1@lenovo.com>,
+        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
+        Tomoki Maruichi <maruichit@lenovo.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 12, 2020 at 4:24 AM Jani Nikula <jani.nikula@linux.intel.com> wrote:
+>
+> On Wed, 11 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
+> > I got a "failed to apply" email from the patchwork. Can you please let
+> > me know on which branch is it trying to apply it? I have currently
+> > rebased my patchset to drm-intel-next-queued.
+>
+> drm-tip branch of https://cgit.freedesktop.org/drm/drm-tip
+>
+> It's kind of like linux-next of drm.
+>
 
-On 4/6/20 3:00 PM, Sowjanya Komatineni wrote:
->
-> On 4/6/20 2:39 PM, Sowjanya Komatineni wrote:
->>
->> On 4/6/20 2:15 PM, Sowjanya Komatineni wrote:
->>>
->>> On 4/6/20 2:11 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 07.04.2020 00:02, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>>>>>> Am I understanding correctly that this thread will take 100%=20
->>>>>>>>>> CPU,
->>>>>>>>>> spinning here, if more than 2 frame-captures queued?
->>>>>>>>> on more than 2 frames captures, it breaks thread and on next=20
->>>>>>>>> wakeup it
->>>>>>>>> continues
->>>>>>>> The wait_event() won't wait if condition is true.
->>>>>>> condition is checked when waitqueue is woken up
->>>>>> https://elixir.bootlin.com/linux/v5.6.2/source/include/linux/wait.h#=
-L462=20
->>>>>>
->>>>> process is put to sleep until the condition evaluates to true or=20
->>>>> signal
->>>>> is received.
->>>>>
->>>>> condition is checked each time the waitqueue head is woken up.
->>>> This is a wrong assumption in accordance to the code.
->
-> process is in sleep until the condition is evaluated and when=20
-> condition is true wakeup still happens only when wake_up on waitqueue=20
-> is called
->
-> This is the reason for using this to prevent blocking while waiting=20
-> for the buffers.
+Hi Jani,
 
-w.r.t capture list update, wakeup happens when wake_up on waitqueue is=20
-called.
+Haven't heard any comments in a while, so just checking to see if you
+got a chance to look at my last patchset. It is here:
 
-wakeup also happens on kthread stop signal event.
+https://patchwork.freedesktop.org/patch/357452/
 
+Thanks & Best Regards,
+
+Rajat Jain
+
+> BR,
+> Jani.
 >
 >
->>>
->>> when every buffer is available as long as we are in streaming, we=20
->>> should process it.
->>>
->>> So if wake up happens when list has buffer, it will be processed but=20
->>> at a time we limit processing 2 simultaneous buffer capture starts=20
->>> only.
->>>
->> Fixing typo.
->>
->> I meant when ever buffer is available as long as we are in streaming,=20
->> we should process it.
->>
->> So capture thread processes as long as buffers are available from=20
->> user space limiting 2 simultaneous trigger of captures and thread=20
->> will be in sleep when capture buffers list is empty or no stop thread=20
->> is signaled.
->
->
->
+> --
+> Jani Nikula, Intel Open Source Graphics Center
