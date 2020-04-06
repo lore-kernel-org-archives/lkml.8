@@ -2,206 +2,255 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5650C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE1EC2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A4922240
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E0422284
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 14:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T7SyR2U7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rtFgLkj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgDFOJm (ORCPT
+        id S1728674AbgDFOJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 10:09:42 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27439 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728611AbgDFOJl (ORCPT
+        Mon, 6 Apr 2020 10:09:56 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:41382 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728584AbgDFOJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 10:09:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586182179;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wl9a4vsMx6popLEQnps/1oTIMHKzOVah2HdwSj1HK4k=;
-        b=T7SyR2U7n4VBR9Bh2c9woIcfyTHUtAtFbAW97hOYzPisY8dtsUonr83TsEVbNEBt4H7zBX
-        +iXOnvqGaXcyuW297tsU71Miyzv+in//Fq4k6NaEYsrWyj8Rd5bp7AnAJK+odSE1mPbE1P
-        SQ6u8NKdbmp2wBKgkc2bHSkZatKH+KI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-506-20pdoNKkNzyFdMakHIAuLg-1; Mon, 06 Apr 2020 10:09:35 -0400
-X-MC-Unique: 20pdoNKkNzyFdMakHIAuLg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DE5313F6;
-        Mon,  6 Apr 2020 14:09:34 +0000 (UTC)
-Received: from [10.72.12.191] (ovpn-12-191.pek2.redhat.com [10.72.12.191])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 115529D352;
-        Mon,  6 Apr 2020 14:09:28 +0000 (UTC)
-Subject: Re: [PATCH] vhost: force spec specified alignment on types
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20200406124931.120768-1-mst@redhat.com>
- <045c84ed-151e-a850-9c72-5079bd2775e6@redhat.com>
- <20200406095424-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d171447e-eabc-60ab-6de7-41ac9b82d7d1@redhat.com>
-Date:   Mon, 6 Apr 2020 22:09:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Apr 2020 10:09:55 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i3so12864580qtv.8;
+        Mon, 06 Apr 2020 07:09:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=G1rSBURl2zWm9/ISfqkcj4HvKPnz52goe6oMKSgf0oI=;
+        b=rtFgLkj0p2RrTrAWhHybESc3oB+VWTYbUa2PeYE/n6ibqiHBMkcCsI9h+iBlU7mER2
+         3djYK5HzlapCimAAbDZ40sLBTdS88FINSzM56xLra7q+/FUmeLK7MRqT1bCptMiyuPay
+         8R2i0XXqySVKQg+BLYHP8yCLgcEvdumbhEB4IEApLhPf5yd5K9fyOwApT3zcH97+2QRt
+         bzwwIKg9KoMUGrH+CJpK8KjmJIPhi33BIu5FESwQVCX39OsRjUbr42JkfWpSWClpD1vq
+         eZa3fdcq3l6gmjoPsyDKYFAdwHQtzdEfoG0P+JryG4BFzMMhb7VqXLOU+Xei+wDnR3B8
+         pi0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G1rSBURl2zWm9/ISfqkcj4HvKPnz52goe6oMKSgf0oI=;
+        b=QlOyNUy9hSZAPjzXMZbae2o75vvXA+LXbCwXawd32ukY/YMFS9emNN8CID6Pda4nje
+         2P27ijkw8o0zcnINbddRFEX2ZTDqO8qUfAqD2An3lNZTtWI4dOsu2xhs9ZRlSPMEtwTR
+         K1A8oj8cHWmwSjg5Qaa5TMXPW4VfXMVf15fMUC7hFFg/G85JyrKHgdK4NZ1QOjBB5DfJ
+         +hHAcHml9a5Hv4SOzBmB4IUbjBDlsvQaic/7pAemJRn/jy3kRUi1LzHrbmMPOdzqLBxg
+         Q1h1RN389EWpJsacfPxOD/SpTZs7qPYBgYKrS6gdUTdudYWofG4B09WTsWgG1X/rsmSN
+         lZlg==
+X-Gm-Message-State: AGi0PuZmMFsrKlwz8/aE0P/k8qsKxsGYHJX8r/uu/6QOwzBSFgMd9BB6
+        4woeVTjTlcaFjikacFn+cN4=
+X-Google-Smtp-Source: APiQypJiFuilmxySOSTcg4mbSaBEqnkoUgeoSO7gspSBdPAvYJD/ohLgnqVe/A6XH3xNinJWn0+GqQ==
+X-Received: by 2002:ac8:674a:: with SMTP id n10mr8395633qtp.150.1586182194189;
+        Mon, 06 Apr 2020 07:09:54 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id h138sm14600509qke.86.2020.04.06.07.09.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 07:09:53 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 53F96409A3; Mon,  6 Apr 2020 11:09:51 -0300 (-03)
+Date:   Mon, 6 Apr 2020 11:09:51 -0300
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>,
+        Andrey Zhizhikin <andrey.z@gmail.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 4/5] tools api: add a lightweight buffered reading api
+Message-ID: <20200406140951.GE29826@kernel.org>
+References: <20200402154357.107873-1-irogers@google.com>
+ <20200402154357.107873-5-irogers@google.com>
+ <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200406095424-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Sat, Apr 04, 2020 at 12:06:45PM +0900, Namhyung Kim escreveu:
+> Hello,
+> 
+> On Fri, Apr 3, 2020 at 12:44 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > The synthesize benchmark shows the majority of execution time going to
+> > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
+> > reading library that will be used to replace these calls in a follow-up
+> > CL.
 
-On 2020/4/6 =E4=B8=8B=E5=8D=889:55, Michael S. Tsirkin wrote:
-> On Mon, Apr 06, 2020 at 09:34:00PM +0800, Jason Wang wrote:
->> On 2020/4/6 =E4=B8=8B=E5=8D=888:50, Michael S. Tsirkin wrote:
->>> The ring element addresses are passed between components with differe=
-nt
->>> alignments assumptions. Thus, if guest/userspace selects a pointer an=
-d
->>> host then gets and dereferences it, we might need to decrease the
->>> compiler-selected alignment to prevent compiler on the host from
->>> assuming pointer is aligned.
->>>
->>> This actually triggers on ARM with -mabi=3Dapcs-gnu - which is a
->>> deprecated configuration, but it seems safer to handle this
->>> generally.
->>>
->>> I verified that the produced binary is exactly identical on x86.
->>>
->>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->>> ---
->>>
->>> This is my preferred way to handle the ARM incompatibility issues
->>> (in preference to kconfig hacks).
->>> I will push this into next now.
->>> Comments?
->>
->> I'm not sure if it's too late to fix. It would still be still problema=
-tic
->> for the userspace that is using old uapi headers?
->>
->> Thanks
-> It's not a problem in userspace. The problem is when
-> userspace/guest uses 2 byte alignment and passes it to kernel
-> assuming 8 byte alignment. The fix is for host not to
-> make these assumptions.
+waiting for some conclusion to this thread,
 
+- Arnaldo
 
-Yes, but I meant when userspace is complied with apcs-gnu, then it still=20
-assumes 8 byte alignment?
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/lib/api/io.h | 107 +++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 107 insertions(+)
+> >  create mode 100644 tools/lib/api/io.h
+> >
+> > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+> > new file mode 100644
+> > index 000000000000..5aa5b0e26a7a
+> > --- /dev/null
+> > +++ b/tools/lib/api/io.h
+> > @@ -0,0 +1,107 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Lightweight buffered reading library.
+> > + *
+> > + * Copyright 2019 Google LLC.
+> > + */
+> > +#ifndef __API_IO__
+> > +#define __API_IO__
+> > +
+> > +struct io {
+> > +       /* File descriptor being read/ */
+> > +       int fd;
+> > +       /* Size of the read buffer. */
+> > +       unsigned int buf_len;
+> > +       /* Pointer to storage for buffering read. */
+> > +       char *buf;
+> > +       /* End of the storage. */
+> > +       char *end;
+> > +       /* Currently accessed data pointer. */
+> > +       char *data;
+> > +       /* Set true on when the end of file on read error. */
+> > +       bool eof;
+> > +};
+> > +
+> > +static inline void io__init(struct io *io, int fd,
+> > +                           char *buf, unsigned int buf_len)
+> > +{
+> > +       io->fd = fd;
+> > +       io->buf_len = buf_len;
+> > +       io->buf = buf;
+> > +       io->end = buf;
+> > +       io->data = buf;
+> > +       io->eof = false;
+> > +}
+> > +
+> > +/* Reads one character from the "io" file with similar semantics to fgetc. */
+> > +static inline int io__get_char(struct io *io)
+> > +{
+> > +       char *ptr = io->data;
+> > +
+> > +       if (ptr == io->end) {
+> > +               ssize_t n = read(io->fd, io->buf, io->buf_len);
+> > +
+> > +               if (n <= 0) {
+> > +                       io->eof = true;
+> > +                       return -1;
+> > +               }
+> > +               ptr = &io->buf[0];
+> > +               io->end = &io->buf[n];
+> > +       }
+> > +       io->data = ptr + 1;
+> > +       return *ptr;
+> > +}
+> > +
+> > +/* Read a hexadecimal value with no 0x prefix into the out argument hex.
+> > + * Returns -1 on error or if nothing is read, otherwise returns the character
+> > + * after the hexadecimal value.
+> > + */
+> > +static inline int io__get_hex(struct io *io, __u64 *hex)
+> > +{
+> > +       bool first_read = true;
+> > +
+> > +       *hex = 0;
+> > +       while (true) {
+> > +               char ch = io__get_char(io);
+> > +
+> 
+> Maybe you can add this
+> 
+>     if (io->eof)
+>         return 0;
+> 
+> Please see below
+> 
+> 
+> > +               if (ch < 0)
+> > +                       return ch;
+> > +               if (ch >= '0' && ch <= '9')
+> > +                       *hex = (*hex << 4) | (ch - '0');
+> > +               else if (ch >= 'a' && ch <= 'f')
+> > +                       *hex = (*hex << 4) | (ch - 'a' + 10);
+> > +               else if (ch >= 'A' && ch <= 'F')
+> > +                       *hex = (*hex << 4) | (ch - 'A' + 10);
+> > +               else if (first_read)
+> > +                       return -1;
+> > +               else
+> > +                       return ch;
+> > +               first_read = false;
+> > +       }
+> > +}
+> 
+> What if a file contains hex digits at the end (without trailing spaces)?
+> I guess it'd see EOF and return -1, right?
+> 
+> And it'd better to be clear when it sees a big hex numbers -
+> it could have a comment that it'd simply discard upper bits
+> or return an error.
+> 
+> > +
+> > +/* Read a decimal value into the out argument dec.
+> > + * Returns -1 on error or if nothing is read, otherwise returns the character
+> > + * after the decimal value.
+> > + */
+> > +static inline int io__get_dec(struct io *io, __u64 *dec)
+> > +{
+> > +       bool first_read = true;
+> > +
+> > +       *dec = 0;
+> > +       while (true) {
+> > +               char ch = io__get_char(io);
+> > +
+> > +               if (ch < 0)
+> > +                       return ch;
+> > +               if (ch >= '0' && ch <= '9')
+> > +                       *dec = (*dec * 10) + ch - '0';
+> > +               else if (first_read)
+> > +                       return -1;
+> > +               else
+> > +                       return ch;
+> > +               first_read = false;
+> > +       }
+> > +}
+> 
+> Ditto.
+> 
+> Thanks
+> Namhyung
+> 
+> 
+> > +
+> > +#endif /* __API_IO__ */
+> > --
+> > 2.26.0.rc2.310.g2932bb562d-goog
+> >
 
-Thanks
+-- 
 
-
->
->>>    drivers/vhost/vhost.h            |  6 ++---
->>>    include/uapi/linux/virtio_ring.h | 41 ++++++++++++++++++++++++----=
-----
->>>    2 files changed, 34 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
->>> index cc82918158d2..a67bda9792ec 100644
->>> --- a/drivers/vhost/vhost.h
->>> +++ b/drivers/vhost/vhost.h
->>> @@ -74,9 +74,9 @@ struct vhost_virtqueue {
->>>    	/* The actual ring of buffers. */
->>>    	struct mutex mutex;
->>>    	unsigned int num;
->>> -	struct vring_desc __user *desc;
->>> -	struct vring_avail __user *avail;
->>> -	struct vring_used __user *used;
->>> +	vring_desc_t __user *desc;
->>> +	vring_avail_t __user *avail;
->>> +	vring_used_t __user *used;
->>>    	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
->>>    	struct vhost_desc *descs;
->>> diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/vi=
-rtio_ring.h
->>> index 559f42e73315..cd6e0b2eaf2f 100644
->>> --- a/include/uapi/linux/virtio_ring.h
->>> +++ b/include/uapi/linux/virtio_ring.h
->>> @@ -118,16 +118,6 @@ struct vring_used {
->>>    	struct vring_used_elem ring[];
->>>    };
->>> -struct vring {
->>> -	unsigned int num;
->>> -
->>> -	struct vring_desc *desc;
->>> -
->>> -	struct vring_avail *avail;
->>> -
->>> -	struct vring_used *used;
->>> -};
->>> -
->>>    /* Alignment requirements for vring elements.
->>>     * When using pre-virtio 1.0 layout, these fall out naturally.
->>>     */
->>> @@ -164,6 +154,37 @@ struct vring {
->>>    #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
->>>    #define vring_avail_event(vr) (*(__virtio16 *)&(vr)->used->ring[(v=
-r)->num])
->>> +/*
->>> + * The ring element addresses are passed between components with dif=
-ferent
->>> + * alignments assumptions. Thus, we might need to decrease the compi=
-ler-selected
->>> + * alignment, and so must use a typedef to make sure the __aligned a=
-ttribute
->>> + * actually takes hold:
->>> + *
->>> + * https://gcc.gnu.org/onlinedocs//gcc/Common-Type-Attributes.html#C=
-ommon-Type-Attributes
->>> + *
->>> + * When used on a struct, or struct member, the aligned attribute ca=
-n only
->>> + * increase the alignment; in order to decrease it, the packed attri=
-bute must
->>> + * be specified as well. When used as part of a typedef, the aligned=
- attribute
->>> + * can both increase and decrease alignment, and specifying the pack=
-ed
->>> + * attribute generates a warning.
->>> + */
->>> +typedef struct vring_desc __attribute__((aligned(VRING_DESC_ALIGN_SI=
-ZE)))
->>> +	vring_desc_t;
->>> +typedef struct vring_avail __attribute__((aligned(VRING_AVAIL_ALIGN_=
-SIZE)))
->>> +	vring_avail_t;
->>> +typedef struct vring_used __attribute__((aligned(VRING_USED_ALIGN_SI=
-ZE)))
->>> +	vring_used_t;
->>> +
->>> +struct vring {
->>> +	unsigned int num;
->>> +
->>> +	vring_desc_t *desc;
->>> +
->>> +	vring_avail_t *avail;
->>> +
->>> +	vring_used_t *used;
->>> +};
->>> +
->>>    static inline void vring_init(struct vring *vr, unsigned int num, =
-void *p,
->>>    			      unsigned long align)
->>>    {
-
+- Arnaldo
