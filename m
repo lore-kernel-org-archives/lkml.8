@@ -2,408 +2,157 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5789FC2BA17
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E399C2BA80
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F02D206C0
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAFD206C0
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 17:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vGJISjtW"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CjbhAJj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbgDFRoc (ORCPT
+        id S1727954AbgDFRoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 13:44:32 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40001 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgDFRoa (ORCPT
+        Mon, 6 Apr 2020 13:44:44 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43671 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727922AbgDFRon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 13:44:30 -0400
-Received: by mail-pl1-f195.google.com with SMTP id h11so86156plk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:44:29 -0700 (PDT)
+        Mon, 6 Apr 2020 13:44:43 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a5so394696qtw.10
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 10:44:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9mmQaEU7pWx/GoSk4QgZnyNRh/7RdOmSGmaGx7v/l+8=;
-        b=vGJISjtWQ4U+UiA8t/ymiaZ8byzNHWi/9V011RGN+CheDP2E1A68vUqC8/IYWQX7Sc
-         0A6nw3jAE0vsk6UMMS8h2V7jIBCHG0I1sDj5inpQPmvzbdlRyae521SOj+jQBhghh7eo
-         rRPI8vgBiosfUPmj0f4AQNUXRizl5HDbp12EagTemx6QPJS6JP5UugRaGq8LALY5P2RX
-         JgCwy5JZQdrX/WNspNvibpWV0uhL5rNpUbUOhNtCzDbi4H1Ny+8p1KUabdQMB9I7QC/F
-         Wg0UmLM1VU9PEyzoROg/eMIW7iMbACkn7v/TN60n0euTwSCtrkLE5nOxGvKJA7NzQwHe
-         eMjg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O889dxB/XJ11aoM95cldpEaus4gDgLM3yTi+BUCXaL0=;
+        b=CjbhAJj3Tg6y8oKldTLzjJgMKn6v55oqoh5dQSCe0t9eI0N5Ab9KpB1ZaMBFL49hJ1
+         U2YSO0kjrRgeaVmCyD1Lcyc+Iuyxswp5BwvxKn+KzvzHMaJcVK7WJhnu0m7hWXwYQAjw
+         EsH9hi5e2/hmMFgImNwnk2oGoD+gqahObRsAOtHsmPfZSJNwMjQA+RrmNO7VLZb2hQ+h
+         qUebv2jQpa0u/8Tixk/rjBRzO66TXyjwfdnFe1eOI2mWwFyyzG4hzRY/WnE/jl5r+6YQ
+         QwHeryLLzOnmdRx3ZutBFI9zPe366Dfo41v/rVhgI7RZAv5qyT02wzORNsi1NbF9BHM3
+         ubhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9mmQaEU7pWx/GoSk4QgZnyNRh/7RdOmSGmaGx7v/l+8=;
-        b=OAa79FWkjbgghOsQ/gHpv8iyzvdxb952o0RUdtxFJrtbbQYWk4XR2FyoZtDSmWAuEJ
-         tfUJj0ZvDRN6eHqL7QOQgZDEc5dMdVwYMm5ShRU1eT0ktsO/AgpCHlvtgpAS+UnvzDwZ
-         dPW1tSEIB0feYC7+6hNHktcJRT6EIrnt+CaYVtSh0o/TknBrRzvO0xY6e2LQf1kBJqOY
-         58XbeXH/i9J1AgiklKdyqQi67aDs3PQoEQdjPGogOdQQQzWSJWYDyZyaMjsOw8ePc1Xr
-         RCTYzAYiIgxfsB8wDN5ffYPI+i02td3vi9cDX9C58Sq4f6YvKw1tdpXIquMHHP0ti4Fp
-         J4fA==
-X-Gm-Message-State: AGi0PuZet2LGjhSSrqZSRYNah8q7UPfHoATEVzKmoFIbDnrDc6DspInl
-        q/KbBnf1WMvJxbz01Xg2ob5EqpF7NTpxm3Yrl8r2VQ==
-X-Google-Smtp-Source: APiQypLB2lCK1RdTSQbXSqXQj/SrstWc3/SdaHl8AoR4Pfl5Q7WWqEDo0Nb1U5el09Lr17EA9BKxxHbXC6jyrsxB67s=
-X-Received: by 2002:a17:902:8c94:: with SMTP id t20mr20830697plo.336.1586195068761;
- Mon, 06 Apr 2020 10:44:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O889dxB/XJ11aoM95cldpEaus4gDgLM3yTi+BUCXaL0=;
+        b=r2RQJggwCHgSd2x3vYUw1k1tqILt5ERH5SC2Wld/DHzqVfOO9JHthHUSJYqAv3tpZN
+         P/tmUa5TFwqWn/3+SkFWXW0zmSdlJFnaVGsKEypqN9I9PXSvQYAANOJG5X3q5TfROtzD
+         ZHJ1OoSRPJGQU3PRzl2yal426KvtubqE5CR6YM8ymtK7coP2afBnZR0LeIRs6KqU1MRt
+         G4k+kwfGmMNw4Kma52zIxUP01VGh+HN9A8dHakMGK6hH28+wUehKjkFibZTIOpIEVKlh
+         fiabXrVVpwPBvxgIzAn7+4r3xBlFRABUefSrbHIxnvF7TKgskPvr8s5g4cwOLxkajJPJ
+         TtdQ==
+X-Gm-Message-State: AGi0PuYKmFasXCrUqkrQvOBPHfzVY77dI/mOgodEn225V35j4UUmkZDV
+        nEioQKAETg91MaD3VOZd3dBEIA==
+X-Google-Smtp-Source: APiQypLj6wnyOzro00s4tpq9gdIN+7IPdSVtnDUW7iERedT5t2IGtckVe64o2Po3xX134XMZwCxmLA==
+X-Received: by 2002:ac8:4c8a:: with SMTP id j10mr602951qtv.69.1586195081480;
+        Mon, 06 Apr 2020 10:44:41 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id u29sm13038349qkm.102.2020.04.06.10.44.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 10:44:40 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jLVnc-0008Sf-EB; Mon, 06 Apr 2020 14:44:40 -0300
+Date:   Mon, 6 Apr 2020 14:44:40 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, rafael@kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING in ib_umad_kill_port
+Message-ID: <20200406174440.GR20941@ziepe.ca>
+References: <00000000000075245205a2997f68@google.com>
+ <20200406172151.GJ80989@unreal>
 MIME-Version: 1.0
-References: <20200402204639.161637-1-trishalfonso@google.com>
- <20200402204639.161637-2-trishalfonso@google.com> <CAAeHK+xFLmnAHPPCrmmqb1of7+cZmvKKPgAMACjArrLChG=xDw@mail.gmail.com>
- <CAKFsvUKZFiiLFGcFykLoXhK1ehc-T=c6EkHf1UNmQRJc=uBQXg@mail.gmail.com>
-In-Reply-To: <CAKFsvUKZFiiLFGcFykLoXhK1ehc-T=c6EkHf1UNmQRJc=uBQXg@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 6 Apr 2020 19:44:17 +0200
-Message-ID: <CAAeHK+y=apWCBPPG7MiBF7qq57a4b4GGXfLVSEukQ4DKOY-ZNg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] KUnit: KASAN Integration
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406172151.GJ80989@unreal>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 3, 2020 at 7:17 PM Patricia Alfonso <trishalfonso@google.com> w=
-rote:
->
-> On Fri, Apr 3, 2020 at 6:20 AM Andrey Konovalov <andreyknvl@google.com> w=
-rote:
+On Mon, Apr 06, 2020 at 08:21:51PM +0300, Leon Romanovsky wrote:
+> + RDMA
+> 
+> On Sun, Apr 05, 2020 at 11:37:15PM -0700, syzbot wrote:
+> > Hello,
 > >
-> > On Thu, Apr 2, 2020 at 10:46 PM 'Patricia Alfonso' via kasan-dev
-> > <kasan-dev@googlegroups.com> wrote:
-> > >
-> > > Integrate KASAN into KUnit testing framework.
-> > >         - Fail tests when KASAN reports an error that is not expected
-> > >         - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASA=
-N
-> > >         tests
-> > >         - Expected KASAN reports pass tests and are still printed whe=
-n run
-> > >         without kunit_tool (kunit_tool still bypasses the report due =
-to the
-> > >         test passing)
-> > >         - KUnit struct in current task used to keep track of the curr=
-ent
-> > >         test from KASAN code
-> > >
-> > > Make use of "[PATCH v3 kunit-next 1/2] kunit: generalize
-> > > kunit_resource API beyond allocated resources" and "[PATCH v3
-> > > kunit-next 2/2] kunit: add support for named resources" from Alan
-> > > Maguire [1]
-> > >         - A named resource is added to a test when a KASAN report is
-> > >          expected
-> > >         - This resource contains a struct for kasan_data containing
-> > >         booleans representing if a KASAN report is expected and if a
-> > >         KASAN report is found
-> > >
-> > > [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-s=
-end-email-alan.maguire@oracle.com/T/#t)
-> > >
-> > > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> > > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> > > ---
-> > >  include/kunit/test.h  |  5 ++++
-> > >  include/linux/kasan.h |  6 +++++
-> > >  lib/kunit/test.c      | 13 ++++++----
-> > >  lib/test_kasan.c      | 56 +++++++++++++++++++++++++++++++++++++++--=
---
-> > >  mm/kasan/report.c     | 30 +++++++++++++++++++++++
-> > >  5 files changed, 101 insertions(+), 9 deletions(-)
-> > >
-> > > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > > index ac59d18e6bab..1dc3d118f64b 100644
-> > > --- a/include/kunit/test.h
-> > > +++ b/include/kunit/test.h
-> > > @@ -225,6 +225,11 @@ struct kunit {
-> > >         struct list_head resources; /* Protected by lock. */
-> > >  };
-> > >
-> > > +static inline void kunit_set_failure(struct kunit *test)
-> > > +{
-> > > +       WRITE_ONCE(test->success, false);
-> > > +}
-> > > +
-> > >  void kunit_init_test(struct kunit *test, const char *name, char *log=
-);
-> > >
-> > >  int kunit_run_tests(struct kunit_suite *suite);
-> > > diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> > > index 5cde9e7c2664..148eaef3e003 100644
-> > > --- a/include/linux/kasan.h
-> > > +++ b/include/linux/kasan.h
-> > > @@ -14,6 +14,12 @@ struct task_struct;
-> > >  #include <asm/kasan.h>
-> > >  #include <asm/pgtable.h>
-> > >
-> > > +/* kasan_data struct is used in KUnit tests for KASAN expected failu=
-res */
-> > > +struct kunit_kasan_expectation {
-> > > +       bool report_expected;
-> > > +       bool report_found;
-> > > +};
-> > > +
-> > >  extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
-> > >  extern pte_t kasan_early_shadow_pte[PTRS_PER_PTE];
-> > >  extern pmd_t kasan_early_shadow_pmd[PTRS_PER_PMD];
-> > > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > > index 2cb7c6220a00..030a3281591e 100644
-> > > --- a/lib/kunit/test.c
-> > > +++ b/lib/kunit/test.c
-> > > @@ -10,16 +10,12 @@
-> > >  #include <linux/kernel.h>
-> > >  #include <linux/kref.h>
-> > >  #include <linux/sched/debug.h>
-> > > +#include <linux/sched.h>
-> > >
-> > >  #include "debugfs.h"
-> > >  #include "string-stream.h"
-> > >  #include "try-catch-impl.h"
-> > >
-> > > -static void kunit_set_failure(struct kunit *test)
-> > > -{
-> > > -       WRITE_ONCE(test->success, false);
-> > > -}
-> > > -
-> > >  static void kunit_print_tap_version(void)
-> > >  {
-> > >         static bool kunit_has_printed_tap_version;
-> > > @@ -288,6 +284,10 @@ static void kunit_try_run_case(void *data)
-> > >         struct kunit_suite *suite =3D ctx->suite;
-> > >         struct kunit_case *test_case =3D ctx->test_case;
-> > >
-> > > +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> > > +       current->kunit_test =3D test;
-> > > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
-> > > +
-> > >         /*
-> > >          * kunit_run_case_internal may encounter a fatal error; if it=
- does,
-> > >          * abort will be called, this thread will exit, and finally t=
-he parent
-> > > @@ -603,6 +603,9 @@ void kunit_cleanup(struct kunit *test)
-> > >                 spin_unlock(&test->lock);
-> > >                 kunit_remove_resource(test, res);
-> > >         }
-> > > +#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
-> > > +       current->kunit_test =3D NULL;
-> > > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(kunit_cleanup);
-> > >
-> > > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > > index 3872d250ed2c..dbfa0875ee09 100644
-> > > --- a/lib/test_kasan.c
-> > > +++ b/lib/test_kasan.c
-> > > @@ -23,12 +23,60 @@
-> > >
-> > >  #include <asm/page.h>
-> > >
-> > > -/*
-> > > - * Note: test functions are marked noinline so that their names appe=
-ar in
-> > > - * reports.
-> > > +#include <kunit/test.h>
-> > > +
-> > > +static struct kunit_resource resource;
-> > > +static struct kunit_kasan_expectation fail_data;
-> > > +static bool multishot;
-> > > +static int orig_panic_on_warn;
-> > > +
-> > > +static int kasan_test_init(struct kunit *test)
-> > > +{
-> > > +       /*
-> > > +        * Temporarily enable multi-shot mode and set panic_on_warn=
-=3D0.
-> > > +        * Otherwise, we'd only get a report for the first case.
-> > > +        */
-> > > +       multishot =3D kasan_save_enable_multi_shot();
-> > > +
-> > > +       orig_panic_on_warn =3D panic_on_warn;
-> > > +       panic_on_warn =3D 0;
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static void kasan_test_exit(struct kunit *test)
-> > > +{
-> > > +       kasan_restore_multi_shot(multishot);
-> > > +
-> > > +       /* Restore panic_on_warn */
+> > syzbot found the following crash on:
 > >
-> > Nit: no need for this comment, I think it's clear that here we're
-> > restoring stuff we saved in kasan_test_init().
+> > HEAD commit:    304e0242 net_sched: add a temporary refcnt for struct tcin..
+> > git tree:       net
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=119dd16de00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=9627a92b1f9262d5d30c
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 > >
-> Okay!
->
-> > > +       panic_on_warn =3D orig_panic_on_warn;
-> > > +}
-> > > +
-> > > +/**
-> > > + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expres=
-sion does
-> > > + * not cause a KASAN error. This uses a KUnit resource named "kasan_=
-data." Do
-> > > + * Do not use this name for a KUnit resource outside here.
-> > > + *
-> > >   */
-> > > +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
-> > > +       struct kunit_resource *res; \
-> > > +       struct kunit_kasan_expectation *kasan_data; \
-> > > +       fail_data.report_expected =3D true; \
-> > > +       fail_data.report_found =3D false; \
-> > > +       kunit_add_named_resource(test, \
-> > > +                               NULL, \
-> > > +                               NULL, \
-> > > +                               &resource, \
-> > > +                               "kasan_data", &fail_data); \
-> > > +       condition; \
-> > > +       res =3D kunit_find_named_resource(test, "kasan_data"); \
+> > Unfortunately, I don't have any reproducer for this crash yet.
 > >
-> > Is res going to be =3D=3D &resource here? If so, no need to call
-> > kunit_find_named_resource().
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com
 > >
->
-> You're right. Thanks for the suggestion!
->
-> > > +       kasan_data =3D res->data; \
-> > > +       KUNIT_EXPECT_EQ(test, \
-> > > +                       kasan_data->report_expected, \
-> > > +                       kasan_data->report_found); \
-> >
-> > Nit: no need to add kasan_data var, just use resource.data->report_expe=
-cted.
-> >
->
-> I can probably just use fail_data->report_expected, actually.
->
-> > > +       kunit_put_resource(res); \
-> > > +} while (0)
-> > >
-> > > -static noinline void __init kmalloc_oob_right(void)
-> > >  {
-> > >         char *ptr;
-> > >         size_t size =3D 123;
-> > > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > > index 5ef9f24f566b..497477c4b679 100644
-> > > --- a/mm/kasan/report.c
-> > > +++ b/mm/kasan/report.c
-> > > @@ -32,6 +32,8 @@
-> > >
-> > >  #include <asm/sections.h>
-> > >
-> > > +#include <kunit/test.h>
-> > > +
-> > >  #include "kasan.h"
-> > >  #include "../slab.h"
-> > >
-> > > @@ -455,12 +457,35 @@ static bool report_enabled(void)
-> > >         return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
-> > >  }
-> > >
-> > > +#if IS_ENABLED(CONFIG_KUNIT)
-> > > +void kasan_update_kunit_status(struct kunit *cur_test)
-> >
-> > This isn't used outside of report.c, right? Then _static_ void
-> > kasan_update_kunit_status().
-> >
->
-> Correct.
->
-> > > +{
-> > > +       struct kunit_resource *resource;
-> > > +       struct kunit_kasan_expectation *kasan_data;
-> > > +
-> > > +       if (!kunit_find_named_resource(cur_test, "kasan_data")) {
-> > > +               kunit_set_failure(cur_test);
-> > > +               return;
-> > > +       }
-> > > +
-> > > +       resource =3D kunit_find_named_resource(cur_test, "kasan_data"=
-);
-> >
-> > Do this before the if above, and then check if (!resource), will save
-> > you a call to kunit_find_named_resource().
-> >
-> > > +       kasan_data =3D resource->data;
-> > > +       kasan_data->report_found =3D true;
-> >
-> > No need for kasan_data var (if it can't be NULL or something), just do:
-> >
-> > resource->data->report_found =3D true;
-> >
->
-> The compiler seems to really hate this...
-> mm/kasan/report.c: In function =E2=80=98kasan_update_kunit_status=E2=80=
-=99:
-> mm/kasan/report.c:471:16: warning: dereferencing =E2=80=98void *=E2=80=99=
- pointer
->   471 |  resource->data->report_found =3D true;
->       |                ^~
-> mm/kasan/report.c:471:16: error: request for member =E2=80=98report_found=
-=E2=80=99 in
-> something not a structure or union
->
-> Do you know how to fix this? I don't think I fully understand the error.
+> > sysfs group 'power' not found for kobject 'umad1'
+> > WARNING: CPU: 1 PID: 31308 at fs/sysfs/group.c:279 sysfs_remove_group fs/sysfs/group.c:279 [inline]
+> > WARNING: CPU: 1 PID: 31308 at fs/sysfs/group.c:279 sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 1 PID: 31308 Comm: kworker/u4:10 Not tainted 5.6.0-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Workqueue: events_unbound ib_unregister_work
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x188/0x20d lib/dump_stack.c:118
+> >  panic+0x2e3/0x75c kernel/panic.c:221
+> >  __warn.cold+0x2f/0x35 kernel/panic.c:582
+> >  report_bug+0x27b/0x2f0 lib/bug.c:195
+> >  fixup_bug arch/x86/kernel/traps.c:175 [inline]
+> >  fixup_bug arch/x86/kernel/traps.c:170 [inline]
+> >  do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+> >  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+> >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> > RIP: 0010:sysfs_remove_group fs/sysfs/group.c:279 [inline]
+> > RIP: 0010:sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
+> > Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c 01 00 75 41 48 8b 33 48 c7 c7 60 c3 39 88 e8 93 c3 5f ff <0f> 0b eb 95 e8 22 62 cb ff e9 d2 fe ff ff 48 89 df e8 15 62 cb ff
+> > RSP: 0018:ffffc90001d97a60 EFLAGS: 00010282
+> > RAX: 0000000000000000 RBX: ffffffff88915620 RCX: 0000000000000000
+> > RDX: 0000000000000000 RSI: ffffffff815ca861 RDI: fffff520003b2f3e
+> > RBP: 0000000000000000 R08: ffff8880a78fc2c0 R09: ffffed1015ce66a1
+> > R10: ffffed1015ce66a0 R11: ffff8880ae733507 R12: ffff88808e5ba070
+> > R13: ffffffff88915bc0 R14: ffff88808e5ba008 R15: dffffc0000000000
+> >  dpm_sysfs_remove+0x97/0xb0 drivers/base/power/sysfs.c:794
+> >  device_del+0x18b/0xd30 drivers/base/core.c:2687
+> >  cdev_device_del+0x15/0x80 fs/char_dev.c:570
+> >  ib_umad_kill_port+0x45/0x250 drivers/infiniband/core/user_mad.c:1327
+> >  ib_umad_remove_one+0x18a/0x220 drivers/infiniband/core/user_mad.c:1409
+> >  remove_client_context+0xbe/0x110 drivers/infiniband/core/device.c:724
+> >  disable_device+0x13b/0x230 drivers/infiniband/core/device.c:1270
+> >  __ib_unregister_device+0x91/0x180 drivers/infiniband/core/device.c:1437
+> >  ib_unregister_work+0x15/0x30 drivers/infiniband/core/device.c:1547
+> >  process_one_work+0x965/0x16a0 kernel/workqueue.c:2266
+> >  worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+> >  kthread+0x388/0x470 kernel/kthread.c:268
+> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
 
-Ah, resource->data is a void *, missed that. Let's keep the kasan_data
-var then, but do explicit casting:
+I'm not sure what could be done wrong here to elicit this:
 
-kasan_data =3D (struct kunit_kasan_expectation *)resource->data;
-kasan_data->report_found =3D true;
+ sysfs group 'power' not found for kobject 'umad1'
 
->
-> > > +}
-> > > +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> > > +
-> > >  void kasan_report_invalid_free(void *object, unsigned long ip)
-> > >  {
-> > >         unsigned long flags;
-> > >         u8 tag =3D get_tag(object);
-> > >
-> > >         object =3D reset_tag(object);
-> > > +
-> > > +#if IS_ENABLED(CONFIG_KUNIT)
-> > > +       if (current->kunit_test)
-> > > +               kasan_update_kunit_status(current->kunit_test);
-> > > +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> > > +
-> > >         start_report(&flags);
-> > >         pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (v=
-oid *)ip);
-> > >         print_tags(tag, object);
-> > > @@ -481,6 +506,11 @@ void __kasan_report(unsigned long addr, size_t s=
-ize, bool is_write, unsigned lon
-> > >         if (likely(!report_enabled()))
-> > >                 return;
-> > >
-> > > +#if IS_ENABLED(CONFIG_KUNIT)
-> > > +       if (current->kunit_test)
-> > > +               kasan_update_kunit_status(current->kunit_test);
-> > > +#endif /* IS_ENABLED(CONFIG_KUNIT) */
-> > > +
-> > >         disable_trace_on_warning();
-> > >
-> > >         tagged_addr =3D (void *)addr;
->
-> --
-> Best,
-> Patricia
+??
+
+I've seen another similar sysfs related trigger that we couldn't
+figure out.
+
+Hard to investigate without a reproducer.
+
+Jason
