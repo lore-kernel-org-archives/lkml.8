@@ -2,120 +2,84 @@ Return-Path: <SRS0=Zj89=5W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CC1C2BA19
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E75C2BA19
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3355B221E8
-	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B9B206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  6 Apr 2020 12:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tc47wP7v"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gq3ggIF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgDFMtP (ORCPT
+        id S1728096AbgDFMu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 08:49:15 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38365 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbgDFMtP (ORCPT
+        Mon, 6 Apr 2020 08:50:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53708 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728009AbgDFMu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 08:49:15 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w2so12932732oic.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 05:49:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fFB4VdA84Kugwzr7cseBJwu0dBCE6rHh8pgVv8EEcS0=;
-        b=tc47wP7v2iRxBHrC4XRQCCKeCh3hWP45Nin6JzgR3+4GyevHAWChQgDAKOfMtyjmK9
-         VOsVxkgLbMbW58sh4UpBrQRTKFdFnniHrU/yt309hGVa0gub/FsysLJMwD1xquCmQRGA
-         xiHuAJuoFhQl7veK5j9wCnk3W9bbPkO2EXrmvpEJSXzypOIDJPVQDKErZodbebvt726B
-         h8M5jUCKjLQUotXM4U7CGxB8CF+Vx3RWNrL/KOonulMVcijs/zR52xudTFNRPq0WJyy6
-         X/MOFAgZizYVSLrK6cSA4ll9AK3iZJc5H8yorq0nmHOZcnLLK/IpwO+eBBCCzUTL8+kV
-         EN/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fFB4VdA84Kugwzr7cseBJwu0dBCE6rHh8pgVv8EEcS0=;
-        b=RdAxd3+HhT0k5cGoFGh09c8OXVFbOkprbvJrf/RS2QSSaxUUv1wyGzR0lJK22Z6FDn
-         1lV7vWkpOqhope284XxBjZTzpqLGd3YJCjXLcjrO5KHvl3IT3mahRvP+bP9ut/kVckwy
-         l+Rv9z7+jW8301McFct5WeLa6DPwbeI9GLxlL3ccTotd7coCttPkhnDZi5h7VAt+X5L6
-         JwLe/9KpwKF3OdH3qNlSfEEM9AhvUkuTWadk98W6Sa0nooTUzta+0XyAemFprPsYbzI4
-         d5QJUdDRPzksVSTZhvV1NFAjWfTbovXanms1PtPvMST7M5yp/PVGNNOTrxIKeKbNPPLt
-         OpTA==
-X-Gm-Message-State: AGi0Pua0xOPDXwIHEK1ZUS47nSsZYMj+4Dz7Q1KOPDVjwx1m4tMmZCWP
-        pIRptnm7PRKJpCvbV9yomomGY+PtmNZSwpf1pC0=
-X-Google-Smtp-Source: APiQypK+8VytYADNh4P+zG7WCNGv9WUis8t/SIv0S1IzfcExS1VnQzKmLTrz8eNCcJ0u1hURK/PclnoAZK+H2zmiSR4=
-X-Received: by 2002:aca:3196:: with SMTP id x144mr12841366oix.77.1586177354089;
- Mon, 06 Apr 2020 05:49:14 -0700 (PDT)
+        Mon, 6 Apr 2020 08:50:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0yJdiqRUTuGzJsIc9YdNsg+wOhFQED1U03A0cfa6MRI=; b=gq3ggIF38sLmUn7QoaZUANArfs
+        yoRMRHz6q60UmstjEVzGVRJnM1vDyNx/7iZiiHGDgttp/BY0ZofnMnwBwSr4coe9IXm6AItylx/gw
+        xrq8ONsMH7SqNNf6AIrAxM7bnuWmIErs7w0ppTo57slOM2QvktSCxUeZAbjUShh5N7h4Pg/j0lMT/
+        p/nX0y5RG9+gkf/ifOlDkHCOhycW0dccTjNY95PKjCJzWdE3tenws74NKPYmKp/liH1yHbSCPuGTl
+        j8B0FplBVWVO/Z37xspkCl5mbRaD6xJ4FQJfFXvDl6Qmo/Va8lvVJ01cDF2crrTbdpgr0nzMmRlhu
+        5vK6eC6w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLRCc-0004y8-QG; Mon, 06 Apr 2020 12:50:10 +0000
+Date:   Mon, 6 Apr 2020 05:50:10 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org,
+        "Kenneth R. Crudup" <kenny@panix.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Laight <David.Laight@aculab.com>,
+        Doug Covelli <dcovelli@vmware.com>
+Subject: Re: [RFC PATCH] x86/split_lock: Disable SLD if an unaware
+ (out-of-tree) module enables VMX
+Message-ID: <20200406125010.GA29306@infradead.org>
+References: <20200403163007.6463-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-References: <20200404125845.1381080-1-gch981213@gmail.com> <CAJsYDVLA3fgjBGdStkiZeqEv8q2j2sUdDzgj3QdahB=tvyYJWg@mail.gmail.com>
- <CAOX2RU7ZU0Jj71YCAoP=qaqUomaHKTi=XMV8wGvwRg_fYpfoMg@mail.gmail.com>
-In-Reply-To: <CAOX2RU7ZU0Jj71YCAoP=qaqUomaHKTi=XMV8wGvwRg_fYpfoMg@mail.gmail.com>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Mon, 6 Apr 2020 20:49:02 +0800
-Message-ID: <CAJsYDVJbczAST7HPtkPAtQXhm+RdZFyAJz4XVjwkNMPDdMnDyQ@mail.gmail.com>
-Subject: Re: [PATCH] Revert "mtd: spi-nor: Add 4B_OPCODES flag to w25q256"
-To:     Robert Marko <robimarko@gmail.com>
-Cc:     linux-mtd@lists.infradead.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000be6f7405a29eb139"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403163007.6463-1-sean.j.christopherson@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000be6f7405a29eb139
-Content-Type: text/plain; charset="UTF-8"
+On Fri, Apr 03, 2020 at 09:30:07AM -0700, Sean Christopherson wrote:
+> Hook into native CR4 writes to disable split-lock detection if CR4.VMXE
+> is toggled on by an SDL-unaware entity, e.g. an out-of-tree hypervisor
+> module.  Most/all VMX-based hypervisors blindly reflect #AC exceptions
+> into the guest, or don't intercept #AC in the first place.  With SLD
+> enabled, this results in unexpected #AC faults in the guest, leading to
+> crashes in the guest and other undesirable behavior.
 
-Hi!
-
-On Mon, Apr 6, 2020 at 8:23 PM Robert Marko <robimarko@gmail.com> wrote:
->
-> It appears that W25Q256JV has an SFDP table and in it advertises 3B or 4B modes.
-> >
-> > [    1.957903] spi_qup 78b5000.spi: IN:block:16, fifo:64, OUT:block:16, fifo:64
-> > [    1.962185] SFDP advertises 3B or 4B
-> > [    1.977393] spi-nor spi0.0: w25q256 (32768 Kbytes)
-> >
-> I have used the attached patch to check what does the SFDP DWORD 1 advertises.
-> If FV version has or does not advertise 4B support than that can be
-> used to differentiate them.
-
-My old w25q256fv spits all 0xFF to 0x5a read sfdp instruction.
-I've asked someone with a newer w25q256fv to dump the entire SFDP
-for me and it's in the attachment. You could do a comparison between
-w25q256jv with this dump.
-
-> Can you apply this patch and check what the FV version advertises as I
-> don't have a device using that revision.
-> FV version also should have SFDP as datasheet for it clearly advertises is.
-
-I've checked the sfdp dump in the attachment and it's also advertising
-3B or 4B in 1st BFPT dword.
-
--- 
-Regards,
-Chuanhong Guo
-
---000000000000be6f7405a29eb139
-Content-Type: application/octet-stream; name="sfdp-w25q256fvem-wson8.bin"
-Content-Disposition: attachment; filename="sfdp-w25q256fvem-wson8.bin"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k8ogxpxp0>
-X-Attachment-Id: f_k8ogxpxp0
-
-U0ZEUAABAP8AAAEJgAAA////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-///////////////////lIPP/////D0TrCGsIO0K7/v//////AAD//yHrDCAPUhDYAAD/////////
-////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////w==
---000000000000be6f7405a29eb139--
+Out of tree modules do not matter, so we should not add code just to
+work around broken third party code.  If you really feel strongly just
+make sure something they rely on for their hacks stops being exported
+and they are properly broken.
