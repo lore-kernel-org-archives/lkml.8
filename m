@@ -2,100 +2,158 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CE7C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471CAC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8076C2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F541206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:56:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="OMf1NOEN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tt81uMJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgDGJ40 (ORCPT
+        id S1728199AbgDGJ4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:56:26 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:37996 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728091AbgDGJ40 (ORCPT
+        Tue, 7 Apr 2020 05:56:46 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41413 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbgDGJ4p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:56:26 -0400
-Received: by mail-lj1-f181.google.com with SMTP id v16so3013845ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:56:24 -0700 (PDT)
+        Tue, 7 Apr 2020 05:56:45 -0400
+Received: by mail-qk1-f195.google.com with SMTP id y3so978749qky.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:56:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Hr+mHdDvTFoRIT/CRSZS1TyQa2gyop6xAKiNSv38ra0=;
-        b=OMf1NOENNZQYb1s0ekZSWScx1UIQEOmNdE6Ci7fyg9t2GHZpfvUdgCqWsFsSXaQkmw
-         bDqH/7BaZhRZTkRnpMJkZvB5k9LcqAbtwXPSdfzD+2YX40dHWTVoRHLr8wVYIbxS2Bb3
-         mXyxGdW1qC7NGWEAq+CvM7tWUDyWVSnt0j8BeyyJJAfVHuX+aE62pwzxovyqobGDR9FM
-         zyHBmYFFqG+pxr1BnAzS3mrXXebO2M5LiTdlQK/bqcdvy6YRYpEn6eslzQxCVwVkR/ma
-         vkiTObVAl9rLBAfb6yt6DmYk/mIRPc/vOE6GHcRyQly5xXihidnjZR08KyR9al0a6oD6
-         8VeA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wOvU8XbPeciAVuMkk94uCPCE8fOwB8s2h2DZgFPF+lI=;
+        b=tt81uMJuBtlesP98X1T0RIiaiUiPYLoOuerlBYu9yxMWEFu9A0CTSdBwhQzhWRNVjL
+         9hFiYtVL60xs1vfkP+hmJ/5DrRrf65DKUypMVi6WCyAtHJRAF0mgHufnw4RMGY0bvqve
+         4+W6UiFxZlXtN709TsERNrr8+XbICXrUQXFBDLUGAUeq8Nn1bVx2MczRJ6rmRdrzor2A
+         iqQByCNIZwkfuW0zTxcOJFgksMyoSM2m0p2XpdGCxLNOw/WIAYlDwzbVvYYNv7jBHA6W
+         4Pg2QcDxFQ1wZc4ozCXWJ0TwN5NIkviK5VW/pDSoM9Ew8dAnKkM0eR6X4ZLxhQ21Wgc/
+         0DqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Hr+mHdDvTFoRIT/CRSZS1TyQa2gyop6xAKiNSv38ra0=;
-        b=PdmNGtz1nkVz9wEp32iHFgrQiASiMNgFNkUyuTdawVIYu0NiH368F4a3nzWwhQy95b
-         aCVsEsFkXK5j4pEevtIizEeV7pByAqzggiRv4512XocUU2OysnkckgxxNS1J1B2Tk0Kx
-         rU5SuBrVWJ2R37q7dsbArTHZWE91Z3Y16PubZKK040a3YYlFnm1R9/O56irnWkd0TVco
-         GKlXuWwKgm/wtUMuyCx7JdnE3w8kyC20Lcu6CFaflMji1kHl3F/2D+/npXuXGDEBoh9z
-         K0Xxvu6JWfp78/TZH+Xez5yNTIczJ0yGocktdRsP3YwsPXZCmuNIWOYEcFg+cCCey9fM
-         2UzA==
-X-Gm-Message-State: AGi0Puatityq8cS7BPaj2k6UpzpsmJEStWoYj5+P5XerbL1wBobbdIlt
-        Bdq53471DvzPnWYtA+D0oF14QA==
-X-Google-Smtp-Source: APiQypLzbcBXaC7SPGZjabCqZDwjsTQUaJcJmC9dGQcLyjzMIEUJJViDWI7gPma8gc5q1NE53lxhhQ==
-X-Received: by 2002:a2e:888e:: with SMTP id k14mr1266812lji.4.1586253383383;
-        Tue, 07 Apr 2020 02:56:23 -0700 (PDT)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id t24sm10710162lfk.90.2020.04.07.02.56.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 02:56:22 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 11:56:20 +0200
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] media: rcar-vin: Add support for
- MEDIA_BUS_FMT_SRGGB8_1X8 format
-Message-ID: <20200407095620.GA1716317@oden.dyn.berto.se>
-References: <1583838364-12932-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1583838364-12932-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200310124605.GO2975348@oden.dyn.berto.se>
- <OSBPR01MB35905FFB621C2F4222692832AAFF0@OSBPR01MB3590.jpnprd01.prod.outlook.com>
- <20200310140625.GA88560@oden.dyn.berto.se>
- <CA+V-a8vsYGdx6AtgqwS0LXREn4hu-EjVh2D5Dp_rHmpazBYG5A@mail.gmail.com>
- <20200319150329.GB3192108@oden.dyn.berto.se>
- <CA+V-a8u8=H-6WfaYMLWH73zo5ehP8cu9D-tdGULk=Hkvq4KuAQ@mail.gmail.com>
- <20200330120745.GA3213219@oden.dyn.berto.se>
- <CA+V-a8vbTc0DZ15y0zZ97PH6khwQVxz=M-8_kgx1AiKkdg5QaA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wOvU8XbPeciAVuMkk94uCPCE8fOwB8s2h2DZgFPF+lI=;
+        b=LBdsng2alGs8f/WssabprmH6rz8SSYENji0/EMYLytb3b+w5Tj9czK159vhMhxVXhp
+         4hOavneZhoNfLgEl09+Nyow69bWOdm6C/7hsm/uqx/DjXT97PtCPQhE8KyBVzSKsAhSm
+         OiUZbZUYYcqWiZSccZUGr5O6fF0urTTsNL/2dKWXPo/b2LQLY8VHezzW46PKfsHXWRkL
+         ONdH55XFvBnUFHekRva+A8uv/O4fyNWrfHFJTgaqUlocqu6sBuV5/YzDEbW3x79mXpUG
+         +NGheN49XPXtRvtcCwSIlk/usY5Eb93gXm6ptvGu4fnatkGW+SMzGDjawv2T7CGHz6+6
+         k1hA==
+X-Gm-Message-State: AGi0Pubnj2+HkmvMmOD6ia2yDmQXUsTT9sg9JFRJ5FpcJ6DGqlzlhysU
+        npYuTWHysyG5iIsYGp3eE1mgC255wHSc5JJadzDd7w==
+X-Google-Smtp-Source: APiQypIrHCaGuQCjUmPSy0FTruafk+m/gHJzlMFr46V09puGrz9Tz+8jGD/WYBJ0gcI+UjmSNKBFWp8/vldVa9o5GXQ=
+X-Received: by 2002:a37:8d86:: with SMTP id p128mr1330952qkd.250.1586253403265;
+ Tue, 07 Apr 2020 02:56:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+V-a8vbTc0DZ15y0zZ97PH6khwQVxz=M-8_kgx1AiKkdg5QaA@mail.gmail.com>
+References: <00000000000075245205a2997f68@google.com> <20200406172151.GJ80989@unreal>
+ <20200406174440.GR20941@ziepe.ca>
+In-Reply-To: <20200406174440.GR20941@ziepe.ca>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 7 Apr 2020 11:56:30 +0200
+Message-ID: <CACT4Y+Zv_WXEn6u5a6kRZpkDJnSzeGF1L7JMw4g85TLEgAM7Lw@mail.gmail.com>
+Subject: Re: WARNING in ib_umad_kill_port
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
+On Mon, Apr 6, 2020 at 7:44 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Mon, Apr 06, 2020 at 08:21:51PM +0300, Leon Romanovsky wrote:
+> > + RDMA
+> >
+> > On Sun, Apr 05, 2020 at 11:37:15PM -0700, syzbot wrote:
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    304e0242 net_sched: add a temporary refcnt for struct tcin..
+> > > git tree:       net
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=119dd16de00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=8c1e98458335a7d1
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=9627a92b1f9262d5d30c
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >
+> > > Unfortunately, I don't have any reproducer for this crash yet.
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com
+> > >
+> > > sysfs group 'power' not found for kobject 'umad1'
+> > > WARNING: CPU: 1 PID: 31308 at fs/sysfs/group.c:279 sysfs_remove_group fs/sysfs/group.c:279 [inline]
+> > > WARNING: CPU: 1 PID: 31308 at fs/sysfs/group.c:279 sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
+> > > Kernel panic - not syncing: panic_on_warn set ...
+> > > CPU: 1 PID: 31308 Comm: kworker/u4:10 Not tainted 5.6.0-syzkaller #0
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > > Workqueue: events_unbound ib_unregister_work
+> > > Call Trace:
+> > >  __dump_stack lib/dump_stack.c:77 [inline]
+> > >  dump_stack+0x188/0x20d lib/dump_stack.c:118
+> > >  panic+0x2e3/0x75c kernel/panic.c:221
+> > >  __warn.cold+0x2f/0x35 kernel/panic.c:582
+> > >  report_bug+0x27b/0x2f0 lib/bug.c:195
+> > >  fixup_bug arch/x86/kernel/traps.c:175 [inline]
+> > >  fixup_bug arch/x86/kernel/traps.c:170 [inline]
+> > >  do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
+> > >  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+> > >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+> > > RIP: 0010:sysfs_remove_group fs/sysfs/group.c:279 [inline]
+> > > RIP: 0010:sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:270
+> > > Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c 01 00 75 41 48 8b 33 48 c7 c7 60 c3 39 88 e8 93 c3 5f ff <0f> 0b eb 95 e8 22 62 cb ff e9 d2 fe ff ff 48 89 df e8 15 62 cb ff
+> > > RSP: 0018:ffffc90001d97a60 EFLAGS: 00010282
+> > > RAX: 0000000000000000 RBX: ffffffff88915620 RCX: 0000000000000000
+> > > RDX: 0000000000000000 RSI: ffffffff815ca861 RDI: fffff520003b2f3e
+> > > RBP: 0000000000000000 R08: ffff8880a78fc2c0 R09: ffffed1015ce66a1
+> > > R10: ffffed1015ce66a0 R11: ffff8880ae733507 R12: ffff88808e5ba070
+> > > R13: ffffffff88915bc0 R14: ffff88808e5ba008 R15: dffffc0000000000
+> > >  dpm_sysfs_remove+0x97/0xb0 drivers/base/power/sysfs.c:794
+> > >  device_del+0x18b/0xd30 drivers/base/core.c:2687
+> > >  cdev_device_del+0x15/0x80 fs/char_dev.c:570
+> > >  ib_umad_kill_port+0x45/0x250 drivers/infiniband/core/user_mad.c:1327
+> > >  ib_umad_remove_one+0x18a/0x220 drivers/infiniband/core/user_mad.c:1409
+> > >  remove_client_context+0xbe/0x110 drivers/infiniband/core/device.c:724
+> > >  disable_device+0x13b/0x230 drivers/infiniband/core/device.c:1270
+> > >  __ib_unregister_device+0x91/0x180 drivers/infiniband/core/device.c:1437
+> > >  ib_unregister_work+0x15/0x30 drivers/infiniband/core/device.c:1547
+> > >  process_one_work+0x965/0x16a0 kernel/workqueue.c:2266
+> > >  worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+> > >  kthread+0x388/0x470 kernel/kthread.c:268
+> > >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > > Kernel Offset: disabled
+> > > Rebooting in 86400 seconds..
+>
+> I'm not sure what could be done wrong here to elicit this:
+>
+>  sysfs group 'power' not found for kobject 'umad1'
+>
+> ??
+>
+> I've seen another similar sysfs related trigger that we couldn't
+> figure out.
+>
+> Hard to investigate without a reproducer.
+>
+> Jason
 
-On 2020-04-06 18:20:33 +0100, Lad, Prabhakar wrote:
-> Did you manage to get the required information on this ?
 
-I'm still working on it, sorry for not completing it last week. I will 
-let you know as soon as I can.
-
--- 
-Regards,
-Niklas Söderlund
+Based on all of the sysfs-related bugs I've seen, my bet would be on
+some races. E.g. one thread registers devices, while another
+unregisters these.
