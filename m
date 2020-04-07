@@ -2,238 +2,119 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCB8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA42C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB60C2074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8682074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:57:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FIbceAnL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cTukUVpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgDGN4y (ORCPT
+        id S1728953AbgDGN54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 09:56:54 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:17372 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728573AbgDGN4x (ORCPT
+        Tue, 7 Apr 2020 09:57:56 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38236 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbgDGN5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 09:56:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586267812; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=TE4hZov0rkOV4uqiyW/RcPjnKoFTB49aSNaOcciKWeo=;
- b=FIbceAnLcnywNWsMYRatjLFsxwMwW1+a8kI3X0h2Cxpww2WuBUo1a3n2wOfKVCrFQR3KCVjF
- 9WxgA+hl0r5kJIBl/mbm+3TPTyIQl2sDo7Mr+bGffbpus7gKlnM1P+ddsvg3T2xOem84ygLc
- LE+w5ahb/06oYJV1f/qFEobFzGQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8c869f.7f7ba7233f48-smtp-out-n04;
- Tue, 07 Apr 2020 13:56:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0BCA2C4478C; Tue,  7 Apr 2020 13:56:46 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1B6B7C433F2;
-        Tue,  7 Apr 2020 13:56:45 +0000 (UTC)
+        Tue, 7 Apr 2020 09:57:55 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037DtWx0143825;
+        Tue, 7 Apr 2020 13:57:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=xcWl0/RLZI+rRm19VaCtBfLo0RsQgPHMgtE9vFZ4Fvk=;
+ b=cTukUVpV7tEYYfRw3vib2RUWtKckkPGvag7e5FHILhitPjnLHZF6vrFvNu4mJ6EdQGlT
+ C/brjB7s2e+nSR3tvlig5r55FN+jEdIL1Werk+VTt+gtOFGkMt6FDLAq9vS2jvrjpa9w
+ eTwHdfwd2YKQSo5TqNcSaAShFeAW3N63TaBy98tnZoWZJySV8bgYDgVixBYwMKz/q8gC
+ fMzgDzyAB2vrJEKnPsKqzDFA02yopz8gHDDR0eWynOcqtM7ub0cqqF2rrqbboBcnIEHD
+ jCvkq8tima6FpZHne3F3MHQy0O8EDWrOb4ika9umW444Q4YnqcEz8b7ACsHa/hdNTnL0 hA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 306jvn535s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 13:57:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037DrIdi044963;
+        Tue, 7 Apr 2020 13:57:40 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 3073qg4bnb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 13:57:40 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 037DvcQU030005;
+        Tue, 7 Apr 2020 13:57:38 GMT
+Received: from linux-1.home (/92.157.90.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Apr 2020 06:57:38 -0700
+Subject: Re: [PATCH V2 0/9] objtool changes to remove all
+ ANNOTATE_NOSPEC_ALTERNATIVE
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+        jthierry@redhat.com, tglx@linutronix.de
+References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
+ <20200407133528.htoxyrfc7fv625lh@treble>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <ae8f307f-0e41-ea25-7119-e3ee517d57db@oracle.com>
+Date:   Tue, 7 Apr 2020 16:02:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 07 Apr 2020 19:26:45 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     mike.leach@linaro.org, mathieu.poirier@linaro.org,
-        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
-        swboyd@chromium.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [RFC PATCH] coresight: dynamic-replicator: Fix handling of
- multiple connections
-In-Reply-To: <bb209f80-ac02-6321-dac4-ebf9ee6fa9a0@arm.com>
-References: <20200405102819.28460-1-saiprakash.ranjan@codeaurora.org>
- <CAJ9a7VgQzK1XSCvLwuqODwkWfvo=6Wwps7Db+pL5xYDeCuktrg@mail.gmail.com>
- <6c0f45488f8a44bf860759e00fcabd09@codeaurora.org>
- <906d374d-a4d6-f2f2-6845-88b97a5ff7d9@arm.com>
- <39a2b3fff165a108fa59d72b630b5f14@codeaurora.org>
- <bb209f80-ac02-6321-dac4-ebf9ee6fa9a0@arm.com>
-Message-ID: <bd05b31c2391edfff5044f22f2f83edf@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20200407133528.htoxyrfc7fv625lh@treble>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
 
-On 2020-04-07 18:38, Suzuki K Poulose wrote:
-> On 04/07/2020 12:29 PM, Sai Prakash Ranjan wrote:
->> Hi Suzuki,
->> 
->> Thanks for looking into this issue.
->> 
->> On 2020-04-07 15:54, Suzuki K Poulose wrote:
->>> On 04/07/2020 10:46 AM, Sai Prakash Ranjan wrote:
->>> 
->>> There seems to be two replicators back to back here. What is 
->>> connected
->>> to the other output of both of them ? Are there any TPIUs ? What 
->>> happens
->>> if you choose a sink on the other end of "swao_replicator" (ETB ?)
->>> 
->> 
->> The other outport of swao replicator is connected to EUD which is a
->> QCOM specific HW which can be used as a sink like USB.
->> And the other outport of other replicator(replicator_out) is connected 
->> to
->> TPIU.
->> 
->>> After boot, what do the idfilter registers read for both the 
->>> replicators ?
->>> 
->> 
->> Added some prints in replicator_probe.
->> 
->>   replicator probe ret=-517 devname=6046000.replicator idfilter0=0x0 
->> idfilter1=0x0
->>   replicator probe ret=0 devname=6b06000.replicator idfilter0=0xff 
->> idfilter1=0xff
->>   replicator probe ret=0 devname=6046000.replicator idfilter0=0xff 
->> idfilter1=0xff
+On 4/7/20 3:35 PM, Josh Poimboeuf wrote:
+> On Tue, Apr 07, 2020 at 09:31:33AM +0200, Alexandre Chartre wrote:
+>> Hi,
+>>
+>> This is version v2 of this patchset based on the different comments
+>> received so far. It now uses and includes PeterZ patch to add
+>> UNWIND_HINT_RET_OFFSET. Other changes are described below.
+>>
+>> Code like retpoline or RSB stuffing, which is used to mitigate some of
+>> the speculative execution issues, is currently ignored by objtool with
+>> the ANNOTATE_NOSPEC_ALTERNATIVE directive. This series adds support
+>> for intra-function calls to objtool so that it can handle such a code.
+>> With these changes, we can remove all ANNOTATE_NOSPEC_ALTERNATIVE
+>> directives.
+>>
+>> Changes:
+>>   - replace RETPOLINE_RET with PeterZ UNWIND_HINT_RET_OFFSET
+>>   - make objtool intra-function call action architecture dependent
+>>   - objtool now automatically detects and validates all intra-function
+>>     calls but it issues a warning if the call was not explicitly tagged
+>>   - change __FILL_RETURN_BUFFER to work with objtool
+>>   - add generic ANNOTATE_INTRA_FUNCTION_CALL macro
+>>   - remove all ANNOTATE_SPEC_ALTERNATIVE (even for __FILL_RETURN_BUFFER)
 > 
-> Curious to see how the idfilterX is set to 0:
-> 	 if that is never used.
-> 		Or
-> 	 if the user doesn't reset it back to 0xff.
-> 
+> I had trouble applying the patches.  What branch are they based on?  In
+> general the latest tip/master is good.
 
-For both replicators, the default value seems to be 0x0.
+Oups, this is on based on 5.5. I didn't realize I was that late, I though
+I recently rebased but it looks like I didn't. Sorry about that, I will
+make sure the next version is more recent.
 
-  replicator probe in res ret=0 devname=6046000.replicator idfilter0=0x0 
-idfilter1=0x0
-  replicator probe ret=-517 devname=6046000.replicator idfilter0=0x0 
-idfilter1=0x0
-  replicator probe in res ret=0 devname=6b06000.replicator idfilter0=0x0 
-idfilter1=0x0
-  replicator probe ret=0 devname=6b06000.replicator idfilter0=0xff 
-idfilter1=0xff
-  replicator probe in res ret=0 devname=6046000.replicator idfilter0=0x0 
-idfilter1=0x0
-  replicator probe ret=0 devname=6046000.replicator idfilter0=0xff 
-idfilter1=0xff
-
-> Does your test ever touch EUD (enable the port for EUD at
-> swao-replicator) ? What are the values before you run your test ?
-> 
-> 
-
-No, we do not use EUD, downstream it is used as dummy sink.
-And I just try to select the ETR as the sink and enable ETM0 as the 
-trace source.
-
-echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
-echo 1 > /sys/bus/coresight/devices/etm0/enable_source
-
-Also I see the KASAN warning but that seems like some other issue.
-
-[  526.110401] 
-==================================================================
-[  526.117988] BUG: KASAN: slab-out-of-bounds in 
-funnel_enable+0x54/0x1b0
-[  526.124706] Read of size 4 at addr ffffff8135f9549c by task bash/1114
-[  526.131324]
-[  526.132886] CPU: 3 PID: 1114 Comm: bash Tainted: G S                
-5.4.25 #232
-[  526.140397] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP 
-(DT)
-[  526.147113] Call trace:
-[  526.149653]  dump_backtrace+0x0/0x188
-[  526.153431]  show_stack+0x20/0x2c
-[  526.156852]  dump_stack+0xdc/0x144
-[  526.160370]  print_address_description+0x3c/0x494
-[  526.165211]  __kasan_report+0x144/0x168
-[  526.169170]  kasan_report+0x10/0x18
-[  526.172769]  check_memory_region+0x1a4/0x1b4
-[  526.177164]  __kasan_check_read+0x18/0x24
-[  526.181292]  funnel_enable+0x54/0x1b0
-[  526.185072]  coresight_enable_path+0x104/0x198
-[  526.189649]  coresight_enable+0x118/0x26c
-[  526.193778]  enable_source_store+0x64/0xa8
-[  526.198007]  dev_attr_store+0x40/0x58
-[  526.201788]  sysfs_kf_write+0x4c/0x64
-[  526.205567]  kernfs_fop_write+0x16c/0x210
-[  526.209700]  __vfs_write+0x54/0x1a8
-[  526.213297]  vfs_write+0xe4/0x1a4
-[  526.216714]  ksys_write+0x84/0xec
-[  526.220131]  __arm64_sys_write+0x20/0x2c
-[  526.224179]  el0_svc_common+0xa8/0x160
-[  526.228040]  el0_svc_compat_handler+0x2c/0x38
-[  526.232533]  el0_svc_compat+0x8/0x10
-[  526.236225]
-[  526.237782] Allocated by task 280:
-[  526.241298]  __kasan_kmalloc+0xf0/0x1ac
-[  526.245249]  kasan_kmalloc+0xc/0x14
-[  526.248849]  __kmalloc+0x28c/0x3b4
-[  526.252361]  coresight_register+0x88/0x250
-[  526.256587]  funnel_probe+0x15c/0x228
-[  526.260365]  dynamic_funnel_probe+0x20/0x2c
-[  526.264679]  amba_probe+0xbc/0x158
-[  526.268193]  really_probe+0x144/0x408
-[  526.271970]  driver_probe_device+0x70/0x140
-[  526.276282]  __device_attach_driver+0x9c/0x110
-[  526.280861]  bus_for_each_drv+0x90/0xd8
-[  526.284822]  __device_attach+0xb4/0x164
-[  526.288772]  device_initial_probe+0x20/0x2c
-[  526.293081]  bus_probe_device+0x34/0x94
-[  526.297030]  deferred_probe_work_func+0xa4/0x100
-[  526.301794]  process_one_work+0x33c/0x640
-[  526.305922]  worker_thread+0x2a0/0x470
-[  526.309786]  kthread+0x128/0x138
-[  526.313119]  ret_from_fork+0x10/0x18
-[  526.316810]
-[  526.318364] Freed by task 0:
-[  526.321344] (stack is not available)
-[  526.325024]
-[  526.326580] The buggy address belongs to the object at 
-ffffff8135f95480
-[  526.326580]  which belongs to the cache kmalloc-128 of size 128
-[  526.339439] The buggy address is located 28 bytes inside of
-[  526.339439]  128-byte region [ffffff8135f95480, ffffff8135f95500)
-[  526.351399] The buggy address belongs to the page:
-[  526.356342] page:ffffffff04b7e500 refcount:1 mapcount:0 
-mapping:ffffff814b00c380 index:0x0 compound_mapcount: 0
-[  526.366711] flags: 0x4000000000010200(slab|head)
-[  526.371475] raw: 4000000000010200 ffffffff05034008 ffffffff0501eb08 
-ffffff814b00c380
-[  526.379435] raw: 0000000000000000 0000000000190019 00000001ffffffff 
-0000000000000000
-[  526.387393] page dumped because: kasan: bad access detected
-[  526.393128]
-[  526.394681] Memory state around the buggy address:
-[  526.399619]  ffffff8135f95380: fc fc fc fc fc fc fc fc fc fc fc fc fc 
-fc fc fc
-[  526.407046]  ffffff8135f95400: fc fc fc fc fc fc fc fc fc fc fc fc fc 
-fc fc fc
-[  526.414473] >ffffff8135f95480: 04 fc fc fc fc fc fc fc fc fc fc fc fc 
-fc fc fc
-[  526.421900]                             ^
-[  526.426029]  ffffff8135f95500: fc fc fc fc fc fc fc fc fc fc fc fc fc 
-fc fc fc
-[  526.433456]  ffffff8135f95580: fc fc fc fc fc fc fc fc fc fc fc fc fc 
-fc fc fc
-[  526.440883] 
-==================================================================
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+alex.
