@@ -2,101 +2,124 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCE0C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4D9C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899A820719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD3920719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C1VPA4l1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbgDGNQ1 (ORCPT
+        id S1728842AbgDGNYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 09:16:27 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33393 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbgDGNQ1 (ORCPT
+        Tue, 7 Apr 2020 09:24:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43188 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728812AbgDGNYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 09:16:27 -0400
-Received: by mail-oi1-f193.google.com with SMTP id m14so1451068oic.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 06:16:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HPDKx3oSRt9Y7X4bWqhfNeKSwWIUsvZI1ClXBkig7os=;
-        b=Wu1UfZYHGPAXzaVdZpciVen+ZgF6JiRlGKPoxOiNrLShHXP1l2yhsDS1K4QcKxDlkH
-         s/uMAR0ryseBoErZbfaHNrriqZ5EuByprURHU1ag/zwB1UJBI/6+hnPuac3rzC5w2NFC
-         ek/TdSC80cdAlXPaH1fzDYFizgK+O1U7ZUDe0KBjqitWM/0py7lKnYqceNg3pjS0b1g3
-         tYbctDnQSi2o1soQtVfchc7wKC6oxjh84FRGNGTMXEafwMApQnOCRd8mdXfK/RKakchZ
-         MKUFI3V2G1nL0ymuphA9d/YX6LOu3BXwz8s3nbmskpEA5eJ5QiOhLsABJ+WCjcheK6D9
-         1Nug==
-X-Gm-Message-State: AGi0PuYPAW2GRX3YMQ1wDtNZI6TArAG4f03+B8dfi0ldu7Y8YZGd1VeU
-        Ft2NYGqAEZBCWkMWfL7+/9IzkFy9DyF4wd9op0U=
-X-Google-Smtp-Source: APiQypLG5uAh4zlD6yhUFCYUK18eL9OcJRZ0sLvd60tTXtYDdxd3jG6DqxcxL+LEDKwxJRKuEyPr6H6evLUmTJr8ALw=
-X-Received: by 2002:aca:ad93:: with SMTP id w141mr1676490oie.54.1586265386476;
- Tue, 07 Apr 2020 06:16:26 -0700 (PDT)
+        Tue, 7 Apr 2020 09:24:13 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037DMX9S132958;
+        Tue, 7 Apr 2020 13:23:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=HUw+iF3lmkPYdLpCfY3zJ8y3YywDPB2OUxVRgTbL+5w=;
+ b=C1VPA4l1iKpGlFUKd75dJWscvpQww4PyN8f9x9/DNZJUSEa/zSlsejjgZg8Q9ejahPNT
+ F4t5eyLRrBNLEVd5z5uaP/uRbUOmxMerGjYUKv787gSbdS9HaqZAXix4xpp+dkU9RpAt
+ Vnzu1r4/Wk3bC/SpmA+NRMFNV46SKn+F4M6YiqWIhd9jJKhhfYPMOd9PXIDOA2D1J2v1
+ Fkw8WYJy33gNqmjLJnz0POpPGBwkp3vbdFry6UFTtLuBsOKDXbPDAE4KyJYlT1+Z23x/
+ qK+GyFsvO7WnPe5C2GEC6lFf4bxyv7GoUJcCVhJjoSqiCTzUmcDJdvxxmJbUe+f6WeLX IQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 308ffdawqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 13:23:57 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037DMUSd010700;
+        Tue, 7 Apr 2020 13:23:57 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 30839tbkup-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 13:23:57 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 037DNtoV003956;
+        Tue, 7 Apr 2020 13:23:56 GMT
+Received: from linux-1.home (/10.175.58.13)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Apr 2020 06:23:55 -0700
+Subject: Re: [PATCH V2 5/9] objtool: Add support for intra-function calls
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, tglx@linutronix.de
+References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
+ <20200407073142.20659-6-alexandre.chartre@oracle.com>
+ <20200407130729.GZ20730@hirez.programming.kicks-ass.net>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <40b19a8e-ae5e-623e-fb3f-261f9fec2ea5@oracle.com>
+Date:   Tue, 7 Apr 2020 15:28:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <20200407103537.4138-1-max.krummenacher@toradex.com>
-In-Reply-To: <20200407103537.4138-1-max.krummenacher@toradex.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Apr 2020 15:16:14 +0200
-Message-ID: <CAMuHMdWrekHiADkMmgO5nDxFNYjLud7FD=7ArMZNQire_+7TQg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] defconfig: fix changed configs and refresh
-To:     Max Krummenacher <max.oss.09@gmail.com>
-Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200407130729.GZ20730@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
+ clxscore=1015 phishscore=0 mlxscore=0 bulkscore=0 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max,
 
-On Tue, Apr 7, 2020 at 12:36 PM Max Krummenacher <max.oss.09@gmail.com> wrote:
-> Three configs have been renamed and/or changed behaviour.
-> Clean that by using the new config name.
-> Then refresh the defconfig with make defconfig savedefconfig.
->
-> The refreshed defconfig does result in a not changed .config.
->
-> Applies on linux-next/master tag: next-20200407
->
-> Max Krummenacher (4):
->   arm64: defconfig: DRM_DUMB_VGA_DAC: follow changed config symbol name
->   arm64: defconfig: PCIE_TEGRA194: follow changed config symbol name
->   arm64: defconfig: ARCH_R8A7795: follow changed config symbol name
->   arm64: defconfig: refresh
+On 4/7/20 3:07 PM, Peter Zijlstra wrote:
+> On Tue, Apr 07, 2020 at 09:31:38AM +0200, Alexandre Chartre wrote:
+> 
+>> index a62e032863a8..7ee1561bf7ad 100644
+>> --- a/tools/objtool/arch/x86/decode.c
+>> +++ b/tools/objtool/arch/x86/decode.c
+>> @@ -497,3 +497,15 @@ void arch_initial_func_cfi_state(struct cfi_state *state)
+>>   	state->regs[16].base = CFI_CFA;
+>>   	state->regs[16].offset = -8;
+>>   }
+>> +
+>> +
+>> +void arch_configure_intra_function_call(struct stack_op *op)
+>> +{
+>> +	/*
+>> +	 * For the impact on the stack, make an intra-function
+>> +	 * call behaves like a push of an immediate value (the
+>> +	 * return address).
+>> +	 */
+>> +	op->src.type = OP_SRC_CONST;
+>> +	op->dest.type = OP_DEST_PUSH;
+>> +}
+> 
+> An alternative is to always set up stack ops for CALL/RET on decode, but
+> conditionally run update_insn_state() for them.
+> 
+> Not sure that makes more logical sense, but the patch would be simpler I
+> think.
 
-Probably CONFIG_DRM_DISPLAY_CONNECTOR should also be enabled for HDMI,
-VGA, and composite display connectors on various boards since commit
-0c275c30176b2e78 ("drm/bridge: Add bridge driver for display
-connectors"), but it's not clear to me when exactly this became a
-requirement, as before there was no code that looked for e.g.
-vga-connector.
-Laurent?
+Right, this would avoid adding a new arch dependent function and the patch
+will be simpler. This probably makes sense as the stack impact is the same
+for all calls (but objtool will use it only for intra-function calls).
 
-Gr{oetje,eeting}s,
+Thanks,
 
-                        Geert
+alex.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
