@@ -2,208 +2,174 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F406DC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5206C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C669720771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:12:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U1hIVeMg"
+	by mail.kernel.org (Postfix) with ESMTP id A3E602075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:13:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgDGVM4 (ORCPT
+        id S1726523AbgDGVM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:12:56 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:48182 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgDGVMw (ORCPT
+        Tue, 7 Apr 2020 17:12:59 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:52747 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgDGVM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:12:52 -0400
-Received: by mail-vk1-f201.google.com with SMTP id g7so1830142vkk.15
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:12:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=MaBweOlch11HKb9t7GCZeN/zarBri4qPTIweTTR7A04=;
-        b=U1hIVeMgswPvziZ0ENUZYnzyWBhSCYX1bi1rARPXO57w/nzGQOlElGD5smfdBFlgwG
-         gXCN6YdCQeatvDTyqJdkgZuBP8CiZ+Hj3VRJHszvMVDyns+C/E9Q8C/y6yxRFeTTGWoM
-         GG1+jjyR0teAgUt91n/wzDszB+8msDgtD7ByUeko2Qpj4m22zRPp5ALbgoPr/uVvFgbQ
-         TTfUs8RpRc30TRfkI6SzWRYi6WgM/NLDDnXf7s3wFlY60H6B93LrYlmWtMw04W7Vrb+T
-         g4C1jYezUSJ/DNkuS09urOiqpdkeYzOib6zl5qhTxluDPNqAVmIR11J75YVKeTCRsxBW
-         LM3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=MaBweOlch11HKb9t7GCZeN/zarBri4qPTIweTTR7A04=;
-        b=KlHIuS72IEIdmxosYoE/D/wlouNFPh6lL80craloTh89HzT4RzNxQ1yWITh5TsEs4Z
-         fICyLr3+sxTGBpybMRICvCIT1ic5LZhRzuro9kMjn/HikIhwCt+/KdRGI3DOJjNspjzg
-         mcnt8pmA0lPfV5G2qCMD2Jn+x5M+b0VkIZX4iezUajA4XmOlAOyOCaqzFUFhCLyIdi8z
-         SwelwNJSgGiM/p/1q9LRvfh0LCs7qmHvuGmSoGmhzQ5MGsYOnRNNMhHmxlwG2f2E32fH
-         96/jiFJdv+7GxiJzLuZh9xy5FSMGuq0L4x2lGL4ExQnkX/9pGM3T242sP3uhcKfMaIx6
-         kw7g==
-X-Gm-Message-State: AGi0Pua0ShRsmgJfMHCdjFlA7AkMBK4n/bM8j3Nsd2R/72ZozNQCZvCy
-        9lsnTVoxtqaJJLL444xc53GB2anj978=
-X-Google-Smtp-Source: APiQypK5y0nSomIW5VQaxOMuV0GGky2G/aipZdtaQUPbQUivIeAbJmE6e/0rAFwdiqwLJNImOtnXxJ/ZUpM=
-X-Received: by 2002:ab0:764a:: with SMTP id s10mr3176845uaq.1.1586293969257;
- Tue, 07 Apr 2020 14:12:49 -0700 (PDT)
-Date:   Tue,  7 Apr 2020 14:12:43 -0700
-Message-Id: <20200407211243.247362-1-badhri@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-Subject: [PATCH v1] power_supply: Add a helper function to retrieve psy array
- from phandle
-From:   Badhri Jagan Sridharan <badhri@google.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Badhri Jagan Sridharan <badhri@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Apr 2020 17:12:56 -0400
+X-Originating-IP: 72.234.141.215
+Received: from tb.lan (udp224251uds.hawaiiantel.net [72.234.141.215])
+        (Authenticated sender: mail@aparcar.org)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id A228FFF803;
+        Tue,  7 Apr 2020 21:12:50 +0000 (UTC)
+From:   Paul Spooren <mail@aparcar.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        daniel@makrotopia.org, freifunk@adrianschmutzler.de,
+        Paul Spooren <mail@aparcar.org>
+Subject: [PATCH 1/5] arm: dts: linksys: rename rango to wrt3200acm
+Date:   Tue,  7 Apr 2020 11:08:11 -1000
+Message-Id: <20200407210816.866084-2-mail@aparcar.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200407210816.866084-1-mail@aparcar.org>
+References: <20200407210816.866084-1-mail@aparcar.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-power_supply_get_by_phandle retrieves power_supply object based on
-phandle. However, when multiple power_supply objects are registered
-by the same parent device the first power_supply object's reference
-is returned. This varies according to probe order. Add a helper to
-return all the power_supply object's reference.
+Linksys uses internally the codename "rango" for a device sold under the
+name of "Linksys WRT3200ACM", which is already reflected in the device
+tree `model`. However the `compatible` list only contains the codename
+`linksys,rango` which does not relate to the common name.
 
-The caller has to provide the power_supply pointer array.
--EOVERFLOW is returned when the size of the array is not enough to
-pass back all the power_supply objects.
+This patch renames the `dts` file to the sanitized model name and
+prepends `linksys,wrt3200acm` to the `compatible` list to simplify the
+device relation.
 
-Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+Signed-off-by: Paul Spooren <mail@aparcar.org>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Jason Cooper <jason@lakedaemon.net>
+CC: Andrew Lunn <andrew@lunn.ch>
+CC: Gregory Clement <gregory.clement@bootlin.com>
+CC: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+CC: Daniel Golle <daniel@makrotopia.org>
+CC: Adrian Schmutzler <freifunk@adrianschmutzler.de>
 ---
- drivers/power/supply/power_supply_core.c | 78 ++++++++++++++++++++++++
- include/linux/power_supply.h             |  9 +++
- 2 files changed, 87 insertions(+)
+ arch/arm/boot/dts/Makefile                    |  2 +-
+ ....dts => armada-385-linksys-wrt3200acm.dts} | 26 +++++++++----------
+ 2 files changed, 14 insertions(+), 14 deletions(-)
+ rename arch/arm/boot/dts/{armada-385-linksys-rango.dts => armada-385-linksys-wrt3200acm.dts} (83%)
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 1a9a9fae73d32..e7bab4661ba13 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -32,6 +32,13 @@ EXPORT_SYMBOL_GPL(power_supply_notifier);
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e8dd99201397..a0df7f97cc44 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1282,8 +1282,8 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+ 	armada-385-db-ap.dtb \
+ 	armada-385-linksys-caiman.dtb \
+ 	armada-385-linksys-cobra.dtb \
+-	armada-385-linksys-rango.dtb \
+ 	armada-385-linksys-shelby.dtb \
++	armada-385-linksys-wrt3200acm.dtb \
+ 	armada-385-synology-ds116.dtb \
+ 	armada-385-turris-omnia.dtb \
+ 	armada-388-clearfog.dtb \
+diff --git a/arch/arm/boot/dts/armada-385-linksys-rango.dts b/arch/arm/boot/dts/armada-385-linksys-wrt3200acm.dts
+similarity index 83%
+rename from arch/arm/boot/dts/armada-385-linksys-rango.dts
+rename to arch/arm/boot/dts/armada-385-linksys-wrt3200acm.dts
+index 3c4af57ec2b9..bf7b546e3344 100644
+--- a/arch/arm/boot/dts/armada-385-linksys-rango.dts
++++ b/arch/arm/boot/dts/armada-385-linksys-wrt3200acm.dts
+@@ -12,43 +12,43 @@
  
- static struct device_type power_supply_dev_type;
+ / {
+ 	model = "Linksys WRT3200ACM";
+-	compatible = "linksys,rango", "linksys,armada385", "marvell,armada385",
+-		     "marvell,armada380";
++	compatible = "linksys,wrt3200acm", "linksys,rango", "linksys,armada385",
++		     "marvell,armada385", "marvell,armada380";
+ };
  
-+struct match_device_node_array_param {
-+	struct device_node *parent_of_node;
-+	struct power_supply **psy;
-+	ssize_t psy_size;
-+	ssize_t psy_count;
-+};
-+
- #define POWER_SUPPLY_DEFERRED_REGISTER_TIME	msecs_to_jiffies(10)
+ &expander0 {
+ 	wan_amber@0 {
+-		label = "rango:amber:wan";
++		label = "wrt3200acm:amber:wan";
+ 		reg = <0x0>;
+ 	};
  
- static bool __power_supply_is_supplied_by(struct power_supply *supplier,
-@@ -522,6 +529,77 @@ struct power_supply *power_supply_get_by_phandle(struct device_node *np,
- }
- EXPORT_SYMBOL_GPL(power_supply_get_by_phandle);
+ 	wan_white@1 {
+-		label = "rango:white:wan";
++		label = "wrt3200acm:white:wan";
+ 		reg = <0x1>;
+ 	};
  
-+static int power_supply_match_device_node_array(struct device *dev,
-+						void *data)
-+{
-+	struct match_device_node_array_param *param =
-+		(struct match_device_node_array_param *)data;
-+	struct power_supply **psy = param->psy;
-+	ssize_t size = param->psy_size;
-+	ssize_t *count = &param->psy_count;
-+
-+	if (!dev->parent || dev->parent->of_node != param->parent_of_node)
-+		return 0;
-+
-+	if (*count >= size)
-+		return -EOVERFLOW;
-+
-+	psy[*count] = dev_get_drvdata(dev);
-+	atomic_inc(&psy[*count]->use_cnt);
-+	(*count)++;
-+
-+	return 0;
-+}
-+
-+/**
-+ * power_supply_get_by_phandle_array() - Similar to
-+ * power_supply_get_by_phandle but returns an array of power supply
-+ * objects which are associated with the phandle.
-+ * @np: Pointer to device node holding phandle property.
-+ * @property: Name of property holding a power supply name.
-+ * @psy: Array of power_supply pointers provided by the client which is
-+ * filled by power_supply_get_by_phandle_array.
-+ * @size: size of power_supply pointer array.
-+ *
-+ * If power supply was found, it increases reference count for the
-+ * internal power supply's device. The user should power_supply_put()
-+ * after usage.
-+ *
-+ * Return: On success returns the number of power supply objects filled
-+ * in the @psy array.
-+ * -EOVERFLOW when size of @psy array is not suffice.
-+ * -EINVAL when @psy is NULL or @size is 0.
-+ * -ENODEV when matching device_node is not found.
-+ */
-+int power_supply_get_by_phandle_array(struct device_node *np,
-+				      const char *property,
-+				      struct power_supply **psy,
-+				      ssize_t size)
-+{
-+	struct device_node *power_supply_np;
-+	int ret;
-+	struct match_device_node_array_param param;
-+
-+	if (psy == NULL || size == 0)
-+		return -EINVAL;
-+
-+	power_supply_np = of_parse_phandle(np, property, 0);
-+	if (!power_supply_np)
-+		return -ENODEV;
-+
-+	param.parent_of_node = power_supply_np;
-+	param.psy = psy;
-+	param.psy_size = size;
-+	param.psy_count = 0;
-+	ret = class_for_each_device(power_supply_class, NULL, &param,
-+				    power_supply_match_device_node_array);
-+
-+	of_node_put(power_supply_np);
-+
-+	return param.psy_count;
-+}
-+EXPORT_SYMBOL_GPL(power_supply_get_by_phandle_array);
-+
- static void devm_power_supply_put(struct device *dev, void *res)
- {
- 	struct power_supply **psy = res;
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index dcd5a71e6c677..8c1478a480674 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -366,12 +366,21 @@ extern void power_supply_put(struct power_supply *psy);
- #ifdef CONFIG_OF
- extern struct power_supply *power_supply_get_by_phandle(struct device_node *np,
- 							const char *property);
-+extern int power_supply_get_by_phandle_array(struct device_node *np,
-+					     const char *property,
-+					     struct power_supply **psy,
-+					     ssize_t size);
- extern struct power_supply *devm_power_supply_get_by_phandle(
- 				    struct device *dev, const char *property);
- #else /* !CONFIG_OF */
- static inline struct power_supply *
- power_supply_get_by_phandle(struct device_node *np, const char *property)
- { return NULL; }
-+static int power_supply_get_by_phandle_array(struct device_node *np,
-+					     const char *property,
-+					     struct power_supply **psy,
-+					     int size)
-+{ return 0; }
- static inline struct power_supply *
- devm_power_supply_get_by_phandle(struct device *dev, const char *property)
- { return NULL; }
+ 	usb2@5 {
+-		label = "rango:white:usb2";
++		label = "wrt3200acm:white:usb2";
+ 		reg = <0x5>;
+ 	};
+ 
+ 	usb3_1@6 {
+-		label = "rango:white:usb3_1";
++		label = "wrt3200acm:white:usb3_1";
+ 		reg = <0x6>;
+ 	};
+ 
+ 	usb3_2@7 {
+-		label = "rango:white:usb3_2";
++		label = "wrt3200acm:white:usb3_2";
+ 		reg = <0x7>;
+ 	};
+ 
+ 	wps_white@8 {
+-		label = "rango:white:wps";
++		label = "wrt3200acm:white:wps";
+ 		reg = <0x8>;
+ 	};
+ 
+ 	wps_amber@9 {
+-		label = "rango:amber:wps";
++		label = "wrt3200acm:amber:wps";
+ 		reg = <0x9>;
+ 	};
+ };
+@@ -56,22 +56,22 @@ wps_amber@9 {
+ &gpio_leds {
+ 	power {
+ 		gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
+-		label = "rango:white:power";
++		label = "wrt3200acm:white:power";
+ 	};
+ 
+ 	sata {
+ 		gpios = <&gpio0 21 GPIO_ACTIVE_LOW>;
+-		label = "rango:white:sata";
++		label = "wrt3200acm:white:sata";
+ 	};
+ 
+ 	wlan_2g {
+ 		gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+-		label = "rango:white:wlan_2g";
++		label = "wrt3200acm:white:wlan_2g";
+ 	};
+ 
+ 	wlan_5g {
+ 		gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
+-		label = "rango:white:wlan_5g";
++		label = "wrt3200acm:white:wlan_5g";
+ 	};
+ };
+ 
 -- 
-2.26.0.292.g33ef6b2f38-goog
+2.25.1
 
