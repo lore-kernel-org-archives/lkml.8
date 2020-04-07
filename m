@@ -2,95 +2,182 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F883C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7687C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6912A2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF2B2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586281619;
+	bh=IEqYwD+/yTV5lpDfioBKZo+wlOnwx9M3BgoD8Cf8inI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ayHPs/J2kk1s40qaqN9ORR97ZBXLlY1+dlHslEFYyfbNMbvHAOZFYIhA+IbdrhuAJ
+	 EnIC4OFKHIdk7VGryL8YieBVpeQ88YXt/Suwmdu7aoCJBHADQeeEG4U1VJIl7m548H
+	 MAU1y2e1LJc6YnhQYqeLqXCDhaGHfaWKtMkOtELE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgDGRox (ORCPT
+        id S1726469AbgDGRq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:44:53 -0400
-Received: from cloud.peff.net ([104.130.231.41]:36090 "HELO cloud.peff.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
-        id S1726332AbgDGRow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:44:52 -0400
-Received: (qmail 3091 invoked by uid 109); 7 Apr 2020 17:44:50 -0000
-Received: from Unknown (HELO peff.net) (10.0.1.2)
- by cloud.peff.net (qpsmtpd/0.94) with SMTP; Tue, 07 Apr 2020 17:44:50 +0000
-Authentication-Results: cloud.peff.net; auth=none
-Received: (qmail 30621 invoked by uid 111); 7 Apr 2020 17:55:14 -0000
-Received: from coredump.intra.peff.net (HELO sigill.intra.peff.net) (10.0.0.2)
- by peff.net (qpsmtpd/0.94) with (TLS_AES_256_GCM_SHA384 encrypted) ESMTPS; Tue, 07 Apr 2020 13:55:14 -0400
-Authentication-Results: peff.net; auth=none
-Date:   Tue, 7 Apr 2020 13:44:49 -0400
-From:   Jeff King <peff@peff.net>
-To:     Joe Perches <joe@perches.com>
-Cc:     Olaf Hering <olaf@aepfle.de>, linux-kernel@vger.kernel.org,
-        git@vger.kernel.org
-Subject: Re: get_maintainer.pl sends bogus addresses to git send-email
-Message-ID: <20200407174449.GA1884106@coredump.intra.peff.net>
-References: <20200407154046.GA15368@aepfle.de>
- <20200407170257.GA1844923@coredump.intra.peff.net>
- <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
+        Tue, 7 Apr 2020 13:46:58 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:23040 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgDGRq6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 13:46:58 -0400
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 037Hkfi4021890;
+        Wed, 8 Apr 2020 02:46:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 037Hkfi4021890
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586281602;
+        bh=W8JU4ZdqtphrsLfo36sdrJqKVT9peXFuSNpLzYmGRP8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KQ32CoE6vGnxANJ1vo7wjPNojKvgkZQGCpmYdUq30o1oKwsWJbevbGZX2c74akTHV
+         mG3V3aC1qBv08hEUiaAv38G2Uv5FGBt7NjwGJxSWOIQyHJaKShhMY7Hfo4ijF0seaI
+         XOOCqYQj9svPSYad/6/MrhHY6JfKFD+lqz+kHCcstWy8I0PhI1vanp7yUfC1gQOECz
+         qNj9crhukCY8Vc3QcoVMDwtMy+uY9HAj311kea9bLq129hkao6czii436ViMylWiTa
+         FRSN6hIKN0HT2HMFqUggMk0lHB0GX8iJX2Nt1FcrQGiWgIEsZOyTFbS7lJZw+SpAj6
+         Td8qjMzxfWevg==
+X-Nifty-SrcIP: [209.85.222.49]
+Received: by mail-ua1-f49.google.com with SMTP id y17so1564219uap.13;
+        Tue, 07 Apr 2020 10:46:42 -0700 (PDT)
+X-Gm-Message-State: AGi0PubiEbQijp3VAMbH7ejzMWKidelpkEX99Lrm0C5usoyImgmv/qdN
+        HrWGMQIeJAbZdCy+Tw9lxslpO1lJ84L2TPU88s8=
+X-Google-Smtp-Source: APiQypL0lGxoDy3XTsgexzG6gSdFm4/73ugftZ4GObxBOtaXUO+wEwIZgBYmG3ZinZ6BOUGFWDei5mSD9PrEhbFlitw=
+X-Received: by 2002:a9f:28c5:: with SMTP id d63mr2669722uad.25.1586281600679;
+ Tue, 07 Apr 2020 10:46:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
+References: <20200403051709.22407-1-masahiroy@kernel.org> <20200406112220.GB126804@google.com>
+ <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com> <CAKwvOdmHxeZ+T1OsOhW25pPygHM4D21OgZqRk141xbjP437-1w@mail.gmail.com>
+In-Reply-To: <CAKwvOdmHxeZ+T1OsOhW25pPygHM4D21OgZqRk141xbjP437-1w@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 8 Apr 2020 02:46:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARSMvGZ6T4Ct=U4Xe1WQCgkaWE8m8BxRuYiaokKVjA_ig@mail.gmail.com>
+Message-ID: <CAK7LNARSMvGZ6T4Ct=U4Xe1WQCgkaWE8m8BxRuYiaokKVjA_ig@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 10:18:41AM -0700, Joe Perches wrote:
+On Wed, Apr 8, 2020 at 2:01 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> On Tue, Apr 7, 2020 at 9:17 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > On Mon, Apr 6, 2020 at 8:22 PM 'Matthias Maennich' via Clang Built
+> > Linux <clang-built-linux@googlegroups.com> wrote:
+> > >
+> > > On Fri, Apr 03, 2020 at 02:17:09PM +0900, Masahiro Yamada wrote:
+> > > >As Documentation/kbuild/llvm.rst implies, building the kernel with a
+> > > >full set of LLVM tools gets very verbose and unwieldy.
+> > > >
+> > > >Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
+> > > >GCC and Binutils. You can pass LLVM=1 from the command line or as an
+> > > >environment variable. Then, Kbuild will use LLVM toolchains in your
+> > > >PATH environment.
+> > > >
+> > > >Please note LLVM=1 does not turn on the LLVM integrated assembler.
+> > > >You need to explicitly pass AS=clang to use it. When the upstream
+> > > >kernel is ready for the integrated assembler, I think we can make
+> > > >it default.
+> > > >
+> > > >We discussed what we need, and we agreed to go with a simple boolean
+> > > >switch (https://lkml.org/lkml/2020/3/28/494).
+> > > >
+> > > >Some items in the discussion:
+> > > >
+> > > >- LLVM_DIR
+> > > >
+> > > >  When multiple versions of LLVM are installed, I just thought supporting
+> > > >  LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
+> > > >
+> > > >  CC      = $(LLVM_DIR)clang
+> > > >  LD      = $(LLVM_DIR)ld.lld
+> > > >    ...
+> > > >
+> > > >  However, we can handle this by modifying PATH. So, we decided to not do
+> > > >  this.
+> > > >
+> > > >- LLVM_SUFFIX
+> > > >
+> > > >  Some distributions (e.g. Debian) package specific versions of LLVM with
+> > > >  naming conventions that use the version as a suffix.
+> > > >
+> > > >  CC      = clang$(LLVM_SUFFIX)
+> > > >  LD      = ld.lld(LLVM_SUFFIX)
+> > > >    ...
+> > > >
+> > > >  will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
+> > > >  but the suffixed versions in /usr/bin/ are symlinks to binaries in
+> > > >  /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
+> > > >
+> > > >- HOSTCC, HOSTCXX, etc.
+> > > >
+> > > >  We can switch the host compilers in the same way:
+> > > >
+> > > >  ifneq ($(LLVM),)
+> > > >  HOSTCC       = clang
+> > > >  HOSTCXX      = clang++
+> > > >  else
+> > > >  HOSTCC       = gcc
+> > > >  HOSTCXX      = g++
+> > > >  endif
+> > > >
+> > > >  This may the right thing to do, but I could not make up my mind.
+> > > >  Because we do not frequently switch the host compiler, a counter
+> > > >  solution I had in my mind was to leave it to the default of the
+> > > >  system.
+> > > >
+> > > >  HOSTCC       = cc
+> > > >  HOSTCXX      = c++
+> > >
+> > > What about HOSTLD ? I saw recently, that setting HOSTLD=ld.lld is not
+> > > yielding the expected result (some tools, like e.g. fixdep still require
+> > > an `ld` to be in PATH to be built). I did not find the time to look into
+> > > that yet, but I would like to consistently switch to the llvm toolchain
+> > > (including linker and possibly more) also for hostprogs.
+> >
+> >
+> > HOSTLD=ld.lld worked for me, but HOSTCC=clang did not.
+> >
+> >
+> >
+> > HOSTCC=clang without CC=clang fails to build objtool.
+> >
+> > The build system of objtool is meh.  :(
+>
+> Let's tackle that in a follow up, with the goal of build hermiticity
+> in mind.  I think there's good feedback in this thread to inform the
+> design of a v2:
+> 1. CLANG_AS=0 to disable integrated as.  Hopefully we won't need this
+> much longer, so we don't need to spend too much time on this, Masahiro
+> please just choose a name for this.  llvm-as naming conventions
+> doesn't follow the rest of binutils.
 
-> On Tue, 2020-04-07 at 13:02 -0400, Jeff King wrote:
-> > On Tue, Apr 07, 2020 at 05:40:46PM +0200, Olaf Hering wrote:
-> > 
-> > > For me sending patches via git send-email fails because email address
-> > > conversion is failing. Something appends a ')' to x86/lkml@kernel.org.
-> > > I suspect the double '))' in MAINTAINERS is confusing the command.
-> > > I tried to send the trivial patch from v5.0 and v5.6 tag.
-> > > 
-> > > Is this a failure in ./scripts/get_maintainer.pl,
-> > > or is this something git does internally?
-> > > I'm sure others use such command on a daily basis, so likely something on
-> > > my end became broken at some point in the past.
-> > 
-> > It's a bug in send-email's hand-rolled address parser, which was fixed
-> > in bd869f67b9 (send-email: add and use a local copy of Mail::Address,
-> > 2018-01-05). Upgrade to Git v2.17.0 or newer.
-> 
-> Not really.
-> You need to add --norolestats on the get_maintainer command line
-> 
-> git send-email expects bare email addresses, not ones annotated
-> with additional content.
+I am not so familiar with the terminology in LLVM,
+but I feel 'integrated' is a keyword IMHO.
+I prefer LLVM_IA=1.  (or  LLVM_INTEGRATED_AS=1)
 
-I agree that dropping them from the output is even better, if you'd
-never want them to be sent.
 
-Syntactically they are rfc822 comments, and send-email _should_ be able
-to handle them (and does in recent versions).
+> 2. HOSTCC=clang HOSTLD=ld.lld set by LLVM=1 for helping with build hermiticity.
+>
 
-> For instance:
-> 
-> $ ./scripts/get_maintainer.pl -f lib/vsprintf.c
-> Petr Mladek <pmladek@suse.com> (maintainer:VSPRINTF)
-> Steven Rostedt <rostedt@goodmis.org> (maintainer:VSPRINTF)
-> Sergey Senozhatsky <sergey.senozhatsky@gmail.com> (maintainer:VSPRINTF)
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> (reviewer:VSPRINTF)
-> Rasmus Villemoes <linux@rasmusvillemoes.dk> (reviewer:VSPRINTF)
 
-In all of these cases send-email will drop the bit in parentheses.
 
-> linux-kernel@vger.kernel.org (open list)
 
-In this one, I think that the comment will be used as the name field,
-since there isn't one.
-
--Peff
+-- 
+Best Regards
+Masahiro Yamada
