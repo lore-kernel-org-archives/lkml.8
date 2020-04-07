@@ -2,108 +2,89 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDEBC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308F8C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BAB2082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2C12075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AzmsIQiT"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nOG4bn7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbgDGUIJ (ORCPT
+        id S1727805AbgDGUI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:08:09 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37836 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726712AbgDGUII (ORCPT
+        Tue, 7 Apr 2020 16:08:29 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:18590 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727349AbgDGUI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:08:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586290087;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pN+gkxMesJKsy+L8oStv/TkSI0ntYQt3xD3UKdBvVD0=;
-        b=AzmsIQiTR2h8Z0cEaMB3AGuPdtXiUiwky0A5F7bWKOugWR1cod1b3y1WOnZaVCXd7A+7Vk
-        6yrI3gpnG/WRFhPs8+Iu1bRR6X5OAHVAoL6b1rTsHgdrPWdPI8+GD9yOeb+ENLxqhGaQXe
-        a+/CNMOXGTiVksn12C/mCuv8PoNQM4s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-6pjcTtFVMvC_rgW4P24pzQ-1; Tue, 07 Apr 2020 16:08:05 -0400
-X-MC-Unique: 6pjcTtFVMvC_rgW4P24pzQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0535107ACC9;
-        Tue,  7 Apr 2020 20:08:03 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-180.rdu2.redhat.com [10.10.117.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 06F3C385;
-        Tue,  7 Apr 2020 20:07:58 +0000 (UTC)
-Subject: Re: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive data
- objects
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        David Rientjes <rientjes@google.com>
-References: <20200406185827.22249-1-longman@redhat.com>
- <20200406200016.GJ21484@bombadil.infradead.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <ba77ea54-69db-2d5c-4811-78b0ac1c45d7@redhat.com>
-Date:   Tue, 7 Apr 2020 16:07:58 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 7 Apr 2020 16:08:28 -0400
+X-UUID: 8471fe2b636049fa9f36b0f8e3fb0568-20200408
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=WqSU90W8BDFuk3y8S58rG8mKm4Tc9B0etHGPGZwhauc=;
+        b=nOG4bn7wd9ovUAiygI3NOcRDlNPX4dyIje0Ejhh7to6mIDLlGPokoulHf3O8vtXTXD0TFea5396/BcXjzuTAKZqQs8ij26LJawAhhrEZerH6FeOckd1y78Tgb3vxG6AAyiL7SZGoQVNMweKFzPeE9v2kuO0S/+POqIC2ekw08+o=;
+X-UUID: 8471fe2b636049fa9f36b0f8e3fb0568-20200408
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 360376222; Wed, 08 Apr 2020 04:08:23 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 8 Apr 2020 04:08:17 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 8 Apr 2020 04:08:18 +0800
+From:   <sean.wang@mediatek.com>
+To:     <linus.walleij@linaro.org>, <linux-mediatek@lists.infradead.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Light Hsieh <light.hsieh@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Subject: [PATCH v7 2/2] pinctrl: mediatek: make MediaTek MT6765 pinctrl ready for buiding loadable module
+Date:   Wed, 8 Apr 2020 04:08:17 +0800
+Message-ID: <42100afe6f97d28447c153bea6b54ea556cf95ca.1586289920.git.sean.wang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <9feeb04805e5a406fe22a92e3f280abda39ddda4.1586289920.git.sean.wang@mediatek.com>
+References: <9feeb04805e5a406fe22a92e3f280abda39ddda4.1586289920.git.sean.wang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200406200016.GJ21484@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/6/20 4:00 PM, Matthew Wilcox wrote:
-> On Mon, Apr 06, 2020 at 02:58:27PM -0400, Waiman Long wrote:
->> +/**
->> + * kvfree_sensitive - free a data object containing sensitive information
->> + * @addr - address of the data object to be freed
->> + * @len  - length of the data object
-> Did you try building this with W=1?  I believe this is incorrect kerneldoc.
-> It should be @addr: and @len:
->
-> Also, it reads better in the htmldocs if you capitalise the first letter
-> of each sentence and finish with a full stop.
->
-You are right. I use the wrong delimiter here. I just send out a v3
-patch to fix that. Thanks for noticing it.
-
-
->> @@ -914,7 +911,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
->>  		 */
->>  		if (ret > key_data_len) {
->>  			if (unlikely(key_data))
->> -				__kvzfree(key_data, key_data_len);
->> +				kvfree_sensitive(key_data, key_data_len);
-> I'd drop the test of key_data here.
->
-I would like to keep the unlikely tag here to emphaize the fact that
-this path should not be taken. I have comments up a few lines to talk
-about it, though it didn't show up in the diff.
-
-Cheers,
-Longman
+RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KVGhpcyBwYXRj
+aCBtYWtlIHBpbmN0cmwtbXQ2NzY1IHJlYWR5IGZvciBidWlsZGluZyBhcyBsb2FkYWJsZSBtb2R1
+bGUuDQoNClNpZ25lZC1vZmYtYnk6IFNlYW4gV2FuZyA8c2Vhbi53YW5nQG1lZGlhdGVrLmNvbT4N
+ClNpZ25lZC1vZmYtYnk6IExpZ2h0IEhzaWVoIDxsaWdodC5oc2llaEBtZWRpYXRlay5jb20+DQot
+LS0NCnY2LT52NzogcmVtb3ZlIGNoYW5nZS1pZA0KLS0tDQogZHJpdmVycy9waW5jdHJsL21lZGlh
+dGVrL0tjb25maWcgICAgICAgICAgfCAyICstDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3Bp
+bmN0cmwtbXQ2NzY1LmMgfCA0ICsrKysNCiAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
+KSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVr
+L0tjb25maWcgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvS2NvbmZpZw0KaW5kZXggNTUxYWM3
+MTZiMTBjLi5mMzJkMzY0NGM1MDkgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0
+ZWsvS2NvbmZpZw0KKysrIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tjb25maWcNCkBAIC04
+Nyw3ICs4Nyw3IEBAIGNvbmZpZyBQSU5DVFJMX01UMjcxMg0KIAlzZWxlY3QgUElOQ1RSTF9NVEsN
+CiANCiBjb25maWcgUElOQ1RSTF9NVDY3NjUNCi0JYm9vbCAiTWVkaWF0ZWsgTVQ2NzY1IHBpbiBj
+b250cm9sIg0KKwl0cmlzdGF0ZSAiTWVkaWF0ZWsgTVQ2NzY1IHBpbiBjb250cm9sIg0KIAlkZXBl
+bmRzIG9uIE9GDQogCWRlcGVuZHMgb24gQVJNNjQgfHwgQ09NUElMRV9URVNUDQogCWRlZmF1bHQg
+QVJNNjQgJiYgQVJDSF9NRURJQVRFSw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRp
+YXRlay9waW5jdHJsLW10Njc2NS5jIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwt
+bXQ2NzY1LmMNCmluZGV4IDkwNWRhZThjM2ZkOC4uMmM1OWQzOTM2MjU2IDEwMDY0NA0KLS0tIGEv
+ZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXQ2NzY1LmMNCisrKyBiL2RyaXZlcnMv
+cGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10Njc2NS5jDQpAQCAtNiw2ICs2LDcgQEANCiAgKg0K
+ICAqLw0KIA0KKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCiAjaW5jbHVkZSAicGluY3RybC1t
+dGstbXQ2NzY1LmgiDQogI2luY2x1ZGUgInBpbmN0cmwtcGFyaXMuaCINCiANCkBAIC0xMTAzLDMg
+KzExMDQsNiBAQCBzdGF0aWMgaW50IF9faW5pdCBtdDY3NjVfcGluY3RybF9pbml0KHZvaWQpDQog
+CXJldHVybiBwbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIoJm10Njc2NV9waW5jdHJsX2RyaXZlcik7
+DQogfQ0KIGFyY2hfaW5pdGNhbGwobXQ2NzY1X3BpbmN0cmxfaW5pdCk7DQorDQorTU9EVUxFX0xJ
+Q0VOU0UoIkdQTCB2MiIpOw0KK01PRFVMRV9ERVNDUklQVElPTigiTWVkaWFUZWsgTVQ2NzY1IFBp
+bmN0cmwgRHJpdmVyIik7DQotLSANCjIuMjUuMQ0K
 
