@@ -2,157 +2,111 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D923C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EACC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF36520768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBBD820768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CqEj5G+G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVQZHEJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgDGAvr (ORCPT
+        id S1726428AbgDGAyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:51:47 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37424 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgDGAvq (ORCPT
+        Mon, 6 Apr 2020 20:54:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40466 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgDGAyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:51:46 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u65so8478531pfb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 17:51:45 -0700 (PDT)
+        Mon, 6 Apr 2020 20:54:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s8so1863303wrt.7;
+        Mon, 06 Apr 2020 17:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=tAw8KW0bFK0Yz8fIQWiF5l2yjocFDcbB0anIbqS6PMQ=;
-        b=CqEj5G+G1Sj4eY6jp4z1gwYVVfP3ETQnuFn7UF14pAzWnqbjMtwoznXsx7fbhBZ3xx
-         SfE7Wcbx04ZI0XVPq+w0HsmW6uLefMOG6+x/k1RYvEaUjUoTBZ1xMHzuJYN2VfDMo+rN
-         xwbW3q//wywrDHb3RgR8RnRdXvYXUfHFmvXA2GjclllReOVuFY3IcPOr6lySEPouZvTI
-         SZaWhnsVBPesQsSW59bWFclTF+EZ2amlNN+n38mbG9tssPXWypwA/q2SGOfFgqnfj9HI
-         XIHrmdopSuoZ1bTv193cBLOYcZJqpaWksg9cLZ60IFbf5laJuNZjUXuIXybMHqhnZunN
-         T98g==
+        h=from:to:cc:subject:date:message-id;
+        bh=f9/NbIgNdnQIK+P1jaZ1EvtyelbjfTXJfL5WDuMOA0U=;
+        b=NVQZHEJMxzxjmz22HV/sWwxN+ocAVOoaF4cKwwkqm6oc/YyLfl3BntEiYdR2eBkvUm
+         XPDNr+Xaam85Uw8cjJsIjj0/trxwWmT8teMcokDv6SeGeUGREF+TO3i/DSBdQD+6h8eM
+         xN/jJHUPLMaSNEe4unkFRY/s3/CSW51YP1jvP+0o23BoXflk2cX7Ersic512kXJH4QoM
+         xbwsHe+5I0t2ta1oWMNhC8x6mUYl7w84kht2Ixw9W0hlayw6UyedqhjPoaRu7o0bmu2q
+         7lZLBBl4sWcM5PAeweT3FWb59/qFSJXuL0zFkif/CsJlhy95Ff0S8mAiov1jhkyISN89
+         k4+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=tAw8KW0bFK0Yz8fIQWiF5l2yjocFDcbB0anIbqS6PMQ=;
-        b=NZiiDCyFchVwkphX1/Yp8BOLWWtiQbRxWIDkAalEs4rGPi55oWMsIg5fGTqtnKtEmS
-         DpaSKVNQpcsDKm/BFkRCOB2SR74n1YqKiJ7n4A9UyA1BXKCebUZ3qPoBdOs2bkSBxfYM
-         fnCxGejtR7e1DpP6reCucYIG1fnvPJHRfjgaZoyLTdztoUIAZSdC2OUdPDy3NTQUetS4
-         M7yEWcbcQzDV/p7ZSmDSNAZM2128/LsqUCsWmIcwYzQKBfF3gNkdaAXyRzFGHAgH5XUk
-         IbqMqQ7qxj8uVB8joFYmCecYwTfcSyuveQjS6i0bRQ6Qzq8HGWkzXxlOTAnKiJJePapf
-         7m7Q==
-X-Gm-Message-State: AGi0PuZjugnzl+CW58zoDrFF0hOMlWWrIZrK1QjqLy8sLDDfJq6dEz0J
-        8aHfK2HIfKQAPwFbvbRYryg=
-X-Google-Smtp-Source: APiQypJiXLxaPiaqtXc+2hUQni5NRszaSjpfE6ESZh4OGo/SjydSw+b7jjk1VPM3FGSAKr2kgTwqcA==
-X-Received: by 2002:a65:670e:: with SMTP id u14mr1842173pgf.264.1586220705440;
-        Mon, 06 Apr 2020 17:51:45 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id o15sm11699220pgj.60.2020.04.06.17.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 17:51:44 -0700 (PDT)
-Date:   Tue, 07 Apr 2020 10:50:20 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH v3 05/15] powerpc/irq: Add helpers to get and set
- regs->softe
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <5aeaa33383e833f6eca30893fbd188b88e019eaa.1586196948.git.christophe.leroy@c-s.fr>
-        <f9f0bd58f9e75e8e3826f25d9db9ff2c6ad9c84b.1586196948.git.christophe.leroy@c-s.fr>
-In-Reply-To: <f9f0bd58f9e75e8e3826f25d9db9ff2c6ad9c84b.1586196948.git.christophe.leroy@c-s.fr>
-MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1586219567.cl8bye6kgu.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=f9/NbIgNdnQIK+P1jaZ1EvtyelbjfTXJfL5WDuMOA0U=;
+        b=HBx4TvzV0VKe3EfgGjQff8VyPHJBn/fews81ncfrJb2YHjA6H0UkP+3TlNfACKTskx
+         yoVnd+bH11r8WsxO6AIk7cICQvmveqwhRICLf5+EF7p+EWNw2zcdwq5dMMWvw34nwN8f
+         Y39yRk7FzQLRbVng6Yg0+ze6aB6X80YJBWGhjb3oQAC/XEXdvIFI7oT2I4YdYvtddeAV
+         g/tBYwOYoQBMKv4dHmna5oYOSJrRB1yD5hTNGugLTOwubgLwQHdNSVXp/NE/bKXHdRQS
+         o62HVeAjG64qwXlHp/pA3h0GPz68VXkLtetT6YMlssPxUgYlslzZx61jS4eBTU7O/m9t
+         W/kA==
+X-Gm-Message-State: AGi0PubAZ3MToeI+noOOarMaWCXebymy70sSAbenfMUSOlTfmnd6/0uz
+        WPaDCN4ZejJ5+Ig+01takOGIkI/J
+X-Google-Smtp-Source: APiQypIPVHIP9fjB4kiUFE3+ZRRnl+/t+T2AowygVGQZ/IboLf+SRubDjmK8pg1+8yWt0sCHbWkSRg==
+X-Received: by 2002:adf:f5d0:: with SMTP id k16mr1972339wrp.227.1586220858093;
+        Mon, 06 Apr 2020 17:54:18 -0700 (PDT)
+Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p10sm28244775wrm.6.2020.04.06.17.54.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 06 Apr 2020 17:54:17 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-stable@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, sashal@kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH stable-4.9.y]] net: dsa: tag_brcm: Fix skb->fwd_offload_mark location
+Date:   Mon,  6 Apr 2020 17:54:12 -0700
+Message-Id: <1586220853-34769-1-git-send-email-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on April 7, 2020 4:16 am:
-> regs->softe doesn't exist on PPC32.
->=20
-> Add helpers to get and set regs->softe.
-> Those helpers will void on PPC32.
->=20
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  arch/powerpc/include/asm/hw_irq.h | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm=
-/hw_irq.h
-> index e0e71777961f..e69466867d5f 100644
-> --- a/arch/powerpc/include/asm/hw_irq.h
-> +++ b/arch/powerpc/include/asm/hw_irq.h
-> @@ -39,6 +39,8 @@
->  #define PACA_IRQ_MUST_HARD_MASK	(PACA_IRQ_EE)
->  #endif
-> =20
-> +#endif /* CONFIG_PPC64 */
-> +
->  /*
->   * flags for paca->irq_soft_mask
->   */
-> @@ -47,8 +49,6 @@
->  #define IRQS_PMI_DISABLED	2
->  #define IRQS_ALL_DISABLED	(IRQS_DISABLED | IRQS_PMI_DISABLED)
-> =20
-> -#endif /* CONFIG_PPC64 */
-> -
->  #ifndef __ASSEMBLY__
-> =20
->  extern void replay_system_reset(void);
-> @@ -282,6 +282,15 @@ extern void irq_set_pending_from_srr1(unsigned long =
-srr1);
-> =20
->  extern void force_external_irq_replay(void);
-> =20
-> +static inline unsigned long get_softe(struct pt_regs *regs)
-> +{
-> +	return regs->softe;
-> +}
-> +
-> +static inline void set_softe(struct pt_regs *regs, unsigned long val)
-> +{
-> +	regs->softe =3D val;
-> +}
->  #else /* CONFIG_PPC64 */
-> =20
->  static inline unsigned long arch_local_save_flags(void)
-> @@ -350,6 +359,14 @@ static inline bool arch_irq_disabled_regs(struct pt_=
-regs *regs)
-> =20
->  static inline void may_hard_irq_enable(void) { }
-> =20
-> +static inline unsigned long get_softe(struct pt_regs *regs)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void set_softe(struct pt_regs *regs, unsigned long val)
-> +{
-> +}
+When the backport of upstream commit
+0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ("net: dsa: Fix duplicate
+frames flooded by learning") was done the assignment of
+skb->fwd_offload_mark would land in brcm_tag_xmit() which is incorrect,
+it should have been in brcm_tag_rcv().
 
-If this goes into a general shared header, I would prefer if we could
-do something a bit more general (at least with the name).
+Fixes: 5e845dc62f38 ("net: dsa: Fix duplicate frames flooded by learning")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ net/dsa/tag_brcm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I think get_softe() could just be replaced with arch_irq_disabled_regs().
+diff --git a/net/dsa/tag_brcm.c b/net/dsa/tag_brcm.c
+index 76d55a80f3b9..98074338cd83 100644
+--- a/net/dsa/tag_brcm.c
++++ b/net/dsa/tag_brcm.c
+@@ -84,8 +84,6 @@ static struct sk_buff *brcm_tag_xmit(struct sk_buff *skb, struct net_device *dev
+ 		brcm_tag[2] = BRCM_IG_DSTMAP2_MASK;
+ 	brcm_tag[3] = (1 << p->port) & BRCM_IG_DSTMAP1_MASK;
+ 
+-	skb->offload_fwd_mark = 1;
+-
+ 	return skb;
+ 
+ out_free:
+@@ -148,6 +146,8 @@ static int brcm_tag_rcv(struct sk_buff *skb, struct net_device *dev,
+ 	skb->dev->stats.rx_packets++;
+ 	skb->dev->stats.rx_bytes += skb->len;
+ 
++	skb->offload_fwd_mark = 1;
++
+ 	netif_receive_skb(skb);
+ 
+ 	return 0;
+-- 
+2.7.4
 
-For set, could we call it irq_soft_mask_regs_set_state()? 32 has no soft
-mask state in regs, so it's more obvious that it's a no-op. Or you could
-make 32-bit version a BUG(), and then always guard it with IS_ENABLED().
-
-Thanks,
-Nick
-=
