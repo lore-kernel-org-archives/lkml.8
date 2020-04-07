@@ -2,105 +2,202 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A62C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC74EC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF132206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725EF2074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:57:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIBzdmVY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vBaMQQlf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgDGM4I (ORCPT
+        id S1728771AbgDGM5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:56:08 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35182 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgDGM4H (ORCPT
+        Tue, 7 Apr 2020 08:57:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37334 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728146AbgDGM5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 08:56:07 -0400
-Received: by mail-pf1-f195.google.com with SMTP id a13so783677pfa.2;
-        Tue, 07 Apr 2020 05:56:06 -0700 (PDT)
+        Tue, 7 Apr 2020 08:57:48 -0400
+Received: by mail-wm1-f68.google.com with SMTP id j19so1728677wmi.2;
+        Tue, 07 Apr 2020 05:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ig7enmh1xqIMupAhnVZ5RcpKxVtZ4Uzul6UlsPcv9Oo=;
-        b=FIBzdmVYE5/QR8uThRRfspwHjQHAjgZbz5ao/Wp76m2VqcEenVSVXZoC/Yo6XFDdy9
-         vf1QNp8sEL4A8RcUHzLkz97KM6x5MCTfdRf3QKFYXRs8aXEGwGFcrdqE8t4sut3leebc
-         h13UrxbngqOquAGLFAG7dFoWQpglYEZPFYA2w0EfUBUhVJR3AVy84W8EJ8/DRL7kBLPe
-         sWj1V0W2j58Tm2DiL/rmeTdM3y7/HGsy8copHBJdHun6RUJea8HHz47swXvHnq6sCC+p
-         fqj85f5md2lMKLseDGMccylPsfZXnafjMJSwzWjuZJxpvnUJuQe826HJa//x/yCdWvb8
-         C6ug==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=NJgFiHGVdEHVoPHsjcjQFPUVIguP3zuu0mFKw20AE/I=;
+        b=vBaMQQlfPEOTUUXSzYIRq4G4kDrCj4VmuSnRz3BAzJkT0orChsQF6W5INidkHLNPW7
+         nqTyfzXBdohezy0lOGI3lsaO3OXyZ6MdPUHTa1tcM2ngqPFMKVvkUY1s0dXNxJgocRgO
+         Gx5sYtkoAVX+xl/QN/Hz+fspEgaZqIcIQbVGDG5oGJ8HV45f9zFNSbU9c7NNqwKVF5Yi
+         0K3exelQTcqOpeP5+huVBYoOda9yUg+AiGiV3ezLl1QSpsaHcj97JsmWdaHoj5AP8c5u
+         Te9qraRr03mED15QGisiH2MQZobn32netPPlIBXXmbbaQBwVOatO/8ev0uu42D3dYGBN
+         RWEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ig7enmh1xqIMupAhnVZ5RcpKxVtZ4Uzul6UlsPcv9Oo=;
-        b=nhypyazG9KnU4DV/N1kZ10ut3IMX75AN0do69z+MHXMhQQlK8AWt5PI4Ik0i3ytney
-         UFntt+BSQG9V5ZFOFPbLWX9XGvn3KjYgw+VY6TkDuKGwvETBFkFPx9hJQrRh2zLH5Qf2
-         VaMKxKfHmQyCbY0qMiou3NSX23/Ml86TKUW4ENWa1+jpAk3l/m+u12+vMCE2ag5d8EKl
-         zqhgb6TCLTDwrThJe4WYF62YdM3YAu2xeU6OOD+MndIHasBIHrHkDLy16ORKvS/P5Ry/
-         swj7rHW7GN3n3nilILXg1moYysXNdbiNa/yVBePVB9usncTRRo4OS+eGXzrdBCba+uWf
-         HuZA==
-X-Gm-Message-State: AGi0PubxHRmxSZ2lWIHBbHKq+sYJuFIJYjvFQmAm/Fx+gRPlpVqA6/6m
-        kySZxj7EHzhOsWV9xye8W1A=
-X-Google-Smtp-Source: APiQypJCX0vTZj1qAlLIiM04lysN4jvTPdTdU+Qyz3k2eJZ/+bCQ7tQ+2inYApfUkA63pzMDXVV6RQ==
-X-Received: by 2002:a62:1a90:: with SMTP id a138mr2565217pfa.320.1586264166323;
-        Tue, 07 Apr 2020 05:56:06 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:600d:c36b:d50:b01b:c4e4:35ad])
-        by smtp.gmail.com with ESMTPSA id c62sm13746195pfc.136.2020.04.07.05.56.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 05:56:05 -0700 (PDT)
-From:   Aishwarya R <aishwaryarj100@gmail.com>
-Cc:     aishwaryarj100@gmail.com, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: spi-fsl-lpspi: Fix indentation and open brace should be on the previous line
-Date:   Tue,  7 Apr 2020 18:25:57 +0530
-Message-Id: <20200407125557.6520-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=NJgFiHGVdEHVoPHsjcjQFPUVIguP3zuu0mFKw20AE/I=;
+        b=Vyr/TmkQhAvU1NHPqqyB9d9aSsha+imcteGun1aqNAoI8GgG1uXWjbO9q+otC2FpK6
+         EUKI7Qlwq6bCzGQfBsWqlaqGrVx2qvevW5YRg4wCh/OjzJpt95Bn6dqbMLxcdRgV7CLi
+         3omADt1XgTukdJu4Nw5dEXymP0UQbmp9KUykU6wmD1odHEC7+Rdoue/ZCLmY75feKxi8
+         ix6L09RQSHZmLDDiNI5L3c3threSfuPdMsOpzWOZn1DMcqxlIGQVRtXaPbjkfaPTtF+f
+         dXaEaut872tdfu9U/ksHPanJX5i5ZFfl+UkeBIdIMS9L1KbQYn4+a5AgGNGKfqPRsjJw
+         b8hw==
+X-Gm-Message-State: AGi0PuYbEfFls2vJhiqucth+Jz4RLeKOqWGzPoJgjyy+ZkBWVkONkPpk
+        3fwGaGBNXZgQ2orqE/dMbz28vEnMbAKICiNNqZU=
+X-Google-Smtp-Source: APiQypLf2n32gkj/40LPaOXiDFIUwBtDEXVa9iT+o0zSQGe98lpZiv9eO+Dg4KTGdklo81hElYAdZ5EZ/fvR5qsk8rE=
+X-Received: by 2002:a1c:7c0d:: with SMTP id x13mr2251285wmc.44.1586264266277;
+ Tue, 07 Apr 2020 05:57:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200407023512.GA25005@ubuntu> <20200407030504.GX23230@ZenIV.linux.org.uk>
+ <20200407031318.GY23230@ZenIV.linux.org.uk> <CAM7-yPQas7hvTVLa4U80t0Em0HgLCk2whLQa4O3uff5J3OYiAA@mail.gmail.com>
+ <20200407040354.GZ23230@ZenIV.linux.org.uk> <CAM7-yPRaQsNgZKjru40nM1N_u8HVLVKmJCAzu20DcPL=jzKjWQ@mail.gmail.com>
+In-Reply-To: <CAM7-yPRaQsNgZKjru40nM1N_u8HVLVKmJCAzu20DcPL=jzKjWQ@mail.gmail.com>
+From:   Yun Levi <ppbuk5246@gmail.com>
+Date:   Tue, 7 Apr 2020 21:57:35 +0900
+Message-ID: <CAM7-yPQ4DNNBHd2=QJpCLAmRRLSVuxKjnH6kJmuBdQ8iP0TRSA@mail.gmail.com>
+Subject: Fwd: [PATCH] netns: dangling pointer on netns bind mount point.
+To:     daniel@iogearbox.net, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resolved open brace { should be on the previous line checkpatch
-error and fix the indentation
+---------- Forwarded message ---------
+From: Yun Levi <ppbuk5246@gmail.com>
+Date: Tue, Apr 7, 2020 at 9:53 PM
+Subject: Re: [PATCH] netns: dangling pointer on netns bind mount point.
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: David S. Miller <davem@davemloft.net>, Jakub Kicinski
+<kuba@kernel.org>, Guillaume Nault <gnault@redhat.com>, Nicolas
+Dichtel <nicolas.dichtel@6wind.com>, Eric Dumazet
+<edumazet@google.com>, Li RongQing <lirongqing@baidu.com>, Thomas
+Gleixner <tglx@linutronix.de>, Johannes Berg
+<johannes.berg@intel.com>, David Howells <dhowells@redhat.com>,
+<daniel@iogearbox.net>, <linux-fsdevel@vger.kernel.org>,
+<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
 
-Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>
----
- drivers/spi/spi-fsl-lpspi.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 8b41b70f6f5c..511211b82430 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -186,14 +186,13 @@ static bool fsl_lpspi_can_dma(struct spi_controller *controller,
+BTW, It's my question.
 
- 	bytes_per_word = fsl_lpspi_bytes_per_word(transfer->bits_per_word);
+>Look: we call ns_get_path(), which calls ns_get_path_cb(), which
+>calls the callback passed to it (ns_get_path_task(), in this case),
+>which grabs a reference to ns.  Then we pass that reference to
+>__ns_get_path().
+>
+>__ns_get_path() looks for dentry stashed in ns.  If there is one
+>and it's still alive, we grab a reference to that dentry and drop
+>the reference to ns - no new inodes had been created, so no new
+>namespace references have appeared.  Existing inode is pinned
+>by dentry and dentry is pinned by _dentry_ reference we've got.
 
--	switch (bytes_per_word)
--	{
--		case 1:
--		case 2:
--		case 4:
--			break;
--		default:
--			return false;
-+	switch (bytes_per_word) {
-+	case 1:
-+	case 2:
-+	case 4:
-+		break;
-+	default:
-+		return false;
- 	}
+actually ns_get_path is called in unshare(2). and it makes new dentry
+and inode in __ns_get_path finally (Cuz it create new network
+namespace)
+In that case, when I mount with --bind option to this
+proc/self/ns/net, it only increase dentry refcount on
+do_loopback->clone_mnt finally (not call netns_operation->get)
+That means it's not increase previous created network namespace
+reference count but only increase reference count of _dentry_
+In that situation, If I exit the child process it definitely frees the
+net_namespace previous created at the same time it decrease
+net_namespace's refcnt in exit_task_namespace().
+It means it's possible that bind mount point can hold the dentry with
+inode having net_namespace's dangling pointer in another process.
+In above situation, parent who know that binded mount point calls
+setns(2) then it sets the net_namespace which is refered by the inode
+of the dentry increased by do_loopback.
+That makes set the net_namespace which was freed already.
 
- 	return true;
---
-2.17.1
+The Kernel Panic log is happend NOT in child kill but in Parent killed
+after I setns(2) with the net_namespace made by child process.
+
+Thanks you for your reviewing, But Please forgive that I couldn't
+share .config right now (I try to make for x86....)
+I try to understand your comments But Please forgive my fault because
+of my ignorant...
+If my explain is wrong, please rebuke me... and Please share your knowledge...
+
+Thank you.
+
+On Tue, Apr 7, 2020 at 1:04 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Tue, Apr 07, 2020 at 12:29:34PM +0900, Yun Levi wrote:
+>
+> > sock_prot_inuse_add+0x10/0x20
+> > __sock_release+0x44/0xc0
+> > sock_close+0x14/0x20
+> > __fput+0x8c/0x1b8
+> > ____fput+0xc/0x18
+> > task_work_run+0xa8/0xd8
+> > do_exit+0x2e4/0xa50
+> > do_group_exit+0x34/0xc8
+> > get_signal+0xd4/0x600
+> > do_signal+0x174/0x268
+> > do_notify_resume+0xcc/0x110
+> > work_pending+0x8/0x10
+> > Code: b940c821 f940c000 d538d083 8b010800 (b8606861) ---[ end trace
+> > 0b98c9ccbfd9f6fd ]---
+> > Date/Time : 02-14-0120 06:35:47 Kernel panic - not syncing: Fatal
+> > exception in interrupt SMP: stopping secondary CPUs Kernel Offset:
+> > disabled CPU features: 0x0,21806000 Memory Limit: none
+> >
+> > What I saw is when I try to bind on some mount point to
+> > /proc/{pid}/ns/net which made by child process, That's doesn't
+> > increase the netns' refcnt.
+>
+> Why would it?  Increase of netns refcount should happen when you
+> follow /proc/*/ns/net and stay for as long as nsfs inode is alive,
+> not by cloning that mount.  And while we are at it, you don't need
+> to bind it anywhere in order to call setns() - just open the
+> sucker and then feed the resulting descriptor to setns(2).  No
+> mount --bind involved and if child exiting between open() and
+> setns() would free netns, we would have exact same problem.
+>
+> > And when the child process's going to exit, it frees the netns But
+> > Still bind mount point's inode's private data point to netns which was
+> > freed by child when it exits.
+>
+> Look: we call ns_get_path(), which calls ns_get_path_cb(), which
+> calls the callback passed to it (ns_get_path_task(), in this case),
+> which grabs a reference to ns.  Then we pass that reference to
+> __ns_get_path().
+>
+> __ns_get_path() looks for dentry stashed in ns.  If there is one
+> and it's still alive, we grab a reference to that dentry and drop
+> the reference to ns - no new inodes had been created, so no new
+> namespace references have appeared.  Existing inode is pinned
+> by dentry and dentry is pinned by _dentry_ reference we've got.
+>
+> If dentry is not there or is already in the middle of being destroyed,
+> we allocate a new inode, stash our namespace reference into it,
+> create a dentry referencing that new inode, stash it into namespace
+> and return that dentry.  Without dropping namespace reference we'd
+> obtained in ns_get_path_task() - it went into new inode.
+>
+> If inode or dentry creation fails (out of memory), we drop what
+> we'd obtained (namespace if inode creation fails, just the inode
+> if dentry creation fails - namespace reference that went into
+> inode will be dropped by inode destructor in the latter case) and
+> return an error.
+>
+> If somebody else manages to get through the entire thing while
+> we'd been allocating stuff and we see _their_ dentry already
+> stashed into namespace, we just drop our dentry (its destructor
+> will drop inode reference, which will lead to inode destructor,
+> which will drop namespace reference) and bugger off with -EAGAIN.
+> The caller (ns_get_path_cb()) will retry the entire thing.
+>
+> The invariant to be preserved here is "each of those inodes
+> holds a reference to namespace for as long as the inode exists".
+> ns_get_path() increments namespace refcount if and only if it
+> has allocated an nsfs inode.  If it grabs an existing dentry
+> instead, the namespace refcount remains unchanged.
+>
+> Anyway, I would really like to see .config and C (or shell)
+> reproducer.  Ideally - .config that could be run in a KVM.
