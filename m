@@ -2,194 +2,273 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965E9C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7752DC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B78720730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323C320730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="rnHTf7ps";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="MZofr0wt"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CGEqBf8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbgDGSn2 (ORCPT
+        id S1726819AbgDGSoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:43:28 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:60360 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726706AbgDGSn2 (ORCPT
+        Tue, 7 Apr 2020 14:44:11 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:50836 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgDGSoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:43:28 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 037IhBIa019794;
-        Tue, 7 Apr 2020 11:43:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=od1lvjj19hWqNrYN+FQBr+a9k7OciRv3+R1HIB+tuZ4=;
- b=rnHTf7psnECsyAzVsmKAZJ4dC+j0jWkhX3kjjy0E5tDoBo4m1KufpJ4H0SSRYxGdhyFu
- Ew4InNKNfb0eYHy/WXWt2PfTozvqMvoSQx31aVRjErZVnKdYe1iliSWuSDwTOl2nbRQr
- PqJWJh5vVZwJy0Zs7cWRh9O2VO2cakaym8w= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 307449h0w9-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 07 Apr 2020 11:43:12 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 7 Apr 2020 11:42:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aPw5HSHY3djo8aCMNhvsOyXpUGk5AU/RhaeoQgrmo2ERykSZ82lOos1RBD1VcrbK25KTcU7b9JQnq/3nNHlUA3vR5OGvJito6OyUYDfAWO9+VpQ7Fd/VSJo6zEM+51rU2+hr+rJw13SOou/9NwLWcN8aSBF0FBaGu+4UgMLvJO1IundcHCrpmx324S6/V+hjC98DN+UvxRfwVNQqnG+lomTgkCrZWb/Xd/WHx52tKtrllzlRwN2YjwJ+YYkZCZr5sVYN9O7xZVBby2fvrF2YqFQkwCJlAkDNMCO1DAgjCyCBWa8pzsuTt9u1mGL1Vi9kYhFsPQ/vhhcb502T7+4uJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=od1lvjj19hWqNrYN+FQBr+a9k7OciRv3+R1HIB+tuZ4=;
- b=mjt1AzFENAVXRf6piEHfmLB8byH9DpCB6vZhY5l+Vlz5v+UBMijHeyL5gm+9tkNnR1uXuJhi9RRBJixdWm05AgY68FKCwaM1hhLvrwyTqoWotJNBzdzqjAbMMEgG/ogfJBdSI08kJwJIF2uCHpDoSHQfEJnKV9EdRfLj4JDxbTNQSUyDxmm7Msjxq6fGdtF+9Gvc6n110BqX9hXXJ8ZSvHNW+IM+ADV887v6qdp+5l10TjAVnQuGn2lte/aWjV5vAwMdgpLoppvH26K6qpBXGapRuOHFaZloiNTfjiL4+ihejjyggq/3N2wfgxqCzmIk0urMjDAgQL/ZiZyqVbk+oQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=od1lvjj19hWqNrYN+FQBr+a9k7OciRv3+R1HIB+tuZ4=;
- b=MZofr0wt9yGBJJ2GiSTTCzDNHo7NhEKecHWy8DQB0fKYyOflHRKpd5uUdlZRrQJjbexCnwXhijcJGlh7xm/ojvYfa+g/QQfDSgbPkgwm0n69vVk7YdKuTUdgOwIArDYWBBy9i5sW8VM0PCUAu4IFQH2icto/GHChipyM4S1DLsE=
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2792.namprd15.prod.outlook.com (2603:10b6:a03:15c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.21; Tue, 7 Apr
- 2020 18:42:45 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
- 18:42:45 +0000
-Date:   Tue, 7 Apr 2020 11:42:40 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Aslan Bakirov <aslan@fb.com>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andreas Schaufler <andreas.schaufler@gmx.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joonsoo Kim <js1304@gmail.com>
-Subject: Re: [PATCH v5 2/2] mm: hugetlb: optionally allocate gigantic
- hugepages using cma
-Message-ID: <20200407184240.GA22872@carbon.DHCP.thefacebook.com>
-References: <20200407163840.92263-1-guro@fb.com>
- <20200407163840.92263-3-guro@fb.com>
- <20200407181546.GV18914@dhcp22.suse.cz>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407181546.GV18914@dhcp22.suse.cz>
-X-ClientProxiedBy: MWHPR02CA0011.namprd02.prod.outlook.com
- (2603:10b6:300:4b::21) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Tue, 7 Apr 2020 14:44:11 -0400
+Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2184359E;
+        Tue,  7 Apr 2020 20:44:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586285047;
+        bh=+wwINIXYvOQByrteQZLqgZA10lOroQ6Th1LCLXHNWwk=;
+        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
+        b=CGEqBf8PhEA5f1q02Ta5eOsOgIywvva9MvH7UcrF/xxNL3RDhKHwLvICbCaaTqqlJ
+         qhtcU6m17k5ASR3PFhPtK2ypAdDNHij3OCefgj+4AaOcrA2cdM7bWI0NKQjFD2UVqI
+         SRAe2cHQTmLKhxW/ziAA+Pz98upJfaRDE9QnoSCc=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v5 4/9] media: adv748x: add definitions for audio output
+ related registers
+To:     Alex Riesen <alexander.riesen@cetitec.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <cover.1585852001.git.alexander.riesen@cetitec.com>
+ <26573ecdb48aa816f802b9d8bbe5f74157248021.1585852001.git.alexander.riesen@cetitec.com>
+ <a0ff0a59-bd6e-044b-5669-679126c23323@ideasonboard.com>
+ <20200407171327.GA4711@pflmari>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ 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
+ WZw01QYHU/GUV/zHJSFk
+Organization: Ideas on Board
+Message-ID: <9bdf0c48-ca1c-addc-aca4-5f1889d0ae93@ideasonboard.com>
+Date:   Tue, 7 Apr 2020 19:44:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.DHCP.thefacebook.com (2620:10d:c090:400::5:b342) by MWHPR02CA0011.namprd02.prod.outlook.com (2603:10b6:300:4b::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Tue, 7 Apr 2020 18:42:44 +0000
-X-Originating-IP: [2620:10d:c090:400::5:b342]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7b2553ba-9240-4d8a-44a9-08d7db237655
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2792:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2792BBCD4EADC6B55519BBD7BEC30@BYAPR15MB2792.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 036614DD9C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(366004)(5660300002)(81166006)(8936002)(55016002)(66556008)(81156014)(66476007)(2906002)(8676002)(6506007)(6666004)(498600001)(186003)(33656002)(86362001)(9686003)(7696005)(54906003)(110136005)(1076003)(52116002)(16526019)(66946007)(4326008);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DF9sySCfT0WVfFFua77f1F1kNcPNiDWZ7lygoChKhe2qiYthZZTe0YFnpMxQiA1WYXB+7AHQu5EmSzg9ZU1SiC8ky4uQH0xysxJLYs2lV6VDf6iYEPjodEIDn9NzEv/YgWhS74E67vV3I4EBTMNAr92KTelpbVNRdGCGUs4TaxbV6NmSjo6cfxVs8z/o0/Bb+pKfky8k2CmB9dg7A/BHgi6+c1GvHcQTw7RAe7Bn5nRy8wvkF6hXyv1GcXF4COcFxHUJZgL5Z2tt3/XvTiJWgS5YZzdzRDxvxTpnMV3nXoBsOc4MByvTAOoSulW8b9+XzYulZgMkTxuI9n9NudVAyHbwOBx+0NQGASv27+I6z0iX/sgtYDXygrHUdP345z/sUAJY70fww8Y9/RDabd4tSbB4MM/s20JyQOXZx0PFCMqXYRgEiD/4zitd4c5iyetF
-X-MS-Exchange-AntiSpam-MessageData: 2papkDdV5OMigyJbAL/sZemi04msvvODo3czzCQhxIhux+6AETdvubnrc+Ec/TJ0cVmjA0FYCVmK6KHZYfLFVpS3J4CNzETn5v5MxLNFQfTdlKspQzHkcZ71PBudR9IcgvlUYSd6wYJsSLZEWtrr7+MzpeEeTChnBzyqDDOzixuOzMySWXqFQ80cFs/TQOwf
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b2553ba-9240-4d8a-44a9-08d7db237655
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 18:42:45.2881
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GIizueJz1V1jsqiEJnsDl6VSjYEi5x8u72vkbQEuy6a/vYU8nqnydnlTDgFv/cDN
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2792
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_08:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- priorityscore=1501 spamscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- clxscore=1015 mlxscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070152
-X-FB-Internal: deliver
+In-Reply-To: <20200407171327.GA4711@pflmari>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 08:15:46PM +0200, Michal Hocko wrote:
-> On Tue 07-04-20 09:38:40, Roman Gushchin wrote:
-> > Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation at
-> > runtime") has added the run-time allocation of gigantic pages.  However it
-> > actually works only at early stages of the system loading, when the
-> > majority of memory is free.  After some time the memory gets fragmented by
-> > non-movable pages, so the chances to find a contiguous 1 GB block are
-> > getting close to zero.  Even dropping caches manually doesn't help a lot.
-> > 
-> > At large scale rebooting servers in order to allocate gigantic hugepages
-> > is quite expensive and complex.  At the same time keeping some constant
-> > percentage of memory in reserved hugepages even if the workload isn't
-> > using it is a big waste: not all workloads can benefit from using 1 GB
-> > pages.
-> > 
-> > The following solution can solve the problem:
-> > 1) On boot time a dedicated cma area* is reserved. The size is passed
-> >    as a kernel argument.
-> > 2) Run-time allocations of gigantic hugepages are performed using the
-> >    cma allocator and the dedicated cma area
-> > 
-> > In this case gigantic hugepages can be allocated successfully with a high
-> > probability, however the memory isn't completely wasted if nobody is using
-> > 1GB hugepages: it can be used for pagecache, anon memory, THPs, etc.
-> > 
-> > * On a multi-node machine a per-node cma area is allocated on each node.
-> >   Following gigantic hugetlb allocation are using the first available
-> >   numa node if the mask isn't specified by a user.
-> > 
-> > Usage:
-> > 1) configure the kernel to allocate a cma area for hugetlb allocations:
-> >    pass hugetlb_cma=10G as a kernel argument
-> > 
-> > 2) allocate hugetlb pages as usual, e.g.
-> >    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
-> > 
-> > If the option isn't enabled or the allocation of the cma area failed,
-> > the current behavior of the system is preserved.
-> > 
-> > x86 and arm-64 are covered by this patch, other architectures can be
-> > trivially added later.
-> > 
-> > The patch contains clean-ups and fixes proposed and implemented by
-> > Aslan Bakirov and Randy Dunlap. It also contains ideas and suggestions
-> > proposed by Rik van Riel, Michal Hocko and Mike Kravetz. Thanks!
-> > 
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > Tested-by: Andreas Schaufler <andreas.schaufler@gmx.de>
-> > Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-> > Acked-by: Michal Hocko <mhocko@kernel.org>
-> > Cc: Aslan Bakirov <aslan@fb.com>
-> > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Rik van Riel <riel@surriel.com>
-> > Cc: Joonsoo Kim <js1304@gmail.com>
+Hi Alex,
+
+With all the changes you've described below:
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+On 07/04/2020 18:13, Alex Riesen wrote:
+> Hi Kieran,
 > 
-> Thanks a lot for addressing my review feedback!
+> Kieran Bingham, Tue, Apr 07, 2020 18:21:00 +0200:
+>> On 02/04/2020 19:34, Alex Riesen wrote:
+>>> diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
+>>> index 0a9d78c2870b..1a1ea70086c6 100644
+>>> --- a/drivers/media/i2c/adv748x/adv748x.h
+>>> +++ b/drivers/media/i2c/adv748x/adv748x.h
+>>> @@ -226,6 +226,11 @@ struct adv748x_state {
+>>>  
+>>>  #define ADV748X_IO_VID_STD		0x05
+>>>  
+>>> +#define ADV748X_IO_PAD_CONTROLS		0x0e
+>>> +#define ADV748X_IO_PAD_CONTROLS_TRI_AUD	BIT(5)
+>>> +#define ADV748X_IO_PAD_CONTROLS_PDN_AUD	BIT(1)
+>>> +#define ADV748X_IO_PAD_CONTROLS1	0x1d
+>>
+>> What is CONTROLS1 (1d) referenced from here?
+> 
+> I wish I knew... I afraid this is a left-over from the early development
+> attempts. It is obviously a mask of some bits. I don't even use the _CONTROLS1
+> anymore.
+> 
+> Removed the #define.
+> 
+>> There's no 'field' matching for this register, and the 'bits' (0, 2, 3,
+>> 4) correspond to "pdn_spi, pdn_pix, '-', tri_spi"
+> 
+>> Perhaps we need to define those bit fields accordingly and reference
+>> them where they get used directly?
+>>
+>> Perhaps calling bit 3 as:
+>>  #define ADV748X_IO_PAD_CONTROLS_BIT_3	BIT(3)
+>>
+>> Or
+>>  #define ADV748X_IO_PAD_CONTROLS_RESVD	BIT(3)
+> 
+> I would prefer _BIT_3, if only to stay as opaque as the documentation.
+> 
+>> (Unless you have documentation that better describes it?)
+> 
+> Mine matches what you described above.
+> 
+> Do you mind if I describe the other bits of the register even though the
+> driver does not use them? Just for completeness sake (and while I still have
+> access to the documentation).
 
-Actually thank you for looking at it!
+I'm fine describing those extra BIT()s correctly.
 
-Andrew, can you, please, pick this version up instead of current patches and
-fixes in the mm tree?
-It will also fix the build on the next tree.
+> 
+>>> @@ -248,7 +253,21 @@ struct adv748x_state {
+>>>  #define ADV748X_IO_REG_FF		0xff
+>>>  #define ADV748X_IO_REG_FF_MAIN_RESET	0xff
+>>>  
+>>> +/* DPLL Map */
+>>> +#define ADV748X_DPLL_MCLK_FS		0xb5
+>>> +#define ADV748X_DPLL_MCLK_FS_N_MASK	GENMASK(2, 0)
+>>> +
+>>>  /* HDMI RX Map */
+>>> +#define ADV748X_HDMI_I2S		0x03	/* I2S mode and width */
+>>
+>> Looks like a more appropriate name than the datasheets
+>> "hdmi_register_03h" :-D
+> 
+> It was derived from the map and prefix of its bit-fields: i2soutmode and
+> i2sbitwidth. I too felt the name hdmi_register_03h lacking of depth.
+> 
+>>> +#define ADV748X_HDMI_I2SBITWIDTH_MASK	GENMASK(4, 0)
+>>> +#define ADV748X_HDMI_I2SOUTMODE_SHIFT	5
+>>> +#define ADV748X_HDMI_I2SOUTMODE_MASK	\
+>>> +	GENMASK(6, ADV748X_HDMI_I2SOUTMODE_SHIFT)
+>>
+>> I'd be very tempted to ignore the 80char limit here and put that on the
+>> line above ... or find a way to remove the 1 character...
+>>
+>> In fact, given the entry there - how about just leaving this as:
+>>
+>> #define ADV748X_HDMI_I2SOUTMODE_MASK	GENMASK(6, 5)
+> 
+> No problem. Reformatted with two spaces.
+> 
+>>> +#define ADV748X_I2SOUTMODE_I2S 0
+>>> +#define ADV748X_I2SOUTMODE_RIGHT_J 1
+>>> +#define ADV748X_I2SOUTMODE_LEFT_J 2
+>>> +#define ADV748X_I2SOUTMODE_SPDIF 3
+>>
+>> Can we align these value in the column with the other values?
+> 
+> Alignment corrected.
+> 
+>> And as much as I hate long define names, it seems a bit odd that these
+>> suddenly lack the HDMI_ part of the define prefix...
+>>
+>> Should we either remove the HDMI_ from
+>>  ADV748X_HDMI_I2SBITWIDTH_MASK
+>>  ADV748X_HDMI_I2SOUTMODE_SHIFT
+>>  ADV748X_HDMI_I2SOUTMODE_MASK
+>>
+>> or add it to
+>>  ADV748X_I2SOUTMODE_I2S
+>>  ADV748X_I2SOUTMODE_RIGHT_J
+>>  ADV748X_I2SOUTMODE_LEFT_J
+>>  ADV748X_I2SOUTMODE_SPDIF
+> 
+> Well, I see no reason for them to stand out like this, so perhaps I better add
+> the prefix. I didn't add the prefix initially because they weren't names of
+> fields or registers, but names of values of a field (i2soutmode of that
+> hdmi_register_03h).
+> But I see there is a precedent for such already:
+> ADV748X_CP_{CON,SAT,BRI}_{MIN,DEF,MAX}, so prefix is okay.
+> 
+>>> @@ -260,6 +279,16 @@ struct adv748x_state {
+>>>  #define ADV748X_HDMI_F1H1		0x0b	/* field1 height_1 */
+>>>  #define ADV748X_HDMI_F1H1_INTERLACED	BIT(5)
+>>>  
+>>> +#define ADV748X_HDMI_MUTE_CTRL		0x1a
+>>> +#define ADV748X_HDMI_MUTE_CTRL_MUTE_AUDIO BIT(4)
+>>> +#define ADV748X_HDMI_MUTE_CTRL_WAIT_UNMUTE_MASK	GENMASK(3, 1)
+>>> +#define ADV748X_HDMI_MUTE_CTRL_NOT_AUTO_UNMUTE	BIT(0)
+>>> +
+>>> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED	0x0f
+>>
+>> Can we keep the register definitions in address order please?
+> 
+> Done.
+> 
+>>> +#define ADV748X_HDMI_AUDIO_MUTE_SPEED_MASK	GENMASK(4, 0)
+>>> +#define ADV748X_MAN_AUDIO_DL_BYPASS BIT(7)
+>>> +#define ADV748X_AUDIO_DELAY_LINE_BYPASS BIT(6)
+>>
+>> Those bits do not describe the register they are in, not sure how to
+>> address that without exceptionally long names though.. :-(
+>>
+>> So perhaps how you've got them might be the best option...
+> 
+> Yes, please. Besides, they aren't even obviously related to the audio mute
+> speed.
+> 
+> And I corrected the alignment.
+> 
+>>> +#define ADV748X_HDMI_REG_6D		0x6d	/* hdmi_reg_6d */
+>>> +#define ADV748X_I2S_TDM_MODE_ENABLE BIT(7)
+> 
+> Alignment corrected.
+> 
+> Regards,
+> Alex
+> 
 
-Thanks!
+-- 
+Regards
+--
+Kieran
