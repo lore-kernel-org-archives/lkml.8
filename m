@@ -2,175 +2,237 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E69C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5734BC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A5A20719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586267940;
-	bh=zgIl4KNNN6OWsbD0xSxLoKEN7YLQTkq95W9kbwneqdg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=otWFAO97hSusTPAm/A5B0wsqqrJ0Vtj+x7NPOSIXuQDrv8yLrY/Y9t1fY9PDiDvNV
-	 7FCDWrvvcyz7uvenrGFRt8zkZSkK6KJ0wQ1dXTuCqCUZYLZV0KGZZJsAcL0K9vM8ew
-	 8jCa4+RDYBUZLazMJa7DhjkyjQQcFXepLPfEzf5U=
+	by mail.kernel.org (Postfix) with ESMTP id BDA3820719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:59:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="oQwNAlq9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgDGN67 (ORCPT
+        id S1728978AbgDGN70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 09:58:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43039 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbgDGN67 (ORCPT
+        Tue, 7 Apr 2020 09:59:26 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44521 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728737AbgDGN70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 09:58:59 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w15so3993755wrv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 06:58:56 -0700 (PDT)
+        Tue, 7 Apr 2020 09:59:26 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i16so4123067edy.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 06:59:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dqe/lMioF3rr7wkki1S9O6T9iLt/kpYKFjZ4BIclciI=;
+        b=oQwNAlq9uQG76hiuQGtYOS4ARo5k2jRQs+ucBz94VaHpekKqE/9uqAFc2SF65Kdcw6
+         oGrB7s34Y2/T2DjNsS4ihYg1zhOQLEno2Agos53yevyTP1T6kV0ZNyJhq5GDYE8+gRSC
+         K8qe3ZfLPMfc498lE5Jbya6N3qj98NAhuMqfE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7oMqieg8pNA5U1Gqo/zdJwJNHWJR141xdDvdPejtqTI=;
-        b=b4su2Sw+PKa3q4vSvSRGFjpf72kXH1D3IlZmGQIL6U9jMNvviqxohwJiPO8ZDji01u
-         WLjgCGk/fSXkNWEnzPNwjS77xx73vHj3OwtHpbR0+izLOAf7E+sDzPaT9+RgVpXrFjT/
-         Ut7WHOMNAdIsfCT1+oUliZmJNhx3d5xDslX0/Wj8mbHtDDrUc8HfHDl5uIpTN+k3B01G
-         E3+7zt6YxMauV+S088j/RHwAnLFaGVf4IMhkrFPjXX7Nfn28RVjWMBCe0N7OKE2Kb28e
-         tb6X+k99hlzYHIB8cl5qtETibgdQTQ9M8EOWDyMkBkCc+t3tAT9RNgAio7cHAgVNRo3t
-         tHvw==
-X-Gm-Message-State: AGi0Pub5qyQCtDIscGQDivE8JoV86g8fmeF1BtOi7E+MLvp6gFswOl30
-        1Tr/kPsRgRYmrqkqXexeNi8=
-X-Google-Smtp-Source: APiQypIdi/9iwz570aPHnT8xTis1j6JkFOGqdxShbVn1+GBG3wNO5p8MwoE4Mp2kP0hFvEiBaR1e7w==
-X-Received: by 2002:adf:bbc5:: with SMTP id z5mr2992228wrg.168.1586267935643;
-        Tue, 07 Apr 2020 06:58:55 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id v186sm2357359wme.24.2020.04.07.06.58.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 06:58:54 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 15:58:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v1 1/2] powerpc/pseries/hotplug-memory: stop checking
- is_mem_section_removable()
-Message-ID: <20200407135853.GQ18914@dhcp22.suse.cz>
-References: <20200407135416.24093-1-david@redhat.com>
- <20200407135416.24093-2-david@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dqe/lMioF3rr7wkki1S9O6T9iLt/kpYKFjZ4BIclciI=;
+        b=SE+1Am/uO+phPWqbbplWCW2vHxS79z8I2FpaMCNF35kWwed0+AoLyzLyH49tXfwj41
+         G8Fua1kmzEKdtzBT7hL5xsmUmULQHi9BIKp8stI9BvDN43EyHI/vmc68I5S8POCkqZKd
+         pt82AFndPMBO05hgYMf4Mr5ESUxBN0uhvg9NpYq3QhQuzVk5CZAAxdRiyQ2QDPDcuzlT
+         Ok6YQlwszClwpuMBYUguhWWnmrC3pjV91MI6ax5iSbKx5TkNR33oGghJTYSdQ8s41GYC
+         1yxweH5PPOuQAVA6gnHT6ovM2XzaLLhYwR6mGZ4y9FGKuZKgFdd3UrIU/bJ1g9WM5FF+
+         TAdw==
+X-Gm-Message-State: AGi0PuZi7/p0dbZpWLMpr5aH4o3DX5bpi1TB509+Rov9Kl03h5qLBtD8
+        +tAKOHuVXaQL43r9gKi/M/NBsPnOLQxkcGJr6DF3Ug==
+X-Google-Smtp-Source: APiQypJ/lpfvkrxltKAShH8KskIPyKjaVvMHi0AGOqarLBgt/23p7UMVEZJffNchoZveGw1Hgmf0fjf+YrhtEaOWXq0=
+X-Received: by 2002:a17:906:fd7:: with SMTP id c23mr2234448ejk.312.1586267962932;
+ Tue, 07 Apr 2020 06:59:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407135416.24093-2-david@redhat.com>
+References: <20200402143623.GB31529@gardel-login> <CAJfpegtRi9epdxAeoVbm+7UxkZfzC6XmD4K_5dg=RKADxy_TVA@mail.gmail.com>
+ <20200402152831.GA31612@gardel-login> <CAJfpegum_PsCfnar8+V2f_VO3k8CJN1LOFJV5OkHRDbQKR=EHg@mail.gmail.com>
+ <20200402155020.GA31715@gardel-login> <CAJfpeguM__+S6DiD4MWFv5GCf_EUWvGFT0mzuUCCrfQwggqtDQ@mail.gmail.com>
+ <20200403110842.GA34663@gardel-login> <CAJfpegtYKhXB-HNddUeEMKupR5L=RRuydULrvm39eTung0=yRg@mail.gmail.com>
+ <20200403150143.GA34800@gardel-login> <CAJfpegudLD8F-25k-k=9G96JKB+5Y=xFT=ZMwiBkNTwkjMDumA@mail.gmail.com>
+ <20200406172917.GA37692@gardel-login> <a4b5828d73ff097794f63f5f9d0fd1532067941c.camel@themaw.net>
+In-Reply-To: <a4b5828d73ff097794f63f5f9d0fd1532067941c.camel@themaw.net>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 7 Apr 2020 15:59:10 +0200
+Message-ID: <CAJfpegvYGB01i9eqCH-95Ynqy0P=CuxPCSAbSpBPa-TV8iXN0Q@mail.gmail.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+To:     Ian Kent <raven@themaw.net>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Content-Type: multipart/mixed; boundary="000000000000733b8805a2b3ca6b"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-04-20 15:54:15, David Hildenbrand wrote:
-> In commit 53cdc1cb29e8 ("drivers/base/memory.c: indicate all memory
-> blocks as removable"), the user space interface to compute whether a memory
-> block can be offlined (exposed via
-> /sys/devices/system/memory/memoryX/removable) has effectively been
-> deprecated. We want to remove the leftovers of the kernel implementation.
-> 
-> When offlining a memory block (mm/memory_hotplug.c:__offline_pages()),
-> we'll start by:
-> 1. Testing if it contains any holes, and reject if so
-> 2. Testing if pages belong to different zones, and reject if so
-> 3. Isolating the page range, checking if it contains any unmovable pages
-> 
-> Using is_mem_section_removable() before trying to offline is not only racy,
-> it can easily result in false positives/negatives. Let's stop manually
-> checking is_mem_section_removable(), and let device_offline() handle it
-> completely instead. We can remove the racy is_mem_section_removable()
-> implementation next.
-> 
-> We now take more locks (e.g., memory hotplug lock when offlining and the
-> zone lock when isolating), but maybe we should optimize that
-> implementation instead if this ever becomes a real problem (after all,
-> memory unplug is already an expensive operation). We started using
-> is_mem_section_removable() in commit 51925fb3c5c9 ("powerpc/pseries:
-> Implement memory hotplug remove in the kernel"), with the initial
-> hotremove support of lmbs.
+--000000000000733b8805a2b3ca6b
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I am not familiar with this code but it makes sense to make it sync with
-the global behavior.
+On Tue, Apr 7, 2020 at 4:22 AM Ian Kent <raven@themaw.net> wrote:
+> > Right now, when you have n mounts, and any mount changes, or one is
+> > added or removed then we have to parse the whole mount table again,
+> > asynchronously, processing all n entries again, every frickin
+> > time. This means the work to process n mounts popping up at boot is
+> > O(n=C2=B2). That sucks, it should be obvious to anyone. Now if we get t=
+hat
+> > fixed, by some mount API that can send us minimal notifications about
+> > what happened and where, then this becomes O(n), which is totally OK.
 
-> Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  .../platforms/pseries/hotplug-memory.c        | 26 +++----------------
->  1 file changed, 3 insertions(+), 23 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> index b2cde1732301..5ace2f9a277e 100644
-> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> @@ -337,39 +337,19 @@ static int pseries_remove_mem_node(struct device_node *np)
->  
->  static bool lmb_is_removable(struct drmem_lmb *lmb)
->  {
-> -	int i, scns_per_block;
-> -	bool rc = true;
-> -	unsigned long pfn, block_sz;
-> -	u64 phys_addr;
-> -
->  	if (!(lmb->flags & DRCONF_MEM_ASSIGNED))
->  		return false;
->  
-> -	block_sz = memory_block_size_bytes();
-> -	scns_per_block = block_sz / MIN_MEMORY_BLOCK_SIZE;
-> -	phys_addr = lmb->base_addr;
-> -
->  #ifdef CONFIG_FA_DUMP
->  	/*
->  	 * Don't hot-remove memory that falls in fadump boot memory area
->  	 * and memory that is reserved for capturing old kernel memory.
->  	 */
-> -	if (is_fadump_memory_area(phys_addr, block_sz))
-> +	if (is_fadump_memory_area(lmb->base_addr, memory_block_size_bytes()))
->  		return false;
->  #endif
-> -
-> -	for (i = 0; i < scns_per_block; i++) {
-> -		pfn = PFN_DOWN(phys_addr);
-> -		if (!pfn_in_present_section(pfn)) {
-> -			phys_addr += MIN_MEMORY_BLOCK_SIZE;
-> -			continue;
-> -		}
-> -
-> -		rc = rc && is_mem_section_removable(pfn, PAGES_PER_SECTION);
-> -		phys_addr += MIN_MEMORY_BLOCK_SIZE;
-> -	}
-> -
-> -	return rc;
-> +	/* device_offline() will determine if we can actually remove this lmb */
-> +	return true;
->  }
->  
->  static int dlpar_add_lmb(struct drmem_lmb *);
-> -- 
-> 2.25.1
+Something's not right with the above statement.  Hint: if there are
+lots of events in quick succession, you can batch them quite easily to
+prevent overloading the system.
 
--- 
-Michal Hocko
-SUSE Labs
+Wrote a pair of utilities to check out the capabilities of the current
+API.   The first one just creates N mounts, optionally sleeping
+between each.  The second one watches /proc/self/mountinfo and
+generates individual (add/del/change) events based on POLLPRI and
+comparing contents with previous instance.
+
+First use case: create 10,000 mounts, then start the watcher and
+create 1000 mounts with a 50ms sleep between them.  Total time (user +
+system) consumed by the watcher: 25s.  This is indeed pretty dismal,
+and a per-mount query will help tremendously.  But it's still "just"
+25ms per mount, so if the mounts are far apart (which is what this
+test is about), this won't thrash the system.  Note, how this is self
+regulating: if the load is high, it will automatically batch more
+requests, preventing overload.  It is also prone to lose pairs of add
++ remove in these case (and so is the ring buffer based one from
+David).
+
+Second use case: start the watcher and create 50,000 mounts with no
+sleep between them.   Total time consumed by the watcher: 0.154s or
+3.08us/event.    Note, the same test case adds about 5ms for the
+50,000 umount events, which is 0.1us/event.
+
+Real life will probably be between these extremes, but it's clear that
+there's room for improvement in userspace as well as kernel
+interfaces.  The current kernel interface is very efficient in
+retrieving a lot of state in one go.  It is not efficient in handling
+small differences.
+
+> > Anyway, I have the suspicion this discussion has stopped being
+> > useful. I think you are trying to fix problems that userspce actually
+> > doesn't have. I can just tell you what we understand the problems
+> > are,
+> > but if you are out trying to fix other percieved ones, then great,
+> > but
+> > I mostly lost interest.
+
+I was, and still am, trying to see the big picture.
+
+Whatever.   I think it's your turn to show some numbers about how the
+new API improves performance of systemd with a large number of mounts.
+
+Thanks,
+Miklos
+
+--000000000000733b8805a2b3ca6b
+Content-Type: text/x-csrc; charset="US-ASCII"; name="many-mounts.c"
+Content-Disposition: attachment; filename="many-mounts.c"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k8pyrb060>
+X-Attachment-Id: f_k8pyrb060
+
+I2luY2x1ZGUgPGZjbnRsLmg+CiNpbmNsdWRlIDxzdGRpby5oPgojaW5jbHVkZSA8c3RkbGliLmg+
+CiNpbmNsdWRlIDx1bmlzdGQuaD4KI2luY2x1ZGUgPGVyci5oPgojaW5jbHVkZSA8c3lzL3N0YXQu
+aD4KI2luY2x1ZGUgPHN5cy9tb3VudC5oPgoKaW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKmFyZ3Zb
+XSkKewoJY2hhciAqYmFzZV9wYXRoID0gYXJndlsxXTsKCWNoYXIgbmFtZVs0MDk2XTsKCWludCBu
+cl9tb3VudHMsIGksIHNsZWVwX21zID0gMDsKCglpZiAoYXJnYyA8IDMgfHwgYXJnYyA+IDQpCgkJ
+ZXJyeCgxLCAidXNhZ2U6ICVzIGJhc2VfcGF0aCBucl9tb3VudHMgW3NsZWVwX21zXSIsIGFyZ3Zb
+MF0pOwoKCW5yX21vdW50cyA9IGF0b2koYXJndlsyXSk7CglpZiAoYXJnYyA+IDMpCgkJc2xlZXBf
+bXMgPSBhdG9pKGFyZ3ZbM10pOwoKCWZwcmludGYoc3RkZXJyLCAiTW91bnRpbmcuLi5cbiIpOwoJ
+aWYgKG1vdW50KCJub25lIiwgYmFzZV9wYXRoLCAidG1wZnMiLCAwLCBOVUxMKSA9PSAtMSkKCQll
+cnIoMSwgIm1vdW50L3RtcGZzIik7CglpZiAobW91bnQoIm5vbmUiLCBiYXNlX3BhdGgsIE5VTEws
+IE1TX1BSSVZBVEUsIE5VTEwpID09IC0xKQoJCWVycigxLCAibW91bnQvTVNfUFJJVkFURSIpOwoJ
+Zm9yIChpID0gMDsgaSA8IG5yX21vdW50czsgaSsrKSB7CgkJc3ByaW50ZihuYW1lLCAiJXMvJWQi
+LCBiYXNlX3BhdGgsIGkpOwoJCWlmIChta2RpcihuYW1lLCAwNzU1KSA9PSAtMSkKCQkJZXJyKDEs
+ICJta2RpciIpOwoJCWlmIChtb3VudCgibm9uZSIsIG5hbWUsICJ0bXBmcyIsIDAsIE5VTEwpID09
+IC0xKQoJCQllcnIoMSwgIm1vdW50L3RtcGZzIik7CgkJaWYgKG1vdW50KCJub25lIiwgbmFtZSwg
+TlVMTCwgTVNfUFJJVkFURSwgTlVMTCkgPT0gLTEpCgkJCWVycigxLCAibW91bnQvTVNfUFJJVkFU
+RSIpOwoJCWlmIChzbGVlcF9tcykKCQkJdXNsZWVwKHNsZWVwX21zICogMTAwMCk7Cgl9CglmcHJp
+bnRmKHN0ZGVyciwgIlByZXNzIEVOVEVSXG4iKTsKCWdldGNoYXIoKTsKCglmcHJpbnRmKHN0ZGVy
+ciwgIlVubW91bnRpbmcuLi5cbiIpOwoJaWYgKHVtb3VudDIoYmFzZV9wYXRoLCBNTlRfREVUQUNI
+KSA9PSAtMSkKCQllcnIoMSwgInVtb3VudCIpOwoKCWZwcmludGYoc3RkZXJyLCAiRG9uZVxuIik7
+CgoJcmV0dXJuIDA7Cn0K
+--000000000000733b8805a2b3ca6b
+Content-Type: text/x-csrc; charset="US-ASCII"; name="watch_mounts.c"
+Content-Disposition: attachment; filename="watch_mounts.c"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k8pyrjxu1>
+X-Attachment-Id: f_k8pyrjxu1
+
+I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxmY250bC5oPgojaW5jbHVkZSA8c3RyaW5nLmg+
+CiNpbmNsdWRlIDxzdGRsaWIuaD4KI2luY2x1ZGUgPHVuaXN0ZC5oPgojaW5jbHVkZSA8cG9sbC5o
+PgojaW5jbHVkZSA8ZXJyLmg+CgpzdHJ1Y3QgaW5kZXggewoJc3RydWN0IGluZGV4ICpuZXh0OwoJ
+c3RydWN0IGluZGV4ICpwcmV2OwoJY29uc3QgY2hhciAqbGluZTsKfTsKCnN0cnVjdCBzdGF0ZSB7
+CglzaXplX3QgYnVmc2l6ZTsKCWNoYXIgKmJ1ZjsKCXNpemVfdCBpbmRleF9zaXplOwoJc3RydWN0
+IGluZGV4ICppbmRleDsKCXN0cnVjdCBpbmRleCBoZWFkOwp9OwoKc3RhdGljIHZvaWQgcmVhZF9t
+b3VudGluZm8oc3RydWN0IHBvbGxmZCAqcGZkLCBjaGFyICpidWYsIHNpemVfdCBidWZzaXplKQp7
+CglpbnQgcmVhZGNudCwgYmFja29mZiA9IDAsIHJldHJ5ID0gMDsKCXNpemVfdCBsZW47Cglzc2l6
+ZV90IHJlczsKCnJldHJ5OgoJaWYgKGxzZWVrKHBmZC0+ZmQsIDAsIFNFRUtfU0VUKSA9PSAob2Zm
+X3QpIC0xKQoJCWVycigxLCAibHNlZWsiKTsKCWxlbiA9IDA7CglyZWFkY250ID0gMDsKCWRvIHsK
+CQlpZiAobGVuID49IGJ1ZnNpemUgLSA0MDk2KQoJCQllcnJ4KDEsICJidWZmZXIgb3ZlcnJ1biIp
+OwoJCXJlcyA9IHJlYWQocGZkLT5mZCwgYnVmICsgbGVuLCBidWZzaXplIC0gbGVuKTsKCQlpZiAo
+cmVzID09IC0xKQoJCQllcnIoMSwgInJlYWQiKTsKCQlsZW4gKz0gcmVzOwoKCQlpZiAoIXJlcyB8
+fCAhKCsrcmVhZGNudCAlIDE2KSkgewoJCQlpZiAocG9sbChwZmQsIDEsIDApID09IC0xKQoJCQkJ
+ZXJyKDEsICJwb2xsLzAiKTsKCQkJaWYgKHBmZC0+cmV2ZW50cyAmIFBPTExQUkkpIHsKCQkJCWlm
+ICghYmFja29mZikgewoJCQkJCWJhY2tvZmYrKzsKCQkJCQlnb3RvIHJldHJ5OwoJCQkJfQoJCQkJ
+aWYgKCFyZXRyeSkgewoJCQkJCWZwcmludGYoc3RkZXJyLCAicmV0cnkuIik7CgkJCQkJcmV0cnkg
+PSAxOwoJCQkJfQoJCQkJZG8gewoJCQkJCXVzbGVlcChiYWNrb2ZmICogMTAwMCk7CgkJCQkJaWYg
+KGJhY2tvZmYgPCAxMjgpCgkJCQkJCWJhY2tvZmYgKj0gMjsKCQkJCQlpZiAocG9sbChwZmQsIDEs
+IDApID09IC0xKQoJCQkJCQllcnIoMSwgInBvbGwvMCIpOwoJCQkJfSB3aGlsZSAocGZkLT5yZXZl
+bnRzICYgUE9MTFBSSSk7CgkJCQlnb3RvIHJldHJ5OwoJCQl9CgkJfQoJfSB3aGlsZSAocmVzKTsK
+CWJ1ZltsZW5dID0gJ1wwJzsKCglpZiAocmV0cnkpIHsKCQlmcHJpbnRmKHN0ZGVyciwgIi4uXG4i
+KTsKCQlyZXRyeSA9IDA7Cgl9Cn0KCnN0YXRpYyB2b2lkIGFkZF9pbmRleChzdHJ1Y3Qgc3RhdGUg
+KnMsIHN0cnVjdCBpbmRleCAqdGhpcywgY29uc3QgY2hhciAqbGluZSkKewoJc3RydWN0IGluZGV4
+ICpwcmV2ID0gcy0+aGVhZC5wcmV2LCAqbmV4dCA9ICZzLT5oZWFkOwoKCWlmICh0aGlzLT5saW5l
+KQoJCWVycngoMSwgImluZGV4IGNvcnJ1cHRpb24iKTsKCgl0aGlzLT5saW5lID0gbGluZTsKCXRo
+aXMtPm5leHQgPSBuZXh0OwoJdGhpcy0+cHJldiA9IHByZXY7CglwcmV2LT5uZXh0ID0gbmV4dC0+
+cHJldiA9IHRoaXM7Cn0KCnN0YXRpYyB2b2lkIGRlbF9pbmRleChzdHJ1Y3QgaW5kZXggKnRoaXMp
+CnsKCXN0cnVjdCBpbmRleCAqcHJldiA9IHRoaXMtPnByZXYsICpuZXh0ID0gdGhpcy0+bmV4dDsK
+Cgl0aGlzLT5saW5lID0gTlVMTDsKCXByZXYtPm5leHQgPSBuZXh0OwoJbmV4dC0+cHJldiA9IHBy
+ZXY7Cn0KCnN0YXRpYyB2b2lkIGRpZmZfbW91bnRpbmZvKHN0cnVjdCBzdGF0ZSAqb2xkLCBzdHJ1
+Y3Qgc3RhdGUgKmN1cikKewoJY2hhciAqbGluZSwgKmVuZDsKCXN0cnVjdCBpbmRleCAqdGhpczsK
+CWludCBtbnRpZDsKCgljdXItPmhlYWQubmV4dCA9IGN1ci0+aGVhZC5wcmV2ID0gJmN1ci0+aGVh
+ZDsKCWZvciAobGluZSA9IGN1ci0+YnVmOyBsaW5lWzBdOyBsaW5lID0gZW5kICsgMSkgewoJCWVu
+ZCA9IHN0cmNocihsaW5lLCAnXG4nKTsKCQlpZiAoIWVuZCkKCQkJZXJyeCgxLCAicGFyc2luZyAo
+MSkiKTsKCQkqZW5kID0gJ1wwJzsKCQlpZiAoc3NjYW5mKGxpbmUsICIlaSIsICZtbnRpZCkgIT0g
+MSkKCQkJZXJyeCgxLCAicGFyc2luZyAoMikiKTsKCQlpZiAobW50aWQgPCAwIHx8IChzaXplX3Qp
+IG1udGlkID49IGN1ci0+aW5kZXhfc2l6ZSkKCQkJZXJyeCgxLCAiaW5kZXggb3ZlcmZsb3ciKTsK
+CQlhZGRfaW5kZXgoY3VyLCAmY3VyLT5pbmRleFttbnRpZF0sIGxpbmUpOwoKCQl0aGlzID0gJm9s
+ZC0+aW5kZXhbbW50aWRdOwoJCWlmICh0aGlzLT5saW5lKSB7CgkJCWlmIChzdHJjbXAodGhpcy0+
+bGluZSwgbGluZSkpCgkJCQlwcmludGYoIiogJXNcbiIsIGxpbmUpOwoJCQlkZWxfaW5kZXgodGhp
+cyk7CgkJfSBlbHNlIHsKCQkJcHJpbnRmKCIrICVzXG4iLCBsaW5lKTsKCQl9Cgl9Cgl3aGlsZSAo
+b2xkLT5oZWFkLm5leHQgIT0gJm9sZC0+aGVhZCkgewoJCXRoaXMgPSBvbGQtPmhlYWQubmV4dDsK
+CQlwcmludGYoIi0gJXNcbiIsIHRoaXMtPmxpbmUpOwoJCWRlbF9pbmRleCh0aGlzKTsKCX0KCWZm
+bHVzaChzdGRvdXQpOwp9CgppbnQgbWFpbih2b2lkKQp7CglzdHJ1Y3Qgc3RhdGUgc3RhdGVbMl0s
+ICpvbGQgPSAmc3RhdGVbMF0sICpjdXIgPSAmc3RhdGVbMV0sICp0bXA7CglzdHJ1Y3QgcG9sbGZk
+IHBmZCA9IHsgLmV2ZW50cyA9IFBPTExQUkkgfTsKCglvbGQtPmluZGV4X3NpemUgPSBjdXItPmlu
+ZGV4X3NpemUgPSAxMzEwNzI7CglvbGQtPmJ1ZnNpemUgPSBjdXItPmJ1ZnNpemUgPSBjdXItPmlu
+ZGV4X3NpemUgKiAxMjg7CglvbGQtPmluZGV4ID0gY2FsbG9jKG9sZC0+aW5kZXhfc2l6ZSwgc2l6
+ZW9mKHN0cnVjdCBpbmRleCkpOwoJY3VyLT5pbmRleCA9IGNhbGxvYyhjdXItPmluZGV4X3NpemUs
+IHNpemVvZihzdHJ1Y3QgaW5kZXgpKTsKCW9sZC0+YnVmID0gbWFsbG9jKG9sZC0+YnVmc2l6ZSk7
+CgljdXItPmJ1ZiA9IG1hbGxvYyhjdXItPmJ1ZnNpemUpOwoJaWYgKCFvbGQtPmluZGV4IHx8ICFj
+dXItPmluZGV4IHx8ICFvbGQtPmJ1ZiB8fCAhY3VyLT5idWYpCgkJZXJyKDEsICJhbGxvY2F0aW5n
+IGJ1ZmZlcnMiKTsKCglvbGQtPmJ1ZlswXSA9ICdcMCc7CglvbGQtPmhlYWQucHJldiA9IG9sZC0+
+aGVhZC5uZXh0ID0gJm9sZC0+aGVhZDsKCglwZmQuZmQgPSBvcGVuKCIvcHJvYy9zZWxmL21vdW50
+aW5mbyIsIE9fUkRPTkxZKTsKCWlmIChwZmQuZmQgPT0gLTEpCgkJZXJyKDEsICJvcGVuIik7CgoJ
+d2hpbGUgKDEpIHsKCQlyZWFkX21vdW50aW5mbygmcGZkLCBjdXItPmJ1ZiwgY3VyLT5idWZzaXpl
+KTsKCQlkaWZmX21vdW50aW5mbyhvbGQsIGN1cik7CgoJCXRtcCA9IG9sZDsKCQlvbGQgPSBjdXI7
+CgkJY3VyID0gdG1wOwoKCQlpZiAocG9sbCgmcGZkLCAxLCAtMSkgPT0gLTEpCgkJCWVycigxLCAi
+cG9sbC9pbmYiKTsKCX0KfQo=
+--000000000000733b8805a2b3ca6b--
