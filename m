@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBCFC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF91AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AFC220771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A570E2145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255319;
-	bh=sKbjwMLJiBOphC69hyUcwuxnGfiE7NbpZaWocYhiKBI=;
+	s=default; t=1586255320;
+	bh=Fs02QOeqFeunLDhAhOWC8FGhC42gEBQwFYKZQ5UAcC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14vDFJhFp1OcHJPmQJdOilaeqwwQPlIb+wZfDyUkRSCb8xFVXLc2o/+wkTyYTL4Xu
-	 jopzMII4lJ7475Gf4r55n35N5lBeGvOI5VhJRmmsPm13oDJms53vXKkdM8/wg7mw/w
-	 eNvY+vvFlnGiyzv9EXLK81tN1k0ols6BZTZZie/A=
+	b=NyS2yV5xccE1i4k+RPUYlbg59ZknE/1W5PfUDHn3zrzBcOUNK0QTHaKGW7S+//Bjs
+	 eNk2myUpOP6NBUO2yTQV9pmzDrLtcg+QzW0JU8UUeIq+JI891M7DG35HEDnbF9E5uy
+	 X+kFbPLD7t80W0fSf2le0cPynOa9ZOdPxtzAJRIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgDGKZL (ORCPT
+        id S1728884AbgDGKZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:25:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35592 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbgDGKZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:08 -0400
+        id S1728843AbgDGKZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 010182074B;
-        Tue,  7 Apr 2020 10:25:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85C4820644;
+        Tue,  7 Apr 2020 10:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255107;
-        bh=sKbjwMLJiBOphC69hyUcwuxnGfiE7NbpZaWocYhiKBI=;
+        s=default; t=1586255105;
+        bh=Fs02QOeqFeunLDhAhOWC8FGhC42gEBQwFYKZQ5UAcC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IVdc99VgMFf76EWBozzgWB856yo84dwI3/Nf9OLFVAOaj9uXZeF3bxu5YViMECGD+
-         7/m2oY+W+EXrpmhjBWszAbw85PpZ0PNN+SXd0RXVIsGrGmEHRCSuBjLR5IGRWmzrPa
-         GffIvQeXbmdfl7jvQZOGu/PhKY+IZVp2ZPwnfCrs=
+        b=Ah5OOGzKCvaOOTCZmFdvapXOu8pnIaRaSR2cv8yPfuvLJETfcFMfJZkO2Z7wHYxQD
+         aG+PieNbP+bPwszG3AXemGhIy7GTpWnFp6CwvtFVCbIjF9wVf3qZKjAE+PhMVv3O+x
+         5lrbyNL9AHjsMiIIkgHinzCDg8vQb7TDuumH03rc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 08/46] staging: wfx: fix warning about freeing in-use mutex during device unregister
-Date:   Tue,  7 Apr 2020 12:21:39 +0200
-Message-Id: <20200407101500.370794039@linuxfoundation.org>
+        stable@vger.kernel.org, Roland Dreier <roland@purestorage.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Prabhath Sajeepa <psajeepa@purestorage.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 07/46] nvme-rdma: Avoid double freeing of async event data
+Date:   Tue,  7 Apr 2020 12:21:38 +0200
+Message-Id: <20200407101500.273308750@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -60,36 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Pouiller <jerome.pouiller@silabs.com>
+From: Prabhath Sajeepa <psajeepa@purestorage.com>
 
-[ Upstream commit bab0a0b03442a62fe3abefcb2169e0b9ff95990c ]
+[ Upstream commit 9134ae2a2546cb96abddcd4469a79c77ee3a4480 ]
 
-After hif_shutdown(), communication with the chip is no more possible.
-It the only request that never reply. Therefore, hif_cmd.lock is never
-unlocked. hif_shutdown() unlock itself hif_cmd.lock to avoid a potential
-warning during disposal of device. hif_cmd.key_renew_lock should also
-been unlocked for the same reason.
+The timeout of identify cmd, which is invoked as part of admin queue
+creation, can result in freeing of async event data both in
+nvme_rdma_timeout handler and error handling path of
+nvme_rdma_configure_admin queue thus causing NULL pointer reference.
+Call Trace:
+ ? nvme_rdma_setup_ctrl+0x223/0x800 [nvme_rdma]
+ nvme_rdma_create_ctrl+0x2ba/0x3f7 [nvme_rdma]
+ nvmf_dev_write+0xa54/0xcc6 [nvme_fabrics]
+ __vfs_write+0x1b/0x40
+ vfs_write+0xb2/0x1b0
+ ksys_write+0x61/0xd0
+ __x64_sys_write+0x1a/0x20
+ do_syscall_64+0x60/0x1e0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
-Link: https://lore.kernel.org/r/20200310101356.182818-2-Jerome.Pouiller@silabs.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Roland Dreier <roland@purestorage.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wfx/hif_tx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/nvme/host/rdma.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
-index cb7cddcb98159..16e7d190430f3 100644
---- a/drivers/staging/wfx/hif_tx.c
-+++ b/drivers/staging/wfx/hif_tx.c
-@@ -141,6 +141,7 @@ int hif_shutdown(struct wfx_dev *wdev)
- 	else
- 		control_reg_write(wdev, 0);
- 	mutex_unlock(&wdev->hif_cmd.lock);
-+	mutex_unlock(&wdev->hif_cmd.key_renew_lock);
- 	kfree(hif);
- 	return ret;
- }
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 3e85c5cacefd2..0fe08c4dfd2f1 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -850,9 +850,11 @@ out_free_tagset:
+ 	if (new)
+ 		blk_mq_free_tag_set(ctrl->ctrl.admin_tagset);
+ out_free_async_qe:
+-	nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
+-		sizeof(struct nvme_command), DMA_TO_DEVICE);
+-	ctrl->async_event_sqe.data = NULL;
++	if (ctrl->async_event_sqe.data) {
++		nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
++			sizeof(struct nvme_command), DMA_TO_DEVICE);
++		ctrl->async_event_sqe.data = NULL;
++	}
+ out_free_queue:
+ 	nvme_rdma_free_queue(&ctrl->queues[0]);
+ 	return error;
 -- 
 2.20.1
 
