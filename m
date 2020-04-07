@@ -2,187 +2,130 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4CCC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7720C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E1020771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F264206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nAefzkZ2"
+	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="qTZRxyhU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726654AbgDGRxV (ORCPT
+        id S1726446AbgDGR4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:53:21 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38519 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgDGRxV (ORCPT
+        Tue, 7 Apr 2020 13:56:18 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:40435 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgDGR4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:53:21 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c21so1142088pfo.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:53:20 -0700 (PDT)
+        Tue, 7 Apr 2020 13:56:18 -0400
+Received: by mail-il1-f195.google.com with SMTP id j9so4114237ilr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:56:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IZsnHknmPnzlDnnD+lsQB+SUZRKz07GU9C9BlgnfmqY=;
-        b=nAefzkZ2JinyQVrK0n8MAikkoMhgx+2j7FIdTNzirnsibGhl1/ylmS9MckoCSPcMb8
-         dRSjnFECwT2RvISJR+xYvmQ/xy6L0148d4mdHPpIsERRxpYZXRO3sKuXnMPRnGhH+gnd
-         2pQMBdjOFQKmY75VSFEhg+4Jf41epd7vMuwTcMRqlF3K/eWMUKqWffaB+6qJGL6qDweb
-         VVIv+/v6NhVSbVfgdDCnmRMXKZDhX8nbYLcdk1cwCaceANNvWGIiT3q7rYhe4zu9w4qy
-         J9x/+QmbdeIGyzQHl8tNcqFzwrUtLYmKickm7OYk9HCN7aYHpQBRZMjyclL278K7la5R
-         ys1g==
+        bh=hvJ5mj6gXn9DT9sfAhJ2ChcXw2JKTkzR1Wi3heZ02Ig=;
+        b=qTZRxyhUBvB8r8DzHaWWJ9MSkCYfWnA/YinvGgDEnyptSg0zjB0/eCP2yHOV2WjPXa
+         3zcyfee9oNK+lHnTa6A3PHTDDz622tb9gN7uO/wJX3PdQ1wvuhq194yRokWbyMys6zAK
+         30jTu88B+/XQA7bnfLiRVfk2XJkQqKk+3eRkfQ5U/EyXBJSQ6JMlVIrCvR84HRzfIWF5
+         /zxuXnctRaRDBUaAcJKvzCmKtb91dDR2wuGS6k9Y6Ege0ucIHqUmqDskDjVLmsA7NoHu
+         Zh4c+JRkLlSCrKkbHG6wGo7tmH27RgIzta7u2Jl33xGUzLHsUewKCZbRrYWQavGaSoKG
+         5p5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IZsnHknmPnzlDnnD+lsQB+SUZRKz07GU9C9BlgnfmqY=;
-        b=giBH3Xskz7oKIAmb4AsIzYEbARS7LMU+qmvxsuMaujpjrDxaaUJPDCCGXBsupwfoie
-         nUGuMkDatfRfXI6kZl8KjXeuyvNfoFqwQf76XKj41o2qkSKdbJaTNi3xPxIT6yHXDDZv
-         W3Ilh97t6SNNafciZEZg5x148Reu7aELd8/JcsxY9jJOzVJCgPfxozNV2OCitqumI4kb
-         HpzFG4ZXFW6tepl38TnSjVOjtNezl90e6xcAZ7W+gD619QTP/TpXxRfz0BNZ9XaU5Du2
-         8A3NfdR8yJ/ZTWjeH828syFqY38zyI1MwLROmmO0krLd0ndLtwoODsTUBVka1qTlZCL5
-         ysRQ==
-X-Gm-Message-State: AGi0PuaKpOPJTlYJBaZxNPKzOdr/ez6QU6rYVbwl9dFJG9RMANI9YHRZ
-        7Dsb28zoj3Mzi9YOlH6+PZLBOSpm7Ik8K/VT2n9nNQ==
-X-Google-Smtp-Source: APiQypLB3JMGfjj1f8dB6FLLTXomkxBIMaJn/cb7wImwzv7yIcwXQzsSVve3/b4RHeQVbVDMWtqdmcz5Rs9M4XVTndc=
-X-Received: by 2002:a62:e415:: with SMTP id r21mr3651186pfh.169.1586281999850;
- Tue, 07 Apr 2020 10:53:19 -0700 (PDT)
+        bh=hvJ5mj6gXn9DT9sfAhJ2ChcXw2JKTkzR1Wi3heZ02Ig=;
+        b=FRVfsRJnetgClBkIgfaGJa36XEwvwYdhhzTStvG5WxizrAjqgmKkvd8kXmt7+6w9JU
+         H0sRyjBpcDatjHu+IlsWBuvOJfBR0LQqx94FSGdL+Saqng7/nfx6ZFlA2EKDLqBfraJv
+         Ev4A+glHczqwNexWsLsK6OlsUO04mQwTG60ZuX0VwZV6ZdaBJlrteajNz11DcmeVSrh4
+         2/OIzuE60Ojo493hteZoTqJoqzNHBXyE0ieBsst7ja7EZDA3ilHQr/YXeBkIY0voO2yI
+         Q12mZxdUmkq0mbxcYvJ03jleWyzOvl1jqMitENPKmKVcAIvmTqwe/ZcWhIC9Hrqm0XPb
+         usqA==
+X-Gm-Message-State: AGi0PuYzPrzU8PwYWsRT6uycvTwZUfMARyCy0Zk5EKDtNCS1T7EnJV3K
+        ARNsv8oCOtKLa+29PJwsZwTm50jdvLps9uMoVu8pNg==
+X-Google-Smtp-Source: APiQypI9kHAW/Yf4ewikrQLJhKlEmtovKsYuKq0dAYyDV6qBZS9zeRcMhoJQHnsQruqzQ/9zX3VsH99VKX7ok+8qJBA=
+X-Received: by 2002:a92:d11:: with SMTP id 17mr3753627iln.145.1586282177536;
+ Tue, 07 Apr 2020 10:56:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200403051709.22407-1-masahiroy@kernel.org> <20200406112220.GB126804@google.com>
- <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com>
- <CAKwvOdmHxeZ+T1OsOhW25pPygHM4D21OgZqRk141xbjP437-1w@mail.gmail.com> <CAK7LNARSMvGZ6T4Ct=U4Xe1WQCgkaWE8m8BxRuYiaokKVjA_ig@mail.gmail.com>
-In-Reply-To: <CAK7LNARSMvGZ6T4Ct=U4Xe1WQCgkaWE8m8BxRuYiaokKVjA_ig@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 7 Apr 2020 10:53:08 -0700
-Message-ID: <CAKwvOdkicpNMqQipZ+AMTEz7JVou3bkcKiQ3Cih20qH0hoziDg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jian Cai <jiancai@google.com>,
-        Stephen Hines <srhines@google.com>,
-        Luis Lozano <llozano@google.com>
+References: <20200407011259.GA72735@juliacomputing.com> <8f95e8b4-415f-1652-bb02-0a7c631c72ac@intel.com>
+ <CABV8kRw1TQsqs+z43bSfZ5isctuFGMB4g_ztDYihiiXHcy4nVA@mail.gmail.com> <5208ad1e-cd9b-d57e-15b0-0ca935fccacd@intel.com>
+In-Reply-To: <5208ad1e-cd9b-d57e-15b0-0ca935fccacd@intel.com>
+From:   Keno Fischer <keno@juliacomputing.com>
+Date:   Tue, 7 Apr 2020 13:55:40 -0400
+Message-ID: <CABV8kRzfR32+MpAvTAPHCN902WtHSxySujcO2yAB3OT0caVDJg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0 per-thread
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        Kyle Huey <khuey@kylehuey.com>,
+        "Robert O'Callahan" <robert@ocallahan.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 10:47 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Tue, Apr 7, 2020 at 12:27 PM Dave Hansen <dave.hansen@intel.com> wrote:
 >
-> On Wed, Apr 8, 2020 at 2:01 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >> How does this work with things like xstateregs_[gs]et() where the format
+> >> of the kernel buffer and thus the kernel XCR0 is exposed as part of our
+> >> ABI?  With this patch, wouldn't a debugger app see a state buffer that
+> >> looks invalid?
 > >
-> > On Tue, Apr 7, 2020 at 9:17 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > > On Mon, Apr 6, 2020 at 8:22 PM 'Matthias Maennich' via Clang Built
-> > > Linux <clang-built-linux@googlegroups.com> wrote:
-> > > >
-> > > > On Fri, Apr 03, 2020 at 02:17:09PM +0900, Masahiro Yamada wrote:
-> > > > >As Documentation/kbuild/llvm.rst implies, building the kernel with a
-> > > > >full set of LLVM tools gets very verbose and unwieldy.
-> > > > >
-> > > > >Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
-> > > > >GCC and Binutils. You can pass LLVM=1 from the command line or as an
-> > > > >environment variable. Then, Kbuild will use LLVM toolchains in your
-> > > > >PATH environment.
-> > > > >
-> > > > >Please note LLVM=1 does not turn on the LLVM integrated assembler.
-> > > > >You need to explicitly pass AS=clang to use it. When the upstream
-> > > > >kernel is ready for the integrated assembler, I think we can make
-> > > > >it default.
-> > > > >
-> > > > >We discussed what we need, and we agreed to go with a simple boolean
-> > > > >switch (https://lkml.org/lkml/2020/3/28/494).
-> > > > >
-> > > > >Some items in the discussion:
-> > > > >
-> > > > >- LLVM_DIR
-> > > > >
-> > > > >  When multiple versions of LLVM are installed, I just thought supporting
-> > > > >  LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
-> > > > >
-> > > > >  CC      = $(LLVM_DIR)clang
-> > > > >  LD      = $(LLVM_DIR)ld.lld
-> > > > >    ...
-> > > > >
-> > > > >  However, we can handle this by modifying PATH. So, we decided to not do
-> > > > >  this.
-> > > > >
-> > > > >- LLVM_SUFFIX
-> > > > >
-> > > > >  Some distributions (e.g. Debian) package specific versions of LLVM with
-> > > > >  naming conventions that use the version as a suffix.
-> > > > >
-> > > > >  CC      = clang$(LLVM_SUFFIX)
-> > > > >  LD      = ld.lld(LLVM_SUFFIX)
-> > > > >    ...
-> > > > >
-> > > > >  will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
-> > > > >  but the suffixed versions in /usr/bin/ are symlinks to binaries in
-> > > > >  /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
-> > > > >
-> > > > >- HOSTCC, HOSTCXX, etc.
-> > > > >
-> > > > >  We can switch the host compilers in the same way:
-> > > > >
-> > > > >  ifneq ($(LLVM),)
-> > > > >  HOSTCC       = clang
-> > > > >  HOSTCXX      = clang++
-> > > > >  else
-> > > > >  HOSTCC       = gcc
-> > > > >  HOSTCXX      = g++
-> > > > >  endif
-> > > > >
-> > > > >  This may the right thing to do, but I could not make up my mind.
-> > > > >  Because we do not frequently switch the host compiler, a counter
-> > > > >  solution I had in my mind was to leave it to the default of the
-> > > > >  system.
-> > > > >
-> > > > >  HOSTCC       = cc
-> > > > >  HOSTCXX      = c++
-> > > >
-> > > > What about HOSTLD ? I saw recently, that setting HOSTLD=ld.lld is not
-> > > > yielding the expected result (some tools, like e.g. fixdep still require
-> > > > an `ld` to be in PATH to be built). I did not find the time to look into
-> > > > that yet, but I would like to consistently switch to the llvm toolchain
-> > > > (including linker and possibly more) also for hostprogs.
-> > >
-> > >
-> > > HOSTLD=ld.lld worked for me, but HOSTCC=clang did not.
-> > >
-> > >
-> > >
-> > > HOSTCC=clang without CC=clang fails to build objtool.
-> > >
-> > > The build system of objtool is meh.  :(
-> >
-> > Let's tackle that in a follow up, with the goal of build hermiticity
-> > in mind.  I think there's good feedback in this thread to inform the
-> > design of a v2:
-> > 1. CLANG_AS=0 to disable integrated as.  Hopefully we won't need this
-> > much longer, so we don't need to spend too much time on this, Masahiro
-> > please just choose a name for this.  llvm-as naming conventions
-> > doesn't follow the rest of binutils.
+> > Since those operate on the in-kernel buffer of these, which
+> > in this patch always uses the unmodified XCR0, ptracers
+> > should not observe a difference.
 >
-> I am not so familiar with the terminology in LLVM,
-> but I feel 'integrated' is a keyword IMHO.
-> I prefer LLVM_IA=1.  (or  LLVM_INTEGRATED_AS=1)
+> Those operate on *BOTH* kernel and userspace buffers.  They copy between
+> them.  That's kinda the point. :)
 
-I'm happy with either, and I trust your judgement.  You choose.
-Hopefully we will fix all our assembler bugs soon and won't need the
-flag much longer.
+Right, what I meant was that in this patch the kernel level
+xsaves that populates the struct fpu always runs with
+an unmodified XCR0, so the contents of the xsave area
+in struct fpu does not change layout (this is the major
+change in this patch over v1). Are you referring to a ptracer
+which runs with a modified XCR0, and assumes that the
+value it gets back from ptrace will have an XSTATE_BV
+equal to its own observed XCR0 and thus get confused
+about the layout of the buffer (or potentially have not copied
+all of the relevant xstate because it calculated a wrong buffer
+size)? If so, I think that's just a buggy ptracer. The kernel's
+xfeature mask is available via ptrace and a well-behaved
+ptracer should use that (e.g. gdb does, though it looks like
+it then also assumes that the xstate has no holes, so it
+potentially gets the layout wrong anyway).
 
--- 
-Thanks,
-~Nick Desaulniers
+In general, I don't really want the modified XCR0 to affect
+anything other than the particular instructions that depend
+on it and maybe the signal frame (though as I said before,
+I'm open to either here).
+
+If I misunderstood what you were trying to say, I apologize.
+
+> I suspect the patch thus far is only the tip of the iceberg.  I'd really
+> suggest doing some more thorough audits of all of the locations in the
+> kernel that touch the fpu buffer *or* that call XSAVE/XRSTOR.  I'm
+> pretty sure that audit hasn't been done or the ptrace example would have
+> been found already.
+
+Yes, good idea. I will do this again. That said, I'm hoping that
+the general principle to use the kernel layout, except perhaps
+in the signal frame will hold and thus not require modification.
+
+> But, it's also not my daily go-to for debugging.
+
+Luckily rr is fast enough (after much work) that there's almost
+never a reason not to use it. Our developers essentially use
+it exclusively (rather than raw gdb), and our users send us rr
+traces as bug reports. It's basically become our one-stop-shop
+for all things debugging on Linux.
