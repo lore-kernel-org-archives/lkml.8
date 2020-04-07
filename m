@@ -2,150 +2,91 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91210C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88313C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F0A20747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFD52083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KcxeXIEa"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="012GHlOa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726555AbgDGWIC (ORCPT
+        id S1726587AbgDGWIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:08:02 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:10527 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726386AbgDGWIB (ORCPT
+        Tue, 7 Apr 2020 18:08:04 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41008 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbgDGWIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:08:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586297281; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=UsOpSVJVYUqIakS8yQGLQSYuYx2FpvLz7lbcHu0i67o=;
- b=KcxeXIEannVjVgK2IOj/8WAIrTGxOmlbYMD48znzRvbI3r9JzuZhyKXm0hOhi937mdQPtyMh
- Itk2GTrbiQpsl78ozudQmG7FsRe6g5l1Lwi6sZE2zP3ZOBmy2AKUt0bACNuQO20YTVe4Y5Cs
- GiJJcztfiWBnQRJRhc+VC621AjU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8cf9b0.7f79e634cb90-smtp-out-n02;
- Tue, 07 Apr 2020 22:07:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BBAFCC43636; Tue,  7 Apr 2020 22:07:43 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: majja)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 32BC5C433F2;
-        Tue,  7 Apr 2020 22:07:43 +0000 (UTC)
+        Tue, 7 Apr 2020 18:08:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m13so2371231pgd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:07:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uBxvQltL5Nygkvc9R7CLiUS2uaeeOnr3MvEHa8jglnQ=;
+        b=012GHlOaJgDjZ2mlQcH2MvQrmUHUv7z5dqGH+4nGa+M3lR1nOksSonlthbiiu3HZCL
+         FN/2jjaO4zrzYkPow5NAqRcwkS1hgcXkgtVYzR6dLiIqL4Rtd9Ks1wvlye1Pu3X7S/tz
+         DBDnskdn9igLMhMH91n2nupoKW5DqR8wuPRiqTVhDo0bOLJsEv+9QOpX+xwpfOcu3a2O
+         3X/VWkaSBS4ISI6oImCmLfLIuUhnFZjZ2l8oHphBfq+r93zICGNGSrhHBHKipneWjanW
+         yYvUFCSSE+o1uN6aRD/iAVcyxM3uy2f6xfQlL5h5KF2Xvt30q+LIHheHL/tmN7IsD4mV
+         +Log==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uBxvQltL5Nygkvc9R7CLiUS2uaeeOnr3MvEHa8jglnQ=;
+        b=jB85f/bBjXwJwRQFLntigY8HmqgxJ2r8RUm47C5HSQNCgIuFa3lHF2karjoNxN4No1
+         S/JusQCdfg1YLsYkzrzKpDqslh4Qx60t868r7WT4X0jSW+MjIBgoMUl7bH9ZE+reD5yG
+         xxB0409/Pq6pfs+1aJKoWItx4toJ9ae1SKnoIDcbOuyBpfsdOnY7WQozCS9VvQGhv6kO
+         aPvBnCgm+ILna4uM8p269Pp6baHRHwkjAcan5uBE6TZ0b6+OaaMaoTIxc4k4Z2d6qyCQ
+         9GlBSvzEkCCOS9QHk788mvYCABIJwZCe0/xu4Iiea8jHfsjPKpY0QSxxoTnkbYYCId+C
+         s2pQ==
+X-Gm-Message-State: AGi0PuZme7zBNmsHwkzyl1DpEUOZKpitRUiw4wp6RSqxDvopmptFQl5u
+        36XOiiifepPPojASu0U0ykgzO+9d9zf3SA==
+X-Google-Smtp-Source: APiQypLHOBlYdKaoasCbYYwZKamCeOF7H+N8ijWA6nllKLTV+PsPBOw+PqPGuxhJFqLstthY+g4dHg==
+X-Received: by 2002:a63:8c5b:: with SMTP id q27mr3568217pgn.301.1586297278399;
+        Tue, 07 Apr 2020 15:07:58 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:ec7d:96d3:6e2d:dcab? ([2605:e000:100e:8c61:ec7d:96d3:6e2d:dcab])
+        by smtp.gmail.com with ESMTPSA id e23sm175506pff.192.2020.04.07.15.07.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 15:07:57 -0700 (PDT)
+Subject: Re: [PATCH] ata: ahci: Add sysfs attribute to show remapped NVMe
+ device count
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     anthony.wong@canonical.com,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200207100016.32605-1-kai.heng.feng@canonical.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <5c02b240-a336-8869-1d03-6f5219032e78@kernel.dk>
+Date:   Tue, 7 Apr 2020 15:07:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200207100016.32605-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 07 Apr 2020 15:07:43 -0700
-From:   majja@codeaurora.org
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: v4l2-ctrl: Add H264 profile and levels
-In-Reply-To: <225cb4d6-ca56-8e61-0cd1-a2aa183e446a@xs4all.nl>
-References: <1584398550-19727-1-git-send-email-majja@codeaurora.org>
- <225cb4d6-ca56-8e61-0cd1-a2aa183e446a@xs4all.nl>
-Message-ID: <6f67f16bff4623b6bef75ce346594589@codeaurora.org>
-X-Sender: majja@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans,
+On 2/7/20 2:00 AM, Kai-Heng Feng wrote:
+> Add a new sysfs attribute to show how many NVMe devices are remapped.
+> 
+> Userspace like distro installer can use this info to ask user to change
+> the BIOS setting.
 
-Thank you, I have posted a patch with below subject to update the 
-documentation.
-[PATCH] media: uapi: h264: Add new profile and levels
+Sorry for the delay, looks good to me. Applied.
 
-Regards,
-     Maheshwar
+-- 
+Jens Axboe
 
-On 2020-03-30 04:20, Hans Verkuil wrote:
-> Hi Maheshwar,
-> 
-> The patch looks good, but you also need to update the documentation
-> in Documentation/media/uapi/v4l/ext-ctrls-codec.rst, adding the new
-> profile/levels.
-> 
-> You can just post a separate patch for that, and I'll take them both.
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> On 3/16/20 11:42 PM, Maheshwar Ajja wrote:
->> Add H264 profile "Contrained High" and H264 levels "5.2",
->> "6.0", "6.1" and "6.2".
->> 
->> Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
->> ---
->>  drivers/media/v4l2-core/v4l2-ctrls.c | 5 +++++
->>  include/uapi/linux/v4l2-controls.h   | 5 +++++
->>  2 files changed, 10 insertions(+)
->> 
->> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c 
->> b/drivers/media/v4l2-core/v4l2-ctrls.c
->> index 2928c5e..67ce711 100644
->> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
->> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
->> @@ -336,6 +336,10 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
->>  		"4.2",
->>  		"5",
->>  		"5.1",
->> +		"5.2",
->> +		"6.0",
->> +		"6.1",
->> +		"6.2",
->>  		NULL,
->>  	};
->>  	static const char * const h264_loop_filter[] = {
->> @@ -362,6 +366,7 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
->>  		"Scalable High Intra",
->>  		"Stereo High",
->>  		"Multiview High",
->> +		"Constrained High",
->>  		NULL,
->>  	};
->>  	static const char * const vui_sar_idc[] = {
->> diff --git a/include/uapi/linux/v4l2-controls.h 
->> b/include/uapi/linux/v4l2-controls.h
->> index 5a7bede..fbe3f82d 100644
->> --- a/include/uapi/linux/v4l2-controls.h
->> +++ b/include/uapi/linux/v4l2-controls.h
->> @@ -467,6 +467,10 @@ enum v4l2_mpeg_video_h264_level {
->>  	V4L2_MPEG_VIDEO_H264_LEVEL_4_2	= 13,
->>  	V4L2_MPEG_VIDEO_H264_LEVEL_5_0	= 14,
->>  	V4L2_MPEG_VIDEO_H264_LEVEL_5_1	= 15,
->> +	V4L2_MPEG_VIDEO_H264_LEVEL_5_2	= 16,
->> +	V4L2_MPEG_VIDEO_H264_LEVEL_6_0	= 17,
->> +	V4L2_MPEG_VIDEO_H264_LEVEL_6_1	= 18,
->> +	V4L2_MPEG_VIDEO_H264_LEVEL_6_2	= 19,
->>  };
->>  #define 
->> V4L2_CID_MPEG_VIDEO_H264_LOOP_FILTER_ALPHA	(V4L2_CID_MPEG_BASE+360)
->>  #define 
->> V4L2_CID_MPEG_VIDEO_H264_LOOP_FILTER_BETA	(V4L2_CID_MPEG_BASE+361)
->> @@ -495,6 +499,7 @@ enum v4l2_mpeg_video_h264_profile {
->>  	V4L2_MPEG_VIDEO_H264_PROFILE_SCALABLE_HIGH_INTRA	= 14,
->>  	V4L2_MPEG_VIDEO_H264_PROFILE_STEREO_HIGH		= 15,
->>  	V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH		= 16,
->> +	V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_HIGH		= 17,
->>  };
->>  #define 
->> V4L2_CID_MPEG_VIDEO_H264_VUI_EXT_SAR_HEIGHT	(V4L2_CID_MPEG_BASE+364)
->>  #define 
->> V4L2_CID_MPEG_VIDEO_H264_VUI_EXT_SAR_WIDTH	(V4L2_CID_MPEG_BASE+365)
->> 
