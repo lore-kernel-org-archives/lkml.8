@@ -2,74 +2,108 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2893C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E653C2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B58DC206F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF5D20747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgDGGQ7 (ORCPT
+        id S1726852AbgDGGWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:16:59 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47997 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgDGGQ7 (ORCPT
+        Tue, 7 Apr 2020 02:22:35 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:23902 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726232AbgDGGWf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:16:59 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jLhXT-0007JL-Hs; Tue, 07 Apr 2020 08:16:47 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jLhXS-0008D1-Jd; Tue, 07 Apr 2020 08:16:46 +0200
-Date:   Tue, 7 Apr 2020 08:16:46 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/6] dt-bindings: pwm: document the PWM no-flag
-Message-ID: <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
-References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
- <20200405192246.3741784-3-oleksandr.suvorov@toradex.com>
+        Tue, 7 Apr 2020 02:22:35 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0376KR4R027263;
+        Tue, 7 Apr 2020 02:22:33 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 306m369p72-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Apr 2020 02:22:33 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 0376MVCd059802
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 7 Apr 2020 02:22:32 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 6 Apr 2020 23:22:30 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 6 Apr 2020 23:22:30 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 0376MSiP024336;
+        Tue, 7 Apr 2020 02:22:28 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2] iio: core: move 'indio_dev->info' null check first
+Date:   Tue, 7 Apr 2020 09:21:15 +0300
+Message-ID: <20200407062115.84346-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200406123246.57684-1-alexandru.ardelean@analog.com>
+References: <20200406123246.57684-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200405192246.3741784-3-oleksandr.suvorov@toradex.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_01:2020-04-07,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070053
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 05, 2020 at 10:22:42PM +0300, Oleksandr Suvorov wrote:
-> Add the description of PWM_NOFLAGS flag property.
-> 
-> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Doesn't fix anything. Just moves this to be the first check, as it's very
+simple and fails the registration earlier, instead of potentially
+initializing the 'indio_dev->label' and checking for duplicate indexes, and
+then failing with this simple-check.
 
-As I already wrote in reply to the v1 series I'd prefer a name for 0
-that explicitly handles normal polarity.
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+Changelog v1 -> v2:
+* fix typo 'regitration' 'registration'
 
-Best regards
-Uwe
+ drivers/iio/industrialio-core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 157d95a24faa..56ff24d7a174 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1711,6 +1711,9 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+ {
+ 	int ret;
+ 
++	if (!indio_dev->info)
++		return -EINVAL;
++
+ 	indio_dev->driver_module = this_mod;
+ 	/* If the calling driver did not initialize of_node, do it here */
+ 	if (!indio_dev->dev.of_node && indio_dev->dev.parent)
+@@ -1723,9 +1726,6 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (!indio_dev->info)
+-		return -EINVAL;
+-
+ 	/* configure elements for the chrdev */
+ 	indio_dev->dev.devt = MKDEV(MAJOR(iio_devt), indio_dev->id);
+ 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.17.1
+
