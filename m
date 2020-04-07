@@ -2,160 +2,126 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4314CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F17C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5CB20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D8FB2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="fLA7cwtb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y+PUf4/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgDGSKx (ORCPT
+        id S1726530AbgDGSOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:10:53 -0400
-Received: from mail-eopbgr1300109.outbound.protection.outlook.com ([40.107.130.109]:22688
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726417AbgDGSKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:10:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KhIh4ScezEEy8nMQ/JmrkUhqeZyUEUNFlLoyO3EybGupPkNfH1x2BAdrN0szI7WRTT0n4PDXmtT1S6u4VX/gGMXJpTdqGFx7+6GS+sc80l2dNMrR8MWsQKav1SMnm5C426imN1GTAeJb3FPWTEuWbIkJgQCj70nqydNLU5fp3ltItC0ltWkEo1vdp5/QKmm/8oxsdFqeXPvH0xcqtMm3DH3x8bf3spBr/sC2xdUB1BYQ+HGdwzK1PSocEjFGlj+TaZy0UBEWD1+m8QMRPD1fooyoMy8dZOHSX45Qk9EOC503UcomB0dJsylI2uz9fxdDeuo6Un32l1FniaB1sCDEIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=955toTs1i4Rp1kxZe76x/GdBR1MHgdUT2ujwGJ4yGAo=;
- b=Xiy8xx4slFM14EcDkbXXC5l5R5zK5+7CTP05/472z7zT3a/XxdEBgXZecXpGx18p5mdVx1KkojYzSKT8CeJSYzyjNg5cC0plZOsTRuSU2Ys/9LnGkSAWoKqYhRavvYxDoh3x4fX89YpfLFlMiFtJ7IpVXJPNTPDOKZEuKKBxce30LuYIvScPucfda+RKCzKTYEmd5t9Cl9CbVwTNZo/F7VMKCVYDYhAW2Y6qawIwQbEYzOb2hf9YYZh+t47n2KTCHyjUiBjPsFTcXt9H2hulCEeG8A9Yum3wnzQ1Re3uOETWrQ6rjsEmqcMNDv8a/Uxwi0VBhocz4Z3t7yjd6ZrkRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=955toTs1i4Rp1kxZe76x/GdBR1MHgdUT2ujwGJ4yGAo=;
- b=fLA7cwtbmc/GFTrVZfRgxvY61SBX7Bysujn+TkgLTj4SqUAwNFekfZieGDv9ZCCRdheAa/N/VDxicsfi2KqPPtwnedRD3cdZLtH8T+Faj7ntgm2B6163YYE7RDzhXi38Hn4S0VTx5TCga22GMugQ0hJr3m104wBwHBXkpojYPLA=
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (52.132.236.76) by
- HK0P153MB0177.APCP153.PROD.OUTLOOK.COM (52.133.210.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2921.6; Tue, 7 Apr 2020 18:10:43 +0000
-Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
- ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2921.009; Tue, 7 Apr 2020
- 18:10:43 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     vkuznets <vkuznets@redhat.com>, Christoph Hellwig <hch@lst.de>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: RE: hv_hypercall_pg page permissios
-Thread-Topic: hv_hypercall_pg page permissios
-Thread-Index: AQHWDK4fRmHhn5txXkSoYvQO1Kc9Eaht9OJw
-Date:   Tue, 7 Apr 2020 18:10:42 +0000
-Message-ID: <HK0P153MB0273278D61381693E022B3ADBFC30@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-References: <20200407065500.GA28490@lst.de>
- <87v9mblpq6.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87v9mblpq6.fsf@vitty.brq.redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-04-07T18:10:40.4233602Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=13eeedbf-bb62-4239-aed0-70ed63aeaf09;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:38fc:d3a4:dc68:bfc5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c3c2fe18-2ddb-4ba0-c21a-08d7db1efca9
-x-ms-traffictypediagnostic: HK0P153MB0177:|HK0P153MB0177:|HK0P153MB0177:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB017735F5127CAA14D567C2D1BFC30@HK0P153MB0177.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 036614DD9C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(39860400002)(376002)(396003)(346002)(366004)(76116006)(81166006)(81156014)(8676002)(8936002)(52536014)(5660300002)(8990500004)(82960400001)(82950400001)(316002)(54906003)(110136005)(7696005)(66446008)(64756008)(186003)(10290500003)(66556008)(66946007)(7116003)(66476007)(4326008)(6506007)(9686003)(2906002)(71200400001)(86362001)(55016002)(478600001)(33656002);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: J/UOSM1x5O1FSChmFrkb/WAW7RN03z2tKhqmpYJKWBtFEvavkKdMRJpEeWpWFWAD6TalQttUluLoNtyyTeH53SJcoWNG0O8w25Ffd3//yE4wUVei2G+m/TPLBwDlMlD76GzH8UEe4l9xdcxjR5OqsraU8Ce9WxnZEmCnUreCK86GDx9XqJ/czU2wlwj+KIJOE1bHmr3M/KR004+dNamnvyMNEzeXSv0OnLXNEdMluFeKTYQM/Xyb6wHuSHiByoRmOfmGm7rdTjOHwQ048WV0vmFmMAGSdgs3ixu6c5xq7ziIggWqLeIrY1PsQzBHzyE7nDO7vIWX54TNaZ78+3vx7dXUqgCiykp7voDHRA0EAKobgQ++rLscBYx0prJVBIUwPebQnIX6GjoxPpXFfE9DifKYyAHlgwK9qKiDeWgr8oCtgzFgaXIzOP9hFKdOqG13
-x-ms-exchange-antispam-messagedata: 990udObKCS01YNKbOodNcA608BVgCMDfetzgSSeFOBrmSMR9V8xiMeIzW3goQ5vnkgyR/rUwwbwlmMqrkw7IFfYGGI3bvICLEsYExpEh5q3cJMor0XDeVUxeY9u6xfmn0PZ2ch77Hsyjuc1A+gjZYoDjrzn/srv2wDYWKO4gKcKMnDN6UZtjdpwkP09DThvFTD1BdOAVH+z+Ooz0h39e3w==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 7 Apr 2020 14:14:04 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33559 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgDGSOE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 14:14:04 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay1so1557162plb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 11:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PeiZnJCEZqQc3Rqpk45c1lEucyFQ8/zMMdEk9YtKXts=;
+        b=Y+PUf4/ItL0F+5y8tsRBf+kNreItmx9FrKwi5SiANr06qTw66OGN+bynO38NPjRCxF
+         dXLfvMaQcQxA4gXWi5uboU6rC8p1zSePp59K/vOjX1o6XWPy+1620KI7YA22wae9JRsX
+         KxEoRF8kdPb6y8ddg7dfVOwafjoUKtI0tZLmOaEunAqjoNKTNyRgtD74+rT2t/JwGye+
+         siU98mSYL3CG+KWPIzD/1F2vSrkqtl2Vauwv+IdVhin9oCylWjSxWx5bR5TExnuqTSTL
+         UIuWTmq6jv0kWnTgqKj/pxd0f/sZZWusq7acyEGXLPMI34hFInfYFj1Kjvj7VbMjVD5j
+         O5Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PeiZnJCEZqQc3Rqpk45c1lEucyFQ8/zMMdEk9YtKXts=;
+        b=aPYQxatBvB0WWatAgVTHGfHVtT7sCbxS2lDkQ688ieoQCFDn+/35Awwk1CbK0YoDjZ
+         eYV5r26MN8tRMa+af9K2dI3MyZPDstw7IpPbtqlYX5g38qT8KoJtdBHZcZu6XdWF4KVK
+         Y6nDV5WGZP6+D/m573u/GKkzYV21DQnLjRlZBsn9hq5ja1sdkS4ZCNw8XZsZQ2xJ+4+S
+         wRORx2nZh8sSeL0P6X91s7ROl4kpdolz7S/oIYoysjRCEyHKGlSH522a0mz01c97EU4j
+         sWXdaieP9ccrg4x6cIlAp8/xOmWlQPTmKCQ6Big2oQ4HwMnrfpTDs+OrxPfdkzwYYpTo
+         gOwQ==
+X-Gm-Message-State: AGi0PuYJq6c/jQC4ZQdb2ShcdL1W5vMU/M4B0T8b3rh/u+GKblElo++m
+        WO2DQLiNW7/F0PaOlcnn4KXdCDfqBms9PcLoH7sQ9A==
+X-Google-Smtp-Source: APiQypJKouIIKhONDkOghKTAW34SOEQnio5T0ysv+Iu/ELxMBu4fc4dVDMgQPcZZE3yIw33w58OEv/qC/oYsouUrQM0=
+X-Received: by 2002:a17:90a:8085:: with SMTP id c5mr568939pjn.186.1586283241410;
+ Tue, 07 Apr 2020 11:14:01 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3c2fe18-2ddb-4ba0-c21a-08d7db1efca9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2020 18:10:42.6852
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fiFM60CYymm3RL/GerXuU5zV90bz9ouAY/s+ucr6JnCt7t9W/M+x/tvzxu+VvFb98oC4Dnx2N5F9DqtDMefwyw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0177
+References: <29b5043db9a51ef7a0cb6e3a8c69c91e36045cd6.1585944770.git.mirq-linux@rere.qmqm.pl>
+ <202004050928.d6QhVcsQ%lkp@intel.com>
+In-Reply-To: <202004050928.d6QhVcsQ%lkp@intel.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 7 Apr 2020 11:13:50 -0700
+Message-ID: <CAKwvOdm5BhMdAmXR0gCLntkbvF7ajaNoWoHVCCio1CqbGzS6aQ@mail.gmail.com>
+Subject: Re: [PATCH v3 07/11] power: supply: core: tabularize HWMON
+ temperature labels
+To:     kbuild test robot <lkp@intel.com>
+Cc:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        kbuild-all@lists.01.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Vitaly Kuznetsov
-> Sent: Tuesday, April 7, 2020 12:28 AM
-> Christoph Hellwig <hch@lst.de> writes:
->=20
-> > Hi all,
-> >
-> > The x86 Hyper-V hypercall page (hv_hypercall_pg) is the only allocation
-> > in the kernel using __vmalloc with exectutable persmissions, and the
-> > only user of PAGE_KERNEL_RX.  Is there any good reason it needs to
-> > be readable?  Otherwise we could use vmalloc_exec and kill off
-> > PAGE_KERNEL_RX.  Note that before 372b1e91343e6 ("drivers: hv: Turn
-> off
-> > write permission on the hypercall page") it was even mapped writable..
->=20
-> [There is nothing secret in the hypercall page, by reading it you can
-> figure out if you're running on Intel or AMD (VMCALL/VMMCALL) but it's
-> likely not the only possible way :-)]
->=20
-> I see no reason for hv_hypercall_pg to remain readable. I just
-> smoke-tested
->=20
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index 7581cab74acb..17845db67fe2 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -382,7 +382,7 @@ void __init hyperv_init(void)
->         guest_id =3D generate_guest_id(0, LINUX_VERSION_CODE, 0);
->         wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
->=20
-> -       hv_hypercall_pg  =3D __vmalloc(PAGE_SIZE, GFP_KERNEL,
-> PAGE_KERNEL_RX);
-> +       hv_hypercall_pg  =3D vmalloc_exec(PAGE_SIZE);
+On Sat, Apr 4, 2020 at 6:53 PM kbuild test robot <lkp@intel.com> wrote:
+>
+> Hi "Micha=C5=82,
+>
+> I love your patch! Perhaps something to improve:
+>
+> [auto build test WARNING on power-supply/for-next]
+> [also build test WARNING on hwmon/hwmon-next linus/master v5.6 next-20200=
+404]
+> [if your patch is applied to the wrong git tree, please drop us a note to=
+ help
+> improve the system. BTW, we also suggest to use '--base' option to specif=
+y the
+> base tree in git format-patch, please see https://stackoverflow.com/a/374=
+06982]
+>
+> url:    https://github.com/0day-ci/linux/commits/Micha-Miros-aw/extension=
+s-and-fixes/20200405-044024
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-s=
+upply.git for-next
+> config: x86_64-randconfig-b002-20200405 (attached as .config)
+> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 62f3=
+a9650a9f289a07a5f480764fb655178c2334)
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
+n/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         COMPILER=3Dclang make.cross ARCH=3Dx86_64
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All warnings (new ones prefixed by >>):
+>
+> >> drivers/power/supply/power_supply_hwmon.o: warning: objtool: power_sup=
+ply_hwmon_read_string() falls through to next function power_supply_hwmon_w=
+rite()
 
-If we try to write into the page, Hyper-V will kill the guest immediately
-by a virtual double-fault (or triple fault?), IIRC.
+I'm guessing this is from the unreachable:
+https://github.com/0day-ci/linux/commit/b8b2d14ca46ca54257f55c9af58ea25695b=
+9ee36
+I'll need to play with this some more as I couldn't reproduce with a
+simplified test case, but looks like a compiler bug.  Filed
+https://github.com/ClangBuiltLinux/linux/issues/978 for me to track.
 
-> on a Hyper-V 2016 guest and nothing broke, feel free to go ahead and
-> kill PAGE_KERNEL_RX.
-> --
-> Vitaly
-
-This should be OK. Just remember never try to write into the page, unless
-you're trying to use this as a means of forcing a guest reboot. :-)
-
+--=20
 Thanks,
--- Dexuan
+~Nick Desaulniers
