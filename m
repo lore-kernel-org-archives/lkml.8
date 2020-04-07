@@ -2,114 +2,146 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146F9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1391FC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7602075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DD92075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="jIN5hjrS"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="lYJjsqch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgDGQD5 (ORCPT
+        id S1727183AbgDGQG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:03:57 -0400
-Received: from mout.gmx.net ([212.227.15.19]:40645 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728000AbgDGQD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:03:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586275414;
-        bh=e3mRm5CWAZ94bLSIQgu24+nnAMT62ywXZ1pN+mDxiVA=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=jIN5hjrSASiCcNRUHqRZCzPOYwhWWdaVRg9MoG+Uq2mqNFDGhB0vSQK/n2MN3VmSy
-         h92TJRIfqf5DB+Z+GEjspLoee1s236JsuuNPn/DHrq71lNusQKjsPgaa99S4s1hy8y
-         QKZlRV+KDzvHwXUAI5SagxvyAhK7cwpy6HywOOaE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from lenovo-laptop ([82.19.195.159]) by mail.gmx.com (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MvbFs-1j3d5f3HN8-00sfoC; Tue, 07
- Apr 2020 18:03:33 +0200
-Date:   Tue, 7 Apr 2020 17:03:30 +0100
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Allison Randal <allison@lohutok.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Coccinelle: zalloc-simple: Fix patch mode for
- dma_alloc_coherent()
-Message-ID: <20200407160330.5m75sfkhrrx3wgrl@lenovo-laptop>
-References: <beeed2c8-1b5a-66a8-ec41-f5770c04bae9@web.de>
+        Tue, 7 Apr 2020 12:06:29 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45573 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbgDGQG2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 12:06:28 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m12so4675739edl.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 09:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZSC8MNyMYJ4CcbIl5da3tSwMWoq31/28XKL6OZqNaaY=;
+        b=lYJjsqchyogIG2xHJXiYDwsutn6iKu82kteMMh/iUcPx8osqcaPhaQMR0VRfmVhNWK
+         NCagF590A9IHqge+RLez3WuO7uxY62A3hcYNfVsfdv+RVIwhEq7wV1V2/QfjuAh/HHNJ
+         Ndiq/cU1KP/QZ40BrUjm6Tbot2afFBCYP9DNU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZSC8MNyMYJ4CcbIl5da3tSwMWoq31/28XKL6OZqNaaY=;
+        b=J4KNVAw8Hf0KZZNz6NYNjD8MGzc+uibzweXN4PUiA3YqFxEA0esNViJKU5vHgyk8nk
+         0BQPh1DFMX2m6zsw6oYXT2GCf+DA/Ob42Yn7pZzIc1GmWj/k7tOVRvbsguC17VWkstSX
+         uwFOoXr/0tyKekYnBpATFGaposRaI/VMowEVSh/fxjAffIwrFo66gxTd1Abgti9zrjT1
+         oRB7/cJHcqaBySMga9SVALhk+/C4Sz+WnQwI24MzQmpKZVEnyNG+zdlaCEolRJ6HCBqU
+         0G4eVlMUVDmNS3Z13z/lK64LGl9+8Zch9eaKHWuGJ3T0LnDgw0BJgCL8KpI5j9JeinkO
+         eWsA==
+X-Gm-Message-State: AGi0PuaEa08WF2qrmayLx+agpJuqCmonKj9y2E4kPRfzhwncpbgStlC4
+        7R+8BFFeDTE5jcRpLRVQ5GX1aMySsyzu58fyb+1Wog==
+X-Google-Smtp-Source: APiQypIXfOQtepXXTh7ycOqzqzJa8O502xxo9QjDYoNHsfjRyMveiS82f7idPBRjOLqUA9QCRFw1nO3c8tM2xgW4Ai4=
+X-Received: by 2002:a17:906:405b:: with SMTP id y27mr2784058ejj.213.1586275585452;
+ Tue, 07 Apr 2020 09:06:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <CAJfpegum_PsCfnar8+V2f_VO3k8CJN1LOFJV5OkHRDbQKR=EHg@mail.gmail.com>
+ <20200402155020.GA31715@gardel-login> <CAJfpeguM__+S6DiD4MWFv5GCf_EUWvGFT0mzuUCCrfQwggqtDQ@mail.gmail.com>
+ <20200403110842.GA34663@gardel-login> <CAJfpegtYKhXB-HNddUeEMKupR5L=RRuydULrvm39eTung0=yRg@mail.gmail.com>
+ <20200403150143.GA34800@gardel-login> <CAJfpegudLD8F-25k-k=9G96JKB+5Y=xFT=ZMwiBkNTwkjMDumA@mail.gmail.com>
+ <20200406172917.GA37692@gardel-login> <a4b5828d73ff097794f63f5f9d0fd1532067941c.camel@themaw.net>
+ <CAJfpegvYGB01i9eqCH-95Ynqy0P=CuxPCSAbSpBPa-TV8iXN0Q@mail.gmail.com> <20200407155329.GA39803@gardel-login>
+In-Reply-To: <20200407155329.GA39803@gardel-login>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 7 Apr 2020 18:06:13 +0200
+Message-ID: <CAJfpegufdi7u3Wyo0YWeoPs9MQa1TePD=AHNW9S9Ey9jTuofHw@mail.gmail.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <beeed2c8-1b5a-66a8-ec41-f5770c04bae9@web.de>
-X-Provags-ID: V03:K1:VyTCQk3EiMwZojK0lcw8VVypr4boid8PMeIUQcoFh5hfKXppl56
- f55N+K3JBSSRb1BRquGaiX4iXL3AXghXl6kjS9BQyMfsiE7wKmAzQjMA6az0OKeLnxKig21
- 0jtHzgLZDn7oelFHXALFodCvR1ijjVom5BFJsf81wct7THQwETUEq5ke8Cip0Y+QW5kyvzn
- tgfNXExVv5a25wkN2Eo4g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7YENew970fU=:3ut9H6t0BFdslC+tkJ3dnR
- 4vEXMQannVKiiPvU4Ifp81a8B/GXumK0AUngL5R0LwXPAGET5HxyNp9IvUET//yuSKo1LgWJM
- zC+s4sn+xZ4ESLWwFE0oJX42w94ZdqosLisZaQqpAlkAF6Rkj/EWXNkNZ1tkmmlJOl/uzPIny
- 5TTUVZMDkN4kxA9iOUGfSf9ikSxrPITG3E+urpXnOCVWM5ZgYfslrxuvyL0At4dFTTfiaYBW0
- FqxTgTSDTCUOu52A+JEfZa65NvVBB2ldi4sU/VhalGYYa6FJGp85NsHrhzj+49K1RRJaUqd5D
- 2+6bT+IMpLL+uiol8SpyBVsottPF2KlkEFLAnNT9+RG4hpjq6YDfJ6pKD5mds1KoNhaLiJQiy
- 6tOGt/XM+4bkUFaqXGGLqC3Je+zto3vqMW5lx1y+R60pC1oA2FEWKsPYGkjWKvVu527zi6zyj
- WRa1UT97yPy9FuKTlYoiPJ6DxehYCZ4b4rI8mfbrpwZCGJ0nySBWcrQ5yxRP0YkmOD39NYLYP
- 2clVJS4sDs+vUpZY5kp882AvQyStkPuJZ5gYgzAkBsjaZd3YaKN9FXOJxhkDhKRBKRqj6T2J3
- WgmXLgxDl10l8OveZP5X7QBUBbCC3RSvfYHyPp+nCbzZPHT2IXXikUE56feY34aZkpgqI9TD4
- 7gH/zKpSlp9avP9PSCfkzfsYe8JEI7SI+VOLHVRZBl9RfLoOGZghWWrha6kVKZ8gNhixV2Npz
- QeHs6xVdAgbt3RMfz1QEHOdGpHxsRyFcw/bZ1Uoo4dE2JH91/WFVeLl84J6iM+F5oF/oSXC8S
- Yn4EbLN6PzaiIt4Sf7OPCssoA0uNr41i4mlZJoKbpwA+8lw+XYzWZM5JN77FnhHQynKcllLmb
- LtamXhONciuKcqE9P0lJfLtKGrIbLlEQJmsj8fkeJGMZ0HH0rLXkIfgLMhVf9/++xVcA4/e4l
- 2ZWGFPlANUS1cX6bjWcWmTnF6Kj+JMrm1ccvgCRVPgL+/I9QgG4g4RYofMrca4tSnX4bTPOHp
- qpnXzrPel7V2RzxAARtJ8zrbP42Z/br8iNMZqfVMYmGq1eprif+D5ixyt8GHCstUw8kxjpycJ
- Y9QqL2IDdi/tOtD7PgCjvKs/+cLQuvgFwDa0Fb5btAQraaJ2Px1Qu2zMg1tm0RsIDr8n2to2t
- Uzdjg7ZfJQtSQj9uhiJB3P9Ne7Gr6KVZWrFsYRlfcJohjVJOFUUaRSP4hrNoYfA6tdLPSxlNR
- iEBlZEtOjOrF1ex8v
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 04, 2020 at 09:06:46AM +0200, Markus Elfring wrote:
-> > Commit dfd32cad146e ("dma-mapping: remove dma_zalloc_coherent()"), in
-> > removing dma_zalloc_coherent() treewide, inadvertently removed the pat=
-ch
-> > rule for dma_alloc_coherent(), leaving Coccinelle unable to auto-gener=
-ate
-> > patches for this case. Fix this.
+On Tue, Apr 7, 2020 at 5:53 PM Lennart Poettering <mzxreary@0pointer.de> wr=
+ote:
 >
-> I suggest to reconsider also the distribution of recipients for your pat=
-ch
-> according to the fields =E2=80=9CCc=E2=80=9D and =E2=80=9CTo=E2=80=9D.
-
-Good point.
-
+> On Di, 07.04.20 15:59, Miklos Szeredi (miklos@szeredi.hu) wrote:
 >
-> Will the software development attention grow in a way so that further
-> implementation details can be adjusted also for the mentioned SmPL scrip=
-t?
-
-I'm not sure I understand what you mean. Would you mind clarifying?
-
-Best,
-Alex
-
+> > On Tue, Apr 7, 2020 at 4:22 AM Ian Kent <raven@themaw.net> wrote:
+> > > > Right now, when you have n mounts, and any mount changes, or one is
+> > > > added or removed then we have to parse the whole mount table again,
+> > > > asynchronously, processing all n entries again, every frickin
+> > > > time. This means the work to process n mounts popping up at boot is
+> > > > O(n=C2=B2). That sucks, it should be obvious to anyone. Now if we g=
+et that
+> > > > fixed, by some mount API that can send us minimal notifications abo=
+ut
+> > > > what happened and where, then this becomes O(n), which is totally O=
+K.
+> >
+> > Something's not right with the above statement.  Hint: if there are
+> > lots of events in quick succession, you can batch them quite easily to
+> > prevent overloading the system.
+> >
+> > Wrote a pair of utilities to check out the capabilities of the current
+> > API.   The first one just creates N mounts, optionally sleeping
+> > between each.  The second one watches /proc/self/mountinfo and
+> > generates individual (add/del/change) events based on POLLPRI and
+> > comparing contents with previous instance.
+> >
+> > First use case: create 10,000 mounts, then start the watcher and
+> > create 1000 mounts with a 50ms sleep between them.  Total time (user +
+> > system) consumed by the watcher: 25s.  This is indeed pretty dismal,
+> > and a per-mount query will help tremendously.  But it's still "just"
+> > 25ms per mount, so if the mounts are far apart (which is what this
+> > test is about), this won't thrash the system.  Note, how this is self
+> > regulating: if the load is high, it will automatically batch more
+> > requests, preventing overload.  It is also prone to lose pairs of add
+> > + remove in these case (and so is the ring buffer based one from
+> > David).
 >
-> Regards,
-> Markus
+> We will batch requests too in systemd, of course, necessarily, given
+> that the /p/s/mi inotify stuff is async. Thing though is that this
+> means we buy lower CPU usage =E2=80=94 working around the O(n=C2=B2) issu=
+e =E2=80=94 by
+> introducing artifical higher latencies. We usually want to boot
+> quickly, and not artificially slow.
+>
+> Sure one can come up with some super smart scheme how to tweak the
+> artifical latencies, how to grow them, how to shrink them, depending
+> on a perceived flood of events, some backing off scheme. But that's
+> just polishing a turd, if all we want is proper queued change
+> notification without the O(n=C2=B2) behaviour.
+>
+> I mean, the fix for an O(n=C2=B2) algorithm is to make it O(n) or so. By
+> coalescing wake-up events you just lower the n again, probably
+> linearly, but that still means we pay O(n=C2=B2), which sucks.
+
+Obviously.  But you keep ignoring event queue overflows; it's
+basically guaranteed to happen with a sizable mount storm and then you
+are back to O(n^2).
+
+Give it some testing please, as Linus is not going to take any
+solution without an actual use case and testing.  When you come back
+and say that fsinfo(2) works fine with systemd and a 100k mount/umount
+storm, then we can have a look at the performance budget and revisit
+the fine points of API design.
+
+Thanks,
+Miklos
