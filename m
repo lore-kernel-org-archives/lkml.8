@@ -2,106 +2,211 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E66C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96045C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6513220747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:54:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ObfqlF+q"
+	by mail.kernel.org (Postfix) with ESMTP id 695C820730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586300275;
+	bh=kxC2yjbONA5gg6JjZg6K/Xqs3rQbnojBnZBYqUEU0xA=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=C7J/rBLw0nrDrAgOqQdlOdLCdqs7Waa7i5dyZPO8nxUePezCP7z7o53RPTGyQSddO
+	 OxK+mny6ZMSo2siN20E5mM8ho12nL2+Z4hFfRiOJp1f8jDclGqEMYzPGRQYaVlRCs8
+	 26+5ODMjY5RRbYZjY7oXljfN9wo+nnYbxfaGYrTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726443AbgDGWy2 (ORCPT
+        id S1726443AbgDGW5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:54:28 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23857 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726380AbgDGWy2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:54:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586300066;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LZDDid3a3ePfhLodTyOmZRjnrTotcjxlg26rXizPwJc=;
-        b=ObfqlF+qr4JzEZfMc1rh6YNj/qk9jWVGcJbMwmyVPo9oqFOhTYBdXnsJGUx3Jk6zCjOl2Z
-        stUNY3gX0QRSSyhL8YaHdDfhC7AxUYWjL7TjQjpUCJfoESIBTz8eM8QoJXB6901KYyc5Wr
-        q6P/xqlY6MOf541foeWRhA4d1MotEdY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-VXoG6dq-MCGFzhVdysVHAQ-1; Tue, 07 Apr 2020 18:54:19 -0400
-X-MC-Unique: VXoG6dq-MCGFzhVdysVHAQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 7 Apr 2020 18:57:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbgDGW5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 18:57:54 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 061BE13F9;
-        Tue,  7 Apr 2020 22:54:17 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-224.rdu2.redhat.com [10.10.112.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 428C55DA60;
-        Tue,  7 Apr 2020 22:54:11 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=whwaNvyd1q=h0nUQio9byojpxufGkOiVfAh10woRs8KSA@mail.gmail.com>
-References: <CAHk-=whwaNvyd1q=h0nUQio9byojpxufGkOiVfAh10woRs8KSA@mail.gmail.com> <20200406185827.22249-1-longman@redhat.com> <c2c8adf48be7cb18bbdf0aef7d21e2defe3d2183.camel@perches.com> <CAHk-=wg_mkSc-pH8ntGHR=no9DOLRQyxdtU20p55DrM1su6QzA@mail.gmail.com> <CAHk-=wg2Vsb0JETo24=Tc-T2drwMopMRfKnc__r5SZ6tEnbwcA@mail.gmail.com> <699292.1586294051@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, Joe Perches <joe@perches.com>,
-        Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>, law@redhat.com
-Subject: Re: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive data objects
+        by mail.kernel.org (Postfix) with ESMTPSA id 30507206C0;
+        Tue,  7 Apr 2020 22:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586300272;
+        bh=kxC2yjbONA5gg6JjZg6K/Xqs3rQbnojBnZBYqUEU0xA=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=KQfuLHOa9pd2NH3A+Xqhc38dv/oHodgyhPMUQGi0254hMCHVoIZKUIop/U0vpsK6k
+         AXfKmaYZDj2a55KyJ6SAx+s3F1gI7VKtaQ6MXqO25Gr4/kFtUoHx/bb9J6aDJt/yex
+         wbZV6q9wJRrQ+Qcc6ai0ct4b8rHnGBwX24FeyKkw=
+Message-ID: <e32db4ef5a0ae4e2002a3d957491c88e49daa5bb.camel@kernel.org>
+Subject: Re: [PATCH v2 2/2] ceph: allow rename operation under different
+ quota realms
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Zheng Yan <zyan@redhat.com>
+Cc:     Frank Schilder <frans@dtu.dk>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 07 Apr 2020 18:57:50 -0400
+In-Reply-To: <20200407103020.22588-3-lhenriques@suse.com>
+References: <20200407103020.22588-1-lhenriques@suse.com>
+         <20200407103020.22588-3-lhenriques@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <749734.1586300050.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 07 Apr 2020 23:54:10 +0100
-Message-ID: <749735.1586300050@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Tue, 2020-04-07 at 11:30 +0100, Luis Henriques wrote:
+> Returning -EXDEV when trying to 'mv' files/directories from different
+> quota realms results in copy+unlink operations instead of the faster
+> CEPH_MDS_OP_RENAME.  This will occur even when there aren't any quotas
+> set in the destination directory, or if there's enough space left for
+> the new file(s).
+> 
+> This patch adds a new helper function to be called on rename operations
+> which will allow these operations if they can be executed.  This patch
+> mimics userland fuse client commit b8954e5734b3 ("client:
+> optimize rename operation under different quota root").
+> 
+> Since ceph_quota_is_same_realm() is now called only from this new
+> helper, make it static.
+> 
+> URL: https://tracker.ceph.com/issues/44791
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+>  fs/ceph/dir.c   |  9 ++++----
+>  fs/ceph/quota.c | 58 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>  fs/ceph/super.h |  3 ++-
+>  3 files changed, 64 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
+> index d0cd0aba5843..23f0345611a3 100644
+> --- a/fs/ceph/dir.c
+> +++ b/fs/ceph/dir.c
+> @@ -1099,11 +1099,12 @@ static int ceph_rename(struct inode *old_dir, struct dentry *old_dentry,
+>  			op = CEPH_MDS_OP_RENAMESNAP;
+>  		else
+>  			return -EROFS;
+> +	} else if (old_dir != new_dir) {
+> +		err = ceph_quota_check_rename(mdsc, d_inode(old_dentry),
+> +					      new_dir);
+> +		if (err)
+> +			return err;
+>  	}
+> -	/* don't allow cross-quota renames */
+> -	if ((old_dir != new_dir) &&
+> -	    (!ceph_quota_is_same_realm(old_dir, new_dir)))
+> -		return -EXDEV;
+>  
+>  	dout("rename dir %p dentry %p to dir %p dentry %p\n",
+>  	     old_dir, old_dentry, new_dir, new_dentry);
+> diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
+> index c5c8050f0f99..9e82704a9f7b 100644
+> --- a/fs/ceph/quota.c
+> +++ b/fs/ceph/quota.c
+> @@ -264,7 +264,7 @@ static struct ceph_snap_realm *get_quota_realm(struct ceph_mds_client *mdsc,
+>  	return NULL;
+>  }
+>  
+> -bool ceph_quota_is_same_realm(struct inode *old, struct inode *new)
+> +static bool ceph_quota_is_same_realm(struct inode *old, struct inode *new)
+>  {
+>  	struct ceph_mds_client *mdsc = ceph_inode_to_client(old)->mdsc;
+>  	struct ceph_snap_realm *old_realm, *new_realm;
+> @@ -516,3 +516,59 @@ bool ceph_quota_update_statfs(struct ceph_fs_client *fsc, struct kstatfs *buf)
+>  	return is_updated;
+>  }
+>  
+> +/*
+> + * ceph_quota_check_rename - check if a rename can be executed
+> + * @mdsc:	MDS client instance
+> + * @old:	inode to be copied
+> + * @new:	destination inode (directory)
+> + *
+> + * This function verifies if a rename (e.g. moving a file or directory) can be
+> + * executed.  It forces an rstat update in the @new target directory (and in the
+> + * source @old as well, if it's a directory).  The actual check is done both for
+> + * max_files and max_bytes.
+> + *
+> + * This function returns 0 if it's OK to do the rename, or, if quotas are
+> + * exceeded, -EXDEV (if @old is a directory) or -EDQUOT.
+> + */
+> +int ceph_quota_check_rename(struct ceph_mds_client *mdsc,
+> +			    struct inode *old, struct inode *new)
+> +{
+> +	struct ceph_inode_info *ci_old = ceph_inode(old);
+> +	int ret = 0;
+> +
+> +	if (ceph_quota_is_same_realm(old, new))
+> +		return 0;
+> +
+> +	/*
+> +	 * Get the latest rstat for target directory (and for source, if a
+> +	 * directory)
+> +	 */
+> +	ret = ceph_do_getattr(new, CEPH_STAT_RSTAT, false);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (S_ISDIR(old->i_mode)) {
+> +		ret = ceph_do_getattr(old, CEPH_STAT_RSTAT, false);
+> +		if (ret)
+> +			return ret;
+> +		ret = check_quota_exceeded(new, QUOTA_CHECK_MAX_BYTES_OP,
+> +					   ci_old->i_rbytes);
+> +		if (!ret)
+> +			ret = check_quota_exceeded(new,
+> +						   QUOTA_CHECK_MAX_FILES_OP,
+> +						   ci_old->i_rfiles +
+> +						   ci_old->i_rsubdirs);
 
-> > It might be worth asking the compiler folks to give us an __attribute_=
-_ for
-> > that - even if they don't do anything with it immediately.  So we migh=
-t have
-> > something like:
-> >
-> >         void free(const volatile void *ptr) __attribute__((free(1)));
-> =
+Somewhat idle curiosity, but what happens with hardlinked files where
+one dentry is in one quota domain and another is in a different one?
+Does it stay in the old quotarealm?
 
-> Yeah, that sounds sane.
+In any case, this is likely fine as non-hardlinked files are the
+pessimal case anyway.
 
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D94527
+> +		if (ret)
+> +			ret = -EXDEV;
+> +	} else {
+> +		ret = check_quota_exceeded(new, QUOTA_CHECK_MAX_BYTES_OP,
+> +					   i_size_read(old));
+> +		if (!ret)
+> +			ret = check_quota_exceeded(new,
+> +						   QUOTA_CHECK_MAX_FILES_OP, 1);
+> +		if (ret)
+> +			ret = -EDQUOT;
+> +	}
+> +
+> +	return ret;
+> +}
+> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+> index 037cdfb2ad4f..d5853831a6b5 100644
+> --- a/fs/ceph/super.h
+> +++ b/fs/ceph/super.h
+> @@ -1175,13 +1175,14 @@ extern void ceph_handle_quota(struct ceph_mds_client *mdsc,
+>  			      struct ceph_mds_session *session,
+>  			      struct ceph_msg *msg);
+>  extern bool ceph_quota_is_max_files_exceeded(struct inode *inode);
+> -extern bool ceph_quota_is_same_realm(struct inode *old, struct inode *new);
+>  extern bool ceph_quota_is_max_bytes_exceeded(struct inode *inode,
+>  					     loff_t newlen);
+>  extern bool ceph_quota_is_max_bytes_approaching(struct inode *inode,
+>  						loff_t newlen);
+>  extern bool ceph_quota_update_statfs(struct ceph_fs_client *fsc,
+>  				     struct kstatfs *buf);
+> +extern int ceph_quota_check_rename(struct ceph_mds_client *mdsc,
+> +				   struct inode *old, struct inode *new);
+>  extern void ceph_cleanup_quotarealms_inodes(struct ceph_mds_client *mdsc);
+>  
+>  #endif /* _FS_CEPH_SUPER_H */
 
-> Even if it wasn't initially used for anything it wouldn't hurt, and mayb=
-e
-> some day it would improve warnings (and allow the compiler to do the dea=
-d
-> store elimination that started this whole long set of threads in the fir=
-st
-> place..)
-
-With regard to this, I've got back "not sure what Linus was talking about =
-WRT
-DSE, if he's got examples he could pass along, they'd be appreciated"
-
-David
+-- 
+Jeff Layton <jlayton@kernel.org>
 
