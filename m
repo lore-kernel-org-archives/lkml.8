@@ -2,289 +2,134 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBCBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEEDC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4780206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R4qx4JOB"
+	by mail.kernel.org (Postfix) with ESMTP id 8B05620731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgDGLB6 (ORCPT
+        id S1728365AbgDGLCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:01:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33944 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgDGLB5 (ORCPT
+        Tue, 7 Apr 2020 07:02:47 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42043 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbgDGLCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:01:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 65so3401230wrl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 04:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lrvv+xJ1GPbPtd9mC9WfvPH0Y05ufQDVnaAuC8UizGg=;
-        b=R4qx4JOBBD08rkaPcYuve7i7YBu+uaBWWCNPH1KgklRWcm2mn+BHz7MFBD/5G8bS63
-         pwuLv+YC8yWxneBxjrA8hTtg4wmRTdKuBlFtvMY6YU2WXhvCQnwdKHZivSsJYN65qdWi
-         pxV2BL7a3eGDjSvF5CIetpFNRMZezjbn4ZGu3YSPtkW0Umyp2MGbFqCTF/W2N/CcmgwN
-         DfU4Rj6iXHK7aR60xMgqb8JRf9PE8Ht8yZ4bm4zYad6J00HHAilj+UBAdAcxo46QQnbs
-         lEKsJoFIDF51XrcFPuREZ9391dV/V0TfpC4sOYKSUNM5BWNbmOi/zln3sXSDdDFx5Ox/
-         A5KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lrvv+xJ1GPbPtd9mC9WfvPH0Y05ufQDVnaAuC8UizGg=;
-        b=GrorWDomFI6I6deI1C4HLZ60GrpD3z0jKi6ca/Ht1ZwUMCowX3Y4ZgNSikYTphPYGU
-         atLQJJZAXsLlFVpAmw2gmulwe6QBNWnrCLRTzh6blnvc2/rQrwnGqTKE82aPvIV/tPqY
-         7ekGeJzD0i0flWEoaykTue9s1aconfeb5fxROoLhRVKWiZwsCwZubRpuixMx+r+rT3Mt
-         n4ixCVasS0C4+sAuD9KUql/M6/DSOoL7D4Ol75lK3rNHoZLo/e0d44UdjQ8ohhAtT4/6
-         qVgiDlnAaLrHcmaKtucGfHv6Ez4ADFdwnm3raV7N7Bqhc5Pud3pWUd5xd8sK+4WOI/3a
-         Pekg==
-X-Gm-Message-State: AGi0Pua7u4L930b2fx1dbavqfIbIb05of9s15+MOelPuEUfCJiin7jSU
-        9bNXslhMMmc5RHO5qB4b6yQdJQ==
-X-Google-Smtp-Source: APiQypIw5mZTJ+obpt9JttMWcZCpY5PLCvRKb+0qmz83brxu78nH/PbJRR8NjOqQssQsjCrOrH/AxA==
-X-Received: by 2002:a5d:4842:: with SMTP id n2mr2217910wrs.154.1586257314435;
-        Tue, 07 Apr 2020 04:01:54 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:6097:1406:6470:33b5])
-        by smtp.gmail.com with ESMTPSA id c18sm30089003wrx.5.2020.04.07.04.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 04:01:54 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 13:01:46 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 05/10] iommu/ioasid: Create an IOASID set for host SVA use
-Message-ID: <20200407110146.GB285264@myrica>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1585158931-1825-6-git-send-email-jacob.jun.pan@linux.intel.com>
- <20200401135316.GF882512@myrica>
- <20200406083353.73efda5b@jacob-builder>
+        Tue, 7 Apr 2020 07:02:47 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1jLm02-0003qi-5i; Tue, 07 Apr 2020 13:02:34 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:9c00:37c7:b172:db58] (unknown [IPv6:2a03:f580:87bc:d400:9c00:37c7:b172:db58])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 4729B4DDF77;
+        Tue,  7 Apr 2020 11:02:29 +0000 (UTC)
+Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+ the KSZ9031 PHY
+To:     Philippe Schenker <philippe.schenker@toradex.com>,
+        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "david@protonic.nl" <david@protonic.nl>,
+        "davem@davemloft.net" <davem@davemloft.net>
+References: <20200407093654.26095-1-o.rempel@pengutronix.de>
+ <699bf716ce12178655b47ce77227e4e42b85de1b.camel@toradex.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <49e9c223-78ed-f735-1787-f8c38cb18b1c@pengutronix.de>
+Date:   Tue, 7 Apr 2020 13:02:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406083353.73efda5b@jacob-builder>
+In-Reply-To: <699bf716ce12178655b47ce77227e4e42b85de1b.camel@toradex.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:33:53AM -0700, Jacob Pan wrote:
-> Hi Jean,
+On 4/7/20 12:57 PM, Philippe Schenker wrote:
+> On Tue, 2020-04-07 at 11:36 +0200, Oleksij Rempel wrote:
+>> Add support for following phy-modes: rgmii, rgmii-id, rgmii-txid,
+>> rgmii-rxid.
+>>
+>> This PHY has an internal RX delay of 1.2ns and no delay for TX.
+>>
+>> The pad skew registers allow to set the total TX delay to max 1.38ns
+>> and
+>> the total RX delay to max of 2.58ns (configurable 1.38ns + build in
+>> 1.2ns) and a minimal delay of 0ns.
+>>
+>> According to the RGMII v1.3 specification the delay provided by PCB
+>> traces
+>> should be between 1.5ns and 2.0ns. The RGMII v2.0 allows to provide
+>> this
+>> delay by MAC or PHY. So, we configure this PHY to the best values we
+>> can
+>> get by this HW: TX delay to 1.38ns (max supported value) and RX delay
+>> to
+>> 1.80ns (best calculated delay)
+>>
+>> The phy-modes can still be fine tuned/overwritten by *-skew-ps
+>> device tree properties described in:
+>> Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+>>
+>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > 
-> On Wed, 1 Apr 2020 15:53:16 +0200
-> Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
-> 
-> > On Wed, Mar 25, 2020 at 10:55:26AM -0700, Jacob Pan wrote:
-> > > Bare metal SVA allocates IOASIDs for native process addresses. This
-> > > should be separated from VM allocated IOASIDs thus under its own
-> > > set.
-> > > 
-> > > This patch creates a system IOASID set with its quota set to
-> > > PID_MAX. This is a reasonable default in that SVM capable devices
-> > > can only bind to limited user processes.  
-> > 
-> > Yes realistically there won't be more than PID_MAX_DEFAULT=0x8000
-> > bound address spaces. My machine uses a PID_MAX of 4 million though,
-> > so in theory more than 0x8000 processes may want a bond.
-> Got it, I assume we can adjust the system set quota as necessary.
-> 
-> > On Arm the
-> > limit of shared contexts per VM is currently a little less than
-> > 0x10000 (which is the number of CPU ASIDs).
-> > 
-> I guess shared contexts means shared address? then it makes sense
-> #IOASID < #ASID.
+> Make sure you do not exceet 80 chars with your phydev_warn. Besides
+> that:
 
-Yes by shared contexts I mean shared address spaces. Theoretically #ASID <
-#IOASID for us, because the max ASID size is 16-bit.
+Warning and Error strings should not be wrapped, so that you can better
+"grep" for them.
 
-> 
-> > But quotas are only necessary for VMs, when the host shares the PASID
-> > space with them (which isn't a use-case for Arm systems as far as I
-> > know, each VM gets its own PASID space).
-> Is there a host-guest PASID translation? or the PASID used by the VM is
-> physical PASID? When a page request comes in to SMMU, how does it know
-> the owner of the PASID if PASID range can overlap between host and
-> guest?
+regards,
+Marc
 
-We assign PCI functions to VMs, so Page Requests are routed with
-RID:PASID, not PASID alone. The SMMU finds the struct device associated
-with the RID, and submits the fault with iommu_report_device_fault(). If
-the VF is assigned to a VM, then the page request gets injected into the
-VM, otherwise it uses the host IOPF handler
-
-> > Could we have quota-free IOASID sets for the host?
-> > 
-> Yes, perhaps just add a flag such that the set has its own namespace.
-> You mean have this quota-free IOASID set even co-exist with VMs? I still
-> don't get how PRQ works.
-> 
-> That is not the use case for VT-d in that we have to have system-wide
-> allocation for host PASIDs. We have enqcmd which can take a PASID from
-> the per task MSR and deliver to multiple devices, so even though the
-> PASID table is per device the PASID name space must be global.
-> 
-> > For the SMMU I'd like to allocate two sets, one SVA and one private
-> > for auxiliary domains, and I don't think giving either a quota makes
-> > much sense at the moment.
-> I agree we don;t need the quota if we don't support guest SVA at the
-> same time.
-> 
-> So the sva set and aux_domain set PASIDs have their own namespaces?
-
-They share the same PASID space, but they store different objects
-(mm_struct and context descriptor, respectively) so they need different
-ioasid_set tokens.
-
-> 
-> > There can be systems using only SVA and
-> > systems using only private PASIDs. I think it should be
-> > first-come-first-served until admins want a knob to define a policy
-> > themselves, based on cgroups for example.
-> > 
-> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > ---
-> > >  drivers/iommu/intel-iommu.c | 8 +++++++-
-> > >  drivers/iommu/ioasid.c      | 9 +++++++++
-> > >  include/linux/ioasid.h      | 9 +++++++++
-> > >  3 files changed, 25 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/iommu/intel-iommu.c
-> > > b/drivers/iommu/intel-iommu.c index ec3fc121744a..af7a1ef7b31e
-> > > 100644 --- a/drivers/iommu/intel-iommu.c
-> > > +++ b/drivers/iommu/intel-iommu.c
-> > > @@ -3511,8 +3511,14 @@ static int __init init_dmars(void)
-> > >  		goto free_iommu;
-> > >  
-> > >  	/* PASID is needed for scalable mode irrespective to SVM */
-> > > -	if (intel_iommu_sm)
-> > > +	if (intel_iommu_sm) {
-> > >  		ioasid_install_capacity(intel_pasid_max_id);
-> > > +		/* We should not run out of IOASIDs at boot */
-> > > +		if (ioasid_alloc_system_set(PID_MAX_DEFAULT)) {
-> > > +			pr_err("Failed to enable host PASID
-> > > allocator\n");
-> > > +			intel_iommu_sm = 0;
-> > > +		}
-> > > +	}
-> > >  
-> > >  	/*
-> > >  	 * for each drhd
-> > > diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> > > index 6265d2dbbced..9135af171a7c 100644
-> > > --- a/drivers/iommu/ioasid.c
-> > > +++ b/drivers/iommu/ioasid.c
-> > > @@ -39,6 +39,9 @@ struct ioasid_data {
-> > >  static ioasid_t ioasid_capacity;
-> > >  static ioasid_t ioasid_capacity_avail;
-> > >  
-> > > +int system_ioasid_sid;
-> > > +static DECLARE_IOASID_SET(system_ioasid);
-> > > +
-> > >  /* System capacity can only be set once */
-> > >  void ioasid_install_capacity(ioasid_t total)
-> > >  {
-> > > @@ -51,6 +54,12 @@ void ioasid_install_capacity(ioasid_t total)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(ioasid_install_capacity);
-> > >  
-> > > +int ioasid_alloc_system_set(int quota)
-> > > +{
-> > > +	return ioasid_alloc_set(&system_ioasid, quota,
-> > > &system_ioasid_sid); +}
-> > > +EXPORT_SYMBOL_GPL(ioasid_alloc_system_set);  
-> > 
-> > I think this helper could stay in the VT-d driver for the moment. If
-> > the SMMU driver ever implements auxiliary domains it will use a
-> > private IOASID set, separate from the shared IOASID set managed by
-> > iommu-sva. Both could qualify as "system set".
-> > 
-> Sounds good. Perhaps remove the special "system set". SVA code,
-> VFIO, VT-d, or SMMU driver can all allocate their own sets.
-> So to meet both SMMU and VT-d requirements, we should do:
-> 1. add an IOASID_PRIVATE flag to ioasid_alloc_set(), indicating this is
-> a private set
-> 2. All APIs operate on the set_id accordingly, e.g. ioasid_find() will
-> only search within the private set. Private set is excluded from from
-> global search (VT-d needs this in PRQ).
-> 
-> Since VT-d already needs private PASIDs for guest SVM where
-> GPASID!=HPASID, I feel we can just reuse the per ioasid_set Xarray for
-> both quota-free private set and guest set.
-
-Ok I think this sounds fine
-
-Thanks,
-Jean
-
-> 
-> 
-> Thanks for the feedback!
-> 
-> Jacob
-> 
-> > Thanks,
-> > Jean
-> > 
-> > > +
-> > >  /*
-> > >   * struct ioasid_allocator_data - Internal data structure to hold
-> > > information
-> > >   * about an allocator. There are two types of allocators:
-> > > diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> > > index 8c82d2625671..097b1cc043a3 100644
-> > > --- a/include/linux/ioasid.h
-> > > +++ b/include/linux/ioasid.h
-> > > @@ -29,6 +29,9 @@ struct ioasid_allocator_ops {
-> > >  	void *pdata;
-> > >  };
-> > >  
-> > > +/* Shared IOASID set for reserved for host system use */
-> > > +extern int system_ioasid_sid;
-> > > +
-> > >  #define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
-> > >  
-> > >  #if IS_ENABLED(CONFIG_IOASID)
-> > > @@ -41,6 +44,7 @@ int ioasid_register_allocator(struct
-> > > ioasid_allocator_ops *allocator); void
-> > > ioasid_unregister_allocator(struct ioasid_allocator_ops
-> > > *allocator); int ioasid_attach_data(ioasid_t ioasid, void *data);
-> > > void ioasid_install_capacity(ioasid_t total); +int
-> > > ioasid_alloc_system_set(int quota); int ioasid_alloc_set(struct
-> > > ioasid_set *token, ioasid_t quota, int *sid); void
-> > > ioasid_free_set(int sid, bool destroy_set); int
-> > > ioasid_find_sid(ioasid_t ioasid); @@ -88,5 +92,10 @@ static inline
-> > > void ioasid_install_capacity(ioasid_t total) {
-> > >  }
-> > >  
-> > > +static inline int ioasid_alloc_system_set(int quota)
-> > > +{
-> > > +	return -ENOTSUPP;
-> > > +}
-> > > +
-> > >  #endif /* CONFIG_IOASID */
-> > >  #endif /* __LINUX_IOASID_H */
-> > > -- 
-> > > 2.7.4
-> > >   
-> 
-> [Jacob Pan]
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
