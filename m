@@ -2,150 +2,112 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9EDC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65976C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64940206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D052206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:28:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KHsjYgQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgDGQ1i (ORCPT
+        id S1727991AbgDGQ2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:27:38 -0400
-Received: from mga06.intel.com ([134.134.136.31]:32973 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726776AbgDGQ1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:27:38 -0400
-IronPort-SDR: 2VlTbSxVbBSbuYw1ydcGX/vPTduvbQflHNBXRKtVEs8jtp7Y0AvkW362WdSb+Ph6A10JWxoSh6
- aCGgF9SqgEqw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 09:27:37 -0700
-IronPort-SDR: X45ded2A9SgUXwbH/l+PIMaqb/QJ89zgSdi/8J/tx1pNQTytOCCP4R5rWkwrDffgCQwmutwOe3
- P3tMODcwjmJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,355,1580803200"; 
-   d="scan'208";a="254507809"
-Received: from chenb-mobl1.amr.corp.intel.com (HELO [10.255.231.128]) ([10.255.231.128])
-  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 09:27:32 -0700
-Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0
- per-thread
-To:     Keno Fischer <keno@juliacomputing.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        Kyle Huey <khuey@kylehuey.com>,
-        Robert O'Callahan <robert@ocallahan.org>
-References: <20200407011259.GA72735@juliacomputing.com>
- <8f95e8b4-415f-1652-bb02-0a7c631c72ac@intel.com>
- <CABV8kRw1TQsqs+z43bSfZ5isctuFGMB4g_ztDYihiiXHcy4nVA@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <5208ad1e-cd9b-d57e-15b0-0ca935fccacd@intel.com>
-Date:   Tue, 7 Apr 2020 09:27:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Apr 2020 12:28:47 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43322 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726776AbgDGQ2q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 12:28:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586276926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8fuLk3L8ELTxwTSKiP3T5dmiYkZPR3qzEibGwB0sRWY=;
+        b=KHsjYgQUQQPufUN3cQL/d6YVE4QVr9o6ycNfW7zPEuJwMaAvlxtdtIzMSmAs4BskNA3nCa
+        4YFKfPM8qLerbwTNCsIAfC1i+nbxAR7mA3e34E5LsJZSesskB6On7vcGCmRwbIcjvJ4Qdg
+        DV5X0OtLS1hrS/jITWLVOA8M03P7hHc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-476-TEwEXIKEN1i_4ybstAbp-w-1; Tue, 07 Apr 2020 12:28:43 -0400
+X-MC-Unique: TEwEXIKEN1i_4ybstAbp-w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35920800D50;
+        Tue,  7 Apr 2020 16:28:42 +0000 (UTC)
+Received: from treble (ovpn-116-24.rdu2.redhat.com [10.10.116.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C549E60BF7;
+        Tue,  7 Apr 2020 16:28:40 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 11:28:38 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, jthierry@redhat.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH V2 9/9] x86/speculation: Remove all
+ ANNOTATE_NOSPEC_ALTERNATIVE directives
+Message-ID: <20200407162838.5hlh6oom4oa45ugt@treble>
+References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
+ <20200407073142.20659-10-alexandre.chartre@oracle.com>
+ <20200407132837.GA20730@hirez.programming.kicks-ass.net>
+ <20200407133454.n55u5nx33ruj73gx@treble>
+ <89b10eb8-c030-b954-6be3-8830fc6a8daa@oracle.com>
+ <3eb36fd2-9827-4c1b-681c-9c1d65c7582f@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <CABV8kRw1TQsqs+z43bSfZ5isctuFGMB4g_ztDYihiiXHcy4nVA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <3eb36fd2-9827-4c1b-681c-9c1d65c7582f@oracle.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> How does this work with things like xstateregs_[gs]et() where the format
->> of the kernel buffer and thus the kernel XCR0 is exposed as part of our
->> ABI?  With this patch, wouldn't a debugger app see a state buffer that
->> looks invalid?
+On Tue, Apr 07, 2020 at 06:18:51PM +0200, Alexandre Chartre wrote:
 > 
-> Since those operate on the in-kernel buffer of these, which
-> in this patch always uses the unmodified XCR0, ptracers
-> should not observe a difference.
-
-Those operate on *BOTH* kernel and userspace buffers.  They copy between
-them.  That's kinda the point. :)
-
-But I don't see any modifications to copy_xstate_to_user() or
-user_regset_copyout() in your patch.
-
-I suspect the patch thus far is only the tip of the iceberg.  I'd really
-suggest doing some more thorough audits of all of the locations in the
-kernel that touch the fpu buffer *or* that call XSAVE/XRSTOR.  I'm
-pretty sure that audit hasn't been done or the ptrace example would have
-been found already.
-
->> I'm also trying to think of what kinds of things CPU companies add to
->> their architectures that would break this stuff.  I can't recall ever
->> having a discussion with folks at Intel where we're designing a CPU
->> feature and we say, "Can't do that, it would break record/replay".
+> On 4/7/20 4:32 PM, Alexandre Chartre wrote:
+> > 
+> > On 4/7/20 3:34 PM, Josh Poimboeuf wrote:
+> > > On Tue, Apr 07, 2020 at 03:28:37PM +0200, Peter Zijlstra wrote:
+> > > > Josh, we should probably have objtool verify it doesn't emit ORC entries
+> > > > in alternative ranges.
+> > > 
+> > > Agreed, it might be as simple as checking for insn->alt_group in the
+> > > INSN_STACK check or in update_insn_state().
+> > > 
+> > 
+> > We could do that only for the "objtool orc generate" command. That way
+> > "objtool check" would still check the alternative, but "objtool orc generate"
+> > will just use the first half of the alternative (like it does today with
+> > ANNOTATE_NOSPEC_ALTERNATIVE). We can even keep all ANNOTATE_NOSPEC_ALTERNATIVE
+> > but only use them for "objtool orc generate".
+> > 
 > 
-> Heh, I'm having these discussions for you - ask me which Intel
-> microarchitectures have interesting bugs here ;). The fact that rr works,
-> is pretty much the only reason we buy Intel hardware these days, so
-> there is at least a good reason for Intel folks to care. I think the evil
-> plan is to make rr so good that everybody is using it, so you'll
-> start having these conversations more :).
+> I have checked and objtool doesn't emit ORC entries for alternative:
+> decode_instructions() doesn't mark such section with sec->text = true
+> so create_orc_sections() doesn't emit corresponding ORC entries.
+> 
+> So I think we can remove the ANNOTATE_NOSPEC_ALTERNATIVE directives,
+> this will allow objtool to check the instructions but it still won't
+> emit ORC entries (same behavior as today). In the future, if ORC
+> eventually supports alternative we will be ready to have objtool emit
+> ORC entries.
 
-Having reverse execution is a laudable goal.  I've been using this:
+What's the benefit of removing ANNOTATE_NOSPEC_ALTERNATIVE if there's no
+ORC support to go along with it?
 
-	https://www.windriver.com/products/simics/
+Also I want to avoid adding "ORC alternatives".  ORC is nice and simple
+and we should keep it that way as much as possible.
 
-to do kernel (and occasional app) debugging the last few years, and its
-reverse execution is invaluable for certain kinds of debugging.  But,
-it's also not my daily go-to for debugging.
+Again, we should warn on stack changes inside alternatives, and then
+look at converting RSB and retpolines to use static branches so they
+have deterministic stacks.
 
-I'm just far from convinced that we your problem is worth solving,
-especially in the place you're proposing to solve it.
+-- 
+Josh
+
