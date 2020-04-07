@@ -2,80 +2,104 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D80EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDF2C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FFB20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABABC20719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:14:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hbak8jfx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDGVN2 (ORCPT
+        id S1726608AbgDGVOX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:13:28 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46135 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgDGVN2 (ORCPT
+        Tue, 7 Apr 2020 17:14:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36703 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726370AbgDGVOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:13:28 -0400
-X-Originating-IP: 72.234.141.215
-Received: from tb.lan (udp224251uds.hawaiiantel.net [72.234.141.215])
-        (Authenticated sender: mail@aparcar.org)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D2A2DFF805;
-        Tue,  7 Apr 2020 21:13:21 +0000 (UTC)
-From:   Paul Spooren <mail@aparcar.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, jason@lakedaemon.net, andrew@lunn.ch,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        daniel@makrotopia.org, freifunk@adrianschmutzler.de
-Subject: [PATCH 0/5] arm: dts: linksys: rename codename to model
-Date:   Tue,  7 Apr 2020 11:08:16 -1000
-Message-Id: <20200407210816.866084-7-mail@aparcar.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200407210816.866084-1-mail@aparcar.org>
-References: <20200407210816.866084-1-mail@aparcar.org>
+        Tue, 7 Apr 2020 17:14:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586294062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JDR/Ja/MXRViYxacEiXghWWXRn30qULV8zNLAxslGog=;
+        b=Hbak8jfxFrUX3zgjjidCy4zjiBzh+4SoCK5PO+TawDqFD8qE9qaJCKOHknvZs5ys5i2YqM
+        V5Gz72IIZRSX5f3vbnF01XDvFxTlYwFjYq7IrzvpEJluP9j1SzQLp1chnC9MZ3DQ6YRvqE
+        TOjuZn0zLKEUW5d3jGoCYlbxteK7JBs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-154-8Woi6jfnOlGwnE-45vTsXw-1; Tue, 07 Apr 2020 17:14:20 -0400
+X-MC-Unique: 8Woi6jfnOlGwnE-45vTsXw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B74658017CE;
+        Tue,  7 Apr 2020 21:14:17 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-224.rdu2.redhat.com [10.10.112.224])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A2CD09B912;
+        Tue,  7 Apr 2020 21:14:12 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wg2Vsb0JETo24=Tc-T2drwMopMRfKnc__r5SZ6tEnbwcA@mail.gmail.com>
+References: <CAHk-=wg2Vsb0JETo24=Tc-T2drwMopMRfKnc__r5SZ6tEnbwcA@mail.gmail.com> <20200406185827.22249-1-longman@redhat.com> <c2c8adf48be7cb18bbdf0aef7d21e2defe3d2183.camel@perches.com> <CAHk-=wg_mkSc-pH8ntGHR=no9DOLRQyxdtU20p55DrM1su6QzA@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Joe Perches <joe@perches.com>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive data objects
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <699291.1586294051.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 07 Apr 2020 22:14:11 +0100
+Message-ID: <699292.1586294051@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linksys chose to use codenames for a few of their devices and sell their
-them under an entirely different name.
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-codename  model name
-rango  -> wrt3200acm
-mamba  -> wrt1900ac
-cobra  -> wrt1900ac-v2
-caiman -> wrt1200ac
-shelby -> wrt1900acs
+> So the _real_ prototype for 'free()'-like operations should be something=
+ like
+> =
 
-This introduces some extra loops in OpenWrt, a distribution specialized
-on embedded Internet facing devices, as both codename and model name are
-used within the build system. The double naming requires developers to
-keep track of that mapping and introduces inconsistencies:
+>     void free(const volatile killed void *ptr);
+> =
 
-To build a specific device in OpenWrt profiles are used, named after the
-device model, e.g. `wrt3200acm`. However as device tree is used and the
-first item of the DT `compatible` list is `linksys,rango`, the running
-device identifies itself as `linksys,rango`.
+> where that "killed" also tells the compiler that the pointer lifetime
+> is dead, so that using it afterwards is invalid. So that the compiler
+> could warn us about some of the most trivial use-after-free cases.
 
-Such double naming complicates currently the automatic search for
-firmware upgrade as the build system does not support such mapping.
-Ideally the first item of the DT `compatible` list would contain a
-string reasonable similar to the DT `model`.
+It might be worth asking the compiler folks to give us an __attribute__ fo=
+r
+that - even if they don't do anything with it immediately.  So we might ha=
+ve
+something like:
 
-With this patch set the Linksys device tree files are moved from
-containing the codename to contain a sanitized model name and also use
-it as first entry of the DT `compatible` list.
+	void free(const volatile void *ptr) __attribute__((free(1)));
 
-Paul Spooren (5):
-  arm: dts: linksys: rename rango to wrt3200acm
-  arm: dts: linksys: rename mamba to wrt1900ac
-  arm: dts: linksys: rename cobra to wrt1900acv2
-  arm: dts: linksys: rename caiman to wrt1200ac
-  arm: dts: linksys: rename shelby to wrt1900acsv
+There are some for allocation functions, some of which we use, though I'm =
+not
+sure we do so as consistently as we should (should inline functions like
+kcalloc() have them, for example?).
+
+David
+
