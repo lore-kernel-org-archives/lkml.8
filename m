@@ -2,372 +2,140 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48330C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC992C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3E08206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E653206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d1kRVUss"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="eHPnfIbQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgDGJZm (ORCPT
+        id S1728062AbgDGJ0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:25:42 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34899 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgDGJZm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:25:42 -0400
-Received: by mail-lf1-f67.google.com with SMTP id r17so1825010lff.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:25:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hDWL/BNWVM4skkO5zbxiz7K0KSm79JAbtKShEn6aXkM=;
-        b=d1kRVUssLHcYjZhjJ1Mi9OsCvmz/lxUwhmzGfbLcb+zCsCb1JlnCIh1W86x0PI7Vom
-         Wpx6VXubjgwOefM9SrC6vfaVD61isoE6SEgxeIS7zKfB1bkAeAGb42EZOCPZ6wEolegH
-         jlJS8iND1jcVaVoOeUEIYzEHlHaSgCSBnlu0rJrcly9jMie/19yJLbDqqcg859uXzd3J
-         cyDghaJXjFURq8b2LpeZQU2lDClR6NsFRsu88BC/iBuh8LlQUiuGTMCIlQTqe5qlfTqS
-         S85GPUnn3rZyUqWdbrRLkbwri6AObkTnzOnXRcO5498IsbrvODvqmAiRXfRbEQyQJSAW
-         Aw3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hDWL/BNWVM4skkO5zbxiz7K0KSm79JAbtKShEn6aXkM=;
-        b=RC7vofQKJstbJBtimc4b9TdqimiZI4babDOGVM7v38FoGVY0oA6Qsa6EiAFguP2y3w
-         kuWGPqA5N236nfGpaBwJ+jqazxpf7vV1RJg7XI5Az74QoQpVIFkULZis6gqnaWosIQ5c
-         pigoqJFqa9H2PSBczLrij8wdUymFvr94sCcpb+SigsLRamieuu0WUSzulazWeivFqoy0
-         bi2fr4R29xHNQqAmDjKTfdavb/e4EcBvJH4wLn8GC5uzVyz44IRikiNiACH8FVWBqrDn
-         Pxorh4/Y8SbAev30B0XFKJ7PD7nVSE9zQAsUzskmqdbyp2W6JbRGwH+8Lrm7qssFWU/c
-         iMsw==
-X-Gm-Message-State: AGi0PubCDV7F86d3gDk4gWHXSUrPSlFVUd01BaXB0G2HdTmeaKkHkP19
-        IRIC1xFGI0Dm+q6+zs9163cUqym/pb88GAXZtZULiA==
-X-Google-Smtp-Source: APiQypIbuQO84l0L4PZRD4lKJsUroBjA70Eif7Kn6qETQveY6hFDNqsrwCuRss2wYha5/GFVS0yCmpASHcn6EpziUl8=
-X-Received: by 2002:ac2:5559:: with SMTP id l25mr965103lfk.55.1586251538012;
- Tue, 07 Apr 2020 02:25:38 -0700 (PDT)
+        Tue, 7 Apr 2020 05:26:25 -0400
+Received: from mout.web.de ([217.72.192.78]:36717 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726637AbgDGJ0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 05:26:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586251565;
+        bh=PVP/PwT3okYgBTOE2hskX3+DfyvmwWuNY9KgVJPQSF0=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=eHPnfIbQ+x2RtKyKsB3R1/H7WgmYmGtTHEvhbBkjj5AFZioUCUhgX6DMKCOy14Krj
+         Rm68TbEX17GdF0Pic37zW5pHnlKY7G5Egx2GBO2hj5PbfH6x3yy18t/I6/MeWFOhXh
+         QWhYc+OPQ3gnPUC8HwtDTuDj0whTf5+lqv1Me7lE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.49.5.104]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LvSPv-1jDsJL3gUF-010e8x; Tue, 07
+ Apr 2020 11:26:05 +0200
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        devel@driverdev.osuosl.org, linux-iio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH 2/3] iio: make use of iio_device_attach_kfifo_buffer()
+ where straightforward
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <36669e0f-c41c-5cc8-7218-be5cad5cf8a5@web.de>
+Date:   Tue, 7 Apr 2020 11:26:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
- <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
- <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
- <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
- <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
- <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
- <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com>
- <20200310111837.GA1368052@kuha.fi.intel.com> <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
-In-Reply-To: <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 7 Apr 2020 14:55:26 +0530
-Message-ID: <CA+G9fYuwv+TEhgi46pjs2-GCe0mmMHyki9nAokvGCEA2syK5Dg@mail.gmail.com>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        lkft-triage@lists.linaro.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:OyrW4qWnk2pU3f5huI2LSlzLsOAAJJbK6kHVm+iMocBiEWY0g/g
+ dT6JRmYXDBaBDJWhP3cuiFC9WDn9Gbrne9uukXs2yOcKtjVcW6tMGWnxtTSROo1Em822WZ/
+ O9jLc7PlSrv3n/ydZNs19DIpnIbFpZJZ5DmBi/Y8AmApyc8LPUK7bov532zpwM36SlqlMN2
+ gdnxd0qcHN/2Q+bneKn7w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AXf/A644imo=:Tb39wfjNQTwM2/QyBctB4V
+ jXlbgzzlIeKjeh2aWJ++UjTC7r2+RPl2F1bhuPKdxJdNY/LvmN0TDIdxIo4CUo0MlHgfmNL9b
+ cB1pEnbzQ/YmBrrewq+qGthWzwX/tegxh3/DrTwvg4Va1Zwm8XALV1blpaoIpfX74RdecxRy/
+ 3L5zxx3bEIGG4SzFjBc6wloQ+PQZZ1ksPooXfip/Y6hemSNMb/ZJBgYBd6OGsHokD+3skTisR
+ 1B6dDaPASVPKrr9+MFThX6PXkdaZ5qkApEH1g2Ufq50pnHgw7ZLB/3AJ1i+C5oKWqbwZqlv3X
+ iUjZ114r99xrTohUUCnYr3GtPdIo6icLSpU9xGMVMZkaclv104EnZsO6YjfPtgt3p8TEm47bj
+ LaLZCjq/mZLxAkmVDvnjrGMG/NoVKuHyLOqzZemgsPtMutSe4Zl0ddbQTml32YGFVdNuf+3bM
+ LTQ/0Tti8gKmdHnGj8JusIHxf+G8jFWRY+dqzbdLlwkUFs1A2QrzHbwTIA+ht3u7bnCS/5gH/
+ 5DzsCAkfjTQLA5cqLCJ5S9hX1DNsVX3wYqhPccpvmlbOdTkENyUsj4UL2kq+u/jQDglt8FAVT
+ OA+/pV1EwIatevIDLTcZZ2I6HZTI5ZobAtrdT2EeVAUvwVFlYujg9ZqR4gekgjLaUlPYUioQ0
+ e6ZeTMELzkXLIVvnHutyBbKBNesvgoHxcAhU2qJMQof2wMT/iP3plFfFZ4lInSP6W6Mepvr7e
+ RFYQ7nr+QJLL62aXuj7hS36PwFN3b/a9IUC/lKdzJo1s41OgYFXwOhRBcOh1RAizQs2wMXR+f
+ 4YAPKmzWnXGn+YAfnTsJ+GiEXiBe5gpsrA9KVHL97v5iFxxRj+fY6p2v++Ei3gqFDhbUJjl8i
+ eCvXuQxEtBVfPFh05g64mNwozy7laK5P/TRfGJHN6R0L0wD4jYZw2cJNMz8NuR1qEGNWRLRbk
+ Eteq2wUB1++k0E6YzAPIeIihuogoGwNLr6b+BCqqnasx4LHkcPujDCZ+VZ5HCOfjyJubjzAI4
+ 99GwdqrXIDLv/NNNQhhtyWyPA7JY66PjO+932r3txku8fGNWt1GijiPm5IdmxcYtXNOBUTril
+ FkCo5Cj5UaeGKk61iFUtSgWaGVs0WgeA6k1abjsECAmFjv+d8CNVdqX5WgtJWBCjxGYCz86lE
+ P1mb+kKwE4bOtYtkqFkHRLLdeF0ud2srT6mhB9vAUoPN4icLopaO/NIdN0wV+JCD4aIIQMnA8
+ eGrrBhGfL6SAZIG7Y
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020 at 02:16, Brendan Higgins <brendanhiggins@google.com> wrote:
-> > > > > > > > > > Steps reproduce by using kselftests,
-> > > > > > > > > >
-> > > > > > > > > >           - lsmod || true
-> > > > > > > > > >           - cd /opt/kselftests/default-in-kernel/lib/
-> > > > > > > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
-> > > > > > > > > >           - ./printf.sh || true
-> > > > > > > > > >           - ./bitmap.sh || true
-> > > > > > > > > >           - ./prime_numbers.sh || true
-> > > > > > > > > >           - ./strscpy.sh || true
-> > > > > > > > > >
-> > > > > > > > > > x86_64 kernel BUG dump.
-> > > > > > > > > > + ./printf.sh
-> > > > > > > >
-> > > > > > > > Oops, I am wondering if I broke this with my change "Revert "software
-> > > > > > > > node: Simplify software_node_release() function"":
-> > > > > > > >
-> > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
-> > > > > > > >
-> > > > > > > > I am still investigating, will update later.
-> > > > > > >
-> > > > > > > Okay, yeah, I am pretty sure I caused the breakage. I got an email
-> > > > > > > from kernel test robot a couple days ago that I didn't see:
-> > > > > > >
-> > > > > > > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
-> > > > > > >
-> > > > > > > It shows the same breakage after applying this change.
-> > > > > > >
-> > > > > > > I am still investigating how my change broke it, nevertheless.
-> > > > > >
-> > > > > > As nodes in the tree are being removed, the code before the patch that
-> > > > > > "simplified" the software_node_release() function accessed the node's parent
-> > > > > > in its release function.
-> > > > > >
-> > > > > > And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
-> > > > > > longer necessarily called in order, leading to referencing released memory.
-> > > > > > Oops!
-> > > > > >
-> > > > > > So Heikki's patch actually fixed a bug. :-)
-> > > > >
-> > > > > Well, I think it just hid the problem. It looks like the core
-> > > > > (lib/kobject.c) allows the parent kobject to be released before the
-> > > > > last child kobject is released. To be honest, that does not sound
-> > > > > right to me...
-> > > > >
-> > > > > I think we can workaround this problem by taking reference to the
-> > > > > parent when the child is added, and then releasing it when the child
-> > > > > is released, and in that way be guaranteed that the parent will not
-> > > > > disappear before the child is fully released, but that still does not
-> > > > > feel right. It feels more like the core is not doing it's job to me.
-> > > > > The parent just should not be released before its children.
-> > > > >
-> > > > > Either I'm wrong about that, and we still should take the reference on
-> > > > > the parent, or we revert my patch like Brendan proposed and then fix
-> > > >
-> > > > Either way, isn't it wrong to release the node ID before deleting the
-> > > > sysfs entry? I am not sure that my fix was the correct one, but I
-> > > > believe the bug that Heidi and I found is actually a bug.
-> >
-> > I agree.
-> >
-> > > > > the core with something like this (warning, I did not even try to
-> > > > > compile that):
-> > > >
-> > > > I will try it out.
-> > > >
-> > > > > diff --git a/lib/kobject.c b/lib/kobject.c
-> > > > > index 83198cb37d8d..ec5774992337 100644
-> > > > > --- a/lib/kobject.c
-> > > > > +++ b/lib/kobject.c
-> > > > > @@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > > >                 kobject_uevent(kobj, KOBJ_REMOVE);
-> > > > >         }
-> > > > >
-> > > > > +       if (t && t->release) {
-> > > > > +               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > > > > +                        kobject_name(kobj), kobj);
-> > > > > +               t->release(kobj);
-> > > > > +       }
-> > > > > +
-> > > > >         /* remove from sysfs if the caller did not do it */
-> > > > >         if (kobj->state_in_sysfs) {
-> > > > >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
-> > > > > @@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
-> > > > >                 kobject_del(kobj);
-> > > > >         }
-> > > > >
-> > > > > -       if (t && t->release) {
-> > > > > -               pr_debug("kobject: '%s' (%p): calling ktype release\n",
-> > > > > -                        kobject_name(kobj), kobj);
-> > > > > -               t->release(kobj);
-> > > > > -       }
-> > > > > -
-> > > > >         /* free name if we allocated it */
-> > > > >         if (name) {
-> > > > >                 pr_debug("kobject: '%s': free name\n", name);
-> > >
-> > > Alright, so I tried it and it looks like Heikki's suggestion worked.
-> > >
-> > > Is everyone comfortable going this route?
-> >
-> > Hold on. Another way to fix the problem is to increment the parent's
-> > reference count before that kobject_del(kobj) is called, and then
-> > decrementing it after t->release(kobj) is called. It may be safer to
-> > fix the problem like that.
->
-> Right, this was your first suggestion above, right? That actually made
-> more sense to me, but you seemed skeptical of it due to it being
-> messier, which makes sense.
->
-> Nevertheless, having children take a reference seems like the right
-> thing to do because the children need to degregister themselves from
-> the parent. Calling t->release() ahead of kobject_del() seems to
-> reintroduce the problem that I pointed out, albeit *much* more
-> briefly. If I understand correctly, it is always wrong to have a sysfs
-> entry that points to a partially deallocated kobject. Please correct
-> me if I am wrong.
->
-> So I think there are two solutions: Either we have to ensure that each
-> child is deallocated first so we can preserve the kobject_del() and
-> then t->release() ordering, or we have to add some sort of "locking"
-> mechanism to prevent the kobject from being accessed by anything other
-> than the deallocation code until it is fully deallocated; well, it
-> would have to prevent any access at all :-). I think it goes without
-> saying that this "locking" idea is pretty flawed.
->
-> The problem with just having children take a reference is that the
-> kobject children already take a reference to their parent, so it seems
-> like the kobject should be smart enough to deallocate children rather
-> than having swnode have to keep a separate tally of children, no?
->
-> Sorry if this all seems obvious, I am not an expert on this part of the kernel.
->
-> > My example above proofs that there is the problem, but it changes the
-> > order of execution which I think can always have other consequences.
-> >
-> > > Also, should I send this fix as a separate patch? Or do people want me
-> > > to send an updated revision of my revert patch with the fix?
-> >
-> > This needs to be send in its own separate patch. Ideally it could be
-> > send together with the revert in the same series, but I'm not sure
-> > that's possible anymore. Didn't Greg pick the revert already?
->
-> Sounds good.
->
-> I did already let Greg know when he emailed us on backporting the
-> patch to stable, and he acked saying he removed them. So as long as
-> these are not in the queue for 5.6 (it is not in Linus' tree yet), we
-> should be good.
-
-The reported bug is still noticed on Linux mainline master branch
-The Kernel BUG noticed on x86_64 and i386 running selftest on Linux
-mainline kernel 5.6.0.
-
-Linux version 5.6.0 (oe-user@oe-host) (gcc version 7.3.0 (GCC)) #1 SMP
-Mon Apr 6 17:25:26 UTC 2020
-<>
-[  270.580905] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[  270.588978] #PF: supervisor read access in kernel mode
-[  270.594114] #PF: error_code(0x0000) - not-present page
-[  270.599247] PGD 800000026b340067 P4D 800000026b340067 PUD 26b34e067 PMD 0
-[  270.606119] Oops: 0000 [#1] SMP PTI
-[  270.609604] CPU: 1 PID: 4688 Comm: modprobe Tainted: G        W
-    5.6.0 #1
-[  270.616996] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.2 05/23/2018
-[  270.624381] RIP: 0010:ida_free+0x76/0x140
-[  270.628391] Code: 45 d0 00 00 00 00 48 89 45 b0 0f 88 c4 00 00 00
-89 f3 e8 0d 51 02 00 48 8d 7d a8 49 89 c6 e8 e1 04 01 00 a8 01 49 89
-c5 75 42 <4c> 0f a3 20 72 76 48 8b 7d a8 4c 89 f6 e8 18 53 02 00 89 de
-48 c7
-[  270.647128] RSP: 0018:ffffbd8841d07a50 EFLAGS: 00010046
-[  270.652346] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff978be6ac48c0
-[  270.659468] RDX: 0000000000000000 RSI: ffff978beb346780 RDI: ffff978be6ac5138
-[  270.666595] RBP: ffffbd8841d07aa8 R08: 0000000000000001 R09: 0000000000000000
-[  270.673725] R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
-[  270.680850] R13: 0000000000000000 R14: 0000000000000246 R15: ffffffffc0383b3c
-[  270.687973] FS:  00007fc8e92c2740(0000) GS:ffff978befa80000(0000)
-knlGS:0000000000000000
-[  270.696052] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  270.701790] CR2: 0000000000000000 CR3: 000000021f2b0003 CR4: 00000000003606e0
-[  270.708920] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  270.716043] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  270.723169] Call Trace:
-[  270.725618]  software_node_release+0x2b/0xb0
-[  270.729886]  kobject_put+0xad/0x1c0
-[  270.733378]  kobject_del+0x4a/0x60
-[  270.736776]  kobject_put+0x92/0x1c0
-[  270.740270]  fwnode_remove_software_node+0x32/0x40
-[  270.745061]  software_node_unregister_nodes+0x2a/0x50
-[  270.750114]  test_printf_init+0xf30/0x1c16 [test_printf]
-[  270.755422]  ? test_hashed+0x75/0x75 [test_printf]
-[  270.760211]  ? test_hashed+0x75/0x75 [test_printf]
-[  270.765003]  do_one_initcall+0x61/0x2f0
-[  270.768842]  ? rcu_read_lock_sched_held+0x4f/0x80
-[  270.773541]  ? kmem_cache_alloc_trace+0x282/0x2b0
-[  270.778247]  do_init_module+0x5f/0x22b
-[  270.781999]  load_module+0x24e6/0x2ac0
-[  270.785754]  ? security_kernel_post_read_file+0x3f/0x60
-[  270.790979]  __do_sys_finit_module+0xfc/0x120
-[  270.795334]  ? __do_sys_finit_module+0xfc/0x120
-[  270.799862]  __x64_sys_finit_module+0x1a/0x20
-[  270.804219]  do_syscall_64+0x55/0x200
-[  270.807885]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-[  270.812938] RIP: 0033:0x7fc8e8bcaf59
-[  270.816516] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00
-00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
-08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 0f ff 2b 00 f7 d8 64 89
-01 48
-[  270.835253] RSP: 002b:00007ffe9a4fb6f8 EFLAGS: 00000202 ORIG_RAX:
-0000000000000139
-[  270.842810] RAX: ffffffffffffffda RBX: 0000000000cdfaf0 RCX: 00007fc8e8bcaf59
-[  270.849934] RDX: 0000000000000000 RSI: 0000000000418cce RDI: 0000000000000005
-[  270.857057] RBP: 0000000000418cce R08: 0000000000000000 R09: 0000000000000000
-[  270.864180] R10: 0000000000000005 R11: 0000000000000202 R12: 0000000000000000
-[  270.871306] R13: 0000000000040000 R14: 0000000000000000 R15: 0000000000000000
-[  270.878433] Modules linked in: test_printf(+) cls_bpf sch_fq 8021q
-sch_ingress veth algif_hash x86_pkg_temp_thermal fuse [last unloaded:
-gpio_mockup]
-[  270.891812] CR2: 0000000000000000
-[  270.895130] ---[ end trace 151cfe414205f0bc ]---
-[  270.899742] RIP: 0010:ida_free+0x76/0x140
-[  270.903752] Code: 45 d0 00 00 00 00 48 89 45 b0 0f 88 c4 00 00 00
-89 f3 e8 0d 51 02 00 48 8d 7d a8 49 89 c6 e8 e1 04 01 00 a8 01 49 89
-c5 75 42 <4c> 0f a3 20 72 76 48 8b 7d a8 4c 89 f6 e8 18 53 02 00 89 de
-48 c7
-[  270.922489] RSP: 0018:ffffbd8841d07a50 EFLAGS: 00010046
-[  270.927706] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff978be6ac48c0
-[  270.934831] RDX: 0000000000000000 RSI: ffff978beb346780 RDI: ffff978be6ac5138
-[  270.941954] RBP: ffffbd8841d07aa8 R08: 0000000000000001 R09: 0000000000000000
-[  270.949078] R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
-[  270.956204] R13: 0000000000000000 R14: 0000000000000246 R15: ffffffffc0383b3c
-[  270.963328] FS:  00007fc8e92c2740(0000) GS:ffff978befa80000(0000)
-knlGS:0000000000000000
-[  270.971414] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  270.977158] CR2: 0000000000000000 CR3: 000000021f2b0003 CR4: 00000000003606e0
-[  270.984281] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  270.991407] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  270.998540] BUG: sleeping function called from invalid context at
-/usr/src/kernel/include/linux/percpu-rwsem.h:49
-[  271.008782] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid:
-4688, name: modprobe
-[  271.016771] INFO: lockdep is turned off.
-[  271.020691] irq event stamp: 4812
-[  271.024011] hardirqs last  enabled at (4811): [<ffffffffb5be42f1>]
-kfree+0x181/0x2e0
-[  271.031748] hardirqs last disabled at (4812): [<ffffffffb67d2b68>]
-_raw_spin_lock_irqsave+0x18/0x50
-[  271.040778] softirqs last  enabled at (4496): [<ffffffffb6a00348>]
-__do_softirq+0x348/0x459
-[  271.049117] softirqs last disabled at (4487): [<ffffffffb59be298>]
-irq_exit+0xb8/0xc0
-[  271.056933] CPU: 1 PID: 4688 Comm: modprobe Tainted: G      D W
-    5.6.0 #1
-[  271.064317] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.2 05/23/2018
-[  271.071702] Call Trace:
-[  271.074147]  dump_stack+0x7a/0xa5
-[  271.077465]  ___might_sleep+0x163/0x250
-[  271.081296]  __might_sleep+0x4a/0x80
-[  271.084868]  exit_signals+0x33/0x2f0
-[  271.088446]  do_exit+0xb6/0xcd0
-[  271.091586]  rewind_stack_do_exit+0x17/0x20
-[  271.095770] RIP: 0033:0x7fc8e8bcaf59
-[  271.099349] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00
-00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
-08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 0f ff 2b 00 f7 d8 64 89
-01 48
-[  271.118093] RSP: 002b:00007ffe9a4fb6f8 EFLAGS: 00000202 ORIG_RAX:
-0000000000000139
-[  271.125649] RAX: ffffffffffffffda RBX: 0000000000cdfaf0 RCX: 00007fc8e8bcaf59
-[  271.132775] RDX: 0000000000000000 RSI: 0000000000418cce RDI: 0000000000000005
-[  271.139897] RBP: 0000000000418cce R08: 0000000000000000 R09: 0000000000000000
-[  271.147022] R10: 0000000000000005 R11: 0000000000000202 R12: 0000000000000000
-[  271.154146] R13: 0000000000040000 R14: 0000000000000000 R15: 0000000000000000
-[  271.161274] note: modprobe[4688] exited with preempt_count 1
-
-Full test log:
-https://lkft.validation.linaro.org/scheduler/job/1341945#L8386
-https://lkft.validation.linaro.org/scheduler/job/1341969#L8023
+How do you think about a patch subject like =E2=80=9Ciio: Increase use of =
+iio_device_attach_kfifo_buffer()=E2=80=9D?
 
 
-- Naresh
+> This change does that.
+
+I suggest to improve also this commit message.
+
+* Would you like to consider a wording like =E2=80=9CConvert a specific fu=
+nction call
+  combination to a better programming interface.=E2=80=9D?
+
+* Do you imagine any more software fine-tuning because of related
+  collateral evolution?
+
+Regards,
+Markus
