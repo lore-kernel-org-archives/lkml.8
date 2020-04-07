@@ -2,167 +2,90 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093FEC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2777AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF17C2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A772078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586255313;
+	bh=o5+VVv/NdrgfdXFjKKdDinBsvD48G4NvcvDVyOKNL5A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YVLrOxG5o3+eLglP9VWK+mIXqFLd6rowiX59nYC2GIvhTTXPmiqAUwk5RXzJjY9oA
+	 FTEscXrdaWPh2XTbNZpN38dzCIYuOVC26R7BBdF43DtlsIFga7jbihBq0TEVdbMvM7
+	 /BHtM+swdWWtyFyKwV6yL9LPBav9qAE4GONeMkUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgDGKZW (ORCPT
+        id S1728658AbgDGK2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:25:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45174 "EHLO mx2.suse.de"
+        Tue, 7 Apr 2020 06:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbgDGKZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id ACAF2AB76;
-        Tue,  7 Apr 2020 10:25:15 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 347761E1233; Tue,  7 Apr 2020 12:25:15 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 12:25:15 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, Michal Hocko <mhocko@kernel.org>,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK
- instead.
-Message-ID: <20200407102515.GB9482@quack2.suse.cz>
-References: <draft-87d08kw57p.fsf@notabene.neil.brown.name>
- <878sj8w55y.fsf@notabene.neil.brown.name>
+        id S1728919AbgDGKZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 733F82074F;
+        Tue,  7 Apr 2020 10:25:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586255119;
+        bh=o5+VVv/NdrgfdXFjKKdDinBsvD48G4NvcvDVyOKNL5A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XzMI/GELhSra/yZ7N9G2I3Mh0DC8bBKtu4oTvQ1RDjs5+XtnRMfd71rEkQzKVvJyU
+         uWmSJVbs26AgPYW84ZGgMKhIEQeH2Rf01bcN/mdtwEtLvECd2j2RbL15I8/zqRNnXx
+         vzGXpxqUoWVSufYvg75GgVLaHq7UxIxBuvT65910=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.5 38/46] rxrpc: Fix sendmsg(MSG_WAITALL) handling
+Date:   Tue,  7 Apr 2020 12:22:09 +0200
+Message-Id: <20200407101503.512089696@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
+References: <20200407101459.502593074@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878sj8w55y.fsf@notabene.neil.brown.name>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-04-20 09:44:25, NeilBrown wrote:
-> 
-> After an NFS page has been written it is considered "unstable" until a
-> COMMIT request succeeds.  If the COMMIT fails, the page will be
-> re-written.
-> 
-> These "unstable" pages are currently accounted as "reclaimable", either
-> in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
-> 'reclaimable' count.  This might have made sense when sending the COMMIT
-> required a separate action by the VFS/MM (e.g.  releasepage() used to
-> send a COMMIT).  However now that all writes generated by ->writepages()
-> will automatically be followed by a COMMIT (since commit 919e3bd9a875
-> ("NFS: Ensure we commit after writeback is complete")) it makes more
-> sense to treat them as writeback pages.
-> 
-> So this patch removes NR_UNSTABLE_NFS and accounts unstable pages in
-> NR_WRITEBACK and WB_WRITEBACK.
-> 
-> A particular effect of this change is that when
-> wb_check_background_flush() calls wb_over_bg_threshold(), the latter
-> will report 'true' a lot less often as the 'unstable' pages are no
-> longer considered 'dirty' (as there is nothing that writeback can do
-> about them anyway).
-> 
-> Currently wb_check_background_flush() will trigger writeback to NFS even
-> when there are relatively few dirty pages (if there are lots of unstable
-> pages), this can result in small writes going to the server (10s of
-> Kilobytes rather than a Megabyte) which hurts throughput.
-> With this patch, there are fewer writes which are each larger on average.
-> 
-> Where the NR_UNSTABLE_NFS count was included in statistics
-> virtual-files, the entry is retained, but the value is hard-coded as
-> zero.  static trace points which record this counter no longer report
-> it.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
+From: David Howells <dhowells@redhat.com>
 
-...
+commit 498b577660f08cef5d9e78e0ed6dcd4c0939e98c upstream.
 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index e5f76da8cd4e..24678d6e308d 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5237,7 +5237,7 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
->  
->  	printk("active_anon:%lu inactive_anon:%lu isolated_anon:%lu\n"
->  		" active_file:%lu inactive_file:%lu isolated_file:%lu\n"
-> -		" unevictable:%lu dirty:%lu writeback:%lu unstable:%lu\n"
-> +		" unevictable:%lu dirty:%lu writeback:%lu unstable:0\n"
->  		" slab_reclaimable:%lu slab_unreclaimable:%lu\n"
->  		" mapped:%lu shmem:%lu pagetables:%lu bounce:%lu\n"
->  		" free:%lu free_pcp:%lu free_cma:%lu\n",
-> @@ -5250,7 +5250,6 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
->  		global_node_page_state(NR_UNEVICTABLE),
->  		global_node_page_state(NR_FILE_DIRTY),
->  		global_node_page_state(NR_WRITEBACK),
-> -		global_node_page_state(NR_UNSTABLE_NFS),
->  		global_node_page_state(NR_SLAB_RECLAIMABLE),
->  		global_node_page_state(NR_SLAB_UNRECLAIMABLE),
->  		global_node_page_state(NR_FILE_MAPPED),
-> @@ -5283,7 +5282,7 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
->  			" anon_thp: %lukB"
->  #endif
->  			" writeback_tmp:%lukB"
-> -			" unstable:%lukB"
-> +			" unstable:0kB"
->  			" all_unreclaimable? %s"
->  			"\n",
->  			pgdat->node_id,
-> @@ -5305,7 +5304,6 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
->  			K(node_page_state(pgdat, NR_ANON_THPS) * HPAGE_PMD_NR),
->  #endif
->  			K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
-> -			K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
->  			pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES ?
->  				"yes" : "no");
->  	}
+Fix the handling of sendmsg() with MSG_WAITALL for userspace to round the
+timeout for when a signal occurs up to at least two jiffies as a 1 jiffy
+timeout may end up being effectively 0 if jiffies wraps at the wrong time.
 
-These are just page allocator splats on OOM. I don't think preserving
-'unstable' in these reports is needed.
+Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> @@ -1707,8 +1706,16 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
->  static void *vmstat_next(struct seq_file *m, void *arg, loff_t *pos)
->  {
->  	(*pos)++;
-> -	if (*pos >= NR_VMSTAT_ITEMS)
-> +	if (*pos >= NR_VMSTAT_ITEMS) {
-> +		/*
-> +		 * Deprecated counters which are no longer represented
-> +		 * in vmstat arrays. We just lie about them to be always
-> +		 * 0 to not break userspace which might expect them in
-> +		 * the output.
-> +		 */
-> +		seq_puts(m, "nr_unstable 0");
->  		return NULL;
-> +	}
->  	return (unsigned long *)m->private + *pos;
->  }
+---
+ net/rxrpc/sendmsg.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Umm, how is this supposed to work? vmstat_next() should return next element
-of the sequence, not fill anything into seq_file - that's the job of
-vmstat_show(). Looking at seq_read() implementation it may actually end up
-working fine but I wouldn't really bet much on it especially in corner
-cases like when we are just about to fill the user buffer and then need to
-restart reading close to an end of vmstat file or so.
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -58,8 +58,8 @@ static int rxrpc_wait_for_tx_window_wait
+ 
+ 	rtt = READ_ONCE(call->peer->rtt);
+ 	rtt2 = nsecs_to_jiffies64(rtt) * 2;
+-	if (rtt2 < 1)
+-		rtt2 = 1;
++	if (rtt2 < 2)
++		rtt2 = 2;
+ 
+ 	timeout = rtt2;
+ 	tx_start = READ_ONCE(call->tx_hard_ack);
 
-Michal, won't it be cleaner to have NR_VM_DEPRECATED_ITEMS included in
-NR_VMSTAT_ITEMS, have names of these items in vmstat_text, and just set
-appropriate number of 0 entries at the end of the array generated in
-vmstat_start() and be done with it? That seems conceptually simpler and the
-overhead is minimal.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
