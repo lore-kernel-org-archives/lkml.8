@@ -2,154 +2,291 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20930C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA52C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F275920644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7DC20644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:19:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="AuqK+uoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgDGKPI (ORCPT
+        id S1728140AbgDGKTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:15:08 -0400
-Received: from mga17.intel.com ([192.55.52.151]:39649 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbgDGKPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:15:07 -0400
-IronPort-SDR: x3U3uClDZd93FhwryB6KDY7jMud9//Hmk9LqydcA/4XTGWwSXlhkPU4TgtiA8/JpJp95dG3MHi
- LY8Df6UHJxhQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 03:15:07 -0700
-IronPort-SDR: CjaCR8V+9ymL4ndQ8pNhtruwZmYMTt8pnFR7kZksUs4VylPAdNCQ1luRcDIUlm+WxD5T6W/hQ8
- +XPgDau0QbMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
-   d="scan'208";a="330148961"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by orsmga001.jf.intel.com with ESMTP; 07 Apr 2020 03:15:04 -0700
-Subject: Re: [PATCH v4 1/3] mmc: host: Introduce the request_atomic() for the
- host
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cover.1585896945.git.baolin.wang7@gmail.com>
- <04c25ff9f9b17d41d734c498e4be61dee745bb30.1585896945.git.baolin.wang7@gmail.com>
- <5a55947b-e920-4515-49cf-163f6d539421@intel.com>
- <CADBw62qXyQCO5s+8Ytg2VCn5tEXS6dPQarQW1mHWJMJm+jUiXQ@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <5cc006fe-e5f5-b9bf-bb01-c425d943783c@intel.com>
-Date:   Tue, 7 Apr 2020 13:14:17 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 7 Apr 2020 06:19:18 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38524 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgDGKTS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:19:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/SHKDXHzcHKe3xB0z6PA2YRoYV7/g4rTA1T7um9SQwk=; b=AuqK+uoiLfm9tn/EIdv5RAYWD
+        aOO47m4FkgWC2BQOILrusCQ73YKVNmv8dw0c6mtIRzexUFievzPinPCo7yeQJ9YriAg7hA1aYDa4w
+        QQS30yRToAQk9BCfLmi2fkYcxveNsNpa1lpeOuAHnTb1p+QcE/sXr/0nc1W0Hh1vWNw9C8PKd4ht1
+        7/PHJiS0f37nxJvqIYnAdyTYDoalfC5huw40nfXKmjWUdNU7RDgZeMM8/BJaF4mR0Dtx2S7MGeIV3
+        3XD9wp71Oz6BCFdY77WvyhyJGmCxYgRWZZbA571eRgiVZxa7r0s9gpBwwVYPrVQJvTKlG6Njaw9su
+        X1S074zMg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:35162)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jLlK5-0007IJ-RE; Tue, 07 Apr 2020 11:19:14 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jLlK4-0007Z8-FZ; Tue, 07 Apr 2020 11:19:12 +0100
+Date:   Tue, 7 Apr 2020 11:19:12 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mripard@kernel.org, wens@csie.org, ebiederm@xmission.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: Trying to kexec on Allwinner A80
+Message-ID: <20200407101912.GL25745@shell.armlinux.org.uk>
+References: <20200406082720.GA31279@Red>
+ <20200407100203.GK25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <CADBw62qXyQCO5s+8Ytg2VCn5tEXS6dPQarQW1mHWJMJm+jUiXQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407100203.GK25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/04/20 10:21 am, Baolin Wang wrote:
-> On Tue, Apr 7, 2020 at 2:38 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 3/04/20 10:05 am, Baolin Wang wrote:
->>> The SD host controller can process one request in the atomic context if
->>> the card is nonremovable, which means we can submit next request in the
->>> irq hard handler when using the MMC host software queue to reduce the
->>> latency. Thus this patch adds a new API request_atomic() for the host
->>> controller, as well as adding support for host software queue to submit
->>> a request by the new request_atomic() API.
->>>
->>> Moreover there is an unusual case that the card is busy when trying to
->>> send a command, and we can not polling the card status in interrupt
->>> context by using request_atomic() to dispatch requests. Thus we should
->>> queue a work to try again in the non-atomic context in case the host
->>> releases the busy signal later.
->>>
->>> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
->>> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
->>
->>
->> One minor point below, otherwise:
->>
->> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->>
->>> ---
->>>  drivers/mmc/host/mmc_hsq.c | 29 ++++++++++++++++++++++++++++-
->>>  drivers/mmc/host/mmc_hsq.h |  1 +
->>>  include/linux/mmc/host.h   |  3 +++
->>>  3 files changed, 32 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/mmc/host/mmc_hsq.c b/drivers/mmc/host/mmc_hsq.c
->>> index b90b2c9..a57f802 100644
->>> --- a/drivers/mmc/host/mmc_hsq.c
->>> +++ b/drivers/mmc/host/mmc_hsq.c
->>> @@ -16,11 +16,20 @@
->>>  #define HSQ_NUM_SLOTS        64
->>>  #define HSQ_INVALID_TAG      HSQ_NUM_SLOTS
->>>
->>> +static void mmc_hsq_retry_handler(struct work_struct *work)
->>> +{
->>> +     struct mmc_hsq *hsq = container_of(work, struct mmc_hsq, retry_work);
->>> +     struct mmc_host *mmc = hsq->mmc;
->>> +
->>> +     mmc->ops->request(mmc, hsq->mrq);
->>> +}
->>> +
->>>  static void mmc_hsq_pump_requests(struct mmc_hsq *hsq)
->>>  {
->>>       struct mmc_host *mmc = hsq->mmc;
->>>       struct hsq_slot *slot;
->>>       unsigned long flags;
->>> +     int ret = 0;
->>>
->>>       spin_lock_irqsave(&hsq->lock, flags);
->>>
->>> @@ -42,7 +51,24 @@ static void mmc_hsq_pump_requests(struct mmc_hsq *hsq)
->>>
->>>       spin_unlock_irqrestore(&hsq->lock, flags);
->>>
->>> -     mmc->ops->request(mmc, hsq->mrq);
->>> +     if (mmc->ops->request_atomic)
->>> +             ret = mmc->ops->request_atomic(mmc, hsq->mrq);
->>> +     else
->>> +             mmc->ops->request(mmc, hsq->mrq);
->>> +
->>> +     /*
->>> +      * If returning BUSY from request_atomic(), which means the card
->>> +      * may be busy now, and we should change to non-atomic context to
->>> +      * try again for this unusual case, to avoid time-consuming operations
->>> +      * in the atomic context.
->>> +      *
->>> +      * Note: we just give a warning for other error cases, since the host
->>> +      * driver will handle them.
->>> +      */
->>> +     if (ret == -EBUSY)
->>> +             schedule_work(&hsq->retry_work);
->>> +     else
->>> +             WARN_ON_ONCE(ret && ret != -EBUSY);
->>
->> 'ret != -EBUSY' is redundant because it is always true in the 'else' clause.
+On Tue, Apr 07, 2020 at 11:02:03AM +0100, Russell King - ARM Linux admin wrote:
+> On Mon, Apr 06, 2020 at 10:27:20AM +0200, Corentin Labbe wrote:
+> > Hello
+> > 
+> > I am trying to add the last missing Allwinner Soc in kernelci: the A80.
+> > But this SoC does not have any way to be used in kernelci, no USB nor network in uboot.
+> > So I have tried to fake uboot since the kernel has network support and run the new kernel via kexec.
+> > 
+> > But kexec 2.0.18 fail to work:
+> > kexec --force /tmp/kernel --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
 > 
-> Ah, Yes, thanks for pointing this out and I will fix it ine next version.
+> As I mentioned in my other reply, this apparent "kexec" command line
+> does not seem to reflect the arguments you actually used to invoke
+> the kexec output below.
 > 
-> By the way, could you help to review patch 2 and 3 in this patch set? Thanks.
+> > syscall kexec_file_load not available.
 > 
+> This message is produced by do_kexec_file_load().  This function is only
+> invoked if the do_kexec_file_syscall flag in main() is set.  This flag
+> is only set if one of:
+> 
+> 	--kexec-file-syscall
+> 	--kexec-syscall
+> 	--kexec-syscall-auto
+> 	-s
+> 	-c
+> 	-a
+> 
+> are provided on the kexec command line.  Your command line above does
+> not contain any of those arguments, so either the command line is not
+> what you used, or you are using a patched kexec, or your compiler is
+> grossly miscompiling kexec.
+> 
+> > Try gzip decompression.
+> > kernel: 0xb6535008 kernel_size: 0x853200
+> > MEMORY RANGES
+> > 0000000020000000-000000009fffffff (0)
+> 
+> Then there's the debug output, which is only produced if the
+> kexec_debug global is set, which in turn is only set if --debug or -d
+> is supplied on the kexec command line - which again, your kexec
+> command line does not contain this.
+> 
+> > zImage header: 0x016f2818 0x00000000 0x00853200
+> > zImage size 0x853200, file size 0x853200
+> > zImage requires 0x00864200 bytes
+> >   offset 0x0000bae4 tag 0x5a534c4b size 8
+> > Decompressed kernel sizes:
+> >  text+data 0x0158b3a0 bss 0x000632f0 total 0x015ee690
+> > Resulting kernel space: 0x01def5a0
+> > Kernel: address=0x20008000 size=0x01def5a0
+> > Initrd: address=0x21df8000 size=0x0090b6fa
+> > DT    : address=0x22704000 size=0x00005c09
+> > kexec_load: entry = 0x20008000 flags = 0x280000
+> > nr_segments = 3
+> > segment[0].buf   = 0xb6535008
+> > segment[0].bufsz = 0x853204
+> > segment[0].mem   = 0x20008000
+> > segment[0].memsz = 0x854000
+> > segment[1].buf   = 0xb5c29008
+> > segment[1].bufsz = 0x90b6fa
+> > segment[1].mem   = 0x21df8000
+> > segment[1].memsz = 0x90c000
+> > segment[2].buf   = 0x4db50
+> > segment[2].bufsz = 0x5c09
+> > segm[   71.039126] kexec_core: Starting new kernel
+> > ent[2].mem   = 0[   71.044712] Disabling non-boot CPUs ...
+> > x22704000
+> > segment[2].memsz = 0x6000
+> > [   71.489070] Bye!
+> > 
+> > 
+> > I have tried also kexec-2.0.20
+> > Try gzip decompression.
+> > zImage header: 0x00000000 0x000019b4 0x00001000
+> > zImage requires 0x008641c0 bytes
+> > Could not find a free area of memory of 0x86c1c0 bytes...
+> > Cannot load /tmp/kernel
+> 
+> kexec 2.0.20 doesn't appear to have changed anything to do with how
+> allocations are done.  The above output looks even more strange and
+> confusing.  "zImage header" is produced by debugging prints, which
+> imply that kexec_debug was set.
+> 
+> However, the "MEMORY RANGES" output is missing - this has not gone
+> away with kexec 2.0.20, it's still there, and works for me (I've
+> just built and tested kexec 2.0.20).
+> 
+> Also, the values on the "zImage header" line are completely messed
+> up; the first should be the zImage magic value and it is not - that
+> suggests that the file being loaded is not a zImage file, or is
+> corrupted.
 
-I'd like to handle the inhibit wait differently.  I will make some patches
-for that and send them out.
+Under a VM (the kernel doesn't have kexec support - but that's not a
+problem, because the initial loading stages are the relevant parts
+which all happen in userspace):
 
+# build/sbin/kexec --version
+kexec-tools 2.0.20
+# build/sbin/kexec --debug --load virt-vmlinuz-5.4.0+
+Try gzip decompression.
+kernel: 0xb6a6c008 kernel_size: 0x407358
+MEMORY RANGES
+0000000040000000-000000007fffffff (0)
+zImage header: 0x016f2818 0x00000000 0x00407358
+zImage size 0x407358, file size 0x407358
+zImage requires 0x00418358 bytes
+  offset 0x00007178 tag 0x5a534c4b size 12
+Decompressed kernel sizes:
+ text+data 0x00c2ed24 bss 0x000319ec total 0x00c60710
+Resulting kernel space: 0x0104707c
+Kernel: address=0x40008000 size=0x0104707c
+DT    : address=0x41051000 size=0x00100000
+kexec_load: entry = 0x40008000 flags = 0x280000
+nr_segments = 2
+segment[0].buf   = 0xb6a6c008
+segment[0].bufsz = 0x40735c
+segment[0].mem   = 0x40008000
+segment[0].memsz = 0x408000
+segment[1].buf   = 0xb696b008
+segment[1].bufsz = 0x100000
+segment[1].mem   = 0x41051000
+segment[1].memsz = 0x100000
+kexec_load failed: Function not implemented
+entry       = 0x40008000 flags = 0x280000
+nr_segments = 2
+segment[0].buf   = 0xb6aa0008
+segment[0].bufsz = 0x40735c
+segment[0].mem   = 0x40008000
+segment[0].memsz = 0x408000
+segment[1].buf   = 0xb699f008
+segment[1].bufsz = 0x100000
+segment[1].mem   = 0x41051000
+segment[1].memsz = 0x100000
+#
+
+On a SolidRun Hummingboard2 (iMX6 based, which has kexec support, same
+kexec binary, first without an initrd, and then with):
+
+# build/sbin/kexec --version
+kexec-tools 2.0.20
+# build/sbin/kexec --debug --load multi-vmlinuz-5.6.0+
+Try gzip decompression.
+kernel: 0xb6763008 kernel_size: 0x7273a8
+MEMORY RANGES
+0000000010000000-000000004fffffff (0)
+zImage header: 0x016f2818 0x00000000 0x007273a8
+zImage size 0x7273a8, file size 0x7273a8
+zImage requires 0x007383a8 bytes
+  offset 0x00004da8 tag 0x5a534c4b size 12
+Decompressed kernel sizes:
+ text+data 0x00dbedb8 bss 0x007489f8 total 0x015077b0
+Resulting kernel space: 0x015077b0
+Kernel: address=0x10008000 size=0x015077b0
+DT    : address=0x11511000 size=0x0000b000
+kexec_load: entry = 0x10008000 flags = 0x280000
+nr_segments = 2
+segment[0].buf   = 0xb6763008
+segment[0].bufsz = 0x7273ac
+segment[0].mem   = 0x10008000
+segment[0].memsz = 0x728000
+segment[1].buf   = 0x1207cb0
+segment[1].bufsz = 0xb000
+segment[1].mem   = 0x11511000
+segment[1].memsz = 0xb000
+# build/sbin/kexec --unload
+# build/sbin/kexec --debug --load multi-vmlinuz-5.6.0+ --initrd /boot/initrd.img-5.4.0+
+Try gzip decompression.
+kernel: 0xb65d8008 kernel_size: 0x7273a8
+MEMORY RANGES
+0000000010000000-000000004fffffff (0)
+zImage header: 0x016f2818 0x00000000 0x007273a8
+zImage size 0x7273a8, file size 0x7273a8
+zImage requires 0x007383a8 bytes
+  offset 0x00004da8 tag 0x5a534c4b size 12
+Decompressed kernel sizes:
+ text+data 0x00dbedb8 bss 0x007489f8 total 0x015077b0
+Resulting kernel space: 0x015077b0
+Kernel: address=0x10008000 size=0x015077b0
+Initrd: address=0x11510000 size=0x0053f46a
+DT    : address=0x11a50000 size=0x0000b044
+kexec_load: entry = 0x10008000 flags = 0x280000
+nr_segments = 3
+segment[0].buf   = 0xb65d8008
+segment[0].bufsz = 0x7273ac
+segment[0].mem   = 0x10008000
+segment[0].memsz = 0x728000
+segment[1].buf   = 0xb6098008
+segment[1].bufsz = 0x53f46a
+segment[1].mem   = 0x11510000
+segment[1].memsz = 0x540000
+segment[2].buf   = 0x993cf0
+segment[2].bufsz = 0xb044
+segment[2].mem   = 0x11a50000
+segment[2].memsz = 0xc000
+
+On clearfog (Armada 388):
+
+# build/sbin/kexec --debug --load multi-vmlinuz-5.6.0+
+Try gzip decompression.
+kernel: 0xb6745008 kernel_size: 0x7273a8
+MEMORY RANGES
+0000000000000000-000000003fffffff (0)
+zImage header: 0x016f2818 0x00000000 0x007273a8
+zImage size 0x7273a8, file size 0x7273a8
+zImage requires 0x007383a8 bytes
+  offset 0x00004da8 tag 0x5a534c4b size 12
+Decompressed kernel sizes:
+ text+data 0x00dbedb8 bss 0x007489f8 total 0x015077b0
+Resulting kernel space: 0x015077b0
+Kernel: address=0x00008000 size=0x015077b0
+DT    : address=0x01511000 size=0x00007be3
+kexec_load: entry = 0x8000 flags = 0x280000
+nr_segments = 2
+segment[0].buf   = 0xb6745008
+segment[0].bufsz = 0x7273ac
+segment[0].mem   = 0x8000
+segment[0].memsz = 0x728000
+segment[1].buf   = 0x1be7f68
+segment[1].bufsz = 0x7be3
+segment[1].mem   = 0x1511000
+segment[1].memsz = 0x8000
+
+All appears to work fine.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
