@@ -2,228 +2,110 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB38DC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24FEC2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9098720692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E3C20692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:51:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQo4f6yK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727612AbgDGGqs (ORCPT
+        id S1727302AbgDGGvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:46:48 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:42592 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbgDGGqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:46:46 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E3DB11A186E;
-        Tue,  7 Apr 2020 08:46:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5717B1A1B16;
-        Tue,  7 Apr 2020 08:46:39 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AFDFB402DD;
-        Tue,  7 Apr 2020 14:46:33 +0800 (SGT)
-From:   Biwen Li <biwen.li@oss.nxp.com>
-To:     shawnguo@kernel.org, ran.wang_1@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
-Subject: [RESEND 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add ftm_alarm0 node
-Date:   Tue,  7 Apr 2020 14:42:50 +0800
-Message-Id: <20200407064251.39244-3-biwen.li@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200407064251.39244-1-biwen.li@oss.nxp.com>
-References: <20200407064251.39244-1-biwen.li@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 7 Apr 2020 02:51:17 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35295 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgDGGvR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 02:51:17 -0400
+Received: by mail-qk1-f195.google.com with SMTP id k134so642772qke.2;
+        Mon, 06 Apr 2020 23:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y4FAoei46Tkc3HfHlCIKmv+2BjR5V8f9xenFoOtsKN4=;
+        b=tQo4f6yKtMHTJ0hQi+oM3MZgcHaRvAV7aDsZGtxCuYln7mYN8W+9/TOLWGGm8S6wqa
+         95cxOdNcctfI6yKkFwoL3+EDY+0FDcP5lM7hdhohRJevf91pNFlupKSOIELe9XPccwMh
+         6N7ApC9NhFF8Scantpav7pS8TD21Oos/V0b4o0N3niIojk9Je+7GjdYvTvH1mccY4Nhl
+         5G15tkjpkK4wGPyZvs/1f40gLbUcERdUif9Hsd1qNRoa1wv/nyZ8NU8MMysm+5OZqwqm
+         rGHpvhZVnd8NttGewORj2Sd5not4n68zV3vJP8rtbJjKMtlkO01vWh1cx/YIFr0XMTt0
+         xh/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y4FAoei46Tkc3HfHlCIKmv+2BjR5V8f9xenFoOtsKN4=;
+        b=LY/mobUyh/9MA/l8M2Ffxyxh3jUw6FgixQzxq/uaA660nXWC8NCIZ9bi8WmGiFA0Yn
+         bRzDGt3VVCKWMvE24/kW5UOHir05LWFKcLM8Ld9RWhnq5i5Eau9Ilgz0t0pnKvGa03ve
+         BRIbKpYQ93UcMEWUbncqPTMdQL+DBCzfUu+gFaXdwiNLU/npm1p7TVzmOkAekLD9IAhH
+         eo6rvoyaZt4STkDJK92HNF7J8afx9TCOFN51v/5yNj+e0iPBebpaduP05TrdS/9NYPE0
+         T+J8JOaE3czLHyF0IV3llGY9nhNyEL29JsKcOtO80cHksP14arKCXhBvgJz858RX7Pae
+         HlMg==
+X-Gm-Message-State: AGi0PubIKpk1sQIE0QUIyJMupWmWdbjngnSJiNTru7Fk9rsSjWtMNBc+
+        XrzV9Vt8GtTaUWYDM+gmB7z9XOrEOzXR1hv+98c=
+X-Google-Smtp-Source: APiQypLLsOdvypIFNxuaVrbiZeeORo8cVXBYb0ZNxxDoZPkW/yNo1thc2t6Xj2qD9Chy7pElS4GccL0R0thQRTsHmNg=
+X-Received: by 2002:a37:4ac2:: with SMTP id x185mr720414qka.413.1586242274672;
+ Mon, 06 Apr 2020 23:51:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200407055837.3508017-1-alistair@alistair23.me> <20200407055837.3508017-2-alistair@alistair23.me>
+In-Reply-To: <20200407055837.3508017-2-alistair@alistair23.me>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Mon, 6 Apr 2020 23:50:48 -0700
+Message-ID: <CA+E=qVdQKS9TCG7Sa4aefAZbgWO3-rgA9u13v=iB6+TN7yQe=Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] Bluetooth: hci_h5: Add support for binding
+ RTL8723BS with device tree
+To:     Alistair Francis <alistair@alistair23.me>
+Cc:     netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        devicetree <devicetree@vger.kernel.org>, alistair23@gmail.com,
+        arm-linux <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biwen Li <biwen.li@nxp.com>
+On Mon, Apr 6, 2020 at 10:58 PM Alistair Francis <alistair@alistair23.me> wrote:
+>
+> From: Vasily Khoruzhick <anarsoul@gmail.com>
+>
+> RTL8723BS is often used in ARM boards, so add ability to bind it
+> using device tree.
+>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Signed-off-by: Alistair Francis <alistair@alistair23.me>
+> ---
+>  drivers/bluetooth/hci_h5.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+> index 106c110efe56..b0e25a7ca850 100644
+> --- a/drivers/bluetooth/hci_h5.c
+> +++ b/drivers/bluetooth/hci_h5.c
+> @@ -1019,6 +1019,8 @@ static const struct of_device_id rtl_bluetooth_of_match[] = {
+>         { .compatible = "realtek,rtl8822cs-bt",
+>           .data = (const void *)&rtl_vnd },
+>  #endif
+> +       { .compatible = "realtek,rtl8822bs-bt",
 
-The patch adds ftm_alarm0 DT node
-	- add new rcpm node
-	- add ftm_alarm0 node
-	- aliases ftm_alarm0 as rtc1
+Wrong compatible? Also you probably want to keep it over #endif.
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
- 5 files changed, 72 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 337919366dc8..ab8b19f4d750 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -22,6 +22,7 @@
- 		rtic-c = &rtic_c;
- 		rtic-d = &rtic_d;
- 		sec-mon = &sec_mon;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -499,6 +500,20 @@
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-+
-+		rcpm: rcpm@1ee2140 {
-+			compatible = "fsl,ls1012a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1012a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index c084c7a4b6a6..9dbcec8058de 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -27,6 +27,7 @@
- 		ethernet4 = &enet4;
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -764,6 +765,19 @@
- 			big-endian;
- 		};
- 
-+		rcpm: rcpm@1ee208c {
-+			compatible = "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee208c 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1043a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index d4c1da3d4bde..acd6125fb7d3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -28,6 +28,7 @@
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
- 		ethernet7 = &enet7;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -765,6 +766,20 @@
- 			queue-sizes = <64 64>;
- 			big-endian;
- 		};
-+
-+		rcpm: rcpm@1ee208c {
-+			compatible = "fsl,ls1046a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee208c 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1046a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	reserved-memory {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 594566265e3d..bd8528f224b3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -18,6 +18,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -777,6 +778,19 @@
- 				};
- 			};
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls1088a-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index f96d06da96be..0e06b0e12cd3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -24,6 +24,7 @@
- 		serial1 = &serial1;
- 		serial2 = &serial2;
- 		serial3 = &serial3;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpu: cpus {
-@@ -759,6 +760,19 @@
- 			reg = <0x0 0x04000000 0x0 0x01000000>;
- 			interrupts = <0 12 4>;
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls208xa-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls208xa-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	ddr1: memory-controller@1080000 {
--- 
-2.17.1
-
+> +         .data = (const void *)&rtl_vnd },
+>         { },
+>  };
+>  MODULE_DEVICE_TABLE(of, rtl_bluetooth_of_match);
+> --
+> 2.25.1
+>
