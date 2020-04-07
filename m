@@ -2,135 +2,123 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A787C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B55C2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC86206F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B7A206F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:41:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IWRfOCF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgDGCkQ (ORCPT
+        id S1726663AbgDGClL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 22:40:16 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:6109 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726353AbgDGCkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 22:40:15 -0400
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 06 Apr 2020 19:40:14 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg01-sd.qualcomm.com with ESMTP; 06 Apr 2020 19:40:13 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 8A2DF4BBC; Mon,  6 Apr 2020 19:40:13 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 19:40:13 -0700
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Arnd Bergmann' <arnd@arndb.de>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        Mon, 6 Apr 2020 22:41:11 -0400
+Received: from mail-eopbgr150077.outbound.protection.outlook.com ([40.107.15.77]:61705
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726312AbgDGClL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 22:41:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RWDdbC0p4YIBR3IdIyw5skPfQkyGEf8liloYviVAZPrIqOcQl2KnQfNVwQR+StYohkBuWWOddVqzHmrkRh1+wDOvxOALVFeTJzmfkHN1uIggZz3hLz395+T2GUkN7iDk+MiKQgMce+6O28hW49F+ciH1+xoGmqBklEXJds7PKmUiSvlC+3ZyOiLJoITSTJCGAOIkUujNzb92zqYxEVVzx3GdvW6ZMkotvMMfJNi4Jo8xpQXJqHF+Q2pPUZieA9fF8sNEps2uKrSWaIvKynB6pEshbrUqDYYifNaHzquEaUj/MibalNef+tj8qNIBk+KGWUrjEG/XixQL2TLbLuy/nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ziKVVCMcbc2o3dJo49Qq+Vw0lkwqKGID7MTcKhOYn8s=;
+ b=Fge222Web7e2trbNZpjMpNAnMr9RvR3WUFxi5J5hBQN2iswn8Z4b4wh8jlvSsfaT8Xc1riaVo/YLQSSItNfVI9e6F/YCXv2GS5NFf2vmIH/Jd8z3og/jT1PAQH/0d/tTc85x6MXid1ZPkFvNiwaw4vI5YxnXnGs4xotMYikzfh0ZDpkjfjhNRgeQvIKNYIDlBwBBwn4U25GAYcAm1QJkHcI6P9vIz1T3Djx0u2YvVWY+oP50uO87H9cgmZH/jwyJekiJ4vfYyf5sPLBpXOt8TVjakn+G+SDYGoJBu4xwyfTcENlDoeaPUwKbOkXn1KP68ynteXgshmhI8d/vs4XE3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ziKVVCMcbc2o3dJo49Qq+Vw0lkwqKGID7MTcKhOYn8s=;
+ b=IWRfOCF95dkcpVhX+nQzu3dxGYDzgjfC0JvThds/sg/b+ZBSutfUndPVb7VBAFPmqSx02EVs/7x6zjd+g25be88+9wBZMy9jBSp2rt9FX9P+Lq5jH8sc4E5U+Dnm4Kk/dl4BwluhBwsIEcro+U2uEyfyDpHFOV9i2trKzsqe2Io=
+Received: from AM0PR04MB4322.eurprd04.prod.outlook.com (2603:10a6:208:64::12)
+ by AM0PR04MB4371.eurprd04.prod.outlook.com (2603:10a6:208:72::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Tue, 7 Apr
+ 2020 02:41:04 +0000
+Received: from AM0PR04MB4322.eurprd04.prod.outlook.com
+ ([fe80::6822:8f3b:4365:c35c]) by AM0PR04MB4322.eurprd04.prod.outlook.com
+ ([fe80::6822:8f3b:4365:c35c%5]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
+ 02:41:04 +0000
+From:   Andy Tang <andy.tang@nxp.com>
+To:     Mian Yousaf Kaukab <ykaukab@suse.de>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+CC:     "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v11 11/12] clk: pwm: Assign u64 divisor to unsigned int
- before use
-Message-ID: <20200407024013.GB7019@codeaurora.org>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <ab7b568b1d287949276b3b1c9efdb1cad1f92004.1584667964.git.gurus@codeaurora.org>
- <CAK8P3a0XrYGYBQ_hTKF4fVBr7DDZsLnR+8o=09cig_gAje=v3w@mail.gmail.com>
- <9943d663c74046d798f4614343f25187@AcuMS.aculab.com>
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: RE: [EXT] [PATCH 2/2] clk: qoriq: add cpufreq platform device
+Thread-Topic: [EXT] [PATCH 2/2] clk: qoriq: add cpufreq platform device
+Thread-Index: AQHWCf3kcQGeCLykpEuuWcAPGdtk96hs95sA
+Date:   Tue, 7 Apr 2020 02:41:04 +0000
+Message-ID: <AM0PR04MB4322E8CBB8C13BA94C802E98F3C30@AM0PR04MB4322.eurprd04.prod.outlook.com>
+References: <20200403212114.15565-1-ykaukab@suse.de>
+ <20200403212114.15565-2-ykaukab@suse.de>
+In-Reply-To: <20200403212114.15565-2-ykaukab@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=andy.tang@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d1ff8cbb-caf5-4525-0408-08d7da9d1ded
+x-ms-traffictypediagnostic: AM0PR04MB4371:|AM0PR04MB4371:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB437144C56B155845BA0C44DBF3C30@AM0PR04MB4371.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-forefront-prvs: 036614DD9C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4322.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(396003)(136003)(366004)(346002)(39860400002)(76116006)(8676002)(66556008)(81156014)(316002)(110136005)(66946007)(81166006)(54906003)(6506007)(66476007)(64756008)(53546011)(71200400001)(7696005)(4744005)(52536014)(5660300002)(478600001)(8936002)(186003)(4326008)(26005)(86362001)(6636002)(2906002)(33656002)(66446008)(55016002)(44832011)(9686003);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lr1XM4tUqccthD1LMiCinZtKJI/Zn8wgy/33Rgop/Fm3F2nKAn5g99kR1Ug3A1c7SrStDsTp8gzrCu3xM+BIi8SVxO0x7QGGsxg1qTe7RK4rli1n5q1dvcbA7mQcO/s53eYgQmeK9/CPR4AesJfl8khNdn8S4SQJjHw/636ldcbIgwkhz1mOdo8giVNC0zP4NnEJc+KmIy2gatjqrAy4/dVtuqhtdYK2xlM3vH0yaqnPoxKtplTEbF9sB3jPyaKAq+VV0693467WM5kxHHpeG+fHH50Cr2+1vC/sAhf1g7d9tLyxcG7zfBczq4Z3A1yIv5yosVAd76/rpyvcQMK5ijciHUw/mn4cvITcuJT/xqE83c6iXwLTRBjfn81YliKe2cq8WwMd+fF+PQvBIf7cuIGwXSxfeYOj96/Fead2wUUsw/ntbxgUroTRfgRn0Umd
+x-ms-exchange-antispam-messagedata: gEbfDl/OQvTa4n8embEENWFOsQRTystzNZtZ4cRT4ENHXbgq/3DpGKEFqLL6LBEN6VAqw88whY8nzv+1B1mslvguzLJQtNqV681pNnT7A5VYy/qPBW3B2Jzp9ZbEvsRj0cGSaXvhRzMqAtHdCfEO3A==
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9943d663c74046d798f4614343f25187@AcuMS.aculab.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1ff8cbb-caf5-4525-0408-08d7da9d1ded
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2020 02:41:04.1778
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Kjt3IenFLjzivpeZEg3Ws7C+13MD35SzXS2Z0EubLv1pwC6OoYMoJVpiFdiKRpXbb0GSzZ7i7gwGS5SXDotZ9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4371
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 06:42:39PM +0000, David Laight wrote:
-> From: Arnd Bergmann
-> > Sent: 20 March 2020 17:01
-> > On Fri, Mar 20, 2020 at 2:42 AM Guru Das Srinagesh <gurus@codeaurora.org> wrote:
-> > >
-> > > Since the PWM framework is switching struct pwm_args.period's datatype
-> > > to u64, prepare for this transition by assigning the 64-bit divisor to
-> > > an unsigned int variable to use as the divisor. This is being done
-> > > because the divisor is a 32-bit constant and the quotient will be zero
-> > > if the divisor exceeds 2^32.
-
-Correction: The quotient will be zero when the denominator exceeds the
-numerator, i.e. NSECS_PER_SEC, and not U32_MAX. For this to happen, the
-property "clock-frequency" must be specified to be more than
-NSEC_PER_SEC, i.e. 1 GHz. Just observed that currently in the device
-tree, all instances of this driver (compatible string "pwm-clock") are
-setting this property to values within that limit.
-
-> > >
-> > > Cc: Michael Turquette <mturquette@baylibre.com>
-> > > Cc: Stephen Boyd <sboyd@kernel.org>
-> > > Cc: linux-clk@vger.kernel.org
-> > > Cc: David Laight <David.Laight@ACULAB.COM>
-> > >
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > ---
-> > >  drivers/clk/clk-pwm.c | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/clk/clk-pwm.c b/drivers/clk/clk-pwm.c
-> > > index 87fe0b0e..c0b5da3 100644
-> > > --- a/drivers/clk/clk-pwm.c
-> > > +++ b/drivers/clk/clk-pwm.c
-> > > @@ -72,6 +72,7 @@ static int clk_pwm_probe(struct platform_device *pdev)
-> > >         struct pwm_device *pwm;
-> > >         struct pwm_args pargs;
-> > >         const char *clk_name;
-> > > +       unsigned int period;
-> > >         int ret;
-> > >
-> > >         clk_pwm = devm_kzalloc(&pdev->dev, sizeof(*clk_pwm), GFP_KERNEL);
-> > > @@ -88,8 +89,9 @@ static int clk_pwm_probe(struct platform_device *pdev)
-> > >                 return -EINVAL;
-> > >         }
-> > >
-> > > +       period = pargs.period;
-> > >         if (of_property_read_u32(node, "clock-frequency", &clk_pwm->fixed_rate))
-> > > -               clk_pwm->fixed_rate = NSEC_PER_SEC / pargs.period;
-> > > +               clk_pwm->fixed_rate = NSEC_PER_SEC / period;
-> > >
-> > >         if (pargs.period != NSEC_PER_SEC / clk_pwm->fixed_rate &&
-> > >             pargs.period != DIV_ROUND_UP(NSEC_PER_SEC, clk_pwm->fixed_rate)) {
-> > 
-> > Doesn't this one need a check for "pargs.period>UINT_MAX" or
-> > "pargs.period > NSEC_PER_SEC"?
-> > 
-
-With the assignment of period to unsigned int, wouldn't doing
-s/pargs.period/period suffice?
-
-Also, will add a check to ensure that clk_pwm->fixed_rate is non-zero. If it
-is zero, fail probe.
-
-> > It looks like truncating the 64-bit value to a 32-bit type can result in
-> > unexpected behavior.
-> 
-> I also suspect the last two lines ought to use the 32bit copy.
-> And there is a chance that the division will explode.
-
-The check mentioned above will ensure that the division will not
-explode.
-
-What do you guys think?
-
-Thank you.
-
-Guru Das.
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1pYW4gWW91c2FmIEthdWth
+YiA8eWthdWthYkBzdXNlLmRlPg0KPiBTZW50OiAyMDIwxOo01MI0yNUgNToyMQ0KPiBUbzogbGlu
+dXgtcG1Admdlci5rZXJuZWwub3JnOyBBbmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPjsNCj4g
+c2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+DQo+IENjOiB2
+aXJlc2gua3VtYXJAbGluYXJvLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4g
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMu
+b3psYWJzLm9yZzsgTWlhbg0KPiBZb3VzYWYgS2F1a2FiIDx5a2F1a2FiQHN1c2UuZGU+DQo+IFN1
+YmplY3Q6IFtFWFRdIFtQQVRDSCAyLzJdIGNsazogcW9yaXE6IGFkZCBjcHVmcmVxIHBsYXRmb3Jt
+IGRldmljZQ0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBBZGQgYSBwbGF0Zm9ybSBk
+ZXZpY2UgZm9yIHFvaXJxLWNwdWZyZXEgZHJpdmVyIGZvciB0aGUgY29tcGF0aWJsZSBjbG9ja2dl
+bg0KPiBibG9ja3MuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNaWFuIFlvdXNhZiBLYXVrYWIgPHlr
+YXVrYWJAc3VzZS5kZT4NCj4gLS0tDQo+ICBkcml2ZXJzL2Nsay9jbGstcW9yaXEuYyB8IDMwICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKy0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2Vy
+dGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsv
+Y2xrLXFvcmlxLmMgYi9kcml2ZXJzL2Nsay9jbGstcW9yaXEuYyBpbmRleA0KPiBkNTk0NmY3NDg2
+ZDYuLjM3NGFmY2FiODlhZiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9jbGsvY2xrLXFvcmlxLmMN
+Cj4gKysrIGIvZHJpdmVycy9jbGsvY2xrLXFvcmlxLmMNCj4gQEAgLTk1LDYgKzk1LDcgQEAgc3Ry
+dWN0IGNsb2NrZ2VuIHsNCj4gIH07DQo+IA0KDQpGb3IgYm90aCBwYXRjaGVzLA0KUmV2aWV3ZWQt
+Ynk6IFl1YW50aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KDQpCUiwNCkFuZHkNCg0K
