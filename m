@@ -2,157 +2,158 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236C5C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF94EC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93BF2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0532075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YsRiZ1dE"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Jl8BqXl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgDGQCg (ORCPT
+        id S1727989AbgDGQCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:02:36 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45676 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbgDGQCf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:02:35 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o26so1918493pgc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 09:02:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bCeukKbud7C3clm1zbpVpVwgv+8wge+9QzRvJl6XRts=;
-        b=YsRiZ1dEtXgjSAtNUNsyT8zEGLIAz3phRF7UE6EXjeNzS9J0E3WHCS/cxlySz3B1hB
-         beXyhRyr5Vk8avGeXgB4i2pOGSJo2Op9/bw15THjx0x8D6P3f8qLao8/5qGSocrLL2dK
-         6gWtCI6r6N0mXiPIrVCBTw1mAwiBEjLBqdRH8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bCeukKbud7C3clm1zbpVpVwgv+8wge+9QzRvJl6XRts=;
-        b=IjqAq33b1XvvvgAotjr60zHJbocxv3hsL3DG9o7q+Aw56zziPVdOmLNoEW8by7AXpH
-         AJwqmPaTdB9LZdUcn3lma3RR6eqWcfQGmCsYFNXtyUD/M282F3z7+tNWmL5PpXMeJfnG
-         ih63mb979TF4h2jGUx7966ld9BEb9ZqLGXqBcEuPswMwYgE2vLiZSJYk97VazF14h/UK
-         g3wG3yii7lj0m7uqfhpuuJ1XPagyawNPgxbdBLXNITsEdl7e6fWv1rQYxLrbGPhZERYW
-         7p2kTKvW6SxigriQ8LkvOfLNPARCfxVTaB5/VooH2XGzCAijZsAztZ5R8hHsCvOxEzoy
-         b+Cg==
-X-Gm-Message-State: AGi0PuZx5YCE9+96CC9vxGJGWLqLXpdOnS92vvRrqTFCsOeuVNR2frOf
-        BgxKvgwl19GOIlXZab4nA8sAfA==
-X-Google-Smtp-Source: APiQypKzSZVZEZ9v0JoDGhqqEMHpb9k4/uqGwRPfOc9GLFgVM/iX2dNtzE9KGS6y1ZlSJjwUxLaYSA==
-X-Received: by 2002:aa7:94a5:: with SMTP id a5mr3266386pfl.67.1586275354262;
-        Tue, 07 Apr 2020 09:02:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z63sm13623706pgd.12.2020.04.07.09.02.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 09:02:33 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 09:02:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH 2/3] exec: Make unlocking exec_update_mutex explict
-Message-ID: <202004070902.5D36F15E@keescook>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
- <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
- <87wo6s3wxd.fsf_-_@x220.int.ebiederm.org>
- <87imic3wtz.fsf_-_@x220.int.ebiederm.org>
+        Tue, 7 Apr 2020 12:02:46 -0400
+Received: from mout.gmx.net ([212.227.17.20]:49349 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbgDGQCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 12:02:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1586275336;
+        bh=MjED2rL8qFcaewF1yuTCY8oY81g21cBSfIGHWAJZhMU=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=Jl8BqXl73a3riwsYbnv+x7UmfvkDw9tKZL2TNz/DJ0vFDfMaN2+x19lbN9xx87+lC
+         3+ZL2kMK+WiwDySFJZjTn3TmI3NAhZWNhxh0yMPypCuDv1dcm6cPNINx9XNyuxNGul
+         rH8nkZklPVh2RmUjRZp9o9qblbOHX95hYR+B1LCE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from lenovo-laptop ([82.19.195.159]) by mail.gmx.com (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1N1wll-1jB2250hY1-012FWj; Tue, 07
+ Apr 2020 18:02:16 +0200
+Date:   Tue, 7 Apr 2020 17:02:13 +0100
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Allison Randal <allison@lohutok.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Chaitra Basappa <chaitra.basappa@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "James E. J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-scsi@vger.kernel.org, aacraid@microsemi.com,
+        MPT-FusionLinux.pdl@broadcom.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: Remove unnecessary calls to memset after
+ dma_alloc_coherent
+Message-ID: <20200407160213.qh64de6ebrj7qkmx@lenovo-laptop>
+References: <e2401a31-e9fd-e849-e27c-6e079f5556d2@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87imic3wtz.fsf_-_@x220.int.ebiederm.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <e2401a31-e9fd-e849-e27c-6e079f5556d2@web.de>
+X-Provags-ID: V03:K1:d/rbaoVneuFo0laPsfO0MaLfxIn2+jKJUs/i7ZOLORm+LfbBtQT
+ ESuMc1oTz+fMZ0oStoWZwfeViYqrbeO1LXx1GGgpaEVPnqsXdzsBP1CCn5fNSGlUyZljOui
+ I7fgj9QWPd7jJBqYvNLWXFsWvl2e2GA/b/izskTEJrxpVWWfI/dvT66HeAuXqJJEoWAwBWc
+ jebJmfW9Kw6uZBru7hWMA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:U2Pjpg2Ki7w=:xq6163nCcOwVZqGtXA1HMf
+ 19/Gs5h+3UI36/aBiaBU1kuksy+wup06rLtbVmc5WwxmfLOYa99iZHzKR77kev6SwPaMOnf/5
+ gyQJ2ZHoFnzVuAkgIB4AA0Ddz+Egx6RS7JGbLkoEmd6dDu1KnS5TAEDxko2eNMA/EojMz/Rq8
+ nEBeKbpf0mtSuVqb5v3BM4IqKZ8IGWRUhSs7U9OYEXUS2TLPUWLZ6eGeT+J0WSJo8ZL4sEVYq
+ lMmuzOXowBoWvVsv8G6jGuvzupEfa1iEb8CVK5FIXTcP+GmbLrqNKyoI2mFt9IFAbhjpPm92s
+ JoWRcvh4wpQAeDq/0cs7PycSMpvvSVM1MxkylDZaeVr+8uBaqbhc9sAy8JlBlJeEAF+u1TDIJ
+ YvZ7vttcV/EiFjAi1RSy4MM4WbTATmAS5TK2XvKM2kq3RzLJDaZQ9R9Ih5b6/ln83Gmun3Bwj
+ w917gxTNOlglO8uETEOIRSydDoio5a0xWEZz7jELD/+xPPDP8lRqfl9Io/7f3Y3UhjksL+EMG
+ Ear5+fdik64Jksxf89roRGribeIswgpWy3uRU4aeQL8rNqJZPRlxnoiGdaTDowt4zYG2v4v+X
+ y8sxAZq1dRQWSQEjq1V0u5ckgIDkKlfJeivxKd/K2mWLlO0OCnCYyKcIBpHZI3BCDgyqTCRGw
+ GviZQW73dh2jkjG/xyanglkDtGbqy4dYjOb8XFSZS9w+cN5tx7gkz5P4RvStdA63mfV9tiLhQ
+ Ub5RUHfXr9E9bNmYwRSBdlF1PGkEkAY765SL3J4PFJqeKVs00z0SRSdL3AJPZg7YlUDIwrdMp
+ M4/KAFkk50NkU/AmGF8ROcfm858qfZtYTaN6ZPqF1uSYXu2D6nOMKE3e3tiyTjfannSXer6hw
+ ysT9Hwdl/g46QipspSaTNFAZUsW/P+8V4mjOdzi3vzx9wv82cHpJAaClCqHAZv4ZWJN338IFw
+ Nkgspk0qtotriu5gwEaJsm6l1wZYIXQurHkHXl5qRWVtVrKDBHM5VkcrERXbDdVqPrlAqmPPm
+ b4RsFafzc8NkynJrJhD60LW4E6cli01gC5F9gGfd6yeFGheimpNcUtqtoP8OAge2GnpH+ohne
+ 3R/CqDXTi26RVR9IzGv2uAsfSRWiYhY9yaitv/VIiqPai8vxdHCTK4BJ6YUkO3EQq/sz9/qfi
+ +afwyyOiaN+FTiEEN/FgmPUa14e6fuJ08jHShjGl8Vmhflh8gMXL8/SXk01mM8856ZH1uP1v7
+ YUw3hrs2eYKFne8Sc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:31:52PM -0500, Eric W. Biederman wrote:
-> 
-> With install_exec_creds updated to follow immediately after
-> setup_new_exec, the failure of unshare_sighand is the only
-> code path where exec_update_mutex is held but not explicitly
-> unlocked.
-> 
-> Update that code path to explicitly unlock exec_update_mutex.
-> 
-> Remove the unlocking of exec_update_mutex from free_bprm.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+On Sat, Apr 04, 2020 at 01:14:52PM +0200, Markus Elfring wrote:
+> > dma_alloc_coherent() now zeroes memory after allocation, so additional
+> > calls to memset() afterwards are unnecessary. Remove them.
+>
+> I suggest to reconsider the distribution of recipients also for this pat=
+ch
+> according to the fields =E2=80=9CCc=E2=80=9D and =E2=80=9CTo=E2=80=9D.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Thanks. I'll do this in a v2/RESEND.
+>
+>
+> =E2=80=A6
+> > +++ b/drivers/scsi/dpt_i2o.c
+> =E2=80=A6
+> > @@ -3067,13 +3064,12 @@ static int adpt_i2o_build_sys_table(void)
+> >  	sys_tbl_len =3D sizeof(struct i2o_sys_tbl) +	// Header + IOPs
+> >  				(hba_count) * sizeof(struct i2o_sys_tbl_entry);
+> >
+> > -	sys_tbl =3D dma_alloc_coherent(&pHba->pDev->dev,
+> > -				sys_tbl_len, &sys_tbl_pa, GFP_KERNEL);
+> > +	sys_tbl =3D dma_alloc_coherent(&pHba->pDev->dev, sys_tbl_len,
+> > +				     &sys_tbl_pa, GFP_KERNEL);
+> >  	if (!sys_tbl) {
+> =E2=80=A6
+> > +++ b/drivers/scsi/mvsas/mv_init.c
+> > @@ -244,28 +244,22 @@ static int mvs_alloc(struct mvs_info *mvi, struc=
+t Scsi_Host *shost)
+> =E2=80=A6
+> > -	mvi->slot =3D dma_alloc_coherent(mvi->dev,
+> > -				       sizeof(*mvi->slot) * slot_nr,
+> > +	mvi->slot =3D dma_alloc_coherent(mvi->dev, sizeof(*mvi->slot) * slot=
+_nr,
+> >  				       &mvi->slot_dma, GFP_KERNEL);
+> >  	if (!mvi->slot)
+> =E2=80=A6
+> > +++ b/drivers/scsi/qla2xxx/qla_isr.c
+> > @@ -79,7 +79,7 @@ qla24xx_process_abts(struct scsi_qla_host *vha, void=
+ *pkt)
+> >  	    (uint8_t *)abts, sizeof(*abts));
+> >
+> >  	rsp_els =3D dma_alloc_coherent(&ha->pdev->dev, sizeof(*rsp_els), &dm=
+a,
+> > -	    GFP_KERNEL);
+> > +				     GFP_KERNEL);
+> >  	if (!rsp_els) {
+> =E2=80=A6
+> > +++ b/drivers/scsi/qla2xxx/qla_mbx.c
+> > @@ -4887,15 +4887,13 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t=
+ *vha)
+> >  	    "Entered %s.\n", __func__);
+> >
+> >  	els_cmd_map =3D dma_alloc_coherent(&ha->pdev->dev, ELS_CMD_MAP_SIZE,
+> > -	    &els_cmd_map_dma, GFP_KERNEL);
+> > +					 &els_cmd_map_dma, GFP_KERNEL);
+> >  	if (!els_cmd_map) {
+> =E2=80=A6
+>
+> I find it safer to integrate such source code reformattings by
+> another update step which will be separated from the proposed deletion
+> of unwanted function calls.
 
--Kees
+Good point. This whitespace was autoformatted by Coccinelle, probably
+due to my bad SmPL skills.
 
-> ---
->  fs/exec.c               | 6 +++---
->  include/linux/binfmts.h | 3 +--
->  2 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index d55710a36056..28c87020da9b 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1318,7 +1318,7 @@ int flush_old_exec(struct linux_binprm * bprm)
->  	 */
->  	retval = unshare_sighand(me);
->  	if (retval)
-> -		goto out;
-> +		goto out_unlock;
->  
->  	set_fs(USER_DS);
->  	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
-> @@ -1335,6 +1335,8 @@ int flush_old_exec(struct linux_binprm * bprm)
->  	do_close_on_exec(me->files);
->  	return 0;
->  
-> +out_unlock:
-> +	mutex_unlock(&me->signal->exec_update_mutex);
->  out:
->  	return retval;
->  }
-> @@ -1451,8 +1453,6 @@ static void free_bprm(struct linux_binprm *bprm)
->  {
->  	free_arg_pages(bprm);
->  	if (bprm->cred) {
-> -		if (bprm->called_exec_mmap)
-> -			mutex_unlock(&current->signal->exec_update_mutex);
->  		mutex_unlock(&current->signal->cred_guard_mutex);
->  		abort_creds(bprm->cred);
->  	}
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index a345d9fed3d8..6f564b9ad882 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -47,8 +47,7 @@ struct linux_binprm {
->  		secureexec:1,
->  		/*
->  		 * Set by flush_old_exec, when exec_mmap has been called.
-> -		 * This is past the point of no return, when the
-> -		 * exec_update_mutex has been taken.
-> +		 * This is past the point of no return.
->  		 */
->  		called_exec_mmap:1;
->  #ifdef __alpha__
-> -- 
-> 2.25.0
-> 
+Best,
+Alex
 
--- 
-Kees Cook
+
+>
+> Regards,
+> Markus
