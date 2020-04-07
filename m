@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDFDC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAED7C3815B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C5320857
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA3520857
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgDGSij (ORCPT
+        id S1727958AbgDGSiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:38:39 -0400
-Received: from 8bytes.org ([81.169.241.247]:57724 "EHLO theia.8bytes.org"
+        Tue, 7 Apr 2020 14:38:55 -0400
+Received: from 8bytes.org ([81.169.241.247]:57454 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727136AbgDGSiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:38:03 -0400
+        id S1727049AbgDGSiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 14:38:02 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 51AD96A1; Tue,  7 Apr 2020 20:37:54 +0200 (CEST)
+        id 3549360C; Tue,  7 Apr 2020 20:37:53 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -45,9 +45,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [RFC PATCH 30/34] iommu/omap: Convert to probe/release_device() call-backs
-Date:   Tue,  7 Apr 2020 20:37:38 +0200
-Message-Id: <20200407183742.4344-31-joro@8bytes.org>
+Subject: [RFC PATCH 26/34] iommu/rockchip: Convert to probe/release_device() call-backs
+Date:   Tue,  7 Apr 2020 20:37:34 +0200
+Message-Id: <20200407183742.4344-27-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200407183742.4344-1-joro@8bytes.org>
 References: <20200407183742.4344-1-joro@8bytes.org>
@@ -58,140 +58,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Convert the OMAP IOMMU driver to use the probe_device() and
+Convert the Rockchip IOMMU driver to use the probe_device() and
 release_device() call-backs of iommu_ops, so that the iommu core code
 does the group and sysfs setup.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/omap-iommu.c | 49 ++++++++++----------------------------
- 1 file changed, 13 insertions(+), 36 deletions(-)
+ drivers/iommu/rockchip-iommu.c | 26 +++++++-------------------
+ 1 file changed, 7 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-index ecc9d0829a91..6699fe6d9e06 100644
---- a/drivers/iommu/omap-iommu.c
-+++ b/drivers/iommu/omap-iommu.c
-@@ -1640,15 +1640,13 @@ static phys_addr_t omap_iommu_iova_to_phys(struct iommu_domain *domain,
- 	return ret;
+diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+index b33cdd5aad81..d25c2486ca07 100644
+--- a/drivers/iommu/rockchip-iommu.c
++++ b/drivers/iommu/rockchip-iommu.c
+@@ -1054,40 +1054,28 @@ static void rk_iommu_domain_free(struct iommu_domain *domain)
+ 	kfree(rk_domain);
  }
  
--static int omap_iommu_add_device(struct device *dev)
-+static struct iommu_device *omap_iommu_probe_device(struct device *dev)
+-static int rk_iommu_add_device(struct device *dev)
++static struct iommu_device *rk_iommu_probe_device(struct device *dev)
  {
- 	struct omap_iommu_arch_data *arch_data, *tmp;
-+	struct platform_device *pdev;
- 	struct omap_iommu *oiommu;
 -	struct iommu_group *group;
- 	struct device_node *np;
--	struct platform_device *pdev;
- 	int num_iommus, i;
--	int ret;
+-	struct rk_iommu *iommu;
+ 	struct rk_iommudata *data;
++	struct rk_iommu *iommu;
  
- 	/*
- 	 * Allocate the archdata iommu structure for DT-based devices.
-@@ -1657,7 +1655,7 @@ static int omap_iommu_add_device(struct device *dev)
- 	 * IOMMU users.
- 	 */
- 	if (!dev->of_node)
--		return 0;
+ 	data = dev->archdata.iommu;
+ 	if (!data)
+-		return -ENODEV;
 +		return ERR_PTR(-ENODEV);
  
- 	/*
- 	 * retrieve the count of IOMMU nodes using phandle size as element size
-@@ -1670,27 +1668,27 @@ static int omap_iommu_add_device(struct device *dev)
+ 	iommu = rk_iommu_from_dev(dev);
  
- 	arch_data = kcalloc(num_iommus + 1, sizeof(*arch_data), GFP_KERNEL);
- 	if (!arch_data)
--		return -ENOMEM;
-+		return ERR_PTR(-ENOMEM);
- 
- 	for (i = 0, tmp = arch_data; i < num_iommus; i++, tmp++) {
- 		np = of_parse_phandle(dev->of_node, "iommus", i);
- 		if (!np) {
- 			kfree(arch_data);
--			return -EINVAL;
-+			return ERR_PTR(-EINVAL);
- 		}
- 
- 		pdev = of_find_device_by_node(np);
- 		if (!pdev) {
- 			of_node_put(np);
- 			kfree(arch_data);
--			return -ENODEV;
-+			return ERR_PTR(-ENODEV);
- 		}
- 
- 		oiommu = platform_get_drvdata(pdev);
- 		if (!oiommu) {
- 			of_node_put(np);
- 			kfree(arch_data);
--			return -EINVAL;
-+			return ERR_PTR(-EINVAL);
- 		}
- 
- 		tmp->iommu_dev = oiommu;
-@@ -1699,46 +1697,25 @@ static int omap_iommu_add_device(struct device *dev)
- 		of_node_put(np);
- 	}
- 
-+	dev->archdata.iommu = arch_data;
-+
- 	/*
- 	 * use the first IOMMU alone for the sysfs device linking.
- 	 * TODO: Evaluate if a single iommu_group needs to be
- 	 * maintained for both IOMMUs
- 	 */
- 	oiommu = arch_data->iommu_dev;
--	ret = iommu_device_link(&oiommu->iommu, dev);
--	if (ret) {
--		kfree(arch_data);
--		return ret;
--	}
--
--	dev->archdata.iommu = arch_data;
--
--	/*
--	 * IOMMU group initialization calls into omap_iommu_device_group, which
--	 * needs a valid dev->archdata.iommu pointer
--	 */
 -	group = iommu_group_get_for_dev(dev);
--	if (IS_ERR(group)) {
--		iommu_device_unlink(&oiommu->iommu, dev);
--		dev->archdata.iommu = NULL;
--		kfree(arch_data);
+-	if (IS_ERR(group))
 -		return PTR_ERR(group);
--	}
 -	iommu_group_put(group);
+-
+-	iommu_device_link(&iommu->iommu, dev);
+ 	data->link = device_link_add(dev, iommu->dev,
+ 				     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
  
 -	return 0;
-+	return &oiommu->iommu;
++	return &iommu->iommu;
  }
  
--static void omap_iommu_remove_device(struct device *dev)
-+static void omap_iommu_release_device(struct device *dev)
+-static void rk_iommu_remove_device(struct device *dev)
++static void rk_iommu_release_device(struct device *dev)
  {
- 	struct omap_iommu_arch_data *arch_data = dev->archdata.iommu;
+-	struct rk_iommu *iommu;
+ 	struct rk_iommudata *data = dev->archdata.iommu;
  
- 	if (!dev->of_node || !arch_data)
- 		return;
- 
--	iommu_device_unlink(&arch_data->iommu_dev->iommu, dev);
--	iommu_group_remove_device(dev);
+-	iommu = rk_iommu_from_dev(dev);
 -
- 	dev->archdata.iommu = NULL;
- 	kfree(arch_data);
+ 	device_link_del(data->link);
+-	iommu_device_unlink(&iommu->iommu, dev);
+-	iommu_group_remove_device(dev);
+ }
  
-@@ -1763,8 +1740,8 @@ static const struct iommu_ops omap_iommu_ops = {
- 	.map		= omap_iommu_map,
- 	.unmap		= omap_iommu_unmap,
- 	.iova_to_phys	= omap_iommu_iova_to_phys,
--	.add_device	= omap_iommu_add_device,
--	.remove_device	= omap_iommu_remove_device,
-+	.probe_device	= omap_iommu_probe_device,
-+	.release_device	= omap_iommu_release_device,
- 	.device_group	= omap_iommu_device_group,
- 	.pgsize_bitmap	= OMAP_IOMMU_PGSIZES,
- };
+ static struct iommu_group *rk_iommu_device_group(struct device *dev)
+@@ -1126,8 +1114,8 @@ static const struct iommu_ops rk_iommu_ops = {
+ 	.detach_dev = rk_iommu_detach_device,
+ 	.map = rk_iommu_map,
+ 	.unmap = rk_iommu_unmap,
+-	.add_device = rk_iommu_add_device,
+-	.remove_device = rk_iommu_remove_device,
++	.probe_device = rk_iommu_probe_device,
++	.release_device = rk_iommu_release_device,
+ 	.iova_to_phys = rk_iommu_iova_to_phys,
+ 	.device_group = rk_iommu_device_group,
+ 	.pgsize_bitmap = RK_IOMMU_PGSIZE_BITMAP,
 -- 
 2.17.1
 
