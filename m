@@ -2,156 +2,135 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC469C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A57C2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852BB2074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D2C6206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:02:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Q6VjkvOn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6i0zW3W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgDGEBQ (ORCPT
+        id S1726591AbgDGECs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 00:01:16 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31731 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725802AbgDGEBQ (ORCPT
+        Tue, 7 Apr 2020 00:02:48 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40909 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgDGECs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 00:01:16 -0400
-X-UUID: 01ecef53abd240e3b45fe3e134db50d8-20200407
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=tDfNg15w+Ek3LL7rOou7wOOIqGnTslzbpPXl9hJyd+0=;
-        b=Q6VjkvOnS8xSsd7Yb90johBvvQVleE/Z7yyQ8y8gZn9YdLTQkCDvFvaW9TECp6w0c9oO5Yte8zsKWfe8eesrqFoV5TKKfdDGYDzmvgHPJAOAc6r/zVpxEhqv20hiPrPTw5Qs9Cze1rdXNCArf/j/zL2fy4A9nXS66LzKay177gs=;
-X-UUID: 01ecef53abd240e3b45fe3e134db50d8-20200407
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <yingjoe.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1589193616; Tue, 07 Apr 2020 12:01:08 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Apr 2020 12:01:02 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Apr 2020 12:01:03 +0800
-Message-ID: <1586232063.17821.2.camel@mtksdaap41>
-Subject: Re: [PATCH v11 4/5] rtc: mt6397: Add support for the MediaTek
- MT6358 RTC
-From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        <linux-rtc@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-pm@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Tue, 7 Apr 2020 12:01:03 +0800
-In-Reply-To: <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 7 Apr 2020 00:02:48 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c20so189271pfi.7;
+        Mon, 06 Apr 2020 21:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=VsWwfSynrS4eDpYd0Gko9iMPncgHMSVWwRU0vtKq6/k=;
+        b=L6i0zW3W5a85p7YXJdl+LTgGSw4psSAI2oViDk6KiPH5ubKBWlqlU1ihTd2inAlul6
+         TAS7UweJ4U2ETiUxFPYrDxWVNG64V+1MKkOH6D1cGvA8OgYl+n00AGK13Oprb3wDRxP1
+         OZZnTnQCAID0wbZtG7sRBEVIT6NaUunqGzKYosxjidvbe+OTJI2NUcDR5VqIGIcHvWLy
+         ItHI0ib384o24MNKwPmzGbAUy4xO1CNsirbXhDmzmkvdjiQdQovot1M/QZLu+r+RvYmr
+         fMiXuHJVHl8CubzTDkNEeSlRFwFaqA0vd8/zd58Kw+y0D49+eS2KHYvF8gNS30E+eO6r
+         kipg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=VsWwfSynrS4eDpYd0Gko9iMPncgHMSVWwRU0vtKq6/k=;
+        b=oWCRYCk8oIMtdxKctoCzTK94Oi7ljLg0x+JGp4ufa+CJMCPcxJUaVmK3iUiWZjT05Y
+         VOceB8a5PQstuyZgDBdohfnB75xrjHIDGa2d5dZHEqBFfly3JipsvKxAjTQUIECVOm73
+         n25rohfstmdCQYj6J7+azX2S/l7TK5ELcEWS47yZtn3smMM6fo8JXNL/ns1SwSKN084U
+         VTGmckWErvQwOAgyWPIOlwBACk/mgXIp3lt1IcGsYZq6r3/ajPlP2jcohgeUIi3wbi3c
+         GUCrSsLbYtidPBPyisxG65wldpLeAt6tWQHQxCWZYqGKI8QLWhO/MacTTiD8CqYF8VIO
+         cs1A==
+X-Gm-Message-State: AGi0Pua3nOJ3bKZfNoqC+UJILZJWr6Ugh2uaHEV/qLtdpEfw2B9apfLZ
+        EYXMAgR64SFzJRW0eSvQGyqpJfxU
+X-Google-Smtp-Source: APiQypIW1yj/mj9qGPIqMvzWJIQpso6KUoVZXtxctp339oP3LbP1MqbwkMylzpgLfR/UfbUCdUAj/Q==
+X-Received: by 2002:a65:53cf:: with SMTP id z15mr86720pgr.367.1586232167036;
+        Mon, 06 Apr 2020 21:02:47 -0700 (PDT)
+Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
+        by smtp.gmail.com with ESMTPSA id f9sm11282241pgj.2.2020.04.06.21.02.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 21:02:46 -0700 (PDT)
+Date:   Tue, 07 Apr 2020 14:01:18 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2 1/4] powerpc/64s: implement probe_kernel_read/write
+ without touching AMR
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+References: <20200403093529.43587-1-npiggin@gmail.com>
+        <558b6131-60b4-98b7-dc40-25d8dacea05a@c-s.fr>
+        <1585911072.njtr9qmios.astroid@bobo.none>
+In-Reply-To: <1585911072.njtr9qmios.astroid@bobo.none>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1586230235.0xvc3pjkcj.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTMxIGF0IDEyOjA3ICswODAwLCBIc2luLUhzaXVuZyBXYW5nIHdyb3Rl
-Og0KPiBGcm9tOiBSYW4gQmkgPHJhbi5iaUBtZWRpYXRlay5jb20+DQo+IA0KPiBUaGlzIGFkZCBz
-dXBwb3J0IGZvciB0aGUgTWVkaWFUZWsgTVQ2MzU4IFJUQy4gRHJpdmVyIHVzaW5nDQo+IGNvbXBh
-dGlibGUgZGF0YSB0byBzdG9yZSBkaWZmZXJlbnQgUlRDX1dSVEdSIGFkZHJlc3Mgb2Zmc2V0Lg0K
-PiBUaGlzIHJlcGxhY2UgUlRDX1dSVEdSIHRvIFJUQ19XUlRHUl9NVDYzMjMgaW4gbXQ2MzIzLXBv
-d2Vyb2ZmDQo+IGRyaXZlciB3aGljaCBvbmx5IG5lZWRlZCBieSBhcm12NyBDUFUgd2l0aG91dCBB
-VEYuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBSYW4gQmkgPHJhbi5iaUBtZWRpYXRlay5jb20+DQo+
-IFNpZ25lZC1vZmYtYnk6IEhzaW4tSHNpdW5nIFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0
-ZWsuY29tPg0KDQoNCkxvb2tzIGdvb2QgdG8gbWUsIHRoYW5rcy4NCg0KUmV2aWV3ZWQtYnk6IFlp
-bmdqb2UgQ2hlbiA8eWluZ2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NCg0KDQpKb2UuQw0KDQo+IC0t
-LQ0KPiAgZHJpdmVycy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJvZmYuYyB8ICAyICstDQo+ICBk
-cml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMgICAgICAgICAgICAgIHwgMjMgKysrKysrKysrKysrKysr
-KysrKy0tLS0NCj4gIGluY2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMuaCAgICAgICAgfCAgOSAr
-KysrKysrKy0NCj4gIDMgZmlsZXMgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlv
-bnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bvd2VyL3Jlc2V0L210NjMyMy1wb3dl
-cm9mZi5jIGIvZHJpdmVycy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJvZmYuYw0KPiBpbmRleCAx
-Y2FmNDNkLi4wNTMyODAzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3Bvd2VyL3Jlc2V0L210NjMy
-My1wb3dlcm9mZi5jDQo+ICsrKyBiL2RyaXZlcnMvcG93ZXIvcmVzZXQvbXQ2MzIzLXBvd2Vyb2Zm
-LmMNCj4gQEAgLTMwLDcgKzMwLDcgQEAgc3RhdGljIHZvaWQgbXQ2MzIzX2RvX3B3cm9mZih2b2lk
-KQ0KPiAgCWludCByZXQ7DQo+ICANCj4gIAlyZWdtYXBfd3JpdGUocHdyYy0+cmVnbWFwLCBwd3Jj
-LT5iYXNlICsgUlRDX0JCUFUsIFJUQ19CQlBVX0tFWSk7DQo+IC0JcmVnbWFwX3dyaXRlKHB3cmMt
-PnJlZ21hcCwgcHdyYy0+YmFzZSArIFJUQ19XUlRHUiwgMSk7DQo+ICsJcmVnbWFwX3dyaXRlKHB3
-cmMtPnJlZ21hcCwgcHdyYy0+YmFzZSArIFJUQ19XUlRHUl9NVDYzMjMsIDEpOw0KPiAgDQo+ICAJ
-cmV0ID0gcmVnbWFwX3JlYWRfcG9sbF90aW1lb3V0KHB3cmMtPnJlZ21hcCwNCj4gIAkJCQkJcHdy
-Yy0+YmFzZSArIFJUQ19CQlBVLCB2YWwsDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3J0Yy9ydGMt
-bXQ2Mzk3LmMgYi9kcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMNCj4gaW5kZXggY2RhMjM4ZC4uN2Yz
-ZGZkMiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ydGMvcnRjLW10NjM5Ny5jDQo+ICsrKyBiL2Ry
-aXZlcnMvcnRjL3J0Yy1tdDYzOTcuYw0KPiBAQCAtOSw2ICs5LDcgQEANCj4gICNpbmNsdWRlIDxs
-aW51eC9tZmQvbXQ2Mzk3L2NvcmUuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4g
-ICNpbmNsdWRlIDxsaW51eC9tdXRleC5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5o
-Pg0KPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiAgI2luY2x1ZGUgPGxp
-bnV4L3JlZ21hcC5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3J0Yy5oPg0KPiBAQCAtMjAsNyArMjEs
-NyBAQCBzdGF0aWMgaW50IG10a19ydGNfd3JpdGVfdHJpZ2dlcihzdHJ1Y3QgbXQ2Mzk3X3J0YyAq
-cnRjKQ0KPiAgCWludCByZXQ7DQo+ICAJdTMyIGRhdGE7DQo+ICANCj4gLQlyZXQgPSByZWdtYXBf
-d3JpdGUocnRjLT5yZWdtYXAsIHJ0Yy0+YWRkcl9iYXNlICsgUlRDX1dSVEdSLCAxKTsNCj4gKwly
-ZXQgPSByZWdtYXBfd3JpdGUocnRjLT5yZWdtYXAsIHJ0Yy0+YWRkcl9iYXNlICsgcnRjLT5kYXRh
-LT53cnRnciwgMSk7DQo+ICAJaWYgKHJldCA8IDApDQo+ICAJCXJldHVybiByZXQ7DQo+ICANCj4g
-QEAgLTI2OSw2ICsyNzAsOCBAQCBzdGF0aWMgaW50IG10a19ydGNfcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCj4gIAlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwg
-SU9SRVNPVVJDRV9NRU0sIDApOw0KPiAgCXJ0Yy0+YWRkcl9iYXNlID0gcmVzLT5zdGFydDsNCj4g
-IA0KPiArCXJ0Yy0+ZGF0YSA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsN
-Cj4gKw0KPiAgCXJ0Yy0+aXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsNCj4gIAlpZiAo
-cnRjLT5pcnEgPCAwKQ0KPiAgCQlyZXR1cm4gcnRjLT5pcnE7DQo+IEBAIC0zMjUsMTAgKzMyOCwy
-MiBAQCBzdGF0aWMgaW50IG10NjM5N19ydGNfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4g
-IHN0YXRpYyBTSU1QTEVfREVWX1BNX09QUyhtdDYzOTdfcG1fb3BzLCBtdDYzOTdfcnRjX3N1c3Bl
-bmQsDQo+ICAJCQltdDYzOTdfcnRjX3Jlc3VtZSk7DQo+ICANCj4gK3N0YXRpYyBjb25zdCBzdHJ1
-Y3QgbXRrX3J0Y19kYXRhIG10NjM1OF9ydGNfZGF0YSA9IHsNCj4gKwkud3J0Z3IgPSBSVENfV1JU
-R1JfTVQ2MzU4LA0KPiArfTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfcnRjX2Rh
-dGEgbXQ2Mzk3X3J0Y19kYXRhID0gew0KPiArCS53cnRnciA9IFJUQ19XUlRHUl9NVDYzOTcsDQo+
-ICt9Ow0KPiArDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdDYzOTdfcnRj
-X29mX21hdGNoW10gPSB7DQo+IC0JeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzMjMtcnRj
-IiwgfSwNCj4gLQl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjM5Ny1ydGMiLCB9LA0KPiAt
-CXsgfQ0KPiArCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzIzLXJ0YyIsDQo+ICsJCS5k
-YXRhID0gJm10NjM5N19ydGNfZGF0YSwgfSwNCj4gKwl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVr
-LG10NjM1OC1ydGMiLA0KPiArCQkuZGF0YSA9ICZtdDYzNThfcnRjX2RhdGEsIH0sDQo+ICsJeyAu
-Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzOTctcnRjIiwNCj4gKwkJLmRhdGEgPSAmbXQ2Mzk3
-X3J0Y19kYXRhLCB9LA0KPiArCXt9DQo+ICB9Ow0KPiAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwg
-bXQ2Mzk3X3J0Y19vZl9tYXRjaCk7DQo+ICANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgv
-bWZkL210NjM5Ny9ydGMuaCBiL2luY2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMuaA0KPiBpbmRl
-eCA3ZGZiNjNiLi42MjAwZjNiIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21mZC9tdDYz
-OTcvcnRjLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3L3J0Yy5oDQo+IEBAIC0x
-OCw3ICsxOCw5IEBADQo+ICAjZGVmaW5lIFJUQ19CQlBVX0NCVVNZICAgICAgICAgQklUKDYpDQo+
-ICAjZGVmaW5lIFJUQ19CQlBVX0tFWSAgICAgICAgICAgICgweDQzIDw8IDgpDQo+ICANCj4gLSNk
-ZWZpbmUgUlRDX1dSVEdSICAgICAgICAgICAgICAweDAwM2MNCj4gKyNkZWZpbmUgUlRDX1dSVEdS
-X01UNjM1OCAgICAgICAweDNhDQo+ICsjZGVmaW5lIFJUQ19XUlRHUl9NVDYzOTcgICAgICAgMHgz
-Yw0KPiArI2RlZmluZSBSVENfV1JUR1JfTVQ2MzIzICAgICAgIFJUQ19XUlRHUl9NVDYzOTcNCj4g
-IA0KPiAgI2RlZmluZSBSVENfSVJRX1NUQSAgICAgICAgICAgIDB4MDAwMg0KPiAgI2RlZmluZSBS
-VENfSVJRX1NUQV9BTCAgICAgICAgIEJJVCgwKQ0KPiBAQCAtNjUsNiArNjcsMTAgQEANCj4gICNk
-ZWZpbmUgTVRLX1JUQ19QT0xMX0RFTEFZX1VTICAxMA0KPiAgI2RlZmluZSBNVEtfUlRDX1BPTExf
-VElNRU9VVCAgIChqaWZmaWVzX3RvX3VzZWNzKEhaKSkNCj4gIA0KPiArc3RydWN0IG10a19ydGNf
-ZGF0YSB7DQo+ICsJdTMyICAgICAgICAgICAgICAgICAgICAgd3J0Z3I7DQo+ICt9Ow0KPiArDQo+
-ICBzdHJ1Y3QgbXQ2Mzk3X3J0YyB7DQo+ICAJc3RydWN0IGRldmljZSAgICAgICAgICAgKmRldjsN
-Cj4gIAlzdHJ1Y3QgcnRjX2RldmljZSAgICAgICAqcnRjX2RldjsNCj4gQEAgLTc0LDYgKzgwLDcg
-QEAgc3RydWN0IG10NjM5N19ydGMgew0KPiAgCXN0cnVjdCByZWdtYXAgICAgICAgICAgICpyZWdt
-YXA7DQo+ICAJaW50ICAgICAgICAgICAgICAgICAgICAgaXJxOw0KPiAgCXUzMiAgICAgICAgICAg
-ICAgICAgICAgIGFkZHJfYmFzZTsNCj4gKwljb25zdCBzdHJ1Y3QgbXRrX3J0Y19kYXRhICpkYXRh
-Ow0KPiAgfTsNCj4gIA0KPiAgI2VuZGlmIC8qIF9MSU5VWF9NRkRfTVQ2Mzk3X1JUQ19IXyAqLw0K
-DQo=
+Nicholas Piggin's on April 3, 2020 9:05 pm:
+> Christophe Leroy's on April 3, 2020 8:31 pm:
+>>=20
+>>=20
+>> Le 03/04/2020 =C3=A0 11:35, Nicholas Piggin a =C3=A9crit=C2=A0:
+>>> There is no need to allow user accesses when probing kernel addresses.
+>>=20
+>> I just discovered the following commit=20
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commi=
+t/?id=3D75a1a607bb7e6d918be3aca11ec2214a275392f4
+>>=20
+>> This commit adds probe_kernel_read_strict() and probe_kernel_write_stric=
+t().
+>>=20
+>> When reading the commit log, I understand that probe_kernel_read() may=20
+>> be used to access some user memory. Which will not work anymore with=20
+>> your patch.
+>=20
+> Hmm, I looked at _strict but obviously not hard enough. Good catch.
+>=20
+> I don't think probe_kernel_read() should ever access user memory,
+> the comment certainly says it doesn't, but that patch sort of implies
+> that they do.
+>=20
+> I think it's wrong. The non-_strict maybe could return userspace data to=20
+> you if you did pass a user address? I don't see why that shouldn't just=20
+> be disallowed always though.
+>=20
+> And if the _strict version is required to be safe, then it seems like a
+> bug or security issue to just allow everyone that doesn't explicitly
+> override it to use the default implementation.
+>=20
+> Also, the way the weak linkage is done in that patch, means parisc and
+> um archs that were previously overriding probe_kernel_read() now get
+> the default probe_kernel_read_strict(), which would be wrong for them.
 
+The changelog in commit 75a1a607bb7 makes it a bit clearer. If the
+non-_strict variant is used on non-kernel addresses, then it might not=20
+return -EFAULT or it might cause a kernel warning. The _strict variant=20
+is supposed to be usable with any address and it will return -EFAULT if=20
+it was not a valid and mapped kernel address.
+
+The non-_strict variant can not portably access user memory because it
+uses KERNEL_DS, and its documentation says its only for kernel pointers.
+So powerpc should be fine to run that under KUAP AFAIKS.
+
+I don't know why the _strict behaviour is not just made default, but
+the implementation of it does seem to be broken on the archs that
+override the non-_strict variant.
+
+Thanks,
+Nick
+=
