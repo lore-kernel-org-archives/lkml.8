@@ -2,137 +2,112 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790FCC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7F920731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB8020731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:55:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MgUm0WOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgDGLyy (ORCPT
+        id S1728541AbgDGLzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:54:54 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2635 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726562AbgDGLyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:54:54 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 159A3B05CDA06F27F690;
-        Tue,  7 Apr 2020 12:54:52 +0100 (IST)
-Received: from [127.0.0.1] (10.210.168.238) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 7 Apr 2020
- 12:54:50 +0100
-Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
- commands
-To:     Hannes Reinecke <hare@suse.de>,
-        Christoph Hellwig <hch@infradead.org>
-CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <ming.lei@redhat.com>,
-        <bvanassche@acm.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        Hannes Reinecke <hare@suse.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-3-git-send-email-john.garry@huawei.com>
- <20200310183243.GA14549@infradead.org>
- <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
- <20200311062228.GA13522@infradead.org>
- <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
-Date:   Tue, 7 Apr 2020 12:54:29 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 7 Apr 2020 07:55:53 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33552 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgDGLzw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 07:55:52 -0400
+Received: by mail-qk1-f195.google.com with SMTP id v7so1283582qkc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 04:55:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ceAe9s5g1bpqs/xuk9UoBUiTWj0Xhc3RDSdNgpswe0Q=;
+        b=MgUm0WOp8c8FLGB7Ig9nz5OKFLDWqyBHiLaWKxbCjl1iyEUxM/1XZNr5O+NhZHo4fe
+         R0Z4TJCHZYXh8L+/cnbal1UBc20KEWoa0ukvwx3SVgDGMMOhhguGv0RYFu+d5DyTCIBf
+         jHKEw9N6iCFhBkxiuxyt5R7nS9hQi5T4HbwpN5hDyOlI7PsUtPVBvNEooBibfPsXyt+K
+         nJWpiDXZcDh8f06MQ4IXCB9B6lojiTIDGV51LtXY/UuE+bzimWeak/KA3iFWTFKX3bks
+         //GWpDCzc5fL8Z5Y01nEBk8UUbKsTx46WlNeMjhIq1HC7P85+dHAmmuXmnPMDcmhHg+B
+         IOIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ceAe9s5g1bpqs/xuk9UoBUiTWj0Xhc3RDSdNgpswe0Q=;
+        b=l4ohdht+fUeN3c/7c9tLsqY8s6Mp7Db799/y1oLkhac9uPVium0+xMbjuczoFnXkb8
+         Z7JrDVkfK/6UdsaniAospXQYyGJImcvmZkOJND7WKdzs5JPu1JIkY3DDJ2cBe6qcvOwk
+         XbqdrQBKGySQmANPtSmuEhdwVJX8gLDlqtuNac+oGYTXmxGOLsjwQXRIuCOcIpH7QzYE
+         VZHzotlqzAnfVGYOfb+uCelesZQIoC7+rDvPYD2jq3J5YCl0y7eYxHXe0yw+kcQQu6yD
+         aoeYCH2SW79kVMmPzbJSz5e+nvuNFKuBeMVLoLQd5gcw02mowCXo7FvgJNmtakdzifvx
+         M5kw==
+X-Gm-Message-State: AGi0PuaO4iqxqDBKO3eKCQt6AOHuy2rbXiXdN+x/A4m1LsWNS/vTdWcm
+        34C2hBocgYqAldoklqvmHhkBYmbfbb6z6A==
+X-Google-Smtp-Source: APiQypI6tyZXZJ/lR2tBYH+vI4JsVy0kISJi44Lw4iUz36y6gU16DjHD+k1n8fMNxZYuWTBREupC8w==
+X-Received: by 2002:a05:620a:91d:: with SMTP id v29mr1681222qkv.424.1586260549945;
+        Tue, 07 Apr 2020 04:55:49 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id q13sm7074962qki.136.2020.04.07.04.55.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 04:55:49 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jLmpY-0007fp-Nb; Tue, 07 Apr 2020 08:55:48 -0300
+Date:   Tue, 7 Apr 2020 08:55:48 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING in ib_umad_kill_port
+Message-ID: <20200407115548.GU20941@ziepe.ca>
+References: <00000000000075245205a2997f68@google.com>
+ <20200406172151.GJ80989@unreal>
+ <20200406174440.GR20941@ziepe.ca>
+ <CACT4Y+Zv_WXEn6u5a6kRZpkDJnSzeGF1L7JMw4g85TLEgAM7Lw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.168.238]
-X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Zv_WXEn6u5a6kRZpkDJnSzeGF1L7JMw4g85TLEgAM7Lw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/04/2020 10:05, Hannes Reinecke wrote:
-> On 3/11/20 7:22 AM, Christoph Hellwig wrote:
->> On Tue, Mar 10, 2020 at 09:08:56PM +0000, John Garry wrote:
->>> On 10/03/2020 18:32, Christoph Hellwig wrote:
->>>> On Wed, Mar 11, 2020 at 12:25:28AM +0800, John Garry wrote:
->>>>> From: Hannes Reinecke <hare@suse.com>
->>>>>
->>>>> Allocate a separate 'reserved_cmd_q' for sending reserved commands.
->>>>
->>>> Why?  Reserved command specifically are not in any way tied to queues.
->>>> .
->>>>
->>>
->>> So the v1 series used a combination of the sdev queue and the per-host
->>> reserved_cmd_q. Back then you questioned using the sdev queue for virtio
->>> scsi, and the unconfirmed conclusion was to use a common per-host q. This is
->>> the best link I can find now:
->>>
->>> https://www.mail-archive.com/linux-scsi@vger.kernel.org/msg83177.html
->>
->> That was just a question on why virtio uses the per-device tags, which
->> didn't look like it made any sense.  What I'm worried about here is
->> mixing up the concept of reserved tags in the tagset, and queues to use
->> them.  Note that we already have the scsi_get_host_dev to allocate
->> a scsi_device and thus a request_queue for the host itself.  That seems
->> like the better interface to use a tag for a host wide command vs
->> introducing a parallel path.
->>
-> Thinking about it some more, I don't think that scsi_get_host_dev() is
-> the best way of handling it.
-> Problem is that it'll create a new scsi_device with <hostno:this_id:0>,
-> which will then show up via eg 'lsscsi'.
-
-are you sure? Doesn't this function just allocate the sdev, but do 
-nothing with it, like probing it?
-
-I bludgeoned it in here for PoC:
-
-https://github.com/hisilicon/kernel-dev/commit/ef0ae8540811e32776f64a5b42bd76cbed17ba47
-
-And then still:
-
-john@ubuntu:~$ lsscsi
-[0:0:0:0] disk SEAGATE  ST2000NM0045  N004  /dev/sda
-[0:0:1:0] disk SEAGATE  ST2000NM0045  N004  /dev/sdb
-[0:0:2:0] disk ATASAMSUNG HM320JI  0_01  /dev/sdc
-[0:0:3:0] disk SEAGATE  ST1000NM0023  0006  /dev/sdd
-[0:0:4:0] enclosu HUAWEIExpander 12Gx16  128-
-john@ubuntu:~$
-
-Some proper plumbing would be needed, though.
-
-> This would be okay if 'this_id' would have been defined by the driver;
-> sadly, most drivers which are affected here do set 'this_id' to -1.
-> So we wouldn't have a nice target ID to allocate the device from, let
-> alone the problem that we would have to emulate a complete scsi device
-> with all required minimal command support etc.
-> And I'm not quite sure how well that would play with the exising SCSI
-> host template; the device we'll be allocating would have basically
-> nothing in common with the 'normal' SCSI devices.
+On Tue, Apr 07, 2020 at 11:56:30AM +0200, Dmitry Vyukov wrote:
+> > I'm not sure what could be done wrong here to elicit this:
+> >
+> >  sysfs group 'power' not found for kobject 'umad1'
+> >
+> > ??
+> >
+> > I've seen another similar sysfs related trigger that we couldn't
+> > figure out.
+> >
+> > Hard to investigate without a reproducer.
 > 
-> What we could do, though, is to try it the other way round:
-> Lift the request queue from scsi_get_host_dev() into the scsi host
-> itself, so that scsi_get_host_dev() can use that queue, but we also
-> would be able to use it without a SCSI device attached.
+> Based on all of the sysfs-related bugs I've seen, my bet would be on
+> some races. E.g. one thread registers devices, while another
+> unregisters these.
 
-wouldn't that limit 1x scsi device per host, not that I know if any more 
-would ever be required? But it does still seem better to use the request 
-queue in the scsi device.
+I did check that the naming is ordered right, at least we won't be
+concurrently creating and destroying umadX sysfs of the same names.
 
-> 
+I'm also fairly sure we can't be destroying the parent at the same
+time as this child.
 
-cheers,
-John
+Do you see the above commonly? Could it be some driver core thing? Or
+is it more likely something wrong in umad?
+
+Jason
