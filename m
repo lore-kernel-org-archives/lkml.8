@@ -2,145 +2,129 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFBCC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480B9C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B05A2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1136620747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:33:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="f0awkIQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgDGGdB (ORCPT
+        id S1727070AbgDGGdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:33:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58154 "EHLO mx2.suse.de"
+        Tue, 7 Apr 2020 02:33:55 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:34753 "EHLO frisell.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbgDGGdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:33:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 25EE7AD2C;
-        Tue,  7 Apr 2020 06:32:58 +0000 (UTC)
-Subject: Re: [PATCH v6 2/2] tty: samsung_tty: 32-bit access for TX/RX hold
- registers
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Hyunki Koo <hyunki00.koo@samsung.com>, gregkh@linuxfoundation.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, linux-serial@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
- <CGME20200406230902epcas2p19a8df6805dac59968d664efb9bc9419b@epcas2p1.samsung.com>
- <20200406230855.13772-1-hyunki00.koo@samsung.com>
- <62a918df-b3ba-21f4-b3ad-9f638ad104ad@suse.com>
- <20200407062439.GA21995@kozik-lap>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <257f278b-ce96-4cfb-85ff-53e123a076f5@suse.cz>
-Date:   Tue, 7 Apr 2020 08:32:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726448AbgDGGdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 02:33:55 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id fc413e04;
+        Tue, 7 Apr 2020 06:25:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-transfer-encoding;
+         s=mail; bh=DM9NrDkjXWpH4zu4SJmHj2Mdn+k=; b=f0awkIQPRVQo9hlCsQF4
+        GvF9MJdapgxLuHNpSOZvBlY0debaS6aHicQQHZIBdH1jBG3bh8dUwkj4rAw/F350
+        C6hOWMHuC0QYhFhd5iI8Oi7QfxSH0QEpUegjdZ3ZpjeUnyrZX4vqG3TCrxkvyrwd
+        hLjBRvr7Gd6ebmXeP1tvuq7RJBJzd2Dsi9GobMc7sEz0ymLAiX0ASCGHlp7dP0AA
+        gm926jwHIdGs0QGf3v8cJwHXhTPrHdrMOtN0QMsHuYDDuhvmq5hFjbI9h+Choj0v
+        KPQCCKC0Nincy4Fn4BO48rxRaRxgGGAOFgIzrCUJI2NM0DuXxULLa3XtnQepTGyx
+        Hw==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 0bb34400 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Tue, 7 Apr 2020 06:25:00 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        x86@kernel.org, arnd@arndb.de, srinivas.pandruvada@linux.intel.com,
+        bberg@redhat.com, bp@suse.de
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: [PATCH 1/3] x86/mce/therm_throt: remove unused platform_thermal_notify function pointer
+Date:   Tue,  7 Apr 2020 00:33:43 -0600
+Message-Id: <20200407063345.4484-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-In-Reply-To: <20200407062439.GA21995@kozik-lap>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07. 04. 20, 8:24, Krzysztof Kozlowski wrote:
-> On Tue, Apr 07, 2020 at 06:49:29AM +0200, Jiri Slaby wrote:
->> On 07. 04. 20, 1:08, Hyunki Koo wrote:
->>> Support 32-bit access for the TX/RX hold registers UTXH and URXH.
->>>
->>> This is required for some newer SoCs.
->>>
->>> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
->> ...
->>> ---
->>>  drivers/tty/serial/samsung_tty.c | 76 +++++++++++++++++++++++++++++++++-------
->>>  1 file changed, 64 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
->>> index 73f951d65b93..bdf1d4d12cb1 100644
->>> --- a/drivers/tty/serial/samsung_tty.c
->>> +++ b/drivers/tty/serial/samsung_tty.c
->>> @@ -154,12 +154,47 @@ struct s3c24xx_uart_port {
->> ...
->>> -#define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
->>> +static void wr_reg(struct uart_port *port, u32 reg, u32 val)
->>> +{
->>> +	switch (port->iotype) {
->>> +	case UPIO_MEM:
->>> +		writeb_relaxed(val, portaddr(port, reg));
->>> +		break;
->>> +	case UPIO_MEM32:
->>> +		writel_relaxed(val, portaddr(port, reg));
->>> +		break;
->>> +	}
->>> +}
->>> +
->>>  #define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port, reg))
->>>  
->>> +static void wr_reg_barrier(struct uart_port *port, u32 reg, u32 val)
->>
->> You need to explain, why you need this _barrier variant now. This change
->> should be done in a separate patch too.
-> 
-> There is no functional change in regard of barrier.  The ordered IO was
-> used there before.
+A long time ago platform_thermal_notify was added as some generic
+mechanism for platform drivers to hook thermal events. It seems as
+though this has been entirely superseded, and nothing uses it. Remove
+the plumbing for this, since this code runs in an interrupt hot path.
 
-The patch changes one wr_reg to wr_reg_barrier without any explanation.
-This will hardly be accepted.
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ arch/x86/include/asm/mce.h            |  3 ---
+ arch/x86/kernel/cpu/mce/therm_throt.c | 25 -------------------------
+ 2 files changed, 28 deletions(-)
 
-thanks,
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index 4359b955e0b7..ee30cb60ad36 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -257,9 +257,6 @@ extern void (*deferred_error_int_vector)(void);
+ 
+ void intel_init_thermal(struct cpuinfo_x86 *c);
+ 
+-/* Interrupt Handler for core thermal thresholds */
+-extern int (*platform_thermal_notify)(__u64 msr_val);
+-
+ /* Interrupt Handler for package thermal thresholds */
+ extern int (*platform_thermal_package_notify)(__u64 msr_val);
+ 
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index f36dc0742085..f904e85eb68f 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -105,10 +105,6 @@ struct thermal_state {
+ 	struct _thermal_state pkg_thresh1;
+ };
+ 
+-/* Callback to handle core threshold interrupts */
+-int (*platform_thermal_notify)(__u64 msr_val);
+-EXPORT_SYMBOL(platform_thermal_notify);
+-
+ /* Callback to handle core package threshold_interrupts */
+ int (*platform_thermal_package_notify)(__u64 msr_val);
+ EXPORT_SYMBOL_GPL(platform_thermal_package_notify);
+@@ -551,24 +547,6 @@ static void notify_package_thresholds(__u64 msr_val)
+ 		platform_thermal_package_notify(msr_val);
+ }
+ 
+-static void notify_thresholds(__u64 msr_val)
+-{
+-	/* check whether the interrupt handler is defined;
+-	 * otherwise simply return
+-	 */
+-	if (!platform_thermal_notify)
+-		return;
+-
+-	/* lower threshold reached */
+-	if ((msr_val & THERM_LOG_THRESHOLD0) &&
+-			thresh_event_valid(CORE_LEVEL, 0))
+-		platform_thermal_notify(msr_val);
+-	/* higher threshold reached */
+-	if ((msr_val & THERM_LOG_THRESHOLD1) &&
+-			thresh_event_valid(CORE_LEVEL, 1))
+-		platform_thermal_notify(msr_val);
+-}
+-
+ /* Thermal transition interrupt handler */
+ static void intel_thermal_interrupt(void)
+ {
+@@ -579,9 +557,6 @@ static void intel_thermal_interrupt(void)
+ 
+ 	rdmsrl(MSR_IA32_THERM_STATUS, msr_val);
+ 
+-	/* Check for violation of core thermal thresholds*/
+-	notify_thresholds(msr_val);
+-
+ 	therm_throt_process(msr_val & THERM_STATUS_PROCHOT,
+ 			    THERMAL_THROTTLING_EVENT,
+ 			    CORE_LEVEL);
 -- 
-js
-suse labs
+2.26.0
+
