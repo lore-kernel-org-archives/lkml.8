@@ -2,111 +2,117 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E1CC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A89DC2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9F6206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64AEA206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgDGJGx (ORCPT
+        id S1727993AbgDGJJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:06:53 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:27120 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725817AbgDGJGw (ORCPT
+        Tue, 7 Apr 2020 05:09:59 -0400
+Received: from www62.your-server.de ([213.133.104.62]:46680 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgDGJJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:06:52 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03794QAO022400;
-        Tue, 7 Apr 2020 05:06:10 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 306m36a31s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 05:06:10 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 037968rS018092
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 7 Apr 2020 05:06:08 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 7 Apr 2020
- 05:06:07 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 7 Apr 2020 05:06:07 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 03795tM0008769;
-        Tue, 7 Apr 2020 05:05:56 -0400
-From:   Bogdan Togorean <bogdan.togorean@analog.com>
-To:     <dri-devel@lists.freedesktop.org>
-CC:     Bogdan Togorean <bogdan.togorean@analog.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Matt Redfearn <matt.redfearn@thinci.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RESEND] drm: bridge: adv7511: Fix low refresh rate register for ADV7533/5
-Date:   Tue, 7 Apr 2020 12:04:55 +0300
-Message-ID: <20200407090457.24493-1-bogdan.togorean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Apr 2020 05:09:59 -0400
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLkEy-00032R-Aa; Tue, 07 Apr 2020 11:09:52 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLkEx-000KHk-Um; Tue, 07 Apr 2020 11:09:52 +0200
+Subject: Re: [PATCH v2 1/4] powerpc/64s: implement probe_kernel_read/write
+ without touching AMR
+To:     Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     Alexei Starovoitov <ast@kernel.org>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
+References: <20200403093529.43587-1-npiggin@gmail.com>
+ <558b6131-60b4-98b7-dc40-25d8dacea05a@c-s.fr>
+ <1585911072.njtr9qmios.astroid@bobo.none>
+ <1586230235.0xvc3pjkcj.astroid@bobo.none>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <e01d8139-dca4-2239-d660-bfc962426c7a@iogearbox.net>
+Date:   Tue, 7 Apr 2020 11:09:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_01:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=787 suspectscore=1 spamscore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070077
+In-Reply-To: <1586230235.0xvc3pjkcj.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25774/Mon Apr  6 14:53:25 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For ADV7533 and ADV7535 low refresh rate is selected using
-bits [3:2] of 0x4a main register.
-So depending on ADV model write 0xfb or 0x4a register.
+Hey Nicholas,
 
-Fixes: 9c8af882bf12: ("drm: Add adv7511 encoder driver")
-Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
----
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+On 4/7/20 6:01 AM, Nicholas Piggin wrote:
+> Nicholas Piggin's on April 3, 2020 9:05 pm:
+>> Christophe Leroy's on April 3, 2020 8:31 pm:
+>>> Le 03/04/2020 à 11:35, Nicholas Piggin a écrit :
+>>>> There is no need to allow user accesses when probing kernel addresses.
+>>>
+>>> I just discovered the following commit
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=75a1a607bb7e6d918be3aca11ec2214a275392f4
+>>>
+>>> This commit adds probe_kernel_read_strict() and probe_kernel_write_strict().
+>>>
+>>> When reading the commit log, I understand that probe_kernel_read() may
+>>> be used to access some user memory. Which will not work anymore with
+>>> your patch.
+>>
+>> Hmm, I looked at _strict but obviously not hard enough. Good catch.
+>>
+>> I don't think probe_kernel_read() should ever access user memory,
+>> the comment certainly says it doesn't, but that patch sort of implies
+>> that they do.
+>>
+>> I think it's wrong. The non-_strict maybe could return userspace data to
+>> you if you did pass a user address? I don't see why that shouldn't just
+>> be disallowed always though.
+>>
+>> And if the _strict version is required to be safe, then it seems like a
+>> bug or security issue to just allow everyone that doesn't explicitly
+>> override it to use the default implementation.
+>>
+>> Also, the way the weak linkage is done in that patch, means parisc and
+>> um archs that were previously overriding probe_kernel_read() now get
+>> the default probe_kernel_read_strict(), which would be wrong for them.
+> 
+> The changelog in commit 75a1a607bb7 makes it a bit clearer. If the
+> non-_strict variant is used on non-kernel addresses, then it might not
+> return -EFAULT or it might cause a kernel warning. The _strict variant
+> is supposed to be usable with any address and it will return -EFAULT if
+> it was not a valid and mapped kernel address.
+> 
+> The non-_strict variant can not portably access user memory because it
+> uses KERNEL_DS, and its documentation says its only for kernel pointers.
+> So powerpc should be fine to run that under KUAP AFAIKS.
+> 
+> I don't know why the _strict behaviour is not just made default, but
+> the implementation of it does seem to be broken on the archs that
+> override the non-_strict variant.
 
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index 87b58c1acff4..2a8fd2b27f0d 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -756,8 +756,13 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
- 	else
- 		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_NONE;
- 
--	regmap_update_bits(adv7511->regmap, 0xfb,
--		0x6, low_refresh_rate << 1);
-+	if (adv7511->type == ADV7511)
-+		regmap_update_bits(adv7511->regmap, 0xfb,
-+			0x6, low_refresh_rate << 1);
-+	else
-+		regmap_update_bits(adv7511->regmap, 0x4a,
-+			0xc, low_refresh_rate << 2);
-+
- 	regmap_update_bits(adv7511->regmap, 0x17,
- 		0x60, (vsync_polarity << 6) | (hsync_polarity << 5));
- 
--- 
-2.17.1
+Yeah, we should make it default and only add a "opt out" for the old legacy
+cases; there was also same discussion started over here just recently [0].
 
+Thanks,
+Daniel
+
+   [0] https://lore.kernel.org/lkml/20200403133533.GA3424@infradead.org/T/
