@@ -2,184 +2,137 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F89C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC0BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B629520719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:05:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BoMvFf/V"
+	by mail.kernel.org (Postfix) with ESMTP id E2DA720719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgDGOFs (ORCPT
+        id S1728969AbgDGOHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:05:48 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37198 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbgDGOFs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:05:48 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g23so3220921otq.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:05:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1NdsvHQeHu5QTk7zrN8HxtBhQoh7MwqSb5UgLwBlUkg=;
-        b=BoMvFf/VkDwYpMORHYEN6VhZl9zkCF1rwYWePM3AbCC/5ff6rDQ6ThJrNVEODSt+bj
-         C9hPTShy6YVufNgRs01+mvvOpfYGjOhTMAVGjrFoHQ/daQJ5oJwp2XokTIqZS1ksJFln
-         pU3ISmF/3RY5/iz70Bp+Eer6w1lT14oepTW34=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1NdsvHQeHu5QTk7zrN8HxtBhQoh7MwqSb5UgLwBlUkg=;
-        b=orOPBU3X2xaZ7M6wy/mVa9gJ5pOJ+LPO4G6l+DYDN4yb6O+sS7IlacM/2qT4+8Ttt5
-         OL6iD5R+w/kY91fJZqFsiESvbgf0jZomTlgJcQGQdpidOHaZIMoDkAFOn2p6z7zyzY87
-         RxfHTMtVXsAFnUPVnfymL0TSFDy3D24NhPtiQS7NwrzH05UbzY2OHCw7NgNv09jzTOb7
-         7TpY1syNWciaJuQAtz2stPHLctXZJcAMRYxKFcIIT+xVvUWiklLtP5XuvbyKDLtf7RfM
-         inpv/Dcqiu9ErJe/wCIA8Ge98NugPJ9VmFnRPLr8sdlqWSGWiLjn36jpm2HYr6cy/lY5
-         72eg==
-X-Gm-Message-State: AGi0PuZ0DVm95l7hCEnWgNGwyj4mBCmERdIZmFM1p4O/cvGYhf7z0Bn/
-        16gtIRsop6Pp7i56zKS9c1HVbWtowGpgnXtHk9qtsg==
-X-Google-Smtp-Source: APiQypL/RlVT2i69RdrWi7CstJmXxSmQgsRErYEyJetTK19b3yru1qFqr6NV0uNNQhhnA48y6Mo8ViTg31pruJQoNjs=
-X-Received: by 2002:a05:6830:15d4:: with SMTP id j20mr1666775otr.303.1586268346055;
- Tue, 07 Apr 2020 07:05:46 -0700 (PDT)
+        Tue, 7 Apr 2020 10:07:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:20197 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728555AbgDGOHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:07:00 -0400
+IronPort-SDR: +v3lAP0i467RbDm527H7LJJu6st1v8nM3R1nwbs6sX40EEQWYnGru1iH4RS/2AudvKlfv9nfIX
+ NgKTJbP9fMrQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 07:06:59 -0700
+IronPort-SDR: cVIdhVIACDxGFIxq8ps3la2RYMlj2bu6OvWVhdQuFBFftFmxPGu+TcjIzhalFJD5B8mg7qFRls
+ t/Dch/O+JAig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,354,1580803200"; 
+   d="scan'208";a="254467391"
+Received: from chenb-mobl1.amr.corp.intel.com (HELO [10.255.231.128]) ([10.255.231.128])
+  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 07:06:59 -0700
+Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0
+ per-thread
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Keno Fischer <keno@juliacomputing.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        Kyle Huey <khuey@kylehuey.com>,
+        Robert O'Callahan <robert@ocallahan.org>
+References: <20200407011259.GA72735@juliacomputing.com>
+ <20200407122103.GU20730@hirez.programming.kicks-ass.net>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <a5b07aa9-96ea-a9b5-13db-e5dcbd7760e6@intel.com>
+Date:   Tue, 7 Apr 2020 07:06:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200114134101.159194-1-liumartin@google.com> <20200224033941.GB211610@google.com>
- <CAO_48GEPKk64uepCqZEc=6XGiv4tZnPHv=RZdwzKPuUqOxjpow@mail.gmail.com>
-In-Reply-To: <CAO_48GEPKk64uepCqZEc=6XGiv4tZnPHv=RZdwzKPuUqOxjpow@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 7 Apr 2020 16:05:34 +0200
-Message-ID: <CAKMK7uH9gxp79VPfG+yMp+65_-+=U2iV1UH-SfzRnOc=9T4cPw@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf: support 32bit DMA_BUF_SET_NAME ioctl
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     Martin Liu <liumartin@google.com>,
-        Minchan Kim <minchan@kernel.org>, surenb@google.com,
-        Wei Wang <wvw@google.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>, jenhaochen@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200407122103.GU20730@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 3:26 PM Sumit Semwal <sumit.semwal@linaro.org> wrote=
-:
->
-> Hello,
->
-> Daniel, your comments here, please?
+On 4/7/20 5:21 AM, Peter Zijlstra wrote:
+> You had a fairly long changelog detailing what the patchd does; but I've
+> failed to find a single word on _WHY_ we want to do any of that.
 
-Don't :-)
+The goal in these record/replay systems is to be able to recreate thee
+exact same program state on two systems at two different times.  To make
+it reasonably fast, they try to minimize the number of snapshots they
+have to take and avoid things like single stepping.
 
-I mean rule of thumb you should never need a compat_ioctl for a new
-ioctl, that's just failure to read
-https://www.kernel.org/doc/html/v5.4-preprc-cpu/ioctl/botching-up-ioctls.ht=
-ml
+So, there are some windows where they just let the CPU run and don't
+bother with taking any snapshots of register state, for instance.  Let's
+say you read a word from shared memory, multiply it and shift it around
+some registers, then stick it back in shared memory.  Most of these
+things will just a record the snapshot at the memory read and assume
+that all the instructions in the middle execute deterministically.  That
+eliminates a ton of snapshots.
 
-Specifically the char * pointer in the ioctl definition is the
-problem. Now we're somewhat lucky here, since the actual layout of the
-data isn't different between 32 and 64 bit, it's only the ioctl. Which
-is the 2nd issue, the type in there should be the type of the data in
-userspace, not the type of the _pointer_ to the stuff in userspace. So
-here actually variable-sized char[] array, which also doesn't work
-really.
+But, what if an instruction in the middle isn't deterministic between
+two machines.  Let's say you record a trace on a a Broadwell system,
+then try to replay it on a Skylake, and one of the non-snapshotted
+instructions is xgetbv.  Skylake added MPX, so xgetbv will return
+different values.  Your replay diverges from what was "recorded", and
+life sucks.
 
-Anyway I've created a quick patch to have distinct ioctl number
-defines and handle both in the main handler, that should work. Cc'ed
-everyone from this thread, please test.
--Daniel
+Same problem exists for CPUID, but that was hacked around in another set.
 
->
-> On Mon, 24 Feb 2020 at 09:09, Martin Liu <liumartin@google.com> wrote:
-> >
-> > On Tue, Jan 14, 2020 at 09:41:01PM +0800, Martin Liu wrote:
-> >
-> > CC more MLs for winder review.
-> >
-> > > This commit adds SET_NAME ioctl coversion to
-> > > support 32 bit ioctl.
-> > >
-> > > Signed-off-by: Martin Liu <liumartin@google.com>
-> > > ---
-> > >  drivers/dma-buf/dma-buf.c | 22 +++++++++++++++++++++-
-> > >  1 file changed, 21 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> > > index ce41cd9b758a..a73048b34843 100644
-> > > --- a/drivers/dma-buf/dma-buf.c
-> > > +++ b/drivers/dma-buf/dma-buf.c
-> > > @@ -25,6 +25,7 @@
-> > >  #include <linux/mm.h>
-> > >  #include <linux/mount.h>
-> > >  #include <linux/pseudo_fs.h>
-> > > +#include <linux/compat.h>
-> > >
-> > >  #include <uapi/linux/dma-buf.h>
-> > >  #include <uapi/linux/magic.h>
-> > > @@ -409,13 +410,32 @@ static void dma_buf_show_fdinfo(struct seq_file=
- *m, struct file *file)
-> > >       dma_resv_unlock(dmabuf->resv);
-> > >  }
-> > >
-> > > +#ifdef CONFIG_COMPAT
-> > > +static long dma_buf_ioctl_compat(struct file *file, unsigned int cmd=
-,
-> > > +                              unsigned long arg)
-> > > +{
-> > > +     switch (_IOC_NR(cmd)) {
-> > > +     case _IOC_NR(DMA_BUF_SET_NAME):
-> > > +             /* Fix up pointer size*/
-> > > +             if (_IOC_SIZE(cmd) =3D=3D sizeof(compat_uptr_t)) {
-> > > +                     cmd &=3D ~IOCSIZE_MASK;
-> > > +                     cmd |=3D sizeof(void *) << IOCSIZE_SHIFT;
-> > > +             }
-> > > +             break;
-> > > +     }
-> > > +     return dma_buf_ioctl(file, cmd, (unsigned long)compat_ptr(arg))=
-;
-> > > +}
-> > > +#endif
-> > > +
-> > >  static const struct file_operations dma_buf_fops =3D {
-> > >       .release        =3D dma_buf_release,
-> > >       .mmap           =3D dma_buf_mmap_internal,
-> > >       .llseek         =3D dma_buf_llseek,
-> > >       .poll           =3D dma_buf_poll,
-> > >       .unlocked_ioctl =3D dma_buf_ioctl,
-> > > -     .compat_ioctl   =3D compat_ptr_ioctl,
-> > > +#ifdef CONFIG_COMPAT
-> > > +     .compat_ioctl   =3D dma_buf_ioctl_compat,
-> > > +#endif
-> > >       .show_fdinfo    =3D dma_buf_show_fdinfo,
-> > >  };
-> > >
-> > > --
-> > > 2.25.0.rc1.283.g88dfdc4193-goog
-> > >
->
->
->
-> --
-> Thanks and regards,
->
-> Sumit Semwal
-> Linaro Consumer Group - Kernel Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-
-
-
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+I'm also trying to think of what kinds of things CPU companies add to
+their architectures that would break this stuff.  I can't recall ever
+having a discussion with folks at Intel where we're designing a CPU
+feature and we say, "Can't do that, it would break record/replay".  I
+suspect there are more of these landmines around and I bet that we're
+building more of them into CPUs every day.
