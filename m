@@ -2,110 +2,140 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43EAC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0530C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAAB20692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:12:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="xt64h3VU"
+	by mail.kernel.org (Postfix) with ESMTP id 8EAAC20692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgDGPMd (ORCPT
+        id S1729279AbgDGPOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:12:33 -0400
-Received: from mail-eopbgr20116.outbound.protection.outlook.com ([40.107.2.116]:59900
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728917AbgDGPMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:12:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NP5nCKdGpozCbktulTLUQqdrPiIr4RC0YPMovI7ITC5A2nWPDj6a0UoKEcZOydSNAGnhxsALGUfA6pMvqwxPntD1IOY3okF1xqpMpeuLfo8DPef2VGHLA8Y1IaxBFSMWJ9VTLObBqKMwfMUG9pSTxMrTymgACmmsy32O7SlLWYahiWVbBASmmv95aywqlSKLYSRri73ItS2qzxo3ulWO6nP3U3DqcS5rJ61SdXNS/fjCa1g2GpGvDWIUWYA+XgWkIRjPCCjrym0X6qXyS5I25LEWD/DqB3MOBGw4fHtxdmkEGnyUFeO9VH5uPhCJTeOjnfF0+n5UswZeBo7jg4E/3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SVyGZ0W3n6/Ua3Xqa7jQMTgP2dcmUSlWGYX24XKFU5w=;
- b=ZNuu8MK9lRJBI+hCUP93FVJNaWDCD9pGyq/102+naUfk+JQ2KVg/Aylh8u+JgURivNlkhjNKRtjsAN8K2fhxIhhTxp3FmLwPXphscGQ+wFSM96fCTOATosqtVlFPyUY1OU/vZYXuOFqyT4TDNR7tVIY6DEpzn9YGjLe2C5NHNbex/ZEd50oXY7K4j8tYkAKPpgrISf12JXlWQjvsV6ncLE1ZXlnVofoog4gwDAKHzVom5UFpEtm3ULJEPUWmQAfTFMey3IG+foY+8lyS/xPXo1GV1M0ERMC3RH+5avmou6rd2xBfU0sXPW7tyvrfP/iAZ3ckHJW2KyyTQ5Ru31wLpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SVyGZ0W3n6/Ua3Xqa7jQMTgP2dcmUSlWGYX24XKFU5w=;
- b=xt64h3VUjoQKmLPJ82eT00B8gNQraV+X11hsK5eKvbDdFI+wZwCi9hkf8SWDwn3qpocFVBsg/PT9j0GEu6Mh43C9y0LOB1j3nal7azmzmV1LHAlamHSKU1wEiBFOmusZlr1oDjd3UORGbVG0ylF3zsQHv1O2LoLz6CChXVkgGgk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=vadym.kochan@plvision.eu; 
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
- VI1P190MB0429.EURP190.PROD.OUTLOOK.COM (10.165.197.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.20; Tue, 7 Apr 2020 15:12:23 +0000
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::f983:c9a8:573a:751c]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::f983:c9a8:573a:751c%7]) with mapi id 15.20.2878.021; Tue, 7 Apr 2020
- 15:12:22 +0000
-Date:   Tue, 7 Apr 2020 18:12:19 +0300
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Gregory CLEMENT <gregory.clement@free-electrons.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bus: mbus: export mvebu_mbus_{add,del}_window for modules
-Message-ID: <20200407151219.GB25149@plvision.eu>
-References: <20200324190623.26482-1-vadym.kochan@plvision.eu>
- <20200325135801.GA29951@infradead.org>
+        Tue, 7 Apr 2020 11:14:10 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62686 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728306AbgDGPOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:14:10 -0400
+IronPort-SDR: e2F3fvYjJzLzH/gvI6FziCJ69bveB9/Tpr2xBALz/6Cl0EtnUP0pmxPWnoVCEaCVja+Qu1W3fw
+ NFAEfBDow0Uw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 08:14:08 -0700
+IronPort-SDR: 8ckQHmyoRKj0DtORzCgo/m3++m+vmgjbBLXTRWkuf7wtA3ynA8bzDDWhMm9y+5VxyZAfQLA732
+ 8roctUPLzFZw==
+X-IronPort-AV: E=Sophos;i="5.72,355,1580803200"; 
+   d="scan'208";a="243790804"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 08:14:03 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 4C0FF205C7; Tue,  7 Apr 2020 18:14:01 +0300 (EEST)
+Date:   Tue, 7 Apr 2020 18:14:01 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200407151401.GA5206@paasikivi.fi.intel.com>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200406165108.GA7646@kekkonen.localdomain>
+ <20200406173234.GD16885@pendragon.ideasonboard.com>
+ <20200407062241.GA8883@kekkonen.localdomain>
+ <20200407122106.GD4751@pendragon.ideasonboard.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200325135801.GA29951@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: AM6PR0502CA0048.eurprd05.prod.outlook.com
- (2603:10a6:20b:56::25) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:802:35::10)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from plvision.eu (217.20.186.93) by AM6PR0502CA0048.eurprd05.prod.outlook.com (2603:10a6:20b:56::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.22 via Frontend Transport; Tue, 7 Apr 2020 15:12:21 +0000
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e23670b0-36ad-405f-4c64-08d7db061288
-X-MS-TrafficTypeDiagnostic: VI1P190MB0429:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1P190MB0429190E96B075BEE24036BE95C30@VI1P190MB0429.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
-X-Forefront-PRVS: 036614DD9C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(366004)(39830400003)(346002)(396003)(376002)(316002)(4744005)(1076003)(6916009)(81166006)(44832011)(36756003)(8676002)(52116002)(8936002)(956004)(26005)(2616005)(81156014)(5660300002)(508600001)(7696005)(8886007)(186003)(33656002)(66556008)(66476007)(86362001)(2906002)(55016002)(16526019)(4326008)(66946007)(142933001);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: plvision.eu does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hD+Hw4kEpdm08NfeUTy3EFlkKuQKFLIUxyKTKINCVvdaVDJuTjXEnGnTyRfyA9AM+na1BT/d3IrMExYe5Q5OyeawUypi7mxuzeBPFWGtiliULUsy88uZQX69zA/2IZF9MAaYzXvDsF4k5qG4tpApNqvugsRB7x0e12iclVHVZQrvaQ+eoI8yiGdV8Kykd8OTCqPp/1JdMRy6O0PadPWDW+j1EQx9RkOh5TWtTGMi5VdkfHl7fGgDEUpy2nHmzLybtxDmdGI1cHvSlSREOkzumbmaLQjUqWiou4cinMGGqcWJAOes7hojyat4el4ETgPEtQq3vV55Vfycl47fidwda/9NkvnuqYcss7ibp6vHcJbKa5n6AVgTjyLzPewwzlktLwKY33FL3i6SBQ4fmD6wdV1YK9DtA7RE04b47L1U7WRe5pGUX4n0lArsaXNLe7YzHlE2Tc5XaRa/Hhi5OR3oRyKZAjjfP/BfzqwBGkWb+LdFHwV3BSqAaIg/1ZNkKTyW
-X-MS-Exchange-AntiSpam-MessageData: Oe7zX42K7xnRDfsNmiuTvTDLT4hpwAaelRh4CJNZ5o2jyjNO4qzz92csoG40aju7KwN7M5QGmBKSQwEJfhWJoDKpfSrrkGLdUqr8SzQLxbHHLP15MTQ1c+3DgwNVwF2QQg/+/8Dcc7N/Vb1Dh62oWA==
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: e23670b0-36ad-405f-4c64-08d7db061288
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 15:12:22.6451
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C0AVWSX07memi/vZCbbLZ6fzYqcekOb7yhuaijHKkch2hulWtnBtq4Ju1XPyhzLh/tSoh6p4ZzzaGZWVfkURG5ePnaASvMyBnjPwylwbS/M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0429
+In-Reply-To: <20200407122106.GD4751@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Hi Laurent,
 
-On Wed, Mar 25, 2020 at 06:58:01AM -0700, Christoph Hellwig wrote:
-> On Tue, Mar 24, 2020 at 09:06:23PM +0200, Vadym Kochan wrote:
-> > Allow to add/del remap window by external modules at runtime.
+On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
+> Hi Sakari,
 > 
-> Please send this together with your driver submission.
+> On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
+> > On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
+> > > On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
+> > > > On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> > > > > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> > > > > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> > > > > 24MHz. So instead making clock-frequency as dt-property just let the
+> > > > > driver enforce the required clock frequency.
+> > > > 
+> > > > Even if some current systems where the driver is used are using 24 MHz
+> > > > clock, that doesn't mean there wouldn't be systems using another frequency
+> > > > that the driver does not support right now.
+> > > > 
+> > > > The driver really should not set the frequency unless it gets it from DT,
+> > > > but I think the preferred means is to use assigned-clock-rates instead, and
+> > > > not to involve the driver with setting the frequency.
+> > > > 
+> > > > Otherwise we'll make it impossible to support other frequencies, at least
+> > > > without more or less random defaults.
+> > > 
+> > > We're running in circles here.
+> > > 
+> > > As the driver only supports 24MHz at the moment, the frequency should be
+> > > set by the driver, as it's a driver limitation. We can then work on
+> > > supporting additional frequencies, which will require DT to provide a
+> > > list of supported frequencies for the system, but that can be done on
+> > > top.
+> > 
+> > I guess it would be possible to use different external clock frequencies on
+> > a sensor in a given system but that seems to be a bit far fetched, to the
+> > extent I've never seen anyone doing that in practice.
+> > 
+> > Originally, the driver set the frequency based on the clock-frequency
+> > property. If we're removing that but use a fixed frequency instead, then
+> > how is that going to work going forward when someone adds support for other
+> > frequencies in the driver and has a system requiring that, while there are
+> > some other platforms relying on the driver setting a particular frequency?
+> 
+> The standard property for this is link-frequencies, not clock-frequency.
+> Deprecating clock-frequency now paves the way to use the standard
+> property later when/if someone implements support for additional
+> frequencies.
 
-The driver itself is just servicing user process to configure io
-windows via ioctl, so I think it is not so useful ?
+The external clock frequency and link frequency are different indeed, but
+they are related. The link frequency has been selected in a way that it is
+possible to generate that exact frequency using the chosen external clock
+frequency. If you change the external clock frequency, chances are good
+there is no PLL configuration to generate that link frequency.
 
-Thanks,
-Vadym Kochan
+> 
+> > Although, if you're saying that this driver only needs to work with DT that
+> > comes with the kernel and you don't care about DT binary compatibility,
+> > this would be fine.
+> 
+> I believe this series to not break backward compatibility, as the driver
+> only works with a 24MHz clock, so I expect all DTs to specify that.
+
+What you're still doing here is defining the DT bindings based on the
+current driver implementation, not the device properties.
+
+-- 
+Regards,
+
+Sakari Ailus
