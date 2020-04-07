@@ -4,118 +4,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5C4C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85859C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15242206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64957206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgDGLLL (ORCPT
+        id S1728480AbgDGLMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:11:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36484 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728121AbgDGLKt (ORCPT
+        Tue, 7 Apr 2020 07:12:08 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42579 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgDGLMI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:10:49 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037B4ZIa064169
-        for <linux-kernel@vger.kernel.org>; Tue, 7 Apr 2020 07:10:48 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082pearyp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:10:48 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Tue, 7 Apr 2020 12:10:43 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 Apr 2020 12:10:41 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037BAg4b51839080
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 11:10:42 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B487EA4054;
-        Tue,  7 Apr 2020 11:10:42 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 463A9A405C;
-        Tue,  7 Apr 2020 11:10:42 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.8.150])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Apr 2020 11:10:42 +0000 (GMT)
-Date:   Tue, 7 Apr 2020 12:52:14 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH v2 4/5] KVM: s390: vsie: Move conditional reschedule
-In-Reply-To: <20200403153050.20569-5-david@redhat.com>
-References: <20200403153050.20569-1-david@redhat.com>
-        <20200403153050.20569-5-david@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 7 Apr 2020 07:12:08 -0400
+X-Originating-IP: 84.210.220.251
+Received: from [192.168.1.123] (cm-84.210.220.251.getinternet.no [84.210.220.251])
+        (Authenticated sender: fredrik@strupe.net)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id F082FFF80D;
+        Tue,  7 Apr 2020 11:12:04 +0000 (UTC)
+Subject: Re: [PATCH] arm64: armv8_deprecated: Fix undef_hook mask for thumb
+ setend
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>, catalin.marinas@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        will.deacon@arm.com
+References: <911db2f1-e078-a460-32ee-154a0b4de5d4@strupe.net>
+ <20200407092744.GA2665@gaia> <a2b345a4-30a0-3218-8c8d-e84ec2317dc9@arm.com>
+From:   Fredrik Strupe <fredrik@strupe.net>
+Message-ID: <7e0a3318-5b0e-3718-ced6-ae1fc7f5fece@strupe.net>
+Date:   Tue, 7 Apr 2020 13:12:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040711-0028-0000-0000-000003F3AC5A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040711-0029-0000-0000-000024B94356
-Message-Id: <20200407125214.35c70f2a@p-imbrenda>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_03:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
- adultscore=0 mlxlogscore=953 suspectscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004070091
+In-Reply-To: <a2b345a4-30a0-3218-8c8d-e84ec2317dc9@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  3 Apr 2020 17:30:49 +0200
-David Hildenbrand <david@redhat.com> wrote:
+On 07.04.2020 12:47, Suzuki K Poulose wrote:
 
-> Let's move it to the outer loop, in case we ever run again into long
-> loops, trying to map the prefix. While at it, convert it to
-> cond_resched().
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/s390/kvm/vsie.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-> index 4f6c22d72072..ef05b4e167fb 100644
-> --- a/arch/s390/kvm/vsie.c
-> +++ b/arch/s390/kvm/vsie.c
-> @@ -1000,8 +1000,6 @@ static int do_vsie_run(struct kvm_vcpu *vcpu,
-> struct vsie_page *vsie_page) 
->  	handle_last_fault(vcpu, vsie_page);
->  
-> -	if (need_resched())
-> -		schedule();
->  	if (test_cpu_flag(CIF_MCCK_PENDING))
->  		s390_handle_mcck();
->  
-> @@ -1185,6 +1183,7 @@ static int vsie_run(struct kvm_vcpu *vcpu,
-> struct vsie_page *vsie_page) kvm_s390_vcpu_has_irq(vcpu, 0) ||
->  		    kvm_s390_vcpu_sie_inhibited(vcpu))
->  			break;
-> +		cond_resched();
->  	}
->  
->  	if (rc == -EFAULT) {
+> On 04/07/2020 10:27 AM, Catalin Marinas wrote:
+>> On Mon, Apr 06, 2020 at 04:16:05PM +0200, Fredrik Strupe wrote:
+>>> Use a full 32-bit mask to prevent accidental matchings of thumb32
+>>> instructions where the second half-word is equal to the thumb16 setend
+>>> encoding.
+>>>
+>>> This fixes the same problem as the following patch:
+>>>
+>>>      https://lkml.org/lkml/2020/3/16/341
+>>
+>> This link is not guaranteed to be stable and the commit should have the
+>> full description rather than referring to another email.
+>>
+>>> but for setend emulation instead.
+>>>
+>>> Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
+>>
+>> It also needs Fixes: and Cc: stable tags.
+>>
+>>> ---
+>>>   arch/arm64/kernel/armv8_deprecated.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/kernel/armv8_deprecated.c 
+>>> b/arch/arm64/kernel/armv8_deprecated.c
+>>> index 9d3442d62..8c06dfee0 100644
+>>> --- a/arch/arm64/kernel/armv8_deprecated.c
+>>> +++ b/arch/arm64/kernel/armv8_deprecated.c
+>>> @@ -609,7 +609,7 @@ static struct undef_hook setend_hooks[] = {
+>>>       },
+>>>       {
+>>>           /* Thumb mode */
+>>> -        .instr_mask    = 0x0000fff7,
+>>> +        .instr_mask    = 0xfffffff7,
+>>>           .instr_val    = 0x0000b650,
+>>
+>> I can see how this could happen but it would be useful to provide a
+>> concrete example in the commit log.
+>>
+>> The instruction opcode built by call_undef_hook() first reads a u16 as a
+>> T16 instruction and the above should be fine. However, if this looks
+>> like a T32 opcode, it reads a subsequent u16 which becomes the lowest
+>> half-word and the above mask/val may inadvertently match it.
+>>
+Thanks for the feedback. I have updated the patch with the requested 
+changes.
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+>
+> We also do a check on the pstate_val, along with the instr_val to
+> confirm the mode. So this should be fine as it is ?
+>
+> Suzuki
+
+pstate_val only indicates thumb execution, not whether the current 
+instruction
+is a T16 or T32 instruction.
+
+Fredrik
+
+--- For thumb instructions, call_undef_hook() in traps.c first reads a 
+u16, and if the u16 indicates a T32 instruction (u16 >= 0xe800), a 
+second u16 is read, which then makes up the the lower half-word of a T32 
+instruction. For T16 instructions, the second u16 is not read, which 
+makes the resulting u32 opcode always have the upper half set to 0. 
+However, having the upper half of instr_mask in the undef_hook set to 0 
+masks out the upper half of all thumb instructions - both T16 and T32. 
+This results in trapped T32 instructions with the lower half-word equal 
+to the T16 encoding of setend (b650) being matched, even though the 
+upper half-word is not 0000 and thus indicates a T32 opcode. An example 
+of such a T32 instruction is eaa0b650, which should raise a SIGILL since 
+T32 instructions with an eaa prefix are unallocated as per Arm ARM, but 
+instead works as a SETEND because the second half-word is set to b650. 
+This patch fixes the issue by extending instr_mask to include the upper 
+u32 half, which will still match T16 instructions where the upper half 
+is 0, but not T32 instructions. Signed-off-by: Fredrik Strupe 
+<fredrik@strupe.net> Cc: Catalin Marinas <catalin.marinas@arm.com> Cc: 
+Will Deacon <will.deacon@arm.com> Fixes: 2d888f48e056 ("arm64: Emulate 
+SETEND for AArch32 tasks") --- arch/arm64/kernel/armv8_deprecated.c | 2 
++- 1 file changed, 1 insertion(+), 1 deletion(-) diff --git 
+a/arch/arm64/kernel/armv8_deprecated.c 
+b/arch/arm64/kernel/armv8_deprecated.c index 9d3442d62..8c06dfee0 100644 
+--- a/arch/arm64/kernel/armv8_deprecated.c +++ 
+b/arch/arm64/kernel/armv8_deprecated.c @@ -609,7 +609,7 @@ static struct 
+undef_hook setend_hooks[] = { }, { /* Thumb mode */ - .instr_mask = 
+0x0000fff7, + .instr_mask = 0xfffffff7, .instr_val = 0x0000b650, 
+.pstate_mask = (PSR_AA32_T_BIT | PSR_AA32_MODE_MASK), .pstate_val = 
+(PSR_AA32_T_BIT | PSR_AA32_MODE_USR), -- 2.20.1
 
