@@ -2,103 +2,137 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED662C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F4C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB6520731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:53:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ebfedmCe"
+	by mail.kernel.org (Postfix) with ESMTP id 4D7F920731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgDGLxv (ORCPT
+        id S1728532AbgDGLyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:53:51 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38540 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgDGLxv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:53:51 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DD9D759E;
-        Tue,  7 Apr 2020 13:53:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1586260429;
-        bh=Tpiom0/9HXYeqjAE4DHHDRRZxBkeLOXqxIpsYWIHF6g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ebfedmCea0DfNA0f42wlzHUJ2BLM0TWCtj0eEBAhriSjwzr+qKv8H2+0Lx01A4caG
-         4OkfkWpzk03YQcri6vBUkj8jqfzHs4PRp3P2krRIerPxxioqldAa6fk2Y8ZlF2dKf1
-         aeddqev8gIsaNCw8Z5vfBkNMMp++zEf/oT8a8Gcg=
-Date:   Tue, 7 Apr 2020 14:53:38 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Max Krummenacher <max.oss.09@gmail.com>
-Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Olof Johansson <olof@lixom.net>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/4] arm64: defconfig: DRM_DUMB_VGA_DAC: follow changed
- config symbol name
-Message-ID: <20200407115338.GB4751@pendragon.ideasonboard.com>
-References: <20200407103537.4138-1-max.krummenacher@toradex.com>
- <20200407103537.4138-2-max.krummenacher@toradex.com>
+        Tue, 7 Apr 2020 07:54:54 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2635 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726562AbgDGLyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 07:54:54 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 159A3B05CDA06F27F690;
+        Tue,  7 Apr 2020 12:54:52 +0100 (IST)
+Received: from [127.0.0.1] (10.210.168.238) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 7 Apr 2020
+ 12:54:50 +0100
+Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
+ commands
+To:     Hannes Reinecke <hare@suse.de>,
+        Christoph Hellwig <hch@infradead.org>
+CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <ming.lei@redhat.com>,
+        <bvanassche@acm.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>,
+        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
+        Hannes Reinecke <hare@suse.com>
+References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
+ <1583857550-12049-3-git-send-email-john.garry@huawei.com>
+ <20200310183243.GA14549@infradead.org>
+ <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
+ <20200311062228.GA13522@infradead.org>
+ <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
+Date:   Tue, 7 Apr 2020 12:54:29 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200407103537.4138-2-max.krummenacher@toradex.com>
+In-Reply-To: <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.168.238]
+X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Max,
+On 06/04/2020 10:05, Hannes Reinecke wrote:
+> On 3/11/20 7:22 AM, Christoph Hellwig wrote:
+>> On Tue, Mar 10, 2020 at 09:08:56PM +0000, John Garry wrote:
+>>> On 10/03/2020 18:32, Christoph Hellwig wrote:
+>>>> On Wed, Mar 11, 2020 at 12:25:28AM +0800, John Garry wrote:
+>>>>> From: Hannes Reinecke <hare@suse.com>
+>>>>>
+>>>>> Allocate a separate 'reserved_cmd_q' for sending reserved commands.
+>>>>
+>>>> Why?  Reserved command specifically are not in any way tied to queues.
+>>>> .
+>>>>
+>>>
+>>> So the v1 series used a combination of the sdev queue and the per-host
+>>> reserved_cmd_q. Back then you questioned using the sdev queue for virtio
+>>> scsi, and the unconfirmed conclusion was to use a common per-host q. This is
+>>> the best link I can find now:
+>>>
+>>> https://www.mail-archive.com/linux-scsi@vger.kernel.org/msg83177.html
+>>
+>> That was just a question on why virtio uses the per-device tags, which
+>> didn't look like it made any sense.  What I'm worried about here is
+>> mixing up the concept of reserved tags in the tagset, and queues to use
+>> them.  Note that we already have the scsi_get_host_dev to allocate
+>> a scsi_device and thus a request_queue for the host itself.  That seems
+>> like the better interface to use a tag for a host wide command vs
+>> introducing a parallel path.
+>>
+> Thinking about it some more, I don't think that scsi_get_host_dev() is
+> the best way of handling it.
+> Problem is that it'll create a new scsi_device with <hostno:this_id:0>,
+> which will then show up via eg 'lsscsi'.
 
-Thank you for the patch.
+are you sure? Doesn't this function just allocate the sdev, but do 
+nothing with it, like probing it?
 
-On Tue, Apr 07, 2020 at 12:35:34PM +0200, Max Krummenacher wrote:
-> This occurrence wasn't changed in the original rename commit.
+I bludgeoned it in here for PoC:
+
+https://github.com/hisilicon/kernel-dev/commit/ef0ae8540811e32776f64a5b42bd76cbed17ba47
+
+And then still:
+
+john@ubuntu:~$ lsscsi
+[0:0:0:0] disk SEAGATE  ST2000NM0045  N004  /dev/sda
+[0:0:1:0] disk SEAGATE  ST2000NM0045  N004  /dev/sdb
+[0:0:2:0] disk ATASAMSUNG HM320JI  0_01  /dev/sdc
+[0:0:3:0] disk SEAGATE  ST1000NM0023  0006  /dev/sdd
+[0:0:4:0] enclosu HUAWEIExpander 12Gx16  128-
+john@ubuntu:~$
+
+Some proper plumbing would be needed, though.
+
+> This would be okay if 'this_id' would have been defined by the driver;
+> sadly, most drivers which are affected here do set 'this_id' to -1.
+> So we wouldn't have a nice target ID to allocate the device from, let
+> alone the problem that we would have to emulate a complete scsi device
+> with all required minimal command support etc.
+> And I'm not quite sure how well that would play with the exising SCSI
+> host template; the device we'll be allocating would have basically
+> nothing in common with the 'normal' SCSI devices.
 > 
-> Fixes commit 0411374bdf2b3 ("drm/bridge: dumb-vga-dac: Rename driver to
-> simple-bridge").
+> What we could do, though, is to try it the other way round:
+> Lift the request queue from scsi_get_host_dev() into the scsi host
+> itself, so that scsi_get_host_dev() can use that queue, but we also
+> would be able to use it without a SCSI device attached.
+
+wouldn't that limit 1x scsi device per host, not that I know if any more 
+would ever be required? But it does still seem better to use the request 
+queue in the scsi device.
+
 > 
-> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
-My bad, sorry about the trouble.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> 
-> ---
-> 
->  arch/arm64/configs/defconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 24e534d850454..ae908c3f43c76 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -610,7 +610,7 @@ CONFIG_DRM_MSM=m
->  CONFIG_DRM_TEGRA=m
->  CONFIG_DRM_PANEL_LVDS=m
->  CONFIG_DRM_PANEL_SIMPLE=m
-> -CONFIG_DRM_DUMB_VGA_DAC=m
-> +CONFIG_DRM_SIMPLE_BRIDGE=m
->  CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
->  CONFIG_DRM_SII902X=m
->  CONFIG_DRM_THINE_THC63LVD1024=m
-
--- 
-Regards,
-
-Laurent Pinchart
+cheers,
+John
