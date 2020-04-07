@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5FEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18659C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC772074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3BEA2082D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255025;
-	bh=OTr7RM5lQrjJE8EzqxD/5LlOedA2SxaY+uJAxcNQoTU=;
+	s=default; t=1586255027;
+	bh=kRAFIVrOFJYN7K1JCfavhQ9CnsGKo7eEipc5+stHJdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CTR3rBp17WXZ2OrN473lYGiz1XUBEDhc8YOfnk25ayX6mieyC9WDh8jwPaIpYgs0f
-	 T9UyhjuT5q9ZaoZ+fZ8iqpEMrq187AaL33sbAk5ETtvMhKBK+rr7JUeVfkZP01BQ/K
-	 xi6KMX+Uba7ETggJ/+LaGUwxoe6EHug/uP0MpBj4=
+	b=aZgPKwJMWGl08dwVjRLntzYYKrJVlHtZg/lH3XOwVJRWHAnQAAk17eGmwu7WiJFqt
+	 fJ/WlC1O2DzTeps9aMjW8TtG2BfIz2h2T8V6ijHix3eRdE+/S24VT1zGRFOfUCmOLY
+	 LmlNtwtFwoJ88h4p4mUVu2fcemh6UXcRG1Y5BT2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgDGKXo (ORCPT
+        id S1728560AbgDGKXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33556 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728533AbgDGKXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:23:41 -0400
+        id S1728550AbgDGKXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EBF42078C;
-        Tue,  7 Apr 2020 10:23:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 107E22082D;
+        Tue,  7 Apr 2020 10:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255021;
-        bh=OTr7RM5lQrjJE8EzqxD/5LlOedA2SxaY+uJAxcNQoTU=;
+        s=default; t=1586255023;
+        bh=kRAFIVrOFJYN7K1JCfavhQ9CnsGKo7eEipc5+stHJdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o2GvLhpBqGxosMDoOSfmy0w/d2kX+7aDB8CPU/5UATFE3q0H0yUJ+xRLD46nAH2IX
-         TylFh2s+7MTX4neEvHOJUFDoIEGJscyfTfKVvkkIEuK4YX6Q36PkN8q7DUp/UInI5p
-         j0SXCz6kmGiiFh3vzJoI68ODwf71jPmga/Lxqqkc=
+        b=Aa7XoNdIYpdNyH8tF4SX9ADB5LccI0xnup7RZqUEFEiiHB5VZWe6HA8F+qYhFDYp8
+         vBIkXJOkaoCidsGYFDqoOER8DI0loeHDepgEyALZl/re3SiYwv7Or/QCH6ow1esgfv
+         2HGyRXV7HKjcNoEvofTbOoeClb+HXWPeJiRXuPeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Volf <martin.volf.42@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.4 34/36] i2c: i801: Do not add ICH_RES_IO_SMI for the iTCO_wdt device
-Date:   Tue,  7 Apr 2020 12:22:07 +0200
-Message-Id: <20200407101458.567850603@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Amritha Nambiar <amritha.nambiar@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 35/36] net: Fix Tx hash bound checking
+Date:   Tue,  7 Apr 2020 12:22:08 +0200
+Message-Id: <20200407101458.682372081@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -61,135 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Amritha Nambiar <amritha.nambiar@intel.com>
 
-commit 04bbb97d1b732b2d197f103c5818f5c214a4cf81 upstream.
+commit 6e11d1578fba8d09d03a286740ffcf336d53928c upstream.
 
-Martin noticed that nct6775 driver does not load properly on his system
-in v5.4+ kernels. The issue was bisected to commit b84398d6d7f9 ("i2c:
-i801: Use iTCO version 6 in Cannon Lake PCH and beyond") but it is
-likely not the culprit because the faulty code has been in the driver
-already since commit 9424693035a5 ("i2c: i801: Create iTCO device on
-newer Intel PCHs"). So more likely some commit that added PCI IDs of
-recent chipsets made the driver to create the iTCO_wdt device on Martins
-system.
+Fixes the lower and upper bounds when there are multiple TCs and
+traffic is on the the same TC on the same device.
 
-The issue was debugged to be PCI configuration access to the PMC device
-that is not present. This returns all 1's when read and this caused the
-iTCO_wdt driver to accidentally request resourses used by nct6775.
+The lower bound is represented by 'qoffset' and the upper limit for
+hash value is 'qcount + qoffset'. This gives a clean Rx to Tx queue
+mapping when there are multiple TCs, as the queue indices for upper TCs
+will be offset by 'qoffset'.
 
-It turns out that the SMI resource is only required for some ancient
-systems, not the ones supported by this driver. For this reason do not
-populate the SMI resource at all and drop all the related code. The
-driver now always populates the main I/O resource and only in case of SPT
-(Intel Sunrisepoint) compatible devices it adds another resource for the
-NO_REBOOT bit. These two resources are of different types so
-platform_get_resource() used by the iTCO_wdt driver continues to find
-the both resources at index 0.
+v2: Fixed commit description based on comments.
 
-Link: https://lore.kernel.org/linux-hwmon/CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com/
-Fixes: 9424693035a5 ("i2c: i801: Create iTCO device on newer Intel PCHs")
-[wsa: complete fix needs all of http://patchwork.ozlabs.org/project/linux-i2c/list/?series=160959&state=*]
-Reported-by: Martin Volf <martin.volf.42@gmail.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 1b837d489e06 ("net: Revoke export for __skb_tx_hash, update it to just be static skb_tx_hash")
+Fixes: eadec877ce9c ("net: Add support for subordinate traffic classes to netdev_pick_tx")
+Signed-off-by: Amritha Nambiar <amritha.nambiar@intel.com>
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Reviewed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-i801.c |   45 +++++++++++-------------------------------
- 1 file changed, 12 insertions(+), 33 deletions(-)
+ net/core/dev.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -129,11 +129,6 @@
- #define TCOBASE		0x050
- #define TCOCTL		0x054
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -2795,6 +2795,8 @@ static u16 skb_tx_hash(const struct net_
  
--#define ACPIBASE		0x040
--#define ACPIBASE_SMI_OFF	0x030
--#define ACPICTRL		0x044
--#define ACPICTRL_EN		0x080
--
- #define SBREG_BAR		0x10
- #define SBREG_SMBCTRL		0xc6000c
- #define SBREG_SMBCTRL_DNV	0xcf000c
-@@ -1544,7 +1539,7 @@ i801_add_tco_spt(struct i801_priv *priv,
- 		pci_bus_write_config_byte(pci_dev->bus, devfn, 0xe1, hidden);
- 	spin_unlock(&p2sb_spinlock);
- 
--	res = &tco_res[ICH_RES_MEM_OFF];
-+	res = &tco_res[1];
- 	if (pci_dev->device == PCI_DEVICE_ID_INTEL_DNV_SMBUS)
- 		res->start = (resource_size_t)base64_addr + SBREG_SMBCTRL_DNV;
- 	else
-@@ -1554,7 +1549,7 @@ i801_add_tco_spt(struct i801_priv *priv,
- 	res->flags = IORESOURCE_MEM;
- 
- 	return platform_device_register_resndata(&pci_dev->dev, "iTCO_wdt", -1,
--					tco_res, 3, &spt_tco_platform_data,
-+					tco_res, 2, &spt_tco_platform_data,
- 					sizeof(spt_tco_platform_data));
- }
- 
-@@ -1567,17 +1562,16 @@ static struct platform_device *
- i801_add_tco_cnl(struct i801_priv *priv, struct pci_dev *pci_dev,
- 		 struct resource *tco_res)
- {
--	return platform_device_register_resndata(&pci_dev->dev, "iTCO_wdt", -1,
--					tco_res, 2, &cnl_tco_platform_data,
--					sizeof(cnl_tco_platform_data));
-+	return platform_device_register_resndata(&pci_dev->dev,
-+			"iTCO_wdt", -1, tco_res, 1, &cnl_tco_platform_data,
-+			sizeof(cnl_tco_platform_data));
- }
- 
- static void i801_add_tco(struct i801_priv *priv)
- {
--	u32 base_addr, tco_base, tco_ctl, ctrl_val;
- 	struct pci_dev *pci_dev = priv->pci_dev;
--	struct resource tco_res[3], *res;
--	unsigned int devfn;
-+	struct resource tco_res[2], *res;
-+	u32 tco_base, tco_ctl;
- 
- 	/* If we have ACPI based watchdog use that instead */
- 	if (acpi_has_watchdog())
-@@ -1592,30 +1586,15 @@ static void i801_add_tco(struct i801_pri
- 		return;
- 
- 	memset(tco_res, 0, sizeof(tco_res));
--
--	res = &tco_res[ICH_RES_IO_TCO];
--	res->start = tco_base & ~1;
--	res->end = res->start + 32 - 1;
--	res->flags = IORESOURCE_IO;
--
- 	/*
--	 * Power Management registers.
-+	 * Always populate the main iTCO IO resource here. The second entry
-+	 * for NO_REBOOT MMIO is filled by the SPT specific function.
- 	 */
--	devfn = PCI_DEVFN(PCI_SLOT(pci_dev->devfn), 2);
--	pci_bus_read_config_dword(pci_dev->bus, devfn, ACPIBASE, &base_addr);
--
--	res = &tco_res[ICH_RES_IO_SMI];
--	res->start = (base_addr & ~1) + ACPIBASE_SMI_OFF;
--	res->end = res->start + 3;
-+	res = &tco_res[0];
-+	res->start = tco_base & ~1;
-+	res->end = res->start + 32 - 1;
- 	res->flags = IORESOURCE_IO;
- 
--	/*
--	 * Enable the ACPI I/O space.
--	 */
--	pci_bus_read_config_dword(pci_dev->bus, devfn, ACPICTRL, &ctrl_val);
--	ctrl_val |= ACPICTRL_EN;
--	pci_bus_write_config_dword(pci_dev->bus, devfn, ACPICTRL, ctrl_val);
--
- 	if (priv->features & FEATURE_TCO_CNL)
- 		priv->tco_pdev = i801_add_tco_cnl(priv, pci_dev, tco_res);
- 	else
+ 	if (skb_rx_queue_recorded(skb)) {
+ 		hash = skb_get_rx_queue(skb);
++		if (hash >= qoffset)
++			hash -= qoffset;
+ 		while (unlikely(hash >= qcount))
+ 			hash -= qcount;
+ 		return hash + qoffset;
 
 
