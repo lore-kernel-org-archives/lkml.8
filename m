@@ -2,76 +2,90 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCFFC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E71C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6CB206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F63220730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgDGQWR (ORCPT
+        id S1728367AbgDGQWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:22:17 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56038 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727582AbgDGQWR (ORCPT
+        Tue, 7 Apr 2020 12:22:18 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:40622 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727707AbgDGQWR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 12:22:17 -0400
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jLqzN-0007M8-Uz; Tue, 07 Apr 2020 16:22:14 +0000
-Date:   Tue, 7 Apr 2020 18:22:13 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
-Subject: Re: [RFC][PATCH 0/3] exec_update_mutex related cleanups
-Message-ID: <20200407162213.tgdjzgzwrebqxchc@wittgenstein>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
- <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
- <87wo6s3wxd.fsf_-_@x220.int.ebiederm.org>
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 037GKs1W002269;
+        Tue, 7 Apr 2020 19:20:54 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
+        id A8684639B0; Tue,  7 Apr 2020 19:20:54 +0300 (IDT)
+From:   amirmizi6@gmail.com
+To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Amir Mizinski <amirmizi6@gmail.com>
+Subject: [PATCH v6 3/7] tpm: tpm_tis: rewrite "tpm_tis_req_canceled()"
+Date:   Tue,  7 Apr 2020 19:20:40 +0300
+Message-Id: <20200407162044.168890-4-amirmizi6@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200407162044.168890-1-amirmizi6@gmail.com>
+References: <20200407162044.168890-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87wo6s3wxd.fsf_-_@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:29:50PM -0500, Eric W. Biederman wrote:
-> 
-> Linus,
-> 
-> Since you rightly pointed out the code in fs/exec.c is less readable
-> than it should be right now.  Here is where I currently sit on making
-> that code static where possible and as obvious as possible.
-> 
-> I will resend this after the merge window for a proper review when
-> people are less likely to be distrcacted but I figured I might as well
-> send this out now so I can see if anyone runs screaming from this code.
-> 
-> Eric W. Biederman (3):
->       binfmt: Move install_exec_creds after setup_new_exec to match binfmt_elf
->       exec: Make unlocking exec_update_mutex explict
->       exec: Rename the flag called_exec_mmap point_of_no_return
+From: Amir Mizinski <amirmizi6@gmail.com>
 
-Under the assumption that we go forward with this approach this seems
-like a good cleanup.
+Using this function while read/write data resulted in aborted operation.
+After investigating according to TCG TPM Profile (PTP) Specifications,
+i found cancel should happen only if TPM_STS.commandReady bit is lit and
+couldn't find a case when the current condition is valid.
+So i'm removing the case for "TPM_VID_WINBOND" since we have no need for it
 
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Also default comparison is wrong. only cmdReady bit need to be compared
+instead of the full lower status register byte.
+
+Fixes: 1f86605 (tpm: Fix cancellation of TPM commands (polling mode))
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+---
+ drivers/char/tpm/tpm_tis_core.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index 6c4f232..453d7ef 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -713,13 +713,10 @@ static bool tpm_tis_req_canceled(struct tpm_chip *chip, u8 status)
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+ 
+ 	switch (priv->manufacturer_id) {
+-	case TPM_VID_WINBOND:
+-		return ((status == TPM_STS_VALID) ||
+-			(status == (TPM_STS_VALID | TPM_STS_COMMAND_READY)));
+ 	case TPM_VID_STM:
+ 		return (status == (TPM_STS_VALID | TPM_STS_COMMAND_READY));
+ 	default:
+-		return (status == TPM_STS_COMMAND_READY);
++		return ((status & TPM_STS_COMMAND_READY) == TPM_STS_COMMAND_READY);
+ 	}
+ }
+ 
+-- 
+2.7.4
+
