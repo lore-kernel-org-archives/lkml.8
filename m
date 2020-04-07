@@ -2,128 +2,286 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035AAC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE96C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D469C2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5DB20747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgDGGeP (ORCPT
+        id S1726798AbgDGGgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:34:15 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:37064 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726808AbgDGGeO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:34:14 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0376XHGK005052;
-        Tue, 7 Apr 2020 02:34:12 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 306q55hfa6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 02:34:12 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 0376YBIJ025162
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 7 Apr 2020 02:34:11 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 7 Apr 2020 02:34:10 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 7 Apr 2020 02:34:10 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 7 Apr 2020 02:34:10 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 0376Y88n025398;
-        Tue, 7 Apr 2020 02:34:09 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <alexandru.tachici@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2] iio: adc: ad7192: fix null pointer de-reference crash during probe
-Date:   Tue, 7 Apr 2020 09:33:10 +0300
-Message-ID: <20200407063310.85466-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200406123109.56947-1-alexandru.ardelean@analog.com>
-References: <20200406123109.56947-1-alexandru.ardelean@analog.com>
+        Tue, 7 Apr 2020 02:36:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58828 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgDGGgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 02:36:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A333AAB8F;
+        Tue,  7 Apr 2020 06:36:50 +0000 (UTC)
+Subject: Re: [PATCH v2 10/17] drm/vram-helper: make drm_vram_mm_debugfs_init()
+ return 0
+To:     Wambui Karuga <wambui.karugax@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20200310133121.27913-1-wambui.karugax@gmail.com>
+ <20200310133121.27913-11-wambui.karugax@gmail.com>
+ <20200318152627.GY2363188@phenom.ffwll.local>
+ <alpine.LNX.2.21.99999.375.2003181857010.54051@wambui>
+ <CAKMK7uGwJ6nzLPzwtfUY79e1fSFxkrSgTfJuDeM4px6c0v13qg@mail.gmail.com>
+ <20200318165846.GC3090655@kroah.com>
+ <CAKMK7uGbg5Lax+eXJda4k9LNd7JBb+LRtRw4S+bZ4GbNGT--ZA@mail.gmail.com>
+ <20200319075524.GB3445010@kroah.com>
+ <20200319101830.GB2363188@phenom.ffwll.local>
+ <alpine.LNX.2.21.99999.375.2003191522020.89327@wambui>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <cfbf0a0c-8fe1-ff41-d8cb-8f96a3912a36@suse.de>
+Date:   Tue, 7 Apr 2020 08:36:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_01:2020-04-07,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
- phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070055
+In-Reply-To: <alpine.LNX.2.21.99999.375.2003191522020.89327@wambui>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="6mY5WCj8o464gsmRMV60mpBknP0sOP0q2"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
-assignment:
-  'indio_dev->name = spi_get_device_id(spi)->name;'
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--6mY5WCj8o464gsmRMV60mpBknP0sOP0q2
+Content-Type: multipart/mixed; boundary="mwE4Ij88AF68pEAL96OgyaZsE0QujrvLw";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Wambui Karuga <wambui.karugax@gmail.com>, Daniel Vetter
+ <daniel@ffwll.ch>, Greg KH <gregkh@linuxfoundation.org>,
+ Dave Airlie <airlied@linux.ie>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel <dri-devel@lists.freedesktop.org>
+Message-ID: <cfbf0a0c-8fe1-ff41-d8cb-8f96a3912a36@suse.de>
+Subject: Re: [PATCH v2 10/17] drm/vram-helper: make drm_vram_mm_debugfs_init()
+ return 0
+References: <20200310133121.27913-1-wambui.karugax@gmail.com>
+ <20200310133121.27913-11-wambui.karugax@gmail.com>
+ <20200318152627.GY2363188@phenom.ffwll.local>
+ <alpine.LNX.2.21.99999.375.2003181857010.54051@wambui>
+ <CAKMK7uGwJ6nzLPzwtfUY79e1fSFxkrSgTfJuDeM4px6c0v13qg@mail.gmail.com>
+ <20200318165846.GC3090655@kroah.com>
+ <CAKMK7uGbg5Lax+eXJda4k9LNd7JBb+LRtRw4S+bZ4GbNGT--ZA@mail.gmail.com>
+ <20200319075524.GB3445010@kroah.com>
+ <20200319101830.GB2363188@phenom.ffwll.local>
+ <alpine.LNX.2.21.99999.375.2003191522020.89327@wambui>
+In-Reply-To: <alpine.LNX.2.21.99999.375.2003191522020.89327@wambui>
 
-After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
-during probe with null de-ref.
+--mwE4Ij88AF68pEAL96OgyaZsE0QujrvLw
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-This change assigns the 'compatible' string from the DT table, as the new
-'indio_dev->name'. As such, the new device/part name now looks like
-'adi,ad719x', and now has the vendor prefix.
+Hi
 
-Note that this change is not doing any NULL check to the return value of
-'of_match_device()'. This shouldn't happen, and if it does it's likely a
-framework error on the probe side.
+Am 19.03.20 um 13:27 schrieb Wambui Karuga:
+>=20
+>=20
+> On Thu, 19 Mar 2020, Daniel Vetter wrote:
+>=20
+>> On Thu, Mar 19, 2020 at 08:55:24AM +0100, Greg KH wrote:
+>>> On Wed, Mar 18, 2020 at 08:10:43PM +0100, Daniel Vetter wrote:
+>>>> On Wed, Mar 18, 2020 at 5:58 PM Greg KH <gregkh@linuxfoundation.org>=
 
-Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
+>>>> wrote:
+>>>>>
+>>>>> On Wed, Mar 18, 2020 at 05:31:47PM +0100, Daniel Vetter wrote:
+>>>>>> On Wed, Mar 18, 2020 at 5:03 PM Wambui Karuga
+>>>>>> <wambui.karugax@gmail.com> wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> On Wed, 18 Mar 2020, Daniel Vetter wrote:
+>>>>>>>
+>>>>>>>> On Tue, Mar 10, 2020 at 04:31:14PM +0300, Wambui Karuga wrote:
+>>>>>>>>> Since 987d65d01356 (drm: debugfs: make
+>>>>>>>>> drm_debugfs_create_files() never fail),
+>>>>>>>>> drm_debugfs_create_files() never
+>>>>>>>>> fails and should return void. Therefore, remove its use as the
+>>>>>>>>> return value of drm_vram_mm_debugfs_init(), and have the functi=
+on
+>>>>>>>>> return 0 directly.
+>>>>>>>>>
+>>>>>>>>> v2: have drm_vram_mm_debugfs_init() return 0 instead of void to=
 
-Changelog v1 -> v2:
-* fix colon for Fixes tag
-* updated commit title a bit; to make it longer
+>>>>>>>>> avoid
+>>>>>>>>> introducing build issues and build breakage.
+>>>>>>>>>
+>>>>>>>>> References:
+>>>>>>>>> https://lists.freedesktop.org/archives/dri-devel/2020-February/=
+257183.html
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+>>>>>>>>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+>>>>>>>>> ---
+>>>>>>>>> =C2=A0drivers/gpu/drm/drm_gem_vram_helper.c | 10 ++++------
+>>>>>>>>> =C2=A01 file changed, 4 insertions(+), 6 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c
+>>>>>>>>> b/drivers/gpu/drm/drm_gem_vram_helper.c
+>>>>>>>>> index 92a11bb42365..c8bcc8609650 100644
+>>>>>>>>> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
+>>>>>>>>> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+>>>>>>>>> @@ -1048,14 +1048,12 @@ static const struct drm_info_list
+>>>>>>>>> drm_vram_mm_debugfs_list[] =3D {
+>>>>>>>>> =C2=A0 */
+>>>>>>>>> =C2=A0int drm_vram_mm_debugfs_init(struct drm_minor *minor)
+>>>>>>>>> =C2=A0{
+>>>>>>>>> -=C2=A0=C2=A0=C2=A0 int ret =3D 0;
+>>>>>>>>> -
+>>>>>>>>> =C2=A0#if defined(CONFIG_DEBUG_FS)
+>>>>>>>>
+>>>>>>>> Just noticed that this #if here is not needed, we already have a=
 
- drivers/iio/adc/ad7192.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+>>>>>>>> dummy
+>>>>>>>> function for that case. Care to write a quick patch to remove
+>>>>>>>> it? On top
+>>>>>>>> of this patch series here ofc, I'm in the processing of merging
+>>>>>>>> the entire
+>>>>>>>> pile.
+>>>>>>>>
+>>>>>>>> Thanks, Daniel
+>>>>>>> Hi Daniel,
+>>>>>>> Without this check here, and compiling without CONFIG_DEBUG_FS, t=
+his
+>>>>>>> function is run and the drm_debugfs_create_files() does not have
+>>>>>>> access to
+>>>>>>> the parameters also protected by an #if above this function. So
+>>>>>>> the change
+>>>>>>> throws an error for me. Is that correct?
+>>>>>>
+>>>>>> Hm right. Other drivers don't #ifdef out their debugfs file functi=
+ons
+>>>>>> ... kinda a bit disappointing that we can't do this in the neatest=
 
-diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
-index 8ec28aa8fa8a..0039a45e1f33 100644
---- a/drivers/iio/adc/ad7192.c
-+++ b/drivers/iio/adc/ad7192.c
-@@ -888,6 +888,7 @@ MODULE_DEVICE_TABLE(of, ad7192_of_match);
- 
- static int ad7192_probe(struct spi_device *spi)
- {
-+	const struct of_device_id *of_id;
- 	struct ad7192_state *st;
- 	struct iio_dev *indio_dev;
- 	int ret, voltage_uv = 0;
-@@ -937,10 +938,12 @@ static int ad7192_probe(struct spi_device *spi)
- 		goto error_disable_avdd;
- 	}
- 
-+	of_id = of_match_device(ad7192_of_match, &spi->dev);
-+
- 	spi_set_drvdata(spi, indio_dev);
--	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
-+	st->devid = (unsigned long)of_id->data;
- 	indio_dev->dev.parent = &spi->dev;
--	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->name = of_id->compatible;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
- 	ret = ad7192_channels_config(indio_dev);
--- 
-2.17.1
+>>>>>> way
+>>>>>> possible.
+>>>>>>
+>>>>>> Greg, has anyone ever suggested to convert the debugfs_create_file=
 
+>>>>>> function (and similar things) to macros that don't use any of the
+>>>>>> arguments, and then also annotating all the static
+>>>>>> functions/tables as
+>>>>>> __maybe_unused and let the compiler garbage collect everything?
+>>>>>> Instead of explicit #ifdef in all the drivers ...
+>>>>>
+>>>>> No, no one has suggested that, having the functions be static inlin=
+e
+>>>>> should make it all "just work" properly if debugfs is not enabled.=C2=
+=A0
+>>>>> The
+>>>>> variables will not be used, so the compiler should just optimize th=
+em
+>>>>> away properly.
+>>>>>
+>>>>> No checks for CONFIG_DEBUG_FS should be needed anywhere in .c code.=
+
+>>>>
+>>>> So the trouble with this one is that the static inline functions for=
+
+>>>> the debugfs file are wrapped in a #if too, and hence if we drop the
+>>>> #if around the function call stuff won't compile. Should we drop all=
+
+>>>> the #if in the .c file and assume the compiler will remove all the
+>>>> dead code and dead functions?
+>>>
+>>> Yes you should :)
+>>>
+>>> there should not be any need for #if in a .c file for debugfs stuff.
+>>
+>> Wambui, can you pls try that out? I.e. removing all the #if for
+>> CONFIG_DEBUG_FS from that file.
+>=20
+> Removing them works with CONFIG_DEBUG_FS enabled or disabled.
+> I can send a patch for that.
+
+Please do. Removing explicit checks for CONFIG_ is usually a good thing.
+
+Best regards
+Thomas
+
+>=20
+> wambui karuga
+>> -Daniel
+>> --=C2=A0
+>> Daniel Vetter
+>> Software Engineer, Intel Corporation
+>> http://blog.ffwll.ch
+>>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--mwE4Ij88AF68pEAL96OgyaZsE0QujrvLw--
+
+--6mY5WCj8o464gsmRMV60mpBknP0sOP0q2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl6MH38ACgkQaA3BHVML
+eiPRpAf/XgFMgUJ3EjT30XEr8vTATgBrz7VDp5Kg8yOi8yTEQZ+W+IOsfQG43xcl
+3O8ZP3m9kvse6ILrojpr51f4mWj64zW7D4I5zuzGh7MS0nfDUCKYL2/kp/Dgiy8K
+04pIJVmuTEIIjdd2IZXJOwRfPtcu9GVNIgRbL+aqv854dOTfcFEjx7MQejaCKiXg
+Al8t5V0Ewce8nBMFLbipCutq6FjanV5G0kHWAszO6ftD1RFD3KTGSPkJ+1vJZrib
+5I7EtoxXJ5lX3FMksJML4RYI5LDZifbAQT7lH7uqQgxY4hfaswwPXKjQ5EHxBh39
+V/bNZ8yh/4fKv9QQx1IkzuqbJtV03w==
+=b7HE
+-----END PGP SIGNATURE-----
+
+--6mY5WCj8o464gsmRMV60mpBknP0sOP0q2--
