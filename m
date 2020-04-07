@@ -2,111 +2,182 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17EACC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F33F1C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBBD820768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AA020768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVQZHEJM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bmS1u9FM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgDGAyU (ORCPT
+        id S1726421AbgDGA6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:54:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40466 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgDGAyU (ORCPT
+        Mon, 6 Apr 2020 20:58:35 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37856 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgDGA6e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:54:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s8so1863303wrt.7;
-        Mon, 06 Apr 2020 17:54:18 -0700 (PDT)
+        Mon, 6 Apr 2020 20:58:34 -0400
+Received: by mail-lj1-f194.google.com with SMTP id r24so1800144ljd.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 17:58:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=f9/NbIgNdnQIK+P1jaZ1EvtyelbjfTXJfL5WDuMOA0U=;
-        b=NVQZHEJMxzxjmz22HV/sWwxN+ocAVOoaF4cKwwkqm6oc/YyLfl3BntEiYdR2eBkvUm
-         XPDNr+Xaam85Uw8cjJsIjj0/trxwWmT8teMcokDv6SeGeUGREF+TO3i/DSBdQD+6h8eM
-         xN/jJHUPLMaSNEe4unkFRY/s3/CSW51YP1jvP+0o23BoXflk2cX7Ersic512kXJH4QoM
-         xbwsHe+5I0t2ta1oWMNhC8x6mUYl7w84kht2Ixw9W0hlayw6UyedqhjPoaRu7o0bmu2q
-         7lZLBBl4sWcM5PAeweT3FWb59/qFSJXuL0zFkif/CsJlhy95Ff0S8mAiov1jhkyISN89
-         k4+g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=TDz9BFmZ8zQpqNsWCTptx0CrsbNAsUuC7AsThVhGJVY=;
+        b=bmS1u9FMz/4hyaxFYbha1NI2AnffokqKUEnhj0wBpgyduvbsFD1n+97WD4U75p+1ob
+         EnZaumrGvgNO5ochV/LIMm/bYhgMXfD4ViALib44ySCVTBIE7hRrGzgfnQGFvJKVH4Tm
+         9wJXGyAAVbsTUiaPiPJaKA0QtBuvojNec0BT6DUp1VwTYUWUUQPiLXHTxTZTIuRs2j9g
+         AVAZhVv0QaVNJCJVzLbPNrJQaeInwCs5j5lWTCGIcBd0kX09NR+NmU0MY16u07v/p4K9
+         bMzmb9zMEWyWTREvKXMA4vbsKfTw3q6vuHRRVFerVwNjGiwI+fU7frloTaX1suC7w10o
+         nhmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=f9/NbIgNdnQIK+P1jaZ1EvtyelbjfTXJfL5WDuMOA0U=;
-        b=HBx4TvzV0VKe3EfgGjQff8VyPHJBn/fews81ncfrJb2YHjA6H0UkP+3TlNfACKTskx
-         yoVnd+bH11r8WsxO6AIk7cICQvmveqwhRICLf5+EF7p+EWNw2zcdwq5dMMWvw34nwN8f
-         Y39yRk7FzQLRbVng6Yg0+ze6aB6X80YJBWGhjb3oQAC/XEXdvIFI7oT2I4YdYvtddeAV
-         g/tBYwOYoQBMKv4dHmna5oYOSJrRB1yD5hTNGugLTOwubgLwQHdNSVXp/NE/bKXHdRQS
-         o62HVeAjG64qwXlHp/pA3h0GPz68VXkLtetT6YMlssPxUgYlslzZx61jS4eBTU7O/m9t
-         W/kA==
-X-Gm-Message-State: AGi0PubAZ3MToeI+noOOarMaWCXebymy70sSAbenfMUSOlTfmnd6/0uz
-        WPaDCN4ZejJ5+Ig+01takOGIkI/J
-X-Google-Smtp-Source: APiQypIPVHIP9fjB4kiUFE3+ZRRnl+/t+T2AowygVGQZ/IboLf+SRubDjmK8pg1+8yWt0sCHbWkSRg==
-X-Received: by 2002:adf:f5d0:: with SMTP id k16mr1972339wrp.227.1586220858093;
-        Mon, 06 Apr 2020 17:54:18 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id p10sm28244775wrm.6.2020.04.06.17.54.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 06 Apr 2020 17:54:17 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-stable@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, sashal@kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org (open list:NETWORKING [GENERAL]),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH stable-4.9.y]] net: dsa: tag_brcm: Fix skb->fwd_offload_mark location
-Date:   Mon,  6 Apr 2020 17:54:12 -0700
-Message-Id: <1586220853-34769-1-git-send-email-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=TDz9BFmZ8zQpqNsWCTptx0CrsbNAsUuC7AsThVhGJVY=;
+        b=qpy/fUidbrnc4WgD0g/zEE/8oJnYR1r9aoaxI255bgsXfucqBqh0iFfGBgb8Zsq8t1
+         2y3EQGKw5W0WFu4gBRFEiO+g6bczxto2akOXEGfy9gpiBwYuv0LG1Owf/kqBBMyrIXJN
+         uZ5/ClWKwHRhQ1W9ZXdCYj4/MHXjdNWJzdxwygKwNs0sz/fLidzXyirFMQe2xIiVnRGY
+         g7trD1kJ0Qso3KOcE6dUZgwc7jFXc75zUvoK6GJw0mTHjkyBwXGcBzXNjwe7EaYsEnW3
+         RJbWzXHQn0lFP32WPCqnACAZa0MhKGcHE49rvsEG1a3VBHnUtJB6UNHd/dRzrRRXcEYa
+         bdWw==
+X-Gm-Message-State: AGi0PuaAsNhoL3uUlvAFPOZFmn14nvMMBQuA5CGayy9/HoxTU6W7O8TP
+        eWaHZrKBQRDGG1I2H1O5Ihz+snByvLOXq/40oFTneg==
+X-Google-Smtp-Source: APiQypJPjEm7jIn9z+xThhRqVGjzF4hWCD7RLXMMIVBq9BZWIjtWy7Q+lJWVYtgK52U74tJQzmDlc9Ni7zpWkWW3eWA=
+X-Received: by 2002:a2e:894e:: with SMTP id b14mr3817ljk.103.1586221111082;
+ Mon, 06 Apr 2020 17:58:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1585548051.git.ashish.kalra@amd.com> <0f8a2125c7acb7b38fc51a044a8088e8baa45e3d.1585548051.git.ashish.kalra@amd.com>
+ <8694381f-2083-e477-bea1-04fb572519d0@oracle.com>
+In-Reply-To: <8694381f-2083-e477-bea1-04fb572519d0@oracle.com>
+From:   Steve Rutherford <srutherford@google.com>
+Date:   Mon, 6 Apr 2020 17:57:54 -0700
+Message-ID: <CABayD+dvb7iYOJrrBRwKw2qp1MDLWucp3yds_YG+vLTzaV6DTA@mail.gmail.com>
+Subject: Re: [PATCH v6 06/14] KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Cc:     Ashish Kalra <Ashish.Kalra@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the backport of upstream commit
-0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ("net: dsa: Fix duplicate
-frames flooded by learning") was done the assignment of
-skb->fwd_offload_mark would land in brcm_tag_xmit() which is incorrect,
-it should have been in brcm_tag_rcv().
-
-Fixes: 5e845dc62f38 ("net: dsa: Fix duplicate frames flooded by learning")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- net/dsa/tag_brcm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/net/dsa/tag_brcm.c b/net/dsa/tag_brcm.c
-index 76d55a80f3b9..98074338cd83 100644
---- a/net/dsa/tag_brcm.c
-+++ b/net/dsa/tag_brcm.c
-@@ -84,8 +84,6 @@ static struct sk_buff *brcm_tag_xmit(struct sk_buff *skb, struct net_device *dev
- 		brcm_tag[2] = BRCM_IG_DSTMAP2_MASK;
- 	brcm_tag[3] = (1 << p->port) & BRCM_IG_DSTMAP1_MASK;
- 
--	skb->offload_fwd_mark = 1;
--
- 	return skb;
- 
- out_free:
-@@ -148,6 +146,8 @@ static int brcm_tag_rcv(struct sk_buff *skb, struct net_device *dev,
- 	skb->dev->stats.rx_packets++;
- 	skb->dev->stats.rx_bytes += skb->len;
- 
-+	skb->offload_fwd_mark = 1;
+On Thu, Apr 2, 2020 at 3:27 PM Krish Sadhukhan
+<krish.sadhukhan@oracle.com> wrote:
+>
+>
+> On 3/29/20 11:21 PM, Ashish Kalra wrote:
+> > From: Brijesh Singh <Brijesh.Singh@amd.com>
+> >
+> > The command finalize the guest receiving process and make the SEV guest
+> > ready for the execution.
+> >
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: "Radim Kr=C4=8Dm=C3=A1=C5=99" <rkrcmar@redhat.com>
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Borislav Petkov <bp@suse.de>
+> > Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> > Cc: x86@kernel.org
+> > Cc: kvm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> > ---
+> >   .../virt/kvm/amd-memory-encryption.rst        |  8 +++++++
+> >   arch/x86/kvm/svm.c                            | 23 ++++++++++++++++++=
 +
- 	netif_receive_skb(skb);
- 
- 	return 0;
--- 
-2.7.4
+> >   2 files changed, 31 insertions(+)
+> >
+> > diff --git a/Documentation/virt/kvm/amd-memory-encryption.rst b/Documen=
+tation/virt/kvm/amd-memory-encryption.rst
+> > index 554aa33a99cc..93cd95d9a6c0 100644
+> > --- a/Documentation/virt/kvm/amd-memory-encryption.rst
+> > +++ b/Documentation/virt/kvm/amd-memory-encryption.rst
+> > @@ -375,6 +375,14 @@ Returns: 0 on success, -negative on error
+> >                   __u32 trans_len;
+> >           };
+> >
+> > +15. KVM_SEV_RECEIVE_FINISH
+> > +------------------------
+> > +
+> > +After completion of the migration flow, the KVM_SEV_RECEIVE_FINISH com=
+mand can be
+> > +issued by the hypervisor to make the guest ready for execution.
+> > +
+> > +Returns: 0 on success, -negative on error
+> > +
+> >   References
+> >   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > index 5fc5355536d7..7c2721e18b06 100644
+> > --- a/arch/x86/kvm/svm.c
+> > +++ b/arch/x86/kvm/svm.c
+> > @@ -7573,6 +7573,26 @@ static int sev_receive_update_data(struct kvm *k=
+vm, struct kvm_sev_cmd *argp)
+> >       return ret;
+> >   }
+> >
+> > +static int sev_receive_finish(struct kvm *kvm, struct kvm_sev_cmd *arg=
+p)
+> > +{
+> > +     struct kvm_sev_info *sev =3D &to_kvm_svm(kvm)->sev_info;
+> > +     struct sev_data_receive_finish *data;
+> > +     int ret;
+> > +
+> > +     if (!sev_guest(kvm))
+> > +             return -ENOTTY;
+> > +
+> > +     data =3D kzalloc(sizeof(*data), GFP_KERNEL);
+> > +     if (!data)
+> > +             return -ENOMEM;
+> > +
+> > +     data->handle =3D sev->handle;
+> > +     ret =3D sev_issue_cmd(kvm, SEV_CMD_RECEIVE_FINISH, data, &argp->e=
+rror);
+> > +
+> > +     kfree(data);
+> > +     return ret;
+> > +}
+> > +
+> >   static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+> >   {
+> >       struct kvm_sev_cmd sev_cmd;
+> > @@ -7632,6 +7652,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void _=
+_user *argp)
+> >       case KVM_SEV_RECEIVE_UPDATE_DATA:
+> >               r =3D sev_receive_update_data(kvm, &sev_cmd);
+> >               break;
+> > +     case KVM_SEV_RECEIVE_FINISH:
+> > +             r =3D sev_receive_finish(kvm, &sev_cmd);
+> > +             break;
+> >       default:
+> >               r =3D -EINVAL;
+> >               goto out;
+> Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
 
+As to ENOTTY, man page for ioctl translates it as "The specified
+request does not apply to the kind of object that the file descriptor
+fd references", which seems appropriate here.
+Reviewed-by: Steve Rutherford <srutherford@google.com>
