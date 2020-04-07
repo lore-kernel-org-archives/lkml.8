@@ -2,108 +2,113 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FCAC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F37C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1F12074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:33:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586269991;
-	bh=cminWrIgkRVEhjmai3BMkPP+WLA37jmwDe9yEHcu7Tg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=opiVYx7tqr7iJFzADBphXipYOY6O99jR7j041SbBP1JJKeDfE/r0Qgn+U97UexeTz
-	 r22ugI+8z8/NX7LiwB0a6VgLTj0gjCk9EefgxRo4X9wJdb/oORQ/T17Al2fdirJ3aG
-	 1L9ppNVnN38Kfm2I+iCELX6xdQuu5Eh7bGxG47ag=
+	by mail.kernel.org (Postfix) with ESMTP id 83FF32072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgDGOdK (ORCPT
+        id S1729125AbgDGOfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:33:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728975AbgDGOdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:33:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AC342072A;
-        Tue,  7 Apr 2020 14:33:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586269989;
-        bh=cminWrIgkRVEhjmai3BMkPP+WLA37jmwDe9yEHcu7Tg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T+mc3+rDHQN+IacAd+EmpTdDH2QE8aO0VMBd8RUfIZg7lMPcTqAmayi+OoDlmf724
-         ep5Duhdvj2XzEEsxx/jN5ENw5LdRt5/mEw/XJjh/e8Wnk+8niv71ZpkDUjqXuE+iWc
-         A9g/3oTOEG6F6VMW6AuzVTUNvoovPNd8kqkKV2DE=
-Date:   Tue, 7 Apr 2020 16:33:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-        syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
-        RDMA mailing list <linux-rdma@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in ib_umad_kill_port
-Message-ID: <20200407143304.GA876345@kroah.com>
-References: <00000000000075245205a2997f68@google.com>
- <20200406172151.GJ80989@unreal>
- <20200406174440.GR20941@ziepe.ca>
- <CACT4Y+Zv_WXEn6u5a6kRZpkDJnSzeGF1L7JMw4g85TLEgAM7Lw@mail.gmail.com>
- <20200407115548.GU20941@ziepe.ca>
- <CACT4Y+Zy0LwpHkTMTtb08ojOxuEUFo1Z7wkMCYSVCvsVDcxayw@mail.gmail.com>
+        Tue, 7 Apr 2020 10:35:20 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:40196 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728306AbgDGOfU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:35:20 -0400
+Received: by mail-il1-f200.google.com with SMTP id g79so3352739ild.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:35:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=DrOiOhIFnf1BvQ7pnLuWGhH2q/1ZIrRtofFqFtUp27M=;
+        b=Vcb3ydY1+iRNbp7VdRWo1bOmDVq6YtvGLjf2UHPBs+z4K2AttY8FouPU8zgmBmxxot
+         4fGN7AW/2xzEQ4sFWZBFYaLF3PHBG+uxilLos2keYjE5acQMyUwSspr3vp1LzYleqCQc
+         wnTp+2Yk+UjLEoMB9zXQvW5iUuAdTyuLzOyv5wPSji09SfuQ8uaMqEixxSXOdD3lZwiZ
+         YCN5C25EwQ5gGFYu+hNlGmPNUQ+eOQfaE5DA1KmYTbHbkM39d0RHAG1GO8ueMWvjeaXA
+         UCU9Px3vX1cKLj4NxUgv4xFmRZ9wjLzXPn/j+Urn/g0so4pdrkUwCEIBhFD+su3g6tV5
+         1C5w==
+X-Gm-Message-State: AGi0PuaYsmr/Q+h1JpmsYEtBtCJAYNNEggQyI93CGLJ9Dd1XbUukD1ff
+        ODA4/fLb5iIkIPMbVjSmMi3eC2WGE/2/hn8dFPEg13neAmip
+X-Google-Smtp-Source: APiQypIPzmkdGfhwr1DKHuI4/FjJ/bMgn9Z346lrTLPvc30IISP1GbPLwjE+Qkth+YHj1ZooU6MxLDwq4gufEcCl16/+XanvKJii
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+Zy0LwpHkTMTtb08ojOxuEUFo1Z7wkMCYSVCvsVDcxayw@mail.gmail.com>
+X-Received: by 2002:a92:b0a:: with SMTP id b10mr2580712ilf.18.1586270119511;
+ Tue, 07 Apr 2020 07:35:19 -0700 (PDT)
+Date:   Tue, 07 Apr 2020 07:35:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fdc98405a2b44a8c@google.com>
+Subject: WARNING in add_taint/usb_submit_urb
+From:   syzbot <syzbot+f44561cfce4cc0e75b89@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 02:39:42PM +0200, Dmitry Vyukov wrote:
-> On Tue, Apr 7, 2020 at 1:55 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Tue, Apr 07, 2020 at 11:56:30AM +0200, Dmitry Vyukov wrote:
-> > > > I'm not sure what could be done wrong here to elicit this:
-> > > >
-> > > >  sysfs group 'power' not found for kobject 'umad1'
-> > > >
-> > > > ??
-> > > >
-> > > > I've seen another similar sysfs related trigger that we couldn't
-> > > > figure out.
-> > > >
-> > > > Hard to investigate without a reproducer.
-> > >
-> > > Based on all of the sysfs-related bugs I've seen, my bet would be on
-> > > some races. E.g. one thread registers devices, while another
-> > > unregisters these.
-> >
-> > I did check that the naming is ordered right, at least we won't be
-> > concurrently creating and destroying umadX sysfs of the same names.
-> >
-> > I'm also fairly sure we can't be destroying the parent at the same
-> > time as this child.
-> >
-> > Do you see the above commonly? Could it be some driver core thing? Or
-> > is it more likely something wrong in umad?
-> 
-> Mmmm... I can't say, I am looking at some bugs very briefly. I've
-> noticed that sysfs comes up periodically (or was it some other similar
-> fs?). General observation is that code frequently assumes only the
-> happy scenario and only, say, a single administrator doing one thing
-> at a time, slowly and carefully, and it is not really hardened against
-> armies of monkeys.
-> But I did not look at code abstractions, bug patterns, contracts, etc.
-> 
-> Greg KH may know better. Greg, as far as I remember you commented on
-> some of these reports along the lines of, for example, "the warning is
-> in sysfs code, but the bug is in the callers".
+Hello,
 
-Yes, that is correct.
+syzbot found the following crash on:
 
+HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=11cce12be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+dashboard link: https://syzkaller.appspot.com/bug?extid=f44561cfce4cc0e75b89
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a8312be00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e35d8fe00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f44561cfce4cc0e75b89@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 1 != type 3
+WARNING: CPU: 1 PID: 384 at drivers/usb/core/urb.c:478 usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 384 Comm: systemd-udevd Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ usb_submit_urb+0x10b0/0x1460 drivers/usb/core/urb.c:363
+ panic+0x2aa/0x6e1 kernel/panic.c:221
+ add_taint.cold+0x16/0x16 kernel/panic.c:434
+ set_bit include/asm-generic/bitops/instrumented-atomic.h:28 [inline]
+ set_ti_thread_flag include/linux/thread_info.h:55 [inline]
+ set_fs arch/x86/include/asm/uaccess.h:33 [inline]
+ __probe_kernel_read+0x188/0x1d0 mm/maccess.c:67
+ __warn.cold+0x14/0x30 kernel/panic.c:581
+ __warn+0xd5/0x1c8 kernel/panic.c:574
+ usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+ __warn.cold+0x2f/0x30 kernel/panic.c:582
+ usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+ report_bug+0x27b/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
+ usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+Code: 4d 85 e
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
