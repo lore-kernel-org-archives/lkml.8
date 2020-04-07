@@ -2,125 +2,133 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E15C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF164C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BFB2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77477206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:20:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Rv6t0CkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgDGIQO (ORCPT
+        id S1726889AbgDGIUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 04:16:14 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:35627 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgDGIQO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 04:16:14 -0400
-Received: by mail-il1-f199.google.com with SMTP id t10so2419551ilf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 01:16:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IJaW8e1pAg406HAS3eifVVxAuqJ0aaca8MQ2T7iKKWU=;
-        b=AMd1Ksw4WseqhAtIPonGJUGnLCm2bPNPPuBMDuQrDGTwaPeGlgtbtxD1I9tGKJ0SWd
-         Sri2t9500/BCIFTx16VeqbM3CTuXdD9Ye3YoBEcrhXG8eUXsZW3ZWUdDFm1ku15g6irN
-         ya+9RPu7sdhbRfVzH7zdC4JcLsbrkD750esHccXoWOabZXZwV+Tc02csmApV1SieFjfw
-         72Kfk15yASrHWsOkAnp28c1nVp05OWUQcfaNeU0dmaYNRu3fzv4JJF3DcSW9Dfh25qE2
-         V3QdpO91oJJYKeaM4tLbhGEXGqjmm+51KnEZ1ziskCxezpSp2HqKN/xRuHAsinYdDGWb
-         ci5g==
-X-Gm-Message-State: AGi0PuaFcB3cf8UOwo93dxE6f5Pv8VO9dRyuRXCGDPRWvb+BUHujijRr
-        OCBzQCkEBK8DRMTyiqWtl8VpKTlEhDOYuNu7Dx1Yw84ajoJo
-X-Google-Smtp-Source: APiQypLvj1XMIJth9nQaOebGarxZ54oBjoIcjVBp91jSdnNJcksZbB7B5U15GQarxcic6eQdMqO5vTJIVTFUdPBYznxJzJII/xOB
+        Tue, 7 Apr 2020 04:20:46 -0400
+Received: from mout.web.de ([217.72.192.78]:40545 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbgDGIUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 04:20:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586247638;
+        bh=axDv8zIhXE7bsjbz/f1ODbZWUdk+z3gkTTq0sfunDd8=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=Rv6t0CkD1heypLf+VI3RG0rXc2+oyCcwngbxRGCyrhMeofwrV0ICtrsC06a/yrMxl
+         evtKTbK4/K6PDwCGxerJbAJ8NIgCuAdTu6WT387F2uIfUgU08tiHhCZ/khybHoCkhm
+         ecxinLYOWoit0aN91aQ2xW9D8bPBmB+nFIMqlp4I=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.49.5.104]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lo0V2-1iorYk1mem-00fyoa; Tue, 07
+ Apr 2020 10:20:38 +0200
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: core: move 'indio_dev->info' null check first
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <cb300eeb-6045-bd91-3e0e-902dd3b5d5d8@web.de>
+Date:   Tue, 7 Apr 2020 10:20:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:d150:: with SMTP id t16mr1233211ilg.164.1586247373398;
- Tue, 07 Apr 2020 01:16:13 -0700 (PDT)
-Date:   Tue, 07 Apr 2020 01:16:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000037a76305a2aeff88@google.com>
-Subject: INFO: trying to register non-static key in __io_uring_register
-From:   syzbot <syzbot+e6eeca4a035da76b3065@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        xiaoguang.wang@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:aHOrZ7W7oehiuXC+BmesoutQg3MIGnbgyZ4wMISjdGAa2gj0zQM
+ Gfh8Rt5ebQ4+E1TcW8C5kTZjKfyiEwzqdQeonY3GJKvrsLotwk6gS673PYLTTt5G7XLtXDN
+ OUdFLMCJDvUoS7xkgelLHZ2+gaiAA69PoGyHpDiAxVUe86sqnFP0Yb0FZwDxKpZycslZYI3
+ rvjPr9hOkPKBwcG3fig4w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IjsO9saZrLc=:HgBVfaxwtJVLHi/x3sjz/P
+ DAjgT52cEVu7cVBXYd9thuhnxYieM01UXMrtK44opiKNoFI5TMB5joN3ucxX5REDqZh0RyjBC
+ YCU6PvON4wDgAM1uyZLYR6q2x6GJvhDxjiZDqqOpnrdxY0JhNnyyNnf2jXXmRAldFtTa5JRDm
+ pqOxekv+j3zj+OPgXkY91bSWjaF5XXgqvRDBOi7pjscHvJW8T9VwS1FKVhbuQG/s3eb36fLCU
+ 2RDSgDXw9BeTBSwKSlQzc8voYf+gVRqv/p8+RcR1AZnwEBHlGb4ytNYpGE3DMSrzpnNsBn8sA
+ 1Br3FwMd5s8NU59az97m8G3pzf1BnZ6Q+mg/SuaYx0XrDDAldKU11QoxCvnG1kWBoRhO50IcR
+ BTD6B4nUc9Uxo+SG/CgMQbKWO4U14MDdbNWEEo/j94O0zsSwoZkygEnoewI+sDjg0bRJp77zl
+ ZSB/VocwARZtPxqPzUqASfbjd8bv3ruAbjihej71VGV1dJXA2+sDfcOfeZhHepCJkIarPuIBv
+ Htvr2/ZSl+CH5WBlAhrbAXEzCoZ5jtpfz+w5ThTMwwSs4oTwBy8FtpnRwQidzMj4EQs8ejtTs
+ t7/cDnt8W9DlnMQ4zJ/96zFVVMyQkM1HENIw1SCuBOSPIMPkAuN+6P+UsrVqefk4PHmt2048f
+ zlGh3FEXsUlx7vowCXiG1nAV3kj+h/5PJ9PwIBvXmnQWWQOsnTPLVb0ZlHX2hwmo+09ZEa3eM
+ wgnI+rqrockR5c9zLYKqjwo8Ehx2B7qft3W0UOeiDwAsFf8gsApqqgAP3ANotl5cuCxIQVNpu
+ +CtIycP66FKGwwgHOorVenSgS5+oRswBzhiGs5TAGFhg48WSiac9O7+6O+0+xqqR6LsddXUXV
+ 2zORQrIHXkoS52GcEUtsp1HS69J8K8aQXNY7N7MddKyOkPnQNsipckAT9ZPSAYKpdHJe1y/uq
+ ykt0POpn+c5Wu0I0xKOcmKaJVsygka+UNLJKKvkZFjZp8Qyj7gAXOvHCq++TOOJ4xInRolM3e
+ vVJNO0FL8iM0y2devuqZzSSmvyRW/rTYaqpJWD6cHn94YP1HBl/tcfWNAPqPAad6kv1kSLt+u
+ DTaoSucDDi4VpmLSWpoaA9skPYHCwfQNjoY65ZQk/z419wZBLpC1Ie6thKbaYPMPTD/1oX/X3
+ I/5kCBpDc0ICOuDsOC4hGlDFoDuLuOvG1raXqqgyiMx7P2FxAUS5N7DHLQoKah76f6Q1fn0hs
+ oPzbTVM2rc8j8EKG0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> Doesn't fix anything.
 
-syzbot found the following crash on:
-
-HEAD commit:    b2e2a818 Add linux-next specific files for 20200406
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1418a1c7e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=595413e7170f444b
-dashboard link: https://syzkaller.appspot.com/bug?extid=e6eeca4a035da76b3065
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17cd89cde00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=102d89cde00000
-
-The bug was bisected to:
-
-commit 0558955373023b08f638c9ede36741b0e4200f58
-Author: Xiaoguang Wang <xiaoguang.wang@linux.alibaba.com>
-Date:   Tue Mar 31 06:05:18 2020 +0000
-
-    io_uring: refactor file register/unregister/update handling
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=166f91c7e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=156f91c7e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=116f91c7e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e6eeca4a035da76b3065@syzkaller.appspotmail.com
-Fixes: 055895537302 ("io_uring: refactor file register/unregister/update handling")
-
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 7099 Comm: syz-executor897 Not tainted 5.6.0-next-20200406-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:913 [inline]
- register_lock_class+0x1664/0x1760 kernel/locking/lockdep.c:1225
- __lock_acquire+0x104/0x4e00 kernel/locking/lockdep.c:4223
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4923
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
- io_sqe_files_register fs/io_uring.c:6599 [inline]
- __io_uring_register+0x1fe8/0x2f00 fs/io_uring.c:8001
- __do_sys_io_uring_register fs/io_uring.c:8081 [inline]
- __se_sys_io_uring_register fs/io_uring.c:8063 [inline]
- __x64_sys_io_uring_register+0x192/0x560 fs/io_uring.c:8063
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x440289
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffff1bbf558 EFLAGS: 00000246 ORIG_RAX: 00000000000001ab
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440289
-RDX: 0000000020000280 RSI: 0000000000000002 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000401b10
-R13: 0000000000401ba0 R14: 0000000000000000 R15: 0000000000000000
+Would the change description be nicer without this sentence?
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> Just moves this =E2=80=A6
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+I suggest to choose an imperative wording.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?id=3D7e63420847ae5f1036e4f7c42f=
+0b3282e73efbc2#n151
+
+Regards,
+Markus
