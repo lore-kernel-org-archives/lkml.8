@@ -2,131 +2,145 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EC3C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F59CC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1242078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:40:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czssrx60"
+	by mail.kernel.org (Postfix) with ESMTP id 8146720719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729608AbgDGQkA (ORCPT
+        id S1728766AbgDGQk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:40:00 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36948 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728667AbgDGQj5 (ORCPT
+        Tue, 7 Apr 2020 12:40:27 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:52194 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727993AbgDGQk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:39:57 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u65so1051876pfb.4;
-        Tue, 07 Apr 2020 09:39:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VRer8X2L/GUfBquT6NjWsO1KdgfiQsJvE+ja9YUCoBw=;
-        b=czssrx60iQ6+hcLiuMSvIwFmTLPuzgEeGYNSmaF9PYR/RMPq1lhVgFl0e0NoaRdn9i
-         k5tlRRS12hm+t1ookatrwhGPkRhrlhBBMDObFzvTHMp5dyyzvNmFNT3lso+pwb6uUciY
-         ub9DL3xZo6iSKyv8sTp/HxGZYti061s3FY7YCAz4ZLcbIwTWRXVe15Td9dMM8NC8eRz4
-         dn71kr8Nqa/ZGsHB/OnOImEBU3dnyhB7mWu9orjgSunFbTdOb+J/ZdLA9TVZlDnU9hb3
-         0gj7IbKqSlmp39UvXk/z/ybw1yVfYxvnpTgg/hwzGYvyVbtcDUFwpMnDYPZseuRztQWJ
-         JmVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VRer8X2L/GUfBquT6NjWsO1KdgfiQsJvE+ja9YUCoBw=;
-        b=Fmuc+mhbf3+BOewinzQsYGLeotx5LV1B9Mng/TCQxrvXDx3Xh8opQA6NAUajqdbKGg
-         t8pNFuJiedXio+/rtnKGevLwlS+VlfgdHnb3DtccaTeFY2Oehdx7bRS0STZdhuCepTpi
-         l8GeXaIG3DrkuMoj+TEiOCNb7whxhg65FXFsOBz95yzMu6RgUAdI7HZr9s07hNu/4FTX
-         jajlxDsHIKGp3jxf/ePvRHbwF8Bp/Jgcjvpj4gRF/HM9bPLdGG2qSeC3DYXEEPurPpJD
-         AUW3i048B7LxZKTmh4ipU8jwNsgyRAopR7uXkpF+jXOYDF7bWIxlXrY7GbwTXJXGMgZW
-         uNLg==
-X-Gm-Message-State: AGi0PubnmTLY8i/Im4LLH24onXvW0F83J3ExL86KiMnabgx4pnO53wHz
-        W6WxFQNTE+xi5YyWLLbILJI=
-X-Google-Smtp-Source: APiQypJGSKZhvfZ2QAlimweCH8iql1s8R258WWfSHP6WRjIydPOv6M9y+MFtyf4SfosMWHq7TxFq0w==
-X-Received: by 2002:aa7:9588:: with SMTP id z8mr3201521pfj.240.1586277596617;
-        Tue, 07 Apr 2020 09:39:56 -0700 (PDT)
-Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
-        by smtp.gmail.com with ESMTPSA id a13sm1127925pfc.26.2020.04.07.09.39.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Apr 2020 09:39:56 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        nsekhar@ti.com, bgolaszewski@baylibre.com,
-        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        mika.westerberg@linux.intel.com, baruch@tkos.co.il,
-        wsa+renesas@sang-engineering.com, kgene@kernel.org,
-        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
-        khilman@baylibre.com, matthias.bgg@gmail.com,
-        gregory.clement@bootlin.com, rrichter@marvell.com,
-        afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, heiko@sntech.de,
-        baohua@kernel.org, linus.walleij@linaro.org, mripard@kernel.org,
-        wens@csie.org, ardb@kernel.org, michal.simek@xilinx.com,
-        gcherian@marvell.com, jun.nie@linaro.org, shawnguo@kernel.org,
-        rayagonda.kokatanur@broadcom.com, lori.hikichi@broadcom.com,
-        nishkadg.linux@gmail.com, kstewart@linuxfoundation.org,
-        allison@lohutok.net, gregkh@linuxfoundation.org,
-        tglx@linutronix.de, bigeasy@linutronix.de, info@metux.net,
-        hslester96@gmail.com, narmstrong@baylibre.com,
-        martin.blumenstingl@googlemail.com, qii.wang@mediatek.com,
-        drinkcat@chromium.org, hsinyi@chromium.org, fparent@baylibre.com,
-        opensource@jilayne.com, swinslow@gmail.com,
-        linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v1 28/28] i2c: octeon-platdrv: convert to devm_platform_ioremap_resource
-Date:   Wed,  8 Apr 2020 00:37:41 +0800
-Message-Id: <20200407163741.17615-29-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200407163741.17615-1-zhengdejin5@gmail.com>
-References: <20200407163741.17615-1-zhengdejin5@gmail.com>
+        Tue, 7 Apr 2020 12:40:26 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 0A114634C89;
+        Tue,  7 Apr 2020 19:39:17 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jLrFs-0002MN-3d; Tue, 07 Apr 2020 19:39:16 +0300
+Date:   Tue, 7 Apr 2020 19:39:16 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200407163916.GL6127@valkosipuli.retiisi.org.uk>
+References: <20200331133346.372517-2-robert.foss@linaro.org>
+ <20200401080705.j4goeqcqhoswhx4u@gilmour.lan>
+ <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
+ <20200403232736.GA6127@valkosipuli.retiisi.org.uk>
+ <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
+ <20200406083506.GE6127@valkosipuli.retiisi.org.uk>
+ <20200407083647.4mocdl7aqa3x737q@gilmour.lan>
+ <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
+ <20200407123232.ktvaifhqntgzvkap@gilmour.lan>
+ <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use devm_platform_ioremap_resource() to simplify code, which
-contains platform_get_resource and devm_ioremap_resource.
+On Tue, Apr 07, 2020 at 05:47:41PM +0200, Robert Foss wrote:
+> On Tue, 7 Apr 2020 at 14:32, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > Hi Robert,
+> >
+> > On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
+> > > On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
+> > > > > > But that 19.2MHz is not a limitation of the device itself, it's a
+> > > > > > limitation of our implementation, so we can instead implement
+> > > > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
+> > > > > > sure that our parent clock is configured at the right rate) and the
+> > > > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
+> > > > > > been rounded too far apart from the frequency we expect).
+> > > > > >
+> > > > > > This is doing exactly the same thing, except that we don't encode our
+> > > > > > implementation limitations in the DT, but in the driver instead.
+> > > > >
+> > > > > What I really wanted to say that a driver that doesn't get the clock
+> > > > > frequency from DT but still sets that frequency is broken.
+> > > > >
+> > > > > This frequency is highly system specific, and in many cases only a certain
+> > > > > frequency is usable, for a few reasons: On many SoCs, not all common
+> > > > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
+> > > > > are being used as well), and then that frequency affects the usable CSI-2
+> > > > > bus frequencies directly --- and of those, only safe, known-good ones
+> > > > > should be used. IOW, getting the external clock frequency wrong typically
+> > > > > has an effect that that none of the known-good CSI-2 bus clock frequencies
+> > > > > are available.
+> > > >
+> > > > So clock-frequency is not about the "Frequency of the xvclk clock in
+> > > > Hertz", but the frequency at which that clock must run on this
+> > > > particular SoC / board to be functional?
+> > > >
+> > > > If so, then yeah, we should definitely keep it, but the documentation
+> > > > of the binding should be made clearer as well.
+> > >
+> > > Alright so, let me summarise the desired approach then.
+> >
+> > There's a separate discussion on the same topic here:
+> > https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
+> 
+> Thanks for the link.
+> 
+> >
+> > > ACPI:
+> > >   - Fetch the "clock-frequency" property
+> > >   - Verify it to be 19.2Mhz
+> > >
+> > > DT:
+> > >   - Fetch the "clock-frequency" property
+> > >   - Verify it to be 19.2Mhz
+> > >   - Get xvclk clock
+> > >   - Get xvclk clock rate
+> > >   - Verify xvclk clock rate to be 19.2Mhz
+> >
+> > The current status is that you should
+> > 's/clock-frequency/link-frequencies/', and in order to replace
+> > assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
+> > between steps 3 and 4
+> 
+> Would we want to 's/clock-frequency/link-frequencies/' for ACPI too?
+> I imagine that would cause some breakage.
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/i2c/busses/i2c-octeon-platdrv.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+It would, yes, and it would be no more correct on DT either.
 
-diff --git a/drivers/i2c/busses/i2c-octeon-platdrv.c b/drivers/i2c/busses/i2c-octeon-platdrv.c
-index 64bda83e65ac..0c227963c8d6 100644
---- a/drivers/i2c/busses/i2c-octeon-platdrv.c
-+++ b/drivers/i2c/busses/i2c-octeon-platdrv.c
-@@ -136,7 +136,6 @@ static int octeon_i2c_probe(struct platform_device *pdev)
- {
- 	struct device_node *node = pdev->dev.of_node;
- 	int irq, result = 0, hlc_irq = 0;
--	struct resource *res_mem;
- 	struct octeon_i2c *i2c;
- 	bool cn78xx_style;
- 
-@@ -167,8 +166,7 @@ static int octeon_i2c_probe(struct platform_device *pdev)
- 	i2c->roff.twsi_int = 0x10;
- 	i2c->roff.sw_twsi_ext = 0x18;
- 
--	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	i2c->twsi_base = devm_ioremap_resource(&pdev->dev, res_mem);
-+	i2c->twsi_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(i2c->twsi_base)) {
- 		result = PTR_ERR(i2c->twsi_base);
- 		goto out;
+There are basically two possibilities here; either use the clock-frequency
+property and set the frequency, or rely on assigned-clock-rates, and get
+the frequency instead.
+
+The latter, while I understand it is generally preferred, comes with having
+to figure out the register list set that closest matches the frequency
+obtained. The former generally gets around this silently by the clock
+driver setting the closest frequency it can support.
+
 -- 
-2.25.0
+Regards,
 
+Sakari Ailus
