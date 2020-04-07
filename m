@@ -5,63 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BEAC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45F0C2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98259206F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863EE206F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJrU1YiG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qVlGe6IV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgDGHf3 (ORCPT
+        id S1727614AbgDGHgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 03:35:29 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46228 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgDGHf3 (ORCPT
+        Tue, 7 Apr 2020 03:36:46 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35716 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgDGHgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 03:35:29 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 111so726188oth.13;
-        Tue, 07 Apr 2020 00:35:28 -0700 (PDT)
+        Tue, 7 Apr 2020 03:36:46 -0400
+Received: by mail-ot1-f68.google.com with SMTP id v2so2136585oto.2;
+        Tue, 07 Apr 2020 00:36:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Fid1QYCY0NO/I6cTp/weYurLiEg0cFhCN05hyqNgj/o=;
-        b=XJrU1YiGYXObCCyXMEpQZnKbbwe1ZMgGBITvdVL8yqcS5c4ABjNgv1qZ5t/y9cw1F8
-         MsAAVIWLcQQ8q6DRSVEp6ovppqqwycPJ9VisN7GDYbtZfqjNpNOWgfnac39+vNq+GqHr
-         DULGIjG0ANLz3tIsKU4xd3dR0PrSm/4vbFXWQN6POY1r40YiFRZSprxg0UweJmKdQaps
-         TS21+MlgxJ9bz9czec7CBhYaH+YRzenE/DJ+JRbXLYVnFS9LPdxhQAtfN+nDIGbZ9+no
-         dva2d+fT/l2uXBMFoA2YBFZoc3FnekN5iwPVOMlUVjsZlYPTg+9bGkMGhSeGq6HTV/yL
-         eAGw==
+        bh=MXkFKK0nBYOjUan987EYuLjdzpEpfg2o9ahd6UADeAM=;
+        b=qVlGe6IVUK5d+MeTkjvvVNqA01YUQYDIfau+P2843flDckaJGhAAGphCCUVY48NpV1
+         zOBmqIUAIIOh1d+nEi4tgqLbws2/5KtESiEZoyq03SKkA/DyCt0i+BGcmCAj848JscnE
+         IsUEEsvrh7efftHE4LzY3tfEq89fvTbdu00JKh/FlKrVp4Av6SVY6qsm1BKpDLxyrPk4
+         JVRDIkYBdLRotogkW57VWTW0/zeg065JlstGIq8fSNInXip5woEf6Uuwt5I9hpzptriS
+         xeOkHj8gFW3cJd1rpX9OoK/SV8+IwtQYM/TPoVvbd1QX/dzABm9kyRe8OrKU2s/XyrY6
+         VAEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Fid1QYCY0NO/I6cTp/weYurLiEg0cFhCN05hyqNgj/o=;
-        b=AtlrFnODiReNrwCPTE525ASig/uFtSPAu3f9qDFf2awcZT54AHmHGjlPmkpzlcwe/Y
-         tQwyHJX8707V1hEAljkNMup0S3TWUiRf+Vx7AWz8XPpH1bNi8VMqWpLwUUawfsMZSFV5
-         Q7QAx2pjE2GPPrDdBHB+dUhvjAg6MDOB0rsWNsqk314VWJzTU2yph0kbznIac5nAtUnQ
-         5RxTqS5OqmHCOxsfjazSH+CNFOTPA/BwPqn5POdPLSTDXhprlnmaWGZjrGpPcVMsvO7O
-         Cl+qAxB0P18IDGaV37YlUQsqMHxII4LQ5lvqyldmrEnmJltXXc3X5zWDkmjlZXQYNT0T
-         zqeg==
-X-Gm-Message-State: AGi0PuZpFNM4J9+tqib7PriJga/Qb1i8Ox+/tk43x4wGbA5cRfm+Zgzd
-        YzXbXqxywouzgMMVf2Q4E53oaJ/Xu0U/e99giOs=
-X-Google-Smtp-Source: APiQypLI0T3PwqTnxtxkqJnxwE8QGxknf0jO+EhxS8l79ny0FYLhK6MNtO3r7HSPV1qbh6C45cOjMeY+tdBR+PB/R0k=
-X-Received: by 2002:a9d:ef6:: with SMTP id 109mr474840otj.43.1586244928446;
- Tue, 07 Apr 2020 00:35:28 -0700 (PDT)
+        bh=MXkFKK0nBYOjUan987EYuLjdzpEpfg2o9ahd6UADeAM=;
+        b=STHBWWZDr8T+ZsqWDfkOBuj0rutTHQNJAIuqwbe+XdyIzfyc0kSd0fcC91bz1tBwxu
+         vOHFYHzWCVI4F9f1ouY8Oz66aCJ+Q6c1uCukQmX+BGmIdssR5RG66of/LMV2pbdrnTHZ
+         HU0fDrUG0yBolWhhAf5g1euKKsGQefMzECE99yCr/Sp8DGODDQHLbxd0/UMnnks8MlzN
+         rSKwcbq8Uf2e6ONB31jLfYq3jthhD5nIP1CJYaO//BcLvIjnbdZOjSfjtywQnJvlqi1t
+         dYRsGhywY+1Ebrx3UFzmdVukEdLBNBXeHZchqsC6KqDYpNbncgqKOABKY2KuGkS7vLGt
+         XPgg==
+X-Gm-Message-State: AGi0PuZlrSdeKiE2F1CYbr+X3h1/5yJuzHHySBVQFh9dTh5yCwFTVjAo
+        mFEAvf6CqYVGPRToiZhi8pZMb37IeY4uJQ9SyUs=
+X-Google-Smtp-Source: APiQypJqyGDzl5VXE9Pp5Imd+j7wp2mMXSOcontkXnZYyqlWKTlr+lV+SmLAlDscNrlVYewbyYf/dBRu+iPg9yHiALI=
+X-Received: by 2002:a4a:7555:: with SMTP id g21mr840337oof.46.1586245005099;
+ Tue, 07 Apr 2020 00:36:45 -0700 (PDT)
 MIME-Version: 1.0
 References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200406173002.GC16885@pendragon.ideasonboard.com>
-In-Reply-To: <20200406173002.GC16885@pendragon.ideasonboard.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200406173425.GE16885@pendragon.ideasonboard.com>
+In-Reply-To: <20200406173425.GE16885@pendragon.ideasonboard.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 7 Apr 2020 08:35:02 +0100
-Message-ID: <CA+V-a8sROBQpYvaP8TJ9fGYqOXT+uFsKhjnVBh0hZ2qS7yLQiQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/5] media: dt-bindings: media: i2c: Deprecate usage of
- the clock-frequency property
+Date:   Tue, 7 Apr 2020 08:36:19 +0100
+Message-ID: <CA+V-a8tmj0SDpJWPL1B3GQ6FA=fLN-4-oCj5p4L0vAZSBg29vw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency dt-property
 To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
@@ -89,55 +88,76 @@ Hi Laurent,
 
 Thank you for the review.
 
-On Mon, Apr 6, 2020 at 6:30 PM Laurent Pinchart
+On Mon, Apr 6, 2020 at 6:34 PM Laurent Pinchart
 <laurent.pinchart@ideasonboard.com> wrote:
 >
 > Hi Prabhakar,
 >
 > Thank you for the patch.
 >
-> On Mon, Apr 06, 2020 at 05:42:37PM +0100, Lad Prabhakar wrote:
-> > OV5645 sensor supports input clock frequency ranging from 6MHz to 27MHz
-> > but the driver strictly expects this to be 24MHz (with tolerance of 1%)
-> > with this restrictions let the driver enforce the clock frequency
+> On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> > 24MHz. So instead making clock-frequency as dt-property just let the
+> > driver enforce the required clock frequency.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/media/i2c/ov5645.c | 14 +++++---------
+> >  1 file changed, 5 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/media/i2c/ov5645.c b/drivers/media/i2c/ov5645.c
+> > index a6c17d15d754..52848fff8a08 100644
+> > --- a/drivers/media/i2c/ov5645.c
+> > +++ b/drivers/media/i2c/ov5645.c
+> > @@ -61,6 +61,8 @@
+> >  #define OV5645_SDE_SAT_U             0x5583
+> >  #define OV5645_SDE_SAT_V             0x5584
+> >
+> > +#define OV5645_XVCLK_FREQ            24000000
+> > +
+> >  /* regulator supplies */
+> >  static const char * const ov5645_supply_name[] = {
+> >       "vdddo", /* Digital I/O (1.8V) supply */
+> > @@ -1094,25 +1096,19 @@ static int ov5645_probe(struct i2c_client *client)
+> >               return PTR_ERR(ov5645->xclk);
+> >       }
+> >
+> > -     ret = of_property_read_u32(dev->of_node, "clock-frequency", &xclk_freq);
+> > +     ret = clk_set_rate(ov5645->xclk, OV5645_XVCLK_FREQ);
+> >       if (ret) {
+> > -             dev_err(dev, "could not get xclk frequency\n");
+> > +             dev_err(dev, "could not set xclk frequency\n");
+> >               return ret;
+> >       }
+> > -
 >
-> Maybe s/with/With/ ?
+> I think you can keep the blank line here.
 >
-OK will fix it next version.
+Oops my bad will drop that in next version.
 
 Cheers,
 --Prabhakar
 
-> > internally to 24MHz rather then being passed as dt-property.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
 > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 >
-> > ---
-> >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 2 --
-> >  1 file changed, 2 deletions(-)
+> >       /* external clock must be 24MHz, allow 1% tolerance */
+> > +     xclk_freq = clk_get_rate(ov5645->xclk);
+> >       if (xclk_freq < 23760000 || xclk_freq > 24240000) {
+> >               dev_err(dev, "external clock frequency %u is not supported\n",
+> >                       xclk_freq);
+> >               return -EINVAL;
+> >       }
 > >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > index 72ad992f77be..a55bb728ea48 100644
-> > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > @@ -8,7 +8,6 @@ Required Properties:
-> >  - compatible: Value should be "ovti,ov5645".
-> >  - clocks: Reference to the xclk clock.
-> >  - clock-names: Should be "xclk".
-> > -- clock-frequency: Frequency of the xclk clock.
-> >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> >    to the hardware pin PWDNB which is physically active low.
-> >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > @@ -37,7 +36,6 @@ Example:
+> > -     ret = clk_set_rate(ov5645->xclk, xclk_freq);
+> > -     if (ret) {
+> > -             dev_err(dev, "could not set xclk frequency\n");
+> > -             return ret;
+> > -     }
+> > -
+> >       for (i = 0; i < OV5645_NUM_SUPPLIES; i++)
+> >               ov5645->supplies[i].supply = ov5645_supply_name[i];
 > >
-> >                       clocks = <&clks 200>;
-> >                       clock-names = "xclk";
-> > -                     clock-frequency = <24000000>;
-> >
-> >                       vdddo-supply = <&camera_dovdd_1v8>;
-> >                       vdda-supply = <&camera_avdd_2v8>;
 >
 > --
 > Regards,
