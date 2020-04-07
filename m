@@ -2,144 +2,177 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACA8C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5B9C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380AB20692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C912072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MyRqMeCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgDGPI0 convert rfc822-to-8bit (ORCPT
+        id S1729376AbgDGPJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:08:26 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51630 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728917AbgDGPI0 (ORCPT
+        Tue, 7 Apr 2020 11:09:23 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:33364 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728917AbgDGPJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:08:26 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037F82rh066732
-        for <linux-kernel@vger.kernel.org>; Tue, 7 Apr 2020 11:08:25 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082pej4nf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 11:08:24 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
-        Tue, 7 Apr 2020 16:08:04 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 Apr 2020 16:08:00 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037F7Djk48431584
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 15:07:13 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D721A4C04A;
-        Tue,  7 Apr 2020 15:08:17 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 72EAE4C044;
-        Tue,  7 Apr 2020 15:08:17 +0000 (GMT)
-Received: from localhost (unknown [9.85.74.108])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Apr 2020 15:08:17 +0000 (GMT)
-Date:   Tue, 07 Apr 2020 20:38:13 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH v6 4/4] powerpc/vdso: Switch VDSO to generic C
- implementation.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        Paul Mackerras <paulus@samba.org>
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, luto@kernel.org, tglx@linutronix.de,
-        vincenzo.frascino@arm.com
-References: <cover.1586265010.git.christophe.leroy@c-s.fr>
-        <56e0cc4bc8314ee4da87256fcafc03885977f0dd.1586265010.git.christophe.leroy@c-s.fr>
-In-Reply-To: <56e0cc4bc8314ee4da87256fcafc03885977f0dd.1586265010.git.christophe.leroy@c-s.fr>
+        Tue, 7 Apr 2020 11:09:23 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200407150921euoutp01bf0ea6ba0bc64b75ab3abfb098b40d7f~DkiBbiipe2841728417euoutp01-
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Apr 2020 15:09:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200407150921euoutp01bf0ea6ba0bc64b75ab3abfb098b40d7f~DkiBbiipe2841728417euoutp01-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1586272161;
+        bh=idauTFWK3EpGoGdyTuPSIRfG1qiQ4QuCWlsIf0lCvis=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=MyRqMeCmRZgtvN/qXVsScBSpE/PX6ZLkI/A+UaVKf3VL2VAqviKfrJjgxYegcukLS
+         snMrnK3MM0LzeAZqzyCe71VL1HGY3cjnlYeFg9MJYkkwv9zr+R34esAj/OiXtnt3l7
+         JdGfyQcDhclZEvyC+TCPdEqKJpbg6jfDKXX4LhWs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200407150921eucas1p1d6e08cb14ebc93275b56ef404cc3e9bc~DkiBL3Ieq1502615026eucas1p1z;
+        Tue,  7 Apr 2020 15:09:21 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id C3.D8.60698.1A79C8E5; Tue,  7
+        Apr 2020 16:09:21 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200407150920eucas1p2cb21da18247e3a715521cced7445e593~DkiA2imxC3080030800eucas1p2C;
+        Tue,  7 Apr 2020 15:09:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200407150920eusmtrp1ed47ecce65e10c1249762595dba836db~DkiA10Ics2164321643eusmtrp16;
+        Tue,  7 Apr 2020 15:09:20 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-ec-5e8c97a13edf
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id FA.59.07950.0A79C8E5; Tue,  7
+        Apr 2020 16:09:20 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200407150920eusmtip1cf6a74c9b9d6b9dd2d26ab4440874a57~DkiAXVC2E2577125771eusmtip1X;
+        Tue,  7 Apr 2020 15:09:20 +0000 (GMT)
+Subject: Re: [RESEND 2/2] drm: bridge: adv7511: Extend list of audio sample
+ rates
+To:     Bogdan Togorean <bogdan.togorean@analog.com>,
+        dri-devel@lists.freedesktop.org
+Cc:     jernej.skrabec@siol.net, jonas@kwiboo.se, airlied@linux.ie,
+        narmstrong@baylibre.com, linux-kernel@vger.kernel.org,
+        alexios.zavras@intel.com, Laurent.pinchart@ideasonboard.com,
+        tglx@linutronix.de
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <6ecea2a4-ba7a-929e-3536-22bbb1a39f40@samsung.com>
+Date:   Tue, 7 Apr 2020 17:09:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thunderbird/68.4.1
 MIME-Version: 1.0
-User-Agent: astroid/v0.15-13-gb675b421
- (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20040715-0008-0000-0000-0000036C3AB7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040715-0009-0000-0000-00004A8DD4DB
-Message-Id: <1586271940.xja63xxjer.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_07:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
- adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004070127
+In-Reply-To: <20200224120155.15510-2-bogdan.togorean@analog.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUgUcRTH/e3M7o5bK+Oq+LIoWoIwPBL9YyIThYghIoIgSsscdTzKix3X
+        K0o7rFV3Q10P1NIuSyTIPNYrRdbIezVT8GwrpFjRtGxNMyXXUfK/z3vv+973PXgEJhsUOhGR
+        MfGsIoaJkoskuO7dssH1caE68HBlmpjSGLoEVOtkq5i6lZ6HUUPmORE1/NuEUV0zwziVkfNM
+        TH1oeiCi9PcDqJrqfMxXQk8P+9FzI+liukRVJKSfvjEJ6M7sQQH93WAQ0/WLn4S0MatDQLdp
+        tDi9UL33jMRf4h3KRkUmsAp3nyBJxGpLA4ozSpKWNRMoDemITGRNAOkFbWV5wkwkIWRkBYI0
+        sw7jg18IVLWlm8ECgq7Rb4KtFnPB2mbhBYLKr4uID2YRtPe/3VDZkWdBM6kSWdh+nc0/tLhF
+        hJG9CIytlrnWhIh0htWa0Q2RlPSBrAI9sjBOHoBaQ+eGxoE8DwX1a4jX2EJX0RRuYWvSF/KK
+        OjYYI/fB7boSjGdHGJsqE1jMgJwVw3xtKeL3Pg5Z5f2bbAfTHbVinvdAj1aN85wKxoo7GN+s
+        QlBX1YjxhaMwYfizvimx7uAMr5rc+bQfVH1pE1jSQNrAyKwtv4MN5OoKMT4tBdVdGa/eD8a+
+        us2BjlA+YBZlI3nxtsuKt11TvO2a4v++jxBeiRxZJRcdznKeMWyiG8dEc8qYcLeQ2OhqtP5p
+        PWsd5gbU+jdYj0gCyXdKPzHqQJmQSeCSo/UICExuL3XSZATKpKFMcgqriL2sUEaxnB7tJnC5
+        o9TziemSjAxn4tmrLBvHKraqAsLaKQ2Nty0N+LHpZVkJO5KQ97HsqOBQL8pV34sP4FKD1YWV
+        19e6T42dSF85Ms5l5qq1zS8jGhpvzGqbl/sYj9NB5/JbcuqsSnd5liqVBytmQn76P6xaGrIP
+        SIhMVHemOM/nd3/se+5iCiv5bIy9/t5FedOrxqr9ioMu7CSMZaRelN9bkONcBONxCFNwzD/R
+        xwZPZQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKIsWRmVeSWpSXmKPExsVy+t/xu7oLpvfEGWydpm3Re+4kk8W+u/vY
+        LZpapzBbXPn6ns3i6veXzBYn31xlseicuITd4vKuOWwWh/qiLTZvmsrswOXx6qqjx/sbrewe
+        sztmsnos3vOSyePEhEtMHu/OnWP32P7tAavH/e7jTB4HeiezeHzeJBfAFaVnU5RfWpKqkJFf
+        XGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX8XfvDsaC+1wVP3vvMDYw
+        buPoYuTkkBAwkfg67R9zFyMXh5DAUkaJtc1LGSES4hK7579lhrCFJf5c62KDKHrNKPH/1lwm
+        kISwQLBE790ONhBbBMj++PcGO0gRs8AZRondqxcyQXScZJS4P3UxWBWbgKbE3803wWxeATuJ
+        7mmHwNaxCKhIbDl3AmydqECExOOJ7YwQNYISJ2c+YQGxOQUcJKbMPA5mMwuoS/yZd4kZwpaX
+        aN46G8oWl7j1ZD7TBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1kvNz
+        NzECo3jbsZ9bdjB2vQs+xCjAwajEw/sgsSdOiDWxrLgy9xCjBAezkgivVG9nnBBvSmJlVWpR
+        fnxRaU5q8SFGU6DnJjJLiSbnAxNMXkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC
+        1CKYPiYOTqkGRsVX7VrMTN891j5mEnL61LIzfteBPaxLrmbtehxQf/C1gFWQHet9a7513I+F
+        69P/d0oe2M/1SOnUgcaWuQ8PuGZW/3Y5F73VqNJpiuuhBIvyvPvSznP0Q257Ot07/+bbpI7b
+        Tx9dZzjxynr/5BrJgJXXVbXqHx4qfX4sdK+dhqj5v5drBKKuOCqxFGckGmoxFxUnAgAUZZlv
+        +AIAAA==
+X-CMS-MailID: 20200407150920eucas1p2cb21da18247e3a715521cced7445e593
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200224165503eucas1p2a8aea2390c4b0421e99641e0d4183167
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200224165503eucas1p2a8aea2390c4b0421e99641e0d4183167
+References: <20200224120155.15510-1-bogdan.togorean@analog.com>
+        <CGME20200224165503eucas1p2a8aea2390c4b0421e99641e0d4183167@eucas1p2.samsung.com>
+        <20200224120155.15510-2-bogdan.togorean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy wrote:
-> powerpc is a bit special for VDSO as well as system calls in the
-> way that it requires setting CR SO bit which cannot be done in C.
-> Therefore, entry/exit needs to be performed in ASM.
-> 
-> Implementing __arch_get_vdso_data() would clobbers the link register,
-> requiring the caller to save it. As the ASM calling function already
-> has to set a stack frame and saves the link register before calling
-> the C vdso function, retriving the vdso data pointer there is lighter.
-> 
-> Implement __arch_vdso_capable() and:
-> - When the timebase is used, make it always return true.
-> - When the RTC clock is used, make it always return false.
-> 
-
-<snip>
-
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+On 24.02.2020 13:01, Bogdan Togorean wrote:
+> ADV7511 support sample rates up to 192kHz. CTS and N parameters should
+> be computed accordingly so this commit extend the list up to maximum
+> supported sample rate.
+>
+> Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
 > ---
-> v6:
-> - Added missing prototypes in asm/vdso/gettimeofday.h for __c_kernel_ functions.
-> - Using STACK_FRAME_OVERHEAD instead of INT_FRAME_SIZE
-> - Rebased on powerpc/merge as of 7 Apr 2020
-> - Fixed build failure with gcc 9
-> - Added a patch to create asm/vdso/processor.h and more cpu_relax() in it
-> ---
->  arch/powerpc/Kconfig                         |   2 +
->  arch/powerpc/include/asm/clocksource.h       |   7 +
->  arch/powerpc/include/asm/vdso/clocksource.h  |   7 +
->  arch/powerpc/include/asm/vdso/gettimeofday.h | 175 +++++++++++
->  arch/powerpc/include/asm/vdso/vsyscall.h     |  25 ++
->  arch/powerpc/include/asm/vdso_datapage.h     |  40 +--
->  arch/powerpc/kernel/asm-offsets.c            |  49 +---
->  arch/powerpc/kernel/time.c                   |  91 +-----
->  arch/powerpc/kernel/vdso.c                   |   5 +-
->  arch/powerpc/kernel/vdso32/Makefile          |  32 +-
->  arch/powerpc/kernel/vdso32/config-fake32.h   |  34 +++
->  arch/powerpc/kernel/vdso32/gettimeofday.S    | 291 +------------------
->  arch/powerpc/kernel/vdso32/vgettimeofday.c   |  29 ++
->  arch/powerpc/kernel/vdso64/Makefile          |  23 +-
->  arch/powerpc/kernel/vdso64/gettimeofday.S    | 243 +---------------
->  arch/powerpc/kernel/vdso64/vgettimeofday.c   |  29 ++
->  16 files changed, 391 insertions(+), 691 deletions(-)
->  create mode 100644 arch/powerpc/include/asm/clocksource.h
->  create mode 100644 arch/powerpc/include/asm/vdso/clocksource.h
->  create mode 100644 arch/powerpc/include/asm/vdso/gettimeofday.h
->  create mode 100644 arch/powerpc/include/asm/vdso/vsyscall.h
->  create mode 100644 arch/powerpc/kernel/vdso32/config-fake32.h
->  create mode 100644 arch/powerpc/kernel/vdso32/vgettimeofday.c
->  create mode 100644 arch/powerpc/kernel/vdso64/vgettimeofday.c
-
-You should also consider adding -fasynchronous-unwind-tables. For 
-background, please see:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ba96301ce9be7925cdaee677b1a2ff8eddba9fd4
+>  drivers/gpu/drm/bridge/adv7511/adv7511_audio.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+> index 1e9b128d229b..13e8cee6e827 100644
+> --- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+> +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+> @@ -27,6 +27,18 @@ static void adv7511_calc_cts_n(unsigned int f_tmds, unsigned int fs,
+>  	case 48000:
+>  		*n = 6144;
+>  		break;
+> +	case 88200:
+> +		*n = 12544;
+> +		break;
+> +	case 96000:
+> +		*n = 12288;
+> +		break;
+> +	case 176400:
+> +		*n = 25088;
+> +		break;
+> +	case 192000:
+> +		*n = 24576;
+> +		break;
 
 
-- Naveen
+I would put:
+
+case 32000:
+case 48000:
+case 96000:
+case 192000:
+    *n = fs * 128 / 1000;
+    break;
+case 44100:
+case 88200:
+case 176400:
+    *n = fs * 128 / 900;
+    break;
+
+To uncover the magic. Up to you.
+
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+
+Regards
+Andrzej
+>  	}
+>  
+>  	*cts = ((f_tmds * *n) / (128 * fs)) * 1000;
+
 
