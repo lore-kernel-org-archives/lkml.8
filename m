@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C80BC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B660C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D56F2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358E32075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgDGTUh (ORCPT
+        id S1727390AbgDGTUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:20:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19248 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727002AbgDGTUf (ORCPT
+        Tue, 7 Apr 2020 15:20:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25266 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727192AbgDGTUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:20:35 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037J36qc034588;
-        Tue, 7 Apr 2020 15:20:34 -0400
+        Tue, 7 Apr 2020 15:20:38 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037J91CS120236;
+        Tue, 7 Apr 2020 15:20:36 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082nx33y5-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 308ye2g8rq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 15:20:34 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 037JHF3u087179;
-        Tue, 7 Apr 2020 15:20:33 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082nx33xp-1
+        Tue, 07 Apr 2020 15:20:36 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 037J9eou123167;
+        Tue, 7 Apr 2020 15:20:36 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 308ye2g8rh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 15:20:33 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 037JKCYK010870;
-        Tue, 7 Apr 2020 19:20:32 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02wdc.us.ibm.com with ESMTP id 306hv6jdkx-1
+        Tue, 07 Apr 2020 15:20:36 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 037JKZDF027895;
+        Tue, 7 Apr 2020 19:20:35 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03wdc.us.ibm.com with ESMTP id 306hv6ae53-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 19:20:32 +0000
+        Tue, 07 Apr 2020 19:20:35 +0000
 Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037JKUtO45678932
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037JKYsv48890254
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 19:20:30 GMT
+        Tue, 7 Apr 2020 19:20:34 GMT
 Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CBE4C2805E;
-        Tue,  7 Apr 2020 19:20:30 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0A5AD28059;
+        Tue,  7 Apr 2020 19:20:34 +0000 (GMT)
 Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29B8A2805C;
-        Tue,  7 Apr 2020 19:20:30 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 589DE28064;
+        Tue,  7 Apr 2020 19:20:33 +0000 (GMT)
 Received: from cpe-172-100-173-215.stny.res.rr.com.com (unknown [9.85.207.206])
         by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Apr 2020 19:20:30 +0000 (GMT)
+        Tue,  7 Apr 2020 19:20:33 +0000 (GMT)
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
 To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -62,9 +62,9 @@ Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
         alex.williamson@redhat.com, kwankhede@nvidia.com,
         jjherne@linux.ibm.com, fiuczy@linux.ibm.com,
         Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate resource in use
-Date:   Tue,  7 Apr 2020 15:20:03 -0400
-Message-Id: <20200407192015.19887-4-akrowiak@linux.ibm.com>
+Subject: [PATCH v7 07/15] s390/vfio-ap: filter CRYCB bits for unavailable queue devices
+Date:   Tue,  7 Apr 2020 15:20:07 -0400
+Message-Id: <20200407192015.19887-8-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200407192015.19887-1-akrowiak@linux.ibm.com>
 References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
@@ -73,254 +73,267 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-07_08:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
- lowpriorityscore=0 suspectscore=3 adultscore=0 clxscore=1015
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004070153
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 malwarescore=0 clxscore=1015 spamscore=0
+ mlxlogscore=999 bulkscore=0 phishscore=0 lowpriorityscore=0 mlxscore=0
+ suspectscore=3 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2004070151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduces a new driver callback to prevent a root user from unbinding
-an AP queue from its device driver if the queue is in use. The intent of
-this callback is to provide a driver with the means to prevent a root user
-from inadvertently taking a queue away from a guest and giving it to the
-host while the guest is still using it. The callback will
-be invoked whenever a change to the AP bus's sysfs apmask or aqmask
-attributes would result in one or more AP queues being removed from its
-driver. If the callback responds in the affirmative for any driver
-queried, the change to the apmask or aqmask will be rejected with a device
-in use error.
+Even though APQNs for queues that are not in the host's AP configuration
+may be assigned to a matrix mdev, we do not want to set bits in the guest's
+CRYCB for APQNs that do not reference AP queue devices bound to the vfio_ap
+device driver. Ideally, it would be great if such APQNs could be filtered
+out before setting the bits in the guest's CRYCB; however, the architecture
+precludes filtering individual APQNs. Consequently, either the APID or APQI
+must be filtered.
 
-For this patch, only non-default drivers will be queried. Currently,
-there is only one non-default driver, the vfio_ap device driver. The
-vfio_ap device driver manages AP queues passed through to one or more
-guests and we don't want to unexpectedly take AP resources away from
-guests which are most likely independently administered.
+This patch introduces code to filter the APIDs or APQIs assigned to the
+matrix mdev's AP configuration before assigning them to the guest's AP
+configuration (i.e., CRYCB). We'll start by filtering the APIDs:
+
+   If an APQN assigned to the matrix mdev's AP configuration does not
+   reference a queue device bound to the vfio_ap device driver, the APID
+   will be filtered out (i.e., not assigned to the guest's CRYCB).
+
+If every APID assigned to the matrix mdev is filtered out, then we'll try
+filtering the APQI's:
+
+   If an APQN assigned to the matrix mdev's AP configuration does not
+   reference a queue device bound to the vfio_ap device driver, the APQI
+   will be filtered out (i.e., not assigned to the guest's CRYCB).
+
+In any case, if after filtering either the APIDs or APQIs there are any
+APQNs that can be assigned to the guest's CRYCB, they will be assigned and
+the CRYCB will be hot plugged into the guest.
+
+Example
+=======
+
+APQNs bound to vfio_ap device driver:
+   04.0004
+   04.0047
+   04.0054
+
+   05.0005
+   05.0047
+   05.0054
+
+Assignments to matrix mdev:
+   APIDs  APQIs  -> APQNs
+   04     0004      04.0004
+   05     0005      04.0005
+          0047      04.0047
+          0054      04.0054
+                    05.0004
+                    05.0005
+                    05.0047
+                    04.0054
+
+Filter APIDs:
+   APID 04 will be filtered because APQN 04.0005 is not bound.
+   APID 05 will be filtered because APQN 05.0004 is not bound.
+   APQNs remaining: None
+
+Filter APQIs:
+   APQI 04 will be filtered because APQN 05.0004 is not bound.
+   APQI 05 will be filtered because APQN 04.0005 is not bound.
+   APQNs remaining: 04.0047, 04.0054, 05.0047, 05.0054
+
+APQNs 04.0047, 04.0054, 05.0047, 05.0054 will be assigned to the CRYCB and
+hot plugged into the KVM guest.
 
 Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/ap_bus.c | 144 +++++++++++++++++++++++++++++++++--
- drivers/s390/crypto/ap_bus.h |   4 +
- 2 files changed, 142 insertions(+), 6 deletions(-)
+ drivers/s390/crypto/vfio_ap_ops.c | 150 ++++++++++++++++++++++++++++--
+ 1 file changed, 140 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-index 5256e3ce84e5..af15c095e76a 100644
---- a/drivers/s390/crypto/ap_bus.c
-+++ b/drivers/s390/crypto/ap_bus.c
-@@ -35,6 +35,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/debugfs.h>
- #include <linux/ctype.h>
-+#include <linux/module.h>
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index beb2e68a2b1c..25b7d978e3fd 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -296,14 +296,17 @@ static void vfio_ap_matrix_init(struct ap_config_info *info,
+ 	matrix->adm_max = info->apxa ? info->Nd : 15;
+ }
  
- #include "ap_bus.h"
- #include "ap_debug.h"
-@@ -995,9 +996,11 @@ int ap_parse_mask_str(const char *str,
- 	newmap = kmalloc(size, GFP_KERNEL);
- 	if (!newmap)
- 		return -ENOMEM;
--	if (mutex_lock_interruptible(lock)) {
--		kfree(newmap);
--		return -ERESTARTSYS;
-+	if (lock) {
-+		if (mutex_lock_interruptible(lock)) {
-+			kfree(newmap);
-+			return -ERESTARTSYS;
+-static bool vfio_ap_mdev_commit_crycb(struct ap_matrix_mdev *matrix_mdev)
++static bool vfio_ap_mdev_has_crycb(struct ap_matrix_mdev *matrix_mdev)
+ {
+-	if (matrix_mdev->kvm && matrix_mdev->kvm->arch.crypto.crycbd) {
+-		kvm_arch_crypto_set_masks(matrix_mdev->kvm,
+-					  matrix_mdev->shadow_crycb.apm,
+-					  matrix_mdev->shadow_crycb.aqm,
+-					  matrix_mdev->shadow_crycb.adm);
+-	}
++	return (matrix_mdev->kvm && matrix_mdev->kvm->arch.crypto.crycbd);
++}
++
++static void vfio_ap_mdev_commit_crycb(struct ap_matrix_mdev *matrix_mdev)
++{
++	kvm_arch_crypto_set_masks(matrix_mdev->kvm,
++				  matrix_mdev->shadow_crycb.apm,
++				  matrix_mdev->shadow_crycb.aqm,
++				  matrix_mdev->shadow_crycb.adm);
+ }
+ 
+ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+@@ -550,6 +553,130 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev,
+ 	return 0;
+ }
+ 
++static int vfio_ap_mdev_filter_matrix(struct ap_matrix_mdev *matrix_mdev,
++				      struct ap_matrix *shadow_crycb,
++				      bool filter_apids)
++{
++	unsigned long apid, apqi, apqn;
++
++	memcpy(shadow_crycb, &matrix_mdev->matrix, sizeof(*shadow_crycb));
++
++	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm, AP_DEVICES) {
++		/*
++		 * If the APID is not assigned to the host AP configuration,
++		 * we can not assign it to the guest's AP configuration
++		 */
++		if (!test_bit_inv(apid,
++				  (unsigned long *)matrix_dev->info.apm)) {
++			clear_bit_inv(apid, shadow_crycb->apm);
++			continue;
 +		}
- 	}
- 
- 	if (*str == '+' || *str == '-') {
-@@ -1009,7 +1012,10 @@ int ap_parse_mask_str(const char *str,
- 	}
- 	if (rc == 0)
- 		memcpy(bitmap, newmap, size);
--	mutex_unlock(lock);
 +
-+	if (lock)
-+		mutex_unlock(lock);
++		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
++				     AP_DOMAINS) {
++			/*
++			 * If the APQI is not assigned to the host AP
++			 * configuration, then it can not be assigned to the
++			 * guest's AP configuration
++			 */
++			if (!test_bit_inv(apqi, (unsigned long *)
++					  matrix_dev->info.aqm)) {
++				clear_bit_inv(apqi, shadow_crycb->aqm);
++				continue;
++			}
 +
- 	kfree(newmap);
- 	return rc;
- }
-@@ -1196,12 +1202,75 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
- 	return rc;
- }
- 
-+int __verify_card_reservations(struct device_driver *drv, void *data)
-+{
-+	int rc = 0;
-+	struct ap_driver *ap_drv = to_ap_drv(drv);
-+	unsigned long *newapm = (unsigned long *)data;
++			/*
++			 * If the APQN is not bound to the vfio_ap device
++			 * driver, then we can't assign it to the guest's
++			 * AP configuration. The AP architecture won't
++			 * allow filtering of a single APQN, so if we're
++			 * filtering APIDs, then filter the APID; otherwise,
++			 * filter the APQI.
++			 */
++			apqn = AP_MKQID(apid, apqi);
++			if (!vfio_ap_get_queue(apqn)) {
++				if (filter_apids)
++					clear_bit_inv(apid, shadow_crycb->apm);
++				else
++					clear_bit_inv(apqi, shadow_crycb->aqm);
++				break;
++			}
++		}
 +
-+	/*
-+	 * If the reserved bits do not identify cards reserved for use by the
-+	 * non-default driver, there is no need to verify the driver is using
-+	 * the queues.
-+	 */
-+	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
-+		return 0;
-+
-+	/* The non-default driver's module must be loaded */
-+	if (!try_module_get(drv->owner))
-+		return 0;
-+
-+	if (ap_drv->in_use)
-+		if (ap_drv->in_use(newapm, ap_perms.aqm))
-+			rc = -EADDRINUSE;
-+
-+	module_put(drv->owner);
-+
-+	return rc;
-+}
-+
-+static int apmask_commit(unsigned long *newapm)
-+{
-+	int rc;
-+	unsigned long reserved[BITS_TO_LONGS(AP_DEVICES)];
-+
-+	/*
-+	 * Check if any bits in the apmask have been set which will
-+	 * result in queues being removed from non-default drivers
-+	 */
-+	if (bitmap_andnot(reserved, newapm, ap_perms.apm, AP_DEVICES)) {
-+		rc = bus_for_each_drv(&ap_bus_type, NULL, reserved,
-+				      __verify_card_reservations);
-+		if (rc)
-+			return rc;
++		/*
++		 * If we're filtering APQIs and all of them have been filtered,
++		 * there's no need to continue filtering.
++		 */
++		if (!filter_apids)
++			if (bitmap_empty(shadow_crycb->aqm, AP_DOMAINS))
++				break;
 +	}
 +
-+	memcpy(ap_perms.apm, newapm, APMASKSIZE);
-+
-+	return 0;
++	return bitmap_weight(shadow_crycb->apm, AP_DEVICES) *
++	       bitmap_weight(shadow_crycb->aqm, AP_DOMAINS);
 +}
 +
- static ssize_t apmask_store(struct bus_type *bus, const char *buf,
- 			    size_t count)
- {
- 	int rc;
-+	unsigned long newapm[BITS_TO_LONGS(AP_DEVICES)];
-+
-+	if (mutex_lock_interruptible(&ap_perms_mutex))
-+		return -ERESTARTSYS;
-+
-+	memcpy(newapm, ap_perms.apm, APMASKSIZE);
-+
-+	rc = ap_parse_mask_str(buf, newapm, AP_DEVICES, NULL);
-+	if (rc)
-+		goto done;
-+
-+	rc = apmask_commit(newapm);
-+	if (rc)
-+		goto done;
- 
--	rc = ap_parse_mask_str(buf, ap_perms.apm, AP_DEVICES, &ap_perms_mutex);
-+done:
-+	mutex_unlock(&ap_perms_mutex);
- 	if (rc)
- 		return rc;
- 
-@@ -1227,12 +1296,75 @@ static ssize_t aqmask_show(struct bus_type *bus, char *buf)
- 	return rc;
- }
- 
-+int __verify_queue_reservations(struct device_driver *drv, void *data)
++static bool vfio_ap_mdev_configure_crycb(struct ap_matrix_mdev *matrix_mdev)
 +{
-+	int rc = 0;
-+	struct ap_driver *ap_drv = to_ap_drv(drv);
-+	unsigned long *newaqm = (unsigned long *)data;
++	int napm, naqm;
++	struct ap_matrix shadow_crycb;
++
++	vfio_ap_matrix_init(&matrix_dev->info, &shadow_crycb);
++	napm = bitmap_weight(matrix_mdev->matrix.apm, AP_DEVICES);
++	naqm = bitmap_weight(matrix_mdev->matrix.aqm, AP_DOMAINS);
 +
 +	/*
-+	 * If the reserved bits do not identify queues reserved for use by the
-+	 * non-default driver, there is no need to verify the driver is using
-+	 * the queues.
++	 * If there are no APIDs or no APQIs assigned to the matrix mdev,
++	 * then no APQNs shall be assigned to the guest CRYCB.
 +	 */
-+	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
-+		return 0;
++	if ((napm != 0) || (naqm != 0)) {
++		/*
++		 * Filter the APIDs assigned to the matrix mdev for APQNs that
++		 * do not reference an AP queue device bound to the driver.
++		 */
++		napm = vfio_ap_mdev_filter_matrix(matrix_mdev, &shadow_crycb,
++						  true);
++		/*
++		 * If there are no APQNs that can be assigned to the guest's
++		 * CRYCB after filtering, then try filtering the APQIs.
++		 */
++		if (napm == 0) {
++			naqm = vfio_ap_mdev_filter_matrix(matrix_mdev,
++							  &shadow_crycb, false);
 +
-+	/* The non-default driver's module must be loaded */
-+	if (!try_module_get(drv->owner))
-+		return 0;
-+
-+	if (ap_drv->in_use)
-+		if (ap_drv->in_use(ap_perms.apm, newaqm))
-+			rc = -EADDRINUSE;
-+
-+	module_put(drv->owner);
-+
-+	return rc;
-+}
-+
-+static int aqmask_commit(unsigned long *newaqm)
-+{
-+	int rc;
-+	unsigned long reserved[BITS_TO_LONGS(AP_DOMAINS)];
-+
-+	/*
-+	 * Check if any bits in the aqmask have been set which will
-+	 * result in queues being removed from non-default drivers
-+	 */
-+	if (bitmap_andnot(reserved, newaqm, ap_perms.aqm, AP_DOMAINS)) {
-+		rc = bus_for_each_drv(&ap_bus_type, NULL, reserved,
-+				      __verify_queue_reservations);
-+		if (rc)
-+			return rc;
++			/*
++			 * If there are no APQNs that can be assigned to the
++			 * matrix mdev after filtering the APQIs, then no APQNs
++			 * shall be assigned to the guest's CRYCB.
++			 */
++			if (naqm == 0) {
++				bitmap_clear(shadow_crycb.apm, 0, AP_DEVICES);
++				bitmap_clear(shadow_crycb.aqm, 0, AP_DOMAINS);
++			}
++		}
 +	}
 +
-+	memcpy(ap_perms.aqm, newaqm, AQMASKSIZE);
++	/*
++	 * If the guest's AP configuration has not changed, then return
++	 * indicating such.
++	 */
++	if (bitmap_equal(matrix_mdev->shadow_crycb.apm, shadow_crycb.apm,
++			 AP_DEVICES) &&
++	    bitmap_equal(matrix_mdev->shadow_crycb.aqm, shadow_crycb.aqm,
++			 AP_DOMAINS) &&
++	    bitmap_equal(matrix_mdev->shadow_crycb.adm, shadow_crycb.adm,
++			 AP_DOMAINS))
++		return false;
 +
-+	return 0;
++	/*
++	 * Copy the changes to the guest's CRYCB, then return indicating that
++	 * the guest's AP configuration has changed.
++	 */
++	memcpy(&matrix_mdev->shadow_crycb, &shadow_crycb, sizeof(shadow_crycb));
++
++	return true;
 +}
 +
- static ssize_t aqmask_store(struct bus_type *bus, const char *buf,
- 			    size_t count)
- {
- 	int rc;
-+	unsigned long newaqm[BITS_TO_LONGS(AP_DEVICES)];
+ /**
+  * vfio_ap_mdev_qlinks_for_apid
+  *
+@@ -1203,9 +1330,11 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+ 	if (ret)
+ 		return NOTIFY_DONE;
  
--	rc = ap_parse_mask_str(buf, ap_perms.aqm, AP_DOMAINS, &ap_perms_mutex);
-+	if (mutex_lock_interruptible(&ap_perms_mutex))
-+		return -ERESTARTSYS;
+-	memcpy(&matrix_mdev->shadow_crycb, &matrix_mdev->matrix,
+-	       sizeof(matrix_mdev->shadow_crycb));
+-	vfio_ap_mdev_commit_crycb(matrix_mdev);
++	if (!vfio_ap_mdev_has_crycb(matrix_mdev))
++		return NOTIFY_DONE;
 +
-+	memcpy(newaqm, ap_perms.aqm, AQMASKSIZE);
-+
-+	rc = ap_parse_mask_str(buf, newaqm, AP_DOMAINS, NULL);
-+	if (rc)
-+		goto done;
-+
-+	rc = aqmask_commit(newaqm);
-+	if (rc)
-+		goto done;
-+
-+done:
-+	mutex_unlock(&ap_perms_mutex);
- 	if (rc)
- 		return rc;
++	if (vfio_ap_mdev_configure_crycb(matrix_mdev))
++		vfio_ap_mdev_commit_crycb(matrix_mdev);
  
-diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
-index 4348fdff1c61..86bf5e224ba4 100644
---- a/drivers/s390/crypto/ap_bus.h
-+++ b/drivers/s390/crypto/ap_bus.h
-@@ -138,6 +138,7 @@ struct ap_driver {
- 	void (*remove)(struct ap_device *);
- 	void (*suspend)(struct ap_device *);
- 	void (*resume)(struct ap_device *);
-+	bool (*in_use)(unsigned long *apm, unsigned long *aqm);
- };
- 
- #define to_ap_drv(x) container_of((x), struct ap_driver, driver)
-@@ -266,6 +267,9 @@ void ap_queue_init_state(struct ap_queue *aq);
- struct ap_card *ap_card_create(int id, int queue_depth, int raw_device_type,
- 			       int comp_device_type, unsigned int functions);
- 
-+#define APMASKSIZE (BITS_TO_LONGS(AP_DEVICES) * sizeof(unsigned long))
-+#define AQMASKSIZE (BITS_TO_LONGS(AP_DOMAINS) * sizeof(unsigned long))
-+
- struct ap_perms {
- 	unsigned long ioctlm[BITS_TO_LONGS(AP_IOCTLS)];
- 	unsigned long apm[BITS_TO_LONGS(AP_DEVICES)];
+ 	return NOTIFY_OK;
+ }
+@@ -1315,6 +1444,7 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+ 	mutex_lock(&matrix_dev->lock);
+ 	if (matrix_mdev->kvm) {
+ 		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
++		vfio_ap_matrix_clear(&matrix_mdev->shadow_crycb);
+ 		matrix_mdev->kvm->arch.crypto.pqap_hook = NULL;
+ 		vfio_ap_mdev_reset_queues(mdev);
+ 		kvm_put_kvm(matrix_mdev->kvm);
 -- 
 2.21.1
 
