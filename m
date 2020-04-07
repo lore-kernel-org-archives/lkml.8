@@ -2,226 +2,101 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F50C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAF9C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CDC2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C5B20720
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586303998;
+	bh=N9TaasfPbDVW6lu1Xgb870eltLDyGIxW4VuLgPXrMS4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QnjE8eP0I3wmB+udNDoe5bnWDtyyYOayIsTL8cM3p2CZKjV1r8BBS0sEEbz4E215O
+	 KW/tFKrE4c48uDeKaNWSAlY+BeF+o5QYBqDXY1bYyHMc7nTXtgBg6qYAeHq4LsGXQD
+	 HyyfvIUV3292Y9MZj/yC4luRI0e7eab0A90j1+TM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbgDGX7Q (ORCPT
+        id S1726603AbgDGX75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:59:16 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:42297 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726406AbgDGX7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:59:16 -0400
-Received: from dread.disaster.area (pa49-180-164-3.pa.nsw.optusnet.com.au [49.180.164.3])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E972A3A3FC9;
-        Wed,  8 Apr 2020 09:59:10 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jLy7Z-0005jv-Sr; Wed, 08 Apr 2020 09:59:09 +1000
-Date:   Wed, 8 Apr 2020 09:59:09 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 4/8] fs/xfs: Make DAX mount option a tri-state
-Message-ID: <20200407235909.GF24067@dread.disaster.area>
-References: <20200407182958.568475-1-ira.weiny@intel.com>
- <20200407182958.568475-5-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407182958.568475-5-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=K0+o7W9luyMo1Ua2eXjR1w==:117 a=K0+o7W9luyMo1Ua2eXjR1w==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
-        a=QyXUC8HyAAAA:8 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=AVdJM_MZequfPCXCU-IA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+        Tue, 7 Apr 2020 19:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbgDGX75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 19:59:57 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8256B2054F;
+        Tue,  7 Apr 2020 23:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586303996;
+        bh=N9TaasfPbDVW6lu1Xgb870eltLDyGIxW4VuLgPXrMS4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=azhg/LGZXwLxkLBPBoy1E3E+A1F7hwyJDp7Wec79fozwQng8HksXrm3EYQcoQAcW/
+         i7Q/I1I3XOHLxmiDNJLrqE4ig0xWatykTX8MBDcFynZU1So5mOZllTVgd7tFA0X/9/
+         C84GBRKx1NRhLy/emFupyUUpUCLTyVMDk3A81ySI=
+Date:   Wed, 8 Apr 2020 08:59:47 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Andrew Cooper <andrew.cooper3@citrix.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <hch@infradead.org>,
+        <sean.j.christopherson@intel.com>, <mingo@redhat.com>,
+        <bp@alien8.de>, <hpa@zytor.com>, <x86@kernel.org>,
+        <kenny@panix.com>, <jeyu@kernel.org>, <rasmus.villemoes@prevas.dk>,
+        <pbonzini@redhat.com>, <fenghua.yu@intel.com>,
+        <xiaoyao.li@intel.com>, <nadav.amit@gmail.com>,
+        <thellstrom@vmware.com>, <tony.luck@intel.com>,
+        <rostedt@goodmis.org>, <gregkh@linuxfoundation.org>,
+        <jannh@google.com>, <keescook@chromium.org>,
+        <David.Laight@aculab.com>, <dcovelli@vmware.com>
+Subject: Re: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
+Message-Id: <20200408085947.c48be95995fb6915bf16de88@kernel.org>
+In-Reply-To: <55dfd3fd-26c2-77d6-4961-3cef8d746f7f@citrix.com>
+References: <20200407110236.930134290@infradead.org>
+        <20200407111007.352324393@infradead.org>
+        <20200408015124.ec42bcffc1377cb6ea94f785@kernel.org>
+        <55dfd3fd-26c2-77d6-4961-3cef8d746f7f@citrix.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 11:29:54AM -0700, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+Hi Andrew,
+
+On Tue, 7 Apr 2020 18:16:58 +0100
+Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+
+> On 07/04/2020 17:51, Masami Hiramatsu wrote:
+> > diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+> > index d74d9e605723..ade80796453c 100644
+> > --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
+> > +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
+> > @@ -70,6 +70,8 @@ BEGIN {
+> >  	mmx_expr = "^(emms|fxsave|fxrstor|ldmxcsr|stmxcsr)" # MMX/SSE nmemonics lacking operands
+> >  	fpu_expr = "^x87"
+> >  
+> > +	vmx_expr = "^VM.*" # All mnemonic start with "VM" are VMX instructions
 > 
-> As agreed upon[1].  We make the dax mount option a tri-state.  '-o dax'
-> continues to operate the same.  We add 'always', 'never', and 'iflag'
-> (default).
+> Not really.
 > 
-> [1] https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Changes from v5:
-> 	New Patch
-> ---
->  fs/xfs/xfs_iops.c  |  2 +-
->  fs/xfs/xfs_mount.h | 26 +++++++++++++++++++++++++-
->  fs/xfs/xfs_super.c | 34 +++++++++++++++++++++++++++++-----
->  3 files changed, 55 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 81f2f93caec0..1ec4a36917bd 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -1248,7 +1248,7 @@ xfs_inode_supports_dax(
->  		return false;
->  
->  	/* DAX mount option or DAX iflag must be set. */
-> -	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
-> +	if (xfs_mount_dax_mode(mp) != XFS_DAX_ALWAYS &&
->  	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
->  		return false;
->  
-> diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-> index 88ab09ed29e7..ce027ee06692 100644
-> --- a/fs/xfs/xfs_mount.h
-> +++ b/fs/xfs/xfs_mount.h
-> @@ -233,7 +233,31 @@ typedef struct xfs_mount {
->  						   allocator */
->  #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
->  
-> -#define XFS_MOUNT_DAX		(1ULL << 62)	/* TEST ONLY! */
-> +/* DAX flag is a 2 bit field representing a tri-state for dax
-> + *      iflag, always, never
-> + * We reserve/document the 2 bits using dax field/field2
-> + */
-> +#define XFS_DAX_FIELD_MASK 0x3ULL
-> +#define XFS_DAX_FIELD_SHIFT 62
-> +#define XFS_MOUNT_DAX_FIELD	(1ULL << 62)
-> +#define XFS_MOUNT_DAX_FIELD2	(1ULL << 63)
-> +
-> +enum {
-> +	XFS_DAX_IFLAG = 0,
-> +	XFS_DAX_ALWAYS = 1,
-> +	XFS_DAX_NEVER = 2,
-> +};
-> +
-> +static inline void xfs_mount_set_dax(struct xfs_mount *mp, u32 val)
-> +{
-> +	mp->m_flags &= ~(XFS_DAX_FIELD_MASK << XFS_DAX_FIELD_SHIFT);
-> +	mp->m_flags |= ((val & XFS_DAX_FIELD_MASK) << XFS_DAX_FIELD_SHIFT);
-> +}
-> +
-> +static inline u32 xfs_mount_dax_mode(struct xfs_mount *mp)
-> +{
-> +	return (mp->m_flags >> XFS_DAX_FIELD_SHIFT) & XFS_DAX_FIELD_MASK;
-> +}
+> VMMCALL, VMLOAD, VMSAVE and VMRUN are SVM instructions.
 
-This is overly complex. Just use 2 flags:
+Here VMX will include SVM instructions. Would we need to distinguish them in this context?
+(Or INAT_VIRT might be politically correct :) )
 
-#define XFS_MOUNT_DAX_ALWAYS	(1ULL << 26)
-#define XFS_MOUNT_DAX_NEVER	(1ULL << 27)
+> VMASKMOV is a AVX instruction.
 
-and if no mount flag is set, we use the inode flag....
+Good point. That instruction is written in lowercase "vmaskmov" in x86-opcode-map.txt.
+(Maybe it is better to note it in x86-opcode-map.txt)
 
-> @@ -59,7 +66,7 @@ enum {
->  	Opt_filestreams, Opt_quota, Opt_noquota, Opt_usrquota, Opt_grpquota,
->  	Opt_prjquota, Opt_uquota, Opt_gquota, Opt_pquota,
->  	Opt_uqnoenforce, Opt_gqnoenforce, Opt_pqnoenforce, Opt_qnoenforce,
-> -	Opt_discard, Opt_nodiscard, Opt_dax,
-> +	Opt_discard, Opt_nodiscard, Opt_dax, Opt_dax_enum,
->  };
->  
->  static const struct fs_parameter_spec xfs_fs_parameters[] = {
-> @@ -103,6 +110,7 @@ static const struct fs_parameter_spec xfs_fs_parameters[] = {
->  	fsparam_flag("discard",		Opt_discard),
->  	fsparam_flag("nodiscard",	Opt_nodiscard),
->  	fsparam_flag("dax",		Opt_dax),
-> +	fsparam_enum("dax",		Opt_dax_enum, dax_param_enums),
->  	{}
->  };
->  
-> @@ -129,7 +137,6 @@ xfs_fs_show_options(
->  		{ XFS_MOUNT_GRPID,		",grpid" },
->  		{ XFS_MOUNT_DISCARD,		",discard" },
->  		{ XFS_MOUNT_LARGEIO,		",largeio" },
-> -		{ XFS_MOUNT_DAX,		",dax" },
-+		{ XFS_MOUNT_DAX_ALWAYS,		",dax=always" },
-+		{ XFS_MOUNT_DAX_NEVER,		",dax=never" },
-
->  		{ 0, NULL }
->  	};
->  	struct xfs_mount	*mp = XFS_M(root->d_sb);
-> @@ -185,6 +192,20 @@ xfs_fs_show_options(
->  	if (!(mp->m_qflags & XFS_ALL_QUOTA_ACCT))
->  		seq_puts(m, ",noquota");
->  
-> +	switch (xfs_mount_dax_mode(mp)) {
-> +		case XFS_DAX_IFLAG:
-> +			seq_puts(m, ",dax=iflag");
-> +			break;
-> +		case XFS_DAX_ALWAYS:
-> +			seq_puts(m, ",dax=always");
-> +			break;
-> +		case XFS_DAX_NEVER:
-> +			seq_puts(m, ",dax=never");
-> +			break;
-> +		default:
-> +			break;
-> +	}
-
-	if (!(mp->m_flags & (XFS_MOUNT_DAX_ALWAYS | XFS_MOUNT_DAX_NEVER))
-		seq_puts(m, ",dax=iflag");
-
-> +
->  	return 0;
->  }
->  
-> @@ -1244,7 +1265,10 @@ xfs_fc_parse_param(
->  		return 0;
->  #ifdef CONFIG_FS_DAX
->  	case Opt_dax:
-> -		mp->m_flags |= XFS_MOUNT_DAX;
-> +		xfs_mount_set_dax(mp, XFS_DAX_ALWAYS);
-> +		return 0;
-> +	case Opt_dax_enum:
-> +		xfs_mount_set_dax(mp, result.uint_32);
->  		return 0;
->  #endif
->  	default:
-> @@ -1437,7 +1461,7 @@ xfs_fc_fill_super(
->  	if (XFS_SB_VERSION_NUM(&mp->m_sb) == XFS_SB_VERSION_5)
->  		sb->s_flags |= SB_I_VERSION;
->  
-> -	if (mp->m_flags & XFS_MOUNT_DAX) {
-> +	if (xfs_mount_dax_mode(mp) == XFS_DAX_ALWAYS) {
-
-	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS) {
-
->  		bool rtdev_is_dax = false, datadev_is_dax;
->  
->  		xfs_warn(mp,
-> @@ -1451,7 +1475,7 @@ xfs_fc_fill_super(
->  		if (!rtdev_is_dax && !datadev_is_dax) {
->  			xfs_alert(mp,
->  			"DAX unsupported by block device. Turning off DAX.");
-> -			mp->m_flags &= ~XFS_MOUNT_DAX;
-> +			xfs_mount_set_dax(mp, XFS_DAX_NEVER);
->  		}
->  		if (xfs_sb_version_hasreflink(&mp->m_sb)) {
->  			xfs_alert(mp,
-> -- 
-> 2.25.1
-> 
-> 
+Thank you,
 
 -- 
-Dave Chinner
-david@fromorbit.com
+Masami Hiramatsu <mhiramat@kernel.org>
