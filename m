@@ -2,203 +2,116 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B15C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C7AC2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECCC20747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E90420678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d23qVeU9"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KRbxMquy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgDGHVr (ORCPT
+        id S1727755AbgDGHWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 03:21:47 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39001 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgDGHVr (ORCPT
+        Tue, 7 Apr 2020 03:22:24 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31606 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727635AbgDGHWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 03:21:47 -0400
-Received: by mail-lj1-f194.google.com with SMTP id i20so2501506ljn.6;
-        Tue, 07 Apr 2020 00:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EgyJX/tT/p7EOsEfgotNMj1exMf/z2jpwTwXDaChsqw=;
-        b=d23qVeU9A4iyXSxPoFvo0fxSxwBchKebgTpZOFTYf5W6FShO0c7apqTiKZWJ0scD9o
-         +RJbdP9KUDcwvWa+cjICZ0HVm1zes1M2o0YaacNoGAWEFK2gKIZfRBpb9XihKzzXCpH1
-         4FTWO+3wjPZNkD1U+7jLnZlYFrmGbT6TYAoC1LwrvgMPcW4novFqlVI4xsjdsR6D7m4b
-         91klmrIbMdJ1nv/SjIwbZ3ThK5usw+9lgkgdm1sgkG7BZpud8XUVq28luJCI9YHlQUZ7
-         rwSsjhEKvVi0agDwF/qLD5JZe2k3FcQEMJTSyAe8JWwlsuMC/kmX0XvRpCpmSG2dZoIw
-         Dj6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EgyJX/tT/p7EOsEfgotNMj1exMf/z2jpwTwXDaChsqw=;
-        b=RSLStfHNelRZ/1iAz9Jjmhwsp8nDT++z1m5W/FYgzu0d/oVJAt9g4v/JkHNerpu5rE
-         zKF44qUiPsSIe8i/oHAQBAljxiQO6WUiQFmqk2n5xp53OqLNUmZvJYAUyr14NjgXo36f
-         H6N0ccNN0kT8XuwA6pho8K+7cqvaDeqMcrtBi6+Ppfe2Pt+W8QRigd/ShFS2pSKZkdm6
-         jOuwkJO1Ux5+NUf+osp0yRe8XjLfW365SwhaqXCiSy3ZRGgmj+sZcTbiuW+ld0Mf/3Sz
-         zQJlCkAHxw0QikqqTTCAs13B4xtSyhfdDSHtXP45oZY4eDgVmV6ycdVJEsY07Jb2Xl7i
-         tlYQ==
-X-Gm-Message-State: AGi0PuZJ5w1B3eT6dCVNcGAOWSLn1cG6+6K4r9Ed7kZXUojYb3uq/uVL
-        QBzb2qAfMrQy5ZByuBJiL/hMbgYOGmR8a9avnDM=
-X-Google-Smtp-Source: APiQypL0QO0fYdBCVGmywG1GuBMZ3MCrkmIuKXq+lBh+5kloWljtZtB11OvNSrqxC7vAP0e9L75JE4xR9G4URoBnhl8=
-X-Received: by 2002:a2e:89c5:: with SMTP id c5mr784501ljk.48.1586244104623;
- Tue, 07 Apr 2020 00:21:44 -0700 (PDT)
+        Tue, 7 Apr 2020 03:22:23 -0400
+X-UUID: 2724cb70b45a4fc59a75a60eb1c07008-20200407
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=LcKOflwcAVgIoKzi1ClTy0WXvLpBoUICseaOM3oRllU=;
+        b=KRbxMquyngabsCPIGMTanlXxqnSmUixsb+4xphBX8TaNZSGs/o8nCTx/n6shfAYZbgqYSs5UTtX7AELPatHv9TCcX5LYQeCTNlsvZ4V6c5GQ0jXSuOm8gXv8hK3rSe5BRL6jYB1KF+bUSv6i/8G7gO9S7Z5i6E7LohwOQsgbQU4=;
+X-UUID: 2724cb70b45a4fc59a75a60eb1c07008-20200407
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 591171986; Tue, 07 Apr 2020 15:22:19 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 7 Apr 2020 15:22:15 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 7 Apr 2020 15:22:09 +0800
+From:   <light.hsieh@mediatek.com>
+To:     <linus.walleij@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
+        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
+Subject: [PATCH v6 0/2] pinctr: mediatek: make MediaTek pinctrl-paris and related driver ready for buidling loadable module
+Date:   Tue, 7 Apr 2020 15:22:08 +0800
+Message-ID: <1586244130-21523-1-git-send-email-light.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-References: <cover.1585896945.git.baolin.wang7@gmail.com> <04c25ff9f9b17d41d734c498e4be61dee745bb30.1585896945.git.baolin.wang7@gmail.com>
- <5a55947b-e920-4515-49cf-163f6d539421@intel.com>
-In-Reply-To: <5a55947b-e920-4515-49cf-163f6d539421@intel.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 7 Apr 2020 15:21:33 +0800
-Message-ID: <CADBw62qXyQCO5s+8Ytg2VCn5tEXS6dPQarQW1mHWJMJm+jUiXQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] mmc: host: Introduce the request_atomic() for the host
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 439E575EA29836A477196E91C88EBF3671BF192137C8D0A792237965C856E59B2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 2:38 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 3/04/20 10:05 am, Baolin Wang wrote:
-> > The SD host controller can process one request in the atomic context if
-> > the card is nonremovable, which means we can submit next request in the
-> > irq hard handler when using the MMC host software queue to reduce the
-> > latency. Thus this patch adds a new API request_atomic() for the host
-> > controller, as well as adding support for host software queue to submit
-> > a request by the new request_atomic() API.
-> >
-> > Moreover there is an unusual case that the card is busy when trying to
-> > send a command, and we can not polling the card status in interrupt
-> > context by using request_atomic() to dispatch requests. Thus we should
-> > queue a work to try again in the non-atomic context in case the host
-> > releases the busy signal later.
-> >
-> > Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
->
->
-> One minor point below, otherwise:
->
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->
-> > ---
-> >  drivers/mmc/host/mmc_hsq.c | 29 ++++++++++++++++++++++++++++-
-> >  drivers/mmc/host/mmc_hsq.h |  1 +
-> >  include/linux/mmc/host.h   |  3 +++
-> >  3 files changed, 32 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mmc/host/mmc_hsq.c b/drivers/mmc/host/mmc_hsq.c
-> > index b90b2c9..a57f802 100644
-> > --- a/drivers/mmc/host/mmc_hsq.c
-> > +++ b/drivers/mmc/host/mmc_hsq.c
-> > @@ -16,11 +16,20 @@
-> >  #define HSQ_NUM_SLOTS        64
-> >  #define HSQ_INVALID_TAG      HSQ_NUM_SLOTS
-> >
-> > +static void mmc_hsq_retry_handler(struct work_struct *work)
-> > +{
-> > +     struct mmc_hsq *hsq = container_of(work, struct mmc_hsq, retry_work);
-> > +     struct mmc_host *mmc = hsq->mmc;
-> > +
-> > +     mmc->ops->request(mmc, hsq->mrq);
-> > +}
-> > +
-> >  static void mmc_hsq_pump_requests(struct mmc_hsq *hsq)
-> >  {
-> >       struct mmc_host *mmc = hsq->mmc;
-> >       struct hsq_slot *slot;
-> >       unsigned long flags;
-> > +     int ret = 0;
-> >
-> >       spin_lock_irqsave(&hsq->lock, flags);
-> >
-> > @@ -42,7 +51,24 @@ static void mmc_hsq_pump_requests(struct mmc_hsq *hsq)
-> >
-> >       spin_unlock_irqrestore(&hsq->lock, flags);
-> >
-> > -     mmc->ops->request(mmc, hsq->mrq);
-> > +     if (mmc->ops->request_atomic)
-> > +             ret = mmc->ops->request_atomic(mmc, hsq->mrq);
-> > +     else
-> > +             mmc->ops->request(mmc, hsq->mrq);
-> > +
-> > +     /*
-> > +      * If returning BUSY from request_atomic(), which means the card
-> > +      * may be busy now, and we should change to non-atomic context to
-> > +      * try again for this unusual case, to avoid time-consuming operations
-> > +      * in the atomic context.
-> > +      *
-> > +      * Note: we just give a warning for other error cases, since the host
-> > +      * driver will handle them.
-> > +      */
-> > +     if (ret == -EBUSY)
-> > +             schedule_work(&hsq->retry_work);
-> > +     else
-> > +             WARN_ON_ONCE(ret && ret != -EBUSY);
->
-> 'ret != -EBUSY' is redundant because it is always true in the 'else' clause.
+RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KcGluY3RybDog
+bWVkaWF0ZWs6IG1ha2UgTWVkaWFUZWsgcGluY3RybCB2MiBkcml2ZXIgcmVhZHkgZm9yIGJ1aWRs
+aW5nIGxvYWRhYmxlIG1vZHVsZQ0KDQpJbiB0aGUgZnV0dXJlIHdlIHdhbnQgdG8gYmUgYWJsZSB0
+byBidWlsZCB0aGUgTWVkaWFUZWsgcGluY3RybCBkcml2ZXIsDQpiYXNlZCBvbiBwYXJpcywgYXMg
+a2VybmVsIG1vZHVsZS4gVGhpcyBwYXRjaCBhbGxvd3MgcGluY3RybC1wYXJpcy5jLCB0aGUNCmV4
+dGVybmFsIGludGVycnVwdCBjb250cm9sbGVyIG10ay1laW50LmMsIGFuZCBwaW5jdHJsLW10ay1j
+b21tb24tdjIuYyB0bw0KYmUgbG9hZGFibGUgYXMgbW9kdWxlLg0KDQpUaGUgZm9sbG93aW5nIGlz
+IHRoZSByYXRpb25hbGUgZm9yIGRldGVybWluaW5nIHdoZXRoZXIgbXRrLWVpbnQuYywNCnBpbmN0
+cmwtbXRrLWNvbW1vbi12Mi5jLCBhbmQgcGluY3RybC1wYXJpcy5jIGFyZSBidWlsdCBhcyBsb2Fk
+YWJsZSBtb2R1bGU6DQoNCjEuIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9LY29uZmlnOg0KMS4x
+IFBJTkNUUkxfTVRYWFhYOiBjaGFuZ2UgZnJvbSBib29sIHRvIHRyaXN0YXRlLiBJdCBpcyBzcGVj
+aWZpZWQgaW4NCiAgICAgICAgZGVmY29uZmlnIGZpbGUuIE1UWFhYWCBjYW4gb25seSBiZSB0aGUg
+dXNlciBvZiBwaW5jdHJsLXBhcmlzLA0KICAgICAgICB3aGljaCBjYW4gTVQ2NzY1IG9yIE1UODE4
+My4gVGhlIHBhdGNoIGZvciBjaGFuZ2luZw0KICAgICAgICBQSU5DVFJMX01UNjc2NSBmcm9tIGJv
+b2wgdG8gdHJpc3RhdGUgd2lsbCBiZSBnaXZlbiBhcyB0aGUgbmV4dA0KICAgICAgICBwYXRjaCBv
+ZiB0aGUgcGF0Y2ggc2VyaWVzLg0KMS4yIFBJTkNUUkxfTVRLX1BBUklTOiBjaGFuZ2UgZnJvbSBi
+b29sIHRvIHRyaXN0YXRlIGFuZCBzZWxlY3QNCiAgICAgICAgUElOQ1RSTF9NVEtfVjIuIE5vIG5l
+ZWQgdG8gc3BlY2lmeSBpbiBkZWZjb25maWcgZmlsZS4NCiAgICAgICogUElOQ1RSTF9NVEtfUEFS
+SVMgd2lsbCBiZSB5IGlmIGFueSBQSU5DVFJMX01UWFhYWCBzZWxlY3RpbmcNCiAgICAgICAgUElO
+Q1RSTF9NVEtfUEFSSVMgaXMgeS4NCiAgICAgICogUElOQ1RSTF9NVEtfUEFSSVMgd2lsbCBiZSBu
+IGlmIGFsbCBQSU5DVFJMX01UWFhYWCBzZWxlY3RpbmcNCiAgICAgICAgUElOQ1RSTF9NVEtfUEFS
+SVMgaXMgbi4NCiAgICAgICogUElOQ1RSTF9NVEtfUEFSSVMgd2lsbCBiZSBtIGlmIHNvbWUgUElO
+Q1RSTF9NVFhYWFggc2VsZWN0aW5nDQogICAgICAgIFBJTkNUUkxfTVRLX1BBUklTIGFyZSBtIGFu
+ZCBvdGhlciBQSU5DVFJMX01UWFhYWCBzZWxlY3RpbmcNCiAgICAgICAgUElOQ1RSTF9NVEtfUEFS
+SVMgYXJlIG4uDQoxLjMgUElOQ1RSTF9NVEtfTU9PUkU6IHNlbGVjdCBFSU5UX01USyBhbmQgUElO
+Q1RSTF9NVEtfVjIuIEl0IGlzIG1ha2UNCiAgICAgICAgdG8gYmUgcmVhZHkgZm9yIGJ1aWxkaW5n
+IGFzIGxvYWRhYmxlIGtlcm5lbCBtb2R1bGUgYmVjYXVzZSBpdA0KICAgICAgICBpcyBub3QgdXNl
+ZCBvbiBBbmRyb2lkIGtlcm5lbC4gICAgICAgIA0KMS40IFBJTkNUUkxfTVRLX1YyOiBhZGQgdGhp
+cyB0cmlzdGF0ZSBjb25maWcgd2hpY2ggZGVwZW5kcyBvbg0KICAgICAgICBQSU5DVFJMX01US19Q
+QVJJUyBhbmQgUElOQ1RSTF9NVEtfTU9PUkUuIE5vIG5lZWQgdG8gc3BlY2lmeSBpbiANCiAgICAg
+ICAgZGVmY29uZmlnIGZpbGUuDQogICAgICAqIFBJTkNUUkxfTVRLX1YyIHdpbGwgYmUgeSBpZiBl
+aXRoZXIgUElOQ1RSTF9NVEtfUEFSSVMgb3INCiAgICAgICAgUElOQ1RSTF9NVEtfTU9PUkUgaXMg
+eS4NCiAgICAgICogUElOQ1RSTF9NVEtfVjIgd2lsbCBiZSBuIGlmIGJvdGggUElOQ1RSTF9NVEtf
+UEFSSVMgYW5kDQogICAgICAgIFBJTkNUUkxfTVRLX01PT1JFIGFyZSBuLg0KICAgICAgKiBQSU5D
+VFJMX01US19WMiB3aWxsIGJlIG0gaWYgUElOQ1RSTF9NVEtfUEFSSVMgaXMgbSBhbmQNCiAgICAg
+ICAgUElOQ1RSTF9NVEtfTU9PUkUgaXMgbi4NCjEuNSBFSU5UX01USzogY2hhbmdlIGZyb20gYm9v
+bCB0byB0cmlzdGF0ZSBhbmQgYWRkIHJ1bGUgZm9yIGRlZmF1bHQuDQogICAgICAgIE5vIG5lZWQg
+dG8gc3BlY2lmeSBpbiBkZWZjb25maWcgZmlsZS4NCiAgICAgICogRmlyc3QgcnVsZTogZGV0ZXJt
+aW5lIGlmIEVJTlRfTVRLIGlzIHkgb3IgbiBhY2NvcmRpbmcgdG8gDQogICAgICAgIHNlbGVjdGlv
+biBvZiBQSU5DVFJMX01USyBvciBQSU5DVFJMX01US19NT1JFLg0KICAgICAgKiBTZWNvbmQgcnVs
+ZTogZGV0ZXJtaW5lIGlmIEVJTlRfTVRLIGlzIHksIG0sIG9yIG4gYWNjb3JkaW5nIHRvDQogICAg
+ICAgIHNlbGVjdGlvbiBvZiBQSU5DVFJMX01US19QQVJJUy4NCg0KMi4gZHJpdmVycy9waW5jdHJs
+L21lZGlhdGVrL01ha2VmaWxlOiBVc2UgUElOQ1RSTF9NVEtfVjIgdG8gZGV0ZXJtaW5lDQogICAg
+ICAgIGlmIHBpbmN0cmwtbXRrLWNvbW1vbi12Mi5jIGlzIGJ1aWx0IGFzIGxvYWRhYmxlIG1vZHVs
+ZSBvcg0KICAgICAgICBidWlsdC1pbi4NCg0KDQpMaWdodCBIc2llaCAoMik6DQogIHBpbmN0cmw6
+IG1lZGlhdGVrOiBtYWtlIE1lZGlhVGVrIHBpbmN0cmwgdjIgZHJpdmVyIHJlYWR5IGZvciBidWlk
+bGluZw0KICAgIGxvYWRhYmxlIG1vZHVsZQ0KICBwaW5jdHJsOiBtZWRpYXRlazogbWFrZSBNZWRp
+YVRlayBNVDY3NjUgcGluY3RybCByZWFkeSBmb3IgYnVpZGluZw0KICAgIGxvYWRhYmxlIG1vZHVs
+ZQ0KDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL0tjb25maWcgICAgICAgICAgICAgICAgIHwg
+MTMgKysrKysrKysrKy0tLQ0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9NYWtlZmlsZSAgICAg
+ICAgICAgICAgICB8ICA1ICsrKy0tDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL210ay1laW50
+LmMgICAgICAgICAgICAgIHwgIDkgKysrKysrKysrDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVr
+L3BpbmN0cmwtbXQ2NzY1LmMgICAgICAgIHwgIDQgKysrKw0KIGRyaXZlcnMvcGluY3RybC9tZWRp
+YXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuYyB8IDI0ICsrKysrKysrKysrKysrKysrKysrKysr
+Kw0KIGRyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBhcmlzLmMgICAgICAgICB8ICA2
+ICsrKysrKw0KIDYgZmlsZXMgY2hhbmdlZCwgNTYgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMo
+LSkNCg0KLS0gDQoxLjguMS4xLmRpcnR5DQo=
 
-Ah, Yes, thanks for pointing this out and I will fix it ine next version.
-
-By the way, could you help to review patch 2 and 3 in this patch set? Thanks.
-
-> >  }
-> >
-> >  static void mmc_hsq_update_next_tag(struct mmc_hsq *hsq, int remains)
-> > @@ -325,6 +351,7 @@ int mmc_hsq_init(struct mmc_hsq *hsq, struct mmc_host *mmc)
-> >       hsq->mmc->cqe_private = hsq;
-> >       mmc->cqe_ops = &mmc_hsq_ops;
-> >
-> > +     INIT_WORK(&hsq->retry_work, mmc_hsq_retry_handler);
-> >       spin_lock_init(&hsq->lock);
-> >       init_waitqueue_head(&hsq->wait_queue);
-> >
-> > diff --git a/drivers/mmc/host/mmc_hsq.h b/drivers/mmc/host/mmc_hsq.h
-> > index 18b9cf5..ffdd9cd 100644
-> > --- a/drivers/mmc/host/mmc_hsq.h
-> > +++ b/drivers/mmc/host/mmc_hsq.h
-> > @@ -12,6 +12,7 @@ struct mmc_hsq {
-> >       wait_queue_head_t wait_queue;
-> >       struct hsq_slot *slot;
-> >       spinlock_t lock;
-> > +     struct work_struct retry_work;
-> >
-> >       int next_tag;
-> >       int num_slots;
-> > diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> > index c318fb5..d4a50e5d 100644
-> > --- a/include/linux/mmc/host.h
-> > +++ b/include/linux/mmc/host.h
-> > @@ -92,6 +92,9 @@ struct mmc_host_ops {
-> >                           int err);
-> >       void    (*pre_req)(struct mmc_host *host, struct mmc_request *req);
-> >       void    (*request)(struct mmc_host *host, struct mmc_request *req);
-> > +     /* Submit one request to host in atomic context. */
-> > +     int     (*request_atomic)(struct mmc_host *host,
-> > +                               struct mmc_request *req);
-> >
-> >       /*
-> >        * Avoid calling the next three functions too often or in a "fast
-> >
->
-
-
--- 
-Baolin Wang
