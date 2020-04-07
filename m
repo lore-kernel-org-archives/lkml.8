@@ -2,125 +2,235 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6541CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11208C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A367208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Dr3sAdrv"
+	by mail.kernel.org (Postfix) with ESMTP id CF0512137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586270850;
+	bh=ADImPYYslzIoXNmP8AI1ecz09vgodHpmNO3wEZmJtvc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=oTUnifz7+32O83pgzB3QkwadpfbMXm3T21SSIe/qwW5CqTRAggRyrD5qDHK8rSa6q
+	 qkWaCbcGDmrXybfbWG5RNbh0q0muwq0BqHW5ZnsTm0bc0ADCCyync4k4L6DZjFV6iA
+	 cY3PtN6rCY+gnMyS5FJ9T44ooeH9zib5MDW53w1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgDGOrR (ORCPT
+        id S1729334AbgDGOrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:47:17 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:56062 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729306AbgDGOrM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:47:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729304AbgDGOrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 10:47:12 -0400
-Received: by mail-pj1-f66.google.com with SMTP id fh8so850472pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v9zl9wdVM8GEYtYil3Mhwjs87sA3d02fBbOSD/V/2Io=;
-        b=Dr3sAdrvWqwbVgYRG3xI41G3QomvAew/Asd8fOt+Hzih8GAcGLY990zl5lzEDEUFfS
-         rFz2r8PiTez4vQkSHyG6i66D37p45zDTF7mKWyqHS2KRTSW4HsCHenibJ08i0FlY9LCA
-         RJATz1HEkSwg5S/VSgSpr6RXXPaavBo70UMlSGPI82JH1ercjcbnGTpTe132ZKGMZHAw
-         nZksYVqpBq42d5GPn0kG3A1mMxp6m9j2bb+5m8WvKb6oXTdpyGm/tEZMU0avt92C3PwW
-         WXhNzRtLZimrbB/nPTEE/DL7MZON4cRniYmXRoW32mBWz7TA80gs7IJIuu/Jwx1bBX1v
-         bT4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v9zl9wdVM8GEYtYil3Mhwjs87sA3d02fBbOSD/V/2Io=;
-        b=JeBElMuEXzfsY6Npne6uuELV2sBy6Ou/MHPbKumpHgjIw9Zh0rhF2W9y9hQ4fw5auf
-         ycBnRgS6LvqFy6r3oWUy2dMWFlY8ijMvRRj3C8nmWF052T75NBV6V+s83X8g8iwrQv8c
-         68dxndqBJSIk9nJV8+BfoBtuTb/5a1VuOtV0Ix0E/sKI3xOTEXTu3XOPR39V7yCsutuD
-         Lfo+8HPa0RSm/NIOJ1RSSyOmzrqE1bNesYoUljjf4fLzNnvwLQOO9c0yHnjfRZ0l/y5z
-         x2Wz2x1O63tHu39TSIDDAsnphLW3noK3RPCY5+cpqu9WuyzLJNT10niSIRui0SKmOynA
-         Pxug==
-X-Gm-Message-State: AGi0PuYQpSnx7Gc9J3lHdQ+SQ1v+ERZZk/A04InaBKkV+zVV358FO77X
-        x2V++lT3I4fFFEjrcCcDKfJFSQ==
-X-Google-Smtp-Source: APiQypIxfe67P6X0LmkT8qgkBuwk7TGkhTTBndI07oSrQhzlvJyC2RaWNfS88nZVZw4Jjgn0w6QRAw==
-X-Received: by 2002:a17:902:aa94:: with SMTP id d20mr2788910plr.313.1586270831007;
-        Tue, 07 Apr 2020 07:47:11 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id y15sm14190093pfc.206.2020.04.07.07.47.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 07:47:10 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        aou@eecs.berkeley.edu, mhiramat@kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH v4 6/9] riscv: add ARCH_SUPPORTS_DEBUG_PAGEALLOC support
-Date:   Tue,  7 Apr 2020 22:46:51 +0800
-Message-Id: <9a9f8ff6d9ea84628511def8bacce8f8247945d1.1586265122.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.1586265122.git.zong.li@sifive.com>
-References: <cover.1586265122.git.zong.li@sifive.com>
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BCAF2072A;
+        Tue,  7 Apr 2020 14:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586270831;
+        bh=ADImPYYslzIoXNmP8AI1ecz09vgodHpmNO3wEZmJtvc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rETwQztwoXiCjveL0KyN64a4HutFPxC97X5mX8UqoRHzKghd6dmJhZrzobSAfLRyp
+         ZEp6cQN9IBggBZk1OhOXGknhucldzBRS+AELkqXNS2B0Co+2PF4VOiT+N1NovJzIpw
+         8gSgxOfRZjFscXfOIoC2pNwJhI6mt/D/ZLwc4fSs=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jLpVN-001QIA-8h; Tue, 07 Apr 2020 15:47:09 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH] irqchip/meson-gpio: Fix HARDIRQ-safe -> HARDIRQ-unsafe lock order
+Date:   Tue,  7 Apr 2020 15:46:58 +0100
+Message-Id: <20200407144658.829246-1-maz@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, khilman@baylibre.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARCH_SUPPORTS_DEBUG_PAGEALLOC provides a hook to map and unmap
-pages for debugging purposes. Implement the __kernel_map_pages
-functions to fill the poison pattern.
+Running a lockedp-enabled kernel on a vim3l board (Amlogic SM1)
+leads to the following splat:
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+[   13.557138] WARNING: HARDIRQ-safe -> HARDIRQ-unsafe lock order detected
+[   13.587485] ip/456 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:
+[   13.625922] ffff000059908cf0 (&irq_desc_lock_class){-.-.}-{2:2}, at: __setup_irq+0xf8/0x8d8
+[   13.632273] which would create a new lock dependency:
+[   13.637272]  (&irq_desc_lock_class){-.-.}-{2:2} -> (&ctl->lock){+.+.}-{2:2}
+[   13.644209]
+[   13.644209] but this new dependency connects a HARDIRQ-irq-safe lock:
+[   13.654122]  (&irq_desc_lock_class){-.-.}-{2:2}
+[   13.654125]
+[   13.654125] ... which became HARDIRQ-irq-safe at:
+[   13.664759]   lock_acquire+0xec/0x368
+[   13.666926]   _raw_spin_lock+0x60/0x88
+[   13.669979]   handle_fasteoi_irq+0x30/0x178
+[   13.674082]   generic_handle_irq+0x38/0x50
+[   13.678098]   __handle_domain_irq+0x6c/0xc8
+[   13.682209]   gic_handle_irq+0x5c/0xb0
+[   13.685872]   el1_irq+0xd0/0x180
+[   13.689010]   arch_cpu_idle+0x40/0x220
+[   13.692732]   default_idle_call+0x54/0x60
+[   13.696677]   do_idle+0x23c/0x2e8
+[   13.699903]   cpu_startup_entry+0x30/0x50
+[   13.703852]   rest_init+0x1e0/0x2b4
+[   13.707301]   arch_call_rest_init+0x18/0x24
+[   13.711449]   start_kernel+0x4ec/0x51c
+[   13.715167]
+[   13.715167] to a HARDIRQ-irq-unsafe lock:
+[   13.722426]  (&ctl->lock){+.+.}-{2:2}
+[   13.722430]
+[   13.722430] ... which became HARDIRQ-irq-unsafe at:
+[   13.732319] ...
+[   13.732324]   lock_acquire+0xec/0x368
+[   13.735985]   _raw_spin_lock+0x60/0x88
+[   13.739452]   meson_gpio_irq_domain_alloc+0xcc/0x290
+[   13.744392]   irq_domain_alloc_irqs_hierarchy+0x24/0x60
+[   13.749586]   __irq_domain_alloc_irqs+0x160/0x2f0
+[   13.754254]   irq_create_fwspec_mapping+0x118/0x320
+[   13.759073]   irq_create_of_mapping+0x78/0xa0
+[   13.763360]   of_irq_get+0x6c/0x80
+[   13.766701]   of_mdiobus_register_phy+0x10c/0x238 [of_mdio]
+[   13.772227]   of_mdiobus_register+0x158/0x380 [of_mdio]
+[   13.777388]   mdio_mux_init+0x180/0x2e8 [mdio_mux]
+[   13.782128]   g12a_mdio_mux_probe+0x290/0x398 [mdio_mux_meson_g12a]
+[   13.788349]   platform_drv_probe+0x5c/0xb0
+[   13.792379]   really_probe+0xe4/0x448
+[   13.795979]   driver_probe_device+0xe8/0x140
+[   13.800189]   __device_attach_driver+0x94/0x120
+[   13.804639]   bus_for_each_drv+0x84/0xd8
+[   13.808474]   __device_attach+0xe4/0x168
+[   13.812361]   device_initial_probe+0x1c/0x28
+[   13.816592]   bus_probe_device+0xa4/0xb0
+[   13.820430]   deferred_probe_work_func+0xa8/0x100
+[   13.825064]   process_one_work+0x264/0x688
+[   13.829088]   worker_thread+0x4c/0x458
+[   13.832768]   kthread+0x154/0x158
+[   13.836018]   ret_from_fork+0x10/0x18
+[   13.839612]
+[   13.839612] other info that might help us debug this:
+[   13.839612]
+[   13.850354]  Possible interrupt unsafe locking scenario:
+[   13.850354]
+[   13.855720]        CPU0                    CPU1
+[   13.858774]        ----                    ----
+[   13.863242]   lock(&ctl->lock);
+[   13.866330]                                local_irq_disable();
+[   13.872233]                                lock(&irq_desc_lock_class);
+[   13.878705]                                lock(&ctl->lock);
+[   13.884297]   <Interrupt>
+[   13.886857]     lock(&irq_desc_lock_class);
+[   13.891014]
+[   13.891014]  *** DEADLOCK ***
+
+The issue can occur when CPU1 is doing something like irq_set_type()
+and CPU0 performing an interrupt allocation, for example. Taking
+an interrupt (like the one being reconfigured) would lead to a deadlock.
+
+A solution to this is:
+
+- Reorder the locking so that meson_gpio_irq_update_bits takes the lock
+  itself at all times, instead of relying on the caller to lock or not,
+  hence making the RMW sequence atomic,
+
+- Rework the critical section in meson_gpio_irq_request_channel to only
+  cover the allocation itself, and let the gpio_irq_sel_pin callback
+  deal with its own locking if required,
+
+- Take the private spin-lock with interrupts disabled at all times
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- arch/riscv/Kconfig       |  3 +++
- arch/riscv/mm/pageattr.c | 13 +++++++++++++
- 2 files changed, 16 insertions(+)
+ drivers/irqchip/irq-meson-gpio.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index a94d0f064d9c..1e1efc998baf 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -132,6 +132,9 @@ config ARCH_SELECT_MEMORY_MODEL
- config ARCH_WANT_GENERAL_HUGETLB
- 	def_bool y
+diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
+index ccc7f823911b..bc7aebcc96e9 100644
+--- a/drivers/irqchip/irq-meson-gpio.c
++++ b/drivers/irqchip/irq-meson-gpio.c
+@@ -144,12 +144,17 @@ struct meson_gpio_irq_controller {
+ static void meson_gpio_irq_update_bits(struct meson_gpio_irq_controller *ctl,
+ 				       unsigned int reg, u32 mask, u32 val)
+ {
++	unsigned long flags;
+ 	u32 tmp;
  
-+config ARCH_SUPPORTS_DEBUG_PAGEALLOC
-+	def_bool y
++	spin_lock_irqsave(&ctl->lock, flags);
 +
- config SYS_SUPPORTS_HUGETLBFS
- 	def_bool y
- 
-diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-index 7be6cd67e2ef..728759eb530a 100644
---- a/arch/riscv/mm/pageattr.c
-+++ b/arch/riscv/mm/pageattr.c
-@@ -172,3 +172,16 @@ int set_direct_map_default_noflush(struct page *page)
- 
- 	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
+ 	tmp = readl_relaxed(ctl->base + reg);
+ 	tmp &= ~mask;
+ 	tmp |= val;
+ 	writel_relaxed(tmp, ctl->base + reg);
++
++	spin_unlock_irqrestore(&ctl->lock, flags);
  }
+ 
+ static void meson_gpio_irq_init_dummy(struct meson_gpio_irq_controller *ctl)
+@@ -196,14 +201,15 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
+ 			       unsigned long  hwirq,
+ 			       u32 **channel_hwirq)
+ {
++	unsigned long flags;
+ 	unsigned int idx;
+ 
+-	spin_lock(&ctl->lock);
++	spin_lock_irqsave(&ctl->lock, flags);
+ 
+ 	/* Find a free channel */
+ 	idx = find_first_zero_bit(ctl->channel_map, NUM_CHANNEL);
+ 	if (idx >= NUM_CHANNEL) {
+-		spin_unlock(&ctl->lock);
++		spin_unlock_irqrestore(&ctl->lock, flags);
+ 		pr_err("No channel available\n");
+ 		return -ENOSPC;
+ 	}
+@@ -211,6 +217,8 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
+ 	/* Mark the channel as used */
+ 	set_bit(idx, ctl->channel_map);
+ 
++	spin_unlock_irqrestore(&ctl->lock, flags);
 +
-+void __kernel_map_pages(struct page *page, int numpages, int enable)
-+{
-+	if (!debug_pagealloc_enabled())
-+		return;
-+
-+	if (enable)
-+		__set_memory((unsigned long)page_address(page), numpages,
-+			     __pgprot(_PAGE_PRESENT), __pgprot(0));
-+	else
-+		__set_memory((unsigned long)page_address(page), numpages,
-+			     __pgprot(0), __pgprot(_PAGE_PRESENT));
-+}
+ 	/*
+ 	 * Setup the mux of the channel to route the signal of the pad
+ 	 * to the appropriate input of the GIC
+@@ -225,8 +233,6 @@ meson_gpio_irq_request_channel(struct meson_gpio_irq_controller *ctl,
+ 	 */
+ 	*channel_hwirq = &(ctl->channel_irqs[idx]);
+ 
+-	spin_unlock(&ctl->lock);
+-
+ 	pr_debug("hwirq %lu assigned to channel %d - irq %u\n",
+ 		 hwirq, idx, **channel_hwirq);
+ 
+@@ -287,13 +293,9 @@ static int meson_gpio_irq_type_setup(struct meson_gpio_irq_controller *ctl,
+ 			val |= REG_EDGE_POL_LOW(params, idx);
+ 	}
+ 
+-	spin_lock(&ctl->lock);
+-
+ 	meson_gpio_irq_update_bits(ctl, REG_EDGE_POL,
+ 				   REG_EDGE_POL_MASK(params, idx), val);
+ 
+-	spin_unlock(&ctl->lock);
+-
+ 	return 0;
+ }
+ 
 -- 
-2.26.0
+2.25.1
 
