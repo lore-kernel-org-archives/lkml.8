@@ -2,139 +2,121 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08A8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726E8C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8334320678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:48:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=qubes-os.org header.i=frederic.pierret@qubes-os.org header.b="RhskYl71"
+	by mail.kernel.org (Postfix) with ESMTP id 432F62074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586260355;
+	bh=II1pwoRWO506IHM9BklJPMIsQjRlhdCQnZOBbPZ90Cw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xZ5zpLox8Ag4EC5K1dz9pm8qgNRN4auu0/qDxZ3MV4Yb7uTmVvwKyNppXredJyYF9
+	 UytNZ/IzrSt0g8xUjvSa0L8wbX29J1fItt+lS9kB5YoT0S8UkTi6Z0hllkEoMldyrr
+	 ji1iTsR3a+QbWmrhrmJ5uVOPPBCpAG/S+1OYWkzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgDGLss (ORCPT
+        id S1728458AbgDGLwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:48:48 -0400
-Received: from sender4-of-o53.zoho.com ([136.143.188.53]:21350 "EHLO
-        sender4-of-o53.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgDGLss (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:48:48 -0400
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Apr 2020 07:48:47 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1586259204; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=SQJ4J3gdSHaAMJrAW2vforzWyw2HsCPIDymu1UirJX5baA3vwJe7dTqCwjAEVuVM7D9ln4rmRzEOO9id2GN3SraE3cEoETJudsPsprvBgR6F2rxW5jsfsdrmysdLyf9nlLJgNdSmocWdktBsWrzZ3h+tLlE1+h/jjqVYWUCLhow=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1586259204; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=C/Yq67cW8uTVVpw1SfMGvhEYjHhJY1OJC8jyQ+cJV/s=; 
-        b=BXuIgPue5YQpbdEGogRNrq256YcfNTscgiQEZ4zkrRzccsTQkXQElgKVYJGydLj3kOQe3t98WLjCjTbGkBSyz2MAtQVyOVpnMafy91RzX92JEVVpH1wpCqg/selqsWOSHwoGYtPSQSuY6eVBJQUZwHU/KUBJFWXkGSEBra3B8P4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=qubes-os.org;
-        spf=pass  smtp.mailfrom=frederic.pierret@qubes-os.org;
-        dmarc=pass header.from=<frederic.pierret@qubes-os.org> header.from=<frederic.pierret@qubes-os.org>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586259204;
-        s=s; d=qubes-os.org; i=frederic.pierret@qubes-os.org;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=C/Yq67cW8uTVVpw1SfMGvhEYjHhJY1OJC8jyQ+cJV/s=;
-        b=RhskYl71ugxP1z+Y7zz+0MDN+ttSoPYMyRG9M+2ugxCe3Z/xLIFpfFb9BWHZGyb7
-        XXLbAXx41Y6mBHAcKtjCPEA4benFGfW7o51MWrzc3sWbd1Gcsr7/mDjRrwAn3xlE1Ik
-        S3h6cHXti3yMZg+DThXzREE14n/R/1NNKhKTWork=
-Received: from localhost.localdomain (92.188.110.153 [92.188.110.153]) by mx.zohomail.com
-        with SMTPS id 1586259191605742.439510224391; Tue, 7 Apr 2020 04:33:11 -0700 (PDT)
-From:   =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20=28fepitre=29?= 
-        <frederic.pierret@qubes-os.org>
-To:     keescook@chromium.org, re.emese@gmail.com,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20=28fepitre=29?= 
-        <frederic.pierret@qubes-os.org>
-Message-ID: <20200407113259.270172-1-frederic.pierret@qubes-os.org>
-Subject: [PATCH] gcc-common.h: 'params.h' has been dropped in GCC10
-Date:   Tue,  7 Apr 2020 13:32:59 +0200
-X-Mailer: git-send-email 2.25.2
+        Tue, 7 Apr 2020 07:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726562AbgDGLwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 07:52:34 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 192F620678;
+        Tue,  7 Apr 2020 11:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586260353;
+        bh=II1pwoRWO506IHM9BklJPMIsQjRlhdCQnZOBbPZ90Cw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SifwQlr3atkEZLhSnM4MAmtZm71biNi+AX4LOKYaXknDWl/wCp1Lmk4UVN9+zLMF2
+         lDF98dn00tOYCCIZK9KAbfg5Pz8IusxzfNqvIAPiMORjcAfr44WrVFdk3f/6eqBgTX
+         8Irnm5JZE0Fp81oQjeh7NcrHG6lEjRvPcf3CPRmw=
+Received: by pali.im (Postfix)
+        id C19B05F1; Tue,  7 Apr 2020 13:52:30 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 13:52:30 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
+ use use platform api"
+Message-ID: <20200407115230.7dsepjfxwbk53x2v@pali>
+References: <20200324004413.14355-1-marek.behun@nic.cz>
+ <20200324122017.GR3819@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200324122017.GR3819@lunn.ch>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Moreover, GCC10 complains about gimple definition. For example,
-doing a 'scripts/gcc-plugin.sh g++ g++ gcc' returns:
+On Tuesday 24 March 2020 13:20:17 Andrew Lunn wrote:
+> On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
+> > This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
+> > 
+> > This commit caused a regression on Armada 37xx. The pinctrl driver says
+> >   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
+> >   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
+> > and afterwards other drivers cannot use GPIOs by this driver as IRQs.
+> > 
+> > Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
+> > Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> > Cc: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
+> >  1 file changed, 3 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > index 32f12a388b3c..5f125bd6279d 100644
+> > --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/of.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/of_device.h>
+> > +#include <linux/of_irq.h>
+> >  #include <linux/pinctrl/pinconf-generic.h>
+> >  #include <linux/pinctrl/pinconf.h>
+> >  #include <linux/pinctrl/pinctrl.h>
+> > @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+> >  		return ret;
+> >  	}
+> >  
+> > -	nr_irq_parent = platform_irq_count(pdev);
+> 
+> Hi Marek
+> 
+> Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
 
-In file included from <stdin>:1:
-./gcc-plugins/gcc-common.h:852:13: error: redefinition of =E2=80=98static b=
-ool is_a_helper<T>::test(U*) [with U =3D const gimple; T =3D const ggoto*]=
-=E2=80=99
-  852 | inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from ./gcc-plugins/gcc-common.h:125,
-                 from <stdin>:1:
-/usr/lib/gcc/x86_64-redhat-linux/10/plugin/include/gimple.h:1037:1: note: =
-=E2=80=98static bool is_a_helper<T>::test(U*) [with U =3D const gimple; T =
-=3D const ggoto*]=E2=80=99 previously declared here
- 1037 | is_a_helper <const ggoto *>::test (const gimple *gs)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from <stdin>:1:
-./gcc-plugins/gcc-common.h:859:13: error: redefinition of =E2=80=98static b=
-ool is_a_helper<T>::test(U*) [with U =3D const gimple; T =3D const greturn*=
-]=E2=80=99
-  859 | inline bool is_a_helper<const greturn *>::test(const_gimple gs)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from ./gcc-plugins/gcc-common.h:125,
-                 from <stdin>:1:
-/usr/lib/gcc/x86_64-redhat-linux/10/plugin/include/gimple.h:1489:1: note: =
-=E2=80=98static bool is_a_helper<T>::test(U*) [with U =3D const gimple; T =
-=3D const greturn*]=E2=80=99 previously declared here
- 1489 | is_a_helper <const greturn *>::test (const gimple *gs)
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Hello Andrew! I have tested it with 5.6 kernel and return value in
+nr_irq_parent is in both cases zero. So it is not -EPROBE_DEFER. And
+return value of of_irq_count(np) is 12 for d0013800.pinctrl and 5 for
+d0018800.pinctrl.
 
-A hacky way for solving this is to ignore them for GCC10.
+So this is a clear regression introduced by that patch.
 
-Signed-off-by: Fr=C3=A9d=C3=A9ric Pierret (fepitre) <frederic.pierret@qubes=
--os.org>
----
- scripts/gcc-plugins/gcc-common.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-com=
-mon.h
-index 17f06079a712..9ad76b7f3f10 100644
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -35,7 +35,9 @@
- #include "ggc.h"
- #include "timevar.h"
-=20
-+#if BUILDING_GCC_VERSION < 10000
- #include "params.h"
-+#endif
-=20
- #if BUILDING_GCC_VERSION <=3D 4009
- #include "pointer-set.h"
-@@ -847,6 +849,7 @@ static inline gimple gimple_build_assign_with_ops(enum =
-tree_code subcode, tree l
- =09return gimple_build_assign(lhs, subcode, op1, op2 PASS_MEM_STAT);
- }
-=20
-+#if BUILDING_GCC_VERSION < 10000
- template <>
- template <>
- inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
-@@ -860,6 +863,7 @@ inline bool is_a_helper<const greturn *>::test(const_gi=
-mple gs)
- {
- =09return gs->code =3D=3D GIMPLE_RETURN;
- }
-+#endif
-=20
- static inline gasm *as_a_gasm(gimple stmt)
- {
---=20
-2.25.2
-
-
+> This patch has removed the handling of that.
+> 
+> > -	if (nr_irq_parent < 0) {
+> > -		if (nr_irq_parent != -EPROBE_DEFER)
+> > -			dev_err(dev, "Couldn't determine irq count: %pe\n",
+> > -				ERR_PTR(nr_irq_parent));
+> > -		return nr_irq_parent;
+> > -	}
+> 
+> Thanks
+> 	Andrew
