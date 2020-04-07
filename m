@@ -2,56 +2,50 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B66C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F684C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA67020644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F7F20644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255357;
-	bh=DCZ2l5F56FR9NskugDQGc4jykl12y8rfDISYAsN/Awo=;
+	s=default; t=1586255370;
+	bh=jofjR1UsY4XmO6hftHWB0RJ35cTeTLnamkyk1zHaLRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g4tk1rsQDvIJGOP/lDHR+cP6AK9bTjGoZwFQR5HpMUwlsJASy3jPKpSSoAsQm/0Nq
-	 7hpMSvfq4KHStSkNDFopO7hKJ/5KMMhiKrAsj64OKld72d2iJoDbQUZ++j5q+K7NrL
-	 NN2061b8/27BeALP3Nh3gNpL+nsuz08CE6thqOtc=
+	b=ylcWi5+hfUiKiyuSNuR0X1R17j4hoH2cTYdYOckTcfTVLXNVKxqHFOWK1kV02apnN
+	 sky4fcT8a1b0eRFASCoIf6QhEAtObQrdfl2N5syLoIha3GTuEy0naUyne5boNUYjLb
+	 uubX4A3LB81FYkjMRiXTjLCtXr0cyRJqmHcoyX7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgDGKX7 (ORCPT
+        id S1728519AbgDGKXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33934 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728599AbgDGKX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:23:56 -0400
+        id S1728478AbgDGKXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E5DA207FF;
-        Tue,  7 Apr 2020 10:23:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB2B32074B;
+        Tue,  7 Apr 2020 10:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255035;
-        bh=DCZ2l5F56FR9NskugDQGc4jykl12y8rfDISYAsN/Awo=;
+        s=default; t=1586255011;
+        bh=jofjR1UsY4XmO6hftHWB0RJ35cTeTLnamkyk1zHaLRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CNLeEHTSTH7SgTIKt3Z4pa/o4imRZa5ia6Xt0TQ1cGvOR68kY28bjWLaqSeNTDefo
-         mcSyz3RPhUmTsVxDwteaDOYhOYmhhGHxUn1n06DQ/+RpgEP4fjZiBeik+sgiUCFRqr
-         ocFfU20gXS+AS+nrWtudrpnEtwGgstwXBMNKMmAc=
+        b=vmWjPRISIxQK++dnhfc5duMG9TVuCVbh7JNL0jyTiv8nhA7k8rnFOGL9cWIZD0aRH
+         1Ff3WygbE+NtFpH/CaFYqLjs0Xpfoa60qMBEOI0BIEuuaqCdyGfAcDjBpeV3Iecc+v
+         j/CJ50xZcNSGw+peHID/jDWs7j/HTxfzXFN3DoDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, franky.lin@broadcom.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 14/36] brcmfmac: abort and release host after error
-Date:   Tue,  7 Apr 2020 12:21:47 +0200
-Message-Id: <20200407101456.184025773@linuxfoundation.org>
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>
+Subject: [PATCH 5.4 30/36] iwlwifi: dbg: dont abort if sending DBGC_SUSPEND_RESUME fails
+Date:   Tue,  7 Apr 2020 12:22:03 +0200
+Message-Id: <20200407101458.123203444@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -64,57 +58,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-[ Upstream commit 863844ee3bd38219c88e82966d1df36a77716f3e ]
+commit 699b760bd29edba736590fffef7654cb079c753e upstream.
 
-With commit 216b44000ada ("brcmfmac: Fix use after free in
-brcmf_sdio_readframes()") applied, we see locking timeouts in
-brcmf_sdio_watchdog_thread().
+If the firmware is in a bad state or not initialized fully, sending
+the DBGC_SUSPEND_RESUME command fails but we can still collect logs.
 
-brcmfmac: brcmf_escan_timeout: timer expired
-INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
-Not tainted 4.19.94-07984-g24ff99a0f713 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
-[<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
-[<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
-[<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
-[<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
+Instead of aborting the entire dump process, simply ignore the error.
+By removing the last callpoint that was checking the return value, we
+can also convert the function to return void.
 
-In addition to restarting or exiting the loop, it is also necessary to
-abort the command and to release the host.
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: 576058330f2d ("iwlwifi: dbg: support debug recording suspend resume command")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200306151129.dcec37b2efd4.I8dcd190431d110a6a0e88095ce93591ccfb3d78d@changeid
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: franky.lin@broadcom.com
-Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c |   15 +++++----------
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.h |    6 +++---
+ 2 files changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index a935993a3c514..d43247a95ce53 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -1934,6 +1934,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
- 			if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
- 					       BRCMF_SDIO_FT_NORMAL)) {
- 				rd->len = 0;
-+				brcmf_sdio_rxfail(bus, true, true);
-+				sdio_release_host(bus->sdiodev->func1);
- 				brcmu_pkt_buf_free_skb(pkt);
- 				continue;
- 			}
--- 
-2.20.1
-
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+@@ -2311,10 +2311,7 @@ static void iwl_fw_dbg_collect_sync(stru
+ 		goto out;
+ 	}
+ 
+-	if (iwl_fw_dbg_stop_restart_recording(fwrt, &params, true)) {
+-		IWL_ERR(fwrt, "Failed to stop DBGC recording, aborting dump\n");
+-		goto out;
+-	}
++	iwl_fw_dbg_stop_restart_recording(fwrt, &params, true);
+ 
+ 	IWL_DEBUG_FW_INFO(fwrt, "WRT: Data collection start\n");
+ 	if (iwl_trans_dbg_ini_valid(fwrt->trans))
+@@ -2480,14 +2477,14 @@ static int iwl_fw_dbg_restart_recording(
+ 	return 0;
+ }
+ 
+-int iwl_fw_dbg_stop_restart_recording(struct iwl_fw_runtime *fwrt,
+-				      struct iwl_fw_dbg_params *params,
+-				      bool stop)
++void iwl_fw_dbg_stop_restart_recording(struct iwl_fw_runtime *fwrt,
++				       struct iwl_fw_dbg_params *params,
++				       bool stop)
+ {
+ 	int ret = 0;
+ 
+ 	if (test_bit(STATUS_FW_ERROR, &fwrt->trans->status))
+-		return 0;
++		return;
+ 
+ 	if (fw_has_capa(&fwrt->fw->ucode_capa,
+ 			IWL_UCODE_TLV_CAPA_DBG_SUSPEND_RESUME_CMD_SUPP))
+@@ -2504,7 +2501,5 @@ int iwl_fw_dbg_stop_restart_recording(st
+ 			iwl_fw_set_dbg_rec_on(fwrt);
+ 	}
+ #endif
+-
+-	return ret;
+ }
+ IWL_EXPORT_SYMBOL(iwl_fw_dbg_stop_restart_recording);
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
+@@ -263,9 +263,9 @@ _iwl_fw_dbg_trigger_simple_stop(struct i
+ 	_iwl_fw_dbg_trigger_simple_stop((fwrt), (wdev),		\
+ 					iwl_fw_dbg_get_trigger((fwrt)->fw,\
+ 							       (trig)))
+-int iwl_fw_dbg_stop_restart_recording(struct iwl_fw_runtime *fwrt,
+-				      struct iwl_fw_dbg_params *params,
+-				      bool stop);
++void iwl_fw_dbg_stop_restart_recording(struct iwl_fw_runtime *fwrt,
++				       struct iwl_fw_dbg_params *params,
++				       bool stop);
+ 
+ #ifdef CONFIG_IWLWIFI_DEBUGFS
+ static inline void iwl_fw_set_dbg_rec_on(struct iwl_fw_runtime *fwrt)
 
 
