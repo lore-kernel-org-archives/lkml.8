@@ -2,545 +2,187 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E75C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FF1C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E207220730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDBE220747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NEuCmAy7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D6KaMiKT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgDGWYB (ORCPT
+        id S1726605AbgDGWYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:24:01 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:16902 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726420AbgDGWX7 (ORCPT
+        Tue, 7 Apr 2020 18:24:02 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26200 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726530AbgDGWYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:23:59 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586298238; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=6NBRgSkB04lnlQNl9JWfaKmDzhvU4Sal9aDU/x5Dc84=; b=NEuCmAy7pcqMWiLzMGTrYLbLAIAJ2wrhrkiMRLq8575I8MEovjjd5URoftXkWrNFWSEusM/t
- p4MlNBZgw5ldnogQ2BTPxRHfCkI1WwpHSqwxLfKTHKgrSaMHRWuS9l6dEy+EtPO4jFUf1KI5
- b7+l573X8PuaXCURc2M37f0IWBA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8cfd6d.7fc18fbd2ab0-smtp-out-n02;
- Tue, 07 Apr 2020 22:23:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 72F6FC433F2; Tue,  7 Apr 2020 22:23:41 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5C122C43636;
-        Tue,  7 Apr 2020 22:23:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5C122C43636
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        vinod.koul@linaro.org, Jack Pham <jackp@codeaurora.org>,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v3 3/4] phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
-Date:   Tue,  7 Apr 2020 15:23:28 -0700
-Message-Id: <1586298209-4589-4-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org>
-References: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org>
+        Tue, 7 Apr 2020 18:24:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586298239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jL2SlKj1gk+SXatVva+PLT8Nc9hxvdVqnXrq13Ge/nc=;
+        b=D6KaMiKT4iUPhU+ga2XLbUmrj/y2PD9rXwg8cnKg9POkMNx5QjWYR1J+gVEuJVXoIoebJR
+        aX83pgWiKAteyryV3TCPVYXmTmHWjcoX6gBvXw93fDjQO5HF+wiJY5gWTcqagZDbSMZ+/x
+        XyTAtb6c9dohBitk1zZv7uRGiespzcg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-0m3YYY18PROXGzFbuNyGtA-1; Tue, 07 Apr 2020 18:23:56 -0400
+X-MC-Unique: 0m3YYY18PROXGzFbuNyGtA-1
+Received: by mail-wr1-f69.google.com with SMTP id w12so2913740wrl.23
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:23:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jL2SlKj1gk+SXatVva+PLT8Nc9hxvdVqnXrq13Ge/nc=;
+        b=a0O5Y/z5YskuGLknlxeZiOZyF3IJLKg/3jb3SoFYTK21j8AIgWbO2bykABpGr4CidA
+         +eNTUVeo0MNiHUXU2o7C09LAGoDa46EU2s/I19ixbqGTizVZLKRIVgTSy9zifkLK9pzv
+         ufI9UVAvmZZv7O1u9PIzULdPspzdgnLLew3XvrfRDKXfXWWFvdgAJQZENLBO3FU1ir7w
+         WzMBsbuNv9uaCpNIpXBGboMYzpaITida1xBJjPWcuuGuCwP1diZpJja9u43VSfjgUkRm
+         Mfu7FwxF+ThF5peM9XWdsiXq6YRnzYsbqFvrXaa7ucBRjk4ExTs3y1mGELYwnsFzO21O
+         nldA==
+X-Gm-Message-State: AGi0PuZpE+gAxsZxzdrivHcc3ttds5JP5VxsNYxGaKbieZA5VM3fMSNG
+        ATh2fiMEL0xL10SZHd2XbZTP2MOd+y/EmcsuGk3htaUOIJsQrRpyt5NVF5mj/1jUFIL/B/dchsO
+        QU15zpEH0TKfKxbU+mbRKhjIb
+X-Received: by 2002:adf:9168:: with SMTP id j95mr4723928wrj.145.1586298234906;
+        Tue, 07 Apr 2020 15:23:54 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL4WQ5BTkhOmSbeGTJVlGkzsuoHwtVtlTLcOKyFI5IwdvkPb/QQ9R8igODcabSrxvjJdF+oNQ==
+X-Received: by 2002:adf:9168:: with SMTP id j95mr4723914wrj.145.1586298234661;
+        Tue, 07 Apr 2020 15:23:54 -0700 (PDT)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id h81sm4565064wme.42.2020.04.07.15.23.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 15:23:54 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Only bind to the
+ INT0002 dev when using s2idle
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxim Mikityanskiy <maxtram95@gmail.com>,
+        "5 . 3+" <stable@vger.kernel.org>
+References: <20200407213058.62870-1-hdegoede@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <cfd3171a-94fb-7382-28e1-a236cb6759cc@redhat.com>
+Date:   Wed, 8 Apr 2020 00:23:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200407213058.62870-1-hdegoede@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Pham <jackp@codeaurora.org>
+Hi all,
 
-Add support for SM8150 QMP USB3 PHY with the necessary
-initialization sequences as well as additional QMP V4
-register definitions.
+I just realized that I should have added a cover letter to this
+patch to discuss how to merge it.
 
-Signed-off-by: Jack Pham <jackp@codeaurora.org>
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
----
- drivers/phy/qualcomm/phy-qcom-qmp.c | 153 ++++++++++++++++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp.h | 198 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 349 insertions(+), 2 deletions(-)
+Rafael has already queued up the
+"[PATCH v3 2/2] platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()"
+in his tree. Looking at both patches the parts of the file the
+touch are different enough that that should not be a problem though.
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 7db2a94..cc04471 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -160,6 +160,12 @@ enum qphy_reg_layout {
- 	[QPHY_PCS_LFPS_RXTERM_IRQ_STATUS] = 0x170,
- };
- 
-+static const unsigned int qmp_v4_usb3phy_regs_layout[] = {
-+	[QPHY_SW_RESET]			= 0x00,
-+	[QPHY_START_CTRL]		= 0x44,
-+	[QPHY_PCS_STATUS]		= 0x14,
-+};
-+
- static const unsigned int sdm845_ufsphy_regs_layout[] = {
- 	[QPHY_START_CTRL]		= 0x00,
- 	[QPHY_PCS_READY_STATUS]		= 0x160,
-@@ -972,6 +978,115 @@ enum qphy_reg_layout {
- 	QMP_PHY_INIT_CFG(QPHY_V4_MULTI_LANE_CTRL1, 0x02),
- };
- 
-+static const struct qmp_phy_init_tbl sm8150_usb3_serdes_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_EN_CENTER, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_PER1, 0x31),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_PER2, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_STEP_SIZE1_MODE0, 0xde),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_STEP_SIZE2_MODE0, 0x07),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_STEP_SIZE1_MODE1, 0xde),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SSC_STEP_SIZE2_MODE1, 0x07),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_BUF_ENABLE, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CMN_IPTRIM, 0x20),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CP_CTRL_MODE0, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CP_CTRL_MODE1, 0x06),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_RCTRL_MODE0, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_RCTRL_MODE1, 0x16),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_CCTRL_MODE0, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_PLL_CCTRL_MODE1, 0x36),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_SYSCLK_EN_SEL, 0x1a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP_EN, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP1_MODE0, 0x14),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP2_MODE0, 0x34),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP1_MODE1, 0x34),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_LOCK_CMP2_MODE1, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DEC_START_MODE0, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DEC_START_MODE1, 0x82),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START1_MODE0, 0xab),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START2_MODE0, 0xea),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START3_MODE0, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE_MAP, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START1_MODE1, 0xab),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START2_MODE1, 0xea),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_DIV_FRAC_START3_MODE1, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE1_MODE0, 0x24),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE1_MODE1, 0x24),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_VCO_TUNE2_MODE1, 0x02),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_HSCLK_SEL, 0x01),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_CORECLK_DIV_MODE1, 0x08),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0, 0xca),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0, 0x1e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1, 0xca),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1, 0x1e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_COM_BIN_VCOCAL_HSCLK_SEL, 0x11),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_usb3_tx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_RES_CODE_LANE_TX, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_RES_CODE_LANE_RX, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_LANE_MODE_1, 0xd5),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_RCV_DETECT_LVL_2, 0x12),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PI_QEC_CTRL, 0x20),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_usb3_rx_tbl[] = {
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_GAIN, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_FO_GAIN, 0x2f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x7f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_LOW, 0xff),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_HIGH, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_PI_CONTROLS, 0x99),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SB2_THRESH1, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SB2_THRESH2, 0x08),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SB2_GAIN1, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SB2_GAIN2, 0x05),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_VGA_CAL_CNTRL1, 0x54),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_VGA_CAL_CNTRL2, 0x0e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3, 0x4a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL4, 0x0a),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_LOW, 0xc0),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_HIGH, 0x00),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQ_OFFSET_ADAPTOR_CNTRL1, 0x77),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_CNTRL, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_DEGLITCH_CNTRL, 0x0e),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_LOW, 0xbf),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH, 0xbf),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH2, 0x3f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH3, 0x7f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH4, 0x94),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_LOW, 0xdc),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH, 0xdc),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH2, 0x5c),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH3, 0x0b),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH4, 0xb3),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_DFE_EN_TIMER, 0x04),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_DFE_CTLE_POST_CAL_OFFSET, 0x38),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_AUX_DATA_TCOARSE_TFINE, 0xa0),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_DCC_CTRL1, 0x0c),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_GM_CAL, 0x1f),
-+	QMP_PHY_INIT_CFG(QSERDES_V4_RX_VTH_CODE, 0x10),
-+};
-+
-+static const struct qmp_phy_init_tbl sm8150_usb3_pcs_tbl[] = {
-+	/* Lock Det settings */
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG1, 0xd0),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG2, 0x07),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_LOCK_DETECT_CONFIG6, 0x13),
-+
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_REFGEN_REQ_CONFIG1, 0x21),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_RX_SIGDET_LVL, 0xaa),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_CDR_RESET_TIME, 0x0a),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_ALIGN_DETECT_CONFIG1, 0x88),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_ALIGN_DETECT_CONFIG2, 0x13),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_PCS_TX_RX_CONFIG, 0x0c),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_EQ_CONFIG1, 0x4b),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_EQ_CONFIG5, 0x10),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_LFPS_DET_HIGH_COUNT_VAL, 0xf8),
-+	QMP_PHY_INIT_CFG(QPHY_V4_PCS_USB3_RXEQTRAINING_DFE_TIME_S2, 0x07),
-+};
-+
-+
- /* struct qmp_phy_cfg - per-PHY initialization config */
- struct qmp_phy_cfg {
- 	/* phy-type - PCIE/UFS/USB */
-@@ -1126,6 +1241,10 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
- 	"aux", "cfg_ahb", "ref", "com_aux",
- };
- 
-+static const char * const qmp_v4_phy_clk_l[] = {
-+	"aux", "ref_clk_src", "ref", "com_aux",
-+};
-+
- static const char * const sdm845_ufs_phy_clk_l[] = {
- 	"ref", "ref_aux",
- };
-@@ -1392,6 +1511,37 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
- 	.is_dual_lane_phy	= true,
- };
- 
-+static const struct qmp_phy_cfg sm8150_usb3phy_cfg = {
-+	.type			= PHY_TYPE_USB3,
-+	.nlanes			= 1,
-+
-+	.serdes_tbl		= sm8150_usb3_serdes_tbl,
-+	.serdes_tbl_num		= ARRAY_SIZE(sm8150_usb3_serdes_tbl),
-+	.tx_tbl			= sm8150_usb3_tx_tbl,
-+	.tx_tbl_num		= ARRAY_SIZE(sm8150_usb3_tx_tbl),
-+	.rx_tbl			= sm8150_usb3_rx_tbl,
-+	.rx_tbl_num		= ARRAY_SIZE(sm8150_usb3_rx_tbl),
-+	.pcs_tbl		= sm8150_usb3_pcs_tbl,
-+	.pcs_tbl_num		= ARRAY_SIZE(sm8150_usb3_pcs_tbl),
-+	.clk_list		= qmp_v4_phy_clk_l,
-+	.num_clks		= ARRAY_SIZE(qmp_v4_phy_clk_l),
-+	.reset_list		= msm8996_usb3phy_reset_l,
-+	.num_resets		= ARRAY_SIZE(msm8996_usb3phy_reset_l),
-+	.vreg_list		= qmp_phy_vreg_l,
-+	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
-+	.regs			= qmp_v4_usb3phy_regs_layout,
-+
-+	.start_ctrl		= SERDES_START | PCS_START,
-+	.pwrdn_ctrl		= SW_PWRDN,
-+
-+	.has_pwrdn_delay	= true,
-+	.pwrdn_delay_min	= POWER_DOWN_DELAY_US_MIN,
-+	.pwrdn_delay_max	= POWER_DOWN_DELAY_US_MAX,
-+
-+	.has_phy_dp_com_ctrl	= true,
-+	.is_dual_lane_phy	= true,
-+};
-+
- static void qcom_qmp_phy_configure(void __iomem *base,
- 				   const unsigned int *regs,
- 				   const struct qmp_phy_init_tbl tbl[],
-@@ -2117,6 +2267,9 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
- 	}, {
- 		.compatible = "qcom,sm8150-qmp-ufs-phy",
- 		.data = &sm8150_ufsphy_cfg,
-+	}, {
-+		.compatible = "qcom,sm8150-qmp-usb3-phy",
-+		.data = &sm8150_usb3phy_cfg,
- 	},
- 	{ },
- };
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.h b/drivers/phy/qualcomm/phy-qcom-qmp.h
-index 90f793c..22c9009 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.h
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.h
-@@ -125,7 +125,7 @@
- #define QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB		0x1DC
- #define QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB		0x1E0
- 
--/* Only for QMP V3 PHY - DP COM registers */
-+/* Only for QMP V3 & V4 PHY - DP COM registers */
- #define QPHY_V3_DP_COM_PHY_MODE_CTRL			0x00
- #define QPHY_V3_DP_COM_SW_RESET				0x04
- #define QPHY_V3_DP_COM_POWER_DOWN_CTRL			0x08
-@@ -314,6 +314,14 @@
- #define QPHY_V3_PCS_MISC_OSC_DTCT_MODE2_CONFIG5		0x60
- 
- /* Only for QMP V4 PHY - QSERDES COM registers */
-+#define QSERDES_V4_COM_SSC_EN_CENTER			0x010
-+#define QSERDES_V4_COM_SSC_PER1				0x01c
-+#define QSERDES_V4_COM_SSC_PER2				0x020
-+#define QSERDES_V4_COM_SSC_STEP_SIZE1_MODE0		0x024
-+#define QSERDES_V4_COM_SSC_STEP_SIZE2_MODE0		0x028
-+#define QSERDES_V4_COM_SSC_STEP_SIZE1_MODE1		0x030
-+#define QSERDES_V4_COM_SSC_STEP_SIZE2_MODE1		0x034
-+#define QSERDES_V4_COM_SYSCLK_BUF_ENABLE		0x050
- #define QSERDES_V4_COM_PLL_IVCO				0x058
- #define QSERDES_V4_COM_CMN_IPTRIM			0x060
- #define QSERDES_V4_COM_CP_CTRL_MODE0			0x074
-@@ -330,10 +338,22 @@
- #define QSERDES_V4_COM_DEC_START_MODE0			0x0bc
- #define QSERDES_V4_COM_LOCK_CMP2_MODE1			0x0b8
- #define QSERDES_V4_COM_DEC_START_MODE1			0x0c4
-+#define QSERDES_V4_COM_DIV_FRAC_START1_MODE0		0x0cc
-+#define QSERDES_V4_COM_DIV_FRAC_START2_MODE0		0x0d0
-+#define QSERDES_V4_COM_DIV_FRAC_START3_MODE0		0x0d4
-+#define QSERDES_V4_COM_DIV_FRAC_START1_MODE1		0x0d8
-+#define QSERDES_V4_COM_DIV_FRAC_START2_MODE1		0x0dc
-+#define QSERDES_V4_COM_DIV_FRAC_START3_MODE1		0x0e0
- #define QSERDES_V4_COM_VCO_TUNE_MAP			0x10c
-+#define QSERDES_V4_COM_VCO_TUNE1_MODE0			0x110
-+#define QSERDES_V4_COM_VCO_TUNE2_MODE0			0x114
-+#define QSERDES_V4_COM_VCO_TUNE1_MODE1			0x118
-+#define QSERDES_V4_COM_VCO_TUNE2_MODE1			0x11c
- #define QSERDES_V4_COM_VCO_TUNE_INITVAL2		0x124
- #define QSERDES_V4_COM_HSCLK_SEL			0x158
- #define QSERDES_V4_COM_HSCLK_HS_SWITCH_SEL		0x15c
-+#define QSERDES_V4_COM_CORECLK_DIV_MODE1		0x16c
-+#define QSERDES_V4_COM_SVS_MODE_CLK_SEL			0x184
- #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE0	0x1ac
- #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE0	0x1b0
- #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE1_MODE1	0x1b4
-@@ -341,12 +361,16 @@
- #define QSERDES_V4_COM_BIN_VCOCAL_CMP_CODE2_MODE1	0x1b8
- 
- /* Only for QMP V4 PHY - TX registers */
-+#define QSERDES_V4_TX_RES_CODE_LANE_TX			0x34
-+#define QSERDES_V4_TX_RES_CODE_LANE_RX			0x38
- #define QSERDES_V4_TX_LANE_MODE_1			0x84
-+#define QSERDES_V4_TX_RCV_DETECT_LVL_2			0x9c
- #define QSERDES_V4_TX_PWM_GEAR_1_DIVIDER_BAND0_1	0xd8
- #define QSERDES_V4_TX_PWM_GEAR_2_DIVIDER_BAND0_1	0xdC
- #define QSERDES_V4_TX_PWM_GEAR_3_DIVIDER_BAND0_1	0xe0
- #define QSERDES_V4_TX_PWM_GEAR_4_DIVIDER_BAND0_1	0xe4
- #define QSERDES_V4_TX_TRAN_DRVR_EMP_EN			0xb8
-+#define QSERDES_V4_TX_PI_QEC_CTRL		0x104
- 
- /* Only for QMP V4 PHY - RX registers */
- #define QSERDES_V4_RX_UCDR_FO_GAIN			0x008
-@@ -354,17 +378,27 @@
- #define QSERDES_V4_RX_UCDR_FASTLOCK_FO_GAIN		0x030
- #define QSERDES_V4_RX_UCDR_SO_SATURATION_AND_ENABLE	0x034
- #define QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_LOW		0x03c
-+#define QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_HIGH		0x040
- #define QSERDES_V4_RX_UCDR_PI_CONTROLS			0x044
- #define QSERDES_V4_RX_UCDR_PI_CTRL2			0x048
-+#define QSERDES_V4_RX_UCDR_SB2_THRESH1			0x04c
-+#define QSERDES_V4_RX_UCDR_SB2_THRESH2			0x050
-+#define QSERDES_V4_RX_UCDR_SB2_GAIN1			0x054
-+#define QSERDES_V4_RX_UCDR_SB2_GAIN2			0x058
-+#define QSERDES_V4_RX_AUX_DATA_TCOARSE_TFINE			0x060
- #define QSERDES_V4_RX_AC_JTAG_ENABLE			0x068
- #define QSERDES_V4_RX_AC_JTAG_MODE			0x078
- #define QSERDES_V4_RX_RX_TERM_BW			0x080
-+#define QSERDES_V4_RX_VGA_CAL_CNTRL1			0x0d4
-+#define QSERDES_V4_RX_VGA_CAL_CNTRL2			0x0d8
-+#define QSERDES_V4_RX_GM_CAL				0x0dc
- #define QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2		0x0ec
- #define QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3		0x0f0
- #define QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL4		0x0f4
- #define QSERDES_V4_RX_RX_IDAC_TSETTLE_LOW		0x0f8
- #define QSERDES_V4_RX_RX_IDAC_TSETTLE_HIGH		0x0fc
- #define QSERDES_V4_RX_RX_IDAC_MEASURE_TIME		0x100
-+#define QSERDES_V4_RX_RX_EQ_OFFSET_ADAPTOR_CNTRL1	0x110
- #define QSERDES_V4_RX_RX_OFFSET_ADAPTOR_CNTRL2		0x114
- #define QSERDES_V4_RX_SIGDET_CNTRL			0x11c
- #define QSERDES_V4_RX_SIGDET_LVL			0x120
-@@ -385,9 +419,12 @@
- #define QSERDES_V4_RX_RX_MODE_10_HIGH2			0x1a0
- #define QSERDES_V4_RX_RX_MODE_10_HIGH3			0x1a4
- #define QSERDES_V4_RX_RX_MODE_10_HIGH4			0x1a8
-+#define QSERDES_V4_RX_DFE_EN_TIMER			0x1b4
-+#define QSERDES_V4_RX_DFE_CTLE_POST_CAL_OFFSET		0x1b8
- #define QSERDES_V4_RX_DCC_CTRL1				0x1bc
-+#define QSERDES_V4_RX_VTH_CODE				0x1c4
- 
--/* Only for QMP V4 PHY - PCS registers */
-+/* Only for QMP V4 PHY - UFS PCS registers */
- #define QPHY_V4_PHY_START				0x000
- #define QPHY_V4_POWER_DOWN_CONTROL			0x004
- #define QPHY_V4_SW_RESET				0x008
-@@ -409,4 +446,161 @@
- #define QPHY_V4_TX_MID_TERM_CTRL1			0x1d8
- #define QPHY_V4_MULTI_LANE_CTRL1			0x1e0
- 
-+/* Only for QMP V4 PHY - USB/PCIe PCS registers */
-+#define QPHY_V4_PCS_SW_RESET				0x000
-+#define QPHY_V4_PCS_REVISION_ID0			0x004
-+#define QPHY_V4_PCS_REVISION_ID1			0x008
-+#define QPHY_V4_PCS_REVISION_ID2			0x00c
-+#define QPHY_V4_PCS_REVISION_ID3			0x010
-+#define QPHY_V4_PCS_PCS_STATUS1				0x014
-+#define QPHY_V4_PCS_PCS_STATUS2				0x018
-+#define QPHY_V4_PCS_PCS_STATUS3				0x01c
-+#define QPHY_V4_PCS_PCS_STATUS4				0x020
-+#define QPHY_V4_PCS_PCS_STATUS5				0x024
-+#define QPHY_V4_PCS_PCS_STATUS6				0x028
-+#define QPHY_V4_PCS_PCS_STATUS7				0x02c
-+#define QPHY_V4_PCS_DEBUG_BUS_0_STATUS			0x030
-+#define QPHY_V4_PCS_DEBUG_BUS_1_STATUS			0x034
-+#define QPHY_V4_PCS_DEBUG_BUS_2_STATUS			0x038
-+#define QPHY_V4_PCS_DEBUG_BUS_3_STATUS			0x03c
-+#define QPHY_V4_PCS_POWER_DOWN_CONTROL			0x040
-+#define QPHY_V4_PCS_START_CONTROL			0x044
-+#define QPHY_V4_PCS_INSIG_SW_CTRL1			0x048
-+#define QPHY_V4_PCS_INSIG_SW_CTRL2			0x04c
-+#define QPHY_V4_PCS_INSIG_SW_CTRL3			0x050
-+#define QPHY_V4_PCS_INSIG_SW_CTRL4			0x054
-+#define QPHY_V4_PCS_INSIG_SW_CTRL5			0x058
-+#define QPHY_V4_PCS_INSIG_SW_CTRL6			0x05c
-+#define QPHY_V4_PCS_INSIG_SW_CTRL7			0x060
-+#define QPHY_V4_PCS_INSIG_SW_CTRL8			0x064
-+#define QPHY_V4_PCS_INSIG_MX_CTRL1			0x068
-+#define QPHY_V4_PCS_INSIG_MX_CTRL2			0x06c
-+#define QPHY_V4_PCS_INSIG_MX_CTRL3			0x070
-+#define QPHY_V4_PCS_INSIG_MX_CTRL4			0x074
-+#define QPHY_V4_PCS_INSIG_MX_CTRL5			0x078
-+#define QPHY_V4_PCS_INSIG_MX_CTRL7			0x07c
-+#define QPHY_V4_PCS_INSIG_MX_CTRL8			0x080
-+#define QPHY_V4_PCS_OUTSIG_SW_CTRL1			0x084
-+#define QPHY_V4_PCS_OUTSIG_MX_CTRL1			0x088
-+#define QPHY_V4_PCS_CLAMP_ENABLE			0x08c
-+#define QPHY_V4_PCS_POWER_STATE_CONFIG1			0x090
-+#define QPHY_V4_PCS_POWER_STATE_CONFIG2			0x094
-+#define QPHY_V4_PCS_FLL_CNTRL1				0x098
-+#define QPHY_V4_PCS_FLL_CNTRL2				0x09c
-+#define QPHY_V4_PCS_FLL_CNT_VAL_L			0x0a0
-+#define QPHY_V4_PCS_FLL_CNT_VAL_H_TOL			0x0a4
-+#define QPHY_V4_PCS_FLL_MAN_CODE			0x0a8
-+#define QPHY_V4_PCS_TEST_CONTROL1			0x0ac
-+#define QPHY_V4_PCS_TEST_CONTROL2			0x0b0
-+#define QPHY_V4_PCS_TEST_CONTROL3			0x0b4
-+#define QPHY_V4_PCS_TEST_CONTROL4			0x0b8
-+#define QPHY_V4_PCS_TEST_CONTROL5			0x0bc
-+#define QPHY_V4_PCS_TEST_CONTROL6			0x0c0
-+#define QPHY_V4_PCS_LOCK_DETECT_CONFIG1			0x0c4
-+#define QPHY_V4_PCS_LOCK_DETECT_CONFIG2			0x0c8
-+#define QPHY_V4_PCS_LOCK_DETECT_CONFIG3			0x0cc
-+#define QPHY_V4_PCS_LOCK_DETECT_CONFIG4			0x0d0
-+#define QPHY_V4_PCS_LOCK_DETECT_CONFIG5			0x0d4
-+#define QPHY_V4_PCS_LOCK_DETECT_CONFIG6			0x0d8
-+#define QPHY_V4_PCS_REFGEN_REQ_CONFIG1			0x0dc
-+#define QPHY_V4_PCS_REFGEN_REQ_CONFIG2			0x0e0
-+#define QPHY_V4_PCS_REFGEN_REQ_CONFIG3			0x0e4
-+#define QPHY_V4_PCS_BIST_CTRL				0x0e8
-+#define QPHY_V4_PCS_PRBS_POLY0				0x0ec
-+#define QPHY_V4_PCS_PRBS_POLY1				0x0f0
-+#define QPHY_V4_PCS_FIXED_PAT0				0x0f4
-+#define QPHY_V4_PCS_FIXED_PAT1				0x0f8
-+#define QPHY_V4_PCS_FIXED_PAT2				0x0fc
-+#define QPHY_V4_PCS_FIXED_PAT3				0x100
-+#define QPHY_V4_PCS_FIXED_PAT4				0x104
-+#define QPHY_V4_PCS_FIXED_PAT5				0x108
-+#define QPHY_V4_PCS_FIXED_PAT6				0x10c
-+#define QPHY_V4_PCS_FIXED_PAT7				0x110
-+#define QPHY_V4_PCS_FIXED_PAT8				0x114
-+#define QPHY_V4_PCS_FIXED_PAT9				0x118
-+#define QPHY_V4_PCS_FIXED_PAT10				0x11c
-+#define QPHY_V4_PCS_FIXED_PAT11				0x120
-+#define QPHY_V4_PCS_FIXED_PAT12				0x124
-+#define QPHY_V4_PCS_FIXED_PAT13				0x128
-+#define QPHY_V4_PCS_FIXED_PAT14				0x12c
-+#define QPHY_V4_PCS_FIXED_PAT15				0x130
-+#define QPHY_V4_PCS_TXMGN_CONFIG			0x134
-+#define QPHY_V4_PCS_G12S1_TXMGN_V0			0x138
-+#define QPHY_V4_PCS_G12S1_TXMGN_V1			0x13c
-+#define QPHY_V4_PCS_G12S1_TXMGN_V2			0x140
-+#define QPHY_V4_PCS_G12S1_TXMGN_V3			0x144
-+#define QPHY_V4_PCS_G12S1_TXMGN_V4			0x148
-+#define QPHY_V4_PCS_G12S1_TXMGN_V0_RS			0x14c
-+#define QPHY_V4_PCS_G12S1_TXMGN_V1_RS			0x150
-+#define QPHY_V4_PCS_G12S1_TXMGN_V2_RS			0x154
-+#define QPHY_V4_PCS_G12S1_TXMGN_V3_RS			0x158
-+#define QPHY_V4_PCS_G12S1_TXMGN_V4_RS			0x15c
-+#define QPHY_V4_PCS_G3S2_TXMGN_MAIN			0x160
-+#define QPHY_V4_PCS_G3S2_TXMGN_MAIN_RS			0x164
-+#define QPHY_V4_PCS_G12S1_TXDEEMPH_M6DB			0x168
-+#define QPHY_V4_PCS_G12S1_TXDEEMPH_M3P5DB		0x16c
-+#define QPHY_V4_PCS_G3S2_PRE_GAIN			0x170
-+#define QPHY_V4_PCS_G3S2_POST_GAIN			0x174
-+#define QPHY_V4_PCS_G3S2_PRE_POST_OFFSET		0x178
-+#define QPHY_V4_PCS_G3S2_PRE_GAIN_RS			0x17c
-+#define QPHY_V4_PCS_G3S2_POST_GAIN_RS			0x180
-+#define QPHY_V4_PCS_G3S2_PRE_POST_OFFSET_RS		0x184
-+#define QPHY_V4_PCS_RX_SIGDET_LVL			0x188
-+#define QPHY_V4_PCS_RX_SIGDET_DTCT_CNTRL		0x18c
-+#define QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_L		0x190
-+#define QPHY_V4_PCS_RCVR_DTCT_DLY_P1U2_H		0x194
-+#define QPHY_V4_PCS_RATE_SLEW_CNTRL1			0x198
-+#define QPHY_V4_PCS_RATE_SLEW_CNTRL2			0x19c
-+#define QPHY_V4_PCS_PWRUP_RESET_DLY_TIME_AUXCLK		0x1a0
-+#define QPHY_V4_PCS_P2U3_WAKEUP_DLY_TIME_AUXCLK_L	0x1a4
-+#define QPHY_V4_PCS_P2U3_WAKEUP_DLY_TIME_AUXCLK_H	0x1a8
-+#define QPHY_V4_PCS_TSYNC_RSYNC_TIME			0x1ac
-+#define QPHY_V4_PCS_CDR_RESET_TIME			0x1b0
-+#define QPHY_V4_PCS_TSYNC_DLY_TIME			0x1b4
-+#define QPHY_V4_PCS_ELECIDLE_DLY_SEL			0x1b8
-+#define QPHY_V4_PCS_CMN_ACK_OUT_SEL			0x1bc
-+#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG1		0x1c0
-+#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG2		0x1c4
-+#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG3		0x1c8
-+#define QPHY_V4_PCS_ALIGN_DETECT_CONFIG4		0x1cc
-+#define QPHY_V4_PCS_PCS_TX_RX_CONFIG			0x1d0
-+#define QPHY_V4_PCS_RX_IDLE_DTCT_CNTRL			0x1d4
-+#define QPHY_V4_PCS_RX_DCC_CAL_CONFIG			0x1d8
-+#define QPHY_V4_PCS_EQ_CONFIG1				0x1dc
-+#define QPHY_V4_PCS_EQ_CONFIG2				0x1e0
-+#define QPHY_V4_PCS_EQ_CONFIG3				0x1e4
-+#define QPHY_V4_PCS_EQ_CONFIG4				0x1e8
-+#define QPHY_V4_PCS_EQ_CONFIG5				0x1ec
-+#define QPHY_V4_PCS_USB3_POWER_STATE_CONFIG1		0x300
-+#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_STATUS		0x304
-+#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_CTRL		0x308
-+#define QPHY_V4_PCS_USB3_AUTONOMOUS_MODE_CTRL2		0x30c
-+#define QPHY_V4_PCS_USB3_LFPS_RXTERM_IRQ_SOURCE_STATUS	0x310
-+#define QPHY_V4_PCS_USB3_LFPS_RXTERM_IRQ_CLEAR		0x314
-+#define QPHY_V4_PCS_USB3_LFPS_DET_HIGH_COUNT_VAL	0x318
-+#define QPHY_V4_PCS_USB3_LFPS_TX_ECSTART		0x31c
-+#define QPHY_V4_PCS_USB3_LFPS_PER_TIMER_VAL		0x320
-+#define QPHY_V4_PCS_USB3_LFPS_TX_END_CNT_U3_START	0x324
-+#define QPHY_V4_PCS_USB3_RXEQTRAINING_LOCK_TIME		0x328
-+#define QPHY_V4_PCS_USB3_RXEQTRAINING_WAIT_TIME		0x32c
-+#define QPHY_V4_PCS_USB3_RXEQTRAINING_CTLE_TIME		0x330
-+#define QPHY_V4_PCS_USB3_RXEQTRAINING_WAIT_TIME_S2	0x334
-+#define QPHY_V4_PCS_USB3_RXEQTRAINING_DFE_TIME_S2	0x338
-+#define QPHY_V4_PCS_USB3_RCVR_DTCT_DLY_U3_L		0x33c
-+#define QPHY_V4_PCS_USB3_RCVR_DTCT_DLY_U3_H		0x340
-+#define QPHY_V4_PCS_USB3_ARCVR_DTCT_EN_PERIOD		0x344
-+#define QPHY_V4_PCS_USB3_ARCVR_DTCT_CM_DLY		0x348
-+#define QPHY_V4_PCS_USB3_TXONESZEROS_RUN_LENGTH		0x34c
-+#define QPHY_V4_PCS_USB3_ALFPS_DEGLITCH_VAL		0x350
-+#define QPHY_V4_PCS_USB3_SIGDET_STARTUP_TIMER_VAL	0x354
-+#define QPHY_V4_PCS_USB3_TEST_CONTROL			0x358
-+
-+/* Only for QMP V4 PHY - PCS_MISC registers */
-+#define QPHY_V4_PCS_MISC_TYPEC_CTRL			0x00
-+#define QPHY_V4_PCS_MISC_TYPEC_PWRDN_CTRL		0x04
-+#define QPHY_V4_PCS_MISC_PCS_MISC_CONFIG1		0x08
-+#define QPHY_V4_PCS_MISC_CLAMP_ENABLE			0x0c
-+#define QPHY_V4_PCS_MISC_TYPEC_STATUS			0x10
-+#define QPHY_V4_PCS_MISC_PLACEHOLDER_STATUS		0x14
-+
- #endif
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+So I guess this can go through platform/x86 as usual, or
+(assuming everyone is ok with the change itself) alternatively
+Rafael can take it to make sure there will be no conflicts?
+
+Regards,
+
+Hans
+
+
+On 07-04-2020 23:30, Hans de Goede wrote:
+> Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
+> irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
+> the parents IRQ because this was breaking suspend (causing immediate
+> wakeups) on an Asus E202SA.
+> 
+> This workaround for this issue is mostly fine, on most Cherry Trail
+> devices where we need the INT0002 device for wakeups by e.g. USB kbds,
+> the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
+> anyways.
+> 
+> But not on all devices, specifically on a Medion Akoya E1239T there is
+> no SCI at all, and because the irq_set_wake request is not passed on to
+> the parent IRQ, wake up by the builtin USB kbd does not work here.
+> 
+> So the workaround for the Asus E202SA immediate wake problem is causing
+> problems elsewhere; and in hindsight it is not the correct fix,
+> the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
+> Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
+> actually is a Braswell device.
+> 
+> Most (all?) Braswell devices use classic S3 mode suspend rather then
+> s2idle suspend and in this case directly dealing with PME events as
+> the INT0002 driver does likely is not the best idea, so that this is
+> causing issues is not surprising.
+> 
+> Replace the workaround of not passing irq_set_wake requests on to the
+> parents IRQ, by not binding to the INT0002 device when s2idle is not used.
+> This fixes USB kbd wakeups not working on some Cherry Trail devices,
+> while still avoiding mucking with the wakeup flags on the Asus E202SA
+> (and other Brasswell devices).
+> 
+> Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
+> Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+> Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement irq_set_wake on Bay Trail")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>   drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
+>   1 file changed, 5 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+> index 55f088f535e2..e8bec72d3823 100644
+> --- a/drivers/platform/x86/intel_int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel_int0002_vgpio.c
+> @@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip = {
+>   	.irq_set_wake		= int0002_irq_set_wake,
+>   };
+>   
+> -static struct irq_chip int0002_cht_irqchip = {
+> -	.name			= DRV_NAME,
+> -	.irq_ack		= int0002_irq_ack,
+> -	.irq_mask		= int0002_irq_mask,
+> -	.irq_unmask		= int0002_irq_unmask,
+> -	/*
+> -	 * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
+> -	 * and we don't want to mess with the ACPI SCI irq settings.
+> -	 */
+> -	.flags			= IRQCHIP_SKIP_SET_WAKE,
+> -};
+> -
+>   static const struct x86_cpu_id int0002_cpu_ids[] = {
+>   	INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),	/* Valleyview, Bay Trail  */
+> -	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),	/* Braswell, Cherry Trail */
+> +	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_byt_irqchip),	/* Braswell, Cherry Trail */
+>   	{}
+>   };
+>   
+> @@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pdev)
+>   	if (!cpu_id)
+>   		return -ENODEV;
+>   
+> +	/* We only need to directly deal with PMEs when using s2idle */
+> +	if (!pm_suspend_default_s2idle())
+> +		return -ENODEV;
+> +
+>   	irq = platform_get_irq(pdev, 0);
+>   	if (irq < 0)
+>   		return irq;
+> 
+
