@@ -2,140 +2,97 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58B8C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18CCC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9604E20747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B1B206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:00:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnUBQwpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgDGO6c (ORCPT
+        id S1729277AbgDGPAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:58:32 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3082 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728855AbgDGO6c (ORCPT
+        Tue, 7 Apr 2020 11:00:33 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45372 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729064AbgDGPAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:58:32 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037EsWgJ031822;
-        Tue, 7 Apr 2020 10:58:30 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 306m36b0x4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 10:58:30 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 037EwSLW001741
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 7 Apr 2020 10:58:28 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 7 Apr 2020
- 07:58:27 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 7 Apr 2020 07:58:26 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 037EwPW2021183;
-        Tue, 7 Apr 2020 10:58:25 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: buffer: remove null-checks for 'indio_dev->info'
-Date:   Tue, 7 Apr 2020 17:59:18 +0300
-Message-ID: <20200407145918.6833-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Apr 2020 11:00:33 -0400
+Received: by mail-lj1-f195.google.com with SMTP id t17so4033188ljc.12;
+        Tue, 07 Apr 2020 08:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n9qgnK2KRBH7r2dzJsAycd35bPm5nSXjOlpxrB9QcgM=;
+        b=DnUBQwpLF1yGSi2kCfjTckSu3hVQIAqPRf6DCY6DKO1++HLkqNzgAjG/AOk4unY1sr
+         A/yLSMR7xjVELDvtTH34sD3slYnF0yY/RPfzExQH+W6QU3iNJ9VjsxpoBFOXQixtHP6c
+         /5AmVZSXEX3S5Px2atvu92qQLIx9LmEmBBiqAowyhAfXA2szGkqoYtB0nIF24JEBVQ1b
+         Ng+s6Yvhhk6TgT8yV6vjRFliE8nJrofXIVu1xlT1HHvQp4leEOYSateJojFu5ze5Uj4+
+         jXZO7sEKsJzLI+krVprqAFYNIR4CL75T9ZNEDrTj87TkkRD/tgxNuoGXgN20kDqD0Zsp
+         Rejg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n9qgnK2KRBH7r2dzJsAycd35bPm5nSXjOlpxrB9QcgM=;
+        b=poQJ3OIi3hIiq1zWdj2s6rj6+wLnlEga4SZy6WNShfQuFeN5wVJj51QAbAUxbTibPx
+         faI2s5YjqKUCt7gVGQQMb2RSKN38mnessZ+Edq+5Uq9iLQjSqQosWFsEKwDVVL5cOJwa
+         EmgVu64/r344Uustpube11JFsyuL5z1CO02aImhlsWsE7xPSIolJfUqg7WFI6ijkont0
+         4GfstSRKZgFDonns42zDSKPuRa0ygbW3yeuKOIW6POlDj2tLp2Zwl7LZap40L0AwMPG3
+         D65a9vw19cqqXFg47zF+MZgeoHJthczVuF9Q3Q96eHC+ae+J2teUFgCUe5+Itnvgpdba
+         nMBQ==
+X-Gm-Message-State: AGi0PuYzSq50FbLlVtDgMgK/usnPNU9X5QNeVi8zNDkYkDsLl9Mk0Hat
+        bwAPvYrMTLO3QCbFmcfSygGq3Kk4
+X-Google-Smtp-Source: APiQypKiJGQiLiQA48VDa3JP3jGkXKo3FZCYfQFwllaqzQw15HCQQysW6YJAqfQxTNyNx+zXA5et/A==
+X-Received: by 2002:a2e:6809:: with SMTP id c9mr1974279lja.251.1586271631199;
+        Tue, 07 Apr 2020 08:00:31 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id x24sm4014932lfc.6.2020.04.07.08.00.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 08:00:30 -0700 (PDT)
+Subject: Re: [PATCH v10 54/55] Input: atmel_mxt_ts: Implement synchronization
+ during various operation
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-55-jiada_wang@mentor.com>
+ <c53637ef-8e5d-3243-7236-5da360021f21@gmail.com>
+ <b06c7915-562f-ec68-766a-2118cfe57a0f@mentor.com>
+ <b9a8865c-7754-16f7-8f66-9cd70dc42d3c@gmail.com>
+ <c5e7dc2d-08c7-e55e-352d-b9b0d86fe63e@gmail.com>
+ <500c814a-b0f4-db9f-30f6-bc6ac985c5e2@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b429ec7f-3cea-d689-aecd-ae2abe12420a@gmail.com>
+Date:   Tue, 7 Apr 2020 18:00:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_07:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070128
+In-Reply-To: <500c814a-b0f4-db9f-30f6-bc6ac985c5e2@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checking for 'indio_dev->info' is an impossible condition, since an IIO
-device should NOT be able to register without that information.
-The iio_device_register() function won't allow an IIO device to register if
-'indio_dev->info' is NULL.
+06.04.2020 07:18, Wang, Jiada пишет:
+...
+> I had some test,
+> and confirmed you are right,
+> this commit is no longer applicable to upstream,
+> but as discussed in another patch,
+> disable_irq() need to be moved after remove of mxt_fw_attr_group.
+> I will add this change in a new commit.
 
-If that information somehow becomes NULL, then we're likely busted anyway
-and we should crash the system, if we haven't already.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/industrialio-buffer.c | 19 +------------------
- 1 file changed, 1 insertion(+), 18 deletions(-)
-
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index e6fa1a4e135d..c96071bfada8 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -54,10 +54,6 @@ static bool iio_buffer_ready(struct iio_dev *indio_dev, struct iio_buffer *buf,
- 	size_t avail;
- 	int flushed = 0;
- 
--	/* wakeup if the device was unregistered */
--	if (!indio_dev->info)
--		return true;
--
- 	/* drain the buffer if it was disabled */
- 	if (!iio_buffer_is_active(buf)) {
- 		to_wait = min_t(size_t, to_wait, 1);
-@@ -109,9 +105,6 @@ ssize_t iio_buffer_read_outer(struct file *filp, char __user *buf,
- 	size_t to_wait;
- 	int ret = 0;
- 
--	if (!indio_dev->info)
--		return -ENODEV;
--
- 	if (!rb || !rb->access->read)
- 		return -EINVAL;
- 
-@@ -131,11 +124,6 @@ ssize_t iio_buffer_read_outer(struct file *filp, char __user *buf,
- 
- 	add_wait_queue(&rb->pollq, &wait);
- 	do {
--		if (!indio_dev->info) {
--			ret = -ENODEV;
--			break;
--		}
--
- 		if (!iio_buffer_ready(indio_dev, rb, to_wait, n / datum_size)) {
- 			if (signal_pending(current)) {
- 				ret = -ERESTARTSYS;
-@@ -171,7 +159,7 @@ __poll_t iio_buffer_poll(struct file *filp,
- 	struct iio_dev *indio_dev = filp->private_data;
- 	struct iio_buffer *rb = indio_dev->buffer;
- 
--	if (!indio_dev->info || rb == NULL)
-+	if (rb == NULL)
- 		return 0;
- 
- 	poll_wait(filp, &rb->pollq, wait);
-@@ -1100,11 +1088,6 @@ int iio_update_buffers(struct iio_dev *indio_dev,
- 		goto out_unlock;
- 	}
- 
--	if (indio_dev->info == NULL) {
--		ret = -ENODEV;
--		goto out_unlock;
--	}
--
- 	ret = __iio_update_buffers(indio_dev, insert_buffer, remove_buffer);
- 
- out_unlock:
--- 
-2.17.1
-
+Sounds good.
