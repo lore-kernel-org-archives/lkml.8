@@ -2,86 +2,81 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91C9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EC4C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4DE220719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9C52078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:20:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="reAgR5jj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgDGOTX convert rfc822-to-8bit (ORCPT
+        id S1729058AbgDGOUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:19:23 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47543 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728737AbgDGOTW (ORCPT
+        Tue, 7 Apr 2020 10:20:06 -0400
+Received: from one.firstfloor.org ([193.170.194.197]:40912 "EHLO
+        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728737AbgDGOUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:19:22 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jLp4K-000768-PN; Tue, 07 Apr 2020 16:19:12 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 64BBF101303; Tue,  7 Apr 2020 16:19:12 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>
-Cc:     mtk.manpages@gmail.com, Andrei Vagin <avagin@openvz.org>,
-        Dmitry Safonov <dima@arista.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Adrian Reber <adrian@lisas.de>
-Subject: Re: RFC: time_namespaces(7) manual page
-In-Reply-To: <fe940759-9159-5d89-1f5b-f92fa247177f@gmail.com>
-References: <7221df0a-435b-f8bc-ff91-c188af535e73@gmail.com> <20200407032318.GA494464@gmail.com> <87r1wzk2p5.fsf@nanos.tec.linutronix.de> <fe940759-9159-5d89-1f5b-f92fa247177f@gmail.com>
-Date:   Tue, 07 Apr 2020 16:19:12 +0200
-Message-ID: <87lfn7js4f.fsf@nanos.tec.linutronix.de>
+        Tue, 7 Apr 2020 10:20:06 -0400
+Received: by one.firstfloor.org (Postfix, from userid 503)
+        id A6FD78733C; Tue,  7 Apr 2020 16:20:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
+        s=mail; t=1586269203;
+        bh=lRzrQwhMU5K1R+FJHTlsmI5L3Ae0ffZFkwYoksiVqAg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=reAgR5jjyJWwcXa6izYSZ7QW82J41bt4hnpQ9Fr3T6bRdmGKs3HnL4XvvYKvycXVb
+         femjynZgUxgi2MBsoha0TLacKsKqpIB3rcNbd4w6qZRoukub6fI375GwmK857nMhFz
+         +cXTpLXOQ6j7+B/C9TgdB6fJssIIHTDuuFq2UTAY=
+Date:   Tue, 7 Apr 2020 07:20:03 -0700
+From:   Andi Kleen <andi@firstfloor.org>
+To:     Keno Fischer <keno@juliacomputing.com>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        Kyle Huey <khuey@kylehuey.com>,
+        Robert O'Callahan <robert@ocallahan.org>
+Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0
+ per-thread
+Message-ID: <20200407142002.jxzc3xcuyoznjgkh@two.firstfloor.org>
+References: <20200407011259.GA72735@juliacomputing.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407011259.GA72735@juliacomputing.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
-> I've tried to capture this info, as well some other relevant errors
-> in the following text. Does it look okay?
->
->        Writes  to  the  timens_offsets  file  can fail with the following
->        errors:
->
->        EINVAL An offset-nanosecs value is greater than 999,999,999.
->
->        EINVAL A clock-id value is not valid.
->
->        EPERM  The caller does not have the the CAP_SYS_TIME capability.
->
->        ERANGE An offset-secs value is out of range.  In particular;
->
->               · offset-secs can't be set to a value which would make  the
->                 current time on the corresponding clock inside the names‐
->                 pace a negative value; and
->
->               · offset-secs can't be set to a value such that the time on
->                 the corresponding clock inside the namespace would exceed
->                 half of the value of the  kernel  constant  KTIME_SEC_MAX
->                 (this  limits  the  clock  value to a maximum of approxi‐
->                 mately 146 years).
+> Thank you in advance for any review comments - I thought the comments
+> on v1 were quite helpful. I understand this is a tall ask for mainline
+> inclusion, but the feature is just too useful for me to give up ;).
 
-Yes.
+> [1] https://lkml.org/lkml/2018/6/16/134
 
-Thanks,
+The rationale from that post should have been in this description.
 
-        tglx
+You can already do what you want using the clearcpuid= boot flags using the
+infrastructure in [1], which is in newer kernels.
+
+So to disable AVX512 you would use clearcpuid=304 and the AVX feature
+set should be the same as Haswell. To disable AVX2 you would use
+clearcpuid=293 and you get the same feature set as Sandy Bridge.
+
+A boot option is not as convenient as a run time setting, but has a lot
+less weird corner cases.
+
+-Andi
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/x86/kernel/cpu/cpuid-deps.c?id=0b00de857a648dafe7020878c7a27cf776f5edf4
+
+-Andi
