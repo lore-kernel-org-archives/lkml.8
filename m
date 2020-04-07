@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB57C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D4BC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6AA22078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10DA72078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217945;
-	bh=AVj+XPiQxDa8C7Tyehp1HCoqAl1OwJmuCvK9g5+Z3jQ=;
+	s=default; t=1586217951;
+	bh=jO0bfRACoDqbJtxtvsGKsvpEltAHBXHauexTK0lbnSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ou3FrPPKM6B9DZqWAeFpRNn+rfHePfh3pSolW4h1J1pBNER/nWqTTLhb1kJuGn1mj
-	 EH2gePIQlX7V6viiHePJn31iPf63VJUGFis2tuHUdCQiGeewcW8sDK8L6ItnccClEe
-	 nQPrsO3uSwdGZm6cTeYSD1+YG7RLmUvMdE+RMDho=
+	b=1B+B/TOGsCRasjvO4idmaG2Eon3Bl3PxXkkJy67Sqj8jfmYNO8aTNaHHvJoWeaxFt
+	 G9Mj+fUdN4STFNjdVxB/qfCmYu4D3QGlPPfqaTk4hsLS2d0cswwuUriTP3GxGCIPr5
+	 fQAi/filu17lskCRxY/8R2itWnehlXifSQ7V+ZUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgDGAC1 (ORCPT
+        id S1728366AbgDGAFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36774 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbgDGACW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:22 -0400
+        id S1728077AbgDGAC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1066F2080C;
-        Tue,  7 Apr 2020 00:02:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C66B4207FF;
+        Tue,  7 Apr 2020 00:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217742;
-        bh=AVj+XPiQxDa8C7Tyehp1HCoqAl1OwJmuCvK9g5+Z3jQ=;
+        s=default; t=1586217745;
+        bh=jO0bfRACoDqbJtxtvsGKsvpEltAHBXHauexTK0lbnSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KA80CbZnOpEmNylEkB6Hs9hpCCZ5lUWCd82bYwiNnIwQ/BXQ2aRhsMMKKdbnaRuhV
-         ZSu0e1bsaVnNVVbS5bmBP2NfF28qTUVfOGijiFyWSd/WcO+yy6cyiQeQLI+k1c5wm4
-         eRpOW8evDYF8/PdO4OJPe6WyL2rqVzKNUDjYsBaI=
+        b=2S9GZGL4X83Ureyiqe7vgDpOcdLA8WnTltPP8y5iAtQETKdRmrCoLsmIFmu/yNJHz
+         p1lxSzY814wjDMSW7RXhhHVtI6DWOmYdmkD+Xj3/6h/ojZvP6cbFW66ZtvvonfonJz
+         CRcODgUOkpexqo9HNY2XR8i/61qZayhk0ubh/dA8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, Phil Sutter <phil@nwl.cc>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 24/32] netfilter: nf_tables: Allow set back-ends to report partial overlaps on insertion
-Date:   Mon,  6 Apr 2020 20:01:42 -0400
-Message-Id: <20200407000151.16768-24-sashal@kernel.org>
+Cc:     Raju Rangoju <rajur@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 27/32] cxgb4/ptp: pass the sign of offset delta in FW CMD
+Date:   Mon,  6 Apr 2020 20:01:45 -0400
+Message-Id: <20200407000151.16768-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
 References: <20200407000151.16768-1-sashal@kernel.org>
@@ -61,46 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Raju Rangoju <rajur@chelsio.com>
 
-[ Upstream commit 8c2d45b2b65ca1f215244be1c600236e83f9815f ]
+[ Upstream commit 50e0d28d3808146cc19b0d5564ef4ba9e5bf3846 ]
 
-Currently, the -EEXIST return code of ->insert() callbacks is ambiguous: it
-might indicate that a given element (including intervals) already exists as
-such, or that the new element would clash with existing ones.
+cxgb4_ptp_fineadjtime() doesn't pass the signedness of offset delta
+in FW_PTP_CMD. Fix it by passing correct sign.
 
-If identical elements already exist, the front-end is ignoring this without
-returning error, in case NLM_F_EXCL is not set. However, if the new element
-can't be inserted due an overlap, we should report this to the user.
-
-To this purpose, allow set back-ends to return -ENOTEMPTY on collision with
-existing elements, translate that to -EEXIST, and return that to userspace,
-no matter if NLM_F_EXCL was set.
-
-Reported-by: Phil Sutter <phil@nwl.cc>
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Raju Rangoju <rajur@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 068daff41f6e6..ddaaf5e535d58 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -4689,6 +4689,11 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 				err = -EBUSY;
- 			else if (!(nlmsg_flags & NLM_F_EXCL))
- 				err = 0;
-+		} else if (err == -ENOTEMPTY) {
-+			/* ENOTEMPTY reports overlapping between this element
-+			 * and an existing one.
-+			 */
-+			err = -EEXIST;
- 		}
- 		goto err5;
- 	}
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+index 58a039c3224ad..af1f40cbccc88 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
+@@ -246,6 +246,9 @@ static int  cxgb4_ptp_fineadjtime(struct adapter *adapter, s64 delta)
+ 			     FW_PTP_CMD_PORTID_V(0));
+ 	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
+ 	c.u.ts.sc = FW_PTP_SC_ADJ_FTIME;
++	c.u.ts.sign = (delta < 0) ? 1 : 0;
++	if (delta < 0)
++		delta = -delta;
+ 	c.u.ts.tm = cpu_to_be64(delta);
+ 
+ 	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), NULL);
 -- 
 2.20.1
 
