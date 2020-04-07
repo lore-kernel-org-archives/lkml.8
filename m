@@ -2,207 +2,181 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52134C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2A6C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF53220730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:16:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="NFmoJFD9"
+	by mail.kernel.org (Postfix) with ESMTP id 7931520747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbgDGWQc (ORCPT
+        id S1726467AbgDGWWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:16:32 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37627 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDGWQc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:16:32 -0400
-Received: by mail-io1-f68.google.com with SMTP id n20so5111938ioa.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+YHrzs2XPGAqjRasG+YxC96yDyxPmKpa+mwePIDhyYI=;
-        b=NFmoJFD9/fSsMOlsdKH/bQgFHeTGKGos97k1EE064Kd7wUj5Ml/IWBtOjYaxNwQ3BX
-         /9tk64StRSEsVWiROBTzm9M2UoGw7kW/1IiEOmGwEJxxJlzx0WMhj7I2cZ6lE9dNeq8R
-         Dc65W2NMvYcMeWUVsw+gdm0FFaxE1ROWtypxnlMUCY5Uo9oBJXn3a8JpZfGDG8mWZuI2
-         WkEQKy2/uMkC5QJ8HWhv/gV+R/vGj7HMN3cCqqA53pDpWyET7sKyi8npopt2UyBgRGzA
-         mEIq6t3HxdYQp0RqX/l5UCRSSl/xSwRGfp+/cKAPARkvzADRJgNVduZHIUKoxNHZkS6F
-         XB9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+YHrzs2XPGAqjRasG+YxC96yDyxPmKpa+mwePIDhyYI=;
-        b=h7gdSiWefkyT403hKLwQb4aaowpLv4edY9Pt7ZL139n7kmiQ7AxocjSUY/4PrYwgAO
-         OENS1rIVLLyC9tgBbUwh/+jx5yamTuf9WFBhJiHhfpUfa1wVKrPRIvAyc+Z2hnO+/3PS
-         R7BYJfUYTsgSNecuv5kbm+xZgwZcbvrkiwq/6LyW5jrcOsrOPt8wujLKJmxighhPbwUV
-         A1+XPMqPra+xx0UQx3+7TpIp94k7Ectls9cl4a0saHFc+Sg1RrZwRXh5XQoZyrjVoTJd
-         gLLBFfGEWJbTg3mKV2PIwejkSOpaBoaaASX2IJG5dv+r3w4fb/+fMAKkGr1whrHNKSPw
-         N5cw==
-X-Gm-Message-State: AGi0PuZGRitjzPP9yRAgOEhzx0t5J5WMs24Rzpc3ffupP8vuRovQjwby
-        seJoW0OKWzoZQhi82iA2M9NJaSr/EH0yEgtl0dXq3A==
-X-Google-Smtp-Source: APiQypIwEA3RSbllQhtbkGB6f/PER8aQGoRVQymPwJiAq7ezLIRoJezpBLGk4jXxyv7DTPEQO2AhuV9PchQdz+RN8DM=
-X-Received: by 2002:a02:cd2d:: with SMTP id h13mr4047248jaq.46.1586297791226;
- Tue, 07 Apr 2020 15:16:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200407011259.GA72735@juliacomputing.com> <8f95e8b4-415f-1652-bb02-0a7c631c72ac@intel.com>
- <CABV8kRw1TQsqs+z43bSfZ5isctuFGMB4g_ztDYihiiXHcy4nVA@mail.gmail.com>
- <5208ad1e-cd9b-d57e-15b0-0ca935fccacd@intel.com> <CABV8kRzfR32+MpAvTAPHCN902WtHSxySujcO2yAB3OT0caVDJg@mail.gmail.com>
- <9921cb2e-a7cb-c1d0-b120-c08f06be7c7f@intel.com>
-In-Reply-To: <9921cb2e-a7cb-c1d0-b120-c08f06be7c7f@intel.com>
-From:   Keno Fischer <keno@juliacomputing.com>
-Date:   Tue, 7 Apr 2020 18:15:54 -0400
-Message-ID: <CABV8kRxDkE1dQh0c2FkFpkUruiR0aD-hXbgd5-jcoCDiwYHs1A@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0 per-thread
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tue, 7 Apr 2020 18:22:08 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30926 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbgDGWWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 18:22:08 -0400
+IronPort-SDR: AfsxHqqmUNBE+YXhfpW/d2+zS5UWYjbK9FW1oKxKy6Xe+Qe/juotInwiMefR4iDDoEhcegNJu4
+ use7AZ5sUbJQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 15:22:06 -0700
+IronPort-SDR: MHqNrBVUSFnEW0SwAq44PvRuJRi2rd4NlBahYEO7RpbBCKWzXtcB0NZMVrXO6kqpzjaM3KUQy2
+ cW+QrYij3Uqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,356,1580803200"; 
+   d="scan'208";a="254604510"
+Received: from chenb-mobl1.amr.corp.intel.com (HELO [10.255.231.128]) ([10.255.231.128])
+  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 15:21:59 -0700
+Subject: Re: [RFC PATCH v9 14/27] mm: Handle Shadow Stack page fault
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        Kyle Huey <khuey@kylehuey.com>,
-        "Robert O'Callahan" <robert@ocallahan.org>
-Content-Type: text/plain; charset="UTF-8"
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
+References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
+ <20200205181935.3712-15-yu-cheng.yu@intel.com>
+ <4902a6ee-cb0f-2700-1f6d-9d756593183c@intel.com>
+ <444d97c4a4f70ccbb12da5e8f7ff498b37a9f60d.camel@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <e432d102-7f69-7ba3-6146-c0165eef87e1@intel.com>
+Date:   Tue, 7 Apr 2020 15:21:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <444d97c4a4f70ccbb12da5e8f7ff498b37a9f60d.camel@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The userspace buffer is... a userspace buffer.  It is not and should not
-> be tied to the format of the kernel buffer.
+On 4/7/20 11:14 AM, Yu-cheng Yu wrote:
+> On Wed, 2020-02-26 at 16:08 -0800, Dave Hansen wrote:
+>>> diff --git a/mm/memory.c b/mm/memory.c
+>>> index 45442d9a4f52..6daa28614327 100644
+>>> --- a/mm/memory.c
+>>> +++ b/mm/memory.c
+>>> @@ -772,7 +772,8 @@ copy_one_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
+>>>  	 * If it's a COW mapping, write protect it both
+>>>  	 * in the parent and the child
+>>>  	 */
+>>> -	if (is_cow_mapping(vm_flags) && pte_write(pte)) {
+>>> +	if ((is_cow_mapping(vm_flags) && pte_write(pte)) ||
+>>> +	    arch_copy_pte_mapping(vm_flags)) {
+>>>  		ptep_set_wrprotect(src_mm, addr, src_pte);
+>>>  		pte = pte_wrprotect(pte);
+>>>  	}
+>>
+>> You have to modify this because pte_write()==0 for shadow stack PTEs, right?
+>>
+>> Aren't shadow stack ptes *logically* writable, even if they don't have
+>> the write bit set?  What would happen if we made pte_write()==1 for them?
+> 
+> Here the vm_flags needs to have VM_MAYWRITE, and the PTE needs to have
+> _PAGE_WRITE.  A shadow stack does not have either.
 
-I don't think I disagree with you. However, I should point out that in
-the kernel currently, the layout of this user space buffer changes depending
-on the setting of the kernel XCR0 (Is this a good idea? Probably not -
-certainly all the users I've looked at get this wrong and assume the
-layout is fixed just variably sized, but that is how the kernel currently
-works, so we're probably stuck with it)
+I literally mean taking pte_write(), and doing something l
 
-> > Are you referring to a ptracer which runs with a modified XCR0, and
-> > assumes that the value it gets back from ptrace will have an
-> > XSTATE_BV equal to its own observed XCR0 and thus get confused about
-> > the layout of the buffer (or potentially have not copied all of the
-> > relevant xstate because it calculated a wrong buffer size)?
->
-> I don't think it's insane for a process to assume that it can XRSTOR a
-> buffer that it gets back from ptrace.  That seems like something that
-> could clearly be an ABI that apps depend on.
+static inline int pte_write(pte_t pte)
+{
+	if (pte_present(pte) && pte_is_shadow_stack(pte))
+		return 1;
 
-Yes, that's fair, but I'm less worried about the case where
-the ptracer itself is running with a modified XCR0,
-because something had to explicitly opt that
-process into that behavior. That piece can verify
-that the application works fine, or alternatively fix
-the system calls to emulate whatever behavior
-that user application wants to build from this primitive.
-I also believe that the issue I mentioned above,
-where the ptrace xstate buffer is compacted will
-cause it to fail to XRSTOR properly depending
-on what the kernel XCR0 value is, and it won't XRSTORC
-either, because we don't write the XCOMP_BV.
+        return pte_flags(pte) & _PAGE_RW;
+}
 
-> Also, let's look at the comment about where XCR0 shows up in the ABI
-> (arch/x86/include/asm/user.h):
->
-> >  * For now, only the first 8 bytes of the software usable bytes[464..471] will
-> >  * be used and will be set to OS enabled xstate mask (which is same as the
-> >  * 64bit mask returned by the xgetbv's xCR0).
->
-> That also makes it sound like we expect there to be a *SINGLE* value
-> across the entire system.  It also makes me wonder *which* xgetbv is
-> expected to match USER_XSTATE_XCR0_WORD.  It can't be the ptracee since
-> we expect them to change XCR0.  It can't be the ptracer because they can
-> use this new prctl too.  So does it refer to the kernel?  Or, should the
-> new prctl() *disable* future ptrace()s?
+Then if is_cow_mapping() returns true for shadow stack VMAs, the above
+code doesn't need to change.
 
-It can't be the ptracee's XCR0, because that would be
-breaking to the ptracers, which haven't opted into any
-XCR0 modification. I don't think it should be the ptracer's
-XCR0, because that would make the ptracer with the
-modified XCR0 unable to trace a tracee with the full XCR0,
-which, while potentially an acceptable trade-off, seems unnecessary.
+> To fix checking vm_flags, what about adding a "arch_is_cow_mappping()" to the
+> generic is_cow_mapping()?
 
-> > If so, I think that's just a buggy ptracer. The kernel's xfeature
-> > mask is available via ptrace and a well-behaved ptracer should use
-> > that (e.g. gdb does, though it looks like it then also assumes that
-> > the xstate has no holes, so it potentially gets the layout wrong
-> > anyway).
->
-> I'm trying to figure out what the semantics are of this whole thing.  It
-> can't be "don't let userspace observe the real XCR0" because ptrace
-> exposes that.  Is it, "make memory images portable, unless it's a memory
-> image from ptrace"?
+That makes good sense to me.
 
-The semantics I want are "make userspace instructions behave
-in the way that they would if XCR0 was this value". I'm open to
-additionally extending this to sigframes, because I can't think of
-a situation in which writing all those extra zeros would be useful,
-but I'm also ok with the argument that it shouldn't affect any kernel
-behavior whatsoever as Andy was suggesting earlier in the thread.
+> For the PTE, the check actually tries to determine if the PTE is not already
+> being copy-on-write, which is:
+> 
+> 	(!_PAGE_RW && !_PAGE_DIRTY_HW)
+> 
+> So what about making it pte_cow()?
+> 
+> 	/*
+> 	 * The PTE is in copy-on-write status.
+> 	 */
+> 	static inline int pte_cow(pte_t pte)
+> 	{
+> 		return !(pte_flags(pte) & (_PAGE_WRITE | _PAGE_DIRTY_HW));
+> 	}
 
-You can build something with more complete semantics on top of it,
-as rr would, to more fully emulate the environment. You're probably
-gonna be needing to trap CPUID anyway to mask off the relevant
-features. I would prefer if the kernel didn't make assumptions here,
-and just gave me the minimal primitive to build on top of.
-
-> > In general, I don't really want the modified XCR0 to affect
-> > anything other than the particular instructions that depend
-> > on it and maybe the signal frame (though as I said before,
-> > I'm open to either here).
->
-> Just remember that, in the end, we don't get to say what a good ptracer
-> or bad ptracer is.  If they're expecting semantics that we've kept
-> constant for 10 years, we change the semantics, and the app breaks, the
-> kernel is in the wrong.
-
-Every ptracer is a bad ptracer - using this API "correctly" is essentially
-impossible ;). I certainly agree that we can't change the behavior for
-ptracers that haven't opted into XCR0 modification, but I don't think
-that imposes any restriction on what a ptracer with modified XCR0
-does (well, there's three possible options, and two reasonable ones,
-so it should be one of those)
-
-> I also don't feel like I have a good handle on what ptracers *do* with
-> their XSAVE buffers that they get/set.  How many apps in a distro do
-> something with this interface?
-
-Well, anything that's a debugger would: gdb, lldb, rr.
-CRIU's compel tool does too.
-However, most ptracers probably don't touch the fpu state.
-strace doesn't, proot doesn't.
-I did some grepping around and the only other ptracer
-I could find that was using this interface is
-... linux (in um mode).
-
-As a quick survey, gdb reads the kernel
-XCR0 from the xstate and uses that to compute
-the size of the xsave area (which I think is most correct).
-lldb and rr use cpuid, which should be a
-fine upper bound (overallocating is fine for ptrace)
-assuming nobody is messing with cpuid *cough*,
-though of course what just happens here is that they
-just won't see the extra state. criu always uses 4096 bytes.
-linux um requests the maximum it knows about.
-None (including linux-um, oops) of them are aware
-that the layout of the ptrace buffer is compressed if
-XCR0 has holes in it (I'll leave it up to you to decide
-whether that means we should fix it while hardware
-with holes in its XCR0 is still rare - though you can
-get into this situation with cmdline flags). All those
-applications will have incorrect behavior if the kernel
-XCR0 has a whole in it (they don't care about the
-user XCR0 though, so that's somewhat unrelated
-to this PR).
-
-I don't see any compelling reason to hide additional
-xstate from a ptracer with modified xcr0 if it asks for it.
+... with appropriate comments that seems fine to me.
