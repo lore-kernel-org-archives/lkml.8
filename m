@@ -2,116 +2,121 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150B4C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D829EC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB9020692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:04:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VbVZgdnW"
+	by mail.kernel.org (Postfix) with ESMTP id B8CF920692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbgDGPEV (ORCPT
+        id S1729312AbgDGPGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:04:21 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:64326 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728992AbgDGPEU (ORCPT
+        Tue, 7 Apr 2020 11:06:52 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:22528 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728917AbgDGPGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:04:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586271859; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=cPqqM4WiYnKa1v/ODX9moiHz3GFe4yiq98IQIIpjCVY=; b=VbVZgdnWyVNAZ4PHKXVHx2HLKe65IX3tnkmjffDOiBYbyxZeGuHT76QUUFF4mNPfDVhhaPdS
- LW+Eq0OoD2q0KFSKTk3oGY915ZtUDcNlUl2WtogtLxL4WadwO36U/cSNhrVFHRMLDZy0Lw74
- D5QlHr0rH2yam5qngjl9nzI6wYs=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8c9673.7fa09574c810-smtp-out-n04;
- Tue, 07 Apr 2020 15:04:19 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7E785C433D2; Tue,  7 Apr 2020 15:04:18 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E3CDAC433F2;
-        Tue,  7 Apr 2020 15:04:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E3CDAC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH 2/3] bus: mhi: core: Make sure to powerdown if
- mhi_sync_power_up fails
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1586207077-22361-1-git-send-email-jhugo@codeaurora.org>
- <1586207077-22361-3-git-send-email-jhugo@codeaurora.org>
- <20200407061455.GB2442@Mani-XPS-13-9360>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <18dbd05b-63cf-0494-b20c-90a96626ceeb@codeaurora.org>
-Date:   Tue, 7 Apr 2020 09:04:15 -0600
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 7 Apr 2020 11:06:51 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037Esnkf031914;
+        Tue, 7 Apr 2020 11:06:50 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 306m36b23f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Apr 2020 11:06:49 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 037F6mIF004900
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 7 Apr 2020 11:06:48 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 7 Apr 2020 08:06:47 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 7 Apr 2020 08:06:47 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 7 Apr 2020 08:06:46 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 037F6i2a022691;
+        Tue, 7 Apr 2020 11:06:44 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v3] iio: move 'indio_dev->info' null check first in __iio_device_register()
+Date:   Tue, 7 Apr 2020 18:07:43 +0300
+Message-ID: <20200407150743.8144-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200406123246.57684-1-alexandru.ardelean@analog.com>
+References: <20200406123246.57684-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20200407061455.GB2442@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_07:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/2020 12:14 AM, Manivannan Sadhasivam wrote:
-> On Mon, Apr 06, 2020 at 03:04:36PM -0600, Jeffrey Hugo wrote:
->> Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
->> clean up the resources.  Otherwise a BUG could be triggered when
->> attempting to clean up MSIs because the IRQ is still active from a
->> request_irq().
->>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   drivers/bus/mhi/core/pm.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
->> index cd6ba23..1bfa334 100644
->> --- a/drivers/bus/mhi/core/pm.c
->> +++ b/drivers/bus/mhi/core/pm.c
->> @@ -922,7 +922,11 @@ int mhi_sync_power_up(struct mhi_controller *mhi_cntrl)
->>   			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
->>   			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
->>   
->> -	return (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
->> +	ret = (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
->> +
->> +	if (ret)
->> +		mhi_power_down(mhi_cntrl, false);
->> +	return ret;
-> 
-> I'd prefer the style of,
-> 
-> ```
-> statement
-> if (cond)
-> 	statement
-> 
-> return
-> ```
-> 
-> Please stick to this. The change itself looks good.
-> 
+Moves this to be the first check, as it's very simple and fails the
+registration earlier, instead of potentially initializing the
+'indio_dev->label' and checking for duplicate indexes, and then failing
+with this simple-check.
 
-Sure, will do.
+This is a minor optimization, since '__iio_device_register()' will waste
+fewer validation cycles in case 'indio_dev->info' is NULL.
 
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
+Changelog v1 -> v2:
+* fixed typo 'regitration' -> 'registration'
+
+Changelog v2 -> v3:
+* title update to include __iio_device_register()
+* dropped 'Doesn't fix anything.' 
+* added sentence about the minor optimization
+
+ drivers/iio/industrialio-core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 157d95a24faa..56ff24d7a174 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1711,6 +1711,9 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+ {
+ 	int ret;
+ 
++	if (!indio_dev->info)
++		return -EINVAL;
++
+ 	indio_dev->driver_module = this_mod;
+ 	/* If the calling driver did not initialize of_node, do it here */
+ 	if (!indio_dev->dev.of_node && indio_dev->dev.parent)
+@@ -1723,9 +1726,6 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (!indio_dev->info)
+-		return -EINVAL;
+-
+ 	/* configure elements for the chrdev */
+ 	indio_dev->dev.devt = MKDEV(MAJOR(iio_devt), indio_dev->id);
+ 
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.17.1
+
