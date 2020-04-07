@@ -7,84 +7,128 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF33C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4DBC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5E720692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE6E20787
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:40:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.ca header.i=@yahoo.ca header.b="M1ZyPm84"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vNKOZDHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgDGAkl (ORCPT
+        id S1726444AbgDGAkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:40:41 -0400
-Received: from sonic310-49.consmr.mail.gq1.yahoo.com ([98.137.69.175]:35341
-        "EHLO sonic310-49.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726287AbgDGAkl (ORCPT
+        Mon, 6 Apr 2020 20:40:55 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42575 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgDGAkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:40:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.ca; s=s2048; t=1586220039; bh=WqkBupthajN/wVNjyMab6WjNkJYjZbWKiQLkiDzGuL8=; h=Date:From:Subject:To:Cc:References:In-Reply-To:From:Subject; b=M1ZyPm84VdFE7nGdaCFwWB9dJFOU2AswpxkEQomEJzw9T0vV4NJG9RNfVmohcSg8mL2bEJEquJ6QW5EgoDGrp9iZ03c/41vIOhn4a2yr4ECZ5b3thfguhpBSoAgaRGyP/3OcAfwV68h5MKIs5s1fVsyEaZtue93megk8RR3qJOeIx9nagkd+ieOQt+ujWesq7Lyjr5Lhnx60jXnqQC7gWlOLqKpJMJN+Lf1pidgM/Eupa/RnUjTs3CRltdACwJPpUvLgoWVk3+RNL3reAYJDhtOKgw6/8MG+WEs6K8OmcOQh2WoVMVRftK1HBov8RLWQi2slsPgLLXfVFPQiBICMNw==
-X-YMail-OSG: N_6BpMEVRDvd.miR6A7lED5GPdAEx7ojsA--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.gq1.yahoo.com with HTTP; Tue, 7 Apr 2020 00:40:39 +0000
-Received: by smtp426.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 56102bb25bec285dc24cdcfca4dac9a3;
-          Tue, 07 Apr 2020 00:38:38 +0000 (UTC)
-Date:   Mon, 06 Apr 2020 20:38:34 -0400
-From:   "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Subject: Re: Bad rss-counter state from drm/ttm, drm/vmwgfx: Support huge TTM
- pagefaults
-To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org,
-        Thomas =?iso-8859-1?q?Hellstr=F6m?= "(VMware)" 
-        <thomas_os@shipmail.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christian =?iso-8859-1?b?S/ZuaWc=?= <christian.koenig@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?b?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-graphics-maintainer@vmware.com,
-        Michal Hocko <mhocko@suse.com>, pv-drivers@vmware.com,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Roland Scheidegger <sroland@vmware.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>
-References: <1586138158.v5u7myprlp.none.ref@localhost>
-        <1586138158.v5u7myprlp.none@localhost>
-        <0b12b28c-5f42-b56b-ea79-6e3d1052b332@shipmail.org>
-In-Reply-To: <0b12b28c-5f42-b56b-ea79-6e3d1052b332@shipmail.org>
+        Mon, 6 Apr 2020 20:40:55 -0400
+Received: by mail-qk1-f193.google.com with SMTP id 123so7133qkm.9
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 17:40:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=3LF/o4UOLHZ7u5AeS29ADFIWE/RbgKztcg6yxkuc2qQ=;
+        b=vNKOZDHkVJsbIEl7B7c09QFBaVWbhOwlnie7l8bQaV7AYsc9mGKPyWD/eASJY9Vo4X
+         sK+TIV22dunx7p11iPc1/gUFM3n632Nb5QGtVSA6r+s0pRCjvuCJTp/Pw4URio2TACHk
+         cBPNCV0W206g4WLSdowuC4Zqnnjil4NH2lwpyYrFHaSwp9PiZ7TzpFrxgFrKgQ0bwRh3
+         rC4vY+aRHIGemp3dKSWPWJtPpeEQs0Yb0U+ArAknFJ36qVwHIC+y0SW+dCaRTBR5kQWX
+         a4jae8RXk6OejxqWk8TdsZObJ7GU98u+I7xlS+ygtKwi9MlGxW5nC4gPC+u9Hk+MMOck
+         XJNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3LF/o4UOLHZ7u5AeS29ADFIWE/RbgKztcg6yxkuc2qQ=;
+        b=LZBSTHkHqD/B6WHYz38mpG5lYZvhoFC6wSgTdwDqm0L5iwePPpRH7sgToOfvJ+yrD/
+         LTJl9fM6EQdYEx8y0voLKwphXwRoNOHbipBhauUF7Uk4KQSECOoSakOI0m4ODFISFGIO
+         yk9PHc5U7q1zd0jThG9zPGyyTMPldS1nXLsnYo6ZA/6aCdI76QYTElWr9cgqfyHjHjbm
+         v/RjN74AxWclDmqbD5pILC4DdP8xragU9H7zJH52nTewIdYHCLliAALRe2KieOigI3us
+         itoObiAhrNNimD2GWO+Dlpl7/fR5lzDRGIWLlRMNA+J/sZOegR40FAJx27Nc4dQJUrUb
+         iDpQ==
+X-Gm-Message-State: AGi0PuaYk2WIXGkRk72wDy/81nfD/TTrqyqPpI2looeZv92hyq3TT5/A
+        6Tae/PwVwoHv9NNJ0zRnk34x3HrHOUtPV0Esn5E=
+X-Google-Smtp-Source: APiQypJFrTcD8M7cUC55n3DG+zlL6SuC0I0p5zWmGQ68W8FY6zH5fvJsjpMf8bVNRdIshpZimFwOSYplzRb7pfniCZw=
+X-Received: by 2002:a37:af86:: with SMTP id y128mr24790013qke.429.1586220054400;
+ Mon, 06 Apr 2020 17:40:54 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <1586219716.1a3fyi6lh5.none@localhost>
-Content-Type: text/plain; charset=utf-8
+References: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com> <20200406091814.17256-1-hdanton@sina.com>
+In-Reply-To: <20200406091814.17256-1-hdanton@sina.com>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Tue, 7 Apr 2020 09:40:43 +0900
+Message-ID: <CAAmzW4MZG9m+wDYSnG3ZGy_9X_ajv6eU8AdtGyrSJ7kW1K3TQQ@mail.gmail.com>
+Subject: Re: [PATCH v5 02/10] mm/vmscan: protect the workingset on anonymous LRU
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mailer: WebService/1.1.15620 hermes Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Thomas Hellstr=C3=B6m (VMware)'s message of April 6, 2020 5:0=
-4 pm:
-> Hi,
->=20
-> On 4/6/20 9:51 PM, Alex Xu (Hello71) wrote:
->> Using 314b658 with amdgpu, starting sway and firefox causes "BUG: Bad
->> rss-counter state" and "BUG: non-zero pgtables_bytes on freeing mm" to
->> start filling dmesg, and then closing programs causes more BUGs and
->> hangs, and then everything grinds to a halt (can't start more programs,
->> can't even reboot through systemd).
->>
->> Using master and reverting that branch up to that point fixes the
->> problem.
->>
->> I'm using a Ryzen 1600 and AMD Radeon RX 480 on an ASRock B450 Pro4
->> board with IOMMU enabled.
->=20
-> If you could try the attached patch, that'd be great!
->=20
-> Thanks,
->=20
-> Thomas
->=20
+2020=EB=85=84 4=EC=9B=94 6=EC=9D=BC (=EC=9B=94) =EC=98=A4=ED=9B=84 6:18, Hi=
+llf Danton <hdanton@sina.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+>
+> On Fri,  3 Apr 2020 14:40:40 +0900 Joonsoo Kim wrote:
+> >
+> > @@ -3093,11 +3093,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> >       if (unlikely(page !=3D swapcache && swapcache)) {
+> >               page_add_new_anon_rmap(page, vma, vmf->address, false);
+> >               mem_cgroup_commit_charge(page, memcg, false, false);
+> > -             lru_cache_add_active_or_unevictable(page, vma);
+> > +             lru_cache_add_inactive_or_unevictable(page, vma);
+> >       } else {
+> >               do_page_add_anon_rmap(page, vma, vmf->address, exclusive)=
+;
+> >               mem_cgroup_commit_charge(page, memcg, true, false);
+> > -             activate_page(page);
+> >       }
+> >
+> >       swap_free(entry);
+> ...
+> > @@ -996,8 +996,6 @@ static enum page_references page_check_references(s=
+truct page *page,
+> >               return PAGEREF_RECLAIM;
+> >
+> >       if (referenced_ptes) {
+> > -             if (PageSwapBacked(page))
+> > -                     return PAGEREF_ACTIVATE;
+> >               /*
+> >                * All mapped pages start out with page table
+> >                * references from the instantiating fault, so we need
+> > @@ -1020,7 +1018,7 @@ static enum page_references page_check_references=
+(struct page *page,
+> >               /*
+> >                * Activate file-backed executable pages after first usag=
+e.
+> >                */
+> > -             if (vm_flags & VM_EXEC)
+> > +             if ((vm_flags & VM_EXEC) && !PageSwapBacked(page))
+> >                       return PAGEREF_ACTIVATE;
+> >
+> >               return PAGEREF_KEEP;
+> > --
+> > 2.7.4
+>
+> Both changes other than
+> s/lru_cache_add_active_or_unevictable/lru_cache_add_inactive_or_unevictab=
+le/
+> are likely worth their own seperate commits with a concise log.
 
-Yeah, that works too. Kernel config sent off-list.
+IMO, all of the changes in this patch provides just one logical change
+for LRU management
+on anonymous page so it's better to be together.
 
-Regards,
-Alex.
+Thanks.
