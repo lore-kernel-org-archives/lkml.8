@@ -2,51 +2,51 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F4AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C39C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1482078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A95920801
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217736;
-	bh=aJGDApDJxafW+Vlm41KJkKg+iMU290np3OMqekDT3+0=;
+	s=default; t=1586217740;
+	bh=muNrQiaZ8eIKGS+5LNkuEELzJtq6f1xeWtgQdhCXaFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pdXxbyevjxArVLOV+YQvGqsLHRuFPc1nai9uxFzL2DY2F7zsfLM3dWSGAPeQjn+Rs
-	 S8Th39ao8LLf22PP+7JhUMwu+uPfQaapQiZVC62uXA1XN4YiQA+g38di6PYjsqBJlV
-	 OSwuXRv93VcleYc/djAzBF0gNMaenSRXWTn8zzgA=
+	b=eOiRwesiA2jWNL9feqtkmnIfbExTH7tN4G5ogrKg4dV+SBM1kWoKeL5w2eBiaUlWf
+	 6WqVTqZEWg5sixah1pq3vJ+6P+FN1WQCs9ku1lkCbZr2nD6L9iBy1QaiUble/cGLjX
+	 H+wmRFbUPySjBJrMVotedQLpe7ytbQzYg/07N/9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgDGACP (ORCPT
+        id S1728031AbgDGACT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36296 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbgDGACN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:13 -0400
+        id S1727994AbgDGACP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0D4420857;
-        Tue,  7 Apr 2020 00:02:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8BF720B1F;
+        Tue,  7 Apr 2020 00:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217732;
-        bh=aJGDApDJxafW+Vlm41KJkKg+iMU290np3OMqekDT3+0=;
+        s=default; t=1586217734;
+        bh=muNrQiaZ8eIKGS+5LNkuEELzJtq6f1xeWtgQdhCXaFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJgn7cwNK80ew1beaj5NYHwrUm8U/ZeJY/vHvlYGiLOgLrpAvpnH/IlsGlPho+3OQ
-         CxJyHS8ZIbE24OdrT2e0lcac2O8vfCwT1pT8D7AzEQKxPFGvkuXvO0Wl/lmmvwNNFu
-         Ul1SJohX9IAXjQ3lqnKXBR2oa3nvleyRYrRotXmE=
+        b=OjEQ42aM+2jORmp67qq/slEN7tKVptWZGLcb5e/0SyIhQGhy/0HdlNHbcLz7kmYPT
+         nXpahs3rVaSXRbbQ96zSnrSE53e6S46OJjHvc5Jl3uMb0FhaWjm3dnWSr6W1OzVmPs
+         6WK1cHfMIUHT84nrtdtIrTsj+1DGlZrd2KsY9F+4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zheng Wei <wei.zheng@vivo.com>,
+Cc:     Luo bin <luobin9@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 16/32] net: vxge: fix wrong __VA_ARGS__ usage
-Date:   Mon,  6 Apr 2020 20:01:34 -0400
-Message-Id: <20200407000151.16768-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 18/32] hinic: fix the bug of clearing event queue
+Date:   Mon,  6 Apr 2020 20:01:36 -0400
+Message-Id: <20200407000151.16768-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
 References: <20200407000151.16768-1-sashal@kernel.org>
@@ -59,96 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Wei <wei.zheng@vivo.com>
+From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit b317538c47943f9903860d83cc0060409e12d2ff ]
+[ Upstream commit 614eaa943e9fc3fcdbd4aa0692ae84973d363333 ]
 
-printk in macro vxge_debug_ll uses __VA_ARGS__ without "##" prefix,
-it causes a build error when there is no variable
-arguments(e.g. only fmt is specified.).
+should disable eq irq before freeing it, must clear event queue
+depth in hw before freeing relevant memory to avoid illegal
+memory access and update consumer idx to avoid invalid interrupt
 
-Signed-off-by: Zheng Wei <wei.zheng@vivo.com>
+Signed-off-by: Luo bin <luobin9@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/neterion/vxge/vxge-config.h |  2 +-
- drivers/net/ethernet/neterion/vxge/vxge-main.h   | 14 +++++++-------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ .../net/ethernet/huawei/hinic/hinic_hw_eqs.c  | 24 +++++++++++++------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.h b/drivers/net/ethernet/neterion/vxge/vxge-config.h
-index e678ba379598e..628fa9b2f7416 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-config.h
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-config.h
-@@ -2045,7 +2045,7 @@ vxge_hw_vpath_strip_fcs_check(struct __vxge_hw_device *hldev, u64 vpath_mask);
- 	if ((level >= VXGE_ERR && VXGE_COMPONENT_LL & VXGE_DEBUG_ERR_MASK) ||  \
- 	    (level >= VXGE_TRACE && VXGE_COMPONENT_LL & VXGE_DEBUG_TRACE_MASK))\
- 		if ((mask & VXGE_DEBUG_MASK) == mask)			       \
--			printk(fmt "\n", __VA_ARGS__);			       \
-+			printk(fmt "\n", ##__VA_ARGS__);		       \
- } while (0)
- #else
- #define vxge_debug_ll(level, mask, fmt, ...)
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.h b/drivers/net/ethernet/neterion/vxge/vxge-main.h
-index 59a57ff5e96af..9c86f4f9cd424 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-main.h
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-main.h
-@@ -452,49 +452,49 @@ int vxge_fw_upgrade(struct vxgedev *vdev, char *fw_name, int override);
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+index 79243b626ddbe..6a723c4757bce 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+@@ -188,7 +188,7 @@ static u8 eq_cons_idx_checksum_set(u32 val)
+  * eq_update_ci - update the HW cons idx of event queue
+  * @eq: the event queue to update the cons idx for
+  **/
+-static void eq_update_ci(struct hinic_eq *eq)
++static void eq_update_ci(struct hinic_eq *eq, u32 arm_state)
+ {
+ 	u32 val, addr = EQ_CONS_IDX_REG_ADDR(eq);
  
- #if (VXGE_DEBUG_LL_CONFIG & VXGE_DEBUG_MASK)
- #define vxge_debug_ll_config(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_ll_config(level, fmt, ...)
- #endif
+@@ -202,7 +202,7 @@ static void eq_update_ci(struct hinic_eq *eq)
  
- #if (VXGE_DEBUG_INIT & VXGE_DEBUG_MASK)
- #define vxge_debug_init(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_init(level, fmt, ...)
- #endif
+ 	val |= HINIC_EQ_CI_SET(eq->cons_idx, IDX)    |
+ 	       HINIC_EQ_CI_SET(eq->wrapped, WRAPPED) |
+-	       HINIC_EQ_CI_SET(EQ_ARMED, INT_ARMED);
++	       HINIC_EQ_CI_SET(arm_state, INT_ARMED);
  
- #if (VXGE_DEBUG_TX & VXGE_DEBUG_MASK)
- #define vxge_debug_tx(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_tx(level, fmt, ...)
- #endif
+ 	val |= HINIC_EQ_CI_SET(eq_cons_idx_checksum_set(val), XOR_CHKSUM);
  
- #if (VXGE_DEBUG_RX & VXGE_DEBUG_MASK)
- #define vxge_debug_rx(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_rx(level, fmt, ...)
- #endif
+@@ -347,7 +347,7 @@ static void eq_irq_handler(void *data)
+ 	else if (eq->type == HINIC_CEQ)
+ 		ceq_irq_handler(eq);
  
- #if (VXGE_DEBUG_MEM & VXGE_DEBUG_MASK)
- #define vxge_debug_mem(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_mem(level, fmt, ...)
- #endif
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
+ }
  
- #if (VXGE_DEBUG_ENTRYEXIT & VXGE_DEBUG_MASK)
- #define vxge_debug_entryexit(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_entryexit(level, fmt, ...)
- #endif
+ /**
+@@ -702,7 +702,7 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
+ 	}
  
- #if (VXGE_DEBUG_INTR & VXGE_DEBUG_MASK)
- #define vxge_debug_intr(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_intr(level, fmt, ...)
- #endif
+ 	set_eq_ctrls(eq);
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
+ 
+ 	err = alloc_eq_pages(eq);
+ 	if (err) {
+@@ -752,18 +752,28 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
+  **/
+ static void remove_eq(struct hinic_eq *eq)
+ {
+-	struct msix_entry *entry = &eq->msix_entry;
+-
+-	free_irq(entry->vector, eq);
++	hinic_set_msix_state(eq->hwif, eq->msix_entry.entry,
++			     HINIC_MSIX_DISABLE);
++	free_irq(eq->msix_entry.vector, eq);
+ 
+ 	if (eq->type == HINIC_AEQ) {
+ 		struct hinic_eq_work *aeq_work = &eq->aeq_work;
+ 
+ 		cancel_work_sync(&aeq_work->work);
++		/* clear aeq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_AEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	} else if (eq->type == HINIC_CEQ) {
+ 		tasklet_kill(&eq->ceq_tasklet);
++		/* clear ceq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_CEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	}
+ 
++	/* update cons_idx to avoid invalid interrupt */
++	eq->cons_idx = hinic_hwif_read_reg(eq->hwif, EQ_PROD_IDX_REG_ADDR(eq));
++	eq_update_ci(eq, EQ_NOT_ARMED);
++
+ 	free_eq_pages(eq);
+ }
+ 
 -- 
 2.20.1
 
