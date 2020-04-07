@@ -2,164 +2,133 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A53C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEAFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A64C2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A4D2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:15:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586283353;
+	bh=XXV7u8rrBxz2Q54XgdqfvhwO81iPh0PeMlATFyQ4iBI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p0lOwOSTeISuap9q79nVe5vQZ4Pc0ySYdUAHJ1K99bupS0rvgWXypCWPwqXn8QxDJ
+	 HPBG5yDeDDHAVmofOudgnfvy59x1rqNYwP43QWIdLSCnPpZqJG35sGmSdas/tntpxS
+	 cVkfncGT5UjaKIX1TNd26H6tW9TYAEu0uPyBUZas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgDGSO7 (ORCPT
+        id S1726642AbgDGSPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:14:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:7315 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgDGSO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:14:59 -0400
-IronPort-SDR: sWPo7ahmYzt2gzCFCyAnVLINzSO06zNZ5b2uNofdOn87uTqIp2gexTYA3840XSZ1G7MqNYIvlE
- VoLEQeMuVftw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 11:14:58 -0700
-IronPort-SDR: kJCrsPjoVYdbrOIa/DsHhlgy3v2nC4JN+UUwMGWfglVpv1BJLsoVZYjqnzPZ63YyNHofXQ22Jn
- Cr26BsaSkbgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,356,1580803200"; 
-   d="scan'208";a="451316171"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Apr 2020 11:14:58 -0700
-Message-ID: <444d97c4a4f70ccbb12da5e8f7ff498b37a9f60d.camel@intel.com>
-Subject: Re: [RFC PATCH v9 14/27] mm: Handle Shadow Stack page fault
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
+        Tue, 7 Apr 2020 14:15:52 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46875 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgDGSPv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 14:15:51 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y44so1425344wrd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 11:15:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=30f4EXGKl1YJhrB5sA5rsC6Ua7MRsvS6emxG/UIc+z4=;
+        b=IJgJ4V9zpRrmvN8xLIKb4QnOpZU1QZHYzo1s2v3BkpMgVDeFqC4V/ln++5CIKjDqA2
+         KLB5YSGtA0BTN3BIc8RpKlS26sfn9rXQfIDUZXCPsBZBDbF5l7bSMh7BY4/lgnG9JDCx
+         hGvzSj0UjIXJua9YtYnYOwi5VlMzyBwUDxoFh3hykCtWTMwW0LQwOI7z+c3BPKaW60Pd
+         jWPAeledzXkosks0FHnvxr2k88siVaOeYIvXqYmBZkysEb7BuyE5av5Lj5V3w5Dy7wlV
+         dNJqrLOTProYt3vO/GG7NpiiE4tXF70ytwOjts16+s83m7oD3iNrYWpMZem9fRxJJA0u
+         wIJQ==
+X-Gm-Message-State: AGi0Pub8ZUsxbIZ5f0VWpBHtNSL4QpzRNyjcqkSdJeVaghpryB+VzXHb
+        GdSHI5tDXUnJCSQwBEdixpA1IBTt
+X-Google-Smtp-Source: APiQypITHu4vN/S/wf/3welZh/HKE2B4GgI/qWph0fV/wXNSGjyHrTkeAOlxepCrV64wBXvSikvSFQ==
+X-Received: by 2002:adf:90ea:: with SMTP id i97mr3924822wri.123.1586283349499;
+        Tue, 07 Apr 2020 11:15:49 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id g2sm31444354wrs.42.2020.04.07.11.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 11:15:48 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 20:15:46 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Aslan Bakirov <aslan@fb.com>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org,
+        Rik van Riel <riel@surriel.com>,
         Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Andreas Schaufler <andreas.schaufler@gmx.de>,
         Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Date:   Tue, 07 Apr 2020 11:14:58 -0700
-In-Reply-To: <4902a6ee-cb0f-2700-1f6d-9d756593183c@intel.com>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
-         <20200205181935.3712-15-yu-cheng.yu@intel.com>
-         <4902a6ee-cb0f-2700-1f6d-9d756593183c@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Joonsoo Kim <js1304@gmail.com>
+Subject: Re: [PATCH v5 2/2] mm: hugetlb: optionally allocate gigantic
+ hugepages using cma
+Message-ID: <20200407181546.GV18914@dhcp22.suse.cz>
+References: <20200407163840.92263-1-guro@fb.com>
+ <20200407163840.92263-3-guro@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407163840.92263-3-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 16:08 -0800, Dave Hansen wrote:
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index 45442d9a4f52..6daa28614327 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -772,7 +772,8 @@ copy_one_pte(struct mm_struct *dst_mm, struct mm_struct *src_mm,
-> >  	 * If it's a COW mapping, write protect it both
-> >  	 * in the parent and the child
-> >  	 */
-> > -	if (is_cow_mapping(vm_flags) && pte_write(pte)) {
-> > +	if ((is_cow_mapping(vm_flags) && pte_write(pte)) ||
-> > +	    arch_copy_pte_mapping(vm_flags)) {
-> >  		ptep_set_wrprotect(src_mm, addr, src_pte);
-> >  		pte = pte_wrprotect(pte);
-> >  	}
+On Tue 07-04-20 09:38:40, Roman Gushchin wrote:
+> Commit 944d9fec8d7a ("hugetlb: add support for gigantic page allocation at
+> runtime") has added the run-time allocation of gigantic pages.  However it
+> actually works only at early stages of the system loading, when the
+> majority of memory is free.  After some time the memory gets fragmented by
+> non-movable pages, so the chances to find a contiguous 1 GB block are
+> getting close to zero.  Even dropping caches manually doesn't help a lot.
 > 
-> You have to modify this because pte_write()==0 for shadow stack PTEs, right?
+> At large scale rebooting servers in order to allocate gigantic hugepages
+> is quite expensive and complex.  At the same time keeping some constant
+> percentage of memory in reserved hugepages even if the workload isn't
+> using it is a big waste: not all workloads can benefit from using 1 GB
+> pages.
 > 
-> Aren't shadow stack ptes *logically* writable, even if they don't have
-> the write bit set?  What would happen if we made pte_write()==1 for them?
-
-Here the vm_flags needs to have VM_MAYWRITE, and the PTE needs to have
-_PAGE_WRITE.  A shadow stack does not have either.
-
-To fix checking vm_flags, what about adding a "arch_is_cow_mappping()" to the
-generic is_cow_mapping()?
-
-For the PTE, the check actually tries to determine if the PTE is not already
-being copy-on-write, which is:
-
-	(!_PAGE_RW && !_PAGE_DIRTY_HW)
-
-So what about making it pte_cow()?
-
-	/*
-	 * The PTE is in copy-on-write status.
-	 */
-	static inline int pte_cow(pte_t pte)
-	{
-		return !(pte_flags(pte) & (_PAGE_WRITE | _PAGE_DIRTY_HW));
-	}
+> The following solution can solve the problem:
+> 1) On boot time a dedicated cma area* is reserved. The size is passed
+>    as a kernel argument.
+> 2) Run-time allocations of gigantic hugepages are performed using the
+>    cma allocator and the dedicated cma area
 > 
-> > @@ -2417,6 +2418,7 @@ static inline void wp_page_reuse(struct vm_fault *vmf)
-> >  	flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
-> >  	entry = pte_mkyoung(vmf->orig_pte);
-> >  	entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-> > +	entry = pte_set_vma_features(entry, vma);
-> >  	if (ptep_set_access_flags(vma, vmf->address, vmf->pte, entry, 1))
-> >  		update_mmu_cache(vma, vmf->address, vmf->pte);
-> >  	pte_unmap_unlock(vmf->pte, vmf->ptl);
-> > @@ -2504,6 +2506,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
-> >  		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
-> >  		entry = mk_pte(new_page, vma->vm_page_prot);
-> >  		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-> > +		entry = pte_set_vma_features(entry, vma);
-> >  		/*
-> >  		 * Clear the pte entry and flush it first, before updating the
-> >  		 * pte with the new entry. This will avoid a race condition
-> > @@ -3023,6 +3026,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
-> >  	pte = mk_pte(page, vma->vm_page_prot);
-> >  	if ((vmf->flags & FAULT_FLAG_WRITE) && reuse_swap_page(page, NULL)) {
-> >  		pte = maybe_mkwrite(pte_mkdirty(pte), vma);
-> > +		pte = pte_set_vma_features(pte, vma);
-> >  		vmf->flags &= ~FAULT_FLAG_WRITE;
-> >  		ret |= VM_FAULT_WRITE;
-> >  		exclusive = RMAP_EXCLUSIVE;
-> > @@ -3165,6 +3169,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
-> >  	entry = mk_pte(page, vma->vm_page_prot);
-> >  	if (vma->vm_flags & VM_WRITE)
-> >  		entry = pte_mkwrite(pte_mkdirty(entry));
-> > +	entry = pte_set_vma_features(entry, vma);
-> >  
-> >  	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
-> >  			&vmf->ptl);
-> > 
+> In this case gigantic hugepages can be allocated successfully with a high
+> probability, however the memory isn't completely wasted if nobody is using
+> 1GB hugepages: it can be used for pagecache, anon memory, THPs, etc.
 > 
-> These seem wrong, or at best inconsistent with what's already done.
+> * On a multi-node machine a per-node cma area is allocated on each node.
+>   Following gigantic hugetlb allocation are using the first available
+>   numa node if the mask isn't specified by a user.
 > 
-> We don't need anything like pte_set_vma_features() today because we have
-> vma->vm_page_prot.  We could easily have done what you suggest here for
-> things like protection keys: ignore the pkey PTE bits until we create
-> the final PTE then shove them in there.
+> Usage:
+> 1) configure the kernel to allocate a cma area for hugetlb allocations:
+>    pass hugetlb_cma=10G as a kernel argument
 > 
-> What are the bit patterns of the shadow stack bits that come out of
-> these sites?  Can they be represented in ->vm_page_prot?
+> 2) allocate hugetlb pages as usual, e.g.
+>    echo 10 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
+> 
+> If the option isn't enabled or the allocation of the cma area failed,
+> the current behavior of the system is preserved.
+> 
+> x86 and arm-64 are covered by this patch, other architectures can be
+> trivially added later.
+> 
+> The patch contains clean-ups and fixes proposed and implemented by
+> Aslan Bakirov and Randy Dunlap. It also contains ideas and suggestions
+> proposed by Rik van Riel, Michal Hocko and Mike Kravetz. Thanks!
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Tested-by: Andreas Schaufler <andreas.schaufler@gmx.de>
+> Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+> Acked-by: Michal Hocko <mhocko@kernel.org>
+> Cc: Aslan Bakirov <aslan@fb.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: Joonsoo Kim <js1304@gmail.com>
 
-Yes, we can put _PAGE_DIRTY_HW in vm_page_prot.  Also set the bit in
-ptep_set_access_flags() for shadow stack PTEs.
-
+Thanks a lot for addressing my review feedback!
+-- 
+Michal Hocko
+SUSE Labs
