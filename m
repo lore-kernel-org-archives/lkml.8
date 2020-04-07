@@ -2,77 +2,192 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4E7C2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A573DC2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12F1206F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586238216;
-	bh=f4zBSzGQroby1C5YQlwI3K2ZZKv+UEnm9JRTLRxnuVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sBNruoImvO0n4DBOoWmL5ut5NNvb31kMYv6/OiFUMCKHa93319kFMSXu+I67lbWvW
-	 tWgVxyKdmvc2nWjKbMCCHYjCz8z4xu6mJ7V6By95j01gRi2asnn24299kcL0cfJU1U
-	 YFC/WYy/gG3pLvQyqwnyJlu4GmoCoD8ZUKH6PEz8=
+	by mail.kernel.org (Postfix) with ESMTP id 74E0620747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:50:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="nXcul3e4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgDGFnf (ORCPT
+        id S1726760AbgDGFuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 01:43:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 01:50:39 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:2364 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgDGFne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 01:43:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 795B8206F5;
-        Tue,  7 Apr 2020 05:43:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586238214;
-        bh=f4zBSzGQroby1C5YQlwI3K2ZZKv+UEnm9JRTLRxnuVc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BhjTUHK6rfgOQOow47upoLydCbz1A1zra8g0JKDFZmkfip45CWso89+wGI7aWuFwN
-         7+vyH0lc0qYskBWeLV41dx6l3kBvTG96hUtyiapXmmYbfvwvAYMbCUnTftC3yiTKvS
-         txa0pmYkGBVLjEQGfSv2m7wdCK81fyl7M9Sk6Z8Y=
-Date:   Tue, 7 Apr 2020 07:43:31 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-stable@vger.kernel.org, sashal@kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        id S1725817AbgDGFuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 01:50:39 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48xGj80qxxz9tyl1;
+        Tue,  7 Apr 2020 07:50:36 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=nXcul3e4; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id LZXCBihUOUFy; Tue,  7 Apr 2020 07:50:36 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48xGj76XqXz9tyl0;
+        Tue,  7 Apr 2020 07:50:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586238635; bh=2tZXuUuex6nYp5avlGoJBieKqNJeU842UJK6lCZeZPI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nXcul3e4DfJz0oM+xpLF9D5KFsNSJWxYp7PA9W3ITIQcqYUdiyVW1sAUPqGqCxJyw
+         BwvgBOpHsrpTZ8JH2VvPA0qmqfeAih64Ql/VijwikDKSaPq/07LD7gdSUKWK/sYVlr
+         QphDLp2os721Ch5R4UtyRkSVjow/YCG5h8UngLyo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B8D208B76E;
+        Tue,  7 Apr 2020 07:50:36 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id J6cArsecsUwx; Tue,  7 Apr 2020 07:50:36 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BBBE78B75E;
+        Tue,  7 Apr 2020 07:50:33 +0200 (CEST)
+Subject: Re: [PATCH v12 5/8] powerpc/64: make buildable without CONFIG_COMPAT
+To:     Michal Suchanek <msuchanek@suse.de>, linuxppc-dev@lists.ozlabs.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH stable-4.9.y]] net: dsa: tag_brcm: Fix
- skb->fwd_offload_mark location
-Message-ID: <20200407054331.GA258967@kroah.com>
-References: <1586220853-34769-1-git-send-email-f.fainelli@gmail.com>
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <20200225173541.1549955-1-npiggin@gmail.com>
+ <cover.1584699455.git.msuchanek@suse.de>
+ <e5619617020ef3a1f54f0c076e7d74cb9ec9f3bf.1584699455.git.msuchanek@suse.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <b420b304-05e9-df58-7149-31169b0b01e2@c-s.fr>
+Date:   Tue, 7 Apr 2020 07:50:30 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586220853-34769-1-git-send-email-f.fainelli@gmail.com>
+In-Reply-To: <e5619617020ef3a1f54f0c076e7d74cb9ec9f3bf.1584699455.git.msuchanek@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 05:54:12PM -0700, Florian Fainelli wrote:
-> When the backport of upstream commit
-> 0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ("net: dsa: Fix duplicate
-> frames flooded by learning") was done the assignment of
-> skb->fwd_offload_mark would land in brcm_tag_xmit() which is incorrect,
-> it should have been in brcm_tag_rcv().
+
+
+Le 20/03/2020 à 11:20, Michal Suchanek a écrit :
+> There are numerous references to 32bit functions in generic and 64bit
+> code so ifdef them out.
 > 
-> Fixes: 5e845dc62f38 ("net: dsa: Fix duplicate frames flooded by learning")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 > ---
->  net/dsa/tag_brcm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> v2:
+> - fix 32bit ifdef condition in signal.c
+> - simplify the compat ifdef condition in vdso.c - 64bit is redundant
+> - simplify the compat ifdef condition in callchain.c - 64bit is redundant
+> v3:
+> - use IS_ENABLED and maybe_unused where possible
+> - do not ifdef declarations
+> - clean up Makefile
+> v4:
+> - further makefile cleanup
+> - simplify is_32bit_task conditions
+> - avoid ifdef in condition by using return
+> v5:
+> - avoid unreachable code on 32bit
+> - make is_current_64bit constant on !COMPAT
+> - add stub perf_callchain_user_32 to avoid some ifdefs
+> v6:
+> - consolidate current_is_64bit
+> v7:
+> - remove leftover perf_callchain_user_32 stub from previous series version
+> v8:
+> - fix build again - too trigger-happy with stub removal
+> - remove a vdso.c hunk that causes warning according to kbuild test robot
+> v9:
+> - removed current_is_64bit in previous patch
+> v10:
+> - rebase on top of 70ed86f4de5bd
+> ---
+>   arch/powerpc/include/asm/thread_info.h | 4 ++--
+>   arch/powerpc/kernel/Makefile           | 6 +++---
+>   arch/powerpc/kernel/entry_64.S         | 2 ++
+>   arch/powerpc/kernel/signal.c           | 3 +--
+>   arch/powerpc/kernel/syscall_64.c       | 6 ++----
+>   arch/powerpc/kernel/vdso.c             | 3 ++-
+>   arch/powerpc/perf/callchain.c          | 8 +++++++-
+>   7 files changed, 19 insertions(+), 13 deletions(-)
+> 
 
-Now queued up, thanks.
+[...]
 
-greg k-h
+> diff --git a/arch/powerpc/kernel/syscall_64.c b/arch/powerpc/kernel/syscall_64.c
+> index 87d95b455b83..2dcbfe38f5ac 100644
+> --- a/arch/powerpc/kernel/syscall_64.c
+> +++ b/arch/powerpc/kernel/syscall_64.c
+> @@ -24,7 +24,6 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>   				   long r6, long r7, long r8,
+>   				   unsigned long r0, struct pt_regs *regs)
+>   {
+> -	unsigned long ti_flags;
+>   	syscall_fn f;
+>   
+>   	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+> @@ -68,8 +67,7 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>   
+>   	local_irq_enable();
+>   
+> -	ti_flags = current_thread_info()->flags;
+> -	if (unlikely(ti_flags & _TIF_SYSCALL_DOTRACE)) {
+> +	if (unlikely(current_thread_info()->flags & _TIF_SYSCALL_DOTRACE)) {
+>   		/*
+>   		 * We use the return value of do_syscall_trace_enter() as the
+>   		 * syscall number. If the syscall was rejected for any reason
+> @@ -94,7 +92,7 @@ notrace long system_call_exception(long r3, long r4, long r5,
+>   	/* May be faster to do array_index_nospec? */
+>   	barrier_nospec();
+>   
+> -	if (unlikely(ti_flags & _TIF_32BIT)) {
+> +	if (unlikely(is_32bit_task())) {
+
+is_compat() should be used here instead, because we dont want to use 
+compat_sys_call_table() on PPC32.
+
+>   		f = (void *)compat_sys_call_table[r0];
+>   
+>   		r3 &= 0x00000000ffffffffULL;
+
+Christophe
