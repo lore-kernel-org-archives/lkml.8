@@ -2,53 +2,55 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C243C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8A3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C982082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2B3A20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255081;
-	bh=MgUBkgRyGDEoet7WkJIpUu01v9uuWx0w0BQHOcz/Zoo=;
+	s=default; t=1586255083;
+	bh=4nPDAK8FhaKO//oce9RzisZ2p1XmrMAHJp8g7CR2YFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D9X5+0XquPFjMXzFHZRzpZsDKIto17E1/BNCiaPPuTLlxbRizn+bd6MNo9UqsE9RJ
-	 dmyj8WyZ0DlSyPtBYNd38zuKPXJRXbzxz5VIu78e/3OG9MkYzlHXkBzQvwsEadTOGJ
-	 aBWQusweqI7ny37ZO5F0njDJoy4vXSbyxgO/QMUg=
+	b=BnvR1mnN5PAwKk/OhPUh1a0lBeQ7CbwKCxh2e0c/R1o518dTF2yOIZblCYl2oaNSh
+	 KIN6er+xiYvqQSeK4AmBli2I7HldTtGxmA5sIcLVU4JOI+mQIiWg8YdShYczBtaYzl
+	 3PJVtQKGVVCLFxheeOhiGH2OIw/63+dUF7YtRskE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbgDGKYk (ORCPT
+        id S1728765AbgDGKYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:24:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728739AbgDGKYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:24:34 -0400
+        id S1728747AbgDGKYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:24:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B92F2080C;
-        Tue,  7 Apr 2020 10:24:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBFC92082F;
+        Tue,  7 Apr 2020 10:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255072;
-        bh=MgUBkgRyGDEoet7WkJIpUu01v9uuWx0w0BQHOcz/Zoo=;
+        s=default; t=1586255075;
+        bh=4nPDAK8FhaKO//oce9RzisZ2p1XmrMAHJp8g7CR2YFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a6si5W56L2IR1TdjwHMt/EjGkhtsLCqjQgOxsn4GL5T9jDj2Q66gPs7poTdbDEE7L
-         pvxKYxvJ4rhZlw043xfLxV8NH+lZegSysyXJXlg2O4m1vkGUK7rIYchSZAvAdOx+r2
-         3GLc1H+lGC1DqX4gGFB+/oW2M3PfFCiFRTi6+xG8=
+        b=Tmgn4Ja4jt7JbcJfJ5vIvSfQ4e/muFiJA42Pn3k39cLqScqMVzPBSWI3pyenYW3Fw
+         XS4gdqzLKcCUqsKCbCmrl4QngF47SOOktCIUrsNSvqa02Jm+8TvvkCcyZB7eCAcjce
+         lFpSQimGU0XDzrFifsrqpnE8W1I5c0X6tG36RiqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 19/46] bpf: Fix tnum constraints for 32-bit comparisons
-Date:   Tue,  7 Apr 2020 12:21:50 +0200
-Message-Id: <20200407101501.574740613@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 02/46] net: dsa: ksz: Select KSZ protocol tag
+Date:   Tue,  7 Apr 2020 12:21:33 +0200
+Message-Id: <20200407101459.777473459@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -61,194 +63,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-[ Upstream commit 604dca5e3af1db98bd123b7bfc02b017af99e3a0 ]
+[ Upstream commit f772148eb757b0823fbfdc2fe592d5e06c7f19b0 ]
 
-The BPF verifier tried to track values based on 32-bit comparisons by
-(ab)using the tnum state via 581738a681b6 ("bpf: Provide better register
-bounds after jmp32 instructions"). The idea is that after a check like
-this:
+KSZ protocol tag is needed by the KSZ DSA drivers.
 
-    if ((u32)r0 > 3)
-      exit
-
-We can't meaningfully constrain the arithmetic-range-based tracking, but
-we can update the tnum state to (value=0,mask=0xffff'ffff'0000'0003).
-However, the implementation from 581738a681b6 didn't compute the tnum
-constraint based on the fixed operand, but instead derives it from the
-arithmetic-range-based tracking. This means that after the following
-sequence of operations:
-
-    if (r0 >= 0x1'0000'0001)
-      exit
-    if ((u32)r0 > 7)
-      exit
-
-The verifier assumed that the lower half of r0 is in the range (0, 0)
-and apply the tnum constraint (value=0,mask=0xffff'ffff'0000'0000) thus
-causing the overall tnum to be (value=0,mask=0x1'0000'0000), which was
-incorrect. Provide a fixed implementation.
-
-Fixes: 581738a681b6 ("bpf: Provide better register bounds after jmp32 instructions")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200330160324.15259-3-daniel@iogearbox.net
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 0b9f9dfbfab4 ("dsa: Allow tag drivers to be built as modules")
+Tested-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/bpf/verifier.c | 108 ++++++++++++++++++++++++++++--------------
- 1 file changed, 72 insertions(+), 36 deletions(-)
+ drivers/net/dsa/microchip/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 79f38a281390d..f6476c4e9037a 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -5550,6 +5550,70 @@ static bool cmp_val_with_extended_s64(s64 sval, struct bpf_reg_state *reg)
- 		reg->smax_value <= 0 && reg->smin_value >= S32_MIN);
- }
+--- a/drivers/net/dsa/microchip/Kconfig
++++ b/drivers/net/dsa/microchip/Kconfig
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config NET_DSA_MICROCHIP_KSZ_COMMON
++	select NET_DSA_TAG_KSZ
+ 	tristate
  
-+/* Constrain the possible values of @reg with unsigned upper bound @bound.
-+ * If @is_exclusive, @bound is an exclusive limit, otherwise it is inclusive.
-+ * If @is_jmp32, @bound is a 32-bit value that only constrains the low 32 bits
-+ * of @reg.
-+ */
-+static void set_upper_bound(struct bpf_reg_state *reg, u64 bound, bool is_jmp32,
-+			    bool is_exclusive)
-+{
-+	if (is_exclusive) {
-+		/* There are no values for `reg` that make `reg<0` true. */
-+		if (bound == 0)
-+			return;
-+		bound--;
-+	}
-+	if (is_jmp32) {
-+		/* Constrain the register's value in the tnum representation.
-+		 * For 64-bit comparisons this happens later in
-+		 * __reg_bound_offset(), but for 32-bit comparisons, we can be
-+		 * more precise than what can be derived from the updated
-+		 * numeric bounds.
-+		 */
-+		struct tnum t = tnum_range(0, bound);
-+
-+		t.mask |= ~0xffffffffULL; /* upper half is unknown */
-+		reg->var_off = tnum_intersect(reg->var_off, t);
-+
-+		/* Compute the 64-bit bound from the 32-bit bound. */
-+		bound += gen_hi_max(reg->var_off);
-+	}
-+	reg->umax_value = min(reg->umax_value, bound);
-+}
-+
-+/* Constrain the possible values of @reg with unsigned lower bound @bound.
-+ * If @is_exclusive, @bound is an exclusive limit, otherwise it is inclusive.
-+ * If @is_jmp32, @bound is a 32-bit value that only constrains the low 32 bits
-+ * of @reg.
-+ */
-+static void set_lower_bound(struct bpf_reg_state *reg, u64 bound, bool is_jmp32,
-+			    bool is_exclusive)
-+{
-+	if (is_exclusive) {
-+		/* There are no values for `reg` that make `reg>MAX` true. */
-+		if (bound == (is_jmp32 ? U32_MAX : U64_MAX))
-+			return;
-+		bound++;
-+	}
-+	if (is_jmp32) {
-+		/* Constrain the register's value in the tnum representation.
-+		 * For 64-bit comparisons this happens later in
-+		 * __reg_bound_offset(), but for 32-bit comparisons, we can be
-+		 * more precise than what can be derived from the updated
-+		 * numeric bounds.
-+		 */
-+		struct tnum t = tnum_range(bound, U32_MAX);
-+
-+		t.mask |= ~0xffffffffULL; /* upper half is unknown */
-+		reg->var_off = tnum_intersect(reg->var_off, t);
-+
-+		/* Compute the 64-bit bound from the 32-bit bound. */
-+		bound += gen_hi_min(reg->var_off);
-+	}
-+	reg->umin_value = max(reg->umin_value, bound);
-+}
-+
- /* Adjusts the register min/max values in the case that the dst_reg is the
-  * variable register that we are working on, and src_reg is a constant or we're
-  * simply doing a BPF_K check.
-@@ -5605,15 +5669,8 @@ static void reg_set_min_max(struct bpf_reg_state *true_reg,
- 	case BPF_JGE:
- 	case BPF_JGT:
- 	{
--		u64 false_umax = opcode == BPF_JGT ? val    : val - 1;
--		u64 true_umin = opcode == BPF_JGT ? val + 1 : val;
--
--		if (is_jmp32) {
--			false_umax += gen_hi_max(false_reg->var_off);
--			true_umin += gen_hi_min(true_reg->var_off);
--		}
--		false_reg->umax_value = min(false_reg->umax_value, false_umax);
--		true_reg->umin_value = max(true_reg->umin_value, true_umin);
-+		set_upper_bound(false_reg, val, is_jmp32, opcode == BPF_JGE);
-+		set_lower_bound(true_reg, val, is_jmp32, opcode == BPF_JGT);
- 		break;
- 	}
- 	case BPF_JSGE:
-@@ -5634,15 +5691,8 @@ static void reg_set_min_max(struct bpf_reg_state *true_reg,
- 	case BPF_JLE:
- 	case BPF_JLT:
- 	{
--		u64 false_umin = opcode == BPF_JLT ? val    : val + 1;
--		u64 true_umax = opcode == BPF_JLT ? val - 1 : val;
--
--		if (is_jmp32) {
--			false_umin += gen_hi_min(false_reg->var_off);
--			true_umax += gen_hi_max(true_reg->var_off);
--		}
--		false_reg->umin_value = max(false_reg->umin_value, false_umin);
--		true_reg->umax_value = min(true_reg->umax_value, true_umax);
-+		set_lower_bound(false_reg, val, is_jmp32, opcode == BPF_JLE);
-+		set_upper_bound(true_reg, val, is_jmp32, opcode == BPF_JLT);
- 		break;
- 	}
- 	case BPF_JSLE:
-@@ -5717,15 +5767,8 @@ static void reg_set_min_max_inv(struct bpf_reg_state *true_reg,
- 	case BPF_JGE:
- 	case BPF_JGT:
- 	{
--		u64 false_umin = opcode == BPF_JGT ? val    : val + 1;
--		u64 true_umax = opcode == BPF_JGT ? val - 1 : val;
--
--		if (is_jmp32) {
--			false_umin += gen_hi_min(false_reg->var_off);
--			true_umax += gen_hi_max(true_reg->var_off);
--		}
--		false_reg->umin_value = max(false_reg->umin_value, false_umin);
--		true_reg->umax_value = min(true_reg->umax_value, true_umax);
-+		set_lower_bound(false_reg, val, is_jmp32, opcode == BPF_JGE);
-+		set_upper_bound(true_reg, val, is_jmp32, opcode == BPF_JGT);
- 		break;
- 	}
- 	case BPF_JSGE:
-@@ -5743,15 +5786,8 @@ static void reg_set_min_max_inv(struct bpf_reg_state *true_reg,
- 	case BPF_JLE:
- 	case BPF_JLT:
- 	{
--		u64 false_umax = opcode == BPF_JLT ? val    : val - 1;
--		u64 true_umin = opcode == BPF_JLT ? val + 1 : val;
--
--		if (is_jmp32) {
--			false_umax += gen_hi_max(false_reg->var_off);
--			true_umin += gen_hi_min(true_reg->var_off);
--		}
--		false_reg->umax_value = min(false_reg->umax_value, false_umax);
--		true_reg->umin_value = max(true_reg->umin_value, true_umin);
-+		set_upper_bound(false_reg, val, is_jmp32, opcode == BPF_JLE);
-+		set_lower_bound(true_reg, val, is_jmp32, opcode == BPF_JLT);
- 		break;
- 	}
- 	case BPF_JSLE:
--- 
-2.20.1
-
+ menuconfig NET_DSA_MICROCHIP_KSZ9477
 
 
