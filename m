@@ -2,244 +2,289 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813B8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBCBC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B65220731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4780206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CN0nUyjc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R4qx4JOB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgDGLBe (ORCPT
+        id S1728430AbgDGLB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:01:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54321 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726591AbgDGLBa (ORCPT
+        Tue, 7 Apr 2020 07:01:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33944 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728152AbgDGLB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:01:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586257288;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8h7WOmhqWbqsj2xXniOI5xjfIW2oGUv8L9dkNvwcCDM=;
-        b=CN0nUyjctr3dwHZ1NLyOO2uA1sMspQyqDq1Sd2DlnYMd/YjpH300QFwDM71cmrwrJ1ItZ5
-        DXNCKr9oi6MTnHK6y9WreMFKeSUc4/gABA/ZkI4r44rlXdEDCfhN88ik2EzO3SRFJ5JP2j
-        EYmSzLa5u8AFN7xtcVnHhAOtED3ONtQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-168-9ThSrBYlPeGPa8K6lERIRg-1; Tue, 07 Apr 2020 07:01:23 -0400
-X-MC-Unique: 9ThSrBYlPeGPa8K6lERIRg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1900B8017F3;
-        Tue,  7 Apr 2020 11:01:22 +0000 (UTC)
-Received: from localhost (ovpn-12-129.pek2.redhat.com [10.72.12.129])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33E0092F83;
-        Tue,  7 Apr 2020 11:01:17 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 19:01:15 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        dzickus@redhat.com, dyoung@redhat.com
-Subject: Re: [PATCH v2 0/3] KVM: VMX: Fix for kexec VMCLEAR and VMXON cleanup
-Message-ID: <20200407110115.GA14381@MiWiFi-R3L-srv>
-References: <20200321193751.24985-1-sean.j.christopherson@intel.com>
+        Tue, 7 Apr 2020 07:01:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 65so3401230wrl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 04:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lrvv+xJ1GPbPtd9mC9WfvPH0Y05ufQDVnaAuC8UizGg=;
+        b=R4qx4JOBBD08rkaPcYuve7i7YBu+uaBWWCNPH1KgklRWcm2mn+BHz7MFBD/5G8bS63
+         pwuLv+YC8yWxneBxjrA8hTtg4wmRTdKuBlFtvMY6YU2WXhvCQnwdKHZivSsJYN65qdWi
+         pxV2BL7a3eGDjSvF5CIetpFNRMZezjbn4ZGu3YSPtkW0Umyp2MGbFqCTF/W2N/CcmgwN
+         DfU4Rj6iXHK7aR60xMgqb8JRf9PE8Ht8yZ4bm4zYad6J00HHAilj+UBAdAcxo46QQnbs
+         lEKsJoFIDF51XrcFPuREZ9391dV/V0TfpC4sOYKSUNM5BWNbmOi/zln3sXSDdDFx5Ox/
+         A5KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lrvv+xJ1GPbPtd9mC9WfvPH0Y05ufQDVnaAuC8UizGg=;
+        b=GrorWDomFI6I6deI1C4HLZ60GrpD3z0jKi6ca/Ht1ZwUMCowX3Y4ZgNSikYTphPYGU
+         atLQJJZAXsLlFVpAmw2gmulwe6QBNWnrCLRTzh6blnvc2/rQrwnGqTKE82aPvIV/tPqY
+         7ekGeJzD0i0flWEoaykTue9s1aconfeb5fxROoLhRVKWiZwsCwZubRpuixMx+r+rT3Mt
+         n4ixCVasS0C4+sAuD9KUql/M6/DSOoL7D4Ol75lK3rNHoZLo/e0d44UdjQ8ohhAtT4/6
+         qVgiDlnAaLrHcmaKtucGfHv6Ez4ADFdwnm3raV7N7Bqhc5Pud3pWUd5xd8sK+4WOI/3a
+         Pekg==
+X-Gm-Message-State: AGi0Pua7u4L930b2fx1dbavqfIbIb05of9s15+MOelPuEUfCJiin7jSU
+        9bNXslhMMmc5RHO5qB4b6yQdJQ==
+X-Google-Smtp-Source: APiQypIw5mZTJ+obpt9JttMWcZCpY5PLCvRKb+0qmz83brxu78nH/PbJRR8NjOqQssQsjCrOrH/AxA==
+X-Received: by 2002:a5d:4842:: with SMTP id n2mr2217910wrs.154.1586257314435;
+        Tue, 07 Apr 2020 04:01:54 -0700 (PDT)
+Received: from myrica ([2001:171b:226b:54a0:6097:1406:6470:33b5])
+        by smtp.gmail.com with ESMTPSA id c18sm30089003wrx.5.2020.04.07.04.01.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 04:01:54 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 13:01:46 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 05/10] iommu/ioasid: Create an IOASID set for host SVA use
+Message-ID: <20200407110146.GB285264@myrica>
+References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1585158931-1825-6-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20200401135316.GF882512@myrica>
+ <20200406083353.73efda5b@jacob-builder>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200321193751.24985-1-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200406083353.73efda5b@jacob-builder>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/21/20 at 12:37pm, Sean Christopherson wrote:
-> Patch 1 fixes a a theoretical bug where a crashdump NMI that arrives
-> while KVM is messing with the percpu VMCS list would result in one or more
-> VMCSes not being cleared, potentially causing memory corruption in the new
-> kexec'd kernel.
+On Mon, Apr 06, 2020 at 08:33:53AM -0700, Jacob Pan wrote:
+> Hi Jean,
+> 
+> On Wed, 1 Apr 2020 15:53:16 +0200
+> Jean-Philippe Brucker <jean-philippe@linaro.org> wrote:
+> 
+> > On Wed, Mar 25, 2020 at 10:55:26AM -0700, Jacob Pan wrote:
+> > > Bare metal SVA allocates IOASIDs for native process addresses. This
+> > > should be separated from VM allocated IOASIDs thus under its own
+> > > set.
+> > > 
+> > > This patch creates a system IOASID set with its quota set to
+> > > PID_MAX. This is a reasonable default in that SVM capable devices
+> > > can only bind to limited user processes.  
+> > 
+> > Yes realistically there won't be more than PID_MAX_DEFAULT=0x8000
+> > bound address spaces. My machine uses a PID_MAX of 4 million though,
+> > so in theory more than 0x8000 processes may want a bond.
+> Got it, I assume we can adjust the system set quota as necessary.
+> 
+> > On Arm the
+> > limit of shared contexts per VM is currently a little less than
+> > 0x10000 (which is the number of CPU ASIDs).
+> > 
+> I guess shared contexts means shared address? then it makes sense
+> #IOASID < #ASID.
 
-I am wondering if this theoretical bug really exists. Now CKI of Redhat
-reported crash dumping failed on below commit. I reserved a
-intel machine and can reproduce it always. 
-
-Commit: 5364abc57993 - Merge tag 'arc-5.7-rc1' of
-
-From failure trace, it's the kvm vmx which caused this. I have reverted
-them and the failure disappeared.
-
-4f6ea0a87608 KVM: VMX: Gracefully handle faults on VMXON
-d260f9ef50c7 KVM: VMX: Fold loaded_vmcs_init() into alloc_loaded_vmcs()
-31603d4fc2bb KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support
-
-The trace is here. 
-
-[  132.476387] sysrq: Trigger a crash 
-[  132.479829] Kernel panic - not syncing: sysrq triggered crash 
-[  132.480817] CPU: 4 PID: 1975 Comm: runtest.sh Kdump: loaded Not tainted 5.6.0-5364abc.cki #1 
-[  132.480817] Hardware name: Dell Inc. Precision R7610/, BIOS A08 11/21/2014 
-[  132.480817] Call Trace: 
-[  132.480817]  dump_stack+0x66/0x90 
-[  132.480817]  panic+0x101/0x2e3 
-[  132.480817]  ? printk+0x58/0x6f 
-[  132.480817]  sysrq_handle_crash+0x11/0x20 
-[  132.480817]  __handle_sysrq.cold+0x48/0x104 
-[  132.480817]  write_sysrq_trigger+0x24/0x40 
-[  132.480817]  proc_reg_write+0x3c/0x60 
-[  132.480817]  vfs_write+0xb6/0x1a0 
-[  132.480817]  ksys_write+0x5f/0xe0 
-[  132.480817]  do_syscall_64+0x5b/0x1c0 
-[  132.480817]  entry_SYSCALL_64_after_hwframe+0x44/0xa9 
-[  132.480817] RIP: 0033:0x7f205575d4b7 
-[  132.480817] Code: 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24 
-[  132.480817] RSP: 002b:00007ffe6ab44a38 EFLAGS: 00000246 ORIG_RAX: 0000000000000001 
-[  132.480817] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f205575d4b7 
-[  132.480817] RDX: 0000000000000002 RSI: 000055e2876e1da0 RDI: 0000000000000001 
-[  132.480817] RBP: 000055e2876e1da0 R08: 000000000000000a R09: 0000000000000001 
-[  132.480817] R10: 000055e2879bf930 R11: 0000000000000246 R12: 0000000000000002 
-[  132.480817] R13: 00007f205582e500 R14: 0000000000000002 R15: 00007f205582e700 
-[  132.480817] BUG: unable to handle page fault for address: ffffffffffffffc8 
-[  132.480817] #PF: supervisor read access in kernel mode 
-[  132.480817] #PF: error_code(0x0000) - not-present page 
-[  132.480817] PGD 14460f067 P4D 14460f067 PUD 144611067 PMD 0  
-[  132.480817] Oops: 0000 [#12] SMP PTI 
-[  132.480817] CPU: 4 PID: 1975 Comm: runtest.sh Kdump: loaded Tainted: G      D           5.6.0-5364abc.cki #1 
-[  132.480817] Hardware name: Dell Inc. Precision R7610/, BIOS A08 11/21/2014 
-[  132.480817] RIP: 0010:crash_vmclear_local_loaded_vmcss+0x57/0xd0 [kvm_intel] 
-[  132.480817] Code: c7 c5 40 e0 02 00 4a 8b 04 f5 80 69 42 85 48 8b 14 28 48 01 e8 48 39 c2 74 4d 4c 8d 6a c8 bb 00 00 00 80 49 c7 c4 00 00 00 80 <49> 8b 7d 00 48 89 fe 48 01 de 72 5c 4c 89 e0 48 2b 05 13 a8 88 c4 
-[  132.480817] RSP: 0018:ffffa85d435dfcb0 EFLAGS: 00010007 
-[  132.480817] RAX: ffff9c82ebb2e040 RBX: 0000000080000000 RCX: 000000000000080f 
-[  132.480817] RDX: 0000000000000000 RSI: 00000000000000ff RDI: 000000000000080f 
-[  132.480817] RBP: 000000000002e040 R08: 000000717702c90c R09: 0000000000000004 
-[  132.480817] R10: 0000000000000009 R11: 0000000000000000 R12: ffffffff80000000 
-[  132.480817] R13: ffffffffffffffc8 R14: 0000000000000004 R15: 0000000000000000 
-[  132.480817] FS:  00007f2055668740(0000) GS:ffff9c82ebb00000(0000) knlGS:0000000000000000 
-[  132.480817] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
-[  132.480817] CR2: ffffffffffffffc8 CR3: 0000000151904003 CR4: 00000000000606e0 
-[  132.480817] Call Trace: 
-[  132.480817]  native_machine_crash_shutdown+0x45/0x190 
-[  132.480817]  __crash_kexec+0x61/0x130 
-[  132.480817]  ? __crash_kexec+0x9a/0x130 
-[  132.480817]  ? panic+0x11d/0x2e3 
-[  132.480817]  ? printk+0x58/0x6f 
-[  132.480817]  ? sysrq_handle_crash+0x11/0x20 
-[  132.480817]  ? __handle_sysrq.cold+0x48/0x104 
-[  132.480817]  ? write_sysrq_trigger+0x24/0x40 
-[  132.480817]  ? proc_reg_write+0x3c/0x60 
-[  132.480817]  ? vfs_write+0xb6/0x1a0 
-[  132.480817]  ? ksys_write+0x5f/0xe0 
-[  132.480817]  ? do_syscall_64+0x5b/0x1c0 
-[  132.480817]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9 
+Yes by shared contexts I mean shared address spaces. Theoretically #ASID <
+#IOASID for us, because the max ASID size is 16-bit.
 
 > 
-> Patch 2 is cleanup that's made possible by patch 1.
-> 
-> Patch 3 isn't directly related, but it conflicts with the crash cleanup
-> changes, both from a code and a semantics perspective.  Without the crash
-> cleanup, IMO hardware_enable() should do crash_disable_local_vmclear()
-> if VMXON fails, i.e. clean up after itself.  But hardware_disable()
-> doesn't even do crash_disable_local_vmclear() (which is what got me
-> looking at that code in the first place).  Basing the VMXON change on top
-> of the crash cleanup avoids the debate entirely.
-> 
-> v2:
->   - Inverted the code flow, i.e. move code from loaded_vmcs_init() to
->     __loaded_vmcs_clear().  Trying to share loaded_vmcs_init() with
->     alloc_loaded_vmcs() was taking more code than it saved. [Paolo]
-> 
-> 
-> Gory details on the crashdump bug:
-> 
-> I verified my analysis of the NMI bug by simulating what would happen if
-> an NMI arrived in the middle of list_add() and list_del().  The below
-> output matches expectations, e.g. nothing hangs, the entry being added
-> doesn't show up, and the entry being deleted _does_ show up.
-> 
-> [    8.205898] KVM: testing NMI in list_add()
-> [    8.205898] KVM: testing NMI in list_del()
-> [    8.205899] KVM: found e3
-> [    8.205899] KVM: found e2
-> [    8.205899] KVM: found e1
-> [    8.205900] KVM: found e3
-> [    8.205900] KVM: found e1
-> 
-> static void vmx_test_list(struct list_head *list, struct list_head *e1,
->                           struct list_head *e2, struct list_head *e3)
-> {
->         struct list_head *tmp;
-> 
->         list_for_each(tmp, list) {
->                 if (tmp == e1)
->                         pr_warn("KVM: found e1\n");
->                 else if (tmp == e2)
->                         pr_warn("KVM: found e2\n");
->                 else if (tmp == e3)
->                         pr_warn("KVM: found e3\n");
->                 else
->                         pr_warn("KVM: kaboom\n");
->         }
-> }
-> 
-> static int __init vmx_init(void)
-> {
->         LIST_HEAD(list);
->         LIST_HEAD(e1);
->         LIST_HEAD(e2);
->         LIST_HEAD(e3);
-> 
->         pr_warn("KVM: testing NMI in list_add()\n");
-> 
->         list.next->prev = &e1;
->         vmx_test_list(&list, &e1, &e2, &e3);
-> 
->         e1.next = list.next;
->         vmx_test_list(&list, &e1, &e2, &e3);
-> 
->         e1.prev = &list;
->         vmx_test_list(&list, &e1, &e2, &e3);
-> 
->         INIT_LIST_HEAD(&list);
->         INIT_LIST_HEAD(&e1);
-> 
->         list_add(&e1, &list);
->         list_add(&e2, &list);
->         list_add(&e3, &list);
-> 
->         pr_warn("KVM: testing NMI in list_del()\n");
-> 
->         e3.prev = &e1;
->         vmx_test_list(&list, &e1, &e2, &e3);
-> 
->         list_del(&e2);
->         list.prev = &e1;
->         vmx_test_list(&list, &e1, &e2, &e3);
-> }
-> 
-> Sean Christopherson (3):
->   KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support
->   KVM: VMX: Fold loaded_vmcs_init() into alloc_loaded_vmcs()
->   KVM: VMX: Gracefully handle faults on VMXON
-> 
->  arch/x86/kvm/vmx/vmx.c | 103 ++++++++++++++++-------------------------
->  arch/x86/kvm/vmx/vmx.h |   1 -
->  2 files changed, 40 insertions(+), 64 deletions(-)
-> 
-> -- 
-> 2.24.1
-> 
+> > But quotas are only necessary for VMs, when the host shares the PASID
+> > space with them (which isn't a use-case for Arm systems as far as I
+> > know, each VM gets its own PASID space).
+> Is there a host-guest PASID translation? or the PASID used by the VM is
+> physical PASID? When a page request comes in to SMMU, how does it know
+> the owner of the PASID if PASID range can overlap between host and
+> guest?
 
+We assign PCI functions to VMs, so Page Requests are routed with
+RID:PASID, not PASID alone. The SMMU finds the struct device associated
+with the RID, and submits the fault with iommu_report_device_fault(). If
+the VF is assigned to a VM, then the page request gets injected into the
+VM, otherwise it uses the host IOPF handler
+
+> > Could we have quota-free IOASID sets for the host?
+> > 
+> Yes, perhaps just add a flag such that the set has its own namespace.
+> You mean have this quota-free IOASID set even co-exist with VMs? I still
+> don't get how PRQ works.
+> 
+> That is not the use case for VT-d in that we have to have system-wide
+> allocation for host PASIDs. We have enqcmd which can take a PASID from
+> the per task MSR and deliver to multiple devices, so even though the
+> PASID table is per device the PASID name space must be global.
+> 
+> > For the SMMU I'd like to allocate two sets, one SVA and one private
+> > for auxiliary domains, and I don't think giving either a quota makes
+> > much sense at the moment.
+> I agree we don;t need the quota if we don't support guest SVA at the
+> same time.
+> 
+> So the sva set and aux_domain set PASIDs have their own namespaces?
+
+They share the same PASID space, but they store different objects
+(mm_struct and context descriptor, respectively) so they need different
+ioasid_set tokens.
+
+> 
+> > There can be systems using only SVA and
+> > systems using only private PASIDs. I think it should be
+> > first-come-first-served until admins want a knob to define a policy
+> > themselves, based on cgroups for example.
+> > 
+> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > ---
+> > >  drivers/iommu/intel-iommu.c | 8 +++++++-
+> > >  drivers/iommu/ioasid.c      | 9 +++++++++
+> > >  include/linux/ioasid.h      | 9 +++++++++
+> > >  3 files changed, 25 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/iommu/intel-iommu.c
+> > > b/drivers/iommu/intel-iommu.c index ec3fc121744a..af7a1ef7b31e
+> > > 100644 --- a/drivers/iommu/intel-iommu.c
+> > > +++ b/drivers/iommu/intel-iommu.c
+> > > @@ -3511,8 +3511,14 @@ static int __init init_dmars(void)
+> > >  		goto free_iommu;
+> > >  
+> > >  	/* PASID is needed for scalable mode irrespective to SVM */
+> > > -	if (intel_iommu_sm)
+> > > +	if (intel_iommu_sm) {
+> > >  		ioasid_install_capacity(intel_pasid_max_id);
+> > > +		/* We should not run out of IOASIDs at boot */
+> > > +		if (ioasid_alloc_system_set(PID_MAX_DEFAULT)) {
+> > > +			pr_err("Failed to enable host PASID
+> > > allocator\n");
+> > > +			intel_iommu_sm = 0;
+> > > +		}
+> > > +	}
+> > >  
+> > >  	/*
+> > >  	 * for each drhd
+> > > diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> > > index 6265d2dbbced..9135af171a7c 100644
+> > > --- a/drivers/iommu/ioasid.c
+> > > +++ b/drivers/iommu/ioasid.c
+> > > @@ -39,6 +39,9 @@ struct ioasid_data {
+> > >  static ioasid_t ioasid_capacity;
+> > >  static ioasid_t ioasid_capacity_avail;
+> > >  
+> > > +int system_ioasid_sid;
+> > > +static DECLARE_IOASID_SET(system_ioasid);
+> > > +
+> > >  /* System capacity can only be set once */
+> > >  void ioasid_install_capacity(ioasid_t total)
+> > >  {
+> > > @@ -51,6 +54,12 @@ void ioasid_install_capacity(ioasid_t total)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(ioasid_install_capacity);
+> > >  
+> > > +int ioasid_alloc_system_set(int quota)
+> > > +{
+> > > +	return ioasid_alloc_set(&system_ioasid, quota,
+> > > &system_ioasid_sid); +}
+> > > +EXPORT_SYMBOL_GPL(ioasid_alloc_system_set);  
+> > 
+> > I think this helper could stay in the VT-d driver for the moment. If
+> > the SMMU driver ever implements auxiliary domains it will use a
+> > private IOASID set, separate from the shared IOASID set managed by
+> > iommu-sva. Both could qualify as "system set".
+> > 
+> Sounds good. Perhaps remove the special "system set". SVA code,
+> VFIO, VT-d, or SMMU driver can all allocate their own sets.
+> So to meet both SMMU and VT-d requirements, we should do:
+> 1. add an IOASID_PRIVATE flag to ioasid_alloc_set(), indicating this is
+> a private set
+> 2. All APIs operate on the set_id accordingly, e.g. ioasid_find() will
+> only search within the private set. Private set is excluded from from
+> global search (VT-d needs this in PRQ).
+> 
+> Since VT-d already needs private PASIDs for guest SVM where
+> GPASID!=HPASID, I feel we can just reuse the per ioasid_set Xarray for
+> both quota-free private set and guest set.
+
+Ok I think this sounds fine
+
+Thanks,
+Jean
+
+> 
+> 
+> Thanks for the feedback!
+> 
+> Jacob
+> 
+> > Thanks,
+> > Jean
+> > 
+> > > +
+> > >  /*
+> > >   * struct ioasid_allocator_data - Internal data structure to hold
+> > > information
+> > >   * about an allocator. There are two types of allocators:
+> > > diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> > > index 8c82d2625671..097b1cc043a3 100644
+> > > --- a/include/linux/ioasid.h
+> > > +++ b/include/linux/ioasid.h
+> > > @@ -29,6 +29,9 @@ struct ioasid_allocator_ops {
+> > >  	void *pdata;
+> > >  };
+> > >  
+> > > +/* Shared IOASID set for reserved for host system use */
+> > > +extern int system_ioasid_sid;
+> > > +
+> > >  #define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
+> > >  
+> > >  #if IS_ENABLED(CONFIG_IOASID)
+> > > @@ -41,6 +44,7 @@ int ioasid_register_allocator(struct
+> > > ioasid_allocator_ops *allocator); void
+> > > ioasid_unregister_allocator(struct ioasid_allocator_ops
+> > > *allocator); int ioasid_attach_data(ioasid_t ioasid, void *data);
+> > > void ioasid_install_capacity(ioasid_t total); +int
+> > > ioasid_alloc_system_set(int quota); int ioasid_alloc_set(struct
+> > > ioasid_set *token, ioasid_t quota, int *sid); void
+> > > ioasid_free_set(int sid, bool destroy_set); int
+> > > ioasid_find_sid(ioasid_t ioasid); @@ -88,5 +92,10 @@ static inline
+> > > void ioasid_install_capacity(ioasid_t total) {
+> > >  }
+> > >  
+> > > +static inline int ioasid_alloc_system_set(int quota)
+> > > +{
+> > > +	return -ENOTSUPP;
+> > > +}
+> > > +
+> > >  #endif /* CONFIG_IOASID */
+> > >  #endif /* __LINUX_IOASID_H */
+> > > -- 
+> > > 2.7.4
+> > >   
+> 
+> [Jacob Pan]
