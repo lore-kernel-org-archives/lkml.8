@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E24BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517F6C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20EE9208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2995B20719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i6mWkU87"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FGQruDoo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgDGXvE (ORCPT
+        id S1726417AbgDGXvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:51:04 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42377 "EHLO
+        Tue, 7 Apr 2020 19:51:09 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38357 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgDGXvC (ORCPT
+        with ESMTP id S1726603AbgDGXvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:51:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id v2so461141plp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:51:01 -0700 (PDT)
+        Tue, 7 Apr 2020 19:51:04 -0400
+Received: by mail-pl1-f193.google.com with SMTP id w3so1840692plz.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:51:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pFQkRgh1REqkDpACcdt+UfCfvgHDToGduy/d5MuknNk=;
-        b=i6mWkU87+EqLGVlkeycAW1iqUek2kXI9xDjkNbOX1OCNtE37+/M7EnkQyBbmOAA+Ot
-         WZi5rmOu3vhA45q9b4Hfu0nV6VvC8YxidTH10xQY+mlpUdn7Cq1oXCvybmgIzmmUBfZC
-         5PXT6Fg1Ag7Msgk85ncRN8AJve5gwNG0UzERE=
+        bh=bBJzE53eaksNDmdb05BmcKfF0GccMZv3HofDPA/DfVk=;
+        b=FGQruDooKcNpsi9j7VDoiO49bKy9eYmUHUDg3Gvocl/eigw6X5+mqz0bu9PkGMWfku
+         rEjtJO1lF5c1bBFWT/73a2x8N/A55hSi/3+AQTK33LyC5Y+oeOmYC6yIHKDbZ83zW6ok
+         AuI2LFX6DuokvAZumPkRW7cYl3BAladfRVSTg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pFQkRgh1REqkDpACcdt+UfCfvgHDToGduy/d5MuknNk=;
-        b=eDspHWRlHNqvV7OGnpWw7G+oSFscMvn5uVQLBhKJ6iOBtRqM7YqcXVXHxXmXpkia0H
-         FiypAspk4Pg57VEyZXpYKbx/ML9kURuRNSfI83E0P+CFssgiwe0zbuPe1NmRYc8/2kkB
-         hf9aKH+l75e8LlrsHOfVS6P1nrjc8JwJHI5SqTnISXSq7/7x3DQTuStKFth4Prwm3/nZ
-         3Fi2QprhPzN8nCjufxGWrmlqIVYm/U8d02C1Rg0/Lsnc5ENIQvBhGfbbzkHjeEw3TrmG
-         umiUbICz1RhtRuquEI8aox6I/TBqsQKQYtCb2twxPZ4XMW1To9rTa22aNQQCBhqz+jzD
-         cmQQ==
-X-Gm-Message-State: AGi0PubQiIrRpB6u5ZCNvLks2eUebIZJ6AVr92j/81hlZ7RbxqBnhyVZ
-        pxAF2Kxm2AqbgEbwRLW+uTWvIg==
-X-Google-Smtp-Source: APiQypIyTvb0C4G8xQ+PTsfIdd+WxpN1AINzY4dwE9PSKG5Y/HFai8m4ry+I2/cUQMqsdNH3q0Aw/Q==
-X-Received: by 2002:a17:90a:fa17:: with SMTP id cm23mr2019144pjb.121.1586303461516;
-        Tue, 07 Apr 2020 16:51:01 -0700 (PDT)
+        bh=bBJzE53eaksNDmdb05BmcKfF0GccMZv3HofDPA/DfVk=;
+        b=R37OYyAcZIzIg28ZaDHeblAmKOC8xhvsCVS+SlvcXTQ00+KGWXPVPxL78aLTDPBSI5
+         PC6U4Zx8X6C2Tp1Vt9jl7M4t4Z/CvPAW3FSju21BB0yrnG+bnSQLmOsJ9JzRFK/n4104
+         UKyusvr3KAZpvQZLNBx7QO/vMEpCPjmZVLmwU9/TjVaclxtdgCGzMvnu/xOik1zlp36i
+         o9H1Bgn3ls8xevJPft//OBNxHbOaYF8eI6PQ62kJAovLBGGP/X6d/ihAJ3oa0Prle8P/
+         y2Q0X6DKDH24AK7bn38P5OQDXVWSUxynf0wdxk4okgecQtHY9KRbz3xeaTtMQZ8oMSkP
+         PDdw==
+X-Gm-Message-State: AGi0Pua7ehFwMK9RjKUqWkBqyzOFRzaR2NVf0pj6T0I+1EskvkawKMpI
+        nzBKtsDt6gDNtXd5du5n/ihteRQERMbbYw==
+X-Google-Smtp-Source: APiQypJKaPUIpNKIeM1S4TQG4CqiQmoXpruLfwsRdw928lUopKp/PkcCkXUlo6cmMm2kQIc0Q/aUEQ==
+X-Received: by 2002:a17:90a:208f:: with SMTP id f15mr1724748pjg.60.1586303463664;
+        Tue, 07 Apr 2020 16:51:03 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id s27sm14467165pgn.90.2020.04.07.16.51.00
+        by smtp.gmail.com with ESMTPSA id s27sm14467165pgn.90.2020.04.07.16.51.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 16:51:01 -0700 (PDT)
+        Tue, 07 Apr 2020 16:51:03 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -61,9 +61,9 @@ Cc:     mka@chromium.org, Lina Iyer <ilina@codeaurora.org>,
         Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
         evgreen@chromium.org, Douglas Anderson <dianders@chromium.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/10] drivers: qcom: rpmh-rsc: Kill cmd_cache and find_match() with fire
-Date:   Tue,  7 Apr 2020 16:50:19 -0700
-Message-Id: <20200407164915.v3.5.I6d3d0a3ec810dc72ff1df3cbf97deefdcdeb8eef@changeid>
+Subject: [PATCH v3 07/10] drivers: qcom: rpmh-rsc: tcs_is_free() can just check tcs_in_use
+Date:   Tue,  7 Apr 2020 16:50:21 -0700
+Message-Id: <20200407164915.v3.7.Icf2213131ea652087f100129359052c83601f8b0@changeid>
 X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 In-Reply-To: <20200407235024.260460-1-dianders@chromium.org>
 References: <20200407235024.260460-1-dianders@chromium.org>
@@ -74,153 +74,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "cmd_cache" in RPMH wasn't terribly sensible.  Specifically:
+tcs_is_free() had two checks in it: does the software think that the
+TCS is free and does the hardware think that the TCS is free.  I
+couldn't figure out in which case the hardware could think that a TCS
+was in-use but software thought it was free.  Apparently there is no
+case and the extra check can be removed.  This apparently has already
+been done in a downstream patch.
 
-- The current code doesn't realy detect "conflicts" properly any case
-  where the sequence being checked has more than one entry.  One
-  simple way to see this in the current code is that if cmd[0].addr
-  isn't found that cmd[1].addr is never checked.
-- The code attempted to use the "cmd_cache" to update an existing
-  message in a sleep/wake TCS with new data.  The goal appeared to be
-  to update part of a TCS while leaving the rest of the TCS alone.  We
-  never actually do this.  We always fully invalidate and re-write
-  everything.
-- If/when we try to optimize things to not fully invalidate / re-write
-  every time we update the TCSes we'll need to think it through very
-  carefully.  Specifically requirement of find_match() that the new
-  sequence of addrs must match exactly the old sequence of addrs seems
-  inflexible.  It's also not documented in rpmh_write() and
-  rpmh_write_batch().  In any case, if we do decide to require updates
-  to keep the exact same sequence and length then presumably the API
-  and data structures should be updated to understand groups more
-  properly.  The current algorithm doesn't really keep track of the
-  length of the old sequence and there are several boundary-condition
-  bugs because of that.  Said another way: if we decide to do
-  something like this in the future we should start from scratch and
-  thus find_match() isn't useful to keep around.
-
-This patch isn't quite a no-op.  Specifically:
-
-- It should be a slight performance boost of not searching through so
-  many arrays.
-- The old code would have done something useful in one case: it would
-  allow someone calling rpmh_write() to override the data that came
-  from rpmh_write_batch().  I don't believe that actually happens in
-  reality.
-
+Suggested-by: Maulik Shah <mkshah@codeaurora.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v3:
-- Kill find_match moves from patch #9 to patch #5 (Maulik).
-- Rewrote commit message to adjust for patch order.
+- Replace ("...warn if state mismatch") w/ ("...just check tcs_in_use")
 
 Changes in v2:
-- Got rid of useless "if (x) continue" at end of for loop.
+- Comment tcs_is_free() new for v2; replaces old patch 6.
 
- drivers/soc/qcom/rpmh-internal.h |  2 --
- drivers/soc/qcom/rpmh-rsc.c      | 47 --------------------------------
- 2 files changed, 49 deletions(-)
+ drivers/soc/qcom/rpmh-rsc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
-index e9a90cb7773e..6a6d776ccca9 100644
---- a/drivers/soc/qcom/rpmh-internal.h
-+++ b/drivers/soc/qcom/rpmh-internal.h
-@@ -30,7 +30,6 @@ struct rsc_drv;
-  * @ncpt:      number of commands in each TCS
-  * @lock:      lock for synchronizing this TCS writes
-  * @req:       requests that are sent from the TCS
-- * @cmd_cache: flattened cache of cmds in sleep/wake TCS
-  * @slots:     indicates which of @cmd_addr are occupied
-  */
- struct tcs_group {
-@@ -42,7 +41,6 @@ struct tcs_group {
- 	int ncpt;
- 	spinlock_t lock;
- 	const struct tcs_request *req[MAX_TCS_PER_TYPE];
--	u32 *cmd_cache;
- 	DECLARE_BITMAP(slots, MAX_TCS_SLOTS);
- };
- 
 diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index 855a1dab7718..da1045c92b38 100644
+index 84ae3e514eee..9502e7ea96be 100644
 --- a/drivers/soc/qcom/rpmh-rsc.c
 +++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -522,42 +522,12 @@ int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg)
- 	return ret;
+@@ -177,7 +177,6 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
+  * @tcs_id: The global ID of this TCS.
+  *
+  * Returns true if nobody has claimed this TCS (by setting tcs_in_use).
+- * If the TCS looks free, checks that the hardware agrees.
+  *
+  * Must be called with the drv->lock held or the tcs_lock for the TCS being
+  * tested. If only the tcs_lock is held then it is possible that this
+@@ -188,8 +187,7 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
+  */
+ static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
+ {
+-	return !test_bit(tcs_id, drv->tcs_in_use) &&
+-	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id);
++	return !test_bit(tcs_id, drv->tcs_in_use);
  }
  
--static int find_match(const struct tcs_group *tcs, const struct tcs_cmd *cmd,
--		      int len)
--{
--	int i, j;
--
--	/* Check for already cached commands */
--	for_each_set_bit(i, tcs->slots, MAX_TCS_SLOTS) {
--		if (tcs->cmd_cache[i] != cmd[0].addr)
--			continue;
--		if (i + len >= tcs->num_tcs * tcs->ncpt)
--			goto seq_err;
--		for (j = 0; j < len; j++) {
--			if (tcs->cmd_cache[i + j] != cmd[j].addr)
--				goto seq_err;
--		}
--		return i;
--	}
--
--	return -ENODATA;
--
--seq_err:
--	WARN(1, "Message does not match previous sequence.\n");
--	return -EINVAL;
--}
--
- static int find_slots(struct tcs_group *tcs, const struct tcs_request *msg,
- 		      int *tcs_id, int *cmd_id)
- {
- 	int slot, offset;
- 	int i = 0;
- 
--	/* Find if we already have the msg in our TCS */
--	slot = find_match(tcs, msg->cmds, msg->num_cmds);
--	if (slot >= 0)
--		goto copy_data;
--
- 	/* Do over, until we can fit the full payload in a TCS */
- 	do {
- 		slot = bitmap_find_next_zero_area(tcs->slots, MAX_TCS_SLOTS,
-@@ -567,11 +537,7 @@ static int find_slots(struct tcs_group *tcs, const struct tcs_request *msg,
- 		i += tcs->ncpt;
- 	} while (slot + msg->num_cmds - 1 >= i);
- 
--copy_data:
- 	bitmap_set(tcs->slots, slot, msg->num_cmds);
--	/* Copy the addresses of the resources over to the slots */
--	for (i = 0; i < msg->num_cmds; i++)
--		tcs->cmd_cache[slot + i] = msg->cmds[i].addr;
- 
- 	offset = slot / tcs->ncpt;
- 	*tcs_id = offset + tcs->offset;
-@@ -763,19 +729,6 @@ static int rpmh_probe_tcs_config(struct platform_device *pdev,
- 		tcs->mask = ((1 << tcs->num_tcs) - 1) << st;
- 		tcs->offset = st;
- 		st += tcs->num_tcs;
--
--		/*
--		 * Allocate memory to cache sleep and wake requests to
--		 * avoid reading TCS register memory.
--		 */
--		if (tcs->type == ACTIVE_TCS)
--			continue;
--
--		tcs->cmd_cache = devm_kcalloc(&pdev->dev,
--					      tcs->num_tcs * ncpt, sizeof(u32),
--					      GFP_KERNEL);
--		if (!tcs->cmd_cache)
--			return -ENOMEM;
- 	}
- 
- 	drv->num_tcs = st;
+ /**
 -- 
 2.26.0.292.g33ef6b2f38-goog
 
