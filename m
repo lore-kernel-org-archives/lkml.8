@@ -2,37 +2,37 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C357AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80334C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97CE82072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 510612075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:31:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ClIVEwm8"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="A2xmSSgo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgDGQbK (ORCPT
+        id S1728282AbgDGQbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:31:10 -0400
-Received: from mout.gmx.net ([212.227.15.19]:44755 "EHLO mout.gmx.net"
+        Tue, 7 Apr 2020 12:31:45 -0400
+Received: from mout.gmx.net ([212.227.15.15]:42475 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbgDGQbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:31:10 -0400
+        id S1726884AbgDGQbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 12:31:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586277060;
-        bh=mGcNn/hciDAa1MtlzL+yKAo9BVtXHK66bYlr9Vx0ozY=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ClIVEwm8T5Aa6VcCJQASK9GNmTiUt+aynyqNP6ZIf6TmCASZnR9d6SbWM4IKwXToa
-         uDSaYF8YhZf7vRVraaXIW0ZEyzNelb3YOG308tHYAYxA6JtvRIZ+MrvngK+GJFa7vl
-         uqD6AKqDz/szviFV+2smJlBnTz8UcQdkDFI7Iz78=
+        s=badeba3b8450; t=1586277031;
+        bh=dRrnNHMV0G1JWqD9csNXwBisLe5gckVpiKr95ecTaME=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=A2xmSSgoRNLUHu1/Szg6r1vDXUsZTOb+KG/SzV/HDceLZWBO/U+Oj6HDrV1WnDhko
+         pZONpBSR2un/s1WzpCBwdlNsEXB1ArF8I4rMsRAUI4I2meaksyoywhLJQwfZtLVpft
+         JZLwizq6DZjy+zoHK0ZZayf0QKAisQygb+nN8OGQ=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
 Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
  (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MMobO-1jcQZU17Xo-00IjSr; Tue, 07 Apr 2020 18:31:00 +0200
+ 1MxlzI-1j5qfp01K2-00zFIB; Tue, 07 Apr 2020 18:30:31 +0200
 From:   Oscar Carter <oscar.carter@gmx.com>
 To:     Forest Bond <forest@alittletooquiet.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -42,65 +42,55 @@ Cc:     Oscar Carter <oscar.carter@gmx.com>,
         Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
         Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] staging: vt6656: Remove unnecessary local variable initialization
-Date:   Tue,  7 Apr 2020 18:29:59 +0200
-Message-Id: <20200407162959.7318-3-oscar.carter@gmx.com>
+Subject: [PATCH v2 0/2] staging: vt6656: Cleanup of the vnt_get_frame_time function
+Date:   Tue,  7 Apr 2020 18:29:57 +0200
+Message-Id: <20200407162959.7318-1-oscar.carter@gmx.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200407162959.7318-1-oscar.carter@gmx.com>
-References: <20200407162959.7318-1-oscar.carter@gmx.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UaY/NzihUNA7noUE4WYo5a2HMtl4iCD2xIPTYOXp8Y36W5So9s9
- SU6FGSAaXWqjiMZ+i4KJ+VgUy1o+JX72oXb9tGYSU58Q3IE3l7lUNmJPAvdGFCh48Kza7zj
- 7q6va4Abvh8S41q4PvJ+72V6UcyBlL5Qt5XqjKFU3uR9tqibS5MqVDox6PBNVo36I7SHFWt
- /W6duAPkz/YzcdTJBKIGw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ssw9doPq2OE=:oj/WuGNg3mz2KQVXrTZJeP
- fqAuIHxpbaf8nQtNhm5rog717riSqPIP9MJVR/TfCLgQ+fmJ/hE74+AWu/MS3pqQl35et2TMn
- qqbvBObj6sYgYPBJlIbbymW76ahkZ/UOA34FTmLKesPEWt19QOCFKHKOBn9+/1g+oZJQ2qYN6
- PTHCVFNSUfKPlTHrogTTk4iTJALA4ZI6gq9ppXx4vO8ZICEfLB/I7u+pPdpmPmg6IbVLparz8
- 9iq+Uc6FSBJ+QFzgvpHFIOJe3Mb/mBGtIswp8SWtbUc5iLrSF+8iBizALt2XJlhu5gDPaCORv
- lG/hnCDCLGhZac+TBcRkz6utSTNrHlV2qS6+f2f42d2pomdirIMNPkyxUlipbuUyY1u/7ITVV
- Mj6G+WVyaKmxToKy7z95rRLvd1ekCz9sljzF6iATGiIEkMt4MnqIwNfbxZ/J1rJEXLCSXwZXt
- R2MSpUhVsCoZe27VGOlhzqnz1OQ3T7V9gvP0VTMXKFobkhKpvbdseop5DGUMvczxEe0E8GkEo
- hT2G2eNis6gD1zDZROpep64c3e6n0adUNuq3pNCQz9ZUAHHbUjm+7fxKUqwz2Vcoc2Q/T3Ykm
- nMH9t/nyYBgHNa732VtdBlPeo8NN/tCkrbyS59jhoUvopE61fHouTfIaItTk6O2tWztposGa4
- lsoifrY/ybmGmHoNJ9cxitVrgJkaYIa0HrSgmU6UmpSbrE2hpqqaR3BWRJbtD0lClHDMrOnJX
- rAavBiWwk7HLMZsXDWm8PlDAYHpwS+BNabVl00Y1zGRMc/v4L9zuXzQ2G8Yb+sGVHQtWcPZJE
- yOBy7lpV3YvKZ/02C2cn50B1jBY2ygbv2H0zFhgOrV2CsfC980RQRs1opxOAqCQt3GI5EkAi4
- rhKE0w86Jtp6LeQLsnNGHYhW8GueyyDghIcx/kYRJw2rNiPvLXgyupEmHQ5axpuyeMvWzk/Q/
- z1gY0N5Rx1+YCXsIcvxAyx7JaIktqkHwqi7+Fa0S1KCR4/4WwrG7XTH3FBPGpY9A/EZWBH53o
- eeExstw5rCO5Z06p2LS+p4Gp1DR7Optf4xIIf/wd6viST0hM1bE7AcCsplcEp0B19N921KLDT
- CTwChosCov30WcasUYwCvNMCIsvt46NW6kLhfwVq7XkJlgwG7uqMEwBx71N6z0L/TYXQF5nQF
- CH21trLuLwMydyHMfR22ptE1QIBsYG6KfL7nuyI+AEezOtNDP8uQjCOjINwN1Lnjswcmm+d5q
- xDpKp27KcK33HmY/g
+X-Provags-ID: V03:K1:NC+4dIil97qHJle9P/jL4lfVPLU6zXIGv3DcNsA37CN31QtovPX
+ g7fC2WiIKUbfZfLe+tWJ81AyrwAkQRoJb1waEYYfBFIGlt01IJeZLY8c6h2SuLhTXyoOqCu
+ QdbyepCYd+xIjSrQABk1eOP7vfnjvOujorDEly3sdLmenh1JbXdWPDQ5TadppU4ww9j7Msd
+ MyGcNYOv90QOACHIxHshw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mGXCBEHfOME=:awlMunGY2CwfFgGND6vS6a
+ Sj8Eg86ye8tBzkbBpLedSEy1NZP08VL0lFBpCa9LyqtbFy3H2M0PnzB4r+i6wI4xEHGeiuh4v
+ RfoOegHBOARWSVd9hw7MyTKTj3GvG47PjLtiExj8EQ5P8GwIR9byBlZmPUdDKTnqa9osGv0UQ
+ oI67n5/JuTw9UlvLW9NK0B1TxHZcX+0I51Oa0N+1InDVzQikHOu5+MwiKl73skTMpPMBGSEbh
+ 3SsiOuM1W7lhLe9gUA0codB4JVdNT873A8IjkjJ6ufdVjEhF2GVzZspLfUXmKKs732+O5PD/x
+ 3NZKDoT9AsuZtQWwxfhiBYYKFq29csza+BnG2ASLImn0U2N/tIpxVSPSmAPcnQ4vnGXHbtFBj
+ 6Hm1kGn0iSs2jcEzFdL/diJenSzPN+Y4s67/gIHsnSeiMBvTyfYtMSryl5wJhJIp5BaySAvfm
+ nY3KgGlSq9vUGjFBv2ZZVTJ+uHYIfHtQgLpvHqroM4ldgEMDd3m2q7iCnVI5xQvK+U0HVnj8h
+ 724JzXWiYdSBPxIzq+hMCjOl+mut7n7TQluS35+jH4b3QFJj8W5q6KsmIpVAVbv17A2bTGYUF
+ xGDIfB+Z0pQ9jg8n6FtOTY5QTwu2IqMrNGbcypYRCP1GTEn367P8TAi54xgUBYo/lhsdoACGw
+ fIqodTTbCTmq5kfTN+c+tnJVd0rD+T8tTha3Ps2V77wCNaN1lJSUXSpMY0vvZd7f1RvY/a8x8
+ 1TBRgiDjkmRQLLntOmfZCIflAbNgWVtyIbk+TCUBtWjuNVhzj8h5rMzlXWQi4tGKV0/55mLfP
+ 9dw6xFD1LA96LHPkW7QvC/Th0K+Yn55L7lqAj3iCiFDzFKfCXhJTCZTpbmRXPuSn7FeLv2a6w
+ yPe8fZH5uyh9gA/86Vd8M1xtCEYlo7237h90vznZNdLIZZwRjpquvf4N48SIuZvjzLCPTZ4FE
+ 6JaJCD5dY38FvtNSzn7B9YvEDVxJ4PwM4MMYsK3CYo5kdlbWVI+dmHoEXXqL3pInTywrj3YXJ
+ M8OJ3cnxShFT0MOmUYVHt0x2hTM3B1NHHIoujU96DMZBlUMj0Px2tZhnRHEP3UnqWSZpxwy15
+ 5yIdaDXzpAkwJxAx0UMktmwtMGoAxgx9M2rPOo4WCHlLe6xj8hmO+3XAgZ5dUwo8ZDW0dypsb
+ bUEcsI/EIM0NQIKUoC7yAkekUICa6f6I00PI/Pm0r7iu5N7aBWwS9rPIO6u6tcbjOyBUJQDn7
+ kQ9GDukuzpk4ptoAs
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't initialize the rate variable as it is set a few lines later.
+This patch series makes a cleanup of the vnt_get_frame_time function.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/baseband.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The first patch makes use of the define RATE_11M instead of a magic
+number. The second patch remove unnecessary local variable initialization.
 
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
-seband.c
-index 092e56668a09..5d9bc97916a5 100644
-=2D-- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -135,7 +135,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 p=
-kt_type,
- {
- 	unsigned int frame_time;
- 	unsigned int preamble;
--	unsigned int rate =3D 0;
-+	unsigned int rate;
+Changelog v1 -> v2
+- Not use the ARRAY_SIZE macro to compare against the tx_rate variable.
 
- 	if (tx_rate > RATE_54M)
- 		return 0;
+Oscar Carter (2):
+  staging: vt6656: Use define instead of magic number for tx_rate
+  staging: vt6656: Remove unnecessary local variable initialization
+
+ drivers/staging/vt6656/baseband.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
 =2D-
 2.20.1
 
