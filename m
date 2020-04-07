@@ -2,109 +2,82 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3711C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823E6C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DD720731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD3F20731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OzzFlv8d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JCfpGm5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgDGNvb (ORCPT
+        id S1728948AbgDGNwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 09:51:31 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34211 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbgDGNvb (ORCPT
+        Tue, 7 Apr 2020 09:52:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54798 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbgDGNwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 09:51:31 -0400
-Received: by mail-lf1-f67.google.com with SMTP id x23so2453717lfq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 06:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0ZDRUt3eOgGiaKX8/LhaubmvfH76uWvW+ZDm0Jnzfuw=;
-        b=OzzFlv8dJTtxOJq1DDp9Cu2oRQ/u+vPgLaEttIDiFFYQazpja60LVy7GcKOJtN9KVe
-         SmrXMtt829rBJtRwFrp3Yo/+7RFQEeIsDt98Pmf/rpjoto8Yv7lsBFoxnYGCa98+NA8q
-         vcTQB0ObNwY4RiV5U4m7tH0TtQHdzuWrcRBBbqWhX6KrJXbHlAl9cgLshL54vG20Zd8b
-         xV/iK/LsadsjL6dqgJO0i1xsWjf6hDsX9JxtfL1vROqP1Fj2QqnyOox+badK8fshoKKK
-         jVzjW2XeWQmn7RuiROOwFLeCkOdpW89f63oXCNGJf5D5PkaR1508DuCtwpSz1unPHN6+
-         K5Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0ZDRUt3eOgGiaKX8/LhaubmvfH76uWvW+ZDm0Jnzfuw=;
-        b=eIxmob99zrI73RTGDnZ6jCyVMwe8y8VbL3LAb9ec3idHHwfDVzSpDU/VLZ34jke3g1
-         kwCRamwTqS+MtJ28eIICiHnRRZzc52at/uUnzTuZlhUo/HJ8LdZj742thJeRWIAvMt9t
-         ozPNsVsCGglDbzQIq8qRw2spvFnHunYnjUFvB7kaJm5UVRUUGKVEaTg5h/tvH4EawgHQ
-         EIgvh8BmC/p7+bfYCrHMT9984rXua0ulLaxvJ2ZtEhPVWxwxzIsTlJiRg9g+/noYGC7H
-         QAPaM8SCZHacN2hZd7llWlGfYyXPUXGfEJOLvUSZ8S5w/eSvTaxGYyfkoCL+ebETMGKj
-         btTQ==
-X-Gm-Message-State: AGi0PuanGXC9zQ/PVdo1ZLmWjc7Y9RRG3miRhSnlamX2carsV5z+1JXk
-        Kq4w3b3YjugcSeSlARUmCUmjR327GH8VhnxJvjM0WRJlV9A=
-X-Google-Smtp-Source: APiQypJwDVqCmyA8mC9IcT6X63VEZpPEFfsRPRlDBmqddx+8Lh4NnRodBiV0OnC173NkLm76vKQtFva8Cl1/9fUSaFM=
-X-Received: by 2002:a05:6512:1109:: with SMTP id l9mr1632108lfg.50.1586267488223;
- Tue, 07 Apr 2020 06:51:28 -0700 (PDT)
+        Tue, 7 Apr 2020 09:52:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ialmh1oNZLrhgWKFPrEXktfEmlPtTKu0trjFrs2T2Ck=; b=JCfpGm5ABDoZyrRINyea9As5ry
+        6mA0K68m+m9rOR5ykUCFTi9JmTJjYgoXBvdLwk3m9UQxUo7I+I0mByn4sTxWyBThdaJ6mlKQG3poy
+        b+42ZWwm4p2jvIW9bnLtf/VwdH9dcAsB9uonIitdwQs8OKJItTjdeiFfIcl48oIw5O6IxXdyV5f3T
+        8W9Q5+0Uz+SVW4xH5MAbPosSpbDJsmSlEWeGn2b2/9aHq33ddluQRChFRsuIkLSEtN3gF/0C5sKTt
+        AYco4od8uFkhl6IKtm7W9i9yLkIC99rCHcc7TbKSKipUOlSIoorshtw5NRzH15UIs0WJExGL+7Wgy
+        WG7Qt90Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLoeD-0003SC-Q4; Tue, 07 Apr 2020 13:52:13 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A88C83011DD;
+        Tue,  7 Apr 2020 15:52:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 933052B953CBE; Tue,  7 Apr 2020 15:52:11 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 15:52:11 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, tglx@linutronix.de
+Subject: Re: [PATCH V2 9/9] x86/speculation: Remove all
+ ANNOTATE_NOSPEC_ALTERNATIVE directives
+Message-ID: <20200407135211.GB20730@hirez.programming.kicks-ass.net>
+References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
+ <20200407073142.20659-10-alexandre.chartre@oracle.com>
 MIME-Version: 1.0
-References: <20200407101452.046058399@linuxfoundation.org>
-In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
-From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date:   Tue, 7 Apr 2020 08:51:15 -0500
-Message-ID: <CAEUSe7_Je2e_ExLnnwj-SLtSqLyoAPTXqS_WO8yiHneMh46qfw@mail.gmail.com>
-Subject: Re: [PATCH 5.6 00/29] 5.6.3-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407073142.20659-10-alexandre.chartre@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Tue, Apr 07, 2020 at 09:31:42AM +0200, Alexandre Chartre wrote:
 
-On Tue, 7 Apr 2020 at 05:27, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.6.3 release.
-> There are 29 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 09 Apr 2020 10:13:38 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.6.3-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> -	ANNOTATE_NOSPEC_ALTERNATIVE
+>  	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *\reg),	\
+>  		__stringify(RETPOLINE_JMP \reg), X86_FEATURE_RETPOLINE,	\
+>  		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *\reg), X86_FEATURE_RETPOLINE_AMD
 
-Perf still fails to build. Can be fixed by picking up 9ff76cea4e9e
-("perf python: Fix clang detection to strip out options passed in
-$CC").
+Possibly we can write this like:
 
-Greetings!
+	ALTERNATIVE("", "lfence", X86_FEATURE_RETPOLINE_AMD);
+	ALTERNATIVE("jmp *\reg", "jmp __x86_retpoline_jmp_\reg", X86_FEATURE_RETPOLINE);
 
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+With an out-of-line copy of the retpoline, just like the THUNKs the
+compiler uses, except of course, it can't be those, because we actually
+want to use the alternative to implement those.
+
+By moving the retpoline magic out-of-line we ensure it has a unique
+address and the ORC stuff should work.
+
+I'm just not sure what to do about the RETPOLINE_CALL variant.
