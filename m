@@ -2,100 +2,97 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C26BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A988C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCEB20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gcIbPYLb"
+	by mail.kernel.org (Postfix) with ESMTP id 3748720748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:58:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgDGV5b (ORCPT
+        id S1726484AbgDGV6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:57:31 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:10415 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726380AbgDGV5a (ORCPT
+        Tue, 7 Apr 2020 17:58:21 -0400
+Received: from smtprelay0012.hostedemail.com ([216.40.44.12]:46180 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726380AbgDGV6U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:57:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586296650; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=9iFqM9zTj++rDFA03fAusevw7VnMwBpRPBogkohm+gQ=; b=gcIbPYLb2eanxbjswBl2lYUF4EXmGjwsk3S138jtu3a07DZLnZO+kyfonEheNxKBWVdGeBwg
- DMjUJDu+yhrT+N9a36HzGJ5+T6HC5N5CrWMj5iYCC4IUjNIQFwvPCSz+PDZRyyhpu26NTeF4
- MMYbyhXnITHgJwlM/xSOWfbRC1A=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8cf746.7f1ccb48eab0-smtp-out-n03;
- Tue, 07 Apr 2020 21:57:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 15333C44788; Tue,  7 Apr 2020 21:57:24 +0000 (UTC)
-Received: from majja-linux1.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: majja)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D294DC433F2;
-        Tue,  7 Apr 2020 21:57:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D294DC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=majja@codeaurora.org
-From:   Maheshwar Ajja <majja@codeaurora.org>
-To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ezequiel@collabora.com, paul.kocialkowski@bootlin.com,
-        p.zabel@pengutronix.de, boris.brezillon@collabora.com,
-        posciak@chromium.org, jonas@kwiboo.se, linfish@google.com
-Cc:     Maheshwar Ajja <majja@codeaurora.org>
-Subject: [PATCH] media: uapi: h264: Add new profile and levels
-Date:   Tue,  7 Apr 2020 14:55:26 -0700
-Message-Id: <1586296526-9451-1-git-send-email-majja@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 7 Apr 2020 17:58:20 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id B51C6180A733B;
+        Tue,  7 Apr 2020 21:58:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: crime20_65b1ec1fcad57
+X-Filterd-Recvd-Size: 2834
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  7 Apr 2020 21:58:18 +0000 (UTC)
+Message-ID: <2afc201cea5fd59829ce818041b4290a0ec5bb8c.camel@perches.com>
+Subject: Re: get_maintainer.pl sends bogus addresses to git send-email
+From:   Joe Perches <joe@perches.com>
+To:     Jeff King <peff@peff.net>
+Cc:     Olaf Hering <olaf@aepfle.de>, linux-kernel@vger.kernel.org,
+        git@vger.kernel.org
+Date:   Tue, 07 Apr 2020 14:56:19 -0700
+In-Reply-To: <20200407174449.GA1884106@coredump.intra.peff.net>
+References: <20200407154046.GA15368@aepfle.de>
+         <20200407170257.GA1844923@coredump.intra.peff.net>
+         <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
+         <20200407174449.GA1884106@coredump.intra.peff.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add H264 profile "Contrained High" and H264 levels "5.2",
-"6.0", "6.1" and "6.2".
+On Tue, 2020-04-07 at 13:44 -0400, Jeff King wrote:
+> On Tue, Apr 07, 2020 at 10:18:41AM -0700, Joe Perches wrote:
+> 
+> > On Tue, 2020-04-07 at 13:02 -0400, Jeff King wrote:
+> > > On Tue, Apr 07, 2020 at 05:40:46PM +0200, Olaf Hering wrote:
+> > > 
+> > > > For me sending patches via git send-email fails because email address
+> > > > conversion is failing. Something appends a ')' to x86/lkml@kernel.org.
+> > > > I suspect the double '))' in MAINTAINERS is confusing the command.
+> > > > I tried to send the trivial patch from v5.0 and v5.6 tag.
+> > > > 
+> > > > Is this a failure in ./scripts/get_maintainer.pl,
+> > > > or is this something git does internally?
+> > > > I'm sure others use such command on a daily basis, so likely something on
+> > > > my end became broken at some point in the past.
+> > > 
+> > > It's a bug in send-email's hand-rolled address parser, which was fixed
+> > > in bd869f67b9 (send-email: add and use a local copy of Mail::Address,
+> > > 2018-01-05). Upgrade to Git v2.17.0 or newer.
+> > 
+> > Not really.
+> > You need to add --norolestats on the get_maintainer command line
+> > 
+> > git send-email expects bare email addresses, not ones annotated
+> > with additional content.
+> 
+> I agree that dropping them from the output is even better, if you'd
+> never want them to be sent.
+> 
+> Syntactically they are rfc822 comments, and send-email _should_ be able
+> to handle them (and does in recent versions).
 
-Signed-off-by: Maheshwar Ajja <majja@codeaurora.org>
----
- Documentation/media/uapi/v4l/ext-ctrls-codec.rst | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I'm not certain that comments are allowed _after_ a tld in an
+email address.  In any case, I guess it's a good thing I used
+parentheses for the get_maintainer rolestats block.
 
-diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-index d4fc5f2..c02b9a8 100644
---- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-+++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-@@ -756,6 +756,14 @@ enum v4l2_mpeg_video_h264_level -
-       - Level 5.0
-     * - ``V4L2_MPEG_VIDEO_H264_LEVEL_5_1``
-       - Level 5.1
-+    * - ``V4L2_MPEG_VIDEO_H264_LEVEL_5_2``
-+      - Level 5.2
-+    * - ``V4L2_MPEG_VIDEO_H264_LEVEL_6_0``
-+      - Level 6.0
-+    * - ``V4L2_MPEG_VIDEO_H264_LEVEL_6_1``
-+      - Level 6.1
-+    * - ``V4L2_MPEG_VIDEO_H264_LEVEL_6_2``
-+      - Level 6.2
- 
- 
- 
-@@ -868,6 +876,8 @@ enum v4l2_mpeg_video_h264_profile -
-       - Stereo High profile
-     * - ``V4L2_MPEG_VIDEO_H264_PROFILE_MULTIVIEW_HIGH``
-       - Multiview High profile
-+    * - ``V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_HIGH``
-+      - Constrained High profile
- 
- 
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> > linux-kernel@vger.kernel.org (open list)
+> 
+> In this one, I think that the comment will be used as the name field,
+> since there isn't one.
+
+I think that slightly unexpected as the name field is not required.
+
+cheers, Joe
+
