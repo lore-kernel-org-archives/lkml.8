@@ -2,94 +2,170 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A6C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8E1C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA6D206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB0C6206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgDGRUm (ORCPT
+        id S1726613AbgDGRVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:20:42 -0400
-Received: from smtprelay0023.hostedemail.com ([216.40.44.23]:34162 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726277AbgDGRUm (ORCPT
+        Tue, 7 Apr 2020 13:21:47 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:52464 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726277AbgDGRVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:20:42 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 62F4D18033F62;
-        Tue,  7 Apr 2020 17:20:41 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: army88_5e3ac7fd8b42
-X-Filterd-Recvd-Size: 2612
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  7 Apr 2020 17:20:40 +0000 (UTC)
-Message-ID: <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
-Subject: Re: get_maintainer.pl sends bogus addresses to git send-email
-From:   Joe Perches <joe@perches.com>
-To:     Jeff King <peff@peff.net>, Olaf Hering <olaf@aepfle.de>
-Cc:     linux-kernel@vger.kernel.org, git@vger.kernel.org
-Date:   Tue, 07 Apr 2020 10:18:41 -0700
-In-Reply-To: <20200407170257.GA1844923@coredump.intra.peff.net>
-References: <20200407154046.GA15368@aepfle.de>
-         <20200407170257.GA1844923@coredump.intra.peff.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 7 Apr 2020 13:21:46 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 35970634C89;
+        Tue,  7 Apr 2020 20:20:36 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1jLrtr-0002Ma-BQ; Tue, 07 Apr 2020 20:20:35 +0300
+Date:   Tue, 7 Apr 2020 20:20:35 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Robert Foss <robert.foss@linaro.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Dongchun Zhu <dongchun.zhu@mediatek.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v6 1/3] media: dt-bindings: ov8856: Document YAML bindings
+Message-ID: <20200407172035.GM6127@valkosipuli.retiisi.org.uk>
+References: <CAG3jFyvUd08U9yNVPUD9Y=nd5Xpcx34GcHJRhtvAAycoq3qimg@mail.gmail.com>
+ <20200403232736.GA6127@valkosipuli.retiisi.org.uk>
+ <20200404093446.vuvwrhn5436h4d3s@gilmour.lan>
+ <20200406083506.GE6127@valkosipuli.retiisi.org.uk>
+ <20200407083647.4mocdl7aqa3x737q@gilmour.lan>
+ <CAG3jFyvd32pWppubMoOoyH9eO2XLjwUXMC7p4xtv8m+JkPv6vw@mail.gmail.com>
+ <20200407123232.ktvaifhqntgzvkap@gilmour.lan>
+ <CAG3jFysSrZJRE2TvL0bWoRFNnscgDGj8yGr-iwWBm4=1wMbJ9A@mail.gmail.com>
+ <20200407163916.GL6127@valkosipuli.retiisi.org.uk>
+ <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5BGFB5znb9QyyPVL47kc809Ktu33bssvqg5eA-WwvMgOw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-07 at 13:02 -0400, Jeff King wrote:
-> On Tue, Apr 07, 2020 at 05:40:46PM +0200, Olaf Hering wrote:
+Hi Tomasz,
+
+On Tue, Apr 07, 2020 at 06:46:06PM +0200, Tomasz Figa wrote:
+> On Tue, Apr 7, 2020 at 6:40 PM Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> >
+> > On Tue, Apr 07, 2020 at 05:47:41PM +0200, Robert Foss wrote:
+> > > On Tue, 7 Apr 2020 at 14:32, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > >
+> > > > Hi Robert,
+> > > >
+> > > > On Tue, Apr 07, 2020 at 01:29:05PM +0200, Robert Foss wrote:
+> > > > > On Tue, 7 Apr 2020 at 10:36, Maxime Ripard <maxime@cerno.tech> wrote:
+> > > > > > On Mon, Apr 06, 2020 at 11:35:07AM +0300, Sakari Ailus wrote:
+> > > > > > > > But that 19.2MHz is not a limitation of the device itself, it's a
+> > > > > > > > limitation of our implementation, so we can instead implement
+> > > > > > > > something equivalent in Linux using a clk_set_rate to 19.2MHz (to make
+> > > > > > > > sure that our parent clock is configured at the right rate) and the
+> > > > > > > > clk_get_rate and compare that to 19.2MHz (to make sure that it's not
+> > > > > > > > been rounded too far apart from the frequency we expect).
+> > > > > > > >
+> > > > > > > > This is doing exactly the same thing, except that we don't encode our
+> > > > > > > > implementation limitations in the DT, but in the driver instead.
+> > > > > > >
+> > > > > > > What I really wanted to say that a driver that doesn't get the clock
+> > > > > > > frequency from DT but still sets that frequency is broken.
+> > > > > > >
+> > > > > > > This frequency is highly system specific, and in many cases only a certain
+> > > > > > > frequency is usable, for a few reasons: On many SoCs, not all common
+> > > > > > > frequencies can be used (e.g. 9,6 MHz, 19,2 MHz and 24 MHz; while others
+> > > > > > > are being used as well), and then that frequency affects the usable CSI-2
+> > > > > > > bus frequencies directly --- and of those, only safe, known-good ones
+> > > > > > > should be used. IOW, getting the external clock frequency wrong typically
+> > > > > > > has an effect that that none of the known-good CSI-2 bus clock frequencies
+> > > > > > > are available.
+> > > > > >
+> > > > > > So clock-frequency is not about the "Frequency of the xvclk clock in
+> > > > > > Hertz", but the frequency at which that clock must run on this
+> > > > > > particular SoC / board to be functional?
+> > > > > >
+> > > > > > If so, then yeah, we should definitely keep it, but the documentation
+> > > > > > of the binding should be made clearer as well.
+> > > > >
+> > > > > Alright so, let me summarise the desired approach then.
+> > > >
+> > > > There's a separate discussion on the same topic here:
+> > > > https://lore.kernel.org/linux-media/20200407122106.GD4751@pendragon.ideasonboard.com/
+> > >
+> > > Thanks for the link.
+> > >
+> > > >
+> > > > > ACPI:
+> > > > >   - Fetch the "clock-frequency" property
+> > > > >   - Verify it to be 19.2Mhz
+> > > > >
+> > > > > DT:
+> > > > >   - Fetch the "clock-frequency" property
+> > > > >   - Verify it to be 19.2Mhz
+> > > > >   - Get xvclk clock
+> > > > >   - Get xvclk clock rate
+> > > > >   - Verify xvclk clock rate to be 19.2Mhz
+> > > >
+> > > > The current status is that you should
+> > > > 's/clock-frequency/link-frequencies/', and in order to replace
+> > > > assigned-clock-rates, you'll want to have a clk_set_rate to 19.2MHz
+> > > > between steps 3 and 4
+> > >
+> > > Would we want to 's/clock-frequency/link-frequencies/' for ACPI too?
+> > > I imagine that would cause some breakage.
+> >
+> > It would, yes, and it would be no more correct on DT either.
+> >
+> > There are basically two possibilities here; either use the clock-frequency
+> > property and set the frequency, or rely on assigned-clock-rates, and get
+> > the frequency instead.
+> >
+> > The latter, while I understand it is generally preferred, comes with having
+> > to figure out the register list set that closest matches the frequency
+> > obtained. The former generally gets around this silently by the clock
+> > driver setting the closest frequency it can support.
 > 
-> > For me sending patches via git send-email fails because email address
-> > conversion is failing. Something appends a ')' to x86/lkml@kernel.org.
-> > I suspect the double '))' in MAINTAINERS is confusing the command.
-> > I tried to send the trivial patch from v5.0 and v5.6 tag.
-> > 
-> > Is this a failure in ./scripts/get_maintainer.pl,
-> > or is this something git does internally?
-> > I'm sure others use such command on a daily basis, so likely something on
-> > my end became broken at some point in the past.
+> Wouldn't the former actually cause problems, because the closest
+> frequency the clock driver can support could be pretty far from the
+> one requested? (E.g. 19.2 MHz vs 24 MHz) The driver needs to check the
+> resulting frequency anyway.
+
+That's possible, yes; in this case there wouldn't be a guarantee the
+frequency wouldn't be far off.
+
 > 
-> It's a bug in send-email's hand-rolled address parser, which was fixed
-> in bd869f67b9 (send-email: add and use a local copy of Mail::Address,
-> 2018-01-05). Upgrade to Git v2.17.0 or newer.
+> Perhaps a simplified approach of rounding the result of clk_get_rate()
+> to a multiple of 100 KHz and comparing it to the hardcoded value would
+> be enough in practice?
 
-Not really.
-You need to add --norolestats on the get_maintainer command line
+Then the question is: how much deviation from the expected value is
+allowed? I think there was another case where such range was checked and
+because the clock was just slightly more off, the probe failed because of
+that.
 
-git send-email expects bare email addresses, not ones annotated
-with additional content.
+I'd in that case check some fairly wide range, and print a warning if the
+frequency isn't in that range, but still proceed. It's generally impossible
+to set a precise limit on the tolerance.
 
-
-For instance:
-
-$ ./scripts/get_maintainer.pl -f lib/vsprintf.c
-Petr Mladek <pmladek@suse.com> (maintainer:VSPRINTF)
-Steven Rostedt <rostedt@goodmis.org> (maintainer:VSPRINTF)
-Sergey Senozhatsky <sergey.senozhatsky@gmail.com> (maintainer:VSPRINTF)
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> (reviewer:VSPRINTF)
-Rasmus Villemoes <linux@rasmusvillemoes.dk> (reviewer:VSPRINTF)
-linux-kernel@vger.kernel.org (open list)
-
-vs:
-
-$ ./scripts/get_maintainer.pl -f --norolestats lib/vsprintf.c
-Petr Mladek <pmladek@suse.com>
-Steven Rostedt <rostedt@goodmis.org>
-Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Rasmus Villemoes <linux@rasmusvillemoes.dk>
-linux-kernel@vger.kernel.org
-
-
+-- 
+Sakari Ailus
