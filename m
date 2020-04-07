@@ -2,131 +2,189 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF852C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806BFC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA8E2074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXYnTdb5"
+	by mail.kernel.org (Postfix) with ESMTP id 5596D2074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgDGOf4 (ORCPT
+        id S1729319AbgDGOf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:35:56 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35754 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729103AbgDGOfz (ORCPT
+        Tue, 7 Apr 2020 10:35:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:41454 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729287AbgDGOf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:35:55 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k134so1840151qke.2;
-        Tue, 07 Apr 2020 07:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=f/EAzeoB610Oj5d/VUk9L0zsAWvphNQPe8+Su9+KStA=;
-        b=hXYnTdb5Tc1HFfd65aj7th2iEeVuJUs7F04W/T6aL2Nbo9ZT295OMiLKJ2DY22WAVW
-         1d5jVdaDz6TTlRkFfo7bF0ok/Dd4Et/xp3vxs3u9GsmaugOB2hdSMjp2l9fsSSCqU0X5
-         eT7TDHCKsYCoFd5d0y9GMmYiPYWG2s+Q2GijGkqDvNYO1t9DFWM7UaAFdE7SLhxjDir0
-         1FVb2df4QCGfD6WCUkHwY7KmuKoLoXsIUf9rM+MC3g9mFyFb75fQTIv+8C9msfZ8Nt7V
-         7ZXDvx0uvqZ8szNCp/hJceVeDLIcXvpxJCTGDfj1TbIzo7DXiTPZijzVlJpxesaHseh3
-         kzFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=f/EAzeoB610Oj5d/VUk9L0zsAWvphNQPe8+Su9+KStA=;
-        b=e1uruSfT8b4QVRua53M5UGUdAsq7aNIQt/gPub6AOyABkX2EVOydsc2ZqKljvIx2tX
-         Injr4VzLBjDH4WOVNXzSiI0/zWknQ4hO4GrlJjDTQpH6EU2vj685vQ/O6ldAWCMqCbxK
-         Sle29H/X9vycbx7ZjfW2mvZV4ZiE+xk24CB6GHuOdnIBRsQBmuhgvIEjkJaFhSGYg18n
-         xRntYf92DZOXXdXU2uD9KSu3Em/KZCJjIdq4mpVC60+EWqv4gjB65pBnU8/BoQFFnl/g
-         aE3JVhEjI+Z6j/+6y5ruICdAEEESHUdCGxX5RxLcnqLq9+1TqQIcROMRNNeOq9/PTzV0
-         QrQA==
-X-Gm-Message-State: AGi0PuYAO3ERSCFsi/8hlgQKIuQypc6luSNrsv/T2jHS95/ZSV/j7TkL
-        GFdtAc+DSCcoCs2nkCTY9Fs=
-X-Google-Smtp-Source: APiQypKN/wCh5Y0oRNAUu4qvqoRkmbwJqo6zfj+JHzbv3MFGWDMxpAH+FrYP30uO7fgCgdwMDwIJew==
-X-Received: by 2002:a37:8044:: with SMTP id b65mr2523229qkd.238.1586270154328;
-        Tue, 07 Apr 2020 07:35:54 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id i20sm15917175qkl.135.2020.04.07.07.35.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 07:35:53 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C3583409A3; Tue,  7 Apr 2020 11:35:51 -0300 (-03)
-Date:   Tue, 7 Apr 2020 11:35:51 -0300
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-Message-ID: <20200407143551.GF11186@kernel.org>
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <20200407143014.GD11186@kernel.org>
+        Tue, 7 Apr 2020 10:35:56 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 9F442295A6A
+Message-ID: <5c417620e1baeed7ec4ac750ab481366df2aa590.camel@collabora.com>
+Subject: Re: [PATCH v8 4/5] media: rkvdec: Add the rkvdec driver
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     DVB_Linux_Media <linux-media@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Date:   Tue, 07 Apr 2020 11:35:45 -0300
+In-Reply-To: <CAKQmDh_pCX_s2Ze7b1YBqgvEZHNrgzDUfcjPos8_GZq8x6=5Ng@mail.gmail.com>
+References: <20200403221345.16702-1-ezequiel@collabora.com>
+         <20200403221345.16702-5-ezequiel@collabora.com>
+         <CAKQmDh_pCX_s2Ze7b1YBqgvEZHNrgzDUfcjPos8_GZq8x6=5Ng@mail.gmail.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0-1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407143014.GD11186@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 07, 2020 at 11:30:14AM -0300, Arnaldo Carvalho de Melo escreveu:
-> [perf@five ~]$ type perf
-> perf is hashed (/home/perf/bin/perf)
-> [perf@five ~]$ getcap /home/perf/bin/perf
-> /home/perf/bin/perf = cap_sys_ptrace,cap_syslog,38+ep
-> [perf@five ~]$ groups
-> perf perf_users
-> [perf@five ~]$ id
-> uid=1002(perf) gid=1002(perf) groups=1002(perf),1003(perf_users) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
-> [perf@five ~]$ perf top --stdio
-> Error:
-> Failed to mmap with 1 (Operation not permitted)
-> [perf@five ~]$ perf record -a
-> ^C[ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 1.177 MB perf.data (1552 samples) ]
+On Mon, 2020-04-06 at 16:27 -0400, Nicolas Dufresne wrote:
+> Le ven. 3 avr. 2020 à 18:14, Ezequiel Garcia <ezequiel@collabora.com> a écrit :
+> > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > 
+> > The rockchip vdec block is a stateless decoder that's able to decode
+> > H264, HEVC and VP9 content. This commit adds the core infrastructure
+> > and the H264 backend. Support for VP9 and HEVS will be added later on.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 > 
-> [perf@five ~]$ perf evlist
-> cycles:u
-> [perf@five ~]$
+> Sorry for the late feedback (got a comment lower) ...
+> 
+> Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+> 
 
-Humm, perf record falls back to cycles:u after initially trying cycles
-(i.e. kernel and userspace), lemme see trying 'perf top -e cycles:u',
-lemme test, humm not really:
+Nice, thank you.
 
-[perf@five ~]$ perf top --stdio -e cycles:u
-Error:
-Failed to mmap with 1 (Operation not permitted)
-[perf@five ~]$ perf record -e cycles:u -a sleep 1
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 1.123 MB perf.data (132 samples) ]
-[perf@five ~]$
+> > --
+> > v8:
+> > * Fix kfree and style changes, as suggested by Andriy.
+> > v7:
+> > * hverkuil-cisco@xs4all.nl: replaced VFL_TYPE_GRABBER by _VIDEO
+> > * Use macros and ARRAY_SIZE instead of magic numbers,
+> >   as suggested by Mauro.
+> > * Renamed M_N macro, suggested by Mauro.
+> > * Use v4l2_m2m_buf_done_and_job_finish.
+> > * Set buffers' zeroth plane payload in .buf_prepare
+> > * Refactor try/s_fmt for spec compliance.
+> > ---
+> >  MAINTAINERS                                |    7 +
+> >  drivers/staging/media/Kconfig              |    2 +
+> >  drivers/staging/media/Makefile             |    1 +
+> >  drivers/staging/media/rkvdec/Kconfig       |   15 +
+> >  drivers/staging/media/rkvdec/Makefile      |    3 +
+> >  drivers/staging/media/rkvdec/TODO          |   11 +
+> >  drivers/staging/media/rkvdec/rkvdec-h264.c | 1156 ++++++++++++++++++++
+> >  drivers/staging/media/rkvdec/rkvdec-regs.h |  223 ++++
+> >  drivers/staging/media/rkvdec/rkvdec.c      | 1103 +++++++++++++++++++
+> >  drivers/staging/media/rkvdec/rkvdec.h      |  121 ++
+> >  10 files changed, 2642 insertions(+)
+> >  create mode 100644 drivers/staging/media/rkvdec/Kconfig
+> >  create mode 100644 drivers/staging/media/rkvdec/Makefile
+> >  create mode 100644 drivers/staging/media/rkvdec/TODO
+> >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264.c
+> >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-regs.h
+> >  create mode 100644 drivers/staging/media/rkvdec/rkvdec.c
+> >  create mode 100644 drivers/staging/media/rkvdec/rkvdec.h
+> > 
+> 
+[..]
+> > +
+> > +static void set_ps_field(u32 *buf, struct rkvdec_ps_field field, u32 value)
+> > +{
+> > +       u8 bit = field.offset % 32, word = field.offset / 32;
+> > +       u64 mask = GENMASK_ULL(bit + field.len - 1, bit);
+> > +       u64 val = ((u64)value << bit) & mask;
+> > +
+> > +       buf[word] &= ~mask;
+> > +       buf[word] |= val;
+> > +       if (bit + field.len > 32) {
+> > +               buf[word + 1] &= ~(mask >> 32);
+> > +               buf[word + 1] |= val >> 32;
+> > +       }
+> > +}
+> > +
+> > +static void assemble_hw_pps(struct rkvdec_ctx *ctx,
+> > +                           struct rkvdec_h264_run *run)
+> > +{
+> > +       struct rkvdec_h264_ctx *h264_ctx = ctx->priv;
+> > +       const struct v4l2_ctrl_h264_sps *sps = run->sps;
+> > +       const struct v4l2_ctrl_h264_pps *pps = run->pps;
+> > +       const struct v4l2_ctrl_h264_decode_params *dec_params = run->decode_params;
+> > +       const struct v4l2_h264_dpb_entry *dpb = dec_params->dpb;
+> > +       struct rkvdec_h264_priv_tbl *priv_tbl = h264_ctx->priv_tbl.cpu;
+> > +       struct rkvdec_sps_pps_packet *hw_ps;
+> > +       dma_addr_t scaling_list_address;
+> > +       u32 scaling_distance;
+> > +       u32 i;
+> > +
+> > +       /*
+> > +        * HW read the SPS/PPS information from PPS packet index by PPS id.
+> > +        * offset from the base can be calculated by PPS_id * 32 (size per PPS
+> > +        * packet unit). so the driver copy SPS/PPS information to the exact PPS
+> > +        * packet unit for HW accessing.
+> > +        */
+> > +       hw_ps = &priv_tbl->param_set[pps->pic_parameter_set_id];
+> > +       memset(hw_ps, 0, sizeof(*hw_ps));
+> > +
+> > +#define WRITE_PPS(value, field) set_ps_field(hw_ps->info, field, value)
+> > +       /* write sps */
+> > +       WRITE_PPS(0xf, SEQ_PARAMETER_SET_ID);
+> > +       WRITE_PPS(0xff, PROFILE_IDC);
+> > +       WRITE_PPS(1, CONSTRAINT_SET3_FLAG);
+> 
+> At first I found that part rather interesting, but I see this
+> hardcoding matches what Rockchip do.
+> 
+> https://github.com/rockchip-linux/mpp/blob/release/mpp/hal/rkdec/h264d/hal_h264d_rkv_reg.c#L266
+> 
+> > +       WRITE_PPS(sps->chroma_format_idc, CHROMA_FORMAT_IDC);
+> 
+> But here's it's not so great. This driver does not implement any kind
+> of validation. In fact, if I pass 3
+> here  (YCbCr 4:4:4) it will accept it, and kind of decode some frames,
+> but eventually with crash and
+> reboot is needed. We should (as defined in the Statelss CODEC spec)
+> validate the SPS and refuse if
+> an unsupported profile idc, chroma idc, luma/chroma depth or coded
+> size is requested.
 
-Back to debugging this.
+Perhaps we could validate that at request_validate time,
+or maybe ops.try_ctrl is better.
 
-- Arnaldo
+</thinking_out_loud>
+
+> Validating the
+> S_FMT is not sufficient as one can trick the driver in allocating
+> buffers that are too small.
+> 
+
+I am not sure I follow you: how do you think the driver
+can be tricked like this?
+
+> What I suspect is that we need to be careful with this HW, as it seems
+> to be a bit half backed, which
+> means it might be supporting more features then supported by the TRM
+> or reference code, and we
+> must disable this with software.
+> 
+> (p.s. I can provide a stream to reproduce the 4:4:4 driver failure)
+> 
+
+Thanks,
+Ezequiel
+
