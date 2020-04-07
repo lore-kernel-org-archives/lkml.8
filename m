@@ -2,145 +2,159 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD001C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:20:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3571AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3ED20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:20:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFAD620748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:21:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVEu4Xou"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="B2qz40op"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgDGVU5 (ORCPT
+        id S1726469AbgDGVVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:20:57 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44173 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDGVU5 (ORCPT
+        Tue, 7 Apr 2020 17:21:08 -0400
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:22364 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgDGVVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:20:57 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x16so3930266qts.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:20:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=eY5d6ZavaIVAvbx8NYtgXr1qanyD8WK2AjrNomfEZy0=;
-        b=YVEu4Xouj0grHaPP+GEssOMfrIT0PgK/AJiLYhCagBO+4KhKOc/XWZLg/nDP5PCSxY
-         wMiMbk4YK+de8T7Qv+vrrUG06CpE8ar/zd5UA06SNC8BJoOqZQ4JtfirItWlDI0CQlC2
-         AH7s41HcTfR7GSU63ElWhx4IGSjMNMrpbTUIvXOkGvySHMkMPWXNHIaVHhy9GD8GWlLY
-         sWfLDpvw4ftmBRNgnEuMnCi2xdRPptXjilqWJfXqdsPaF0PiZLIEahF/mUs17IseVlu+
-         goS38Kxmo1e7Jhj8fNeq3SMXAXLCWuEu6PDTv+GnPr14+ascReBPYGdZ4q3NcWyWveYi
-         UvRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=eY5d6ZavaIVAvbx8NYtgXr1qanyD8WK2AjrNomfEZy0=;
-        b=OjCn02ADirSrBJYSzownmxjzMshjWVScURfwEBaNWISyBxVCbfFSHspj0zStABIsj9
-         kEyKJks8hjzN0nmI5PGxEPSTiV94s9jVt2USGFo6gB2vIMEnR//Whr5P0ITTcvR2Sle6
-         y4G4I3jx8cmPB5cm5HQVvVEfWyNjPJufPy7HvRgR0uixswWa7Z+17BQm7PDeCsiUF/ni
-         IWnTBbivH4zikbKn4X45QtOX3SsyVGoGhxXCkMiTnwSl0Wx+iGg+ievkgXn9tqo+NnwO
-         H/7uGG4btpbiWGxo7p3U8aupgjJhmMl4+K9kX2CJy8TSkwucRHEOAbWYR9ynBD9i5Q4x
-         wL/A==
-X-Gm-Message-State: AGi0Pua4LHxOVz11DO7nlPR3Tk9LFGULUANt3gmwFTPtVjqZxtlMs0nz
-        8cJFipYlrbRmLwcYEeKCwGPbNjwNaGU=
-X-Google-Smtp-Source: APiQypKyKap0GnKvQbnYxuIDuzN9ySOXXPpVXSGMu4IDl5ZMUL2kLobqalRu68unaPRejcV6BOdPXA==
-X-Received: by 2002:aed:2591:: with SMTP id x17mr4284846qtc.76.1586294455964;
-        Tue, 07 Apr 2020 14:20:55 -0700 (PDT)
-Received: from darkstar ([177.89.165.183])
-        by smtp.gmail.com with ESMTPSA id l186sm6808089qke.16.2020.04.07.14.20.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 14:20:55 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 18:20:51 -0300
-From:   Cristian Souza <cristianmsbr@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net
-Subject: [PATCH] docs: admin-guide: Clarify sentences
-Message-ID: <20200407212051.GA22156@darkstar>
+        Tue, 7 Apr 2020 17:21:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1586294467;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=yohZgO1cSq06DF0y1oMl6qbvylo5IHTJURPzFHgykKA=;
+  b=B2qz40opb6DJJtrtHJqMct2v9NtfyzAcNrFnCL83r2jKbt95d+TRDCHS
+   SeMAYlhvxkBEqy24tcVAJDVQB4vwKTdu4a4/Kr9Chdzko5k1sOp+TXsQ/
+   73ZBJYGsJ+GzWBPMrZ2rDySUcOeBWEHIRrRar6b+LdGdN4J8AdQkygNXx
+   o=;
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: T07NPnfs91txdCmkBzYw7URfU7gbHGeWsimmexUlwAFk+7pISy9lknhEjUONEtzYabCua/c4FC
+ 9xsOYdZ0SQy/Gwjegmq58XM0TvJxdGeI/Myp573HIzABBdGd9nE24Y9UdBelg6kPJPqYTaLB/B
+ YJV8/jr22AjwTBz0Vv1aOV3AY5WR2cwPZrMroh40RBuUywuTLipfHMnbKKZvU/zfmM2Qjiz7cF
+ pRWIYnqfnsHf1qtRLi4TFCz2Z1lbGN5ViHiptcRXdLVHas++pQGRi4r9zl35yvxHMwpZaCq976
+ n28=
+X-SBRS: 2.7
+X-MesageID: 15736135
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,356,1580792400"; 
+   d="scan'208";a="15736135"
+Subject: Re: [PATCH 0/4] x86/module: Out-of-tree module decode and sanitize
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>,
+        <hch@infradead.org>, <sean.j.christopherson@intel.com>,
+        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+        <x86@kernel.org>, <kenny@panix.com>, <jeyu@kernel.org>,
+        <rasmus.villemoes@prevas.dk>, <pbonzini@redhat.com>,
+        <fenghua.yu@intel.com>, <xiaoyao.li@intel.com>,
+        <nadav.amit@gmail.com>, <thellstrom@vmware.com>,
+        <tony.luck@intel.com>, <rostedt@goodmis.org>,
+        <gregkh@linuxfoundation.org>, <jannh@google.com>,
+        <keescook@chromium.org>, <David.Laight@aculab.com>,
+        <dcovelli@vmware.com>, <mhiramat@kernel.org>
+References: <20200407110236.930134290@infradead.org>
+ <a53a01b9-2907-4eb3-a9fd-16e6e8029028@citrix.com>
+ <20200407194112.GQ2452@worktop.programming.kicks-ass.net>
+ <e6d9f83e-e88c-c079-50b3-ff8ad8682074@citrix.com>
+ <20200407204530.GR2452@worktop.programming.kicks-ass.net>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <34f2a325-45c4-44e8-595a-187d0d37afa6@citrix.com>
+Date:   Tue, 7 Apr 2020 22:21:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200407204530.GR2452@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Spelling mistakes corrected for easy reading.
+On 07/04/2020 21:45, Peter Zijlstra wrote:
+>> POPF: Don't really want someone being able to set IOPL3.  However, this
+>> might quite easily show up as a false positive depending on how the
+>> irqsafe infrastructure gets inlined.
+> local_irq_restore() will be a POPF :/
 
-Signed-off-by: Cristian Souza <cristianmsbr@gmail.com>
----
- Documentation/admin-guide/init.rst | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+Ok.  Something to consider in an orthogonal direction.  A while ago, I
+put this into Xen as a security fix:
 
-diff --git a/Documentation/admin-guide/init.rst b/Documentation/admin-guide/init.rst
-index e89d97f31eaf..68f2f6cf456b 100644
---- a/Documentation/admin-guide/init.rst
-+++ b/Documentation/admin-guide/init.rst
-@@ -1,34 +1,34 @@
--Explaining the dreaded "No init found." boot hang message
--=========================================================
-+Explaining the dreaded "No working init found." boot hang message
-+=================================================================
+iret_exit_to_guest:
+        andl  $~(X86_EFLAGS_IOPL|X86_EFLAGS_NT|X86_EFLAGS_VM),24(%rsp)
+        orl   $X86_EFLAGS_IF,24(%rsp)
+        addq  $8,%rsp
+.Lft0:  iretq
 
--OK, so you've got this pretty unintuitive message (currently located
--in init/main.c) and are wondering what the H*** went wrong.
-+OK, so you have got this pretty unintuitive message (currently located
-+in init/main.c) and are wondering what went wrong.
- Some high-level reasons for failure (listed roughly in order of execution)
- to load the init binary are:
+which unconditionally fixes up the unsafe flags even if something
+manages to slips through (e.g. local_irq_restore() against stack
+rubble).  It turns out that it has saved us several CVEs in the
+intervening time.
 
- A) Unable to mount root FS
- B) init binary doesn't exist on rootfs
--C) broken console device
--D) binary exists but dependencies not available
--E) binary cannot be loaded
-+C) Broken console device
-+D) Binary exists but dependencies not available
-+E) Binary cannot be loaded
+Is this the kind of things the hardening folk would be interested in?
 
- Detailed explanations:
+> --- a/arch/x86/kernel/module.c
+> +++ b/arch/x86/kernel/module.c
+> @@ -282,6 +282,68 @@ static bool insn_is_mov_DRn(struct insn
+>  	return false;
+>  }
+>
+> +static bool insn_is_GDT_modifier(struct insn *insn)
+> +{
+> +	u8 modrm = insn->modrm.bytes[0];
+> +	u8 modrm_mod = X86_MODRM_MOD(modrm);
+> +	u8 modrm_reg = X86_MODRM_REG(modrm);
+> +
+> +	if (insn->opcode.bytes[0] != 0x0f)
+> +		return false;
+> +
+> +	switch (insn->opcode.bytes[1]) {
+> +	case 0x00: /* Grp6 */
+> +		switch (modrm_reg) {
+> +		/* case 0x0: SLDT */
+> +		case 0x2: /* LLDT */
+> +		case 0x3: /* LTR */
+> +			return true;
 
- A) Set "debug" kernel parameter (in bootloader config file or CONFIG_CMDLINE)
-    to get more detailed kernel messages.
--B) make sure you have the correct root FS type
-+B) Make sure you have the correct root FS type
-    (and ``root=`` kernel parameter points to the correct partition),
-    required drivers such as storage hardware (such as SCSI or USB!)
--   and filesystem (ext3, jffs2 etc.) are builtin (alternatively as modules,
-+   and filesystem (ext3, jffs2, etc.) are builtin (alternatively as modules,
-    to be pre-loaded by an initrd)
- C) Possibly a conflict in ``console= setup`` --> initial console unavailable.
-    E.g. some serial consoles are unreliable due to serial IRQ issues (e.g.
-    missing interrupt-based configuration).
-    Try using a different ``console= device`` or e.g. ``netconsole=``.
--D) e.g. required library dependencies of the init binary such as
-+D) E.g. required library dependencies of the init binary such as
-    ``/lib/ld-linux.so.2`` missing or broken. Use
-    ``readelf -d <INIT>|grep NEEDED`` to find out which libraries are required.
--E) make sure the binary's architecture matches your hardware.
-+E) Make sure the binary's architecture matches your hardware.
-    E.g. i386 vs. x86_64 mismatch, or trying to load x86 on ARM hardware.
-    In case you tried loading a non-binary file here (shell script?),
-    you should make sure that the script specifies an interpreter in its shebang
-@@ -40,13 +40,13 @@ E) make sure the binary's architecture matches your hardware.
+Come to think of it, if you include the Sxxx variants, a sufficiently
+clever compiler can collapse this entire switch statement into a single
+"and $~3, modrm_reg" instruction, rather than being forced to use "and
+$~1, modrm_reg; cmp $2, ...".
 
- Please extend this explanation whenever you find new failure causes
- (after all loading the init binary is a CRITICAL and hard transition step
--which needs to be made as painless as possible), then submit patch to LKML.
-+which needs to be made as painless as possible), then submit a patch to LKML.
- Further TODOs:
+Probably on the extreme end of micro-optimising however.
 
- - Implement the various ``run_init_process()`` invocations via a struct array
-   which can then store the ``kernel_execve()`` result value and on failure
-   log it all by iterating over **all** results (very important usability fix).
--- try to make the implementation itself more helpful in general,
-+- Try to make the implementation itself more helpful in general,
-   e.g. by providing additional error messages at affected places.
-
- Andreas Mohr <andi at lisas period de>
---
-2.25.1
+~Andrew
