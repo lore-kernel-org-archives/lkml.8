@@ -2,98 +2,128 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84280C2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035AAC2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9682074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="3gcwL1+W"
+	by mail.kernel.org (Postfix) with ESMTP id D469C2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgDGGeC (ORCPT
+        id S1727254AbgDGGeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:34:02 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:34753 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727089AbgDGGd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:33:58 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 9ab397b9;
-        Tue, 7 Apr 2020 06:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=jnfqAcB3FkJJghojQNXETQmiD
-        XM=; b=3gcwL1+WjA8BQ7Cevgi80DvJ02fa2QeAaH8mhH3zDS8mraY/l/jPs30/x
-        oV/1oXf5jR59xrff0vmfJsq2ruGKk149PwCwgoJcexA+CECBVs3JD23dH6DyUAqr
-        lO7Lf7AgWQWbwd3xrTziEajJcRbZkuWNyeZwEVwtwJGutp96H71oh9xSEJrnltjI
-        DBtFvmBj24FbF5WgFG2K9fA2O5MvZrKQ8yNMSYS+dOsgKvz7zgI8X4d749uUUFep
-        bEBrd6FWjly/stvpyE5NapE8Z+MmVyxRAFCtPYPERS8zYFIlDXPK6Zsm3O5kxk8B
-        hkWqeMcNp+84MMhDAFx0K3/g2oDyg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d2fa65a3 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 7 Apr 2020 06:25:02 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        x86@kernel.org, arnd@arndb.de, srinivas.pandruvada@linux.intel.com,
-        bberg@redhat.com, bp@suse.de
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: [PATCH 3/3] x86/mce/therm_throt: allow disabling the thermal vector altogether
-Date:   Tue,  7 Apr 2020 00:33:45 -0600
-Message-Id: <20200407063345.4484-3-Jason@zx2c4.com>
-In-Reply-To: <20200407063345.4484-1-Jason@zx2c4.com>
-References: <20200407063345.4484-1-Jason@zx2c4.com>
+        Tue, 7 Apr 2020 02:34:15 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:37064 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726808AbgDGGeO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 02:34:14 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0376XHGK005052;
+        Tue, 7 Apr 2020 02:34:12 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 306q55hfa6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Apr 2020 02:34:12 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 0376YBIJ025162
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 7 Apr 2020 02:34:11 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 7 Apr 2020 02:34:10 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 7 Apr 2020 02:34:10 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 7 Apr 2020 02:34:10 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 0376Y88n025398;
+        Tue, 7 Apr 2020 02:34:09 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <alexandru.tachici@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2] iio: adc: ad7192: fix null pointer de-reference crash during probe
+Date:   Tue, 7 Apr 2020 09:33:10 +0300
+Message-ID: <20200407063310.85466-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200406123109.56947-1-alexandru.ardelean@analog.com>
+References: <20200406123109.56947-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_01:2020-04-07,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
+ phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The thermal IRQ handler uses 1.21% CPU on my system when it's hot from
-compiling things. Indeed looking at /proc/interrupts reveals quite a lot
-of events coming in. Beyond logging them, the existing drivers on the
-system don't appear to do very much that I'm interested in. So, add a
-way to disable this entirely so that I can regain precious CPU cycles.
+When the 'spi_device_id' table was removed, it omitted to cleanup/fix the
+assignment:
+  'indio_dev->name = spi_get_device_id(spi)->name;'
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+After that patch 'spi_get_device_id(spi)' returns NULL, so this crashes
+during probe with null de-ref.
+
+This change assigns the 'compatible' string from the DT table, as the new
+'indio_dev->name'. As such, the new device/part name now looks like
+'adi,ad719x', and now has the vendor prefix.
+
+Note that this change is not doing any NULL check to the return value of
+'of_match_device()'. This shouldn't happen, and if it does it's likely a
+framework error on the probe side.
+
+Fixes: 66614ab2be38 ("staging: iio: adc: ad7192: removed spi_device_id")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- arch/x86/Kconfig                | 4 ++++
- arch/x86/kernel/cpu/mce/intel.c | 3 ++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 39e7444353af..3125a11932f2 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1157,7 +1157,11 @@ config X86_MCE_INJECT
+Changelog v1 -> v2:
+* fix colon for Fixes tag
+* updated commit title a bit; to make it longer
+
+ drivers/iio/adc/ad7192.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7192.c b/drivers/iio/adc/ad7192.c
+index 8ec28aa8fa8a..0039a45e1f33 100644
+--- a/drivers/iio/adc/ad7192.c
++++ b/drivers/iio/adc/ad7192.c
+@@ -888,6 +888,7 @@ MODULE_DEVICE_TABLE(of, ad7192_of_match);
  
- config X86_THERMAL_VECTOR
- 	def_bool y
-+	prompt "Machine check thermal vector"
- 	depends on X86_MCE_INTEL
-+	---help---
-+	  Provide support for capturing thermal events, logging them, and
-+	  passing them off to other drivers.
- 
- config X86_MCE_THERMAL_VERBOSE
- 	bool "Verbose logging for thermal events"
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index f996ffb887bc..d14f1922fb49 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -511,7 +511,8 @@ static void intel_ppin_init(struct cpuinfo_x86 *c)
- 
- void mce_intel_feature_init(struct cpuinfo_x86 *c)
+ static int ad7192_probe(struct spi_device *spi)
  {
--	intel_init_thermal(c);
-+	if (IS_ENABLED(CONFIG_X86_THERMAL_VECTOR))
-+		intel_init_thermal(c);
- 	intel_init_cmci();
- 	intel_init_lmce();
- 	intel_ppin_init(c);
++	const struct of_device_id *of_id;
+ 	struct ad7192_state *st;
+ 	struct iio_dev *indio_dev;
+ 	int ret, voltage_uv = 0;
+@@ -937,10 +938,12 @@ static int ad7192_probe(struct spi_device *spi)
+ 		goto error_disable_avdd;
+ 	}
+ 
++	of_id = of_match_device(ad7192_of_match, &spi->dev);
++
+ 	spi_set_drvdata(spi, indio_dev);
+-	st->devid = (unsigned long)of_device_get_match_data(&spi->dev);
++	st->devid = (unsigned long)of_id->data;
+ 	indio_dev->dev.parent = &spi->dev;
+-	indio_dev->name = spi_get_device_id(spi)->name;
++	indio_dev->name = of_id->compatible;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
+ 	ret = ad7192_channels_config(indio_dev);
 -- 
-2.26.0
+2.17.1
 
