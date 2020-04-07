@@ -2,98 +2,150 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE68C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F170C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8293120936
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586271364;
-	bh=dmf2sCt8OdjywGVBqBDJTrQdLEpDVN1TaWBbslFDsRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KcnHUJU/xCguKVRBaO3+MptFXcqyVjfvQ/QVsHe2s8zTpquOAMrM+vBlWClIJUXUD
-	 5dpDPrAdeDpvh15oWTkZfKCN9CUs7zrUwAtC5IBNJ4azHh92On7RvBT8Fq7Sqfmz5Q
-	 mAa85ClRNOGnMCe5uJ8uMCw6cvFRMg4+0pMP0KcE=
+	by mail.kernel.org (Postfix) with ESMTP id 5D6F620747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:56:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rh5ZIXJ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgDGO4D (ORCPT
+        id S1729329AbgDGO41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729177AbgDGO4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:56:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDB7D20A8B;
-        Tue,  7 Apr 2020 14:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586271362;
-        bh=dmf2sCt8OdjywGVBqBDJTrQdLEpDVN1TaWBbslFDsRg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zfx7S+kokJvXRkoGEyjzLmK2uimhuiC+A0Y3zzYF/4x8dFA0kjGkbtJZ/scRZkIkd
-         285K3KzLYKWkGUdloYF1oXtfqs5pC7jRnTiMHLxKOZ7J+6tF2LdmbF7/EgTdV8SDx5
-         CSyVRwG8kVG2ZnuJKLh4bWExJ0XfDLDxfGn4PpYg=
-Date:   Tue, 7 Apr 2020 16:55:56 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, hch@infradead.org,
-        sean.j.christopherson@intel.com, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, kenny@panix.com, jeyu@kernel.org,
-        rasmus.villemoes@prevas.dk, fenghua.yu@intel.com,
-        xiaoyao.li@intel.com, nadav.amit@gmail.com, thellstrom@vmware.com,
-        tony.luck@intel.com, rostedt@goodmis.org, jannh@google.com,
-        keescook@chromium.org, David.Laight@aculab.com,
-        dcovelli@vmware.com, mhiramat@kernel.org
-Subject: Re: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
-Message-ID: <20200407145556.GA895937@kroah.com>
-References: <20200407110236.930134290@infradead.org>
- <20200407111007.352324393@infradead.org>
- <20200407143543.GB876345@kroah.com>
- <527b5c72-96cb-a6cc-5301-449d86015ec9@redhat.com>
+        Tue, 7 Apr 2020 10:56:27 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37634 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728855AbgDGO41 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:56:27 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t11so2631148lfe.4;
+        Tue, 07 Apr 2020 07:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nRvaZx0CW/m/jWE2uVOD/eMgFMwO805CIg6iMnzrwfQ=;
+        b=Rh5ZIXJ4BX4A7nfqy6jJldrDXLrwYgycJ/H8JLJWXCvAnXodELRZ53RFkm3+Z2xHbJ
+         +fc7dcYqOpaccDSskefX0R8SR+7kgNP0e/WcCD0m+uSJuyoDTBupMrxxiIE6Xg91UPZJ
+         In2jU3YBFxtRnMXmd9taBho56WrB9B+YkfrtAKmG9uvfdr98S6nPAQFtVuGuwhGbWxgZ
+         b9ppQzm8pAZ+ziRGQ9ykxstpzeQsZo+q5NQE0TZ75vkJl4JgsURr5d34oIWtkZw7exDe
+         SFsNWrGYN7V5KJTCOYTiQZ0+g37mbSy1fc2F3ak3X0qePEU3Pd1TqcT7tKJzFL++5J3F
+         zJ8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nRvaZx0CW/m/jWE2uVOD/eMgFMwO805CIg6iMnzrwfQ=;
+        b=gEir9mjeJuRcgvH8SFiFtqNEWM9yBF1HQz4L8qSCvD7Y0ZGT58b0byPZMLfw6Y9qCm
+         LM6zK1aGfb4Ct2uBHYCtAT6v+fFBAGxlDFirtde8sfHfuxGkvqRXCAB9bEq36oSpDWGf
+         eB7iggNrW3PXgnQS/Z5znF9LBC4OvA66GpU2+Jh1SLUp1l/fH85yue/W9e8BqZ7YlLjj
+         icA9W6G1ql8n+9kOmfKElBmVFgztMjcl1OTcou6vlaT7de6Mr6TI2000mLteYj8OxLZW
+         tnmpEbh3n46AC5C+/5AflZ9OuALibKpB5HgApbk763fcDKabZxdj70Rpsp0PcLdN9pqx
+         6+zA==
+X-Gm-Message-State: AGi0PuZtNq9XD/Oaa1iaK7snIRLrHnabP5HRCYTjRllWc92aNni78rwA
+        tNKAV9TtcmqlYWs38VgegfTt4QzR
+X-Google-Smtp-Source: APiQypL6B8kp5TQs+FJdHUEYk9FXX4Z/oe5sNVyJwhksdok7qiY1iCawCoZgHR01tr1EVXCvQvZqeg==
+X-Received: by 2002:ac2:4d07:: with SMTP id r7mr736918lfi.14.1586271384280;
+        Tue, 07 Apr 2020 07:56:24 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id x29sm10512013lfn.64.2020.04.07.07.56.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 07:56:23 -0700 (PDT)
+Subject: Re: [PATCH v10 20/55] Input: atmel_mxt_ts - handle cfg filename via
+ pdata/sysfs
+To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200331105051.58896-1-jiada_wang@mentor.com>
+ <20200331105051.58896-21-jiada_wang@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d926e4be-84ee-24f3-3523-776e763e6d4e@gmail.com>
+Date:   Tue, 7 Apr 2020 17:56:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <527b5c72-96cb-a6cc-5301-449d86015ec9@redhat.com>
+In-Reply-To: <20200331105051.58896-21-jiada_wang@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 04:44:57PM +0200, Paolo Bonzini wrote:
-> On 07/04/20 16:35, Greg KH wrote:
-> > On Tue, Apr 07, 2020 at 01:02:39PM +0200, Peter Zijlstra wrote:
-> >> It turns out that with Split-Lock-Detect enabled (default) any VMX
-> >> hypervisor needs at least a little modification in order to not blindly
-> >> inject the #AC into the guest without the guest being ready for it.
-> >>
-> >> Since there is no telling which module implements a hypervisor, scan
-> >> all out-of-tree modules' text and look for VMX instructions and refuse
-> >> to load it when SLD is enabled (default) and the module isn't marked
-> >> 'sld_safe'.
-> >>
-> >> Hypervisors, which have been modified and are known to work correctly,
-> >> can add:
-> >>
-> >>   MODULE_INFO(sld_safe, "Y");
-> >>
-> >> to explicitly tell the module loader they're good.
-> > 
-> > What's to keep any out-of-tree module from adding this same module info
-> > "flag" and just lie about it?  Isn't that what you are trying to catch
-> > here, or is it a case of, "if you lie, your code will break" as well?
+31.03.2020 13:50, Jiada Wang пишет:
+> From: Nick Dyer <nick.dyer@itdev.co.uk>
 > 
-> It's the latter.  Basically it's doing _the users_ of out-of-tree
-> modules a favor by avoiding crashes of their virtual machines;
-> developers need to fix them anyway.
+> There may be multiple maXTouch chips on a single device which will require
+> different configuration files. Add a platform data value for the
+> configuration filename.
+> 
+> Add sysfs entry to write configuration file if the platform data is not
+> set.
+> 
+> Split out the object initialisation code from mxt_initialize() into
+> mxt_configure_objects() to allow this.
+> 
+> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+> Acked-by: Yufeng Shen <miletus@chromium.org>
+> (cherry picked from ndyer/linux/for-upstream commit 71a2a4d1954460b949a16b607f72bafab294ca79)
+> [gdavis: Resolve forward port conflicts due to applying upstream
+> 	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
+> 	 data support").]
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
+> [gdavis: Squash fix from Vladimir Zapolskiy:
+> 	 - Input: atmel_mxt_ts - fix error paths in mxt_configure_objects()]
+> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+> [jiada: Separate Documentation/ portion change to another commit
+> 	Rename mxt_update_cfg_store to update_cfg_store
+> 	Replace DEVICE_ATTR with DEVICE_ATTR_WO]
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> ---
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 109 +++++++++++++++++++----
+>  1 file changed, 94 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index 720574417219..d1865250f492 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -34,7 +34,6 @@
+>  #include <dt-bindings/input/atmel_mxt_ts.h>
+>  
+>  /* Configuration file */
+> -#define MXT_CFG_NAME		"maxtouch.cfg"
+>  #define MXT_CFG_MAGIC		"OBP_RAW V1"
+...
 
-Ok, seems kind of a heavy hammer, but oh well...
+>  static void mxt_input_sync(struct mxt_data *data)
+>  {
+> -	input_mt_report_pointer_emulation(data->input_dev,
+> -					  data->t19_num_keys);
+> -	input_sync(data->input_dev);
+> +	if (data->input_dev) {
+> +		input_mt_report_pointer_emulation(data->input_dev,
+> +						  data->t19_num_keys);
+> +		input_sync(data->input_dev);
+> +	}
+>  }
 
-thanks for the explanation.
+Looks like this hunk shouldn't belong to this patch.
 
-greg k-h
+...
+> +	if (data->pcfg_name)
+> +		mxt_update_file_name(&data->client->dev,
+> +				     &data->cfg_name,
+> +				     data->pcfg_name,
+> +				     strlen(data->pcfg_name));
+
+This looks wrong to me because I think the cfg_name should fall back to
+"maxtouch.cfg" if atmel,cfg_name isn't specified in device-tree,
+otherwise this commit may break devices that use an older device-tree.
