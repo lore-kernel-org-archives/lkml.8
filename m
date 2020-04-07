@@ -2,130 +2,110 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3FEC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43EAC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B6620692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BAAB20692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="CKILv9GD"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="xt64h3VU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgDGPM0 (ORCPT
+        id S1729391AbgDGPMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:12:26 -0400
-Received: from mout.web.de ([212.227.17.11]:47199 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728917AbgDGPMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:12:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586272328;
-        bh=eaQCulwN4tutP4JcG6F/6ekV5+WwQnYfWRGpAq4Sno0=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=CKILv9GD6wHhKxO2u82a7484vjDQCxV7PPPJU7mo/RIolO1d4ON8nBZkXjxp3CKT+
-         BH72yAxHmo0/st6dHxop9+0XKfXV0qubpIRsN7dIMP9kVO7xF2SjfF3z6T71pKQ/rz
-         eJyn6o/rkae9TM4l9uvOadKtMj+3Gj1v7u4L43Eo=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.5.104]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LvBV8-1jDYSI2ex8-010JHi; Tue, 07
- Apr 2020 17:12:08 +0200
-To:     Niklas Schnelle <schnelle@linux.ibm.com>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: Re: [RFC] net/mlx5: Fix failing fw tracer allocation on s390
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <77241c76-4836-3080-7fa6-e65fc3af5106@web.de>
-Date:   Tue, 7 Apr 2020 17:12:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 11:12:33 -0400
+Received: from mail-eopbgr20116.outbound.protection.outlook.com ([40.107.2.116]:59900
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728917AbgDGPMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:12:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NP5nCKdGpozCbktulTLUQqdrPiIr4RC0YPMovI7ITC5A2nWPDj6a0UoKEcZOydSNAGnhxsALGUfA6pMvqwxPntD1IOY3okF1xqpMpeuLfo8DPef2VGHLA8Y1IaxBFSMWJ9VTLObBqKMwfMUG9pSTxMrTymgACmmsy32O7SlLWYahiWVbBASmmv95aywqlSKLYSRri73ItS2qzxo3ulWO6nP3U3DqcS5rJ61SdXNS/fjCa1g2GpGvDWIUWYA+XgWkIRjPCCjrym0X6qXyS5I25LEWD/DqB3MOBGw4fHtxdmkEGnyUFeO9VH5uPhCJTeOjnfF0+n5UswZeBo7jg4E/3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SVyGZ0W3n6/Ua3Xqa7jQMTgP2dcmUSlWGYX24XKFU5w=;
+ b=ZNuu8MK9lRJBI+hCUP93FVJNaWDCD9pGyq/102+naUfk+JQ2KVg/Aylh8u+JgURivNlkhjNKRtjsAN8K2fhxIhhTxp3FmLwPXphscGQ+wFSM96fCTOATosqtVlFPyUY1OU/vZYXuOFqyT4TDNR7tVIY6DEpzn9YGjLe2C5NHNbex/ZEd50oXY7K4j8tYkAKPpgrISf12JXlWQjvsV6ncLE1ZXlnVofoog4gwDAKHzVom5UFpEtm3ULJEPUWmQAfTFMey3IG+foY+8lyS/xPXo1GV1M0ERMC3RH+5avmou6rd2xBfU0sXPW7tyvrfP/iAZ3ckHJW2KyyTQ5Ru31wLpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SVyGZ0W3n6/Ua3Xqa7jQMTgP2dcmUSlWGYX24XKFU5w=;
+ b=xt64h3VUjoQKmLPJ82eT00B8gNQraV+X11hsK5eKvbDdFI+wZwCi9hkf8SWDwn3qpocFVBsg/PT9j0GEu6Mh43C9y0LOB1j3nal7azmzmV1LHAlamHSKU1wEiBFOmusZlr1oDjd3UORGbVG0ylF3zsQHv1O2LoLz6CChXVkgGgk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=vadym.kochan@plvision.eu; 
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
+ VI1P190MB0429.EURP190.PROD.OUTLOOK.COM (10.165.197.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.20; Tue, 7 Apr 2020 15:12:23 +0000
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::f983:c9a8:573a:751c]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::f983:c9a8:573a:751c%7]) with mapi id 15.20.2878.021; Tue, 7 Apr 2020
+ 15:12:22 +0000
+Date:   Tue, 7 Apr 2020 18:12:19 +0300
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Gregory CLEMENT <gregory.clement@free-electrons.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bus: mbus: export mvebu_mbus_{add,del}_window for modules
+Message-ID: <20200407151219.GB25149@plvision.eu>
+References: <20200324190623.26482-1-vadym.kochan@plvision.eu>
+ <20200325135801.GA29951@infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325135801.GA29951@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: AM6PR0502CA0048.eurprd05.prod.outlook.com
+ (2603:10a6:20b:56::25) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:35::10)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BBB+879L09pHLCNOjgTFSNPxC88/hhITl+4GTbKJ54WW4aCUs99
- 36AJ4I2H5kxq9e1Ut6UomV9mUVw+y2/VrejiiTRx2u0ZcTFyCGJu+c7y9gx0Yd7IQVYwN72
- gaj7wE9yD2hjNwoQLs6U6NAe5IhTpitlYsxFrgG9dnvP/THWxLgOSvAcfZg5yt3H3uo6zHu
- uFp+Y+eieGU6m5FR6zzXQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:igVlEAP7Nu8=:PzN90UhXhu/ZegAZCfL935
- OgoEyQT6YTcfqz0x+s7R3mtmjGHW/rI9ELiUZgKlZpGhpC00fqacnfhU1htDSe6l7UqTODOGX
- yr6N2SqoQKW6rKgr9PL89XyBFcMKPQcnUKUyclKVdiDWR/wK8xkqlG9KgGD8CwC71V1LDjh4F
- LtuyCAFvi+NNVJBcKX0aTjkcD8yzVUE5Waabpg/gGUrjp5oIIXMk4V6zy7N8TRGnH1CcZITJW
- F7FwjItKRB+tHwLmsOKWnFm1vhd+4moHkJBTdAD225Kx9TOvNknbdDS4kb7lV+LtCqkhcE8Q/
- /ezEOOnHpG+9TWWRVqO+7abgv3yMj0iETmquJZkldQ0v0vWVZBLh2eIWuepq7cihyxk0JZsLg
- SEj/SdbY2LovyjBOnfD1+gGNYGVg29aRuifCQsahHjRnPeyC+/Yjgff85njFJybulsuOpgQzf
- 1S0rWWoBlawVF1DfYcuV43UStNCQZRBjtpmEh5E4wXWC3/pIU31Ac6IblgEpRlBxyf+nMxwBy
- ZIHenPnpROVZs5/zJyApuNSmE2aDJQpDIlyTK99rjTfice/W914CyyFBLa4nsf5JwAXbeXgkS
- nN9am/p9ua+Ng/85/0Qe2uSy82w9r6vpw3giCS93BFQ+09FQMlJfpHyEYck+CYRuTshxLrCoX
- jsCh18iqbIC6FSTzh5gmGmy6wPWTSutq4uliuSRoKOhgtJjR175knU2B3yiY8rkA66oq44wo7
- pUFengtxS52RR1VbtXXWbkMa8GYUNz7o+4VWTq5HVRdLeW0YWtrgYDVf0ld5mCtYJJbOlGblD
- vxyCWlMz7tIdBH/9tM8dgDn27zpNywwuIlLxVRiKdVy7azK7NnAe/wxYFE6K7eZVIt+bcuyib
- E0NAWl30dheV/UnRXnPtcKJ1jvZNDe1+Bz7Q3VP2W+d2KEnSBO3ipG9yvPuZjy+4upRYZ311F
- xBex0n6I9nLfuU42qdN94c9GnIeoEezyXGCeBOWgGnDew0okVYfH+U728LLN47/uo0IRE0uBm
- 5arIfb9KpoLQ1T1U53pM+tmVKpPOcauy4S/kflJnn34GQZoWEydQeIAlPmmJP9IVf3HkjT1+a
- Wb9fDiErGSUkHjHt8mnXP8IdUVJHbF+utNb/Kzy1s1OJDuYSYc6x2CJS+T8ZcLMI6kQqzwZso
- NqwWLhN4/PM9z4pnVIZsFPR8Mr0fei7Pz0NNNTVSs2JRKVRPzw+BizemI+7mnXwZ1xkUTyFqE
- 3KUEtGuQ8IwwBFucC
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plvision.eu (217.20.186.93) by AM6PR0502CA0048.eurprd05.prod.outlook.com (2603:10a6:20b:56::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.22 via Frontend Transport; Tue, 7 Apr 2020 15:12:21 +0000
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e23670b0-36ad-405f-4c64-08d7db061288
+X-MS-TrafficTypeDiagnostic: VI1P190MB0429:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1P190MB0429190E96B075BEE24036BE95C30@VI1P190MB0429.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-Forefront-PRVS: 036614DD9C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(366004)(39830400003)(346002)(396003)(376002)(316002)(4744005)(1076003)(6916009)(81166006)(44832011)(36756003)(8676002)(52116002)(8936002)(956004)(26005)(2616005)(81156014)(5660300002)(508600001)(7696005)(8886007)(186003)(33656002)(66556008)(66476007)(86362001)(2906002)(55016002)(16526019)(4326008)(66946007)(142933001);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: plvision.eu does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hD+Hw4kEpdm08NfeUTy3EFlkKuQKFLIUxyKTKINCVvdaVDJuTjXEnGnTyRfyA9AM+na1BT/d3IrMExYe5Q5OyeawUypi7mxuzeBPFWGtiliULUsy88uZQX69zA/2IZF9MAaYzXvDsF4k5qG4tpApNqvugsRB7x0e12iclVHVZQrvaQ+eoI8yiGdV8Kykd8OTCqPp/1JdMRy6O0PadPWDW+j1EQx9RkOh5TWtTGMi5VdkfHl7fGgDEUpy2nHmzLybtxDmdGI1cHvSlSREOkzumbmaLQjUqWiou4cinMGGqcWJAOes7hojyat4el4ETgPEtQq3vV55Vfycl47fidwda/9NkvnuqYcss7ibp6vHcJbKa5n6AVgTjyLzPewwzlktLwKY33FL3i6SBQ4fmD6wdV1YK9DtA7RE04b47L1U7WRe5pGUX4n0lArsaXNLe7YzHlE2Tc5XaRa/Hhi5OR3oRyKZAjjfP/BfzqwBGkWb+LdFHwV3BSqAaIg/1ZNkKTyW
+X-MS-Exchange-AntiSpam-MessageData: Oe7zX42K7xnRDfsNmiuTvTDLT4hpwAaelRh4CJNZ5o2jyjNO4qzz92csoG40aju7KwN7M5QGmBKSQwEJfhWJoDKpfSrrkGLdUqr8SzQLxbHHLP15MTQ1c+3DgwNVwF2QQg/+/8Dcc7N/Vb1Dh62oWA==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: e23670b0-36ad-405f-4c64-08d7db061288
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 15:12:22.6451
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: C0AVWSX07memi/vZCbbLZ6fzYqcekOb7yhuaijHKkch2hulWtnBtq4Ju1XPyhzLh/tSoh6p4ZzzaGZWVfkURG5ePnaASvMyBnjPwylwbS/M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0429
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On s390 FORCE_MAX_ZONEORDER is 9 instead of 11, thus a larger kzalloc()
-> allocation as done for the firmware tracer will always fail.
+Hi Christoph,
 
-How do you think about to add the tag =E2=80=9CFixes=E2=80=9D to the final=
- change description?
+On Wed, Mar 25, 2020 at 06:58:01AM -0700, Christoph Hellwig wrote:
+> On Tue, Mar 24, 2020 at 09:06:23PM +0200, Vadym Kochan wrote:
+> > Allow to add/del remap window by external modules at runtime.
+> 
+> Please send this together with your driver submission.
 
-Regards,
-Markus
+The driver itself is just servicing user process to configure io
+windows via ioctl, so I think it is not so useful ?
+
+Thanks,
+Vadym Kochan
