@@ -2,69 +2,82 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5E6C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777CCC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A10B20768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:02:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586286146;
-	bh=4QhCej4WjH859mfvxyVTYrdDHfxgRVhnwHPErvMgIeM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=W2G7J/v20iy3MNtXriftmN4jzvV0eMJPTrdg8RLr1DTvY0I0ElMBuaJ+PVCJapD4o
-	 hJy4dtx3T8kaN3KeXKIVwENppzS2AC9eG31ZEm8GD/3uHUZ2MoZ9e2RBIeCKL+gvyF
-	 9TdQhdC4tdnABLWqwD3t7CtoR3xl+F4Pi5giL2EE=
+	by mail.kernel.org (Postfix) with ESMTP id 3C27E2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:02:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lD+Ucvcn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgDGTC0 (ORCPT
+        id S1726934AbgDGTC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726332AbgDGTCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:02:25 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C657E2072A;
-        Tue,  7 Apr 2020 19:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586286145;
-        bh=4QhCej4WjH859mfvxyVTYrdDHfxgRVhnwHPErvMgIeM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=xFWReDvrA3NkUjbYXob9me3J5DmVyKtSxKryM7QLJHg+sbaCBVnk28qQckgz6Tp4/
-         qzjG9KvbyMNmoQaCQvPNCXwfO8ql/oGdmdikQBPcpQ5x3IE9AMtWu5AT7i2YHRVBrY
-         nY1PUEKobtICggscDReNL8BKj8CNpN68f/valB2o=
-Subject: Re: [PATCH 5.6 00/30] 5.6.3-rc2 review
+        Tue, 7 Apr 2020 15:02:57 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10465 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgDGTC5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 15:02:57 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e8cce2b0000>; Tue, 07 Apr 2020 12:02:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Apr 2020 12:02:56 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Apr 2020 12:02:56 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr
+ 2020 19:02:56 +0000
+Received: from [10.26.73.75] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr 2020
+ 19:02:24 +0000
+Subject: Re: [PATCH 5.4 00/38] 5.4.31-rc2 review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200407154752.006506420@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <ecfe71d8-41f5-9579-555a-3678b3588dea@kernel.org>
-Date:   Tue, 7 Apr 2020 13:02:24 -0600
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200407154755.973323425@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <af3af99e-c86d-7cb4-3f9b-76ee20880101@nvidia.com>
+Date:   Tue, 7 Apr 2020 20:02:22 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200407154752.006506420@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200407154755.973323425@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1586286123; bh=+lpOgaURlFw6DZNJWlrCXeJ+HPILFxHI/OCMY13Mr6Q=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=lD+Ucvcn4Xi0RalRRwAlrUttwo+iNhPOB6CiDIzbGwx402yM7AzW5HecYLci7G+Xo
+         kZiB+lz9sDu9yPfVtP2gMI80Zar7fpTci1Hrlh9oVIPz2OTB4Ze2BVhLQEjvHeZNUr
+         CU57z9w+CPxlQrkVz3FrOmk02BuascShBRJC8h/OhSAjgnsefvhpf8/MhPV471K0sm
+         IAjKDe5E30Moz278Dz9n9rfen3AaKFW1INVRdg6RzJeXhWNM+cdQ2bshoukX4jCJgz
+         TWDEDUQm+hIL5Hh5mBAIJSI8p3SIitk8PspElRQsN0gEBGUFy7jCm7YQN6/Lk9U9dg
+         qPiaCgb2oO1gw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/20 10:39 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.3 release.
-> There are 30 patches in this series, all will be posted as a response
+
+On 07/04/2020 17:38, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.31 release.
+> There are 38 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -72,17 +85,31 @@ On 4/7/20 10:39 AM, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.3-rc2.gz
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.31-rc2.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
 > and the diffstat can be found below.
 > 
 > thanks,
 > 
 > greg k-h
-> 
 
-Compiled and booted on my test system. No dmesg regressions.
 
-thanks,
--- Shuah
+All tests are passing for Tegra ...
+
+Test results for stable-v5.4:
+    13 builds:	13 pass, 0 fail
+    24 boots:	24 pass, 0 fail
+    40 tests:	40 pass, 0 fail
+
+Linux version:	5.4.31-rc2-g23c04177b89f
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
