@@ -2,177 +2,171 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F6FC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A15DC2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F282078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0D4207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c28LT2nI"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="wdop+Ryp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u7Ar+N/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgDGOWS (ORCPT
+        id S1729074AbgDGOWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:22:18 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37238 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728776AbgDGOWR (ORCPT
+        Tue, 7 Apr 2020 10:22:46 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57187 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728776AbgDGOWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:22:17 -0400
-Received: by mail-pj1-f66.google.com with SMTP id k3so829224pjj.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:22:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eBta2dvsE/8BQDUZIv4+0XBQsmidsJtftVziTz+qjVI=;
-        b=c28LT2nIa6FgFzpPwxLup032GZK4L8K4ouge31SEjUG/gH9vs53p+caNuH4KRTVMsk
-         tVc0HmW8GMW8AlzvfXM3b6AYR4uOGnjCLRsxi67DjOcKDi5ohZ/u1J7elPzXAABDZ3YM
-         6L9cOKtezf6q5Lh7SlNKOmKI4kkJ3w3bXjc4gF0JSAIdy+LJjCDE/+PUnk3Ki/fEit63
-         yehjzBhgD/zFGCA1/rpMREUFGLHhAxiZ7/X2T4XFm9bpTVkImM84HI7g1q+29iOcYtVi
-         nNdZtP6Sjf+cD+SeM+ytFgM+TCZSbTO0qCTuX5oiHuBRvUjIYXrSj4vnxwIRePK6Nv8Z
-         odcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eBta2dvsE/8BQDUZIv4+0XBQsmidsJtftVziTz+qjVI=;
-        b=Frs7TJ0VPIumhnMDOj4huAo/z9ghIDOSMHmNVQ4S1eFMQPLyKDuleHUIfn24RvW1oe
-         jaHp4zQuk+73+zkYVd7ANWCWu0HaiLl4VeBsaHoimE6gaIC/NlrOB8xSLKlazyGkc8pN
-         ACMPi1KWxDcqQxVKYTeWoiAFgq2BmbdLl6CgIMbZA9lNfzEmtFA6liYRpp+D137Y/27g
-         7N+hkQ2BFq/1NRaQl9suA7SZQDfV5l3RcIy9F16cVdvUW3F/iShpuaOh8fBb6M2qrHE4
-         SAw4PHhVftzQM57/pkMcgtKyJhsfRw2Ror6EnkiHNEYKgrL3lqgB2nSuer11TLqPlCKf
-         FUpw==
-X-Gm-Message-State: AGi0PuYvCqRzAS91XDzQJDHx8DtFHFpY9gflRUVD3BXEoFQShuZ6m07T
-        7CHkFkVXhfgrIHI94F5Yiv9QnSlMCBKl2EmDwljGBA==
-X-Google-Smtp-Source: APiQypKZy79cap6HgorbVpseb0/JOuDvypQMsLjHHCuUy0YK4idmEXVVvDW6zlhXlExk9NXf9f9+2LY/uYJ0dRuDLBw=
-X-Received: by 2002:a17:90a:2541:: with SMTP id j59mr3073585pje.128.1586269335956;
- Tue, 07 Apr 2020 07:22:15 -0700 (PDT)
+        Tue, 7 Apr 2020 10:22:46 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E14165800FB;
+        Tue,  7 Apr 2020 10:22:44 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 07 Apr 2020 10:22:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=WZZOGhHApCSV1L4UtRpjl8cMVms
+        LTISqTdlhGk83/tE=; b=wdop+RypTY1L95rFhllqkRhtWYgEAFYClfhAPgL7V8o
+        qMlLR5SE6GWLIa1ZSoQ79+Z0W44kt9OiHmZ3CvUvzPb9jnW8UTnki0vTUO07qO/M
+        IH6Du1/ArFs7vqpgdxcGBcasaf/y7tUY/Qy7R0LaqaiV+vdq3gWWG69cu1/Db2d2
+        tSYjGHL62GfQ854q3eGFOokJ2aVePEbHQyaKzerNy29ZfdIMewn63SjOEecLL7SC
+        keWTudwlRGyEJlyAtfcF1aiupSS+Bt6ZxO/lAXvD3cJrOSGcwc7fHwYCw97oo/XP
+        B09l3Pen7zFk/wx6bMLUR9LR0LM1186/fRdBfVdHAjg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=WZZOGh
+        HApCSV1L4UtRpjl8cMVmsLTISqTdlhGk83/tE=; b=u7Ar+N/LF2C6DeXvp3SLmb
+        v1Aty03403E8GzS/l7ZKt6hE1iFd1OjUSMadk8vZhO0FHQa5CTGzPnz2qMBxScGh
+        VM3E1KLQdyBaBxleBRWqGLabrDiHLEfgPjVNddjZEVwztIaWE4P5pY5cKXNJff1G
+        m4v7B7IbDgM7MLt99bro9rRdWjB2MqQrm0rgPulYrJ6qwW00bE6wZ8PNYhUPXcpA
+        NpZlR0RsXbdqFhNsP68Mf/Bl8eF9YLBED3W7NW8d0Dgna7s6UMubPnxtj7zz17PK
+        db20zhWWFiQbOMl2mISNojJH+Obdtsrx2/DuH48sMTHeAJRm9Yrwpn1QMT9SoKvA
+        ==
+X-ME-Sender: <xms:sIyMXlTiXSiRI3WvCdI1mm-Jzir6hQXM5vePtj5cXsapk4tU1rNmag>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehgdejgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:sIyMXgXSx8_2lL0owyyT9Y357BIRf8xmDBvgz7I_14l90OfeLLKC5w>
+    <xmx:sIyMXhLRLGm4H2wIpXCkhFto8ChkzLs0j1QJICpClPHUiGd0LFxaYA>
+    <xmx:sIyMXo1pKdgnUJ6tomalMQBcN1-ucn-9h8KxFx-8TrBFAflFemlHRg>
+    <xmx:tIyMXlK4-tLy7Ok2qgPryQ3kFTA8t51d5wIiKn3KRdcyZJ25Z25gwQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0064F3280066;
+        Tue,  7 Apr 2020 10:22:39 -0400 (EDT)
+Date:   Tue, 7 Apr 2020 16:22:38 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
+Message-ID: <20200407142238.ik67isetbggn2rh3@gilmour.lan>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
+ <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
+ <20200407110339.GA1489441@kb-xps>
 MIME-Version: 1.0
-References: <CAAeHK+wdEByqpv90WCtb2=E9Xx6WpkDxn7xq__8JwSh8ROZn7w@mail.gmail.com>
- <Pine.LNX.4.44L0.2004061504580.26186-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2004061504580.26186-100000@netrider.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 7 Apr 2020 16:22:04 +0200
-Message-ID: <CAAeHK+zrn_9L+FyKaw=vX8jfM4K7TJDjqadw8Q0HwSavz5qr3w@mail.gmail.com>
-Subject: Re: [PATCH] usb: raw-gadget: fix raw_event_queue_fetch locking
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cmea35pc2hxci5l3"
+Content-Disposition: inline
+In-Reply-To: <20200407110339.GA1489441@kb-xps>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 9:26 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Mon, 6 Apr 2020, Andrey Konovalov wrote:
->
-> > On Mon, Apr 6, 2020 at 8:20 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+
+--cmea35pc2hxci5l3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Apr 07, 2020 at 01:03:39PM +0200, Kamel Bouhara wrote:
+> > On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
+> > > Add dt binding for the counter variant of the rotary encoder driver.
 > > >
-> > > On Mon, 6 Apr 2020, Andrey Konovalov wrote:
+> > > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > ---
+> > >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
+> > >  1 file changed, 67 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
 > > >
-> > > > If queue->size check in raw_event_queue_fetch() fails (which normally
-> > > > shouldn't happen, that check is a fail-safe), the function returns
-> > > > without reenabling interrupts. This patch fixes that issue, along with
-> > > > propagating the cause of failure to the function caller.
-> > > >
-> > > > Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
-> > > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > > > ---
-> > > >
-> > > > Greg, this should apply cleanly on top of Dan's "usb: raw-gadget: Fix
-> > > > copy_to/from_user() checks" patch.
-> > > >
-> > > > ---
-> > > >  drivers/usb/gadget/legacy/raw_gadget.c | 19 +++++++++++++++----
-> > > >  1 file changed, 15 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
-> > > > index e490ffa1f58b..1582521ec774 100644
-> > > > --- a/drivers/usb/gadget/legacy/raw_gadget.c
-> > > > +++ b/drivers/usb/gadget/legacy/raw_gadget.c
-> > > > @@ -81,6 +81,7 @@ static int raw_event_queue_add(struct raw_event_queue *queue,
-> > > >  static struct usb_raw_event *raw_event_queue_fetch(
-> > > >                               struct raw_event_queue *queue)
-> > > >  {
-> > > > +     int ret;
-> > > >       unsigned long flags;
-> > > >       struct usb_raw_event *event;
-> > > >
-> > > > @@ -89,11 +90,14 @@ static struct usb_raw_event *raw_event_queue_fetch(
-> > > >        * there's at least one event queued by decrementing the semaphore,
-> > > >        * and then take the lock to protect queue struct fields.
-> > > >        */
-> > > > -     if (down_interruptible(&queue->sema))
-> > > > -             return NULL;
-> > > > +     ret = down_interruptible(&queue->sema);
-> > > > +     if (ret)
-> > > > +             return ERR_PTR(ret);
-> > > >       spin_lock_irqsave(&queue->lock, flags);
-> > > > -     if (WARN_ON(!queue->size))
-> > > > +     if (WARN_ON(!queue->size)) {
-> > > > +             spin_unlock_irqrestore(&queue->lock, flags);
-> > > >               return NULL;
-> > >
-> > > Suppose the WARN_ON triggers, and you return NULL here.  Then where do
-> > > you reverse the down_interruptible() on queue->sema?
-> > >
-> > > > +     }
-> > > >       event = queue->events[0];
-> > > >       queue->size--;
-> > > >       memmove(&queue->events[0], &queue->events[1],
-> > > > @@ -522,10 +526,17 @@ static int raw_ioctl_event_fetch(struct raw_dev *dev, unsigned long value)
-> > > >       spin_unlock_irqrestore(&dev->lock, flags);
-> > > >
-> > > >       event = raw_event_queue_fetch(&dev->queue);
-> > > > -     if (!event) {
-> > > > +     if (PTR_ERR(event) == -EINTR) {
-> > > >               dev_dbg(&dev->gadget->dev, "event fetching interrupted\n");
-> > > >               return -EINTR;
-> > > >       }
-> > > > +     if (IS_ERR_OR_NULL(event)) {
-> > > > +             dev_err(&dev->gadget->dev, "failed to fetch event\n");
-> > > > +             spin_lock_irqsave(&dev->lock, flags);
-> > > > +             dev->state = STATE_DEV_FAILED;
-> > > > +             spin_unlock_irqrestore(&dev->lock, flags);
-> > > > +             return -ENODEV;
-> > > > +     }
-> > >
-> > > Not here, obviously.  Does the semaphore ever get released?
+> > > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > new file mode 100644
+> > > index 000000000000..a59f7c1faf0c
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > @@ -0,0 +1,67 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
 > >
-> > If this warning triggered, something has already gone horribly wrong,
-> > so we set the device stated to "failed".
-> >
-> > But even if we ignore that, should the semaphore be "released"? The
-> > initial semaphore's counter value is 0, so one up()+down() sequence of
-> > events leaves it with the initial value. So it's the down() event that
-> > brings it to the initial state (unless there were multiple up()s of
-> > course). Unless I misunderstand something.
+> > Bindings are usually used by other OS's, so you should consider
+> > putting it under a more permissive license, usually that would be GPL2
+> > and the BSD-2-Clause
 >
-> Okay, now I get it.  It's an invariant of the driver: the semaphore's
-> value is always equal to queue->size.  You might consider putting this
-> in a comment, in some future update.
+> Well to be honest I just looked into an existing binding and I guess
+> the wrong one :).
 
-Correct. Sent v2 with a comment.
+Not the wrong ones, but the old ones :)
 
-> Incidentally, how often do you expect the queue to contain more than
-> one entry?  If that happens a lot, it would be more efficient to
-> implement the queue as a ring (with first and last pointers) than to
-> call memmove() every time an entry is removed.
+It's painful to change a license on existing files, whereas it's
+pretty easy to mention it during review.
 
-Currently not often (we can have one CONNECT and one CONTROL in the
-queue at the same time), but that might change if we ever add more
-event types. I'm not sure if it makes sense to change the
-implementation right now, as this isn't a bottleneck. But if it ever
-becomes one, I'll certainly do that, thanks for a suggestion!
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Rotary Encoder Counter
+> > > +
+> > > +maintainers:
+> > > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > +
+> > > +description:
+> > > +  Registers a Rotary encoder connected through a counter device.
+> >
+> > You shouldn't really describe the action here, but more what the
+> > binding is about. The registration will not depend on the presence of
+> > the node following that binding, but rather on whether or not the OS
+> > that uses it has support for it.
+> >
+>
+> Then shall it be better with just :
+> "A rotary encoder device using a generic counter interface." ?
+
+The generic counter interface is a Linux-only stuff though, some other
+OS might want to implement something else. Something like "based on a
+counter"?
+
+Maxime
+
+--cmea35pc2hxci5l3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoyMrgAKCRDj7w1vZxhR
+xaGoAP0Rk4zze3+M3tv+xBVv0PmMPLNoqDCmIQF259PcWDF2FQEAovMUQKsz/fRB
+40V3ClfoNka1Z3kbhlkiwiHDy75R/Q0=
+=HdTF
+-----END PGP SIGNATURE-----
+
+--cmea35pc2hxci5l3--
