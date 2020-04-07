@@ -2,107 +2,89 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311FEC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD1BC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BE220719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34B320719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S8rr+ljh"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XbsiHs0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgDGBHt (ORCPT
+        id S1726467AbgDGBJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:07:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29264 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726582AbgDGBHq (ORCPT
+        Mon, 6 Apr 2020 21:09:56 -0400
+Received: from mail-pg1-f171.google.com ([209.85.215.171]:44459 "EHLO
+        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgDGBJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:07:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586221665;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jXqTQsUO9YVhjrcDRdxdoA1nJXOlF582i9eQgnD+YFc=;
-        b=S8rr+ljhJNGprvWC73XtxxyWK92hrfxtUkxPjUoy0GJDl3bDfr+2Vtjk8nfh2AjB9AdKlB
-        PznXQ7PUqwTgq+haElXdDbk9gFoXM5xtMV9KND99+VjvN6J67WCkkmf1FwA551MIhceZXE
-        5/C0MU82JitBvSXQlJmLzP+a/ZeO+Js=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-266-sV9uXe5IN4CFksfgDMcCLA-1; Mon, 06 Apr 2020 21:07:42 -0400
-X-MC-Unique: sV9uXe5IN4CFksfgDMcCLA-1
-Received: by mail-wr1-f71.google.com with SMTP id d4so853639wrq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:07:41 -0700 (PDT)
+        Mon, 6 Apr 2020 21:09:56 -0400
+Received: by mail-pg1-f171.google.com with SMTP id 142so899484pgf.11
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:09:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hxs/afcb0MhjFFfWYcFauB3HH6jjoFqq7M9/7Awekes=;
+        b=XbsiHs0kPiXh+KouUNZMERmrL06fLoNH3qeAhFjSsbF677ozzS+MsBznMHrqAEVvlH
+         YvKbM4BSBuS0KwJS1YD91zEv+as8Eehgwh/0M64ImGC14gFXo6azk/UCISZ7faZ5HSYr
+         PsevY+xJ5YURV1M1bAEvE1MbKR3edaydTjPe4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jXqTQsUO9YVhjrcDRdxdoA1nJXOlF582i9eQgnD+YFc=;
-        b=hxBL3Kj+1zsXbUOJyYpATsAlHhS5Fk8U2Vbo2Ba8oOfKND1m0YipuPUW9umYdPCbTp
-         V94D+Pf6DJQ5wylYz5MGTpBCiZNe/DNqYDOQ7SXC2hy3mTNXR8YxTxtj1PQUkbjsWvEj
-         2MuwMb7RoW3VlV9UZ0tGrs0sfq55IAXjlsLI+/QgSxauEJT0sNF5Rqb5SOwtIQb1jnfM
-         rXcHDxNwQ97uSeiutGQ7ruI/whhSGihrJ2FvGHDI6QeVTo2MOE+7ycrvOmPikO7iFW7Q
-         QpFhzlE93zFNMhrETvHyc8gJFsFoUCKjOxL6QRLD2E0+8JmkVMNN2KGI++Zd//ExemCh
-         ARLQ==
-X-Gm-Message-State: AGi0PubBTlF3cc4/ibaoUqNwn6gANzhJDxxe4EfejBMeW9ZmgYY0Siwz
-        K7xW62ozNSvpQEUQjy4cyctHiVknC/8Y1MbsZSXSQ5HsDWp5zPH3YYCQrrg93ZCQ1LUN2xSD3NN
-        0Ny0K+xLoji2yGEEH8fCH2+LH
-X-Received: by 2002:a5d:6a47:: with SMTP id t7mr1956340wrw.131.1586221660768;
-        Mon, 06 Apr 2020 18:07:40 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLi++G08KSxRhS85KgN5Q3h/2wGkqBja4GHXhB9IEHoUEJizYJP56tBhmaJBFrG8QKxZifQnw==
-X-Received: by 2002:a5d:6a47:: with SMTP id t7mr1956327wrw.131.1586221660622;
-        Mon, 06 Apr 2020 18:07:40 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id k184sm103051wma.13.2020.04.06.18.07.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Hxs/afcb0MhjFFfWYcFauB3HH6jjoFqq7M9/7Awekes=;
+        b=Swm49AxGJrlczjgz2R1yXQzbRM1ufSsLNx2SYW7JtjusLM81MN97dWmZxtPT28lqK/
+         U47Usg6WR46yxj+Mdb8MtyMHlwTroHUFcrcTqeqHUtBvzPVe0DkFsVfRy7Ec66liJRs+
+         gIYyqexi201kDsxwXJViEsj6LIG4dITizWvfQkYTlrZyEyut3pR0qxXWKWVriCI4J7E8
+         2A4INwrmezmgFGRFVkYoA1wzxLVUXLeQ/2YhsFHPMvrycqtH4+39vZTPSgIYCQJRlxAS
+         v4uK6ZRlEaT0KrZp7t249j9uMga2avzzE1RYtAKacy983FX4WCuTlvmpTS2a2OfF9X/2
+         J6hQ==
+X-Gm-Message-State: AGi0PubkYNBX8Z6F4ElHPA8bwZWv5guFFGJ5ocEfn1s/Pdag1HpfmnRe
+        NSZOb4eADKGtkL9uNQMfKhE8JSY5HvQ=
+X-Google-Smtp-Source: APiQypLOn6SjQqUwMDdvustCjzzD3AW1DQSx+dpCelcy6Ptdb7cAm/AABk1hV6c0vDmLNwuVfIHT+g==
+X-Received: by 2002:a63:a55d:: with SMTP id r29mr1888282pgu.248.1586221794481;
+        Mon, 06 Apr 2020 18:09:54 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id s27sm12086500pgn.90.2020.04.06.18.09.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 18:07:40 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 21:07:38 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
+        Mon, 06 Apr 2020 18:09:53 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH v7 06/19] virtio-rng: pull in slab.h
-Message-ID: <20200407010700.446571-7-mst@redhat.com>
-References: <20200407010700.446571-1-mst@redhat.com>
+Cc:     heikki.krogerus@linux.intel.com,
+        Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [PATCH 0/3] platform/chrome: typec: Add port partner registration
+Date:   Mon,  6 Apr 2020 18:09:36 -0700
+Message-Id: <20200407010940.155490-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407010700.446571-1-mst@redhat.com>
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to virtio header changes, include slab.h directly as
-this module is using it.
+The following series adds port-partner registration when
+connects/disconnects are detected. In order to do that, we also register
+a listener for the cros-usbpd-notifier, which will inform the driver of
+EC PD events. While we are here, separate out the Type C port data
+objects into a separate struct.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- drivers/char/hw_random/virtio-rng.c | 1 +
- 1 file changed, 1 insertion(+)
+Prashant Malani (3):
+  platform/chrome: typec: Use notifier for updates
+  platform/chrome: typec: Add struct for port data
+  platform/chrome: typec: Register port partner
 
-diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-index 718d8c087650..79a6e47b5fbc 100644
---- a/drivers/char/hw_random/virtio-rng.c
-+++ b/drivers/char/hw_random/virtio-rng.c
-@@ -11,6 +11,7 @@
- #include <linux/virtio.h>
- #include <linux/virtio_rng.h>
- #include <linux/module.h>
-+#include <linux/slab.h>
- 
- static DEFINE_IDA(rng_index_ida);
- 
+ drivers/platform/chrome/cros_ec_typec.c | 121 ++++++++++++++++++++----
+ 1 file changed, 104 insertions(+), 17 deletions(-)
+
 -- 
-MST
+2.26.0.292.g33ef6b2f38-goog
 
