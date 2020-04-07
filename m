@@ -2,78 +2,101 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74E1C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C37C2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E9B20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:39:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YXRX/s27"
+	by mail.kernel.org (Postfix) with ESMTP id D4AA220747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586238154;
+	bh=QIRrn6My6HdlNXOSqc29iQjUrL4q0bCMmbmpYKRe/EQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cAxz9GEwXAEuaTaCUEyErLVmDJO0t6A619t+tnUI7Yzy3eZHTQUzs81gDuV74PLw6
+	 Or8U2VMja7R0S57rtE/ah6ZD+OB9LwCQS3YTIoouN6QTSKQY1qtgb2UuGXDHmU9tPe
+	 GBVIoIHnHRURdeCNWW/nQ9a8TyvVSe6bPywY+VqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbgDGFjk (ORCPT
+        id S1726767AbgDGFmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 01:39:40 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:53383 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725802AbgDGFjk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 01:39:40 -0400
-X-UUID: d87fd0e9cee9446698661ea4fa27869b-20200407
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=O2o43k14xlejaS3ceaxlrwDivs/SbOA913cIeBStoZE=;
-        b=YXRX/s27LQjlY0SBhoQESXz6OnA1AelVMp/90tn8ITuFjnc+lxSW/FiN9+9LPBbhSxQYtXKB3ZVYF6BD8QaOHxAwwi+W522elAyF8bRa4doY4iDWmiN6fyZR1Nq1YbIshh1990tlTv78VztogwN/AgyvqKnPHvKBqOZFPUAqpTs=;
-X-UUID: d87fd0e9cee9446698661ea4fa27869b-20200407
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <fengping.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 744196807; Tue, 07 Apr 2020 13:39:32 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Apr 2020 13:39:28 +0800
-Received: from localhost.localdomain (10.15.20.246) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Apr 2020 13:39:30 +0800
-From:   Fengping yu <fengping.yu@mediatek.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, <linux-input@vger.kernel.org>
-Subject: [PATCH v3] drivers:input:keyboard: add mtk keypad driver 
-Date:   Tue, 7 Apr 2020 13:36:09 +0800
-Message-ID: <20200407053610.20996-1-fengping.yu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Tue, 7 Apr 2020 01:42:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgDGFmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 01:42:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BCAF206F5;
+        Tue,  7 Apr 2020 05:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586238152;
+        bh=QIRrn6My6HdlNXOSqc29iQjUrL4q0bCMmbmpYKRe/EQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ATf1NYS0f28qOW/3ECAujxcltmNFLeQUzoAb7JV86tpumTZw33qCq9PsR7QKMUS8n
+         4eKLZDw7ZQJZ03iS6MB/VgnYESZhv6RvxxiMJZvn3PLmXDvA3abgcRRBf0N8M2BnMj
+         XKeHTRcYMM0keBywoGT6aAsIIcFJNovB5TzcwgVg=
+Date:   Tue, 7 Apr 2020 07:42:27 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Maxime Bizon <mbizon@freebox.fr>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 4.9 040/102] net: dsa: Fix duplicate frames flooded by
+ learning
+Message-ID: <20200407054227.GA257896@kroah.com>
+References: <20200401161530.451355388@linuxfoundation.org>
+ <20200401161540.401786749@linuxfoundation.org>
+ <5b036a64-db51-d687-758f-c8b0a5b0c72b@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 9C2F0DBEA935612CFC96B21F5282E409AABF91147DF33EF885EB4B82EDEFAFE82000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b036a64-db51-d687-758f-c8b0a5b0c72b@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpUaGlzIHBhdGNoc2V0IGFkZCBzdXBwb3J0IHRvIE1lZGlhVGVrIG1hdHJpeCBrZXlwYWQuDQoN
-CkNoYW5nZSBzaW5jZSB2MjoNCi0gcmVtb3ZlIGV4dHJhIHNwYWNlIGFuZCByZWR1bmRhbnQgbGlu
-ZXMNCi0gcmVtb3ZlIHVzZWxlc3MgY29kZQ0KLSB1cGRhdGUga2V5cGFkIGRldmljZXRyZWUgZG9j
-dW1lbnQgZGVib3VuY2UgdGltZSB1bml0DQotIGNoYW5nZSB0byB1c2UgZGV2bV9wbGF0Zm9ybV9p
-b3JlbWFwX3Jlc291cmNlKCkgdG8gc2ltcGxpZnkgcmVzb3VyY2UgbWFuYWdlbWVudA0KLSB1c2Ug
-Yml0bWFwIHRvIHN0b3JlIGFuZCBjaGVjayBrZXlwYWQgc3RhdGUNCg0KZmVuZ3BpbmcueXUgKDIp
-Og0KICBhZGQgZHQtYmluZGluZyBkb2N1bWVudCBmb3IgTWVkaWFUZWsgS2V5cGFkDQogIGFkZCBN
-ZWRpYVRlayBrZXlwYWQgZHJpdmVyDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9t
-dGsta3BkLnR4dCAgICAgfCAgNjEgKysrKysNCiBhcmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmln
-ICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvS2NvbmZp
-ZyAgICAgICAgICAgICAgICB8ICAgNyArDQogZHJpdmVycy9pbnB1dC9rZXlib2FyZC9NYWtlZmls
-ZSAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJzL2lucHV0L2tleWJvYXJkL210ay1rcGQu
-YyAgICAgICAgICAgICAgfCAyNTggKysrKysrKysrKysrKysrKysrDQogNSBmaWxlcyBjaGFuZ2Vk
-LCAzMjggaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC50eHQNCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9pbnB1dC9rZXlib2FyZC9tdGsta3BkLmMNCg0KLS0NCjIuMTguMA0KDQo=
+On Mon, Apr 06, 2020 at 05:42:16PM -0700, Florian Fainelli wrote:
+> 
+> 
+> On 4/1/2020 9:17 AM, Greg Kroah-Hartman wrote:
+> > From: Florian Fainelli <f.fainelli@gmail.com>
+> > 
+> > [ Upstream commit 0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ]
+> > 
+> > When both the switch and the bridge are learning about new addresses,
+> > switch ports attached to the bridge would see duplicate ARP frames
+> > because both entities would attempt to send them.
+> > 
+> > Fixes: 5037d532b83d ("net: dsa: add Broadcom tag RX/TX handler")
+> > Reported-by: Maxime Bizon <mbizon@freebox.fr>
+> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> > Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+> > Signed-off-by: David S. Miller <davem@davemloft.net>
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ---
+> >  net/dsa/tag_brcm.c |    2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > --- a/net/dsa/tag_brcm.c
+> > +++ b/net/dsa/tag_brcm.c
+> > @@ -84,6 +84,8 @@ static struct sk_buff *brcm_tag_xmit(str
+> >  		brcm_tag[2] = BRCM_IG_DSTMAP2_MASK;
+> >  	brcm_tag[3] = (1 << p->port) & BRCM_IG_DSTMAP1_MASK;
+> >  
+> > +	skb->offload_fwd_mark = 1;
+> 
+> This is incorrectly placed, the assignment should be in brcm_tag_rcv().
+> It looks like only linux-4.9.y is affected. Sorry for not noticing this
+> earlier. Do you want me to submit a correcting patch?
 
+Yes please, that would make it easier for me.
+
+thanks,
+
+greg k-h
