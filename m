@@ -2,117 +2,95 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F73FC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F883C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E502082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:43:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="cxUdlynH"
+	by mail.kernel.org (Postfix) with ESMTP id 6912A2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgDGRnu (ORCPT
+        id S1726657AbgDGRox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:43:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41291 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGRnu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:43:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id b12so4252109ion.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nLa8vWF/VHkJLQ5tzbAupKSkO7Nd/GQhK2vTdnyt2y4=;
-        b=cxUdlynHEL2HXCInGiFUbupNgINSW8CZIPliUdfXDuBkfl9kG0+4OYer70mLLKEHr0
-         vqQXDHUHcRzSrzCluxfuT9/dha0FCNMZutjG/L4rpPtKF53DKgPRtuHjHhhlsYp2A9gT
-         lGg1I8AXOKRD6BuuaD4mpCepf4X4ssrueLB0LWmeGOHvxvHLLo+Cfsfl3GVCxSIMtBJ2
-         vc5nAAxFKSV7U4jZTZAKxx/JMFycQS+Gnb1ol6efME71kjoDqbMOLNfF7aljFlioXb0Y
-         U+N1gahyzWtPx1NpLQ5wYOVx7k38jtDr/tR8LS9s7LbG34dJt1bEeYpOElRiwhKXMWlX
-         ac9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nLa8vWF/VHkJLQ5tzbAupKSkO7Nd/GQhK2vTdnyt2y4=;
-        b=WuqUFbNVWkdj7tHf3JKe3Tl51H6XQpeAY1giLKiOh5TEkG9eU5hTlt4zN6+Xb9Yb3n
-         k9uUud92609wpuUhlb1xbbJqeacN+pk8ttNvTLg3fgV9ifgsmvlCKrbCTQjQcj+2n3mz
-         BMi+d8LREEZ8jZBFNnSilVWTeLqVM3MlTrG0ukSlPyxwwr42mQgRN4kgDhuYU/KDsyFK
-         OE4YR10dI5pm+4r3rBb0KAAaVtZlnZC58BL8JceiuU7nMZTCEBgKYz61bnEwXpM/hiNE
-         6RBBS6QNEE1EhzyQkln7h2Vkf/6YifxoQB+/Vs1xEp1fN/TiBLg+0Pfx7FCk8TTk4kjG
-         9aHA==
-X-Gm-Message-State: AGi0PubWCgKDHj3o1rL0X4YRoRM8oWX0tpbNWiC7pDASHegRg9cGO1f6
-        al0swTQYoaK/8Kjkt1tOpSdFc0PgXN6eQIdV7p03cw==
-X-Google-Smtp-Source: APiQypKdMl63j0jsbL/tOJdgN63pxjl9MivX+3Gy3v3cZnXqbMogOdk7L4fQdx+qIQ6fu9+1tIzzkvkw/t6Se/9Qp7k=
-X-Received: by 2002:a6b:b3c3:: with SMTP id c186mr3156512iof.85.1586281428368;
- Tue, 07 Apr 2020 10:43:48 -0700 (PDT)
+        Tue, 7 Apr 2020 13:44:53 -0400
+Received: from cloud.peff.net ([104.130.231.41]:36090 "HELO cloud.peff.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
+        id S1726332AbgDGRow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 13:44:52 -0400
+Received: (qmail 3091 invoked by uid 109); 7 Apr 2020 17:44:50 -0000
+Received: from Unknown (HELO peff.net) (10.0.1.2)
+ by cloud.peff.net (qpsmtpd/0.94) with SMTP; Tue, 07 Apr 2020 17:44:50 +0000
+Authentication-Results: cloud.peff.net; auth=none
+Received: (qmail 30621 invoked by uid 111); 7 Apr 2020 17:55:14 -0000
+Received: from coredump.intra.peff.net (HELO sigill.intra.peff.net) (10.0.0.2)
+ by peff.net (qpsmtpd/0.94) with (TLS_AES_256_GCM_SHA384 encrypted) ESMTPS; Tue, 07 Apr 2020 13:55:14 -0400
+Authentication-Results: peff.net; auth=none
+Date:   Tue, 7 Apr 2020 13:44:49 -0400
+From:   Jeff King <peff@peff.net>
+To:     Joe Perches <joe@perches.com>
+Cc:     Olaf Hering <olaf@aepfle.de>, linux-kernel@vger.kernel.org,
+        git@vger.kernel.org
+Subject: Re: get_maintainer.pl sends bogus addresses to git send-email
+Message-ID: <20200407174449.GA1884106@coredump.intra.peff.net>
+References: <20200407154046.GA15368@aepfle.de>
+ <20200407170257.GA1844923@coredump.intra.peff.net>
+ <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
 MIME-Version: 1.0
-References: <20200406221253.1307209-1-lyude@redhat.com> <20200406221253.1307209-5-lyude@redhat.com>
-In-Reply-To: <20200406221253.1307209-5-lyude@redhat.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Tue, 7 Apr 2020 13:43:11 -0400
-Message-ID: <CAMavQKJ5TaTbbS2iqkcQhwCbfiXoDvG5+V1qEa509GaqjBwM2g@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] drm/dp_mst: Print errors on ACT timeouts
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 6:13 PM Lyude Paul <lyude@redhat.com> wrote:
->
-> Although it's not unexpected for drm_dp_check_act_status() to fail due
-> to DPCD read failures (as the hub may have just been unplugged
-> suddenly), timeouts are a bit more worrying as they either mean we need
-> a longer timeout value, or we aren't setting up payload allocations
-> properly. So, let's start printing errors on timeouts.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Cc: Sean Paul <sean@poorly.run>
+On Tue, Apr 07, 2020 at 10:18:41AM -0700, Joe Perches wrote:
 
-Patches 1,2,4 are still
+> On Tue, 2020-04-07 at 13:02 -0400, Jeff King wrote:
+> > On Tue, Apr 07, 2020 at 05:40:46PM +0200, Olaf Hering wrote:
+> > 
+> > > For me sending patches via git send-email fails because email address
+> > > conversion is failing. Something appends a ')' to x86/lkml@kernel.org.
+> > > I suspect the double '))' in MAINTAINERS is confusing the command.
+> > > I tried to send the trivial patch from v5.0 and v5.6 tag.
+> > > 
+> > > Is this a failure in ./scripts/get_maintainer.pl,
+> > > or is this something git does internally?
+> > > I'm sure others use such command on a daily basis, so likely something on
+> > > my end became broken at some point in the past.
+> > 
+> > It's a bug in send-email's hand-rolled address parser, which was fixed
+> > in bd869f67b9 (send-email: add and use a local copy of Mail::Address,
+> > 2018-01-05). Upgrade to Git v2.17.0 or newer.
+> 
+> Not really.
+> You need to add --norolestats on the get_maintainer command line
+> 
+> git send-email expects bare email addresses, not ones annotated
+> with additional content.
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+I agree that dropping them from the output is even better, if you'd
+never want them to be sent.
 
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index ce61964baa7c..0cbeb0f5c834 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -4499,10 +4499,14 @@ int drm_dp_check_act_status(struct drm_dp_mst_topology_mgr *mgr)
->                                  status & DP_PAYLOAD_ACT_HANDLED || status < 0,
->                                  100, timeout_ms * USEC_PER_MSEC);
->         if (ret < 0 && status >= 0) {
-> -               DRM_DEBUG_KMS("Failed to get ACT bit %d after %dms\n",
-> -                             status, timeout_ms);
-> +               DRM_ERROR("Failed to get ACT after %dms, last status: %02x\n",
-> +                         timeout_ms, status);
->                 return -EINVAL;
->         } else if (status < 0) {
-> +               /*
-> +                * Failure here isn't unexpected - the hub may have
-> +                * just been unplugged
-> +                */
->                 DRM_DEBUG_KMS("Failed to read payload table status: %d\n",
->                               status);
->                 return status;
-> --
-> 2.25.1
->
+Syntactically they are rfc822 comments, and send-email _should_ be able
+to handle them (and does in recent versions).
+
+> For instance:
+> 
+> $ ./scripts/get_maintainer.pl -f lib/vsprintf.c
+> Petr Mladek <pmladek@suse.com> (maintainer:VSPRINTF)
+> Steven Rostedt <rostedt@goodmis.org> (maintainer:VSPRINTF)
+> Sergey Senozhatsky <sergey.senozhatsky@gmail.com> (maintainer:VSPRINTF)
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> (reviewer:VSPRINTF)
+> Rasmus Villemoes <linux@rasmusvillemoes.dk> (reviewer:VSPRINTF)
+
+In all of these cases send-email will drop the bit in parentheses.
+
+> linux-kernel@vger.kernel.org (open list)
+
+In this one, I think that the comment will be used as the name field,
+since there isn't one.
+
+-Peff
