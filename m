@@ -2,160 +2,95 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5B7C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3150C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05A720857
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7779620747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kNZP+0VE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BBZlsBLP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgDGWYL (ORCPT
+        id S1726692AbgDGWYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:24:11 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:24369 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726420AbgDGWYI (ORCPT
+        Tue, 7 Apr 2020 18:24:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52206 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgDGWYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:24:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586298247; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=FxQstoFPP1Qfd1VW2GuV0A7jVekKn/42g76oHq7LPFw=; b=kNZP+0VE5n9pConISEc9L584s+H4dKHNIZYssYrBft1LdPDarG6k/4rbzP7TjKKvr2DiHhyd
- 8uZtGULW7QoWHa7N0Gu3cSBwIbOHqYO/xZDDH0UW4aFRmKCpnszi+4NV95TCi9sjNUyA7piY
- Jx24N4e9WGBEXumAepGfgsCau3Q=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8cfd6b.7f8d89faf148-smtp-out-n03;
- Tue, 07 Apr 2020 22:23:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0392EC43637; Tue,  7 Apr 2020 22:23:38 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0889CC433BA;
-        Tue,  7 Apr 2020 22:23:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0889CC433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        vinod.koul@linaro.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v3 1/4] dt-bindings: phy: Add binding for qcom,usb-hs-7nm
-Date:   Tue,  7 Apr 2020 15:23:26 -0700
-Message-Id: <1586298209-4589-2-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org>
-References: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org>
+        Tue, 7 Apr 2020 18:24:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ilWPxxADWa3Mhatef/EKw7rS7FCyC/3gxiDqFnp+HLE=; b=BBZlsBLPC3Z7Ym7P4pCyL1Km26
+        xO+SsFOTryXTlbDB71tkCxYVEjbXDJJ0n534EO5JJxADwCKc65ekQsrica4ogN2t5qYlsPP3clZcP
+        ER5Putst3MeTijN9yhRletEkRPQqm96I6AM/PWFsLHSfZSn5+kYYymH9CfizhshKlxxYzUHXHWvFl
+        trx7Z2YsT/VBmtmD5GzSukdKaD8S68A9c7n24Fx51B9Co3SkpTAYotIf5jA/P3iQ5bynWCqgCNk0V
+        lUHsqJjoCXVEz/mXHh6NZ83c/OHmH1xQLSRNiHpE5250zTCFBo7GoCLiDmAmKitnkVi1GWIufMqSu
+        8q8KZ6vg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLwdf-0002jz-SO; Tue, 07 Apr 2020 22:24:11 +0000
+Date:   Tue, 7 Apr 2020 15:24:11 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive data
+ objects
+Message-ID: <20200407222411.GN21484@bombadil.infradead.org>
+References: <CAHk-=wg2Vsb0JETo24=Tc-T2drwMopMRfKnc__r5SZ6tEnbwcA@mail.gmail.com>
+ <20200406185827.22249-1-longman@redhat.com>
+ <c2c8adf48be7cb18bbdf0aef7d21e2defe3d2183.camel@perches.com>
+ <CAHk-=wg_mkSc-pH8ntGHR=no9DOLRQyxdtU20p55DrM1su6QzA@mail.gmail.com>
+ <699292.1586294051@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <699292.1586294051@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This binding shows the descriptions and properties for the
-7nm Synopsis HS USB PHY used on QCOM platforms.
+On Tue, Apr 07, 2020 at 10:14:11PM +0100, David Howells wrote:
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> 
+> > So the _real_ prototype for 'free()'-like operations should be something like
+> > 
+> >     void free(const volatile killed void *ptr);
+> > 
+> > where that "killed" also tells the compiler that the pointer lifetime
+> > is dead, so that using it afterwards is invalid. So that the compiler
+> > could warn us about some of the most trivial use-after-free cases.
+> 
+> It might be worth asking the compiler folks to give us an __attribute__ for
+> that - even if they don't do anything with it immediately.  So we might have
+> something like:
+> 
+> 	void free(const volatile void *ptr) __attribute__((free(1)));
+> 
+> There are some for allocation functions, some of which we use, though I'm not
+> sure we do so as consistently as we should (should inline functions like
+> kcalloc() have them, for example?).
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   | 76 ++++++++++++++++++++++
- 1 file changed, 76 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+GCC recognises free() as being a __builtin.  I don't know if there's
+an __attribute__ for it.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
-new file mode 100644
-index 0000000..7292e27
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/qcom,usb-hs-7nm.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Qualcomm Synopsys 7nm High-Speed USB PHY
-+
-+maintainers:
-+  - Wesley Cheng <wcheng@codeaurora.org>
-+
-+description: |
-+  Qualcomm Hi-Speed 7nm USB PHY
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,usb-snps-hs-7nm-phy
-+      - qcom,sm8150-usb-hs-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    items:
-+      - description: rpmhcc ref clock
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+
-+  resets:
-+    items:
-+      - description: PHY core reset
-+
-+  vdda-pll-supply:
-+    description: phandle to the regulator VDD supply node.
-+
-+  vdda18-supply:
-+    description: phandle to the regulator 1.8V supply node.
-+
-+  vdda33-supply:
-+    description: phandle to the regulator 3.3V supply node.
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#phy-cells"
-+  - clocks
-+  - clock-names
-+  - resets
-+  - vdda-pll-supply
-+  - vdda18-supply
-+  - vdda33-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/clock/qcom,gcc-sm8150.h>
-+    usb_1_hsphy: phy@88e2000 {
-+        compatible = "qcom,sm8150-usb-hs-phy";
-+        reg = <0 0x088e2000 0 0x400>;
-+        status = "disabled";
-+        #phy-cells = <0>;
-+
-+        clocks = <&rpmhcc RPMH_CXO_CLK>;
-+        clock-names = "ref";
-+
-+        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+    };
-+...
-\ No newline at end of file
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+gcc/builtins.def:DEF_LIB_BUILTIN        (BUILT_IN_FREE, "free", BT_FN_VOID_PTR, ATTR_NOTHROW_LEAF_LIST)
+
+It looks like the only two things this really does is warn you if you
+try to free a pointer that gcc can prove isn't in the heap, and elide
+the call if gcc can prove it's definitely NULL.  Which are both things
+that a compiler should do, but aren't all that valuable.
