@@ -2,140 +2,204 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A65C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E00C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7D42075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7692075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:53:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="A+y7Wiu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgDGRwF (ORCPT
+        id S1726550AbgDGRxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:52:05 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:42206 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGRwE (ORCPT
+        Tue, 7 Apr 2020 13:53:13 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36190 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgDGRxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:52:04 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id A11CA804F2;
-        Tue,  7 Apr 2020 19:52:00 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 19:51:59 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, Gustavo.Pimentel@synopsys.com,
-        Joao.Pinto@synopsys.com
-Subject: Re: [PATCH v2 3/4] drm: ipk: Add extensions for DW MIPI DSI Host
- driver
-Message-ID: <20200407175159.GB6356@ravnborg.org>
-References: <cover.1586174459.git.angelo.ribeiro@synopsys.com>
- <8b63a8390bbc0e81d01540648da7e6b03b8577fa.1586174459.git.angelo.ribeiro@synopsys.com>
+        Tue, 7 Apr 2020 13:53:13 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i7so5192572edq.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:53:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fReP27+S8EmMViT0XclWb7BSpfuyZbaoShchCIlF6Rg=;
+        b=A+y7Wiu9/0A8vN6mcp7HvaDsjMwJO9AiWFfp037z19Xog8YupjaaQW8koO92zoDEYp
+         IIvfWWPYQvToilZuR266uHofWkFgFHJWE7gBge/mg1MdLy61ROA/rRkjTEZTs/OyOQks
+         LvETkaIYIytm/YeFp9IKbufW09FRI3HnLkGFIvfTszWm6sCKqCpxOuSYGkRG/OvZpNEx
+         CIziu9ZH1ri7BfmrVjIFn2ptCSb5niuwl/HDMTrp7jrlhx9ThbXOib0ikEeqIf/0SpOX
+         H5TR1y52tUGQxOyggfm/7VC6rN0zsSX6nlmQLQkK0KC6I/goIFCY5WWX2d9uKCHzLsZP
+         TE1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fReP27+S8EmMViT0XclWb7BSpfuyZbaoShchCIlF6Rg=;
+        b=eFFJxLLQdjSUBbWVlb+YdWb234rezZIbT4kPI+Oy67AwMeVoAwhaU3wVnL20MHkg7C
+         7V9U8CUorLAaKKx0Zv9R+k1pV76/lLm+C7wanDCogSz9VpOEpMfTKa9ewKaPICQ4Sxy/
+         S5UMKbOt2gLFSJZgSv7+KS7747l/lwQN0vZu7yiuqfzx0Z0LiYAWLY5I3gb2oIQGZ0Oh
+         ipmspM10y9lRHqCW+5mEygDOBfKCl+yKDImr94J6zIVTalJr0xBBdXCyg+AWM91IpuH6
+         GX8AJaT1c1GsCDvG+mG1DR5GUtuii9g6Cj8/uNlE/fqD4tLOWH80ManukKMM5JqGVYHM
+         eGOg==
+X-Gm-Message-State: AGi0PubzECKJOc3haBTokFh9ti9DjQCdQDH6DDZNWjeq84NrsnN7S30F
+        FUWZobtoM4p1gcJGJqmko/SFYwnl+RMcyWZFaNYFfQ==
+X-Google-Smtp-Source: APiQypJ57XlctB5m5vpEXm+L/8pvYvG+sfnlbPnmuml+0OdDWKFc7GxhEGybYQcVpM/HElMl+IAh2syFW1PO5P0sDow=
+X-Received: by 2002:a17:906:1e42:: with SMTP id i2mr3043907ejj.317.1586281990650;
+ Tue, 07 Apr 2020 10:53:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b63a8390bbc0e81d01540648da7e6b03b8577fa.1586174459.git.angelo.ribeiro@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=QyXUC8HyAAAA:8
-        a=VwQbUJbxAAAA:8 a=jIQo8A4GAAAA:8 a=NYW8XwYh3pstn-W6v_UA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=Lf5xNeLK5dgiOs8hzIjU:22
+References: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com>
+In-Reply-To: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 7 Apr 2020 10:52:58 -0700
+Message-ID: <CAPcyv4goJ2jbXNVZbMUKtRUominhuMhuTKrMh=fnhrfvC4jyjw@mail.gmail.com>
+Subject: Re: [PATCH] memcpy_flushcache: use cache flusing for larger lengths
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        device-mapper development <dm-devel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Angelo.
+On Tue, Apr 7, 2020 at 8:02 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
+>
+> [ resending this to x86 maintainers ]
+>
+> Hi
+>
+> I tested performance of various methods how to write to optane-based
+> persistent memory, and found out that non-temporal stores achieve
+> throughput 1.3 GB/s. 8 cached stores immediatelly followed by clflushopt
+> or clwb achieve throughput 1.6 GB/s.
+>
+> memcpy_flushcache uses non-temporal stores, I modified it to use cached
+> stores + clflushopt and it improved performance of the dm-writecache
+> target significantly:
+>
+> dm-writecache throughput:
+> (dd if=/dev/zero of=/dev/mapper/wc bs=64k oflag=direct)
+> writecache block size   512             1024            2048            4096
+> movnti                  496 MB/s        642 MB/s        725 MB/s        744 MB/s
+> clflushopt              373 MB/s        688 MB/s        1.1 GB/s        1.2 GB/s
+>
+> For block size 512, movnti works better, for larger block sizes,
+> clflushopt is better.
 
-One nit below.
+This should use clwb instead of clflushopt, the clwb macri
+automatically converts back to clflushopt if clwb is not supported.
 
-	Sam
+>
+> I was also testing the novafs filesystem, it is not upstream, but it
+> benefitted from similar change in __memcpy_flushcache and
+> __copy_user_nocache:
+> write throughput on big files - movnti: 662 MB/s, clwb: 1323 MB/s
+> write throughput on small files - movnti: 621 MB/s, clwb: 1013 MB/s
+>
+>
+> I submit this patch for __memcpy_flushcache that improves dm-writecache
+> performance.
+>
+> Other ideas - should we introduce memcpy_to_pmem instead of modifying
+> memcpy_flushcache and move this logic there? Or should I modify the
+> dm-writecache target directly to use clflushopt with no change to the
+> architecture-specific code?
 
-On Mon, Apr 06, 2020 at 03:24:13PM +0200, Angelo Ribeiro wrote:
-> Add Synopsys DesignWare IPK specific extensions for Synopsys DesignWare
-> MIPI DSI Host driver.
-> 
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Cc: Joao Pinto <jpinto@synopsys.com>
-> Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+This also needs to mention your analysis that showed that this can
+have negative cache pollution effects [1], so I'm not sure how to
+decide when to make the tradeoff. Once we have movdir64b the tradeoff
+equation changes yet again:
+
+[1]: https://lore.kernel.org/linux-nvdimm/alpine.LRH.2.02.2004010941310.23210@file01.intranet.prod.int.rdu2.redhat.com/
+
+
+>
+> Mikulas
+>
+>
+>
+>
+> From: Mikulas Patocka <mpatocka@redhat.com>
+>
+> I tested dm-writecache performance on a machine with Optane nvdimm and it
+> turned out that for larger writes, cached stores + cache flushing perform
+> better than non-temporal stores. This is the throughput of dm-writecache
+> measured with this command:
+> dd if=/dev/zero of=/dev/mapper/wc bs=64 oflag=direct
+>
+> block size      512             1024            2048            4096
+> movnti          496 MB/s        642 MB/s        725 MB/s        744 MB/s
+> clflushopt      373 MB/s        688 MB/s        1.1 GB/s        1.2 GB/s
+>
+> We can see that for smaller block, movnti performs better, but for larger
+> blocks, clflushopt has better performance.
+>
+> This patch changes the function __memcpy_flushcache accordingly, so that
+> with size >= 768 it performs cached stores and cache flushing. Note that
+> we must not use the new branch if the CPU doesn't have clflushopt - in
+> that case, the kernel would use inefficient "clflush" instruction that has
+> very bad performance.
+>
+> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+>
 > ---
->  drivers/gpu/drm/ipk/Kconfig           |   9 +
->  drivers/gpu/drm/ipk/Makefile          |   2 +
->  drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c | 556 ++++++++++++++++++++++++++++++++++
->  3 files changed, 567 insertions(+)
->  create mode 100644 drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
-> 
-> diff --git a/drivers/gpu/drm/ipk/Kconfig b/drivers/gpu/drm/ipk/Kconfig
-> index 1f87444..49819e5 100644
-> --- a/drivers/gpu/drm/ipk/Kconfig
-> +++ b/drivers/gpu/drm/ipk/Kconfig
-> @@ -11,3 +11,12 @@ config DRM_IPK
->  	  Enable support for the Synopsys DesignWare DRM DSI.
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called ipk-drm.
+>  arch/x86/lib/usercopy_64.c |   36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>
+> Index: linux-2.6/arch/x86/lib/usercopy_64.c
+> ===================================================================
+> --- linux-2.6.orig/arch/x86/lib/usercopy_64.c   2020-03-24 15:15:36.644945091 -0400
+> +++ linux-2.6/arch/x86/lib/usercopy_64.c        2020-03-30 07:17:51.450290007 -0400
+> @@ -152,6 +152,42 @@ void __memcpy_flushcache(void *_dst, con
+>                         return;
+>         }
+>
+> +       if (static_cpu_has(X86_FEATURE_CLFLUSHOPT) && size >= 768 && likely(boot_cpu_data.x86_clflush_size == 64)) {
+> +               while (!IS_ALIGNED(dest, 64)) {
+> +                       asm("movq    (%0), %%r8\n"
+> +                           "movnti  %%r8,   (%1)\n"
+> +                           :: "r" (source), "r" (dest)
+> +                           : "memory", "r8");
+> +                       dest += 8;
+> +                       source += 8;
+> +                       size -= 8;
+> +               }
+> +               do {
+> +                       asm("movq    (%0), %%r8\n"
+> +                           "movq   8(%0), %%r9\n"
+> +                           "movq  16(%0), %%r10\n"
+> +                           "movq  24(%0), %%r11\n"
+> +                           "movq    %%r8,   (%1)\n"
+> +                           "movq    %%r9,  8(%1)\n"
+> +                           "movq   %%r10, 16(%1)\n"
+> +                           "movq   %%r11, 24(%1)\n"
+> +                           "movq  32(%0), %%r8\n"
+> +                           "movq  40(%0), %%r9\n"
+> +                           "movq  48(%0), %%r10\n"
+> +                           "movq  56(%0), %%r11\n"
+> +                           "movq    %%r8, 32(%1)\n"
+> +                           "movq    %%r9, 40(%1)\n"
+> +                           "movq   %%r10, 48(%1)\n"
+> +                           "movq   %%r11, 56(%1)\n"
+> +                           :: "r" (source), "r" (dest)
+> +                           : "memory", "r8", "r9", "r10", "r11");
+> +                       clflushopt((void *)dest);
+> +                       dest += 64;
+> +                       source += 64;
+> +                       size -= 64;
+> +               } while (size >= 64);
+> +       }
 > +
-> +config DRM_IPK_DSI
-> +	tristate "Synopsys DesignWare IPK specific extensions for MIPI DSI"
-> +	depends on DRM_IPK
-> +	select DRM_DW_MIPI_DSI
-> +	help
-> +	  Choose this option for Synopsys DesignWare IPK MIPI DSI support.
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called dw-mipi-dsi-ipk.
-> diff --git a/drivers/gpu/drm/ipk/Makefile b/drivers/gpu/drm/ipk/Makefile
-> index 51d2774..c80503f 100644
-> --- a/drivers/gpu/drm/ipk/Makefile
-> +++ b/drivers/gpu/drm/ipk/Makefile
-> @@ -4,3 +4,5 @@ ipk-drm-y := \
->  	dw-vpg.o
->  
->  obj-$(CONFIG_DRM_IPK) += ipk-drm.o
-> +
-> +obj-$(CONFIG_DRM_IPK_DSI) += dw-mipi-dsi-ipk.o
-> diff --git a/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c b/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
-> new file mode 100644
-> index 0000000..070eccb
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ipk/dw-mipi-dsi-ipk.c
-> @@ -0,0 +1,556 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019-2020 Synopsys, Inc. and/or its affiliates.
-> + * Synopsys DesignWare MIPI DSI solution driver
-> + *
-> + * Author: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
-> + * Author: Luis Oliveira <luis.oliveira@synopsys.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/bridge/dw_mipi_dsi.h>
-> +#include <video/mipi_display.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include <drm/drm_crtc.h>
-> +#include <drm/drm_device.h>
-> +#include <drm/drm_print.h>
-Same rant as in previous mail about include file.
-
-
-Rest of the driver looked good while quickly browsing the code.
-
-	Sam
+>         /* 4x8 movnti loop */
+>         while (size >= 32) {
+>                 asm("movq    (%0), %%r8\n"
+>
