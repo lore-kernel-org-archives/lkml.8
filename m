@@ -2,162 +2,230 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D68C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5805C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9356C2078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDE32076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NZD9eLnR"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Xz1PaOxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgDGC1Z (ORCPT
+        id S1726605AbgDGC2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 22:27:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49761 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726287AbgDGC1Z (ORCPT
+        Mon, 6 Apr 2020 22:28:08 -0400
+Received: from mail-qv1-f47.google.com ([209.85.219.47]:39379 "EHLO
+        mail-qv1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgDGC2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 22:27:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586226444;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/fkDDJK2MlhGUP4gN8FDHRycy0vZD9gxGtsDR0UkgUU=;
-        b=NZD9eLnRqb1fqHhQanYI6RlYOugzKTswLIH2Y+PBKq7UWtidCHG3ZUBnM6nrkWQFpOzP8t
-        KwqFF9b3DvUpIyzVoyrTgflIrY/S6mk6w46YaAlPHw+GRMKIOjKarpqNc5RrjoEzyZ0JEk
-        f09lBiLUzaRH3/81TD2wyBqgnVvI/iQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-g4RjecHeNXmp3TQcxruaxw-1; Mon, 06 Apr 2020 22:27:22 -0400
-X-MC-Unique: g4RjecHeNXmp3TQcxruaxw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04F0A8017F5;
-        Tue,  7 Apr 2020 02:27:21 +0000 (UTC)
-Received: from [10.72.12.246] (ovpn-12-246.pek2.redhat.com [10.72.12.246])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1BBC85D9C5;
-        Tue,  7 Apr 2020 02:27:15 +0000 (UTC)
-Subject: Re: [PATCH] cachefiles: fix assertion failed after bmap
-To:     dhowells@redhat.com, linux-cachefs@redhat.com
-Cc:     linux-kernel@vger.kernel.org, jlayton@kernel.org
-References: <1584709355-7071-1-git-send-email-xiubli@redhat.com>
-From:   Xiubo Li <xiubli@redhat.com>
-Message-ID: <929da299-609f-f943-477d-0a32c23891c2@redhat.com>
-Date:   Tue, 7 Apr 2020 10:27:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <1584709355-7071-1-git-send-email-xiubli@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Mon, 6 Apr 2020 22:28:07 -0400
+Received: by mail-qv1-f47.google.com with SMTP id v38so1145834qvf.6
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 19:28:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=53HavfuEoNs7RdkbULc05Z/N1hLdj8dohxY4zgNOzHg=;
+        b=Xz1PaOxLFsXJrcs/MLYXgVbP6pZ68eOQOoeOAwDWL/o3fGjYrlIabduJ8regH40GBU
+         b4fF1q6VopAEvLtlUJCdDRGSLwx+Dk95JSmvM1oiEkkPwJd7605yxXA6e0l3XR5TMbn2
+         lP3i2rBZHaInkgKdChOShXThfRXbdtJHS+Rj1OVMGZAR565lkPbE2x7D3mt3cBERkEuV
+         7Fyb6IBh7bQCeFeCYQcowONWeEf43i+vRUpVOyxLicwGYivlB8ov2mOk0MsYXwp4XWDS
+         Z9sn92aSH7v3vlO5G2WSmiHm6uxY5CH824PwLSkyC/MNOLIj6oFdRwbmcX3Bgwm14IC6
+         AYlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=53HavfuEoNs7RdkbULc05Z/N1hLdj8dohxY4zgNOzHg=;
+        b=Y5mT4SbzAUBhFQin8WQz+u6TrV4OHZvh394864Z1zibreyBBHfKOCsw5qf7cOonIkp
+         0rJdsjHBlKeafRqCKHgRkLpfskJf1NURU870VF/pofY0f0LXztNCprP14nL5vyrhy6wy
+         AyN9uk021Dt3eLupAeNRwJLWFmU2CqvHyessTCxR6/aBptdMo199+8h9sLou5gFafrYO
+         ia4DueDQnFT5np/jJIlcGrruuEtswJqD6sZldn9UUDEp5R5B9lRWkF6lb9/GFXf3iaB/
+         SeGo07ozNtimeeDRLE+0iYpxH1f95qDe+K69c8+02G105kHl8brrMesrGeyTBkgF04lx
+         +1xA==
+X-Gm-Message-State: AGi0Pub9AyfZOAsT6LHA7IFgTt/7P2fjyc+gAay0HMY6MJ9Gd3Lhw4z8
+        HlFUXz6RaNaWycTFVFpdRToJkTFfxpfCrw==
+X-Google-Smtp-Source: APiQypLzwKru+4XVS81uYNuNV2j8b55OHDlmxpC6NF8tm56uLTju6sMpbDTav6gvnVo4iJRoCZL4xw==
+X-Received: by 2002:a05:6214:183:: with SMTP id q3mr121783qvr.234.1586226485967;
+        Mon, 06 Apr 2020 19:28:05 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id h138sm15856228qke.86.2020.04.06.19.28.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 Apr 2020 19:28:05 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Linux-next POWER9 NULL pointer NIP since 1st Apr.
+Message-Id: <15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw>
+Date:   Mon, 6 Apr 2020 22:28:04 -0400
+Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping.
+Ever since 1st Apr, linux-next starts to trigger a NULL pointer NIP on =
+POWER9 below using
+this config,
 
-Thanks
-BRs
+https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
 
+It takes a while to reproduce, so before I bury myself into bisecting =
+and just send a head-up
+to see if anyone spots anything obvious.
 
-On 2020/3/20 21:02, xiubli@redhat.com wrote:
-> From: Xiubo Li <xiubli@redhat.com>
->
-> <7>[  333.227204] ceph:  page/inode not in cache
-> <7>[  333.571182] ceph:  page/inode not in cache
-> <7>[  333.741097] ceph:  page/inode not in cache
-> <7>[  337.977233] ceph:  all-page read submitted
-> <7>[  339.649714] ceph:  all-page read submitted
-> <3>[  339.654882] CacheFiles:
-> <3>[  339.654952] CacheFiles: Assertion failed
-> <4>[  339.655124] ------------[ cut here ]------------
-> <2>[  339.655126] kernel BUG at fs/cachefiles/rdwr.c:434!
-> <4>[  339.655225] invalid opcode: 0000 [#1] SMP KASAN PTI
-> <4>[  339.655309] CPU: 0 PID: 3004 Comm: python2 Tainted: G            E     5.6.0-rc6+ #77
-> <4>[  339.655436] Hardware name: Red Hat RHEV Hypervisor, BIOS 1.11.0-2.el7 04/01/2014
-> <4>[  339.655578] RIP: 0010:cachefiles_read_or_alloc_page.cold.19+0xa2/0xcd [cachefiles]
-> <4>[  339.656007] RSP: 0018:ffff88838110f610 EFLAGS: 00010282
-> <4>[  339.656095] RAX: 000000000000001c RBX: ffff88836e564600 RCX: 0000000000000001
-> <4>[  339.656210] RDX: 0000000000000000 RSI: 0000000000000007 RDI: ffff888389c22bd0
-> <4>[  339.656326] RBP: ffff88837b502e48 R08: ffffed107138457b R09: ffffed107138457b
-> <4>[  339.656441] R10: ffffed107138457a R11: ffff888389c22bd3 R12: ffffea000d2dffc0
-> <4>[  339.656563] R13: 0000000000000000 R14: ffff88835ef44700 R15: ffff88835ef44600
-> <4>[  339.656679] FS:  00007fbb546c3740(0000) GS:ffff888389c00000(0000) knlGS:0000000000000000
-> <4>[  339.656809] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4>[  339.656902] CR2: 0000561ecd9c5108 CR3: 000000036c20a000 CR4: 00000000000406f0
-> <4>[  339.657020] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> <4>[  339.657136] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> <4>[  339.657251] Call Trace:
-> <4>[  339.657322]  ? fscache_run_op.isra.10+0x80/0x150 [fscache]
-> <4>[  339.657421]  ? cachefiles_read_copier+0x920/0x920 [cachefiles]
-> <4>[  339.657529]  ? fscache_wait_for_operation_activation+0xe2/0x310 [fscache]
-> <4>[  339.657659]  __fscache_read_or_alloc_page+0x3d2/0x520 [fscache]
-> <4>[  339.657797]  ceph_readpage_from_fscache+0x80/0x110 [ceph]
-> <4>[  339.657915]  ceph_do_readpage+0x1f3/0x660 [ceph]
-> <4>[  339.657997]  ? scan_shadow_nodes+0x50/0x50
-> <4>[  339.658094]  ? writepages_finish+0x700/0x700 [ceph]
-> <4>[  339.658178]  ? add_to_page_cache_lru+0x10e/0x190
-> <4>[  339.658255]  ? add_to_page_cache_locked+0x10/0x10
-> <4>[  339.658361]  ceph_readpage+0x12/0x40 [ceph]
-> <4>[  339.658433]  generic_file_buffered_read+0xa4e/0x1160
-> <4>[  339.658517]  ? read_cache_page_gfp+0x20/0x20
-> <4>[  339.658599]  ? down_read+0xe0/0x190
-> <4>[  339.658661]  ? unaccount_page_cache_page+0x2f0/0x2f0
-> <4>[  339.658743]  ? generic_file_read_iter+0x3b/0x220
-> <4>[  339.658846]  ceph_read_iter+0x321/0x1430 [ceph]
-> <4>[  339.658923]  ? avc_has_perm_noaudit+0x147/0x200
-> <4>[  339.659027]  ? ceph_direct_read_write+0xee0/0xee0 [ceph]
-> <4>[  339.659115]  ? perf_event_fork+0x20/0x20
-> <4>[  339.659182]  ? vma_wants_writenotify+0x6f/0x240
-> <4>[  339.659257]  ? __ia32_sys_mmap_pgoff+0x80/0x80
-> <4>[  339.659334]  ? __rb_insert_augmented+0x34/0x3f0
-> <4>[  339.662451]  ? vm_get_page_prot+0x60/0x60
-> <4>[  339.665560]  ? vma_set_page_prot+0xe5/0x100
-> <4>[  339.668668]  ? mmap_region+0x370/0xa60
-> <4>[  339.671773]  ? userfaultfd_unmap_complete+0x89/0x1e0
-> <4>[  339.674900]  ? new_sync_read+0x286/0x3b0
-> <4>[  339.678011]  new_sync_read+0x286/0x3b0
-> <4>[  339.681102]  ? __ia32_sys_llseek+0x1d0/0x1d0
-> <4>[  339.684196]  ? __fsnotify_parent+0x8d/0x1f0
-> <4>[  339.687242]  ? fsnotify+0x5c5/0x600
-> <4>[  339.690224]  ? __fsnotify_inode_delete+0x20/0x20
-> <4>[  339.693188]  ? avc_policy_seqno+0x22/0x30
-> <4>[  339.696043]  ? security_file_permission+0xe1/0x180
-> <4>[  339.698821]  vfs_read+0xaf/0x1b0
-> <4>[  339.701518]  ksys_read+0xb4/0x150
-> <4>[  339.704177]  ? kernel_write+0xb0/0xb0
-> <4>[  339.706822]  do_syscall_64+0x73/0x260
-> <4>[  339.709427]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> <4>[  339.712055] RIP: 0033:0x7fbb534eb950
->
-> Signed-off-by: Xiubo Li <xiubli@redhat.com>
-> ---
->   fs/cachefiles/rdwr.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/cachefiles/rdwr.c b/fs/cachefiles/rdwr.c
-> index 1dc97f2..073c14c 100644
-> --- a/fs/cachefiles/rdwr.c
-> +++ b/fs/cachefiles/rdwr.c
-> @@ -431,7 +431,7 @@ int cachefiles_read_or_alloc_page(struct fscache_retrieval *op,
->   	block <<= shift;
->   
->   	ret = bmap(inode, &block);
-> -	ASSERT(ret < 0);
-> +	ASSERT(!ret);
->   
->   	_debug("%llx -> %llx",
->   	       (unsigned long long) (page->index << shift),
+[  206.744625][T13224] LTP: starting fallocate04
+[  207.601583][T27684] /dev/zero: Can't open blockdev
+[  208.674301][T27684] EXT4-fs (loop0): mounting ext3 file system using =
+the ext4 subsystem
+[  208.680347][T27684] BUG: Unable to handle kernel instruction fetch =
+(NULL pointer?)
+[  208.680383][T27684] Faulting instruction address: 0x00000000
+[  208.680406][T27684] Oops: Kernel access of bad area, sig: 11 [#1]
+[  208.680439][T27684] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
+DEBUG_PAGEALLOC NUMA PowerNV
+[  208.680474][T27684] Modules linked in: ext4 crc16 mbcache jbd2 loop =
+kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci libahci mdio tg3 =
+libata libphy firmware_class dm_mirror dm_region_hash dm_log dm_mod
+[  208.680576][T27684] CPU: 117 PID: 27684 Comm: fallocate04 Tainted: G  =
+      W         5.6.0-next-20200401+ #288
+[  208.680614][T27684] NIP:  0000000000000000 LR: c0080000102c0048 CTR: =
+0000000000000000
+[  208.680657][T27684] REGS: c000200361def420 TRAP: 0400   Tainted: G    =
+    W          (5.6.0-next-20200401+)
+[  208.680700][T27684] MSR:  900000004280b033 =
+<SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 42022228  XER: 20040000
+[  208.680760][T27684] CFAR: c00800001032c494 IRQMASK: 0=20
+[  208.680760][T27684] GPR00: c0000000005ac3f8 c000200361def6b0 =
+c00000000165c200 c00020107dae0bd0=20
+[  208.680760][T27684] GPR04: 0000000000000000 0000000000000400 =
+0000000000000000 0000000000000000=20
+[  208.680760][T27684] GPR08: c000200361def6e8 c0080000102c0040 =
+000000007fffffff c000000001614e80=20
+[  208.680760][T27684] GPR12: 0000000000000000 c000201fff671280 =
+0000000000000000 0000000000000002=20
+[  208.680760][T27684] GPR16: 0000000000000002 0000000000040001 =
+c00020030f5a1000 c00020030f5a1548=20
+[  208.680760][T27684] GPR20: c0000000015fbad8 c00000000168c654 =
+c000200361def818 c0000000005b4c10=20
+[  208.680760][T27684] GPR24: 0000000000000000 c0080000103365b8 =
+c00020107dae0bd0 0000000000000400=20
+[  208.680760][T27684] GPR28: c00000000168c3a8 0000000000000000 =
+0000000000000000 0000000000000000=20
+[  208.681014][T27684] NIP [0000000000000000] 0x0
+[  208.681065][T27684] LR [c0080000102c0048] ext4_iomap_end+0x8/0x30 =
+[ext4]
+[  208.681091][T27684] Call Trace:
+[  208.681129][T27684] [c000200361def6b0] [c0000000005ac3bc] =
+iomap_apply+0x20c/0x920 (unreliable)
+iomap_apply at fs/iomap/apply.c:80 (discriminator 4)
+[  208.681173][T27684] [c000200361def7f0] [c0000000005b4adc] =
+iomap_bmap+0xfc/0x160
+iomap_bmap at fs/iomap/fiemap.c:142
+[  208.681228][T27684] [c000200361def850] [c0080000102c2c1c] =
+ext4_bmap+0xa4/0x180 [ext4]
+ext4_bmap at fs/ext4/inode.c:3213
+[  208.681260][T27684] [c000200361def890] [c0000000004f71fc] =
+bmap+0x4c/0x80
+[  208.681281][T27684] [c000200361def8c0] [c00800000fdb0acc] =
+jbd2_journal_init_inode+0x44/0x1a0 [jbd2]
+jbd2_journal_init_inode at fs/jbd2/journal.c:1255
+[  208.681326][T27684] [c000200361def960] [c00800001031c808] =
+ext4_load_journal+0x440/0x860 [ext4]
+[  208.681371][T27684] [c000200361defa30] [c008000010322a14] =
+ext4_fill_super+0x342c/0x3ab0 [ext4]
+[  208.681414][T27684] [c000200361defba0] [c0000000004cb0bc] =
+mount_bdev+0x25c/0x290
+[  208.681478][T27684] [c000200361defc40] [c008000010310250] =
+ext4_mount+0x28/0x50 [ext4]
+[  208.681520][T27684] [c000200361defc60] [c00000000053242c] =
+legacy_get_tree+0x4c/0xb0
+[  208.681556][T27684] [c000200361defc90] [c0000000004c864c] =
+vfs_get_tree+0x4c/0x130
+[  208.681593][T27684] [c000200361defd00] [c00000000050a1c8] =
+do_mount+0xa18/0xc50
+[  208.681641][T27684] [c000200361defdd0] [c00000000050a9a8] =
+sys_mount+0x158/0x180
+[  208.681679][T27684] [c000200361defe20] [c00000000000b3f8] =
+system_call+0x5c/0x68
+[  208.681726][T27684] Instruction dump:
+[  208.681747][T27684] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
+XXXXXXXX XXXXXXXX XXXXXXXX=20
+[  208.681797][T27684] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
+XXXXXXXX XXXXXXXX XXXXXXXX=20
+[  208.681839][T27684] ---[ end trace 4e9e2bab7f1d4048 ]---
+[  208.802259][T27684]=20
+[  209.802373][T27684] Kernel panic - not syncing: Fatal exception
 
-
+[  215.281666][T16896] LTP: starting chown04_16
+[  215.424203][T18297] BUG: Unable to handle kernel instruction fetch =
+(NULL pointer?)
+[  215.424289][T18297] Faulting instruction address: 0x00000000
+[  215.424313][T18297] Oops: Kernel access of bad area, sig: 11 [#1]
+[  215.424341][T18297] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
+DEBUG_PAGEALLOC NUMA PowerNV
+[  215.424383][T18297] Modules linked in: loop kvm_hv kvm ip_tables =
+x_tables xfs sd_mod bnx2x mdio tg3 ahci libahci libphy libata =
+firmware_class dm_mirror dm_region_hash dm_log dm_mod
+[  215.424459][T18297] CPU: 85 PID: 18297 Comm: chown04_16 Tainted: G    =
+    W         5.6.0-next-20200405+ #3
+[  215.424489][T18297] NIP:  0000000000000000 LR: c00800000fbc0408 CTR: =
+0000000000000000
+[  215.424530][T18297] REGS: c000200b8606f990 TRAP: 0400   Tainted: G    =
+    W          (5.6.0-next-20200405+)
+[  215.424570][T18297] MSR:  9000000040009033 <SF,HV,EE,ME,IR,DR,RI,LE>  =
+CR: 84000248  XER: 20040000
+[  215.424619][T18297] CFAR: c00800000fbc64f4 IRQMASK: 0=20
+[  215.424619][T18297] GPR00: c0000000006c2238 c000200b8606fc20 =
+c00000000165ce00 0000000000000000=20
+[  215.424619][T18297] GPR04: c000201a58106400 c000200b8606fcc0 =
+000000005f037e7d ffffffff00013bfb=20
+[  215.424619][T18297] GPR08: c000201a58106400 0000000000000000 =
+0000000000000000 c000000001652ee0=20
+[  215.424619][T18297] GPR12: 0000000000000000 c000201fff69a600 =
+0000000000000000 0000000000000000=20
+[  215.424619][T18297] GPR16: 0000000000000000 0000000000000000 =
+0000000000000000 0000000000000000=20
+[  215.424619][T18297] GPR20: 0000000000000000 0000000000000000 =
+0000000000000000 0000000000000007=20
+[  215.424619][T18297] GPR24: 0000000000000000 0000000000000000 =
+c00800000fbc8688 c000200b8606fcc0=20
+[  215.424619][T18297] GPR28: 0000000000000000 000000007fffffff =
+c00800000fbc0400 c00020068b8c0e70=20
+[  215.424914][T18297] NIP [0000000000000000] 0x0
+[  215.424953][T18297] LR [c00800000fbc0408] find_free_cb+0x8/0x30 =
+[loop]
+find_free_cb at drivers/block/loop.c:2129
+[  215.424997][T18297] Call Trace:
+[  215.425036][T18297] [c000200b8606fc20] [c0000000006c2290] =
+idr_for_each+0xf0/0x170 (unreliable)
+[  215.425073][T18297] [c000200b8606fca0] [c00800000fbc2744] =
+loop_lookup.part.2+0x4c/0xb0 [loop]
+loop_lookup at drivers/block/loop.c:2144
+[  215.425105][T18297] [c000200b8606fce0] [c00800000fbc3558] =
+loop_control_ioctl+0x120/0x1d0 [loop]
+[  215.425149][T18297] [c000200b8606fd40] [c0000000004eb688] =
+ksys_ioctl+0xd8/0x130
+[  215.425190][T18297] [c000200b8606fd90] [c0000000004eb708] =
+sys_ioctl+0x28/0x40
+[  215.425233][T18297] [c000200b8606fdb0] [c00000000003cc30] =
+system_call_exception+0x110/0x1e0
+[  215.425274][T18297] [c000200b8606fe20] [c00000000000c9f0] =
+system_call_common+0xf0/0x278
+[  215.425314][T18297] Instruction dump:
+[  215.425338][T18297] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
+XXXXXXXX XXXXXXXX XXXXXXXX=20
+[  215.425374][T18297] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
+XXXXXXXX XXXXXXXX XXXXXXXX=20
+[  215.425422][T18297] ---[ end trace ebed248fad431966 ]---
+[  215.642114][T18297]=20
+[  216.642220][T18297] Kernel panic - not syncing: Fatal exception=
