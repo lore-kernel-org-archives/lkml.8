@@ -2,220 +2,143 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EC5C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3666C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 308B52075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7852075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:02:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bRk2d3AM"
+	dkim=pass (1024-bit key) header.d=quantenna.com header.i=@quantenna.com header.b="AJrvRgyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgDGUC3 (ORCPT
+        id S1727798AbgDGUCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:02:29 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28554 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726436AbgDGUC2 (ORCPT
+        Tue, 7 Apr 2020 16:02:31 -0400
+Received: from mx0b-00183b01.pphosted.com ([67.231.157.42]:48584 "EHLO
+        mx0a-00183b01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727109AbgDGUC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:02:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586289747;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cIVKRcoNPT/YhGvKNLvmQ1QZBE7ggdwD//CljsTSQaE=;
-        b=bRk2d3AMHJf8c49BQeEgfUiaFfYH5J0Sq07SWeZjX79khs8rjlqKqx9do1dQDsyofzdeH0
-        XfkIabd6xqBqQCG8qDDfSJojcs5iD+kwQDVl7tiDHpA5vD+xJie0B5QACNUpVjLht+fNYb
-        fva6rTiqEJtWym3Th0elM2S8Wcj+3AM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-157-TiKKrl-pMImpNLxjy12tNw-1; Tue, 07 Apr 2020 16:02:18 -0400
-X-MC-Unique: TiKKrl-pMImpNLxjy12tNw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E6DC149C0;
-        Tue,  7 Apr 2020 20:02:17 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-117-180.rdu2.redhat.com [10.10.117.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5036D385;
-        Tue,  7 Apr 2020 20:02:15 +0000 (UTC)
-Subject: Re: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive data
- objects
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-References: <20200407200106.10917-1-longman@redhat.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <f8cd2c50-c044-5550-7b1a-d0a6765c4fc8@redhat.com>
-Date:   Tue, 7 Apr 2020 16:02:14 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 7 Apr 2020 16:02:29 -0400
+X-Greylist: delayed 809 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Apr 2020 16:02:28 EDT
+Received: from pps.filterd (m0059811.ppops.net [127.0.0.1])
+        by mx0b-00183b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037JbQK5019294;
+        Tue, 7 Apr 2020 13:48:54 -0600
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2104.outbound.protection.outlook.com [104.47.55.104])
+        by mx0b-00183b01.pphosted.com with ESMTP id 306mruf642-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Apr 2020 13:48:53 -0600
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b1EtLp0TH80X03l9k+oXTTzYtkvLzhyAL0qSr+CVhVPemdth3DhSC3FWMuFQgFC+H8qQ3QRrayYqyM/hvQ1cRpLYIuVri8ABBeJ8EAw4DtUxPLCD0boF8PiKPBvRYDV2h03Qk/DxoBJk22WZSUDcUJ+/uXWTCotfpy+lpAFnQh9nUzbDb0DghIDf4pD7c2Tbl3zG999yiBgGUg5k5AWTNQyu17iHapj8G69Kk2rlZbEAUwg/RXoyE765FwW8alLvQ3MHvxJKOQhXglq1BOusMmelpVlVMOBszuJRB4KGYXfmrt54MmzbJEzJ//tm/owlV2k4faWWBpkrMn0A2fga6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W0UK76TzFgOA2iUOqqcPQ4wXkAo1pJXh80+LEJ7aalo=;
+ b=GZDKnilbWEOuO9RIMn/kpLQBAuUGsaNPHBh94eSnwu6T0+cX49U9fXqrVPr92RlahUF+SIaGuZIn4vQYtb0meV3Pz3mpmwt+cDMUIjGUVzK2TKwbTbHEuPbqgBEqExHddnZY82pIz/NscTOUhAclBTG7DZMf5NeF+hx0QSRsbE/71kmQ64k2HsC0ebD3ilQav0/ii39NelTyzWTbcZghs+Uvk+mcUr+SamZdqhAK0MJ3ubvQO6G1rSQKRvnOSnB24y9R1gFwNpUkVAH1AtvGYD5DKvUvYiSQkgCYUjEGp4JjrP2HJrCTmUGFS+BPYIlJan/4SuY13vPdYS+ib2V08g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=quantenna.com; dmarc=pass action=none
+ header.from=quantenna.com; dkim=pass header.d=quantenna.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quantenna.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W0UK76TzFgOA2iUOqqcPQ4wXkAo1pJXh80+LEJ7aalo=;
+ b=AJrvRgyVN1cj20kl4NI3Cpueq7/VvIvaB1fnXwMVnL6YdHxhgKp6FwUbpOnfrOsukvfX/BfF7WoeEqSPDiAYF6As/I+4z8Et32TzOEUW/h7Khki1iQ6wH4KAKPma6UMUsj9H3f+63IK9pU4gSx3/a81htssGgdwRYGCpvtblRcc=
+Received: from BN3PR05MB2641.namprd05.prod.outlook.com
+ (2a01:111:e400:7bb9::24) by BN3PR05MB2658.namprd05.prod.outlook.com
+ (2a01:111:e400:7bb5::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.13; Tue, 7 Apr
+ 2020 19:48:52 +0000
+Received: from BN3PR05MB2641.namprd05.prod.outlook.com
+ ([fe80::a0b8:50f4:2701:4ecf]) by BN3PR05MB2641.namprd05.prod.outlook.com
+ ([fe80::a0b8:50f4:2701:4ecf%4]) with mapi id 15.20.2900.012; Tue, 7 Apr 2020
+ 19:48:52 +0000
+Received: from CY4PR05MB3558.namprd05.prod.outlook.com (2603:10b6:910:53::39)
+ by CY4PR05MB3046.namprd05.prod.outlook.com (2603:10b6:903:f3::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.13; Tue, 7 Apr
+ 2020 19:48:20 +0000
+Received: from CY4PR05MB3558.namprd05.prod.outlook.com
+ ([fe80::c886:d658:a1c4:1f6a]) by CY4PR05MB3558.namprd05.prod.outlook.com
+ ([fe80::c886:d658:a1c4:1f6a%7]) with mapi id 15.20.2900.012; Tue, 7 Apr 2020
+ 19:48:20 +0000
+Date:   Tue, 7 Apr 2020 22:48:13 +0300
+From:   Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+CC:     imitsyanko@quantenna.com, avinashp@quantenna.com,
+        smatyukevich@quantenna.com, kvalo@codeaurora.org,
+        davem@davemloft.net, huangfq.daxian@gmail.com,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] qtnfmac: Simplify code in _attach functions
+Message-ID: <20200407194812.aziu2hedsfkwh7lg@bars>
+Mail-Followup-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        imitsyanko@quantenna.com, avinashp@quantenna.com,
+        smatyukevich@quantenna.com, kvalo@codeaurora.org,
+        davem@davemloft.net, huangfq.daxian@gmail.com,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200407193233.9439-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407193233.9439-1-christophe.jaillet@wanadoo.fr>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: AM6P194CA0086.EURP194.PROD.OUTLOOK.COM
+ (2603:10a6:209:8f::27) To CY4PR05MB3558.namprd05.prod.outlook.com
+ (2603:10b6:910:53::39)
 MIME-Version: 1.0
-In-Reply-To: <20200407200106.10917-1-longman@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from bars (195.182.157.78) by AM6P194CA0086.EURP194.PROD.OUTLOOK.COM (2603:10a6:209:8f::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend Transport; Tue, 7 Apr 2020 19:48:17 +0000
+X-Originating-IP: [195.182.157.78]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 12bfffd6-f00f-4ec0-c110-08d7db2c9fce
+X-MS-TrafficTypeDiagnostic: CY4PR05MB3046:|BN3PR05MB2658:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR05MB3046DCAA18E799701E5FB7FAA3C30@CY4PR05MB3046.namprd05.prod.outlook.com>
+X-Moderation-Data: 4/7/2020 7:48:49 PM
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 036614DD9C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN3PR05MB2641.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(366004)(6666004)(9576002)(66556008)(66946007)(5660300002)(9686003)(66476007)(956004)(4326008)(2906002)(33716001)(52116002)(1076003)(6496006)(6916009)(26005)(81166006)(8936002)(498600001)(81156014)(186003)(8676002)(16526019)(558084003)(55016002)(86362001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: quantenna.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9mRMJKhpJ5OqXETYBMKnc3FwU6jgMZdIB/OT12E362akRA7E+6zfS9zPX+UXZDVu5fvoMY/6jA2n4BXzxZ8mOnB2Ff/6uN3RrRnCEH9SQQqCSHYoC5VSwS32tl9mDL9OSBYCF+UflH6vRh7Y1qwiC6U2btLRRrCgPHUtAccmQGrglf1ROG6kOltaftNsJsg3n50ao0E6oVSjJDQj9I935pG2DiOz7btlK/bP9dX6UqEr7hNkrQRdT2v9xFYmDXr5VTQxIBmGOKePKjdr7ynpXICljKkWJbw5YSWN41X91lHii/Kr4M+ygDy+hai8ZP43gD0IWkG3cY+KdHSWgu5BCGgVIRPzXlpBRwgqloeJYBhn3Cv8bg/zlGZmYLFGOuImye7fWYn2u8rv3pWk8GyLwb++I5ewNd+4WoHqXQGFzq9CnBiWf/4ldUIRNMQAN9uq
+X-MS-Exchange-AntiSpam-MessageData: HR8qq6/QVcm/qmySwRKP4tPZBvkn1MpzdJgZxRbMU+HIfPnMxRSHIvXjN1UGdP5+DltmOyOXDItnyfG7Ddi6Uv7CZsuNTGhSwd90aohYu0wGglXh0lUiwPW/S8bRn+t3BrkO2PpqkY9sDViCS819/Q==
+X-OriginatorOrg: quantenna.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12bfffd6-f00f-4ec0-c110-08d7db2c9fce
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a355dbce-62b4-4789-9446-c1d5582180ff
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: j55ykmrFdXdXGxdm4Ug+8N8CAiQ7Nv+7Xsx9kdH8MsoFsPZxetfrwxB9ucWzPWh6Fm1s38nH2q0K7BNIpL4xBmgmgJCBQgkfb3d7X2XfxR06oKACtqwxEeKyltR8OsakpTDZonFQ+Fz7ulIXDBTOXJR2gjo9cs1vH01lx82pY9ivoQgpAskAvhDee5bksNWYoryRTMEYm2qtLjQaVgYBeg==
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 19:48:52.0354
+ (UTC)
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR05MB2658
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_08:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=653
+ phishscore=0 spamscore=0 bulkscore=0 clxscore=1011 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/20 4:01 PM, Waiman Long wrote:
-> For kvmalloc'ed data object that contains sensitive information like
-> cryptographic key, we need to make sure that the buffer is always
-> cleared before freeing it. Using memset() alone for buffer clearing may
-> not provide certainty as the compiler may compile it away. To be sure,
-> the special memzero_explicit() has to be used.
->
-> This patch introduces a new kvfree_sensitive() for freeing those
-> sensitive data objects allocated by kvmalloc(). The relevnat places
-> where kvfree_sensitive() can be used are modified to use it.
->
-> Fixes: 4f0882491a14 ("KEYS: Avoid false positive ENOMEM error on key read")
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  include/linux/mm.h       |  1 +
->  mm/util.c                | 18 ++++++++++++++++++
->  security/keys/internal.h | 11 -----------
->  security/keys/keyctl.c   | 16 +++++-----------
->  4 files changed, 24 insertions(+), 22 deletions(-)
->
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 7dd5c4ccbf85..9b3130b20f42 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -757,6 +757,7 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
->  }
->  
->  extern void kvfree(const void *addr);
-> +extern void kvfree_sensitive(const void *addr, size_t len);
->  
->  static inline int compound_mapcount(struct page *page)
->  {
-> diff --git a/mm/util.c b/mm/util.c
-> index 988d11e6c17c..01e210766f3d 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -604,6 +604,24 @@ void kvfree(const void *addr)
->  }
->  EXPORT_SYMBOL(kvfree);
->  
-> +/**
-> + * kvfree_sensitive - free a data object containing sensitive information
-> + * @addr - address of the data object to be freed
-> + * @len  - length of the data object
-> + *
-> + * Use the special memzero_explicit() function to clear the content of a
-> + * kvmalloc'ed object containing sensitive data to make sure that the
-> + * compiler won't optimize out the data clearing.
-> + */
-> +void kvfree_sensitive(const void *addr, size_t len)
-> +{
-> +	if (likely(!ZERO_OR_NULL_PTR(addr))) {
-> +		memzero_explicit((void *)addr, len);
-> +		kvfree(addr);
-> +	}
-> +}
-> +EXPORT_SYMBOL(kvfree_sensitive);
-> +
->  static inline void *__page_rmapping(struct page *page)
->  {
->  	unsigned long mapping;
-> diff --git a/security/keys/internal.h b/security/keys/internal.h
-> index 6d0ca48ae9a5..153d35c20d3d 100644
-> --- a/security/keys/internal.h
-> +++ b/security/keys/internal.h
-> @@ -350,15 +350,4 @@ static inline void key_check(const struct key *key)
->  #define key_check(key) do {} while(0)
->  
->  #endif
-> -
-> -/*
-> - * Helper function to clear and free a kvmalloc'ed memory object.
-> - */
-> -static inline void __kvzfree(const void *addr, size_t len)
-> -{
-> -	if (addr) {
-> -		memset((void *)addr, 0, len);
-> -		kvfree(addr);
-> -	}
-> -}
->  #endif /* _INTERNAL_H */
-> diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-> index 5e01192e222a..edde63a63007 100644
-> --- a/security/keys/keyctl.c
-> +++ b/security/keys/keyctl.c
-> @@ -142,10 +142,7 @@ SYSCALL_DEFINE5(add_key, const char __user *, _type,
->  
->  	key_ref_put(keyring_ref);
->   error3:
-> -	if (payload) {
-> -		memzero_explicit(payload, plen);
-> -		kvfree(payload);
-> -	}
-> +	kvfree_sensitive(payload, plen);
->   error2:
->  	kfree(description);
->   error:
-> @@ -360,7 +357,7 @@ long keyctl_update_key(key_serial_t id,
->  
->  	key_ref_put(key_ref);
->  error2:
-> -	__kvzfree(payload, plen);
-> +	kvfree_sensitive(payload, plen);
->  error:
->  	return ret;
->  }
-> @@ -914,7 +911,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
->  		 */
->  		if (ret > key_data_len) {
->  			if (unlikely(key_data))
-> -				__kvzfree(key_data, key_data_len);
-> +				kvfree_sensitive(key_data, key_data_len);
->  			key_data_len = ret;
->  			continue;	/* Allocate buffer */
->  		}
-> @@ -923,7 +920,7 @@ long keyctl_read_key(key_serial_t keyid, char __user *buffer, size_t buflen)
->  			ret = -EFAULT;
->  		break;
->  	}
-> -	__kvzfree(key_data, key_data_len);
-> +	kvfree_sensitive(key_data, key_data_len);
->  
->  key_put_out:
->  	key_put(key);
-> @@ -1225,10 +1222,7 @@ long keyctl_instantiate_key_common(key_serial_t id,
->  		keyctl_change_reqkey_auth(NULL);
->  
->  error2:
-> -	if (payload) {
-> -		memzero_explicit(payload, plen);
-> -		kvfree(payload);
-> -	}
-> +	kvfree_sensitive(payload, plen);
->  error:
->  	return ret;
->  }
 
-Sorry, wrong one. Please ignore it.
+Hello Christophe,
 
--Longman
+> There is no need to re-implement 'netdev_alloc_skb_ip_align()' here.
+> Keep the code simple.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
+Thanks for cleaning this up!
 
+Reviewed-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+
+Regards,
+Sergey
