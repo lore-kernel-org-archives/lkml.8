@@ -2,148 +2,113 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EF4C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A855CC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0752076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:52:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="l4GJooe1"
+	by mail.kernel.org (Postfix) with ESMTP id 8426D20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbgDGPw5 (ORCPT
+        id S1727549AbgDGPxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:52:57 -0400
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.216]:34221 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbgDGPw5 (ORCPT
+        Tue, 7 Apr 2020 11:53:33 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:33398 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgDGPxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:52:57 -0400
-X-Greylist: delayed 726 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Apr 2020 11:52:56 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586274775;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=Message-ID:Subject:To:From:Date:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=0Vm5jvdMMayd/AwXXhj00PE8ghMFHjy0GR5Lfh87NN4=;
-        b=l4GJooe1P6ckza86t8onD0IM13cp0a0RIkOJk+fPoeoOHMIfotcZzApdq9CuETfm8s
-        SuZnuEkIaxdAcV5Mrxy+Gm/oWJucLWKNOTYOWrHto6R0wrCCGKtmQd8CAHAfqVOxd6p0
-        dW9RN92pbVApcPlHyF/AYs7PAoPqJ3RwVMqlpPlDgwVhO9t8tcBVOIbN3TKYZO48XjUb
-        6riG7udOrvlSSXUZd/oa7H3GU7KTBccPKJZxU9zzx/M+yXJ7KnfHS+WJnsY9Tx3InOvK
-        FZybhoAWhFXM14j8IKQKuAyWFI+8kCQGiHv9hPvblKZC+0fXKPJIZfedW51SAIJYbYRh
-        f5Kg==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS32kg"
-X-RZG-CLASS-ID: mo00
-Received: from aepfle.de
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id 204e5fw37Fenh96
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 7 Apr 2020 17:40:49 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 17:40:46 +0200
-From:   Olaf Hering <olaf@aepfle.de>
-To:     linux-kernel@vger.kernel.org, git@vger.kernel.org
-Subject: get_maintainer.pl sends bogus addresses to git send-email
-Message-ID: <20200407154046.GA15368@aepfle.de>
+        Tue, 7 Apr 2020 11:53:33 -0400
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
+        by gardel.0pointer.net (Postfix) with ESMTP id 1F908E8017E;
+        Tue,  7 Apr 2020 17:53:30 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id A667E161537; Tue,  7 Apr 2020 17:53:29 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 17:53:29 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Ian Kent <raven@themaw.net>, David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>, andres@anarazel.de,
+        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Upcoming: Notifications, FS notifications and fsinfo()
+Message-ID: <20200407155329.GA39803@gardel-login>
+References: <CAJfpegum_PsCfnar8+V2f_VO3k8CJN1LOFJV5OkHRDbQKR=EHg@mail.gmail.com>
+ <20200402155020.GA31715@gardel-login>
+ <CAJfpeguM__+S6DiD4MWFv5GCf_EUWvGFT0mzuUCCrfQwggqtDQ@mail.gmail.com>
+ <20200403110842.GA34663@gardel-login>
+ <CAJfpegtYKhXB-HNddUeEMKupR5L=RRuydULrvm39eTung0=yRg@mail.gmail.com>
+ <20200403150143.GA34800@gardel-login>
+ <CAJfpegudLD8F-25k-k=9G96JKB+5Y=xFT=ZMwiBkNTwkjMDumA@mail.gmail.com>
+ <20200406172917.GA37692@gardel-login>
+ <a4b5828d73ff097794f63f5f9d0fd1532067941c.camel@themaw.net>
+ <CAJfpegvYGB01i9eqCH-95Ynqy0P=CuxPCSAbSpBPa-TV8iXN0Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJfpegvYGB01i9eqCH-95Ynqy0P=CuxPCSAbSpBPa-TV8iXN0Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Di, 07.04.20 15:59, Miklos Szeredi (miklos@szeredi.hu) wrote:
 
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, Apr 7, 2020 at 4:22 AM Ian Kent <raven@themaw.net> wrote:
+> > > Right now, when you have n mounts, and any mount changes, or one is
+> > > added or removed then we have to parse the whole mount table again,
+> > > asynchronously, processing all n entries again, every frickin
+> > > time. This means the work to process n mounts popping up at boot is
+> > > O(n²). That sucks, it should be obvious to anyone. Now if we get that
+> > > fixed, by some mount API that can send us minimal notifications about
+> > > what happened and where, then this becomes O(n), which is totally OK.
+>
+> Something's not right with the above statement.  Hint: if there are
+> lots of events in quick succession, you can batch them quite easily to
+> prevent overloading the system.
+>
+> Wrote a pair of utilities to check out the capabilities of the current
+> API.   The first one just creates N mounts, optionally sleeping
+> between each.  The second one watches /proc/self/mountinfo and
+> generates individual (add/del/change) events based on POLLPRI and
+> comparing contents with previous instance.
+>
+> First use case: create 10,000 mounts, then start the watcher and
+> create 1000 mounts with a 50ms sleep between them.  Total time (user +
+> system) consumed by the watcher: 25s.  This is indeed pretty dismal,
+> and a per-mount query will help tremendously.  But it's still "just"
+> 25ms per mount, so if the mounts are far apart (which is what this
+> test is about), this won't thrash the system.  Note, how this is self
+> regulating: if the load is high, it will automatically batch more
+> requests, preventing overload.  It is also prone to lose pairs of add
+> + remove in these case (and so is the ring buffer based one from
+> David).
 
-For me sending patches via git send-email fails because email address
-conversion is failing. Something appends a ')' to x86/lkml@kernel.org.
-I suspect the double '))' in MAINTAINERS is confusing the command.
-I tried to send the trivial patch from v5.0 and v5.6 tag.
+We will batch requests too in systemd, of course, necessarily, given
+that the /p/s/mi inotify stuff is async. Thing though is that this
+means we buy lower CPU usage — working around the O(n²) issue — by
+introducing artifical higher latencies. We usually want to boot
+quickly, and not artificially slow.
 
-Is this a failure in ./scripts/get_maintainer.pl,
-or is this something git does internally?
-I'm sure others use such command on a daily basis, so likely something on
-my end became broken at some point in the past.
+Sure one can come up with some super smart scheme how to tweak the
+artifical latencies, how to grow them, how to shrink them, depending
+on a perceived flood of events, some backing off scheme. But that's
+just polishing a turd, if all we want is proper queued change
+notification without the O(n²) behaviour.
 
-Olaf
+I mean, the fix for an O(n²) algorithm is to make it O(n) or so. By
+coalescing wake-up events you just lower the n again, probably
+linearly, but that still means we pay O(n²), which sucks.
 
-linux.git $ git send-email --reroll-count 1 --confirm=3Dalways --annotate -=
--to-cmd ./scripts/get_maintainer.pl  HEAD^
+Lennart
 
-(mbox) Adding cc: Olaf Hering <olaf@aepfle.de> from line 'From: Olaf Hering=
- <olaf@aepfle.de>'
-(body) Adding cc: Olaf Hering <olaf@aepfle.de> from line 'Signed-off-by: Ol=
-af Hering <olaf@aepfle.de>'
-(to-cmd) Adding to: "K. Y. Srinivasan" <kys@microsoft.com> from: './scripts=
-/get_maintainer.pl'
-(to-cmd) Adding to: Haiyang Zhang <haiyangz@microsoft.com> from: './scripts=
-/get_maintainer.pl'
-(to-cmd) Adding to: Stephen Hemminger <sthemmin@microsoft.com> from: './scr=
-ipts/get_maintainer.pl'
-(to-cmd) Adding to: Sasha Levin <sashal@kernel.org> from: './scripts/get_ma=
-intainer.pl'
-(to-cmd) Adding to: Thomas Gleixner <tglx@linutronix.de> from: './scripts/g=
-et_maintainer.pl'
-(to-cmd) Adding to: Ingo Molnar <mingo@redhat.com> from: './scripts/get_mai=
-ntainer.pl'
-(to-cmd) Adding to: Borislav Petkov <bp@alien8.de> from: './scripts/get_mai=
-ntainer.pl'
-(to-cmd) Adding to: "H. Peter Anvin" <hpa@zytor.com> from: './scripts/get_m=
-aintainer.pl'
-(to-cmd) Adding to: x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND=
- 64-BIT)) from: './scripts/get_maintainer.pl'
-(to-cmd) Adding to: devel@linuxdriverproject.org (open list:Hyper-V CORE AN=
-D DRIVERS) from: './scripts/get_maintainer.pl'
-(to-cmd) Adding to: linux-kernel@vger.kernel.org (open list:X86 ARCHITECTUR=
-E (32-BIT AND 64-BIT)) from: './scripts/get_maintainer.pl'
-
-=46rom: Olaf Hering <olaf@aepfle.de>
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        x86@kernel.org) (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),
-        devel@linuxdriverproject.org (open list:Hyper-V CORE AND DRIVERS),
-        linux-kernel@vger.kernel.org) (open list:X86 ARCHITECTURE (32-BIT A=
-ND 64-BIT)
-Cc: Olaf Hering <olaf@aepfle.de>
-X-Mailer: git-send-email 2.16.4
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-
-Send this email? ([y]es|[n]o|[q]uit|[a]ll): y
-5.1.3 Invalid character in domain: <x86@kernel.org)>
-
-
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl6MnvkACgkQ86SN7mm1
-DoBZWw//b1Rcjobavt7s5p1SIXjRUQLivHHKjVm7BgoPN30dtaltqRpZH/ngWUpz
-et96oqNdh5ATkSmWvbg0V53H1zc6BNfovcDnQU7hfEYs4VP6jil1tiQg3nKgc63P
-TXOnmuKQjOjzz1tSA40JEdB1CerNTVjAgpdHeNndv0fsxORjUownNPrTWNI+RWov
-wLn4ZWCTIp9181fYuHsX+8qKpqPYUK7oM7BcAPBq/IlQU5g8+YAckwRCU2cCbm4y
-DzUgYyUOyOpgxNfKKb2htcUwpwz77xFBmksiRsO1vY2i4QbU18josDdvqUeJZDJ1
-dwVOOYtbDbKq2yYoJu/vPv/RVamlKy42vh4m03l6KOuh/ZxZxtcN4uGqPKFFyxzy
-2zMx9RFautx+IcBE2ZJGPKeOycs1H9FdJSnUayFMBBuykaBj6/vnPUwR/jmNPkeP
-rYn1A9ZHvbuTWyox1ed1QMrS/sVsbRTNGvWUoYVz/kH/Z3qPQWYtZ5vkRjk2AvHY
-63baYKf7qAtTkS+95FCdrTc54kjNfFBetdn8vtw2AvspD3o+LHUklF/sVrVPhgPm
-pXUoaW0q1u5yuof0xPOvNeeac0EYyPQgeoG52R9tZHBNCWf4TgJZj3hzVv6IldQk
-5CV1nn9TSzjYEtkuVwM0eZdsVuhh9EfbmoLmWY8x/NjcCcIRQaU=
-=r0nd
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
+--
+Lennart Poettering, Berlin
