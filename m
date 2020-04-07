@@ -2,75 +2,111 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23188C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77C8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA052076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586270931;
-	bh=a/heueCsMj86xTmZbpNgbMIKaqfKaMRFRwOu5c0tZg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gWEnatx/4X6o1WQibncLR5CtqLSVv8XitKQR9znlDiaOAPwErDSJNy6PU1VgJe9Us
-	 ck7bdAD59zcfY6ed9fimYS/BLDRwDbaqHAYhhqpfmXYq+zdcV2PGlFi/NphXXacgyt
-	 iQL5/Oe5aG0+2WtY1vVlRS5NJIM8eDl+77aQ4YxY=
+	by mail.kernel.org (Postfix) with ESMTP id 7AE112075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:49:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M9ru2EIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgDGOsu (ORCPT
+        id S1729342AbgDGOtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:48:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgDGOsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:48:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAF8D20747;
-        Tue,  7 Apr 2020 14:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586270929;
-        bh=a/heueCsMj86xTmZbpNgbMIKaqfKaMRFRwOu5c0tZg0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HZXRdNNLA29mHJdOF1anvrZxRiInY5MCCBqtNZXtLI3hSPOlNxdNKzdMT+MWLk8sa
-         YG5KfIGJVBZ2zCLUVkbxKFOwgaZfjKid2s14uw2z2qFi/hoTPzaKTtl9jg/f1DppCF
-         5Bv7MtZdkXgROUZgwzliaZKV4hRfmVarageJrKhQ=
-Date:   Tue, 7 Apr 2020 16:48:45 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Martin Volf <martin.volf.42@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.5 42/46] i2c: i801: Do not add ICH_RES_IO_SMI for the
- iTCO_wdt device
-Message-ID: <20200407144845.GA889211@kroah.com>
-References: <20200407101459.502593074@linuxfoundation.org>
- <20200407101503.858623897@linuxfoundation.org>
- <20200407111301.GA1928@ninjato>
+        Tue, 7 Apr 2020 10:49:03 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35327 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729177AbgDGOtD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:49:03 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k5so1845928pga.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u+CLNaPUQYq2OplEHVq5gf8jMgu0kMxas5mZCBzFgZY=;
+        b=M9ru2EIsxQ8aueuOKfm8D1/BG9Ethijs5O0Tfb7uLYNUws6PtzED2n44+4mlXvcobz
+         hMgNJ5lY9jCjQal1mnzTncH2VofC+rhBul8dWjV8918gSlm4RygOYi7cLbcTcmeryqZn
+         1TDJYTSk9q4wSowrYJ4AZ1WLDUPniMIQVrQkFOhXsDPMP6p5/KyCCYhzo4AiOUJOVUd8
+         xv2kHKlvdnPlbTbREA/vlJbG968TkA0PIp1R3+ieWEf07suEbjsb4z/y9uESzYPLRvdh
+         feOQYNrakJ+C8g3DU0+dO88NaGpzqi06J/N3UhPqFS6EEPX63YzM02K7hQ76Y7i8EFNt
+         0vQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u+CLNaPUQYq2OplEHVq5gf8jMgu0kMxas5mZCBzFgZY=;
+        b=Go9Q4rKYVn5zvKd5GFozsS07+ZyTRLsOpmG/uXKzoGf0GeAfBSSY6vQCOztPeRNf4s
+         wZz15/OKDnljKfzXwuq6NwbIlFTM3TEZuYVqEqRJIm62/t8k3qICxrmXKKOBuATDyfp4
+         FMz3gqs347++f54OxAmZ/9iRh6D7LfIkwEU0Ddpj8CzPJFMFMi8hc948hcjpoXu/La8J
+         CibQcoVddd0RqDfXLLTLXU1shne6YSJ1Wr1eG+Cz9v1iDP/dmqKCwpeaAvLOcrkL6QwG
+         8GJ1s/5MQq2IjIRNlG8+qCwjawEEuuYB+hkUCVviJb2ktv6gzA3yjRtci9c2qAE47blG
+         KNJw==
+X-Gm-Message-State: AGi0Pua9ap/ooydZjYG5JwX6NDjAfMQ0mAwnCcXxr4xtGe/B42rIfFWY
+        8X8QIAaWUR6z2V7Vtk8hzN+cNoO9/xJ1K+OoPder/w==
+X-Google-Smtp-Source: APiQypL98I+FELC6QKAZBsq0lZb1fje6O55Jn8kAQX9mlDoKr5VlTyuh3jt3ZNEFrxJbdsN4xit107fZIl2NmJ2ZgVY=
+X-Received: by 2002:a63:f411:: with SMTP id g17mr2389626pgi.440.1586270941629;
+ Tue, 07 Apr 2020 07:49:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407111301.GA1928@ninjato>
+References: <c4cedb13ee6159857ed7d9884e55718e4b1dede4.1586268809.git.andreyknvl@google.com>
+ <20200407142936.GL2066@kadam>
+In-Reply-To: <20200407142936.GL2066@kadam>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 7 Apr 2020 16:48:49 +0200
+Message-ID: <CAAeHK+x1wbSOt=EA-T1C3RjNhjYPa_uB0=vMmMS2-LECQFcj-g@mail.gmail.com>
+Subject: Re: [PATCH v2] usb: raw-gadget: fix raw_event_queue_fetch locking
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 01:13:01PM +0200, Wolfram Sang wrote:
-> Hi Greg,
-> 
-> > Fixes: 9424693035a5 ("i2c: i801: Create iTCO device on newer Intel PCHs")
-> > [wsa: complete fix needs all of http://patchwork.ozlabs.org/project/linux-i2c/list/?series=160959&state=*]
-> 
-> Did you pick these others, too, this time?
+On Tue, Apr 7, 2020 at 4:29 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+>
+> On Tue, Apr 07, 2020 at 04:14:50PM +0200, Andrey Konovalov wrote:
+> > @@ -89,11 +90,18 @@ static struct usb_raw_event *raw_event_queue_fetch(
+> >        * there's at least one event queued by decrementing the semaphore,
+> >        * and then take the lock to protect queue struct fields.
+> >        */
+> > -     if (down_interruptible(&queue->sema))
+> > -             return NULL;
+> > +     ret = down_interruptible(&queue->sema);
+> > +     if (ret)
+> > +             return ERR_PTR(ret);
+> >       spin_lock_irqsave(&queue->lock, flags);
+> > -     if (WARN_ON(!queue->size))
+> > +     /*
+> > +      * queue->size must have the same value as queue->sema counter (before
+> > +      * the down_interruptible() call above), so this check is a fail-safe.
+> > +      */
+> > +     if (WARN_ON(!queue->size)) {
+> > +             spin_unlock_irqrestore(&queue->lock, flags);
+> >               return NULL;
+>
+> I'm sorry for not noticing this earlier.  When a function returns both
+> error pointers and NULL then NULL is supposed to a special case of
+> success.  For example:
+>
+>         my_struct_pointer = get_optional_feature();
+>
+> If there is a memory allocation failure then my_struct_pointer is
+> -ENOMEM and we fail.  But say the optional feature is disabled, then
+> we can't return a valid pointer, but it's also working as designed so
+> it's not an error.  In that case we return NULL.  The surrounding code
+> should be written to allow NULL pointers.
+>
+> So I don't think returning NULL here is correct.
 
-Ugh, no, I missed that.  Thanks for pointing it out, I have now queued
-them up, and will push out -rc2 for these issues.
-
-thanks,
-
-greg k-h
+No problem, sent v3, thanks!
