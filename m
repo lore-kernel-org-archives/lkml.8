@@ -2,131 +2,119 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6B1C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A00C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0562074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFC220747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:12:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EDpSU9+3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJvZ2cKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgDGWMO (ORCPT
+        id S1726530AbgDGWMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:12:14 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34540 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgDGWMO (ORCPT
+        Tue, 7 Apr 2020 18:12:21 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48657 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726380AbgDGWMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:12:14 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m2so4882039otr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FcYVbwRy7qPzYPxF2uVobHVwbwhKOGFJJ0f6jVVp4qc=;
-        b=EDpSU9+3vSDiHbPzXJwkVB41VD773ddvZ2XAEKXuJacwUm5dvTEpqcpoGt1jjkYg9Z
-         /4FL46J2z60kPy/RlHgBbfan5YGebhTpD4W1ejOHuri5M3XeaXe5P8dVtFqdLAjEL+ed
-         axbbvcHv0tSnEQKhza5grVDB+jYhJdXTCUDkY=
+        Tue, 7 Apr 2020 18:12:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586297539;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+76ohg15yjGQ53/NYcOF5gb3ZEmpJpgNPDQ8a4CriK8=;
+        b=cJvZ2cKD9vAmengtppjIJwffVhqyeghHQlz0rCyAkqEeSPren99wtmjOh0HnM4PRcMPdv8
+        608GSntEd6webY9G30Yj/4TwrrcszZb0oVj5orw+grelGfClgPt0tGd375p48EOA7aoHVn
+        ioofkjkV41U1MvM9s3AzZfMTBBkzncc=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-415-sd9nioGrNL6JI8fe_7fs1g-1; Tue, 07 Apr 2020 18:12:18 -0400
+X-MC-Unique: sd9nioGrNL6JI8fe_7fs1g-1
+Received: by mail-wr1-f70.google.com with SMTP id v14so2924975wrq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:12:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FcYVbwRy7qPzYPxF2uVobHVwbwhKOGFJJ0f6jVVp4qc=;
-        b=fw9N51VaTHGvjNctHC+vqjo+Mh3u+A+Sv0/jtDHCu4PTm0rKVScgR8HxNxIDl6D5ME
-         YTm+TjMLl0hXUvpJ2124OISJISiHVwkOKcXYS75HtNwSTrWJi4dw97N9qGQMOnz+w398
-         Rx/PcpZPT1suKiws6VpbA4twQKtvZ6HERGsjhDny3G1qRGZ/sycNRjWkVJN3zkiwAO5J
-         JzLKvS8w3NKoNvFtskwNpMxFWtfpDS4Jzf8WZHWzxG1n99Xy/B8U1IqRwGaEsedipECj
-         rPc4P8ueE7nOsu2TPSfD03jbuiwHuuqBPJSlG32e2YG/PnoxXs/7SIOLLUjD/FW6Mmyf
-         ElIg==
-X-Gm-Message-State: AGi0Pua3uMYb7XxllVP6vc92xYcMF4D50y7niwFL7WWUD1rNsshAKD26
-        gixK115hBvEt4txEqDANzpCmoFiZzx4=
-X-Google-Smtp-Source: APiQypJjkasOIftLHZc1LC06V+8Q5uaa4TyGA4BbkNdmBO4gzNX/HihyoHJqn3vV1+owxeaG8a58Fg==
-X-Received: by 2002:a9d:798a:: with SMTP id h10mr3312989otm.367.1586297533783;
-        Tue, 07 Apr 2020 15:12:13 -0700 (PDT)
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com. [209.85.210.49])
-        by smtp.gmail.com with ESMTPSA id c7sm5566766ooi.41.2020.04.07.15.12.13
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+76ohg15yjGQ53/NYcOF5gb3ZEmpJpgNPDQ8a4CriK8=;
+        b=o8W6g4JWJ4hZK9yh7Kle6nTfJOgISj5ITxNOJBZTd4BFC1nOZrTj4sEUbrqPXUnVbO
+         tgbyzCjNNzL9HIv7jCgz1WWl5o11djLdtTPllgXCElxAsXFmenEWxu4p+1cCedMPnBnD
+         2DcCFBFM3HgSNNyYw8+VpcGgFgb1vCWpc6QgeDtq/5fYCfiXyo5EXWKyOmEzuka6vOCd
+         cKK138uoc9EUfKGmJP70n2Fjw7llM3W71TlcoWUGsz28kHYsC+04iSzTmOrpsunseKlG
+         zyQ3UbUlhYr5NHDiuJAenp6SrSXRPvneU9rTSVMZGJWFsIt2JjJpAPEyfXBSAP2B1Wm9
+         n9Ww==
+X-Gm-Message-State: AGi0PuYR4+9Xtum7gijASpefoeZj5bLG6Q2kSUXitZ+6ggsg3c63R1Xf
+        xFAeU5OEEiyxg308Xmc+IWAU8GKozH14N3MiLqDnvr8cq+qIx+1XN4qUZoEeOADtIntBrr8Bv2V
+        amSlnZbaikuHeXkvRh0UX0gfk
+X-Received: by 2002:adf:fecb:: with SMTP id q11mr5011771wrs.350.1586297537084;
+        Tue, 07 Apr 2020 15:12:17 -0700 (PDT)
+X-Google-Smtp-Source: APiQypI0zozENDA68wZyj1/iNoo3CrP+2oVdM1VBIHx12vKyt4p4dwm7FtNvUEYgy9ORH06Ztxvdpw==
+X-Received: by 2002:adf:fecb:: with SMTP id q11mr5011744wrs.350.1586297536865;
+        Tue, 07 Apr 2020 15:12:16 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:bd61:914:5c2f:2580? ([2001:b07:6468:f312:bd61:914:5c2f:2580])
+        by smtp.gmail.com with ESMTPSA id n6sm6483443wrs.81.2020.04.07.15.12.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 15:12:13 -0700 (PDT)
-Received: by mail-ot1-f49.google.com with SMTP id f52so4833028otf.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:12:13 -0700 (PDT)
-X-Received: by 2002:a9f:2478:: with SMTP id 111mr3368330uaq.0.1586297071641;
- Tue, 07 Apr 2020 15:04:31 -0700 (PDT)
+        Tue, 07 Apr 2020 15:12:16 -0700 (PDT)
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Nadav Amit <nadav.amit@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, hch@infradead.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        mingo <mingo@redhat.com>, bp <bp@alien8.de>, hpa@zytor.com,
+        x86 <x86@kernel.org>, "Kenneth R. Crudup" <kenny@panix.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jannh@google.com, keescook@chromium.org, David.Laight@aculab.com,
+        Doug Covelli <dcovelli@vmware.com>, mhiramat@kernel.org
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.429362016@infradead.org>
+ <10ABBCEE-A74D-4100-99D9-05B4C1758FF6@gmail.com>
+ <20200407193853.GP2452@worktop.programming.kicks-ass.net>
+ <90B32DAE-0BB5-4455-8F73-C43037695E7C@gmail.com>
+ <20200407205042.GT2452@worktop.programming.kicks-ass.net>
+ <96C2F23A-D6F4-4A04-82B6-284788C5D2CC@gmail.com>
+ <20200407212754.GU2452@worktop.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e390a895-cc09-0e9b-a05d-0c9b7bc6bfbd@redhat.com>
+Date:   Wed, 8 Apr 2020 00:12:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200402155130.8264-1-dianders@chromium.org> <20200402085050.v2.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
- <20200403013356.GA6987@ming.t460p> <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
- <CAD=FV=Vsk0SjkA+DbUwJxvO6NFcr0CO9=H1FD7okJ2PxMt5pYA@mail.gmail.com>
- <20200405091446.GA3421@localhost.localdomain> <CAD=FV=WQZA7PGEbv_fKikGOEijP+qEEZgYXWifgjDzV6BVOUMQ@mail.gmail.com>
- <20200407021403.GB5779@localhost.localdomain>
-In-Reply-To: <20200407021403.GB5779@localhost.localdomain>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 7 Apr 2020 15:04:20 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UmdL5d13FqpwVC8MokY8yzMV=_wNe=42vtDx9OVNvpkQ@mail.gmail.com>
-Message-ID: <CAD=FV=UmdL5d13FqpwVC8MokY8yzMV=_wNe=42vtDx9OVNvpkQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] blk-mq: Rerun dispatching in the case of budget contention
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Salman Qazi <sqazi@google.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-scsi@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
-        Ajay Joshi <ajay.joshi@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Hou Tao <houtao1@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200407212754.GU2452@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 07/04/20 23:27, Peter Zijlstra wrote:
+> On Tue, Apr 07, 2020 at 02:22:11PM -0700, Nadav Amit wrote:
+>> Anyhow, I do not think it is the only use-case which is not covered by your
+>> patches (even considering CRs/DRs alone). For example, there is no kernel
+>> function to turn on CR4.VMXE, which is required to run hypervisors on x86.
+> That needs an exported function; there is no way we'll allow random
+> writes to CR4, there's too much dodgy stuff in there.
 
-On Mon, Apr 6, 2020 at 7:14 PM Ming Lei <ming.lei@redhat.com> wrote:
->
-> On Sun, Apr 05, 2020 at 09:26:39AM -0700, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Sun, Apr 5, 2020 at 2:15 AM Ming Lei <ming.lei@redhat.com> wrote:
-> > >
-> > > @@ -103,6 +104,9 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
-> > >                 rq = e->type->ops.dispatch_request(hctx);
-> > >                 if (!rq) {
-> > >                         blk_mq_put_dispatch_budget(hctx);
-> > > +
-> > > +                       if (e->type->ops.has_work && e->type->ops.has_work(hctx))
-> > > +                               blk_mq_delay_run_hw_queue(hctx, BLK_MQ_BUDGET_DELAY);
-> >
-> > To really close the race, don't we need to run all the queues
-> > associated with the hctx?  I haven't traced it through, but I've been
-> > assuming that the multiple "hctx"s associated with the same queue will
-> > have the same budget associated with them and thus they can block each
-> > other out.
->
-> Yeah, we should run all hctxs which share the same budget space.
->
-> Also, in theory, we don't have to add the delay, however BFQ may plug the
-> dispatch for 9 ms, so looks delay run queue is required.
+native_write_cr4 and pv_ops (through which you can do write_cr4) are
+both exported, and so is cpu_tlbstate which is used by __cr4_set_bits
+and friends.  Am I missing something glaringly obvious?
 
-I have posted up v3.  A few notes:
+Paolo
 
-* Since we should run all "hctxs" I took out the check for has_work()
-before kicking the queue.
-
-* As far as I can tell the theoretical race happens for _anyone_ who
-puts budget, so I added it to blk_mq_put_dispatch_budget().  Feel free
-to shout at me in response to v3 if you believe I'm wrong about that.
-
-Thanks for all your reviews and suggestions so far!
-
--Doug
