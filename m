@@ -2,195 +2,175 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10C4C2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D478C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD6F206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A6F3206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:03:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCQc2ooh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgDGJBV (ORCPT
+        id S1727992AbgDGJDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:01:21 -0400
-Received: from submit-3.e-mind.com ([188.94.192.49]:41460 "EHLO
-        submit-3.e-mind.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbgDGJBV (ORCPT
+        Tue, 7 Apr 2020 05:03:03 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46338 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbgDGJDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:01:21 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by submit-3.e-mind.com (Postfix) with ESMTP id 16E80846A0A
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Apr 2020 09:01:19 +0000 (UTC)
-Received: from submit-3.e-mind.com ([127.0.0.1])
-        by localhost (submit-3.e-mind.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SBXEwaSI-FsZ for <linux-kernel@vger.kernel.org>;
-        Tue,  7 Apr 2020 11:01:19 +0200 (CEST)
-Received: from qmail.e-mind.com (qmail34.e-mind.com [188.94.192.34])
-        by submit-3.e-mind.com (Postfix) with SMTP id B9DC0842152
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Apr 2020 11:01:10 +0200 (CEST)
-Received: (qmail 1175 invoked by uid 0); 7 Apr 2020 09:01:07 -0000
-Received: from unknown (HELO ?192.168.143.6?) (185.53.252.165)
-  by 0 with SMTP; 7 Apr 2020 09:01:07 -0000
-Subject: Re: Serial data loss
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <960c5054-48b0-fedc-4f3a-7246d84da832@eurek.it>
- <20200407082454.GA299198@kroah.com>
-Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Gianluca Renzi <icjtqr@gmail.com>,
-        dimka@embeddedalley.com, linux@rempel-privat.de
-From:   gianluca <gianlucarenzi@eurek.it>
-Message-ID: <19bbd87d-75d7-3d9f-d7c1-629d1cc961e8@eurek.it>
-Date:   Tue, 7 Apr 2020 11:01:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Tue, 7 Apr 2020 05:03:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id j17so2885387wru.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:03:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DRXlKn7HmOFm5ccoiUQcbfGST1b67GDuowbtfhgFw3A=;
+        b=QCQc2ooh+a9rXYlxOHDVGIeF83MOwG5kgXWNsjguSU7lCuViETES2OIBFfrBHSpR4G
+         bd9Pnnu18nxxhRTQ5Zx3G72DT18JOh39ba/BbWYKQU10JddmZWV+0qZPOL8akp3na8K+
+         8QBmX9SXak/WnnBn1jCFuB22WCjwbzvWvwFRnnjAXEqIqmBQR36dm1nOqAw7GbvWIM6o
+         Ec58oIoq+4uxSgtkTKUHYlak8WbPt2iFp5RDmB/90k6oUDZ+TbMLaOzj3JIxzJ1UeKbk
+         7JceY7WMXl8aLytKp6+XxlcZ5NipNtLilK6ILNEyERR12y1vU2xMNUiRSMAeUr2y+3hW
+         t3kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=DRXlKn7HmOFm5ccoiUQcbfGST1b67GDuowbtfhgFw3A=;
+        b=SBcJyrfi8c0iOnHNGoyUpDIWuogYCrWCaoosYxBVv6XGyS8f6NtL0HudvTnct72VI3
+         Wkr93Qz93bfRSmDqkbuJYMEIjeYhZKU9CJNW8QWO3/cg7J9Zj55+uh4K1b7XBq6pYTPY
+         mbycHlgKUDYlCRGVD8USVmif1SRBq2VYpg+4eTNBo5zpHY6BEJBK3GFQiO9f15r6FtHo
+         ni5PZsOHRgmIBcEM+iT11Ae/aPjOr+xbmkE1ZULxl0RV6rdEeF4BL3DU+JcUJlNzawD0
+         KSoFEGuz0ktPKvfVXX3kmLd0AFoo0NjKgp+PJ+zlndabQXtZieqhoxKQ2c7diLbvu7ju
+         ioUg==
+X-Gm-Message-State: AGi0Pua/ZlwkbLT3JTU7BPDhfUgiwu9VkCA0IdkHU4f/fcZCcBaIS64A
+        kkjy04p+am2suTSjTBR7Yew=
+X-Google-Smtp-Source: APiQypIDxtKoE95m14eO9Kt16/8W7z3zlsTB6Zj/m+U87h6+fynDM1PAhj7zDDQVUyPtBvCdGkHBTg==
+X-Received: by 2002:adf:f7cc:: with SMTP id a12mr1609823wrq.275.1586250179840;
+        Tue, 07 Apr 2020 02:02:59 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id b187sm1637805wmc.14.2020.04.07.02.02.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 02:02:59 -0700 (PDT)
+Subject: Re: [PATCH] Make the "Reducing compressed framebufer size" message be
+ DRM_INFO_ONCE()
+To:     Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Peter Jones <pjones@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20180706190424.29194-1-pjones@redhat.com>
+ <20180706203015.GC23473@intel.com>
+From:   Jiri Slaby <jirislaby@gmail.com>
+Autocrypt: addr=jirislaby@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <37f3c0dd-265e-e6a9-47d5-3a6195ca4a7c@gmail.com>
+Date:   Tue, 7 Apr 2020 11:02:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200407082454.GA299198@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20180706203015.GC23473@intel.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-I am very pleased the Mr. Greg Kroah-Hartman is writing to me in person!
-
-I appreciate a lot sir!
-
-On 04/07/2020 10:24 AM, Greg Kroah-Hartman wrote:
-> On Tue, Apr 07, 2020 at 09:30:21AM +0200, gianluca wrote:
->> I have a BIG trouble having dataloss when using two internal serial ports of
->> my boards based on NXP/FreeScale iMX28 SoC ARMv5Te ARM920ej-s architecture.
+On 06. 07. 18, 22:30, Rodrigo Vivi wrote:
+> On Fri, Jul 06, 2018 at 03:04:24PM -0400, Peter Jones wrote:
+>> This was sort of annoying me:
 >>
->> It runs at 454Mhz.
+>> random:~$ dmesg | tail -1
+>> [523884.039227] [drm] Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.
+>> random:~$ dmesg | grep -c "Reducing the compressed"
+>> 47
 >>
->> Kernel used 4.9.x
->
-> That's a very old kernel, you are going to have to get support for that
-> from the vendor you bought it from :(
->
-
-We are the vendor. ;-)
-
-Jokes apart, I can try to use the latest kernel 5.6, and see how is 
-going on them, but at the first check the driver seems exactly the same 
-as in kernel 4.9.
-
->> When using my test case unit software between two serial ports connect each
->> other by a null modem cable, it fails when the speed rate are different,
->
-> Of course, how would that work?
->
-
-I am not native english speaker so I am misleading to a 
-misunderstanding: my test case is a software with two pthreads which the 
-main thread is working with a differnet baud rate than the other 
-pthread. Using the same software in two different machines, and using 
-the same baudrate for each corrispondant port it should work.
-
-i.e. /dev/ttyAPP1 is running at 9600 and /dev/ttyAPP2 is running at 38400
-
-The same in the other machine. Both ports are null-modem connected:
-
-	9600  /dev/ttyAPP1 <----> /dev/ttyAPP1 9600
-	38400 /dev/ttyAPP2 <----> /dev/ttyAPP2 38400
-
-I hope to be clear now. ;-)
-
->> and
->> dataloss is increasing higher the speed rate.
->
-> What type of flow control are you using?
->
-
-Unfortunately no flow control. Because the I cannot use it. When 
-connected to the real-hardware those two ports are connected to a 
-microcontroller unit which does not have flow control, only RX & TX 
-connected (i.e. no RTS/CTS/DTE/DCE lines)
-
->> I suppose to have overruns (now I am modifying my software to check them
->> too), but I think it is due the way the ISR is called and all data are
->> passed to the uart circular buffer within the interrupt routine.
->
-> Are you using flow control?
->
-
-As above, no [ unfortunately ]
-
-
->> I am talking about the high latency from the IRQ up to the service routine
->> when flushing the FIFO and another IRQ is called by another uart in the same
->> time at different speed.
+>> This patch makes it DRM_INFO_ONCE() just like the similar message
+>> farther down in that function is pr_info_once().
 >>
->> The code I was looking is: drivers/tty/serial/mxs-auart.c __but__ all other
->> serial drivers are acting in the same way: they are reading one character at
->> time from the FIFO (if it exists) and put it into the circular buffer so
->> serial/tty driver can pass them to the user read routine.
+>> Signed-off-by: Peter Jones <pjones@redhat.com>
+>> ---
+>>  drivers/gpu/drm/i915/intel_fbc.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> Each function call has some overhead and it is time-consuming, and if
->> another interrupt is invoked by the same UART Core but from another serial
->> port (different context) the continuos insertion done by hardware UART into
->> the FIFO cannot be served fast enough to have an overrun. I think this can
->> be applied __almost__ to every serial driver as they are written in the same
->> way.
->>
->> And it is __NOT__ an issue because of the CPU and its speed! Using two
->> serial converter (FTDI and Prolific PL2303 based) on each board, the problem
->> does not appear at all even after 24 hours running at more than 115200!!!
->
-> usb-serial devices are totally different and send data to the host in a
-> completly different way.
->
-> Your hardware might just not be able to handle really high baud rates at
-> a continous stream, what baud rate were you using?
->
+>> diff --git a/drivers/gpu/drm/i915/intel_fbc.c b/drivers/gpu/drm/i915/intel_fbc.c
+>> index b431b6733cc..88b013758da 100644
+>> --- a/drivers/gpu/drm/i915/intel_fbc.c
+>> +++ b/drivers/gpu/drm/i915/intel_fbc.c
+>> @@ -585,7 +585,7 @@ static int intel_fbc_alloc_cfb(struct intel_crtc *crtc)
+>>  	if (!ret)
+>>  		goto err_llb;
+>>  	else if (ret > 1) {
+>> -		DRM_INFO("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
+>> +		DRM_INFO_ONCE("Reducing the compressed framebuffer size. This may lead to less power savings than a non-reduced-size. Try to increase stolen memory size if available in BIOS.\n");
+> 
+> I know the feeling of seeing a message over and over again when you are already aware of that.
+> Specially something that tells you to change BIOS configuration...
+> for this reason I think it makes sense, so:
+> 
+> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+> 
+> I will just wait for CI and give a couple days to someone else to challenge.
+> If I end up forgetting to push it please ping me...
 
-I suppose that, but the same issue can be proven with all single core 
-(NO FIFO UART) processors using two ports on the same uart core, running 
-Linux kernel @ 450 Mhz or less.
+After almost two years, ping :).
 
-The irq latency it is the same.
+> 
+>>  
+>>  	}
+>>  
+>> -- 
+>> 2.17.1
 
-> And again, this is what flow control was designed for, please use it.
->
-
-I know and usually I am using a sort of protocol which can check 
-correctness of packet, and if not, the packet has to be reasked/resent.
-In this case the microcontroller board I am connected to is not built by 
-us, and the software is a custom protocol (and I do not know if an error 
-on transfer can be accomplished by another request).
-
-So the flow control __CANNOT_BE_USED_AT_ALL__...
-
->> It does work fine if I am using two different serial devices: one internal
->> uart (mxs-auart) and an external uart (ttyUSB).
->
-> Again, different interrupt and protocols being used for the USB stuff.
->
-
-...and in our case is working better than the internal uart driver on 
-the same board. It is a real pity...
-
-> thanks,
->
-
-Thanks to you, mr. greg k-h!
-
-> greg k-h
-
-
-P.S.: I am a very close friend of Andrea Arcangeli, we grew up in the 
-same place, and we went in the same school here in Italy (Imola - bologna).
-
-We used to talked about you last Christmas Holidays when Andrea came to 
-Italy from NY
-
-Regards,
-Gianluca Renzi
+thanks,
 -- 
-Eurek s.r.l.                          |
-Electronic Engineering                | http://www.eurek.it
-via Celletta 8/B, 40026 Imola, Italy  | Phone: +39-(0)542-609120
-p.iva 00690621206 - c.f. 04020030377  | Fax:   +39-(0)542-609212
+js
