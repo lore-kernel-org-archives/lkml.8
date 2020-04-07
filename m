@@ -2,115 +2,150 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97143C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D2BC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F939206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88AF720672
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:29:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EYX7aOA6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDxKD1NS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgDGDZ0 (ORCPT
+        id S1726676AbgDGD3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 23:25:26 -0400
-Received: from ozlabs.org ([203.11.71.1]:47977 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgDGDZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 23:25:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48xCTb4D8pz9sP7;
-        Tue,  7 Apr 2020 13:25:23 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586229924;
-        bh=ogC/NRDkcWa/7KTckeoNf18YOt6A6FLY38S8Q3wB5ME=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EYX7aOA6pYuuGIxwHP3mKxzV9ql44uxi94eeB1D/oh3G1fMUdt3QdV0NQXuLk+Kdk
-         wtPENZPW4VQiASLKXhfjdh9imZ/eqscycWPik+LNF+xXwOxNRZZ3YdlvBmeXswtxSN
-         iPXnpACAEDStsrHrMLnJjZSTrnJ0BGwH/jw5gcXAE4LWt+fwjW9QjxxFbjFzLL1BrG
-         Gq0l13PQ17MljSrZg65a60/j/ZLYLrzucdt2s+mAPl/vqQe/FRoXZmjE7ou1F2pVy0
-         3ML5ibp9oU5y0nWjXJ5IEPD3AqQyz3mjgFsmch7/aLabOerewPeyiSDXI5lk/g/1Ig
-         ClMRWqisram2A==
-Date:   Tue, 7 Apr 2020 13:25:21 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- vhost tree
-Message-ID: <20200407132521.656db6fa@canb.auug.org.au>
-In-Reply-To: <20200330193137.44fd70c9@canb.auug.org.au>
-References: <20200330193137.44fd70c9@canb.auug.org.au>
+        Mon, 6 Apr 2020 23:29:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38747 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgDGD3s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 23:29:48 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 31so2169372wre.5;
+        Mon, 06 Apr 2020 20:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Z3mTP8Wsofeqj6eOKfo8X83UZpmewwXdpeVvoGsbXc=;
+        b=KDxKD1NSLbHiR+T2DgjXusnla18HONVDru2o0v5qMd1QBTrct4egupXxjZoZVfRAQc
+         My+kMw+EEUWxcXpKIp9ragW1gjCQjPTealcpHEKYEDpsFXlePiTy+X82dvBmKEPf8dxK
+         bLyMJz/jkRLlz4wJ+kZZVRXd18FX1HtH6Ln01Wkx1o91bknOK56zp2UiZxSPB79Qetz9
+         9B3rF+TmbadjWwWwIbKrIEANspIbt7LgdO2CnxDGwngdA44j0RH8z/MQn+kb/a1f8KVR
+         qE4rePuYpM6NSrKbCwQvspHfH1N45JUrG7/eFkaxe2LcMiIPbaUhvSpdiwyOb6v7QoVa
+         YFXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Z3mTP8Wsofeqj6eOKfo8X83UZpmewwXdpeVvoGsbXc=;
+        b=TnB5rojW15MHb+rgoeI07c0hsmHKfs0ULnhxqOBkuAhg5QITDtA9k482T20SYLNrC8
+         45xmBf7edQKYBnkQKFoJYEpTUw7YNdld3FW9v6LuWR83g7GES15rsbRHQ//B23Ti94iX
+         8g5rMiTIbXJJjArvO212hdrCRuy9YAQcnUqMjhWbaeEHRQkxps7tyvc021CO1ZZPQoH2
+         0iRJEhadEYAO0ICxMq7oU98foP5hPk/BZDnKqZQQYVbiZ8flCAff6rvc7ciU9xd/qkc6
+         zmbrgtVJMHatzrTG/THhUKVOLgHKFlHBP/lqOvxksY88f5aC27h/IzNgIuS31cOJ+uDO
+         +PXw==
+X-Gm-Message-State: AGi0PuYLjbFMdKHxw5V9WvzPS9zAs2JSjZXw3Ps0FhFZhUtd/MsgFeiU
+        7gcALIpTxrNoHEcAr5xso3bSYgm/m8r+uzLPDOw=
+X-Google-Smtp-Source: APiQypJc5wzHV8b8oB1iMtufPCXXLROO/oTv+sc1ncZBC0vZi0TRCxhNkA1nLErvWPLhLHsugRbmf4g1AU+O+alKc1o=
+X-Received: by 2002:a5d:53d1:: with SMTP id a17mr226459wrw.41.1586230185306;
+ Mon, 06 Apr 2020 20:29:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ha9CF+nuht8SxRgPo5BqeMm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200407023512.GA25005@ubuntu> <20200407030504.GX23230@ZenIV.linux.org.uk>
+ <20200407031318.GY23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200407031318.GY23230@ZenIV.linux.org.uk>
+From:   Yun Levi <ppbuk5246@gmail.com>
+Date:   Tue, 7 Apr 2020 12:29:34 +0900
+Message-ID: <CAM7-yPQas7hvTVLa4U80t0Em0HgLCk2whLQa4O3uff5J3OYiAA@mail.gmail.com>
+Subject: Re: [PATCH] netns: dangling pointer on netns bind mount point.
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Guillaume Nault <gnault@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        David Howells <dhowells@redhat.com>, daniel@iogearbox.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ha9CF+nuht8SxRgPo5BqeMm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Actually I confirm that Kernel Panic on 4.19 version.
+But I couldn't check main line not yet. Below is the one of the panic
+log what i've experienced
 
-Hi all,
+Internal error: Oops: 96000004 [#1] SMP 2020-03-14T15:35
+Modules linked in: hsl_linux_helper(O) saswifmod(O) asrim(O)
+linux_bcm_knet(O) linux_user_bde(O) linux_kernel_bde(O)
+ds_peripheral(O) m_vlog(O) m_scontrol(O)
+CPU: 2 PID: 5966 Comm: c.EQMD_ASYNC Tainted: G W O 4.19.26 NOS
+Hardware name: LS1046A RDB Board (DT)
+pstate: 60000005 (nZCv daif -PAN -UAO) :44
+pc : sock_prot_inuse_add+0x10/0x20
+ lr : netlink_release+0x30c/0x5a8
+sp : ffff0000244c3b20
+x29: ffff0000244c3b20 x28: ffff8008774ea000
+x27: ffff800865b093d0 x26: ffff800865b09000
+x25: ffff800863580c00 x24: ffff00001892f000
+x23: ffff80086514ba00 x22: ffff000018acd000
+x21: ffff0000189ae000 x20: ffff00001892a000
+x19: ffff0000088bfb2c x18: 0000000000000400
+x16: 0000000000000000 x15: 0000000000000400
+x14: 0000000000000400  x13: 0000000000000000
+x12: 0000000000000001 x11: 000000000000a949
+x10: 0000000000062d05 x9 : 0000000000000027
+x8 : ffff800877120280 x7 : 0000000000000200
+x6 : ffff800865b092e8 x5 : ffff0000244c3ae0
+x4 : 0000000000000000 x3 : 0000800866e9a000
+x2 : 00000000ffffffff x1 : 0000000000000000
+x0 : 0000000000000000
+Process c.EQMD_ASYNC (pid: 5966, stack limit = 0x0000000088e20a05)
+Call trace:
+sock_prot_inuse_add+0x10/0x20
+__sock_release+0x44/0xc0
+sock_close+0x14/0x20
+__fput+0x8c/0x1b8
+____fput+0xc/0x18
+task_work_run+0xa8/0xd8
+do_exit+0x2e4/0xa50
+do_group_exit+0x34/0xc8
+get_signal+0xd4/0x600
+do_signal+0x174/0x268
+do_notify_resume+0xcc/0x110
+work_pending+0x8/0x10
+Code: b940c821 f940c000 d538d083 8b010800 (b8606861) ---[ end trace
+0b98c9ccbfd9f6fd ]---
+Date/Time : 02-14-0120 06:35:47 Kernel panic - not syncing: Fatal
+exception in interrupt SMP: stopping secondary CPUs Kernel Offset:
+disabled CPU features: 0x0,21806000 Memory Limit: none
 
-On Mon, 30 Mar 2020 19:31:37 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+What I saw is when I try to bind on some mount point to
+/proc/{pid}/ns/net which made by child process, That's doesn't
+increase the netns' refcnt.
+And when the child process's going to exit, it frees the netns But
+Still bind mount point's inode's private data point to netns which was
+freed by child when it exits.
+
+Thank you for your reviewing But I also confirm that problem on mainline too.
+
+And sorry to my fault.
+
+
+On Tue, Apr 7, 2020 at 12:13 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> Today's linux-next merge of the akpm-current tree got a conflict in:
->=20
->   drivers/virtio/virtio_balloon.c
->=20
-> between commit:
->=20
->   5a6b4cc5b7a1 ("virtio-balloon: Switch back to OOM handler for VIRTIO_BA=
-LLOON_F_DEFLATE_ON_OOM")
->=20
-> from the vhost tree and commits:
->=20
->   5193acb63eef ("virtio-balloon: pull page poisoning config out of free p=
-age hinting")o
->   226d0484a676 ("virtio-balloon: add support for providing free page repo=
-rts to host")
->   49006aae9e94 ("virtio-balloon: switch back to OOM handler for VIRTIO_BA=
-LLOON_F_DEFLATE_ON_OOM")
->=20
-> from the akpm-current tree.
->=20
-> OK, this is such a mess that all I could do was to revert commit
-> 5a6b4cc5b7a1 from the vhost tree and keep all the akpm-current tree
-> patches. Please sort this out before Linus gets to see it.
-
-I am still reverting that commit ...
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ha9CF+nuht8SxRgPo5BqeMm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6L8qEACgkQAVBC80lX
-0GxOdQf4qm/H7arlMHt3rCEMgQtUm06eukNtKeIvZNGk7rlT2VHL9a30D0lroW8h
-/1S2diFqECocXVSrF0p1VONP5HkQduBGqrlyZEEYRpnNkQsmpLKSLQUmY+f4t+hH
-d5IGQIVgCUBBSa03nuw/8ymhfdV2v0l1ULrJ6eSmSsp1u7Yv0iJWUOFvSQJhRa3w
-M8Wc7NDKy8HbDD6NTxxJzh+c5H/eRZWveLc+E+LGv0Pnr3PyoC51aZbIPgYkPPxh
-VcczV4zry4CztNk2VXgjwVyNqexvT9s/LO1G1EXZRa9QeSMq3sDsUj50QopS66vz
-PxWxw7x4CJT86yNnDYpdsV8++MbA
-=iEHN
------END PGP SIGNATURE-----
-
---Sig_/ha9CF+nuht8SxRgPo5BqeMm--
+> On Tue, Apr 07, 2020 at 04:05:04AM +0100, Al Viro wrote:
+>
+> > Could you post a reproducer, preferably one that would trigger an oops
+> > on mainline?
+>
+> BTW, just to make sure - are we talking about analysis of existing
+> oops, or is it "never seen it happen, but looks like it should be
+> triggerable" kind of situation?
