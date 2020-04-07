@@ -2,134 +2,130 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E80C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34436C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A71920748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:25:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AiVquqM/"
+	by mail.kernel.org (Postfix) with ESMTP id EFCBD20748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586291240;
+	bh=moGCNv47ZxvdGIc/GLXskdRzKlVipLS5hfxu3QO3Dk0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SnaIZSGLqpB4wv1j+waE1+0Uzpr9D2dxhqqGJrC8N/GhF5q85dJwathbb1TxRS4Sh
+	 8r+6Quf7sPxagf/N2sUg3S8P7QW/M0Dbt5e0MEYwlM2dIBPQw8l63tTfOjSToArGw/
+	 4hnPCiwzvoV6OLnyDPMlCQyptnMGd7S7DAOrYLqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgDGUZf (ORCPT
+        id S1726428AbgDGU1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:25:35 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46973 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726277AbgDGUZf (ORCPT
+        Tue, 7 Apr 2020 16:27:19 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42229 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgDGU1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:25:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586291133;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=scImo7fc2VVLGYYgXmQngzwdo//+qw89Krq5Bdm1HOo=;
-        b=AiVquqM/94RfI6TYwRTbqEM0E9AOIrFk0p8Dv6Vwy+Nwb0SC1YT/zjpTJEjH+/Sb/m/V7q
-        7WVr1vItsB0pckLo+j8PQDybVWDZEAaYAbvg/VEXNT+e4amFlO4FfAxk9gAayPTwMDb/g7
-        7S2qTY0W0LcfGqwOjbfsKKTTe6DaRPE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-aijyxqmrMsqH75FaYxNYjQ-1; Tue, 07 Apr 2020 16:25:29 -0400
-X-MC-Unique: aijyxqmrMsqH75FaYxNYjQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A25998017CE;
-        Tue,  7 Apr 2020 20:25:25 +0000 (UTC)
-Received: from krava (unknown [10.40.192.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A305A1001B3F;
-        Tue,  7 Apr 2020 20:25:13 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 22:25:08 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v7] perf tools: add support for libpfm4
-Message-ID: <20200407202508.GA3210726@krava>
-References: <20200407064018.158555-1-irogers@google.com>
+        Tue, 7 Apr 2020 16:27:18 -0400
+Received: by mail-lj1-f194.google.com with SMTP id q19so5194609ljp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vULJyP67JBNxuLxHNrQncN4uZpPg3T+lQ2vheCSCnts=;
+        b=Co/TSBn32SZzvluykyMIO4sU64Cf1AfgWv4n1Ae9afPaloY7VXr8XtXadW7RVEAJTs
+         vKV3XqBLwUf5Lgvpk3GujRZVBG8OK5QgWjcN+ys77+yQtLlPkGtl5ki0fbBk2eZ4dECK
+         i/T/hdMlpAbmHPRqD3BIA2AO4cpGwlth3++mE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vULJyP67JBNxuLxHNrQncN4uZpPg3T+lQ2vheCSCnts=;
+        b=VTn3DPCfDzP6roQTIjoW30gKbkyMMfuvDWNuF8Xq8AMRE9JHKTbhFpU0bfT8ggCZrO
+         p9qksBXDCakYKuqy4bZWpCtk5BEy5XqwQMnPIeeKtjstVBOeVZsYuV/4Nz4+E4Y+hbdN
+         +Rk/NVVML3907vIqxIZVaHNvOuegTJbtP+jbMoMKC9+6sW7aO02McDIZ9lvWjRWMXRny
+         UwZdI5ngk3Bmh9jzKoX6lnuk4MRYDmfNGMAfcWye2Q1eekpkfK7XbBZzqxKy8EvJ/6Gu
+         0IHKNf44d/a/OgOcBwfy1HJfNkELjyixNE3aWo0beYCTDyFZbSXjslf5XjOve8yL6NQj
+         qpeQ==
+X-Gm-Message-State: AGi0PuaOaX3Wq0esKuCjO4m7NP3AEDYmBe85Ct7AsV9xgyYbeXeC1pjI
+        CEdibkVg5Y7rX5d+qec9O2zyryMDcNQ=
+X-Google-Smtp-Source: APiQypIcVmKI52DHjS7PhPqwhtxF6CFbgQcjeSlI7bg+L+VOTcL2/F04Pbq1lfiWKZa1LBaYDH/j4Q==
+X-Received: by 2002:a2e:9f43:: with SMTP id v3mr407294ljk.129.1586291235210;
+        Tue, 07 Apr 2020 13:27:15 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id f26sm13806243lfc.76.2020.04.07.13.27.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 13:27:13 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id r17so3438503lff.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:27:13 -0700 (PDT)
+X-Received: by 2002:ac2:4466:: with SMTP id y6mr2501400lfl.125.1586291232936;
+ Tue, 07 Apr 2020 13:27:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407064018.158555-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200406185827.22249-1-longman@redhat.com> <c2c8adf48be7cb18bbdf0aef7d21e2defe3d2183.camel@perches.com>
+ <CAHk-=wg_mkSc-pH8ntGHR=no9DOLRQyxdtU20p55DrM1su6QzA@mail.gmail.com>
+In-Reply-To: <CAHk-=wg_mkSc-pH8ntGHR=no9DOLRQyxdtU20p55DrM1su6QzA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 7 Apr 2020 13:26:57 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg2Vsb0JETo24=Tc-T2drwMopMRfKnc__r5SZ6tEnbwcA@mail.gmail.com>
+Message-ID: <CAHk-=wg2Vsb0JETo24=Tc-T2drwMopMRfKnc__r5SZ6tEnbwcA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive data objects
+To:     Joe Perches <joe@perches.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 11:40:18PM -0700, Ian Rogers wrote:
-> From: Stephane Eranian <eranian@google.com>
-> 
-> This patch links perf with the libpfm4 library if it is available and
-> NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
-> event tables for all processors supported by perf_events. It is a helper
-> library that helps convert from a symbolic event name to the event
-> encoding required by the underlying kernel interface. This
-> library is open-source and available from: http://perfmon2.sf.net.
-> 
-> With this patch, it is possible to specify full hardware events
-> by name. Hardware filters are also supported. Events must be
-> specified via the --pfm-events and not -e option. Both options
-> are active at the same time and it is possible to mix and match:
-> 
-> $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
-> 
-> v7 rebases and adds fallback code for libpfm4 events.
->    The fallback code is to force user only priv level in case the
->    perf_event_open() syscall failed for permissions reason.
->    the fallback forces a user privilege level restriction on the event string,
->    so depending on the syntax either u or :u is needed.
-> 
->    But libpfm4 can use a : or . as the separator, so simply searching
->    for ':' vs. '/' is not good enough to determine the syntax needed.
->    Therefore, this patch introduces a new evsel boolean field to mark events
->    coming from  libpfm4. The field is then used to adjust the fallback string.
+On Tue, Apr 7, 2020 at 1:16 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Think of it this way: free() doesn't really change the data, it kills
+> the lifetime of it. You can't access it afterwards - you can neither
+> read it nor write it validly. That is a completely different - and
+> independent - operation from writing to it.
 
-heya,
-I made bunch of comments for v5, not sure you saw them:
-  https://lore.kernel.org/lkml/20200323235846.104937-1-irogers@google.com/
+Side note: I'd really love to be able to describe that operation, but
+there's sadly no such extension.
 
-jirka
+So the _real_ prototype for 'free()'-like operations should be something like
 
-> v6 is a rebase.
-> v5 is a rebase.
-> v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
->    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
->    missed in v3.
-> v3 is against acme/perf/core and removes a diagnostic warning.
-> v2 of this patch makes the --pfm-events man page documentation
-> conditional on libpfm4 behing configured. It tidies some of the
-> documentation and adds the feature test missed in the v1 patch.
-> 
+    void free(const volatile killed void *ptr);
 
-SNIP
+where that "killed" also tells the compiler that the pointer lifetime
+is dead, so that using it afterwards is invalid. So that the compiler
+could warn us about some of the most trivial use-after-free cases.
 
+Because we've had even those trivially stupid ones
+
+Yes, obviously various analysis systems do exactly that kind of
+analysis (and usually go much further), but then it's external things
+like coverity etc.
+
+The point being that the lifetime of an object is independent from
+being able to write to an object, and the "const" in the "free()" is
+not "I promise to not write to it", but "I can accept a constant
+pointer".
+
+We've had a number of places in the kernel where we do that kind of
+"lifetime" marking explicitly by assigning a NULL (or invalid value)
+to the pointer when we free it.
+
+I have this dim memory of us even (long long long ago) trying to use a
+#define kfree() ... to do that, but it turns out to be basically
+impossible to get the proper "use once" semantics, so it doesn't work
+if the argument to kfree() has side effects.
+
+               Linus
