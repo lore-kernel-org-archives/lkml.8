@@ -2,129 +2,112 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A1CC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C8DC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDFA2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FAF2063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:30:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nI+28tmD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VI0HbAwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgDGW34 (ORCPT
+        id S1726744AbgDGW37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:29:56 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36670 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbgDGW3x (ORCPT
+        Tue, 7 Apr 2020 18:29:59 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:40322 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726681AbgDGW3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:29:53 -0400
-Received: by mail-pf1-f195.google.com with SMTP id n10so1468317pff.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:29:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/5Dlo9c6NkrNlKhGxo4WiMmRax8P6tj8YZhOaAlFBfg=;
-        b=nI+28tmDYxfUXfht9m038gFrt7Recb9Ozlvc4UQxEyYgc+WlN6FE3ncBzInK0cMsj7
-         y6a/Kuv1KV1lcnKjVKDGdW3KbWuhTVQdBSBvzjXT6vPIeqdwNiFn4YENmwLcFq8Y44xj
-         YD262bhCXpaI5QIN2ofdWk/08Vwbn9w1s5BSA3VVn3imBJ14PW4djp9KiRr8M5GyWp8c
-         RuQOKb+DCPoPS9TETWvkGfDF+qAWuR6h7hWZ63vvq3WAFCwOdF1jknf+ivEB3L1ghqyF
-         RyDLDhe4hYKQ2LEDMwgXJQOdlA9MTwFwa5XRe75Kr1dUkD63YxfE0sIK/7aIRtmwJSkS
-         b5rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/5Dlo9c6NkrNlKhGxo4WiMmRax8P6tj8YZhOaAlFBfg=;
-        b=Bi6Sz7KlCCKRNQTfr0838KQ0EihhKR6gzYmRqDZczH82Bu+107FYga7ZM4qRsnpJnQ
-         7o9DgJlP6T7GzKU5XWuwTPJDBOWP9dROaVXBhJ/wckrbHSRhBSVQa+IC7V24RJ7RY4/s
-         DBSH67ovaqSPXr/Qo2c2oJBeVGAiGkTbwGQ/CmANIwbvbBcmUF0i4V+9FebAOWACldIe
-         3f2irP5wNtlj3YJWyRikyQkD/6AScEdRhagb+NJBGU1oCVYgTO5HaFJYiXHKEF9O19tI
-         EwBByB71BA5J0d82BaBwHnnLMWCblBRM/NxfPRcS55kTcWNBBTvjDo6D5LWwssyxjt39
-         I+UA==
-X-Gm-Message-State: AGi0Puav1AZaLBsTxmWkML7VHM3SZTGE2bxyDQCIycwd7nGJeLKtzgpk
-        G9ms7plXJxH4A3+z1M/L6l88m7M/sNk=
-X-Google-Smtp-Source: APiQypJz2ExCAgyCPPwVRM5J8c8RKa6kKi9IhliwMD/WX4yhCs1nX97X4GqALHk0m2lsH8vN6KHeAg==
-X-Received: by 2002:a63:31c2:: with SMTP id x185mr4178337pgx.380.1586298592970;
-        Tue, 07 Apr 2020 15:29:52 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 3sm11016636pfd.140.2020.04.07.15.29.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 15:29:52 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 15:29:58 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Siddharth Gupta <sidgup@codeaurora.org>
-Cc:     ohad@wizery.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org
-Subject: Re: [PATCH 2/2] remoteproc: core: Prevent sleep when rproc crashes
-Message-ID: <20200407222958.GL20625@builder.lan>
-References: <1582164713-6413-1-git-send-email-sidgup@codeaurora.org>
- <1582164713-6413-3-git-send-email-sidgup@codeaurora.org>
+        Tue, 7 Apr 2020 18:29:54 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586298594; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Y51llxo6V8hgiVIDqT1dGRczqJHThRU0itOQaSw5CeI=; b=VI0HbAwX2zoGlE/mrWClJR4gNs7YWmRgcqP12BG964IeQ0KU9sMFlqaOzO6ySbOr5uk+Fndc
+ wWRDTkuUO97oRdX+uJaPVSCKvx+KA5RKN1pT1pzsfo5kA7DNwzfkrtlI1ibNhELAzOsxgNxB
+ SUaMA23/ucdpEsD2I3u5HGSo9Fk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8cfed9.7fa01118d928-smtp-out-n01;
+ Tue, 07 Apr 2020 22:29:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 220DFC44788; Tue,  7 Apr 2020 22:29:44 +0000 (UTC)
+Received: from [10.110.111.40] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C548BC433F2;
+        Tue,  7 Apr 2020 22:29:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C548BC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v3 0/4] Add SS/HS-USB changes for Qualcomm SM8150 chipset
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        vinod.koul@linaro.org
+References: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <a1328e98-fb97-3fff-913e-45ad85f44532@codeaurora.org>
+Date:   Tue, 7 Apr 2020 15:29:41 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582164713-6413-3-git-send-email-sidgup@codeaurora.org>
+In-Reply-To: <1586298209-4589-1-git-send-email-wcheng@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19 Feb 18:11 PST 2020, Siddharth Gupta wrote:
+Hi All,
 
-> Remoteproc recovery should be fast and any delay will have an impact on the
-> user-experience. Use power management APIs (pm_stay_awake and pm_relax) to
-> ensure that the system does not go to sleep.
+Sorry for the confusion, please disregard these patches.  I sent the
+incorrect patch series update.
+
+Thanks
+Wesley
+
+On 4/7/2020 3:23 PM, Wesley Cheng wrote:
+> This series adds support for the Synopsis 7nm HSPHY USB driver being
+> used in QCOM chipsets.  The HSPHY register map differs compared to 
+> other PHY revisions.  In addition, modifications and updates are done
+> to the QMP driver to add new registers/offsets, and to update the
+> initialization sequence for enabling the SSUSB path on SM8150.
 > 
-> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> ---
->  drivers/remoteproc/remoteproc_core.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> Changes in v3:
+>  - Use devm_reset_control_get_exclusive instead of referencing index for
+>    reset handle
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 5ab65a4..52e318c 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1712,6 +1712,8 @@ static void rproc_crash_handler_work(struct work_struct *work)
->  
->  	if (!rproc->recovery_disabled)
->  		rproc_trigger_recovery(rproc);
-> +
-> +	pm_relax(&rproc->dev);
->  }
->  
->  /**
-> @@ -2242,6 +2244,8 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
->  		return;
->  	}
->  
-> +	pm_stay_awake(&rproc->dev);
+> Changes in v2:
+>  - Fixed YAML errors caught by dt_binding_check
+> 
+> Jack Pham (1):
+>   phy: qcom-qmp: Add SM8150 QMP USB3 PHY support
+> 
+> Wesley Cheng (3):
+>   dt-bindings: phy: Add binding for qcom,usb-hs-7nm
+>   phy: qcom-snps: Add SNPS USB PHY driver for QCOM based SOCs
+>   phy: qcom-qmp: Use proper PWRDOWN offset for sm8150 USB
+> 
+>  .../devicetree/bindings/phy/qcom,usb-hs-7nm.yaml   |  76 ++++++
+>  drivers/phy/qualcomm/Kconfig                       |  10 +
+>  drivers/phy/qualcomm/Makefile                      |   1 +
+>  drivers/phy/qualcomm/phy-qcom-qmp.c                | 157 +++++++++++
+>  drivers/phy/qualcomm/phy-qcom-qmp.h                | 198 +++++++++++++-
+>  drivers/phy/qualcomm/phy-qcom-snps-7nm.c           | 294 +++++++++++++++++++++
+>  6 files changed, 734 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-7nm.yaml
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> 
 
-Following Mathieu's question I was expecting you to do this on
-rproc->dev.parent.
-
-But looking at the implementation of pm_stay_awake(), it ends up being a
-nop if dev->power.wakeup isn't specified. This in turn seems to come
-from device_wakeup_enable(), which will bail if dev->power.can_wakeup is
-not set. But I don't see where this would be set for either the platform
-driver or the remoteproc's struct device - and neither one of them have
-a "wakeup" attribute in sysfs.
-
-Is there some additional plumbing needed for this?
-
-Regards,
-Bjorn
-
-> +
->  	dev_err(&rproc->dev, "crash detected in %s: type %s\n",
->  		rproc->name, rproc_crash_to_string(type));
->  
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
