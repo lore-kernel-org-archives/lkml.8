@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E99C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3B4C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B1F2078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0842078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586218062;
-	bh=lkt+7S1Ws1ROwt9EaaZvt6jC5ZwlXMV5tjkHz4O490Y=;
+	s=default; t=1586218070;
+	bh=Zg0lXdbFYkI82DZL3HsOsGw1RamNs7bH/YilUYo10QM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SZ99dPyVa/3s13RdskIAIP3hm5xL3764Z6o2vXpWPKjLhYV8aOqoU5lho4x/57cOI
-	 +v4SoqURdA0bGb00ywPSRr5zzcx0gFfFPqd7hxQnTKEokicvWR82Y08tAi+LoedfG7
-	 nXPNSD6Y0gR5MYPu4xjgrfZMjd+yoM46Ruupnj6U=
+	b=KYRYag4qq3uxKgwFwHAGQg2W8Hv+h3RCVoQ+kBEmhO0lKP7Rb4+zzqwpTuTzHZ7u6
+	 /d7t47RY+KYlzKtFXD8IoMECHJb0RQ0HFBvRoBfEvY3OMjMViFCPnTxhd0g0NeOX7U
+	 aaGTstocF3EiLg4XVFPcdlwcGbfN7LbJykx0z5xE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgDGAHl (ORCPT
+        id S1728244AbgDGAHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:07:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35100 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:07:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbgDGABm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:42 -0400
+        id S1727247AbgDGABk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2DBF20857;
-        Tue,  7 Apr 2020 00:01:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9749620A8B;
+        Tue,  7 Apr 2020 00:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217701;
-        bh=lkt+7S1Ws1ROwt9EaaZvt6jC5ZwlXMV5tjkHz4O490Y=;
+        s=default; t=1586217699;
+        bh=Zg0lXdbFYkI82DZL3HsOsGw1RamNs7bH/YilUYo10QM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=up45+1zgqT0AUhldGKDvNulHckuAXdD2u2wHYQLbK60XsmKS7jb4XXt/PgJamN5jp
-         tT5OkG0XXI/UFkOaR8z14iyBxWppnBAP9o2WUJ0PsXzVKgoKwD6Zma7biVnI2QSsiH
-         bmqD/llMnt7KNhXLln6nqbZ98NoMhMiN1hh+aHLM=
+        b=dEMdc21AW5Rx2x7z/2rKxDrLnaXgeokOB000LhORVYR9BY/M1233pEw/vUFlr90zo
+         2KuHE+NJroVn5szAWNWOp3AJQ7uFSyrQeCXIosGQgWeRHubrHjHWnGOTXCFEHt2Bfw
+         wVeQw6CQCl5by7aC4R7QK4l6D8DYMUSYRtuZesHU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alain Volmat <avolmat@me.com>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+Cc:     Ilan Peer <ilan.peer@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 34/35] i2c: st: fix missing struct parameter description
-Date:   Mon,  6 Apr 2020 20:00:56 -0400
-Message-Id: <20200407000058.16423-34-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 32/35] cfg80211: Do not warn on same channel at the end of CSA
+Date:   Mon,  6 Apr 2020 20:00:54 -0400
+Message-Id: <20200407000058.16423-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
 References: <20200407000058.16423-1-sashal@kernel.org>
@@ -61,33 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alain Volmat <avolmat@me.com>
+From: Ilan Peer <ilan.peer@intel.com>
 
-[ Upstream commit f491c6687332920e296d0209e366fe2ca7eab1c6 ]
+[ Upstream commit 05dcb8bb258575a8dd3499d0d78bd2db633c2b23 ]
 
-Fix a missing struct parameter description to allow
-warning free W=1 compilation.
+When cfg80211_update_assoc_bss_entry() is called, there is a
+verification that the BSS channel actually changed. As some APs use
+CSA also for bandwidth changes, this would result with a kernel
+warning.
 
-Signed-off-by: Alain Volmat <avolmat@me.com>
-Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fix this by removing the WARN_ON().
+
+Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200326150855.96316ada0e8d.I6710376b1b4257e5f4712fc7ab16e2b638d512aa@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-st.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/wireless/scan.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-st.c b/drivers/i2c/busses/i2c-st.c
-index 54e1fc8a495e7..f7f7b5b64720e 100644
---- a/drivers/i2c/busses/i2c-st.c
-+++ b/drivers/i2c/busses/i2c-st.c
-@@ -434,6 +434,7 @@ static void st_i2c_wr_fill_tx_fifo(struct st_i2c_dev *i2c_dev)
- /**
-  * st_i2c_rd_fill_tx_fifo() - Fill the Tx FIFO in read mode
-  * @i2c_dev: Controller's private data
-+ * @max: Maximum amount of data to fill into the Tx FIFO
-  *
-  * This functions fills the Tx FIFO with fixed pattern when
-  * in read mode to trigger clock.
+diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+index aef240fdf8df6..328402ab64a3f 100644
+--- a/net/wireless/scan.c
++++ b/net/wireless/scan.c
+@@ -2022,7 +2022,11 @@ void cfg80211_update_assoc_bss_entry(struct wireless_dev *wdev,
+ 
+ 	spin_lock_bh(&rdev->bss_lock);
+ 
+-	if (WARN_ON(cbss->pub.channel == chan))
++	/*
++	 * Some APs use CSA also for bandwidth changes, i.e., without actually
++	 * changing the control channel, so no need to update in such a case.
++	 */
++	if (cbss->pub.channel == chan)
+ 		goto done;
+ 
+ 	/* use transmitting bss */
 -- 
 2.20.1
 
