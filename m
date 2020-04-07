@@ -2,128 +2,92 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DF1C2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42359C2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4A452051A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:13:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="pCGTwxkz"
+	by mail.kernel.org (Postfix) with ESMTP id 19ACF20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgDGGNY (ORCPT
+        id S1726898AbgDGGOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:13:24 -0400
-Received: from mail-eopbgr760043.outbound.protection.outlook.com ([40.107.76.43]:9670
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725802AbgDGGNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:13:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gnHHZ0DJJKNbViHKBgKcWig9nym4WeFl9OfvcTdHbosEjv++iKq/+jbzxDtVQKH7om35X0o2EXIW+aGgSd572nUn5aFse93DlY5G+RKu/s+PKOmc+cZCXxB1nfXHQEHeeOaoWH+UTauG9zGU+utY5vXyXmtYf9cbjhlaGmWmpXe+Esc/uqIHajY15klI1dK9iOCG7xJptYCz30jzoAovISqDE0qEudnGu5+18jto7d6wycjUR1LPykH9hqESRZb312q44yWo1wpX95XMnBXITLSgG2zeF1zvdBpi90tSRdRqjAhrFbuF0GDWrrVZH1W/UWD6deeaj9S4XhlWkAhNfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dg7ZqmOdtpnlk1OQiets3N5Y3HSftsSf1ihldmuggoQ=;
- b=nec/ST07CRFjo+xG57nVEWGSZaOZyZyMGtMdc6FieUDLhd33jZxNUkCKZY2Qxirq/z+S8XtYSkSsI0EpW+neIaYNzzWVon2C2fOZtLDPIKrLlOc4oqTPkiH88BtaQkySzrahliiMTg1AX49SELhU+FvX7JjiG/Qb96tSZGOwfhNdic7/4j/0fdHMHZu5g24WfO2yJ3s3tlEGbncpIqbXT0uNa+rlpEDADblz6hbXhmX53wrZQo7O+xDjtp/BldIsjNiMpnmnTH42CdpO2v+WnLiKCOGoit1LZK8hEF5R9XwB6rpA3rd3185Z0GqKYg/6jSw14/j2ZTyj4JIb9p6ARw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dg7ZqmOdtpnlk1OQiets3N5Y3HSftsSf1ihldmuggoQ=;
- b=pCGTwxkzg76JecwiwPDtWlfbcVs479jInPtotEEQaBbOnGW+mnIAwb9ocH/PUuIRrTxwwSB8s+ZxMFC0IEfYe5Xc3T8cAErwZzdRp6oEtxiVinzszUNWpULGvdUc6J2zKu430WIrmUs8WInW/eYaYuj9M+wXeaHPrd6fLSx/JC0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com (2603:10b6:5:1c4::14)
- by DM6SPR01MB0036.namprd12.prod.outlook.com (2603:10b6:5:61::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Tue, 7 Apr
- 2020 06:13:18 +0000
-Received: from DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::2d84:ed9d:cba4:dcfd]) by DM6PR12MB3865.namprd12.prod.outlook.com
- ([fe80::2d84:ed9d:cba4:dcfd%3]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
- 06:13:18 +0000
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     pbonzini@redhat.com, joro@8bytes.org, jon.grimm@amd.com,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Alexander Graf <graf@amazon.com>
-Subject: [PATCH] KVM: x86: Fixes posted interrupt check for IRQs delivery modes
-Date:   Tue,  7 Apr 2020 01:13:09 -0500
-Message-Id: <1586239989-58305-1-git-send-email-suravee.suthikulpanit@amd.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: DM5PR21CA0037.namprd21.prod.outlook.com
- (2603:10b6:3:ed::23) To DM6PR12MB3865.namprd12.prod.outlook.com
- (2603:10b6:5:1c4::14)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ssuthiku-rhel7-ssp.amd.com (165.204.78.2) by DM5PR21CA0037.namprd21.prod.outlook.com (2603:10b6:3:ed::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.6 via Frontend Transport; Tue, 7 Apr 2020 06:13:17 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [165.204.78.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2c1ade45-3bd7-4a8f-41ee-08d7dabac3bc
-X-MS-TrafficTypeDiagnostic: DM6SPR01MB0036:|DM6SPR01MB0036:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6SPR01MB00368BF3D5E1477B1A142214F3C30@DM6SPR01MB0036.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-Forefront-PRVS: 036614DD9C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3865.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(346002)(376002)(39860400002)(396003)(136003)(2906002)(956004)(8936002)(54906003)(5660300002)(81166006)(81156014)(316002)(36756003)(8676002)(44832011)(66946007)(6486002)(86362001)(66556008)(478600001)(2616005)(186003)(52116002)(7696005)(66476007)(26005)(6666004)(4326008)(16526019)(21314003);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GXNSa4tnlLTCGXhu9z+dOi3CaAO4BTCvTJ9SpTOfeHikfrXNwhnrXZyC+7y1S4pZONXi6iXchoOa8cHCjktjp3NzloDouEwJd2UNRsSjqysTn/rku6ikRy9UZ2MZa/zjf1d3yJjlSvAoaAmzre00BIxvJ7sqXq0Gl+1EXZJSUQWYiezRPbhfb2U5MxpDsjIUYQDySd1w0QgqAk0jqfAQjCFupHCnXLG+QB9CMhu/fVNEEFQdmG2Td56uflTaCbxZpyZBOmxI1YqdbqUyx6fyRWEJ3F+WNy3PJi/8AGiOSVKjM3aKayftN9tzBbP+UMYDTT0XOZ43BLWl5y8JN1PTS3dcru1N8OYZ+rJe/YMIf0BWSCii0DY/5Wp5KlBOrhTiEqLTIU+lp1P4Oplw/bzuDnVhsc6BLGwg5bIV9SEKJ1xc/RKgCCA3ruyUQymbvPHekLtS4Bxl9e4dMIciD9JVR/zqT2XIE1eW38zsw7CmeAk=
-X-MS-Exchange-AntiSpam-MessageData: 3TwdOSKPhKyqR26FG4cqQRe/5hLHHPDNI+Y+H+OIn/znZvnUsmYpGz5DNwkVnbufDXzK5q8/34oLf+65VdKrlhO4SUDnJ+THQkkjK2iqNqErA6fbXAW98vYD4N95/l+5X+yqyD8SPxj4IZEEhPTXfA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c1ade45-3bd7-4a8f-41ee-08d7dabac3bc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 06:13:18.1500
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EDc84LflynubXaR4UALvBYVSbl1nETR1hviNoH0G9LMvekeOypSoPkEY2Lsi8HWaKOlnE2A2g20m7CgLFyiaig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6SPR01MB0036
+        Tue, 7 Apr 2020 02:14:46 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:42746 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbgDGGOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 02:14:46 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6D1EB1A10E6;
+        Tue,  7 Apr 2020 08:14:44 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 854A31A1064;
+        Tue,  7 Apr 2020 08:14:40 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 2074840294;
+        Tue,  7 Apr 2020 14:14:35 +0800 (SGT)
+From:   Biwen Li <biwen.li@oss.nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, ran.wang_1@nxp.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: [PATCH 1/4] arm64: dts: lx2160a: add ftm_alarm0 DT node
+Date:   Tue,  7 Apr 2020 14:10:51 +0800
+Message-Id: <20200407061054.16912-1-biwen.li@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current logic incorrectly uses the enum ioapic_irq_destination_types
-to check the posted interrupt destination types. However, the value was
-set using APIC_DM_XXX macros, which are left-shifted by 8 bits.
+From: Biwen Li <biwen.li@nxp.com>
 
-Fixes by using the APIC_DM_FIXED and APIC_DM_LOWEST instead.
+The patch adds ftm_alarm0 DT node for Soc LX2160A
+FlexTimer1 module is used to wakeup the system in deep sleep
 
-Fixes: (fdcf75621375 'KVM: x86: Disable posted interrupts for non-standard IRQs delivery modes')
-Cc: Alexander Graf <graf@amazon.com>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
- arch/x86/include/asm/kvm_host.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 98959e8..f15e5b3 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1664,8 +1664,8 @@ void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
- static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
- {
- 	/* We can only post Fixed and LowPrio IRQs */
--	return (irq->delivery_mode == dest_Fixed ||
--		irq->delivery_mode == dest_LowestPrio);
-+	return (irq->delivery_mode == APIC_DM_FIXED ||
-+		irq->delivery_mode == APIC_DM_LOWEST);
- }
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index e5ee5591e52b..e0d8d68ce070 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -16,6 +16,10 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
  
- static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
++	aliases {
++		rtc1 = &ftm_alarm0;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -768,6 +772,20 @@
+ 			timeout-sec = <30>;
+ 		};
+ 
++		rcpm: rcpm@1e34040 {
++			compatible = "fsl,lx2160a-rcpm", "fsl,qoriq-rcpm-2.1+";
++			reg = <0x0 0x1e34040 0x0 0x1c>;
++			#fsl,rcpm-wakeup-cells = <7>;
++			little-endian;
++		};
++
++		ftm_alarm0: timer@2800000 {
++			compatible = "fsl,lx2160a-ftm-alarm";
++			reg = <0x0 0x2800000 0x0 0x10000>;
++			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0 0x0>;
++			interrupts = <0 44 4>;
++		};
++
+ 		usb0: usb@3100000 {
+ 			compatible = "snps,dwc3";
+ 			reg = <0x0 0x3100000 0x0 0x10000>;
 -- 
-1.8.3.1
+2.17.1
 
