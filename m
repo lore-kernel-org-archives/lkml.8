@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3B9C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6764FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49CD206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2611D206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dMT43QtD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JXKVFRYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgDGLNO (ORCPT
+        id S1728589AbgDGLNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:13:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48972 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbgDGLNM (ORCPT
+        Tue, 7 Apr 2020 07:13:18 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:42520 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728563AbgDGLNO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:13:12 -0400
+        Tue, 7 Apr 2020 07:13:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=k18ChHz5jq7GnLj8UdXR7lsxUanr/pTCe7iNAcGVsLI=; b=dMT43QtDWREnSUGCJ6+jHS57Yn
-        uZlm4BKaWhWGdPOB07XRzXqy/IfHQrhIqpgawmDwdE5SbkOtjpAmgJ+WEYnN4w4mMYQ47oXe7zxnJ
-        10IdHNfqt7sDhxBzpm7DzyT0Rkpg50ekaspuS1TGnhL8+v5oUCI7dE2L+RfI+d28GC2QQym8j+KXB
-        wMWqmxSvV2kv56f7FE+P22+By3G1thNZ3Qa7TFkj84Tan2TI0dreKRWbpA+vfVqBvRG6tzo56kQ+f
-        6gJqtmtj+BlMGmpc1A1vX2n4i1+Ez4lWO2v6x1r4C6vVH4aJLZ5z9ZCI5T9O6xlxK90k1UnNYfLIL
-        uAqQj7lA==;
+        bh=cWMWN/XgPNFQvfUsKATnnJdhiBs9QqNEX+OYocITT5E=; b=JXKVFRYKmmNwnZAY34R78DkLRK
+        qrMy7+tXdtRAuBxPfYpIKp2nqERnHosvxDZXizWuKvc8qG9KfFCas/T1S7uQnlf3Fp7GP3Ors6az4
+        cm6Ab8QkBHQdlA4tgYm6h0my0OecMgIEib2MrlfkOgD8vaaIoHCVcfUOq2X6yhxHDl5CkqLqh//Wj
+        H4uaPbEOo/xNtDw0AFqtE+os2mp6dyMEfrCtvMT6XP/I4ItYXOCdW2EkVctq4wVwR4PkD9xeUZb+U
+        +RnbmnpPpXVipD/K5jq3hKWSErTGTNsQ5D6PkHXckHJi83hdXX7K5gdrBED+9XpaG9PiaUUl0L/g7
+        9O1Cgqig==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLm9n-0002wK-D7; Tue, 07 Apr 2020 11:12:39 +0000
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLm9m-0007DQ-Ou; Tue, 07 Apr 2020 11:12:39 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4B30A305FB6;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4F1F33060FC;
         Tue,  7 Apr 2020 13:12:36 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 22B0E29C96F20; Tue,  7 Apr 2020 13:12:36 +0200 (CEST)
-Message-Id: <20200407111007.352324393@infradead.org>
+        id 2036E2999410F; Tue,  7 Apr 2020 13:12:36 +0200 (CEST)
+Message-Id: <20200407111007.276421550@infradead.org>
 User-Agent: quilt/0.65
-Date:   Tue, 07 Apr 2020 13:02:39 +0200
+Date:   Tue, 07 Apr 2020 13:02:38 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     tglx@linutronix.de, linux-kernel@vger.kernel.org
 Cc:     hch@infradead.org, sean.j.christopherson@intel.com,
@@ -56,7 +56,7 @@ Cc:     hch@infradead.org, sean.j.christopherson@intel.com,
         gregkh@linuxfoundation.org, jannh@google.com,
         keescook@chromium.org, David.Laight@aculab.com,
         dcovelli@vmware.com, mhiramat@kernel.org
-Subject: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
+Subject: [PATCH 2/4] module: Convert module_finalize() to load_info
 References: <20200407110236.930134290@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -65,215 +65,284 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It turns out that with Split-Lock-Detect enabled (default) any VMX
-hypervisor needs at least a little modification in order to not blindly
-inject the #AC into the guest without the guest being ready for it.
+Provide load_info to module_finalize(), such that architectures might,
+for example, use get_modinfo() in their implementation.
 
-Since there is no telling which module implements a hypervisor, scan
-all out-of-tree modules' text and look for VMX instructions and refuse
-to load it when SLD is enabled (default) and the module isn't marked
-'sld_safe'.
-
-Hypervisors, which have been modified and are known to work correctly,
-can add:
-
-  MODULE_INFO(sld_safe, "Y");
-
-to explicitly tell the module loader they're good.
-
-Reported-by: "Kenneth R. Crudup" <kenny@panix.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200402124205.242674296@linutronix.de
 ---
- arch/x86/include/asm/cpu.h   |    5 ++
- arch/x86/kernel/cpu/intel.c  |    5 ++
- arch/x86/kernel/module.c     |   87 ++++++++++++++++++++++++++++++++++++++++++-
- include/linux/moduleloader.h |    2 
- kernel/module.c              |    3 -
- 5 files changed, 99 insertions(+), 3 deletions(-)
+ arch/arc/kernel/module.c        |    4 ++--
+ arch/arm/kernel/module.c        |    5 +++--
+ arch/arm64/kernel/module.c      |    6 +++---
+ arch/ia64/kernel/module.c       |    3 +--
+ arch/m68k/kernel/module.c       |    4 +---
+ arch/microblaze/kernel/module.c |    3 +--
+ arch/mips/kernel/module.c       |    6 +++---
+ arch/nds32/kernel/module.c      |    4 +---
+ arch/nios2/kernel/module.c      |    3 +--
+ arch/parisc/kernel/module.c     |    6 +++---
+ arch/powerpc/kernel/module.c    |    5 +++--
+ arch/s390/kernel/module.c       |    6 +++---
+ arch/sh/kernel/module.c         |    6 +++---
+ arch/sparc/kernel/module.c      |    7 ++++---
+ arch/x86/kernel/module.c        |    6 +++---
+ include/linux/moduleloader.h    |    4 +---
+ kernel/module.c                 |    6 ++----
+ 17 files changed, 38 insertions(+), 46 deletions(-)
 
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -44,6 +44,7 @@ unsigned int x86_stepping(unsigned int s
- extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
- extern void switch_to_sld(unsigned long tifn);
- extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
-+extern bool split_lock_enabled(void);
- #else
- static inline void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c) {}
- static inline void switch_to_sld(unsigned long tifn) {}
-@@ -51,5 +52,9 @@ static inline bool handle_user_split_loc
+--- a/arch/arc/kernel/module.c
++++ b/arch/arc/kernel/module.c
+@@ -129,10 +129,10 @@ int apply_relocate_add(Elf32_Shdr *sechd
+  * This couldn't be done in module_frob_arch_sections() because
+  * relocations had not been applied by then
+  */
+-int module_finalize(const Elf32_Ehdr *hdr, const Elf_Shdr *sechdrs,
+-		    struct module *mod)
++int module_finalize(const struct load_info *info, struct module *mod)
  {
- 	return false;
- }
-+static inline bool split_lock_enabled(void)
-+{
-+	return false;
-+}
- #endif
- #endif /* _ASM_X86_CPU_H */
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -1061,6 +1061,11 @@ static void sld_update_msr(bool on)
- 	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
- }
+ #ifdef CONFIG_ARC_DW2_UNWIND
++	const Elf_Shdr *sechdrs = info->sechdrs;
+ 	void *unw;
+ 	int unwsec = mod->arch.unw_sec_idx;
  
-+bool split_lock_enabled(void)
-+{
-+	return sld_state != sld_off;
-+}
-+
- static void split_lock_init(void)
+--- a/arch/arm/kernel/module.c
++++ b/arch/arm/kernel/module.c
+@@ -340,9 +340,10 @@ static const Elf_Shdr *find_mod_section(
+ extern void fixup_pv_table(const void *, unsigned long);
+ extern void fixup_smp(const void *, unsigned long);
+ 
+-int module_finalize(const Elf32_Ehdr *hdr, const Elf_Shdr *sechdrs,
+-		    struct module *mod)
++int module_finalize(const struct load_info *info, struct module *mod)
  {
- 	split_lock_verify_msr(sld_state != sld_off);
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -24,6 +24,8 @@
- #include <asm/pgtable.h>
- #include <asm/setup.h>
- #include <asm/unwind.h>
-+#include <asm/cpu.h>
-+#include <asm/insn.h>
- 
- #if 0
- #define DEBUGP(fmt, ...)				\
-@@ -217,6 +219,78 @@ int apply_relocate_add(Elf64_Shdr *sechd
- }
- #endif
- 
-+static bool insn_is_vmx(struct insn *insn)
-+{
-+	u8 modrm = insn->modrm.bytes[0];
-+	u8 modrm_mod = X86_MODRM_MOD(modrm);
-+	u8 modrm_reg = X86_MODRM_REG(modrm);
-+
-+	u8 prefix = insn->prefixes.bytes[0];
-+
-+	if (insn->opcode.bytes[0] != 0x0f)
-+		return false;
-+
-+	switch (insn->opcode.bytes[1]) {
-+	case 0x01:
-+		switch (insn->opcode.bytes[2]) {
-+		case 0xc1: /* VMCALL */
-+		case 0xc2: /* VMLAUNCH */
-+		case 0xc3: /* VMRESUME */
-+		case 0xc4: /* VMXOFF */
-+			return true;
-+
-+		default:
-+			break;
-+		}
-+		break;
-+
-+	case 0x78: /* VMREAD */
-+	case 0x79: /* VMWRITE */
-+		return true;
-+
-+	case 0xc7:
-+		/* VMPTRLD, VMPTRST, VMCLEAR, VMXON */
-+		if (modrm_mod == 0x03)
-+			break;
-+
-+		if ((modrm_reg == 6 && (!prefix || prefix == 0x66 || prefix == 0xf3)) ||
-+		    (modrm_reg == 7 && (!prefix || prefix == 0xf3)))
-+			return true;
-+
-+		break;
-+
-+	default:
-+		break;
-+	}
-+
-+	return false;
-+}
-+
-+static int decode_module(struct module *mod, void *text, void *text_end, bool sld_safe)
-+{
-+	bool allow_vmx = sld_safe || !split_lock_enabled();
-+	struct insn insn;
-+
-+	while (text < text_end) {
-+		kernel_insn_init(&insn, text, text_end - text);
-+		insn_get_length(&insn);
-+
-+		if (WARN_ON_ONCE(!insn_complete(&insn))) {
-+			pr_err("Module text malformed: %s\n", mod->name);
-+			return -ENOEXEC;
-+		}
-+
-+		if (!allow_vmx && insn_is_vmx(&insn)) {
-+			pr_err("Module has VMX instructions and is not marked 'sld_safe', boot with: 'split_lock_detect=off': %s\n", mod->name);
-+			return -ENOEXEC;
-+		}
-+
-+		text += insn.length;
-+	}
-+
-+	return 0;
-+}
-+
- int module_finalize(const struct load_info *info, struct module *me)
- {
- 	const Elf_Ehdr *hdr = info->hdr;
-@@ -253,6 +327,16 @@ int module_finalize(const struct load_in
- 					    tseg, tseg + text->sh_size);
- 	}
- 
-+	if (text && !get_modinfo(info, "intree")) {
-+		bool sld_safe = get_modinfo(info, "sld_safe");
-+		void *tseg = (void *)text->sh_addr;
-+		int ret;
-+
-+		ret = decode_module(me, tseg, tseg + text->sh_size, sld_safe);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (para) {
- 		void *pseg = (void *)para->sh_addr;
- 		apply_paravirt(pseg, pseg + para->sh_size);
-@@ -261,9 +345,10 @@ int module_finalize(const struct load_in
- 	/* make jump label nops */
- 	jump_label_apply_nops(me);
- 
--	if (orc && orc_ip)
-+	if (orc && orc_ip) {
- 		unwind_module_init(me, (void *)orc_ip->sh_addr, orc_ip->sh_size,
- 				   (void *)orc->sh_addr, orc->sh_size);
-+	}
- 
++	const Elf32_Ehdr *hdr = info->hdr;
++	const Elf_Shdr *sechdrs = info->sechdrs;
+ 	const Elf_Shdr *s = NULL;
+ #ifdef CONFIG_ARM_UNWIND
+ 	const char *secstrs = (void *)hdr + sechdrs[hdr->e_shstrndx].sh_offset;
+--- a/arch/arm64/kernel/module.c
++++ b/arch/arm64/kernel/module.c
+@@ -515,10 +515,10 @@ static int module_init_ftrace_plt(const
  	return 0;
  }
---- a/include/linux/moduleloader.h
-+++ b/include/linux/moduleloader.h
-@@ -26,6 +26,8 @@ struct load_info {
- 	} index;
- };
  
-+extern char *get_modinfo(const struct load_info *info, const char *tag);
-+
- /* These may be implemented by architectures that need to hook into the
-  * module loader code.  Architectures that don't need to do anything special
-  * can just rely on the 'weak' default hooks defined in kernel/module.c.
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1393,7 +1393,6 @@ static inline int same_magic(const char
+-int module_finalize(const Elf_Ehdr *hdr,
+-		    const Elf_Shdr *sechdrs,
+-		    struct module *me)
++int module_finalize(const struct load_info *info, struct module *me)
+ {
++	const Elf_Ehdr *hdr = info->hdr;
++	const Elf_Shdr *sechdrs = info->sechdrs;
+ 	const Elf_Shdr *s;
+ 	s = find_section(hdr, sechdrs, ".altinstructions");
+ 	if (s)
+--- a/arch/ia64/kernel/module.c
++++ b/arch/ia64/kernel/module.c
+@@ -902,8 +902,7 @@ register_unwind_table (struct module *mo
+ 	}
  }
- #endif /* CONFIG_MODVERSIONS */
  
--static char *get_modinfo(const struct load_info *info, const char *tag);
- static char *get_next_modinfo(const struct load_info *info, const char *tag,
- 			      char *prev);
+-int
+-module_finalize (const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs, struct module *mod)
++int module_finalize(const struct load_info *info, struct module *mod)
+ {
+ 	DEBUGP("%s: init: entry=%p\n", __func__, mod->init);
+ 	if (mod->arch.unwind)
+--- a/arch/m68k/kernel/module.c
++++ b/arch/m68k/kernel/module.c
+@@ -99,9 +99,7 @@ int apply_relocate_add(Elf32_Shdr *sechd
+ 	return 0;
+ }
  
-@@ -2521,7 +2520,7 @@ static char *get_next_modinfo(const stru
+-int module_finalize(const Elf_Ehdr *hdr,
+-		    const Elf_Shdr *sechdrs,
+-		    struct module *mod)
++int module_finalize(const struct load_info *info, struct module *mod)
+ {
+ 	module_fixup(mod, mod->arch.fixup_start, mod->arch.fixup_end);
+ 	return 0;
+--- a/arch/microblaze/kernel/module.c
++++ b/arch/microblaze/kernel/module.c
+@@ -114,8 +114,7 @@ int apply_relocate_add(Elf32_Shdr *sechd
+ 	return 0;
+ }
+ 
+-int module_finalize(const Elf32_Ehdr *hdr, const Elf_Shdr *sechdrs,
+-		struct module *module)
++int module_finalize(const struct load_info *info, struct module *module)
+ {
+ 	flush_dcache();
+ 	return 0;
+--- a/arch/mips/kernel/module.c
++++ b/arch/mips/kernel/module.c
+@@ -427,10 +427,10 @@ const struct exception_table_entry *sear
+ }
+ 
+ /* Put in dbe list if necessary. */
+-int module_finalize(const Elf_Ehdr *hdr,
+-		    const Elf_Shdr *sechdrs,
+-		    struct module *me)
++int module_finalize(const struct load_info *info, struct module *me)
+ {
++	const Elf_Ehdr *hdr = info->hdr;
++	const Elf_Shdr *sechdrs = info->sechdrs;
+ 	const Elf_Shdr *s;
+ 	char *secstrings = (void *)hdr + sechdrs[hdr->e_shstrndx].sh_offset;
+ 
+--- a/arch/nds32/kernel/module.c
++++ b/arch/nds32/kernel/module.c
+@@ -266,9 +266,7 @@ apply_relocate_add(Elf32_Shdr * sechdrs,
+ 	return 0;
+ }
+ 
+-int
+-module_finalize(const Elf32_Ehdr * hdr, const Elf_Shdr * sechdrs,
+-		struct module *module)
++int module_finalize(const struct load_info *info, struct module *module)
+ {
+ 	return 0;
+ }
+--- a/arch/nios2/kernel/module.c
++++ b/arch/nios2/kernel/module.c
+@@ -130,8 +130,7 @@ int apply_relocate_add(Elf32_Shdr *sechd
+ 	return 0;
+ }
+ 
+-int module_finalize(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
+-			struct module *me)
++int module_finalize(const struct load_info *info, struct module *me)
+ {
+ 	flush_cache_all();
+ 	return 0;
+--- a/arch/parisc/kernel/module.c
++++ b/arch/parisc/kernel/module.c
+@@ -854,10 +854,10 @@ deregister_unwind_table(struct module *m
+ 		unwind_table_remove(me->arch.unwind);
+ }
+ 
+-int module_finalize(const Elf_Ehdr *hdr,
+-		    const Elf_Shdr *sechdrs,
+-		    struct module *me)
++int module_finalize(const struct load_info *info, struct module *me)
+ {
++	const Elf_Ehdr *hdr = info->hdr;
++	const Elf_Shdr *sechdrs = info->sechdrs;
+ 	int i;
+ 	unsigned long nsyms;
+ 	const char *strtab = NULL;
+--- a/arch/powerpc/kernel/module.c
++++ b/arch/powerpc/kernel/module.c
+@@ -31,9 +31,10 @@ static const Elf_Shdr *find_section(cons
  	return NULL;
  }
  
--static char *get_modinfo(const struct load_info *info, const char *tag)
-+char *get_modinfo(const struct load_info *info, const char *tag)
+-int module_finalize(const Elf_Ehdr *hdr,
+-		const Elf_Shdr *sechdrs, struct module *me)
++int module_finalize(const struct load_info *info, struct module *me)
  {
- 	return get_next_modinfo(info, tag, NULL);
++	const Elf_Ehdr *hdr = info->hdr;
++	const Elf_Shdr *sechdrs = info->sechdrs;
+ 	const Elf_Shdr *sect;
+ 	int rc;
+ 
+--- a/arch/s390/kernel/module.c
++++ b/arch/s390/kernel/module.c
+@@ -437,10 +437,10 @@ int apply_relocate_add(Elf_Shdr *sechdrs
+ 	return 0;
  }
+ 
+-int module_finalize(const Elf_Ehdr *hdr,
+-		    const Elf_Shdr *sechdrs,
+-		    struct module *me)
++int module_finalize(const struct load_info *info, struct module *me)
+ {
++	const Elf_Ehdr *hdr = info->hdr;
++	const Elf_Shdr *sechdrs = info->sechdrs;
+ 	const Elf_Shdr *s;
+ 	char *secstrings, *secname;
+ 	void *aseg;
+--- a/arch/sh/kernel/module.c
++++ b/arch/sh/kernel/module.c
+@@ -96,10 +96,10 @@ int apply_relocate_add(Elf32_Shdr *sechd
+ 	return 0;
+ }
+ 
+-int module_finalize(const Elf_Ehdr *hdr,
+-		    const Elf_Shdr *sechdrs,
+-		    struct module *me)
++int module_finalize(const struct load_info *info, struct module *me)
+ {
++	const Elf_Ehdr *hdr = info->hdr;
++	const Elf_Shdr *sechdrs = info->sechdrs;
+ 	int ret = 0;
+ 
+ 	ret |= module_dwarf_finalize(hdr, sechdrs, me);
+--- a/arch/sparc/kernel/module.c
++++ b/arch/sparc/kernel/module.c
+@@ -204,10 +204,11 @@ static void do_patch_sections(const Elf_
+ 	}
+ }
+ 
+-int module_finalize(const Elf_Ehdr *hdr,
+-		    const Elf_Shdr *sechdrs,
+-		    struct module *me)
++int module_finalize(const struct load_info *info, struct module *me)
+ {
++	const Elf_Ehdr *hdr = info->hdr;
++	const Elf_Shdr *sechdrs = info->sechdrs;
++
+ 	/* make jump label nops */
+ 	jump_label_apply_nops(me);
+ 
+--- a/arch/x86/kernel/module.c
++++ b/arch/x86/kernel/module.c
+@@ -217,10 +217,10 @@ int apply_relocate_add(Elf64_Shdr *sechd
+ }
+ #endif
+ 
+-int module_finalize(const Elf_Ehdr *hdr,
+-		    const Elf_Shdr *sechdrs,
+-		    struct module *me)
++int module_finalize(const struct load_info *info, struct module *me)
+ {
++	const Elf_Ehdr *hdr = info->hdr;
++	const Elf_Shdr *sechdrs = info->sechdrs;
+ 	const Elf_Shdr *s, *text = NULL, *alt = NULL, *locks = NULL,
+ 		*para = NULL, *orc = NULL, *orc_ip = NULL;
+ 	char *secstrings = (void *)hdr + sechdrs[hdr->e_shstrndx].sh_offset;
+--- a/include/linux/moduleloader.h
++++ b/include/linux/moduleloader.h
+@@ -101,9 +101,7 @@ static inline int apply_relocate_add(Elf
+ #endif
+ 
+ /* Any final processing of module before access.  Return -error or 0. */
+-int module_finalize(const Elf_Ehdr *hdr,
+-		    const Elf_Shdr *sechdrs,
+-		    struct module *mod);
++int module_finalize(const struct load_info *info, struct module *mod);
+ 
+ /* Any cleanup needed when module leaves. */
+ void module_arch_cleanup(struct module *mod);
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3425,9 +3425,7 @@ static void module_deallocate(struct mod
+ 	module_memfree(mod->core_layout.base);
+ }
+ 
+-int __weak module_finalize(const Elf_Ehdr *hdr,
+-			   const Elf_Shdr *sechdrs,
+-			   struct module *me)
++int __weak module_finalize(const struct load_info *info, struct module *me)
+ {
+ 	return 0;
+ }
+@@ -3445,7 +3443,7 @@ static int post_relocation(struct module
+ 	add_kallsyms(mod, info);
+ 
+ 	/* Arch-specific module finalizing. */
+-	return module_finalize(info->hdr, info->sechdrs, mod);
++	return module_finalize(info, mod);
+ }
+ 
+ /* Is this module of this name done loading?  No locks held. */
 
 
