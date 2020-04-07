@@ -2,128 +2,98 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF56C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE68C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F418208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8293120936
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586271364;
+	bh=dmf2sCt8OdjywGVBqBDJTrQdLEpDVN1TaWBbslFDsRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KcnHUJU/xCguKVRBaO3+MptFXcqyVjfvQ/QVsHe2s8zTpquOAMrM+vBlWClIJUXUD
+	 5dpDPrAdeDpvh15oWTkZfKCN9CUs7zrUwAtC5IBNJ4azHh92On7RvBT8Fq7Sqfmz5Q
+	 mAa85ClRNOGnMCe5uJ8uMCw6cvFRMg4+0pMP0KcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbgDGOzW (ORCPT
+        id S1729311AbgDGO4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:55:22 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:42197 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729268AbgDGOzW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:55:22 -0400
-Received: from kb-xps (unknown [78.193.40.249])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id DE9D2240009;
-        Tue,  7 Apr 2020 14:55:11 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 16:55:10 +0200
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
-Message-ID: <20200407145510.GC1489441@kb-xps>
-References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
- <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
- <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
- <20200407110339.GA1489441@kb-xps>
- <20200407142238.ik67isetbggn2rh3@gilmour.lan>
+        Tue, 7 Apr 2020 10:56:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729177AbgDGO4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:56:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDB7D20A8B;
+        Tue,  7 Apr 2020 14:56:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586271362;
+        bh=dmf2sCt8OdjywGVBqBDJTrQdLEpDVN1TaWBbslFDsRg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zfx7S+kokJvXRkoGEyjzLmK2uimhuiC+A0Y3zzYF/4x8dFA0kjGkbtJZ/scRZkIkd
+         285K3KzLYKWkGUdloYF1oXtfqs5pC7jRnTiMHLxKOZ7J+6tF2LdmbF7/EgTdV8SDx5
+         CSyVRwG8kVG2ZnuJKLh4bWExJ0XfDLDxfGn4PpYg=
+Date:   Tue, 7 Apr 2020 16:55:56 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, hch@infradead.org,
+        sean.j.christopherson@intel.com, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, x86@kernel.org, kenny@panix.com, jeyu@kernel.org,
+        rasmus.villemoes@prevas.dk, fenghua.yu@intel.com,
+        xiaoyao.li@intel.com, nadav.amit@gmail.com, thellstrom@vmware.com,
+        tony.luck@intel.com, rostedt@goodmis.org, jannh@google.com,
+        keescook@chromium.org, David.Laight@aculab.com,
+        dcovelli@vmware.com, mhiramat@kernel.org
+Subject: Re: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
+Message-ID: <20200407145556.GA895937@kroah.com>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.352324393@infradead.org>
+ <20200407143543.GB876345@kroah.com>
+ <527b5c72-96cb-a6cc-5301-449d86015ec9@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200407142238.ik67isetbggn2rh3@gilmour.lan>
+In-Reply-To: <527b5c72-96cb-a6cc-5301-449d86015ec9@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 04:22:38PM +0200, Maxime Ripard wrote:
-> On Tue, Apr 07, 2020 at 01:03:39PM +0200, Kamel Bouhara wrote:
-> > > On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
-> > > > Add dt binding for the counter variant of the rotary encoder driver.
-> > > >
-> > > > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > > > ---
-> > > >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
-> > > >  1 file changed, 67 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..a59f7c1faf0c
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > > > @@ -0,0 +1,67 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > >
-> > > Bindings are usually used by other OS's, so you should consider
-> > > putting it under a more permissive license, usually that would be GPL2
-> > > and the BSD-2-Clause
-> >
-> > Well to be honest I just looked into an existing binding and I guess
-> > the wrong one :).
->
-> Not the wrong ones, but the old ones :)
->
-> It's painful to change a license on existing files, whereas it's
-> pretty easy to mention it during review.
->
+On Tue, Apr 07, 2020 at 04:44:57PM +0200, Paolo Bonzini wrote:
+> On 07/04/20 16:35, Greg KH wrote:
+> > On Tue, Apr 07, 2020 at 01:02:39PM +0200, Peter Zijlstra wrote:
+> >> It turns out that with Split-Lock-Detect enabled (default) any VMX
+> >> hypervisor needs at least a little modification in order to not blindly
+> >> inject the #AC into the guest without the guest being ready for it.
+> >>
+> >> Since there is no telling which module implements a hypervisor, scan
+> >> all out-of-tree modules' text and look for VMX instructions and refuse
+> >> to load it when SLD is enabled (default) and the module isn't marked
+> >> 'sld_safe'.
+> >>
+> >> Hypervisors, which have been modified and are known to work correctly,
+> >> can add:
+> >>
+> >>   MODULE_INFO(sld_safe, "Y");
+> >>
+> >> to explicitly tell the module loader they're good.
+> > 
+> > What's to keep any out-of-tree module from adding this same module info
+> > "flag" and just lie about it?  Isn't that what you are trying to catch
+> > here, or is it a case of, "if you lie, your code will break" as well?
+> 
+> It's the latter.  Basically it's doing _the users_ of out-of-tree
+> modules a favor by avoiding crashes of their virtual machines;
+> developers need to fix them anyway.
 
-Alright.
+Ok, seems kind of a heavy hammer, but oh well...
 
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Rotary Encoder Counter
-> > > > +
-> > > > +maintainers:
-> > > > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > > > +
-> > > > +description:
-> > > > +  Registers a Rotary encoder connected through a counter device.
-> > >
-> > > You shouldn't really describe the action here, but more what the
-> > > binding is about. The registration will not depend on the presence of
-> > > the node following that binding, but rather on whether or not the OS
-> > > that uses it has support for it.
-> > >
-> >
-> > Then shall it be better with just :
-> > "A rotary encoder device using a generic counter interface." ?
->
-> The generic counter interface is a Linux-only stuff though, some other
-> OS might want to implement something else. Something like "based on a
-> counter"?
->
+thanks for the explanation.
 
-Indeed, that's fair enough.
-
-Thanks.
-
-> Maxime
-
-
-
---
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+greg k-h
