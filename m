@@ -2,120 +2,133 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28413C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A718C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB57220731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255562;
-	bh=EaD1Kn8VYLmOGXzmva1zo3k7Zh6m00qrt36XnH0ewDc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IVKEGNZ3BwihNXxr3pamzfvAobtFfm7kWT8ZKqgIvfnXEk/Dv7c+seyJ+lT+nK81J
-	 EjwDl16mRCoMuIlui4rQpnhLSeKDA//O9I8InY5oVIHPZ92DqQzOZDiU9XTwP1bJCG
-	 t+7VeoPRbcG/46a9tKGDVVgDY9HM3iVe1ZeOmghc=
+	by mail.kernel.org (Postfix) with ESMTP id 2905F20644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgDGKcl (ORCPT
+        id S1728332AbgDGKda convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42826 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:33:30 -0400
+Received: from mga01.intel.com ([192.55.52.88]:13947 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbgDGKcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:32:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE64120644;
-        Tue,  7 Apr 2020 10:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255560;
-        bh=EaD1Kn8VYLmOGXzmva1zo3k7Zh6m00qrt36XnH0ewDc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vA99e8UPNHYo3pYUYHDTE7eQ97fLq0UkdmEul5qO+W+/A5dsd3rL+D5x3dml2XvM5
-         pOEkwFVqEosxXA2U928ZlzIgu7rh9utz8EOLNwmOkJqQUyQkQQG1Xi8aijN1Vctnsp
-         Zmk/gPepk5R6DwBQpraJ3diS2Wh7OK5Ml4yvQEUc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4?= <ville.syrjala@linux.intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "Souza, Jose" <jose.souza@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        SweeAun Khor <swee.aun.khor@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Giacomo Comes <comes@naic.edu>
-Subject: [PATCH 5.6 14/29] drm/i915/display: Fix mode private_flags comparison at atomic_check
-Date:   Tue,  7 Apr 2020 12:22:11 +0200
-Message-Id: <20200407101453.730127410@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
-References: <20200407101452.046058399@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1726399AbgDGKd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:33:29 -0400
+IronPort-SDR: FPFM3prjgIG1IJDrOPG1N/h4i3Na8ugc+3Gdw15sfP7Cd23WgOWP+b3ndHprKZp3Dfm/FB/LH9
+ Qh665Az/REQA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 03:33:29 -0700
+IronPort-SDR: XpZt+O2iUSCoEK9yUeNSh7sumO7vG9vjSw8ex36zPLiZlE9N5cc8i5pG7TOakd9BQpVM6bly1l
+ me/a5kPTscGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
+   d="scan'208";a="361496130"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Apr 2020 03:33:29 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 7 Apr 2020 03:33:28 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 7 Apr 2020 03:33:28 -0700
+Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 7 Apr 2020 03:33:28 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX108.ccr.corp.intel.com ([169.254.8.7]) with mapi id 14.03.0439.000;
+ Tue, 7 Apr 2020 18:33:25 +0800
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+CC:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
+Thread-Topic: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
+Thread-Index: AQHWAEUdkW8K+/kg/06c7098DvJyv6hgm8wAgANYlCCAAK00AIAA6IawgAEUvACABu4SMA==
+Date:   Tue, 7 Apr 2020 10:33:25 +0000
+Message-ID: <A2975661238FB949B60364EF0F2C25743A224C8F@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-7-git-send-email-yi.l.liu@intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D7FF98F@SHSMSX104.ccr.corp.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A21D8C6@SHSMSX104.ccr.corp.intel.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D805F75@SHSMSX104.ccr.corp.intel.com>
+ <A2975661238FB949B60364EF0F2C25743A21ED01@SHSMSX104.ccr.corp.intel.com>
+ <20200403083407.GB1269501@myrica>
+In-Reply-To: <20200403083407.GB1269501@myrica>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uma Shankar <uma.shankar@intel.com>
+Hi Jean,
 
-commit 2bdd4c28baff29163808677a70942de2b45f17dc upstream.
+> From: Jean-Philippe Brucker < jean-philippe@linaro.org >
+> Sent: Friday, April 3, 2020 4:35 PM
+> Subject: Re: [PATCH v1 6/8] vfio/type1: Bind guest page tables to host
+> 
+> On Thu, Apr 02, 2020 at 08:05:29AM +0000, Liu, Yi L wrote:
+> > > > > > static long vfio_iommu_type1_ioctl(void *iommu_data,
+> > > > > >  		default:
+> > > > > >  			return -EINVAL;
+> > > > > >  		}
+> > > > > > +
+> > > > > > +	} else if (cmd == VFIO_IOMMU_BIND) {
+> > > > >
+> > > > > BIND what? VFIO_IOMMU_BIND_PASID sounds clearer to me.
+> > > >
+> > > > Emm, it's up to the flags to indicate bind what. It was proposed to
+> > > > cover the three cases below:
+> > > > a) BIND/UNBIND_GPASID
+> > > > b) BIND/UNBIND_GPASID_TABLE
+> > > > c) BIND/UNBIND_PROCESS
+> > > > <only a) is covered in this patch>
+> > > > So it's called VFIO_IOMMU_BIND.
+> > >
+> > > but aren't they all about PASID related binding?
+> >
+> > yeah, I can rename it. :-)
+> 
+> I don't know if anyone intends to implement it, but SMMUv2 supports
+> nesting translation without any PASID support. For that case the name
+> VFIO_IOMMU_BIND_GUEST_PGTBL without "PASID" anywhere makes more sense.
+> Ideally we'd also use a neutral name for the IOMMU API instead of
+> bind_gpasid(), but that's easier to change later.
 
-This patch fixes the private_flags of mode to be checked and
-compared against uapi.mode and not from hw.mode. This helps
-properly trigger modeset at boot if desired by driver.
+I agree VFIO_IOMMU_BIND is somehow not straight-forward. Especially, it may
+cause confusion when thinking about VFIO_SET_IOMMU. How about using
+VFIO_NESTING_IOMMU_BIND_STAGE1 to cover a) and b)? And has another
+VFIO_BIND_PROCESS in future for the SVA bind case.
 
-It helps resolve audio_codec initialization issues if display
-is connected at boot. Initial discussion on this issue has happened
-on below thread:
-https://patchwork.freedesktop.org/series/74828/
-
-v2: No functional change. Fixed the Closes tag and added
-Maarten's RB.
-
-v3: Added Fixes tag.
-
-Cc: Ville Syrjä <ville.syrjala@linux.intel.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Cc: Souza, Jose <jose.souza@intel.com>
-Fixes: 58d124ea2739 ("drm/i915: Complete crtc hw/uapi split, v6.")
-Closes: https://gitlab.freedesktop.org/drm/intel/issues/1363
-Suggested-by: Ville Syrjä <ville.syrjala@linux.intel.com>
-Signed-off-by: Uma Shankar <uma.shankar@intel.com>
-Signed-off-by: SweeAun Khor <swee.aun.khor@intel.com>
-Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200326125111.11081-1-uma.shankar@intel.com
-(cherry picked from commit d5e56705927e00f703b2eb5a98299dd6622d16e5)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Giacomo Comes <comes@naic.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpu/drm/i915/display/intel_display.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/drivers/gpu/drm/i915/display/intel_display.c
-+++ b/drivers/gpu/drm/i915/display/intel_display.c
-@@ -14582,8 +14582,8 @@ static int intel_atomic_check(struct drm
- 	/* Catch I915_MODE_FLAG_INHERITED */
- 	for_each_oldnew_intel_crtc_in_state(state, crtc, old_crtc_state,
- 					    new_crtc_state, i) {
--		if (new_crtc_state->hw.mode.private_flags !=
--		    old_crtc_state->hw.mode.private_flags)
-+		if (new_crtc_state->uapi.mode.private_flags !=
-+		    old_crtc_state->uapi.mode.private_flags)
- 			new_crtc_state->uapi.mode_changed = true;
- 	}
- 
-
+Regards,
+Yi Liu
 
