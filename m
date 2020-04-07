@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877D7C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432AAC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CECE20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A48020842
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217717;
-	bh=5tu6jgjQORBsXTyfqgjJ3eMKXV2UrGsH132oHEvwEcc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ssp4UnybrelplSC01iRNKXHTsknfcaoB0BaV7QHEPU1UQemVfFXnhSqnAsV47FTlB
-	 e7j2C075fxCyleg4/ed5VAU3Tn0RxgfsHke2Pef3pSZmAPCZqDhDtEEY8xmqTaKWW+
-	 V+zwfwbxoFO+9/aVwgdX3CzAQAD1Cn/BFEY0ck50=
+	s=default; t=1586217725;
+	bh=EcmMmHrfZtD3EeISYwouHAPTwedwqwHUkSTgVvvpOEU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sxM+/Rl71dw3teJphaSiHDfBv6kp54+XMZGPPSRNWECu84SiGJ9qp7oeu8Q3RP60R
+	 XM/FEj90SPAv2XtZOIiVOK4tSC6Eck21001x8htY/XmyANhuPnnmrcuMZHATHgDISR
+	 +QDFdLcnuIXHRvh5DrP/wg9PRBW8pwoi/zkF6+yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgDGAB4 (ORCPT
+        id S1727850AbgDGACD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35562 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbgDGABx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:53 -0400
+        id S1727775AbgDGACA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49AE02083E;
-        Tue,  7 Apr 2020 00:01:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF5132083E;
+        Tue,  7 Apr 2020 00:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217713;
-        bh=5tu6jgjQORBsXTyfqgjJ3eMKXV2UrGsH132oHEvwEcc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ilHvrIVeY8be5f6Uq2Tmel5tAM7qebUNj1c2VyO5V3/KUvOblJ0+F8yDsB/Dv5D5p
-         MAhRLwPhPKM3VEn4nxjQfbtkJ8Fhr2p9egPi9P3Lh9MgAtVLiSSb4pyxuvLjY0BkfQ
-         PFkojcywn/CYKFa+RZ1E9OLEr1e8dDzJvh6QyQIU=
+        s=default; t=1586217719;
+        bh=EcmMmHrfZtD3EeISYwouHAPTwedwqwHUkSTgVvvpOEU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lInQm3UfoPbQKizceYFOsBQHad5urBr42QsHJrBQLD0EQ0ophRXD6+kCcvsintuWU
+         fnQv5yEdHjEz5neWAVxYPHZyjQ7Ylefasfr4wAIcg5MtyniwKZWtUTOmZSlJZ64UTz
+         dpW0GBi7IYSCYP6fGKmqOTD6C8H76aBT/0NfRX90=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 01/32] ARM: dts: sun8i-a83t-tbs-a711: HM5065 doesn't like such a high voltage
-Date:   Mon,  6 Apr 2020 20:01:19 -0400
-Message-Id: <20200407000151.16768-1-sashal@kernel.org>
+Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 06/32] iwlwifi: consider HE capability when setting LDPC
+Date:   Mon,  6 Apr 2020 20:01:24 -0400
+Message-Id: <20200407000151.16768-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
+References: <20200407000151.16768-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,35 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Mordechay Goodstein <mordechay.goodstein@intel.com>
 
-[ Upstream commit a40550952c000667b20082d58077bc647da6c890 ]
+[ Upstream commit cb377dfda1755b3bc01436755d866c8e5336a762 ]
 
-Lowering the voltage solves the quick image degradation over time
-(minutes), that was probably caused by overheating.
+The AP may set the LDPC capability only in HE (IEEE80211_HE_PHY_CAP1),
+but we were checking it only in the HT capabilities.
 
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+If we don't use this capability when required, the DSP gets the wrong
+configuration in HE and doesn't work properly.
+
+Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
+Fixes: befebbb30af0 ("iwlwifi: rs: consider LDPC capability in case of HE")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200306151128.492d167c1a25.I1ad1353dbbf6c99ae57814be750f41a1c9f7f4ac@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 397140454132f..6bf93e5ed6817 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -358,8 +358,8 @@
- };
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
+index 098d48153a387..24df3182ec9eb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
+@@ -147,7 +147,11 @@ static u16 rs_fw_get_config_flags(struct iwl_mvm *mvm,
+ 	     (vht_ena && (vht_cap->cap & IEEE80211_VHT_CAP_RXLDPC))))
+ 		flags |= IWL_TLC_MNG_CFG_FLAGS_LDPC_MSK;
  
- &reg_dldo3 {
--	regulator-min-microvolt = <2800000>;
--	regulator-max-microvolt = <2800000>;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
- 	regulator-name = "vdd-csi";
- };
- 
+-	/* consider our LDPC support in case of HE */
++	/* consider LDPC support in case of HE */
++	if (he_cap->has_he && (he_cap->he_cap_elem.phy_cap_info[1] &
++	    IEEE80211_HE_PHY_CAP1_LDPC_CODING_IN_PAYLOAD))
++		flags |= IWL_TLC_MNG_CFG_FLAGS_LDPC_MSK;
++
+ 	if (sband->iftype_data && sband->iftype_data->he_cap.has_he &&
+ 	    !(sband->iftype_data->he_cap.he_cap_elem.phy_cap_info[1] &
+ 	     IEEE80211_HE_PHY_CAP1_LDPC_CODING_IN_PAYLOAD))
 -- 
 2.20.1
 
