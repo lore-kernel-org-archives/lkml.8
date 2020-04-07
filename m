@@ -2,155 +2,120 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF13C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51291C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306F120730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:58:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gr+rckUK"
+	by mail.kernel.org (Postfix) with ESMTP id 1322B2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586286012;
+	bh=Lde45rsVR94vCtmaheBgWUpbSHu4NQK23JdF7kYO79Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MZlapchNQXylJ5Umwr1rHFtxxllwzUDxBam69aGozYCg3NaJaPXG83fwyJT3Gt+Sx
+	 jLnMlzBACfzxs9Abu5p7vSkEQPwEz2R49OeRq+1LDFB5wmUB9Ter2JLpHbIFT1PQ21
+	 Z9xmlsniNXl5TkoIY5AjB1c85CJConZoa3nHoheE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbgDGS6T (ORCPT
+        id S1726766AbgDGTAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:58:19 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40772 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgDGS6T (ORCPT
+        Tue, 7 Apr 2020 15:00:10 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44153 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgDGTAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:58:19 -0400
-Received: by mail-ot1-f68.google.com with SMTP id q2so1503045otk.7;
-        Tue, 07 Apr 2020 11:58:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QGY37FNAkjMLaN4OPkvvGVRfJPoF2m0cC0lGKtXcqAo=;
-        b=gr+rckUKI58G49Z44BoYW2p6LI6XQ7dJRWJrQ8Sd55kDDpeLB7+lboJBSJdfZGyJdC
-         wuK5DBxn3IGPtxEzcb8ydKbdLdhed+RrAscug86FQyWxSI97EUlig0rnLh5VqDANRDcN
-         arQxqN+pdjx7imdHu+s+JBYprOyvO0yAc5yu1pm3lixaXVZfAG3lqHuk8AbXtnKh/f8w
-         oxWugx2clNoJn7hvWIfqWRdn73eFz7blMNigUe5FHJYvtghxPJtIN1YAB9HYwSYFo6D8
-         B8O6b3GGlQHMX8omJh8mVtZDY7XoyBKNae4DcMaxcSd2cptIM5/jV/4+lsluvhn2LmcA
-         XAiA==
+        Tue, 7 Apr 2020 15:00:10 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n13so725394pgp.11;
+        Tue, 07 Apr 2020 12:00:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QGY37FNAkjMLaN4OPkvvGVRfJPoF2m0cC0lGKtXcqAo=;
-        b=CbhVjXc5dgH8Yq4qgVHNsiJ04dORbxi2Pemkvcv6LuDza5QSEs6Il1aW4Fa9qyYabC
-         ekcOMQjeRYO8W3N73mP3OuQCxIY6ybv38lW6N2vrUOZk/5CZmvZ2VBDPAIRZ/067W5h8
-         vPohMI3dTiB2IMeuOGhIny5AIvkeMInfO5Nhc8Nh26+SWaaq6L5zJ8gDZbLyAa/siN3+
-         YmRhyQSlGfZkSw2R5eX5z+v60dDIkAJKR0Fkbw1luXGwlaUli8ymN6nk5toHt6XhdDLb
-         Kh3o6yusU/8Yu7H2WL9cWwzu47n0Tr8nVSL9QjigY7M5MZ4dv4oRstmhdAE3jpwIdK12
-         I2sw==
-X-Gm-Message-State: AGi0PuabdDl4bM/umtfAqoF0L90qAX4cq2yWcLHdUDjlGAbuYb1wEwg3
-        horn532sP04zOSqwUlffItk=
-X-Google-Smtp-Source: APiQypKv050/wlgr0SPQh2dayH2Ig9WLi5w4zCIC06+rIw0jxXUib3/jR4GEycJh4cac4u8oLrmGgQ==
-X-Received: by 2002:a9d:75d0:: with SMTP id c16mr2826857otl.8.1586285897659;
-        Tue, 07 Apr 2020 11:58:17 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
-        by smtp.gmail.com with ESMTPSA id 90sm5534875otc.29.2020.04.07.11.58.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Apr 2020 11:58:17 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 11:58:15 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        clang-built-linux@googlegroups.com
-Subject: Re: linux-next: build failure after merge of the vhost tree
-Message-ID: <20200407185815.GA1805@ubuntu-s3-xlarge-x86>
-References: <20200407130542.0e3b5d9d@canb.auug.org.au>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=8g+YOhto+FId7IOGUsnB9ouZCy1lzdR5Jj8DGscjgPI=;
+        b=lZ1KjvpXvtj33QhvN+6L47Fl7nyV9BQgah/WiiuNfrJRnXXoKpzRIASMmJI1U6DJfY
+         Nspm7KlQkEt9JzC7SRfIaVSOe1OehX5PlhgO0i1EM7L2HwITRo0Nk6y5o2ZVyMPrrcb/
+         iavfpmP/lhUyvEXk4x17fzVzR+zJ4RSxho4zpA4x/wERThmineXfAH3Ra1HtldHJKYJ6
+         Csg3C6XedQAV6sqrYlv1bOw7g9HOntHqEP1TfRUnc869NpCp/TJKIu1VODW7ukO261FL
+         QeZi45Au/nwwBrgThMeuD5kqtCsRYeVm98qFKaZLciXpJHPtnPaRiPLZO/VHBGSrIf0c
+         rcTg==
+X-Gm-Message-State: AGi0PubnlF2qgaelbQlFdCLc6H5OXhjdRcsOyGR2mC0TQ1E4yIiwJrwD
+        WzGrP1UDE0eaDI1TRQMDJrI=
+X-Google-Smtp-Source: APiQypKZLouSqK9lQOJSsWNqRvqKEIfChEwiU3Z9h3IB3dcC5wNVv88wHOM+aJPwonteOJ90kXqfDQ==
+X-Received: by 2002:aa7:96c1:: with SMTP id h1mr3991833pfq.212.1586286007677;
+        Tue, 07 Apr 2020 12:00:07 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id i2sm14616408pfr.203.2020.04.07.12.00.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 12:00:05 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 60B4B40246; Tue,  7 Apr 2020 19:00:04 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 19:00:04 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     Ming Lei <ming.lei@redhat.com>, axboe@kernel.dk,
+        viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
+        rostedt@goodmis.org, mingo@redhat.com, jack@suse.cz,
+        nstange@suse.de, mhocko@suse.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 0/3] block: address blktrace use-after-free
+Message-ID: <20200407190004.GG11244@42.do-not-panic.com>
+References: <20200402000002.7442-1-mcgrof@kernel.org>
+ <20200403081929.GC6887@ming.t460p>
+ <0e753195-72fb-ce83-16a1-176f2c3cea6a@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200407130542.0e3b5d9d@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0e753195-72fb-ce83-16a1-176f2c3cea6a@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 01:05:42PM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Tue, Apr 07, 2020 at 10:47:01AM +0800, yukuai (C) wrote:
+> On 2020/4/3 16:19, Ming Lei wrote:
 > 
-> After merging the vhost tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
+> > BTW, Yu Kuai posted one patch for this issue, looks that approach
+> > is simpler:
+> > 
+> > https://lore.kernel.org/linux-block/20200324132315.22133-1-yukuai3@huawei.com/
+> > 
+> > 
 > 
-> drivers/gpu/drm/virtio/virtgpu_kms.c: In function 'virtio_gpu_init':
-> drivers/gpu/drm/virtio/virtgpu_kms.c:153:38: error: 'VIRTIO_RING_F_INDIRECT_DESC' undeclared (first use in this function)
->   153 |  if (virtio_has_feature(vgdev->vdev, VIRTIO_RING_F_INDIRECT_DESC)) {
->       |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/virtio/virtgpu_kms.c:153:38: note: each undeclared identifier is reported only once for each function it appears in
+> I think the issue might not be fixed with the patch seires.
 > 
-> Caused by commit
+> At first, I think there are two key points for the issure:
+> 1. The final release of queue is delayed in a workqueue
+> 2. The creation of 'q->debugfs_dir' might failed(only if 1 exist)
+> And if we can fix any of the above problem, the UAF issue will be fixed.
+> (BTW, I did not come up with a good idea for problem 1, and my approach
+> is for problem 2.)
 > 
->   898952f9597e ("virtio: stop using legacy struct vring in kernel")
+> The third patch "block: avoid deferral of blk_release_queue() work" is
+> not enough to fix problem 1:
+> a. if CONFIG_DEBUG_KOBJECT_RELEASE is enable:
+> static void kobject_release(struct kref *kref)
+> {
+>         struct kobject *kobj = container_of(kref, struct kobject, kref);
+> #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+>         unsigned long delay = HZ + HZ * (get_random_int() & 0x3);
+>         pr_info("kobject: '%s' (%p): %s, parent %p (delayed %ld)\n",
+>                 ┊kobject_name(kobj), kobj, __func__, kobj->parent, delay);
+>         INIT_DELAYED_WORK(&kobj->release, kobject_delayed_cleanup);
 > 
-> interacting with commit
-> 
->   5edbb5608256 ("drm/virtio: fix ring free check")
-> 
-> from Linus' tree (post v5.6).
-> 
-> I have added the following merge fix patch for today.
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 7 Apr 2020 12:58:26 +1000
-> Subject: [PATCH] drm/virtio: fix up for include file changes
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_kms.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> index 023a030ca7b9..f4ea4cef5e23 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> @@ -25,6 +25,7 @@
->  
->  #include <linux/virtio.h>
->  #include <linux/virtio_config.h>
-> +#include <linux/virtio_ring.h>
->  
->  #include <drm/drm_file.h>
->  
-> -- 
-> 2.25.0
-> 
-> I do have to wonder why all this code has been added to the vhost tree
-> during the second week of the merge window (especially when I see it
-> rebased 4 times in one day :-().  Is it really intended for v5.7?
-> -- 
-> Cheers,
-> Stephen Rothwell
+>         schedule_delayed_work(&kobj->release, delay);
+> #else
+>         kobject_cleanup(kobj);
+> #endif
+> }
+> b. when 'kobject_put' is called from blk_cleanup_queue, can we make sure
+> it is the last reference?
 
-Linaro's CI also reports an issue with this patch with the remoteproc
-drivers that were freshly merged in Linus' tree for 5.7-rc1 (seen with a
-simple arm allyesconfig build):
+You are right, I think I know the fix for this now. Will run some more
+tests.
 
-drivers/rpmsg/mtk_rpmsg.c:68:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-drivers/rpmsg/mtk_rpmsg.c:93:9: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
-drivers/rpmsg/mtk_rpmsg.c:170:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-drivers/rpmsg/mtk_rpmsg.c:204:9: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
-drivers/rpmsg/mtk_rpmsg.c:223:3: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-drivers/rpmsg/mtk_rpmsg.c:259:9: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
-drivers/rpmsg/mtk_rpmsg.c:376:3: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-drivers/rpmsg/mtk_rpmsg.c:387:15: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
-drivers/rpmsg/mtk_rpmsg.c:409:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-drivers/remoteproc/stm32_rproc.c:152:14: error: implicit declaration of function 'kcalloc' [-Werror,-Wimplicit-function-declaration]
-drivers/remoteproc/stm32_rproc.c:179:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-
-It seems like this series shouldn't be in -next until after 5.7-rc1 (or
-rebased on Linus' tree if it is intended for the merge window).
-
-Cheers,
-Nathan
+  Luis
