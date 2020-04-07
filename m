@@ -2,182 +2,1081 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7687C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E733C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF2B2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586281619;
-	bh=IEqYwD+/yTV5lpDfioBKZo+wlOnwx9M3BgoD8Cf8inI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ayHPs/J2kk1s40qaqN9ORR97ZBXLlY1+dlHslEFYyfbNMbvHAOZFYIhA+IbdrhuAJ
-	 EnIC4OFKHIdk7VGryL8YieBVpeQ88YXt/Suwmdu7aoCJBHADQeeEG4U1VJIl7m548H
-	 MAU1y2e1LJc6YnhQYqeLqXCDhaGHfaWKtMkOtELE=
+	by mail.kernel.org (Postfix) with ESMTP id 6D45820771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgDGRq6 (ORCPT
+        id S1726595AbgDGRrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:46:58 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:23040 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgDGRq6 (ORCPT
+        Tue, 7 Apr 2020 13:47:18 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:41806 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgDGRrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:46:58 -0400
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 037Hkfi4021890;
-        Wed, 8 Apr 2020 02:46:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 037Hkfi4021890
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586281602;
-        bh=W8JU4ZdqtphrsLfo36sdrJqKVT9peXFuSNpLzYmGRP8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KQ32CoE6vGnxANJ1vo7wjPNojKvgkZQGCpmYdUq30o1oKwsWJbevbGZX2c74akTHV
-         mG3V3aC1qBv08hEUiaAv38G2Uv5FGBt7NjwGJxSWOIQyHJaKShhMY7Hfo4ijF0seaI
-         XOOCqYQj9svPSYad/6/MrhHY6JfKFD+lqz+kHCcstWy8I0PhI1vanp7yUfC1gQOECz
-         qNj9crhukCY8Vc3QcoVMDwtMy+uY9HAj311kea9bLq129hkao6czii436ViMylWiTa
-         FRSN6hIKN0HT2HMFqUggMk0lHB0GX8iJX2Nt1FcrQGiWgIEsZOyTFbS7lJZw+SpAj6
-         Td8qjMzxfWevg==
-X-Nifty-SrcIP: [209.85.222.49]
-Received: by mail-ua1-f49.google.com with SMTP id y17so1564219uap.13;
-        Tue, 07 Apr 2020 10:46:42 -0700 (PDT)
-X-Gm-Message-State: AGi0PubiEbQijp3VAMbH7ejzMWKidelpkEX99Lrm0C5usoyImgmv/qdN
-        HrWGMQIeJAbZdCy+Tw9lxslpO1lJ84L2TPU88s8=
-X-Google-Smtp-Source: APiQypL0lGxoDy3XTsgexzG6gSdFm4/73ugftZ4GObxBOtaXUO+wEwIZgBYmG3ZinZ6BOUGFWDei5mSD9PrEhbFlitw=
-X-Received: by 2002:a9f:28c5:: with SMTP id d63mr2669722uad.25.1586281600679;
- Tue, 07 Apr 2020 10:46:40 -0700 (PDT)
+        Tue, 7 Apr 2020 13:47:18 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 8B8E18048A;
+        Tue,  7 Apr 2020 19:47:06 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 19:47:04 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        airlied@linux.ie, daniel@ffwll.ch, Gustavo.Pimentel@synopsys.com,
+        Joao.Pinto@synopsys.com
+Subject: Re: [PATCH v2 2/4] drm: ipk: Add DRM driver for DesignWare IPK DSI
+Message-ID: <20200407174704.GA6356@ravnborg.org>
+References: <cover.1586174459.git.angelo.ribeiro@synopsys.com>
+ <488ff0f31581967517607e6860ab520839e29635.1586174459.git.angelo.ribeiro@synopsys.com>
 MIME-Version: 1.0
-References: <20200403051709.22407-1-masahiroy@kernel.org> <20200406112220.GB126804@google.com>
- <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com> <CAKwvOdmHxeZ+T1OsOhW25pPygHM4D21OgZqRk141xbjP437-1w@mail.gmail.com>
-In-Reply-To: <CAKwvOdmHxeZ+T1OsOhW25pPygHM4D21OgZqRk141xbjP437-1w@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 8 Apr 2020 02:46:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARSMvGZ6T4Ct=U4Xe1WQCgkaWE8m8BxRuYiaokKVjA_ig@mail.gmail.com>
-Message-ID: <CAK7LNARSMvGZ6T4Ct=U4Xe1WQCgkaWE8m8BxRuYiaokKVjA_ig@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <488ff0f31581967517607e6860ab520839e29635.1586174459.git.angelo.ribeiro@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=QyXUC8HyAAAA:8
+        a=VwQbUJbxAAAA:8 a=jIQo8A4GAAAA:8 a=e5mUnYsNAAAA:8 a=4Off-LMMQjLtHQkNATwA:9
+        a=BqbDF8qqGYvOUDtP:21 a=wzVLAJofguk4pnjZ:21 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=Lf5xNeLK5dgiOs8hzIjU:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 8, 2020 at 2:01 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> On Tue, Apr 7, 2020 at 9:17 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > On Mon, Apr 6, 2020 at 8:22 PM 'Matthias Maennich' via Clang Built
-> > Linux <clang-built-linux@googlegroups.com> wrote:
-> > >
-> > > On Fri, Apr 03, 2020 at 02:17:09PM +0900, Masahiro Yamada wrote:
-> > > >As Documentation/kbuild/llvm.rst implies, building the kernel with a
-> > > >full set of LLVM tools gets very verbose and unwieldy.
-> > > >
-> > > >Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
-> > > >GCC and Binutils. You can pass LLVM=1 from the command line or as an
-> > > >environment variable. Then, Kbuild will use LLVM toolchains in your
-> > > >PATH environment.
-> > > >
-> > > >Please note LLVM=1 does not turn on the LLVM integrated assembler.
-> > > >You need to explicitly pass AS=clang to use it. When the upstream
-> > > >kernel is ready for the integrated assembler, I think we can make
-> > > >it default.
-> > > >
-> > > >We discussed what we need, and we agreed to go with a simple boolean
-> > > >switch (https://lkml.org/lkml/2020/3/28/494).
-> > > >
-> > > >Some items in the discussion:
-> > > >
-> > > >- LLVM_DIR
-> > > >
-> > > >  When multiple versions of LLVM are installed, I just thought supporting
-> > > >  LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
-> > > >
-> > > >  CC      = $(LLVM_DIR)clang
-> > > >  LD      = $(LLVM_DIR)ld.lld
-> > > >    ...
-> > > >
-> > > >  However, we can handle this by modifying PATH. So, we decided to not do
-> > > >  this.
-> > > >
-> > > >- LLVM_SUFFIX
-> > > >
-> > > >  Some distributions (e.g. Debian) package specific versions of LLVM with
-> > > >  naming conventions that use the version as a suffix.
-> > > >
-> > > >  CC      = clang$(LLVM_SUFFIX)
-> > > >  LD      = ld.lld(LLVM_SUFFIX)
-> > > >    ...
-> > > >
-> > > >  will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
-> > > >  but the suffixed versions in /usr/bin/ are symlinks to binaries in
-> > > >  /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
-> > > >
-> > > >- HOSTCC, HOSTCXX, etc.
-> > > >
-> > > >  We can switch the host compilers in the same way:
-> > > >
-> > > >  ifneq ($(LLVM),)
-> > > >  HOSTCC       = clang
-> > > >  HOSTCXX      = clang++
-> > > >  else
-> > > >  HOSTCC       = gcc
-> > > >  HOSTCXX      = g++
-> > > >  endif
-> > > >
-> > > >  This may the right thing to do, but I could not make up my mind.
-> > > >  Because we do not frequently switch the host compiler, a counter
-> > > >  solution I had in my mind was to leave it to the default of the
-> > > >  system.
-> > > >
-> > > >  HOSTCC       = cc
-> > > >  HOSTCXX      = c++
-> > >
-> > > What about HOSTLD ? I saw recently, that setting HOSTLD=ld.lld is not
-> > > yielding the expected result (some tools, like e.g. fixdep still require
-> > > an `ld` to be in PATH to be built). I did not find the time to look into
-> > > that yet, but I would like to consistently switch to the llvm toolchain
-> > > (including linker and possibly more) also for hostprogs.
-> >
-> >
-> > HOSTLD=ld.lld worked for me, but HOSTCC=clang did not.
-> >
-> >
-> >
-> > HOSTCC=clang without CC=clang fails to build objtool.
-> >
-> > The build system of objtool is meh.  :(
->
-> Let's tackle that in a follow up, with the goal of build hermiticity
-> in mind.  I think there's good feedback in this thread to inform the
-> design of a v2:
-> 1. CLANG_AS=0 to disable integrated as.  Hopefully we won't need this
-> much longer, so we don't need to spend too much time on this, Masahiro
-> please just choose a name for this.  llvm-as naming conventions
-> doesn't follow the rest of binutils.
+Hi Angelo.
 
-I am not so familiar with the terminology in LLVM,
-but I feel 'integrated' is a keyword IMHO.
-I prefer LLVM_IA=1.  (or  LLVM_INTEGRATED_AS=1)
+Has it been evaluated if the drm_simple_* stuff can be used?
+It looks like this is a single plane, single connector thing so a good
+candidate.
+
+Some nits below.
+
+	Sam
+
+On Mon, Apr 06, 2020 at 03:24:12PM +0200, Angelo Ribeiro wrote:
+> Add support for Synopsys DesignWare VPG (Video Pattern Generator) and
+> DRM driver for Synopsys DesignWare DSI Host IPK solution.
+> 
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> ---
+>  drivers/gpu/drm/Kconfig      |   2 +
+>  drivers/gpu/drm/Makefile     |   1 +
+>  drivers/gpu/drm/ipk/Kconfig  |  13 +
+>  drivers/gpu/drm/ipk/Makefile |   6 +
+>  drivers/gpu/drm/ipk/dw-drv.c | 189 +++++++++++++++
+>  drivers/gpu/drm/ipk/dw-ipk.h |  30 +++
+>  drivers/gpu/drm/ipk/dw-vpg.c | 559 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/ipk/dw-vpg.h |  55 +++++
+>  8 files changed, 855 insertions(+)
+>  create mode 100644 drivers/gpu/drm/ipk/Kconfig
+>  create mode 100644 drivers/gpu/drm/ipk/Makefile
+>  create mode 100644 drivers/gpu/drm/ipk/dw-drv.c
+>  create mode 100644 drivers/gpu/drm/ipk/dw-ipk.h
+>  create mode 100644 drivers/gpu/drm/ipk/dw-vpg.c
+>  create mode 100644 drivers/gpu/drm/ipk/dw-vpg.h
+> 
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index 4359497..29ea1d1 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -388,6 +388,8 @@ source "drivers/gpu/drm/mcde/Kconfig"
+>  
+>  source "drivers/gpu/drm/tidss/Kconfig"
+>  
+> +source "drivers/gpu/drm/ipk/Kconfig"
+> +
+>  # Keep legacy drivers last
+>  
+>  menuconfig DRM_LEGACY
+> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+> index 183c600..5bcc1c1 100644
+> --- a/drivers/gpu/drm/Makefile
+> +++ b/drivers/gpu/drm/Makefile
+> @@ -125,3 +125,4 @@ obj-$(CONFIG_DRM_PANFROST) += panfrost/
+>  obj-$(CONFIG_DRM_ASPEED_GFX) += aspeed/
+>  obj-$(CONFIG_DRM_MCDE) += mcde/
+>  obj-$(CONFIG_DRM_TIDSS) += tidss/
+> +obj-$(CONFIG_DRM_IPK) += ipk/
+> diff --git a/drivers/gpu/drm/ipk/Kconfig b/drivers/gpu/drm/ipk/Kconfig
+> new file mode 100644
+> index 0000000..1f87444
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ipk/Kconfig
+> @@ -0,0 +1,13 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config DRM_IPK
+> +	tristate "DRM Support for Synopsys DesignWare IPK DSI"
+> +	depends on DRM
+> +	select DRM_KMS_HELPER
+> +	select DRM_GEM_CMA_HELPER
+> +	select DRM_KMS_CMA_HELPER
+> +	select DRM_PANEL_BRIDGE
+> +	select VIDEOMODE_HELPERS
+> +	help
+> +	  Enable support for the Synopsys DesignWare DRM DSI.
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called ipk-drm.
+> diff --git a/drivers/gpu/drm/ipk/Makefile b/drivers/gpu/drm/ipk/Makefile
+> new file mode 100644
+> index 0000000..51d2774
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ipk/Makefile
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +ipk-drm-y := \
+> +	dw-drv.o \
+> +	dw-vpg.o
+There is no point in adding '\' here.
+A simple:
+
+    ipk-drm-y := dw-drv.o dw-vpg.o
+
+Lot's of Makefile uses the ugly '\' where they should
+use a += instead :-(
+
+> +obj-$(CONFIG_DRM_IPK) += ipk-drm.o
+> diff --git a/drivers/gpu/drm/ipk/dw-drv.c b/drivers/gpu/drm/ipk/dw-drv.c
+> new file mode 100644
+> index 0000000..6205f1c
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ipk/dw-drv.c
+> @@ -0,0 +1,189 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019-2020 Synopsys, Inc. and/or its affiliates.
+> + * Synopsys DesignWare MIPI DSI DRM driver
+> + *
+> + * Author: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> + */
+> +
+> +#include <linux/component.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/clk.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_fb_cma_helper.h>
+> +#include <drm/drm_fb_helper.h>
+> +#include <drm/drm_gem_cma_helper.h>
+> +#include <drm/drm_gem_framebuffer_helper.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_drv.h>
+> +#include <drm/drm_probe_helper.h>
+> +
+> +#include "dw-ipk.h"
+> +#include "dw-vpg.h"
+
+Please order thei ncludes like this:
+
+#include <linux/*>
+[empty line]
+#include <drm/*>
+[empty line]
+#include "dw*.h"
+
+Within each block - sort alphabetically.
+Drop unused includes - drm_probe_helper is IIRC for legacy stuff
+mostly/only.
+
+> +
+> +static const struct drm_mode_config_funcs dw_ipk_drm_modecfg_funcs = {
+> +	.fb_create = drm_gem_fb_create_with_dirty,
+> +	.atomic_check = drm_atomic_helper_check,
+> +	.atomic_commit = drm_atomic_helper_commit,
+> +};
+> +
+> +static int dw_ipk_load(struct drm_device *drm)
+> +{
+> +	int ret;
+> +
+> +	drm_mode_config_init(drm);
+drmm_mode_config_init(drm);
+And remember to check return value.
+
+> +
+> +	drm->mode_config.min_width = 0;
+> +	drm->mode_config.min_height = 0;
+> +
+> +	/* To handle orientation */
+> +	drm->mode_config.max_width = 2048;
+> +	drm->mode_config.max_height = 2048;
+> +
+> +	drm->mode_config.funcs = &dw_ipk_drm_modecfg_funcs;
+> +
+> +	/* TODO
+> +	 * Optional framebuffer memory resources allocation
+> +	 */
+> +
+> +	ret = vpg_load(drm);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Calls all the crtc's, encoder's and connector's reset */
+> +	drm_mode_config_reset(drm);
+> +
+> +	/* Initialize and enable output polling */
+> +	drm_kms_helper_poll_init(drm);
+> +
+> +	return ret;
+> +}
+> +
+> +static void dw_ipk_unload(struct drm_device *drm)
+> +{
+> +	DRM_DEBUG_DRIVER("\n");
+when you have a drm_device - then please use drm_xxx for
+debug/warnings/errors - and also drm_WARN as applicable.
+This goes for everywhere that DRM_XXX is used.
+In this case use:
+	drm_dbg(drm, "\n");
+
+> +
+> +	drm_kms_helper_poll_fini(drm);
+> +	vpg_unload(drm);
+> +}
+> +
+> +DEFINE_DRM_GEM_CMA_FOPS(ipk_drm_driver_fops);
+> +
+> +static int ipk_gem_cma_dumb_create(struct drm_file *file,
+> +				   struct drm_device *dev,
+> +				   struct drm_mode_create_dumb *args)
+> +{
+> +	unsigned int min_pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
+> +	int err;
+> +
+> +	/*
+> +	 * In order to optimize data transfer, pitch is aligned on
+> +	 * 128 bytes, height is aligned on 4 bytes
+> +	 */
+> +	args->pitch = roundup(min_pitch, 128);
+> +	args->height = roundup(args->height, 4);
+> +
+> +	err = drm_gem_cma_dumb_create_internal(file, dev, args);
+> +	if (err < 0)
+> +		drm_err(dev, "dumb_create failed %d\n", err);
+> +
+> +	return err;
+> +}
+> +
+> +static struct drm_driver dw_ipk_drm_driver = {
+> +	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
+> +	.name = "dw_ipk",
+> +	.desc = "DW IPK DSI Host Controller",
+> +	.date = "20190725",
+> +	.major = 1,
+> +	.minor = 0,
+> +	.patchlevel = 0,
+> +	.fops = &ipk_drm_driver_fops,
+> +	.dumb_create = ipk_gem_cma_dumb_create,
+> +	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+> +	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+> +	.gem_free_object_unlocked = drm_gem_cma_free_object,
+From the documentation:
+
+This is deprecated and should not be used by new drivers. Use
+&drm_gem_object_funcs.free instead.
 
 
-> 2. HOSTCC=clang HOSTLD=ld.lld set by LLVM=1 for helping with build hermiticity.
->
+> +	.gem_vm_ops = &drm_gem_cma_vm_ops,
+> +	.gem_prime_export = drm_gem_prime_export,
+From documentation:
+
+Export hook for GEM drivers. Deprecated in favour of
+&drm_gem_object_funcs.export.
 
 
+> +	.gem_prime_import = drm_gem_prime_import,
+From documentation:
+This defaults to drm_gem_prime_import() if not set.
 
 
--- 
-Best Regards
-Masahiro Yamada
+> +	.gem_prime_get_sg_table = drm_gem_cma_prime_get_sg_table,
+> +	.gem_prime_import_sg_table = drm_gem_cma_prime_import_sg_table,
+> +	.gem_prime_vmap = drm_gem_cma_prime_vmap,
+> +	.gem_prime_vunmap = drm_gem_cma_prime_vunmap,
+> +	.gem_prime_mmap = drm_gem_cma_prime_mmap,
+> +};
+Did not check all - please go through drm_drv.h - and fix so the driver
+do not use any deprecated stuff.
+
+
+> +
+> +static int dw_ipk_drm_platform_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct drm_device *drm;
+> +	struct ipk_device *ipk;
+> +	int ret;
+> +
+> +	DRM_DEBUG_DRIVER("\n");
+> +
+> +	ipk = kzalloc(sizeof(*ipk), GFP_KERNEL);
+drmm_kzalloc() - but see feedback from Daniel too.
+> +	if (!ipk)
+> +		return -ENOMEM;
+> +
+> +	ipk->platform = pdev;
+> +	drm = &ipk->drm;
+> +
+> +	ret = drm_dev_init(&ipk->drm, &dw_ipk_drm_driver, dev);
+> +	if (ret) {
+> +		kfree(ipk);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, drm);
+> +
+> +	ret = dw_ipk_load(drm);
+> +	if (ret)
+> +		goto err_put;
+> +
+> +	ret = drm_dev_register(drm, 0);
+> +	if (ret)
+> +		goto err_put;
+> +
+> +	drm_fbdev_generic_setup(drm, 24);
+> +
+> +	return ret;
+> +
+> +err_put:
+> +	drm_dev_put(drm);
+> +	return ret;
+> +}
+> +
+> +static int dw_ipk_drm_platform_remove(struct platform_device *pdev)
+> +{
+> +	struct drm_device *drm = platform_get_drvdata(pdev);
+> +
+> +	drm_dev_unregister(drm);
+> +	dw_ipk_unload(drm);
+> +	drm_dev_put(drm);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id dw_ipk_dt_ids[] = {
+> +	{.compatible = "snps,dw-ipk-vpg"},
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_ipk_dt_ids);
+> +
+> +static struct platform_driver dw_ipk_drm_platform_driver = {
+> +	.probe = dw_ipk_drm_platform_probe,
+> +	.remove = dw_ipk_drm_platform_remove,
+> +	.driver = {
+> +		.name = "dw-ipk-drm",
+> +		.of_match_table = dw_ipk_dt_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver(dw_ipk_drm_platform_driver);
+> +
+> +MODULE_DESCRIPTION("Synopsys DesignWare IPK DRM driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Angelo Ribeiro <angelo.ribeiro@synopsys.com>");
+> diff --git a/drivers/gpu/drm/ipk/dw-ipk.h b/drivers/gpu/drm/ipk/dw-ipk.h
+> new file mode 100644
+> index 0000000..4abb6dd
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ipk/dw-ipk.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019-2020 Synopsys, Inc. and/or its affiliates.
+> + * Synopsys DesignWare MIPI DSI Controller
+> + */
+> +
+> +#ifndef _DW_IPK_H
+> +#define _DW_IPK_H
+> +
+> +#include "drm/drm_device.h"
+> +#include <drm/bridge/dw_mipi_dsi.h>
+Add the inlcudes so the header file is standalone . the header file
+should not relay on other files being includes.
+Use forward as appropriate - like for example:
+
+struct drm_bridge;
+struct drm_framebuffer;
+stuct drm_plane;
+
+Keep the forwards alphabetically sorted.
+
+> +
+> +struct ipk_pipeline {
+> +	struct drm_framebuffer	*fb;
+> +	struct drm_crtc		crtc;
+> +	struct drm_plane	*plane;
+> +	struct drm_bridge	*bridge;
+> +};
+> +
+> +struct ipk_device {
+> +	struct drm_device drm;
+> +	struct platform_device *platform;
+> +	struct ipk_pipeline pipeline;
+> +	struct vpg_device *vpg;
+> +};
+> +
+> +#define drm_device_to_ipk_device(target) \
+> +	container_of(target, struct ipk_device, drm)
+> +
+> +#endif /* _DW_IPK_H */
+> diff --git a/drivers/gpu/drm/ipk/dw-vpg.c b/drivers/gpu/drm/ipk/dw-vpg.c
+> new file mode 100644
+> index 0000000..feb3e90
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ipk/dw-vpg.c
+> @@ -0,0 +1,559 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019-2020 Synopsys, Inc. and/or its affiliates.
+> + * Synopsys DesignWare MIPI DSI controller
+> + *
+> + * Author: Angelo Ribeiro <angelor@synopsys.com>
+> + * Author: Luis Oliveira <luis.oliveira@synopsys.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/component.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset.h>
+> +
+> +#include <drm/drm_atomic.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_device.h>
+> +#include <drm/drm_fb_cma_helper.h>
+> +#include <drm/drm_fourcc.h>
+> +#include <drm/drm_gem_cma_helper.h>
+> +#include <drm/drm_of.h>
+> +#include <drm/drm_vblank.h>
+> +#include <linux/platform_data/simplefb.h>
+> +#include <video/videomode.h>
+> +
+> +#include "dw-ipk.h"
+> +#include "dw-vpg.h"
+See earlier rant on include files.
+
+> +
+> +#define NB_CRTC 1
+> +#define CRTC_MASK GENMASK(NB_CRTC - 1, 0)
+> +#define MAX_ENDPOINTS 1
+> +
+> +struct vpg_device {
+> +	void __iomem *base;
+> +	void __iomem *base_mmcm;
+> +};
+> +
+> +enum vpg_pixel_fmt {
+> +	VIF_COLOR_CODE_16BIT_CONFIG1 = 0,
+> +	VIF_COLOR_CODE_16BIT_CONFIG2,
+> +	VIF_COLOR_CODE_16BIT_CONFIG3,
+> +	VIF_COLOR_CODE_18BIT_CONFIG1,
+> +	VIF_COLOR_CODE_18BIT_CONFIG2,
+> +	VIF_COLOR_CODE_24BIT,
+> +	VIF_COLOR_CODE_MAX
+> +};
+> +
+> +static enum vpg_pixel_fmt to_vpg_pixel_format(u32 drm_fmt)
+> +{
+> +	enum vpg_pixel_fmt pf;
+> +
+> +	switch (drm_fmt) {
+> +	case DRM_FORMAT_RGB888:
+> +		pf = VIF_COLOR_CODE_24BIT;
+> +		break;
+> +	case DRM_FORMAT_RGB565:
+> +		pf = VIF_COLOR_CODE_16BIT_CONFIG1;
+> +		break;
+> +	default:
+> +		pf = VIF_COLOR_CODE_MAX;
+> +		break;
+> +	}
+> +	return pf;
+> +}
+> +
+> +static struct simplefb_format supported_formats[] = {
+> +	{"r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0}, DRM_FORMAT_RGB565},
+> +	{"r8g8b8", 24, {16, 8}, {8, 8}, {0, 8}, {0, 0}, DRM_FORMAT_RGB888},
+> +	{"x8r8g8b8", 32, {16, 8}, {8, 8}, {0, 8}, {0, 0}, DRM_FORMAT_XRGB8888},
+> +};
+> +
+> +static const u64 vpg_format_modifiers[] = {
+> +	DRM_FORMAT_MOD_LINEAR,
+> +	DRM_FORMAT_MOD_INVALID
+> +};
+> +
+> +static const struct drm_encoder_funcs ipk_encoder_funcs = {
+> +	.destroy = drm_encoder_cleanup,
+> +};
+This driver is a candidate to use drm_simple_encoder_init()
+This would get rid of the above ipk_encoder_funcs variable.
+
+> +
+> +static int ipk_encoder_init(struct drm_device *drm,
+> +			    struct drm_bridge *bridge)
+> +{
+> +	struct ipk_device *ipk = drm_device_to_ipk_device(drm);
+> +	struct drm_encoder *encoder;
+> +	int ret;
+> +
+> +	encoder = devm_kzalloc(drm->dev, sizeof(*encoder), GFP_KERNEL);
+> +	if (!encoder)
+> +		return -ENOMEM;
+> +
+> +	/* Only one CRTC can be attached in IPK_DSI */
+> +	encoder->possible_crtcs = CRTC_MASK;
+> +	encoder->possible_clones = 0;
+> +
+> +	ret = drm_encoder_init(drm, encoder, &ipk_encoder_funcs,
+> +			       DRM_MODE_ENCODER_DPI, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = drm_bridge_attach(encoder, bridge, NULL, 0);
+> +	if (ret)
+> +		goto err_attach;
+> +
+> +	/* Add to the internal struct */
+> +	ipk->pipeline.bridge = bridge;
+> +
+> +	DRM_DEBUG_DRIVER("Num of connectors = %d\n",
+> +			 drm->mode_config.num_connector);
+> +	DRM_DEBUG_DRIVER("Bridge encoder:%d created\n", encoder->base.id);
+drm_dbg(drm, ...)
+> +
+> +	return ret;
+> +
+> +err_attach:
+> +	drm_encoder_cleanup(encoder);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * CRTC
+> + */
+> +static u32 vpg_read(struct vpg_device *dev, u32 reg)
+> +{
+> +	return readl(dev->base + reg);
+> +}
+> +
+> +static void vpg_write(struct vpg_device *dev, u32 reg, u32 val)
+> +{
+> +	writel(val, dev->base + reg);
+> +}
+> +
+> +static void vpg_write_part(struct vpg_device *dev, u32 reg,
+> +			   u32 val, u8 shift, u8 width)
+> +{
+> +	u32 mask = (1 << width) - 1;
+> +
+> +	vpg_write(dev, reg, (vpg_read(dev, reg) &
+> +		  ~(mask << shift)) | ((val & mask) << shift));
+> +}
+> +
+> +static u32 mmcm_read(struct vpg_device *dev, u32 reg)
+> +{
+> +	return readl(dev->base_mmcm + reg);
+> +}
+> +
+> +static void mmcm_write(struct vpg_device *dev, u32 reg, u32 value)
+> +{
+> +	writel(value, dev->base_mmcm + reg);
+> +}
+> +
+> +static void mmcm_configure(struct vpg_device *vpg, struct videomode *v_mode)
+> +{
+> +	int div,  mul, cur_freq, cur_deviat, temp;
+> +	int out_freq = v_mode->pixelclock / 1000;
+> +	int in_freq = 100000;
+> +	int deviat = 1000;	/* Deviation from desired master clock */
+> +	int best_div = 0;	/* Divider for PLL */
+> +	int best_mul = 0;	/* Multiplier for PLL */
+> +
+> +	DRM_DEBUG_DRIVER("out_freq = %d\n", out_freq);
+> +
+> +	for (div = 1; div < 150 && deviat > 50; div++) {
+> +		for (mul = 1; mul <= 10 && deviat > 50; mul++) {
+> +			cur_freq = in_freq * mul / div;
+> +			cur_deviat = abs(out_freq - cur_freq);
+> +			if (cur_deviat < deviat) {
+> +				best_div = div;
+> +				best_mul = mul;
+> +				deviat = cur_deviat;
+> +			}
+> +		}
+> +	}
+> +
+> +	DRM_DEBUG_DRIVER("deviat = %d\n best_div = %d\n best_mul = %d\n",
+> +			 deviat, best_div, best_mul);
+> +
+> +	temp = mmcm_read(vpg, DW_MMCM_CLKOUT0_REG_1) & DW_MMCM_MASK;
+> +	mmcm_write(vpg, DW_MMCM_CLKOUT0_REG_1, temp | (best_div << 6) |
+> +		   best_div);
+> +
+> +	temp = mmcm_read(vpg, DW_MMCM_CLKFBOUT_REG_1) & DW_MMCM_MASK;
+> +	mmcm_write(vpg, DW_MMCM_CLKFBOUT_REG_1, temp | (best_mul << 6) |
+> +		   best_mul);
+> +}
+> +
+> +static void vpg_set_fps(struct vpg_device *vpg,
+> +			const struct drm_display_mode *mode)
+> +{
+> +	/* IF_Freq is in KHz */
+> +	u32 line_time = (1000 * DW_VPG_FREQ) / (mode->vrefresh * mode->vtotal);
+> +
+> +	vpg_write(vpg, DW_VPG_LINE_TIME, line_time);
+> +}
+> +
+> +static void vpg_select_pattern(struct vpg_device *vpg, unsigned int value)
+> +{
+> +	vpg_write(vpg, DW_VPG_TESTMODE, value);
+> +}
+> +
+> +static void vpg_vertical_set(struct vpg_device *vpg, struct videomode *v_mode)
+> +{
+> +	vpg_write_part(vpg, DW_VPG_CANVAS, v_mode->vactive, 16, 16);
+> +	vpg_write_part(vpg, DW_VPG_VBP_VFP_VSA, v_mode->vsync_len, 0, 8);
+> +	vpg_write_part(vpg, DW_VPG_VBP_VFP_VSA, v_mode->vback_porch, 20, 12);
+> +	vpg_write_part(vpg, DW_VPG_VBP_VFP_VSA, v_mode->vfront_porch, 8, 11);
+> +}
+> +
+> +static void vpg_horizontal_set(struct vpg_device *vpg, struct videomode *v_mode)
+> +{
+> +	vpg_write_part(vpg, DW_VPG_CANVAS, v_mode->hactive, 0, 16);
+> +	vpg_write_part(vpg, DW_VPG_HBP_HSA, v_mode->hsync_len, 0, 16);
+> +	vpg_write_part(vpg, DW_VPG_HBP_HSA, v_mode->hback_porch, 16, 16);
+> +}
+> +
+> +static ssize_t show_pattern(struct device *dev,
+> +			    struct device_attribute *attr, char *buf)
+> +{
+> +	struct drm_device *drm = dev_get_drvdata(dev);
+> +	struct ipk_device *ipk = drm_device_to_ipk_device(drm);
+> +	struct vpg_device *vpg = ipk->vpg;
+> +
+> +	return sprintf(buf, "%d\n", vpg_read(vpg, DW_VPG_TESTMODE));
+> +}
+> +
+> +static ssize_t store_pattern(struct device *dev, struct device_attribute *attr,
+> +			     const char *buf, size_t count)
+> +{
+> +	struct drm_device *drm = dev_get_drvdata(dev);
+> +	struct ipk_device *ipk = drm_device_to_ipk_device(drm);
+> +	struct vpg_device *vpg = ipk->vpg;
+> +	long pattern;
+> +	int ret;
+> +
+> +	ret = kstrtol(buf, 0, &pattern);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	vpg_select_pattern(vpg, pattern);
+> +
+> +	return count;
+> +}
+> +
+> +static struct kobj_attribute vpg_pattern = __ATTR(pattern, 0660,
+> +						  (void *)show_pattern,
+> +						  (void *)store_pattern);
+> +
+> +static struct attribute *vpg_attr[] = {
+> +	&vpg_pattern.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group vpg_attr_group = {
+> +	.attrs = vpg_attr,
+> +};
+> +
+> +static void vpg_crtc_mode_set_nofb(struct drm_crtc *crtc)
+> +{
+> +	struct ipk_device *ipk = drm_device_to_ipk_device(crtc->dev);
+> +	struct drm_display_mode *mode = &crtc->state->adjusted_mode;
+> +	struct vpg_device *vpg = ipk->vpg;
+> +	struct videomode v_mode;
+> +
+> +	DRM_DEBUG_DRIVER("\n");
+> +
+> +	drm_display_mode_to_videomode(mode, &v_mode);
+Could be dropped, and all users of videomode could use drm_display_mode.
+One less indirection.
+
+> +
+> +	DRM_DEBUG_DRIVER("CRTC:%d mode:%s\n", crtc->base.id, mode->name);
+> +	DRM_DEBUG_DRIVER("Video mode: %dx%d", v_mode.hactive, v_mode.vactive);
+> +	DRM_DEBUG_DRIVER(" hfp %d hbp %d hsl %d vfp %d vbp %d vsl %d\n",
+> +			 v_mode.hfront_porch, v_mode.hback_porch,
+> +			 v_mode.hsync_len, v_mode.vfront_porch,
+> +			 v_mode.vback_porch, v_mode.vsync_len);
+> +
+> +	mmcm_configure(vpg, &v_mode);
+> +
+> +	vpg_write(vpg, DW_VPG_SEL_DATA, 0x01);
+> +	vpg_write(vpg, DW_VPG_SEL_DATA, 0x03);
+> +
+> +	vpg_horizontal_set(vpg, &v_mode);
+> +
+> +	vpg_vertical_set(vpg, &v_mode);
+> +
+> +	vpg_set_fps(vpg, mode);
+> +
+> +	vpg_select_pattern(vpg, 0);
+> +}
+> +
+> +static void vpg_crtc_atomic_begin(struct drm_crtc *crtc,
+> +				  struct drm_crtc_state *state)
+> +{
+> +	struct drm_pending_vblank_event *event = crtc->state->event;
+> +
+> +	if (event) {
+> +		crtc->state->event = NULL;
+> +		spin_lock_irq(&crtc->dev->event_lock);
+> +		drm_crtc_send_vblank_event(crtc, event);
+> +		spin_unlock_irq(&crtc->dev->event_lock);
+> +	}
+> +}
+> +
+> +static struct drm_crtc_helper_funcs vpg_crtc_helper_funcs = {
+> +	.mode_set_nofb = vpg_crtc_mode_set_nofb,
+> +	.atomic_begin = vpg_crtc_atomic_begin,
+> +};
+> +
+> +static int vpg_crtc_late_register(struct drm_crtc *crtc)
+> +{
+> +	struct ipk_device *ipk = drm_device_to_ipk_device(crtc->dev);
+> +	struct platform_device *pdev = ipk->platform;
+> +	int ret;
+> +
+> +	ret = sysfs_create_group(&pdev->dev.kobj, &vpg_attr_group);
+> +	if (ret)
+> +		drm_err(crtc->dev, "Failed to create sysfs entries");
+> +
+> +	return ret;
+> +}
+> +
+> +static void vpg_crtc_early_unregister(struct drm_crtc *crtc)
+> +{
+> +	struct ipk_device *ipk = drm_device_to_ipk_device(crtc->dev);
+> +	struct platform_device *pdev = ipk->platform;
+> +
+> +	sysfs_remove_group(&pdev->dev.kobj, &vpg_attr_group);
+> +}
+> +
+> +static const struct drm_crtc_funcs vpg_crtc_funcs = {
+> +	.reset = drm_atomic_helper_crtc_reset,
+> +	.destroy = drm_crtc_cleanup,
+> +	.set_config = drm_atomic_helper_set_config,
+> +	.page_flip = drm_atomic_helper_page_flip,
+> +	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
+> +	.late_register =  vpg_crtc_late_register,
+> +	.early_unregister = vpg_crtc_early_unregister
+> +};
+> +
+> +/*
+> + * Plane
+> + */
+> +static void vpg_plane_atomic_update(struct drm_plane *plane,
+> +				    struct drm_plane_state *old_state)
+> +{
+> +	struct ipk_device *ipk = drm_device_to_ipk_device(plane->dev);
+> +	struct drm_plane_state *state = plane->state;
+> +	struct drm_framebuffer *fb = state->fb;
+> +	struct vpg_device *vpg = ipk->vpg;
+> +	enum vpg_pixel_fmt pixel_format;
+> +
+> +	pixel_format = to_vpg_pixel_format(fb->format->format);
+> +
+> +	vpg_write(vpg, DW_VPG_DPICOLORMODE, pixel_format);
+> +}
+> +
+> +static void vpg_plane_atomic_disable(struct drm_plane *plane,
+> +				     struct drm_plane_state *oldstate)
+> +{
+> +	DRM_DEBUG_DRIVER("\n");
+> +}
+> +
+> +static const struct drm_plane_helper_funcs vpg_plane_helper_funcs = {
+> +	.atomic_update = vpg_plane_atomic_update,
+> +	.atomic_disable = vpg_plane_atomic_disable,
+> +};
+> +
+> +static const struct drm_plane_funcs vpg_plane_funcs = {
+> +	.update_plane = drm_atomic_helper_update_plane,
+> +	.disable_plane = drm_atomic_helper_disable_plane,
+> +	.destroy = drm_plane_cleanup,
+> +	.reset = drm_atomic_helper_plane_reset,
+> +	.atomic_duplicate_state = drm_atomic_helper_plane_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_plane_destroy_state,
+> +};
+> +
+> +static void vpg_plane_destroy_all(struct drm_device *drm)
+> +{
+> +	struct drm_plane *plane, *plane_temp;
+> +
+> +	list_for_each_entry_safe(plane, plane_temp,
+> +				 &drm->mode_config.plane_list, head)
+> +		drm_plane_cleanup(plane);
+> +}
+> +
+> +static int vpg_crtc_init(struct drm_device *drm, struct drm_crtc *crtc)
+> +{
+> +	u32 formats[ARRAY_SIZE(supported_formats)], i;
+> +	const u64 *modifiers = vpg_format_modifiers;
+> +	unsigned long possible_crtcs = CRTC_MASK;
+> +	struct device *drm_dev = drm->dev;
+> +	struct drm_plane *plane;
+> +	int ret;
+> +
+> +	plane = devm_kzalloc(drm_dev, sizeof(*plane), GFP_KERNEL);
+> +	if (!plane)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(supported_formats); i++)
+> +		formats[i] = supported_formats[i].fourcc;
+> +
+> +	ret = drm_universal_plane_init(drm, plane, possible_crtcs,
+> +				       &vpg_plane_funcs, formats,
+> +				       ARRAY_SIZE(formats), modifiers,
+> +				       DRM_PLANE_TYPE_PRIMARY, NULL);
+> +	if (ret)
+> +		goto cleanup_planes;
+> +
+> +	drm_plane_helper_add(plane, &vpg_plane_helper_funcs);
+> +
+> +	DRM_DEBUG_DRIVER("plane:%d created\n", plane->base.id);
+> +
+> +	ret = drm_crtc_init_with_planes(drm, crtc, plane, NULL,
+> +					&vpg_crtc_funcs, "DSI-VPG");
+> +	if (ret) {
+> +		DRM_DEBUG_DRIVER("Failed initialize CRTC\n");
+> +		goto cleanup_crtc;
+> +	}
+> +
+> +	drm_crtc_helper_add(crtc, &vpg_crtc_helper_funcs);
+> +
+> +	DRM_DEBUG_DRIVER("CRTC:%d created\n", crtc->base.id);
+> +
+> +	return ret;
+> +
+> +cleanup_crtc:
+> +	drm_crtc_cleanup(crtc);
+> +cleanup_planes:
+> +	vpg_plane_destroy_all(drm);
+> +	return ret;
+> +}
+> +
+> +int vpg_load(struct drm_device *drm)
+> +{
+> +	struct ipk_device *ipk = drm_device_to_ipk_device(drm);
+> +	struct drm_bridge *bridge[MAX_ENDPOINTS] = {NULL};
+> +	struct drm_panel *panel[MAX_ENDPOINTS] = {NULL};
+> +	struct platform_device *pdev = ipk->platform;
+> +	struct device_node *np = drm->dev->of_node;
+> +	int ret, i, endpoint_not_ready = -ENODEV;
+> +	struct reset_control *vpg_rst, *mmcm_rst;
+> +	struct device *dev = drm->dev;
+> +	struct vpg_device *vpg;
+> +	struct drm_crtc *crtc;
+> +	struct resource *res;
+> +
+> +	DRM_DEBUG_DRIVER("\n");
+> +
+> +	vpg = devm_kzalloc(&pdev->dev, sizeof(*vpg), GFP_KERNEL);
+> +	if (!vpg)
+> +		return -ENOMEM;
+> +
+> +	ipk->vpg = vpg;
+> +
+> +	/* Get endpoints if any */
+> +	for (i = 0; i < MAX_ENDPOINTS; i++) {
+> +		ret = drm_of_find_panel_or_bridge(np, 0, i, &panel[i],
+> +						  &bridge[i]);
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +		else if (!ret)
+> +			endpoint_not_ready = 0;
+> +	}
+> +
+> +	if (endpoint_not_ready)
+> +		return endpoint_not_ready;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "vpg");
+> +	vpg->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(vpg->base)) {
+> +		drm_err(drm, "Unable to get VPG registers\n");
+> +		ret = PTR_ERR(vpg->base);
+> +		goto err;
+> +	}
+> +
+> +	vpg_rst = devm_reset_control_get_optional_exclusive(dev, "vpg");
+> +	if (IS_ERR(vpg_rst)) {
+> +		ret = PTR_ERR(vpg_rst);
+> +		if (ret != -EPROBE_DEFER)
+> +			drm_err(drm, "Unable to get reset control: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	if (vpg_rst) {
+> +		reset_control_assert(vpg_rst);
+> +		usleep_range(10, 20);
+> +		reset_control_deassert(vpg_rst);
+> +	}
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mmcm");
+> +	vpg->base_mmcm = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(vpg->base)) {
+> +		ret = PTR_ERR(vpg->base);
+> +		goto err;
+> +	}
+> +
+> +	mmcm_rst = devm_reset_control_get_optional_exclusive(dev, "mmcm");
+> +	if (IS_ERR(mmcm_rst)) {
+> +		ret = PTR_ERR(mmcm_rst);
+> +		if (ret != -EPROBE_DEFER)
+> +			drm_err(drm, "Unable to get reset control: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	if (mmcm_rst) {
+> +		reset_control_assert(mmcm_rst);
+> +		usleep_range(10, 20);
+> +		reset_control_deassert(mmcm_rst);
+> +	}
+> +
+> +	/* Add endpoints panels or bridges if any */
+> +	for (i = 0; i < MAX_ENDPOINTS; i++) {
+> +		if (panel[i]) {
+> +			bridge[i] = drm_panel_bridge_add_typed(panel[i],
+> +							DRM_MODE_CONNECTOR_DSI);
+> +			if (IS_ERR(bridge[i])) {
+> +				ret = PTR_ERR(bridge[i]);
+> +				goto err;
+> +			}
+> +		}
+> +
+> +		if (bridge[i]) {
+> +			ret = ipk_encoder_init(drm, bridge[i]);
+> +			if (ret)
+> +				goto err;
+> +		}
+> +	}
+> +
+> +	crtc = devm_kzalloc(dev, sizeof(*crtc), GFP_KERNEL);
+> +	if (!crtc) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	ret = vpg_crtc_init(drm, crtc);
+> +	if (ret)
+> +		goto err;
+> +
+> +	return ret;
+> +
+> +err:
+> +	for (i = 0; i < MAX_ENDPOINTS; i++)
+> +		drm_panel_bridge_remove(bridge[i]);
+> +
+> +	return ret;
+> +}
+> +
+> +void vpg_unload(struct drm_device *drm)
+> +{
+> +	int i;
+> +
+> +	DRM_DEBUG_DRIVER("\n");
+> +	for (i = 0; i < MAX_ENDPOINTS; i++)
+> +		drm_of_panel_bridge_remove(drm->dev->of_node, 0, i);
+> +}
+> diff --git a/drivers/gpu/drm/ipk/dw-vpg.h b/drivers/gpu/drm/ipk/dw-vpg.h
+> new file mode 100644
+> index 0000000..869ccc4
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ipk/dw-vpg.h
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019-2020 Synopsys, Inc. and/or its affiliates.
+> + * Synopsys DesignWare VPG
+> + */
+> +
+> +#ifndef _VPG_H_
+> +#define _VPG_H_
+> +
+> +#define DW_VPG_PANX				0x00
+> +#define DW_VPG_PANY				0x04
+> +#define DW_VPG_PHASE_SEL			0x08
+> +#define DW_VPG_SEL_DATA				0x0C
+> +#define DW_VPG_SWAP_BAY				0x10
+> +#define DW_VPG_TESTMODE				0x14
+> +#define DW_VPG_ZOOM_OUT				0x18
+> +#define DW_VPG_EDPICTRL				0x1C
+> +#define DW_VPG_CANVAS				0x20
+> +#define DW_VPG_HBP_HSA				0x24
+> +#define DW_VPG_LINE_TIME			0x28
+> +#define DW_VPG_VBP_VFP_VSA			0x2C
+> +#define DW_VPG_DPICOLORMODE			0x30
+> +#define DW_VPG_VERSION				0x34
+> +#define DW_VPG_EXTRNAL_EDPI			0x38
+> +#define DW_VPG_PVO_CEAVID			0x3C
+> +#define DW_VPG_PAN_VALID			0x40
+> +#define DW_VPG_TECONTROL			0x44
+> +#define DW_VPG_IMAGE_START_POSITION_X		0x4C
+> +#define DW_VPG_IMAGE_START_POSITION_Y		0x50
+> +#define DW_VPG_IMAGE_Y				0x54
+> +#define DW_VPG_IMAGE_WORD_COUNT			0x58
+> +#define DW_VPG_IMAGE_DATA_TYPE			0x5C
+> +#define DW_VPG_LINE_PIXS_CNT			0x60
+> +#define DW_VPG_FRAME_LINES_CNT			0x64
+> +
+> +#define DW_MMCM_MASK				0x1000
+> +#define DW_MMCM_CLKOUT0_REG_1			0x20
+> +#define DW_MMCM_CLKOUT0_REG_2			0x24
+> +#define DW_MMCM_CLKFBOUT_REG_1			0x50
+> +#define DW_MMCM_CLKFBOUT_REG_2			0x54
+> +#define DW_MMCM_POWER_REG			0xA0
+> +
+> +#define DW_VPG_ZOOM_OUT_STEP	1
+> +#define DW_VPG_PAN_STEP	40
+> +#define DW_VPG_FREQ	25000	/* [KHz] */
+> +#define DW_VPG_V_FRONT_PORCH	2
+> +#define DW_VPG_V_BACK_PORCH	2
+> +#define DW_VPG_V_SYNC	2
+> +#define SCREEN_SIZE_X	800
+> +#define SCREEN_SIZE_Y	480
+> +
+> +int vpg_load(struct drm_device *ddev);
+> +void vpg_unload(struct drm_device *ddev);
+> +
+> +#endif /* _VPG_H_ */
+> -- 
+> 2.7.4
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
