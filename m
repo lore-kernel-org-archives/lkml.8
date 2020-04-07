@@ -2,161 +2,159 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF1DCC2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549AEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94EC6206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:01:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="amF+sEMo"
+	by mail.kernel.org (Postfix) with ESMTP id 3138D206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgDGFBr (ORCPT
+        id S1726720AbgDGFHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 01:01:47 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:24560 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726329AbgDGFBo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 01:01:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586235703; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=jt0Tk8pFpcuNkX69+BRAOWUABI4M2KygUuVbL9SWXck=;
- b=amF+sEMoE9D4X8rc2f1exmy9FvcTkwcyrmdNfXkBNDWaMR5xtfm/0UhiptRiM5B+K1mDCUAC
- U9ZvyxOaxdI1d5HaCy0+pMP5Pz62gq/C7eYsYOiis4ieTS4S6F9p6eI5FTO+usZcqDaSwMGe
- WJGiSTPAblKYwexCwiIImHLbTpA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8c0936.7f2ed250d538-smtp-out-n01;
- Tue, 07 Apr 2020 05:01:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 09CFAC433D2; Tue,  7 Apr 2020 05:01:42 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 947B3C433BA;
-        Tue,  7 Apr 2020 05:01:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 947B3C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 7 Apr 2020 01:07:07 -0400
+Received: from hfcrelay.icp-osb-irony-out6.external.iinet.net.au ([203.59.1.86]:8292
+        "EHLO hfcrelay.icp-osb-irony-out6.external.iinet.net.au"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726399AbgDGFHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 01:07:06 -0400
+X-Greylist: delayed 558 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Apr 2020 01:07:03 EDT
+X-SMTP-MATCH: 0
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AqAACBB4xe/yqY3MsNWRwBAQEBAQc?=
+ =?us-ascii?q?BAREBBAQBAYFpBQEBCwGERYQbj0oBAQEBAQEGgQoIJYl+j1CBewoBAQEBAQE?=
+ =?us-ascii?q?BAQE3BAEBhEQCgm02Bw4CEAEBAQUBAQEBAQUDAYV3hkkBAQEDIxVBEAsSBgI?=
+ =?us-ascii?q?CJgICSQ4GAQwGAgEBgyKCWK9hdYEyhUuDVYE/gQ4qAYxMeYEHgTgMgi8uPoQ?=
+ =?us-ascii?q?lgzuCXgSQRYdfmHoIgj+XJCOcAo83niYKgX8zGggoCIMkUCWcd2KNCYJDAQE?=
+X-IPAS-Result: =?us-ascii?q?A2AqAACBB4xe/yqY3MsNWRwBAQEBAQcBAREBBAQBAYFpB?=
+ =?us-ascii?q?QEBCwGERYQbj0oBAQEBAQEGgQoIJYl+j1CBewoBAQEBAQEBAQE3BAEBhEQCg?=
+ =?us-ascii?q?m02Bw4CEAEBAQUBAQEBAQUDAYV3hkkBAQEDIxVBEAsSBgICJgICSQ4GAQwGA?=
+ =?us-ascii?q?gEBgyKCWK9hdYEyhUuDVYE/gQ4qAYxMeYEHgTgMgi8uPoQlgzuCXgSQRYdfm?=
+ =?us-ascii?q?HoIgj+XJCOcAo83niYKgX8zGggoCIMkUCWcd2KNCYJDAQE?=
+X-IronPort-AV: E=Sophos;i="5.72,353,1580745600"; 
+   d="scan'208";a="234957621"
+Received: from 203-220-152-42.tpgi.com.au (HELO [192.168.1.108]) ([203.220.152.42])
+  by icp-osb-irony-out6.iinet.net.au with ESMTP; 07 Apr 2020 12:57:41 +0800
+Subject: Re: [PATCH 6/9] clk: Allow the common clk framework to be selectable
+To:     Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Russell King <linux@armlinux.org.uk>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>
+References: <20200405025123.154688-1-sboyd@kernel.org>
+ <20200405025123.154688-7-sboyd@kernel.org>
+ <CAK8P3a2M54quhRNK4xvwjz9O9oZwgrobc_wtkGaeA2PMYwOUdg@mail.gmail.com>
+ <158614207114.88454.6776609424163493475@swboyd.mtv.corp.google.com>
+ <CAK8P3a3Yt2woG2LMcQ0jNPGuHdMtFbBmLvtBbrWFQ4J6x3v9aQ@mail.gmail.com>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <8a2a142a-106a-4241-fca5-5ef12e66cd41@linux-m68k.org>
+Date:   Tue, 7 Apr 2020 14:57:39 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <CAK8P3a3Yt2woG2LMcQ0jNPGuHdMtFbBmLvtBbrWFQ4J6x3v9aQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/5] ath9k: Fix use-after-free Read in htc_connect_service
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200404041838.10426-2-hqjagain@gmail.com>
-References: <20200404041838.10426-2-hqjagain@gmail.com>
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, anenbupt@gmail.com,
-        syzkaller-bugs@googlegroups.com, Qiujun Huang <hqjagain@gmail.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200407050142.09CFAC433D2@smtp.codeaurora.org>
-Date:   Tue,  7 Apr 2020 05:01:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qiujun Huang <hqjagain@gmail.com> wrote:
+Hi Arnd, Stephen
 
-> The skb is consumed by htc_send_epid, so it needn't release again.
+On 6/4/20 5:35 pm, Arnd Bergmann wrote:
+> On Mon, Apr 6, 2020 at 5:01 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>> Quoting Arnd Bergmann (2020-04-05 05:45:20)
+>>> On Sun, Apr 5, 2020 at 4:51 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>>>> There's one snag with doing this, and that's making sure that randconfig
+>>>> builds don't select this option when some architecture or platform
+>>>> implements 'struct clk' outside of the common clk framework. Introduce a
+>>>> new config option 'HAVE_LEGACY_CLK' to indicate those platforms that
+>>>> haven't migrated to the common clk framework and therefore shouldn't be
+>>>> allowed to select this new config option. Also add a note that we hope
+>>>> one day to remove this config entirely.
+>>>
+>>> Good idea!
+>>>
+>>> I've looked through the individual ones and commented a bit on
+>>> what I think may or may not happen with them.
+>>>
+>>> ralink SOC_MT7621 is the only one that I think you got wrong,
+>>> as it already has common-clk support.
+>>
+>> Ah I missed that it was inside a big if RALINK. Thanks. I suppose I
+>> should just remove the select then for that config and not worry about
+>> the duplication of clkdev and common clk configs.
 > 
-> The case reported by syzbot:
+> Won't that cause build failures in those configurations that have
+> both implementations?
 > 
-> https://lore.kernel.org/linux-usb/000000000000590f6b05a1c05d15@google.com
-> usb 1-1: ath9k_htc: Firmware ath9k_htc/htc_9271-1.4.0.fw requested
-> usb 1-1: ath9k_htc: Transferred FW: ath9k_htc/htc_9271-1.4.0.fw, size:
-> 51008
-> usb 1-1: Service connection timeout for: 256
-> ==================================================================
-> BUG: KASAN: use-after-free in atomic_read
-> include/asm-generic/atomic-instrumented.h:26 [inline]
-> BUG: KASAN: use-after-free in refcount_read include/linux/refcount.h:134
-> [inline]
-> BUG: KASAN: use-after-free in skb_unref include/linux/skbuff.h:1042
-> [inline]
-> BUG: KASAN: use-after-free in kfree_skb+0x32/0x3d0 net/core/skbuff.c:692
-> Read of size 4 at addr ffff8881d0957994 by task kworker/1:2/83
+> According to the Makefile, the clk.c file is built whenever CONFIG_MIPS_GIC
+> is unset, so I think we need
 > 
-> Call Trace:
-> kfree_skb+0x32/0x3d0 net/core/skbuff.c:692
-> htc_connect_service.cold+0xa9/0x109
-> drivers/net/wireless/ath/ath9k/htc_hst.c:282
-> ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
-> ath9k_init_htc_services.constprop.0+0xb4/0x650
-> drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
-> ath9k_htc_probe_device+0x25a/0x1d80
-> drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
-> ath9k_htc_hw_init+0x31/0x60
-> drivers/net/wireless/ath/ath9k/htc_hst.c:501
-> ath9k_hif_usb_firmware_cb+0x26b/0x500
-> drivers/net/wireless/ath/ath9k/hif_usb.c:1187
-> request_firmware_work_func+0x126/0x242
-> drivers/base/firmware_loader/main.c:976
-> process_one_work+0x94b/0x1620 kernel/workqueue.c:2264
-> worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-> kthread+0x318/0x420 kernel/kthread.c:255
-> ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>           select HAVE_LEGACY_CLK if !MIPS_GIC
 > 
-> Allocated by task 83:
-> kmem_cache_alloc_node+0xdc/0x330 mm/slub.c:2814
-> __alloc_skb+0xba/0x5a0 net/core/skbuff.c:198
-> alloc_skb include/linux/skbuff.h:1081 [inline]
-> htc_connect_service+0x2cc/0x840
-> drivers/net/wireless/ath/ath9k/htc_hst.c:257
-> ath9k_wmi_connect+0xd2/0x1a0 drivers/net/wireless/ath/ath9k/wmi.c:265
-> ath9k_init_htc_services.constprop.0+0xb4/0x650
-> drivers/net/wireless/ath/ath9k/htc_drv_init.c:146
-> ath9k_htc_probe_device+0x25a/0x1d80
-> drivers/net/wireless/ath/ath9k/htc_drv_init.c:959
-> ath9k_htc_hw_init+0x31/0x60
-> drivers/net/wireless/ath/ath9k/htc_hst.c:501
-> ath9k_hif_usb_firmware_cb+0x26b/0x500
-> drivers/net/wireless/ath/ath9k/hif_usb.c:1187
-> request_firmware_work_func+0x126/0x242
-> drivers/base/firmware_loader/main.c:976
-> process_one_work+0x94b/0x1620 kernel/workqueue.c:2264
-> worker_thread+0x96/0xe20 kernel/workqueue.c:2410
-> kthread+0x318/0x420 kernel/kthread.c:255
-> ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> or maybe move the select into the per-chip configs that need it:
+> RT288X, RT305X, RT3883, and MT7620.
 > 
-> Freed by task 0:
-> kfree_skb+0x102/0x3d0 net/core/skbuff.c:690
-> ath9k_htc_txcompletion_cb+0x1f8/0x2b0
-> drivers/net/wireless/ath/ath9k/htc_hst.c:356
-> hif_usb_regout_cb+0x10b/0x1b0
-> drivers/net/wireless/ath/ath9k/hif_usb.c:90
-> __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
-> usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
-> dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
-> call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
-> expire_timers kernel/time/timer.c:1449 [inline]
-> __run_timers kernel/time/timer.c:1773 [inline]
-> __run_timers kernel/time/timer.c:1740 [inline]
-> run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
-> __do_softirq+0x21e/0x950 kernel/softirq.c:292
+>>>> diff --git a/arch/m68k/Kconfig.cpu b/arch/m68k/Kconfig.cpu
+>>>> index 60ac1cd8b96f..bd2d29c22a10 100644
+>>>> --- a/arch/m68k/Kconfig.cpu
+>>>> +++ b/arch/m68k/Kconfig.cpu
+>>>
+>>>     text    data     bss     dec     hex filename
+>>> 1934726 263616   83284 2281626 22d09a obj/vmlinux-before
+>>> 1971989 266192   83308 2321489 236c51 obj/vmlinux-after
+>>>
+>>> The coldfire clock implementation looks rather simple compared
+>>> to chips from the 2010s: most chips have only fixed clocks,
+>>> and three of them have one of two registers of clock gates.
+>>>
+>>> It shouldn't be hard to convert, but enabling common-clk will
+>>> cause a noticeable kernel size increase on the fairly limited
+>>> hardware.
+>>>
+>>> Simply enabling COMMON_CLK in m5475evb_defconfig
+>>> results in a 1.7% or 40KB growth in kernel size, plus there
+>>> would be additional dynamic memory usage:
+>> There could certainly be some work done to reduce the code size of the
+>> CCF. I haven't looked but perhaps we could save some memory by making
+>> the basic types selectable too and then push a bunch of kconfig updates
+>> through for that.
 > 
-> Reported-and-tested-by: syzbot+9505af1ae303dabdc646@syzkaller.appspotmail.com
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> Right, that might help. Another possibility would be to support both
+> the common clk layer and the custom clk implementation on coldfire
+> until we remove the other custom implementations, by which point
+> even fewer people will care about coldfire.
+> 
+> Let's see what Geert and Greg think would be the best path for coldfire,
+> maybe the added 40KB is less of a problem after all.
 
-5 patches applied to ath-next branch of ath.git, thanks.
+Losing another 40k is not ideal, but not the end of the world.
+It would not stop me running it on any platforms I regularly
+run on. For sure some of the really old hardware just doesn't
+have the RAM to spare.
 
-ced21a4c726b ath9k: Fix use-after-free Read in htc_connect_service
-abeaa85054ff ath9k: Fix use-after-free Read in ath9k_wmi_ctrl_rx
-e4ff08a4d727 ath9k: Fix use-after-free Write in ath9k_htc_rx_msg
-19d6c375d671 ath9x: Fix stack-out-of-bounds Write in ath9k_hif_usb_rx_cb
-2bbcaaee1fcb ath9k: Fix general protection fault in ath9k_hif_usb_rx_cb
+Any way, I say we have to move forward and and move to using
+the common clock framework for ColdFire sooner than later.
 
--- 
-https://patchwork.kernel.org/patch/11474039/
+Regards
+Greg
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
