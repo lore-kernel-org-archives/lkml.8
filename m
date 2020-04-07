@@ -2,310 +2,134 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44D7C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E80C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3AC20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A71920748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:25:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AiVquqM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgDGUY5 (ORCPT
+        id S1726484AbgDGUZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:24:57 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:53436 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGUY5 (ORCPT
+        Tue, 7 Apr 2020 16:25:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46973 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726277AbgDGUZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:24:57 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 7 Apr 2020 16:25:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586291133;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=scImo7fc2VVLGYYgXmQngzwdo//+qw89Krq5Bdm1HOo=;
+        b=AiVquqM/94RfI6TYwRTbqEM0E9AOIrFk0p8Dv6Vwy+Nwb0SC1YT/zjpTJEjH+/Sb/m/V7q
+        7WVr1vItsB0pckLo+j8PQDybVWDZEAaYAbvg/VEXNT+e4amFlO4FfAxk9gAayPTwMDb/g7
+        7S2qTY0W0LcfGqwOjbfsKKTTe6DaRPE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-265-aijyxqmrMsqH75FaYxNYjQ-1; Tue, 07 Apr 2020 16:25:29 -0400
+X-MC-Unique: aijyxqmrMsqH75FaYxNYjQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id B55DF80532;
-        Tue,  7 Apr 2020 22:24:51 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 22:24:50 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, devicetree@vger.kernel.org, airlied@linux.ie,
-        hjc@rock-chips.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 1/2] dt-bindings: display: convert rockchip vop
- bindings to yaml
-Message-ID: <20200407202450.GC28801@ravnborg.org>
-References: <20200403142235.8870-1-jbx6244@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A25998017CE;
+        Tue,  7 Apr 2020 20:25:25 +0000 (UTC)
+Received: from krava (unknown [10.40.192.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A305A1001B3F;
+        Tue,  7 Apr 2020 20:25:13 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 22:25:08 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v7] perf tools: add support for libpfm4
+Message-ID: <20200407202508.GA3210726@krava>
+References: <20200407064018.158555-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200403142235.8870-1-jbx6244@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8
-        a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8 a=s8YR1HE3AAAA:8 a=e5mUnYsNAAAA:8
-        a=I1IL0Xl9k2phEoxdptwA:9 a=oHOzSfBX9ZjYUJn9:21 a=-5uzdQ6-SERdSyDy:21
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=sptkURWiP4Gy88Gu7hUp:22
-        a=jGH_LyMDp9YhSvY-UuyI:22 a=Vxmtnl_E_bksehYqCbjh:22
+In-Reply-To: <20200407064018.158555-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan.
+On Mon, Apr 06, 2020 at 11:40:18PM -0700, Ian Rogers wrote:
+> From: Stephane Eranian <eranian@google.com>
+> 
+> This patch links perf with the libpfm4 library if it is available and
+> NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
+> event tables for all processors supported by perf_events. It is a helper
+> library that helps convert from a symbolic event name to the event
+> encoding required by the underlying kernel interface. This
+> library is open-source and available from: http://perfmon2.sf.net.
+> 
+> With this patch, it is possible to specify full hardware events
+> by name. Hardware filters are also supported. Events must be
+> specified via the --pfm-events and not -e option. Both options
+> are active at the same time and it is possible to mix and match:
+> 
+> $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> 
+> v7 rebases and adds fallback code for libpfm4 events.
+>    The fallback code is to force user only priv level in case the
+>    perf_event_open() syscall failed for permissions reason.
+>    the fallback forces a user privilege level restriction on the event string,
+>    so depending on the syntax either u or :u is needed.
+> 
+>    But libpfm4 can use a : or . as the separator, so simply searching
+>    for ':' vs. '/' is not good enough to determine the syntax needed.
+>    Therefore, this patch introduces a new evsel boolean field to mark events
+>    coming from  libpfm4. The field is then used to adjust the fallback string.
 
-On Fri, Apr 03, 2020 at 04:22:34PM +0200, Johan Jonker wrote:
-> Current dts files with 'vop' nodes are manually verified.
-> In order to automate this process rockchip-vop.txt
-> has to be converted to yaml.
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+heya,
+I made bunch of comments for v5, not sure you saw them:
+  https://lore.kernel.org/lkml/20200323235846.104937-1-irogers@google.com/
 
-Thanks, I have applied the patches to drm-misc-next.
-They will hit the upstream kernel when next merge window opens.
+jirka
 
-	Sam
+> v6 is a rebase.
+> v5 is a rebase.
+> v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+>    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+>    missed in v3.
+> v3 is against acme/perf/core and removes a diagnostic warning.
+> v2 of this patch makes the --pfm-events man page documentation
+> conditional on libpfm4 behing configured. It tidies some of the
+> documentation and adds the feature test missed in the v1 patch.
+> 
 
-> ---
-> Changes v5:
->   Add reviewed by
->   Fix irq.h already included in arm-gic.h
-> 
-> Changes v4:
->   Change description
->   Replace compatible oneOf by enum
->   Change interrupts description
->   Remove resets minItems
-> 
-> Changes v3:
->   Change description
-> 
-> Changes v2:
->   No new properties
-> ---
->  .../bindings/display/rockchip/rockchip-vop.txt     |  74 -------------
->  .../bindings/display/rockchip/rockchip-vop.yaml    | 123 +++++++++++++++++++++
->  2 files changed, 123 insertions(+), 74 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
->  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-> deleted file mode 100644
-> index 8b3a5f514..000000000
-> --- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-> +++ /dev/null
-> @@ -1,74 +0,0 @@
-> -device-tree bindings for rockchip soc display controller (vop)
-> -
-> -VOP (Visual Output Processor) is the Display Controller for the Rockchip
-> -series of SoCs which transfers the image data from a video memory
-> -buffer to an external LCD interface.
-> -
-> -Required properties:
-> -- compatible: value should be one of the following
-> -		"rockchip,rk3036-vop";
-> -		"rockchip,rk3126-vop";
-> -		"rockchip,px30-vop-lit";
-> -		"rockchip,px30-vop-big";
-> -		"rockchip,rk3066-vop";
-> -		"rockchip,rk3188-vop";
-> -		"rockchip,rk3288-vop";
-> -		"rockchip,rk3368-vop";
-> -		"rockchip,rk3366-vop";
-> -		"rockchip,rk3399-vop-big";
-> -		"rockchip,rk3399-vop-lit";
-> -		"rockchip,rk3228-vop";
-> -		"rockchip,rk3328-vop";
-> -
-> -- reg: Must contain one entry corresponding to the base address and length
-> -	of the register space. Can optionally contain a second entry
-> -	corresponding to the CRTC gamma LUT address.
-> -
-> -- interrupts: should contain a list of all VOP IP block interrupts in the
-> -		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
-> -		 format depends on the interrupt controller used.
-> -
-> -- clocks: must include clock specifiers corresponding to entries in the
-> -		clock-names property.
-> -
-> -- clock-names: Must contain
-> -		aclk_vop: for ddr buffer transfer.
-> -		hclk_vop: for ahb bus to R/W the phy regs.
-> -		dclk_vop: pixel clock.
-> -
-> -- resets: Must contain an entry for each entry in reset-names.
-> -  See ../reset/reset.txt for details.
-> -- reset-names: Must include the following entries:
-> -  - axi
-> -  - ahb
-> -  - dclk
-> -
-> -- iommus: required a iommu node
-> -
-> -- port: A port node with endpoint definitions as defined in
-> -  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> -
-> -Example:
-> -SoC specific DT entry:
-> -	vopb: vopb@ff930000 {
-> -		compatible = "rockchip,rk3288-vop";
-> -		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
-> -		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
-> -		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-> -		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
-> -		reset-names = "axi", "ahb", "dclk";
-> -		iommus = <&vopb_mmu>;
-> -		vopb_out: port {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -			vopb_out_edp: endpoint@0 {
-> -				reg = <0>;
-> -				remote-endpoint=<&edp_in_vopb>;
-> -			};
-> -			vopb_out_hdmi: endpoint@1 {
-> -				reg = <1>;
-> -				remote-endpoint=<&hdmi_in_vopb>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-> new file mode 100644
-> index 000000000..42ee2b5c3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-> @@ -0,0 +1,123 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/rockchip/rockchip-vop.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip SoC display controller (VOP)
-> +
-> +description:
-> +  VOP (Video Output Processor) is the display controller for the Rockchip
-> +  series of SoCs which transfers the image data from a video memory
-> +  buffer to an external LCD interface.
-> +
-> +maintainers:
-> +  - Sandy Huang <hjc@rock-chips.com>
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - rockchip,px30-vop-big
-> +      - rockchip,px30-vop-lit
-> +      - rockchip,rk3036-vop
-> +      - rockchip,rk3066-vop
-> +      - rockchip,rk3126-vop
-> +      - rockchip,rk3188-vop
-> +      - rockchip,rk3228-vop
-> +      - rockchip,rk3288-vop
-> +      - rockchip,rk3328-vop
-> +      - rockchip,rk3366-vop
-> +      - rockchip,rk3368-vop
-> +      - rockchip,rk3399-vop-big
-> +      - rockchip,rk3399-vop-lit
-> +
-> +  reg:
-> +    minItems: 1
-> +    items:
-> +      - description:
-> +          Must contain one entry corresponding to the base address and length
-> +          of the register space.
-> +      - description:
-> +          Can optionally contain a second entry corresponding to
-> +          the CRTC gamma LUT address.
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description:
-> +      The VOP interrupt is shared by several interrupt sources, such as
-> +      frame start (VSYNC), line flag and other status interrupts.
-> +
-> +  clocks:
-> +    items:
-> +      - description: Clock for ddr buffer transfer.
-> +      - description: Pixel clock.
-> +      - description: Clock for the ahb bus to R/W the phy regs.
-> +
-> +  clock-names:
-> +    items:
-> +      - const: aclk_vop
-> +      - const: dclk_vop
-> +      - const: hclk_vop
-> +
-> +  resets:
-> +    maxItems: 3
-> +
-> +  reset-names:
-> +    items:
-> +      - const: axi
-> +      - const: ahb
-> +      - const: dclk
-> +
-> +  port:
-> +    type: object
-> +    description:
-> +      A port node with endpoint definitions as defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/rk3288-cru.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    vopb: vopb@ff930000 {
-> +      compatible = "rockchip,rk3288-vop";
-> +      reg = <0x0 0xff930000 0x0 0x19c>,
-> +            <0x0 0xff931000 0x0 0x1000>;
-> +      interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&cru ACLK_VOP0>,
-> +               <&cru DCLK_VOP0>,
-> +               <&cru HCLK_VOP0>;
-> +      clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-> +      resets = <&cru SRST_LCDC1_AXI>,
-> +               <&cru SRST_LCDC1_AHB>,
-> +               <&cru SRST_LCDC1_DCLK>;
-> +      reset-names = "axi", "ahb", "dclk";
-> +      iommus = <&vopb_mmu>;
-> +      vopb_out: port {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        vopb_out_edp: endpoint@0 {
-> +          reg = <0>;
-> +          remote-endpoint=<&edp_in_vopb>;
-> +        };
-> +        vopb_out_hdmi: endpoint@1 {
-> +          reg = <1>;
-> +          remote-endpoint=<&hdmi_in_vopb>;
-> +        };
-> +      };
-> +    };
-> -- 
-> 2.11.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+SNIP
+
