@@ -2,168 +2,131 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272C7C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF852C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033D720753
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA8E2074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXYnTdb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgDGOfv (ORCPT
+        id S1729303AbgDGOf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:35:51 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2636 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729103AbgDGOfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:35:50 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id EE6482EEB0E7A442C724;
-        Tue,  7 Apr 2020 15:35:47 +0100 (IST)
-Received: from [127.0.0.1] (10.210.168.238) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 7 Apr 2020
- 15:35:46 +0100
-Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
- commands
-To:     Hannes Reinecke <hare@suse.de>,
-        Christoph Hellwig <hch@infradead.org>
-CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <ming.lei@redhat.com>,
-        <bvanassche@acm.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        Hannes Reinecke <hare@suse.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-3-git-send-email-john.garry@huawei.com>
- <20200310183243.GA14549@infradead.org>
- <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
- <20200311062228.GA13522@infradead.org>
- <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
- <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
- <39bc2d82-2676-e329-5d32-8acb99b0a204@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <20ebe296-9e57-b3e3-21b3-63a09ce86036@huawei.com>
-Date:   Tue, 7 Apr 2020 15:35:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 7 Apr 2020 10:35:56 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35754 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbgDGOfz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:35:55 -0400
+Received: by mail-qk1-f196.google.com with SMTP id k134so1840151qke.2;
+        Tue, 07 Apr 2020 07:35:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=f/EAzeoB610Oj5d/VUk9L0zsAWvphNQPe8+Su9+KStA=;
+        b=hXYnTdb5Tc1HFfd65aj7th2iEeVuJUs7F04W/T6aL2Nbo9ZT295OMiLKJ2DY22WAVW
+         1d5jVdaDz6TTlRkFfo7bF0ok/Dd4Et/xp3vxs3u9GsmaugOB2hdSMjp2l9fsSSCqU0X5
+         eT7TDHCKsYCoFd5d0y9GMmYiPYWG2s+Q2GijGkqDvNYO1t9DFWM7UaAFdE7SLhxjDir0
+         1FVb2df4QCGfD6WCUkHwY7KmuKoLoXsIUf9rM+MC3g9mFyFb75fQTIv+8C9msfZ8Nt7V
+         7ZXDvx0uvqZ8szNCp/hJceVeDLIcXvpxJCTGDfj1TbIzo7DXiTPZijzVlJpxesaHseh3
+         kzFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=f/EAzeoB610Oj5d/VUk9L0zsAWvphNQPe8+Su9+KStA=;
+        b=e1uruSfT8b4QVRua53M5UGUdAsq7aNIQt/gPub6AOyABkX2EVOydsc2ZqKljvIx2tX
+         Injr4VzLBjDH4WOVNXzSiI0/zWknQ4hO4GrlJjDTQpH6EU2vj685vQ/O6ldAWCMqCbxK
+         Sle29H/X9vycbx7ZjfW2mvZV4ZiE+xk24CB6GHuOdnIBRsQBmuhgvIEjkJaFhSGYg18n
+         xRntYf92DZOXXdXU2uD9KSu3Em/KZCJjIdq4mpVC60+EWqv4gjB65pBnU8/BoQFFnl/g
+         aE3JVhEjI+Z6j/+6y5ruICdAEEESHUdCGxX5RxLcnqLq9+1TqQIcROMRNNeOq9/PTzV0
+         QrQA==
+X-Gm-Message-State: AGi0PuYAO3ERSCFsi/8hlgQKIuQypc6luSNrsv/T2jHS95/ZSV/j7TkL
+        GFdtAc+DSCcoCs2nkCTY9Fs=
+X-Google-Smtp-Source: APiQypKN/wCh5Y0oRNAUu4qvqoRkmbwJqo6zfj+JHzbv3MFGWDMxpAH+FrYP30uO7fgCgdwMDwIJew==
+X-Received: by 2002:a37:8044:: with SMTP id b65mr2523229qkd.238.1586270154328;
+        Tue, 07 Apr 2020 07:35:54 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id i20sm15917175qkl.135.2020.04.07.07.35.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 07:35:53 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C3583409A3; Tue,  7 Apr 2020 11:35:51 -0300 (-03)
+Date:   Tue, 7 Apr 2020 11:35:51 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
+ performance monitoring and observability
+Message-ID: <20200407143551.GF11186@kernel.org>
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+ <20200407143014.GD11186@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <39bc2d82-2676-e329-5d32-8acb99b0a204@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.210.168.238]
-X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407143014.GD11186@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/04/2020 15:00, Hannes Reinecke wrote:
-> On 4/7/20 1:54 PM, John Garry wrote:
->> On 06/04/2020 10:05, Hannes Reinecke wrote:
->>> On 3/11/20 7:22 AM, Christoph Hellwig wrote:
->>>> On Tue, Mar 10, 2020 at 09:08:56PM +0000, John Garry wrote:
->>>>> On 10/03/2020 18:32, Christoph Hellwig wrote:
->>>>>> On Wed, Mar 11, 2020 at 12:25:28AM +0800, John Garry wrote:
->>>>>>> From: Hannes Reinecke <hare@suse.com>
->>>>>>>
->>>>>>> Allocate a separate 'reserved_cmd_q' for sending reserved commands.
->>>>>>
->>>>>> Why?  Reserved command specifically are not in any way tied to 
->>>>>> queues.
->>>>>> .
->>>>>>
->>>>>
->>>>> So the v1 series used a combination of the sdev queue and the per-host
->>>>> reserved_cmd_q. Back then you questioned using the sdev queue for 
->>>>> virtio
->>>>> scsi, and the unconfirmed conclusion was to use a common per-host 
->>>>> q. This is
->>>>> the best link I can find now:
->>>>>
->>>>> https://www.mail-archive.com/linux-scsi@vger.kernel.org/msg83177.html
->>>>
->>>> That was just a question on why virtio uses the per-device tags, which
->>>> didn't look like it made any sense.  What I'm worried about here is
->>>> mixing up the concept of reserved tags in the tagset, and queues to use
->>>> them.  Note that we already have the scsi_get_host_dev to allocate
->>>> a scsi_device and thus a request_queue for the host itself.  That seems
->>>> like the better interface to use a tag for a host wide command vs
->>>> introducing a parallel path.
->>>>
->>> Thinking about it some more, I don't think that scsi_get_host_dev() is
->>> the best way of handling it.
->>> Problem is that it'll create a new scsi_device with <hostno:this_id:0>,
->>> which will then show up via eg 'lsscsi'.
->>
->> are you sure? Doesn't this function just allocate the sdev, but do 
->> nothing with it, like probing it?
->>
->> I bludgeoned it in here for PoC:
->>
->> https://github.com/hisilicon/kernel-dev/commit/ef0ae8540811e32776f64a5b42bd76cbed17ba47 
->>
->>
->> And then still:
->>
->> john@ubuntu:~$ lsscsi
->> [0:0:0:0] disk SEAGATE  ST2000NM0045  N004  /dev/sda
->> [0:0:1:0] disk SEAGATE  ST2000NM0045  N004  /dev/sdb
->> [0:0:2:0] disk ATASAMSUNG HM320JI  0_01  /dev/sdc
->> [0:0:3:0] disk SEAGATE  ST1000NM0023  0006  /dev/sdd
->> [0:0:4:0] enclosu HUAWEIExpander 12Gx16  128-
->> john@ubuntu:~$
->>
->> Some proper plumbing would be needed, though.
->>
->>> This would be okay if 'this_id' would have been defined by the driver;
->>> sadly, most drivers which are affected here do set 'this_id' to -1.
->>> So we wouldn't have a nice target ID to allocate the device from, let
->>> alone the problem that we would have to emulate a complete scsi device
->>> with all required minimal command support etc.
->>> And I'm not quite sure how well that would play with the exising SCSI
->>> host template; the device we'll be allocating would have basically
->>> nothing in common with the 'normal' SCSI devices.
->>>
->>> What we could do, though, is to try it the other way round:
->>> Lift the request queue from scsi_get_host_dev() into the scsi host
->>> itself, so that scsi_get_host_dev() can use that queue, but we also
->>> would be able to use it without a SCSI device attached.
->>
->> wouldn't that limit 1x scsi device per host, not that I know if any 
->> more would ever be required? But it does still seem better to use the 
->> request queue in the scsi device.
->>
-> My concern is this:
+Em Tue, Apr 07, 2020 at 11:30:14AM -0300, Arnaldo Carvalho de Melo escreveu:
+> [perf@five ~]$ type perf
+> perf is hashed (/home/perf/bin/perf)
+> [perf@five ~]$ getcap /home/perf/bin/perf
+> /home/perf/bin/perf = cap_sys_ptrace,cap_syslog,38+ep
+> [perf@five ~]$ groups
+> perf perf_users
+> [perf@five ~]$ id
+> uid=1002(perf) gid=1002(perf) groups=1002(perf),1003(perf_users) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+> [perf@five ~]$ perf top --stdio
+> Error:
+> Failed to mmap with 1 (Operation not permitted)
+> [perf@five ~]$ perf record -a
+> ^C[ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 1.177 MB perf.data (1552 samples) ]
 > 
-> struct scsi_device *scsi_get_host_dev(struct Scsi_Host *shost)
-> {
->      [ .. ]
->      starget = scsi_alloc_target(&shost->shost_gendev, 0, shost->this_id);
->      [ .. ]
-> 
-> and we have typically:
-> 
-> drivers/scsi/hisi_sas/hisi_sas_v3_hw.c: .this_id                = -1,
-> 
-> It's _very_ uncommon to have a negative number as the SCSI target 
-> device; in fact, it _is_ an unsigned int already.
-> 
+> [perf@five ~]$ perf evlist
+> cycles:u
+> [perf@five ~]$
 
-FWIW, the only other driver (gdth) which I see uses this API has this_id 
-= -1 in the scsi host template.
+Humm, perf record falls back to cycles:u after initially trying cycles
+(i.e. kernel and userspace), lemme see trying 'perf top -e cycles:u',
+lemme test, humm not really:
 
-> But alright, I'll give it a go; let's see what I'll end up with.
+[perf@five ~]$ perf top --stdio -e cycles:u
+Error:
+Failed to mmap with 1 (Operation not permitted)
+[perf@five ~]$ perf record -e cycles:u -a sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 1.123 MB perf.data (132 samples) ]
+[perf@five ~]$
 
-note: If we want a fixed scsi_device per host, calling 
-scsi_mq_setup_tags() -> scsi_get_host_dev() will fail as shost state is 
-not running. Maybe we need to juggle some things there to provide a 
-generic solution.
+Back to debugging this.
 
-thanks
+- Arnaldo
