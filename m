@@ -2,114 +2,115 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CA6C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEA4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4755720719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1385720719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:47:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jrywjZgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbgDGKp0 (ORCPT
+        id S1728311AbgDGKrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:45:26 -0400
-Received: from www62.your-server.de ([213.133.104.62]:36154 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgDGKp0 (ORCPT
+        Tue, 7 Apr 2020 06:47:01 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39407 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728144AbgDGKrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:45:26 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jLljQ-0004ag-4r; Tue, 07 Apr 2020 12:45:24 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jLljP-000Qbm-RI; Tue, 07 Apr 2020 12:45:23 +0200
-Subject: Re: [PATCH 5.4 10/36] bpf: Fix tnum constraints for 32-bit
- comparisons
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, bpf@vger.kernel.org
-References: <20200407101454.281052964@linuxfoundation.org>
- <20200407101455.655552813@linuxfoundation.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <26e2a116-bc4c-59b2-7c54-6ebbfb140ea5@iogearbox.net>
-Date:   Tue, 7 Apr 2020 12:45:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 7 Apr 2020 06:47:01 -0400
+Received: by mail-pf1-f196.google.com with SMTP id k15so617317pfh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 03:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4YtfqkIGgXW1xusWEASGyU+2zFmL2OCHZ96I1LCBisM=;
+        b=jrywjZgHRoaeZuIgBosPgfb1HAm9Oz46S+PE45x5nVT0Exh7oWjltxfsQV1URfaL+M
+         e+2tSCbR3ygDI6yJb8Kg9CEAI67D/E4gbityQ7++hX2Qdo87mjWzX32bISfp5fudi3ed
+         BJj4TkA8EAxK0nD9SDpeAjJr+/81GEzVaqMqbHyAw9Xjh95gv5GvS2hKz/xPXhV+pxv1
+         w8aEvM4hd4aKFP/yXPK9HvYbXMl3ujdDK2Ea9D3yMqb3MfFfNNXHslIxNCnWmwjMuJgr
+         Kvzeb1XqwyUQChhL3NE8TbKJs60H51gbSmsSO9jU6LY3D7N/hoe88G0NKk8dj3e41a1j
+         w25A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4YtfqkIGgXW1xusWEASGyU+2zFmL2OCHZ96I1LCBisM=;
+        b=C5HYEAlBhOXPcyCC1+7qMt17l3ZlP6HkOWazHip3ZAPgdsNoGhdEcheZ5Gee6tF/CM
+         x4uSBzmsUCZbilZyocs/bghz9jEJf8sMnoIfjLBuwd4oh0ZBnu6tjkzAqm5ZAwny8/oH
+         q6WwUNR6rXTQ9mv5AsCasT2+lDNdNRKLyZYpox3v1DkaFALRAsYF0ngHJZLCQp2fUxfH
+         dLBYbFy3ZGcQ5ZSZgoctSIVbt96heqr2YxK3++gqjv8OTlhs8GDP74TtqGDVHoYqTMal
+         H/3+1Vk4Ji3vtCNn0bIQHGqUmsVSJ1bme9ZHg3asFVOia+XMkI0eAYXw5jukT33AF7Gv
+         kNEA==
+X-Gm-Message-State: AGi0PuapExcWu1fMC6+hu6mE8YTx4rxPzROOnO2UtGP7w6u/cCrpEOa+
+        joTCcvbZd8GwHAMyTBuPMDV5
+X-Google-Smtp-Source: APiQypKsO/kAkqhUjki9LOTVcMhhtoabGVkmmzOG391e8eHnzPHxXUkh2cilEXxWItXrajqpv3whvQ==
+X-Received: by 2002:a63:34c9:: with SMTP id b192mr101158pga.275.1586256419192;
+        Tue, 07 Apr 2020 03:46:59 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6e86:d03b:4d11:a99a:dd42:277d])
+        by smtp.gmail.com with ESMTPSA id fa16sm1252642pjb.35.2020.04.07.03.46.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 03:46:58 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 16:16:51 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Hemant Kumar <hemantk@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Siddartha Mohanadoss <smohanad@codeaurora.org>,
+        Sujeev Dias <sdias@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] bus: mhi: core: Fix a NULL vs IS_ERR check in
+ mhi_create_devices()
+Message-ID: <20200407104651.GE2442@Mani-XPS-13-9360>
+References: <20200407093133.GM68494@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <20200407101455.655552813@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25774/Mon Apr  6 14:53:25 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407093133.GM68494@mwanda>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Sasha, hey Greg,
+On Tue, Apr 07, 2020 at 12:31:33PM +0300, Dan Carpenter wrote:
+> The mhi_alloc_device() function never returns NULL, it returns error
+> pointers.
+> 
+> Fixes: da1c4f856924 ("bus: mhi: core: Add support for creating and destroying MHI devices")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-On 4/7/20 12:21 PM, Greg Kroah-Hartman wrote:
-> From: Jann Horn <jannh@google.com>
-> 
-> [ Upstream commit 604dca5e3af1db98bd123b7bfc02b017af99e3a0 ]
-> 
-> The BPF verifier tried to track values based on 32-bit comparisons by
-> (ab)using the tnum state via 581738a681b6 ("bpf: Provide better register
-> bounds after jmp32 instructions"). The idea is that after a check like
-> this:
-> 
->      if ((u32)r0 > 3)
->        exit
-> 
-> We can't meaningfully constrain the arithmetic-range-based tracking, but
-> we can update the tnum state to (value=0,mask=0xffff'ffff'0000'0003).
-> However, the implementation from 581738a681b6 didn't compute the tnum
-> constraint based on the fixed operand, but instead derives it from the
-> arithmetic-range-based tracking. This means that after the following
-> sequence of operations:
-> 
->      if (r0 >= 0x1'0000'0001)
->        exit
->      if ((u32)r0 > 7)
->        exit
-> 
-> The verifier assumed that the lower half of r0 is in the range (0, 0)
-> and apply the tnum constraint (value=0,mask=0xffff'ffff'0000'0000) thus
-> causing the overall tnum to be (value=0,mask=0x1'0000'0000), which was
-> incorrect. Provide a fixed implementation.
-> 
-> Fixes: 581738a681b6 ("bpf: Provide better register bounds after jmp32 instructions")
-> Signed-off-by: Jann Horn <jannh@google.com>
-> Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-> Link: https://lore.kernel.org/bpf/20200330160324.15259-3-daniel@iogearbox.net
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-We've already addressed this issue (CVE-2020-8835) on 5.4/5.5/5.6 kernels through
-the following backports:
+Thanks Dan!
 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.4.y&id=8d62a8c7489a68b5738390b008134a644aa9b383
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.5.y&id=0ebc01466d98d016eb6a3780ec8edb0c86fa48bc
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.6.y&id=6797143df51c8ae259aa4bfe4e99c832b20bde8a
+Regards,
+Mani
 
-Given the severity of the issue, we concluded that revert-only is the best and
-most straight forward way to address it for stable.
-
-Was this selected via Sasha's ML mechanism? Should there be a commit tag to opt-out
-for some commits being selected? E.g. this one 581738a681b6 ("bpf: Provide better
-register bounds after jmp32 instructions") already fell through our radar and wrongly
-made its way into 5.4 where it should have never landed. :/
-
-Thanks,
-Daniel
+> ---
+>  drivers/bus/mhi/core/main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> index eb4256b81406..55928feea0c9 100644
+> --- a/drivers/bus/mhi/core/main.c
+> +++ b/drivers/bus/mhi/core/main.c
+> @@ -294,7 +294,7 @@ void mhi_create_devices(struct mhi_controller *mhi_cntrl)
+>  		    !(mhi_chan->ee_mask & BIT(mhi_cntrl->ee)))
+>  			continue;
+>  		mhi_dev = mhi_alloc_device(mhi_cntrl);
+> -		if (!mhi_dev)
+> +		if (IS_ERR(mhi_dev))
+>  			return;
+>  
+>  		mhi_dev->dev_type = MHI_DEVICE_XFER;
+> -- 
+> 2.25.1
+> 
