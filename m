@@ -2,149 +2,163 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C1EC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD464C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80C52064A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB752064A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgDGEtd (ORCPT
+        id S1726692AbgDGEw0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 00:49:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39146 "EHLO mx2.suse.de"
+        Tue, 7 Apr 2020 00:52:26 -0400
+Received: from mga12.intel.com ([192.55.52.136]:50047 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgDGEtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 00:49:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C44ACAC4A;
-        Tue,  7 Apr 2020 04:49:30 +0000 (UTC)
-Subject: Re: [PATCH v6 2/2] tty: samsung_tty: 32-bit access for TX/RX hold
- registers
-To:     Hyunki Koo <hyunki00.koo@samsung.com>, gregkh@linuxfoundation.org,
-        krzk@kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
- <CGME20200406230902epcas2p19a8df6805dac59968d664efb9bc9419b@epcas2p1.samsung.com>
- <20200406230855.13772-1-hyunki00.koo@samsung.com>
-From:   Jiri Slaby <jslaby@suse.com>
-Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <62a918df-b3ba-21f4-b3ad-9f638ad104ad@suse.com>
-Date:   Tue, 7 Apr 2020 06:49:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200406230855.13772-1-hyunki00.koo@samsung.com>
-Content-Type: text/plain; charset=utf-8
+        id S1725802AbgDGEw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 00:52:26 -0400
+IronPort-SDR: 722cifAgA0tgTBfTdLBExAjKFHHYGJVaGFFV/q9Cfc6YF/EqrSku2WT2F8nHlt2lSthW1AypxS
+ yH3QMxLGHoYg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 21:52:25 -0700
+IronPort-SDR: FTxUwEUs3eOU6i7RBbl/xIx6wFG834NqWr7HAU1exjUF7hwWbXMMlKhcgnr2ClgxUW4nv3ou2w
+ Ptp0dN70hD2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
+   d="scan'208";a="451087974"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Apr 2020 21:52:25 -0700
+Received: from fmsmsx116.amr.corp.intel.com (10.18.116.20) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 6 Apr 2020 21:52:25 -0700
+Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
+ fmsmsx116.amr.corp.intel.com (10.18.116.20) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 6 Apr 2020 21:52:25 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX154.ccr.corp.intel.com ([169.254.7.214]) with mapi id 14.03.0439.000;
+ Tue, 7 Apr 2020 12:52:22 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>
+CC:     "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>, "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Topic: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Index: AQHWAEUbvuzF5+3jpEaYhihTFzMRG6hlp7CAgAFE0ACAAE19gIAF9Qaw
+Date:   Tue, 7 Apr 2020 04:52:21 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D80E1DA@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+ <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
+ <20200402115017.0a0f55e2@w520.home>
+ <A2975661238FB949B60364EF0F2C25743A220B62@SHSMSX104.ccr.corp.intel.com>
+ <20200403115011.4aba8ff3@w520.home>
+In-Reply-To: <20200403115011.4aba8ff3@w520.home>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07. 04. 20, 1:08, Hyunki Koo wrote:
-> Support 32-bit access for the TX/RX hold registers UTXH and URXH.
+> From: Alex Williamson
+> Sent: Saturday, April 4, 2020 1:50 AM
+[...]
+> > > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> > > > index 9e843a1..298ac80 100644
+> > > > --- a/include/uapi/linux/vfio.h
+> > > > +++ b/include/uapi/linux/vfio.h
+> > > > @@ -794,6 +794,47 @@ struct vfio_iommu_type1_dma_unmap {
+> > > >  #define VFIO_IOMMU_ENABLE	_IO(VFIO_TYPE, VFIO_BASE + 15)
+> > > >  #define VFIO_IOMMU_DISABLE	_IO(VFIO_TYPE, VFIO_BASE + 16)
+> > > >
+> > > > +/*
+> > > > + * PASID (Process Address Space ID) is a PCIe concept which
+> > > > + * has been extended to support DMA isolation in fine-grain.
+> > > > + * With device assigned to user space (e.g. VMs), PASID alloc
+> > > > + * and free need to be system wide. This structure defines
+> > > > + * the info for pasid alloc/free between user space and kernel
+> > > > + * space.
+> > > > + *
+> > > > + * @flag=VFIO_IOMMU_PASID_ALLOC, refer to the @alloc_pasid
+> > > > + * @flag=VFIO_IOMMU_PASID_FREE, refer to @free_pasid
+> > > > + */
+> > > > +struct vfio_iommu_type1_pasid_request {
+> > > > +	__u32	argsz;
+> > > > +#define VFIO_IOMMU_PASID_ALLOC	(1 << 0)
+> > > > +#define VFIO_IOMMU_PASID_FREE	(1 << 1)
+> > > > +	__u32	flags;
+> > > > +	union {
+> > > > +		struct {
+> > > > +			__u32 min;
+> > > > +			__u32 max;
+> > > > +			__u32 result;
+> > > > +		} alloc_pasid;
+> > > > +		__u32 free_pasid;
+> > > > +	};
+> > >
+> > > We seem to be using __u8 data[] lately where the struct at data is
+> > > defined by the flags.  should we do that here?
+> >
+> > yeah, I can do that. BTW. Do you want to let the structure in the
+> > lately patch share the same structure with this one? As I can foresee,
+> > the two structures would look like similar as both of them include
+> > argsz, flags and data[] fields. The difference is the definition of
+> > flags. what about your opinion?
+> >
+> > struct vfio_iommu_type1_pasid_request {
+> > 	__u32	argsz;
+> > #define VFIO_IOMMU_PASID_ALLOC	(1 << 0)
+> > #define VFIO_IOMMU_PASID_FREE	(1 << 1)
+> > 	__u32	flags;
+> > 	__u8	data[];
+> > };
+> >
+> > struct vfio_iommu_type1_bind {
+> >         __u32           argsz;
+> >         __u32           flags;
+> > #define VFIO_IOMMU_BIND_GUEST_PGTBL     (1 << 0)
+> > #define VFIO_IOMMU_UNBIND_GUEST_PGTBL   (1 << 1)
+> >         __u8            data[];
+> > };
 > 
-> This is required for some newer SoCs.
 > 
-> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-...
-> ---
->  drivers/tty/serial/samsung_tty.c | 76 +++++++++++++++++++++++++++++++++-------
->  1 file changed, 64 insertions(+), 12 deletions(-)
+> Yes, I was even wondering the same for the cache invalidate ioctl, or
+> whether this is going too far for a general purpose "everything related
+> to PASIDs" ioctl.  We need to factor usability into the equation too.
+> I'd be interested in opinions from others here too.  Clearly I don't
+> like single use, throw-away ioctls, but I can find myself on either
+> side of the argument that allocation, binding, and invalidating are all
+> within the domain of PASIDs and could fall within a single ioctl or
+> they each represent different facets of managing PASIDs and should have
+> separate ioctls.  Thanks,
 > 
-> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-> index 73f951d65b93..bdf1d4d12cb1 100644
-> --- a/drivers/tty/serial/samsung_tty.c
-> +++ b/drivers/tty/serial/samsung_tty.c
-> @@ -154,12 +154,47 @@ struct s3c24xx_uart_port {
-...
-> -#define wr_regb(port, reg, val) writeb_relaxed(val, portaddr(port, reg))
-> +static void wr_reg(struct uart_port *port, u32 reg, u32 val)
-> +{
-> +	switch (port->iotype) {
-> +	case UPIO_MEM:
-> +		writeb_relaxed(val, portaddr(port, reg));
-> +		break;
-> +	case UPIO_MEM32:
-> +		writel_relaxed(val, portaddr(port, reg));
-> +		break;
-> +	}
-> +}
-> +
->  #define wr_regl(port, reg, val) writel_relaxed(val, portaddr(port, reg))
->  
-> +static void wr_reg_barrier(struct uart_port *port, u32 reg, u32 val)
 
-You need to explain, why you need this _barrier variant now. This change
-should be done in a separate patch too.
+Looking at uapi/linux/iommu.h:
 
-> +{
-> +	switch (port->iotype) {
-> +	case UPIO_MEM:
-> +		writeb(val, portaddr(port, reg));
-> +		break;
-> +	case UPIO_MEM32:
-> +		writel(val, portaddr(port, reg));
-> +		break;
-> +	}
-> +}
-> +
->  /* Byte-order aware bit setting/clearing functions. */
->  
->  static inline void s3c24xx_set_bit(struct uart_port *port, int idx,
+* Invalidations by %IOMMU_INV_GRANU_DOMAIN don't take any argument other than
+ * @version and @cache.
 
-thanks,
--- 
-js
-suse labs
+Although intel-iommu handles only PASID-related invalidation now, I
+suppose other vendors (or future usages?) may allow non-pasid
+based invalidation too based on above comment. 
+
+Thanks
+Kevin
