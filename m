@@ -2,110 +2,262 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0D3C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61B4C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E58A2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B292072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:28:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="utepuFsA"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZdaPh6nx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbgDGA2X (ORCPT
+        id S1726574AbgDGA2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:28:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46563 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgDGA2X (ORCPT
+        Mon, 6 Apr 2020 20:28:32 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:19093 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgDGA2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:28:23 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q3so8422852pff.13
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 17:28:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=lUrQEjas9LyAD7t4uBRXKepPh+kc7mCeSR7ByaIVLxM=;
-        b=utepuFsAgCGVrQNm105LCP3VGpoDyYIztLJkGNzysn8V6DNXIn28TDRMjfjj1gR2BL
-         MBDFjQT5pphQJhTLWSBKVliMfaeRt0+H43bb1LMpWUfUgTq7zpC+1IFdSF5qOrvLmx6Y
-         S95d1hEn6eAf2hs9UvHWKHEZUzJ1aLItVFkF0yrGPRPfWbt3uDxNlTCoTpBuOzw473oj
-         DkgcLUl4QTAHkxbeM1ihwvCbXYjVk0XDTOxvyMwH8Mg5iMMdSgyQ31z5XDtdhEH+Ak2f
-         toMYHaJodfIQx6VJNAiRxV3kTrvpMwBQg6Ru6Aak3Uud/upHN8bmNnpAGk59aLDkjpvX
-         ZekQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=lUrQEjas9LyAD7t4uBRXKepPh+kc7mCeSR7ByaIVLxM=;
-        b=l6l796v8i2l3lelpqgCTOcA8FBZcfTJgHofsGiPVb7Mv+OTDyOiE9lrhCLcsvDzYc0
-         KkhsghlIb9LZMN8BYar9QFpSVGVRDTP4gKrsCI1k+iRU+mKxlDilJu2rFCQPpBb4tbaZ
-         IChXkiKnljRcPBP+05EcP1i5aYqfwC8zRy5JumoRL9e2bL2ZMrNgItjhMgH8+SQSs+g2
-         xi3G0HcAIfY5qIyzpAdz5+xfZ5EhP8j9rw3SFJ6ZF6mDRHjWfxMh5Gk/aMPrfYYTCWpa
-         VlTYv9seThIpwbbCFEg6zVJGGMjyavy16fAfYwOWLLMrrROrNWKjm/2I9bjOO8Ww22wT
-         v3cw==
-X-Gm-Message-State: AGi0PubAVUpzFVaVsIq7CKYVo0yElsV9Flnih9BHDsKpA3EGijXUf5O0
-        5okEYsTPryGHbcmOLpPKBoE=
-X-Google-Smtp-Source: APiQypL8KF2u89jekKB31NajaeIR1jJV1MTZAwcHEpViXoLNTQO3q4pnc4wwC3IusIfGrjn70laCGQ==
-X-Received: by 2002:a63:db10:: with SMTP id e16mr1548594pgg.361.1586219302200;
-        Mon, 06 Apr 2020 17:28:22 -0700 (PDT)
-Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
-        by smtp.gmail.com with ESMTPSA id 8sm1762515pfz.12.2020.04.06.17.28.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 17:28:21 -0700 (PDT)
-Date:   Tue, 07 Apr 2020 10:26:58 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [RFC PATCH v2 12/13] powerpc/kernel: Do not inconditionally save
- non volatile registers on system call
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
-        <4ef6d617cfd34e09e9bf5a456b2e0b6d2a8a3c96.1586108649.git.christophe.leroy@c-s.fr>
-        <1586135554.pnqaj0giue.astroid@bobo.none>
-        <48d3e2e5-318f-011e-a59b-ec89bd7b76d2@c-s.fr>
-In-Reply-To: <48d3e2e5-318f-011e-a59b-ec89bd7b76d2@c-s.fr>
+        Mon, 6 Apr 2020 20:28:32 -0400
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200407002829epoutp04e4c6d8c9732f6c0486d9b23c4543dbb6~DYg7krW_G0552405524epoutp04_
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Apr 2020 00:28:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200407002829epoutp04e4c6d8c9732f6c0486d9b23c4543dbb6~DYg7krW_G0552405524epoutp04_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1586219309;
+        bh=kYk8Hja5i9axWYkSYRQNU8uWD4EAZdAI2RMgv2nSU+I=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=ZdaPh6nxjKQ4tbeI2RddahsdKtWisZw9Z5zwmAuz6igAPL/JPdZBRT3JO/Y2v+lDN
+         kURHZIx/nMqA/pyMfPYkEGLL5er1I10NULXV+PsWzgd846W5DWvSNt7wxoR1ReNahk
+         d3rNhtkV0G9oSKrzyAHVWKHyzRwHK08rjt3iVB9A=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200407002829epcas5p1eeda5f53dde4d0759e2c87506cb60524~DYg7JAQJD2710727107epcas5p1v;
+        Tue,  7 Apr 2020 00:28:29 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        82.3F.04782.D29CB8E5; Tue,  7 Apr 2020 09:28:29 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200407002827epcas5p32458e0a4063aa41afb9ef95030724c53~DYg5caoo51090110901epcas5p3j;
+        Tue,  7 Apr 2020 00:28:27 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200407002827epsmtrp254a304db95ebcc55170af7ba6c73c89f~DYg5asa_51303013030epsmtrp2m;
+        Tue,  7 Apr 2020 00:28:27 +0000 (GMT)
+X-AuditID: b6c32a49-89bff700000012ae-0a-5e8bc92db9f4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2C.A2.04158.B29CB8E5; Tue,  7 Apr 2020 09:28:27 +0900 (KST)
+Received: from alimakhtar02 (unknown [107.108.234.165]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200407002824epsmtip1ede61960b9b3fd8c9cb1e5b97448dc25~DYg2ZBaig2114921149epsmtip1D;
+        Tue,  7 Apr 2020 00:28:24 +0000 (GMT)
+From:   "Alim Akhtar" <alim.akhtar@samsung.com>
+To:     "'Rob Herring'" <robh@kernel.org>
+Cc:     <devicetree@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <krzk@kernel.org>, <avri.altman@wdc.com>,
+        <martin.petersen@oracle.com>, <kwmad.kim@samsung.com>,
+        <stanley.chu@mediatek.com>, <cang@codeaurora.org>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200405015416.GA16616@bogus>
+Subject: RE: [PATCH v4 1/5] dt-bindings: phy: Document Samsung UFS PHY
+ bindings
+Date:   Tue, 7 Apr 2020 05:58:21 +0530
+Message-ID: <006401d60c73$7486ec20$5d94c460$@samsung.com>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1586218971.lolwg4f0lh.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKI+vJzlUBp7WIi19k8pRZBKIHK2gGQnU/1Ag9B/DgCQMO8c6bX6iwg
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUYRTlm7f4NCeeT8HrCFZTRipqVtKLNPsR8iILi4Io0YZ8qLg2z9GU
+        IqvB1HHEhCwnUaPUMnMZNZdyYcplwpTUMVyKTIco0kghN9rGN5H/zv3OOd+5By6FMUOEjIpJ
+        SOaVCYo4OWmHP33h4entbdSE73w0xLCfl00kO19bQbClLwcIdnCwzoYda+zGWf30KMEOtxWT
+        7J3BDgmredtCspW9vyTs7+ctNmx50xg6aM8N52klnL4qm+QaHlzh1MZOnPtuHse5vMYqxC3o
+        3bgbXRpJKHXGLiCSj4tJ4ZW+B87ZRde/1pBJDfKLtwYKiAzUJ8tBthTQe6DuvYnMQXYUQz9D
+        MDOxZB3mESy1vrEOPxA0P6zE/1k0tfesRDuCvvmrhDh8RdCxsrKmImlvaLmfSVqwE+0O13Qf
+        cIsIo3slMJ01LrEQtrQXGPU/MQt2pI/DYuHCXwNF4fQ2GPuYbIFSeh/os3ZZFFLaAYxFM2vf
+        Y/QmaJ4txsSFNsOyuYIQo4Kh01xv1ThD93IuZokFusYGSu9mINFwCKrLRq1mR/jS22gjYhks
+        zLWvrQB0LOS27RafL0F5SY+1fBB0jRTjFglGe0Btm68YtRG0qzMS0SmFrExGVLvD9TmT1ekK
+        NzUaQsQctGv7sHy0RbeumG5dMd26Arr/YWUIr0IufJIQH8UL/kl+CXyqj6CIF1QJUT7nE+P1
+        aO3SPA+3IN1AiAHRFJLbS0/basIZQpEipMUbEFCY3Ekq02aHM9JIRVo6r0yMUKrieMGAXClc
+        7iwtIExhDB2lSOZjeT6JV/5jJZStLAOlnbx8KrjNrH2HJmPUGzLcBoy9txdHvXakKx8/MeRP
+        7E0cOevwbapkvja9zP9Tmqu6KGyVSO83aAOQ6kiXS35stz3aGqhfYl+tMCamuDHk6KpjaoMZ
+        6bUdROt2xRQTXHjMPrCeU9Ush9b3qIXZ/gvZs02T6rwTQREpePXgfjkuRCv8PDGloPgDpvJd
+        9mUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCIsWRmVeSWpSXmKPExsWy7bCSnK72ye44g6ZuWYuXP6+yWXxav4zV
+        Yv6Rc6wW589vYLe4ueUoi8Wmx9dYLS7vmsNmMeP8PiaL7us72CyWH//HZPF/zw52i6VbbzI6
+        8Hhc7utl8ti0qpPNY/OSeo+Wk/tZPD4+vcXi0bdlFaPH501yHu0HupkCOKK4bFJSczLLUov0
+        7RK4Mjae7WYr2KxUMfXcJNYGxhNSXYycHBICJhLd6xeygdhCArsZJd4uVIeIS0tc3ziBHcIW
+        llj57zmQzQVU84pRYuXyaSwgCTYBXYkdi9vAmkUEVCWaZj1gASliFrjMJHHkzQs2iI57jBK3
+        755iBaniFNCWOLnpLzOILSzgL9Hz8RljFyMHB4uAisTNRyUgJq+ApcSmDiOQCl4BQYmTM5+w
+        gISZBfQk2jYygoSZBeQltr+dwwxxm4LEz6fLWCFOcJPY/3QjC0SNuMTRnz3MExiFZyGZNAth
+        0iwkk2Yh6VjAyLKKUTK1oDg3PbfYsMAoL7Vcrzgxt7g0L10vOT93EyM4LrW0djCeOBF/iFGA
+        g1GJh5eBvTtOiDWxrLgy9xCjBAezkgivVG9nnBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe+fxj
+        kUIC6YklqdmpqQWpRTBZJg5OqQbGZrPzdQ+luA8G/jlsrvKQoYJD8NHOQwmKL6wLK5Pizy7u
+        Mjv4gv9wxZylNa32d78x3td/eGz7d4acoFU3otm7D4S28PMmNIYayxmybrVgdMxi+6/m5vDb
+        NV+yvaMiT2ZJwNf4VYnuXqctYsyv/DTzOsCWxxto8mb7mtieVf3LtKOszjTPT1RiKc5INNRi
+        LipOBACcpHwYxwIAAA==
+X-CMS-MailID: 20200407002827epcas5p32458e0a4063aa41afb9ef95030724c53
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200327171414epcas5p1460e932c0bc98f31ebdd115218b4fd49
+References: <20200327170638.17670-1-alim.akhtar@samsung.com>
+        <CGME20200327171414epcas5p1460e932c0bc98f31ebdd115218b4fd49@epcas5p1.samsung.com>
+        <20200327170638.17670-2-alim.akhtar@samsung.com>
+        <20200405015416.GA16616@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy's on April 7, 2020 4:18 am:
->=20
->=20
-> Le 06/04/2020 =C3=A0 03:25, Nicholas Piggin a =C3=A9crit=C2=A0:
->> Christophe Leroy's on April 6, 2020 3:44 am:
->>> Before : 347 cycles on null_syscall
->>> After  : 327 cycles on null_syscall
->>=20
->> The problem I had doing this is that signal delivery wnats full regs,
->> and you don't know if you have a signal pending ahead of time if you
->> have interrupts enabled.
->>=20
->> I began to try bailing out back to asm to save nvgprs and call again.
->> I think that can be made to work, but it is more complication in asm,
->> and I soon found that 64s CPUs don't care about NVGPRs too much so it's
->> nice to get rid of the !fullregs state.
->=20
-> I tried a new way in v3, please have a look. I split=20
-> syscall_exit_prepare() in 3 parts and the result is unexpected: it is=20
-> better than before the series (307 cycles now versus 311 cycles with=20
-> full ASM syscall entry/exit).
+Hi Rob,
 
-Great! Well I don't really see a problem with how you changed the C code=20
-around. I'll have to look at the assembly but I don't think it would=20
-have caused a problem for 64s.
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: 05 April 2020 07:24
+> To: Alim Akhtar <alim.akhtar@samsung.com>
+> Cc: devicetree@vger.kernel.org; linux-scsi@vger.kernel.org;
+krzk@kernel.org;
+> avri.altman@wdc.com; martin.petersen@oracle.com;
+> kwmad.kim@samsung.com; stanley.chu@mediatek.com;
+> cang@codeaurora.org; linux-samsung-soc@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v4 1/5] dt-bindings: phy: Document Samsung UFS PHY
+> bindings
+> 
+> On Fri, Mar 27, 2020 at 10:36:34PM +0530, Alim Akhtar wrote:
+> > This patch documents Samsung UFS PHY device tree bindings
+> >
+> > Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> > ---
+> >  .../bindings/phy/samsung,ufs-phy.yaml         | 67 +++++++++++++++++++
+> >  1 file changed, 67 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+> > b/Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+> > new file mode 100644
+> > index 000000000000..41ba481ecc76
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/samsung,ufs-phy.yaml
+> > @@ -0,0 +1,67 @@
+> > +# SPDX-License-Identifier: (GPL-2.0)
+> 
+> Dual license new bindings:
+> 
+> (GPL-2.0-only OR BSD-2-Clause)
+> 
+Sure will update.
 
-Thanks,
-Nick
-=
+> > +%YAML 1.2
+> > +---
+> > +$id:
+> > +https://protect2.fireeye.com/url?k=91cb53a2-cc1b5b6e-91cad8ed-000babf
+> > +f3793-
+> 448c7d85bdf69f5a&q=1&u=http%3A%2F%2Fdevicetree.org%2Fschemas%2F
+> > +phy%2Fsamsung%2Cufs-phy.yaml%23
+> > +$schema:
+> > +https://protect2.fireeye.com/url?k=a8ce57c7-f51e5f0b-a8cfdc88-000babf
+> > +f3793-fbe649ab0853d701&q=1&u=http%3A%2F%2Fdevicetree.org%2Fmeta-
+> schem
+> > +as%2Fcore.yaml%23
+> > +
+> > +title: Samsung SoC series UFS PHY Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Alim Akhtar <alim.akhtar@samsung.com>
+> > +
+> > +properties:
+> > +  "#phy-cells":
+> > +    const: 0
+> > +
+> > +  compatible:
+> > +    enum:
+> > +      - samsung,exynos7-ufs-phy
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: PHY base register address
+> > +
+> > +  reg-names:
+> > +    items:
+> > +      - const: phy-pma
+> > +
+> > +  clocks:
+> > +    items:
+> > +      - description: PLL reference clock
+> > +      - description: Referencec clock parrent
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: ref_clk_parent
+> > +      - const: ref_clk
+> 
+> Doesn't match what 'clocks' says.
+> 
+Will correct.
+
+> Also, why do you need the parent in DT? Just use clk_get_parent(). DT
+should
+> reflect actual h/w clock connections (not what the driver happens to
+need).
+> Also, there's the assigned-clocks binding.
+> 
+Some of the platform deviates from the normal clock trees and need to force
+a different parent. To get such parent added this.
+I will explore a bit more on this, and check about assigned-clocks binding.
+This is also an optional clock, so will change accordingly
+
+> > +
+> > +  samsung,pmu-syscon:
+> > +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> > +    description: phandle for PMU system controller interface, used to
+> > +                 control pmu registers for power isolation
+> 
+> We have a binding for power domains. Use that for power isolation.
+> 
+Let me have a look on that, if power domains bindings can be use here, this
+is same way other Exynos binding is defined w.r.t. pmu-syscon.
+
+> > +
+> > +required:
+> > +  - "#phy-cells"
+> > +  - compatible
+> > +  - reg
+> > +  - reg-names
+> > +  - clocks
+> > +  - clock-names
+> > +  - samsung,pmu-syscon
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/exynos7-clk.h>
+> > +
+> > +    ufs_phy: ufs-phy@15571800 {
+> > +        compatible = "samsung,exynos7-ufs-phy";
+> > +        reg = <0x15571800 0x240>;
+> > +        reg-names = "phy-pma";
+> > +        samsung,pmu-syscon = <&pmu_system_controller>;
+> > +        #phy-cells = <0>;
+> > +        clocks = <&clock_fsys1 MOUT_FSYS1_PHYCLK_SEL1>,
+> > +                 <&clock_top1 CLK_SCLK_PHY_FSYS1_26M>;
+> > +        clock-names = "ref_clk_parent",
+> > +                      "ref_clk";
+> > +    };
+> > +...
+> >
+> > base-commit: fb33c6510d5595144d585aa194d377cf74d31911
+> > --
+> > 2.17.1
+> >
+
