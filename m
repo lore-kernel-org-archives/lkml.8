@@ -2,138 +2,108 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E190C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD1AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E932063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA3D2063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q/OfXybI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SnWMQE+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgDGSAc (ORCPT
+        id S1726708AbgDGSAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:00:32 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35923 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgDGSAb (ORCPT
+        Tue, 7 Apr 2020 14:00:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41732 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726393AbgDGSAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:00:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id n10so1155446pff.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 11:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lL9PIYFwO5H6pFnjqwU20khB08jFZDfwSO7ZNczzL60=;
-        b=Q/OfXybIX8XlBl388UsB11QYwnOCa77KIKk/PH2qaCLJ0tvBd2Dw/XQfo5DA/0q5eU
-         5Pz9U+Dabp+E29nomZdI8TCjGZbnxVwkEmJffIc3mGlnqjfgGbNixLmi56NjfVPKmM4k
-         ceiMJ3AjBIB7lOHBJ8MH3rvgSniG1nSLjEyEVsCkU3INp01/OCa1XolRbiJd3STSkisO
-         /ohkM1yAal9IN0b5N2vDDxbpYK8+HeqsvxDsH20mN5tpz/feTewAtsa7gWBv+uNkFhKv
-         a5cDtTsMDv6ZDSqZSAPg464bqGFlqT3LBqOaXCXHnD3Uh1M6Db34nMS+FxWZFVTGW4OQ
-         kI+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lL9PIYFwO5H6pFnjqwU20khB08jFZDfwSO7ZNczzL60=;
-        b=QIhMvGpcynKH7lIn5NjE/iX711EB0YBOf5NNPRt5rDruaa/memB95Lz/3Bs9ROUvwl
-         euVYgldA+2+Xo9J0Dovsj5w8VDzHUcpva/V7SUUeTvPo5Z+KlbeDe//3u6IHVZeOzRgf
-         yYu2qpS+waVFZLgZ587jSyy8loAGJ0QRcjzlxFZAOSnI+QNdG105YgR62O64AjsBRWx+
-         O0lxvNCWynLzm/Irhx/Ay6CfgI9KlD1WT56Vm/41yhnE7TF453g0/V8Qswm+vEtUquG9
-         5onmha4H3/Qoa15M+W6HkRp+uaGBP+L9rYrdP6Wp95ilc/G1f2P2GHC1Gxe90x9vIssX
-         m98A==
-X-Gm-Message-State: AGi0PuZXQSo33kpyiKoy9K/9xYYNO8G1Fh/e2Ss7gP3gRQRviIE2nNlG
-        gbzauae/TOYR76czExD2+SaG5A==
-X-Google-Smtp-Source: APiQypLwgDFHd8YN7yGnVEhfww22EfQF+geZ4hFAxh1KXBNTLxa1/8yF1fGo9CTCGQXJ0+7rbWdRbA==
-X-Received: by 2002:a62:5f06:: with SMTP id t6mr3817977pfb.192.1586282427135;
-        Tue, 07 Apr 2020 11:00:27 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id 66sm14769704pfb.150.2020.04.07.11.00.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 11:00:26 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 11:00:23 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] MIPS: Truncate load-y into 32bit for 32bit kernel
-Message-ID: <20200407180023.vpwkhtrg3v6inqtt@google.com>
-References: <20200405082451.694910-1-jiaxun.yang@flygoat.com>
- <20200407080611.859256-1-jiaxun.yang@flygoat.com>
- <CAKwvOd=Upj_OcrhBnqf1=woCRm-g2wqjv882R0HQeMJu12Uq9w@mail.gmail.com>
+        Tue, 7 Apr 2020 14:00:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586282451;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gyO6jc1Z3TakWHspl9Y+YDzRHKNQ9lnWi7h2xhn6ToE=;
+        b=SnWMQE+upc4NQEL0St996Gzip2x8Rz7n9NfywX/+Opg8ZuDRuCTr9gWr0sH+xFlY54EdCy
+        +WrwRRSD9uzhgrCK3VJ8B4o7wbAixPWJfatPFpruY/0bZLew2uTmltnLODeyGsyVqZ4XW9
+        LJxKGk5TMjClhHSEgmTXsC0MpsTSkYE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-CquBZdi1OrGDRpq1mD43Pw-1; Tue, 07 Apr 2020 14:00:33 -0400
+X-MC-Unique: CquBZdi1OrGDRpq1mD43Pw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DEFC18018AC;
+        Tue,  7 Apr 2020 18:00:31 +0000 (UTC)
+Received: from treble (ovpn-116-24.rdu2.redhat.com [10.10.116.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 18AA597AFB;
+        Tue,  7 Apr 2020 18:00:29 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 13:00:28 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: mmotm 2020-04-05-16-45 uploaded (objtool warning)
+Message-ID: <20200407180028.rhgllzwr6uqjvkbv@treble>
+References: <20200405234639.AU1f3x3Xg%akpm@linux-foundation.org>
+ <b9c97c81-2749-7352-c48b-af7d0b1fa9d6@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAKwvOd=Upj_OcrhBnqf1=woCRm-g2wqjv882R0HQeMJu12Uq9w@mail.gmail.com>
+In-Reply-To: <b9c97c81-2749-7352-c48b-af7d0b1fa9d6@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-07, Nick Desaulniers wrote:
->On Tue, Apr 7, 2020 at 1:07 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->>
->> LLD failed to link vmlinux with 64bit load address for 32bit ELF
->> while bfd will strip 64bit address into 32bit silently.
->> To fix LLD build, we should truncate load address provided by platform
->> into 32bit for 32bit kernel.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> Reviewed-by: Fangrui Song <maskray@google.com>
->> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
->>
->> --
->> V2: Take MaskRay's shell magic.
->
->V2 is way too clever, V1 was much more readable.
+On Sun, Apr 05, 2020 at 10:53:29PM -0700, Randy Dunlap wrote:
+> On 4/5/20 4:46 PM, akpm@linux-foundation.org wrote:
+> > The mm-of-the-moment snapshot 2020-04-05-16-45 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> > 
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> > 
+> > The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> > followed by the base kernel version against which this patch series is to
+> > be applied.
+> > 
+> 
+> on x86_64:
+> 
+> arch/x86/entry/vdso/vma.o: warning: objtool: init_vdso_image()+0xe: unreachable instruction
+> 
+> Full randconfig file is attached.
+> 
+> .o file is attached.
 
-This is difficult:/
-https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_04
-The POSIX shell is only required to do signed long integer arithmetic.
-"signed long" can be 32-bit.
+This one is fixed by the UBSAN_TRAP fix - still waiting for that one to
+get merged:
 
-awk may not provide precision more than a double ("... decimal-floating-constant token as specified
-by the ISO C standard")
+  https://lkml.kernel.org/r/6653ad73c6b59c049211bd7c11ed3809c20ee9f5.1585761021.git.jpoimboe@redhat.com
 
-   % gawk 'BEGIN {printf("%x", (0xffffffff80101234 % 0x100000000))}' /dev/null
-   80101000
+-- 
+Josh
 
->Can this tag be added to the commit to help us track when and where it lands?
->Link: https://github.com/ClangBuiltLinux/linux/issues/786
-
-And this tag for GNU ld enhancement:
-
-Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
-
->> ---
->>  arch/mips/Makefile | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
->> index e1c44aed8156..f8fd3c39fb55 100644
->> --- a/arch/mips/Makefile
->> +++ b/arch/mips/Makefile
->> @@ -286,6 +286,9 @@ ifdef CONFIG_64BIT
->>        $(error CONFIG_CPU_DADDI_WORKAROUNDS unsupported without -msym32)
->>      endif
->>    endif
->> +else
->> +       # Truncate address into 32-bit
->> +       load-y := 0x$(shell echo "$(load-y)" | rev | head -c 8 | rev)
->>  endif
->>
->>  KBUILD_AFLAGS  += $(cflags-y)
->> --
->
->-- 
->Thanks,
->~Nick Desaulniers
