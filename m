@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D10C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12907C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FACA2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6192074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255183;
-	bh=HqEmlzxufOwa6YagG4mTNMv27CCEvyFSPzld7zaEp8o=;
+	s=default; t=1586255185;
+	bh=khVOaY2ujlcX/REye0ztyWAGD+5eMAaXklsRDjNbiUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cmD6j80B5k8+Z88XTp5cwGHt1Y38spUUR4XWaEhKdFawyCbgyHxv80yb5lACuPRSm
-	 w6t/PsCfvTmiANDKjJ9wwmjHIKwlLSH6qs7201tipq5hv0emFLRRYtAIQNbNC1VTfr
-	 w4ZMrE+Wrsy0buHDcm7h3TY3mBnhWAvuHkrnpo7M=
+	b=ySjpbwVrqAWhLnGDWlMDx1vGfDy3A0hXlJOk1xZHBnN5zh/tBNLYouxfb5/HU4N0G
+	 p4V0qe0AwSjrOfuRpI62sclCH2E10jBba385lw2GMjr+3bB7Gf6sspE6pIOlpFNB88
+	 jHaPESaqXjkBQF3GBoSDXXFrXVmIQA9njHoqUjoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbgDGK0W (ORCPT
+        id S1728795AbgDGK0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37942 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:26:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbgDGK0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:26:18 -0400
+        id S1728774AbgDGK0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:26:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1D2B20644;
-        Tue,  7 Apr 2020 10:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44D1F2074F;
+        Tue,  7 Apr 2020 10:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255178;
-        bh=HqEmlzxufOwa6YagG4mTNMv27CCEvyFSPzld7zaEp8o=;
+        s=default; t=1586255180;
+        bh=khVOaY2ujlcX/REye0ztyWAGD+5eMAaXklsRDjNbiUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pTjzTp7Jc+Ml7yEiE98yPFTQiSJCQTp+t0cORw+Z+Ggu7gJ1eJao9ZFDKNaUVkNPX
-         +mw3ajeqYC8QeJcg/A55F4WVY+SrXHL/iw0H648YBbRqKONR/3O7sNXn1Wd9ldhPcy
-         ER2sEzMJonhKuAplEObjL+9sKcJEoymQGduTY1vU=
+        b=XBj3AjEee1fSUyWTTYrXgtV+Dm0vunFUmwZoaYqilnImlZb4DYjmhYRWgN7Al8dnp
+         nCop/yf8CMaND/vKBwjin4Ok9qoKH1AIc5Dbn9stem01qpBsxZDvhlb7CCl84wsK99
+         s+Z14Ane/YfnHwdazdzE4RCwNMvfptGeddH4QynE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH 5.6 15/29] misc: rtsx: set correct pcr_ops for rts522A
-Date:   Tue,  7 Apr 2020 12:22:12 +0200
-Message-Id: <20200407101453.850101538@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 5.6 16/29] misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
+Date:   Tue,  7 Apr 2020 12:22:13 +0200
+Message-Id: <20200407101453.968495514@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
 References: <20200407101452.046058399@linuxfoundation.org>
@@ -58,32 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-commit 10cea23b6aae15e8324f4101d785687f2c514fe5 upstream.
+commit 6b443e5c80b67a7b8a85b33d052d655ef9064e90 upstream.
 
-rts522a should use rts522a_pcr_ops, which is
-diffrent with rts5227 in phy/hw init setting.
+Adding more than 10 pci-endpoint-test devices results in
+"kobject_add_internal failed for pci-endpoint-test.1 with -EEXIST, don't
+try to register things with the same name in the same directory". This
+is because commit 2c156ac71c6b ("misc: Add host side PCI driver for PCI
+test function device") limited the length of the "name" to 20 characters.
+Change the length of the name to 24 in order to support upto 10000
+pci-endpoint-test devices.
 
-Fixes: ce6a5acc9387 ("mfd: rtsx: Add support for rts522A")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200326032618.20472-1-yuehaibing@huawei.com
+Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org # v4.14+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/cardreader/rts5227.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/pci_endpoint_test.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/misc/cardreader/rts5227.c
-+++ b/drivers/misc/cardreader/rts5227.c
-@@ -394,6 +394,7 @@ static const struct pcr_ops rts522a_pcr_
- void rts522a_init_params(struct rtsx_pcr *pcr)
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -633,7 +633,7 @@ static int pci_endpoint_test_probe(struc
  {
- 	rts5227_init_params(pcr);
-+	pcr->ops = &rts522a_pcr_ops;
- 	pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 20, 11);
- 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
- 
+ 	int err;
+ 	int id;
+-	char name[20];
++	char name[24];
+ 	enum pci_barno bar;
+ 	void __iomem *base;
+ 	struct device *dev = &pdev->dev;
 
 
