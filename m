@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF38C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E693C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 946D3207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7180220771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255087;
-	bh=khVOaY2ujlcX/REye0ztyWAGD+5eMAaXklsRDjNbiUc=;
+	s=default; t=1586255091;
+	bh=xmrT11w54ApBz4oohIkiyxhRNgVs9VCTrvI+89Llllc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WPwqHfTXpcIXPrYc4U5JGGUQ/Ll/+LnN1nNIHUs4nYDqDIZfFh/K8/XS5EV15gpkG
-	 7vpGwMm7W/+gIESa9qn5Qnt6fvF5H7KZCF7GngNQ3uHk1fA4qZzYZRkGl6JYrbwiBi
-	 znQh6lfGc2by//VtF/C2JWmoTyBAe0L5TQKafIrw=
+	b=OyChCN0yyygvr0Fozestyfq6NAIgZjhR74i30EUvYByxX4vcqkkSXZOd931Sjhpqb
+	 8/XjHeFEoMzUFwUfiLJSNdZyQr5D0AKLvRkhTtU697VxdWh0iAjF8LnXmfQzHurutX
+	 qK/ybqGhciepwdTzfN1x/th7F9IfAFSYC+xDoJ0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgDGKYq (ORCPT
+        id S1728811AbgDGKYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:24:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35048 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:24:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728747AbgDGKYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:24:43 -0400
+        id S1728794AbgDGKYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:24:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2744A2082F;
-        Tue,  7 Apr 2020 10:24:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 177B620644;
+        Tue,  7 Apr 2020 10:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255082;
-        bh=khVOaY2ujlcX/REye0ztyWAGD+5eMAaXklsRDjNbiUc=;
+        s=default; t=1586255087;
+        bh=xmrT11w54ApBz4oohIkiyxhRNgVs9VCTrvI+89Llllc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1zEry82Ikal49LncbaqmuFMxrQQbU9fQ4wIc1/Qexu8nGPjEeWU661mRmavEe4Xl0
-         FfA4DMOqAh/JaX39BAy5LlOx372QOwSc0Qxx8CcYIQJ5iDvJcRwcwr4+0UTpAQxbrv
-         5/FH1o1sf46qtIqGz+FruwDxeLXKfYlp1i1U2ras=
+        b=vofYaROWb4ihJ2e7KbU91cY0MGYvnbFWQvxSMnXmakhDhFBzzrAfgGywz8GHu4ZVh
+         DyX06QxuuDsvJfwFXtwqWgohjTl36NiKt6xDcZ5OMhUHV2dftIxT0Rx388ETCBKtFu
+         WdtsKNIL8nL8RZudOOy9ZANiIto34KTO8u13aIJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 5.5 22/46] misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
-Date:   Tue,  7 Apr 2020 12:21:53 +0200
-Message-Id: <20200407101501.881056561@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kelsey Skunberg <kelsey.skunberg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.5 24/46] PCI: sysfs: Revert "rescan" file renames
+Date:   Tue,  7 Apr 2020 12:21:55 +0200
+Message-Id: <20200407101502.114243463@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -59,38 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
 
-commit 6b443e5c80b67a7b8a85b33d052d655ef9064e90 upstream.
+commit bd641fd8303a371e789e924291086268256766b0 upstream.
 
-Adding more than 10 pci-endpoint-test devices results in
-"kobject_add_internal failed for pci-endpoint-test.1 with -EEXIST, don't
-try to register things with the same name in the same directory". This
-is because commit 2c156ac71c6b ("misc: Add host side PCI driver for PCI
-test function device") limited the length of the "name" to 20 characters.
-Change the length of the name to 24 in order to support upto 10000
-pci-endpoint-test devices.
+We changed these sysfs filenames:
 
-Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org # v4.14+
+  .../pci_bus/<domain:bus>/rescan  ->  .../pci_bus/<domain:bus>/bus_rescan
+  .../<domain:bus:dev.fn>/rescan   ->  .../<domain:bus:dev.fn>/dev_rescan
+
+and Ruslan reported [1] that this broke a userspace application.
+
+Revert these name changes so both files are named "rescan" again.
+
+Note that we have to use __ATTR() to assign custom C symbols, i.e.,
+"struct device_attribute <symbol>".
+
+[1] https://lore.kernel.org/r/CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com
+
+[bhelgaas: commit log, use __ATTR() both places so we don't have to rename
+the attributes]
+Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
+Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+Link: https://lore.kernel.org/r/20200325151708.32612-1-skunberg.kelsey@gmail.com
+Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org	# v5.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/pci_endpoint_test.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pci-sysfs.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -633,7 +633,7 @@ static int pci_endpoint_test_probe(struc
- {
- 	int err;
- 	int id;
--	char name[20];
-+	char name[24];
- 	enum pci_barno bar;
- 	void __iomem *base;
- 	struct device *dev = &pdev->dev;
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -464,7 +464,8 @@ static ssize_t dev_rescan_store(struct d
+ 	}
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(dev_rescan);
++static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
++							    dev_rescan_store);
+ 
+ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 			    const char *buf, size_t count)
+@@ -501,7 +502,8 @@ static ssize_t bus_rescan_store(struct d
+ 	}
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(bus_rescan);
++static struct device_attribute dev_attr_bus_rescan = __ATTR(rescan, 0200, NULL,
++							    bus_rescan_store);
+ 
+ #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+ static ssize_t d3cold_allowed_store(struct device *dev,
 
 
