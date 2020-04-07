@@ -2,87 +2,100 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F676C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF6CC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C1A20719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E0F2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="bPyp9X0U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="GfhmcrnW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgDGR1v (ORCPT
+        id S1726616AbgDGR36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:27:51 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.166]:15187 "EHLO
+        Tue, 7 Apr 2020 13:29:58 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:25834 "EHLO
         mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgDGR1u (ORCPT
+        with ESMTP id S1726420AbgDGR36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:27:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586280469;
+        Tue, 7 Apr 2020 13:29:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586280596;
         s=strato-dkim-0002; d=aepfle.de;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=y+glctGf8I9d0ulLgSiaydzTvNcHv3FkPBRQdNMb17Q=;
-        b=bPyp9X0UHthssng+sAVvebVKh1C4p0hY07ZF05tKJk8J+GN4O7O4G210UtYKoD4fk1
-        4A0KuXMireNZDLpBpSWP64YDENJjE8VsFIU9HC9MW1F5A14nJukwPZ2k0i4xYlDBlBoY
-        cQlhmewUO6bQwjNRNPSOyabtmLWyVQDk/8edzxNk7dskA1UoKdHl2ycnr9ck9HLCWBjA
-        0U8sjfIfB+Xf9MKAfUE9vWZm3vGa+ZVObmrntKB78hdFTygKtiXTtHbTFvyYJU2QBbdn
-        Hsj+ueDb+ONh5GxrhpPZB1zBslYdvGFvKwiCRVhd5V2FY7FYgC2UAWi1aePJPgdAOo7l
-        z+XA==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS32kg"
+        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=3FGuj7N8e29gKvPlFnzIwsDBtK6iaslDZO/2Jm/LaGU=;
+        b=GfhmcrnWyzcQmUa5Lz3s3bRLyaocHib8/gkI7bKngEYf0qBXU+9ZkVkApCoJi6Wm8P
+        GtLINSe7uD6w0tp8Cs6uc1TBmF1a/sKQlvdX2Q8OT1T+yHpoUoNBaMp0x73xBdXbWTwi
+        Gbc9m7MxysiWheSTPAFJe37jIzPzU8cmPHMfwkxTlnaHzEtwqGT0ObgQQPu+MrI0bFXU
+        urTpXPiEyQpWxzY9SgcEgdPTlR57/33FD6vmFRHckAeEOqe+174ZsCe/K7yq+9AKaI43
+        e8/v1gcbPiJ0TqIw+KAY8qVrx2NjjZeubwTksDrGrVu5RLJQRz9tqTUrW47LVl4sFJbs
+        +/lg==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4AUztn93FPS2dyuY88K"
 X-RZG-CLASS-ID: mo00
 Received: from sender
         by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id 204e5fw37HRmhOG
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256 bits))
+        with ESMTPSA id 204e5fw37HTuhOV
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 7 Apr 2020 19:27:48 +0200 (CEST)
+        Tue, 7 Apr 2020 19:29:56 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 19:29:49 +0200
 From:   Olaf Hering <olaf@aepfle.de>
-To:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Olaf Hering <olaf@aepfle.de>
-Subject: [PATCH v1] x86: hyperv: report value of misc_features
-Date:   Tue,  7 Apr 2020 19:27:39 +0200
-Message-Id: <20200407172739.31371-1-olaf@aepfle.de>
-X-Mailer: git-send-email 2.16.4
+To:     Joe Perches <joe@perches.com>
+Cc:     Jeff King <peff@peff.net>, linux-kernel@vger.kernel.org,
+        git@vger.kernel.org
+Subject: Re: get_maintainer.pl sends bogus addresses to git send-email
+Message-ID: <20200407192949.586159e7.olaf@aepfle.de>
+In-Reply-To: <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
+References: <20200407154046.GA15368@aepfle.de>
+        <20200407170257.GA1844923@coredump.intra.peff.net>
+        <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
+X-Mailer: Claws Mail 2019.12.31 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/gyvhdOKHJllakF_ac6Obz20"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few kernel features depend on ms_hyperv.misc_features, but unlike its
-siblings ->features and ->hints, the value was never reported during boot.
+--Sig_/gyvhdOKHJllakF_ac6Obz20
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
----
- arch/x86/kernel/cpu/mshyperv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Am Tue, 07 Apr 2020 10:18:41 -0700
+schrieb Joe Perches <joe@perches.com>:
 
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index caa032ce3fe3..53706fb56433 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -227,8 +227,8 @@ static void __init ms_hyperv_init_platform(void)
- 	ms_hyperv.misc_features = cpuid_edx(HYPERV_CPUID_FEATURES);
- 	ms_hyperv.hints    = cpuid_eax(HYPERV_CPUID_ENLIGHTMENT_INFO);
- 
--	pr_info("Hyper-V: features 0x%x, hints 0x%x\n",
--		ms_hyperv.features, ms_hyperv.hints);
-+	pr_info("Hyper-V: features 0x%x, hints 0x%x, misc 0x%x\n",
-+		ms_hyperv.features, ms_hyperv.hints, ms_hyperv.misc_features);
- 
- 	ms_hyperv.max_vp_index = cpuid_eax(HYPERV_CPUID_IMPLEMENT_LIMITS);
- 	ms_hyperv.max_lp_index = cpuid_ebx(HYPERV_CPUID_IMPLEMENT_LIMITS);
+> You need to add --norolestats on the get_maintainer command line
+
+Thanks, this can be used as a workaround for the time being.
+Not sure why anyone would actually care about such details in default mode.=
+..
+
+
+Olaf
+
+--Sig_/gyvhdOKHJllakF_ac6Obz20
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl6MuI0ACgkQ86SN7mm1
+DoDElRAAoKPmoW8t03Z5XrOYrmXy2RJPzRRguC/zAbQL+N3AK+xfNHqy93bBDyPF
+xonrACp9WyHtLNywMLH+5k2PecEch70kGyzbw6P1O/H530rN1wWWdbdwywguKpgm
+JVaWu5AEQHWukFfqsZH3BduY8ThOPbsGCar0l+ZtRAlUAs2eYeXv8tcdu0NeVaGS
+9ZyzLO2w7i/wX2MQUfGyJAeJTLFEkXGi+4jy4z+9c05zUqPzmXSncMR5njCytNjD
+W7lEOthcFVKMAUmIvMlnT8KvraKdbJ229Cqs5vlA9LCQK6bd0Xg0MAkH6tHOH61U
+31EV5C4zn5j+/QZdk9qYmlPjyKz7AWp88OiC17ZOqzugILIxGFU2QZwRcxcsVvGK
+dn2llTaTuzen77ifvNhcAjZPhlwrMStqAs0GSFD54XczCNnGUBV6PR/kPt/PhTWT
+ICHAE5HOC+/QmWwI4LsXGwi8l6i+HEd49sr+Egl/iu7mLERmtEY7tROtyYfi+oul
+/oaLYwuXV/kJsLgR2Y2V+D3iWjadyGl9OWbXNaN8AuKXL7dNP1bELbwiqBdJfu6c
+CZsxfi1pzzicw+2s3Hg/phjCgYKlhf9DjVdU9SdQCUY3qF9nGHrJlB0heJBGL+6U
+o/uIBId7siYE3oB3W9OBlp/ZsuQnBAnwx9FiohN5JJTjQo/5uoU=
+=HUNz
+-----END PGP SIGNATURE-----
+
+--Sig_/gyvhdOKHJllakF_ac6Obz20--
