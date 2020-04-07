@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86745C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020E6C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50AAC20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB3FE2078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586254992;
-	bh=TorpH4uEST+U3yxKOkCZL/m53n9xz2lDBNqCEdKUsyA=;
+	s=default; t=1586254994;
+	bh=cNBrUeVKUguLRG5XoS6GQF8frN3ZPEoSCOCtAQ9ya18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ag1Hhu7sOzLRBkBzMdp4qQ6IJv520IwtslFZOIuDmpOd1pc1be0JayV+8fpSncCUR
-	 t4Narp3WesbDhGGhZ7kyi0UzDRP/eGzQ/eJRCs0EbRzmc2c5BDFOC8GoY0VtMrw416
-	 60IHFwPHuXZYD9d3kv/xXYkfjyu2yqzGRmvTJcdk=
+	b=Rw4Ju+XLSeyfMkMryAqHV4tL8q6DeG1FwTytKk9wnH/Du1Z0CBxbu4h8T+GuxGX21
+	 Q1avmLx/P9x5tW5han4beeSR4l6mhu+T+oR4T19W8XDC6JyRPPBZesuhVhn1OKuE2H
+	 2vBn+b2wvWLTnPixwKegppVPV4sA/jKNc3MNdK0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgDGKXL (ORCPT
+        id S1728405AbgDGKXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32808 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728373AbgDGKXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:23:07 -0400
+        id S1728383AbgDGKXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E2972074F;
-        Tue,  7 Apr 2020 10:23:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEDB620771;
+        Tue,  7 Apr 2020 10:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586254986;
-        bh=TorpH4uEST+U3yxKOkCZL/m53n9xz2lDBNqCEdKUsyA=;
+        s=default; t=1586254989;
+        bh=cNBrUeVKUguLRG5XoS6GQF8frN3ZPEoSCOCtAQ9ya18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8jEBkmSIEXfQfV1A4+po1IfDfeDErInOkq/3vbU5A9ZiGthlX2u9XXyJs7XpFU60
-         lx6yisW9hqoVHwgOVBQa5e6i0q/TZ8aTv1n0HDM9iH4rXl/HGYigKvJeORdIVZvJBf
-         pFsaiv0XklYHeqtVAVBrSvzcL0WJDaFi2CZ/1A1M=
+        b=JWHItFMqYUUZKjULzxiET01XNODbmWuG6W/tETU6ob82V68Uj0Dnltz8+qRtNOrfC
+         4M1yfM0je66csbBWfMgYMZHAX0jQzBSaEYTjpDL9QECWh23FfbQ9gEuBSKMltZgWKm
+         dKin5PX/9snoQ3JOZUys8cqIdngU4MoKx2tENKF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 5.4 21/36] nvmem: check for NULL reg_read and reg_write before dereferencing
-Date:   Tue,  7 Apr 2020 12:21:54 +0200
-Message-Id: <20200407101457.069282699@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 5.4 22/36] extcon: axp288: Add wakeup support
+Date:   Tue,  7 Apr 2020 12:21:55 +0200
+Message-Id: <20200407101457.174373170@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -60,48 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 3c91ef69a3e94f78546b246225ed573fbf1735b4 upstream.
+commit 9c94553099efb2ba873cbdddfd416a8a09d0e5f1 upstream.
 
-Return -EPERM if reg_read is NULL in bin_attr_nvmem_read() or if
-reg_write is NULL in bin_attr_nvmem_write().
+On devices with an AXP288, we need to wakeup from suspend when a charger
+is plugged in, so that we can do charger-type detection and so that the
+axp288-charger driver, which listens for our extcon events, can configure
+the input-current-limit accordingly.
 
-This prevents NULL dereferences such as the one described in
-03cd45d2e219 ("thunderbolt: Prevent crash if non-active NVMem file is
-read")
-
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200310132257.23358-10-srinivas.kandagatla@linaro.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvmem/nvmem-sysfs.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/extcon/extcon-axp288.c |   32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
---- a/drivers/nvmem/nvmem-sysfs.c
-+++ b/drivers/nvmem/nvmem-sysfs.c
-@@ -56,6 +56,9 @@ static ssize_t bin_attr_nvmem_read(struc
+--- a/drivers/extcon/extcon-axp288.c
++++ b/drivers/extcon/extcon-axp288.c
+@@ -423,9 +423,40 @@ static int axp288_extcon_probe(struct pl
+ 	/* Start charger cable type detection */
+ 	axp288_extcon_enable(info);
  
- 	count = round_down(count, nvmem->word_size);
- 
-+	if (!nvmem->reg_read)
-+		return -EPERM;
++	device_init_wakeup(dev, true);
++	platform_set_drvdata(pdev, info);
 +
- 	rc = nvmem->reg_read(nvmem->priv, pos, buf, count);
- 
- 	if (rc)
-@@ -90,6 +93,9 @@ static ssize_t bin_attr_nvmem_write(stru
- 
- 	count = round_down(count, nvmem->word_size);
- 
-+	if (!nvmem->reg_write)
-+		return -EPERM;
++	return 0;
++}
 +
- 	rc = nvmem->reg_write(nvmem->priv, pos, buf, count);
++static int __maybe_unused axp288_extcon_suspend(struct device *dev)
++{
++	struct axp288_extcon_info *info = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(info->irq[VBUS_RISING_IRQ]);
++
+ 	return 0;
+ }
  
- 	if (rc)
++static int __maybe_unused axp288_extcon_resume(struct device *dev)
++{
++	struct axp288_extcon_info *info = dev_get_drvdata(dev);
++
++	/*
++	 * Wakeup when a charger is connected to do charger-type
++	 * connection and generate an extcon event which makes the
++	 * axp288 charger driver set the input current limit.
++	 */
++	if (device_may_wakeup(dev))
++		disable_irq_wake(info->irq[VBUS_RISING_IRQ]);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(axp288_extcon_pm_ops, axp288_extcon_suspend,
++			 axp288_extcon_resume);
++
+ static const struct platform_device_id axp288_extcon_table[] = {
+ 	{ .name = "axp288_extcon" },
+ 	{},
+@@ -437,6 +468,7 @@ static struct platform_driver axp288_ext
+ 	.id_table = axp288_extcon_table,
+ 	.driver = {
+ 		.name = "axp288_extcon",
++		.pm = &axp288_extcon_pm_ops,
+ 	},
+ };
+ 
 
 
