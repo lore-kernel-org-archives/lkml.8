@@ -2,172 +2,92 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ED7C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F59C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5D62063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF612074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:29:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="ags5tFZ/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNBVjKjk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgDGMZp (ORCPT
+        id S1728618AbgDGM3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:25:45 -0400
-Received: from sender2-op-o12.zoho.com.cn ([163.53.93.243]:17543 "EHLO
-        sender2-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728146AbgDGMZp (ORCPT
+        Tue, 7 Apr 2020 08:29:13 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44606 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgDGM3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 08:25:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586262323;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=Qcosx3zOods1ZrT/9F495oLQo2i1f+60srMg2RUuf7A=;
-        b=ags5tFZ/0zZxTM73JceTG1Mmm3zVwPq29RPqq/7RBJz9wypY+9hjo1RIF1lnKAqZ
-        coO3/cN3zC0K/wsMDwcKtP103XkOoTY9eAst8VpFAA7EG2Tx493vbYrS5SboxAECf2Z
-        gVKizgoJxE7jo4OTgUFxct5tZP1yTpg30KRsA8K0=
-Received: from flygoat-x1e (60.177.191.213 [60.177.191.213]) by mx.zoho.com.cn
-        with SMTPS id 15862623217966.568477178934359; Tue, 7 Apr 2020 20:25:21 +0800 (CST)
-Date:   Tue, 7 Apr 2020 20:25:19 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     "Xu, Yanfei" <yanfei.xu@windriver.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: BUG: mips: errors when compiling kernel with a large initramfs
-Message-ID: <20200407202519.4d384f3b@flygoat-x1e>
-In-Reply-To: <0c1e4eda-53c6-ea8b-c27b-eabc8569cc74@windriver.com>
-References: <0c1e4eda-53c6-ea8b-c27b-eabc8569cc74@windriver.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+        Tue, 7 Apr 2020 08:29:13 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n13so230123pgp.11;
+        Tue, 07 Apr 2020 05:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=vOQTjEsc/b9nWGCQMtsVYfPJl+HytGkwz1UpCx9vwX8=;
+        b=MNBVjKjkXAaGGC+lGJMT5/YHMphzZ/i2GJoK2Vs0pV4BMdNwgyWmFrn2nPs24yAMGJ
+         VXKWNoh7Tq2+SsQSnNksB1r/ZUKdvgd+ahRqmeC71sBlC1IikzKclwP+8qlOMR9T63mk
+         QLbVUqEXCZJbp0p6YgQ3nkmX1DidzROnBaSxHa8PSWfH1RJh23rsl3U7IdLvTKKH2F3O
+         7/qXeBRwIKJkRMzWae0vjLHG+eovzgzqc0rFwY5c29JGobY2CKRepLCoJUVXGaXUWKHv
+         fK7GY0uhz3a7erjY3f8IdrCjL63ftba2Myvi6pIGzvasS+8dbBoyPzuMFN1cvWooRiOD
+         f0iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vOQTjEsc/b9nWGCQMtsVYfPJl+HytGkwz1UpCx9vwX8=;
+        b=t9Mj1QPnccWZ8kiKvsUjSNb7LiHYk91gY9gpTxw/ykkhruHLXkd+afL2BpWohf05hB
+         IKCJUAv7luPVvxdm0uw0VqLgNQy8afSFazS7/zWraB96kvUSt8RFNJGiN5Juk9+0oU7P
+         Xqbx/zvlbWFlu4PzfH46TIMyk7SCwHk8+OHDy0fIsW7n4HI/F4o657kNqP4QCoLE+V5c
+         EYx8xRa4AOl7ZyyvLlpxpCnSy9iPquy4jmtbnJNrors4xVzX+26Sjlv9ntRbXkVDoVRc
+         4ra3sCnpGMhdCR+7ilCfLPx/Z+fntfzW4hAHJL4lplPahTQDCSytiqNIzaZ/2EmxUoPE
+         Qs2Q==
+X-Gm-Message-State: AGi0PuYlJIUUVTKe+749FNSLaufCI02+4CT0SvlxW1mE023CpGBYYvqP
+        7/8euNR9sicgnsnFxcRiS2pHgzK0qo1j3CC2
+X-Google-Smtp-Source: APiQypLEkKHjYIC1deoz+QQ8rx+ZY4YXbE5tVqk1ceCDuNWxjpvIjZpICuv5ce0ib1fz3VKkOSOl3Q==
+X-Received: by 2002:a62:2b07:: with SMTP id r7mr2220138pfr.273.1586262551588;
+        Tue, 07 Apr 2020 05:29:11 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:600d:c36b:d50:b01b:c4e4:35ad])
+        by smtp.gmail.com with ESMTPSA id o11sm12966626pgh.78.2020.04.07.05.29.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 05:29:10 -0700 (PDT)
+From:   Aishwarya R <aishwaryarj100@gmail.com>
+Cc:     aishwaryarj100@gmail.com, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] spi: spi-fsl-spi: Fix checkpatch error "foo * bar" should be "foo *bar"
+Date:   Tue,  7 Apr 2020 17:58:55 +0530
+Message-Id: <20200407122855.5531-1-aishwaryarj100@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Apr 2020 17:58:23 +0800
-"Xu, Yanfei" <yanfei.xu@windriver.com> wrote:
+This patch fixes checkpatch error "foo * bar" should be "foo *bar"
 
-> Hi,
->=20
->=20
-> It fails to compile mips kernel with large initramfs (at link time).
->=20
-> kernel version: 5.6.0
->=20
->=20
-> Steps to reproduce:
->=20
-> 1. git clone mainline kernel
->=20
-> 2. set ARCH=3Dmips and CROSS_COMPILE=3Dmips-linux-gnu-
->=20
-> 3. make defconfig
->=20
-> 4.enable initramfs support and set the path about initramfs source
-> file
->=20
-> 5.make -j24
->=20
-> [KEY] when your initramfs files is too large, and cause=20
-> usr/initramfs_data.cpio.gz
->=20
-> compiled is larger than 225M, you will get the following error. BTW,
-> x86 doesn't
->=20
-> have this issue that I have tested.
->=20
-> ------------------------------error=20
-> messages-----------------------------------------
->=20
->  =C2=A0 CHK=C2=A0=C2=A0=C2=A0=C2=A0 include/generated/compile.h
->  =C2=A0 LD=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vmlinux.o
->  =C2=A0 MODPOST vmlinux.o
->  =C2=A0 MODINFO modules.builtin.modinfo
->  =C2=A0 GEN=C2=A0=C2=A0=C2=A0=C2=A0 modules.builtin
->  =C2=A0 LD=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .tmp_vmlinux.kallsyms1
-> kernel/configs.o: In function `ikconfig_cleanup':
-> /home/wrsadmin/work/linux/kernel/linux-master/kernel/configs.c:72:(.exit.=
-text+0x8):=20
-> relocation truncated to fit: R_MIPS_26 against `remove_proc_entry'
-> fs/binfmt_script.o: In function `exit_script_binfmt':
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/binfmt_script.c:165:(.ex=
-it.text+0x4):=20
-> relocation truncated to fit: R_MIPS_26 against `unregister_binfmt'
-> fs/binfmt_elf.o: In function `exit_elf_binfmt':
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/binfmt_elf.c:2393:(.exit=
-.text+0x4):=20
-> relocation truncated to fit: R_MIPS_26 against `unregister_binfmt'
-> fs/mbcache.o: In function `mbcache_exit':
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/mbcache.c:429:(.exit.tex=
-t+0x4):=20
-> relocation truncated to fit: R_MIPS_26 against `kmem_cache_destroy'
-> fs/nfs_common/grace.o: In function `exit_grace':
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/nfs_common/grace.c:133:(=
-.exit.text+0x4):=20
-> relocation truncated to fit: R_MIPS_26 against
-> `unregister_pernet_subsys' fs/ext4/super.o: In function
-> `ext4_destroy_lazyinit_thread':
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/ext4/super.c:3456:(.exit=
-.text+0x24):
-> relocation truncated to fit: R_MIPS_26 against `kthread_stop'
-> fs/ext4/super.o: In function `unregister_as_ext2':
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/ext4/super.c:6126:(.exit=
-.text+0x30):
-> relocation truncated to fit: R_MIPS_26 against
-> `unregister_filesystem' fs/ext4/super.o: In function
-> `unregister_as_ext3':
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/ext4/super.c:6155:(.exit=
-.text+0x3c):
-> relocation truncated to fit: R_MIPS_26 against
-> `unregister_filesystem' fs/ext4/super.o: In function `ext4_exit_fs':
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/ext4/super.c:6261:(.exit=
-.text+0x48):
-> relocation truncated to fit: R_MIPS_26 against
-> `unregister_filesystem' fs/ext4/super.o: In function
-> `destroy_inodecache':
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/ext4/super.c:1218:(.exit=
-.text+0x50):
-> relocation truncated to fit: R_MIPS_26 against `rcu_barrier'
-> /home/wrsadmin/work/linux/kernel/linux-master/fs/ext4/super.c:1219:(.exit=
-.text+0x5c):
-> additional relocation overflows omitted from the output
-> Makefile:1086: recipe for target 'vmlinux' failed make[1]: ***
-> [vmlinux] Error 1 Makefile:1058: recipe for target
-> 'autoksyms_recursive' failed make: *** [autoksyms_recursive] Error 2
->=20
->=20
-> Any comment will be appreciated.
+Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>
+---
+ drivers/spi/spi-fsl-spi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Actually I think that won't work even if you managed to workaround
-reloc issue.
-
-MIPS have limited LOW MEM range accessible via KSEG0 (512M, but can be
-less if your system place some MMIO register in that range). Kernel
-image will be placed here together with built-in initramfs, and a
-lot of memory like Page Table can only be allocated from here.
-
-Such a huge initrd will occupy the whole LOW MEM range leaving no space
-for others.
-
-It seems like your system is 32bit, we have no solution for that
-hardware limitaion. For 64bit system you may try to move your kernel
-into XKPHYS instead of KSEG0.
-
-Thanks
-
---
-Jiaxun Yang
-
->=20
-> Thanks,
->=20
-> Yanfei
->=20
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 3b81772fea0d..67f022b8c81d 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -588,7 +588,7 @@ static void fsl_spi_grlib_probe(struct device *dev)
+ 	pdata->cs_control = fsl_spi_grlib_cs_control;
+ }
+ 
+-static struct spi_master * fsl_spi_probe(struct device *dev,
++static struct spi_master *fsl_spi_probe(struct device *dev,
+ 		struct resource *mem, unsigned int irq)
+ {
+ 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+-- 
+2.17.1
 
