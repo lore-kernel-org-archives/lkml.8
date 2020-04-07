@@ -2,97 +2,195 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18CCC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0C4C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B1B206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:00:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnUBQwpL"
+	by mail.kernel.org (Postfix) with ESMTP id C26E8206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586271687;
+	bh=pxNPNw3IOGTVnsSxXTP4d/SsOagKyM3Ug/U/XxdX8rQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ExTUtVdMk72c5yE/h7ldc5Koy91sJ1rh2Bj3yA3V94yE1nKupfXuqWVGoNckgxgaI
+	 UJygrCHYQSJBHqQH76HikwIISw8C7xkt4tZyCNy6jHihT2YN3RpE3ywMBpp9KBl6EO
+	 Lbl9BNPmz59ZH43+VuuqkTM/jvANHQfgOjjr+bFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbgDGPAd (ORCPT
+        id S1729304AbgDGPB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:00:33 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45372 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729064AbgDGPAd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:00:33 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t17so4033188ljc.12;
-        Tue, 07 Apr 2020 08:00:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=n9qgnK2KRBH7r2dzJsAycd35bPm5nSXjOlpxrB9QcgM=;
-        b=DnUBQwpLF1yGSi2kCfjTckSu3hVQIAqPRf6DCY6DKO1++HLkqNzgAjG/AOk4unY1sr
-         A/yLSMR7xjVELDvtTH34sD3slYnF0yY/RPfzExQH+W6QU3iNJ9VjsxpoBFOXQixtHP6c
-         /5AmVZSXEX3S5Px2atvu92qQLIx9LmEmBBiqAowyhAfXA2szGkqoYtB0nIF24JEBVQ1b
-         Ng+s6Yvhhk6TgT8yV6vjRFliE8nJrofXIVu1xlT1HHvQp4leEOYSateJojFu5ze5Uj4+
-         jXZO7sEKsJzLI+krVprqAFYNIR4CL75T9ZNEDrTj87TkkRD/tgxNuoGXgN20kDqD0Zsp
-         Rejg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=n9qgnK2KRBH7r2dzJsAycd35bPm5nSXjOlpxrB9QcgM=;
-        b=poQJ3OIi3hIiq1zWdj2s6rj6+wLnlEga4SZy6WNShfQuFeN5wVJj51QAbAUxbTibPx
-         faI2s5YjqKUCt7gVGQQMb2RSKN38mnessZ+Edq+5Uq9iLQjSqQosWFsEKwDVVL5cOJwa
-         EmgVu64/r344Uustpube11JFsyuL5z1CO02aImhlsWsE7xPSIolJfUqg7WFI6ijkont0
-         4GfstSRKZgFDonns42zDSKPuRa0ygbW3yeuKOIW6POlDj2tLp2Zwl7LZap40L0AwMPG3
-         D65a9vw19cqqXFg47zF+MZgeoHJthczVuF9Q3Q96eHC+ae+J2teUFgCUe5+Itnvgpdba
-         nMBQ==
-X-Gm-Message-State: AGi0PuYzSq50FbLlVtDgMgK/usnPNU9X5QNeVi8zNDkYkDsLl9Mk0Hat
-        bwAPvYrMTLO3QCbFmcfSygGq3Kk4
-X-Google-Smtp-Source: APiQypKiJGQiLiQA48VDa3JP3jGkXKo3FZCYfQFwllaqzQw15HCQQysW6YJAqfQxTNyNx+zXA5et/A==
-X-Received: by 2002:a2e:6809:: with SMTP id c9mr1974279lja.251.1586271631199;
-        Tue, 07 Apr 2020 08:00:31 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id x24sm4014932lfc.6.2020.04.07.08.00.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 08:00:30 -0700 (PDT)
-Subject: Re: [PATCH v10 54/55] Input: atmel_mxt_ts: Implement synchronization
- during various operation
-To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-55-jiada_wang@mentor.com>
- <c53637ef-8e5d-3243-7236-5da360021f21@gmail.com>
- <b06c7915-562f-ec68-766a-2118cfe57a0f@mentor.com>
- <b9a8865c-7754-16f7-8f66-9cd70dc42d3c@gmail.com>
- <c5e7dc2d-08c7-e55e-352d-b9b0d86fe63e@gmail.com>
- <500c814a-b0f4-db9f-30f6-bc6ac985c5e2@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b429ec7f-3cea-d689-aecd-ae2abe12420a@gmail.com>
-Date:   Tue, 7 Apr 2020 18:00:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 7 Apr 2020 11:01:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728943AbgDGPB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:01:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AD36206F7;
+        Tue,  7 Apr 2020 15:01:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586271685;
+        bh=pxNPNw3IOGTVnsSxXTP4d/SsOagKyM3Ug/U/XxdX8rQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=srJU6UGhRd7eJlf2Y1S2AzLwP3reF/UMuF8d/fmIuGpSH1RCsIAKT3lKGxlAE51wp
+         pTbjClrf6bKehiogfyuZQymnCoMtZdYmChQ3VSqDM5kl2awWnrjDBEFW5DfhROtf3f
+         snwD49CBTipS4SgzScDJIeEGiOtnU7KH4GK1N1XU=
+Date:   Tue, 7 Apr 2020 17:01:23 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Fei Zhang <zhangfeionline@gmail.com>
+Cc:     =?utf-8?B?5a6L54mn5pil?= <songmuchun@bytedance.com>,
+        rafael@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [External] Re: [PATCH] driver core: Fix possible use after free
+ on name
+Message-ID: <20200407150123.GA897865@kroah.com>
+References: <1586102749-3364-1-git-send-email-zhangfeionline@gmail.com>
+ <20200405164006.GA1582475@kroah.com>
+ <CAC_binJNLLxfOm0W2TuVTJZxJRTZTvPPocSDNQMU=21XO37oZg@mail.gmail.com>
+ <20200406054110.GA1638548@kroah.com>
+ <CAC_binJMn-uRNy1dwp=2fhF54R8DpaTZYskwEz3GNE-U0pShDQ@mail.gmail.com>
+ <20200406082857.GA1646464@kroah.com>
+ <CAMZfGtURi4KDijw1=2JuTWxufcjypzS2_fEe0sGwXoAOUKbT5Q@mail.gmail.com>
+ <20200406111648.GA1797430@kroah.com>
+ <CAC_bin+tzPeHX2bAz+0hY+qKsBn4-vMuqFvYvW05bDGv32SzEw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <500c814a-b0f4-db9f-30f6-bc6ac985c5e2@mentor.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAC_bin+tzPeHX2bAz+0hY+qKsBn4-vMuqFvYvW05bDGv32SzEw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.04.2020 07:18, Wang, Jiada пишет:
-...
-> I had some test,
-> and confirmed you are right,
-> this commit is no longer applicable to upstream,
-> but as discussed in another patch,
-> disable_irq() need to be moved after remove of mxt_fw_attr_group.
-> I will add this change in a new commit.
+On Tue, Apr 07, 2020 at 10:42:30PM +0800, Fei Zhang wrote:
+> Dear  Greg
+> 
+>    Greg KH < gregkh@linuxfoundation.org >于2020年4月6日周一下午7:16写道：
+> 
+> > On Mon, Apr 06, 2020 at 06:42:46PM +0800,宋牧春wrote:
+> > > Hi Greg,
+> > >
+> > > Greg KH < gregkh@linuxfoundation.org >于2020年4月6日周一下午4:29写道：
+> > > >
+> > > > A: http://en.wikipedia.org/wiki/ Top_post
+> > <http://en.wikipedia.org/wiki/Top_post>
+> > > > Q: Were do I find info about this thing called top-posting?
+> > > > A: Because it messes up the order in which people normally read text.
+> > > > Q: Why is top-posting such a bad thing?
+> > > > A: Top-posting.
+> > > > Q: What is the most annoying thing in e-mail?
+> > > >
+> > > > A: No.
+> > > > Q : Should I include quotations after my reply?
+> > > >
+> > > > http://daringfireball.net/ 2007/07/on_top
+> > <http://daringfireball.net/2007/07/on_top>
+> > > >
+> > > > On Mon, Apr 06, 2020 at 03:40:41PM +0800, Fei Zhang wrote:
+> > > > > Dear Greg,
+> > > > >
+> > > > > Mostly, "class_creat" is used in kernel driver module, basically
+> > > > > read-only strings,
+> > > > > but it is easier to use a local variable string. When writing drive
+> > module,
+> > > > > it fails to judge the local variable string which cannot be passed
+> > in
+> > > > > only via interface.
+> > > > > I found that someone else may also face the same problem.
+> > > >
+> > > > An individual driver should NOT be creating a class, that is not what
+> > it
+> > > > is there for.
+> > >
+> > > If someone want to create a virtual device,someone can call
+> > device_create().
+> > > But the first argument is type of 'struct class *class', so we have to
+> > > call class_create()
+> > > before create device. So an individual driver may be creating a class,
+> > right?
+> >
+> > Again, they should not be, as classes are not what a driver creates. It
+> > is what a subsystem creates, as a class is a type of common devices that
+> > all talk to userspace in the same way.
+> >
+> > > > Class names are very "rare" and should not be dynamically created at
+> > > > all.
+> > >
+> > > I have reviewed the code of the kstrdup_const() which is just below.
+> > >
+> > > const char *kstrdup_const(const char *s, gfp_t gfp)
+> > > {
+> > > if (is_kernel_rodata((unsigned long)s))
+> > >return s;
+> > >
+> > > return kstrdup(s, gfp);
+> > > }
+> > >
+> > > A readonly string which is in the kernel rodata, so we do not need to
+> > > dynamically allocate
+> > > memory to store the name. So with this patch applied, there is nothing
+> > > changed which
+> > > means that we did not waste memory. But it can prevent someone from
+> > > reading stale name
+> > > if an unaware user passes an address to a stack-allocated buffer.
+> > >
+> > > So I think it is worth fixing, right?
+> >
+> > Again, there is nothing to "fix" here as there is no code in the kernel
+> > tree today calling this api with a class name that is not static.
+> >
+> > If we have code that does need to do this,and it is submitted for
+> > merging, and I agree with how it is creating the class names, I will be
+> > glad to take a patch at that time to make this change. Until then, this
+> > is just added complexity for no benefit at all.
+> 
+> 
+> 
+> 
+> 
+> The interface was used by many drivers. Please refer to below link.
+> 
+>  https://elixir.bootlin.com/linux/latest/source/drivers/char/dsp56k.c#L507
 
-Sounds good.
+That should just be fixed up to use the misc device interface, I'll put
+it on my list of things to fix...
+
+> > https://elixir.bootlin.com/linux/latest/source/drivers/char/pcmcia/cm4040_cs.c#L654
+
+Does anyone still care/use pcmcia drivers?  I doubt you will ever run
+this code :)
+
+> > https://elixir.bootlin.com/linux/latest/source/drivers/char/tpm/tpm-interface.c#L462
+
+TPM is a valid class, nothing is wrong with that.
+
+>   ...
+> >
+> Normally, class shall be created before creating the virtual device.
+> > https://elixir.bootlin.com/linux/latest/source/fs/fuse/cuse.c#L628
+> 
+> https://elixir.bootlin.com/linux/latest/source/fs/pstore/pmsg.c#L66
+> 
+
+Those too are fine, nothing broken with them.
+
+>   ...
+> >
+> I think it is worth fixing, it will make the code more stable.
+
+The code is working just fine as-is, nothing is broken.  By adding
+unneeded complexity, it will be more unstable.
+
+Not to mention the first attempt didn't even get it correct, which if I
+had accepted, would have _introduced_ a bug for no reason at all.
+
+Again, if you have an in-kernel user that wants to somehow create a
+class dynamically off of the stack like your example showed, I will be
+glad to revisit this, after I review that driver's code.
+
+thanks,
+
+greg k-h
