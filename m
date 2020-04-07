@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFAEC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8F0C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B4620747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7AA120CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:51:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qeHuIkvm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c5jxfveG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgDGFvv (ORCPT
+        id S1726861AbgDGFvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 01:51:51 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:41538 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgDGFvs (ORCPT
+        Tue, 7 Apr 2020 01:51:42 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40110 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgDGFvl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 01:51:48 -0400
+        Tue, 7 Apr 2020 01:51:41 -0400
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0375petX091483;
-        Tue, 7 Apr 2020 00:51:40 -0500
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0375pTp5057034;
+        Tue, 7 Apr 2020 00:51:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586238700;
-        bh=M2+4k8wmfwupbhN9ssnIg+wY4Ic8DPY+NyV+bVJoVFM=;
+        s=ti-com-17Q1; t=1586238689;
+        bh=FaY0LBRIW3kR+1f3BE+oL9YG/XxgPaOxP6c07wXgYFE=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qeHuIkvm+kkMO+JvB9bifK5IEEAMDaXyhxc9ROGFV6HVmQ57OL3pcVnD0Vwkq5OQ9
-         g+R7S1GWNQRxjoww32erv6GjM6O4Jic083gaXAJ48U90h1iu6tzsRmKT/vGqBgCna3
-         2sGTTpqFAqTNg3iZcd6c1yUYt0qxZxFkkYniH8YA=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0375pdYL041571
+        b=c5jxfveG4QFWbhd0icifpvHolKGGfhPfK+R8WL76La89B9u9fiQDAGZQIM4G/U5S+
+         8fjAAe/69HS+135BkjY2EFRuW06atQHTGqBKNSFLgENMIx5q8s4eG1TWyRbid8B06k
+         IroFU8nEd3DNR5IaAMApwZNlWuGI+NMudEZ8BsX4=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0375pTpB041484
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Apr 2020 00:51:40 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 7 Apr 2020 00:51:29 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Apr
- 2020 00:51:39 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 00:51:28 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Apr 2020 00:51:40 -0500
+ Frontend Transport; Tue, 7 Apr 2020 00:51:29 -0500
 Received: from a0393675ula.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0375pLdP017972;
-        Tue, 7 Apr 2020 00:51:36 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0375pLdM017972;
+        Tue, 7 Apr 2020 00:51:25 -0500
 From:   Keerthy <j-keerthy@ti.com>
 To:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
         <daniel.lezcano@linaro.org>
@@ -56,9 +56,9 @@ CC:     <j-keerthy@ti.com>, <amit.kucheria@verdurent.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
         <mark.rutland@arm.com>
-Subject: [PATCH v6 4/4] arm64: dts: ti: am654: Add thermal zones
-Date:   Tue, 7 Apr 2020 11:21:16 +0530
-Message-ID: <20200407055116.16082-5-j-keerthy@ti.com>
+Subject: [PATCH v6 1/4] dt-bindings: thermal: k3: Add VTM bindings documentation
+Date:   Tue, 7 Apr 2020 11:21:13 +0530
+Message-ID: <20200407055116.16082-2-j-keerthy@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200407055116.16082-1-j-keerthy@ti.com>
 References: <20200407055116.16082-1-j-keerthy@ti.com>
@@ -70,80 +70,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The am654 SoC has three thermal zones namely MPU0, MPU1 and MCU
-zones.
+Add VTM bindings documentation. In the Voltage Thermal
+Management Module(VTM), K3 AM654 supplies a voltage
+reference and a temperature sensor feature that are gathered in the band
+gap voltage and temperature sensor (VBGAPTS) module. The band
+gap provides current and voltage reference for its internal
+circuits and other analog IP blocks. The analog-to-digital
+converter (ADC) produces an output value that is proportional
+to the silicon temperature.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi    |  4 ++
- .../dts/ti/k3-am654-industrial-thermal.dtsi   | 45 +++++++++++++++++++
- 2 files changed, 49 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-index 98b89cf0ccdf..54a133fa1bf2 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-@@ -96,4 +96,8 @@
- 		power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
- 		#thermal-sensor-cells = <1>;
- 	};
-+
-+	thermal_zones: thermal-zones {
-+		#include "k3-am654-industrial-thermal.dtsi"
-+	};
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
+Changes in v6:
+
+  * Reordered the properties to match the order of definition.
+
+ .../bindings/thermal/ti,am654-thermal.yaml    | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+
+diff --git a/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
 new file mode 100644
-index 000000000000..cdc3d40c3f60
+index 000000000000..25b9209c2e5d
 --- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am654-industrial-thermal.dtsi
-@@ -0,0 +1,45 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/ti,am654-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <dt-bindings/thermal/thermal.h>
++title: Texas Instruments AM654 VTM (DTS) binding
 +
-+mpu0_thermal: mpu0_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+	thermal-sensors = <&wkup_vtm0 0>;
++maintainers:
++  - Keerthy <j-keerthy@ti.com>
 +
-+	trips {
-+		mpu0_crit: mpu0_crit {
-+			temperature = <125000>; /* milliCelsius */
-+			hysteresis = <2000>; /* milliCelsius */
-+			type = "critical";
-+		};
-+	};
-+};
++properties:
++  compatible:
++    const: ti,am654-vtm
 +
-+mpu1_thermal: mpu1_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+	thermal-sensors = <&wkup_vtm0 1>;
++  reg:
++    maxItems: 1
 +
-+	trips {
-+		mpu1_crit: mpu1_crit {
-+			temperature = <125000>; /* milliCelsius */
-+			hysteresis = <2000>; /* milliCelsius */
-+			type = "critical";
-+		};
-+	};
-+};
++  power-domains:
++    maxItems: 1
 +
-+mcu_thermal: mcu_thermal {
-+	polling-delay-passive = <250>; /* milliseconds */
-+	polling-delay = <500>; /* milliseconds */
-+	thermal-sensors = <&wkup_vtm0 2>;
++  "#thermal-sensor-cells":
++    const: 1
 +
-+	trips {
-+		mcu_crit: mcu_crit {
-+			temperature = <125000>; /* milliCelsius */
-+			hysteresis = <2000>; /* milliCelsius */
-+			type = "critical";
-+		};
-+	};
-+};
++required:
++  - compatible
++  - reg
++  - power-domains
++  - "#thermal-sensor-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/soc/ti,sci_pm_domain.h>
++    vtm: thermal@42050000 {
++        compatible = "ti,am654-vtm";
++        reg = <0x0 0x42050000 0x0 0x25c>;
++        power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
++        #thermal-sensor-cells = <1>;
++    };
++
++    mpu0_thermal: mpu0_thermal {
++        polling-delay-passive = <250>; /* milliseconds */
++        polling-delay = <500>; /* milliseconds */
++        thermal-sensors = <&vtm0 0>;
++
++        trips {
++                mpu0_crit: mpu0_crit {
++                        temperature = <125000>; /* milliCelsius */
++                        hysteresis = <2000>; /* milliCelsius */
++                        type = "critical";
++                };
++        };
++    };
++...
 -- 
 2.17.1
 
