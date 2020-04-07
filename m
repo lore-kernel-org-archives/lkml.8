@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B04AC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA35C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4CE2078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6391A20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbgDGSiF (ORCPT
+        id S1727526AbgDGSiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:38:05 -0400
-Received: from 8bytes.org ([81.169.241.247]:57724 "EHLO theia.8bytes.org"
+        Tue, 7 Apr 2020 14:38:07 -0400
+Received: from 8bytes.org ([81.169.241.247]:57590 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726898AbgDGSiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:38:00 -0400
+        id S1726956AbgDGSiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 14:38:01 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 5DAF6475; Tue,  7 Apr 2020 20:37:51 +0200 (CEST)
+        id 773C3596; Tue,  7 Apr 2020 20:37:52 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -45,9 +45,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [RFC PATCH 17/34] iommu/arm-smmu: Store device instead of group in arm_smmu_s2cr
-Date:   Tue,  7 Apr 2020 20:37:25 +0200
-Message-Id: <20200407183742.4344-18-joro@8bytes.org>
+Subject: [RFC PATCH 22/34] iommu/msm: Convert to probe/release_device() call-backs
+Date:   Tue,  7 Apr 2020 20:37:30 +0200
+Message-Id: <20200407183742.4344-23-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200407183742.4344-1-joro@8bytes.org>
 References: <20200407183742.4344-1-joro@8bytes.org>
@@ -58,55 +58,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-This is required to convert the arm-smmu driver to the
-probe/release_device() interface.
+Convert the MSM IOMMU driver to use the probe_device() and
+release_device() call-backs of iommu_ops, so that the iommu core code
+does the group and sysfs setup.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/arm-smmu.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ drivers/iommu/msm_iommu.c | 34 +++++++---------------------------
+ 1 file changed, 7 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index a6a5796e9c41..3493501d8b2c 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -69,7 +69,7 @@ MODULE_PARM_DESC(disable_bypass,
- 	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
+index 94a6df1bddd6..10cd4db0710a 100644
+--- a/drivers/iommu/msm_iommu.c
++++ b/drivers/iommu/msm_iommu.c
+@@ -388,43 +388,23 @@ static struct msm_iommu_dev *find_iommu_for_dev(struct device *dev)
+ 	return ret;
+ }
  
- struct arm_smmu_s2cr {
--	struct iommu_group		*group;
-+	struct device			*dev;
- 	int				count;
- 	enum arm_smmu_s2cr_type		type;
- 	enum arm_smmu_s2cr_privcfg	privcfg;
-@@ -1100,7 +1100,7 @@ static int arm_smmu_master_alloc_smes(struct device *dev)
- 	/* It worked! Now, poke the actual hardware */
- 	for_each_cfg_sme(cfg, fwspec, i, idx) {
- 		arm_smmu_write_sme(smmu, idx);
--		smmu->s2crs[idx].group = group;
-+		smmu->s2crs[idx].dev = dev;
- 	}
+-static int msm_iommu_add_device(struct device *dev)
++static struct iommu_device *msm_iommu_probe_device(struct device *dev)
+ {
+ 	struct msm_iommu_dev *iommu;
+-	struct iommu_group *group;
+ 	unsigned long flags;
  
- 	mutex_unlock(&smmu->stream_map_mutex);
-@@ -1495,11 +1495,15 @@ static struct iommu_group *arm_smmu_device_group(struct device *dev)
- 	int i, idx;
+ 	spin_lock_irqsave(&msm_iommu_lock, flags);
+ 	iommu = find_iommu_for_dev(dev);
+ 	spin_unlock_irqrestore(&msm_iommu_lock, flags);
  
- 	for_each_cfg_sme(cfg, fwspec, i, idx) {
--		if (group && smmu->s2crs[idx].group &&
--		    group != smmu->s2crs[idx].group)
-+		struct iommu_group *idx_grp = NULL;
-+
-+		if (smmu->s2crs[idx].dev)
-+			idx_grp = smmu->s2crs[idx].dev->iommu_group;
-+
-+		if (group && idx_grp && group != idx_grp)
- 			return ERR_PTR(-EINVAL);
+-	if (iommu)
+-		iommu_device_link(&iommu->iommu, dev);
+-	else
+-		return -ENODEV;
+-
+-	group = iommu_group_get_for_dev(dev);
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
+-
+-	iommu_group_put(group);
++	if (!iommu)
++		return ERR_PTR(-ENODEV);
  
--		group = smmu->s2crs[idx].group;
-+		group = idx_grp;
- 	}
+-	return 0;
++	return &iommu->iommu;
+ }
  
- 	if (group)
+-static void msm_iommu_remove_device(struct device *dev)
++static void msm_iommu_release_device(struct device *dev)
+ {
+-	struct msm_iommu_dev *iommu;
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&msm_iommu_lock, flags);
+-	iommu = find_iommu_for_dev(dev);
+-	spin_unlock_irqrestore(&msm_iommu_lock, flags);
+-
+-	if (iommu)
+-		iommu_device_unlink(&iommu->iommu, dev);
+-
+-	iommu_group_remove_device(dev);
+ }
+ 
+ static int msm_iommu_attach_dev(struct iommu_domain *domain, struct device *dev)
+@@ -708,8 +688,8 @@ static struct iommu_ops msm_iommu_ops = {
+ 	 */
+ 	.iotlb_sync = NULL,
+ 	.iova_to_phys = msm_iommu_iova_to_phys,
+-	.add_device = msm_iommu_add_device,
+-	.remove_device = msm_iommu_remove_device,
++	.probe_device = msm_iommu_probe_device,
++	.release_device = msm_iommu_release_device,
+ 	.device_group = generic_device_group,
+ 	.pgsize_bitmap = MSM_IOMMU_PGSIZES,
+ 	.of_xlate = qcom_iommu_of_xlate,
 -- 
 2.17.1
 
