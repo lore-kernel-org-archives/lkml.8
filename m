@@ -2,98 +2,70 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C334C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBFBC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B1820730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76FAC20748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:55:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586289304;
+	bh=r+VImNmnLBQUKy6aPx4G7SRNP8Qk/clSP1tZpxClntI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=nBfn0AW8EAXMAErnGn+Peh24NhSJvNpJaQM1VWzEAdnBAXzxyMJkmPN9J/Q8J2irP
+	 gOvCQX/Z28x1BQgfr97lNHnjuz/7Pnu9YvPfnHQqZiIj+F+sxG9KV9So517flxw38E
+	 kKZfgNX4qkFtQbeeJVl9QEttIXwya9Ucjg3Err54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgDGTye (ORCPT
+        id S1727817AbgDGTzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:54:34 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48493 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgDGTye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:54:34 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jLuIn-0004Fa-SY; Tue, 07 Apr 2020 21:54:30 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3E0C61C0082;
-        Tue,  7 Apr 2020 21:54:29 +0200 (CEST)
-Date:   Tue, 07 Apr 2020 19:54:28 -0000
-From:   "tip-bot2 for Jan Kara" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] ucount: Make sure ucounts in /proc/sys/user
- don't regress again
-Cc:     Jan Kara <jack@suse.cz>, Thomas Gleixner <tglx@linutronix.de>,
-        Andrei Vagin <avagin@gmail.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200407154643.10102-1-jack@suse.cz>
-References: <20200407154643.10102-1-jack@suse.cz>
-MIME-Version: 1.0
-Message-ID: <158628926863.28353.6820611452673308754.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 7 Apr 2020 15:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726712AbgDGTzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 15:55:03 -0400
+Subject: Re: [GIT PULL] parisc architecture fixes for kernel v5.7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586289302;
+        bh=r+VImNmnLBQUKy6aPx4G7SRNP8Qk/clSP1tZpxClntI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=f+VShvUrPZxu1C1Ms2KDU5EdVJqfo1DVQFjuvXIE2D7VSZ9q5S+etPphEm0wfuRAK
+         BMcRBUWWUrW7lnZUJLcac5lJlye54Y39VAKA9wZDvX1TO3s/jiNG/xKisWu7tlciFI
+         I6BUIPq7nie29FcuY0bc7opuFp6UEakT2v6vZ6sE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200406201615.GA23183@ls3530.fritz.box>
+References: <20200406201615.GA23183@ls3530.fritz.box>
+X-PR-Tracked-List-Id: <linux-parisc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200406201615.GA23183@ls3530.fritz.box>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git
+ parisc-5.7-1
+X-PR-Tracked-Commit-Id: 106c90922e1e0cd5fcbb34be8ebbb3e8a8e71909
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f9db97d751870cbffc85f4aa0d8aca8a79432691
+Message-Id: <158628930265.3792.541815435181788203.pr-tracker-bot@kernel.org>
+Date:   Tue, 07 Apr 2020 19:55:02 +0000
+To:     Helge Deller <deller@gmx.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+The pull request you sent on Mon, 6 Apr 2020 22:16:15 +0200:
 
-Commit-ID:     0f538e3e712a517bd351607de50cd298102c7c08
-Gitweb:        https://git.kernel.org/tip/0f538e3e712a517bd351607de50cd298102c7c08
-Author:        Jan Kara <jack@suse.cz>
-AuthorDate:    Tue, 07 Apr 2020 17:46:43 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 07 Apr 2020 21:51:27 +02:00
+> git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.7-1
 
-ucount: Make sure ucounts in /proc/sys/user don't regress again
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f9db97d751870cbffc85f4aa0d8aca8a79432691
 
-Commit 769071ac9f20 "ns: Introduce Time Namespace" broke reporting of
-inotify ucounts (max_inotify_instances, max_inotify_watches) in
-/proc/sys/user because it has added UCOUNT_TIME_NAMESPACES into enum
-ucount_type but didn't properly update reporting in
-kernel/ucount.c:setup_userns_sysctls(). This problem got fixed in commit
-eeec26d5da82 "time/namespace: Add max_time_namespaces ucount".
+Thank you!
 
-Add BUILD_BUG_ON to catch a similar problem in the future.
-
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Andrei Vagin <avagin@gmail.com>
-Link: https://lkml.kernel.org/r/20200407154643.10102-1-jack@suse.cz
-
----
- kernel/ucount.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/ucount.c b/kernel/ucount.c
-index 29c60eb..11b1596 100644
---- a/kernel/ucount.c
-+++ b/kernel/ucount.c
-@@ -82,6 +82,8 @@ bool setup_userns_sysctls(struct user_namespace *ns)
- {
- #ifdef CONFIG_SYSCTL
- 	struct ctl_table *tbl;
-+
-+	BUILD_BUG_ON(ARRAY_SIZE(user_table) != UCOUNT_COUNTS + 1);
- 	setup_sysctl_set(&ns->set, &set_root, set_is_seen);
- 	tbl = kmemdup(user_table, sizeof(user_table), GFP_KERNEL);
- 	if (tbl) {
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
