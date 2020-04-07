@@ -2,195 +2,103 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8B2C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFB6C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF532074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9D92075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:28:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J4cjimTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgDGP0o (ORCPT
+        id S1729230AbgDGP2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:26:44 -0400
-Received: from 8bytes.org ([81.169.241.247]:57286 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729040AbgDGP0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:26:43 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id ACAB15D8; Tue,  7 Apr 2020 17:26:41 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 17:26:40 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Updates for Linux v5.7
-Message-ID: <20200407152635.GA10588@8bytes.org>
+        Tue, 7 Apr 2020 11:28:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31027 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728306AbgDGP2L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:28:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586273290;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aDEKpry8Wl4olxgiLDrUYCTGcUfE5/0dkfqVTqUlkAw=;
+        b=J4cjimTnFlUrYAtbXxYnBh2zZD1rlAKEQCRX2/QQPMcT7KCdh2jvrtHviJT31LvJ94BFz3
+        8Q5j+3UdkOoklUzBVBIqrqGZ+NkxsfFJC4kuaMI01NH08Gu8zErxIWp9Mv2zRXexiKS5H9
+        tdOhzgWI3bxkt2KKHBbRzZaPJ0IK/ng=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-136-kBakWZR7MtK_xwbaQz67mA-1; Tue, 07 Apr 2020 11:28:08 -0400
+X-MC-Unique: kBakWZR7MtK_xwbaQz67mA-1
+Received: by mail-wr1-f70.google.com with SMTP id t25so2125463wrb.16
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 08:28:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aDEKpry8Wl4olxgiLDrUYCTGcUfE5/0dkfqVTqUlkAw=;
+        b=snHWRybIQvH0PX9VnnFjl5VdG0qeQ0KwoWW9vUfTkkh/r/+1q21lfhGpBvJKWEm3jg
+         eeWgp9Yk4vasWy9QQ8+IuTYNm0ithnl+4cNMrWxE5uh9bBvB3PtpcapxJhnRdZxngq3S
+         4xWbqjkM5PGgCN+HjrxA3Bmb7LmYW8bYF9wzeLaP74HdNSXH6T6RUVm57JeorbuA0Gxm
+         CXo4fmcobAi50fZ5qYMDbzKzU/wW2Do5nd440LanBT4QEQtmlg8HmoG/4zVOq5TO2ab+
+         QA6NIGAmi1DMppskA/kdDQrJ/39as3K8lMjqZgsLSeSLEfxtONESVgqpD1hACZuk5IYe
+         PbRA==
+X-Gm-Message-State: AGi0PuaJJoXZLR2d9nH9AHsGgRNU6C3ivsfRC2cZmaawosAjnMpWBAq9
+        RHC+2TMxt+mlDrDXpLYJdz2Uzj14cnLDIfuuVhBZPSf61jfojqFi1lYmDChpi65qQdmGEwAa270
+        NCUAOfGfjen9RtZDHUQxwwDtV
+X-Received: by 2002:adf:fa04:: with SMTP id m4mr1881633wrr.30.1586273286800;
+        Tue, 07 Apr 2020 08:28:06 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIh9D+su8gezcQUaGFFTXfGyJIYfOS0FiQ9d6+kwjeD6R+ccU6LNlmSe6dOV1WJjsqAiz36vg==
+X-Received: by 2002:adf:fa04:: with SMTP id m4mr1881607wrr.30.1586273286535;
+        Tue, 07 Apr 2020 08:28:06 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.170.5])
+        by smtp.gmail.com with ESMTPSA id x8sm5037367wrn.27.2020.04.07.08.28.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 08:28:05 -0700 (PDT)
+Subject: Re: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        hch@infradead.org, sean.j.christopherson@intel.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
+        fenghua.yu@intel.com, xiaoyao.li@intel.com, nadav.amit@gmail.com,
+        thellstrom@vmware.com, tony.luck@intel.com, rostedt@goodmis.org,
+        jannh@google.com, keescook@chromium.org, David.Laight@aculab.com,
+        dcovelli@vmware.com, mhiramat@kernel.org
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.352324393@infradead.org> <20200407143543.GB876345@kroah.com>
+ <20200407152412.GE20730@hirez.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <92c36ea2-98c3-9320-0618-aa225d2fbc9e@redhat.com>
+Date:   Tue, 7 Apr 2020 17:28:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200407152412.GE20730@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/04/20 17:24, Peter Zijlstra wrote:
+> The thing I worry about is them lying about "intree", is there anything
+> that avoids that?
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In QEMU we generate a random-ish number on every build (actually an SHA
+of the version and a bunch of other things) and include that in the
+modules as the "in tree" marker.
 
-Hi Linus,
+Paolo
 
-The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
-
-  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-updates-v5.7
-
-for you to fetch changes up to ff68eb23308e6538ec7864c83d39540f423bbe90:
-
-  Merge branches 'iommu/fixes', 'arm/qcom', 'arm/omap', 'arm/smmu', 'x86/amd', 'x86/vt-d', 'virtio' and 'core' into next (2020-03-27 11:33:27 +0100)
-
-----------------------------------------------------------------
-IOMMU Updates for Linux v5.7
-
-Including:
-
-	- ARM-SMMU support for the TLB range invalidation command in
-	  SMMUv3.2.
-
-	- ARM-SMMU introduction of command batching helpers to batch up
-	  CD and ATC invalidation.
-
-	- ARM-SMMU support for PCI PASID, along with necessary PCI
-	  symbol exports.
-
-	- Introduce a generic (actually rename an existing) IOMMU
-	  related pointer in struct device and reduce the IOMMU related
-	  pointers.
-
-	- Some fixes for the OMAP IOMMU driver to make it build on 64bit
-	  architectures.
-
-	- Various smaller fixes and improvements.
-
-----------------------------------------------------------------
-Adrian Huang (1):
-      iommu/amd: Fix the configuration of GCR3 table root pointer
-
-Gustavo A. R. Silva (1):
-      iommu/qcom: Replace zero-length array with flexible-array member
-
-Jacob Pan (3):
-      iommu/vt-d: Fix page request descriptor size
-      iommu/vt-d: Fix mm reference leak
-      iommu/vt-d: Add build dependency on IOASID
-
-Jean-Philippe Brucker (9):
-      iommu/virtio: Build virtio-iommu as module
-      PCI/ATS: Export symbols of PASID functions
-      iommu/arm-smmu-v3: Add support for PCI PASID
-      iommu/arm-smmu-v3: Write level-1 descriptors atomically
-      iommu/arm-smmu-v3: Add command queue batching helpers
-      iommu/arm-smmu-v3: Batch context descriptor invalidation
-      iommu/virtio: Fix sparse warning
-      iommu/virtio: Fix freeing of incomplete domains
-      iommu/virtio: Reject IOMMU page granule larger than PAGE_SIZE
-
-Joerg Roedel (17):
-      Merge tag 'arm-smmu-updates' of git://git.kernel.org/.../will/linux into arm/smmu
-      iommu: Define dev_iommu_fwspec_get() for !CONFIG_IOMMU_API
-      ACPI/IORT: Remove direct access of dev->iommu_fwspec
-      drm/msm/mdp5: Remove direct access of dev->iommu_fwspec
-      iommu/tegra-gart: Remove direct access of dev->iommu_fwspec
-      iommu: Rename struct iommu_param to dev_iommu
-      iommu: Move iommu_fwspec to struct dev_iommu
-      iommu/arm-smmu: Fix uninitilized variable warning
-      iommu: Introduce accessors for iommu private data
-      iommu/arm-smmu-v3: Use accessor functions for iommu private data
-      iommu/arm-smmu: Use accessor functions for iommu private data
-      iommu/renesas: Use accessor functions for iommu private data
-      iommu/mediatek: Use accessor functions for iommu private data
-      iommu/qcom: Use accessor functions for iommu private data
-      iommu/virtio: Use accessor functions for iommu private data
-      iommu: Move fwspec->iommu_priv to struct dev_iommu
-      Merge branches 'iommu/fixes', 'arm/qcom', 'arm/omap', 'arm/smmu', 'x86/amd', 'x86/vt-d', 'virtio' and 'core' into next
-
-Krzysztof Kozlowski (4):
-      iommu/omap: Fix pointer cast -Wpointer-to-int-cast warnings on 64 bit
-      iommu/omap: Fix printing format for size_t on 64-bit
-      iommu/omap: Fix -Woverflow warnings when compiling on 64-bit architectures
-      iommu: Enable compile testing for some of drivers
-
-Qian Cai (1):
-      iommu/vt-d: Silence RCU-list debugging warning in dmar_find_atsr()
-
-Rob Herring (2):
-      iommu/arm-smmu-v3: Batch ATC invalidation commands
-      iommu/arm-smmu-v3: Add SMMUv3.2 range invalidation support
-
-Robin Murphy (3):
-      iommu: Use C99 flexible array in fwspec
-      MAINTAINERS: Cover Arm SMMU DT bindings
-      iommu/arm-smmu: Refactor master_cfg/fwspec usage
-
- MAINTAINERS                              |   1 +
- drivers/acpi/arm64/iort.c                |   6 +-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c |   2 +-
- drivers/iommu/Kconfig                    |  21 +--
- drivers/iommu/amd_iommu_types.h          |   2 +-
- drivers/iommu/arm-smmu-v3.c              | 214 ++++++++++++++++++++++++++-----
- drivers/iommu/arm-smmu.c                 |  55 ++++----
- drivers/iommu/intel-iommu.c              |   3 +-
- drivers/iommu/intel-svm.c                |   9 +-
- drivers/iommu/iommu.c                    |  46 ++++---
- drivers/iommu/ipmmu-vmsa.c               |   7 +-
- drivers/iommu/mtk_iommu.c                |  13 +-
- drivers/iommu/mtk_iommu_v1.c             |  14 +-
- drivers/iommu/omap-iommu.c               |  10 +-
- drivers/iommu/omap-iopgtable.h           |   3 +-
- drivers/iommu/qcom_iommu.c               |  63 +++++----
- drivers/iommu/tegra-gart.c               |   2 +-
- drivers/iommu/virtio-iommu.c             |  42 +++---
- drivers/pci/ats.c                        |   4 +
- include/linux/device.h                   |   9 +-
- include/linux/iommu.h                    |  35 +++--
- include/uapi/linux/virtio_iommu.h        |  12 +-
- 22 files changed, 386 insertions(+), 187 deletions(-)
-
-The changes to 'include/linux/device.h' have been reviewed by Greg.
-
-Please pull.
-
-Thanks,
-
-	Joerg
-
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl6Mm6oACgkQK/BELZcB
-GuO6sg//dZtRWRQKKDiPuRQHlvPJyIorDO2OPvCk1eJWFAOwGyYQLnb1y38JUvZ/
-pCMo8p3iRvmJs+qpTHsZY7I9EvGEdTr/2j00XTrtNoZ51N3YR337648FnSIndSL2
-aLtTt9bMCbV3MF2beg9hxq8T34+94DdEoN/L22XjMnM1H8EDDxijGTDy8bvzhojX
-2Tvq+haDzlR3F6f9o+3lyv0Xv5tqRlzfPcbTmXeIG+9Ccanh4g3bn5+SN8CZhTKu
-GVsIb17HN/5vaTkMD5a5xt7BljfKXxhE8tt5lLkXIWWDQgbhWtJSY6paOnyEQn0U
-uTlHAGEEX8TvYeTofqQrk1zM7WU/FaRNhL8r1vFQFaqWAeb5FI2+nBIJzDBtT+Cw
-A3t4IAvkKoiXwDRFm04aKbvzy5by8hYC/p5XtV7Umw9OjJ6dvdH9hBZ99FKIv0pa
-lzMq+EGgUK1MTlLImffcSQFA3QI88m693pxlvC6GnrnpQ3317SNyBSveOe6rzKc+
-/n8W7BEpid1QcDJKQGfhfD5MOa3BQkSZSYv3t2mXn4Qk89eNINErlJELOGyVuqor
-paQkOkjNWwrKA9FrewUVv8Px5lz2yMjReLYrSTiutipQUhvTcE1z2DJ+1q2MJ78x
-pWyifx5BrVi5/0Iq5a1PCFEq6OenxgDqIgelhTLm4Wgw9frhRkA=
-=uNur
------END PGP SIGNATURE-----
-
---HlL+5n6rz5pIUxbD--
