@@ -2,154 +2,307 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1CAC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A30BC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33134206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD74206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:12:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="WL0skkhX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KZqgvKfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgDGRLN (ORCPT
+        id S1726609AbgDGRMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:11:13 -0400
-Received: from mout.web.de ([217.72.192.78]:58005 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgDGRLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:11:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586279449;
-        bh=6Fwx67S7LSpJX9ZpZfC6U+5pKtQcych8l4xHzMwnVv0=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=WL0skkhXAuy5b7FlXXx2g/8pF3+mAtXaZ3Xmqki/eoAKDL3Pu1qHpxNrPz/ZLzCFj
-         fBPG+3Zs8Oa22/ilENsg3BuFl4ATa1dtvjfyCXJ0cp4iY6x08FgvTZ1Ks6kjjeAtb7
-         LTyrJEBEqwhrhz10/c+ia1Mp0Hoixi58cBZfsAR0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.5.104]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MKa6N-1jLadL3VVX-0023fS; Tue, 07
- Apr 2020 19:10:49 +0200
-Subject: Re: Coccinelle: zalloc-simple: Fix patch mode for
- dma_alloc_coherent()
-To:     Alex Dewar <alex.dewar@gmx.co.uk>, cocci@systeme.lip6.fr
-Cc:     kernel-janitors@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Allison Randal <allison@lohutok.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Tue, 7 Apr 2020 13:12:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48180 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726365AbgDGRL7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 13:11:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586279518;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZSBF7tOzRxO10YjbPU7Bv3EEE5LpjgBIjIXBe6C/0FY=;
+        b=KZqgvKfC8lb5HEewES+q35ZpMMlnw05r4IBD23L6SbrySs2I3C/d+xnv642ggtEvhZcBpN
+        69RqCsdfja0qvkD+4OdhWVpl9U1lMhXPp5wjYD1yhJX1zBLgh5m1cArvBE9GLw/6OuZbMg
+        GhJ50sZE+Vq5eNz0Xuc/JgHhzzX/mPU=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371-98bY3pZFPEO54TQ9QULGGA-1; Tue, 07 Apr 2020 13:11:55 -0400
+X-MC-Unique: 98bY3pZFPEO54TQ9QULGGA-1
+Received: by mail-qv1-f70.google.com with SMTP id j7so3510712qvy.22
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:11:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZSBF7tOzRxO10YjbPU7Bv3EEE5LpjgBIjIXBe6C/0FY=;
+        b=EH0YNrJ9QcGf6hDHA8AatFEcAbDm4BtZ0fg1FyNiU9EYNUWogcmqcMqhIozJXPaTza
+         DJS9YEQIRDxbGgoeBLBMqKxdp6B4xAJk7GzL5CyVnqClPmcENGGobFy1nrgJ1pmHB6Um
+         f1WAoCWug3PXWdv/SVj3qybxzRyNI8Iz5za0dV+uyT+yzgxWQLg06P0lt0SoM0M7XwVe
+         cDZpzOMr3qejvTN/OA+MuMNRx/pYet2dYxoMbV5VxB24tie7tfrXDY/F0gDwcr7Z/PHR
+         P43n88dF2IUVAeE+gUkuoXNtBMDfCYQ5t6FpkILf00wY+GDaU1oNvr2BhasSoQgCcJro
+         RfOw==
+X-Gm-Message-State: AGi0PuaeFn4ZuYRnA2PNBaujypl+e5v8XyN1uPyli2GwHCClAOrJ5CrG
+        sRcCLaP1PcuSnpfISodDBBY6YuLHshrwEDv8Ib+j6jRDNIEUEz55/5LNq8K3ZPnoQjokX4p869N
+        80W434cjtCvDVV/jDcGXeU3cj
+X-Received: by 2002:ac8:568b:: with SMTP id h11mr3359566qta.197.1586279514843;
+        Tue, 07 Apr 2020 10:11:54 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIsBxCQ0i4lAaOo4Y9HTrwWWzimzTlOgDesSissOnAZYNWvh++MU+caahFIR6ZOUThlrc/XRg==
+X-Received: by 2002:ac8:568b:: with SMTP id h11mr3359535qta.197.1586279514431;
+        Tue, 07 Apr 2020 10:11:54 -0700 (PDT)
+Received: from dev.jcline.org ([136.56.87.133])
+        by smtp.gmail.com with ESMTPSA id c40sm18290923qtk.18.2020.04.07.10.11.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 10:11:53 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 13:11:52 -0400
+From:   Jeremy Cline <jcline@redhat.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
         linux-kernel@vger.kernel.org
-References: <beeed2c8-1b5a-66a8-ec41-f5770c04bae9@web.de>
- <20200407160330.5m75sfkhrrx3wgrl@lenovo-laptop>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <045a4a1a-c841-2979-c899-b632ca418b3b@web.de>
-Date:   Tue, 7 Apr 2020 19:10:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: Re: [PATCH v2] kbuild: add dummy toolchains to enable all cc-option
+ etc. in Kconfig
+Message-ID: <20200407171152.GC196945@dev.jcline.org>
+References: <20200407155352.16617-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200407160330.5m75sfkhrrx3wgrl@lenovo-laptop>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:658ts8KvimtcwF8VX6q9/vLaAaDgPGhLfmlrhuR5p1DJ/49ESZ7
- t7zqagrqHtiNFol+3hQh9gTCZawokRswqnToErN6dizrlCcVY+oc4fO7Mfi2GcHdElEcQ7f
- xSv1NHoINQCLdl7+emL4aYt0rNWIM2tGak9+xrK29tPDtFtOTKavwEJ6b62IhSpkMtzEuL9
- aaKCf58WTzd9TK1CjbjiQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RbwNodSnESU=:HxHcmDsIsBUwiJ5jInTsi2
- Hb19qGho3Di2u6lgZ+nhC/DpPk8hm3PRMwx6wucoQmJdUR786JjN6k4NYp8nGnWeEFuO8/8M9
- 0/NtAIfRPOacRcaYPinNeapCFm2IM5aAspSY04rOdP1v1Z0spy58zINlNTKGN9ZCt7mAhGQr5
- n8npo+HLvbrKmOorWmAHCA/qjSw2lPd4Tk9UDj25GhdQsu/w/yu49ocMczPdquLJ42FoBGlfE
- ldVs9WE4HG7ZNHD3ZySwCr+uOIr+b+46yTdltP1mFwwOr9C1IhVjlXPm6QS5NxRAaWfLulYop
- 6r0Yh5q5RPzr9SAEspsYx47Evlz8jhReEvrOQyCeX5ktAGpJqOPwajdpK4h/AHBisxAMEtTjY
- LG7pNL6ZhVt1r8PeyvGgqPxx+EqQiY6TEKMkKT6/kqBUVJiKCzA52X/AbfW4sjoVgWbDFkP7J
- LOz1gXwLxLdx8lwcuZ+EsTwh5N2nISR32hfnoByZam2RugQDGWJenvnCw6A5DivOiFEAj3mnG
- NkrpUq3JEgJjfy+iZr2b/uPv45u6SaEU2YIsJQDiJsJyQGVd0pvX0QXrWZ3qgQJZgz8qNjAtS
- 5WY5wbfAgZ/QtoBmeYBz/3dFBKXXuhNt2NSPBuTCV8MJI8qAHdYxey0Umgcs5xPn/oLiR9szF
- oo9+J15J3a0zhLVlVPPmuV4vQ7V9L4hzpbF2Vf1foknpN2RrfnOjS6MQN9esXUTQo/Ux7ohz8
- X3j19ymhYaehbgPHZxnV46ZmV3Eq9d5oUtlqXAuHLcAUOsJ/JL/xUOR3+EFUKQGg1xotLsI8j
- 3iAn23VVsYRQW6vu412a3s6tcfHfMYOYp/VTDcE8OC5IZP3YrsEx5NLmxF8+15mfJHn231E06
- zmaIJrooxZWeyf8W7NlTH2PB867nrkjimvDdPSK40WMPWa1uUi2tr3nvTEhDy/yvQbKHjmqua
- HMIFucJqkuhPV7lkMmpLrOpTHH4WeQuFKzk+so4vX5SSfLl/z5sl3rGhiZZG4mcCc/goTMTNm
- 8Q0hkXKlU/p/V+kmzrn8yiQZ6cGVq+DFAjiw4mZ3r5Oz5m7ggQzDYTn4Zou8PAS/FghdIM9RE
- pb6ZDm/ilC987fZyCICXuJpsXPW0Dc+cPeGsdmb37BwnFi81S627BepvvFkU3Oi6wbuFE52SF
- qsED5ml6XaLiGBnYkHEFAY+Sqz6ohFUuOdshXr32BRmpJte/gIRa1InoquY5zRAI9zlcoRddG
- bcWzaEz+WZ6ueTiyk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407155352.16617-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Will the software development attention grow in a way so that further
->> implementation details can be adjusted also for the mentioned SmPL scri=
-pt?
->
-> I'm not sure I understand what you mean. Would you mind clarifying?
+On Wed, Apr 08, 2020 at 12:53:52AM +0900, Masahiro Yamada wrote:
+> Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
+> options your compiler does not support. This works well if you configure
+> and build the kernel on the same host machine.
+> 
+> It is inconvenient if you prepare the .config that is carried to a
+> different build environment (typically this happens when you package
+> the kernel for distros) because using a different compiler potentially
+> produces different CONFIG options than the real build environment.
+> So, you probably want to make as many options visible as possible.
+> In other words, you need to create a super-set of CONFIG options that
+> cover any build environment. If some of the CONFIG options turned out
+> to be unsupported on the build machine, they are automatically disabled
+> by the nature of Kconfig.
+> 
+> However, it is not feasible to get a full-featured compiler for every
+> arch.
+> 
+> This issue was discussed here:
+> 
+>   https://lkml.org/lkml/2019/12/9/620
+> 
+> Other than distros, savedefconfig is also a problem. Some arch sub-systems
+> periodically resync defconfig files. If you use a less-capable compiler
+> for savedefconfig, options that do not meet 'depends on $(cc-option,...)'
+> will be forcibly disabled. So, 'make defconfig && make savedefconfig'
+> may silently change the behavior.
+> 
+> This commit adds a set of dummy toolchains that pretend to support any
+> feature.
+> 
+> Most of compiler features are tested by cc-option, which simply checks
+> the exit code of $(CC). The dummy tools are shell scripts that always
+> exit with 0. So, $(cc-option, ...) is evaluated as 'y'.
+> 
+> There are more complicated checks such as:
+> 
+>   scripts/gcc-x86_{32,64}-has-stack-protector.sh
+>   scripts/gcc-plugin.sh
+>   scripts/tools-support-relr.sh
+> 
+> scripts/dummy-tools/gcc passes all checks.
+> 
+> From the top directory of the source tree, you can do:
+> 
+>    $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
+> ---
+> 
+> Changes in v2:
+>   - support --version and -v for ld, objdump, nm
 
-You would like to a change a file for which some software development
-discussions happened a while ago.
-Do you get any further ideas from available information in message archive=
-s?
+Great, "make ARCH=powerpc CROSS_COMPILE=scripts/dummy-tools/ help" no
+longer spits out "/bin/sh: line 0: [: -ge: unary operator expected" and
+everything looks to work as expected.
 
-Julia Lawall (and me) pointed special development concerns out.
+Tested-by: Jeremy Cline <jcline@redhat.com>
 
-Example:
-Code duplications in SmPL disjunctions
-https://lore.kernel.org/cocci/alpine.DEB.2.21.2004062115000.10239@hadrien/
-https://systeme.lip6.fr/pipermail/cocci/2020-April/007099.html
+> 
+>  scripts/dummy-tools/gcc     | 91 +++++++++++++++++++++++++++++++++++++
+>  scripts/dummy-tools/ld      | 30 ++++++++++++
+>  scripts/dummy-tools/nm      |  1 +
+>  scripts/dummy-tools/objcopy |  1 +
+>  4 files changed, 123 insertions(+)
+>  create mode 100755 scripts/dummy-tools/gcc
+>  create mode 100755 scripts/dummy-tools/ld
+>  create mode 120000 scripts/dummy-tools/nm
+>  create mode 120000 scripts/dummy-tools/objcopy
+> 
+> diff --git a/scripts/dummy-tools/gcc b/scripts/dummy-tools/gcc
+> new file mode 100755
+> index 000000000000..33487e99d83e
+> --- /dev/null
+> +++ b/scripts/dummy-tools/gcc
+> @@ -0,0 +1,91 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
+> +# options your compiler does not support. This works well if you configure and
+> +# build the kernel on the same host machine.
+> +#
+> +# It is inconvenient if you prepare the .config that is carried to a different
+> +# build environment (typically this happens when you package the kernel for
+> +# distros) because using a different compiler potentially produces different
+> +# CONFIG options than the real build environment. So, you probably want to make
+> +# as many options visible as possible. In other words, you need to create a
+> +# super-set of CONFIG options that cover any build environment. If some of the
+> +# CONFIG options turned out to be unsupported on the build machine, they are
+> +# automatically disabled by the nature of Kconfig.
+> +#
+> +# However, it is not feasible to get a full-featured compiler for every arch.
+> +# Hence these dummy toolchains to make all compiler tests pass.
+> +#
+> +# Usage:
+> +#
+> +# From the top directory of the source tree, run
+> +#
+> +#   $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
+> +#
+> +# Most of compiler features are tested by cc-option, which simply checks the
+> +# exit code of $(CC). This script does nothing and just exits with 0 in most
+> +# cases. So, $(cc-option, ...) is evaluated as 'y'.
+> +#
+> +# This scripts caters to more checks; handle --version and pre-process __GNUC__
+> +# etc. to pretend to be GCC, and also do right things to satisfy some scripts.
+> +
+> +# Check if the first parameter appears in the rest. Succeeds if found.
+> +# This helper is useful if a particular option was passed to this script.
+> +# Typically used like this:
+> +#   arg_contain <word-you-are-searching-for> "$@"
+> +arg_contain ()
+> +{
+> +	search="$1"
+> +	shift
+> +
+> +	while [ $# -gt 0 ]
+> +	do
+> +		if [ "$search" = "$1" ]; then
+> +			return 0
+> +		fi
+> +		shift
+> +	done
+> +
+> +	return 1
+> +}
+> +
+> +# To set CONFIG_CC_IS_GCC=y
+> +if arg_contain --version "$@"; then
+> +	echo "gcc (scripts/dummy-tools/gcc)"
+> +	exit 0
+> +fi
+> +
+> +if arg_contain -E "$@"; then
+> +	# For scripts/gcc-version.sh; This emulates GCC 20.0.0
+> +	if arg_contain - "$@"; then
+> +		sed 's/^__GNUC__$/20/; s/^__GNUC_MINOR__$/0/; s/^__GNUC_PATCHLEVEL__$/0/'
+> +		exit 0
+> +	else
+> +		echo "no input files" >&2
+> +		exit 1
+> +	fi
+> +fi
+> +
+> +if arg_contain -S "$@"; then
+> +	# For scripts/gcc-x86-*-has-stack-protector.sh
+> +	if arg_contain -fstack-protector "$@"; then
+> +		echo "%gs"
+> +		exit 0
+> +	fi
+> +fi
+> +
+> +# For scripts/gcc-plugin.sh
+> +if arg_contain -print-file-name=plugin "$@"; then
+> +	plugin_dir=$(mktemp -d)
+> +
+> +	sed -n 's/.*#include "\(.*\)"/\1/p' $(dirname $0)/../gcc-plugins/gcc-common.h |
+> +	while read header
+> +	do
+> +		mkdir -p $plugin_dir/include/$(dirname $header)
+> +		touch $plugin_dir/include/$header
+> +	done
+> +
+> +	echo $plugin_dir
+> +	exit 0
+> +fi
+> diff --git a/scripts/dummy-tools/ld b/scripts/dummy-tools/ld
+> new file mode 100755
+> index 000000000000..f68233050405
+> --- /dev/null
+> +++ b/scripts/dummy-tools/ld
+> @@ -0,0 +1,30 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +# Dummy script that always succeeds.
+> +
+> +# Check if the first parameter appears in the rest. Succeeds if found.
+> +# This helper is useful if a particular option was passed to this script.
+> +# Typically used like this:
+> +#   arg_contain <word-you-are-searching-for> "$@"
+> +arg_contain ()
+> +{
+> +	search="$1"
+> +	shift
+> +
+> +	while [ $# -gt 0 ]
+> +	do
+> +		if [ "$search" = "$1" ]; then
+> +			return 0
+> +		fi
+> +		shift
+> +	done
+> +
+> +	return 1
+> +}
+> +
+> +if arg_contain --version "$@" || arg_contain -v "$@"; then
+> +	progname=$(basename $0)
+> +	echo "GNU $progname (scripts/dummy-tools/$progname) 2.50"
+> +	exit 0
+> +fi
+> diff --git a/scripts/dummy-tools/nm b/scripts/dummy-tools/nm
+> new file mode 120000
+> index 000000000000..c0648b38dd42
+> --- /dev/null
+> +++ b/scripts/dummy-tools/nm
+> @@ -0,0 +1 @@
+> +ld
+> \ No newline at end of file
+> diff --git a/scripts/dummy-tools/objcopy b/scripts/dummy-tools/objcopy
+> new file mode 120000
+> index 000000000000..c0648b38dd42
+> --- /dev/null
+> +++ b/scripts/dummy-tools/objcopy
+> @@ -0,0 +1 @@
+> +ld
+> \ No newline at end of file
+> -- 
+> 2.17.1
+> 
 
-Regards,
-Markus
