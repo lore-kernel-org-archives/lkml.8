@@ -2,115 +2,205 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1568C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB78FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75E2D20692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6951120692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtZs2j/d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rJmOYMk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgDGA3P (ORCPT
+        id S1726416AbgDGAgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:29:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37599 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgDGA3P (ORCPT
+        Mon, 6 Apr 2020 20:36:04 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53694 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgDGAgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:29:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r4so875782pgg.4;
-        Mon, 06 Apr 2020 17:29:14 -0700 (PDT)
+        Mon, 6 Apr 2020 20:36:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d77so23501wmd.3;
+        Mon, 06 Apr 2020 17:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Hqwa+hUekQq3MYYw51APHLwXOUrFBa1sM5+b28OQ11o=;
-        b=BtZs2j/dnw2PngLknCmZUjx56rNiQyDoDmVAOgZQjjRFRVxLZmw40H/jFGMoJZu00W
-         LLkqlHs1rwByTmWTrV9dylFtIoPG+wYrFTNW58bNW7CX3M4zii4/8arExgdhP2ic/PTf
-         WlMBZCjZHDb/BccMKoa4uwTN/Apkz9UcGUQFfRGmkWHUDDSkqkC2cEUyLY1KFcdwEZ94
-         aoNc4cygUuxfFDA1FlbDFkkIC4yCB4kJuh2R4uoxmaVAYdTyERGIL9vfLA3tFkUHINdA
-         y0q7KIHg48OMMq82+/ct57yUkpHZ+qahZDz6d7pgpWUvQ03wpYntCF+gpzk4jkfeoHU3
-         wBfA==
+        bh=nIShw3NNsfoTaVz57iQn1zL763NO9aGMj000S0eJNTA=;
+        b=rJmOYMk+WQ1kV6LbDBBa0CvZNi8fnUkjMq1S5G3B4OJ/6Cakg9+yWCRU6bSmdQ1Vh7
+         ddcbKh/U7tZodu+kgm7b1/w+0DMyjyvwgNfweqwfRAlF5RbGP9pWhZMOH6foxB3V4Qn3
+         yyuvpM6RFRn3yLHi9J01KPikXffj+ZczFrRPgmFTu3AYFk9zy+sZn9o3RxXRl60SJAFv
+         pARdnhA1/XzI+NHEcCid7HUqIqVk/4pYw6Np7anavJRpsTvFyl3hdkvP8GHlfAonLn6l
+         pBPFbUP1OgY3MUXOqQ319SlG+zxtsLxJcf99ZxYXtMHoKtIHd663BHdGd7LQtntfW0xl
+         cB1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hqwa+hUekQq3MYYw51APHLwXOUrFBa1sM5+b28OQ11o=;
-        b=JvnNe+WNSlpivPBroaGVkBfPXgMmWZFih3lL9beZZykCGe1+/mzFEt5wXP+CLWuK9J
-         3/5iIUBJEa6OsfJ3OtnsNgwd2JK2Cd44YZ+uZev5SBxuFiFnY2d9F2hzb+Z4p5u3Qvoa
-         BJHRFWc6zMZGZz418fcKSvPLiOYKK/opknCmDSbs6++HDnQU2dWTsXjyOsWMmspg0ba0
-         hqDWxr7vUS8Xkl5FnGzw0iiMv/64zb452wtLyo6N7lo4dsyobYRVVmz17ubpXRE4sLrU
-         3Dzk0TBBRuWLz2Cp5uOJzOzKOS1mI9hC+2ZLBBZox4U9Wl60HMXuYeI6xOTIEHBgrFbQ
-         3buw==
-X-Gm-Message-State: AGi0PuZ1Iwr5aD2V8imbG93P7xXUcs0PXKN+51Yd+iqPSLMFS8w7pzoe
-        ZkgF3vTYe6OmvhZutztZRT4=
-X-Google-Smtp-Source: APiQypL4QBLHOntUiX150El6Uq7vgM86HJSiaP4ts+25+U4uWp6LAmAo44aRKGMV6U/ne7TLrZMjQw==
-X-Received: by 2002:aa7:97a7:: with SMTP id d7mr13246pfq.194.1586219354103;
-        Mon, 06 Apr 2020 17:29:14 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id s76sm11686055pgc.64.2020.04.06.17.29.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Apr 2020 17:29:13 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 17:29:18 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 7/7] ASoC: fsl_easrc: Add EASRC ASoC CPU DAI drivers
-Message-ID: <20200407002918.GC20945@Asurada-Nvidia.nvidia.com>
-References: <cover.1585726761.git.shengjiu.wang@nxp.com>
- <3b5abe538eb293be9e82c077379d63487f71b7c6.1585726761.git.shengjiu.wang@nxp.com>
+        bh=nIShw3NNsfoTaVz57iQn1zL763NO9aGMj000S0eJNTA=;
+        b=kmXPVVjoO7SPkr7KtrLyzspKimjvQlDdPi1RJD5O/LTU+JplXHd8YBIgebgvgNCCPN
+         247NmykXQy4EkmBKFmdCPPofIwCIBmudoW0HYs9btrppJt8QVKyhxaxGYEE30uRnkfmy
+         Tpcm94TCUN+JZlxlQLxI/MmkFHLNHLkyvVykEaA/L1FvPWmSjXD5iXhi/R8KKhM/Oqv3
+         6MwVOszYnulfWAGqCyIjgECuV4chWeZGeaApA66ddXd2Qer1vygsQkHzxetjV1VkO4v/
+         AwirYYGjCSLjz5mA7DxYygc7XymWSUiTxVUIIZiwZO/JoSUN1JuoFvIRxDKnVNphVAQS
+         TfWg==
+X-Gm-Message-State: AGi0PuYqkHi25tcZ8dKWOWSjQaAbRIeEwXoiXjr8DF2pahvayeYQGQXa
+        gz7kxPJLdGs9g6R6XNVxDyQdeFsCVbXv8RuK
+X-Google-Smtp-Source: APiQypKiDdxZ4F0SxKsFg4pauRejuRDw2aemVtDkOGE5pOhVLWMEuBBEG9wGmF8Vmj7fQhrNTpo+1w==
+X-Received: by 2002:a05:600c:2245:: with SMTP id a5mr1685444wmm.171.1586219759442;
+        Mon, 06 Apr 2020 17:35:59 -0700 (PDT)
+Received: from andrea ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id c17sm23169529wrp.28.2020.04.06.17.35.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 17:35:58 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 02:35:52 +0200
+From:   Andrea Parri <parri.andrea@gmail.com>
+To:     Long Li <longli@microsoft.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH 11/11] scsi: storvsc: Re-init stor_chns when a channel
+ interrupt is re-assigned
+Message-ID: <20200407003459.GA7776@andrea>
+References: <20200406001514.19876-1-parri.andrea@gmail.com>
+ <20200406001514.19876-12-parri.andrea@gmail.com>
+ <BN8PR21MB1155C78AAC02D02EA7A7841DCEC20@BN8PR21MB1155.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3b5abe538eb293be9e82c077379d63487f71b7c6.1585726761.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <BN8PR21MB1155C78AAC02D02EA7A7841DCEC20@BN8PR21MB1155.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 04:45:40PM +0800, Shengjiu Wang wrote:
-> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new IP module
-> found on i.MX8MN. It is different with old ASRC module.
+> >@@ -621,6 +621,63 @@ static inline struct storvsc_device
+> >*get_in_stor_device(
+> >
+> > }
+> >
+> >+void storvsc_change_target_cpu(struct vmbus_channel *channel, u32 old,
+> >+u32 new) {
+> >+	struct storvsc_device *stor_device;
+> >+	struct vmbus_channel *cur_chn;
+> >+	bool old_is_alloced = false;
+> >+	struct hv_device *device;
+> >+	unsigned long flags;
+> >+	int cpu;
+> >+
+> >+	device = channel->primary_channel ?
+> >+			channel->primary_channel->device_obj
+> >+				: channel->device_obj;
+> >+	stor_device = get_out_stor_device(device);
+> >+	if (!stor_device)
+> >+		return;
+> >+
+> >+	/* See storvsc_do_io() -> get_og_chn(). */
+> >+	spin_lock_irqsave(&device->channel->lock, flags);
+> >+
+> >+	/*
+> >+	 * Determines if the storvsc device has other channels assigned to
+> >+	 * the "old" CPU to update the alloced_cpus mask and the stor_chns
+> >+	 * array.
+> >+	 */
+> >+	if (device->channel != channel && device->channel->target_cpu ==
+> >old) {
+> >+		cur_chn = device->channel;
+> >+		old_is_alloced = true;
+> >+		goto old_is_alloced;
+> >+	}
+> >+	list_for_each_entry(cur_chn, &device->channel->sc_list, sc_list) {
+> >+		if (cur_chn == channel)
+> >+			continue;
+> >+		if (cur_chn->target_cpu == old) {
+> >+			old_is_alloced = true;
+> >+			goto old_is_alloced;
+> >+		}
+> >+	}
+> >+
+> >+old_is_alloced:
+> >+	if (old_is_alloced)
+> >+		WRITE_ONCE(stor_device->stor_chns[old], cur_chn);
+> >+	else
+> >+		cpumask_clear_cpu(old, &stor_device->alloced_cpus);
 > 
-> The primary features for the EASRC are as follows:
-> - 4 Contexts - groups of channels with an independent time base
-> - Fully independent and concurrent context control
-> - Simultaneous processing of up to 32 audio channels
-> - Programmable filter charachteristics for each context
-> - 32, 24, 20, and 16-bit fixed point audio sample support
-> - 32-bit floating point audio sample support
-> - 8kHz to 384kHz sample rate
-> - 1/16 to 8x sample rate conversion ratio
+> If the old cpu is not allocated, is it still necessary to do a cpumask_clear_cpu?
+
+AFAICT, this really depends on how much we "believe" in the current
+heuristic (as implemented by get_og_chn()):  ;-)
+
+The cpumask_clear_cpu() (and the below, dependent "flush" as well)
+are intended to re-initialize alloced_cpus and stor_chns in order
+for get_og_chn() to re-process/update them.
+
+Also, notice that (both in the current code and after this series)
+alloced_cpus can't be offlined and get_og_chn() does rely on this
+property (cf., e.g., the loop/check over alloced_cpus/node_mask).
+
+I suspect that giving up on this invariant/property would require
+a certain amount of re-design in the heuristic/code in question...
+
+
+> >@@ -1360,7 +1432,14 @@ static int storvsc_do_io(struct hv_device *device,
+> > 			}
+> > 		}
+> > 	} else {
+> >+		spin_lock_irqsave(&device->channel->lock, flags);
+> >+		outgoing_channel = stor_device->stor_chns[q_num];
+> >+		if (outgoing_channel != NULL) {
+> >+			spin_unlock_irqrestore(&device->channel->lock,
+> >flags);
 > 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
+> Checking outgoing_channel again seems unnecessary. Why not just call get_og_chn()?
 
-Overall, looks good to me.
+target_cpu_store() might have changed stor_chns (and alloced_cpus)
+in the meantime (but before we've acquired the device's lock): the
+double check is to make sure we have a "consistent"/an up-to-date
+view of stor_chns and alloced_cpus.
 
-Please add:
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-> diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
-> +static int fsl_easrc_normalize_filter(struct fsl_asrc *easrc,
+> 
+> >+			goto found_channel;
+> >+		}
+> > 		outgoing_channel = get_og_chn(stor_device, q_num);
+> >+		spin_unlock_irqrestore(&device->channel->lock, flags);
+> > 	}
+> 
+> With device->channel->lock, now we have one more lock on the I/O issuing path. It doesn't seem optimal as you are trying to protect the code in storvsc_change_target_cpu(), this doesn't need to block concurrent I/O issuers. Maybe moving to RCU is a better approach?
 
-> +	 * If exponent is zero (value == 0), or 7ff (value == NaNs)
-[...]
-> +	if (exp == 0 || exp == 0x7ff) {
-[...]
-> +	if ((shift > 0 && exp >= 2047) ||
-> +	    (shift < 0 && exp <= 0)) {
+I don't see this as a problem (*and I've validated such conclusion
+in experiments, where the "patched kernel" was sometimes performing
+slighlty better than the "unpatched kernel" and sometimes slightly
+worse...):
 
-Could fit into one line, and would be probably nicer to re-use
-"0x7ff" matching previous places, instead of "2047".
+On the one hand, the stor_chns array "stabilizes" quite early after
+system initialization in "normal" (i.e., common) situations (i.e.,
+no channel reassignments, no device hotplugs...); IOW, get_og_chn()
+really represents the "rare and slow" path here (but not that slow!
+after all...).  Furthermore, notice that even in those "rare cases"
+the number of "contending" channels is limited to at most 1 per 4
+CPUs IIRC (alloced_cpus is "sparsely populated"...).
+
+The latencies of the RCU grace period (in the order of milliseconds)
+would be a major concern for the adoption of RCU here (at least, if
+we continue to consider get_og_chn() as an "updater").  I'm afraid
+that this could be "too slow" even for our slow path...  ;-/
+
+What am I missing?  ;-)
+
+Thanks,
+  Andrea
