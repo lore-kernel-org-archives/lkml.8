@@ -2,181 +2,152 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7159AC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52674C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2839B20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD012076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:21:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="XjIsjt7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgDGUVi (ORCPT
+        id S1727699AbgDGUVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 7 Apr 2020 16:21:39 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:34173 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbgDGUVi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 16:21:38 -0400
-Received: from mga02.intel.com ([134.134.136.20]:49791 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726712AbgDGUVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:21:37 -0400
-IronPort-SDR: BIaomF4KtIAak56v/1CDUdIEoqAHi+pdWoPN7Kpj2hq1KzHywh7wrh8mk+4Yv/uwTRyTDzpuMy
- Stm/fzaeWNjA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 13:21:36 -0700
-IronPort-SDR: 7HIdM4Nl6qxtUCFxEpzsUZM2iV3EnWn6AFvbCF5JQ+Q9/IWGUwninM5SB+h6gzHA+q7a+s8ymq
- hhK5QO/V+SyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,356,1580803200"; 
-   d="scan'208";a="254575428"
-Received: from chenb-mobl1.amr.corp.intel.com (HELO [10.255.231.128]) ([10.255.231.128])
-  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 13:21:35 -0700
-Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0
- per-thread
-To:     Keno Fischer <keno@juliacomputing.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        Kyle Huey <khuey@kylehuey.com>,
-        Robert O'Callahan <robert@ocallahan.org>
-References: <20200407011259.GA72735@juliacomputing.com>
- <8f95e8b4-415f-1652-bb02-0a7c631c72ac@intel.com>
- <CABV8kRw1TQsqs+z43bSfZ5isctuFGMB4g_ztDYihiiXHcy4nVA@mail.gmail.com>
- <5208ad1e-cd9b-d57e-15b0-0ca935fccacd@intel.com>
- <CABV8kRzfR32+MpAvTAPHCN902WtHSxySujcO2yAB3OT0caVDJg@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <9921cb2e-a7cb-c1d0-b120-c08f06be7c7f@intel.com>
-Date:   Tue, 7 Apr 2020 13:21:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1586290897;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=WtVl2Tqlgobs3aTGznDkxrp2IRy/nD6GLGW1APrqHHY=;
+  b=XjIsjt7KYWpO3BMgvTOK/FxHB7NIiwyCAfS8YBn9qKsSAXAZD3tU3/YZ
+   sCIp6TGBw/yUrNHCNPgaivTDWEFEKWveTfLIKh6NUsux94leIfprxWXRz
+   bCeayo1B0ThHOu25FoKOfURVJW520ZV6LoJl8S2mSzMVLMxf3pK93C1xB
+   k=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa4.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa4.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa4.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: 1eDelT3dZ0888ZvXjwp6+FAhyRUH3fRbOibIZI8yY9Gxmy9iGmv1WSxTdw9nmc6e3y8ppZdh7j
+ M6jN4Rq1bsoMYcSNTSTyM2YV801o4rJh8FrLoKgLi7mbuZvUT1PkYMcOTzXwQMlKy46eg+pZJB
+ CaFLEQEpjXzN09jZMHVjCCF7pPdE0Hq4RsQ2u87YxXzGg5cTBOUrv89QeFaLdvye6DUPljvxlw
+ DFX1eMatkkhImuuD/qwrjBRyCLK6/gWyn+X3MHTVJo6oMlBAyH57OsYmrbin5EWbEXKHP2cGBO
+ Qv4=
+X-SBRS: 2.7
+X-MesageID: 15994726
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,356,1580792400"; 
+   d="scan'208";a="15994726"
+Subject: Re: [PATCH 0/4] x86/module: Out-of-tree module decode and sanitize
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>,
+        <hch@infradead.org>, <sean.j.christopherson@intel.com>,
+        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+        <x86@kernel.org>, <kenny@panix.com>, <jeyu@kernel.org>,
+        <rasmus.villemoes@prevas.dk>, <pbonzini@redhat.com>,
+        <fenghua.yu@intel.com>, <xiaoyao.li@intel.com>,
+        <nadav.amit@gmail.com>, <thellstrom@vmware.com>,
+        <tony.luck@intel.com>, <rostedt@goodmis.org>,
+        <gregkh@linuxfoundation.org>, <jannh@google.com>,
+        <keescook@chromium.org>, <David.Laight@aculab.com>,
+        <dcovelli@vmware.com>, <mhiramat@kernel.org>
+References: <20200407110236.930134290@infradead.org>
+ <a53a01b9-2907-4eb3-a9fd-16e6e8029028@citrix.com>
+ <20200407194112.GQ2452@worktop.programming.kicks-ass.net>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <3245cf5e-b21b-634e-a9d7-a63d55145c33@citrix.com>
+Date:   Tue, 7 Apr 2020 21:21:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <CABV8kRzfR32+MpAvTAPHCN902WtHSxySujcO2yAB3OT0caVDJg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200407194112.GQ2452@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/20 10:55 AM, Keno Fischer wrote:
-> On Tue, Apr 7, 2020 at 12:27 PM Dave Hansen <dave.hansen@intel.com> wrote:
->>
->>>> How does this work with things like xstateregs_[gs]et() where the format
->>>> of the kernel buffer and thus the kernel XCR0 is exposed as part of our
->>>> ABI?  With this patch, wouldn't a debugger app see a state buffer that
->>>> looks invalid?
+On 07/04/2020 20:41, Peter Zijlstra wrote:
+> On Tue, Apr 07, 2020 at 06:23:27PM +0100, Andrew Cooper wrote:
+>> On 07/04/2020 12:02, Peter Zijlstra wrote:
+>>> Hi all,
 >>>
->>> Since those operate on the in-kernel buffer of these, which
->>> in this patch always uses the unmodified XCR0, ptracers
->>> should not observe a difference.
->>
->> Those operate on *BOTH* kernel and userspace buffers.  They copy between
->> them.  That's kinda the point. :)
-> 
-> Right, what I meant was that in this patch the kernel level
-> xsaves that populates the struct fpu always runs with
-> an unmodified XCR0, so the contents of the xsave area
-> in struct fpu does not change layout (this is the major
-> change in this patch over v1).
+>>> Driven by the SLD vs VMX interaction, here are some patches that provide means
+>>> to analyze the text of out-of-tree modules.
+>>>
+>>> The first user of that is refusing to load modules on VMX-SLD conflicts, but it
+>>> also has a second patch that refulses to load any module that tries to modify
+>>> CRn/DRn.
+>>>
+>>> I'm thinking people will quickly come up with more and more elaborate tests to
+>>> which to subject out-of-tree modules.
+>> Anything playing with LGDT & friends?  Shouldn't be substantially more
+>> elaborate than CR/DR to check for.
+> More friends? (I wasn't sure on the Sxxx instructions, they appear
+> harmless, but what do I know..)
+>
+> I was also eyeing LSL LTR LSS, none of which I figured a module has any
+> business of using. Are there more?
+>
+> --- a/arch/x86/kernel/module.c
+> +++ b/arch/x86/kernel/module.c
+> @@ -282,6 +282,50 @@ static bool insn_is_mov_DRn(struct insn
+>  	return false;
+>  }
+>  
+> +static bool insn_is_LxDT(struct insn *insn)
+> +{
+> +	u8 modrm = insn->modrm.bytes[0];
+> +	u8 modrm_mod = X86_MODRM_MOD(modrm);
+> +	u8 modrm_reg = X86_MODRM_REG(modrm);
+> +
+> +	if (insn->opcode.bytes[0] != 0x0f)
+> +		return false;
+> +
+> +	switch (insn->opcode.bytes[1]) {
+> +	case 0x00:
+> +		if (modrm_mod != 0x03)
+> +			break;
+> +
 
-The userspace buffer is... a userspace buffer.  It is not and should not
-be tied to the format of the kernel buffer.
+Apologies - missed this before.  LLDT and LTR can be encoded with a
+memory operand, so you need to drop the modrm_mod check to spot all
+instances.
 
-> Are you referring to a ptracer which runs with a modified XCR0, and
-> assumes that the value it gets back from ptrace will have an
-> XSTATE_BV equal to its own observed XCR0 and thus get confused about
-> the layout of the buffer (or potentially have not copied all of the
-> relevant xstate because it calculated a wrong buffer size)?
-
-I don't think it's insane for a process to assume that it can XRSTOR a
-buffer that it gets back from ptrace.  That seems like something that
-could clearly be an ABI that apps depend on.
-
-Also, let's look at the comment about where XCR0 shows up in the ABI
-(arch/x86/include/asm/user.h):
-
->  * For now, only the first 8 bytes of the software usable bytes[464..471] will
->  * be used and will be set to OS enabled xstate mask (which is same as the
->  * 64bit mask returned by the xgetbv's xCR0).
-
-That also makes it sound like we expect there to be a *SINGLE* value
-across the entire system.  It also makes me wonder *which* xgetbv is
-expected to match USER_XSTATE_XCR0_WORD.  It can't be the ptracee since
-we expect them to change XCR0.  It can't be the ptracer because they can
-use this new prctl too.  So does it refer to the kernel?  Or, should the
-new prctl() *disable* future ptrace()s?
-
-> If so, I think that's just a buggy ptracer. The kernel's xfeature
-> mask is available via ptrace and a well-behaved ptracer should use
-> that (e.g. gdb does, though it looks like it then also assumes that
-> the xstate has no holes, so it potentially gets the layout wrong
-> anyway).
-
-I'm trying to figure out what the semantics are of this whole thing.  It
-can't be "don't let userspace observe the real XCR0" because ptrace
-exposes that.  Is it, "make memory images portable, unless it's a memory
-image from ptrace"?
-
-> In general, I don't really want the modified XCR0 to affect
-> anything other than the particular instructions that depend
-> on it and maybe the signal frame (though as I said before,
-> I'm open to either here).
-
-Just remember that, in the end, we don't get to say what a good ptracer
-or bad ptracer is.  If they're expecting semantics that we've kept
-constant for 10 years, we change the semantics, and the app breaks, the
-kernel is in the wrong.
-
-I also don't feel like I have a good handle on what ptracers *do* with
-their XSAVE buffers that they get/set.  How many apps in a distro do
-something with this interface?
+~Andrew
