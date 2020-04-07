@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1966AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54742C3815B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B8620768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2375D20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgDGSj4 (ORCPT
+        id S1728128AbgDGSjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:39:56 -0400
-Received: from 8bytes.org ([81.169.241.247]:57560 "EHLO theia.8bytes.org"
+        Tue, 7 Apr 2020 14:39:55 -0400
+Received: from 8bytes.org ([81.169.241.247]:57434 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726877AbgDGSh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726883AbgDGSh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 14:37:58 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1EE9A329; Tue,  7 Apr 2020 20:37:50 +0200 (CEST)
+        id EB8953D0; Tue,  7 Apr 2020 20:37:50 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -45,9 +45,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [RFC PATCH 10/34] iommu: Move new probe_device path to separate function
-Date:   Tue,  7 Apr 2020 20:37:18 +0200
-Message-Id: <20200407183742.4344-11-joro@8bytes.org>
+Subject: [RFC PATCH 14/34] iommu/amd: Remove dev_data->passthrough
+Date:   Tue,  7 Apr 2020 20:37:22 +0200
+Message-Id: <20200407183742.4344-15-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200407183742.4344-1-joro@8bytes.org>
 References: <20200407183742.4344-1-joro@8bytes.org>
@@ -58,109 +58,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-This makes it easier to remove to old code-path when all drivers are
-converted. As a side effect that it also fixes the error cleanup
-path.
+Make use of generic IOMMU infrastructure to gather the same information
+carried in dev_data->passthrough and remove the struct member.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/iommu.c | 69 ++++++++++++++++++++++++++++---------------
- 1 file changed, 46 insertions(+), 23 deletions(-)
+ drivers/iommu/amd_iommu.c       | 10 +++++-----
+ drivers/iommu/amd_iommu_types.h |  1 -
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 18eb3623bd00..8be047a4808f 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -218,12 +218,55 @@ static int __iommu_probe_device(struct device *dev, struct list_head *group_list
- 	return ret;
- }
- 
-+static int __iommu_probe_device_helper(struct device *dev)
-+{
-+	const struct iommu_ops *ops = dev->bus->iommu_ops;
-+	struct iommu_group *group;
-+	int ret;
-+
-+	ret = __iommu_probe_device(dev, NULL);
-+	if (ret)
-+		goto err_out;
-+
-+	/*
-+	 * Try to allocate a default domain - needs support from the
-+	 * IOMMU driver. There are still some drivers which don't
-+	 * support default domains, so the return value is not yet
-+	 * checked.
-+	 */
-+	iommu_alloc_default_domain(dev);
-+
-+	group = iommu_group_get(dev);
-+	if (!group)
-+		goto err_release;
-+
-+	if (group->default_domain)
-+		ret = __iommu_attach_device(group->default_domain, dev);
-+
-+	iommu_group_put(group);
-+
-+	if (ret)
-+		goto err_release;
-+
-+	if (ops->probe_finalize)
-+		ops->probe_finalize(dev);
-+
-+	return 0;
-+
-+err_release:
-+	iommu_release_device(dev);
-+err_out:
-+	return ret;
-+
-+}
-+
- int iommu_probe_device(struct device *dev)
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 3e0d27f7622e..0b4b4faa876d 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2047,8 +2047,8 @@ static int pdev_iommuv2_enable(struct pci_dev *pdev)
+ static int attach_device(struct device *dev,
+ 			 struct protection_domain *domain)
  {
- 	const struct iommu_ops *ops = dev->bus->iommu_ops;
+-	struct pci_dev *pdev;
+ 	struct iommu_dev_data *dev_data;
++	struct pci_dev *pdev;
+ 	unsigned long flags;
  	int ret;
  
- 	WARN_ON(dev->iommu_group);
+@@ -2067,8 +2067,10 @@ static int attach_device(struct device *dev,
+ 
+ 	pdev = to_pci_dev(dev);
+ 	if (domain->flags & PD_IOMMUV2_MASK) {
++		struct iommu_domain *def_domain = iommu_get_dma_domain(dev);
 +
- 	if (!ops)
- 		return -EINVAL;
+ 		ret = -EINVAL;
+-		if (!dev_data->passthrough)
++		if (def_domain->type != IOMMU_DOMAIN_IDENTITY)
+ 			goto out;
  
-@@ -235,30 +278,10 @@ int iommu_probe_device(struct device *dev)
- 		goto err_free_dev_param;
- 	}
+ 		if (dev_data->iommu_v2) {
+@@ -2189,9 +2191,7 @@ static int amd_iommu_add_device(struct device *dev)
  
--	if (ops->probe_device) {
--		struct iommu_group *group;
--
--		ret = __iommu_probe_device(dev, NULL);
--
--		/*
--		 * Try to allocate a default domain - needs support from the
--		 * IOMMU driver. There are still some drivers which don't
--		 * support default domains, so the return value is not yet
--		 * checked.
--		 */
--		if (!ret)
--			iommu_alloc_default_domain(dev);
--
--		group = iommu_group_get(dev);
--		if (group && group->default_domain) {
--			ret = __iommu_attach_device(group->default_domain, dev);
--			iommu_group_put(group);
--		}
--
--	} else {
--		ret = ops->add_device(dev);
--	}
-+	if (ops->probe_device)
-+		return __iommu_probe_device_helper(dev);
+ 	/* Domains are initialized for this device - have a look what we ended up with */
+ 	domain = iommu_get_domain_for_dev(dev);
+-	if (domain->type == IOMMU_DOMAIN_IDENTITY)
+-		dev_data->passthrough = true;
+-	else if (domain->type == IOMMU_DOMAIN_DMA)
++	if (domain->type == IOMMU_DOMAIN_DMA)
+ 		iommu_setup_dma_ops(dev, IOVA_START_PFN << PAGE_SHIFT, 0);
  
-+	ret = ops->add_device(dev);
- 	if (ret)
- 		goto err_module_put;
- 
+ out:
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index ca8c4522045b..d0d7b6a0c3d8 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -640,7 +640,6 @@ struct iommu_dev_data {
+ 	struct pci_dev *pdev;
+ 	u16 devid;			  /* PCI Device ID */
+ 	bool iommu_v2;			  /* Device can make use of IOMMUv2 */
+-	bool passthrough;		  /* Device is identity mapped */
+ 	struct {
+ 		bool enabled;
+ 		int qdep;
 -- 
 2.17.1
 
