@@ -2,56 +2,55 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1CEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 691FBC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD8C20644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3942720644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255280;
-	bh=amCQ2S+k05Zy4Vn910YGXUE1vYiFDagnqxSn0kCFoi0=;
+	s=default; t=1586255290;
+	bh=VG7Z96ZUZlKYwd0TaRLpdkJIVqF3gxuR9xzR4g0qwd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gkccn2joWB38W1xdTagqLIrSekZoL4hUxhv8h/wKR0T3QBM3Cz5dfM0LOt94VK5mz
-	 77gI2lhYb53j6nWiKFuXaCSDh+DR+RJ8HPa1RzFHOO114w287OUTX67k8PSguMUJqL
-	 LsBhMxfBQg0r2LeoogylruxKCiWyeInFmDz4Zlj4=
+	b=A10Mehu6vYQcvb7sh/E9UttEPcaoha0DjiWm6jsN8msBbU1iV5d/rajHSgS5+Fz3j
+	 +UYkTKo3kjrGjyfrBpMNPY7ONgFSuNpLH8uNvoEMrSojRz05gfEWCYSA4gvgO5ZObo
+	 SX1Sz9j+3MA1kIqha4vybDMZvexiyumggU6WhFTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbgDGK0P (ORCPT
+        id S1729035AbgDGKZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:26:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37246 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:25:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729101AbgDGK0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:26:10 -0400
+        id S1729024AbgDGKZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB4D02074F;
-        Tue,  7 Apr 2020 10:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 864DE20771;
+        Tue,  7 Apr 2020 10:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255169;
-        bh=amCQ2S+k05Zy4Vn910YGXUE1vYiFDagnqxSn0kCFoi0=;
+        s=default; t=1586255147;
+        bh=VG7Z96ZUZlKYwd0TaRLpdkJIVqF3gxuR9xzR4g0qwd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PpH0AZnnpM+okQxHzNxmv39qK0GmTLcgM8sMpVZ4CswiDHtW4ucT3IODNCjDYrC67
-         vJ/wJD9pM1RN7aLFHDJGz2F7dVdtIQLEogIEdlexsEHJEXYos9USphjCKhuzs2TOME
-         tyggtiySc6eEQyx6OoG+hQcmk799BkW81WaM4llo=
+        b=JgXXRIe7uuEM/GzJfBD7z4R+VHLrAuBHb5Sp1jIzkj099DwljzKOMG0+abS1UvOE5
+         c6owCi8hlJ/vvOARmS2OciQgCGhmn5gakOjY2R+pv1aV2CYtee6BMTfx7A+U4wm9xJ
+         XJ6S+ng4gdIyi3YLqfSeNMdeR0HzoPe7CEtGiQdM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 11/29] bpf: Fix tnum constraints for 32-bit comparisons
-Date:   Tue,  7 Apr 2020 12:22:08 +0200
-Message-Id: <20200407101453.370611188@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+        Barry Marson <bmarson@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.5 31/46] Revert "dm: always call blk_queue_split() in dm_process_bio()"
+Date:   Tue,  7 Apr 2020 12:22:02 +0200
+Message-Id: <20200407101502.812102667@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
-References: <20200407101452.046058399@linuxfoundation.org>
+In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
+References: <20200407101459.502593074@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,194 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Mike Snitzer <snitzer@redhat.com>
 
-[ Upstream commit 604dca5e3af1db98bd123b7bfc02b017af99e3a0 ]
+commit 120c9257f5f19e5d1e87efcbb5531b7cd81b7d74 upstream.
 
-The BPF verifier tried to track values based on 32-bit comparisons by
-(ab)using the tnum state via 581738a681b6 ("bpf: Provide better register
-bounds after jmp32 instructions"). The idea is that after a check like
-this:
+This reverts commit effd58c95f277744f75d6e08819ac859dbcbd351.
 
-    if ((u32)r0 > 3)
-      exit
+blk_queue_split() is causing excessive IO splitting -- because
+blk_max_size_offset() depends on 'chunk_sectors' limit being set and
+if it isn't (as is the case for DM targets!) it falls back to
+splitting on a 'max_sectors' boundary regardless of offset.
 
-We can't meaningfully constrain the arithmetic-range-based tracking, but
-we can update the tnum state to (value=0,mask=0xffff'ffff'0000'0003).
-However, the implementation from 581738a681b6 didn't compute the tnum
-constraint based on the fixed operand, but instead derives it from the
-arithmetic-range-based tracking. This means that after the following
-sequence of operations:
+"Fix" this by reverting back to _not_ using blk_queue_split() in
+dm_process_bio() for normal IO (reads and writes).  Long-term fix is
+still TBD but it should focus on training blk_max_size_offset() to
+call into a DM provided hook (to call DM's max_io_len()).
 
-    if (r0 >= 0x1'0000'0001)
-      exit
-    if ((u32)r0 > 7)
-      exit
+Test results from simple misaligned IO test on 4-way dm-striped device
+with chunksize of 128K and stripesize of 512K:
 
-The verifier assumed that the lower half of r0 is in the range (0, 0)
-and apply the tnum constraint (value=0,mask=0xffff'ffff'0000'0000) thus
-causing the overall tnum to be (value=0,mask=0x1'0000'0000), which was
-incorrect. Provide a fixed implementation.
+xfs_io -d -c 'pread -b 2m 224s 4072s' /dev/mapper/stripe_dev
 
-Fixes: 581738a681b6 ("bpf: Provide better register bounds after jmp32 instructions")
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200330160324.15259-3-daniel@iogearbox.net
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+before this revert:
+
+253,0   21        1     0.000000000  2206  Q   R 224 + 4072 [xfs_io]
+253,0   21        2     0.000008267  2206  X   R 224 / 480 [xfs_io]
+253,0   21        3     0.000010530  2206  X   R 224 / 256 [xfs_io]
+253,0   21        4     0.000027022  2206  X   R 480 / 736 [xfs_io]
+253,0   21        5     0.000028751  2206  X   R 480 / 512 [xfs_io]
+253,0   21        6     0.000033323  2206  X   R 736 / 992 [xfs_io]
+253,0   21        7     0.000035130  2206  X   R 736 / 768 [xfs_io]
+253,0   21        8     0.000039146  2206  X   R 992 / 1248 [xfs_io]
+253,0   21        9     0.000040734  2206  X   R 992 / 1024 [xfs_io]
+253,0   21       10     0.000044694  2206  X   R 1248 / 1504 [xfs_io]
+253,0   21       11     0.000046422  2206  X   R 1248 / 1280 [xfs_io]
+253,0   21       12     0.000050376  2206  X   R 1504 / 1760 [xfs_io]
+253,0   21       13     0.000051974  2206  X   R 1504 / 1536 [xfs_io]
+253,0   21       14     0.000055881  2206  X   R 1760 / 2016 [xfs_io]
+253,0   21       15     0.000057462  2206  X   R 1760 / 1792 [xfs_io]
+253,0   21       16     0.000060999  2206  X   R 2016 / 2272 [xfs_io]
+253,0   21       17     0.000062489  2206  X   R 2016 / 2048 [xfs_io]
+253,0   21       18     0.000066133  2206  X   R 2272 / 2528 [xfs_io]
+253,0   21       19     0.000067507  2206  X   R 2272 / 2304 [xfs_io]
+253,0   21       20     0.000071136  2206  X   R 2528 / 2784 [xfs_io]
+253,0   21       21     0.000072764  2206  X   R 2528 / 2560 [xfs_io]
+253,0   21       22     0.000076185  2206  X   R 2784 / 3040 [xfs_io]
+253,0   21       23     0.000077486  2206  X   R 2784 / 2816 [xfs_io]
+253,0   21       24     0.000080885  2206  X   R 3040 / 3296 [xfs_io]
+253,0   21       25     0.000082316  2206  X   R 3040 / 3072 [xfs_io]
+253,0   21       26     0.000085788  2206  X   R 3296 / 3552 [xfs_io]
+253,0   21       27     0.000087096  2206  X   R 3296 / 3328 [xfs_io]
+253,0   21       28     0.000093469  2206  X   R 3552 / 3808 [xfs_io]
+253,0   21       29     0.000095186  2206  X   R 3552 / 3584 [xfs_io]
+253,0   21       30     0.000099228  2206  X   R 3808 / 4064 [xfs_io]
+253,0   21       31     0.000101062  2206  X   R 3808 / 3840 [xfs_io]
+253,0   21       32     0.000104956  2206  X   R 4064 / 4096 [xfs_io]
+253,0   21       33     0.001138823     0  C   R 4096 + 200 [0]
+
+after this revert:
+
+253,0   18        1     0.000000000  4430  Q   R 224 + 3896 [xfs_io]
+253,0   18        2     0.000018359  4430  X   R 224 / 256 [xfs_io]
+253,0   18        3     0.000028898  4430  X   R 256 / 512 [xfs_io]
+253,0   18        4     0.000033535  4430  X   R 512 / 768 [xfs_io]
+253,0   18        5     0.000065684  4430  X   R 768 / 1024 [xfs_io]
+253,0   18        6     0.000091695  4430  X   R 1024 / 1280 [xfs_io]
+253,0   18        7     0.000098494  4430  X   R 1280 / 1536 [xfs_io]
+253,0   18        8     0.000114069  4430  X   R 1536 / 1792 [xfs_io]
+253,0   18        9     0.000129483  4430  X   R 1792 / 2048 [xfs_io]
+253,0   18       10     0.000136759  4430  X   R 2048 / 2304 [xfs_io]
+253,0   18       11     0.000152412  4430  X   R 2304 / 2560 [xfs_io]
+253,0   18       12     0.000160758  4430  X   R 2560 / 2816 [xfs_io]
+253,0   18       13     0.000183385  4430  X   R 2816 / 3072 [xfs_io]
+253,0   18       14     0.000190797  4430  X   R 3072 / 3328 [xfs_io]
+253,0   18       15     0.000197667  4430  X   R 3328 / 3584 [xfs_io]
+253,0   18       16     0.000218751  4430  X   R 3584 / 3840 [xfs_io]
+253,0   18       17     0.000226005  4430  X   R 3840 / 4096 [xfs_io]
+253,0   18       18     0.000250404  4430  Q   R 4120 + 176 [xfs_io]
+253,0   18       19     0.000847708     0  C   R 4096 + 24 [0]
+253,0   18       20     0.000855783     0  C   R 4120 + 176 [0]
+
+Fixes: effd58c95f27774 ("dm: always call blk_queue_split() in dm_process_bio()")
+Cc: stable@vger.kernel.org
+Reported-by: Andreas Gruenbacher <agruenba@redhat.com>
+Tested-by: Barry Marson <bmarson@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/bpf/verifier.c | 108 ++++++++++++++++++++++++++++--------------
- 1 file changed, 72 insertions(+), 36 deletions(-)
+ drivers/md/dm.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 5080469094afe..595b39eee6422 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -5590,6 +5590,70 @@ static bool cmp_val_with_extended_s64(s64 sval, struct bpf_reg_state *reg)
- 		reg->smax_value <= 0 && reg->smin_value >= S32_MIN);
- }
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1739,8 +1739,9 @@ static blk_qc_t dm_process_bio(struct ma
+ 	 * won't be imposed.
+ 	 */
+ 	if (current->bio_list) {
+-		blk_queue_split(md->queue, &bio);
+-		if (!is_abnormal_io(bio))
++		if (is_abnormal_io(bio))
++			blk_queue_split(md->queue, &bio);
++		else
+ 			dm_queue_split(md, ti, &bio);
+ 	}
  
-+/* Constrain the possible values of @reg with unsigned upper bound @bound.
-+ * If @is_exclusive, @bound is an exclusive limit, otherwise it is inclusive.
-+ * If @is_jmp32, @bound is a 32-bit value that only constrains the low 32 bits
-+ * of @reg.
-+ */
-+static void set_upper_bound(struct bpf_reg_state *reg, u64 bound, bool is_jmp32,
-+			    bool is_exclusive)
-+{
-+	if (is_exclusive) {
-+		/* There are no values for `reg` that make `reg<0` true. */
-+		if (bound == 0)
-+			return;
-+		bound--;
-+	}
-+	if (is_jmp32) {
-+		/* Constrain the register's value in the tnum representation.
-+		 * For 64-bit comparisons this happens later in
-+		 * __reg_bound_offset(), but for 32-bit comparisons, we can be
-+		 * more precise than what can be derived from the updated
-+		 * numeric bounds.
-+		 */
-+		struct tnum t = tnum_range(0, bound);
-+
-+		t.mask |= ~0xffffffffULL; /* upper half is unknown */
-+		reg->var_off = tnum_intersect(reg->var_off, t);
-+
-+		/* Compute the 64-bit bound from the 32-bit bound. */
-+		bound += gen_hi_max(reg->var_off);
-+	}
-+	reg->umax_value = min(reg->umax_value, bound);
-+}
-+
-+/* Constrain the possible values of @reg with unsigned lower bound @bound.
-+ * If @is_exclusive, @bound is an exclusive limit, otherwise it is inclusive.
-+ * If @is_jmp32, @bound is a 32-bit value that only constrains the low 32 bits
-+ * of @reg.
-+ */
-+static void set_lower_bound(struct bpf_reg_state *reg, u64 bound, bool is_jmp32,
-+			    bool is_exclusive)
-+{
-+	if (is_exclusive) {
-+		/* There are no values for `reg` that make `reg>MAX` true. */
-+		if (bound == (is_jmp32 ? U32_MAX : U64_MAX))
-+			return;
-+		bound++;
-+	}
-+	if (is_jmp32) {
-+		/* Constrain the register's value in the tnum representation.
-+		 * For 64-bit comparisons this happens later in
-+		 * __reg_bound_offset(), but for 32-bit comparisons, we can be
-+		 * more precise than what can be derived from the updated
-+		 * numeric bounds.
-+		 */
-+		struct tnum t = tnum_range(bound, U32_MAX);
-+
-+		t.mask |= ~0xffffffffULL; /* upper half is unknown */
-+		reg->var_off = tnum_intersect(reg->var_off, t);
-+
-+		/* Compute the 64-bit bound from the 32-bit bound. */
-+		bound += gen_hi_min(reg->var_off);
-+	}
-+	reg->umin_value = max(reg->umin_value, bound);
-+}
-+
- /* Adjusts the register min/max values in the case that the dst_reg is the
-  * variable register that we are working on, and src_reg is a constant or we're
-  * simply doing a BPF_K check.
-@@ -5645,15 +5709,8 @@ static void reg_set_min_max(struct bpf_reg_state *true_reg,
- 	case BPF_JGE:
- 	case BPF_JGT:
- 	{
--		u64 false_umax = opcode == BPF_JGT ? val    : val - 1;
--		u64 true_umin = opcode == BPF_JGT ? val + 1 : val;
--
--		if (is_jmp32) {
--			false_umax += gen_hi_max(false_reg->var_off);
--			true_umin += gen_hi_min(true_reg->var_off);
--		}
--		false_reg->umax_value = min(false_reg->umax_value, false_umax);
--		true_reg->umin_value = max(true_reg->umin_value, true_umin);
-+		set_upper_bound(false_reg, val, is_jmp32, opcode == BPF_JGE);
-+		set_lower_bound(true_reg, val, is_jmp32, opcode == BPF_JGT);
- 		break;
- 	}
- 	case BPF_JSGE:
-@@ -5674,15 +5731,8 @@ static void reg_set_min_max(struct bpf_reg_state *true_reg,
- 	case BPF_JLE:
- 	case BPF_JLT:
- 	{
--		u64 false_umin = opcode == BPF_JLT ? val    : val + 1;
--		u64 true_umax = opcode == BPF_JLT ? val - 1 : val;
--
--		if (is_jmp32) {
--			false_umin += gen_hi_min(false_reg->var_off);
--			true_umax += gen_hi_max(true_reg->var_off);
--		}
--		false_reg->umin_value = max(false_reg->umin_value, false_umin);
--		true_reg->umax_value = min(true_reg->umax_value, true_umax);
-+		set_lower_bound(false_reg, val, is_jmp32, opcode == BPF_JLE);
-+		set_upper_bound(true_reg, val, is_jmp32, opcode == BPF_JLT);
- 		break;
- 	}
- 	case BPF_JSLE:
-@@ -5757,15 +5807,8 @@ static void reg_set_min_max_inv(struct bpf_reg_state *true_reg,
- 	case BPF_JGE:
- 	case BPF_JGT:
- 	{
--		u64 false_umin = opcode == BPF_JGT ? val    : val + 1;
--		u64 true_umax = opcode == BPF_JGT ? val - 1 : val;
--
--		if (is_jmp32) {
--			false_umin += gen_hi_min(false_reg->var_off);
--			true_umax += gen_hi_max(true_reg->var_off);
--		}
--		false_reg->umin_value = max(false_reg->umin_value, false_umin);
--		true_reg->umax_value = min(true_reg->umax_value, true_umax);
-+		set_lower_bound(false_reg, val, is_jmp32, opcode == BPF_JGE);
-+		set_upper_bound(true_reg, val, is_jmp32, opcode == BPF_JGT);
- 		break;
- 	}
- 	case BPF_JSGE:
-@@ -5783,15 +5826,8 @@ static void reg_set_min_max_inv(struct bpf_reg_state *true_reg,
- 	case BPF_JLE:
- 	case BPF_JLT:
- 	{
--		u64 false_umax = opcode == BPF_JLT ? val    : val - 1;
--		u64 true_umin = opcode == BPF_JLT ? val + 1 : val;
--
--		if (is_jmp32) {
--			false_umax += gen_hi_max(false_reg->var_off);
--			true_umin += gen_hi_min(true_reg->var_off);
--		}
--		false_reg->umax_value = min(false_reg->umax_value, false_umax);
--		true_reg->umin_value = max(true_reg->umin_value, true_umin);
-+		set_upper_bound(false_reg, val, is_jmp32, opcode == BPF_JLE);
-+		set_lower_bound(true_reg, val, is_jmp32, opcode == BPF_JLT);
- 		break;
- 	}
- 	case BPF_JSLE:
--- 
-2.20.1
-
 
 
