@@ -2,171 +2,119 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA06C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C355BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C69A20719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9499F20719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:15:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QQ+bxHB7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgDGNOf (ORCPT
+        id S1728832AbgDGNPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 09:14:35 -0400
-Received: from mga03.intel.com ([134.134.136.65]:40466 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728663AbgDGNOf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 09:14:35 -0400
-IronPort-SDR: UpYyJ7eHJYrS7BJd6ae1nj+Zq+ZiHP4Skm231tMGmPQh8jzq+bNe8DZi7CDchXqJgYvEbPUFvH
- HsLCvlaN98rw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 06:14:34 -0700
-IronPort-SDR: r/0dr6EYTZwxWLxIayR2ZXR9NdFw9Xa9tYai4ILG9dVOsoYZY+SxJMYB3W6M6W/SDKcRT5hmRl
- dpKdSYCIt5OQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,354,1580803200"; 
-   d="scan'208";a="254453175"
-Received: from chenb-mobl1.amr.corp.intel.com (HELO [10.255.231.128]) ([10.255.231.128])
-  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 06:14:33 -0700
-Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0
- per-thread
-To:     Keno Fischer <keno@juliacomputing.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        Kyle Huey <khuey@kylehuey.com>,
-        Robert O'Callahan <robert@ocallahan.org>
-References: <20200407011259.GA72735@juliacomputing.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <8f95e8b4-415f-1652-bb02-0a7c631c72ac@intel.com>
-Date:   Tue, 7 Apr 2020 06:14:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Apr 2020 09:15:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51716 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbgDGNPp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 09:15:45 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037DDOlF069769;
+        Tue, 7 Apr 2020 13:15:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=eCPeCa0CmuEAaPGc4dtLgG70fJ6kPBo+OkpbEsJz0OI=;
+ b=QQ+bxHB7b8YLgR3xvHAQV6mrjcZd2mbDrnce54Luq01o1Us8oEHmvaBDB/xyIVZREWtX
+ 4fZb4fcAdkzu7PivyO6zf5huPXh3ZUy1UXekNMIvFzkf1T2oVYt1tnnFadVPNlcSf/E5
+ Vetz4q5QmlGgN0JHWMMAPgVfbds5nPcx4jPCWqIWPaod3P+j3Ft8hI4StuVIqLFEsRCH
+ OA2yzd4fXBUyJg7Vn4kVB+z7XGmO8OMphovlwcWETN1wRG/LvRYV5dWEm8abMhScADSM
+ CZsZukitcu7pTgSJu49syiw0xM7bPuvCrIHy5yXTy4++1ngF8sz9HjpNh+wRh6WUop5V pQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 306jvn4sga-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 13:15:06 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037DCTxn152482;
+        Tue, 7 Apr 2020 13:13:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 30839taxak-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 13:13:05 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 037DD3bd032093;
+        Tue, 7 Apr 2020 13:13:04 GMT
+Received: from linux-1.home (/10.175.58.13)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Apr 2020 06:13:03 -0700
+Subject: Re: [PATCH V2 1/9] objtool: Introduce HINT_RET_OFFSET
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, tglx@linutronix.de
+References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
+ <20200407073142.20659-2-alexandre.chartre@oracle.com>
+ <20200407125323.GY20730@hirez.programming.kicks-ass.net>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <21e4ab99-fe75-ff0d-3c7e-cee0fbe95104@oracle.com>
+Date:   Tue, 7 Apr 2020 15:17:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20200407011259.GA72735@juliacomputing.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200407125323.GY20730@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 malwarescore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I didn't review the first attempt at this, but this looks like a really
-bad idea to me.  I don't 100% buy the arguments that this shouldn't be
-done in a VM.  The x86 virtualization architecture was literally
-designed to hide hardware details like this.
 
-I can't imagine ever merging this until using VMs or at least the KVM
-API has been completely ruled out.
+On 4/7/20 2:53 PM, Peter Zijlstra wrote:
+> On Tue, Apr 07, 2020 at 09:31:34AM +0200, Alexandre Chartre wrote:
+>> diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+>> index 6d875ca6fce0..7a91497fee7e 100644
+>> --- a/tools/objtool/check.h
+>> +++ b/tools/objtool/check.h
+>> @@ -33,9 +33,12 @@ struct instruction {
+>>   	unsigned int len;
+>>   	enum insn_type type;
+>>   	unsigned long immediate;
+>> -	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
+>> +	unsigned int alt_group;
+> 
+> ^^ that wants to be in a later patch I'm thinking
 
-I don't doubt that this approach works in a controlled environment.
-But, I can't imagine that we could ever wrap sane semantics around such
-a beast.
+Correct, rebase error, should be in patch 4.
 
-For instance, what would ARCH_SET_XCR0 do in a signal handler?  The
-components are mostly in their init states so xstate_is_initial() will
-pass.  But the kernel's XRSTOR might #GP because it might try to restore
-states that are not enabled in XCR0 now.
+Thanks,
 
-Also, this has to be done before XCR0's state is observed by userspace,
-which the kernel can't easily do once the program is off and running.
-This tells me that it really needs to be done at execve() time, even
-before the first program instruction runs.
+alex.
 
-These are usually the kinds of things that you figure out when you try
-to go write a manpage for one of these suckers.
-
-How does this work with things like xstateregs_[gs]et() where the format
-of the kernel buffer and thus the kernel XCR0 is exposed as part of our
-ABI?  With this patch, wouldn't a debugger app see a state buffer that
-looks invalid?
-
-Where else in our ABI is the format of the XSAVE buffer exposed?
-
-I'm extra wary of a v2 that's missing the CodingStyle and changelog
-basics as well.
-
-> +static int xcr0_is_legal(unsigned long xcr0)
-> +{
-> +	/* Conservatively disallow anything above bit 9,
-> +	 * to avoid accidentally allowing the disabling of
-> +	 * new features without updating these checks
-> +	 */
-> +	if (xcr0 & ~((1 << 10) - 1))
-> +		return 0;
-
-Yay, magic numbers!
-
-This would be much better as a BUILD_BUG_ON().
-
-> +	if (!(xcr0 & XFEATURE_MASK_FP))
-> +		return 0;
-> +	if ((xcr0 & XFEATURE_MASK_YMM) && !(xcr0 & XFEATURE_MASK_SSE))
-> +		return 0;
-> +	if ((!(xcr0 & XFEATURE_MASK_BNDREGS)) !=
-> +		(!(xcr0 & XFEATURE_MASK_BNDCSR)))
-> +		return 0;
-> +	if (xcr0 & XFEATURE_MASK_AVX512) {
-> +		if (!(xcr0 & XFEATURE_MASK_YMM))
-> +			return 0;
-> +		if ((xcr0 & XFEATURE_MASK_AVX512) != XFEATURE_MASK_AVX512)
-> +			return 0;
-> +	}
-> +	return 1;
-> +}
-
-This appears to copy (instead of refactoring) code from __kvm_set_xcr(),
-yet manages to get the indentation different and wrong.
-
+>> +	bool dead_end, ignore, ignore_alts;
+>> +	bool hint, save, restore;
+>>   	bool retpoline_safe;
+>>   	u8 visited;
+>> +	u8 ret_offset;
+>>   	struct symbol *call_dest;
+>>   	struct instruction *jump_dest;
+>>   	struct instruction *first_jump_src;
+>> -- 
+>> 2.18.2
+>>
