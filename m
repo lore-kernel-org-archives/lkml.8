@@ -2,50 +2,52 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2777AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBCFC2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A772078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AFC220771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255313;
-	bh=o5+VVv/NdrgfdXFjKKdDinBsvD48G4NvcvDVyOKNL5A=;
+	s=default; t=1586255319;
+	bh=sKbjwMLJiBOphC69hyUcwuxnGfiE7NbpZaWocYhiKBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVLrOxG5o3+eLglP9VWK+mIXqFLd6rowiX59nYC2GIvhTTXPmiqAUwk5RXzJjY9oA
-	 FTEscXrdaWPh2XTbNZpN38dzCIYuOVC26R7BBdF43DtlsIFga7jbihBq0TEVdbMvM7
-	 /BHtM+swdWWtyFyKwV6yL9LPBav9qAE4GONeMkUM=
+	b=14vDFJhFp1OcHJPmQJdOilaeqwwQPlIb+wZfDyUkRSCb8xFVXLc2o/+wkTyYTL4Xu
+	 jopzMII4lJ7475Gf4r55n35N5lBeGvOI5VhJRmmsPm13oDJms53vXKkdM8/wg7mw/w
+	 eNvY+vvFlnGiyzv9EXLK81tN1k0ols6BZTZZie/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbgDGK2b (ORCPT
+        id S1728891AbgDGKZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35882 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:25:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728919AbgDGKZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:20 -0400
+        id S1728880AbgDGKZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 733F82074F;
-        Tue,  7 Apr 2020 10:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 010182074B;
+        Tue,  7 Apr 2020 10:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255119;
-        bh=o5+VVv/NdrgfdXFjKKdDinBsvD48G4NvcvDVyOKNL5A=;
+        s=default; t=1586255107;
+        bh=sKbjwMLJiBOphC69hyUcwuxnGfiE7NbpZaWocYhiKBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XzMI/GELhSra/yZ7N9G2I3Mh0DC8bBKtu4oTvQ1RDjs5+XtnRMfd71rEkQzKVvJyU
-         uWmSJVbs26AgPYW84ZGgMKhIEQeH2Rf01bcN/mdtwEtLvECd2j2RbL15I8/zqRNnXx
-         vzGXpxqUoWVSufYvg75GgVLaHq7UxIxBuvT65910=
+        b=IVdc99VgMFf76EWBozzgWB856yo84dwI3/Nf9OLFVAOaj9uXZeF3bxu5YViMECGD+
+         7/m2oY+W+EXrpmhjBWszAbw85PpZ0PNN+SXd0RXVIsGrGmEHRCSuBjLR5IGRWmzrPa
+         GffIvQeXbmdfl7jvQZOGu/PhKY+IZVp2ZPwnfCrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 5.5 38/46] rxrpc: Fix sendmsg(MSG_WAITALL) handling
-Date:   Tue,  7 Apr 2020 12:22:09 +0200
-Message-Id: <20200407101503.512089696@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 08/46] staging: wfx: fix warning about freeing in-use mutex during device unregister
+Date:   Tue,  7 Apr 2020 12:21:39 +0200
+Message-Id: <20200407101500.370794039@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -58,34 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Jérôme Pouiller <jerome.pouiller@silabs.com>
 
-commit 498b577660f08cef5d9e78e0ed6dcd4c0939e98c upstream.
+[ Upstream commit bab0a0b03442a62fe3abefcb2169e0b9ff95990c ]
 
-Fix the handling of sendmsg() with MSG_WAITALL for userspace to round the
-timeout for when a signal occurs up to at least two jiffies as a 1 jiffy
-timeout may end up being effectively 0 if jiffies wraps at the wrong time.
+After hif_shutdown(), communication with the chip is no more possible.
+It the only request that never reply. Therefore, hif_cmd.lock is never
+unlocked. hif_shutdown() unlock itself hif_cmd.lock to avoid a potential
+warning during disposal of device. hif_cmd.key_renew_lock should also
+been unlocked for the same reason.
 
-Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Link: https://lore.kernel.org/r/20200310101356.182818-2-Jerome.Pouiller@silabs.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/sendmsg.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/wfx/hif_tx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -58,8 +58,8 @@ static int rxrpc_wait_for_tx_window_wait
- 
- 	rtt = READ_ONCE(call->peer->rtt);
- 	rtt2 = nsecs_to_jiffies64(rtt) * 2;
--	if (rtt2 < 1)
--		rtt2 = 1;
-+	if (rtt2 < 2)
-+		rtt2 = 2;
- 
- 	timeout = rtt2;
- 	tx_start = READ_ONCE(call->tx_hard_ack);
+diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
+index cb7cddcb98159..16e7d190430f3 100644
+--- a/drivers/staging/wfx/hif_tx.c
++++ b/drivers/staging/wfx/hif_tx.c
+@@ -141,6 +141,7 @@ int hif_shutdown(struct wfx_dev *wdev)
+ 	else
+ 		control_reg_write(wdev, 0);
+ 	mutex_unlock(&wdev->hif_cmd.lock);
++	mutex_unlock(&wdev->hif_cmd.key_renew_lock);
+ 	kfree(hif);
+ 	return ret;
+ }
+-- 
+2.20.1
+
 
 
