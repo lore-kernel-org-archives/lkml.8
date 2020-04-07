@@ -2,107 +2,169 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45448C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228AAC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114F72075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:01:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="CHeRs6j0"
+	by mail.kernel.org (Postfix) with ESMTP id E577C207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgDGVBb (ORCPT
+        id S1726534AbgDGVCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:01:31 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41542 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgDGVBb (ORCPT
+        Tue, 7 Apr 2020 17:02:18 -0400
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:37042 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgDGVCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:01:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a24so1360129pfc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=xOIs/aYyoEYRxoIMxQO5osoz1PpwH/skvHRPL3334M4=;
-        b=CHeRs6j021xT8bWjLDrrWBLWK9V8VLw7f2UsAFSw4lxOjoEHyaaYyP0dEPfbOIBjEK
-         i+3negRDUjEyBG/x3o4tokMia9jkInKAhBMrUg76qlHucqxULZtrH9GbO/YDs6Z4Iuzw
-         YljopLtG59nXQWQNMYvAnK4Ma6cee3yKmOysIU7vjNWVKlFJs7BYlDmb8ZD1m0GE7bO0
-         5T9BLY3mHFo4YPmGm8Yfl41kNcHw/73lrl3ElU3HwsZp0/yN2AZRVS/1potj2lFmOp8u
-         9/B1YW8ZqIRo3REH+7pZHa5oi4+umorNiZTyWfngg+I8izGlK1GxPIVSrJoiiKkDy91Y
-         jNQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=xOIs/aYyoEYRxoIMxQO5osoz1PpwH/skvHRPL3334M4=;
-        b=GvXo/TvhlUpw0hJy58VFng6yCACz7vD79nLwpaLB5sPAXzxTkoO9YYgTXxCu92ZrsC
-         lOruE+/qUOQ2TsTiCNdjC19PByyxBNjKV2BVT9LxGxp9tRzJyECPatcGzQz+tXWfqVVR
-         q51uS+GhJW8V0oEDW4H39vIoyMr9QZY993dZSCOwDBatj7A71aJuWo7p8j8GQBu60V9U
-         7BJUtRQwhsZa5Y/f75O9ATGYtghNDiodx3StmfMcw0tXoPw9cCrSLFEcelpPLIMIjIbj
-         /6Q2aaqYwrzFr0FJiYEZ3FGfXzNz6gAPwJvBzOvGsrTQlqEkeuXq7PsDn87VH7fLyR/U
-         a+0g==
-X-Gm-Message-State: AGi0PuYv6FCWJYITyMlPuJ5jU71Mh6bQGBExmissR7wDKv1hcw88fekr
-        ka5VemH2Mv5wb3ZYkq+wDX/xRsZ2jBk=
-X-Google-Smtp-Source: APiQypJVl+kUONdeDY7nQlJiv7QwGFUK9xO5VnrEKlgUhPzyv4hciH9FG0pjCOC1NTF8uV8IAPdVKA==
-X-Received: by 2002:a63:6e06:: with SMTP id j6mr3882546pgc.167.1586293290368;
-        Tue, 07 Apr 2020 14:01:30 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:34fd:1e6:3333:93da? ([2601:646:c200:1ef2:34fd:1e6:3333:93da])
-        by smtp.gmail.com with ESMTPSA id e26sm3037092pff.167.2020.04.07.14.01.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 14:01:29 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: hv_hypercall_pg page permissios
-Date:   Tue, 7 Apr 2020 14:01:25 -0700
-Message-Id: <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net>
-References: <20200407073830.GA29279@lst.de>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-In-Reply-To: <20200407073830.GA29279@lst.de>
-To:     Christoph Hellwig <hch@lst.de>
-X-Mailer: iPhone Mail (17E255)
+        Tue, 7 Apr 2020 17:02:18 -0400
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1jLvMN-0007JY-1U; Tue, 07 Apr 2020 21:02:15 +0000
+Received: from sleer.kot-begemot.co.uk ([192.168.3.72])
+        by jain.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1jLvMK-000872-Hp; Tue, 07 Apr 2020 22:02:14 +0100
+Subject: Re: [PATCH] um: add a generic "fd" vector transport
+To:     =?UTF-8?Q?Marc-Andr=c3=a9_Lureau?= <marcandre.lureau@redhat.com>,
+        linux-um@lists.infradead.org
+Cc:     joerd.simons@collabora.co.uk, richard@nod.at, jdike@addtoit.com,
+        linux-kernel@vger.kernel.org, alex.dewar@gmx.co.uk
+References: <20200407202853.1791218-1-marcandre.lureau@redhat.com>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Organization: Cambridge Greys
+Message-ID: <8a6dced2-886f-f8bd-aff9-3793f418cb0e@cambridgegreys.com>
+Date:   Tue, 7 Apr 2020 22:02:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200407202853.1791218-1-marcandre.lureau@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/04/2020 21:28, Marc-André Lureau wrote:
+> Learn to take a pre-opened file-descriptor for vector IO.
+> 
+> Instead of teaching the driver to open a FD in multiple ways, it can
+> rely on management layer to do it on its behalf. For example, this
+> allows inheriting a preconfigured device fd or a simple socketpair()
+> setup, without further arguments, privileges or system access by UML.
+> 
+> Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
+> ---
+>   arch/um/drivers/vector_user.c | 59 +++++++++++++++++++++++++++++++++++
+>   1 file changed, 59 insertions(+)
+> 
+> diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
+> index 29fae0456ade..45c1550dbb37 100644
+> --- a/arch/um/drivers/vector_user.c
+> +++ b/arch/um/drivers/vector_user.c
+> @@ -29,6 +29,7 @@
+>   #include <netdb.h>
+>   #include <stdlib.h>
+>   #include <os.h>
+> +#include <limits.h>
+>   #include <um_malloc.h>
+>   #include "vector_user.h"
+>   
+> @@ -42,6 +43,9 @@
+>   #define TRANS_RAW "raw"
+>   #define TRANS_RAW_LEN strlen(TRANS_RAW)
+>   
+> +#define TRANS_FD "fd"
+> +#define TRANS_FD_LEN strlen(TRANS_FD)
+> +
+>   #define VNET_HDR_FAIL "could not enable vnet headers on fd %d"
+>   #define TUN_GET_F_FAIL "tapraw: TUNGETFEATURES failed: %s"
+>   #define L2TPV3_BIND_FAIL "l2tpv3_open : could not bind socket err=%i"
+> @@ -347,6 +351,59 @@ static struct vector_fds *user_init_unix_fds(struct arglist *ifspec, int id)
+>   	return NULL;
+>   }
+>   
+> +static int strtofd(const char *nptr)
+> +{
+> +	long fd;
+> +	char *endptr;
+> +
+> +	if (nptr == NULL)
+> +		return -1;
+> +
+> +	errno = 0;
+> +	fd = strtol(nptr, &endptr, 10);
+> +	if (nptr == endptr ||
+> +		errno != 0 ||
+> +		*endptr != '\0' ||
+> +		fd < 0 ||
+> +		fd > INT_MAX) {
+> +		return -1;
+> +	}
+> +	return fd;
+> +}
+> +
+> +static struct vector_fds *user_init_fd_fds(struct arglist *ifspec)
+> +{
+> +	int fd = -1;
+> +	char *fdarg = NULL;
+> +	struct vector_fds *result = NULL;
+> +
+> +	fdarg = uml_vector_fetch_arg(ifspec, "fd");
+> +	fd = strtofd(fdarg);
+> +	if (fd == -1) {
+> +		printk(UM_KERN_ERR "fd open: bad or missing fd argument");
+> +		goto fd_cleanup;
+> +	}
+> +
+> +	result = uml_kmalloc(sizeof(struct vector_fds), UM_GFP_KERNEL);
+> +	if (result == NULL) {
+> +		printk(UM_KERN_ERR "fd open: allocation failed");
+> +		goto fd_cleanup;
+> +	}
+> +
+> +	result->rx_fd = fd;
+> +	result->tx_fd = fd;
+> +	result->remote_addr_size = 0;
+> +	result->remote_addr = NULL;
+> +	return result;
+> +
+> +fd_cleanup:
+> +	if (fd >= 0)
+> +		os_close_file(fd);
+> +	if (result != NULL)
+> +		kfree(result);
+> +	return NULL;
+> +}
+> +
+>   static struct vector_fds *user_init_raw_fds(struct arglist *ifspec)
+>   {
+>   	int rxfd = -1, txfd = -1;
+> @@ -578,6 +635,8 @@ struct vector_fds *uml_vector_user_open(
+>   		return user_init_socket_fds(parsed, ID_L2TPV3);
+>   	if (strncmp(transport, TRANS_BESS, TRANS_BESS_LEN) == 0)
+>   		return user_init_unix_fds(parsed, ID_BESS);
+> +	if (strncmp(transport, TRANS_FD, TRANS_FD_LEN) == 0)
+> +		return user_init_fd_fds(parsed);
+>   	return NULL;
+>   }
+>   
+> 
 
-> On Apr 7, 2020, at 12:38 AM, Christoph Hellwig <hch@lst.de> wrote:
->=20
-> =EF=BB=BFOn Tue, Apr 07, 2020 at 09:28:01AM +0200, Vitaly Kuznetsov wrote:=
+We should also control enable/disable of recv/sendmmsg as an option here.
 
->> Christoph Hellwig <hch@lst.de> writes:
->>=20
->>> Hi all,
->>>=20
->>> The x86 Hyper-V hypercall page (hv_hypercall_pg) is the only allocation
->>> in the kernel using __vmalloc with exectutable persmissions, and the
->>> only user of PAGE_KERNEL_RX.  Is there any good reason it needs to
->>> be readable?  Otherwise we could use vmalloc_exec and kill off
->>> PAGE_KERNEL_RX.  Note that before 372b1e91343e6 ("drivers: hv: Turn off
->>> write permission on the hypercall page") it was even mapped writable..
->>=20
->> [There is nothing secret in the hypercall page, by reading it you can
->> figure out if you're running on Intel or AMD (VMCALL/VMMCALL) but it's
->> likely not the only possible way :-)]
->>=20
->> I see no reason for hv_hypercall_pg to remain readable. I just
->> smoke-tested
->=20
-> Thanks, I have the same in my WIP tree, but just wanted to confirm this
-> makes sense.
+It can be made generic and be fed into get_transport_options() in 
+vector_kern.c as an override.
 
-Just to make sure we=E2=80=99re all on the same page: x86 doesn=E2=80=99t no=
-rmally have an execute-only mode. Executable memory in the kernel is readabl=
-e unless you are using fancy hypervisor-based XO support.=
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
