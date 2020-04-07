@@ -2,153 +2,87 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2890C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3949C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C837F2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Yiz1k2a+"
+	by mail.kernel.org (Postfix) with ESMTP id 883F32076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586270147;
+	bh=uUUfBlLBVmrI407h4iuq4K2XwW9Hz2vHNDOeF14Nv1E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z8Btid/7FWSmeCjQkCo+AgBDmGF/+UTKwmSFhWV0++/1aCkN0ADpKoY8y+qq+XJML
+	 iDeCiniVDzmMlOL9rwYUfvtEv26vuAEEVHnLg34tBWqD3BcvNGnQmyuGiexHjb/UKQ
+	 8fAHiyZIxBvvyFwMaP443pQZluqrs0gHPmGe18sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgDGOfc (ORCPT
+        id S1729271AbgDGOfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:35:32 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:47088 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728306AbgDGOfb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:35:31 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g74so1309205qke.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y4xgURPmRjyibn/2qSCq97LYNObKcToBBtf2Gfwy2qo=;
-        b=Yiz1k2a+d2vyPRjl1p6OB1s3oRmhJRa5DG4YZ0H+AUV/Saew9NegKF2jh3r9qjam78
-         eeCCWMtYLfMCzWLSg34uIuIw/eM9kAT3TyDKzV1z12eiQSGmu9bfWj0DNIzs8Dh4Dhkt
-         IiAOSad+g2vsRib0Yzm63lmrmtW2zEryv/nfJH+nGBiOgdmVgieyrwDVT8ifojzyHprH
-         UE2SQ7lFdx+OXV8o1S8lPdxxByTJoRk5+9ziWySKynVZT45eG7mLsPbiIWGApTgi0bFx
-         eGhKgqlK6SmCr/aq00Z8LaHBayOZZIOFH8bSxVwKxfumKLVY6ImglmWKO/aK1QgP9sPl
-         Cigg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y4xgURPmRjyibn/2qSCq97LYNObKcToBBtf2Gfwy2qo=;
-        b=fcu9RPLvKVvryF74hi6RV137hbVR3DeIs5d6DhR0Rr9/nTIIDevmIojXrxKfcE/wk4
-         u6bTVZw8ZKCOeDp+I+VjXQNILhv2ASprlR7U5r6fzBX2g4DZ3Tx5trUbc6oztx0cUTKr
-         GGUuqteuieRKtXe+vbs6yUJNhkzJN0pMm1pgly34riTSe5VeN+JYz+goIaiDoED0j7s3
-         qJsR1rBV6Fv7aEfIgcNL9XrKTOzqnelqUD/0T9bzebKNVh2DxKtKCNfNVQEm1U0vecYk
-         bio1LtO9gZw8Eg3Bp1ZTvir/qEtMezKSqyhpm0TfuocEhGDKni+X2BMPFhk17BBFdFXh
-         E4MQ==
-X-Gm-Message-State: AGi0PuY+mqDbdUVPZtsMEkuQbEXzCAcB2G/HxIv7z+8Njx6UgBXx+JR/
-        Oq1FdG3hqvbJ2CGaBo0emXP6wA==
-X-Google-Smtp-Source: APiQypKmGGXSajztBQhxLq8UQIvrySAvflfXyKfiybSPc1r2BxzTEDdWHUHv27/JoHEv5QYkPHlEVQ==
-X-Received: by 2002:a37:4b97:: with SMTP id y145mr2601556qka.167.1586270129635;
-        Tue, 07 Apr 2020 07:35:29 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id 60sm16925154qtb.95.2020.04.07.07.35.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Apr 2020 07:35:29 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jLpK4-0000lj-Ij; Tue, 07 Apr 2020 11:35:28 -0300
-Date:   Tue, 7 Apr 2020 11:35:28 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
-        RDMA mailing list <linux-rdma@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING in ib_umad_kill_port
-Message-ID: <20200407143528.GV20941@ziepe.ca>
-References: <00000000000075245205a2997f68@google.com>
- <20200406172151.GJ80989@unreal>
- <20200406174440.GR20941@ziepe.ca>
- <CACT4Y+Zv_WXEn6u5a6kRZpkDJnSzeGF1L7JMw4g85TLEgAM7Lw@mail.gmail.com>
- <20200407115548.GU20941@ziepe.ca>
- <CACT4Y+Zy0LwpHkTMTtb08ojOxuEUFo1Z7wkMCYSVCvsVDcxayw@mail.gmail.com>
+        Tue, 7 Apr 2020 10:35:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729103AbgDGOfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:35:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14F4E2072A;
+        Tue,  7 Apr 2020 14:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586270145;
+        bh=uUUfBlLBVmrI407h4iuq4K2XwW9Hz2vHNDOeF14Nv1E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vw+fi1YImMQ/v+btFUxWr/B8BtnaY6U61zM5JzUTZ02m5OSJMk6fNH1TIeeHd1sSo
+         JOMoMBZUi7+Ulp+tvVyGMKYlySrU6hRcJ7pbzG8mVo7hi/3CFxSB/1RHbZ9+JRczq2
+         z9xcQS8o6fd8T8DRmV1i+xOPgJ3VrQ7f6W+i5iWI=
+Date:   Tue, 7 Apr 2020 16:35:43 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        hch@infradead.org, sean.j.christopherson@intel.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
+        pbonzini@redhat.com, fenghua.yu@intel.com, xiaoyao.li@intel.com,
+        nadav.amit@gmail.com, thellstrom@vmware.com, tony.luck@intel.com,
+        rostedt@goodmis.org, jannh@google.com, keescook@chromium.org,
+        David.Laight@aculab.com, dcovelli@vmware.com, mhiramat@kernel.org
+Subject: Re: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
+Message-ID: <20200407143543.GB876345@kroah.com>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.352324393@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACT4Y+Zy0LwpHkTMTtb08ojOxuEUFo1Z7wkMCYSVCvsVDcxayw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200407111007.352324393@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 02:39:42PM +0200, Dmitry Vyukov wrote:
-> On Tue, Apr 7, 2020 at 1:55 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Tue, Apr 07, 2020 at 11:56:30AM +0200, Dmitry Vyukov wrote:
-> > > > I'm not sure what could be done wrong here to elicit this:
-> > > >
-> > > >  sysfs group 'power' not found for kobject 'umad1'
-> > > >
-> > > > ??
-> > > >
-> > > > I've seen another similar sysfs related trigger that we couldn't
-> > > > figure out.
-> > > >
-> > > > Hard to investigate without a reproducer.
-> > >
-> > > Based on all of the sysfs-related bugs I've seen, my bet would be on
-> > > some races. E.g. one thread registers devices, while another
-> > > unregisters these.
-> >
-> > I did check that the naming is ordered right, at least we won't be
-> > concurrently creating and destroying umadX sysfs of the same names.
-> >
-> > I'm also fairly sure we can't be destroying the parent at the same
-> > time as this child.
-> >
-> > Do you see the above commonly? Could it be some driver core thing? Or
-> > is it more likely something wrong in umad?
+On Tue, Apr 07, 2020 at 01:02:39PM +0200, Peter Zijlstra wrote:
+> It turns out that with Split-Lock-Detect enabled (default) any VMX
+> hypervisor needs at least a little modification in order to not blindly
+> inject the #AC into the guest without the guest being ready for it.
 > 
-> Mmmm... I can't say, I am looking at some bugs very briefly. I've
-> noticed that sysfs comes up periodically (or was it some other similar
-> fs?). 
+> Since there is no telling which module implements a hypervisor, scan
+> all out-of-tree modules' text and look for VMX instructions and refuse
+> to load it when SLD is enabled (default) and the module isn't marked
+> 'sld_safe'.
+> 
+> Hypervisors, which have been modified and are known to work correctly,
+> can add:
+> 
+>   MODULE_INFO(sld_safe, "Y");
+> 
+> to explicitly tell the module loader they're good.
 
-Hmm..
+What's to keep any out-of-tree module from adding this same module info
+"flag" and just lie about it?  Isn't that what you are trying to catch
+here, or is it a case of, "if you lie, your code will break" as well?
 
-Looking at the git history I see several cases where there are
-ordering problems. I wonder if the rdma parent device is being
-destroyed before the rdma devices complete destruction?
+thanks,
 
-I see the syzkaller is creating a bunch of virtual net devices, and I
-assume it has created a software rdma device on one of these virtual
-devices.
-
-So I'm guessing that it is also destroying a parent? But I can't guess
-which.. Some simple tests with veth suggest it is OK because the
-parent is virtual. But maybe bond or bridge or something?
-
-The issue in rdma is that unregistering a netdev triggers an async
-destruction of the RDMA devices. This has to be async because the
-netdev notification is delivered with RTNL held, and a rdma device
-cannot be destroyed while holding RTNL.
-
-So there is a race, I suppose, where the netdev can complete
-destruction while rdma continues, and if someone deletes the sysfs
-holding the netdev before rdma completes, I'm going to guess, that we
-hit this warning?
-
-Could it be? I would love to know what netdev the rdma device was
-created on, but it doesn't seem to show in the trace :\ 
-
-This theory could be made more likely by adding a sleep to
-ib_unregister_work() to increase the race window - is there some way
-to get syzkaller to search for a reproducer with that patch?
-
-Jason
+greg k-h
