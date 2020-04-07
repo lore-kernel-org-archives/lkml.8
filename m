@@ -2,121 +2,210 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B87C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B445AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51B4620730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586292485;
-	bh=a05UYOnt62RQr+EE+Q1nTgEu1qSHCBk6Xf9LfiGCkDs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LPgRihJLKC/FnuGtjO4kYnH6mIuRE0iuc09IwFenvg2a6ADNl9L334SHgC5mm7tPI
-	 1uPiRPcrUCJZX1wEGi4F7xAcPfkqonLuutCeGihCWXRe/ECDpyMwkBKK4KBjSREIXO
-	 mVLTsM8HcLhpC3GX/JH3APPaAv/lhEQlxv0v5cvc=
+	by mail.kernel.org (Postfix) with ESMTP id 7C2B320730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="curn2VB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgDGUsE (ORCPT
+        id S1726483AbgDGUsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:48:04 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40464 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgDGUsE (ORCPT
+        Tue, 7 Apr 2020 16:48:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39991 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726386AbgDGUsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:48:04 -0400
-Received: by mail-lj1-f194.google.com with SMTP id 142so733774ljj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:48:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0HjyJmpuP/fheL56eiDsEL3j2Jeu/bd9xUqsyeAAnTM=;
-        b=FQhyz95ErvyUTVGyfMDMjF6va9oPn5G9QQis7cMRsGgxDIlUsuR1VPQIJcvsMd+KCq
-         0iP/0/T9Jmk7j6bVuyAPuFSmCHiQ0xIfFLAeu2pHJH+OZduD+lXrUxG4XnL+i0voL1YP
-         rrIyxNCOOm8Hwt3UhNhsZTM7/H0hggIN/mxg4=
+        Tue, 7 Apr 2020 16:48:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586292484;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SNNnS6jMNs/mcFt0zu+7szoqfaJA8/rEUBbigfZagbs=;
+        b=curn2VB0kp+PD0QMXwiZoXLQnK9gATolmErkWB3fzpsM6AeP0sG6/gC9YxZPZnfi/fIN2S
+        UC71dtWCMjWUI3koWj2ETgdHM/gKUUWeQzc/pO2nhdh4pUDlX0DCAHKWSv9t7mbLv1fVEp
+        3WYcsDCT+erVwN5QuHs7A5z7mRCPlcA=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-161-3nJAQkqGNUWOvlJZcH4fEg-1; Tue, 07 Apr 2020 16:48:00 -0400
+X-MC-Unique: 3nJAQkqGNUWOvlJZcH4fEg-1
+Received: by mail-wr1-f69.google.com with SMTP id v14so2749049wrq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:47:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0HjyJmpuP/fheL56eiDsEL3j2Jeu/bd9xUqsyeAAnTM=;
-        b=JP9+oZXgLK/cRztn3TyssbpTOyt4FuH/PTxTYsnTmxw7JIni8RTXI2H3yoLoNNX6G3
-         8v/QC3pKBYstqX/UXNrvZy+pbnwluuPfw7VqZdCY1dCPCJNNMh5LvUcruZiJkFG7wmk+
-         NuROIycrtwfdBMQLaoIargXO9h5swQfFKgcpPYocR6ePMRI0W8LIg51JRBoeOxnJdBkl
-         aEDTGsyn+V2lKv61zna0lZYTTZ1EN9slWCagY14sbn3NhoTH2UrWRaLtzhKpJHg6xWF6
-         hYx6zK4Jt4nj5q33zN23RRdBrPFiG2BAEln2AcIBhmJh0iEtbvcoBQRfAOOUQIPE+1oL
-         Nktg==
-X-Gm-Message-State: AGi0PuasaAK9Y3PXuiFisYLv06Ag9frGR8s1s4ejg90to5NjDcEy7XWw
-        im7hA+4HfSaD44JcW8+xhZmMBtunmM4=
-X-Google-Smtp-Source: APiQypL4G/+xD4DTFNlPJWRl7zy3Ii4bz+kI8xwAsD8O01hQouE/5T6m8UV9PQWXaqitO77zkF3d6Q==
-X-Received: by 2002:a05:651c:22e:: with SMTP id z14mr2768735ljn.64.1586292480080;
-        Tue, 07 Apr 2020 13:48:00 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id i2sm150899ljb.50.2020.04.07.13.47.58
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 13:47:59 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id g27so5237500ljn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:47:58 -0700 (PDT)
-X-Received: by 2002:a2e:8911:: with SMTP id d17mr2932028lji.16.1586292478505;
- Tue, 07 Apr 2020 13:47:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SNNnS6jMNs/mcFt0zu+7szoqfaJA8/rEUBbigfZagbs=;
+        b=apVNojCxSxHCXXIkZG8XrLq0hNBWG1riBZm4cDuK1aIC+5w26iMBwlO3PGrdvPvivk
+         jYl7FtDSnX4vg222bD/Lz11VfYdzCVl7NzBaZlyT6BvBLHeblOEow1KeEP6Du3snvxon
+         WXmYPF+n035ntICYqqojIF+ZR0/ICw/ejQDhp2Tm0jtawlSH8QaG0Bgfj57YBRYItg8b
+         qL21LqQuhnvETFCeKGfnx84oK5DYLKiPSXXnXsdOESUhxcEovT1HYeipUkaUrtREC3sj
+         RASfrg+0kXm+W8yycHbv9gP9vMOG6YMjuvgibH8LsxtMyv87EG3HPaOvZRse5ptvm8w9
+         YmoQ==
+X-Gm-Message-State: AGi0PuZCIe3sIr8tpFcr4LM2BYAnWZPedh/XptgdPeRVWUnGvqESV28G
+        t1G0HqPn3u/PPTIixcxW5jkXuJMrkRyThsHTEV3bpWkI2lDZMOkn0yNHw3Y89JiV2co1wf0WP+q
+        w6zKWP06Jr1ZbvuDmvMra8JfT
+X-Received: by 2002:adf:ff85:: with SMTP id j5mr4399368wrr.332.1586292478473;
+        Tue, 07 Apr 2020 13:47:58 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLn3OvfUzYyhWD+1bLiZR8CGLlW8+JmrgXrPqP6ByTbcA+eAxOaiqPdrRt4b8c5q5+FioxHEQ==
+X-Received: by 2002:adf:ff85:: with SMTP id j5mr4399354wrr.332.1586292478219;
+        Tue, 07 Apr 2020 13:47:58 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::3])
+        by smtp.gmail.com with ESMTPSA id l15sm502142wmi.48.2020.04.07.13.47.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 13:47:57 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 16:47:54 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     syzbot <syzbot+a8c70b7f3579fc0587dc@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, bgeffon@google.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
+Subject: Re: WARNING: bad unlock balance in __get_user_pages_remote
+Message-ID: <20200407204754.GA66033@xz-x1>
+References: <00000000000005c65d05a2b90e70@google.com>
 MIME-Version: 1.0
-References: <87blobnq02.fsf@x220.int.ebiederm.org> <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org> <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
- <87blo45keg.fsf@x220.int.ebiederm.org> <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
- <AM6PR03MB5170FA8CACA7A1BB2026F55EE4C30@AM6PR03MB5170.eurprd03.prod.outlook.com>
-In-Reply-To: <AM6PR03MB5170FA8CACA7A1BB2026F55EE4C30@AM6PR03MB5170.eurprd03.prod.outlook.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 7 Apr 2020 13:47:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wibSLkDSW-5jqyXoaSN-pi9bQVAFtcyZfgYGxBaRp4E4Q@mail.gmail.com>
-Message-ID: <CAHk-=wibSLkDSW-5jqyXoaSN-pi9bQVAFtcyZfgYGxBaRp4E4Q@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <00000000000005c65d05a2b90e70@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 1:29 PM Bernd Edlinger <bernd.edlinger@hotmail.de> wrote:
->
-> Maybe, actually I considered this, but I was anxious that making something
-> that is so far not killable suddenly killable might break other things.
+On Tue, Apr 07, 2020 at 01:16:11PM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    7e634208 Merge tag 'acpi-5.7-rc1-2' of git://git.kernel.or..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=169498ede00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=12205d036cec317f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a8c70b7f3579fc0587dc
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a41543e00000
+> 
+> The bug was bisected to:
+> 
+> commit 71335f37c5e8ec9225285206f7f875057b9737ad
+> Author: Peter Xu <peterx@redhat.com>
+> Date:   Thu Apr 2 04:08:53 2020 +0000
+> 
+>     mm/gup: allow to react to fatal signals
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17dba9b3e00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=143ba9b3e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=103ba9b3e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+a8c70b7f3579fc0587dc@syzkaller.appspotmail.com
+> Fixes: 71335f37c5e8 ("mm/gup: allow to react to fatal signals")
+> 
+> =====================================
+> WARNING: bad unlock balance detected!
+> 5.6.0-syzkaller #0 Not tainted
+> -------------------------------------
+> syz-executor.0/8429 is trying to release lock (&mm->mmap_sem) at:
+> [<ffffffff819fbf60>] __get_user_pages_locked mm/gup.c:1366 [inline]
+> [<ffffffff819fbf60>] __get_user_pages_remote mm/gup.c:1831 [inline]
+> [<ffffffff819fbf60>] __get_user_pages_remote+0x540/0x740 mm/gup.c:1806
+> but there are no more locks to release!
+> 
+> other info that might help us debug this:
+> no locks held by syz-executor.0/8429.
+> 
+> stack backtrace:
+> CPU: 0 PID: 8429 Comm: syz-executor.0 Not tainted 5.6.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x188/0x20d lib/dump_stack.c:118
+>  __lock_release kernel/locking/lockdep.c:4633 [inline]
+>  lock_release+0x586/0x800 kernel/locking/lockdep.c:4941
+>  up_read+0x79/0x750 kernel/locking/rwsem.c:1573
+>  __get_user_pages_locked mm/gup.c:1366 [inline]
+>  __get_user_pages_remote mm/gup.c:1831 [inline]
+>  __get_user_pages_remote+0x540/0x740 mm/gup.c:1806
+>  pin_user_pages_remote+0x67/0xa0 mm/gup.c:2897
+>  process_vm_rw_single_vec mm/process_vm_access.c:108 [inline]
+>  process_vm_rw_core.isra.0+0x423/0x940 mm/process_vm_access.c:218
+>  process_vm_rw+0x21f/0x240 mm/process_vm_access.c:286
+>  __do_sys_process_vm_writev mm/process_vm_access.c:308 [inline]
+>  __se_sys_process_vm_writev mm/process_vm_access.c:303 [inline]
+>  __x64_sys_process_vm_writev+0xdf/0x1b0 mm/process_vm_access.c:303
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x45c879
+> Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fa1008bac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000137
+> RAX: ffffffffffffffda RBX: 00007fa1008bb6d4 RCX: 000000000045c879
+> RDX: 0000000000000001 RSI: 0000000020c22000 RDI: 0000000000000009
+> RBP: 000000000076bf00 R08: 0000000000000001 R09: 0000000000000000
+> R10: 0000000020c22fa0 R11: 0000000000000246 R12: 00000000ffffffff
+> R13: 000000000000085d R14: 00000000004cb1ee R15: 000000000076bf0c
+> ------------[ cut here ]------------
+> DEBUG_RWSEMS_WARN_ON(tmp < 0): count = 0xffffffffffffff00, magic = 0xffff888094028338, owner = 0x3, curr 0xffff888093cbc500, list empty
+> WARNING: CPU: 0 PID: 8429 at kernel/locking/rwsem.c:1435 __up_read kernel/locking/rwsem.c:1435 [inline]
+> WARNING: CPU: 0 PID: 8429 at kernel/locking/rwsem.c:1435 up_read+0x5f9/0x750 kernel/locking/rwsem.c:1574
 
-I don't think it can.
+Indeed the original commit is problematic, sorry for that.
 
-Basically, if you have a execve() and a setprocattr() racing, one or
-the other starts first.
+Fix should be attached below.  According to syzbot document it should
+understand the attached patch inline in the email and apply upon the
+tree, then I think what we need is just:
 
-And if the execve() started first, then the setprocattr() thread would
-get killed by the execve(), and there's no serialization. So you might
-as well just say "it got killed before it even started to wait".
+#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-So semantically, having a killable wait is basically exactly the same
-as losing the race - which wasn't ordered to begin with.
+Thanks,
 
-It's not like anybody will see the return value - the thread that
-would have gotten the value got killed.
+8<-----------------------------------------------------------------------
+From 1be80593076b9630265e118696e74fa17276124f Mon Sep 17 00:00:00 2001
+From: Peter Xu <peterx@redhat.com>
+Date: Tue, 7 Apr 2020 16:34:50 -0400
+Subject: [PATCH] mm/gup: Mark lock taken only after a successful retake
 
-So doing
+It's definitely incorrect to mark the lock as taken even if
+down_read_killable() failed.  It's overlooked when we switched from
+down_read() to down_read_killable() because down_read() won't fail
+while down_read_killable() could.
 
-    if (down_writel_killable(&credlock))
-        return -EINTR;
+Reported-by: syzbot+a8c70b7f3579fc0587dc@syzkaller.appspotmail.com
+Fixes: 71335f37c5e8 ("mm/gup: allow to react to fatal signals")
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ mm/gup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-may *look* like it's new semantics, but it isn't really. That EINTR
-error isn't visible to anybody, and everything looks absolutely
-identical to "execve() in the other thread started earlier and killed
-the thread even before it got to the system call".
+diff --git a/mm/gup.c b/mm/gup.c
+index da3e03185144..1f9a9b3a5869 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1328,7 +1328,6 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 		if (fatal_signal_pending(current))
+ 			break;
+ 
+-		*locked = 1;
+ 		ret = down_read_killable(&mm->mmap_sem);
+ 		if (ret) {
+ 			BUG_ON(ret > 0);
+@@ -1337,6 +1336,7 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 			break;
+ 		}
+ 
++		*locked = 1;
+ 		ret = __get_user_pages(tsk, mm, start, 1, flags | FOLL_TRIED,
+ 				       pages, NULL, locked);
+ 		if (!*locked) {
+-- 
+2.24.1
 
-              Linus
+-- 
+Peter Xu
+
