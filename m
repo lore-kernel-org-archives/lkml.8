@@ -2,111 +2,107 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0B6C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45448C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C642075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586293285;
-	bh=SeaEaHFnXbhpQrCCYQ6v8rsvEnzeKDxOkkNQ7B9VOJs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FAXrTx/cYp08vE22p9RpK0CPvUoNL7cs3BDQh/JRnpdyQTe4BQ8Zq0s7Ek1XuHdSR
-	 W1bajVDL2l79q1QJu0lM2WrzqgGDe9AamCp3pRua5OyCrPoC3lNOSVGvNkdifktisu
-	 3BoDTHyfY98MqLZrHBwQVeES2CKv2wSAqUXWjMZc=
+	by mail.kernel.org (Postfix) with ESMTP id 114F72075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="CHeRs6j0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDGVBY (ORCPT
+        id S1726483AbgDGVBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:01:24 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34362 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726403AbgDGVBX (ORCPT
+        Tue, 7 Apr 2020 17:01:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41542 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgDGVBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:01:23 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x23so3505109lfq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:01:21 -0700 (PDT)
+        Tue, 7 Apr 2020 17:01:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a24so1360129pfc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:01:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=epjd3hRndDDxUzNxhGw+kNUEWswsyoCP1k+ltMRz2F0=;
-        b=Rea+dN4Po4ublGuumqEu1Z9YdmnTeD34HLjcUPAn4kHYHWLUNPIQ/VZCsT6xyf8JiS
-         bmcrncrGMpFp3ozkp1oN3IxqZ435NGWt/x7uln8afuzN0jgjeD5EbAAwriXLYujNsWDj
-         hGtKlgxlKKZWInJKxtH5YVmPqsKEobcBPvotE=
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=xOIs/aYyoEYRxoIMxQO5osoz1PpwH/skvHRPL3334M4=;
+        b=CHeRs6j021xT8bWjLDrrWBLWK9V8VLw7f2UsAFSw4lxOjoEHyaaYyP0dEPfbOIBjEK
+         i+3negRDUjEyBG/x3o4tokMia9jkInKAhBMrUg76qlHucqxULZtrH9GbO/YDs6Z4Iuzw
+         YljopLtG59nXQWQNMYvAnK4Ma6cee3yKmOysIU7vjNWVKlFJs7BYlDmb8ZD1m0GE7bO0
+         5T9BLY3mHFo4YPmGm8Yfl41kNcHw/73lrl3ElU3HwsZp0/yN2AZRVS/1potj2lFmOp8u
+         9/B1YW8ZqIRo3REH+7pZHa5oi4+umorNiZTyWfngg+I8izGlK1GxPIVSrJoiiKkDy91Y
+         jNQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=epjd3hRndDDxUzNxhGw+kNUEWswsyoCP1k+ltMRz2F0=;
-        b=cPdaQWXj08G39/LHQAYJBAu4mFgoZNIEel1r7WVQtZ4gBVWT0GXSqONkBNVztxs0Eq
-         xyXv9Iw7+BDtGfRE0VqzGUzp/3QFSVbx0DQbegbe/U2Y/oIZ6NVZ+6P9Cmj6yUiB3N2e
-         uNzQn63zCuh6LojVa5Id552/NLNNoHkjIvxwyPSo9UCB0D/odWGWSnfHT/wt2rpvD3ei
-         v2Fya6VKqD1xVL4IobzuIEJmrWL+mvquoSZjZ5BV0FP7pY2vDpRcShIfj6I+L86iEuXf
-         NXu76ksi4C/PrlUuFBoaLeEv0OJNrAM+W4R+G1Aom8hLeRtvPecpbU3xddf9QKqTVgUH
-         S5kw==
-X-Gm-Message-State: AGi0PuZvTYYe1RlwlL/nVR67IbnXgX/ZUlkw9MztpLCnEYEVdrkAYbwV
-        4m4aRupF2N6o/e/9gGoZr1zFVrZ+GNI=
-X-Google-Smtp-Source: APiQypIdYEsEGhl4RnzTophC58IU+xs4IQ44GLK4EXwsv+rW/Ug22tevKD8+3IH4zrA39pELAM5/1A==
-X-Received: by 2002:a19:494f:: with SMTP id l15mr2518612lfj.33.1586293279685;
-        Tue, 07 Apr 2020 14:01:19 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id o2sm12314195ljm.2.2020.04.07.14.01.17
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=xOIs/aYyoEYRxoIMxQO5osoz1PpwH/skvHRPL3334M4=;
+        b=GvXo/TvhlUpw0hJy58VFng6yCACz7vD79nLwpaLB5sPAXzxTkoO9YYgTXxCu92ZrsC
+         lOruE+/qUOQ2TsTiCNdjC19PByyxBNjKV2BVT9LxGxp9tRzJyECPatcGzQz+tXWfqVVR
+         q51uS+GhJW8V0oEDW4H39vIoyMr9QZY993dZSCOwDBatj7A71aJuWo7p8j8GQBu60V9U
+         7BJUtRQwhsZa5Y/f75O9ATGYtghNDiodx3StmfMcw0tXoPw9cCrSLFEcelpPLIMIjIbj
+         /6Q2aaqYwrzFr0FJiYEZ3FGfXzNz6gAPwJvBzOvGsrTQlqEkeuXq7PsDn87VH7fLyR/U
+         a+0g==
+X-Gm-Message-State: AGi0PuYv6FCWJYITyMlPuJ5jU71Mh6bQGBExmissR7wDKv1hcw88fekr
+        ka5VemH2Mv5wb3ZYkq+wDX/xRsZ2jBk=
+X-Google-Smtp-Source: APiQypJVl+kUONdeDY7nQlJiv7QwGFUK9xO5VnrEKlgUhPzyv4hciH9FG0pjCOC1NTF8uV8IAPdVKA==
+X-Received: by 2002:a63:6e06:: with SMTP id j6mr3882546pgc.167.1586293290368;
+        Tue, 07 Apr 2020 14:01:30 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:34fd:1e6:3333:93da? ([2601:646:c200:1ef2:34fd:1e6:3333:93da])
+        by smtp.gmail.com with ESMTPSA id e26sm3037092pff.167.2020.04.07.14.01.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 14:01:17 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id z26so1203288ljz.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:01:17 -0700 (PDT)
-X-Received: by 2002:a05:651c:50e:: with SMTP id o14mr2769380ljp.241.1586293277007;
- Tue, 07 Apr 2020 14:01:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200407200318.11711-1-longman@redhat.com> <0fe5dcaf078be61ef21c7f18b750c5dc14c69dd7.camel@perches.com>
- <67c51b03-192c-3006-5071-452f351aee67@redhat.com>
-In-Reply-To: <67c51b03-192c-3006-5071-452f351aee67@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 7 Apr 2020 14:01:01 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whV5Z4XioUOW0UM-PBrW7iqb0HwWKQU5Vn8b5pmsDm=Ww@mail.gmail.com>
-Message-ID: <CAHk-=whV5Z4XioUOW0UM-PBrW7iqb0HwWKQU5Vn8b5pmsDm=Ww@mail.gmail.com>
-Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive data objects
-To:     Waiman Long <longman@redhat.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 07 Apr 2020 14:01:29 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: hv_hypercall_pg page permissios
+Date:   Tue, 7 Apr 2020 14:01:25 -0700
+Message-Id: <C311EB52-A796-4B94-AADD-CCABD19B377E@amacapital.net>
+References: <20200407073830.GA29279@lst.de>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, x86@kernel.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+In-Reply-To: <20200407073830.GA29279@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+X-Mailer: iPhone Mail (17E255)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 1:45 PM Waiman Long <longman@redhat.com> wrote:
->
-> If the memory is really virtually mapped, the only way to find out the
-> size of the object is to use find_vm_area() which can be relatively high
-> cost and no simple helper function is available.
 
-We _could_ just push it down to a "vfree_sensitive()", and do it
-inside the vfree logic. That ends up obviously figuring out the size
-of the area eventually.
+> On Apr 7, 2020, at 12:38 AM, Christoph Hellwig <hch@lst.de> wrote:
+>=20
+> =EF=BB=BFOn Tue, Apr 07, 2020 at 09:28:01AM +0200, Vitaly Kuznetsov wrote:=
 
-But since the vmalloc data structures fundamentally aren't irq-safe,
-vfree() actually has magical things like "if called in an interrupt,
-we'll delay it to work context".
+>> Christoph Hellwig <hch@lst.de> writes:
+>>=20
+>>> Hi all,
+>>>=20
+>>> The x86 Hyper-V hypercall page (hv_hypercall_pg) is the only allocation
+>>> in the kernel using __vmalloc with exectutable persmissions, and the
+>>> only user of PAGE_KERNEL_RX.  Is there any good reason it needs to
+>>> be readable?  Otherwise we could use vmalloc_exec and kill off
+>>> PAGE_KERNEL_RX.  Note that before 372b1e91343e6 ("drivers: hv: Turn off
+>>> write permission on the hypercall page") it was even mapped writable..
+>>=20
+>> [There is nothing secret in the hypercall page, by reading it you can
+>> figure out if you're running on Intel or AMD (VMCALL/VMMCALL) but it's
+>> likely not the only possible way :-)]
+>>=20
+>> I see no reason for hv_hypercall_pg to remain readable. I just
+>> smoke-tested
+>=20
+> Thanks, I have the same in my WIP tree, but just wanted to confirm this
+> makes sense.
 
-So that "eventually" can be quite a bit later, and it would delay the
-overwriting of the sensitive data if we did that.
-
-So this patch does end up simpler, but for vfree data it is actually
-technically the better approach too (since overwriting the sensitive
-data asap is what you want).
-
-            Linus
+Just to make sure we=E2=80=99re all on the same page: x86 doesn=E2=80=99t no=
+rmally have an execute-only mode. Executable memory in the kernel is readabl=
+e unless you are using fancy hypervisor-based XO support.=
