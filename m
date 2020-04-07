@@ -2,81 +2,98 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312ECC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C334C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81DC20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B1820730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgDGTx6 convert rfc822-to-8bit (ORCPT
+        id S1727801AbgDGTye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:53:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:18526 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727588AbgDGTx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:53:57 -0400
-IronPort-SDR: hbotkgA8sbgQWxEE72MFJFx/PWon/JBJ2lk9VfqsIlZGcM3kSWZQ1tE6dKH1SQz4zAih+p2I9W
- ColjiJnEszSQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 12:53:57 -0700
-IronPort-SDR: EOQpdJHw8Xv/8Z2IzxVEfz8+bhH1R5V/Zu6RwmkxCBL7Meo/ptCRe+h8PgKIeCeoj2eWbsBF1w
- klMwDaA+/u/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,356,1580803200"; 
-   d="scan'208";a="397968924"
-Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
-  by orsmga004.jf.intel.com with ESMTP; 07 Apr 2020 12:53:57 -0700
-Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
- ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Apr 2020 12:53:57 -0700
-Received: from orsmsx115.amr.corp.intel.com ([169.254.4.102]) by
- ORSMSX111.amr.corp.intel.com ([169.254.12.226]) with mapi id 14.03.0439.000;
- Tue, 7 Apr 2020 12:53:56 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Yazen Ghannam <Yazen.Ghannam@amd.com>, X86 ML <x86@kernel.org>,
+        Tue, 7 Apr 2020 15:54:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48493 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726712AbgDGTye (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 15:54:34 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jLuIn-0004Fa-SY; Tue, 07 Apr 2020 21:54:30 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3E0C61C0082;
+        Tue,  7 Apr 2020 21:54:29 +0200 (CEST)
+Date:   Tue, 07 Apr 2020 19:54:28 -0000
+From:   "tip-bot2 for Jan Kara" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] ucount: Make sure ucounts in /proc/sys/user
+ don't regress again
+Cc:     Jan Kara <jack@suse.cz>, Thomas Gleixner <tglx@linutronix.de>,
+        Andrei Vagin <avagin@gmail.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/9 v3] New way to track mce notifier chain actions
-Thread-Topic: [PATCH 0/9 v3] New way to track mce notifier chain actions
-Thread-Index: AQHWDPp8vp48dLXhV06F4vOElkh+Z6huEcbg
-Date:   Tue, 7 Apr 2020 19:53:56 +0000
-Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F5D49A9@ORSMSX115.amr.corp.intel.com>
-References: <20200212204652.1489-1-tony.luck@intel.com>
- <20200407163414.18058-1-bp@alien8.de>
-In-Reply-To: <20200407163414.18058-1-bp@alien8.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200407154643.10102-1-jack@suse.cz>
+References: <20200407154643.10102-1-jack@suse.cz>
 MIME-Version: 1.0
+Message-ID: <158628926863.28353.6820611452673308754.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The last patch is something tglx spotted yesterday and fixing that with
-> the MCE flags is pretty easy - was boxing with a wrapper struct around
-> struct mce and that gets really ugly.
->
-> Tony, I'm open to suggestions how to test it - I probably don't have an
-> access to such box which can trigger read errors on nvdimms or what was
-> the use case?
+The following commit has been merged into the timers/urgent branch of tip:
 
-It passes my smoke tests (uncorrectable error consumed by application and
-uncorrectable error consumed by mcsafe_memcpy()).
+Commit-ID:     0f538e3e712a517bd351607de50cd298102c7c08
+Gitweb:        https://git.kernel.org/tip/0f538e3e712a517bd351607de50cd298102c7c08
+Author:        Jan Kara <jack@suse.cz>
+AuthorDate:    Tue, 07 Apr 2020 17:46:43 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 07 Apr 2020 21:51:27 +02:00
 
-Tested-by: Tony Luck <tony.luck@intel.com>
+ucount: Make sure ucounts in /proc/sys/user don't regress again
 
--Tony
+Commit 769071ac9f20 "ns: Introduce Time Namespace" broke reporting of
+inotify ucounts (max_inotify_instances, max_inotify_watches) in
+/proc/sys/user because it has added UCOUNT_TIME_NAMESPACES into enum
+ucount_type but didn't properly update reporting in
+kernel/ucount.c:setup_userns_sysctls(). This problem got fixed in commit
+eeec26d5da82 "time/namespace: Add max_time_namespaces ucount".
+
+Add BUILD_BUG_ON to catch a similar problem in the future.
+
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Andrei Vagin <avagin@gmail.com>
+Link: https://lkml.kernel.org/r/20200407154643.10102-1-jack@suse.cz
+
+---
+ kernel/ucount.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/ucount.c b/kernel/ucount.c
+index 29c60eb..11b1596 100644
+--- a/kernel/ucount.c
++++ b/kernel/ucount.c
+@@ -82,6 +82,8 @@ bool setup_userns_sysctls(struct user_namespace *ns)
+ {
+ #ifdef CONFIG_SYSCTL
+ 	struct ctl_table *tbl;
++
++	BUILD_BUG_ON(ARRAY_SIZE(user_table) != UCOUNT_COUNTS + 1);
+ 	setup_sysctl_set(&ns->set, &set_root, set_is_seen);
+ 	tbl = kmemdup(user_table, sizeof(user_table), GFP_KERNEL);
+ 	if (tbl) {
