@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DACC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20FCC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3687E20719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9E520719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OT/L+d2s"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c6dpUU2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgDGXvL (ORCPT
+        id S1726671AbgDGXvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:51:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46486 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgDGXvI (ORCPT
+        Tue, 7 Apr 2020 19:51:10 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:33337 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbgDGXvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:51:08 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q3so1531662pff.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:51:07 -0700 (PDT)
+        Tue, 7 Apr 2020 19:51:07 -0400
+Received: by mail-pj1-f66.google.com with SMTP id cp9so1572887pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:51:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KvEJzMH6Rxi8JFDstC273KQ0bdGB37YijaATrtjA+Oo=;
-        b=OT/L+d2sOkBze7u7kCa/ul9nbt7FBPk4UFbvoXf7evUw860Zm7kdOTvn+/o1kPqp4C
-         1Y0MaFQ01GRIGs3AAZfSuNfnwO66ph7dkS6vDmTcUTZl5i6jIw+1+KFcO9KXV1wjqlrZ
-         PPO7T+JbzB1wgA8vitRJDvxObqOOuYYVZDiYo=
+        bh=E1QDZq4xExPVunZ2u5Z6vV2KVUCthnGgNSWt9YeCsSE=;
+        b=c6dpUU2pbYj0TXrMFLWPx0itaCWwmlzgy7tfj7AHLGPuYI9CTi24kTSQxrzbgdKETU
+         xixpHB8+EaF92Y9CN02swLIhiLLRAPIgKHXwOS9wcq0jpXGVXuik+G1sJLFS0GvwFmf7
+         6pXzV+xt2+wjrnOmytjESiC/rkWHVJ7Ab1skk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KvEJzMH6Rxi8JFDstC273KQ0bdGB37YijaATrtjA+Oo=;
-        b=pbObw0DjDOJ5DWxemhZsRHQdOy9pqLywERkbPlqOyBQWx9zdSxo2ARlztIcFipIB4e
-         w7wofaRet6ADdMbVmwgNHFqC3wkCSGXg0gI7y9KO2yPgdTA1JqgBRkx4tNQ44aOwEQ0L
-         1yIfbBMcCozLHBn+VXV365aV2PVRHm3ME/HHxWlLcHZg1Znbk5u/e16ONFgKeaszfu88
-         IivGNMZyi5j9jjP8ik+8I7AQZqXqO+hD8THhteM9jCVNRXfc4F467cxdYaBZjX1tE1Mh
-         4Z2QTlMFwxlHRLVvkRSaRyFbfqyQmUpQGvLZu4vnAmcgMQ0N8RnyzH7SCthHMtczeS7g
-         uDlA==
-X-Gm-Message-State: AGi0PuYsQubxWvMf6/tOWzs35FD4V3jLbs6O3GyuA5zJ6g+Dk0CDTigW
-        PkdzqAIwMyvWbT5f3XP4ZR5tMg==
-X-Google-Smtp-Source: APiQypJMr4oUHM0Ta88xT7+6ntyKOqf33TdlrkpIUfBkSR/NP5bMYzT+8z/Iix1PO7MN42gvKmsSlg==
-X-Received: by 2002:aa7:8d90:: with SMTP id i16mr3456900pfr.126.1586303467414;
-        Tue, 07 Apr 2020 16:51:07 -0700 (PDT)
+        bh=E1QDZq4xExPVunZ2u5Z6vV2KVUCthnGgNSWt9YeCsSE=;
+        b=Frb+XVnP6pQ8ZoqYd0Jc2uwlQYJNsuSG2uniUDdRd343j3nRkBcep+4uFlz0unepvD
+         DDNdsgyeKgRuyhINAlxLoN1B430njKpnTfVjoVrc+vItWh0CABcJAjmqluOHkKToDft8
+         IfaadTnKkmZQo+a4X/Xx31dWRUlFfO6s3G+RJa/cfWQ4thevuy9SKeKuPskgrUI+YBa/
+         4gNvPRMSwyMPM4i0idYPataV4O2HfLFbm4JAtShDn0z6UT8mB7Rm1nuff+au2dWAmB1r
+         plwxzHUozk4v9INy+wUrL0aLUre1Bvfyi04xQc1iaTD4gBG63olWDZ5R0u2xWpnnS39D
+         UIQA==
+X-Gm-Message-State: AGi0PuaI2RpY4+l8v8caRtIYvcth8tfdXfZQ16DTGt7MqlXSisvxwkyI
+        IiVT2xltgYVBAQitFTFg8qqDAQ==
+X-Google-Smtp-Source: APiQypLiJgVmpJnjgPsInfIFUwVcKlpxnpvBZRxDLCi4Q4Bua/FXHbakZOVQZiF/gJ8A9hGpq4seWg==
+X-Received: by 2002:a17:90b:384c:: with SMTP id nl12mr1905517pjb.87.1586303465390;
+        Tue, 07 Apr 2020 16:51:05 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id s27sm14467165pgn.90.2020.04.07.16.51.06
+        by smtp.gmail.com with ESMTPSA id s27sm14467165pgn.90.2020.04.07.16.51.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 16:51:06 -0700 (PDT)
+        Tue, 07 Apr 2020 16:51:04 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -61,9 +61,9 @@ Cc:     mka@chromium.org, Lina Iyer <ilina@codeaurora.org>,
         Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
         evgreen@chromium.org, Douglas Anderson <dianders@chromium.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 10/10] drivers: qcom: rpmh-rsc: read_tcs_reg()/write_tcs_reg() are not for IRQ
-Date:   Tue,  7 Apr 2020 16:50:24 -0700
-Message-Id: <20200407164915.v3.10.I2adf93809c692d0b673e1a86ea97c45644aa8d97@changeid>
+Subject: [PATCH v3 08/10] drivers: qcom: rpmh-rsc: Don't double-check rpmh
+Date:   Tue,  7 Apr 2020 16:50:22 -0700
+Message-Id: <20200407164915.v3.8.I8e187cdfb7a31f5bb7724f1f937f2862ee464a35@changeid>
 X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 In-Reply-To: <20200407235024.260460-1-dianders@chromium.org>
 References: <20200407235024.260460-1-dianders@chromium.org>
@@ -74,70 +74,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RSC_DRV_IRQ_ENABLE, RSC_DRV_IRQ_STATUS, and RSC_DRV_IRQ_CLEAR
-registers are not part of TCS 0.  Let's not pretend that they are by
-using read_tcs_reg() and write_tcs_reg() and passing a bogus tcs_id of
-0.  We could introduce a new wrapper for these registers but it
-wouldn't buy us much.  Let's just read/write directly.
+The calls rpmh_rsc_write_ctrl_data() and rpmh_rsc_send_data() are only
+ever called from rpmh.c.  We know that rpmh.c already error checked
+the message.  There's no reason to do it again in rpmh-rsc.
 
+Suggested-by: Maulik Shah <mkshah@codeaurora.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v3:
-- ("...are not for IRQ") is new for v3.
+- ("Don't double-check rpmh") replaces ("Warning if tcs_write...")
 
 Changes in v2: None
 
- drivers/soc/qcom/rpmh-rsc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/soc/qcom/rpmh-rsc.c | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
 
 diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index a3b015196f15..31a998e6f2e9 100644
+index 9502e7ea96be..10c026b2e1bc 100644
 --- a/drivers/soc/qcom/rpmh-rsc.c
 +++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -363,12 +363,12 @@ static void enable_tcs_irq(struct rsc_drv *drv, int tcs_id, bool enable)
- {
- 	u32 data;
- 
--	data = read_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0);
-+	data = readl_relaxed(drv->tcs_base + RSC_DRV_IRQ_ENABLE);
- 	if (enable)
- 		data |= BIT(tcs_id);
- 	else
- 		data &= ~BIT(tcs_id);
--	write_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, data);
-+	writel_relaxed(data, drv->tcs_base + RSC_DRV_IRQ_ENABLE);
+@@ -633,7 +633,7 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
  }
  
  /**
-@@ -389,7 +389,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
- 	const struct tcs_request *req;
- 	struct tcs_cmd *cmd;
+- * rpmh_rsc_send_data() - Validate the incoming message + write to TCS block.
++ * rpmh_rsc_send_data() - Write / trigger active-only message.
+  * @drv: The controller.
+  * @msg: The data to be sent.
+  *
+@@ -658,12 +658,6 @@ int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg)
+ {
+ 	int ret;
  
--	irq_status = read_tcs_reg(drv, RSC_DRV_IRQ_STATUS, 0);
-+	irq_status = readl_relaxed(drv->tcs_base + RSC_DRV_IRQ_STATUS);
+-	if (!msg || !msg->cmds || !msg->num_cmds ||
+-	    msg->num_cmds > MAX_RPMH_PAYLOAD) {
+-		WARN_ON(1);
+-		return -EINVAL;
+-	}
+-
+ 	do {
+ 		ret = tcs_write(drv, msg);
+ 		if (ret == -EBUSY) {
+@@ -734,16 +728,6 @@ int rpmh_rsc_write_ctrl_data(struct rsc_drv *drv, const struct tcs_request *msg)
+ 	unsigned long flags;
+ 	int ret;
  
- 	for_each_set_bit(i, &irq_status, BITS_PER_LONG) {
- 		req = get_req_from_tcs(drv, i);
-@@ -426,7 +426,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
- 		/* Reclaim the TCS */
- 		write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, i, 0);
- 		write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, i, 0);
--		write_tcs_reg(drv, RSC_DRV_IRQ_CLEAR, 0, BIT(i));
-+		writel_relaxed(BIT(i), drv->tcs_base + RSC_DRV_IRQ_CLEAR);
- 		spin_lock(&drv->lock);
- 		clear_bit(i, drv->tcs_in_use);
- 		/*
-@@ -969,7 +969,8 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Enable the active TCS to send requests immediately */
--	write_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, drv->tcs[ACTIVE_TCS].mask);
-+	writel_relaxed(drv->tcs[ACTIVE_TCS].mask,
-+		       drv->tcs_base + RSC_DRV_IRQ_ENABLE);
- 
- 	spin_lock_init(&drv->client.cache_lock);
- 	INIT_LIST_HEAD(&drv->client.cache);
+-	if (!msg || !msg->cmds || !msg->num_cmds ||
+-	    msg->num_cmds > MAX_RPMH_PAYLOAD) {
+-		pr_err("Payload error\n");
+-		return -EINVAL;
+-	}
+-
+-	/* Data sent to this API will not be sent immediately */
+-	if (msg->state == RPMH_ACTIVE_ONLY_STATE)
+-		return -EINVAL;
+-
+ 	tcs = get_tcs_for_msg(drv, msg);
+ 	if (IS_ERR(tcs))
+ 		return PTR_ERR(tcs);
 -- 
 2.26.0.292.g33ef6b2f38-goog
 
