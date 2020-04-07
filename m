@@ -2,180 +2,115 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4EDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF29BC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008C12074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586263190;
-	bh=XH9zJ5yiY4ifu82bYHdYQnEITGn7FUESKDANa29ms9s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dIfpNG8AJQlrv/ozAsUrwTh827ckp/YZcLVDI0uuCGvYfKnIRLbGjJukNWfNsMdF7
-	 STreQeoxYlBJWOiooXa8neo7CIq/ghXwGMS/2uX9kBR5EuWUhS6jRWHtlHRziqVbEO
-	 6+kv+EARDB+HOaj1Sul6nCKyOzLJnbkOWC7HF+Uw=
+	by mail.kernel.org (Postfix) with ESMTP id A68B120719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:40:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KAWILKHj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgDGMjt (ORCPT
+        id S1728756AbgDGMkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728146AbgDGMjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 08:39:48 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1559720719;
-        Tue,  7 Apr 2020 12:39:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586263187;
-        bh=XH9zJ5yiY4ifu82bYHdYQnEITGn7FUESKDANa29ms9s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=C+QFbXk1Ff9ofGt7Aqur1WzmVUFJGLVDKaZhqxSqZhwwlRq7VK1z2aYbUoUtI2p46
-         Zp5fUZgaMgpayWcschM9P8F/CsNJhcNkAnK32UY6LADBFODw2xT3hCnzIwJEUkE3pC
-         qP4jIB/c/adUI/RV91N8NRfROJGiSAmoKHKFkLoQ=
-Date:   Tue, 7 Apr 2020 21:39:43 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <andi@firstfloor.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: perf probe + uprobes missing events
-Message-Id: <20200407213943.3a92e040d4ce30dc55e9aa1f@kernel.org>
-In-Reply-To: <20200406145356.GA32649@kernel.org>
-References: <20200406145356.GA32649@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 7 Apr 2020 08:40:01 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34854 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728679AbgDGMkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 08:40:00 -0400
+Received: by mail-qk1-f193.google.com with SMTP id k134so1405253qke.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 05:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=REDd9q05KI702EFSQR/cgT2WpH4+rJemrcfJ/MESpiQ=;
+        b=KAWILKHjC4U9jPdGMThPZYzHGsdaOtMUPXfBK3RD9JmlOj98NEM4m0KQgCBFHOy4n2
+         fz1uocxz1N2G9vMJEeyZholf93xXeY1RNkHv6cTa7zlix8KDMLaEwtOetBNS4xgCG65i
+         nl/kidfVBsyDg10Vb6nj662lbRm4o+KQ0OAxYFWRFZmYWbTHnP345h0tsgP/m4ka1MA1
+         Y47N+uagOXchGg8ch0blRb8O8a9R0pDqCrK3bvXOzycUe0+e8e0c2zx1cOxvwkqQO6Ad
+         iSD3Oz8xgI+cNYoJpa8jDIUY+efa5fjKfgWGE16NzX7q01rSH5gbyz6Uou6p83ih43tR
+         g9gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=REDd9q05KI702EFSQR/cgT2WpH4+rJemrcfJ/MESpiQ=;
+        b=leaZSvVCZ7DRb2EjEgn3pTZI8wTlzmslJUKdJ0V3G7ICLg9FeRUJ79qRJSzQ2ELlHp
+         Es9KcbE+mlvyCDOhKb3KzMXWPDRwV/8Wi9AEzJ7TptFRUbxQjIGU2D5LVHnAbOW77ZWY
+         ThJLdEL6oFp3EDwHE8ErtL80uPBZcEYWyezXzn0hyZylTrG7okCJDQHnonNda7LsexV9
+         gdgr+lq4G6Q1yecVKAAtF1vRcUwg4BRRiWJvFTe9iV252E4i6taNO7sk4mq301mU85ad
+         OyzrpKANvYIq6h94vGWiUK7TiaLnMhD0d2u+6SoN+EpoMYIvUWXIiOseFtSulWJVVKWy
+         hY9Q==
+X-Gm-Message-State: AGi0PuafSXQifbVPRExT1h01FpZkaA8Ru37eNXOs5WHTMx0bwW65it0O
+        gzZLiKjDkYznF9bT74X8I5VYCIi8csAFiQ7HGHSWaQ==
+X-Google-Smtp-Source: APiQypJufCd7AZpci4Y41mZ7FMY2K9lw7Nzb7z1xobj1dlFqbdAhNNzeKkI9NXFd18jF3KT1Xafx0uU+IQkz5xU0O7w=
+X-Received: by 2002:a05:620a:348:: with SMTP id t8mr1690858qkm.407.1586263198896;
+ Tue, 07 Apr 2020 05:39:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <00000000000075245205a2997f68@google.com> <20200406172151.GJ80989@unreal>
+ <20200406174440.GR20941@ziepe.ca> <CACT4Y+Zv_WXEn6u5a6kRZpkDJnSzeGF1L7JMw4g85TLEgAM7Lw@mail.gmail.com>
+ <20200407115548.GU20941@ziepe.ca>
+In-Reply-To: <20200407115548.GU20941@ziepe.ca>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 7 Apr 2020 14:39:42 +0200
+Message-ID: <CACT4Y+Zy0LwpHkTMTtb08ojOxuEUFo1Z7wkMCYSVCvsVDcxayw@mail.gmail.com>
+Subject: Re: WARNING in ib_umad_kill_port
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
+On Tue, Apr 7, 2020 at 1:55 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Tue, Apr 07, 2020 at 11:56:30AM +0200, Dmitry Vyukov wrote:
+> > > I'm not sure what could be done wrong here to elicit this:
+> > >
+> > >  sysfs group 'power' not found for kobject 'umad1'
+> > >
+> > > ??
+> > >
+> > > I've seen another similar sysfs related trigger that we couldn't
+> > > figure out.
+> > >
+> > > Hard to investigate without a reproducer.
+> >
+> > Based on all of the sysfs-related bugs I've seen, my bet would be on
+> > some races. E.g. one thread registers devices, while another
+> > unregisters these.
+>
+> I did check that the naming is ordered right, at least we won't be
+> concurrently creating and destroying umadX sysfs of the same names.
+>
+> I'm also fairly sure we can't be destroying the parent at the same
+> time as this child.
+>
+> Do you see the above commonly? Could it be some driver core thing? Or
+> is it more likely something wrong in umad?
 
-On Mon, 6 Apr 2020 11:53:56 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Mmmm... I can't say, I am looking at some bugs very briefly. I've
+noticed that sysfs comes up periodically (or was it some other similar
+fs?). General observation is that code frequently assumes only the
+happy scenario and only, say, a single administrator doing one thing
+at a time, slowly and carefully, and it is not really hardened against
+armies of monkeys.
+But I did not look at code abstractions, bug patterns, contracts, etc.
 
-> Hi Masami,
-> 
-> 	I'm trying to use 'perf probe' to debug 'perf test', but I'm not
-> getting repeatable results, take a look:
-> 
-> I'm trying to figure out which expresssions are _really_ being tested
-> byu the 'perf test expr' testcase, so I added a probe to the
-> expr__parse() routine, asking for the expr string to be printed:
-> 
-> [root@five ~]# perf probe -x ~/bin/perf -L expr__parse
-> <expr__parse@/home/acme/git/perf/tools/perf/util/expr.c:0>
->       0  int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr, int runtime)
->       1  {
->       2         return __expr__parse(final_val, ctx, expr, EXPR_PARSE, runtime) ? -1 : 0;
->       3  }
-> 
->          static bool
->          already_seen(const char *val, const char *one, const char **other,
-> 
-> [root@five ~]#
-> 
-> [root@five ~]# perf probe -x ~/bin/perf expr__parse expr:string
-> Target program is compiled without optimization. Skipping prologue.
-> Probe on address 0x5cb11b to force probing at the function entry.
-> 
-> Added new event:
->   probe_perf:expr__parse (on expr__parse in /home/acme/bin/perf with expr:string)
-> 
-> You can now use it in all perf tools, such as:
-> 
-> 	perf record -e probe_perf:expr__parse -aR sleep 1
-> 
-> [root@five ~]#
-
-Hmm, These operation looks good to me. However,
-
-> 
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.015 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.018 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.020 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.023 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.026 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.029 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
->      0.031 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
->      0.034 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
->      0.036 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
->      0.039 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
->      0.041 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.021 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.025 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.029 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.033 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.041 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.044 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.020 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.025 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.029 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.032 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.037 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.040 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
->      0.043 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
->      0.046 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
->      0.049 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
->      0.053 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
->      0.056 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.014 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.017 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.021 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.024 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.030 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.032 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
->      0.035 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
->      0.038 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
->      0.040 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
->      0.044 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
->      0.046 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
-> [root@five ~]#
-
-Strange. This seems bug in uprobes. Did you try to enable ftrace event
-and dump ftrace trace buffer for each time?
-Also, it may help if you dump the /sys/kernel/debug/tracing/uprobe_profile.
-It may indicate how many times the probe is hit and missed.
-
-OK, I'll also try to reproduce it.
-
-Thank you,
-
-> 
-> 
-> Do you have any idea why that happens?
-> 
-> - Arnaldo
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Greg KH may know better. Greg, as far as I remember you commented on
+some of these reports along the lines of, for example, "the warning is
+in sysfs code, but the bug is in the callers".
