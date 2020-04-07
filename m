@@ -2,111 +2,92 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71743C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB4EC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43615206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:39:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XbDd30vv"
+	by mail.kernel.org (Postfix) with ESMTP id 2042C206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgDGXjS (ORCPT
+        id S1726469AbgDGXoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:39:18 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10197 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgDGXjR (ORCPT
+        Tue, 7 Apr 2020 19:44:13 -0400
+Received: from www62.your-server.de ([213.133.104.62]:57580 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgDGXoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:39:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586302757; x=1617838757;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=atnYjxiyKdQFWwXp0PXFdPTtxkh6WFqlWjXNyrLv5sU=;
-  b=XbDd30vvRkpwuWUH+/ptes2kd/aVcBmeFvX3fo3jDRGcnXfAM1SAdFLV
-   XNfEs8KduHsejv6k3+08f7c478Gjadavz+ojmjP+UKqAqAfyGyaWYX2uG
-   jJVWNPHwgh80213nlsKYZlGwcIQ5dLN9zdEZi+tf6G0xt8c/Z5OD9LFYs
-   I=;
-IronPort-SDR: my4cwCRqMA/z2RwjyvFN1C6ahNSR6snq7AWhsbU/AtAM2UZaayhRuNNBGauPOEs0eU9eSwkyms
- 1ZSV36OS7LVg==
-X-IronPort-AV: E=Sophos;i="5.72,356,1580774400"; 
-   d="scan'208";a="37258086"
-Subject: Re: [PATCH v2 3/4] arch/x86: Optionally flush L1D on context switch
-Thread-Topic: [PATCH v2 3/4] arch/x86: Optionally flush L1D on context switch
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 07 Apr 2020 23:39:16 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 16B161A0E81;
-        Tue,  7 Apr 2020 23:39:15 +0000 (UTC)
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Apr 2020 23:39:14 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB002.ant.amazon.com (10.43.161.136) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Apr 2020 23:39:14 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Tue, 7 Apr 2020 23:39:14 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "keescook@chromium.org" <keescook@chromium.org>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-Thread-Index: AQHWC8KR9rJxTIXiWkGqeY4o6Uqz/aht/HqAgABXfYA=
-Date:   Tue, 7 Apr 2020 23:39:14 +0000
-Message-ID: <728ba30fdc269d4b24c4fb16832e0151e8270cba.camel@amazon.com>
-References: <20200406031946.11815-1-sblbir@amazon.com>
-         <20200406031946.11815-4-sblbir@amazon.com> <202004071125.605F665@keescook>
-In-Reply-To: <202004071125.605F665@keescook>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.85]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <11D50BCF4228804F861678344F60F66D@amazon.com>
-Content-Transfer-Encoding: base64
+        Tue, 7 Apr 2020 19:44:13 -0400
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLxt0-0001PO-3o; Wed, 08 Apr 2020 01:44:06 +0200
+Received: from [178.195.186.98] (helo=pc-9.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jLxsz-0008rw-Hi; Wed, 08 Apr 2020 01:44:05 +0200
+Subject: Re: [PATCH bpf] riscv, bpf: Fix offset range checking for auipc+jalr
+ on RV64
+To:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org
+Cc:     Xi Wang <xi.wang@gmail.com>, Luke Nelson <luke.r.nels@gmail.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200406221604.18547-1-luke.r.nels@gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <bdea1a61-53d6-dc03-7cdb-4b6b0710be2e@iogearbox.net>
+Date:   Wed, 8 Apr 2020 01:44:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20200406221604.18547-1-luke.r.nels@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25775/Tue Apr  7 14:53:51 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA0LTA3IGF0IDExOjI2IC0wNzAwLCBLZWVzIENvb2sgd3JvdGU6DQo+IA0K
-PiANCj4gT24gTW9uLCBBcHIgMDYsIDIwMjAgYXQgMDE6MTk6NDVQTSArMTAwMCwgQmFsYmlyIFNp
-bmdoIHdyb3RlOg0KPiA+IEltcGxlbWVudCBhIG1lY2hhbmlzbSB0byBzZWxlY3RpdmVseSBmbHVz
-aCB0aGUgTDFEIGNhY2hlLiBUaGUgZ29hbCBpcyB0bw0KPiA+IGFsbG93IHRhc2tzIHRoYXQgYXJl
-IHBhcmFub2lkIGR1ZSB0byB0aGUgcmVjZW50IHNub29wIGFzc2lzdGVkIGRhdGENCj4gPiBzYW1w
-bGluZw0KPiA+IHZ1bG5lcmFiaWxpdGVzLCB0byBmbHVzaCB0aGVpciBMMUQgb24gYmVpbmcgc3dp
-dGNoZWQgb3V0LiAgVGhpcyBwcm90ZWN0cw0KPiA+IHRoZWlyIGRhdGEgZnJvbSBiZWluZyBzbm9v
-cGVkIG9yIGxlYWtlZCB2aWEgc2lkZSBjaGFubmVscyBhZnRlciB0aGUgdGFzaw0KPiA+IGhhcyBj
-b250ZXh0IHN3aXRjaGVkIG91dC4NCj4gPiANCj4gPiBUaGVyZSBhcmUgdHdvIHNjZW5hcmlvcyB3
-ZSBtaWdodCB3YW50IHRvIHByb3RlY3QgYWdhaW5zdCwgYSB0YXNrIGxlYXZpbmcNCj4gPiB0aGUg
-Q1BVIHdpdGggZGF0YSBzdGlsbCBpbiBMMUQgKHdoaWNoIGlzIHRoZSBtYWluIGNvbmNlcm4gb2Yg
-dGhpcyBwYXRjaCksDQo+ID4gdGhlIHNlY29uZCBzY2VuYXJpbyBpcyBhIG1hbGljaW91cyB0YXNr
-IGNvbWluZyBpbiAobm90IHNvIHdlbGwgdHJ1c3RlZCkNCj4gPiBmb3Igd2hpY2ggd2Ugd2FudCB0
-byBjbGVhbiB1cCB0aGUgY2FjaGUgYmVmb3JlIGl0IHN0YXJ0cy4gT25seSB0aGUgY2FzZQ0KPiA+
-IGZvciB0aGUgZm9ybWVyIGlzIGFkZHJlc3NlZC4NCj4gPiANCj4gPiBBZGQgYXJjaCBzcGVjaWZp
-YyBwcmN0bCgpJ3MgdG8gb3B0LWluIHRvIHRoZSBMMUQgY2FjaGUgb24gY29udGV4dCBzd2l0Y2gN
-Cj4gPiBvdXQsIHRoZSBleGlzdGluZyBtZWNoYW5pc21zIG9mIHRyYWNraW5nIHByZXZfbW0gdmlh
-IGNwdV90bGJzdGF0ZSBpcw0KPiA+IHJldXNlZC4gY29uZF9pYnBiKCkgaXMgcmVmYWN0b3JlZCBh
-bmQgcmVuYW1lZCBpbnRvIGNvbmRfbWl0aWdhdGlvbigpLg0KPiANCj4gSSBzdGlsbCB0aGluayB0
-aGlzIHNob3VsZCBiZSBhIGdlbmVyaWMgcHJjdGwoKS4gSWYgdGhlcmUgaXMgYSBzdHJvbmcNCj4g
-cmVhc29uIG5vdCB0byBkbyB0aGlzLCBjYW4gaXQgYmUgZGVzY3JpYmVkIGluIHRoZSBjb21taXQg
-bG9nIGhlcmU/DQo+IA0KPiAtS2Vlcw0KPiANCg0KSSBjYW4gbW92ZSB0byBwcmN0bCgpIGlmIHRo
-YXQgaXMgd2hhdCB5b3UgcHJlZmVyLCB0aGUgcHJjdGwoKSBjYW4gdGhlbiBkbyBhcmNoDQpzcGVj
-aWZpYyB0aGluZ3MuIEkgdGhvdWdodCBpbiBteSBxdWVzdGlvbiBhcm91bmQgd291bGQgb3RoZXIg
-YXJjaCdzIGxpa2UgdG8gZG8NCnRoaXMsIEkgZGlkIG5vdCBoZWFyIGFueXRoaW5nIHNwZWNpZmlj
-LCBidXQgSSBhbSBoYXBweSB0byBjb252ZXJ0IHRoZQ0KaW50ZXJmYWNlIG92ZXIuDQoNCkJhbGJp
-ciBTaW5naC4NCg0KDQo=
+On 4/7/20 12:16 AM, Luke Nelson wrote:
+> The existing code in emit_call on RV64 checks that the PC-relative offset
+> to the function fits in 32 bits before calling emit_jump_and_link to emit
+> an auipc+jalr pair. However, this check is incorrect because offsets in
+> the range [2^31 - 2^11, 2^31 - 1] cannot be encoded using auipc+jalr on
+> RV64 (see discussion [1]). The RISC-V spec has recently been updated
+> to reflect this fact [2, 3].
+> 
+> This patch fixes the problem by moving the check on the offset into
+> emit_jump_and_link and modifying it to the correct range of encodable
+> offsets, which is [-2^31 - 2^11, 2^31 - 2^11). This also enforces the
+> check on the offset to other uses of emit_jump_and_link (e.g., BPF_JA)
+> as well.
+> 
+> Currently, this bug is unlikely to be triggered, because the memory
+> region from which JITed images are allocated is close enough to kernel
+> text for the offsets to not become too large; and because the bounds on
+> BPF program size are small enough. This patch prevents this problem from
+> becoming an issue if either of these change.
+> 
+> [1]: https://groups.google.com/a/groups.riscv.org/forum/#!topic/isa-dev/bwWFhBnnZFQ
+> [2]: https://github.com/riscv/riscv-isa-manual/commit/b1e42e09ac55116dbf9de5e4fb326a5a90e4a993
+> [3]: https://github.com/riscv/riscv-isa-manual/commit/4c1b2066ebd2965a422e41eb262d0a208a7fea07
+> 
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+
+Applied, thanks!
