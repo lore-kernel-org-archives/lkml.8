@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2DAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B04AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B6820771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4CE2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgDGSiB (ORCPT
+        id S1727476AbgDGSiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:38:01 -0400
-Received: from 8bytes.org ([81.169.241.247]:57536 "EHLO theia.8bytes.org"
+        Tue, 7 Apr 2020 14:38:05 -0400
+Received: from 8bytes.org ([81.169.241.247]:57724 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgDGSh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:37:57 -0400
+        id S1726898AbgDGSiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 14:38:00 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E3062312; Tue,  7 Apr 2020 20:37:49 +0200 (CEST)
+        id 5DAF6475; Tue,  7 Apr 2020 20:37:51 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -45,9 +45,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [RFC PATCH 09/34] iommu: Keep a list of allocated groups in __iommu_probe_device()
-Date:   Tue,  7 Apr 2020 20:37:17 +0200
-Message-Id: <20200407183742.4344-10-joro@8bytes.org>
+Subject: [RFC PATCH 17/34] iommu/arm-smmu: Store device instead of group in arm_smmu_s2cr
+Date:   Tue,  7 Apr 2020 20:37:25 +0200
+Message-Id: <20200407183742.4344-18-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200407183742.4344-1-joro@8bytes.org>
 References: <20200407183742.4344-1-joro@8bytes.org>
@@ -58,62 +58,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-This is needed to defer default_domain allocation for new IOMMU groups
-until all devices have been added to the group.
+This is required to convert the arm-smmu driver to the
+probe/release_device() interface.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/iommu.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/iommu/arm-smmu.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 7a385c18e1a5..18eb3623bd00 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -44,6 +44,7 @@ struct iommu_group {
- 	int id;
- 	struct iommu_domain *default_domain;
- 	struct iommu_domain *domain;
-+	struct list_head entry;
- };
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index a6a5796e9c41..3493501d8b2c 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -69,7 +69,7 @@ MODULE_PARM_DESC(disable_bypass,
+ 	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
  
- struct group_device {
-@@ -184,7 +185,7 @@ static void dev_iommu_free(struct device *dev)
- 	dev->iommu = NULL;
- }
- 
--static int __iommu_probe_device(struct device *dev)
-+static int __iommu_probe_device(struct device *dev, struct list_head *group_list)
- {
- 	const struct iommu_ops *ops = dev->bus->iommu_ops;
- 	struct iommu_device *iommu_dev;
-@@ -204,6 +205,9 @@ static int __iommu_probe_device(struct device *dev)
+ struct arm_smmu_s2cr {
+-	struct iommu_group		*group;
++	struct device			*dev;
+ 	int				count;
+ 	enum arm_smmu_s2cr_type		type;
+ 	enum arm_smmu_s2cr_privcfg	privcfg;
+@@ -1100,7 +1100,7 @@ static int arm_smmu_master_alloc_smes(struct device *dev)
+ 	/* It worked! Now, poke the actual hardware */
+ 	for_each_cfg_sme(cfg, fwspec, i, idx) {
+ 		arm_smmu_write_sme(smmu, idx);
+-		smmu->s2crs[idx].group = group;
++		smmu->s2crs[idx].dev = dev;
  	}
- 	iommu_group_put(group);
  
-+	if (group_list && !group->default_domain && list_empty(&group->entry))
-+		list_add_tail(&group->entry, group_list);
+ 	mutex_unlock(&smmu->stream_map_mutex);
+@@ -1495,11 +1495,15 @@ static struct iommu_group *arm_smmu_device_group(struct device *dev)
+ 	int i, idx;
+ 
+ 	for_each_cfg_sme(cfg, fwspec, i, idx) {
+-		if (group && smmu->s2crs[idx].group &&
+-		    group != smmu->s2crs[idx].group)
++		struct iommu_group *idx_grp = NULL;
 +
- 	iommu_device_link(iommu_dev, dev);
++		if (smmu->s2crs[idx].dev)
++			idx_grp = smmu->s2crs[idx].dev->iommu_group;
++
++		if (group && idx_grp && group != idx_grp)
+ 			return ERR_PTR(-EINVAL);
  
- 	return 0;
-@@ -234,7 +238,7 @@ int iommu_probe_device(struct device *dev)
- 	if (ops->probe_device) {
- 		struct iommu_group *group;
+-		group = smmu->s2crs[idx].group;
++		group = idx_grp;
+ 	}
  
--		ret = __iommu_probe_device(dev);
-+		ret = __iommu_probe_device(dev, NULL);
- 
- 		/*
- 		 * Try to allocate a default domain - needs support from the
-@@ -567,6 +571,7 @@ struct iommu_group *iommu_group_alloc(void)
- 	group->kobj.kset = iommu_group_kset;
- 	mutex_init(&group->mutex);
- 	INIT_LIST_HEAD(&group->devices);
-+	INIT_LIST_HEAD(&group->entry);
- 	BLOCKING_INIT_NOTIFIER_HEAD(&group->notifier);
- 
- 	ret = ida_simple_get(&iommu_group_ida, 0, 0, GFP_KERNEL);
+ 	if (group)
 -- 
 2.17.1
 
