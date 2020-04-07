@@ -2,82 +2,118 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823E6C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410CCC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD3F20731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105F12074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:53:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JCfpGm5A"
+	dkim=pass (2048-bit key) header.d=juliacomputing-com.20150623.gappssmtp.com header.i=@juliacomputing-com.20150623.gappssmtp.com header.b="W5Mi8FhH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgDGNwS (ORCPT
+        id S1728957AbgDGNxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 09:52:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54798 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbgDGNwS (ORCPT
+        Tue, 7 Apr 2020 09:53:21 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45334 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbgDGNxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 09:52:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ialmh1oNZLrhgWKFPrEXktfEmlPtTKu0trjFrs2T2Ck=; b=JCfpGm5ABDoZyrRINyea9As5ry
-        6mA0K68m+m9rOR5ykUCFTi9JmTJjYgoXBvdLwk3m9UQxUo7I+I0mByn4sTxWyBThdaJ6mlKQG3poy
-        b+42ZWwm4p2jvIW9bnLtf/VwdH9dcAsB9uonIitdwQs8OKJItTjdeiFfIcl48oIw5O6IxXdyV5f3T
-        8W9Q5+0Uz+SVW4xH5MAbPosSpbDJsmSlEWeGn2b2/9aHq33ddluQRChFRsuIkLSEtN3gF/0C5sKTt
-        AYco4od8uFkhl6IKtm7W9i9yLkIC99rCHcc7TbKSKipUOlSIoorshtw5NRzH15UIs0WJExGL+7Wgy
-        WG7Qt90Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLoeD-0003SC-Q4; Tue, 07 Apr 2020 13:52:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A88C83011DD;
-        Tue,  7 Apr 2020 15:52:11 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 933052B953CBE; Tue,  7 Apr 2020 15:52:11 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 15:52:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH V2 9/9] x86/speculation: Remove all
- ANNOTATE_NOSPEC_ALTERNATIVE directives
-Message-ID: <20200407135211.GB20730@hirez.programming.kicks-ass.net>
-References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
- <20200407073142.20659-10-alexandre.chartre@oracle.com>
+        Tue, 7 Apr 2020 09:53:21 -0400
+Received: by mail-io1-f65.google.com with SMTP id i19so1402181ioh.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 06:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=juliacomputing-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/tIS1nHkWLKceDKscialOKEJnhPfi2Afg0e9e9048cU=;
+        b=W5Mi8FhHbDCFUgXZ6Z6WR/9xJUqZ9FPprIvt6ODMSY5V17Px+rYJ33yZ0gVgGbvlc6
+         eFkaKkl1PSk4XWjUuxtRIQHEqy0unoYpLxRPYCz5RvdZ0WmDWbQJ//eA6vIvL+vwSUrs
+         DNUJYDVGoIy2+SWvEoWLs9X6GXoP6aVUFLSwNUkWv2AZWobz1hk2dG6wnIyLu/LcY/NE
+         RdgdoZ2hgiyfq9DwjbK0IGsLtdL7yC0J8YElW/9D+fOocy/m1mFdc1v5OF6BD2Yn2gDz
+         oosFdWnXTgS2sney0D/7LMVhKk2JCDC9tc/c1lXBame6AfPt5b58vq0dX11l/FV7pCbU
+         8N2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/tIS1nHkWLKceDKscialOKEJnhPfi2Afg0e9e9048cU=;
+        b=id50ioHYkw3IQ4brAT0Hafx1D/0+q1jA8+LIt3WhXStlVU5dpNnvKQvAZDx+Ng0vU2
+         +Xg6sY1fvCJEW5YD94vD88DC5v4zKtWWVJOIOnrz9mTYqi5M23zokZ24WnmlILZkLEPN
+         G8l0UX+5R+OrHPEb1909sTWlEz7UAbyRRSUsuCQjlBxPW/27y/ZlLuBFtdwp+KzM9sp0
+         1y5xflz7EFTUeg0QiEpvPN15l6NVRT2xFVz8xDipizWGkwRp9EqUZAk10nCjtXQFFiX4
+         lzspJ5dYf6Ta9Ctp2v+ciKPb2W75vg0USjy0P/PSZD2LHNAdjYDh2KWcx7rU2BqYSxXJ
+         IlcA==
+X-Gm-Message-State: AGi0PuaSishpXwxu+B9pySww5hnr76d2WBXv+iBkhJuhrJbDx0hMHDj8
+        YpNciIcqACcchw/gKa+lJPH9xqnfWarTpsnuQ/Mapw==
+X-Google-Smtp-Source: APiQypIFeftaPaG0e8PVkF1/4uZiOdSZeIrZbhO4hk9CyEY9H79J9+Xj038Sgp0OA2dSMNtTvn7YY8g3jMnuMvqHhyc=
+X-Received: by 2002:a02:3506:: with SMTP id k6mr2126090jaa.104.1586267599579;
+ Tue, 07 Apr 2020 06:53:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407073142.20659-10-alexandre.chartre@oracle.com>
+References: <20200407011259.GA72735@juliacomputing.com> <2A931F48-D28F-46F3-827F-FF7F4D5D3E66@amacapital.net>
+ <CABV8kRyi-5wyiCV3HsPfFx6x1_icV72BSy+5eK8UC3UCexTSCA@mail.gmail.com>
+ <CAP045AohDoxZ+tvm+hBWWXgXz6N-z0+UWj--_o1AiVRubWYm6A@mail.gmail.com> <20200407123348.GV20730@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200407123348.GV20730@hirez.programming.kicks-ass.net>
+From:   Keno Fischer <keno@juliacomputing.com>
+Date:   Tue, 7 Apr 2020 09:52:42 -0400
+Message-ID: <CABV8kRx=7fFvHqQ9AX-1P9EBhXg5sH4xjoPKz6qkiQK4tHFUbA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0 per-thread
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kyle Huey <me@kylehuey.com>, Andy Lutomirski <luto@amacapital.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        Kyle Huey <khuey@kylehuey.com>,
+        "Robert O'Callahan" <robert@ocallahan.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 09:31:42AM +0200, Alexandre Chartre wrote:
+> > It's mentioned elsewhere, but I want to emphasize that the return
+> > value of xgetbv is the big one because the dynamic linker uses this.
+> > rr trace portability is essentially limited to machines with identical
+> > xcr0 values because of it.
+>
+> I'm thinking just exposing that value is doable in a much less
+> objectionable fashion, no?
 
-> -	ANNOTATE_NOSPEC_ALTERNATIVE
->  	ALTERNATIVE_2 __stringify(ANNOTATE_RETPOLINE_SAFE; jmp *\reg),	\
->  		__stringify(RETPOLINE_JMP \reg), X86_FEATURE_RETPOLINE,	\
->  		__stringify(lfence; ANNOTATE_RETPOLINE_SAFE; jmp *\reg), X86_FEATURE_RETPOLINE_AMD
+Hi Peter,
 
-Possibly we can write this like:
+I'm not sure I understand what you're asking,
+but let me attempt to provide an answer anyway.
+If I'm off the mark in what you would like to know,
+please let me know and I'll try my best to get back
+to you.
 
-	ALTERNATIVE("", "lfence", X86_FEATURE_RETPOLINE_AMD);
-	ALTERNATIVE("jmp *\reg", "jmp __x86_retpoline_jmp_\reg", X86_FEATURE_RETPOLINE);
+rr's operating principle relies upon every instruction
+having deterministic and reproducible behavior,
+every time they're executed and across machines.
+That means literally bitwise identical updates to the
+x86 register state. Most instructions do that given
+identical register state - of course some don't by
+design like rdtsc. Those instructions get trapped
+and emulated (we're very lucky that doing so is
+possible for all such instructions of practical
+interest on Intel hardware). xcr0 puts us in a bit of
+a bind here, because it modifies the user-visble
+behavior of instructions (in the three ways I mentioned).
+The xgetbv behavior is indeed the most problematic.
+If there was a way to selectively trap
+xgetbv/xsave/xrestor and emulate it, that would likely
+prove sufficient (even just xgetbv may be sufficient,
+but I'd have to do further work to validate that).
+However, I don't think it's possible to trap these
+instructions without also disabling the corresponding
+xstate components, which we do not want, since
+those instructions do actually need to get executed.
 
-With an out-of-line copy of the retpoline, just like the THUNKs the
-compiler uses, except of course, it can't be those, because we actually
-want to use the alternative to implement those.
-
-By moving the retpoline magic out-of-line we ensure it has a unique
-address and the ORC stuff should work.
-
-I'm just not sure what to do about the RETPOLINE_CALL variant.
+Thanks,
+Keno
