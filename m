@@ -2,167 +2,202 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05355C2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B113C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C021720801
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F6A20801
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:26:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vOoh/LI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbgDGE03 convert rfc822-to-8bit (ORCPT
+        id S1726716AbgDGE0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 00:26:29 -0400
-Received: from mga07.intel.com ([134.134.136.100]:23098 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgDGE03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 00:26:29 -0400
-IronPort-SDR: iEDr9ictuXWomlBNa70u7mhcnHHV8xzSkSv/uTZR0VbVAqb5jAdm1/WEeLL+jqseMe75NnjBZ7
- qeog6tzXBc0w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 21:26:28 -0700
-IronPort-SDR: orBWKegM95GnrcWNMzdwaxgcZJMkE9E5n9mkOkZhUWI8iUhpBE9Et9ICkjV2361sOwWz0Vf5rj
- DvvMyMFlclPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
-   d="scan'208";a="397729232"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga004.jf.intel.com with ESMTP; 06 Apr 2020 21:26:28 -0700
-Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 6 Apr 2020 21:26:28 -0700
-Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
- fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 6 Apr 2020 21:26:27 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX106.ccr.corp.intel.com ([169.254.10.89]) with mapi id 14.03.0439.000;
- Tue, 7 Apr 2020 12:26:24 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Thread-Topic: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Thread-Index: AQHWAEVGCz5QQWvL/U+nYnlD7MiZ7Khl/jEAgACVNICAAJ/EgIAF8c6g
-Date:   Tue, 7 Apr 2020 04:26:23 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
-References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
-        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
-        <20200402165954.48d941ee@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
- <20200403112545.6c115ba3@w520.home>
-In-Reply-To: <20200403112545.6c115ba3@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Tue, 7 Apr 2020 00:26:37 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:33018 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgDGE0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 00:26:36 -0400
+Received: by mail-pg1-f201.google.com with SMTP id x16so1499753pgi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 21:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=QWUKDJQTRxWuVmOwgRvVPoWS0UavR+FekLqN1+lSVJ0=;
+        b=vOoh/LI74uP5oGTJtFVs6Wj0xTE8/y6MFdP3yrgFAKUCddTIF/l1UpDa8U199B88Ru
+         w9vQSEt0QtBFCZoQ2zSrGdEwEuiLUow0J7rStScAiPsb968sEU/qyfuiA0kYdaV+X3we
+         mdF+WBr/pbi0ZmjOdWtXyEW50KZW41qkvwyiJnX5NHvmTEKAJbN8SGS5DDX7v4lo/981
+         tWgMYlgRjMuDFYQgKoX43TZNCOmmHH9pWJ5iGZ+81QFYtqZYkBef/I4OntvBMmi7C3Vf
+         HeWvWUzmXa3/1sdg8OMFpEKJdYBwiT3Hw4PwYvyMAPagBmFgHZL95Tu+Ne+JOmFSVKGA
+         a8Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=QWUKDJQTRxWuVmOwgRvVPoWS0UavR+FekLqN1+lSVJ0=;
+        b=YUuTFX3rCZkZNVePGd26ipD+BBgS14d0bIUMXciF3JQ55yd2UHL9Bs+ji/20wrIby9
+         +iiRU4IKKnghn9gNIHFK7dW7b1y+8dQ6Tt9EmUATkO82hyTF+6h0BUPMOJw+x3Ol26EJ
+         iu3mAguoHjRCtLoGJ1w9YMA9hRBjjBIgUwIn/zLY3aIpJNReBf559wLswi4VrdIp9bB5
+         bl8zTt64Tt9yM7+XQ9KKiv0PheZ2NeT1TA9edRMx7EbZhJ0BV408XytP/MHuDO2pm51R
+         HyeyFIKo3ncuyToyxidjT5rqGdC/sC42rZrvXYPx+Y8QyN36jRa+GnOQeKltD6Q5pIds
+         HIzQ==
+X-Gm-Message-State: AGi0PuZO2bY3bEVmgrR4lhTgwoXKsv6YZarAuxVEP920AvXs8864xUVe
+        dVDxwM13hF5RuTCq5ySNkzGKgT/epW+5
+X-Google-Smtp-Source: APiQypLJCnHPeQcXq6SQEnVok3DreXL6u5mQfQikHBJHO0xSMfffYfbLHPybQF8KmADEvQ/NI6B62Eye81jN
+X-Received: by 2002:a17:90b:909:: with SMTP id bo9mr432591pjb.125.1586233595138;
+ Mon, 06 Apr 2020 21:26:35 -0700 (PDT)
+Date:   Tue,  7 Apr 2020 12:26:27 +0800
+Message-Id: <20200407122522.v2.1.Ibfc500cbf0bf2dc8429b17f064e960e95bb228e9@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+Subject: [PATCH v2] Bluetooth: debugfs option to unset MITM flag
+From:   Archie Pusaka <apusaka@google.com>
+To:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Archie Pusaka <apusaka@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Saturday, April 4, 2020 1:26 AM
-[...]
-> > > > +	if (!pasid_cap.control_reg.paside) {
-> > > > +		pr_debug("%s: its PF's PASID capability is not enabled\n",
-> > > > +			dev_name(&vdev->pdev->dev));
-> > > > +		ret = 0;
-> > > > +		goto out;
-> > > > +	}
-> > >
-> > > What happens if the PF's PASID gets disabled while we're using it??
-> >
-> > This is actually the open I highlighted in cover letter. Per the reply
-> > from Baolu, this seems to be an open for bare-metal all the same.
-> > https://lkml.org/lkml/2020/3/31/95
-> 
-> Seems that needs to get sorted out before we can expose this.  Maybe
-> some sort of registration with the PF driver that PASID is being used
-> by a VF so it cannot be disabled?
+From: Archie Pusaka <apusaka@chromium.org>
 
-I guess we may do vSVA for PF first, and then adding VF vSVA later
-given above additional need. It's not necessarily to enable both
-in one step.
+The BT qualification test SM/MAS/PKE/BV-01-C needs us to turn off
+the MITM flag when pairing, and at the same time also set the io
+capability to something other than no input no output.
 
-[...]
-> > > > @@ -1604,6 +1901,18 @@ static int vfio_ecap_init(struct
-> vfio_pci_device *vdev)
-> > > >  	if (!ecaps)
-> > > >  		*(u32 *)&vdev->vconfig[PCI_CFG_SPACE_SIZE] = 0;
-> > > >
-> > > > +#ifdef CONFIG_PCI_ATS
-> > > > +	if (pdev->is_virtfn) {
-> > > > +		struct pci_dev *physfn = pdev->physfn;
-> > > > +
-> > > > +		ret = vfio_pci_add_emulated_cap_for_vf(vdev,
-> > > > +					physfn, epos_max, prev);
-> > > > +		if (ret)
-> > > > +			pr_info("%s, failed to add special caps for VF %s\n",
-> > > > +				__func__, dev_name(&vdev->pdev->dev));
-> > > > +	}
-> > > > +#endif
-> > >
-> > > I can only imagine that we should place the caps at the same location
-> > > they exist on the PF, we don't know what hidden registers might be
-> > > hiding in config space.
+Currently the MITM flag is only unset when the io capability is set
+to no input no output, therefore the test cannot be executed.
 
-Is there vendor guarantee that hidden registers will locate at the
-same offset between PF and VF config space? 
+This patch introduces a debugfs option to force MITM flag to be
+turned off.
 
-> >
-> > but we are not sure whether the same location is available on VF. In
-> > this patch, it actually places the emulated cap physically behind the
-> > cap which lays farthest (its offset is largest) within VF's config space
-> > as the PCIe caps are linked in a chain.
-> 
-> But, as we've found on Broadcom NICs (iirc), hardware developers have a
-> nasty habit of hiding random registers in PCI config space, outside of
-> defined capabilities.  I feel like IGD might even do this too, is that
-> true?  So I don't think we can guarantee that just because a section of
-> config space isn't part of a defined capability that its unused.  It
-> only means that it's unused by common code, but it might have device
-> specific purposes.  So of the PCIe spec indicates that VFs cannot
-> include these capabilities and virtialization software needs to
-> emulate them, we need somewhere safe to place them in config space, and
-> simply placing them off the end of known capabilities doesn't give me
-> any confidence.  Also, hardware has no requirement to make compact use
-> of extended config space.  The first capability must be at 0x100, the
-> very next capability could consume all the way to the last byte of the
-> 4K extended range, and the next link in the chain could be somewhere in
-> the middle.  Thanks,
-> 
+Signed-off-by: Archie Pusaka <apusaka@chromium.org>
+---
 
-Then what would be a viable option? Vendor nasty habit implies
-no standard, thus I don't see how VFIO can find a safe location
-by itself. Also curious how those hidden registers are identified
-by VFIO and employed with proper r/w policy today. If sort of quirks
-are used, then could such quirk way be extended to also carry
-the information about vendor specific safe location? When no
-such quirk info is provided (the majority case), VFIO then finds
-out a free location to carry the new cap.
+Changes in v2:
+- Rename flag to HCI_FORCE_NO_MITM
+- Move debugfs functions to hci_debugfs.c
+- Add comments on not setting SMP_AUTH_MITM
 
-Thanks
-Kevin
+ include/net/bluetooth/hci.h |  1 +
+ net/bluetooth/hci_debugfs.c | 46 +++++++++++++++++++++++++++++++++++++
+ net/bluetooth/smp.c         | 15 ++++++++----
+ 3 files changed, 57 insertions(+), 5 deletions(-)
+
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 79de2a659dd69..f4e8e2a0b7c15 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -298,6 +298,7 @@ enum {
+ 	HCI_FORCE_STATIC_ADDR,
+ 	HCI_LL_RPA_RESOLUTION,
+ 	HCI_CMD_PENDING,
++	HCI_FORCE_NO_MITM,
+ 
+ 	__HCI_NUM_FLAGS,
+ };
+diff --git a/net/bluetooth/hci_debugfs.c b/net/bluetooth/hci_debugfs.c
+index 6b1314c738b8e..5e8af2658e44a 100644
+--- a/net/bluetooth/hci_debugfs.c
++++ b/net/bluetooth/hci_debugfs.c
+@@ -1075,6 +1075,50 @@ DEFINE_SIMPLE_ATTRIBUTE(auth_payload_timeout_fops,
+ 			auth_payload_timeout_get,
+ 			auth_payload_timeout_set, "%llu\n");
+ 
++static ssize_t force_no_mitm_read(struct file *file,
++				  char __user *user_buf,
++				  size_t count, loff_t *ppos)
++{
++	struct hci_dev *hdev = file->private_data;
++	char buf[3];
++
++	buf[0] = hci_dev_test_flag(hdev, HCI_FORCE_NO_MITM) ? 'Y' : 'N';
++	buf[1] = '\n';
++	buf[2] = '\0';
++	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
++}
++
++static ssize_t force_no_mitm_write(struct file *file,
++				   const char __user *user_buf,
++				   size_t count, loff_t *ppos)
++{
++	struct hci_dev *hdev = file->private_data;
++	char buf[32];
++	size_t buf_size = min(count, (sizeof(buf) - 1));
++	bool enable;
++
++	if (copy_from_user(buf, user_buf, buf_size))
++		return -EFAULT;
++
++	buf[buf_size] = '\0';
++	if (strtobool(buf, &enable))
++		return -EINVAL;
++
++	if (enable == hci_dev_test_flag(hdev, HCI_FORCE_NO_MITM))
++		return -EALREADY;
++
++	hci_dev_change_flag(hdev, HCI_FORCE_NO_MITM);
++
++	return count;
++}
++
++static const struct file_operations force_no_mitm_fops = {
++	.open		= simple_open,
++	.read		= force_no_mitm_read,
++	.write		= force_no_mitm_write,
++	.llseek		= default_llseek,
++};
++
+ DEFINE_QUIRK_ATTRIBUTE(quirk_strict_duplicate_filter,
+ 		       HCI_QUIRK_STRICT_DUPLICATE_FILTER);
+ DEFINE_QUIRK_ATTRIBUTE(quirk_simultaneous_discovery,
+@@ -1134,6 +1178,8 @@ void hci_debugfs_create_le(struct hci_dev *hdev)
+ 			    &max_key_size_fops);
+ 	debugfs_create_file("auth_payload_timeout", 0644, hdev->debugfs, hdev,
+ 			    &auth_payload_timeout_fops);
++	debugfs_create_file("force_no_mitm", 0644, hdev->debugfs, hdev,
++			    &force_no_mitm_fops);
+ 
+ 	debugfs_create_file("quirk_strict_duplicate_filter", 0644,
+ 			    hdev->debugfs, hdev,
+diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+index d0b695ee49f63..a85e3e49cd0da 100644
+--- a/net/bluetooth/smp.c
++++ b/net/bluetooth/smp.c
+@@ -2393,12 +2393,17 @@ int smp_conn_security(struct hci_conn *hcon, __u8 sec_level)
+ 			authreq |= SMP_AUTH_CT2;
+ 	}
+ 
+-	/* Require MITM if IO Capability allows or the security level
+-	 * requires it.
++	/* Don't attempt to set MITM if setting is overridden by debugfs
++	 * Needed to pass certification test SM/MAS/PKE/BV-01-C
+ 	 */
+-	if (hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT ||
+-	    hcon->pending_sec_level > BT_SECURITY_MEDIUM)
+-		authreq |= SMP_AUTH_MITM;
++	if (!hci_dev_test_flag(hcon->hdev, HCI_FORCE_NO_MITM)) {
++		/* Require MITM if IO Capability allows or the security level
++		 * requires it.
++		 */
++		if (hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT ||
++		    hcon->pending_sec_level > BT_SECURITY_MEDIUM)
++			authreq |= SMP_AUTH_MITM;
++	}
+ 
+ 	if (hcon->role == HCI_ROLE_MASTER) {
+ 		struct smp_cmd_pairing cp;
+-- 
+2.26.0.292.g33ef6b2f38-goog
+
