@@ -2,186 +2,160 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D57C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C5EC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95DF920748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fS78i4Mi"
+	by mail.kernel.org (Postfix) with ESMTP id 58C4F20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDGVpa (ORCPT
+        id S1726436AbgDGVsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:45:30 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42135 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgDGVpa (ORCPT
+        Tue, 7 Apr 2020 17:48:14 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:42650 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgDGVsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:45:30 -0400
-Received: by mail-il1-f196.google.com with SMTP id f16so4763735ilj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:45:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jJS9snVu5vDf/p1WAVPSGxLik8Jf/0ksqz7dpeYuVlU=;
-        b=fS78i4MiF11WQ1eDDbkUkpEmIGiB3eNrqvl2Sjls0ugnNCKQdcxHdy8D3OYKN57QZi
-         HK6gOz+s4zjZhzR/EWwXOwOfG/3Gpym9YFE1h6wppOMa4bDPRnF9PzM8sJ177pPDVYR5
-         RYidyWH+WJerrXxcPWO/BACpmG4MAo01QmTEcosV31B5JvDvdXdjKCHg/0QmQf55tzyS
-         owA2AJaRV6amevWuhgRpujkKGdFvNoSvqataB8Mh794PrVxfZmOAHaiXMFQoww6HNaiZ
-         BPtQPDQaVYgXsASeCgnoF8PTB8FpHlRERGFVsif2FiC7SOO6pHNdlYT4DKMi6IMYlNE3
-         uqmw==
+        Tue, 7 Apr 2020 17:48:13 -0400
+Received: by mail-io1-f71.google.com with SMTP id a16so4362544ios.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:48:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jJS9snVu5vDf/p1WAVPSGxLik8Jf/0ksqz7dpeYuVlU=;
-        b=dJbkXVQNCRjkbc/X+5ZLrxeeNZoRWbnmspwwp8StdUISzmbEN+1pkifohb6cYfHix3
-         YdlFbmOjj2vE4mN0xnKLPZUNWwPEzveTVRkqV8NlD+XXbacuZhYCMyZ59WOp95I4DKDD
-         aW2qkxkWjIXN1W8in9KXkPj+U6r1dkfEGOhmb2zttU/5nnPyCCTfYMfgk+bWnWuBs0M1
-         CN0Fvdwn96ifGMQIH//dlrY1GuMqhGizBiiIUoL38bgf6SnZuy44IeTlEi383iXKGKUl
-         mc9KeGqk6ZIpyzqRD5DI6D+/bs+5ImmF+rWfLuGyYm1lvN04TnNk+TDmmDBuH8PtpLhK
-         SkMA==
-X-Gm-Message-State: AGi0PuZVBLYb1PgJckCWfFmqB1BFRu3zHjArHt+4o3R1hHpe6vyBrbo/
-        m29L/wwOCqmCcfUcnFzUKx71QiNSMgU29uwylDg=
-X-Google-Smtp-Source: APiQypIk7sK06ovZiI9ghrHVkTSvsz4DdDORxM5bo/v1aXjKvh12EaqR8XUUxTCqIdAx/5g689RLOukfPlticxjl1pw=
-X-Received: by 2002:a92:88d0:: with SMTP id m77mr4417557ilh.282.1586295927057;
- Tue, 07 Apr 2020 14:45:27 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=NnS8vCZT1QvIiL3CCvnp1oqlk6d3Wrv2CkF9MiyL0vg=;
+        b=Ln5iiKlfEFkB00mjDIN9gc4qNDmyfvqpH6XK7+NVH82an2oEiVJp5gcGUlEiYu6Z3v
+         yXhglv0UBUK7anqmNJsYdP6GQLgyQz8Tbpb2QTEBRwoOyY0RAkPugCl7FfxDNkzqBwUf
+         Ea8MV3UM0iswYZM5y2OniyY/HuUBy/FZLV+i505P/4k8CsV+UeDxxY0ZhpiebH/N64Ii
+         KDgr+iReBQkwgwyYaYUC1ZS7/UqWNhSZSHm7URYE2uLxh+hCwlbW4tx/ByOZIxTgeujv
+         wfBx5jZp3JewWKccLD1jXq/+bwNv5n1R0nJgcREmhkglxbJWJ6kblg3PV7CeHOqJnaj4
+         dNmw==
+X-Gm-Message-State: AGi0Pub8YX+wTK4VtiYaKLKeDQFN+rIroAMKZ+wrtPPEdfZXO49fdyob
+        +YM4nHAAWv0+JBb1yk8GPjsy+lp7FhzE1dB9P7lHM+WqHzyW
+X-Google-Smtp-Source: APiQypJNFg1DUL3yZpa64aMYloyhiUN/HLSUqpyctBn7oP1PgCl8VW6rAztTPmwjuG1UQu5QLhAGvHI248qEj5+BKurxbq8BBcrH
 MIME-Version: 1.0
-References: <20200219171225.5547-1-idryomov@gmail.com> <CAHp75Vf24yNeLEweq_70AUzKwbdyurB6ze9739Qy9djA9dSefg@mail.gmail.com>
- <CAOi1vP9gfMoU14Ax+VLksQ+_3yOO3m3bh0Uh02SUMfPFDDEW9g@mail.gmail.com> <CAOi1vP8NN=8e8kW6g7KegUt52auJoE53ZCdEQHv2DMqFe1=g0Q@mail.gmail.com>
-In-Reply-To: <CAOi1vP8NN=8e8kW6g7KegUt52auJoE53ZCdEQHv2DMqFe1=g0Q@mail.gmail.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Tue, 7 Apr 2020 23:45:14 +0200
-Message-ID: <CAOi1vP9t=kq0M91rJXbXa1pj43eczsHw+0Y5Km30tQP5AJrs2g@mail.gmail.com>
-Subject: Re: [PATCH v2] vsprintf: don't obfuscate NULL and error pointers
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+X-Received: by 2002:a5e:8515:: with SMTP id i21mr3943816ioj.96.1586296092402;
+ Tue, 07 Apr 2020 14:48:12 -0700 (PDT)
+Date:   Tue, 07 Apr 2020 14:48:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000018a92305a2ba57e0@google.com>
+Subject: BUG: unable to handle kernel paging request in get_pfnblock_flags_mask
+From:   syzbot <syzbot+18638e81a805a2d96682@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, bgeffon@google.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        peterx@redhat.com, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 8:23 PM Ilya Dryomov <idryomov@gmail.com> wrote:
->
-> On Wed, Feb 19, 2020 at 7:07 PM Ilya Dryomov <idryomov@gmail.com> wrote:
-> >
-> > On Wed, Feb 19, 2020 at 6:37 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Wed, Feb 19, 2020 at 7:13 PM Ilya Dryomov <idryomov@gmail.com> wrote:
-> > > >
-> > > > I don't see what security concern is addressed by obfuscating NULL
-> > > > and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-> > > > of sites where %p is used (over 10000) and the fact that NULL pointers
-> > > > aren't uncommon, it probably wouldn't take long for an attacker to
-> > > > find the hash that corresponds to 0.  Although harder, the same goes
-> > > > for most common error values, such as -1, -2, -11, -14, etc.
-> > > >
-> > > > The NULL part actually fixes a regression: NULL pointers weren't
-> > > > obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-> > > > dereferencing invalid pointers") which went into 5.2.  I'm tacking
-> > > > the IS_ERR() part on here because error pointers won't leak kernel
-> > > > addresses and printing them as pointers shouldn't be any different
-> > > > from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-> > > > debugging based on existing pr_debug and friends excruciating.
-> > > >
-> > > > Note that the "always print 0's for %pK when kptr_restrict == 2"
-> > > > behaviour which goes way back is left as is.
-> > > >
-> > > > Example output with the patch applied:
-> > > >
-> > > >                             ptr         error-ptr              NULL
-> > > > %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> > > > %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> > > > %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
-> > > > %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
-> > > > %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
-> > >
-> > > ...
-> > >
-> > > > +/*
-> > > > + * NULL pointers aren't hashed.
-> > > > + */
-> > > >  static void __init
-> > > >  null_pointer(void)
-> > > >  {
-> > > > -       test_hashed("%p", NULL);
-> > > > +       test(ZEROS "00000000", "%p", NULL);
-> > > >         test(ZEROS "00000000", "%px", NULL);
-> > > >         test("(null)", "%pE", NULL);
-> > > >  }
-> > > >
-> > > > +/*
-> > > > + * Error pointers aren't hashed.
-> > > > + */
-> > > > +static void __init
-> > > > +error_pointer(void)
-> > > > +{
-> > > > +       test(ONES "fffffff5", "%p", ERR_PTR(-EAGAIN));
-> > > > +       test(ONES "fffffff5", "%px", ERR_PTR(-EAGAIN));
-> > >
-> > > > +       test("(efault)", "%pE", ERR_PTR(-EAGAIN));
-> > >
-> > > Hmm... Is capital E on purpose here?
-> >
-> > Yes.  It shows that for %pE an error pointer is still invalid.
-> > %pe is tested separately, in errptr(), and the output would have
-> > been "-EAGAIN".
-> >
-> > > Maybe we may use something else ('%ph'?) for sake of deviation?
-> >
-> > If you look at the resulting file, you will see that null_pointer(),
-> > error_pointer() and invalid_pointer() exercise the same three variants:
-> > %p, %px and %pE.
-> >
-> > This is somewhat confusing, but there seems to be some disagreement
-> > between Pavel and Rasmus as to how the test suite should be structured
-> > and I didn't want to attempt to restructure anything in this patch.
->
-> Sorry, I meant Petr of course.
->
-> Rasmus, who had to deal with mips defining EDQUOT to 1133 by special
-> casing that in lib/errname.c, reminded me that error codes are a mess:
-> EAGAIN is different on alpha.  Rather than picking another error code
-> that is the same on all architectures, let's just use explicit -11.
->
-> error_pointer() should be:
->
->         test(ONES "fffffff5", "%p", ERR_PTR(-11));
->         test(ONES "fffffff5", "%px", ERR_PTR(-11));
->         test("(efault)", "%pE", ERR_PTR(-11));
->
-> I'll wait for more feedback and respin (or perhaps this can be
-> fixed up while applying).
+Hello,
 
-Hi Petr,
+syzbot found the following crash on:
 
-Bump, as I don't see this in linux-next or other public branches.
-The discussion was split between several threads, revolving around
-the vision for how lib/test_printf.c should be structured, but the
-fix itself wasn't disputed.
+HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1685901be00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91b674b8f0368e69
+dashboard link: https://syzkaller.appspot.com/bug?extid=18638e81a805a2d96682
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11379efbe00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10172c5de00000
 
-Could you please pick it up for 5.7-rc1?  If you want to restructure
-the test suite before adding any new test cases, v1 doesn't have them.
-Other than the test cases, the only difference between v1 and v2 is
-added reviews and acks.
+The bug was bisected to:
 
-Thanks,
+commit 4426e945df588f2878affddf88a51259200f7e29
+Author: Peter Xu <peterx@redhat.com>
+Date:   Thu Apr 2 04:08:49 2020 +0000
 
-                Ilya
+    mm/gup: allow VM_FAULT_RETRY for multiple times
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16122ac7e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=15122ac7e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11122ac7e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+18638e81a805a2d96682@syzkaller.appspotmail.com
+Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
+
+BUG: unable to handle page fault for address: fffff11043f9c809
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0 
+Oops: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 7170 Comm: syz-executor720 Not tainted 5.6.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__nr_to_section include/linux/mmzone.h:1256 [inline]
+RIP: 0010:__pfn_to_section include/linux/mmzone.h:1335 [inline]
+RIP: 0010:get_pageblock_bitmap mm/page_alloc.c:452 [inline]
+RIP: 0010:__get_pfnblock_flags_mask mm/page_alloc.c:487 [inline]
+RIP: 0010:get_pfnblock_flags_mask+0x5b/0x190 mm/page_alloc.c:501
+Code: 0d ea e0 be 0a 48 85 c9 0f 84 aa 00 00 00 48 89 f7 48 c1 ef 16 48 8d 2c f9 48 b9 00 00 00 00 00 fc ff df 49 89 e8 49 c1 e8 03 <41> 80 3c 08 00 0f 85 87 00 00 00 48 8b 7d 00 48 85 ff 74 7a 83 e3
+RSP: 0000:ffffc90001697d40 EFLAGS: 00010a06
+RAX: 0000000000000007 RBX: 0001fffffcf404f2 RCX: dffffc0000000000
+RDX: 0000000000000002 RSI: fffffe7a02793d05 RDI: 000003fffff9e809
+RBP: ffffa8821fce4048 R08: 1ffff51043f9c809 R09: ffffed1013c9e829
+R10: ffff88809e4f4147 R11: ffffed1013c9e828 R12: ffff88809e4f4140
+R13: ffff88809e4f4148 R14: 0000000000000000 R15: ffff88809e4f4140
+FS:  000000000268a940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff11043f9c809 CR3: 000000009f94c000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __dump_page+0x122/0x1a40 mm/debug.c:57
+ put_page_testzero include/linux/mm.h:675 [inline]
+ put_page include/linux/mm.h:1136 [inline]
+ lookup_node mm/mempolicy.c:907 [inline]
+ do_get_mempolicy mm/mempolicy.c:970 [inline]
+ kernel_get_mempolicy+0xe3f/0xfb0 mm/mempolicy.c:1615
+ __do_sys_get_mempolicy mm/mempolicy.c:1633 [inline]
+ __se_sys_get_mempolicy mm/mempolicy.c:1629 [inline]
+ __x64_sys_get_mempolicy+0xba/0x150 mm/mempolicy.c:1629
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x441789
+Code: e8 ac e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe6d5ec848 EFLAGS: 00000246 ORIG_RAX: 00000000000000ef
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441789
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000021c9b R08: 0000000000000003 R09: 0000000000402590
+R10: 000000002073b000 R11: 0000000000000246 R12: 0000000000402500
+R13: 0000000000402590 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+CR2: fffff11043f9c809
+---[ end trace bdfbd15c6d2a525e ]---
+RIP: 0010:__nr_to_section include/linux/mmzone.h:1256 [inline]
+RIP: 0010:__pfn_to_section include/linux/mmzone.h:1335 [inline]
+RIP: 0010:get_pageblock_bitmap mm/page_alloc.c:452 [inline]
+RIP: 0010:__get_pfnblock_flags_mask mm/page_alloc.c:487 [inline]
+RIP: 0010:get_pfnblock_flags_mask+0x5b/0x190 mm/page_alloc.c:501
+Code: 0d ea e0 be 0a 48 85 c9 0f 84 aa 00 00 00 48 89 f7 48 c1 ef 16 48 8d 2c f9 48 b9 00 00 00 00 00 fc ff df 49 89 e8 49 c1 e8 03 <41> 80 3c 08 00 0f 85 87 00 00 00 48 8b 7d 00 48 85 ff 74 7a 83 e3
+RSP: 0000:ffffc90001697d40 EFLAGS: 00010a06
+RAX: 0000000000000007 RBX: 0001fffffcf404f2 RCX: dffffc0000000000
+RDX: 0000000000000002 RSI: fffffe7a02793d05 RDI: 000003fffff9e809
+RBP: ffffa8821fce4048 R08: 1ffff51043f9c809 R09: ffffed1013c9e829
+R10: ffff88809e4f4147 R11: ffffed1013c9e828 R12: ffff88809e4f4140
+R13: ffff88809e4f4148 R14: 0000000000000000 R15: ffff88809e4f4140
+FS:  000000000268a940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffff11043f9c809 CR3: 000000009f94c000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
