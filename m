@@ -2,57 +2,57 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D218C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E24BC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F51620719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20EE9208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dKeiEDM/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i6mWkU87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgDGXu7 (ORCPT
+        id S1726605AbgDGXvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:50:59 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42373 "EHLO
+        Tue, 7 Apr 2020 19:51:04 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42377 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgDGXu6 (ORCPT
+        with ESMTP id S1726546AbgDGXvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:50:58 -0400
-Received: by mail-pl1-f193.google.com with SMTP id v2so461078plp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:50:56 -0700 (PDT)
+        Tue, 7 Apr 2020 19:51:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id v2so461141plp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:51:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eT68veUdahfIguyUyBYQoqVQI3dpUpP+dfw8Z1rw5oQ=;
-        b=dKeiEDM/PDcbX+fPQvAgtDORBZqcmvJ6BvEJWJJCDxNNCyzNjQhJpBTP3d3xIgQ439
-         EHC2t7qMFaU01TDtZvzIdZZOe6jtOMYFF/FRidLta6hxWbb/2We2PvfJ/+zG1YUfx0B6
-         MOFHzw0uf5F6afuyvwkxKCU7CNR4pj5q4Pv3c=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pFQkRgh1REqkDpACcdt+UfCfvgHDToGduy/d5MuknNk=;
+        b=i6mWkU87+EqLGVlkeycAW1iqUek2kXI9xDjkNbOX1OCNtE37+/M7EnkQyBbmOAA+Ot
+         WZi5rmOu3vhA45q9b4Hfu0nV6VvC8YxidTH10xQY+mlpUdn7Cq1oXCvybmgIzmmUBfZC
+         5PXT6Fg1Ag7Msgk85ncRN8AJve5gwNG0UzERE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eT68veUdahfIguyUyBYQoqVQI3dpUpP+dfw8Z1rw5oQ=;
-        b=UV7gisPKVTtJNWarJ0mgiHZKUAdcgKkZ/tWBcX3YKXVao80uYVnvSaTmUebdDqiJwE
-         q0CfMj+yIg1dWCz/YmPDiy5IMbmDGmBiHEc5L3Icddz4s1RvArF/NXhKjFFBrCrJBXFz
-         0jSK2VpROmMkSpOm9dYmFqViS4qYo9Uf4oGafsBgUR53evnivK3E0bVD0spKilGSw0Tl
-         Db21SvMOOstRdAlwod7ppWoHodUdS8EEZf1XpII+gI/QPCWeYQUR4hUocgdOiSWaXfxj
-         H7cvFN7QOEdnc75ZgJKyWFUVhDUs316c1NdpyTKFAynde4QY+8V/Ax7A6E+p72aYgi51
-         b5tg==
-X-Gm-Message-State: AGi0PuYdes0fx5mBotPq76+iGs0z8Tab1u+xzNuwWCOoX3s31EYn0MQM
-        fK2n1xZaRVQyz128vSg7gL4Ktw==
-X-Google-Smtp-Source: APiQypJYTmO0cbgnxZFQZqkN1iaxMEolwKi85hzl9BR9MlhjVCBjNxuHbd1evldXYryQV0IDGem+MA==
-X-Received: by 2002:a17:90a:ba09:: with SMTP id s9mr2081513pjr.20.1586303455987;
-        Tue, 07 Apr 2020 16:50:55 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pFQkRgh1REqkDpACcdt+UfCfvgHDToGduy/d5MuknNk=;
+        b=eDspHWRlHNqvV7OGnpWw7G+oSFscMvn5uVQLBhKJ6iOBtRqM7YqcXVXHxXmXpkia0H
+         FiypAspk4Pg57VEyZXpYKbx/ML9kURuRNSfI83E0P+CFssgiwe0zbuPe1NmRYc8/2kkB
+         hf9aKH+l75e8LlrsHOfVS6P1nrjc8JwJHI5SqTnISXSq7/7x3DQTuStKFth4Prwm3/nZ
+         3Fi2QprhPzN8nCjufxGWrmlqIVYm/U8d02C1Rg0/Lsnc5ENIQvBhGfbbzkHjeEw3TrmG
+         umiUbICz1RhtRuquEI8aox6I/TBqsQKQYtCb2twxPZ4XMW1To9rTa22aNQQCBhqz+jzD
+         cmQQ==
+X-Gm-Message-State: AGi0PubQiIrRpB6u5ZCNvLks2eUebIZJ6AVr92j/81hlZ7RbxqBnhyVZ
+        pxAF2Kxm2AqbgEbwRLW+uTWvIg==
+X-Google-Smtp-Source: APiQypIyTvb0C4G8xQ+PTsfIdd+WxpN1AINzY4dwE9PSKG5Y/HFai8m4ry+I2/cUQMqsdNH3q0Aw/Q==
+X-Received: by 2002:a17:90a:fa17:: with SMTP id cm23mr2019144pjb.121.1586303461516;
+        Tue, 07 Apr 2020 16:51:01 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id s27sm14467165pgn.90.2020.04.07.16.50.55
+        by smtp.gmail.com with ESMTPSA id s27sm14467165pgn.90.2020.04.07.16.51.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 16:50:55 -0700 (PDT)
+        Tue, 07 Apr 2020 16:51:01 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -61,10 +61,12 @@ Cc:     mka@chromium.org, Lina Iyer <ilina@codeaurora.org>,
         Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
         evgreen@chromium.org, Douglas Anderson <dianders@chromium.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 00/10] drivers: qcom: rpmh-rsc: Cleanup / add lots of comments
-Date:   Tue,  7 Apr 2020 16:50:14 -0700
-Message-Id: <20200407235024.260460-1-dianders@chromium.org>
+Subject: [PATCH v3 05/10] drivers: qcom: rpmh-rsc: Kill cmd_cache and find_match() with fire
+Date:   Tue,  7 Apr 2020 16:50:19 -0700
+Message-Id: <20200407164915.v3.5.I6d3d0a3ec810dc72ff1df3cbf97deefdcdeb8eef@changeid>
 X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+In-Reply-To: <20200407235024.260460-1-dianders@chromium.org>
+References: <20200407235024.260460-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,91 +74,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to review Maulik's latest "rpmh_flush for non OSI targets"
-patch series I've found myself trying to understand rpmh-rsc better.
-To make it easier for others to do this in the future, add a whole lot
-of comments / documentation.
+The "cmd_cache" in RPMH wasn't terribly sensible.  Specifically:
 
-As part of this there are a very small number of functional changes.
-- We'll get a tiny performance boost by getting rid of the "cmd_cache"
-  which I believe was unnecessary.
-- We now assume someone else is in charge of exclusivity for
-  tcs_invalidate() and have removed a lock in there. As per the
-  comments in the patch, this isn't expected to cause problems.
-- tcs_is_free() no longer checks hardware state, but we think it
-  didn't need to.
+- The current code doesn't realy detect "conflicts" properly any case
+  where the sequence being checked has more than one entry.  One
+  simple way to see this in the current code is that if cmd[0].addr
+  isn't found that cmd[1].addr is never checked.
+- The code attempted to use the "cmd_cache" to update an existing
+  message in a sleep/wake TCS with new data.  The goal appeared to be
+  to update part of a TCS while leaving the rest of the TCS alone.  We
+  never actually do this.  We always fully invalidate and re-write
+  everything.
+- If/when we try to optimize things to not fully invalidate / re-write
+  every time we update the TCSes we'll need to think it through very
+  carefully.  Specifically requirement of find_match() that the new
+  sequence of addrs must match exactly the old sequence of addrs seems
+  inflexible.  It's also not documented in rpmh_write() and
+  rpmh_write_batch().  In any case, if we do decide to require updates
+  to keep the exact same sequence and length then presumably the API
+  and data structures should be updated to understand groups more
+  properly.  The current algorithm doesn't really keep track of the
+  length of the old sequence and there are several boundary-condition
+  bugs because of that.  Said another way: if we decide to do
+  something like this in the future we should start from scratch and
+  thus find_match() isn't useful to keep around.
 
-These changes touch a lot of code in rpmh-rsc, so hopefully someone at
-Qualcomm can test them out better than I did (I don't have every last
-client of RPMH in my tree).
+This patch isn't quite a no-op.  Specifically:
 
-I've tried to structure the patches so that simpler / less
-controversial patches are first. Those could certainly land on their
-own without later patches. Many of the patches could also be dropped
-and the others would still apply if they are controversial.  If you
-need help doing this then please yell.
+- It should be a slight performance boost of not searching through so
+  many arrays.
+- The old code would have done something useful in one case: it would
+  allow someone calling rpmh_write() to override the data that came
+  from rpmh_write_batch().  I don't believe that actually happens in
+  reality.
 
-These patches are based on Maulik's v16 series, AKA:
-https://lore.kernel.org/r/1586154741-8293-1-git-send-email-mkshah@codeaurora.org/
-
-With all that, enjoy.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
 Changes in v3:
-- ("...are not for IRQ") is new for v3.
-- ("Don't double-check rpmh") replaces ("Warning if tcs_write...")
-- Add "TCS" in title (Maulik).
-- Adjusted comments for rpmh_rsc_write_ctrl_data().
-- Comments for new enable_tcs_irq() function.
-- Comments for new rpmh_rsc_cpu_pm_callback() function.
-- Extra blank line removed (Maulik).
-- IRQ registers aren't in TCS0 (Maulik).
 - Kill find_match moves from patch #9 to patch #5 (Maulik).
-- Mention in message that I also fixed up kernel-doc stuff.
-- Moved comments patch after ("Kill cmd_cache and find_match...").
-- One space after a period now (Maulik).
-- Plural of TCS fixed to TCSes following Maulik's example.
-- Re-added comment in tcs_write() about checking for same address.
-- Rebased atop v16 ('Invoke rpmh_flush...') series.
-- Replace ("...warn if state mismatch") w/ ("...just check tcs_in_use")
-- Replaced ("irqsave()...") + ("...never -EBUSY") w/ ("Caller handles...")
 - Rewrote commit message to adjust for patch order.
-- __tcs_set_trigger() comments adjusted now that it can set or unset.
-- get_tcs_for_msg() documents why it's safe to borrow the wake TCS.
-- get_tcs_for_msg() no longer returns -EAGAIN.
 
 Changes in v2:
-- Comment tcs_is_free() new for v2; replaces old patch 6.
-- Document bug of tcs_write() not handling -EAGAIN.
-- Document get_tcs_for_msg() => -EAGAIN only for ACTIVE_ONLY.
-- Document locks for updating "tcs_in_use" more.
-- Document tcs_is_free() without drv->lock OK for tcs_invalidate().
-- Document that rpmh_rsc_send_data() can be an implicit invalidate.
-- Document two get_tcs_for_msg() issues if zero-active TCS.
-- Fixed documentation of "tcs" param in find_slots().
 - Got rid of useless "if (x) continue" at end of for loop.
-- More clear that active-only xfers can happen on wake TCS sometimes.
-- Now prose in comments instead of struct definitions.
-- Pretty ASCII art from Stephen.
-- Reword tcs_write() doc a bit.
 
-Douglas Anderson (10):
-  drivers: qcom: rpmh-rsc: Clean code reading/writing TCS regs/cmds
-  drivers: qcom: rpmh-rsc: Document the register layout better
-  drivers: qcom: rpmh-rsc: Fold tcs_ctrl_write() into its single caller
-  drivers: qcom: rpmh-rsc: Remove get_tcs_of_type() abstraction
-  drivers: qcom: rpmh-rsc: Kill cmd_cache and find_match() with fire
-  drivers: qcom: rpmh-rsc: A lot of comments
-  drivers: qcom: rpmh-rsc: tcs_is_free() can just check tcs_in_use
-  drivers: qcom: rpmh-rsc: Don't double-check rpmh
-  drivers: qcom: rpmh-rsc: Caller handles tcs_invalidate() exclusivity
-  drivers: qcom: rpmh-rsc: read_tcs_reg()/write_tcs_reg() are not for
-    IRQ
+ drivers/soc/qcom/rpmh-internal.h |  2 --
+ drivers/soc/qcom/rpmh-rsc.c      | 47 --------------------------------
+ 2 files changed, 49 deletions(-)
 
- drivers/soc/qcom/rpmh-internal.h |  66 +++--
- drivers/soc/qcom/rpmh-rsc.c      | 465 +++++++++++++++++++++----------
- drivers/soc/qcom/rpmh.c          |   5 +-
- 3 files changed, 363 insertions(+), 173 deletions(-)
-
+diff --git a/drivers/soc/qcom/rpmh-internal.h b/drivers/soc/qcom/rpmh-internal.h
+index e9a90cb7773e..6a6d776ccca9 100644
+--- a/drivers/soc/qcom/rpmh-internal.h
++++ b/drivers/soc/qcom/rpmh-internal.h
+@@ -30,7 +30,6 @@ struct rsc_drv;
+  * @ncpt:      number of commands in each TCS
+  * @lock:      lock for synchronizing this TCS writes
+  * @req:       requests that are sent from the TCS
+- * @cmd_cache: flattened cache of cmds in sleep/wake TCS
+  * @slots:     indicates which of @cmd_addr are occupied
+  */
+ struct tcs_group {
+@@ -42,7 +41,6 @@ struct tcs_group {
+ 	int ncpt;
+ 	spinlock_t lock;
+ 	const struct tcs_request *req[MAX_TCS_PER_TYPE];
+-	u32 *cmd_cache;
+ 	DECLARE_BITMAP(slots, MAX_TCS_SLOTS);
+ };
+ 
+diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+index 855a1dab7718..da1045c92b38 100644
+--- a/drivers/soc/qcom/rpmh-rsc.c
++++ b/drivers/soc/qcom/rpmh-rsc.c
+@@ -522,42 +522,12 @@ int rpmh_rsc_send_data(struct rsc_drv *drv, const struct tcs_request *msg)
+ 	return ret;
+ }
+ 
+-static int find_match(const struct tcs_group *tcs, const struct tcs_cmd *cmd,
+-		      int len)
+-{
+-	int i, j;
+-
+-	/* Check for already cached commands */
+-	for_each_set_bit(i, tcs->slots, MAX_TCS_SLOTS) {
+-		if (tcs->cmd_cache[i] != cmd[0].addr)
+-			continue;
+-		if (i + len >= tcs->num_tcs * tcs->ncpt)
+-			goto seq_err;
+-		for (j = 0; j < len; j++) {
+-			if (tcs->cmd_cache[i + j] != cmd[j].addr)
+-				goto seq_err;
+-		}
+-		return i;
+-	}
+-
+-	return -ENODATA;
+-
+-seq_err:
+-	WARN(1, "Message does not match previous sequence.\n");
+-	return -EINVAL;
+-}
+-
+ static int find_slots(struct tcs_group *tcs, const struct tcs_request *msg,
+ 		      int *tcs_id, int *cmd_id)
+ {
+ 	int slot, offset;
+ 	int i = 0;
+ 
+-	/* Find if we already have the msg in our TCS */
+-	slot = find_match(tcs, msg->cmds, msg->num_cmds);
+-	if (slot >= 0)
+-		goto copy_data;
+-
+ 	/* Do over, until we can fit the full payload in a TCS */
+ 	do {
+ 		slot = bitmap_find_next_zero_area(tcs->slots, MAX_TCS_SLOTS,
+@@ -567,11 +537,7 @@ static int find_slots(struct tcs_group *tcs, const struct tcs_request *msg,
+ 		i += tcs->ncpt;
+ 	} while (slot + msg->num_cmds - 1 >= i);
+ 
+-copy_data:
+ 	bitmap_set(tcs->slots, slot, msg->num_cmds);
+-	/* Copy the addresses of the resources over to the slots */
+-	for (i = 0; i < msg->num_cmds; i++)
+-		tcs->cmd_cache[slot + i] = msg->cmds[i].addr;
+ 
+ 	offset = slot / tcs->ncpt;
+ 	*tcs_id = offset + tcs->offset;
+@@ -763,19 +729,6 @@ static int rpmh_probe_tcs_config(struct platform_device *pdev,
+ 		tcs->mask = ((1 << tcs->num_tcs) - 1) << st;
+ 		tcs->offset = st;
+ 		st += tcs->num_tcs;
+-
+-		/*
+-		 * Allocate memory to cache sleep and wake requests to
+-		 * avoid reading TCS register memory.
+-		 */
+-		if (tcs->type == ACTIVE_TCS)
+-			continue;
+-
+-		tcs->cmd_cache = devm_kcalloc(&pdev->dev,
+-					      tcs->num_tcs * ncpt, sizeof(u32),
+-					      GFP_KERNEL);
+-		if (!tcs->cmd_cache)
+-			return -ENOMEM;
+ 	}
+ 
+ 	drv->num_tcs = st;
 -- 
 2.26.0.292.g33ef6b2f38-goog
 
