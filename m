@@ -2,91 +2,114 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88313C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F83C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFD52083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3163F20747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="012GHlOa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b5fGARpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgDGWIE (ORCPT
+        id S1726602AbgDGWId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:08:04 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41008 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgDGWIC (ORCPT
+        Tue, 7 Apr 2020 18:08:33 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34149 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgDGWId (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:08:02 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m13so2371231pgd.8
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:07:59 -0700 (PDT)
+        Tue, 7 Apr 2020 18:08:33 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p10so5513492ljn.1;
+        Tue, 07 Apr 2020 15:08:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uBxvQltL5Nygkvc9R7CLiUS2uaeeOnr3MvEHa8jglnQ=;
-        b=012GHlOaJgDjZ2mlQcH2MvQrmUHUv7z5dqGH+4nGa+M3lR1nOksSonlthbiiu3HZCL
-         FN/2jjaO4zrzYkPow5NAqRcwkS1hgcXkgtVYzR6dLiIqL4Rtd9Ks1wvlye1Pu3X7S/tz
-         DBDnskdn9igLMhMH91n2nupoKW5DqR8wuPRiqTVhDo0bOLJsEv+9QOpX+xwpfOcu3a2O
-         3X/VWkaSBS4ISI6oImCmLfLIuUhnFZjZ2l8oHphBfq+r93zICGNGSrhHBHKipneWjanW
-         yYvUFCSSE+o1uN6aRD/iAVcyxM3uy2f6xfQlL5h5KF2Xvt30q+LIHheHL/tmN7IsD4mV
-         +Log==
+        bh=+YQ6O1FoLb/MfQceNzDIXhdipEgwi9Vc6NSir8tVQ+0=;
+        b=b5fGARpqiUJ7tcTmKi17zh32/umwOMmRpj5E7VyMWiIibjaXst8RmX8O8P35JUyxoB
+         6Srx0qIWoyb0R3sr5KBfDQoEnvEurTVoixuY6pKVzK6V0nZZaH1WLBHJCgODTyUnqSxc
+         X49o7q+1BAjWXdEHWcb5RBPbkGePf3ZQCcrHIE5gVg8G7dqkVWkgDJtyVY50t+6i1vz7
+         9+Y6CsV3Op9HNxdA7AJcEIcqI4bhlCtefpVpxwuzjXqdpTabAAI1bMAa9VEIUEEBphEf
+         Lr2sVn/gXiqQ8aZkkz6iklP4IDWSm7n0ZR9cfBzhbt+REFpmTKEw0cGFkseFcBPWz3N5
+         wEmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=uBxvQltL5Nygkvc9R7CLiUS2uaeeOnr3MvEHa8jglnQ=;
-        b=jB85f/bBjXwJwRQFLntigY8HmqgxJ2r8RUm47C5HSQNCgIuFa3lHF2karjoNxN4No1
-         S/JusQCdfg1YLsYkzrzKpDqslh4Qx60t868r7WT4X0jSW+MjIBgoMUl7bH9ZE+reD5yG
-         xxB0409/Pq6pfs+1aJKoWItx4toJ9ae1SKnoIDcbOuyBpfsdOnY7WQozCS9VvQGhv6kO
-         aPvBnCgm+ILna4uM8p269Pp6baHRHwkjAcan5uBE6TZ0b6+OaaMaoTIxc4k4Z2d6qyCQ
-         9GlBSvzEkCCOS9QHk788mvYCABIJwZCe0/xu4Iiea8jHfsjPKpY0QSxxoTnkbYYCId+C
-         s2pQ==
-X-Gm-Message-State: AGi0PuZme7zBNmsHwkzyl1DpEUOZKpitRUiw4wp6RSqxDvopmptFQl5u
-        36XOiiifepPPojASu0U0ykgzO+9d9zf3SA==
-X-Google-Smtp-Source: APiQypLHOBlYdKaoasCbYYwZKamCeOF7H+N8ijWA6nllKLTV+PsPBOw+PqPGuxhJFqLstthY+g4dHg==
-X-Received: by 2002:a63:8c5b:: with SMTP id q27mr3568217pgn.301.1586297278399;
-        Tue, 07 Apr 2020 15:07:58 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:ec7d:96d3:6e2d:dcab? ([2605:e000:100e:8c61:ec7d:96d3:6e2d:dcab])
-        by smtp.gmail.com with ESMTPSA id e23sm175506pff.192.2020.04.07.15.07.57
+        bh=+YQ6O1FoLb/MfQceNzDIXhdipEgwi9Vc6NSir8tVQ+0=;
+        b=Dp4ULi8Tx2TD3pOwYxK0SYA7e6/9aZK+GIh+WMGENsGl5IK8dOoRu/njwm/jGNfAYe
+         2wwi+rk5fzARxszGXJ89KPXhe/Sosf/lZ++TPa2/9tXIPA1HPM/IywlrEbkU2fVsQfQw
+         etV1bdtw+FyG5hf36IGdiDpVYHw3MyWlJ5DPuHog02H4XnFY8KDD6AbkMtAlDaM4vLDl
+         iqDtCQTe4wGUsdqN17Kffqw0w/EBrKPtb7zTWiMK9ozOCyG9iNegr3B7xs1B2PsRRxon
+         J55CeNOegIBQS8C4Gyw2qgzaFWAzJQrpwsZTacWsTpS7wZKIwWvMcPvFhlxxrRVRelcF
+         lkqQ==
+X-Gm-Message-State: AGi0Pub9aw+NbXq8RFYDMteL6jfWohVs82XHxfTmvN+4inkEsl3q9DEM
+        42+hYCf3oX/SWVjlpc+VHPWQE2sZ
+X-Google-Smtp-Source: APiQypIPFyOuiHqydgiWr6R4XGLm/DccgJs0gnd5vqagCP8wITfmTfFr2KFObqdKFiD8qLk0TEs8AA==
+X-Received: by 2002:a2e:7d09:: with SMTP id y9mr2964718ljc.146.1586297309354;
+        Tue, 07 Apr 2020 15:08:29 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id r23sm3140311lfi.33.2020.04.07.15.08.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 15:07:57 -0700 (PDT)
-Subject: Re: [PATCH] ata: ahci: Add sysfs attribute to show remapped NVMe
- device count
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     anthony.wong@canonical.com,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200207100016.32605-1-kai.heng.feng@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <5c02b240-a336-8869-1d03-6f5219032e78@kernel.dk>
-Date:   Tue, 7 Apr 2020 15:07:56 -0700
+        Tue, 07 Apr 2020 15:08:28 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
+ <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
+ <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
+ <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
+ <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+Date:   Wed, 8 Apr 2020 01:08:27 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200207100016.32605-1-kai.heng.feng@canonical.com>
+In-Reply-To: <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 2:00 AM, Kai-Heng Feng wrote:
-> Add a new sysfs attribute to show how many NVMe devices are remapped.
+08.04.2020 00:08, Sowjanya Komatineni пишет:
+...
+>>> I think you need a semaphore with resource count = 2.
+>> we hold on to issuing capture if more than 2 buffers are queued and it
+>> continues only after fifo has min 1 slot empty
 > 
-> Userspace like distro installer can use this info to ask user to change
-> the BIOS setting.
+> 
+> Just want to close on this part of feedback. Hope above explanation is
+> clear regarding triggering/issuing at max 2 frame capture to VI HW and
+> also regarding capture threads where they use wait_event_interruptible
+> to prevent blocking waiting for buffers to be available for captures.
+> 
+> So no changes related to this part are needed in v7.
+From what I see in the code, you "hold on" by making kthread to spin in
+a busy-loop while caps_inflight >= SYNCPT_FIFO_DEPTH. So some change
+should be needed to prevent this.
 
-Sorry for the delay, looks good to me. Applied.
-
--- 
-Jens Axboe
-
+The wait_event_interruptible seems should be okay.
