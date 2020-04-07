@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C39C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E628C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A95920801
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DC42078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217740;
-	bh=muNrQiaZ8eIKGS+5LNkuEELzJtq6f1xeWtgQdhCXaFs=;
+	s=default; t=1586217745;
+	bh=51H9TY8V5noS4FlXlFD3P5jsli5RDi0dx8xUt4ONeBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOiRwesiA2jWNL9feqtkmnIfbExTH7tN4G5ogrKg4dV+SBM1kWoKeL5w2eBiaUlWf
-	 6WqVTqZEWg5sixah1pq3vJ+6P+FN1WQCs9ku1lkCbZr2nD6L9iBy1QaiUble/cGLjX
-	 H+wmRFbUPySjBJrMVotedQLpe7ytbQzYg/07N/9I=
+	b=xl6igp2ydCyuynFLfduQA9bhjDGGcvQq5faSttJSbp9SxvKb6GgUDgsFV1vdT2CKK
+	 LiZMKfzV4Mij28J3i+euH4+pwb3NoGqh1DJN4G1ttSk4gIjNUnt+fkxnosd3Bsyr6R
+	 /GA+BwnvdGfB4MAtM/g3TNTD/bOQlmL0zh7yCklo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgDGACT (ORCPT
+        id S1728068AbgDGACX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36410 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbgDGACP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:15 -0400
+        id S1728029AbgDGACU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8BF720B1F;
-        Tue,  7 Apr 2020 00:02:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77E9120768;
+        Tue,  7 Apr 2020 00:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217734;
-        bh=muNrQiaZ8eIKGS+5LNkuEELzJtq6f1xeWtgQdhCXaFs=;
+        s=default; t=1586217739;
+        bh=51H9TY8V5noS4FlXlFD3P5jsli5RDi0dx8xUt4ONeBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OjEQ42aM+2jORmp67qq/slEN7tKVptWZGLcb5e/0SyIhQGhy/0HdlNHbcLz7kmYPT
-         nXpahs3rVaSXRbbQ96zSnrSE53e6S46OJjHvc5Jl3uMb0FhaWjm3dnWSr6W1OzVmPs
-         6WK1cHfMIUHT84nrtdtIrTsj+1DGlZrd2KsY9F+4=
+        b=mJKh4VGhW0aZnDF4qsInoq2XyxQcnl1VxfUxIk52ofuLXhMMlPfx53TX7FneeweRQ
+         1eMP/YyMOL3BrC+6XRVIMedCH5X74dascO4xe+myUUz8ZrIb13vq2tuKQ6zggpzigV
+         QFcqo/dsUkfgsK5BQYpSavDZVsL1qXaxje4RcnFo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luo bin <luobin9@huawei.com>,
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/32] hinic: fix the bug of clearing event queue
-Date:   Mon,  6 Apr 2020 20:01:36 -0400
-Message-Id: <20200407000151.16768-18-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 22/32] selftests/net: add definition for SOL_DCCP to fix compilation errors for old libc
+Date:   Mon,  6 Apr 2020 20:01:40 -0400
+Message-Id: <20200407000151.16768-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
 References: <20200407000151.16768-1-sashal@kernel.org>
@@ -59,93 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: Alan Maguire <alan.maguire@oracle.com>
 
-[ Upstream commit 614eaa943e9fc3fcdbd4aa0692ae84973d363333 ]
+[ Upstream commit 83a9b6f639e9f6b632337f9776de17d51d969c77 ]
 
-should disable eq irq before freeing it, must clear event queue
-depth in hw before freeing relevant memory to avoid illegal
-memory access and update consumer idx to avoid invalid interrupt
+Many systems build/test up-to-date kernels with older libcs, and
+an older glibc (2.17) lacks the definition of SOL_DCCP in
+/usr/include/bits/socket.h (it was added in the 4.6 timeframe).
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
+Adding the definition to the test program avoids a compilation
+failure that gets in the way of building tools/testing/selftests/net.
+The test itself will work once the definition is added; either
+skipping due to DCCP not being configured in the kernel under test
+or passing, so there are no other more up-to-date glibc dependencies
+here it seems beyond that missing definition.
+
+Fixes: 11fb60d1089f ("selftests: net: reuseport_addr_any: add DCCP")
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/huawei/hinic/hinic_hw_eqs.c  | 24 +++++++++++++------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ tools/testing/selftests/net/reuseport_addr_any.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
-index 79243b626ddbe..6a723c4757bce 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
-@@ -188,7 +188,7 @@ static u8 eq_cons_idx_checksum_set(u32 val)
-  * eq_update_ci - update the HW cons idx of event queue
-  * @eq: the event queue to update the cons idx for
-  **/
--static void eq_update_ci(struct hinic_eq *eq)
-+static void eq_update_ci(struct hinic_eq *eq, u32 arm_state)
- {
- 	u32 val, addr = EQ_CONS_IDX_REG_ADDR(eq);
+diff --git a/tools/testing/selftests/net/reuseport_addr_any.c b/tools/testing/selftests/net/reuseport_addr_any.c
+index c6233935fed14..b8475cb29be7a 100644
+--- a/tools/testing/selftests/net/reuseport_addr_any.c
++++ b/tools/testing/selftests/net/reuseport_addr_any.c
+@@ -21,6 +21,10 @@
+ #include <sys/socket.h>
+ #include <unistd.h>
  
-@@ -202,7 +202,7 @@ static void eq_update_ci(struct hinic_eq *eq)
- 
- 	val |= HINIC_EQ_CI_SET(eq->cons_idx, IDX)    |
- 	       HINIC_EQ_CI_SET(eq->wrapped, WRAPPED) |
--	       HINIC_EQ_CI_SET(EQ_ARMED, INT_ARMED);
-+	       HINIC_EQ_CI_SET(arm_state, INT_ARMED);
- 
- 	val |= HINIC_EQ_CI_SET(eq_cons_idx_checksum_set(val), XOR_CHKSUM);
- 
-@@ -347,7 +347,7 @@ static void eq_irq_handler(void *data)
- 	else if (eq->type == HINIC_CEQ)
- 		ceq_irq_handler(eq);
- 
--	eq_update_ci(eq);
-+	eq_update_ci(eq, EQ_ARMED);
- }
- 
- /**
-@@ -702,7 +702,7 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
- 	}
- 
- 	set_eq_ctrls(eq);
--	eq_update_ci(eq);
-+	eq_update_ci(eq, EQ_ARMED);
- 
- 	err = alloc_eq_pages(eq);
- 	if (err) {
-@@ -752,18 +752,28 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
-  **/
- static void remove_eq(struct hinic_eq *eq)
- {
--	struct msix_entry *entry = &eq->msix_entry;
--
--	free_irq(entry->vector, eq);
-+	hinic_set_msix_state(eq->hwif, eq->msix_entry.entry,
-+			     HINIC_MSIX_DISABLE);
-+	free_irq(eq->msix_entry.vector, eq);
- 
- 	if (eq->type == HINIC_AEQ) {
- 		struct hinic_eq_work *aeq_work = &eq->aeq_work;
- 
- 		cancel_work_sync(&aeq_work->work);
-+		/* clear aeq_len to avoid hw access host memory */
-+		hinic_hwif_write_reg(eq->hwif,
-+				     HINIC_CSR_AEQ_CTRL_1_ADDR(eq->q_id), 0);
- 	} else if (eq->type == HINIC_CEQ) {
- 		tasklet_kill(&eq->ceq_tasklet);
-+		/* clear ceq_len to avoid hw access host memory */
-+		hinic_hwif_write_reg(eq->hwif,
-+				     HINIC_CSR_CEQ_CTRL_1_ADDR(eq->q_id), 0);
- 	}
- 
-+	/* update cons_idx to avoid invalid interrupt */
-+	eq->cons_idx = hinic_hwif_read_reg(eq->hwif, EQ_PROD_IDX_REG_ADDR(eq));
-+	eq_update_ci(eq, EQ_NOT_ARMED);
++#ifndef SOL_DCCP
++#define SOL_DCCP 269
++#endif
 +
- 	free_eq_pages(eq);
- }
- 
+ static const char *IP4_ADDR = "127.0.0.1";
+ static const char *IP6_ADDR = "::1";
+ static const char *IP4_MAPPED6 = "::ffff:127.0.0.1";
 -- 
 2.20.1
 
