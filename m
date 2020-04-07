@@ -2,205 +2,201 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B009C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A672FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC9020730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDE62072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:58:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QXKT36Hq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F8htgRGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgDGP6S (ORCPT
+        id S1727868AbgDGP6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:58:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47945 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726889AbgDGP6S (ORCPT
+        Tue, 7 Apr 2020 11:58:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33235 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbgDGP6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:58:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586275096;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yUYJ5bzo+BJgODaE1JfQ2ZwXtILNlfRLeWjodd722hM=;
-        b=QXKT36HqNxAknme6knr7Ko2ovswjbg6yzzWZ4zja+w+P4raeSR1UmhAQElcibhNZQaepQ5
-        tSm9mabjC1jh5OMgj3HMJxpxYvsyT/X2fDMSgWp5ij3U6fJYqjxYzWWZrEn60UhzkykB1t
-        tLHcx5c2R7paQORdBaQR78CiT547RGw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-dKrGDez7O2ilzpapPbNMew-1; Tue, 07 Apr 2020 11:58:12 -0400
-X-MC-Unique: dKrGDez7O2ilzpapPbNMew-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9A78DB61;
-        Tue,  7 Apr 2020 15:58:10 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EC4560BEC;
-        Tue,  7 Apr 2020 15:58:02 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 09:58:01 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
-Message-ID: <20200407095801.648b1371@w520.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
-References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
-        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
-        <20200402165954.48d941ee@w520.home>
-        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
-        <20200403112545.6c115ba3@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+        Tue, 7 Apr 2020 11:58:46 -0400
+Received: by mail-pf1-f193.google.com with SMTP id c138so1653376pfc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 08:58:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=R9/y2y6gn2TBTORGnx9cck+v00h9R2uXMo/O04FD5HA=;
+        b=F8htgRGm1CMzCma9xbvHKrRO+AM4D+0wHNBAPKbzeh3LQCvPCZCUUXAfqRi5jKd5oD
+         xzqNCqjH2krNw2h9ujTHdxgpqBh96iGcm3x/ApH9AUwU6G25sRhNncGLap6WZu1tWvZH
+         55qenGKcfA4CKqFR2PEaaYHe8BMufENVxLBx4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R9/y2y6gn2TBTORGnx9cck+v00h9R2uXMo/O04FD5HA=;
+        b=fbepzAPwJnpNMEc2betWy6PHDMD87WG9GraTrhzd64Ms7A1bc/dlinCGemr7FBF0t4
+         +zCQfq4UcYSP8pbKHKaKuQcbRwGLtzV3lG7qkdxNUWz6owDPKisAIKWyeWFzv9DS8pPH
+         F0aQO7zUbhbFbqJSPDryVqcczLCrlPxWCpDTqOj5Wn4EB26tRTF1RBEjT+MBbzobon8A
+         2WiFNw5ptT6L1F+DMEksW9VfsW3UcWJ9/CBxYerz6M4dAU/jDs0yS2tn2sOMwXiQP1z4
+         B1IM3nsCUY8jlJ7dOufgHLvDN/9eGmYB1eHLpEHtbcqGZgwHGsdRhix3CiAWRkmL6mRL
+         kIFg==
+X-Gm-Message-State: AGi0PubV650Iv836DWXmnizZndCNsvRY4qpkccei4aMq8nDkdhXArPIp
+        CEm9DEgV6U0RlDNw6Vkeb21HCw==
+X-Google-Smtp-Source: APiQypKP4MA4++iYJxvwc1ZhD9QiNn1B48cCrdnsUrWjnVs4jm3TEl4QrKEW0A30kDRvKDV2/odVRA==
+X-Received: by 2002:aa7:9a92:: with SMTP id w18mr3167329pfi.95.1586275123363;
+        Tue, 07 Apr 2020 08:58:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p22sm13768978pgn.73.2020.04.07.08.58.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 08:58:42 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 08:58:41 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH 1/3] binfmt: Move install_exec_creds after setup_new_exec
+ to match binfmt_elf
+Message-ID: <202004070858.4644D9F529@keescook>
+References: <87blobnq02.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
+ <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
+ <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
+ <87lfnda3w3.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
+ <87wo6s3wxd.fsf_-_@x220.int.ebiederm.org>
+ <87o8s43wuq.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o8s43wuq.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Apr 2020 04:26:23 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
-
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Saturday, April 4, 2020 1:26 AM  
-> [...]
-> > > > > +	if (!pasid_cap.control_reg.paside) {
-> > > > > +		pr_debug("%s: its PF's PASID capability is not enabled\n",
-> > > > > +			dev_name(&vdev->pdev->dev));
-> > > > > +		ret = 0;
-> > > > > +		goto out;
-> > > > > +	}  
-> > > >
-> > > > What happens if the PF's PASID gets disabled while we're using it??  
-> > >
-> > > This is actually the open I highlighted in cover letter. Per the reply
-> > > from Baolu, this seems to be an open for bare-metal all the same.
-> > > https://lkml.org/lkml/2020/3/31/95  
-> > 
-> > Seems that needs to get sorted out before we can expose this.  Maybe
-> > some sort of registration with the PF driver that PASID is being used
-> > by a VF so it cannot be disabled?  
+On Mon, Apr 06, 2020 at 08:31:25PM -0500, Eric W. Biederman wrote:
 > 
-> I guess we may do vSVA for PF first, and then adding VF vSVA later
-> given above additional need. It's not necessarily to enable both
-> in one step.
+> In 2016 Linus moved install_exec_creds immediately after
+> setup_new_exec, in binfmt_elf as a cleanup and as part of closing a
+> potential information leak.
 > 
-> [...]
-> > > > > @@ -1604,6 +1901,18 @@ static int vfio_ecap_init(struct  
-> > vfio_pci_device *vdev)  
-> > > > >  	if (!ecaps)
-> > > > >  		*(u32 *)&vdev->vconfig[PCI_CFG_SPACE_SIZE] = 0;
-> > > > >
-> > > > > +#ifdef CONFIG_PCI_ATS
-> > > > > +	if (pdev->is_virtfn) {
-> > > > > +		struct pci_dev *physfn = pdev->physfn;
-> > > > > +
-> > > > > +		ret = vfio_pci_add_emulated_cap_for_vf(vdev,
-> > > > > +					physfn, epos_max, prev);
-> > > > > +		if (ret)
-> > > > > +			pr_info("%s, failed to add special caps for VF %s\n",
-> > > > > +				__func__, dev_name(&vdev->pdev->dev));
-> > > > > +	}
-> > > > > +#endif  
-> > > >
-> > > > I can only imagine that we should place the caps at the same location
-> > > > they exist on the PF, we don't know what hidden registers might be
-> > > > hiding in config space.  
+> Perform the same cleanup for the other binary formats.
 > 
-> Is there vendor guarantee that hidden registers will locate at the
-> same offset between PF and VF config space? 
-
-I'm not sure if the spec really precludes hidden registers, but the
-fact that these registers are explicitly outside of the capability
-chain implies they're only intended for device specific use, so I'd say
-there are no guarantees about anything related to these registers.
-
-FWIW, vfio started out being more strict about restricting config space
-access to defined capabilities, until...
-
-commit a7d1ea1c11b33bda2691f3294b4d735ed635535a
-Author: Alex Williamson <alex.williamson@redhat.com>
-Date:   Mon Apr 1 09:04:12 2013 -0600
-
-    vfio-pci: Enable raw access to unassigned config space
-    
-    Devices like be2net hide registers between the gaps in capabilities
-    and architected regions of PCI config space.  Our choices to support
-    such devices is to either build an ever growing and unmanageable white
-    list or rely on hardware isolation to protect us.  These registers are
-    really no different than MMIO or I/O port space registers, which we
-    don't attempt to regulate, so treat PCI config space in the same way.
-
-> > > but we are not sure whether the same location is available on VF. In
-> > > this patch, it actually places the emulated cap physically behind the
-> > > cap which lays farthest (its offset is largest) within VF's config space
-> > > as the PCIe caps are linked in a chain.  
-> > 
-> > But, as we've found on Broadcom NICs (iirc), hardware developers have a
-> > nasty habit of hiding random registers in PCI config space, outside of
-> > defined capabilities.  I feel like IGD might even do this too, is that
-> > true?  So I don't think we can guarantee that just because a section of
-> > config space isn't part of a defined capability that its unused.  It
-> > only means that it's unused by common code, but it might have device
-> > specific purposes.  So of the PCIe spec indicates that VFs cannot
-> > include these capabilities and virtialization software needs to
-> > emulate them, we need somewhere safe to place them in config space, and
-> > simply placing them off the end of known capabilities doesn't give me
-> > any confidence.  Also, hardware has no requirement to make compact use
-> > of extended config space.  The first capability must be at 0x100, the
-> > very next capability could consume all the way to the last byte of the
-> > 4K extended range, and the next link in the chain could be somewhere in
-> > the middle.  Thanks,
-> >   
+> Different binary formats doing the same things the same way makes exec
+> easier to reason about and easier to maintain.
 > 
-> Then what would be a viable option? Vendor nasty habit implies
-> no standard, thus I don't see how VFIO can find a safe location
-> by itself. Also curious how those hidden registers are identified
-> by VFIO and employed with proper r/w policy today. If sort of quirks
-> are used, then could such quirk way be extended to also carry
-> the information about vendor specific safe location? When no
-> such quirk info is provided (the majority case), VFIO then finds
-> out a free location to carry the new cap.
+> Putting install_exec_creds immediate after setup_new_exec makes many
+> simplifications possible in the code.
+> 
+> Ref: 9f834ec18def ("binfmt_elf: switch to new creds when switching to new mm")
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-See above commit, rather than quirks we allow raw access to any config
-space outside of the capability chain.  My preference for trying to
-place virtual capabilities at the same offset as the capability exists
-on the PF is my impression that the PF config space is often a template
-for the VF config space.  The PF and VF are clearly not independent
-devices, they share design aspects, and sometimes drivers.  Therefore
-if I was a lazy engineer trying to find a place to hide a register in
-config space (and ignoring vendor capabilities*), I'd probably put it
-in the same place on both devices.  Thus if we maintain the same
-capability footprint as the PF, we have a better chance of avoiding
-them.  It's a gamble and maybe we're overthinking it, but this has
-always been a concern when adding virtual capabilities to a physical
-device.  We can always fail over to an approach where we simply find
-free space.  Thanks,
+Acked-by: Kees Cook <keescook@chromium.org>
 
-Alex
+-Kees
 
-* ISTR the Broadcom device implemented the hidden register in standard
-  config space, which was otherwise entirely packed, ie. there was no
-  room for the register to be implemented as a vendor cap.
+> ---
+>  arch/x86/ia32/ia32_aout.c | 3 +--
+>  fs/binfmt_aout.c          | 2 +-
+>  fs/binfmt_elf_fdpic.c     | 2 +-
+>  fs/binfmt_flat.c          | 3 +--
+>  4 files changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/ia32/ia32_aout.c b/arch/x86/ia32/ia32_aout.c
+> index 9bb71abd66bd..37b36a8ce5fa 100644
+> --- a/arch/x86/ia32/ia32_aout.c
+> +++ b/arch/x86/ia32/ia32_aout.c
+> @@ -140,6 +140,7 @@ static int load_aout_binary(struct linux_binprm *bprm)
+>  	set_personality_ia32(false);
+>  
+>  	setup_new_exec(bprm);
+> +	install_exec_creds(bprm);
+>  
+>  	regs->cs = __USER32_CS;
+>  	regs->r8 = regs->r9 = regs->r10 = regs->r11 = regs->r12 =
+> @@ -156,8 +157,6 @@ static int load_aout_binary(struct linux_binprm *bprm)
+>  	if (retval < 0)
+>  		return retval;
+>  
+> -	install_exec_creds(bprm);
+> -
+>  	if (N_MAGIC(ex) == OMAGIC) {
+>  		unsigned long text_addr, map_size;
+>  
+> diff --git a/fs/binfmt_aout.c b/fs/binfmt_aout.c
+> index 8e8346a81723..ace587b66904 100644
+> --- a/fs/binfmt_aout.c
+> +++ b/fs/binfmt_aout.c
+> @@ -162,6 +162,7 @@ static int load_aout_binary(struct linux_binprm * bprm)
+>  	set_personality(PER_LINUX);
+>  #endif
+>  	setup_new_exec(bprm);
+> +	install_exec_creds(bprm);
+>  
+>  	current->mm->end_code = ex.a_text +
+>  		(current->mm->start_code = N_TXTADDR(ex));
+> @@ -174,7 +175,6 @@ static int load_aout_binary(struct linux_binprm * bprm)
+>  	if (retval < 0)
+>  		return retval;
+>  
+> -	install_exec_creds(bprm);
+>  
+>  	if (N_MAGIC(ex) == OMAGIC) {
+>  		unsigned long text_addr, map_size;
+> diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+> index 240f66663543..6c94c6d53d97 100644
+> --- a/fs/binfmt_elf_fdpic.c
+> +++ b/fs/binfmt_elf_fdpic.c
+> @@ -353,6 +353,7 @@ static int load_elf_fdpic_binary(struct linux_binprm *bprm)
+>  		current->personality |= READ_IMPLIES_EXEC;
+>  
+>  	setup_new_exec(bprm);
+> +	install_exec_creds(bprm);
+>  
+>  	set_binfmt(&elf_fdpic_format);
+>  
+> @@ -434,7 +435,6 @@ static int load_elf_fdpic_binary(struct linux_binprm *bprm)
+>  	current->mm->start_stack = current->mm->start_brk + stack_size;
+>  #endif
+>  
+> -	install_exec_creds(bprm);
+>  	if (create_elf_fdpic_tables(bprm, current->mm,
+>  				    &exec_params, &interp_params) < 0)
+>  		goto error;
+> diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+> index 831a2b25ba79..1a1d1fcb893f 100644
+> --- a/fs/binfmt_flat.c
+> +++ b/fs/binfmt_flat.c
+> @@ -541,6 +541,7 @@ static int load_flat_file(struct linux_binprm *bprm,
+>  		/* OK, This is the point of no return */
+>  		set_personality(PER_LINUX_32BIT);
+>  		setup_new_exec(bprm);
+> +		install_exec_creds(bprm);
+>  	}
+>  
+>  	/*
+> @@ -963,8 +964,6 @@ static int load_flat_binary(struct linux_binprm *bprm)
+>  		}
+>  	}
+>  
+> -	install_exec_creds(bprm);
+> -
+>  	set_binfmt(&flat_format);
+>  
+>  #ifdef CONFIG_MMU
+> -- 
+> 2.25.0
+> 
 
+-- 
+Kees Cook
