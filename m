@@ -2,123 +2,138 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD43C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E190C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB982063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E932063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mpn+6KPx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q/OfXybI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgDGSAR (ORCPT
+        id S1726690AbgDGSAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:00:17 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:54692 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726417AbgDGSAR (ORCPT
+        Tue, 7 Apr 2020 14:00:32 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35923 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgDGSAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:00:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586282416; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=dk+x0rTY0DaiUKQYsPBwoDgbCv6jZ7mH7/iIl9UgojQ=; b=mpn+6KPx3kOrqFmSaTGalpbzEooCphuhvGCJlVWg9DVzrK6Noqve/YJIz4BPorfPYJ7+JCp+
- rKXlqC6b9cwk0B9Vbda7F93QNLB4OEdXdd1AKGLyInb8Hc6D4sUJhLkrKy4xIoUKeG0rws0q
- /bva+LkE8dFrwnLq71jbocQ+oF4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8cbfa2.7f5469d50960-smtp-out-n05;
- Tue, 07 Apr 2020 18:00:02 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5F011C44788; Tue,  7 Apr 2020 18:00:02 +0000 (UTC)
-Received: from [192.168.1.10] (cpe-70-95-5-60.san.res.rr.com [70.95.5.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sidgup)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D70FC433F2;
-        Tue,  7 Apr 2020 18:00:01 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D70FC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
-Subject: Re: [PATCH 2/2] remoteproc: core: Prevent sleep when rproc crashes
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org
-References: <1582164713-6413-1-git-send-email-sidgup@codeaurora.org>
- <1582164713-6413-3-git-send-email-sidgup@codeaurora.org>
- <20200224185334.GB9477@xps15>
-From:   Siddharth Gupta <sidgup@codeaurora.org>
-Message-ID: <1a6a8661-d44f-adad-b262-ff42633c7b38@codeaurora.org>
-Date:   Tue, 7 Apr 2020 11:00:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 14:00:31 -0400
+Received: by mail-pf1-f193.google.com with SMTP id n10so1155446pff.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 11:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lL9PIYFwO5H6pFnjqwU20khB08jFZDfwSO7ZNczzL60=;
+        b=Q/OfXybIX8XlBl388UsB11QYwnOCa77KIKk/PH2qaCLJ0tvBd2Dw/XQfo5DA/0q5eU
+         5Pz9U+Dabp+E29nomZdI8TCjGZbnxVwkEmJffIc3mGlnqjfgGbNixLmi56NjfVPKmM4k
+         ceiMJ3AjBIB7lOHBJ8MH3rvgSniG1nSLjEyEVsCkU3INp01/OCa1XolRbiJd3STSkisO
+         /ohkM1yAal9IN0b5N2vDDxbpYK8+HeqsvxDsH20mN5tpz/feTewAtsa7gWBv+uNkFhKv
+         a5cDtTsMDv6ZDSqZSAPg464bqGFlqT3LBqOaXCXHnD3Uh1M6Db34nMS+FxWZFVTGW4OQ
+         kI+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lL9PIYFwO5H6pFnjqwU20khB08jFZDfwSO7ZNczzL60=;
+        b=QIhMvGpcynKH7lIn5NjE/iX711EB0YBOf5NNPRt5rDruaa/memB95Lz/3Bs9ROUvwl
+         euVYgldA+2+Xo9J0Dovsj5w8VDzHUcpva/V7SUUeTvPo5Z+KlbeDe//3u6IHVZeOzRgf
+         yYu2qpS+waVFZLgZ587jSyy8loAGJ0QRcjzlxFZAOSnI+QNdG105YgR62O64AjsBRWx+
+         O0lxvNCWynLzm/Irhx/Ay6CfgI9KlD1WT56Vm/41yhnE7TF453g0/V8Qswm+vEtUquG9
+         5onmha4H3/Qoa15M+W6HkRp+uaGBP+L9rYrdP6Wp95ilc/G1f2P2GHC1Gxe90x9vIssX
+         m98A==
+X-Gm-Message-State: AGi0PuZXQSo33kpyiKoy9K/9xYYNO8G1Fh/e2Ss7gP3gRQRviIE2nNlG
+        gbzauae/TOYR76czExD2+SaG5A==
+X-Google-Smtp-Source: APiQypLwgDFHd8YN7yGnVEhfww22EfQF+geZ4hFAxh1KXBNTLxa1/8yF1fGo9CTCGQXJ0+7rbWdRbA==
+X-Received: by 2002:a62:5f06:: with SMTP id t6mr3817977pfb.192.1586282427135;
+        Tue, 07 Apr 2020 11:00:27 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
+        by smtp.gmail.com with ESMTPSA id 66sm14769704pfb.150.2020.04.07.11.00.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 11:00:26 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 11:00:23 -0700
+From:   Fangrui Song <maskray@google.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] MIPS: Truncate load-y into 32bit for 32bit kernel
+Message-ID: <20200407180023.vpwkhtrg3v6inqtt@google.com>
+References: <20200405082451.694910-1-jiaxun.yang@flygoat.com>
+ <20200407080611.859256-1-jiaxun.yang@flygoat.com>
+ <CAKwvOd=Upj_OcrhBnqf1=woCRm-g2wqjv882R0HQeMJu12Uq9w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200224185334.GB9477@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=Upj_OcrhBnqf1=woCRm-g2wqjv882R0HQeMJu12Uq9w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Mathieu,
-I will be sending a revised patchset soon. Will try to address your 
-comments there.
-
-Thanks,
-Siddharth
-
-On 2/24/2020 10:53 AM, Mathieu Poirier wrote:
-> On Wed, Feb 19, 2020 at 06:11:53PM -0800, Siddharth Gupta wrote:
->> Remoteproc recovery should be fast and any delay will have an impact on the
->> user-experience. Use power management APIs (pm_stay_awake and pm_relax) to
->> ensure that the system does not go to sleep.
-> When you say "ensure the system does not go to sleep", you're referring to the
-> system going idle from the CPUidle subsystem?
->
->> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
->> ---
->>   drivers/remoteproc/remoteproc_core.c | 4 ++++
->>   1 file changed, 4 insertions(+)
+On 2020-04-07, Nick Desaulniers wrote:
+>On Tue, Apr 7, 2020 at 1:07 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 >>
->> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->> index 5ab65a4..52e318c 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -1712,6 +1712,8 @@ static void rproc_crash_handler_work(struct work_struct *work)
->>   
->>   	if (!rproc->recovery_disabled)
->>   		rproc_trigger_recovery(rproc);
->> +
->> +	pm_relax(&rproc->dev);
->>   }
->>   
->>   /**
->> @@ -2242,6 +2244,8 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
->>   		return;
->>   	}
->>   
->> +	pm_stay_awake(&rproc->dev);
->> +
-> I fail to understand how this can be useful since there is no HW associted to
-> rproc->dev...  Is it possible for you to elaborate more on the problem you're
-> trying to fix?
+>> LLD failed to link vmlinux with 64bit load address for 32bit ELF
+>> while bfd will strip 64bit address into 32bit silently.
+>> To fix LLD build, we should truncate load address provided by platform
+>> into 32bit for 32bit kernel.
+>>
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> Reviewed-by: Fangrui Song <maskray@google.com>
+>> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+>>
+>> --
+>> V2: Take MaskRay's shell magic.
 >
-> Thanks,
-> Mathieu
+>V2 is way too clever, V1 was much more readable.
+
+This is difficult:/
+https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_04
+The POSIX shell is only required to do signed long integer arithmetic.
+"signed long" can be 32-bit.
+
+awk may not provide precision more than a double ("... decimal-floating-constant token as specified
+by the ISO C standard")
+
+   % gawk 'BEGIN {printf("%x", (0xffffffff80101234 % 0x100000000))}' /dev/null
+   80101000
+
+>Can this tag be added to the commit to help us track when and where it lands?
+>Link: https://github.com/ClangBuiltLinux/linux/issues/786
+
+And this tag for GNU ld enhancement:
+
+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=25784
+
+>> ---
+>>  arch/mips/Makefile | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+>> index e1c44aed8156..f8fd3c39fb55 100644
+>> --- a/arch/mips/Makefile
+>> +++ b/arch/mips/Makefile
+>> @@ -286,6 +286,9 @@ ifdef CONFIG_64BIT
+>>        $(error CONFIG_CPU_DADDI_WORKAROUNDS unsupported without -msym32)
+>>      endif
+>>    endif
+>> +else
+>> +       # Truncate address into 32-bit
+>> +       load-y := 0x$(shell echo "$(load-y)" | rev | head -c 8 | rev)
+>>  endif
+>>
+>>  KBUILD_AFLAGS  += $(cflags-y)
+>> --
 >
->>   	dev_err(&rproc->dev, "crash detected in %s: type %s\n",
->>   		rproc->name, rproc_crash_to_string(type));
->>   
->> -- 
->> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
+>-- 
+>Thanks,
+>~Nick Desaulniers
