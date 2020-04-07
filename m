@@ -2,301 +2,157 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AD4C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C680FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF1E20731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E6EF20719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ObzsuT1l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="m5BFSB4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgDGKCA (ORCPT
+        id S1728261AbgDGKCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:02:00 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:60642 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbgDGKCA (ORCPT
+        Tue, 7 Apr 2020 06:02:16 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38286 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgDGKCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:02:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586253719; x=1617789719;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=rVhxnWJVglQxQxZQLKjyRxBGZxhOkGnjfilc/VW0QuM=;
-  b=ObzsuT1lQgAFkIAhsKfdTu/YwQj8as2OSCFkPgxXdI38nSSVVtK+qc3b
-   UFbFK9RLEeJkzzeqFYSNpVCvkDQqfTzZ3IyR8P7nC/hBz9JXE/OUMWKZa
-   MP/K6rS0TV2phub/VOQgvpBDJdZDtPlfJC36I0+QAKqxKk6sCYh90G72w
-   Q=;
-IronPort-SDR: 8e+Xhw0Nt+E1Z4jjN9FYkvbs5Ywgx6IHbEWoWbM1oCIzFG7MCyjavNgae0WeL2+2JiSJrFOYVj
- THy8rHQX4bEQ==
-X-IronPort-AV: E=Sophos;i="5.72,353,1580774400"; 
-   d="scan'208";a="37096690"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 07 Apr 2020 10:01:57 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id A5462A1856;
-        Tue,  7 Apr 2020 10:01:54 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Apr 2020 10:01:54 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.171) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 7 Apr 2020 10:01:40 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <dwmw@amazon.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <shakeelb@google.com>, <shuah@kernel.org>,
-        <sj38.park@gmail.com>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC v6 2/7] mm/damon: Account age of target regions
-Date:   Tue, 7 Apr 2020 12:00:01 +0200
-Message-ID: <20200407100007.3894-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200407100007.3894-1-sjpark@amazon.com>
-References: <20200407100007.3894-1-sjpark@amazon.com>
+        Tue, 7 Apr 2020 06:02:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2wR2xqOs8l+OydThwaZ/J8QQDNxkPOYEU/7GzqzAa3M=; b=m5BFSB4gVHf+ffBnIzdw2gzUY
+        wYLYy5Y0VK2BwlAyzTKiAhBnFbd4tft0EP3wZxXv1Vn+oKtv6/Q9jbMnoqA64m5cNzOeU9H6FkysY
+        /BApbRWhjPi3yuFLOZpGvw+24y0Y7sz50JPO3tw+6r+GHd9VPv0T4Yh4nfRnFtJVPjkcPs2sPUctL
+        HktSJN0U63pN2g7MioenRIARxbvLaCNvEJInUlMTLmLWjDaB/AMU8rbmCg/VZJB+FEDVMzQcTB8YI
+        30jZXG3OvCyhOrHD8nZ2rxDyl+oS4PtHG5NB8e5uFJILtGl5xdF6Dx89XcFBFmY17Hh1ZmQnDvQbK
+        SmW2L+DCQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:35146)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jLl3U-0007DE-Og; Tue, 07 Apr 2020 11:02:05 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jLl3T-0007DO-VB; Tue, 07 Apr 2020 11:02:03 +0100
+Date:   Tue, 7 Apr 2020 11:02:03 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     ebiederm@xmission.com, kexec@lists.infradead.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, mripard@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Trying to kexec on Allwinner A80
+Message-ID: <20200407100203.GK25745@shell.armlinux.org.uk>
+References: <20200406082720.GA31279@Red>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.171]
-X-ClientProxiedBy: EX13D34UWA002.ant.amazon.com (10.43.160.245) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406082720.GA31279@Red>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+On Mon, Apr 06, 2020 at 10:27:20AM +0200, Corentin Labbe wrote:
+> Hello
+> 
+> I am trying to add the last missing Allwinner Soc in kernelci: the A80.
+> But this SoC does not have any way to be used in kernelci, no USB nor network in uboot.
+> So I have tried to fake uboot since the kernel has network support and run the new kernel via kexec.
+> 
+> But kexec 2.0.18 fail to work:
+> kexec --force /tmp/kernel --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
 
-DAMON can be used as a primitive for data access pattern awared memory
-maangement optimizations.  However, users who want such optimizations
-should run DAMON, read the monitoring results, analyze it, plan a new
-memory management scheme, and apply the new scheme by themselves.  It
-would not be too hard, but still require some level of efforts.  For
-complicated optimizations, this effort is inevitable.
+As I mentioned in my other reply, this apparent "kexec" command line
+does not seem to reflect the arguments you actually used to invoke
+the kexec output below.
 
-That said, in many cases, users would simply want to apply an actions to
-a memory region of a specific size having a specific access frequency
-for a specific time.  For example, "page out a memory region larger than
-100 MiB but having a low access frequency more than 10 minutes", or "Use
-THP for a memory region larger than 2 MiB having a high access frequency
-for more than 2 seconds".
+> syscall kexec_file_load not available.
 
-For such optimizations, users will need to first account the age of each
-region themselves.  To reduce such efforts, this commit implements a
-simple age account of each region in DAMON.  For each aggregation step,
-DAMON compares the access frequency and start/end address of each region
-with those from last aggregation and reset the age of the region if the
-change is significant.  Else, the age is incremented.
+This message is produced by do_kexec_file_load().  This function is only
+invoked if the do_kexec_file_syscall flag in main() is set.  This flag
+is only set if one of:
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |   5 ++
- mm/damon.c            | 105 ++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 106 insertions(+), 4 deletions(-)
+	--kexec-file-syscall
+	--kexec-syscall
+	--kexec-syscall-auto
+	-s
+	-c
+	-a
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 47fb0ec03030..49205c71c63d 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -22,6 +22,11 @@ struct damon_region {
- 	unsigned long sampling_addr;
- 	unsigned int nr_accesses;
- 	struct list_head list;
-+
-+	unsigned int age;
-+	unsigned long last_vm_start;
-+	unsigned long last_vm_end;
-+	unsigned int last_nr_accesses;
- };
- 
- /* Represents a monitoring target task */
-diff --git a/mm/damon.c b/mm/damon.c
-index a40d044af45f..7e56011b9b5f 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -78,6 +78,10 @@ static struct damon_region *damon_new_region(struct damon_ctx *ctx,
- 	region->nr_accesses = 0;
- 	INIT_LIST_HEAD(&region->list);
- 
-+	region->age = 0;
-+	region->last_vm_start = vm_start;
-+	region->last_vm_end = vm_end;
-+
- 	return region;
- }
- 
-@@ -659,11 +663,44 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- 					sizeof(r->nr_accesses));
- 			trace_damon_aggregated(t->pid, nr,
- 					r->vm_start, r->vm_end, r->nr_accesses);
-+			r->last_nr_accesses = r->nr_accesses;
- 			r->nr_accesses = 0;
- 		}
- 	}
- }
- 
-+#define diff_of(a, b) (a > b ? a - b : b - a)
-+
-+/*
-+ * Increase or reset the age of the given monitoring target region
-+ *
-+ * If the area or '->nr_accesses' has changed significantly, reset the '->age'.
-+ * Else, increase the age.
-+ */
-+static void damon_do_count_age(struct damon_region *r, unsigned int threshold)
-+{
-+	unsigned long sz_threshold = (r->vm_end - r->vm_start) / 5;
-+
-+	if (diff_of(r->vm_start, r->last_vm_start) +
-+			diff_of(r->vm_end, r->last_vm_end) > sz_threshold)
-+		r->age = 0;
-+	else if (diff_of(r->nr_accesses, r->last_nr_accesses) > threshold)
-+		r->age = 0;
-+	else
-+		r->age++;
-+}
-+
-+static void kdamond_count_age(struct damon_ctx *c, unsigned int threshold)
-+{
-+	struct damon_task *t;
-+	struct damon_region *r;
-+
-+	damon_for_each_task(c, t) {
-+		damon_for_each_region(r, t)
-+			damon_do_count_age(r, threshold);
-+	}
-+}
-+
- #define sz_damon_region(r) (r->vm_end - r->vm_start)
- 
- /*
-@@ -672,33 +709,86 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- static void damon_merge_two_regions(struct damon_region *l,
- 				struct damon_region *r)
- {
--	l->nr_accesses = (l->nr_accesses * sz_damon_region(l) +
--			r->nr_accesses * sz_damon_region(r)) /
--			(sz_damon_region(l) + sz_damon_region(r));
-+	unsigned long sz_l = sz_damon_region(l), sz_r = sz_damon_region(r);
-+
-+	l->nr_accesses = (l->nr_accesses * sz_l + r->nr_accesses * sz_r) /
-+			(sz_l + sz_r);
-+	l->age = (l->age * sz_l + r->age * sz_r) / (sz_l + sz_r);
- 	l->vm_end = r->vm_end;
- 	damon_destroy_region(r);
- }
- 
--#define diff_of(a, b) (a > b ? a - b : b - a)
-+static inline void set_last_area(struct damon_region *r, struct region *last)
-+{
-+	r->last_vm_start = last->start;
-+	r->last_vm_end = last->end;
-+}
-+
-+static inline void get_last_area(struct damon_region *r, struct region *last)
-+{
-+	last->start = r->last_vm_start;
-+	last->end = r->last_vm_end;
-+}
- 
- /*
-  * Merge adjacent regions having similar access frequencies
-  *
-  * t		task that merge operation will make change
-  * thres	merge regions having '->nr_accesses' diff smaller than this
-+ *
-+ * After each merge, the biggest mergee region becomes the last shape of the
-+ * new region.  If two regions are split from one region at the end of previous
-+ * aggregation interval are merged into one region, we handle the two regions
-+ * as one big mergee, because it can lead to unproper last shape record if we
-+ * don't do so.
-+ *
-+ * To understand why we take special care for regions split from one region,
-+ * suppose that a region of size 10 has split into two regions of size 4 and 6.
-+ * Two regions show similar access frequency for next aggregation interval and
-+ * thus now be merged into one region again.  Because the split is made
-+ * regardless of the access pattern, DAMON should say the region of size 10 had
-+ * no area change for last aggregation interval.  However, if the two mergees
-+ * are handled seperatively, DAMON will say the merged region has changed its
-+ * size from 6 to 10.
-  */
- static void damon_merge_regions_of(struct damon_task *t, unsigned int thres)
- {
- 	struct damon_region *r, *prev = NULL, *next;
-+	struct region biggest_mergee;	/* the biggest region being merged */
-+	unsigned long sz_biggest = 0;	/* size of the biggest_mergee */
-+	unsigned long sz_mergee = 0;	/* size of current mergee */
- 
- 	damon_for_each_region_safe(r, next, t) {
- 		if (!prev || prev->vm_end != r->vm_start ||
- 		    diff_of(prev->nr_accesses, r->nr_accesses) > thres) {
-+			if (sz_biggest)
-+				set_last_area(prev, &biggest_mergee);
-+
- 			prev = r;
-+			sz_biggest = sz_damon_region(prev);
-+			get_last_area(prev, &biggest_mergee);
- 			continue;
- 		}
-+
-+
-+		/* Set size of current mergee and biggest mergee */
-+		sz_mergee += sz_damon_region(r);
-+		if (sz_mergee > sz_biggest) {
-+			sz_biggest = sz_mergee;
-+			get_last_area(r, &biggest_mergee);
-+		}
-+
-+		/*
-+		 * If next region and current region is not originated from
-+		 * same region, initialize the size of mergee.
-+		 */
-+		if (r->last_vm_start != next->last_vm_start)
-+			sz_mergee = 0;
-+
- 		damon_merge_two_regions(prev, r);
- 	}
-+	if (sz_biggest)
-+		set_last_area(prev, &biggest_mergee);
- }
- 
- /*
-@@ -731,6 +821,12 @@ static void damon_split_region_at(struct damon_ctx *ctx,
- 	struct damon_region *new;
- 
- 	new = damon_new_region(ctx, r->vm_start + sz_r, r->vm_end);
-+	new->age = r->age;
-+	new->last_vm_start = r->vm_start;
-+	new->last_nr_accesses = r->last_nr_accesses;
-+
-+	r->last_vm_start = r->vm_start;
-+	r->last_vm_end = r->vm_end;
- 	r->vm_end = new->vm_start;
- 
- 	damon_insert_region(new, r, damon_next_region(r));
-@@ -912,6 +1008,7 @@ static int kdamond_fn(void *data)
- 
- 		if (kdamond_aggregate_interval_passed(ctx)) {
- 			kdamond_merge_regions(ctx, max_nr_accesses / 10);
-+			kdamond_count_age(ctx, max_nr_accesses / 10);
- 			if (ctx->aggregate_cb)
- 				ctx->aggregate_cb(ctx);
- 			kdamond_reset_aggregated(ctx);
+are provided on the kexec command line.  Your command line above does
+not contain any of those arguments, so either the command line is not
+what you used, or you are using a patched kexec, or your compiler is
+grossly miscompiling kexec.
+
+> Try gzip decompression.
+> kernel: 0xb6535008 kernel_size: 0x853200
+> MEMORY RANGES
+> 0000000020000000-000000009fffffff (0)
+
+Then there's the debug output, which is only produced if the
+kexec_debug global is set, which in turn is only set if --debug or -d
+is supplied on the kexec command line - which again, your kexec
+command line does not contain this.
+
+> zImage header: 0x016f2818 0x00000000 0x00853200
+> zImage size 0x853200, file size 0x853200
+> zImage requires 0x00864200 bytes
+>   offset 0x0000bae4 tag 0x5a534c4b size 8
+> Decompressed kernel sizes:
+>  text+data 0x0158b3a0 bss 0x000632f0 total 0x015ee690
+> Resulting kernel space: 0x01def5a0
+> Kernel: address=0x20008000 size=0x01def5a0
+> Initrd: address=0x21df8000 size=0x0090b6fa
+> DT    : address=0x22704000 size=0x00005c09
+> kexec_load: entry = 0x20008000 flags = 0x280000
+> nr_segments = 3
+> segment[0].buf   = 0xb6535008
+> segment[0].bufsz = 0x853204
+> segment[0].mem   = 0x20008000
+> segment[0].memsz = 0x854000
+> segment[1].buf   = 0xb5c29008
+> segment[1].bufsz = 0x90b6fa
+> segment[1].mem   = 0x21df8000
+> segment[1].memsz = 0x90c000
+> segment[2].buf   = 0x4db50
+> segment[2].bufsz = 0x5c09
+> segm[   71.039126] kexec_core: Starting new kernel
+> ent[2].mem   = 0[   71.044712] Disabling non-boot CPUs ...
+> x22704000
+> segment[2].memsz = 0x6000
+> [   71.489070] Bye!
+> 
+> 
+> I have tried also kexec-2.0.20
+> Try gzip decompression.
+> zImage header: 0x00000000 0x000019b4 0x00001000
+> zImage requires 0x008641c0 bytes
+> Could not find a free area of memory of 0x86c1c0 bytes...
+> Cannot load /tmp/kernel
+
+kexec 2.0.20 doesn't appear to have changed anything to do with how
+allocations are done.  The above output looks even more strange and
+confusing.  "zImage header" is produced by debugging prints, which
+imply that kexec_debug was set.
+
+However, the "MEMORY RANGES" output is missing - this has not gone
+away with kexec 2.0.20, it's still there, and works for me (I've
+just built and tested kexec 2.0.20).
+
+Also, the values on the "zImage header" line are completely messed
+up; the first should be the zImage magic value and it is not - that
+suggests that the file being loaded is not a zImage file, or is
+corrupted.
+
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
