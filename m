@@ -2,217 +2,100 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E76C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD06EC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 545F320771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7B120771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:48:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nZIVGBc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726626AbgDGRry (ORCPT
+        id S1726679AbgDGRsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:47:54 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:54036 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGRrx (ORCPT
+        Tue, 7 Apr 2020 13:48:16 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36058 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgDGRsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:47:53 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C9BCE803078C;
-        Tue,  7 Apr 2020 17:47:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ym6rrVGUgDYk; Tue,  7 Apr 2020 20:47:44 +0300 (MSK)
-Date:   Tue, 7 Apr 2020 20:48:06 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/7] dt-bindings: watchdog: dw-wdt: Replace legacy
- bindings file with YAML-based one
-Message-ID: <20200407174805.cbpufcyimt5daycp@ubsrv2.baikal.int>
-References: <20200306132747.14701-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132803.770DC8030792@mail.baikalelectronics.ru>
- <20200306151839.374AA80307C2@mail.baikalelectronics.ru>
+        Tue, 7 Apr 2020 13:48:16 -0400
+Received: by mail-pf1-f196.google.com with SMTP id n10so1140981pff.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:48:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=NC51PyoeamQkUwNgNNp8H/PX+EtaFEIUJWMw1TZOgI8=;
+        b=nZIVGBc4jmA4lzk0Zkn7WALd70Xd5qFDNwJxNppCL9xq1otHq76X/b0bXcWGG6I5bP
+         KVMETgaTH6b21yCO5T4HZu/i/h9PCNi7OnQdgXMl0w+EbVE7vwuxpvV2JykIHuhSjeZI
+         KTpgwFZ+6nU8HQSi0sFOyKKBCeSym/YN1wsxU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=NC51PyoeamQkUwNgNNp8H/PX+EtaFEIUJWMw1TZOgI8=;
+        b=ZCO86iR4FOSGdfXDmdDolJ9DNrNL31FCV7rPgRPJESEiCoafVtPBtnMbj7gx4s+PwX
+         2KHWoUWdTt53HikkfErdSu2T7bc0x2UwSOpX9EIMaqrOCBESQRGN+a52tl5xW93GSF7Z
+         1v6c1GUJ3ktC7BEhbeMVEWx4l6nT1PJ8KyB3mHTuoSLgZWSSue+AMKYKkUZzwVn06/Rl
+         6ki+BUn9vEpaMtdAdqkXAxUZKSbRhYkcF9gbjj4FJmL/19JOCyyqgd7JaTlcEhSJUnee
+         Aulsok2PW4pYBrEx7iOcAnHRtVgboGX53cLW6ZOgOlyBdPIXH3JowhO2pdoewLxRUq+y
+         ZA+Q==
+X-Gm-Message-State: AGi0PuZICberWjWgZOD+Cr9iF92o5eKGvuxVZRNfgbu3ClNj/gYPgf0D
+        Ebt0JuDU4rXNgkttTNVYxmbR2Q==
+X-Google-Smtp-Source: APiQypI25g0jV1NZvt8ma29F7Vt2lnrWAbATkwBHXyull3NZyvOgwZ2gvZdTN+f9ALFqpzAbFfOswg==
+X-Received: by 2002:a63:6d4a:: with SMTP id i71mr2545924pgc.445.1586281694084;
+        Tue, 07 Apr 2020 10:48:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id c14sm1696086pgi.54.2020.04.07.10.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 10:48:13 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 10:48:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     =?iso-8859-1?Q?Fr=E9d=E9ric?= Pierret 
+        <frederic.pierret@qubes-os.org>
+Cc:     re.emese@gmail.com, kernel-hardening@lists.openwall.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gcc-common.h: 'params.h' has been dropped in GCC10
+Message-ID: <202004071044.0B773CCB4B@keescook>
+References: <20200407113259.270172-1-frederic.pierret@qubes-os.org>
+ <202004070945.D6E095F7@keescook>
+ <3119553b-49dc-9d88-158f-2665f56f7b5c@qubes-os.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200306151839.374AA80307C2@mail.baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3119553b-49dc-9d88-158f-2665f56f7b5c@qubes-os.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter,
-
-On Fri, Mar 06, 2020 at 07:18:35AM -0800, Guenter Roeck wrote:
-> On 3/6/20 5:27 AM, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On Tue, Apr 07, 2020 at 07:22:55PM +0200, Frédéric Pierret wrote:
+> 
+> 
+> On 2020-04-07 18:45, Kees Cook wrote:
 > > 
-> > Modern device tree bindings are supposed to be created as YAML-files
-> > in accordane with dt-schema. This commit replaces the DW Watchdog
-> > legacy bare text bindings with YAML file. As before the the bindings
-> > states that the corresponding dts node is supposed to have a registers
-> > range reference, at least one clocks phandle reference, optional reset
-> > lines. Seeing all the platforms with DW Watchdog provide the watchdog
-> > interrupt property and since in further commit we'll alter the driver
-> > to use it for pre-timeout functionality implementation, lets declare
-> > the IRQ property to be required.
+> > Hi! Thanks for the patch. I don't think this is a hack: it's the right
+> > thing to do here, yes? GCC 10 includes this helper in gimple.h, so we
+> > can ifdef it out in gcc-common.h.
 > > 
-> 
-> First, this is not just a replacement - it changes semantics.
-> 
-> Second, I disagree with making interrupts mandatory. They are only needed
-> for pretimeout functionality, and not everyone may want to enable that.
-> I don't see the point of forcing everyone to enable and provide functionality
-> that is neither wanted or needed for a given use case. Yes, the interrupt
-> is provided by all users today, but we may have one coming up tomorrow
-> where the interrupt line is not even wired up. What then ?
+> > -Kees
+> Hi Kees,
+> Thank you very much for your comment. Would you like me to rephrase the commit including your comment too? "Hacky" mostly meaning humble modification from my point of view :)
 
-Ok. I'll leave the interrupts optional, though I would have to implement
-it in the driver as well. Is this all semantic changes you were referring to?
+Heh, no worries. I've just reproduced the failure you found with gcc 10,
+and I've updated your commit log (and added -Wno-format-diag to the plug
+builds). Here's what I've got in my tree now:
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/gcc-plugins&id=dda632f1bc6da784baab8069e26547e3f4144dbe
 
-There is one more change, which you may have also considered as semantic
-update. It's async clocks support - "pclk" clock. Would you like me to
-unpin this alteration into an additional patch? Rob?
+Thanks for the patch!
 
-I'll also provide the next fixes in v2:
-- single license with GPL-2.0-only,
-- remove copyrights (it's not right to add our copyrights here),
-- replace "additionalProperties: false" with "unevaluatedProperties: false"
-- Remove "assigned-clocks" and "assigned-clock-rates" properties
+-Kees
 
-Regards,
--Sergey
-
-> 
-> Guenter
-> 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > ---
-> >  .../devicetree/bindings/watchdog/dw_wdt.txt   | 24 -------
-> >  .../bindings/watchdog/snps,dw-wdt.yaml        | 66 +++++++++++++++++++
-> >  2 files changed, 66 insertions(+), 24 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt b/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> > deleted file mode 100644
-> > index eb0914420c7c..000000000000
-> > --- a/Documentation/devicetree/bindings/watchdog/dw_wdt.txt
-> > +++ /dev/null
-> > @@ -1,24 +0,0 @@
-> > -Synopsys Designware Watchdog Timer
-> > -
-> > -Required Properties:
-> > -
-> > -- compatible	: Should contain "snps,dw-wdt"
-> > -- reg		: Base address and size of the watchdog timer registers.
-> > -- clocks	: phandle + clock-specifier for the clock that drives the
-> > -		watchdog timer.
-> > -
-> > -Optional Properties:
-> > -
-> > -- interrupts	: The interrupt used for the watchdog timeout warning.
-> > -- resets	: phandle pointing to the system reset controller with
-> > -		line index for the watchdog.
-> > -
-> > -Example:
-> > -
-> > -	watchdog0: wd@ffd02000 {
-> > -		compatible = "snps,dw-wdt";
-> > -		reg = <0xffd02000 0x1000>;
-> > -		interrupts = <0 171 4>;
-> > -		clocks = <&per_base_clk>;
-> > -		resets = <&rst WDT0_RESET>;
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-> > new file mode 100644
-> > index 000000000000..8b30f9601c38
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/watchdog/snps,dw-wdt.yaml
-> > @@ -0,0 +1,66 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +#
-> > +# Copyright (C) 2019 BAIKAL ELECTRONICS, JSC
-> > +#
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/watchdog/snps,dw-wdt.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Synopsys Designware Watchdog Timer
-> > +
-> > +allOf:
-> > +  - $ref: "watchdog.yaml#"
-> > +
-> > +maintainers:
-> > +  - Jamie Iles <jamie@jamieiles.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: snps,dw-wdt
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    description: DW Watchdog pre-timeout interrupts.
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: Watchdog timer reference clock.
-> > +      - description: APB3 interface clock.
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: tclk
-> > +      - const: pclk
-> > +
-> > +  assigned-clocks: true
-> > +
-> > +  assigned-clock-rates: true
-> > +
-> > +  resets:
-> > +    description: Phandle to the DW Watchdog reset lane.
-> > +    maxItems: 1
-> > +
-> > +additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +
-> > +examples:
-> > +  - |
-> > +    watchdog0: watchdog@ffd02000 {
-> > +      compatible = "snps,dw-wdt";
-> > +      reg = <0xffd02000 0x1000>;
-> > +      interrupts = <0 171 4>;
-> > +      clocks = <&per_base_clk>;
-> > +      resets = <&wdt_rst>;
-> > +    };
-> > +...
-> > 
-> 
+-- 
+Kees Cook
