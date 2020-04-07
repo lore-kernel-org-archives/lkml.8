@@ -2,143 +2,108 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58712C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB93C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A370206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255417;
-	bh=JzE8QSLBSji/fwbdetznn6wuAkvze4RHNwUOhEGZU9c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tsIquxPt2N6T5JxtisG6oM8+X/QnuF/K7Ehf1jNqzLr2sQo5yzoWLW/fhGvN7JF+F
-	 L7/unMEUOjGelKBqZSK9OOqbmk4qrbkucJHaSaESoT98XRq0rYki1KA9j3NxzfhAIg
-	 AXko7Pn1VITdpAZMJIQvbMFXMOHoYmQjPw9jDKo4=
+	by mail.kernel.org (Postfix) with ESMTP id AD97D20644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgDGKaD (ORCPT
+        id S1728349AbgDGKa5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:30:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbgDGKWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:22:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6901920731;
-        Tue,  7 Apr 2020 10:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586254959;
-        bh=JzE8QSLBSji/fwbdetznn6wuAkvze4RHNwUOhEGZU9c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4OABTXxxmDPnJ6CFZpCh+lEudHFr6SSl5gxXXdYV6YvOVF5hgIkATGAl/tqeiwSi
-         IUGpTmBVc1d+ZvulMstcxl4N7IS+X6oAgclZPRQPnauZqFNrMdPUzfpTWlpQ8MUgkk
-         /Ls0qjEJLBT8d6ybXvcQnyN5ws9XiEtb8djNhlDA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        George Spelvin <lkml@sdf.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 02/36] kconfig: introduce m32-flag and m64-flag
-Date:   Tue,  7 Apr 2020 12:21:35 +0200
-Message-Id: <20200407101454.599954642@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
-References: <20200407101454.281052964@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 7 Apr 2020 06:30:57 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46992 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728075AbgDGKa4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:30:56 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jLlVG-0004Aj-Kw; Tue, 07 Apr 2020 12:30:46 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 31A28101303; Tue,  7 Apr 2020 12:30:46 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andrei Vagin <avagin@gmail.com>,
+        "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
+Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Adrian Reber <adrian@lisas.de>
+Subject: Re: RFC: time_namespaces(7) manual page
+In-Reply-To: <20200407032318.GA494464@gmail.com>
+References: <7221df0a-435b-f8bc-ff91-c188af535e73@gmail.com> <20200407032318.GA494464@gmail.com>
+Date:   Tue, 07 Apr 2020 12:30:46 +0200
+Message-ID: <87r1wzk2p5.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+Andrei Vagin <avagin@gmail.com> writes:
+> On Sat, Apr 04, 2020 at 01:08:50PM +0200, Michael Kerrisk (man-pages) wrote:
+>>    /proc/PID/timens_offsets
+>>        Associated  with  each  time namespace are offsets, expressed with
+>>        respect to the initial time namespace, that define the  values  of
+>>        the  monotonic  and  boot clocks in that namespace.  These offsets
+>>        are exposed via the file  /proc/PID/timens_offsets.   Within  this
+>>        file,  the  offsets  are  expressed  as  lines consisting of three
+>>        space-delimited fields:
+>> 
+>>            <clock-id> <offset-secs> <offset-nanosecs>
+>> 
+>>        The clock-id identifies the clock whose offsets are  being  shown.
+>>        This field is either 1, for CLOCK_MONOTONIC, or 7, for CLOCK_BOOT‐
+>>        TIME.  The remaining  fields  express  the  offset  (seconds  plus
+>>        nanoseconds)  for the clock in this time namespace.  These offsets
+>>        are expressed relative to the clock values  in  the  initial  time
+>>        namespace.   In  the  initial time namespace, the contents of this
+>>        file are as follows:
+>
+> I think we can mention that offset-secs can be negative, but
+> offset-nanosleep has to be 0 or positive.
 
-[ Upstream commit 8cc4fd73501d9f1370c3eebb70cfe8cc9e24062b ]
+I assume you meant offset-nanosecs :)
 
-When a compiler supports multiple architectures, some compiler features
-can be dependent on the target architecture.
+That aside, there are also limitations in place.
 
-This is typical for Clang, which supports multiple LLVM backends.
-Even for GCC, we need to take care of biarch compiler cases.
+  1) Negative offsets which would offset time into negative space are
+     rejected, i.e. its enforced that
 
-It is not a problem when we evaluate cc-option in Makefiles because
-cc-option is tested against the flag in question + $(KBUILD_CFLAGS).
+          now(CLOCK) + offset[CLOCK] >= 0
 
-The cc-option in Kconfig, on the other hand, does not accumulate
-tested flags. Due to this simplification, it could potentially test
-cc-option against a different target.
+     This is necessary as the kernel expects and also enforces that time
+     cannot be negative.
 
-At first, Kconfig always evaluated cc-option against the host
-architecture.
+  2) Positive offsets which would offset time above KTTIME_SEC_MAX / 2 are
+     rejected, i.e. it's enforced that
 
-Since commit e8de12fb7cde ("kbuild: Check for unknown options with
-cc-option usage in Kconfig and clang"), in case of cross-compiling
-with Clang, the target triple is correctly passed to Kconfig.
+          now(CLOCK) + offset[CLOCK] <= KTIME_SEC_MAX / 2
 
-The case with biarch GCC (and native build with Clang) is still not
-handled properly. We need to pass some flags to specify the target
-machine bit.
+     That is done to prevent that clocks wrap around if the offset would
+     bring it close enough to the wrap around point.
 
-Due to the design, all the macros in Kconfig are expanded in the
-parse stage, where we do not know the target bit size yet.
+     The cutoff value is a pretty arbitrary choice (~146 years). So to
+     hit this you'd need a system which has an uptime of > 146 years,
+     which is pretty much unrealistic.
 
-For example, arch/x86/Kconfig allows a user to toggle CONFIG_64BIT.
-If a compiler flag -foo depends on the machine bit, it must be tested
-twice, one with -m32 and the other with -m64.
+Thanks,
 
-However, -m32/-m64 are not always recognized. So, this commits adds
-m64-flag and m32-flag macros. They expand to -m32, -m64, respectively
-if supported. Or, they expand to an empty string if unsupported.
+        tglx
 
-The typical usage is like this:
-
-  config FOO
-          bool
-          default $(cc-option,$(m64-flag) -foo) if 64BIT
-          default $(cc-option,$(m32-flag) -foo)
-
-This is clumsy, but there is no elegant way to handle this in the
-current static macro expansion.
-
-There was discussion for static functions vs dynamic functions.
-The consensus was to go as far as possible with the static functions.
-(https://lkml.org/lkml/2018/3/2/22)
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Tested-by: George Spelvin <lkml@sdf.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/Kconfig.include | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index bfb44b265a948..77a69ba9cd198 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -40,3 +40,10 @@ $(error-if,$(success, $(LD) -v | grep -q gold), gold linker '$(LD)' not supporte
- 
- # gcc version including patch level
- gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
-+
-+# machine bit flags
-+#  $(m32-flag): -m32 if the compiler supports it, or an empty string otherwise.
-+#  $(m64-flag): -m64 if the compiler supports it, or an empty string otherwise.
-+cc-option-bit = $(if-success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null,$(1))
-+m32-flag := $(cc-option-bit,-m32)
-+m64-flag := $(cc-option-bit,-m64)
--- 
-2.20.1
-
-
-
+     
+          
