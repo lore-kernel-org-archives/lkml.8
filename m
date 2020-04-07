@@ -2,158 +2,146 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6B8C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCD7C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A6F20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A800220678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="OM+IOqbV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AQqrdPIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDGXPK (ORCPT
+        id S1726492AbgDGXPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:15:10 -0400
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:1524 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDGXPK (ORCPT
+        Tue, 7 Apr 2020 19:15:15 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55969 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgDGXPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:15:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1586301310;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=kqfqt8fleUUonNH2T7+V1D0+RdS+r1sUzRmj6ggzkjQ=;
-  b=OM+IOqbVhyFqbku6oURXKhYN1yJ8DhcI86G4BpT3DFvM/Mpe9Fc6ifAV
-   D+jTuZ5mg2evsl+XW/FDRBZowLUeavgvoIrxEE6CY70xbLDC5ch08HGVx
-   S0lVefDq8i1+mID/eVnPc0RzsYy1VTvamDEXTUGpgwOFjiFq/9Bm9ii5u
-   o=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  andrew.cooper3@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="andrew.cooper3@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
-  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="Andrew.Cooper3@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: vuiBD1ORzZfMMH0MT7F67HfRCExRbmhQw3S5duBfVZCrmR8bT3W0GMLSYMl1+vcK0D62ykIXm/
- QjIZZYciW+Emc9VgPlIL302AyXDHHrK5dqI61gxpLpfZakPSnGl8FEq0EfSM3GiTsn+ePduchs
- +9ZejmLYVQICqX9J0ueCpmkEgdYAwQHDtI9gCfcZ4NZy8bDI77D0PxezUrJiT6IRvZC7EQR+6H
- mNxucqiT1wwCKkgqbovY5KM9GQ6q4aNS+Q40R1QobJz+Es2NENDuo7tZCUgeNtd+rgZIdmQyn9
- L1g=
-X-SBRS: 2.7
-X-MesageID: 15320098
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.72,356,1580792400"; 
-   d="scan'208";a="15320098"
-Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
-To:     Nadav Amit <nadav.amit@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, <hch@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        mingo <mingo@redhat.com>, bp <bp@alien8.de>, <hpa@zytor.com>,
-        x86 <x86@kernel.org>, "Kenneth R. Crudup" <kenny@panix.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        <jannh@google.com>, <keescook@chromium.org>,
-        <David.Laight@aculab.com>, Doug Covelli <dcovelli@vmware.com>,
-        <mhiramat@kernel.org>
+        Tue, 7 Apr 2020 19:15:14 -0400
+Received: by mail-pj1-f66.google.com with SMTP id fh8so379829pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZOBitavj4S6ILIuLSBytWPReKVdwTjFE2ZWsCjAPqcU=;
+        b=AQqrdPIjnmwF6hVVXFRsx2ZLxK/7DA1im736romYNf0isFcDjejsG8Fiss1kK9U2Ae
+         IQlAzlGGdoMwzWF2CX6e2hgSE31FxhhaCAxgf6mNiZ6+hvsPRDgh5V1g2xpQ3/bcV/jo
+         uvpwZ/e/gnrMcOLv2exciIA1XRMNOZqhzZyqI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZOBitavj4S6ILIuLSBytWPReKVdwTjFE2ZWsCjAPqcU=;
+        b=IhOoWF13CEHvtp/h8vx27WsI8Wg06ypxZatX/ZfJUu35zFRKJjQzAUQyEAc7DFheHI
+         fY1ZitBbNArxpdsSGGrulRlaOSrxB0pH6q3ssl4aKtu76Yv9clBpELJhPBb683VBYj6B
+         8wU6oRyXgb441fq3IsFa9fnDAolAkk3z352slT+vx/9sTqi/AF00r9mBgXJaYbEA0uIU
+         bvRGVyT07334ScrbnmFwgpD9mENLpiunvR+YHWHJGOhuOZaP7xtYigQYxjJxd22lgxFM
+         T49NSzRVdC832JJa0mPkKQzIF3CdVL2Wdz6lfCrXuZBB0+KkuxjRnsMgWzqorto4JxRR
+         KRfQ==
+X-Gm-Message-State: AGi0PuYjrNw5NCNaQ4wTwlq68cwT48FFclYE8U4cIq201Kfe6j6nZPvH
+        GACegyDinKCuzjYxcvxi0CncNA==
+X-Google-Smtp-Source: APiQypKAILdy3JyxMtfot6PLQALbTVcSiRiXACxyMrXDwKR9EG1Cn289vLqSYShT6VtgmmoMDwsVlQ==
+X-Received: by 2002:a17:90a:fb94:: with SMTP id cp20mr1881215pjb.117.1586301314117;
+        Tue, 07 Apr 2020 16:15:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q67sm2655364pjq.29.2020.04.07.16.15.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 16:15:13 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 16:15:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Peter Zijlstra' <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kenny@panix.com" <kenny@panix.com>,
+        "jeyu@kernel.org" <jeyu@kernel.org>,
+        "rasmus.villemoes@prevas.dk" <rasmus.villemoes@prevas.dk>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>,
+        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
+        "thellstrom@vmware.com" <thellstrom@vmware.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "dcovelli@vmware.com" <dcovelli@vmware.com>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>
+Subject: Re: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
+Message-ID: <202004071611.233B0045@keescook>
 References: <20200407110236.930134290@infradead.org>
- <20200407111007.429362016@infradead.org>
- <10ABBCEE-A74D-4100-99D9-05B4C1758FF6@gmail.com>
- <20200407193853.GP2452@worktop.programming.kicks-ass.net>
- <90B32DAE-0BB5-4455-8F73-C43037695E7C@gmail.com>
- <20200407205042.GT2452@worktop.programming.kicks-ass.net>
- <96C2F23A-D6F4-4A04-82B6-284788C5D2CC@gmail.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <04f4fc03-95cd-df2e-e93d-e9c4fa221ae4@citrix.com>
-Date:   Wed, 8 Apr 2020 00:15:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ <20200407111007.352324393@infradead.org>
+ <23787a63b28744b1906c4d4b6209b6af@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <96C2F23A-D6F4-4A04-82B6-284788C5D2CC@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23787a63b28744b1906c4d4b6209b6af@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/04/2020 22:22, Nadav Amit wrote:
->> On Apr 7, 2020, at 1:50 PM, Peter Zijlstra <peterz@infradead.org> wrote:
->>
->> On Tue, Apr 07, 2020 at 01:27:45PM -0700, Nadav Amit wrote:
->>>> On Apr 7, 2020, at 12:38 PM, Peter Zijlstra <peterz@infradead.org> wrote:
->>>>
->>>> On Tue, Apr 07, 2020 at 11:55:21AM -0700, Nadav Amit wrote:
->>>>>> On Apr 7, 2020, at 4:02 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->>>>>>
->>>>>> Since we now have infrastructure to analyze module text, disallow
->>>>>> modules that write to CRn and DRn registers.
->>>>> Assuming the kernel is built without CONFIG_PARAVIRT, what is the right way
->>>>> for out-of-tree modules to write to CRs? Let’s say CR2?
->>>> Most of them there is no real justification for ever writing to. CR2 I
->>>> suppose we can have an exception for given a sane rationale for why
->>>> you'd need to rewrite the fault address.
->>> For the same reason that KVM writes to CR2 - to restore CR2 before entering
->>> a guest, since CR2 not architecturally loaded from the VMCS. I suspect there
->>> are additional use-cases which are not covered by the kernel interfaces.
->> So I'm not much of a virt guy (clearly), and *groan*, that's horrible.
->> I'll go make an exception for CR2.
-> Clearly you are not a virt guy if you think that this is the horrible part
-> in x86 virtualization ;-)
+On Tue, Apr 07, 2020 at 09:25:56PM +0000, David Laight wrote:
+> From: Peter Zijlstra
+> > Sent: 07 April 2020 12:03
+> > 
+> > It turns out that with Split-Lock-Detect enabled (default) any VMX
+> > hypervisor needs at least a little modification in order to not blindly
+> > inject the #AC into the guest without the guest being ready for it.
+> > 
+> > Since there is no telling which module implements a hypervisor, scan
+> > all out-of-tree modules' text and look for VMX instructions and refuse
+> > to load it when SLD is enabled (default) and the module isn't marked
+> > 'sld_safe'.
+> ...
+> > +	while (text < text_end) {
+> > +		kernel_insn_init(&insn, text, text_end - text);
+> > +		insn_get_length(&insn);
+> > +
+> > +		if (WARN_ON_ONCE(!insn_complete(&insn))) {
+> > +			pr_err("Module text malformed: %s\n", mod->name);
+> > +			return -ENOEXEC;
+> > +		}
+> > +
+> > +		if (!allow_vmx && insn_is_vmx(&insn)) {
+> > +			pr_err("Module has VMX instructions and is not marked 'sld_safe', boot with:
+> > 'split_lock_detect=off': %s\n", mod->name);
+> > +			return -ENOEXEC;
+> > +		}
+> > +
+> > +		text += insn.length;
+> > +	}
+> 
+> There is a slight flaw in the above.
+> A malicious module can hide the required instruction by jumping into the
+> middle of a long instruction.
+> 
+> Even checking branch targets hit instruction barriers isn't enough,
+> an indirect jump could be used.
 
-Very definitely seconded :)
+If I understand the goals here, it's to provide feedback for good actors
+doing things that they don't realize aren't safe. Trying to stop a
+malicious module from doing malicious things is basically impossible:
+it can just load a data blob and self-modify, etc. :)
 
-> Anyhow, I do not think it is the only use-case which is not covered by your
-> patches (even considering CRs/DRs alone). For example, there is no kernel
-> function to turn on CR4.VMXE, which is required to run hypervisors on x86.
+Though, Peter, this does get me thinking: if this is meant to be helpful
+for module authors tripping over things they shouldn't be touching,
+perhaps every test needs to include explicit recommendations? It's
+_kind_ of doing this already. Maybe the above should be:
 
-How about taking this opportunity to see if there is a way to improve on
-the status quo for co-existing hypervisor modules?
+pr_err("%s: contains VMX instructions but is not marked 'sld_safe'. Please see <url> or boot with: 'split_lock_detect=off' to ignore.\n", mod->name);
 
-ISTR there are a large number of hoops to jump through if you're not
-sure if anything else in the system is using VMX, going as far as
-needing to do a full VMXON/VMXOFF cycle each context.
+?
 
-Enabling CR4.VMXE might want to be done proactively by the kernel. 
-Amongst other things, it gives protection against stray INIT IPIs in the
-system, although the interaction with SMX (tboot / trenchboot) wants
-considering carefully.
-
-~Andrew
+-- 
+Kees Cook
