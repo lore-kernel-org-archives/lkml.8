@@ -2,158 +2,154 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D50C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D888C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CF320644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69EE92074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="V9j7Nvrk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgDGJn2 convert rfc822-to-8bit (ORCPT
+        id S1728113AbgDGJqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:43:28 -0400
-Received: from mga05.intel.com ([192.55.52.43]:50872 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgDGJn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:43:28 -0400
-IronPort-SDR: TzGuwU94LtPmKKr66QzMDb8rgkKgSz/9UxMVVIDJB9NMNB55kI48e5ooG6UuH4ztf1YCO1eXvm
- MTx4BV9cxiFw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 02:43:27 -0700
-IronPort-SDR: ADIj2PgCc549wdNYUg0B2hduccfdQAeDAlMT8s+6H2FSVKNI7E7kVIrh8I1malMuHVE0dlhJV0
- +pqscB6WzwhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
-   d="scan'208";a="361487857"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Apr 2020 02:43:27 -0700
-Received: from fmsmsx125.amr.corp.intel.com (10.18.125.40) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Apr 2020 02:43:27 -0700
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- FMSMSX125.amr.corp.intel.com (10.18.125.40) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Apr 2020 02:43:27 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.22]) with mapi id 14.03.0439.000;
- Tue, 7 Apr 2020 17:43:23 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Auger Eric <eric.auger@redhat.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-Thread-Index: AQHWAEUcqZEEdiOKbEGofjWp2Yic+6hjfq+AgAC/vLD//4YrAIAC1vWAgAbjh1A=
-Date:   Tue, 7 Apr 2020 09:43:23 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
- <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
- <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
- <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
- <20200403082305.GA1269501@myrica>
-In-Reply-To: <20200403082305.GA1269501@myrica>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 7 Apr 2020 05:46:37 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:18336 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726725AbgDGJqg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 05:46:36 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586252796; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Ul3YhDd1rPscgFpO4CCJ18JVqPLmuQ5bBOiQ1R8owsk=;
+ b=V9j7NvrkmWPKQd6ECIQqP6Xxc/2RryYtFG1ePOcuHNZLYkwuTRldCtKTQ3Xl9YXSUCiD4S4I
+ G2/Bng8yf9b6aIPm78wqmYi/pdRSdsxBK5TFZKn2mokBSh5ZkEGgUVHy9DihsKow+nH6w6Z0
+ KIyvCj0lMHpcFY5hng3BMj0UaPc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8c4bfb.7fc0072c6490-smtp-out-n03;
+ Tue, 07 Apr 2020 09:46:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BB59AC44788; Tue,  7 Apr 2020 09:46:35 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38318C433F2;
+        Tue,  7 Apr 2020 09:46:35 +0000 (UTC)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 07 Apr 2020 15:16:35 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [RFC PATCH] coresight: dynamic-replicator: Fix handling of
+ multiple connections
+In-Reply-To: <CAJ9a7VgQzK1XSCvLwuqODwkWfvo=6Wwps7Db+pL5xYDeCuktrg@mail.gmail.com>
+References: <20200405102819.28460-1-saiprakash.ranjan@codeaurora.org>
+ <CAJ9a7VgQzK1XSCvLwuqODwkWfvo=6Wwps7Db+pL5xYDeCuktrg@mail.gmail.com>
+Message-ID: <6c0f45488f8a44bf860759e00fcabd09@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+Hi Mike,
 
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Sent: Friday, April 3, 2020 4:23 PM
-> To: Auger Eric <eric.auger@redhat.com>
-> userspace
-> 
-> On Wed, Apr 01, 2020 at 03:01:12PM +0200, Auger Eric wrote:
-> > >>>  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
-> > >>>  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
-> @@ -2254,6 +2309,7
-> > >>> @@ static int vfio_iommu_info_add_nesting_cap(struct
-> > >> vfio_iommu *iommu,
-> > >>>  		/* nesting iommu type supports PASID requests (alloc/free) */
-> > >>>  		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
-> > >> What is the meaning for ARM?
-> > >
-> > > I think it's just a software capability exposed to userspace, on
-> > > userspace side, it has a choice to use it or not. :-) The reason
-> > > define it and report it in cap nesting is that I'd like to make the
-> > > pasid alloc/free be available just for IOMMU with type
-> > > VFIO_IOMMU_TYPE1_NESTING. Please feel free tell me if it is not good
-> > > for ARM. We can find a proper way to report the availability.
-> >
-> > Well it is more a question for jean-Philippe. Do we have a system wide
-> > PASID allocation on ARM?
-> 
-> We don't, the PASID spaces are per-VM on Arm, so this function should consult the
-> IOMMU driver before setting flags. As you said on patch 3, nested doesn't
-> necessarily imply PASID support. The SMMUv2 does not support PASID but does
-> support nesting stages 1 and 2 for the IOVA space.
-> SMMUv3 support of PASID depends on HW capabilities. So I think this needs to be
-> finer grained:
-> 
-> Does the container support:
-> * VFIO_IOMMU_PASID_REQUEST?
->   -> Yes for VT-d 3
->   -> No for Arm SMMU
-> * VFIO_IOMMU_{,UN}BIND_GUEST_PGTBL?
->   -> Yes for VT-d 3
->   -> Sometimes for SMMUv2
->   -> No for SMMUv3 (if we go with BIND_PASID_TABLE, which is simpler due to
->      PASID tables being in GPA space.)
-> * VFIO_IOMMU_BIND_PASID_TABLE?
->   -> No for VT-d
->   -> Sometimes for SMMUv3
-> 
-> Any bind support implies VFIO_IOMMU_CACHE_INVALIDATE support.
+Thanks for taking a look.
 
-good summary. do you expect to see any 
-
+On 2020-04-06 16:25, Mike Leach wrote:
+> Hi,
 > 
-> > >>> +	nesting_cap->stage1_formats = formats;
-> > >> as spotted by Kevin, since a single format is supported, rename
-> > >
-> > > ok, I was believing it may be possible on ARM or so. :-) will rename
-> > > it.
+> The programmable replicator hardware by design enables trace through
+> both ports on reset. (see 1, section 4.4, 9.11)  The replicator driver
+> overrides this functionality to disable output, until the Coresight
+> infrastructure chooses a path from source to sink.
+> Now given that the hardware design is such that we must be able to
+> allow trace to be sent to both ports, a generic patch to prevent this
+> does not seem appropriate here.
 > 
-> Yes I don't think an u32 is going to cut it for Arm :( We need to describe all sorts of
-> capabilities for page and PASID tables (granules, GPA size, ASID/PASID size, HW
-> access/dirty, etc etc.) Just saying "Arm stage-1 format" wouldn't mean much. I
-> guess we could have a secondary vendor capability for these?
+> I think this needs further investigation - to determine why this
+> appears to be failing in this particular instance.
+> 
 
-Actually, I'm wondering if we can define some formats to stands for a set of
-capabilities. e.g. VTD_STAGE1_FORMAT_V1 which may indicates the 1st level
-page table related caps (aw, a/d, SRE, EA and etc.). And vIOMMU can parse
-the capabilities.
+Yes, this probably needs further investigation, but CPU hardlock stack
+trace doesnt help much. I could always trigger this hard lockup without
+this patch on SC7180 SoC and this is only seen when ETR is used as the 
+sink.
 
-Regards,
-Yi Liu
+The only difference I could see between non working case (on SC7180 [1]) 
+and
+the working case (on SDM845 [2]) is the path from source to sink.
 
+SC7180 source to sink path(Not working):
+----------------------------------------
+
+       etm0_out
+	 |
+   apss_funnel_in0
+          |
+  apss_merge_funnel_in
+          |
+      funnel1_in4
+	 |
+   merge_funnel_in1
+	 |
+    swao_funnel_in
+          |
+        etf_in
+	 |
+  swao_replicator_in
+          |
+   replicator_in
+	 |
+        etr_in
+
+
+SDM845 source to sink path(Working):
+------------------------------------
+
+       etm0_out
+          |
+    apss_funnel_in0
+          |
+  apss_merge_funnel_in
+          |
+     funnel2_in5
+	 |
+   merge_funnel_in2
+          |
+       etf_in
+	 |
+   replicator_in
+	 |
+        etr_in
+
+
+[1] - https://lore.kernel.org/patchwork/patch/1212946/
+[2] - 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/boot/dts/qcom/sdm845.dtsi?h=v5.6#n1910
+
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
