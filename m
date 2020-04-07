@@ -2,85 +2,126 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8DAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94114C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D713E206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6596A206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gJSRYrHa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VHuyf2fE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgDGNhV (ORCPT
+        id S1728889AbgDGNkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 09:37:21 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37406 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728768AbgDGNhV (ORCPT
+        Tue, 7 Apr 2020 09:40:18 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40168 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbgDGNkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 09:37:21 -0400
-X-UUID: 54718c5495274adaa35b42087b8d6fb3-20200407
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=RdRXX8sbx8HHYtoWDp4+BPvE2rMumZFXzEadK6V6dIU=;
-        b=gJSRYrHaXQFc1r524SPcwM9qUo/ejzOXONSR9Y0MIsoyiWQirls47ZIa2ELUo27R2mYJLjbe3rs5p69t4ImbJJIfWxomef7mV2n6MLTl9DgCPlNkjFu3AqRcEKGTMICWZWZDB+NnP0upeCN/HyFsywQUXb+2X55OaSgYm/qIHUQ=;
-X-UUID: 54718c5495274adaa35b42087b8d6fb3-20200407
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1348218777; Tue, 07 Apr 2020 21:37:16 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Apr 2020 21:37:11 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Apr 2020 21:37:10 +0800
-Message-ID: <1586266634.2221.0.camel@mtkswgap22>
-Subject: Re: [PATCH v1 1/1] pinctrl: mediatek: remove shadow variable
- declaration
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     "light.hsieh@mediatek.com" <light.hsieh@mediatek.com>
-CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "sean.wang@kernel.org" <sean.wang@kernel.org>,
-        "Kuohong Wang =?UTF-8?Q?=28=E7=8E=8B=E5=9C=8B=E9=B4=BB=29?=" 
-        <kuohong.wang@mediatek.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 7 Apr 2020 21:37:14 +0800
-In-Reply-To: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
-References: <1586255632-27528-1-git-send-email-light.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 7 Apr 2020 09:40:18 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y71so1493552oia.7
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 06:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qEVjxeIlS9igveaV+xU6VqWnT7ciWNXB+lD5YjOf0YY=;
+        b=VHuyf2fEUTXsrAaVoC8SK0zXMcw6H5Lk0weP/eaRiRqQzlAWTFGOpNCdDus81NDfPz
+         YG8CY3OGpqJ1tRTflaBPTBnNrpeTZ8FWwLEjdtikemnsFhR4EtIB2XRRoXV0hVY4h8Gj
+         uAFOBds2Hknlr2vemVncYRkIyeFsi6O1uGCjGDkUx7KOn+6xKvt7BgAf7zmvLTPWznwh
+         Gp0kzKD3OJssr0u6oIs4pXxvBwVRRJmbQkhHvdwiZqjTLdmB3vkzemwcWlXs9ajYx7S/
+         W5owG2bMhZxG9TAFNYqj42yls/6yGBFi3IawvVKai9Ruq0Q0frHjwm7CqG+HUgLrnGag
+         8a9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=qEVjxeIlS9igveaV+xU6VqWnT7ciWNXB+lD5YjOf0YY=;
+        b=forYGO3haqlZRW7PWb4mT/GCx7N9d5Tiawh25r8IbrxDYgrfNatpI7rEoFg2MWtRH0
+         jr0gS55mzaJmrsI1sXOPKV1+Cy8ZuSqzBH5lxXVRwCYhn5HMyVSTBxZceke4o22ck+MJ
+         7BY6bRDi6CLtCKJTU71q3UF3ysQkAnYIYRCAdWJsVR0VC8mytEbuiiYik8LHGX0r8pD2
+         57Mui3SVPBdbkq4Yzs2Gv3aTGij3k489Mfl+vbVLXdtWzjOJ2CWAwtun4TW7rDV41/yk
+         qqUBo8GR/sC8RE7zQZJlQ+YY4wQOaT+/cduTbUWmrvWE7Pr57W67PaRjY0drb2NUoB4P
+         IYYQ==
+X-Gm-Message-State: AGi0PuZtArZ/3dX0t1QljgUSzRwVpl+pSVeFaTnKj9BqZwSUod76tmMq
+        7V/NbqYqMtLzhG0PXFEveg==
+X-Google-Smtp-Source: APiQypJD+WzFC0CWDwX7/blmcYgI8Ij3wnrYGadb+0+fHv7uVjysyC3QPl3npzT4r8M7LGUL1Rcv4A==
+X-Received: by 2002:aca:474e:: with SMTP id u75mr1710905oia.52.1586266817428;
+        Tue, 07 Apr 2020 06:40:17 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id a3sm1129086oop.36.2020.04.07.06.40.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 06:40:14 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
+        by serve.minyard.net (Postfix) with ESMTPSA id 39A47180053;
+        Tue,  7 Apr 2020 13:40:13 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 08:40:12 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2]ipmi:bt-bmc:Avoid unnecessary judgement
+Message-ID: <20200407134012.GC6130@minyard.net>
+Reply-To: minyard@acm.org
+References: <20200406043415.12292-1-tangbin@cmss.chinamobile.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C46968FC8DEA5F527A542FEB4FA622A3AA2E7B501EEE4D5BA8AE4EEE90C277142000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200406043415.12292-1-tangbin@cmss.chinamobile.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGlnaHQsDQoNCk9uIFR1ZSwgMjAyMC0wNC0wNyBhdCAxODozMyArMDgwMCwgbGlnaHQuaHNp
-ZWhAbWVkaWF0ZWsuY29tIHdyb3RlOg0KPiBGcm9tOiBMaWdodCBIc2llaCA8bGlnaHQuaHNpZWhA
-bWVkaWF0ZWsuY29tPg0KPiANCj4gUmVtb3ZlIHNoYWRvdyBkZWNsYXJhdGlvbiBvZiB2YXJpYWJs
-ZSAncHVsbHVwJyBpbiBtdGtfcGluY29uZl9nZXQoKQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogTGln
-aHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3Bp
-bmN0cmwvbWVkaWF0ZWsvcGluY3RybC1wYXJpcy5jIHwgMiAtLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDIgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlh
-dGVrL3BpbmN0cmwtcGFyaXMuYyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLXBh
-cmlzLmMNCj4gaW5kZXggODNiZjI5Yy4uOGY3NTExNSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9w
-aW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwv
-bWVkaWF0ZWsvcGluY3RybC1wYXJpcy5jDQo+IEBAIC0xNjQsOCArMTY0LDYgQEAgc3RhdGljIGlu
-dCBtdGtfcGluY29uZl9nZXQoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LA0KPiAgCWNhc2Ug
-TVRLX1BJTl9DT05GSUdfUFVfQURWOg0KPiAgCWNhc2UgTVRLX1BJTl9DT05GSUdfUERfQURWOg0K
-PiAgCQlpZiAoaHctPnNvYy0+YWR2X3B1bGxfZ2V0KSB7DQo+IC0JCQlib29sIHB1bGx1cDsNCj4g
-LQ0KPiAgCQkJcHVsbHVwID0gcGFyYW0gPT0gTVRLX1BJTl9DT05GSUdfUFVfQURWOw0KPiAgCQkJ
-ZXJyID0gaHctPnNvYy0+YWR2X3B1bGxfZ2V0KGh3LCBkZXNjLCBwdWxsdXAsICZyZXQpOw0KPiAg
-CQl9IGVsc2UNCg0KUmV2aWV3ZWQtYnk6IFN0YW5sZXkgQ2h1IDxzdGFubGV5LmNodUBtZWRpYXRl
-ay5jb20+DQoNCg==
+On Mon, Apr 06, 2020 at 12:34:15PM +0800, Tang Bin wrote:
+> In this driver,only the platform_device and platform_driver
+> matches,can trigger bt_bmc_probe(),and the trigger mode is
+> just Device Tree.Thus remove redundant judgments.
 
+How about the following commit message:
+
+bt_bmc_probe() is only called with an openfirmware platform device.
+Therefore there is no need to check that the passed in device is NULL or
+that it has an openfirmware node.
+
+Also, how did you find this?
+
+Thanks,
+
+-corey
+
+> 
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> ---
+> Changes from v1:
+>  - improve the commit message.
+> 
+>  drivers/char/ipmi/bt-bmc.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
+> index d36aeacb2..890ad55aa 100644
+> --- a/drivers/char/ipmi/bt-bmc.c
+> +++ b/drivers/char/ipmi/bt-bmc.c
+> @@ -430,9 +430,6 @@ static int bt_bmc_probe(struct platform_device *pdev)
+>  	struct device *dev;
+>  	int rc;
+>  
+> -	if (!pdev || !pdev->dev.of_node)
+> -		return -ENODEV;
+> -
+>  	dev = &pdev->dev;
+>  	dev_info(dev, "Found bt bmc device\n");
+>  
+> -- 
+> 2.20.1.windows.1
+> 
+> 
+> 
