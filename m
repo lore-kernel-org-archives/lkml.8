@@ -2,213 +2,113 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BF6C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8797C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDF420719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF7920719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:04:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="DhYnqllR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgDGBAm (ORCPT
+        id S1726370AbgDGBEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:00:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54924 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbgDGBAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:00:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D9134AA7C;
-        Tue,  7 Apr 2020 01:00:37 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@kernel.org>
-Date:   Tue, 07 Apr 2020 11:00:29 +1000
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] mm: clarify __GFP_MEMALLOC usage
-In-Reply-To: <4f861f07-4b47-8ddc-f783-10201ea302d3@nvidia.com>
-References: <20200403083543.11552-1-mhocko@kernel.org> <20200403083543.11552-2-mhocko@kernel.org> <alpine.DEB.2.21.2004031238571.230548@chino.kir.corp.google.com> <87blo8xnz2.fsf@notabene.neil.brown.name> <20200406070137.GC19426@dhcp22.suse.cz> <4f861f07-4b47-8ddc-f783-10201ea302d3@nvidia.com>
-Message-ID: <875zecw1n6.fsf@notabene.neil.brown.name>
+        Mon, 6 Apr 2020 21:04:40 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:22754 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726230AbgDGBEk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 21:04:40 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03710MYd016709
+        for <linux-kernel@vger.kernel.org>; Mon, 6 Apr 2020 18:04:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=S0ioYLMHpN25Y2gPp3J+lnRWbfqozyUe1QBToHd3GdQ=;
+ b=DhYnqllRM1//uwS1elmA0PKQezZDLDlE1EkXBpazHjZ4e5Afp3fXSafcMxANiCOkZ8sM
+ TAEUj83avJ7uosOxkGchQZqp8aBZWbD1gzrgc2k/OZ+qiwmRU1jNNaO+zVyhGqVopjCr
+ w05Q3+CHOSNGFVhEAM9R1ydDkDVS4HziY7E= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 307ff7w4fy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:04:39 -0700
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c085:108::8) by
+ mail.thefacebook.com (2620:10d:c085:21d::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Mon, 6 Apr 2020 18:04:38 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 2BCC33C9170A7; Mon,  6 Apr 2020 18:04:37 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Aslan Bakirov <aslan@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        <linux-mm@kvack.org>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Rik van Riel <riel@surriel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH v4 0/2] mm: using CMA for 1 GB hugepages allocation
+Date:   Mon, 6 Apr 2020 18:04:29 -0700
+Message-ID: <20200407010431.1286488-1-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-06_14:2020-04-06,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 suspectscore=2 phishscore=0 priorityscore=1501
+ spamscore=0 malwarescore=0 mlxlogscore=728 adultscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070007
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+The patchset adds a hugetlb_cma boot option, which allows
+to reserve a cma area which can be later used for 1 GB
+hugepages allocations.
 
-On Mon, Apr 06 2020, John Hubbard wrote:
+This is v4 of the patch(set). It contains a patch from Aslan,
+which adds a useful function of the cma side, and the previous
+version of the hugetlb_cma patch (v3) with all following cleanups
+and fixes squashed, plus the following changes:
+1) removed the hard-coded archs list from docs
+2) added a warning printing on non-supported archs
+3) hugetlb_lock is temporarily dropped in update_and_free_page()
 
-> On 4/6/20 12:01 AM, Michal Hocko wrote:
-> ...
->>  From 6c90b0a19a07c87d24ad576e69b33c6e19c2f9a2 Mon Sep 17 00:00:00 2001
->> From: Michal Hocko <mhocko@suse.com>
->> Date: Wed, 1 Apr 2020 14:00:56 +0200
->> Subject: [PATCH] mm: clarify __GFP_MEMALLOC usage
->>=20
->> It seems that the existing documentation is not explicit about the
->> expected usage and potential risks enough. While it is calls out
->> that users have to free memory when using this flag it is not really
->> apparent that users have to careful to not deplete memory reserves
->> and that they should implement some sort of throttling wrt. freeing
->> process.
->>=20
->> This is partly based on Neil's explanation [1].
->>=20
->> Let's also call out that a pre allocated pool allocator should be
->> considered.
->>=20
->> [1] http://lkml.kernel.org/r/877dz0yxoa.fsf@notabene.neil.brown.name
->> Signed-off-by: Michal Hocko <mhocko@suse.com>
->> ---
->>   include/linux/gfp.h | 5 +++++
->>   1 file changed, 5 insertions(+)
->>=20
->> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
->> index e5b817cb86e7..9cacef1a3ee0 100644
->> --- a/include/linux/gfp.h
->> +++ b/include/linux/gfp.h
->> @@ -110,6 +110,11 @@ struct vm_area_struct;
->>    * the caller guarantees the allocation will allow more memory to be f=
-reed
->>    * very shortly e.g. process exiting or swapping. Users either should
->>    * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
->> + * Users of this flag have to be extremely careful to not deplete the r=
-eserve
->> + * completely and implement a throttling mechanism which controls the c=
-onsumption
->> + * of the reserve based on the amount of freed memory.
->> + * Usage of a pre-allocated pool (e.g. mempool) should be always consid=
-ered before
->> + * using this flag.
+I've retained Michal's and Mike's acks, because changes are
+not significant. Please, let me know if there is something
+wrong.
 
-I think this version is pretty good.
-
->>    *
->>    * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency =
-reserves.
->>    * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
->>=20
->
-> Hi Michal and all,
->
-> How about using approximately this wording instead? I found Neil's wordin=
-g to be
-> especially helpful so I mixed it in. (Also fixed a couple of slight 80-co=
-l overruns.)
->
-> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> index be2754841369..c247a911d8c7 100644
-> --- a/include/linux/gfp.h
-> +++ b/include/linux/gfp.h
-> @@ -111,6 +111,15 @@ struct vm_area_struct;
->    * very shortly e.g. process exiting or swapping. Users either should
->    * be the MM or co-ordinating closely with the VM (e.g. swap over NFS).
->    *
-> + * To be extra clear: users of __GFP_MEMALLOC must be working to free ot=
-her
-> + * memory, and that other memory needs to be freed "soon"; specifically,=
- before
-> + * the reserve is exhausted. This generally implies a throttling mechani=
-sm that
-> + * balances the amount of __GFP_MEMALLOC memory used against the amount =
-that the
-> + * caller is about to free.
-
-I don't like this change. "balances the amount ... is about to free"
-does say anything about time, so it doesn't seem to be about throttling.
-
-I think it is hard to write rules because the rules are a bit spongey.
-
-With mempools, we have a nice clear rule.  When you allocate from a
-mempool you must have a clear path to freeing that allocation which will
-not block on memory allocation except from a subordinate mempool.  This
-implies a partial ordering between mempools.  When you have layered
-block devices the path through the layers from filesystem down to
-hardware defines the order.  It isn't enforced, but it is quite easy to
-reason about.
-
-GFP_MEMALLOC effectively provides multiple mempools.  So it could
-theoretically deadlock if multiple long dependency chains
-happened. i.e. if 1000 threads each make a GFP_MEMALLOC allocation and
-then need to make another one before the first can be freed - then you
-hit problems.  There is no formal way to guarantee that this doesn't
-happen.  We just say "be gentle" and minimize the users of this flag,
-and keep more memory in reserve than we really need.
-Note that 'threads' here might not be Linux tasks.  If you have an IO
-request that proceed asynchronously, moving from queue to queue and
-being handled by different task, then each one is a "thread" for the
-purpose of understanding mem-alloc dependency.
-
-So maybe what I really should focus on is not how quickly things happen,
-but how many happen concurrently.  The idea of throttling is to allow
-previous requests to complete before we start too many more.
-
-With Swap-over-NFS, some of the things that might need to be allocated
-are routing table entries.  These scale with the number of NFS servers
-rather than the number of IO requests, so they are not going to cause
-concurrency problems.
-We also need memory to store replies, but these never exceed the number
-of pending requests, so there is limited concurrency there.
-NFS can send a lot of requests in parallel, but the main limit is the
-RPC "slot table" and while that grows dynamically, it does so with
-GFP_NOFS, so it can block or fail (I wonder if that should explicitly
-disable the use of the reserves).
-
-So there a limit on concurrency imposed by non-GFP_MEMALLOC allocations
-
-So ... maybe the documentation should say that boundless concurrency of
-allocations (i.e. one module allocating a boundless number of times
-before previous allocations are freed) must be avoided.
-
-NeilBrown
+Thanks!
 
 
+Aslan Bakirov (1):
+  mm: cma: NUMA node interface
 
-> + *
-> + * Usage of a pre-allocated pool (e.g. mempool) should be always conside=
-red
-> + * before using this flag.
-> + *
->    * %__GFP_NOMEMALLOC is used to explicitly forbid access to emergency r=
-eserves.
->    * This takes precedence over the %__GFP_MEMALLOC flag if both are set.
->    */
->
->
-> thanks,
-> --=20
-> John Hubbard
-> NVIDIA
+Roman Gushchin (1):
+  mm: hugetlb: optionally allocate gigantic hugepages using cma
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../admin-guide/kernel-parameters.txt         |   8 ++
+ arch/arm64/mm/init.c                          |   6 +
+ arch/x86/kernel/setup.c                       |   4 +
+ include/linux/cma.h                           |  13 ++-
+ include/linux/hugetlb.h                       |  12 ++
+ include/linux/memblock.h                      |   3 +
+ mm/cma.c                                      |  16 +--
+ mm/hugetlb.c                                  | 109 ++++++++++++++++++
+ mm/memblock.c                                 |   2 +-
+ 9 files changed, 163 insertions(+), 10 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+--=20
+2.25.1
 
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl6L0K4ACgkQOeye3VZi
-gbkFeBAAj/ubgl8xubFSCCOIEW1dCuyvy6IlxYESvk6DLZB/zZva93qgEDGMgn4c
-1GVJ6IEbJ/uN1kjTZmfz7MM0a/4zNNwwn0BAMCGdnNAqNuc3g071Huj1MYaRk25h
-lOiWFu9d7nvLC9WfyapLYYqkxd81VqoG0Ktfx4k0Z9Q4utTvQ3REwEIKvZS/dyjQ
-qAxGOP/nSET7FCKY1kGqbgk6Hh3WwP7lP1TB8WB+3MyISZUnGuFlxiie0009DIoY
-R5y3ebxfMRbQEv1etqtWyHa315mm9TbFVOZyNoE6N2JSzf8m952QkATKyLwytbIY
-TBNg40Dw2TXmDTX1QNhHLJ4l5aHveZokumUxpNgN/wpf3lYlgMtoFpRDiHHql90v
-XqKNOD82vLOdUscvILmSjRhS1HX7r8x4/7e7vnvXbOCPFcotgMJk3ZL9AMPymC8e
-VvI5pmYs7arjW29UicMptZwMkeQlZu60Kx1Pw3sYh/OJESCzew6O9/IplCOFZ+cA
-c5isi5wHiYCfUVegvYbrLO8MbRJXCkCyYGcl+RwbR8NENa95S4vc2tV70VonJ2Pl
-d2MTG3jBgD0ZI3AgQmFzW3g9XheB05AJlrUqoDOYsw1/w546YlzCvz/5AWV6xI65
-nTwOpSSdNezL/FpmFARwJs4xXzw+0gkXnS9pjlZFTOZtZsYUyv4=
-=TrXc
------END PGP SIGNATURE-----
---=-=-=--
