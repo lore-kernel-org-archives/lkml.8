@@ -2,119 +2,81 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A00C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B715C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFC220747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB52B2074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cJvZ2cKD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NX6E/shB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDGWMV (ORCPT
+        id S1726555AbgDGWNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:12:21 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48657 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726380AbgDGWMU (ORCPT
+        Tue, 7 Apr 2020 18:13:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52022 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgDGWNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:12:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586297539;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+76ohg15yjGQ53/NYcOF5gb3ZEmpJpgNPDQ8a4CriK8=;
-        b=cJvZ2cKD9vAmengtppjIJwffVhqyeghHQlz0rCyAkqEeSPren99wtmjOh0HnM4PRcMPdv8
-        608GSntEd6webY9G30Yj/4TwrrcszZb0oVj5orw+grelGfClgPt0tGd375p48EOA7aoHVn
-        ioofkjkV41U1MvM9s3AzZfMTBBkzncc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-sd9nioGrNL6JI8fe_7fs1g-1; Tue, 07 Apr 2020 18:12:18 -0400
-X-MC-Unique: sd9nioGrNL6JI8fe_7fs1g-1
-Received: by mail-wr1-f70.google.com with SMTP id v14so2924975wrq.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:12:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+76ohg15yjGQ53/NYcOF5gb3ZEmpJpgNPDQ8a4CriK8=;
-        b=o8W6g4JWJ4hZK9yh7Kle6nTfJOgISj5ITxNOJBZTd4BFC1nOZrTj4sEUbrqPXUnVbO
-         tgbyzCjNNzL9HIv7jCgz1WWl5o11djLdtTPllgXCElxAsXFmenEWxu4p+1cCedMPnBnD
-         2DcCFBFM3HgSNNyYw8+VpcGgFgb1vCWpc6QgeDtq/5fYCfiXyo5EXWKyOmEzuka6vOCd
-         cKK138uoc9EUfKGmJP70n2Fjw7llM3W71TlcoWUGsz28kHYsC+04iSzTmOrpsunseKlG
-         zyQ3UbUlhYr5NHDiuJAenp6SrSXRPvneU9rTSVMZGJWFsIt2JjJpAPEyfXBSAP2B1Wm9
-         n9Ww==
-X-Gm-Message-State: AGi0PuYR4+9Xtum7gijASpefoeZj5bLG6Q2kSUXitZ+6ggsg3c63R1Xf
-        xFAeU5OEEiyxg308Xmc+IWAU8GKozH14N3MiLqDnvr8cq+qIx+1XN4qUZoEeOADtIntBrr8Bv2V
-        amSlnZbaikuHeXkvRh0UX0gfk
-X-Received: by 2002:adf:fecb:: with SMTP id q11mr5011771wrs.350.1586297537084;
-        Tue, 07 Apr 2020 15:12:17 -0700 (PDT)
-X-Google-Smtp-Source: APiQypI0zozENDA68wZyj1/iNoo3CrP+2oVdM1VBIHx12vKyt4p4dwm7FtNvUEYgy9ORH06Ztxvdpw==
-X-Received: by 2002:adf:fecb:: with SMTP id q11mr5011744wrs.350.1586297536865;
-        Tue, 07 Apr 2020 15:12:16 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:bd61:914:5c2f:2580? ([2001:b07:6468:f312:bd61:914:5c2f:2580])
-        by smtp.gmail.com with ESMTPSA id n6sm6483443wrs.81.2020.04.07.15.12.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 15:12:16 -0700 (PDT)
-Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Nadav Amit <nadav.amit@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, hch@infradead.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        mingo <mingo@redhat.com>, bp <bp@alien8.de>, hpa@zytor.com,
-        x86 <x86@kernel.org>, "Kenneth R. Crudup" <kenny@panix.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jannh@google.com, keescook@chromium.org, David.Laight@aculab.com,
-        Doug Covelli <dcovelli@vmware.com>, mhiramat@kernel.org
-References: <20200407110236.930134290@infradead.org>
- <20200407111007.429362016@infradead.org>
- <10ABBCEE-A74D-4100-99D9-05B4C1758FF6@gmail.com>
- <20200407193853.GP2452@worktop.programming.kicks-ass.net>
- <90B32DAE-0BB5-4455-8F73-C43037695E7C@gmail.com>
- <20200407205042.GT2452@worktop.programming.kicks-ass.net>
- <96C2F23A-D6F4-4A04-82B6-284788C5D2CC@gmail.com>
- <20200407212754.GU2452@worktop.programming.kicks-ass.net>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e390a895-cc09-0e9b-a05d-0c9b7bc6bfbd@redhat.com>
-Date:   Wed, 8 Apr 2020 00:12:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 7 Apr 2020 18:13:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=FXLhUp57gFBupyAqKDM1j0MtUkdYHWcwHronu354gjo=; b=NX6E/shBFjhTZtqoWnsQggljWV
+        EyLgZ5kRMQApEWr518G4omxxKtjX1mcRuhtfdBXlhdfAoVdCjqsjGRdVXjbBHd58EvScCldFtbo2F
+        hOA4FH2cuE/ghnQHveMeKwsRvzJSceJ3IbKxeE4Cs17bXDmbtKfsQTj9OljtwybWtCghbqN2ZCTG6
+        6yO26v9Tf70S8HIBje/GJxVf8BXrhRRNtA0zto7fW6Xg29BSrXtEtdaSDXdp9wQtnL448t1XfMOGb
+        27kv5jOh/xg54mKdmaIaR1N1tBzPa0ksGgQeqbilqU4O//Mhy9LRuhkF27lqjReRnOvBXme8yGguq
+        Fl0fC2Xg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLwSl-0004xw-AZ; Tue, 07 Apr 2020 22:12:55 +0000
+Date:   Tue, 7 Apr 2020 15:12:55 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive data
+ objects
+Message-ID: <20200407221255.GM21484@bombadil.infradead.org>
+References: <20200407200318.11711-1-longman@redhat.com>
+ <0fe5dcaf078be61ef21c7f18b750c5dc14c69dd7.camel@perches.com>
+ <67c51b03-192c-3006-5071-452f351aee67@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200407212754.GU2452@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67c51b03-192c-3006-5071-452f351aee67@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/04/20 23:27, Peter Zijlstra wrote:
-> On Tue, Apr 07, 2020 at 02:22:11PM -0700, Nadav Amit wrote:
->> Anyhow, I do not think it is the only use-case which is not covered by your
->> patches (even considering CRs/DRs alone). For example, there is no kernel
->> function to turn on CR4.VMXE, which is required to run hypervisors on x86.
-> That needs an exported function; there is no way we'll allow random
-> writes to CR4, there's too much dodgy stuff in there.
+On Tue, Apr 07, 2020 at 04:45:45PM -0400, Waiman Long wrote:
+> On 4/7/20 4:31 PM, Joe Perches wrote:
+> > On Tue, 2020-04-07 at 16:03 -0400, Waiman Long wrote:
+> >> +extern void kvfree_sensitive(const void *addr, size_t len);
+> > Why should size_t len be required?
+> >
+> > Why not do what kzfree does and memset
+> > the entire allocation? (area->size)
+> 
+> If the memory is really virtually mapped, the only way to find out the
+> size of the object is to use find_vm_area() which can be relatively high
+> cost and no simple helper function is available. On the other hand, the
+> length is readily available in the callers. So passing the length
+> directly to the kvfree_sensitive is simpler.
 
-native_write_cr4 and pv_ops (through which you can do write_cr4) are
-both exported, and so is cpu_tlbstate which is used by __cr4_set_bits
-and friends.  Am I missing something glaringly obvious?
-
-Paolo
-
+Also it lets us zero only the first N bytes of the allocation.  That might
+be good for performance, if only the first N bytes of an M byte allocation
+are actually sensitive.  I don't know if we have any such cases, but
+they could exist.
