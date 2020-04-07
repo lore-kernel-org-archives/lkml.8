@@ -7,43 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05DBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076D5C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB9462074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7DC520644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgDGKmE (ORCPT
+        id S1728359AbgDGKmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:42:04 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47030 "EHLO
+        Tue, 7 Apr 2020 06:42:09 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47032 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgDGKmE (ORCPT
+        with ESMTP id S1726687AbgDGKmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:42:04 -0400
+        Tue, 7 Apr 2020 06:42:05 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jLlg8-0004LQ-Vs; Tue, 07 Apr 2020 12:42:01 +0200
+        id 1jLlg8-0004LN-Kj; Tue, 07 Apr 2020 12:42:01 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 93F871C0481;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 277331C0082;
         Tue,  7 Apr 2020 12:42:00 +0200 (CEST)
-Date:   Tue, 07 Apr 2020 10:42:00 -0000
-From:   "tip-bot2 for Michael Kerrisk (man-pages)" <tip-bot2@linutronix.de>
+Date:   Tue, 07 Apr 2020 10:41:59 -0000
+From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] time/namespace: Fix time_for_children symlink
-Cc:     Michael Kerrisk <mtk.manpages@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+Subject: [tip: timers/urgent] time/namespace: Add max_time_namespaces ucount
+Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
         Dmitry Safonov <dima@arista.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andrei Vagin <avagin@gmail.com>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <a2418c48-ed80-3afe-116e-6611cb799557@gmail.com>
-References: <a2418c48-ed80-3afe-116e-6611cb799557@gmail.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        stable@kernel.org, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200406171342.128733-1-dima@arista.com>
+References: <20200406171342.128733-1-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <158625612023.28353.17886180270911841813.tip-bot2@tip-bot2>
+Message-ID: <158625611966.28353.8687396873950102990.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,54 +60,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/urgent branch of tip:
 
-Commit-ID:     b801f1e22c23c259d6a2c955efddd20370de19a6
-Gitweb:        https://git.kernel.org/tip/b801f1e22c23c259d6a2c955efddd20370de19a6
-Author:        Michael Kerrisk (man-pages) <mtk.manpages@gmail.com>
-AuthorDate:    Fri, 03 Apr 2020 14:11:39 +02:00
+Commit-ID:     eeec26d5da8248ea4e240b8795bb4364213d3247
+Gitweb:        https://git.kernel.org/tip/eeec26d5da8248ea4e240b8795bb4364213d3247
+Author:        Dmitry Safonov <dima@arista.com>
+AuthorDate:    Mon, 06 Apr 2020 18:13:42 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 07 Apr 2020 12:37:21 +02:00
 
-time/namespace: Fix time_for_children symlink
+time/namespace: Add max_time_namespaces ucount
 
-Looking at the contents of the /proc/PID/ns/time_for_children symlink shows
-an anomaly:
+Michael noticed that userns limit for number of time namespaces is missing.
 
-$ ls -l /proc/self/ns/* |awk '{print $9, $10, $11}'
-...
-/proc/self/ns/pid -> pid:[4026531836]
-/proc/self/ns/pid_for_children -> pid:[4026531836]
-/proc/self/ns/time -> time:[4026531834]
-/proc/self/ns/time_for_children -> time_for_children:[4026531834]
-/proc/self/ns/user -> user:[4026531837]
-...
+Furthermore, time namespace introduced UCOUNT_TIME_NAMESPACES, but didn't
+introduce an array member in user_table[]. It would make array's
+initialisation OOB write, but by luck the user_table array has an excessive
+empty member (all accesses to the array are limited with UCOUNT_COUNTS - so
+it silently reuses the last free member.
 
-The reference for 'time_for_children' should be a 'time' namespace, just as
-the reference for 'pid_for_children' is a 'pid' namespace.  In other words,
-the above time_for_children link should read:
-
-/proc/self/ns/time_for_children -> time:[4026531834]
+Fixes user-visible regression: max_inotify_instances by reason of the
+missing UCOUNT_ENTRY() has limited max number of namespaces instead of the
+number of inotify instances.
 
 Fixes: 769071ac9f20 ("ns: Introduce Time Namespace")
-Signed-off-by: Michael Kerrisk <mtk.manpages@gmail.com>
+Reported-by: Michael Kerrisk (man-pages) <mtk.manpages@gmail.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dmitry Safonov <dima@arista.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 Acked-by: Andrei Vagin <avagin@gmail.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/a2418c48-ed80-3afe-116e-6611cb799557@gmail.com
----
- kernel/time/namespace.c | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: stable@kernel.org
+Link: https://lkml.kernel.org/r/20200406171342.128733-1-dima@arista.com
 
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index e6ba064..3b30288 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -447,6 +447,7 @@ const struct proc_ns_operations timens_operations = {
+---
+ Documentation/admin-guide/sysctl/user.rst | 6 ++++++
+ kernel/ucount.c                           | 1 +
+ 2 files changed, 7 insertions(+)
+
+diff --git a/Documentation/admin-guide/sysctl/user.rst b/Documentation/admin-guide/sysctl/user.rst
+index 650eaa0..c458245 100644
+--- a/Documentation/admin-guide/sysctl/user.rst
++++ b/Documentation/admin-guide/sysctl/user.rst
+@@ -65,6 +65,12 @@ max_pid_namespaces
+   The maximum number of pid namespaces that any user in the current
+   user namespace may create.
  
- const struct proc_ns_operations timens_for_children_operations = {
- 	.name		= "time_for_children",
-+	.real_ns_name	= "time",
- 	.type		= CLONE_NEWTIME,
- 	.get		= timens_for_children_get,
- 	.put		= timens_put,
++max_time_namespaces
++===================
++
++  The maximum number of time namespaces that any user in the current
++  user namespace may create.
++
+ max_user_namespaces
+ ===================
+ 
+diff --git a/kernel/ucount.c b/kernel/ucount.c
+index a53cc2b..29c60eb 100644
+--- a/kernel/ucount.c
++++ b/kernel/ucount.c
+@@ -69,6 +69,7 @@ static struct ctl_table user_table[] = {
+ 	UCOUNT_ENTRY("max_net_namespaces"),
+ 	UCOUNT_ENTRY("max_mnt_namespaces"),
+ 	UCOUNT_ENTRY("max_cgroup_namespaces"),
++	UCOUNT_ENTRY("max_time_namespaces"),
+ #ifdef CONFIG_INOTIFY_USER
+ 	UCOUNT_ENTRY("max_inotify_instances"),
+ 	UCOUNT_ENTRY("max_inotify_watches"),
