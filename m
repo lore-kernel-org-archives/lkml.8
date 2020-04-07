@@ -2,212 +2,199 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402A1C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58918C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C5D20719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAE620731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sVoo3UD0"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="nOk9rWpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgDGKLj (ORCPT
+        id S1728182AbgDGKM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:11:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45257 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgDGKLi (ORCPT
+        Tue, 7 Apr 2020 06:12:59 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44678 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbgDGKM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:11:38 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t4so1039549plq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 03:11:36 -0700 (PDT)
+        Tue, 7 Apr 2020 06:12:58 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n13so51350pgp.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 03:12:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=3Lk5/xOF8GmAm5CGxsYxvvNGCwk8oZx7GJZ2RMStRsA=;
-        b=sVoo3UD03yj9EpPDPBT1OiLH75+8rv65KzM6qPBb35hNNuwPd8TSDJVfDT+iFslcV8
-         MiUR5iyFHEXsbd8HBTwGvq84HunNGYdHb+0tPlkwiHdo6XZCDwuF9/i8DE0QpBKcmQGM
-         grYuEdJk350htD1sYEG9IeofrQHk5uYQU/O/F4w58NEmy5O+DvVVdj9Z3d0I2jzUZetc
-         3nYoungIn6blgf1HjfsYeNGDrXqUo+nQYRWj4c4GPMxk+pS13iJGMItuz8xa7e8veNq8
-         tmX5peWY1c2qjQnQaKJCxg01IqG+xvaIUEQWZzjA50B+MHmfV4HV/rMomPGT0y7QVOIL
-         JT8g==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a8i4khJ2KcrGmdxzmtKfXDum+Yb2tcDobJuT0WVUMyY=;
+        b=nOk9rWpvUWW9ZR0XhVG5/G2INLiEWxZxORPnRkJZWmD+FAJb5kXiPvGh1GqSGsqjeX
+         kdPPCEBX/hiTo4GYm7crPPXvsfA7o3XK//1PZXtdWkg9f09ON53fiWBFUzXbC/ff8cIT
+         tmVNuCI74QAfXIPKvKm14UTQdwztAXgUiJ6Gd8sn6fn9OsjS92l21wypaEmdrypCA9pq
+         BNJvjAmhrT1n2I+99vdOhTCsEfwYurQpal7RQxOGzfmZ4uICXKjGhDWWqJJ/j/sM2EPp
+         ls6oE+nhJPfVVzXaMcfaHq566PWcxXDn6XLEmbvZNr5Ge6PGPiPS7oPaZCmUj14hWO/G
+         BJEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3Lk5/xOF8GmAm5CGxsYxvvNGCwk8oZx7GJZ2RMStRsA=;
-        b=q+6g+wgTaVgpk7Tt4BdTGxvnRbMY5lSnlUF1iDr4sc76x4ylF5VYeaXOemNm+SrqO8
-         wXOTGK+Yfa15oVl0wn4h7H61RH+YSUZzmHIXcpjsFqs/VG+l1f/+jJfyRsj5yI9Ud0pI
-         Leo+g8FwYarH8pAOx9Fl+uag6X7S/tGf1zaGczQqSw6SNoj60ZW4INO6qBY+DcsF1ePZ
-         PsWNpXZNc1PXdDk//4LHX/o+hOCj7jFmU7HVicaR4IjOWoroXSzPkKKh1xUQuw/5aNg5
-         zwi43P5T7OccNBioUkpelAh3rnoxomioGVnuskT8kuN82A8PIViHS1eW2+MPOfyHHksE
-         9qqg==
-X-Gm-Message-State: AGi0PuYbL4By2lfYBq7taLtLeDN7iqW3Ftuetw95leYr2qIAQ5rPjoMD
-        SmYIqqA5Ye9Kgd3x0Ea0hIxyRg==
-X-Google-Smtp-Source: APiQypIK+S5PEPLtnd7TZeAcCYxZYT5PuRWNTQmfbuH/XPngzM4EJQcB3Sxl1EsdijdFqy4CGHVbHQ==
-X-Received: by 2002:a17:90a:c256:: with SMTP id d22mr1911489pjx.78.1586254295563;
-        Tue, 07 Apr 2020 03:11:35 -0700 (PDT)
-Received: from localhost.localdomain ([117.196.230.86])
-        by smtp.gmail.com with ESMTPSA id q67sm1228692pjq.29.2020.04.07.03.11.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 07 Apr 2020 03:11:34 -0700 (PDT)
-From:   Sumit Garg <sumit.garg@linaro.org>
-To:     linux-wireless@vger.kernel.org, johannes@sipsolutions.net
-Cc:     davem@davemloft.net, kuba@kernel.org, kvalo@codeaurora.org,
-        chaitanya.mgit@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, matthias.schoepfer@ithinx.io,
-        Philipp.Berg@liebherr.com, Michael.Weitner@liebherr.com,
-        daniel.thompson@linaro.org, loic.poulain@linaro.org,
-        Sumit Garg <sumit.garg@linaro.org>, stable@vger.kernel.org
-Subject: [PATCH v2] mac80211: fix race in ieee80211_register_hw()
-Date:   Tue,  7 Apr 2020 15:40:55 +0530
-Message-Id: <1586254255-28713-1-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=a8i4khJ2KcrGmdxzmtKfXDum+Yb2tcDobJuT0WVUMyY=;
+        b=OglZM4rfDLll5wy04EUGGlgMGYhmhp+9+hsr/Us9LY7F4wHdbbeyrCGZ3/Ku/7BJeH
+         mxGF4hSmocnXaqLtioJ+3A0gvl2q89k8huB3I328BHfyHXI1SMTmcrsJz/HNv3IuoKxT
+         gNr0tIUrfJ18eIVHvv/CgezcjcKPpQ3t+xd32waiLyUFgL33aeju3AZuBjZRJsHVOJv1
+         iUXlbLslMAYjfKm5x9+xUCXZHQi8W4UXwhBys7HTK2jZLkFwhZUG6OLm7f2zyB5EIlye
+         TugT3d73DvePOtGqIx7RcAvbl/Of5v9iyfhkWEvxGLUYGBTXXfrGxxzdIzAV6V0bJCso
+         abrw==
+X-Gm-Message-State: AGi0PubV3wX1PjoYbYSly1V9YAhw80QHW6ePJz7hI9ljCYITYFCRwhRT
+        OSfofuF9n4PRbuCjvWaVjkq2TA==
+X-Google-Smtp-Source: APiQypJLLS0FyNawqLeKHbHtlQlxscIIjaceNOzSmmzi917mUFJ/THD3pIjtFSh4LL8fbhI2jZPlpw==
+X-Received: by 2002:a62:76d1:: with SMTP id r200mr1872109pfc.298.1586254375390;
+        Tue, 07 Apr 2020 03:12:55 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-87-207.dyn.iinet.net.au. [124.171.87.207])
+        by smtp.gmail.com with ESMTPSA id w134sm13401066pfd.41.2020.04.07.03.12.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 03:12:54 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct
+ device
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+References: <87sghz2ibh.fsf@linux.ibm.com> <20200323172256.GB31269@lst.de>
+ <ffce1af6-a215-dee8-7b5c-2111f43accfd@ozlabs.ru>
+ <20200324075402.GJ23447@lst.de>
+ <41975da3-3a4a-fc3c-2b90-8d607cf220e6@ozlabs.ru>
+ <20200325083740.GC21605@lst.de>
+ <a705afc5-779d-baf4-e5d2-e2da04c82743@ozlabs.ru>
+ <213b0c7d-f908-b4f4-466d-6240c3622cd6@ozlabs.ru>
+ <20200406115016.GA10941@lst.de>
+ <348046e7-7a38-62d6-4df0-e4a537b98926@ozlabs.ru>
+ <20200406171706.GA3231@lst.de>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <95395244-bdec-84d2-b81b-3040c076fe4d@ozlabs.ru>
+Date:   Tue, 7 Apr 2020 20:12:49 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200406171706.GA3231@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A race condition leading to a kernel crash is observed during invocation
-of ieee80211_register_hw() on a dragonboard410c device having wcn36xx
-driver built as a loadable module along with a wifi manager in user-space
-waiting for a wifi device (wlanX) to be active.
 
-Sequence diagram for a particular kernel crash scenario:
 
-    user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-       |                    |                 |
-       |<---phy0----wiphy_register()          |
-       |-----iwd if_add---->|                 |
-       |                    |<---IRQ----(RX packet)
-       |              Kernel crash            |
-       |              due to unallocated      |
-       |              workqueue.              |
-       |                    |                 |
-       |       alloc_ordered_workqueue()      |
-       |                    |                 |
-       |              Misc wiphy init.        |
-       |                    |                 |
-       |            ieee80211_if_add()        |
-       |                    |                 |
+On 07/04/2020 03:17, Christoph Hellwig wrote:
+> On Mon, Apr 06, 2020 at 11:25:09PM +1000, Alexey Kardashevskiy wrote:
+>>>> Do you see any serious problem with this approach? Thanks!
+>>>
+>>> Do you have a link to the whole branch?  The github UI is unfortunately
+>>> unusable for that (or I'm missing something).
+>>
+>> The UI shows the branch but since I rebased and forcepushed it, it does
+>> not. Here is the current one with:
+>>
+>> https://github.com/aik/linux/commits/dma-bypass.3
+> 
+> Ok, so we use the core bypass without persistent memory, and then
+> have another bypass mode on top.  Not great, but I can't think
+> of anything better.  Note that your checks for the map_sg case
+> aren't very efficient - for one it would make sense to calculate
+> the limit only once, 
 
-As evident from above sequence diagram, this race condition isn't specific
-to a particular wifi driver but rather the initialization sequence in
-ieee80211_register_hw() needs to be fixed. So re-order the initialization
-sequence and the updated sequence diagram would look like:
+Good points, I'll post revised version when you post your v3 of this.
 
-    user-space  ieee80211_register_hw()  ieee80211_tasklet_handler()
-    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-       |                    |                 |
-       |       alloc_ordered_workqueue()      |
-       |                    |                 |
-       |              Misc wiphy init.        |
-       |                    |                 |
-       |<---phy0----wiphy_register()          |
-       |-----iwd if_add---->|                 |
-       |                    |<---IRQ----(RX packet)
-       |                    |                 |
-       |            ieee80211_if_add()        |
-       |                    |                 |
+> but also it would make sense to reuse the
+> calculted diecect mapping addresses instead of doing another pass
+> later on in the dma-direct code.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
+Probably but I wonder what kind of hardware we need to see the
+difference. I might try, just need to ride to the office to plug the
+cable in my 100GBit eth machines :) Thanks,
 
-Changes in v2:
-- Move rtnl_unlock() just after ieee80211_init_rate_ctrl_alg().
-- Update sequence diagrams in commit message for more clarification.
 
- net/mac80211/main.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
-
-diff --git a/net/mac80211/main.c b/net/mac80211/main.c
-index 4c2b5ba..d497129 100644
---- a/net/mac80211/main.c
-+++ b/net/mac80211/main.c
-@@ -1051,7 +1051,7 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 		local->hw.wiphy->signal_type = CFG80211_SIGNAL_TYPE_UNSPEC;
- 		if (hw->max_signal <= 0) {
- 			result = -EINVAL;
--			goto fail_wiphy_register;
-+			goto fail_workqueue;
- 		}
- 	}
- 
-@@ -1113,7 +1113,7 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 
- 	result = ieee80211_init_cipher_suites(local);
- 	if (result < 0)
--		goto fail_wiphy_register;
-+		goto fail_workqueue;
- 
- 	if (!local->ops->remain_on_channel)
- 		local->hw.wiphy->max_remain_on_channel_duration = 5000;
-@@ -1139,10 +1139,6 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 
- 	local->hw.wiphy->max_num_csa_counters = IEEE80211_MAX_CSA_COUNTERS_NUM;
- 
--	result = wiphy_register(local->hw.wiphy);
--	if (result < 0)
--		goto fail_wiphy_register;
--
- 	/*
- 	 * We use the number of queues for feature tests (QoS, HT) internally
- 	 * so restrict them appropriately.
-@@ -1207,6 +1203,8 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 		goto fail_rate;
- 	}
- 
-+	rtnl_unlock();
-+
- 	if (local->rate_ctrl) {
- 		clear_bit(IEEE80211_HW_SUPPORTS_VHT_EXT_NSS_BW, hw->flags);
- 		if (local->rate_ctrl->ops->capa & RATE_CTRL_CAPA_VHT_EXT_NSS_BW)
-@@ -1254,6 +1252,12 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 		local->sband_allocated |= BIT(band);
- 	}
- 
-+	result = wiphy_register(local->hw.wiphy);
-+	if (result < 0)
-+		goto fail_wiphy_register;
-+
-+	rtnl_lock();
-+
- 	/* add one default STA interface if supported */
- 	if (local->hw.wiphy->interface_modes & BIT(NL80211_IFTYPE_STATION) &&
- 	    !ieee80211_hw_check(hw, NO_AUTO_VIF)) {
-@@ -1293,6 +1297,8 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- #if defined(CONFIG_INET) || defined(CONFIG_IPV6)
-  fail_ifa:
- #endif
-+	wiphy_unregister(local->hw.wiphy);
-+ fail_wiphy_register:
- 	rtnl_lock();
- 	rate_control_deinitialize(local);
- 	ieee80211_remove_interfaces(local);
-@@ -1302,8 +1308,6 @@ int ieee80211_register_hw(struct ieee80211_hw *hw)
- 	ieee80211_led_exit(local);
- 	destroy_workqueue(local->workqueue);
-  fail_workqueue:
--	wiphy_unregister(local->hw.wiphy);
-- fail_wiphy_register:
- 	if (local->wiphy_ciphers_allocated)
- 		kfree(local->hw.wiphy->cipher_suites);
- 	kfree(local->int_scan_req);
-@@ -1353,8 +1357,8 @@ void ieee80211_unregister_hw(struct ieee80211_hw *hw)
- 	skb_queue_purge(&local->skb_queue_unreliable);
- 	skb_queue_purge(&local->skb_queue_tdls_chsw);
- 
--	destroy_workqueue(local->workqueue);
- 	wiphy_unregister(local->hw.wiphy);
-+	destroy_workqueue(local->workqueue);
- 	ieee80211_led_exit(local);
- 	kfree(local->int_scan_req);
- }
 -- 
-2.7.4
-
+Alexey
