@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C2EC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5052C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A31F62074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A03E420771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255231;
-	bh=7d/wJqUuz5hIfd5ZLbF0o2zPbMj1oDOeQJTFbf3ygB8=;
+	s=default; t=1586255236;
+	bh=xGZH/xfyVGtNxM8KRokDTvG6RUGbGegXIurZFLA+fXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7Qg98U6dh0U/ismEZmGPwOtKlcmVQmU5LnmkJTeUoNmnhosqAvXZ6Qnqr1PTrZUp
-	 FdVEz3jqkqBdI15+RRkRcQ03lOVjKB0eX2cMJO4SudGkY9vOLyw9VzdCryLccQWzzq
-	 OaLqJ6accGeI2sHPXBiOmjM5bztVPWGrQnp2PRL0=
+	b=BaHW/9ykOkvEdHhLWW+oeU3WcR+rIOr5LNQ2/Fg6If0ZS6BjOTSE/a6ghIMRw6KdF
+	 5L64N7Or3KtvfXC/pA+59jzSY5muvNLA24IZZzqfbDj9L/cV6u30j2JALs/EYbleub
+	 649mHCzUdrJ/QJVHOSTTOB/dCrAV0G/sgavIRE68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgDGK1K (ORCPT
+        id S1729283AbgDGK1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:27:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39432 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:27:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729279AbgDGK1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:27:05 -0400
+        id S1728482AbgDGK1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:27:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CF772078A;
-        Tue,  7 Apr 2020 10:27:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFFF820801;
+        Tue,  7 Apr 2020 10:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255224;
-        bh=7d/wJqUuz5hIfd5ZLbF0o2zPbMj1oDOeQJTFbf3ygB8=;
+        s=default; t=1586255232;
+        bh=xGZH/xfyVGtNxM8KRokDTvG6RUGbGegXIurZFLA+fXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vbGfCIqEdCD9oLndXrXQGpjWMO1fh626n1j86oBsTDsG3IXbHK3qJ7PiG2ySvY8JJ
-         GN7G4hnirqOW324nWv71ZEE7rVwR7/aRsiuPOGwRY0HIc10WjL1X4pxMtFxIvONtNJ
-         yrw+vvzTYn1nkxLm5mUxj/0RoT+Nh8OtrrSCSs8I=
+        b=LFyTYpFrXkXMwaJSmOrH/UfCQ16BfofXQxCnmXpAjQGgInmVYDjsQJjltaq0xzJKO
+         lu2MSgunDncXKntxdRgkuUVRXyXWGvousAPc20VMK1zhLOhCTHEv/GY1/sEoMb21kt
+         Y7sxznITIuNwTndEFpuDjAjs8gQR18bRI7HliPAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Dmitry V. Levin" <ldv@altlinux.org>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.6 26/29] Revert "ALSA: uapi: Drop asound.h inclusion from asoc.h"
-Date:   Tue,  7 Apr 2020 12:22:23 +0200
-Message-Id: <20200407101455.292977095@linuxfoundation.org>
+        stable@vger.kernel.org, Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH 5.6 29/29] soc: mediatek: knows_txdone needs to be set in Mediatek CMDQ helper
+Date:   Tue,  7 Apr 2020 12:22:26 +0200
+Message-Id: <20200407101455.698732087@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
 References: <20200407101452.046058399@linuxfoundation.org>
@@ -59,36 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
 
-commit b6f69c795547f59ddf1db17cddbd2b9a15c656ed upstream.
+commit ce35e21d82bcac8b3fd5128888f9e233f8444293 upstream.
 
-This reverts commit 645c08f17f477915f6d900b767e789852f150054
-which was reported to break the build a program using this header.
+Mediatek CMDQ driver have a mechanism to do TXDONE_BY_ACK,
+so we should set knows_txdone.
 
-The original issue was addressed in the alsa-lib side recently, so we
-can make the header more self-contained again.
+Fixes:576f1b4bc802 ("soc: mediatek: Add Mediatek CMDQ helper")
 
-Reported-by: Dmitry V. Levin <ldv@altlinux.org>
-Fixes: 645c08f17f47 ("ALSA: uapi: Drop asound.h inclusion from asoc.h")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200331090023.8112-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org # v5.0+
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/sound/asoc.h |    1 +
+ drivers/soc/mediatek/mtk-cmdq-helper.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/include/uapi/sound/asoc.h
-+++ b/include/uapi/sound/asoc.h
-@@ -17,6 +17,7 @@
- #define __LINUX_UAPI_SND_ASOC_H
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -78,6 +78,7 @@ struct cmdq_client *cmdq_mbox_create(str
+ 	client->pkt_cnt = 0;
+ 	client->client.dev = dev;
+ 	client->client.tx_block = false;
++	client->client.knows_txdone = true;
+ 	client->chan = mbox_request_channel(&client->client, index);
  
- #include <linux/types.h>
-+#include <sound/asound.h>
- 
- /*
-  * Maximum number of channels topology kcontrol can represent.
+ 	if (IS_ERR(client->chan)) {
 
 
