@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAFAC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B42C38A2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920AC2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A79720857
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgDGSii (ORCPT
+        id S1727945AbgDGSiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:38:38 -0400
-Received: from 8bytes.org ([81.169.241.247]:57560 "EHLO theia.8bytes.org"
+        Tue, 7 Apr 2020 14:38:52 -0400
+Received: from 8bytes.org ([81.169.241.247]:57434 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbgDGSiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:38:03 -0400
+        id S1726977AbgDGSiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 14:38:02 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A01776A7; Tue,  7 Apr 2020 20:37:54 +0200 (CEST)
+        id D53E25D8; Tue,  7 Apr 2020 20:37:52 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -45,9 +45,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [RFC PATCH 32/34] iommu/exynos: Convert to probe/release_device() call-backs
-Date:   Tue,  7 Apr 2020 20:37:40 +0200
-Message-Id: <20200407183742.4344-33-joro@8bytes.org>
+Subject: [RFC PATCH 24/34] iommu/mediatek-v1 Convert to probe/release_device() call-backs
+Date:   Tue,  7 Apr 2020 20:37:32 +0200
+Message-Id: <20200407183742.4344-25-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200407183742.4344-1-joro@8bytes.org>
 References: <20200407183742.4344-1-joro@8bytes.org>
@@ -58,78 +58,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Convert the Exynos IOMMU drivers to use the probe_device() and
+Convert the Mediatek-v1 IOMMU driver to use the probe_device() and
 release_device() call-backs of iommu_ops, so that the iommu core code
 does the group and sysfs setup.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/exynos-iommu.c | 23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+ drivers/iommu/mtk_iommu_v1.c | 50 +++++++++++++++---------------------
+ 1 file changed, 20 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-index 86ecccbf0438..f865c9093722 100644
---- a/drivers/iommu/exynos-iommu.c
-+++ b/drivers/iommu/exynos-iommu.c
-@@ -1223,19 +1223,13 @@ static phys_addr_t exynos_iommu_iova_to_phys(struct iommu_domain *iommu_domain,
- 	return phys;
+diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
+index a31be05601c9..7bdd74c7cb9f 100644
+--- a/drivers/iommu/mtk_iommu_v1.c
++++ b/drivers/iommu/mtk_iommu_v1.c
+@@ -416,14 +416,12 @@ static int mtk_iommu_create_mapping(struct device *dev,
+ 	return 0;
  }
  
--static int exynos_iommu_add_device(struct device *dev)
-+static struct iommu_device *exynos_iommu_probe_device(struct device *dev)
+-static int mtk_iommu_add_device(struct device *dev)
++static struct iommu_device *mtk_iommu_probe_device(struct device *dev)
  {
- 	struct exynos_iommu_owner *owner = dev->archdata.iommu;
- 	struct sysmmu_drvdata *data;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+-	struct dma_iommu_mapping *mtk_mapping;
+ 	struct of_phandle_args iommu_spec;
+ 	struct of_phandle_iterator it;
+ 	struct mtk_iommu_data *data;
 -	struct iommu_group *group;
+ 	int err;
  
- 	if (!has_sysmmu(dev))
--		return -ENODEV;
--
--	group = iommu_group_get_for_dev(dev);
--
+ 	of_for_each_phandle(&it, err, dev->of_node, "iommus",
+@@ -442,35 +440,28 @@ static int mtk_iommu_add_device(struct device *dev)
+ 	}
+ 
+ 	if (!fwspec || fwspec->ops != &mtk_iommu_ops)
+-		return -ENODEV; /* Not a iommu client device */
++		return ERR_PTR(-ENODEV); /* Not a iommu client device */
+ 
+-	/*
+-	 * This is a short-term bodge because the ARM DMA code doesn't
+-	 * understand multi-device groups, but we have to call into it
+-	 * successfully (and not just rely on a normal IOMMU API attach
+-	 * here) in order to set the correct DMA API ops on @dev.
+-	 */
+-	group = iommu_group_alloc();
 -	if (IS_ERR(group))
 -		return PTR_ERR(group);
-+		return ERR_PTR(-ENODEV);
++	data = dev_iommu_priv_get(dev);
  
- 	list_for_each_entry(data, &owner->controllers, owner_node) {
- 		/*
-@@ -1247,14 +1241,11 @@ static int exynos_iommu_add_device(struct device *dev)
- 					     DL_FLAG_STATELESS |
- 					     DL_FLAG_PM_RUNTIME);
- 	}
+-	err = iommu_group_add_device(group, dev);
 -	iommu_group_put(group);
+-	if (err)
+-		return err;
++	return &data->iommu;
++}
  
--	iommu_device_link(&owner->iommu, dev);
--
--	return 0;
-+	return &owner->iommu;
+-	data = dev_iommu_priv_get(dev);
++static void mtk_iommu_probe_finalize(struct device *dev)
++{
++	struct dma_iommu_mapping *mtk_mapping;
++	struct mtk_iommu_data *data;
++	int err;
++
++	data        = dev_iommu_priv_get(dev);
+ 	mtk_mapping = data->dev->archdata.iommu;
+-	err = arm_iommu_attach_device(dev, mtk_mapping);
+-	if (err) {
+-		iommu_group_remove_device(dev);
+-		return err;
+-	}
+ 
+-	return iommu_device_link(&data->iommu, dev);
++	err = arm_iommu_attach_device(dev, mtk_mapping);
++	if (err)
++		dev_err(dev, "Can't create IOMMU mapping - DMA-OPS will not work\n");
  }
  
--static void exynos_iommu_remove_device(struct device *dev)
-+static void exynos_iommu_release_device(struct device *dev)
+-static void mtk_iommu_remove_device(struct device *dev)
++static void mtk_iommu_release_device(struct device *dev)
  {
- 	struct exynos_iommu_owner *owner = dev->archdata.iommu;
- 	struct sysmmu_drvdata *data;
-@@ -1272,8 +1263,6 @@ static void exynos_iommu_remove_device(struct device *dev)
- 			iommu_group_put(group);
- 		}
- 	}
--	iommu_device_unlink(&owner->iommu, dev);
--	iommu_group_remove_device(dev);
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	struct mtk_iommu_data *data;
+@@ -479,9 +470,6 @@ static void mtk_iommu_remove_device(struct device *dev)
+ 		return;
  
- 	list_for_each_entry(data, &owner->controllers, owner_node)
- 		device_link_del(data->link);
-@@ -1381,8 +1370,8 @@ static const struct iommu_ops exynos_iommu_ops = {
- 	.unmap = exynos_iommu_unmap,
- 	.iova_to_phys = exynos_iommu_iova_to_phys,
- 	.device_group = generic_device_group,
--	.add_device = exynos_iommu_add_device,
--	.remove_device = exynos_iommu_remove_device,
-+	.probe_device = exynos_iommu_probe_device,
-+	.release_device = exynos_iommu_release_device,
- 	.pgsize_bitmap = SECT_SIZE | LPAGE_SIZE | SPAGE_SIZE,
- 	.of_xlate = exynos_iommu_of_xlate,
+ 	data = dev_iommu_priv_get(dev);
+-	iommu_device_unlink(&data->iommu, dev);
+-
+-	iommu_group_remove_device(dev);
+ 	iommu_fwspec_free(dev);
+ }
+ 
+@@ -534,8 +522,10 @@ static const struct iommu_ops mtk_iommu_ops = {
+ 	.map		= mtk_iommu_map,
+ 	.unmap		= mtk_iommu_unmap,
+ 	.iova_to_phys	= mtk_iommu_iova_to_phys,
+-	.add_device	= mtk_iommu_add_device,
+-	.remove_device	= mtk_iommu_remove_device,
++	.probe_device	= mtk_iommu_probe_device,
++	.probe_finalize = mtk_iommu_probe_finalize,
++	.release_device	= mtk_iommu_release_device,
++	.device_group	= generic_device_group,
+ 	.pgsize_bitmap	= ~0UL << MT2701_IOMMU_PAGE_SHIFT,
  };
+ 
 -- 
 2.17.1
 
