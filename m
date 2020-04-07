@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4352EC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD6FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128E12054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD092054F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgDGBeQ (ORCPT
+        id S1726481AbgDGBem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:34:16 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:43702 "EHLO
+        Mon, 6 Apr 2020 21:34:42 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:43816 "EHLO
         out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgDGBeP (ORCPT
+        with ESMTP id S1726230AbgDGBem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:34:15 -0400
+        Mon, 6 Apr 2020 21:34:42 -0400
 Received: from in02.mta.xmission.com ([166.70.13.52])
         by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.90_1)
         (envelope-from <ebiederm@xmission.com>)
-        id 1jLd82-0003J4-7V; Mon, 06 Apr 2020 19:34:14 -0600
+        id 1jLd8T-0003KF-9S; Mon, 06 Apr 2020 19:34:41 -0600
 Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
         by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1jLd81-0002Tn-B4; Mon, 06 Apr 2020 19:34:14 -0600
+        id 1jLd8S-0002Vt-FJ; Mon, 06 Apr 2020 19:34:41 -0600
 From:   ebiederm@xmission.com (Eric W. Biederman)
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
@@ -48,18 +48,18 @@ References: <87blobnq02.fsf@x220.int.ebiederm.org>
         <87lfnda3w3.fsf@x220.int.ebiederm.org>
         <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
         <87wo6s3wxd.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 06 Apr 2020 20:31:25 -0500
+Date:   Mon, 06 Apr 2020 20:31:52 -0500
 In-Reply-To: <87wo6s3wxd.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
         message of "Mon, 06 Apr 2020 20:29:50 -0500")
-Message-ID: <87o8s43wuq.fsf_-_@x220.int.ebiederm.org>
+Message-ID: <87imic3wtz.fsf_-_@x220.int.ebiederm.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1jLd81-0002Tn-B4;;;mid=<87o8s43wuq.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19skiKFAzO68dt2CUixJOa4ehdieyfTS30=
+X-XM-SPF: eid=1jLd8S-0002Vt-FJ;;;mid=<87imic3wtz.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18oi+lq2LNPkBvf0FQ+az02C9Ie0QAYJFE=
 X-SA-Exim-Connect-IP: 68.227.160.95
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 1/3] binfmt: Move install_exec_creds after setup_new_exec to match binfmt_elf
+Subject: [PATCH 2/3] exec: Make unlocking exec_update_mutex explict
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
 X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,109 +68,66 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-In 2016 Linus moved install_exec_creds immediately after
-setup_new_exec, in binfmt_elf as a cleanup and as part of closing a
-potential information leak.
+With install_exec_creds updated to follow immediately after
+setup_new_exec, the failure of unshare_sighand is the only
+code path where exec_update_mutex is held but not explicitly
+unlocked.
 
-Perform the same cleanup for the other binary formats.
+Update that code path to explicitly unlock exec_update_mutex.
 
-Different binary formats doing the same things the same way makes exec
-easier to reason about and easier to maintain.
+Remove the unlocking of exec_update_mutex from free_bprm.
 
-Putting install_exec_creds immediate after setup_new_exec makes many
-simplifications possible in the code.
-
-Ref: 9f834ec18def ("binfmt_elf: switch to new creds when switching to new mm")
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- arch/x86/ia32/ia32_aout.c | 3 +--
- fs/binfmt_aout.c          | 2 +-
- fs/binfmt_elf_fdpic.c     | 2 +-
- fs/binfmt_flat.c          | 3 +--
- 4 files changed, 4 insertions(+), 6 deletions(-)
+ fs/exec.c               | 6 +++---
+ include/linux/binfmts.h | 3 +--
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/ia32/ia32_aout.c b/arch/x86/ia32/ia32_aout.c
-index 9bb71abd66bd..37b36a8ce5fa 100644
---- a/arch/x86/ia32/ia32_aout.c
-+++ b/arch/x86/ia32/ia32_aout.c
-@@ -140,6 +140,7 @@ static int load_aout_binary(struct linux_binprm *bprm)
- 	set_personality_ia32(false);
+diff --git a/fs/exec.c b/fs/exec.c
+index d55710a36056..28c87020da9b 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1318,7 +1318,7 @@ int flush_old_exec(struct linux_binprm * bprm)
+ 	 */
+ 	retval = unshare_sighand(me);
+ 	if (retval)
+-		goto out;
++		goto out_unlock;
  
- 	setup_new_exec(bprm);
-+	install_exec_creds(bprm);
+ 	set_fs(USER_DS);
+ 	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+@@ -1335,6 +1335,8 @@ int flush_old_exec(struct linux_binprm * bprm)
+ 	do_close_on_exec(me->files);
+ 	return 0;
  
- 	regs->cs = __USER32_CS;
- 	regs->r8 = regs->r9 = regs->r10 = regs->r11 = regs->r12 =
-@@ -156,8 +157,6 @@ static int load_aout_binary(struct linux_binprm *bprm)
- 	if (retval < 0)
- 		return retval;
- 
--	install_exec_creds(bprm);
--
- 	if (N_MAGIC(ex) == OMAGIC) {
- 		unsigned long text_addr, map_size;
- 
-diff --git a/fs/binfmt_aout.c b/fs/binfmt_aout.c
-index 8e8346a81723..ace587b66904 100644
---- a/fs/binfmt_aout.c
-+++ b/fs/binfmt_aout.c
-@@ -162,6 +162,7 @@ static int load_aout_binary(struct linux_binprm * bprm)
- 	set_personality(PER_LINUX);
- #endif
- 	setup_new_exec(bprm);
-+	install_exec_creds(bprm);
- 
- 	current->mm->end_code = ex.a_text +
- 		(current->mm->start_code = N_TXTADDR(ex));
-@@ -174,7 +175,6 @@ static int load_aout_binary(struct linux_binprm * bprm)
- 	if (retval < 0)
- 		return retval;
- 
--	install_exec_creds(bprm);
- 
- 	if (N_MAGIC(ex) == OMAGIC) {
- 		unsigned long text_addr, map_size;
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index 240f66663543..6c94c6d53d97 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -353,6 +353,7 @@ static int load_elf_fdpic_binary(struct linux_binprm *bprm)
- 		current->personality |= READ_IMPLIES_EXEC;
- 
- 	setup_new_exec(bprm);
-+	install_exec_creds(bprm);
- 
- 	set_binfmt(&elf_fdpic_format);
- 
-@@ -434,7 +435,6 @@ static int load_elf_fdpic_binary(struct linux_binprm *bprm)
- 	current->mm->start_stack = current->mm->start_brk + stack_size;
- #endif
- 
--	install_exec_creds(bprm);
- 	if (create_elf_fdpic_tables(bprm, current->mm,
- 				    &exec_params, &interp_params) < 0)
- 		goto error;
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index 831a2b25ba79..1a1d1fcb893f 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -541,6 +541,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		/* OK, This is the point of no return */
- 		set_personality(PER_LINUX_32BIT);
- 		setup_new_exec(bprm);
-+		install_exec_creds(bprm);
++out_unlock:
++	mutex_unlock(&me->signal->exec_update_mutex);
+ out:
+ 	return retval;
+ }
+@@ -1451,8 +1453,6 @@ static void free_bprm(struct linux_binprm *bprm)
+ {
+ 	free_arg_pages(bprm);
+ 	if (bprm->cred) {
+-		if (bprm->called_exec_mmap)
+-			mutex_unlock(&current->signal->exec_update_mutex);
+ 		mutex_unlock(&current->signal->cred_guard_mutex);
+ 		abort_creds(bprm->cred);
  	}
- 
- 	/*
-@@ -963,8 +964,6 @@ static int load_flat_binary(struct linux_binprm *bprm)
- 		}
- 	}
- 
--	install_exec_creds(bprm);
--
- 	set_binfmt(&flat_format);
- 
- #ifdef CONFIG_MMU
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index a345d9fed3d8..6f564b9ad882 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -47,8 +47,7 @@ struct linux_binprm {
+ 		secureexec:1,
+ 		/*
+ 		 * Set by flush_old_exec, when exec_mmap has been called.
+-		 * This is past the point of no return, when the
+-		 * exec_update_mutex has been taken.
++		 * This is past the point of no return.
+ 		 */
+ 		called_exec_mmap:1;
+ #ifdef __alpha__
 -- 
 2.25.0
 
