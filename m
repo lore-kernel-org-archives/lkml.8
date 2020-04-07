@@ -2,200 +2,215 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E702EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CA3C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDFA220678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586258658;
-	bh=ToeUGVKs2m7tQPOrE7jPA5m63P5LsU8L+DPLAlYfTSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gDHZNxUR0o3Y2e/pprvIOmlx/uEt1joYHrjgbm/f40wJdlMWJ0/unU9JUUn/s2+0C
-	 4PEU3Xs4MXxWybC6zi0fjRJIXk9v8HmtBmyH0HGpJoiwYHWXLfXzXCmMMl9qacle0O
-	 xwxOW8V6myvwonRtcInJ6bsFIOzaa/L9QcZsxnJA=
+	by mail.kernel.org (Postfix) with ESMTP id 9B5F62051A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgDGLYR (ORCPT
+        id S1728191AbgDGLY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:24:17 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38509 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgDGLYR (ORCPT
+        Tue, 7 Apr 2020 07:24:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47954 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725883AbgDGLY4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:24:17 -0400
-Received: by mail-wr1-f68.google.com with SMTP id 31so3444200wre.5;
-        Tue, 07 Apr 2020 04:24:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MTMyoXMJ8VtLDWI+hysH64pppYa/Gy4OIX+TpR9pxFY=;
-        b=nV9S7thWemIC3BaTKa18QQ8G43Uxx4zeU2bh65Fg3cpBdV0o+AmvfGAwmA1HLvwdSW
-         wnbtPccNNtwGJNDkg++JmHqSz/KdC8SugwXzP0/HP9wbH8PmdhlbsJ5ZdSUcUVCRgoN2
-         sWceDkxcZZOYUDMoCzPgu8DAO1gR7xT0lYd8C3ZFfdS818H48vMFhcFMjNV/uVJ1rJqY
-         E/bxaGF/xU5XkO4iyhmbMjWN2+Ld71kjJ07eNgF/ov7VE4W9JZS5MHqq3d4k8XQ3Brwm
-         LfrsFuuXO4XN36WV1rVN25VTsGDYm/7INaFKnuJy5OQqbtX8EqbRWJ7wCV9HMC9B/D51
-         tBbA==
-X-Gm-Message-State: AGi0PuaMwJnVfHKxYtcA3MNUeHcUqk1ijWeWeNScw68kWUwL242uri9C
-        A0ul0uFp5aiiNpf42Y3emGg=
-X-Google-Smtp-Source: APiQypIipOB3T05Oj3kKxu1rxln6O2UGNVEFkx48j1AV+YsZhuLducWcCw+fhCpBSaJM6HVpW1AjXQ==
-X-Received: by 2002:adf:f8d1:: with SMTP id f17mr2217378wrq.194.1586258654733;
-        Tue, 07 Apr 2020 04:24:14 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id c12sm28205811wrw.90.2020.04.07.04.24.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 04:24:14 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 13:24:12 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK
- instead.
-Message-ID: <20200407112412.GO18914@dhcp22.suse.cz>
-References: <draft-87d08kw57p.fsf@notabene.neil.brown.name>
- <878sj8w55y.fsf@notabene.neil.brown.name>
- <20200407102515.GB9482@quack2.suse.cz>
+        Tue, 7 Apr 2020 07:24:56 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037B4eoN021637
+        for <linux-kernel@vger.kernel.org>; Tue, 7 Apr 2020 07:24:54 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3082f2bb83-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:24:54 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Tue, 7 Apr 2020 12:24:50 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 Apr 2020 12:24:48 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037BOnVY17957108
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Apr 2020 11:24:49 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61C1F4C046;
+        Tue,  7 Apr 2020 11:24:49 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D3F374C04A;
+        Tue,  7 Apr 2020 11:24:46 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.199.45.45])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  7 Apr 2020 11:24:46 +0000 (GMT)
+Subject: Re: [PATCH v5 0/5] Track and expose idle PURR and SPURR ticks
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <1586249263-14048-1-git-send-email-ego@linux.vnet.ibm.com>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Tue, 7 Apr 2020 16:54:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407102515.GB9482@quack2.suse.cz>
+In-Reply-To: <1586249263-14048-1-git-send-email-ego@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20040711-0028-0000-0000-000003F3AE08
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040711-0029-0000-0000-000024B94514
+Message-Id: <a1feda38-9488-a025-4a38-e4785bf7405d@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_03:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ spamscore=0 clxscore=1011 malwarescore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 lowpriorityscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-04-20 12:25:15, Jan Kara wrote:
-> On Tue 07-04-20 09:44:25, NeilBrown wrote:
-> > @@ -5283,7 +5282,7 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
-> >  			" anon_thp: %lukB"
-> >  #endif
-> >  			" writeback_tmp:%lukB"
-> > -			" unstable:%lukB"
-> > +			" unstable:0kB"
-> >  			" all_unreclaimable? %s"
-> >  			"\n",
-> >  			pgdat->node_id,
-> > @@ -5305,7 +5304,6 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
-> >  			K(node_page_state(pgdat, NR_ANON_THPS) * HPAGE_PMD_NR),
-> >  #endif
-> >  			K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
-> > -			K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
-> >  			pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES ?
-> >  				"yes" : "no");
-> >  	}
+On 4/7/20 2:17 PM, Gautham R. Shenoy wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 > 
-> These are just page allocator splats on OOM. I don't think preserving
-> 'unstable' in these reports is needed.
-
-YOu are right and the less we dump from this path the better. I could
-have noticed.
-
-> > @@ -1707,8 +1706,16 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
-> >  static void *vmstat_next(struct seq_file *m, void *arg, loff_t *pos)
-> >  {
-> >  	(*pos)++;
-> > -	if (*pos >= NR_VMSTAT_ITEMS)
-> > +	if (*pos >= NR_VMSTAT_ITEMS) {
-> > +		/*
-> > +		 * Deprecated counters which are no longer represented
-> > +		 * in vmstat arrays. We just lie about them to be always
-> > +		 * 0 to not break userspace which might expect them in
-> > +		 * the output.
-> > +		 */
-> > +		seq_puts(m, "nr_unstable 0");
-> >  		return NULL;
-> > +	}
-> >  	return (unsigned long *)m->private + *pos;
-> >  }
+> Hi,
 > 
-> Umm, how is this supposed to work? vmstat_next() should return next element
-> of the sequence, not fill anything into seq_file - that's the job of
-> vmstat_show(). Looking at seq_read() implementation it may actually end up
-> working fine but I wouldn't really bet much on it especially in corner
-> cases like when we are just about to fill the user buffer and then need to
-> restart reading close to an end of vmstat file or so.
+> This is the fifth version of the patches to track and expose idle PURR
+> and SPURR ticks. These patches are required by tools such as lparstat
+> to compute system utilization for capacity planning purposes.
+> 
+> The previous versions can be found here:
+> v4: https://lkml.org/lkml/2020/3/27/323
+> v3: https://lkml.org/lkml/2020/3/11/331
+> v2: https://lkml.org/lkml/2020/2/21/21
+> v1: https://lore.kernel.org/patchwork/cover/1159341/
+> 
+> They changes from v4 are:
+> 
+>    - As suggested by Naveen, moved the functions read_this_idle_purr()
+>      and read_this_idle_spurr() from Patch 2 and Patch 3 respectively
+>      to Patch 4 where it is invoked.
+> 
+>    - Dropped Patch 6 which cached the values of purr, spurr,
+>      idle_purr, idle_spurr in order to minimize the number of IPIs
+>      sent.
+> 
+>    - Updated the dates for the idle_purr, idle_spurr in the
+>      Documentation Patch 5.
+> 
+> Motivation:
+> ===========
+> On PSeries LPARs, the data centers planners desire a more accurate
+> view of system utilization per resource such as CPU to plan the system
+> capacity requirements better. Such accuracy can be obtained by reading
+> PURR/SPURR registers for CPU resource utilization.
+> 
+> Tools such as lparstat which are used to compute the utilization need
+> to know [S]PURR ticks when the cpu was busy or idle. The [S]PURR
+> counters are already exposed through sysfs.  We already account for
+> PURR ticks when we go to idle so that we can update the VPA area. This
+> patchset extends support to account for SPURR ticks when idle, and
+> expose both via per-cpu sysfs files.
+> 
+> These patches are required for enhancement to the lparstat utility
+> that compute the CPU utilization based on PURR and SPURR which can be
+> found here :
+> https://groups.google.com/forum/#!topic/powerpc-utils-devel/fYRo69xO9r4
+> 
+> 
+> With the patches, when lparstat is run on a LPAR running CPU-Hogs,
+> =========================================================================
+> sudo ./src/lparstat -E 1 3
+> 
+> System Configuration
+> type=Dedicated mode=Capped smt=8 lcpu=2 mem=4834112 kB cpus=0 ent=2.00 
+> 
+> ---Actual---                 -Normalized-
+> %busy  %idle   Frequency     %busy  %idle
+> ------ ------  ------------- ------ ------
+> 1  99.99   0.00  3.35GHz[111%] 110.99   0.00
+> 2 100.00   0.00  3.35GHz[111%] 111.01   0.00
+> 3 100.00   0.00  3.35GHz[111%] 111.00   0.00
+> 
+> With patches, when lparstat is run on and idle LPAR
+> =========================================================================
+> System Configuration
+> type=Dedicated mode=Capped smt=8 lcpu=2 mem=4834112 kB cpus=0 ent=2.00 
+> ---Actual---                 -Normalized-
+> %busy  %idle   Frequency     %busy  %idle
+> ------ ------  ------------- ------ ------
+> 1   0.15  99.84  2.17GHz[ 72%]   0.11  71.89
+> 2   0.24  99.76  2.11GHz[ 70%]   0.18  69.82
+> 3   0.24  99.75  2.11GHz[ 70%]   0.18  69.81
+> 
+> Gautham R. Shenoy (5):
+>   powerpc: Move idle_loop_prolog()/epilog() functions to header file
+>   powerpc/idle: Store PURR snapshot in a per-cpu global variable
+>   powerpc/pseries: Account for SPURR ticks on idle CPUs
+>   powerpc/sysfs: Show idle_purr and idle_spurr for every CPU
+>   Documentation: Document sysfs interfaces purr, spurr, idle_purr,
+>     idle_spurr
+> 
+>  Documentation/ABI/testing/sysfs-devices-system-cpu | 39 +++++++++
+>  arch/powerpc/include/asm/idle.h                    | 93 ++++++++++++++++++++++
+>  arch/powerpc/kernel/sysfs.c                        | 82 ++++++++++++++++++-
+>  arch/powerpc/platforms/pseries/setup.c             |  8 +-
+>  drivers/cpuidle/cpuidle-pseries.c                  | 39 ++-------
+>  5 files changed, 224 insertions(+), 37 deletions(-)
+>  create mode 100644 arch/powerpc/include/asm/idle.h
+> 
 
-Well, I have to confess I haven't really tested this myself but the
-logic was to have this output close to NR_VMSTAT_ITEMS break out of
-the counters loop.
+Hi Gautham,
 
-> Michal, won't it be cleaner to have NR_VM_DEPRECATED_ITEMS included in
-> NR_VMSTAT_ITEMS, have names of these items in vmstat_text, and just set
-> appropriate number of 0 entries at the end of the array generated in
-> vmstat_start() and be done with it? That seems conceptually simpler and the
-> overhead is minimal.
+Thanks for working on it, I tested it using the lparstat patches posted at:
+https://groups.google.com/forum/#!topic/powerpc-utils-devel/_imHP1Guw3c
 
-Yes, that would be much nicer, albeit more code.  So I believe you meant
-something like this?
+On idle system:
+===============
+sudo ./src/lparstat -E 1 3
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 462f6873905a..a18611197bea 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -237,7 +237,6 @@ enum node_stat_item {
- 	NR_FILE_THPS,
- 	NR_FILE_PMDMAPPED,
- 	NR_ANON_THPS,
--	NR_UNSTABLE_NFS,	/* NFS unstable pages */
- 	NR_VMSCAN_WRITE,
- 	NR_VMSCAN_IMMEDIATE,	/* Prioritise for reclaim when writeback ends */
- 	NR_DIRTIED,		/* page dirtyings since bootup */
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 78d53378db99..992e162f1886 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1162,7 +1162,6 @@ const char * const vmstat_text[] = {
- 	"nr_file_hugepages",
- 	"nr_file_pmdmapped",
- 	"nr_anon_transparent_hugepages",
--	"nr_unstable",
- 	"nr_vmscan_write",
- 	"nr_vmscan_immediate_reclaim",
- 	"nr_dirtied",
-@@ -1293,9 +1292,13 @@ const char * const vmstat_text[] = {
- 	"swap_ra_hit",
- #endif
- #endif /* CONFIG_VM_EVENT_COUNTERS || CONFIG_MEMCG */
-+	/* Deprecated counters. Count them in NR_VM_DEPRECATED_ITEMS */
-+	"nr_unstable",
- };
- #endif /* CONFIG_PROC_FS || CONFIG_SYSFS || CONFIG_NUMA || CONFIG_MEMCG */
- 
-+#define NR_VM_DEPRECATED_ITEMS 1
-+
- #if (defined(CONFIG_DEBUG_FS) && defined(CONFIG_COMPACTION)) || \
-      defined(CONFIG_PROC_FS)
- static void *frag_start(struct seq_file *m, loff_t *pos)
-@@ -1661,7 +1664,8 @@ static const struct seq_operations zoneinfo_op = {
- 			 NR_VM_NODE_STAT_ITEMS + \
- 			 NR_VM_WRITEBACK_STAT_ITEMS + \
- 			 (IS_ENABLED(CONFIG_VM_EVENT_COUNTERS) ? \
--			  NR_VM_EVENT_ITEMS : 0))
-+			  NR_VM_EVENT_ITEMS : 0) + \
-+			  NR_VM_DEPRECATED_ITEMS)
- 
- static void *vmstat_start(struct seq_file *m, loff_t *pos)
- {
-@@ -1698,7 +1702,11 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
- 	all_vm_events(v);
- 	v[PGPGIN] /= 2;		/* sectors -> kbytes */
- 	v[PGPGOUT] /= 2;
-+	v += NR_VM_EVENT_ITEMS;
- #endif
-+	for (i = 0; i < NR_VM_DEPRECATED_ITEMS)
-+		v[i] = 0;
-+
- 	return (unsigned long *)m->private + *pos;
- }
- 
+System Configuration
+type=Dedicated mode=Capped smt=8 lcpu=2 mem=4324928 kB cpus=0 ent=2.00 
+
+---Actual---                 -Normalized-
+%busy  %idle   Frequency     %busy  %idle
+------ ------  ------------- ------ ------
+  0.27  99.74  2.11GHz[ 70%]   0.24  69.76
+  0.57  99.43  2.17GHz[ 72%]   0.43  71.57
+  0.52  99.47  2.11GHz[ 70%]   0.38  69.62
+
+
+On system running N while(1) (N == online cpus)
+===============================================
+sudo ./src/lparstat -E 1 3
+
+System Configuration
+type=Dedicated mode=Capped smt=8 lcpu=2 mem=4324928 kB cpus=0 ent=2.00 
+
+---Actual---                 -Normalized-
+%busy  %idle   Frequency     %busy  %idle
+------ ------  ------------- ------ ------
+ 99.99   0.00  3.35GHz[111%] 110.99   0.00
+100.00   0.00  3.35GHz[111%] 111.00   0.00
+100.00   0.00  3.35GHz[111%] 111.00   0.00
+
+
+For the series:
+Reviewed-and-Tested-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+
 -- 
-Michal Hocko
-SUSE Labs
+Kamalesh
+
