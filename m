@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C447C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5737C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F5320936
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA47207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217706;
-	bh=MQo4JrUK0tCJzj0nCxLS7KvVp9c85pC9+ZbJrm18i48=;
+	s=default; t=1586217709;
+	bh=Cu0bIJ+vz5khx9IVzUJPi8H2/VKCJ3eiUPqW2uMzAk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mPHypKeuJfMdNIn99/ZgBfEOFYS1P/+ex7RSojHkUZhyKaayPpezrdh7aJQE7orYP
-	 5fEKMDPSmbKaTBwAIYLfyNTD1oIN8ejKZNxZ6HaGnnmEg0iNbQAdkz9WWtCGpqFm7h
-	 DIeyvehVLGhiYBkhzS6FchJmcPTEF2oALnLetbVg=
+	b=xMa+8tVR5UWMqYoor3f5rZWNobJRz+zTyOMZJq2F2ifXhSK+crArvT59dUGjynR4E
+	 UTE7ItH/fOaXi10SVJKU1klJlqbPwLFb2rxaDN3Q+t8YT1F9Fs0Wq+6vjUzcTaf6+0
+	 ab90Nmqknx2b7Fs9D5K435MRIPjt14Ovcw67YQqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgDGABo (ORCPT
+        id S1727548AbgDGABs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:01:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34812 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:01:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727115AbgDGABh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:37 -0400
+        id S1727421AbgDGABn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E96BF2078A;
-        Tue,  7 Apr 2020 00:01:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2808B208E4;
+        Tue,  7 Apr 2020 00:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217695;
-        bh=MQo4JrUK0tCJzj0nCxLS7KvVp9c85pC9+ZbJrm18i48=;
+        s=default; t=1586217702;
+        bh=Cu0bIJ+vz5khx9IVzUJPi8H2/VKCJ3eiUPqW2uMzAk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qAO5+D1UzbgOmfX4OJy4pUTK3mfB3gVy7S/v8ybIdOG5Bg3YbyJZqIqdVjdPp2dFZ
-         6cqszF57ylKAMsylOyUq83WMWMcl9NaS9LGkD/yU+ropU8PQecWHf753c86KTh0a6Y
-         eqjVf+ur7ahPF3SeFPnKnOifMNMpsHVwdX0pSZdI=
+        b=E/NUX8p/xVlJgOX5TJ11GGyc5BoCrNq9dxdwZ1UClrUlJtEqrrM+0DOs7RhR6aV8w
+         KZThioS5YFOmLTykLbDOuGyyuy/h5g+rQ/EaMOQrppganuTCBsU0Tn3GPMj2gw1iqM
+         Oei5qpJxE3FYZ2DBIIK4Crm+OxU8hEoqwCPHQE0c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Brivio <sbrivio@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 29/35] netfilter: nft_set_rbtree: Detect partial overlaps on insertion
-Date:   Mon,  6 Apr 2020 20:00:51 -0400
-Message-Id: <20200407000058.16423-29-sashal@kernel.org>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 35/35] i2c: pca-platform: Use platform_irq_get_optional
+Date:   Mon,  6 Apr 2020 20:00:57 -0400
+Message-Id: <20200407000058.16423-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
 References: <20200407000058.16423-1-sashal@kernel.org>
@@ -61,151 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit 7c84d41416d836ef7e533bd4d64ccbdf40c5ac70 ]
+[ Upstream commit 14c1fe699cad9cb0acda4559c584f136d18fea50 ]
 
-...and return -ENOTEMPTY to the front-end in this case, instead of
-proceeding. Currently, nft takes care of checking for these cases
-and not sending them to the kernel, but if we drop the set_overlap()
-call in nft we can end up in situations like:
+The interrupt is not required so use platform_irq_get_optional() to
+avoid error messages like
 
- # nft add table t
- # nft add set t s '{ type inet_service ; flags interval ; }'
- # nft add element t s '{ 1 - 5 }'
- # nft add element t s '{ 6 - 10 }'
- # nft add element t s '{ 4 - 7 }'
- # nft list set t s
- table ip t {
- 	set s {
- 		type inet_service
- 		flags interval
- 		elements = { 1-3, 4-5, 6-7 }
- 	}
- }
+  i2c-pca-platform 22080000.i2c: IRQ index 0 not found
 
-This change has the primary purpose of making the behaviour
-consistent with nft_set_pipapo, but is also functional to avoid
-inconsistent behaviour if userspace sends overlapping elements for
-any reason.
-
-v2: When we meet the same key data in the tree, as start element while
-    inserting an end element, or as end element while inserting a start
-    element, actually check that the existing element is active, before
-    resetting the overlap flag (Pablo Neira Ayuso)
-
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 70 ++++++++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-pca-platform.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index 95fcba34bfd35..996fd9dc6160c 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -213,8 +213,43 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
- 	u8 genmask = nft_genmask_next(net);
- 	struct nft_rbtree_elem *rbe;
- 	struct rb_node *parent, **p;
-+	bool overlap = false;
- 	int d;
+diff --git a/drivers/i2c/busses/i2c-pca-platform.c b/drivers/i2c/busses/i2c-pca-platform.c
+index a7a81846d5b1d..635dd697ac0bb 100644
+--- a/drivers/i2c/busses/i2c-pca-platform.c
++++ b/drivers/i2c/busses/i2c-pca-platform.c
+@@ -140,7 +140,7 @@ static int i2c_pca_pf_probe(struct platform_device *pdev)
+ 	int ret = 0;
+ 	int irq;
  
-+	/* Detect overlaps as we descend the tree. Set the flag in these cases:
-+	 *
-+	 * a1. |__ _ _?  >|__ _ _  (insert start after existing start)
-+	 * a2. _ _ __>|  ?_ _ __|  (insert end before existing end)
-+	 * a3. _ _ ___|  ?_ _ _>|  (insert end after existing end)
-+	 * a4. >|__ _ _   _ _ __|  (insert start before existing end)
-+	 *
-+	 * and clear it later on, as we eventually reach the points indicated by
-+	 * '?' above, in the cases described below. We'll always meet these
-+	 * later, locally, due to tree ordering, and overlaps for the intervals
-+	 * that are the closest together are always evaluated last.
-+	 *
-+	 * b1. |__ _ _!  >|__ _ _  (insert start after existing end)
-+	 * b2. _ _ __>|  !_ _ __|  (insert end before existing start)
-+	 * b3. !_____>|            (insert end after existing start)
-+	 *
-+	 * Case a4. resolves to b1.:
-+	 * - if the inserted start element is the leftmost, because the '0'
-+	 *   element in the tree serves as end element
-+	 * - otherwise, if an existing end is found. Note that end elements are
-+	 *   always inserted after corresponding start elements.
-+	 *
-+	 * For a new, rightmost pair of elements, we'll hit cases b1. and b3.,
-+	 * in that order.
-+	 *
-+	 * The flag is also cleared in two special cases:
-+	 *
-+	 * b4. |__ _ _!|<_ _ _   (insert start right before existing end)
-+	 * b5. |__ _ >|!__ _ _   (insert end right after existing start)
-+	 *
-+	 * which always happen as last step and imply that no further
-+	 * overlapping is possible.
-+	 */
-+
- 	parent = NULL;
- 	p = &priv->root.rb_node;
- 	while (*p != NULL) {
-@@ -223,17 +258,42 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
- 		d = memcmp(nft_set_ext_key(&rbe->ext),
- 			   nft_set_ext_key(&new->ext),
- 			   set->klen);
--		if (d < 0)
-+		if (d < 0) {
- 			p = &parent->rb_left;
--		else if (d > 0)
-+
-+			if (nft_rbtree_interval_start(new)) {
-+				overlap = nft_rbtree_interval_start(rbe) &&
-+					  nft_set_elem_active(&rbe->ext,
-+							      genmask);
-+			} else {
-+				overlap = nft_rbtree_interval_end(rbe) &&
-+					  nft_set_elem_active(&rbe->ext,
-+							      genmask);
-+			}
-+		} else if (d > 0) {
- 			p = &parent->rb_right;
--		else {
-+
-+			if (nft_rbtree_interval_end(new)) {
-+				overlap = nft_rbtree_interval_end(rbe) &&
-+					  nft_set_elem_active(&rbe->ext,
-+							      genmask);
-+			} else if (nft_rbtree_interval_end(rbe) &&
-+				   nft_set_elem_active(&rbe->ext, genmask)) {
-+				overlap = true;
-+			}
-+		} else {
- 			if (nft_rbtree_interval_end(rbe) &&
- 			    nft_rbtree_interval_start(new)) {
- 				p = &parent->rb_left;
-+
-+				if (nft_set_elem_active(&rbe->ext, genmask))
-+					overlap = false;
- 			} else if (nft_rbtree_interval_start(rbe) &&
- 				   nft_rbtree_interval_end(new)) {
- 				p = &parent->rb_right;
-+
-+				if (nft_set_elem_active(&rbe->ext, genmask))
-+					overlap = false;
- 			} else if (nft_set_elem_active(&rbe->ext, genmask)) {
- 				*ext = &rbe->ext;
- 				return -EEXIST;
-@@ -242,6 +302,10 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
- 			}
- 		}
- 	}
-+
-+	if (overlap)
-+		return -ENOTEMPTY;
-+
- 	rb_link_node_rcu(&new->node, parent, p);
- 	rb_insert_color(&new->node, &priv->root);
- 	return 0;
+-	irq = platform_get_irq(pdev, 0);
++	irq = platform_get_irq_optional(pdev, 0);
+ 	/* If irq is 0, we do polling. */
+ 	if (irq < 0)
+ 		irq = 0;
 -- 
 2.20.1
 
