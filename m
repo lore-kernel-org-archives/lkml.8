@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D8AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6136AC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7B720730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3119A206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bQMMj2ni"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I3wLg5sq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgDGQ5h (ORCPT
+        id S1726575AbgDGRAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:57:37 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46922 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgDGQ5h (ORCPT
+        Tue, 7 Apr 2020 13:00:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47602 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgDGRAT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:57:37 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037GrwMN104165;
-        Tue, 7 Apr 2020 16:57:21 GMT
+        Tue, 7 Apr 2020 13:00:19 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037GvkwB027272;
+        Tue, 7 Apr 2020 17:00:06 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Nrqiw6PVutT0nmUPIO8Z4xdWOEVBfSK+9lm/8i+m2ZA=;
- b=bQMMj2niT3feQnQPmbUAdrbjXYMyvEZGcYLXVdLQ0H9mrTfw9MjT9TPFl38IJeWr3UYc
- 3y1H3x391ts+0L4wrU+PwB1mausr0m9jzFnSrEvWIjovc5xN9jX4QgytxKFsJSG373Ng
- gHGJhWdyBHTY+lfudZN6Md+IdxVa30z1O7xcwO3eEC7M6KMJCDPiZB7mi8FQhot54Zvf
- N6Tq6o3qQx782Jqf1dG9fw1tfTXmd9UoKtjPEYq87fPVMEhCwo15LNe2nvi/JpTwZjur
- nwxej5cf5hmrL9cDGNyXyLyD63rif5oXT/yF2fqZ9Wb421CslJDsCBOWXim8hAtqZjAF aA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 308ffdc996-1
+ bh=Hlg73nRbyrrV1WN4ZUZYRwSiKj+xZKMutlaFiWJTe/Y=;
+ b=I3wLg5sqN8L1NF/DocaKXBhK+f9E+8UsdHCtkT9S9ZY+0l01oaO2Yh1j8S9WolZWpzyC
+ cgISZkKRjPIqonrnabRyrXcbvn5h8Cj6CUJwmUPMw0WICUNVE0464Qxey05t1WS7jntr
+ 9TVwOGVNGVBDcfKIDenN6+2imDCNW1DgJO8mJMRh9wBwvwRS7ekPSK5GrY14efaFrM0n
+ ofJSXKRQPBzt96a08jheyxDHHP/wO6hzbMcev9p2I3HKtL7Z3lXo634/EzRA9THAmU42
+ N2SzcrtTzA5Kt5o4P7kvdVSjqwfc/bhPlKwqBbrdbC3XnfcbWzZTkQfRnS4ueeWyRHtN Lw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 306j6me9mx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Apr 2020 16:57:21 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037GvIp0050066;
-        Tue, 7 Apr 2020 16:57:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 3073qgmb3x-1
+        Tue, 07 Apr 2020 17:00:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037GuggI077449;
+        Tue, 7 Apr 2020 17:00:05 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 3073ssh8w6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Apr 2020 16:57:21 +0000
+        Tue, 07 Apr 2020 17:00:05 +0000
 Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 037GvIue029049;
-        Tue, 7 Apr 2020 16:57:18 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 037H03RQ003046;
+        Tue, 7 Apr 2020 17:00:03 GMT
 Received: from linux-1.home (/92.157.90.160)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Apr 2020 09:57:18 -0700
+        with ESMTP ; Tue, 07 Apr 2020 10:00:03 -0700
 Subject: Re: [PATCH V2 9/9] x86/speculation: Remove all
  ANNOTATE_NOSPEC_ALTERNATIVE directives
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org, jthierry@redhat.com,
         tglx@linutronix.de
 References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
@@ -64,36 +64,35 @@ References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
  <20200407133454.n55u5nx33ruj73gx@treble>
  <89b10eb8-c030-b954-6be3-8830fc6a8daa@oracle.com>
  <3eb36fd2-9827-4c1b-681c-9c1d65c7582f@oracle.com>
- <20200407162838.5hlh6oom4oa45ugt@treble>
+ <20200407164143.GG20730@hirez.programming.kicks-ass.net>
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <06605b1c-c9ae-fd18-bcb1-e4a48f2cb60e@oracle.com>
-Date:   Tue, 7 Apr 2020 19:01:43 +0200
+Message-ID: <4e5572cc-a134-0a66-9b09-e0aa7ff5102a@oracle.com>
+Date:   Tue, 7 Apr 2020 19:04:28 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20200407162838.5hlh6oom4oa45ugt@treble>
+In-Reply-To: <20200407164143.GG20730@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 mlxlogscore=999
- spamscore=0 bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 adultscore=0 bulkscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2004070138
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- impostorscore=0 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
- clxscore=1015 phishscore=0 mlxscore=0 bulkscore=0 adultscore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 clxscore=1015
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004070137
+ definitions=main-2004070138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 4/7/20 6:28 PM, Josh Poimboeuf wrote:
+On 4/7/20 6:41 PM, Peter Zijlstra wrote:
 > On Tue, Apr 07, 2020 at 06:18:51PM +0200, Alexandre Chartre wrote:
 >>
 >> On 4/7/20 4:32 PM, Alexandre Chartre wrote:
@@ -124,39 +123,13 @@ On 4/7/20 6:28 PM, Josh Poimboeuf wrote:
 >> eventually supports alternative we will be ready to have objtool emit
 >> ORC entries.
 > 
-> What's the benefit of removing ANNOTATE_NOSPEC_ALTERNATIVE if there's no
-> ORC support to go along with it?
+> I mean, we should make it warn for the case where you remove
+> ANNOTATE_NOSPEC and it would like to generate ORC.
 
-To have the code validated by objtool like any other alternative code
-(which is not tagged with ANNOTATE_NOSPEC_ALTERNATIVE).
-
-> Also I want to avoid adding "ORC alternatives".  ORC is nice and simple
-> and we should keep it that way as much as possible.
-> 
-> Again, we should warn on stack changes inside alternatives, and then
-> look at converting RSB and retpolines to use static branches so they
-> have deterministic stacks.
-> 
-objtool doesn't currently warn on stack changes inside alternatives.
-The RSB/retpoline alternatives have warning because objtool doesn't
-support retpoline ret and intra-function calls. If you have an alternative
-doing stack changes that objtool understand (like push/pop, add/remove
-to sp) then you won't have a warning.
-
-I think that's the case with smap_save:
-
-static __always_inline unsigned long smap_save(void)
-{
-         unsigned long flags;
-
-         asm volatile (ALTERNATIVE("", "pushf; pop %0; " __ASM_CLAC,
-                                   X86_FEATURE_SMAP)
-                       : "=rm" (flags) : : "memory", "cc");
-
-         return flags;
-}
-
-The alternative does change the stack but objtool won't complain
-because it handles the pushf and pop instruction.
+Okay, so check if an alternative is changing the stack and warn if it is.
 
 alex.
+
+> Also, what's the point of having objtool grok this code and then not
+> doing anything with it?
+> 
