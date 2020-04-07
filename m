@@ -2,99 +2,120 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCA5C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB29BC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB63B2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586270980;
-	bh=JJUfI4+Purq9fnRot/dmSDalIBDiorY+tl7ywkgmDBU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iVkkglwvLgxLK/J4kqrie0hHEjaB0Xl+upEV7NrcR88Mie76XqRcrykbtTElt/6MM
-	 eeodudWgO+urUQEth0vlW+pbln0OlnfvYfDhw1MN2yR4gRMHzkJXFmz7X2hgsvYtGL
-	 bcbzERSjrGgQQEcKfoaiVgNMnMOhvhbli4QWAhys=
+	by mail.kernel.org (Postfix) with ESMTP id AD84D20747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgDGOti (ORCPT
+        id S1729229AbgDGOyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:49:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58630 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 10:54:35 -0400
+Received: from mga06.intel.com ([134.134.136.31]:25333 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbgDGOti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:49:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3423C20747;
-        Tue,  7 Apr 2020 14:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586270977;
-        bh=JJUfI4+Purq9fnRot/dmSDalIBDiorY+tl7ywkgmDBU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=veO+45Tlg3g3ZSPoWvAEpUp4LiwZZyl7Aez6EAREm2l9JOQzi0fw+WJ4SJF7SUDi9
-         2NvLUS9/6FXlTq+7vKOTKTE1WjqAooPkidBkURLMO0ycD46U/9T6IQI3FrucFneIKI
-         bcQ1rpWfSJaVK2SHN90YWLe/SejgL+UgFienaIB4=
-Date:   Tue, 7 Apr 2020 16:49:33 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.6 00/29] 5.6.3-rc1 review
-Message-ID: <20200407144933.GB889211@kroah.com>
-References: <20200407101452.046058399@linuxfoundation.org>
- <dd65ddb4-478c-c022-542c-5e0b44ab8962@nvidia.com>
+        id S1728855AbgDGOyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:54:35 -0400
+IronPort-SDR: vzH2e/ETbj/Ls1bFDYAfNn5Ele1iE+N+3Ma3JrI+SPdUsapHZh3oUD0xO1TfDoiD54Jj6HW3PF
+ /HcFSleC2vkQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 07:54:34 -0700
+IronPort-SDR: cOZmMIE0ak5uQfYildm7qw134FQCkEL1T7TEy6C+ICKnfA8A0r6yAgOesc5pOEYZpwGdg1fk17
+ thIr/oSRo8dA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,354,1580803200"; 
+   d="scan'208";a="254480922"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 07:54:34 -0700
+Received: from [10.249.224.62] (abudanko-mobl.ccr.corp.intel.com [10.249.224.62])
+        by linux.intel.com (Postfix) with ESMTP id D324C5802BC;
+        Tue,  7 Apr 2020 07:54:28 -0700 (PDT)
+Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
+ performance monitoring and observability
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+ <20200407143014.GD11186@kernel.org> <20200407143551.GF11186@kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <10cc74ee-8587-8cdb-f85f-5724b370a2ce@linux.intel.com>
+Date:   Tue, 7 Apr 2020 17:54:27 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd65ddb4-478c-c022-542c-5e0b44ab8962@nvidia.com>
+In-Reply-To: <20200407143551.GF11186@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 01:37:52PM +0100, Jon Hunter wrote:
+On 07.04.2020 17:35, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Apr 07, 2020 at 11:30:14AM -0300, Arnaldo Carvalho de Melo escreveu:
+>> [perf@five ~]$ type perf
+>> perf is hashed (/home/perf/bin/perf)
+>> [perf@five ~]$ getcap /home/perf/bin/perf
+>> /home/perf/bin/perf = cap_sys_ptrace,cap_syslog,38+ep
+>> [perf@five ~]$ groups
+>> perf perf_users
+>> [perf@five ~]$ id
+>> uid=1002(perf) gid=1002(perf) groups=1002(perf),1003(perf_users) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+>> [perf@five ~]$ perf top --stdio
+>> Error:
+>> Failed to mmap with 1 (Operation not permitted)
+>> [perf@five ~]$ perf record -a
+>> ^C[ perf record: Woken up 1 times to write data ]
+>> [ perf record: Captured and wrote 1.177 MB perf.data (1552 samples) ]
+>>
+>> [perf@five ~]$ perf evlist
+>> cycles:u
+>> [perf@five ~]$
 > 
-> On 07/04/2020 11:21, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.6.3 release.
-> > There are 29 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 09 Apr 2020 10:13:38 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.3-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
+> Humm, perf record falls back to cycles:u after initially trying cycles
+> (i.e. kernel and userspace), lemme see trying 'perf top -e cycles:u',
+> lemme test, humm not really:
 > 
-> All tests are passing for Tegra ...
+> [perf@five ~]$ perf top --stdio -e cycles:u
+> Error:
+> Failed to mmap with 1 (Operation not permitted)
+> [perf@five ~]$ perf record -e cycles:u -a sleep 1
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 1.123 MB perf.data (132 samples) ]
+> [perf@five ~]$
 > 
-> Test results for stable-v5.6:
->     13 builds:	13 pass, 0 fail
->     24 boots:	24 pass, 0 fail
->     40 tests:	40 pass, 0 fail
-> 
-> Linux version:	5.6.3-rc1-g14d42f1aa3c3
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra210-p3450-0000,
->                 tegra30-cardhu-a04
-> 
+> Back to debugging this.
 
-Thanks for testing these 3 so fast.
+Could makes sense adding cap_ipc_lock to the binary to isolate from this:
 
-greg k-h
+kernel/events/core.c: 6101
+	if ((locked > lock_limit) && perf_is_paranoid() &&
+		!capable(CAP_IPC_LOCK)) {
+		ret = -EPERM;
+		goto unlock;
+	}
+
+~Alexey
