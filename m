@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B73C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAD0C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5267120644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 719C62078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255097;
-	bh=TcTIBYPO0IsFQBu/ex/IOcdF3ZlY9TxybumNre7+ifU=;
+	s=default; t=1586255099;
+	bh=+9/waoq6urivDfNZvIaeIMosuJ6pHCmjRRVUUlB8Uig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cnQTLvQEc5Is5hLwZdDP8UfwSMZAFkscbr3CxINzjDjfgHT/aTZrLGxt1MF+KTRaO
-	 TB73mbryc7FYF6Rk4o0P/yz5EcpvP9N6RuSXfEcr6IFyrG9dBzEN5pYoLhO4uRGJbe
-	 DbBGZyHXLhBLutXVDM1pVpW1BragAdp0iALTs4IA=
+	b=hpLLwGVr0tnAV1lIKu8nOYNmxm5SRRppAblL5HIhMe9ST+JlYyhXwH5weq46rmYf6
+	 u/VY56rikEQZoZD9qYsXBJaRvYjG9B52O2gClQvF+UFAVzeCkWALImKt6lflfTpBBZ
+	 EMKoz2Yz0nwNLn94xXsP1Qi9IPGa+qxrh7LUlpS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgDGKY4 (ORCPT
+        id S1728837AbgDGKY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:24:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:24:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728810AbgDGKYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:24:53 -0400
+        id S1728829AbgDGKY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:24:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D0A220644;
-        Tue,  7 Apr 2020 10:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BA4220644;
+        Tue,  7 Apr 2020 10:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255092;
-        bh=TcTIBYPO0IsFQBu/ex/IOcdF3ZlY9TxybumNre7+ifU=;
+        s=default; t=1586255095;
+        bh=+9/waoq6urivDfNZvIaeIMosuJ6pHCmjRRVUUlB8Uig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gPF8UgC5rmFHpUWBUwSwFCvYvVL8giYQ993nDWr2Kqrlg6bsW08kFZhDYtBzGUuJh
-         uc4UHnacoZY00Hqw/TycpUOnYZvva3oep/d+vp9/gGEBdDwJ/uUQS3+KbFoa7nzDRX
-         HwjMHP0W3GDzCTJEd/zYqySnuPwcpY9DTgoFtqTo=
+        b=uMG3VH7ScGv6b/gxvFtk1sCnJhMJ2BD+vZKMQmi0YuMCQhbVZgiio42W3oEeWNGhP
+         yRg8lnVLycIxMODYDvub/c8+Z0BJBUZsLTx252fe/gLfpjjGh0holGH6xfrveKtbaR
+         HXF9DIe5GC7Ta3Ro7tvBFNRfFT2Vn2a6Hq2LEsoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 5.5 26/46] mei: me: add cedar fork device ids
-Date:   Tue,  7 Apr 2020 12:21:57 +0200
-Message-Id: <20200407101502.322530546@linuxfoundation.org>
+        stable@vger.kernel.org, William Dauchy <w.dauchy@criteo.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 03/46] net, ip_tunnel: fix interface lookup with no key
+Date:   Tue,  7 Apr 2020 12:21:34 +0200
+Message-Id: <20200407101459.875071972@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -60,44 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: William Dauchy <w.dauchy@criteo.com>
 
-commit 99397d33b763dc554d118aaa38cc5abc6ce985de upstream.
+[ Upstream commit 25629fdaff2ff509dd0b3f5ff93d70a75e79e0a1 ]
 
-Add Cedar Fork (CDF) device ids, those belongs to the cannon point family.
+when creating a new ipip interface with no local/remote configuration,
+the lookup is done with TUNNEL_NO_KEY flag, making it impossible to
+match the new interface (only possible match being fallback or metada
+case interface); e.g: `ip link add tunl1 type ipip dev eth0`
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20200324210730.17672-1-tomas.winkler@intel.com
+To fix this case, adding a flag check before the key comparison so we
+permit to match an interface with no local/remote config; it also avoids
+breaking possible userland tools relying on TUNNEL_NO_KEY flag and
+uninitialised key.
+
+context being on my side, I'm creating an extra ipip interface attached
+to the physical one, and moving it to a dedicated namespace.
+
+Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
+Signed-off-by: William Dauchy <w.dauchy@criteo.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/misc/mei/hw-me-regs.h |    2 ++
- drivers/misc/mei/pci-me.c     |    2 ++
- 2 files changed, 4 insertions(+)
+ net/ipv4/ip_tunnel.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -87,6 +87,8 @@
- #define MEI_DEV_ID_CMP_H      0x06e0  /* Comet Lake H */
- #define MEI_DEV_ID_CMP_H_3    0x06e4  /* Comet Lake H 3 (iTouch) */
+--- a/net/ipv4/ip_tunnel.c
++++ b/net/ipv4/ip_tunnel.c
+@@ -142,11 +142,8 @@ struct ip_tunnel *ip_tunnel_lookup(struc
+ 			cand = t;
+ 	}
  
-+#define MEI_DEV_ID_CDF        0x18D3  /* Cedar Fork */
-+
- #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
+-	if (flags & TUNNEL_NO_KEY)
+-		goto skip_key_lookup;
+-
+ 	hlist_for_each_entry_rcu(t, head, hash_node) {
+-		if (t->parms.i_key != key ||
++		if ((!(flags & TUNNEL_NO_KEY) && t->parms.i_key != key) ||
+ 		    t->parms.iph.saddr != 0 ||
+ 		    t->parms.iph.daddr != 0 ||
+ 		    !(t->dev->flags & IFF_UP))
+@@ -158,7 +155,6 @@ struct ip_tunnel *ip_tunnel_lookup(struc
+ 			cand = t;
+ 	}
  
- #define MEI_DEV_ID_JSP_N      0x4DE0  /* Jasper Lake Point N */
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -111,6 +111,8 @@ static const struct pci_device_id mei_me
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC, MEI_ME_PCH15_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC_4, MEI_ME_PCH8_CFG)},
+-skip_key_lookup:
+ 	if (cand)
+ 		return cand;
  
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CDF, MEI_ME_PCH8_CFG)},
-+
- 	/* required last entry */
- 	{0, }
- };
 
 
