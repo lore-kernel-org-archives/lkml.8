@@ -2,146 +2,152 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B391C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA1ECC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59E120781
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:10:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586229041;
-	bh=HIaba1rSBj0VPkRgG8RzQApmSUX3kIoFFe7U8GvgMa8=;
-	h=Date:From:To:Subject:In-Reply-To:List-ID:From;
-	b=2ppGUClhGHPwP+zgpbtdZE0KqOjVt4lmsiO/MudoI4gVq6iOxtBAtE434g//MLzcu
-	 /JUc5dw42DxwZfmf848lTSwYvCLrCisj9vsDzi+p8ryUvZS3fKs56+7kgoXiLPdebi
-	 N82nNgsuXidZwEWYX2adVdIl+Umzpewr5Q2HPM9Y=
+	by mail.kernel.org (Postfix) with ESMTP id B62DA20769
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:12:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GIsfgDQu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbgDGDKk (ORCPT
+        id S1726707AbgDGDMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 23:10:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgDGDKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 23:10:40 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E389120716;
-        Tue,  7 Apr 2020 03:10:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586229039;
-        bh=HIaba1rSBj0VPkRgG8RzQApmSUX3kIoFFe7U8GvgMa8=;
-        h=Date:From:To:Subject:In-Reply-To:From;
-        b=Q4LJx0dBHXGuJHAb6rxvCyj8LQqc88XSD22JMiBacG19bZ5BA0ncFCfLbIyT3/17K
-         jDpMvt1jzc9uo9NSiKrIlR0kkBpTS0NVvCIsyQfS3W2nYKIae0sM8k88rBUXSPsKBS
-         CFjjUFy5800mvaktVuGEiWSDSPLecoTBl/oVJo7g=
-Date:   Mon, 06 Apr 2020 20:10:38 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     akpm@linux-foundation.org, bp@alien8.de, geert@linux-m68k.org,
-        haren@us.ibm.com, joe@perches.com, johannes@sipsolutions.net,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, mingo@redhat.com, mm-commits@vger.kernel.org,
-        rikard.falkeborn@gmail.com, tglx@linutronix.de,
-        torvalds@linux-foundation.org, yamada.masahiro@socionext.com
-Subject:  [patch 124/166] linux/bits.h: add compile time sanity
- check of GENMASK inputs
-Message-ID: <20200407031038.8mS1ou6Ll%akpm@linux-foundation.org>
-In-Reply-To: <20200406200254.a69ebd9e08c4074e41ddebaf@linux-foundation.org>
-User-Agent: s-nail v14.8.16
+        Mon, 6 Apr 2020 23:12:41 -0400
+Received: from mail-eopbgr20047.outbound.protection.outlook.com ([40.107.2.47]:13430
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726651AbgDGDMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 23:12:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XVLdCXOqRvcRCi3/VAFhJxcDCUGeW0rSUfDUhcguuQw3OzwUSa4bvC9X0aXpfti9HOsK7OMmgdEji/k2WfRHrWDN0VZdCUcFvd7DL+jnLsfvL8/JctIjd5QLxz95tcOzdAqVcp1CkWFeGTRLTTw9nP2UUtcqjgls//nV7Vjh2lfkBivAuEmG/80wor7DA5zsjQt80qh5rtD6+vc8X4RI0k8Ill/MTaFaGe3AtzxqjyjVq6vqJhOK2T0jmNecYEKWogjFEd6v3fvxWwrDEAkJ50vHU4Xt6hGxK7Xv1ambKV/5jDCvaW5c3uwS+Ev36yAouelrwwVId67UPktv02QjHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9ji6VisXZora5ClGlNIdl1ByO9zzFLePAYCb0aGTAPY=;
+ b=CRGe1lxcMLGv/Mm0bxit8UWL5nOVpkq/bZ335vxXU86PpQV/EPIW+t9S4dfSaOpRn+tVi/0lV/MAzyBSpaWfIYj+ddw40rF1PF87PP/W8mVC8ZK7/EaNWPRbMWkCnFoO3CLfDWERF9igyKs7H4r7U8zNhVxw5EDqz+GOdqdl2QlfWxHlbN6byw+qYmw7fM9lxYdTWmgE1f800QlxPlWc7PCmTf0VmpHZuS6sCvCRt6FasPskf5fhOPIK4P4BdQjbdlLRt8tkenLKYQRR7USe5pUeWXekdG8G3WE48ejjmptwWBz5OPutc+l1TAQPCeo1fMDaOaKxdmz1n18Re3d3hg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9ji6VisXZora5ClGlNIdl1ByO9zzFLePAYCb0aGTAPY=;
+ b=GIsfgDQuCDJj3de12kZ4W3uXjclrV40xxsgO+dMwea5GQMxwoj3/wTAlYdRkxny5xYt1IEvADorPtY5ESk0iaAaRwPZMWuh3Mg5C+TMQdXFH2Bikfrb65vJ1NVNBfaInt+SOdK7qZBQqrKjUIXX5AH09uHA2eKkb2pBXlHXw1lk=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM7PR04MB7141.eurprd04.prod.outlook.com (2603:10a6:20b:11d::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Tue, 7 Apr
+ 2020 03:12:37 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::902c:71:6377:4273]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::902c:71:6377:4273%5]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
+ 03:12:37 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 5/5] usb: chipidea: allow disabling glue drivers if
+ EMBEDDED
+Thread-Topic: [PATCH 5/5] usb: chipidea: allow disabling glue drivers if
+ EMBEDDED
+Thread-Index: AQHWChQAjD6RZ55p5EW1wRD2DjJFfqhtALoA
+Date:   Tue, 7 Apr 2020 03:12:36 +0000
+Message-ID: <20200407031300.GB26899@b29397-desktop>
+References: <2b6d70595475a3ddbd5bb8ae1765868a98c404b6.1585958250.git.mirq-linux@rere.qmqm.pl>
+ <1bf89d4301baa8632daf48b3e28858aff5371954.1585958250.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <1bf89d4301baa8632daf48b3e28858aff5371954.1585958250.git.mirq-linux@rere.qmqm.pl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peter.chen@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f3126266-f0c8-4c0f-4f8b-08d7daa18616
+x-ms-traffictypediagnostic: AM7PR04MB7141:
+x-microsoft-antispam-prvs: <AM7PR04MB71418DF6B0D9DFE0025CFBD18BC30@AM7PR04MB7141.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2958;
+x-forefront-prvs: 036614DD9C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(7916004)(4636009)(366004)(346002)(39860400002)(136003)(396003)(376002)(6512007)(33716001)(81156014)(8936002)(86362001)(6506007)(1076003)(186003)(81166006)(478600001)(26005)(53546011)(4326008)(5660300002)(8676002)(9686003)(44832011)(64756008)(33656002)(54906003)(76116006)(66476007)(6916009)(66556008)(66446008)(316002)(66946007)(6486002)(71200400001)(2906002)(91956017);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IvBUWk6FFqDn8q4Yyz9V6E9ZNSfqvyaYMlDc5PvLCrx2mvFWaZqzqmg9Z9sj8LZWC+dBJ0wQnI0NDMyGsrV2LpT7PqD2oRD2RvqkkZOXkW7SSlQ+ARcj7H83mWEgWXwwUZT+yAHkFtRlUdUQjnnN7UeuIDZQVSWNXpz3PWHw+ljc/RWjUScuU4ak8QqOZUBRPmOR8jq78OxTdCPLmMXGuulxa4iGWlhk/kzI+lAswXatT7QE4yCQAqMVkatJRd+VEIhVN83GbuDNyLlBz91S4twc5EGoO47B1eIwE76wiTozaxYdwiptTeKadio9H9tzWN6c8DOF+D/gdRw3NvoWc8OzVtwIaKJAV0haN+0Wt++aw2j6DVFUJbMBY+FAnzDipl8Rb6xUfXvrECrGJVtlcAZOWMept9Hy5FYWQFvjgLXaH2YCKPggRArCSndMKNEo
+x-ms-exchange-antispam-messagedata: OxEd2tzQL0Mynelq6dTZGH37fR1NJ/daHgyzUn6A7aHZyXdmOtXSoL5mf7+p3IadVOvi5BZ/vfwtbhaFAwgmF5dwogPEwbPopzsTXw2x51nYWPgxSZAypiqh3hEbBL+enhGZGSvNORtaXJpIHiAKoQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8A2FD01AB848AE45AB58D2CBB647B400@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3126266-f0c8-4c0f-4f8b-08d7daa18616
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2020 03:12:36.9895
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: H5vTp0F5beD0Uj3pTnRQKuDc+vMqBGLmIPHCPSSsdr7R15yYuDvASm4s8AwxbQzhYPMhxonZI4SWuSA07tT7FA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: linux/bits.h: add compile time sanity check of GENMASK inputs
-
-GENMASK() and GENMASK_ULL() are supposed to be called with the high bit as
-the first argument and the low bit as the second argument.  Mixing them
-will return a mask with zero bits set.
-
-Recent commits show getting this wrong is not uncommon, see e.g.  commit
-aa4c0c9091b0 ("net: stmmac: Fix misuses of GENMASK macro") and commit
-9bdd7bb3a844 ("clocksource/drivers/npcm: Fix misuse of GENMASK macro").
-
-To prevent such mistakes from appearing again, add compile time sanity
-checking to the arguments of GENMASK() and GENMASK_ULL().  If both
-arguments are known at compile time, and the low bit is higher than the
-high bit, break the build to detect the mistake immediately.
-
-Since GENMASK() is used in declarations, BUILD_BUG_ON_ZERO() must be used
-instead of BUILD_BUG_ON().
-
-__builtin_constant_p does not evaluate is argument, it only checks if it
-is a constant or not at compile time, and __builtin_choose_expr does not
-evaluate the expression that is not chosen.  Therefore, GENMASK(x++, 0)
-does only evaluate x++ once.
-
-Commit 95b980d62d52 ("linux/bits.h: make BIT(), GENMASK(), and friends
-available in assembly") made the macros in linux/bits.h available in
-assembly.  Since BUILD_BUG_OR_ZERO() is not asm compatible, disable the
-checks if the file is included in an asm file.
-
-Due to bugs in GCC versions before 4.9 [0], disable the check if building
-with a too old GCC compiler.
-
-[0]: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=19449
-
-Link: http://lkml.kernel.org/r/20200308193954.2372399-1-rikard.falkeborn@gmail.com
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Haren Myneni <haren@us.ibm.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: lkml <linux-kernel@vger.kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- include/linux/bits.h |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
---- a/include/linux/bits.h~linux-bitsh-add-compile-time-sanity-check-of-genmask-inputs
-+++ a/include/linux/bits.h
-@@ -18,12 +18,30 @@
-  * position @h. For example
-  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-  */
--#define GENMASK(h, l) \
-+#if !defined(__ASSEMBLY__) && \
-+	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
-+#include <linux/build_bug.h>
-+#define GENMASK_INPUT_CHECK(h, l) \
-+	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-+		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
-+#else
-+/*
-+ * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-+ * disable the input check if that is the case.
-+ */
-+#define GENMASK_INPUT_CHECK(h, l) 0
-+#endif
-+
-+#define __GENMASK(h, l) \
- 	(((~UL(0)) - (UL(1) << (l)) + 1) & \
- 	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-+#define GENMASK(h, l) \
-+	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
- 
--#define GENMASK_ULL(h, l) \
-+#define __GENMASK_ULL(h, l) \
- 	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
- 	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-+#define GENMASK_ULL(h, l) \
-+	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
- 
- #endif	/* __LINUX_BITS_H */
-_
+T24gMjAtMDQtMDQgMDI6MDA6MDYsIE1pY2hhxYIgTWlyb3PFgmF3IHdyb3RlOg0KPiBBbGxvdyB0
+byBjdXQgZG93biBvbiBkcml2ZXIgc2l6ZSBmb3IgZW1iZWRkZWQgY29uZmlnLg0KPiANCj4gU2ln
+bmVkLW9mZi1ieTogTWljaGHFgiBNaXJvc8WCYXcgPG1pcnEtbGludXhAcmVyZS5xbXFtLnBsPg0K
+PiAtLS0NCj4gIGRyaXZlcnMvdXNiL2NoaXBpZGVhL0tjb25maWcgIHwgMzcgKysrKysrKysrKysr
+KysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gIGRyaXZlcnMvdXNiL2NoaXBpZGVhL01ha2VmaWxl
+IHwgMTIgKysrKystLS0tLS0tDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKyks
+IDE4IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2NoaXBpZGVh
+L0tjb25maWcgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9LY29uZmlnDQo+IGluZGV4IGQ1M2RiNTIw
+ZTIwOS4uOGJhZmNmYzYwODBkIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3VzYi9jaGlwaWRlYS9L
+Y29uZmlnDQo+ICsrKyBiL2RyaXZlcnMvdXNiL2NoaXBpZGVhL0tjb25maWcNCj4gQEAgLTE4LDE3
+ICsxOCw2IEBAIGNvbmZpZyBVU0JfQ0hJUElERUENCj4gIA0KPiAgaWYgVVNCX0NISVBJREVBDQo+
+ICANCj4gLWNvbmZpZyBVU0JfQ0hJUElERUFfT0YNCj4gLQl0cmlzdGF0ZQ0KPiAtCWRlcGVuZHMg
+b24gT0YNCj4gLQlkZWZhdWx0IFVTQl9DSElQSURFQQ0KPiAtDQo+IC1jb25maWcgVVNCX0NISVBJ
+REVBX1BDSQ0KPiAtCXRyaXN0YXRlDQo+IC0JZGVwZW5kcyBvbiBVU0JfUENJDQo+IC0JZGVwZW5k
+cyBvbiBOT1BfVVNCX1hDRUlWDQo+IC0JZGVmYXVsdCBVU0JfQ0hJUElERUENCj4gLQ0KPiAgY29u
+ZmlnIFVTQl9DSElQSURFQV9VREMNCj4gIAlib29sICJDaGlwSWRlYSBkZXZpY2UgY29udHJvbGxl
+ciINCj4gIAlkZXBlbmRzIG9uIFVTQl9HQURHRVQNCj4gQEAgLTQzLDQgKzMyLDMwIEBAIGNvbmZp
+ZyBVU0JfQ0hJUElERUFfSE9TVA0KPiAgCWhlbHANCj4gIAkgIFNheSBZIGhlcmUgdG8gZW5hYmxl
+IGhvc3QgY29udHJvbGxlciBmdW5jdGlvbmFsaXR5IG9mIHRoZQ0KPiAgCSAgQ2hpcElkZWEgZHJp
+dmVyLg0KPiArDQo+ICtjb25maWcgVVNCX0NISVBJREVBX1BDSQ0KPiArCXRyaXN0YXRlICJFbmFi
+bGUgUENJIGdsdWUgZHJpdmVyIiBpZiBFTUJFRERFRA0KDQpXaHkgZGVwZW5kcyBvbiBFTUJFRERF
+RCBmb3IgdGhpcyBkcml2ZXI/IE5vdCBldmVyeW9uZSBuZWVkcyB0aGlzDQpjb25maWd1cmF0aW9u
+Lg0KDQpQZXRlcg0KPiArCWRlcGVuZHMgb24gVVNCX1BDSQ0KPiArCWRlcGVuZHMgb24gTk9QX1VT
+Ql9YQ0VJVg0KPiArCWRlZmF1bHQgVVNCX0NISVBJREVBDQo+ICsNCj4gK2NvbmZpZyBVU0JfQ0hJ
+UElERUFfTVNNDQo+ICsJdHJpc3RhdGUgIkVuYWJsZSBNU00gaHN1c2IgZ2x1ZSBkcml2ZXIiIGlm
+IEVNQkVEREVEDQo+ICsJZGVmYXVsdCBVU0JfQ0hJUElERUENCj4gKw0KPiArY29uZmlnIFVTQl9D
+SElQSURFQV9JTVgNCj4gKwl0cmlzdGF0ZSAiRW5hYmxlIGkuTVggVVNCIGdsdWUgZHJpdmVyIiBp
+ZiBFTUJFRERFRA0KPiArCWRlcGVuZHMgb24gT0YNCj4gKwlkZWZhdWx0IFVTQl9DSElQSURFQQ0K
+PiArDQo+ICtjb25maWcgVVNCX0NISVBJREVBX0dFTkVSSUMNCj4gKwl0cmlzdGF0ZSAiRW5hYmxl
+IGdlbmVyaWMgVVNCMiBnbHVlIGRyaXZlciIgaWYgRU1CRURERUQNCj4gKwlkZWZhdWx0IFVTQl9D
+SElQSURFQQ0KPiArDQo+ICtjb25maWcgVVNCX0NISVBJREVBX1RFR1JBDQo+ICsJdHJpc3RhdGUg
+IkVuYWJsZSBUZWdyYSBVREMgZ2x1ZSBkcml2ZXIiIGlmIEVNQkVEREVEDQo+ICsJZGVwZW5kcyBv
+biBPRg0KPiArCWRlcGVuZHMgb24gVVNCX0NISVBJREVBX1VEQw0KPiArCWRlZmF1bHQgVVNCX0NI
+SVBJREVBDQo+ICsNCj4gIGVuZGlmDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9jaGlwaWRl
+YS9NYWtlZmlsZSBiL2RyaXZlcnMvdXNiL2NoaXBpZGVhL01ha2VmaWxlDQo+IGluZGV4IDk4NTY2
+M2JhNmU2OC4uZmFlNzc5YTIzODY2IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3VzYi9jaGlwaWRl
+YS9NYWtlZmlsZQ0KPiArKysgYi9kcml2ZXJzL3VzYi9jaGlwaWRlYS9NYWtlZmlsZQ0KPiBAQCAt
+OCwxMCArOCw4IEBAIGNpX2hkcmMtJChDT05GSUdfVVNCX09UR19GU00pCQkrPSBvdGdfZnNtLm8N
+Cj4gIA0KPiAgIyBHbHVlL0JyaWRnZSBsYXllcnMgZ28gaGVyZQ0KPiAgDQo+IC1vYmotJChDT05G
+SUdfVVNCX0NISVBJREVBKQkrPSBjaV9oZHJjX3VzYjIubw0KPiAtb2JqLSQoQ09ORklHX1VTQl9D
+SElQSURFQSkJKz0gY2lfaGRyY19tc20ubw0KPiAtDQo+IC1vYmotJChDT05GSUdfVVNCX0NISVBJ
+REVBX1BDSSkJKz0gY2lfaGRyY19wY2kubw0KPiAtDQo+IC1vYmotJChDT05GSUdfVVNCX0NISVBJ
+REVBX09GKQkrPSB1c2JtaXNjX2lteC5vIGNpX2hkcmNfaW14Lm8NCj4gLW9iai0kKENPTkZJR19V
+U0JfQ0hJUElERUFfT0YpCSs9IGNpX2hkcmNfdGVncmEubw0KPiArb2JqLSQoQ09ORklHX1VTQl9D
+SElQSURFQV9HRU5FUklDKQkrPSBjaV9oZHJjX3VzYjIubw0KPiArb2JqLSQoQ09ORklHX1VTQl9D
+SElQSURFQV9NU00pCQkrPSBjaV9oZHJjX21zbS5vDQo+ICtvYmotJChDT05GSUdfVVNCX0NISVBJ
+REVBX1BDSSkJCSs9IGNpX2hkcmNfcGNpLm8NCj4gK29iai0kKENPTkZJR19VU0JfQ0hJUElERUFf
+SU1YKQkJKz0gY2lfaGRyY19pbXgubyB1c2JtaXNjX2lteC5vDQo+ICtvYmotJChDT05GSUdfVVNC
+X0NISVBJREVBX1RFR1JBKQkrPSBjaV9oZHJjX3RlZ3JhLm8NCj4gLS0gDQo+IDIuMjAuMQ0KPiAN
+Cg0KLS0gDQoNClRoYW5rcywNClBldGVyIENoZW4=
