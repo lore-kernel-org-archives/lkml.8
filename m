@@ -2,150 +2,93 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83D9C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2375C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED6120731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FC520719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="HOXOhS+u"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sw7FeeaP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgDGKwO (ORCPT
+        id S1728378AbgDGKwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:52:14 -0400
-Received: from mail-eopbgr50104.outbound.protection.outlook.com ([40.107.5.104]:4018
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728290AbgDGKwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:52:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JPvKPDODVx3btLyr6nCAx2AvVoxlM13id6JB+2Fl1xZ/1c8whdD5tHO9HHA2cM3MoEueq5OYsJ33i1slyrriXPZtz2F65NvxD7rWebx4CkX+PbR2kZZubHbjy1fjBrZ4s9joatEc64U+Ajf2SwcvQXlJVu6SebsB6ShbPg90iGF3IP5C0rrPWJRHtqou2mriPbiVflE8MeIAlM+QTpscC1HAe8zjML8Cv8o+kgpIdCFnMLyVuDVB5GwEFxyGMl95ZIcgR5mIamkxQBUTgzdLJzakQ8d3pAxlq0IQWKsN0pETWvIYvmHNu0FInanHWE8/mcBIU7I12yu7NdL3HOKEdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uhiOeoD8Ep3vd7ozP0ztEl47UdSzPh4C42RP3wdk7Yo=;
- b=C/BVUI01yoYinjLvHcUyJqQDgL5ovzTRnlOduQ0SehoUo16NkKRSHZggwoSNS7fano440j/wnlF2bWmKYabaYrDDyzU97hKAdtk3xnSIlpgwSJMhblFOGC7IJGv9uzeNsnTfwiZfvntsXEwAhy4PuKqNRszasRI16BmOopYv+zEy5b4jRnsFRnNfYN3BOkSFshJbvKIel7uVuT3pAfFQT0cvdzsd+pmyOBYS0gmG1FYLJd52Ce1mZ0qykUViss5ybULLXyZjGTbmUuhN37ifmOdKJ+pKpTuOgbB16g5sDd9DiDJoXg8oY7mC+iL1GDyXIEzVqvVEO88naBd+JyZC7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uhiOeoD8Ep3vd7ozP0ztEl47UdSzPh4C42RP3wdk7Yo=;
- b=HOXOhS+ug1U/EFc2nempusn+TMyRtbjbsrJblupYTVWFVMKqWhD8U4isTst13dem2DRGpOG4/mvMeKTtUUEYacPpSvxwAtL4/+5C6AvEkEcBsFQhhhStsMtE5Ag2Dt0V5bIrfpyPxoS/ehYSpZ6ykD1VeafyKdOXTX9LW6561F8=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
- by VI1PR05MB5888.eurprd05.prod.outlook.com (2603:10a6:803:dd::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Tue, 7 Apr
- 2020 10:51:57 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
- 10:51:57 +0000
-X-Gm-Message-State: AGi0PuboX5G7pHioKwFTVEiVxK2/Szv7Y5uX0vfz3Fsn6c7l6St7IfrC
-        QnR3VlLggZ+A0E8KBRfim4drngjWv2WGJ3pdpxo=
-X-Google-Smtp-Source: APiQypJcJNgpNCHWqde1ppPh+KOdbTYRa6VL+4ueqjtQLTpEjbjBgjlDMjA9dAs6ilFY8udrPh9G9EFK+lyL21dP3GM=
-X-Received: by 2002:aed:2351:: with SMTP id i17mr1528151qtc.342.1586256713855;
- Tue, 07 Apr 2020 03:51:53 -0700 (PDT)
-References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
- <20200405192246.3741784-3-oleksandr.suvorov@toradex.com> <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
-In-Reply-To: <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date:   Tue, 7 Apr 2020 13:51:42 +0300
-X-Gmail-Original-Message-ID: <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
-Message-ID: <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/6] dt-bindings: pwm: document the PWM no-flag
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BL0PR01CA0021.prod.exchangelabs.com (2603:10b6:208:71::34)
- To VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
+        Tue, 7 Apr 2020 06:52:18 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39366 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728255AbgDGKwR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:52:17 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037AmxcH031144;
+        Tue, 7 Apr 2020 10:52:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=a406pEmkdKb9IqkQkIJIzGh/Bjq1L2qpLfE6qFITsK8=;
+ b=sw7FeeaPeLBdlw4ZI9lU+BTThgDy2AvChnC/TshWUujbnb+3mFVYW33YPWu05DIoEoRb
+ LXKkBQpBea1LsWabAJHkTDrYnSjpJ5Vgrca44MeX1Vj9j/RzBYGwHi4SZ/VhT00uLrG2
+ SvZfw8h/YmZJp5J4RYfWHb01lRStVUHutfD258AWkuwqvmryHNNfss7dmZxq07WFjjH8
+ HOznF2Z5BusZPR7N60Jc7CoSbqQ8akJkGT9ldR01dHXUq5iIcFuOMJrRIqRPrJnRfLcJ
+ HhBb47Lv3oj+i0BNZLSxeROO9m7k/2tPm1Ii/P526/XBI/31fhjXUwimNzJEl3MVw0er aA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 306jvn41jq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 10:52:06 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037AlTt5135720;
+        Tue, 7 Apr 2020 10:52:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 30741dukwp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 10:52:05 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 037Aq3ex016924;
+        Tue, 7 Apr 2020 10:52:03 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Apr 2020 03:52:03 -0700
+Date:   Tue, 7 Apr 2020 13:51:55 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     kvalo@codeaurora.org, ath9k-devel@qca.qualcomm.com,
+        davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        anenbupt@gmail.com, syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH 1/5] ath9k: Fix use-after-free Read in htc_connect_service
+Message-ID: <20200407105154.GI2001@kadam>
+References: <20200404041838.10426-1-hqjagain@gmail.com>
+ <20200404041838.10426-2-hqjagain@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mail-qt1-f176.google.com (209.85.160.176) by BL0PR01CA0021.prod.exchangelabs.com (2603:10b6:208:71::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.17 via Frontend Transport; Tue, 7 Apr 2020 10:51:57 +0000
-Received: by mail-qt1-f176.google.com with SMTP id n17so2268060qtv.4;        Tue, 07 Apr 2020 03:51:57 -0700 (PDT)
-X-Gm-Message-State: AGi0PuboX5G7pHioKwFTVEiVxK2/Szv7Y5uX0vfz3Fsn6c7l6St7IfrC
-        QnR3VlLggZ+A0E8KBRfim4drngjWv2WGJ3pdpxo=
-X-Google-Smtp-Source: APiQypJcJNgpNCHWqde1ppPh+KOdbTYRa6VL+4ueqjtQLTpEjbjBgjlDMjA9dAs6ilFY8udrPh9G9EFK+lyL21dP3GM=
-X-Received: by 2002:aed:2351:: with SMTP id i17mr1528151qtc.342.1586256713855;
- Tue, 07 Apr 2020 03:51:53 -0700 (PDT)
-X-Gmail-Original-Message-ID: <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com>
-X-Originating-IP: [209.85.160.176]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4aa8d418-4f9f-4baa-628f-08d7dae1b14e
-X-MS-TrafficTypeDiagnostic: VI1PR05MB5888:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB58880063227F559576F81B0DF9C30@VI1PR05MB5888.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
-X-Forefront-PRVS: 036614DD9C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB3279.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(39840400004)(346002)(136003)(366004)(376002)(396003)(8676002)(81156014)(86362001)(8936002)(81166006)(450100002)(66556008)(4326008)(316002)(66476007)(6862004)(4744005)(186003)(66946007)(52116002)(966005)(26005)(44832011)(54906003)(9686003)(55236004)(5660300002)(53546011)(55446002)(478600001)(6666004)(2906002)(42186006);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ewO5136rLVVos6aDUu0GO4GSULr0HZO/tmyfN+OF9gTra7nCtNzG5ZXkHSMaiEFVlFK17V/37MwXq+m86Ob7QOTQ3SSKu38J3qA4vTwRCyRsSuVypIqFTpdSHMF8CfTFj5xbMCIv9cNJRULMk+xFOFiwjzaG9APFHCc2OsJIMTufSHrZZ47BZEIrHciyWlceHIjHmDgIc3x8piJM7K9oG9L7ir5O59mdbxWZEeWs8pxUHXGPWbjOZphtFccAT1lYh6GFkJaj61F9/1td4YyxHQRRbGEaPnyELOuoGyTPQTEtT17TjJU2DJOIZTBfUCXQSSE7ipFvKkt931u5IHc7FY4wIyTX7ZwZTxujuTjJLCmcmqMrua8r8iqlSf74Zu1/pBHZRnUs7yON0ys71JDL0TvjsFCjsLYmvMUTFkIHT1WQT8j0Tx4HLhQ0GE/7Afl8SnUK7Jc+talrbcOrEnjC3v4oYamINUB9QJ72SMhQkg7anX7a6CL3/Ult/MaOW/FNgKlhIYnmrEbUVPF4OgJNog==
-X-MS-Exchange-AntiSpam-MessageData: DACH9GMOzmaYoz7Op35kZoMXQaetfc92bMgq6Z2n7ZLNMJQCiYQc/Cj0XCUnM9pBOqdKjBeF55L92rYiGs86Zxqdp4eorzASxC1ZVTMf8wLwgML5DW6M8hSDXL9LQHP9QHLE1dJiNNgt0HNLuGtd/w==
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4aa8d418-4f9f-4baa-628f-08d7dae1b14e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 10:51:57.5084
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bIU7qU7SARTTUvStQ9cXOrpuL7cKO+au53bX/utZsbEVdUCXrRkIY0c0IBqcz7ZhIwZZZ2fTz6Jb6y+dji71ofR7ohtZsQ6hDhl6FBJsWqE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5888
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200404041838.10426-2-hqjagain@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 phishscore=0
+ malwarescore=0 bulkscore=0 spamscore=0 adultscore=0 mlxlogscore=736
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070093
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=2
+ mlxlogscore=813 mlxscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1011 malwarescore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 9:17 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Sun, Apr 05, 2020 at 10:22:42PM +0300, Oleksandr Suvorov wrote:
-> > Add the description of PWM_NOFLAGS flag property.
-> >
-> > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
->
-> As I already wrote in reply to the v1 series I'd prefer a name for 0
-> that explicitly handles normal polarity.
+This patch is correct but there are a lot of error paths in
+hif_usb_send() which don't free the skb.  Some error paths *do* free
+the skb but most don't.  It's really a lot of work to sort through and
+fix.
 
-Uwe, AFAIU, there is no flag that forces normal polarity, the normal polari=
-ty
-is the default state if there is no flag to invert the polarity is set.
-'0' value in the bit flags cell really means there are no flags set
-for the PWM instance.
+regards,
+dan carpenter
 
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
-
-
-
---
-Best regards
-Oleksandr Suvorov
-
-Toradex AG
-Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
