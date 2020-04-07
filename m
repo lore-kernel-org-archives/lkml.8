@@ -2,214 +2,97 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E70AC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E89BC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D78220730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B9720719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="s4RJRTPa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d84g2sKJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgDGWYq (ORCPT
+        id S1726504AbgDGW0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:24:46 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:61044 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726708AbgDGWYn (ORCPT
+        Tue, 7 Apr 2020 18:26:23 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:52881 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgDGW0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:24:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586298282; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=Imil9AjSTOr7fzSdf9HIL72Sr8OKj1T2LJjdyGPinNs=; b=s4RJRTPaQGB7EmuhMXkjJoshPwTwxjdTW9dlZ3feq/585mMBTYATc/fiOdeTtQq9soi+aKpX
- IAB3uIrgG8Yg6r1BJP/DJcrGvsjnrUfhMAIFudafEgX6bHY8WHyjy7ccJCqGK5VMe17u5N1y
- a4/AUMZFiZXTFNjKmKMJ3pTOa60=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8cfdaa.7f7d47d9e8f0-smtp-out-n01;
- Tue, 07 Apr 2020 22:24:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 39083C433D2; Tue,  7 Apr 2020 22:24:42 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 412DCC43637;
-        Tue,  7 Apr 2020 22:24:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 412DCC43637
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        vinod.koul@linaro.org, Jack Pham <jackp@codeaurora.org>,
-        Wesley Cheng <wcheng@codeaurora.org>
-Subject: [PATCH v3 2/2] arm64: dts: qcom: sm8150: Add USB and PHY device nodes
-Date:   Tue,  7 Apr 2020 15:24:27 -0700
-Message-Id: <1586298267-4722-3-git-send-email-wcheng@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1586298267-4722-1-git-send-email-wcheng@codeaurora.org>
-References: <1586298267-4722-1-git-send-email-wcheng@codeaurora.org>
+        Tue, 7 Apr 2020 18:26:23 -0400
+Received: by mail-pj1-f67.google.com with SMTP id ng8so343817pjb.2;
+        Tue, 07 Apr 2020 15:26:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J6jgVx8UtXSs7xAZNp6Vy45fSSdaEZe2Op7yX79fp4w=;
+        b=d84g2sKJMrprsqxkvvIuJG8rbJIoDYuW/BNFQYNVKBVPXf4ayO2obrPrb0aiX6mfsb
+         MKoWK7u0huz909TUbzd+yL7a60Mc8a1JH7hpl4F46tFDGXyhMJuEKedca/fYZEyXzwEt
+         v8k6nLXDgOWTeaKXZDaNEDfgqLBk1z+Tm/Ag+tQOBydHwwPUzbaKJpplbRwYp3dOlEn7
+         KlPDdfVV2bOq/xm2RtaP5zXwjK+YfMVWbmrauRTaFUM9iBXir1G9vWmnLSyNmr7gvKRT
+         wiyjio7udk6HualqXKfbOiSp47R5TpfTr349VUJqD2rOO4nn60GzxuaBu6kED25IbA+6
+         9FaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J6jgVx8UtXSs7xAZNp6Vy45fSSdaEZe2Op7yX79fp4w=;
+        b=p8kEjmeIzeZePIh2nsAPIc8+gm8FrjtijGiJF1Dhb8BueV3XGxd62icW21x5K6dea0
+         nZS0+BP0ut50kCBRiWLTHZDU6caIT9YbItJwOXx2pbR5aj5rUugupmAytG3lgBYURyV5
+         b27XNDo+Wiy84+/6+cXE1FnpoSzgESHzNeC5TyOx3w2YupMWfAb56A9QTXAmc0ALFoNk
+         PUt38E6mhV5t8RrhQwi/C6OpYkozAfzX9XtsLvldXRKb+EPUhNfRTglUsw21CvG+DPcp
+         OedKwfsB2yS006UF+EItB0ZPPGz6pYlXSV3aWUyttTuqm5zu6lY7/xm8UZ95wT8vOg+c
+         OQ2A==
+X-Gm-Message-State: AGi0PuYuKwVBCD4ou+DHRhYS61nVhHEeyqQEpnuD9bLHtTiNYTe0wLBC
+        AGiCs66QaKGGpAuWppZ1YCQDXJF6wS1NBYDC82E=
+X-Google-Smtp-Source: APiQypJnIbbumJ1u0PQMBkzvJmO8JkWoo+AhO9EJIN5DI/VbIQI+3MONMOfFLJPMeR+aEfQalJ/TY/j8kSLR+LAcgNc=
+X-Received: by 2002:a17:90a:8546:: with SMTP id a6mr1739682pjw.8.1586298382222;
+ Tue, 07 Apr 2020 15:26:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200407213058.62870-1-hdegoede@redhat.com> <cfd3171a-94fb-7382-28e1-a236cb6759cc@redhat.com>
+In-Reply-To: <cfd3171a-94fb-7382-28e1-a236cb6759cc@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 Apr 2020 01:26:10 +0300
+Message-ID: <CAHp75VdqQnHbMSSeoDESMgywH-1VxBTT=Uo_GLV1aycmg=MXtA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_int0002_vgpio: Only bind to the
+ INT0002 dev when using s2idle
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxim Mikityanskiy <maxtram95@gmail.com>,
+        "5 . 3+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jack Pham <jackp@codeaurora.org>
+On Wed, Apr 8, 2020 at 1:24 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi all,
+>
+> I just realized that I should have added a cover letter to this
+> patch to discuss how to merge it.
+>
+> Rafael has already queued up the
+> "[PATCH v3 2/2] platform/x86: intel_int0002_vgpio: Use acpi_register_wakeup_handler()"
+> in his tree. Looking at both patches the parts of the file the
+> touch are different enough that that should not be a problem though.
+>
+> So I guess this can go through platform/x86 as usual, or
+> (assuming everyone is ok with the change itself) alternatively
+> Rafael can take it to make sure there will be no conflicts?
 
-Add device nodes for the USB3 controller, QMP SS PHY and
-SNPS HS PHY.
+You will need different patches for v5.7 and the rest.
+In v5.7 new CPU macros are in use.
 
-Signed-off-by: Jack Pham <jackp@codeaurora.org>
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Tested-by: Vinod Koul <vinod.koul@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 21 ++++++++
- arch/arm64/boot/dts/qcom/sm8150.dtsi    | 92 +++++++++++++++++++++++++++++++++
- 2 files changed, 113 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-index 8ab1661..6c6325c 100644
---- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-@@ -408,3 +408,24 @@
- 	vdda-pll-supply = <&vreg_l3c_1p2>;
- 	vdda-pll-max-microamp = <19000>;
- };
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+	vdda-pll-supply = <&vdd_usb_hs_core>;
-+	vdda33-supply = <&vdda_usb_hs_3p1>;
-+	vdda18-supply = <&vdda_usb_hs_1p8>;
-+};
-+
-+&usb_1_qmpphy {
-+	status = "okay";
-+	vdda-phy-supply = <&vreg_l3c_1p2>;
-+	vdda-pll-supply = <&vdda_usb_ss_dp_core_1>;
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3 {
-+	dr_mode = "peripheral";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 141c21d..fd6c83a 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -621,6 +621,98 @@
- 			};
- 		};
- 
-+		usb_1_hsphy: phy@88e2000 {
-+			compatible = "qcom,usb-snps-hs-7nm-phy",
-+							"qcom,sm8150-usb-hs-phy";
-+			reg = <0 0x088e2000 0 0x400>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "ref";
-+
-+			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+		};
-+
-+		usb_1_qmpphy: phy@88e9000 {
-+			compatible = "qcom,sm8150-qmp-usb3-phy";
-+			reg = <0 0x088e9000 0 0x18c>,
-+			      <0 0x088e8000 0 0x10>;
-+			reg-names = "reg-base", "dp_com";
-+			status = "disabled";
-+			#clock-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-+				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
-+			clock-names = "aux", "ref_clk_src", "ref", "com_aux";
-+
-+			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
-+				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
-+			reset-names = "phy", "common";
-+
-+			usb_1_ssphy: lanes@88e9200 {
-+				reg = <0 0x088e9200 0 0x200>,
-+				      <0 0x088e9400 0 0x200>,
-+				      <0 0x088e9c00 0 0x218>,
-+				      <0 0x088e9600 0 0x200>,
-+				      <0 0x088e9800 0 0x200>,
-+				      <0 0x088e9a00 0 0x100>;
-+				#phy-cells = <0>;
-+				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
-+				clock-names = "pipe0";
-+				clock-output-names = "usb3_phy_pipe_clk_src";
-+			};
-+		};
-+
-+		usb_1: usb@a6f8800 {
-+			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
-+			reg = <0 0x0a6f8800 0 0x400>;
-+			status = "disabled";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			dma-ranges;
-+
-+			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE_USB3_PRIM_AXI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_USB30_PRIM_SLEEP_CLK>,
-+				 <&gcc GCC_USB3_SEC_CLKREF_CLK>;
-+			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+				      "sleep", "xo";
-+
-+			assigned-clocks = <&gcc GCC_USB30_PRIM_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_PRIM_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <150000000>;
-+
-+			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 486 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 488 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 489 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hs_phy_irq", "ss_phy_irq",
-+					  "dm_hs_phy_irq", "dp_hs_phy_irq";
-+
-+			power-domains = <&gcc USB30_PRIM_GDSC>;
-+
-+			resets = <&gcc GCC_USB30_PRIM_BCR>;
-+
-+			usb_1_dwc3: dwc3@a600000 {
-+				compatible = "snps,dwc3";
-+				reg = <0 0x0a600000 0 0xcd00>;
-+				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
-+				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+			};
-+		};
-+
- 		aoss_qmp: power-controller@c300000 {
- 			compatible = "qcom,sm8150-aoss-qmp";
- 			reg = <0x0 0x0c300000 0x0 0x100000>;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+With Best Regards,
+Andy Shevchenko
