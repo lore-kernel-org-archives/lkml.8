@@ -2,87 +2,84 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476CFC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E9AC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C54A206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD422074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgDGLND (ORCPT
+        id S1728529AbgDGLNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:13:03 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38708 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728176AbgDGLNC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:13:02 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t28so2671157ott.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 04:13:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e3iXkpvKQTrS/mZHkPAUFQihvDgmhgnkcQpveYe+iPU=;
-        b=J17uUbbLxJz6rl7dd45Mv8Z54VA7cl1V/mfhoeVpL/0i7TJeT+vOquS7s9IwoGKBNq
-         EnfvtN3VEoJEDfFKHDBEvU0FLEns3roU9ckgSfePP4n4x2hbWbPD1TcCjF6b8HB0eqtC
-         PPB2opFKNPwK2xqGsazl42ABPkpj6ZyhWu0IcjPdZ35h9hLritWOaR2QevlegDDrUoso
-         nNhvJ3IDmgi3e7BVMjkaw6Eu8v5JOd6ahcu32vxRPSKXUYjpKGNjvx8/JYWe559WUkZm
-         hdWGBACgLp8mQk3bxqh8a8ecQ/0TKO2nb5c+mos7WSewx63BGMZdIxi/cxar3ZhNg6ZQ
-         5fMw==
-X-Gm-Message-State: AGi0PuYWRIWaOhqaOmlvW3T0lAOvcDNBsl8W6/lRfJsK5aay7s5W2DZG
-        1sXk921DOzfhiyUk1f0pV2zaIP4zvMEJ4lkgj3U=
-X-Google-Smtp-Source: APiQypIyZ+zMrT0ob34m67/8h1bW9LCddkuTM0bzGelJ4kZB59WKXowcJiddAufEynRIza37fmpf86cW43QFEiMVzAc=
-X-Received: by 2002:a9d:76c7:: with SMTP id p7mr1044046otl.145.1586257980496;
- Tue, 07 Apr 2020 04:13:00 -0700 (PDT)
+        Tue, 7 Apr 2020 07:13:07 -0400
+Received: from sauhun.de ([88.99.104.3]:52042 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728495AbgDGLNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 07:13:06 -0400
+Received: from localhost (p54B3320F.dip0.t-ipconnect.de [84.179.50.15])
+        by pokefinder.org (Postfix) with ESMTPSA id E3CFD2C07CD;
+        Tue,  7 Apr 2020 13:13:03 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 13:13:01 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Martin Volf <martin.volf.42@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 5.5 42/46] i2c: i801: Do not add ICH_RES_IO_SMI for the
+ iTCO_wdt device
+Message-ID: <20200407111301.GA1928@ninjato>
+References: <20200407101459.502593074@linuxfoundation.org>
+ <20200407101503.858623897@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20200407103537.4138-1-max.krummenacher@toradex.com> <20200407103537.4138-2-max.krummenacher@toradex.com>
-In-Reply-To: <20200407103537.4138-2-max.krummenacher@toradex.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Apr 2020 13:12:48 +0200
-Message-ID: <CAMuHMdX3EDwrBJQvqpoGkbWjFkEth6wpdk40pZjCydfssJ2T9w@mail.gmail.com>
-Subject: Re: [PATCH 1/4] arm64: defconfig: DRM_DUMB_VGA_DAC: follow changed
- config symbol name
-To:     Max Krummenacher <max.oss.09@gmail.com>
-Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Olof Johansson <olof@lixom.net>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Content-Disposition: inline
+In-Reply-To: <20200407101503.858623897@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 12:36 PM Max Krummenacher <max.oss.09@gmail.com> wrote:
-> This occurrence wasn't changed in the original rename commit.
->
-> Fixes commit 0411374bdf2b3 ("drm/bridge: dumb-vga-dac: Rename driver to
-> simple-bridge").
->
-> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Gr{oetje,eeting}s,
+Hi Greg,
 
-                        Geert
+> Fixes: 9424693035a5 ("i2c: i801: Create iTCO device on newer Intel PCHs")
+> [wsa: complete fix needs all of http://patchwork.ozlabs.org/project/linux-i2c/list/?series=160959&state=*]
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Did you pick these others, too, this time?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+All the  best,
+
+   Wolfram
+
+
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6MYDkACgkQFA3kzBSg
+KbaEgg//cyLUYHfeQlAmqDmjH4MEtoK6Skye8nnj/KuqDHJJj4YjlWW31XUwb7LA
+S2o/6X99kLBUTlvZ4h53j0NV2xXRjDe7etUykB8TduXjUGKe3RyamU/v9wN5iFY8
+TPIEPL9U9aaYPimz28aVucE24ZY6txKdttfoH5Dq7X5nA07bqFugy8JObHu9MdRj
+Eo+71Zn253oG6g6/FTeceW6nT8foxe0QjhJKmEkPE1GG3qpb5W+E2beLP2yhAv8f
+eHPeJuqcOC8yrHFn6m8vs+ymZ/JYuA4zOvuz5VidHMujcrZlC2LjLSN/lMo4dFbs
+HAzJ214EpNW2itH16iv8cjAdombRq9IuQDCTwtVnpb39n+FA7XCHcXRlLrU7KvIb
+s2rWq0NGhU70F5hV+0cxrx7GOED0yOtAu4Ox7hv9Nw3Ydkg7umd9rwNhfbV5aZT5
+lRBtjM/789DPTI4pQf7a+w8yPqzWeEDIFf0tLN5BxmLcdEXpGDfhQOV3Bp9w+xVS
+z631G4C7o6vKVrhLFQlzVh1kVtRJGBTF3hNV0/CEWkhDd/zAIN6pWEo4Kshg2zWT
+7weoUlcCmibjAcBD3h3dzRBK6VPZ2+6Oz03LyqOPQuQbMtbpuRgy1ISgfx0VJdW4
+PPlyshcNCfN5aTMt1oQ/F5WS1tiTL1fBu3n1hemn5eFH+mbp0BM=
+=rzgb
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
