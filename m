@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A878C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86745C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8752074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50AAC20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586254989;
-	bh=YSM3qsOVOWSS2Q5ljx8VaWbZ544ASp2dwCLYH7JjW68=;
+	s=default; t=1586254992;
+	bh=TorpH4uEST+U3yxKOkCZL/m53n9xz2lDBNqCEdKUsyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3pBSieYj8Zk4ZFUA7Pz7Il/sbP+Se1eL5C7Gzx4Np2Sg6yvg3EkmsSutLPlks9Ba
-	 /Tks+8EC4FR5I6VLn4V7k3EjJEDE5E+bZjMlA8kpXk2HD3VFvC93unN/w9i6bJoYgu
-	 Ct2IFjCunTh4vUNjz4SnSDP2WOv1iUtE4u8VUBBA=
+	b=ag1Hhu7sOzLRBkBzMdp4qQ6IJv520IwtslFZOIuDmpOd1pc1be0JayV+8fpSncCUR
+	 t4Narp3WesbDhGGhZ7kyi0UzDRP/eGzQ/eJRCs0EbRzmc2c5BDFOC8GoY0VtMrw416
+	 60IHFwPHuXZYD9d3kv/xXYkfjyu2yqzGRmvTJcdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgDGKXH (ORCPT
+        id S1728391AbgDGKXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32772 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbgDGKXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:23:05 -0400
+        id S1728373AbgDGKXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E60A720801;
-        Tue,  7 Apr 2020 10:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E2972074F;
+        Tue,  7 Apr 2020 10:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586254984;
-        bh=YSM3qsOVOWSS2Q5ljx8VaWbZ544ASp2dwCLYH7JjW68=;
+        s=default; t=1586254986;
+        bh=TorpH4uEST+U3yxKOkCZL/m53n9xz2lDBNqCEdKUsyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bPpT/rJ5TI7C5H4E+84w7dSRieMgkFEf0XMkHYBsD7/OlW6mfNtUK/2oZZPdfFEAF
-         sMcX6FzElbQZmbhJaqzK/DievQnz+2EHqH+wF7alkSl9TvaUMxONKNDA1e7hbGE68M
-         ODoJl8zkCr4AqQZ63MjGv0IZB4wcV8mAGwsH1fp0=
+        b=k8jEBkmSIEXfQfV1A4+po1IfDfeDErInOkq/3vbU5A9ZiGthlX2u9XXyJs7XpFU60
+         lx6yisW9hqoVHwgOVBQa5e6i0q/TZ8aTv1n0HDM9iH4rXl/HGYigKvJeORdIVZvJBf
+         pFsaiv0XklYHeqtVAVBrSvzcL0WJDaFi2CZ/1A1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 5.4 20/36] mei: me: add cedar fork device ids
-Date:   Tue,  7 Apr 2020 12:21:53 +0200
-Message-Id: <20200407101456.950869274@linuxfoundation.org>
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 5.4 21/36] nvmem: check for NULL reg_read and reg_write before dereferencing
+Date:   Tue,  7 Apr 2020 12:21:54 +0200
+Message-Id: <20200407101457.069282699@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -60,44 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 
-commit 99397d33b763dc554d118aaa38cc5abc6ce985de upstream.
+commit 3c91ef69a3e94f78546b246225ed573fbf1735b4 upstream.
 
-Add Cedar Fork (CDF) device ids, those belongs to the cannon point family.
+Return -EPERM if reg_read is NULL in bin_attr_nvmem_read() or if
+reg_write is NULL in bin_attr_nvmem_write().
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20200324210730.17672-1-tomas.winkler@intel.com
+This prevents NULL dereferences such as the one described in
+03cd45d2e219 ("thunderbolt: Prevent crash if non-active NVMem file is
+read")
+
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200310132257.23358-10-srinivas.kandagatla@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hw-me-regs.h |    2 ++
- drivers/misc/mei/pci-me.c     |    2 ++
- 2 files changed, 4 insertions(+)
+ drivers/nvmem/nvmem-sysfs.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -87,6 +87,8 @@
- #define MEI_DEV_ID_CMP_H      0x06e0  /* Comet Lake H */
- #define MEI_DEV_ID_CMP_H_3    0x06e4  /* Comet Lake H 3 (iTouch) */
+--- a/drivers/nvmem/nvmem-sysfs.c
++++ b/drivers/nvmem/nvmem-sysfs.c
+@@ -56,6 +56,9 @@ static ssize_t bin_attr_nvmem_read(struc
  
-+#define MEI_DEV_ID_CDF        0x18D3  /* Cedar Fork */
+ 	count = round_down(count, nvmem->word_size);
+ 
++	if (!nvmem->reg_read)
++		return -EPERM;
 +
- #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
+ 	rc = nvmem->reg_read(nvmem->priv, pos, buf, count);
  
- #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -109,6 +109,8 @@ static const struct pci_device_id mei_me
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC_4, MEI_ME_PCH8_CFG)},
+ 	if (rc)
+@@ -90,6 +93,9 @@ static ssize_t bin_attr_nvmem_write(stru
  
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_CDF, MEI_ME_PCH8_CFG)},
+ 	count = round_down(count, nvmem->word_size);
+ 
++	if (!nvmem->reg_write)
++		return -EPERM;
 +
- 	/* required last entry */
- 	{0, }
- };
+ 	rc = nvmem->reg_write(nvmem->priv, pos, buf, count);
+ 
+ 	if (rc)
 
 
