@@ -2,155 +2,89 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9280C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D1AC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A25206BE
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:26:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NmOHvzsw"
+	by mail.kernel.org (Postfix) with ESMTP id 2D35D206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgDGX0z (ORCPT
+        id S1726469AbgDGXhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:26:55 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35557 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgDGX0z (ORCPT
+        Tue, 7 Apr 2020 19:37:04 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:40816 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgDGXhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:26:55 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c12so1829771plz.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:26:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=y5LS3MU2ajrGhRzRJXtmecDXDze15/f8wGbcQHqh5n4=;
-        b=NmOHvzswUt9XYTE1FH4pjMmmWuJs4RiOc30XXNe/xawQjAVjxF4k/O55uZbflAP5xM
-         Cp6qLKTEtUR08ztRXxhoxXQwdkviEYF6dxtYh3Wsj+o+3nZYQ7xU8rFfKOhcZk+Bhpi4
-         HP77kgIUYAYgSknWgI4gvHP0DUvuUf7JCBS8hsEq7nffrAmL0nVkPQaYeiOygFEkzl5N
-         Xr+erFsD2lXoxBmsReXKP0EOl2MT2F927ooDWplLYCf2yJeovnK18pDwJ9cmht2aFcQ9
-         X5+ayPRdsmUfBW4r2RobojK4RPdw7PUgVsjP2Sa/7mBENcUociKnoa7TEd1ltawkCZDl
-         0T3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y5LS3MU2ajrGhRzRJXtmecDXDze15/f8wGbcQHqh5n4=;
-        b=dR/Wn4ErQAGPyTEWrvy+tRZAobT+AGyLU3GEM0huzSNe6ATGQ5kaD8e0PQ0y8iW/37
-         YHMwFppVClit28NwVB6pIxdG9SRhtBwybKfgychynAd/VOSWKkRM0KQ3V6ipxT2WZljl
-         BhtUpWGcgSJxCbQAgcXKs6+pMAbAq6ex8iQPCApqyCSdu4/G/cW5dM+YW++8LHVnRXyG
-         eTSOhWvmzndUHHTUljtaedGAlLNi5Vk0UZtoLJb8Prx4F7yoiexHcSe4mTmqAydRWSmc
-         QB15gSdriThQKVPtAZRk/yaHxw+YDe3vIFk0VeW+RzIjxJF8SkHMHAerrXNZHC9lfXY2
-         izWQ==
-X-Gm-Message-State: AGi0PuaG90xR+Lfsdaqa4aPpl+ae1N5fOh23QO5F+w7rl/qCRGdX70l8
-        G5ju9tuhuPL1UVTWfFQYp+JueA==
-X-Google-Smtp-Source: APiQypKoPhJDW9jWO0if0qrlkO0oFu9JmnbT7a7/ETHNk4nvDKag6Odi3YwvY66/1Ba6oswXw3zGYA==
-X-Received: by 2002:a17:90a:be0b:: with SMTP id a11mr1977543pjs.56.1586302014257;
-        Tue, 07 Apr 2020 16:26:54 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q12sm14143932pgi.86.2020.04.07.16.26.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 16:26:53 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 16:26:59 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     rishabhb@codeaurora.org
-Cc:     Siddharth Gupta <sidgup@codeaurora.org>, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, linux-remoteproc-owner@vger.kernel.org
-Subject: Re: [PATCH 2/2] remoteproc: core: Prevent sleep when rproc crashes
-Message-ID: <20200407232659.GM20625@builder.lan>
-References: <1582164713-6413-1-git-send-email-sidgup@codeaurora.org>
- <1582164713-6413-3-git-send-email-sidgup@codeaurora.org>
- <20200407222958.GL20625@builder.lan>
- <c98b9b02c49b41c6e2493407f11c5eac@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c98b9b02c49b41c6e2493407f11c5eac@codeaurora.org>
+        Tue, 7 Apr 2020 19:37:04 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 037NaIP6017886
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 7 Apr 2020 18:36:22 -0500
+Message-ID: <93ae433317a82de86ff5e9c8485563b78656b615.camel@kernel.crashing.org>
+Subject: Re: [PATCH v3] usb: gadget: aspeed: improve vhub port irq handling
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Tao Ren <rentao.bupt@gmail.com>
+Cc:     Felipe Balbi <balbi@kernel.org>, linux-aspeed@lists.ozlabs.org,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openbmc@lists.ozlabs.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Joel Stanley <joel@jms.id.au>, taoren@fb.com,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Wed, 08 Apr 2020 09:36:16 +1000
+In-Reply-To: <20200407060242.GA15050@taoren-ubuntu-R90MNF91>
+References: <20200315191430.12379-1-rentao.bupt@gmail.com>
+         <20200401215826.GA8248@taoren-ubuntu-R90MNF91>
+         <512d625e45ea953d722bb7ea73c3619730312284.camel@kernel.crashing.org>
+         <20200403064826.GA10866@taoren-ubuntu-R90MNF91>
+         <20200407060242.GA15050@taoren-ubuntu-R90MNF91>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07 Apr 15:59 PDT 2020, rishabhb@codeaurora.org wrote:
+On Mon, 2020-04-06 at 23:02 -0700, Tao Ren wrote:
+> I ran some testing on my ast2400 and ast2500 BMC and looks like the
+> for() loop runs faster than for_each_set_bit_from() loop in my
+> environment. I'm not sure if something needs to be revised in my test
+> code, but please kindly share your suggestions:
+> 
+> I use get_cycles() to calculate execution time of 2 different loops, and
+> ast_vhub_dev_irq() is replaced with barrier() to avoid "noise"; below
+> are the results:
+> 
+>   - when downstream port number is 5 and only 1 irq bit is set, it takes
+>     ~30 cycles to finish for_each_set_bit() loop, and 20-25 cycles to
+>     finish the for() loop.
+> 
+>   - if downstream port number is 5 and all 5 bits are set, then
+>     for_each_set_bit() loop takes ~50 cycles and for() loop takes ~25
+>     cycles.
+> 
+>   - when I increase downsteam port number to 16 and set 1 irq bit, the
+>     for_each_set_bit() loop takes ~30 cycles and for() loop takes 25
+>     cycles. It's a little surprise to me because I thought for() loop
+>     would cost 60+ cycles (3 times of the value when port number is 5).
+> 
+>   - if downstream port number is 16 and all irq status bits are set,
+>     then for_each_set_bit() loop takes 60-70 cycles and for() loop takes
+>     30+ cycles.
 
-> On 2020-04-07 15:29, Bjorn Andersson wrote:
-> > On Wed 19 Feb 18:11 PST 2020, Siddharth Gupta wrote:
-> > 
-> > > Remoteproc recovery should be fast and any delay will have an impact
-> > > on the
-> > > user-experience. Use power management APIs (pm_stay_awake and
-> > > pm_relax) to
-> > > ensure that the system does not go to sleep.
-> > > 
-> > > Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
-> > > ---
-> > >  drivers/remoteproc/remoteproc_core.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/drivers/remoteproc/remoteproc_core.c
-> > > b/drivers/remoteproc/remoteproc_core.c
-> > > index 5ab65a4..52e318c 100644
-> > > --- a/drivers/remoteproc/remoteproc_core.c
-> > > +++ b/drivers/remoteproc/remoteproc_core.c
-> > > @@ -1712,6 +1712,8 @@ static void rproc_crash_handler_work(struct
-> > > work_struct *work)
-> > > 
-> > >  	if (!rproc->recovery_disabled)
-> > >  		rproc_trigger_recovery(rproc);
-> > > +
-> > > +	pm_relax(&rproc->dev);
-> > >  }
-> > > 
-> > >  /**
-> > > @@ -2242,6 +2244,8 @@ void rproc_report_crash(struct rproc *rproc,
-> > > enum rproc_crash_type type)
-> > >  		return;
-> > >  	}
-> > > 
-> > > +	pm_stay_awake(&rproc->dev);
-> > 
-> > Following Mathieu's question I was expecting you to do this on
-> > rproc->dev.parent.
-> > 
-> > But looking at the implementation of pm_stay_awake(), it ends up being a
-> > nop if dev->power.wakeup isn't specified. This in turn seems to come
-> > from device_wakeup_enable(), which will bail if dev->power.can_wakeup is
-> > not set. But I don't see where this would be set for either the platform
-> > driver or the remoteproc's struct device - and neither one of them have
-> > a "wakeup" attribute in sysfs.
-> > 
-> > Is there some additional plumbing needed for this?
-> We should be able to create a standalone wakeup source using
-> wakeup_source_init.
-> Then we can use _pm_stay_awake and _pm_relax on it.
+I suspect the CPU doesn't have an efficient find-zero-bit primitive,
+check the generated asm. In that case I would go back to the simple for
+loop.
 
-Afaict the way to do this would be to call device_wakeup_enable() on
-either the remoteproc or platform driver's struct device.
+Cheers,
+Ben.
 
-Given that the resources related to waking up the system are associated
-with the platform driver I think this should be done on the platform
-driver's struct device and these calls should operate on the rproc's
-parent.
 
-Regards,
-Bjorn
-
-> > 
-> > Regards,
-> > Bjorn
-> > 
-> > > +
-> > >  	dev_err(&rproc->dev, "crash detected in %s: type %s\n",
-> > >  		rproc->name, rproc_crash_to_string(type));
-> > > 
-> > > --
-> > > Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> > > a Linux Foundation Collaborative Project
