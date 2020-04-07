@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8005C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16C7C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7318D2082D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F3120842
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217711;
-	bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
+	s=default; t=1586217714;
+	bh=0NmjDoUM5gYgsEDS4Q8qgD6YSor5H2823HhLNhDpAmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MGEsMT5KfQRQXPRFvELi7msYPpTnqSWk0rKzuwBrik5f5/LE4fVNRI5rYszx3MRf+
-	 4J93XTmkNULhOiEcJc+9gK5x1m211MM2E11GrsNWSw6N18A7E8DXfzK/NCdbG7h3vX
-	 NEyxFjgNyJ5wAEOZfxBBbZWXqMfToePBRQqu3gE4=
+	b=YEMuC//ekl6wi+EvXPnVdo2s2Pxn9ExCk55bonTx6prNkT5hvssoh/htIOBPCDY73
+	 KNirK38Hkmg2LUQVCT1oYmXhKhlspSqXU8bD344WDNFnCfwPnLgP5kuPxZ9E3FgFR1
+	 fAOsqG0jtdQaA5sQx74pkqURFuPGPvJww8SM0vGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgDGABq (ORCPT
+        id S1727387AbgDGABm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:01:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35042 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:01:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726965AbgDGABk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:40 -0400
+        id S1727003AbgDGABf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D14862082D;
-        Tue,  7 Apr 2020 00:01:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4FF72082D;
+        Tue,  7 Apr 2020 00:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217700;
-        bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
+        s=default; t=1586217694;
+        bh=0NmjDoUM5gYgsEDS4Q8qgD6YSor5H2823HhLNhDpAmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5v7e8Sc4OtOIdSq3r/6kL5UlV7YLVpgjrFbz8ZlYrKA02SWlTIven8+JxA3U98uq
-         wbIgpQ6utsbYCVEY+UwcbpDSoTJ+f6iYXqvw4Q1Hn7Ma26sgr5+hGspXm2s8nX1e1i
-         5miGhaC8GQfC+spiNOz+N8N1S3YD7YA/DaL8R2nw=
+        b=SfSnBUMeNxI/5WQBDs0fClS2fxoTKBZ+dTlcmZofcbtgUmKv8JV6e646+x57yMszl
+         vO1vzawGhmhWmx9QcMX9UQUoi7e+DY1IVxcgAKJPN1xZOaj1jfELFpZQ1C7/cnebGY
+         CSplo3hSBeRsER50KuoclQfpTvDlq/K1+KYJ9+wY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xu Wang <vulab@iscas.ac.cn>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 33/35] qlcnic: Fix bad kzalloc null test
-Date:   Mon,  6 Apr 2020 20:00:55 -0400
-Message-Id: <20200407000058.16423-33-sashal@kernel.org>
+Cc:     Stefano Brivio <sbrivio@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 28/35] netfilter: nft_set_rbtree: Introduce and use nft_rbtree_interval_start()
+Date:   Mon,  6 Apr 2020 20:00:50 -0400
+Message-Id: <20200407000058.16423-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
 References: <20200407000058.16423-1-sashal@kernel.org>
@@ -59,33 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu Wang <vulab@iscas.ac.cn>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit bcaeb886ade124331a6f3a5cef34a3f1484c0a03 ]
+[ Upstream commit 6f7c9caf017be8ab0fe3b99509580d0793bf0833 ]
 
-In qlcnic_83xx_get_reset_instruction_template, the variable
-of null test is bad, so correct it.
+Replace negations of nft_rbtree_interval_end() with a new helper,
+nft_rbtree_interval_start(), wherever this helps to visualise the
+problem at hand, that is, for all the occurrences except for the
+comparison against given flags in __nft_rbtree_get().
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This gets especially useful in the next patch.
+
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nft_set_rbtree.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index 07f9067affc65..cda5b0a9e9489 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -1720,7 +1720,7 @@ static int qlcnic_83xx_get_reset_instruction_template(struct qlcnic_adapter *p_d
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index a9f804f7a04ac..95fcba34bfd35 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -33,6 +33,11 @@ static bool nft_rbtree_interval_end(const struct nft_rbtree_elem *rbe)
+ 	       (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END);
+ }
  
- 	ahw->reset.seq_error = 0;
- 	ahw->reset.buff = kzalloc(QLC_83XX_RESTART_TEMPLATE_SIZE, GFP_KERNEL);
--	if (p_dev->ahw->reset.buff == NULL)
-+	if (ahw->reset.buff == NULL)
- 		return -ENOMEM;
++static bool nft_rbtree_interval_start(const struct nft_rbtree_elem *rbe)
++{
++	return !nft_rbtree_interval_end(rbe);
++}
++
+ static bool nft_rbtree_equal(const struct nft_set *set, const void *this,
+ 			     const struct nft_rbtree_elem *interval)
+ {
+@@ -64,7 +69,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 			if (interval &&
+ 			    nft_rbtree_equal(set, this, interval) &&
+ 			    nft_rbtree_interval_end(rbe) &&
+-			    !nft_rbtree_interval_end(interval))
++			    nft_rbtree_interval_start(interval))
+ 				continue;
+ 			interval = rbe;
+ 		} else if (d > 0)
+@@ -89,7 +94,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
  
- 	p_buff = p_dev->ahw->reset.buff;
+ 	if (set->flags & NFT_SET_INTERVAL && interval != NULL &&
+ 	    nft_set_elem_active(&interval->ext, genmask) &&
+-	    !nft_rbtree_interval_end(interval)) {
++	    nft_rbtree_interval_start(interval)) {
+ 		*ext = &interval->ext;
+ 		return true;
+ 	}
+@@ -224,9 +229,9 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+ 			p = &parent->rb_right;
+ 		else {
+ 			if (nft_rbtree_interval_end(rbe) &&
+-			    !nft_rbtree_interval_end(new)) {
++			    nft_rbtree_interval_start(new)) {
+ 				p = &parent->rb_left;
+-			} else if (!nft_rbtree_interval_end(rbe) &&
++			} else if (nft_rbtree_interval_start(rbe) &&
+ 				   nft_rbtree_interval_end(new)) {
+ 				p = &parent->rb_right;
+ 			} else if (nft_set_elem_active(&rbe->ext, genmask)) {
+@@ -317,10 +322,10 @@ static void *nft_rbtree_deactivate(const struct net *net,
+ 			parent = parent->rb_right;
+ 		else {
+ 			if (nft_rbtree_interval_end(rbe) &&
+-			    !nft_rbtree_interval_end(this)) {
++			    nft_rbtree_interval_start(this)) {
+ 				parent = parent->rb_left;
+ 				continue;
+-			} else if (!nft_rbtree_interval_end(rbe) &&
++			} else if (nft_rbtree_interval_start(rbe) &&
+ 				   nft_rbtree_interval_end(this)) {
+ 				parent = parent->rb_right;
+ 				continue;
 -- 
 2.20.1
 
