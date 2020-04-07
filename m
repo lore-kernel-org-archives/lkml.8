@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86990C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33789C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DED32078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF54620768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586218081;
-	bh=jO0bfRACoDqbJtxtvsGKsvpEltAHBXHauexTK0lbnSo=;
+	s=default; t=1586218097;
+	bh=51H9TY8V5noS4FlXlFD3P5jsli5RDi0dx8xUt4ONeBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1Vw119cW7nedR9lWQxR9lzo07N2B/8lW5gjX06tlE594N91WKIMk/EoZv22SjSAF
-	 JDa4G7cAsAaw+PdDDpBB1UOsaS43hhfpfMwyDiDjU/LMlvQ20vuFlVSZwwpk+Ur42I
-	 +i5ZQJ0mnlaRmPmsyOH3iShIZgUdrJ78PaQDyrwM=
+	b=Gsfd4MhGzTbaDynMhOuGp4XdQhiBpMpZeJcSlgbll8pwSd0wHt0KPU4GPLag53IOG
+	 VaYmSRbC/QRA3ZTq8VmraY80zvW4IAzJhjCsxXzMZsHyVOHE7ApxgTZjLcloxD7iYu
+	 LhcL0aOzyqI3WkRtyBfVeyc5VMgeNqKkt7o//Z50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgDGAIA (ORCPT
+        id S1728228AbgDGAIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:08:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34880 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727149AbgDGABh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:37 -0400
+        id S1726928AbgDGABb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B1ED207FF;
-        Tue,  7 Apr 2020 00:01:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A07AD2080C;
+        Tue,  7 Apr 2020 00:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217696;
-        bh=jO0bfRACoDqbJtxtvsGKsvpEltAHBXHauexTK0lbnSo=;
+        s=default; t=1586217690;
+        bh=51H9TY8V5noS4FlXlFD3P5jsli5RDi0dx8xUt4ONeBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKy1Mfdtd9AXZq8p1jKT/a2Sgs0mGsB2vyC9j4J1dlLyjxkPH3q2T4DhNncPMlbgH
-         3O+1NFcWja3glfSunvkaukaHULcJS3835rATG2QqJOJYPqDAmT9zf0co39weKNdJlx
-         T2Jv18pkqgV11Yawu1r3VVg65pRENW/Y8dMvWEhE=
+        b=WOzLd5rE2PdQIUK0DlF6Plp4SVGb8wwfgKmtJG9r7hJUq5HcVlSH/bC8kGqWG/+Mn
+         k/QYuYpvB3iOhnW27S9zaVxtKgkj6IQ2EVDQUlmzBpUwTgKWzT3As9+11aXSxrFpkJ
+         iU40OzbtPJwYjzu+BSFj86y2dxpS/DFTxhxtt0hA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raju Rangoju <rajur@chelsio.com>,
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 30/35] cxgb4/ptp: pass the sign of offset delta in FW CMD
-Date:   Mon,  6 Apr 2020 20:00:52 -0400
-Message-Id: <20200407000058.16423-30-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 25/35] selftests/net: add definition for SOL_DCCP to fix compilation errors for old libc
+Date:   Mon,  6 Apr 2020 20:00:47 -0400
+Message-Id: <20200407000058.16423-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
 References: <20200407000058.16423-1-sashal@kernel.org>
@@ -59,34 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raju Rangoju <rajur@chelsio.com>
+From: Alan Maguire <alan.maguire@oracle.com>
 
-[ Upstream commit 50e0d28d3808146cc19b0d5564ef4ba9e5bf3846 ]
+[ Upstream commit 83a9b6f639e9f6b632337f9776de17d51d969c77 ]
 
-cxgb4_ptp_fineadjtime() doesn't pass the signedness of offset delta
-in FW_PTP_CMD. Fix it by passing correct sign.
+Many systems build/test up-to-date kernels with older libcs, and
+an older glibc (2.17) lacks the definition of SOL_DCCP in
+/usr/include/bits/socket.h (it was added in the 4.6 timeframe).
 
-Signed-off-by: Raju Rangoju <rajur@chelsio.com>
+Adding the definition to the test program avoids a compilation
+failure that gets in the way of building tools/testing/selftests/net.
+The test itself will work once the definition is added; either
+skipping due to DCCP not being configured in the kernel under test
+or passing, so there are no other more up-to-date glibc dependencies
+here it seems beyond that missing definition.
+
+Fixes: 11fb60d1089f ("selftests: net: reuseport_addr_any: add DCCP")
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/testing/selftests/net/reuseport_addr_any.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-index 58a039c3224ad..af1f40cbccc88 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.c
-@@ -246,6 +246,9 @@ static int  cxgb4_ptp_fineadjtime(struct adapter *adapter, s64 delta)
- 			     FW_PTP_CMD_PORTID_V(0));
- 	c.retval_len16 = cpu_to_be32(FW_CMD_LEN16_V(sizeof(c) / 16));
- 	c.u.ts.sc = FW_PTP_SC_ADJ_FTIME;
-+	c.u.ts.sign = (delta < 0) ? 1 : 0;
-+	if (delta < 0)
-+		delta = -delta;
- 	c.u.ts.tm = cpu_to_be64(delta);
+diff --git a/tools/testing/selftests/net/reuseport_addr_any.c b/tools/testing/selftests/net/reuseport_addr_any.c
+index c6233935fed14..b8475cb29be7a 100644
+--- a/tools/testing/selftests/net/reuseport_addr_any.c
++++ b/tools/testing/selftests/net/reuseport_addr_any.c
+@@ -21,6 +21,10 @@
+ #include <sys/socket.h>
+ #include <unistd.h>
  
- 	err = t4_wr_mbox(adapter, adapter->mbox, &c, sizeof(c), NULL);
++#ifndef SOL_DCCP
++#define SOL_DCCP 269
++#endif
++
+ static const char *IP4_ADDR = "127.0.0.1";
+ static const char *IP6_ADDR = "::1";
+ static const char *IP4_MAPPED6 = "::ffff:127.0.0.1";
 -- 
 2.20.1
 
