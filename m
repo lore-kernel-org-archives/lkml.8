@@ -2,118 +2,105 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DD0C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E113BC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA96C2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:25:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgIKnNfS"
+	by mail.kernel.org (Postfix) with ESMTP id BA24C2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:26:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDGVZA (ORCPT
+        id S1726477AbgDGV0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:25:00 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43224 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDGVZA (ORCPT
+        Tue, 7 Apr 2020 17:26:02 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:53197 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726380AbgDGV0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:25:00 -0400
-Received: by mail-lj1-f195.google.com with SMTP id g27so5331303ljn.10;
-        Tue, 07 Apr 2020 14:24:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GAtwCOX+dVfyCKVRB96BgVe7k8fkkTDmPi/mndtHbHE=;
-        b=BgIKnNfS4RTbHgxPmKD4ikz7Ij+7CTthmYLhRnxOqyPogmv3ieCGlkMYQE40L6md9X
-         aOFfMQFwTmjYEqERE6Kpu3d8krazLneOskIQJOfRlOr0ayxQua9/P/VrHys+HB+nT4M+
-         ISmeXjLYowPohbdNIC1ovev8PQbzA0x9A58xsMXu5VNCVJX43B8u2G8OvW83ZOgTRYzg
-         Ea67m1DIbEEd1nxLwkO6g7VvH130Da6uEUFTeMcH2kLN0L0S3VLhcKWbESLI4eC07ud5
-         r/KEOI0xTJMLKxhZ8jwPWfYBCi68Vz6uUO2Z8hLCFQ8FVaK9x0neztbqdNyKUaJUHX0I
-         Fz9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GAtwCOX+dVfyCKVRB96BgVe7k8fkkTDmPi/mndtHbHE=;
-        b=gRwFdavB6ZnEQ8xaNMuYyEv57kLS5qiovZtfKJjX78/WMnhusRSJ5dvXE4HwNQIC0o
-         hAH99pEanrvdYN+aJwapRSfyAcaDNjdy7yIsskm/QCXSlle9cnGMoDJjNDhDjZXUTVYH
-         g5xKY8CQqPYlV0B9lGraX+CHBEygCbaNDZaZ5/THK6G/43+oIzMC7nJ6NIySEkmjk2Nv
-         OecobLMG22bAPbHR4y3pWygil//i7dgd6sZOHTxls+vMEEQdclFijM7hvdaheWbW/CNz
-         T5tYloxyJfHjy0FWImWcDLaJRmJoIwYp0vU9+kurKeli0INgHIvW4J/P394+cB0L+1tj
-         GBAg==
-X-Gm-Message-State: AGi0PuYAw5SUUYJceyhnC72oyZ7LZlAcsi94eMWIfqEkivtGBiw+GKaK
-        pZD62thfEU8cPEmw95Q4fPM=
-X-Google-Smtp-Source: APiQypJ1CV9U1pJJ9r/hk6aiuySfuJxmSE5p3vbXxVLJwS8xCnpb+bQiM0C4oG89/Xtu400DJFfjsw==
-X-Received: by 2002:a05:651c:23b:: with SMTP id z27mr2810591ljn.125.1586294696371;
-        Tue, 07 Apr 2020 14:24:56 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id y20sm12582621ljd.35.2020.04.07.14.24.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 14:24:55 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Tue, 7 Apr 2020 23:24:47 +0200
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Waiman Long <longman@redhat.com>, Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive data
- objects
-Message-ID: <20200407212447.GA29554@pc636>
-References: <20200407200318.11711-1-longman@redhat.com>
- <0fe5dcaf078be61ef21c7f18b750c5dc14c69dd7.camel@perches.com>
- <67c51b03-192c-3006-5071-452f351aee67@redhat.com>
- <CAHk-=whV5Z4XioUOW0UM-PBrW7iqb0HwWKQU5Vn8b5pmsDm=Ww@mail.gmail.com>
+        Tue, 7 Apr 2020 17:26:02 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-52-92QqPk1OMtCG-Q0ygmijTQ-1; Tue, 07 Apr 2020 22:25:57 +0100
+X-MC-Unique: 92QqPk1OMtCG-Q0ygmijTQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 7 Apr 2020 22:25:56 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 7 Apr 2020 22:25:56 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Peter Zijlstra' <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "hch@infradead.org" <hch@infradead.org>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kenny@panix.com" <kenny@panix.com>,
+        "jeyu@kernel.org" <jeyu@kernel.org>,
+        "rasmus.villemoes@prevas.dk" <rasmus.villemoes@prevas.dk>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
+        "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>,
+        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
+        "thellstrom@vmware.com" <thellstrom@vmware.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "dcovelli@vmware.com" <dcovelli@vmware.com>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>
+Subject: RE: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
+Thread-Topic: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
+Thread-Index: AQHWDM13xoy91raOhkKuBOKktFSrAahuK2jQ
+Date:   Tue, 7 Apr 2020 21:25:56 +0000
+Message-ID: <23787a63b28744b1906c4d4b6209b6af@AcuMS.aculab.com>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.352324393@infradead.org>
+In-Reply-To: <20200407111007.352324393@infradead.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whV5Z4XioUOW0UM-PBrW7iqb0HwWKQU5Vn8b5pmsDm=Ww@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 02:01:01PM -0700, Linus Torvalds wrote:
-> On Tue, Apr 7, 2020 at 1:45 PM Waiman Long <longman@redhat.com> wrote:
-> >
-> > If the memory is really virtually mapped, the only way to find out the
-> > size of the object is to use find_vm_area() which can be relatively high
-> > cost and no simple helper function is available.
-> 
-> We _could_ just push it down to a "vfree_sensitive()", and do it
-> inside the vfree logic. That ends up obviously figuring out the size
-> of the area eventually.
-> 
-> But since the vmalloc data structures fundamentally aren't irq-safe,
-> vfree() actually has magical things like "if called in an interrupt,
-> we'll delay it to work context".
-> 
-Just some thoughts. Sorry for jumping in.
+RnJvbTogUGV0ZXIgWmlqbHN0cmENCj4gU2VudDogMDcgQXByaWwgMjAyMCAxMjowMw0KPiANCj4g
+SXQgdHVybnMgb3V0IHRoYXQgd2l0aCBTcGxpdC1Mb2NrLURldGVjdCBlbmFibGVkIChkZWZhdWx0
+KSBhbnkgVk1YDQo+IGh5cGVydmlzb3IgbmVlZHMgYXQgbGVhc3QgYSBsaXR0bGUgbW9kaWZpY2F0
+aW9uIGluIG9yZGVyIHRvIG5vdCBibGluZGx5DQo+IGluamVjdCB0aGUgI0FDIGludG8gdGhlIGd1
+ZXN0IHdpdGhvdXQgdGhlIGd1ZXN0IGJlaW5nIHJlYWR5IGZvciBpdC4NCj4gDQo+IFNpbmNlIHRo
+ZXJlIGlzIG5vIHRlbGxpbmcgd2hpY2ggbW9kdWxlIGltcGxlbWVudHMgYSBoeXBlcnZpc29yLCBz
+Y2FuDQo+IGFsbCBvdXQtb2YtdHJlZSBtb2R1bGVzJyB0ZXh0IGFuZCBsb29rIGZvciBWTVggaW5z
+dHJ1Y3Rpb25zIGFuZCByZWZ1c2UNCj4gdG8gbG9hZCBpdCB3aGVuIFNMRCBpcyBlbmFibGVkIChk
+ZWZhdWx0KSBhbmQgdGhlIG1vZHVsZSBpc24ndCBtYXJrZWQNCj4gJ3NsZF9zYWZlJy4NCi4uLg0K
+PiArCXdoaWxlICh0ZXh0IDwgdGV4dF9lbmQpIHsNCj4gKwkJa2VybmVsX2luc25faW5pdCgmaW5z
+biwgdGV4dCwgdGV4dF9lbmQgLSB0ZXh0KTsNCj4gKwkJaW5zbl9nZXRfbGVuZ3RoKCZpbnNuKTsN
+Cj4gKw0KPiArCQlpZiAoV0FSTl9PTl9PTkNFKCFpbnNuX2NvbXBsZXRlKCZpbnNuKSkpIHsNCj4g
+KwkJCXByX2VycigiTW9kdWxlIHRleHQgbWFsZm9ybWVkOiAlc1xuIiwgbW9kLT5uYW1lKTsNCj4g
+KwkJCXJldHVybiAtRU5PRVhFQzsNCj4gKwkJfQ0KPiArDQo+ICsJCWlmICghYWxsb3dfdm14ICYm
+IGluc25faXNfdm14KCZpbnNuKSkgew0KPiArCQkJcHJfZXJyKCJNb2R1bGUgaGFzIFZNWCBpbnN0
+cnVjdGlvbnMgYW5kIGlzIG5vdCBtYXJrZWQgJ3NsZF9zYWZlJywgYm9vdCB3aXRoOg0KPiAnc3Bs
+aXRfbG9ja19kZXRlY3Q9b2ZmJzogJXNcbiIsIG1vZC0+bmFtZSk7DQo+ICsJCQlyZXR1cm4gLUVO
+T0VYRUM7DQo+ICsJCX0NCj4gKw0KPiArCQl0ZXh0ICs9IGluc24ubGVuZ3RoOw0KPiArCX0NCg0K
+VGhlcmUgaXMgYSBzbGlnaHQgZmxhdyBpbiB0aGUgYWJvdmUuDQpBIG1hbGljaW91cyBtb2R1bGUg
+Y2FuIGhpZGUgdGhlIHJlcXVpcmVkIGluc3RydWN0aW9uIGJ5IGp1bXBpbmcgaW50byB0aGUNCm1p
+ZGRsZSBvZiBhIGxvbmcgaW5zdHJ1Y3Rpb24uDQoNCkV2ZW4gY2hlY2tpbmcgYnJhbmNoIHRhcmdl
+dHMgaGl0IGluc3RydWN0aW9uIGJhcnJpZXJzIGlzbid0IGVub3VnaCwNCmFuIGluZGlyZWN0IGp1
+bXAgY291bGQgYmUgdXNlZC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
+c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
+Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
-Seems like there is only one place where we can "sleep". I mean when we
-call vfree(). That is free_vmap_area_noflush() -> try_purge_vmap_area_lazy().
-Basically try_purge_vmap_area_lazy() can call the schedule() what is not 
-allowed for IRQs. Instead of inlining the try_purge_vmap_area_lazy()
-into current context we can schedule_work(). And i think it makes sense
-from many point of views.
-
-Also, we can end up in zeroed non-existance vmap area if we do not find_vmap_area().
-
-Thanks!
-
---
-Vlad Rezki
