@@ -2,73 +2,161 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F000C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D218C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57BF20719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F51620719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dKeiEDM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgDGXtv (ORCPT
+        id S1726508AbgDGXu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:49:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48679 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbgDGXtu (ORCPT
+        Tue, 7 Apr 2020 19:50:59 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42373 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgDGXu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:49:50 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jLxyO-00074q-SG; Wed, 08 Apr 2020 01:49:41 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1032010069D; Wed,  8 Apr 2020 01:49:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Singh\, Balbir" <sblbir@amazon.com>,
-        "keescook\@chromium.org" <keescook@chromium.org>
-Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tony.luck\@intel.com" <tony.luck@intel.com>,
-        "benh\@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "jpoimboe\@redhat.com" <jpoimboe@redhat.com>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "dave.hansen\@intel.com" <dave.hansen@intel.com>
-Subject: Re: [PATCH v2 3/4] arch/x86: Optionally flush L1D on context switch
-In-Reply-To: <728ba30fdc269d4b24c4fb16832e0151e8270cba.camel@amazon.com>
-References: <20200406031946.11815-1-sblbir@amazon.com> <20200406031946.11815-4-sblbir@amazon.com> <202004071125.605F665@keescook> <728ba30fdc269d4b24c4fb16832e0151e8270cba.camel@amazon.com>
-Date:   Wed, 08 Apr 2020 01:49:40 +0200
-Message-ID: <87y2r6j1pn.fsf@nanos.tec.linutronix.de>
+        Tue, 7 Apr 2020 19:50:58 -0400
+Received: by mail-pl1-f193.google.com with SMTP id v2so461078plp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eT68veUdahfIguyUyBYQoqVQI3dpUpP+dfw8Z1rw5oQ=;
+        b=dKeiEDM/PDcbX+fPQvAgtDORBZqcmvJ6BvEJWJJCDxNNCyzNjQhJpBTP3d3xIgQ439
+         EHC2t7qMFaU01TDtZvzIdZZOe6jtOMYFF/FRidLta6hxWbb/2We2PvfJ/+zG1YUfx0B6
+         MOFHzw0uf5F6afuyvwkxKCU7CNR4pj5q4Pv3c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eT68veUdahfIguyUyBYQoqVQI3dpUpP+dfw8Z1rw5oQ=;
+        b=UV7gisPKVTtJNWarJ0mgiHZKUAdcgKkZ/tWBcX3YKXVao80uYVnvSaTmUebdDqiJwE
+         q0CfMj+yIg1dWCz/YmPDiy5IMbmDGmBiHEc5L3Icddz4s1RvArF/NXhKjFFBrCrJBXFz
+         0jSK2VpROmMkSpOm9dYmFqViS4qYo9Uf4oGafsBgUR53evnivK3E0bVD0spKilGSw0Tl
+         Db21SvMOOstRdAlwod7ppWoHodUdS8EEZf1XpII+gI/QPCWeYQUR4hUocgdOiSWaXfxj
+         H7cvFN7QOEdnc75ZgJKyWFUVhDUs316c1NdpyTKFAynde4QY+8V/Ax7A6E+p72aYgi51
+         b5tg==
+X-Gm-Message-State: AGi0PuYdes0fx5mBotPq76+iGs0z8Tab1u+xzNuwWCOoX3s31EYn0MQM
+        fK2n1xZaRVQyz128vSg7gL4Ktw==
+X-Google-Smtp-Source: APiQypJYTmO0cbgnxZFQZqkN1iaxMEolwKi85hzl9BR9MlhjVCBjNxuHbd1evldXYryQV0IDGem+MA==
+X-Received: by 2002:a17:90a:ba09:: with SMTP id s9mr2081513pjr.20.1586303455987;
+        Tue, 07 Apr 2020 16:50:55 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id s27sm14467165pgn.90.2020.04.07.16.50.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 16:50:55 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>
+Cc:     mka@chromium.org, Lina Iyer <ilina@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
+        evgreen@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/10] drivers: qcom: rpmh-rsc: Cleanup / add lots of comments
+Date:   Tue,  7 Apr 2020 16:50:14 -0700
+Message-Id: <20200407235024.260460-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Singh, Balbir" <sblbir@amazon.com> writes:
-> On Tue, 2020-04-07 at 11:26 -0700, Kees Cook wrote:
->> On Mon, Apr 06, 2020 at 01:19:45PM +1000, Balbir Singh wrote:
->> > Add arch specific prctl()'s to opt-in to the L1D cache on context switch
->> > out, the existing mechanisms of tracking prev_mm via cpu_tlbstate is
->> > reused. cond_ibpb() is refactored and renamed into cond_mitigation().
->> 
->> I still think this should be a generic prctl(). If there is a strong
->> reason not to do this, can it be described in the commit log here?
->
-> I can move to prctl() if that is what you prefer, the prctl() can then do arch
-> specific things. I thought in my question around would other arch's like to do
-> this, I did not hear anything specific, but I am happy to convert the
-> interface over.
+In order to review Maulik's latest "rpmh_flush for non OSI targets"
+patch series I've found myself trying to understand rpmh-rsc better.
+To make it easier for others to do this in the future, add a whole lot
+of comments / documentation.
 
-Yes, please. It's just a matter of time that other architectures find
-this useful. L1D attacks are not restricted to x86 AFAICT.
+As part of this there are a very small number of functional changes.
+- We'll get a tiny performance boost by getting rid of the "cmd_cache"
+  which I believe was unnecessary.
+- We now assume someone else is in charge of exclusivity for
+  tcs_invalidate() and have removed a lock in there. As per the
+  comments in the patch, this isn't expected to cause problems.
+- tcs_is_free() no longer checks hardware state, but we think it
+  didn't need to.
 
-Thanks,
+These changes touch a lot of code in rpmh-rsc, so hopefully someone at
+Qualcomm can test them out better than I did (I don't have every last
+client of RPMH in my tree).
 
-        tglx
+I've tried to structure the patches so that simpler / less
+controversial patches are first. Those could certainly land on their
+own without later patches. Many of the patches could also be dropped
+and the others would still apply if they are controversial.  If you
+need help doing this then please yell.
+
+These patches are based on Maulik's v16 series, AKA:
+https://lore.kernel.org/r/1586154741-8293-1-git-send-email-mkshah@codeaurora.org/
+
+With all that, enjoy.
+
+Changes in v3:
+- ("...are not for IRQ") is new for v3.
+- ("Don't double-check rpmh") replaces ("Warning if tcs_write...")
+- Add "TCS" in title (Maulik).
+- Adjusted comments for rpmh_rsc_write_ctrl_data().
+- Comments for new enable_tcs_irq() function.
+- Comments for new rpmh_rsc_cpu_pm_callback() function.
+- Extra blank line removed (Maulik).
+- IRQ registers aren't in TCS0 (Maulik).
+- Kill find_match moves from patch #9 to patch #5 (Maulik).
+- Mention in message that I also fixed up kernel-doc stuff.
+- Moved comments patch after ("Kill cmd_cache and find_match...").
+- One space after a period now (Maulik).
+- Plural of TCS fixed to TCSes following Maulik's example.
+- Re-added comment in tcs_write() about checking for same address.
+- Rebased atop v16 ('Invoke rpmh_flush...') series.
+- Replace ("...warn if state mismatch") w/ ("...just check tcs_in_use")
+- Replaced ("irqsave()...") + ("...never -EBUSY") w/ ("Caller handles...")
+- Rewrote commit message to adjust for patch order.
+- __tcs_set_trigger() comments adjusted now that it can set or unset.
+- get_tcs_for_msg() documents why it's safe to borrow the wake TCS.
+- get_tcs_for_msg() no longer returns -EAGAIN.
+
+Changes in v2:
+- Comment tcs_is_free() new for v2; replaces old patch 6.
+- Document bug of tcs_write() not handling -EAGAIN.
+- Document get_tcs_for_msg() => -EAGAIN only for ACTIVE_ONLY.
+- Document locks for updating "tcs_in_use" more.
+- Document tcs_is_free() without drv->lock OK for tcs_invalidate().
+- Document that rpmh_rsc_send_data() can be an implicit invalidate.
+- Document two get_tcs_for_msg() issues if zero-active TCS.
+- Fixed documentation of "tcs" param in find_slots().
+- Got rid of useless "if (x) continue" at end of for loop.
+- More clear that active-only xfers can happen on wake TCS sometimes.
+- Now prose in comments instead of struct definitions.
+- Pretty ASCII art from Stephen.
+- Reword tcs_write() doc a bit.
+
+Douglas Anderson (10):
+  drivers: qcom: rpmh-rsc: Clean code reading/writing TCS regs/cmds
+  drivers: qcom: rpmh-rsc: Document the register layout better
+  drivers: qcom: rpmh-rsc: Fold tcs_ctrl_write() into its single caller
+  drivers: qcom: rpmh-rsc: Remove get_tcs_of_type() abstraction
+  drivers: qcom: rpmh-rsc: Kill cmd_cache and find_match() with fire
+  drivers: qcom: rpmh-rsc: A lot of comments
+  drivers: qcom: rpmh-rsc: tcs_is_free() can just check tcs_in_use
+  drivers: qcom: rpmh-rsc: Don't double-check rpmh
+  drivers: qcom: rpmh-rsc: Caller handles tcs_invalidate() exclusivity
+  drivers: qcom: rpmh-rsc: read_tcs_reg()/write_tcs_reg() are not for
+    IRQ
+
+ drivers/soc/qcom/rpmh-internal.h |  66 +++--
+ drivers/soc/qcom/rpmh-rsc.c      | 465 +++++++++++++++++++++----------
+ drivers/soc/qcom/rpmh.c          |   5 +-
+ 3 files changed, 363 insertions(+), 173 deletions(-)
+
+-- 
+2.26.0.292.g33ef6b2f38-goog
+
