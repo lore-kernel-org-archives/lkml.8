@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB35AC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C159C352BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A073020768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572C22076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgDGSjI (ORCPT
+        id S1727983AbgDGSjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:39:08 -0400
-Received: from 8bytes.org ([81.169.241.247]:57616 "EHLO theia.8bytes.org"
+        Tue, 7 Apr 2020 14:39:00 -0400
+Received: from 8bytes.org ([81.169.241.247]:57578 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbgDGSiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:38:01 -0400
+        id S1727026AbgDGSiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 14:38:02 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1BABB50C; Tue,  7 Apr 2020 20:37:51 +0200 (CEST)
+        id 16E6C5ED; Tue,  7 Apr 2020 20:37:53 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -45,9 +45,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [RFC PATCH 20/34] iommu/s390: Convert to probe/release_device() call-backs
-Date:   Tue,  7 Apr 2020 20:37:28 +0200
-Message-Id: <20200407183742.4344-21-joro@8bytes.org>
+Subject: [RFC PATCH 25/34] iommu/qcom: Convert to probe/release_device() call-backs
+Date:   Tue,  7 Apr 2020 20:37:33 +0200
+Message-Id: <20200407183742.4344-26-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200407183742.4344-1-joro@8bytes.org>
 References: <20200407183742.4344-1-joro@8bytes.org>
@@ -58,74 +58,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Convert the S390 IOMMU driver to use the probe_device() and
+Convert the QCOM IOMMU driver to use the probe_device() and
 release_device() call-backs of iommu_ops, so that the iommu core code
 does the group and sysfs setup.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/s390-iommu.c | 22 ++++++----------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
+ drivers/iommu/qcom_iommu.c | 24 +++++++-----------------
+ 1 file changed, 7 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/iommu/s390-iommu.c b/drivers/iommu/s390-iommu.c
-index 1137f3ddcb85..610f0828f22d 100644
---- a/drivers/iommu/s390-iommu.c
-+++ b/drivers/iommu/s390-iommu.c
-@@ -166,21 +166,14 @@ static void s390_iommu_detach_device(struct iommu_domain *domain,
+diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+index 0e2a96467767..054e476ebd49 100644
+--- a/drivers/iommu/qcom_iommu.c
++++ b/drivers/iommu/qcom_iommu.c
+@@ -524,14 +524,13 @@ static bool qcom_iommu_capable(enum iommu_cap cap)
  	}
  }
  
--static int s390_iommu_add_device(struct device *dev)
-+static struct iommu_device *s390_iommu_probe_device(struct device *dev)
+-static int qcom_iommu_add_device(struct device *dev)
++static struct iommu_device *qcom_iommu_probe_device(struct device *dev)
  {
--	struct iommu_group *group = iommu_group_get_for_dev(dev);
- 	struct zpci_dev *zdev = to_pci_dev(dev)->sysdata;
+ 	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+-	struct iommu_group *group;
+ 	struct device_link *link;
  
+ 	if (!qcom_iommu)
+-		return -ENODEV;
++		return ERR_PTR(-ENODEV);
+ 
+ 	/*
+ 	 * Establish the link between iommu and master, so that the
+@@ -542,28 +541,19 @@ static int qcom_iommu_add_device(struct device *dev)
+ 	if (!link) {
+ 		dev_err(qcom_iommu->dev, "Unable to create device link between %s and %s\n",
+ 			dev_name(qcom_iommu->dev), dev_name(dev));
+-		return -ENODEV;
++		return ERR_PTR(-ENODEV);
+ 	}
+ 
+-	group = iommu_group_get_for_dev(dev);
 -	if (IS_ERR(group))
 -		return PTR_ERR(group);
 -
 -	iommu_group_put(group);
--	iommu_device_link(&zdev->iommu_dev, dev);
+-	iommu_device_link(&qcom_iommu->iommu, dev);
 -
 -	return 0;
-+	return &zdev->iommu_dev;
++	return &qcom_iommu->iommu;
  }
  
--static void s390_iommu_remove_device(struct device *dev)
-+static void s390_iommu_release_device(struct device *dev)
+-static void qcom_iommu_remove_device(struct device *dev)
++static void qcom_iommu_release_device(struct device *dev)
  {
- 	struct zpci_dev *zdev = to_pci_dev(dev)->sysdata;
- 	struct iommu_domain *domain;
-@@ -191,7 +184,7 @@ static void s390_iommu_remove_device(struct device *dev)
- 	 * to vfio-pci and completing the VFIO_SET_IOMMU ioctl (which triggers
- 	 * the attach_dev), removing the device via
- 	 * "echo 1 > /sys/bus/pci/devices/.../remove" won't trigger detach_dev,
--	 * only remove_device will be called via the BUS_NOTIFY_REMOVED_DEVICE
-+	 * only release_device will be called via the BUS_NOTIFY_REMOVED_DEVICE
- 	 * notifier.
- 	 *
- 	 * So let's call detach_dev from here if it hasn't been called before.
-@@ -201,9 +194,6 @@ static void s390_iommu_remove_device(struct device *dev)
- 		if (domain)
- 			s390_iommu_detach_device(domain, dev);
- 	}
--
--	iommu_device_unlink(&zdev->iommu_dev, dev);
+ 	struct qcom_iommu_dev *qcom_iommu = to_iommu(dev);
+ 
+ 	if (!qcom_iommu)
+ 		return;
+ 
+-	iommu_device_unlink(&qcom_iommu->iommu, dev);
 -	iommu_group_remove_device(dev);
+ 	iommu_fwspec_free(dev);
  }
  
- static int s390_iommu_update_trans(struct s390_domain *s390_domain,
-@@ -373,8 +363,8 @@ static const struct iommu_ops s390_iommu_ops = {
- 	.map = s390_iommu_map,
- 	.unmap = s390_iommu_unmap,
- 	.iova_to_phys = s390_iommu_iova_to_phys,
--	.add_device = s390_iommu_add_device,
--	.remove_device = s390_iommu_remove_device,
-+	.probe_device = s390_iommu_probe_device,
-+	.release_device = s390_iommu_release_device,
- 	.device_group = generic_device_group,
- 	.pgsize_bitmap = S390_IOMMU_PGSIZES,
- };
+@@ -619,8 +609,8 @@ static const struct iommu_ops qcom_iommu_ops = {
+ 	.flush_iotlb_all = qcom_iommu_flush_iotlb_all,
+ 	.iotlb_sync	= qcom_iommu_iotlb_sync,
+ 	.iova_to_phys	= qcom_iommu_iova_to_phys,
+-	.add_device	= qcom_iommu_add_device,
+-	.remove_device	= qcom_iommu_remove_device,
++	.probe_device	= qcom_iommu_probe_device,
++	.release_device	= qcom_iommu_release_device,
+ 	.device_group	= generic_device_group,
+ 	.of_xlate	= qcom_iommu_of_xlate,
+ 	.pgsize_bitmap	= SZ_4K | SZ_64K | SZ_1M | SZ_16M,
 -- 
 2.17.1
 
