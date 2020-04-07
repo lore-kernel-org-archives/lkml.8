@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D90C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B6CC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD862080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F7E20801
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217693;
-	bh=SteS77gACO4sJ7lpztNtH3/D2R3O5SRCa8yV+ZMnFak=;
+	s=default; t=1586217696;
+	bh=muNrQiaZ8eIKGS+5LNkuEELzJtq6f1xeWtgQdhCXaFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tKx5p+6lC1x8x7o0KWHy3dV5GsuAzLNFxtD3T+cfRrxPBzBm+JN3dwwAS7mD8FsHG
-	 8rA0I9RvzYyueVh8ydSmQ+BQU7BAwII3C+Ylv8ab1os/kwSP6TnTd8Z+mPUZVsMMnH
-	 Y9Q++lqoc0CeBhRAy0buyrL6KW1gYivwIeq8EFiM=
+	b=EWyiG8+vdrmI+GgoF6rvQwx8OtGyqgxVitLU+93lSF2hFRt4K+9uH2vSbE1nYdo7l
+	 WblSJz1DQk6Vc78iXRqikSIR7/Gd8hNga+3RbBMxh1tFMlgw/rvquNT/VpQae6mcRc
+	 qJ8C2ZXj5B/bsb07wV14p160cLSCduQI5Rsq76uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgDGABc (ORCPT
+        id S1727048AbgDGABf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:01:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34224 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:01:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbgDGABX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:23 -0400
+        id S1726833AbgDGAB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD912082D;
-        Tue,  7 Apr 2020 00:01:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE25B208FE;
+        Tue,  7 Apr 2020 00:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217682;
-        bh=SteS77gACO4sJ7lpztNtH3/D2R3O5SRCa8yV+ZMnFak=;
+        s=default; t=1586217685;
+        bh=muNrQiaZ8eIKGS+5LNkuEELzJtq6f1xeWtgQdhCXaFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mdzmy0SVEjfSYvaOTSoqMQQZ3EjlVHUUQMaSffrGR0VLI3r9XVm8GM4q3LNBNYSfD
-         guxYbQKGnlFcjXXaxzpkx8SgJ/0scp7XctuKFWBfMUmrH0jaQQ40fzaNhKs5qkPJ2m
-         GDOg0py5JinKUyn1Ta3yz4B+XflWPSCaNHC3ZXVI=
+        b=JKoaGiGpS6zQZA9nplb0m6F0EFEubaDpfOtKn7WnEzIjsqrb3WCQGohCoZ1dT6Bou
+         hLbHHDLvAsB1ThIsns7ZPZCeqNGHb1wa5JGiqon/0EssuC4THbfulLrC1pAJt5k1je
+         Mp3yQfVR/0L3wc4+wdZBDElpe0JnZlu+ZYA0ukxE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, maemo-leste@lists.dyne.org,
-        Arthur Demchenkov <spinal.by@gmail.com>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 18/35] ARM: dts: omap4-droid4: Fix lost touchscreen interrupts
-Date:   Mon,  6 Apr 2020 20:00:40 -0400
-Message-Id: <20200407000058.16423-18-sashal@kernel.org>
+Cc:     Luo bin <luobin9@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 21/35] hinic: fix the bug of clearing event queue
+Date:   Mon,  6 Apr 2020 20:00:43 -0400
+Message-Id: <20200407000058.16423-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
 References: <20200407000058.16423-1-sashal@kernel.org>
@@ -63,49 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit 4abd9930d189dedaa59097144c6d8f623342fa72 ]
+[ Upstream commit 614eaa943e9fc3fcdbd4aa0692ae84973d363333 ]
 
-Looks like we can have the maxtouch touchscreen stop producing interrupts
-if an edge interrupt is lost. This can happen easily when the SoC idles as
-the gpio controller may not see any state for an edge interrupt if it
-is briefly triggered when the system is idle.
+should disable eq irq before freeing it, must clear event queue
+depth in hw before freeing relevant memory to avoid illegal
+memory access and update consumer idx to avoid invalid interrupt
 
-Also it looks like maxtouch stops sending any further interrupts if the
-interrupt is not handled. And we do have several cases of maxtouch already
-configured with a level interrupt, so let's do that.
-
-With level interrupt the gpio controller has the interrupt state visible
-after idle. Note that eventually we will probably also be using the
-Linux generic wakeirq configured for the controller, but that cannot be
-done until the maxtouch driver supports runtime PM.
-
-Cc: maemo-leste@lists.dyne.org
-Cc: Arthur Demchenkov <spinal.by@gmail.com>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Luo bin <luobin9@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-mapphone-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/ethernet/huawei/hinic/hinic_hw_eqs.c  | 24 +++++++++++++------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-index da6b107da84a4..aeb5a673c209e 100644
---- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-+++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-@@ -413,7 +413,7 @@
- 		reset-gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>; /* gpio173 */
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+index 79243b626ddbe..6a723c4757bce 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
+@@ -188,7 +188,7 @@ static u8 eq_cons_idx_checksum_set(u32 val)
+  * eq_update_ci - update the HW cons idx of event queue
+  * @eq: the event queue to update the cons idx for
+  **/
+-static void eq_update_ci(struct hinic_eq *eq)
++static void eq_update_ci(struct hinic_eq *eq, u32 arm_state)
+ {
+ 	u32 val, addr = EQ_CONS_IDX_REG_ADDR(eq);
  
- 		/* gpio_183 with sys_nirq2 pad as wakeup */
--		interrupts-extended = <&gpio6 23 IRQ_TYPE_EDGE_FALLING>,
-+		interrupts-extended = <&gpio6 23 IRQ_TYPE_LEVEL_LOW>,
- 				      <&omap4_pmx_core 0x160>;
- 		interrupt-names = "irq", "wakeup";
- 		wakeup-source;
+@@ -202,7 +202,7 @@ static void eq_update_ci(struct hinic_eq *eq)
+ 
+ 	val |= HINIC_EQ_CI_SET(eq->cons_idx, IDX)    |
+ 	       HINIC_EQ_CI_SET(eq->wrapped, WRAPPED) |
+-	       HINIC_EQ_CI_SET(EQ_ARMED, INT_ARMED);
++	       HINIC_EQ_CI_SET(arm_state, INT_ARMED);
+ 
+ 	val |= HINIC_EQ_CI_SET(eq_cons_idx_checksum_set(val), XOR_CHKSUM);
+ 
+@@ -347,7 +347,7 @@ static void eq_irq_handler(void *data)
+ 	else if (eq->type == HINIC_CEQ)
+ 		ceq_irq_handler(eq);
+ 
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
+ }
+ 
+ /**
+@@ -702,7 +702,7 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
+ 	}
+ 
+ 	set_eq_ctrls(eq);
+-	eq_update_ci(eq);
++	eq_update_ci(eq, EQ_ARMED);
+ 
+ 	err = alloc_eq_pages(eq);
+ 	if (err) {
+@@ -752,18 +752,28 @@ static int init_eq(struct hinic_eq *eq, struct hinic_hwif *hwif,
+  **/
+ static void remove_eq(struct hinic_eq *eq)
+ {
+-	struct msix_entry *entry = &eq->msix_entry;
+-
+-	free_irq(entry->vector, eq);
++	hinic_set_msix_state(eq->hwif, eq->msix_entry.entry,
++			     HINIC_MSIX_DISABLE);
++	free_irq(eq->msix_entry.vector, eq);
+ 
+ 	if (eq->type == HINIC_AEQ) {
+ 		struct hinic_eq_work *aeq_work = &eq->aeq_work;
+ 
+ 		cancel_work_sync(&aeq_work->work);
++		/* clear aeq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_AEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	} else if (eq->type == HINIC_CEQ) {
+ 		tasklet_kill(&eq->ceq_tasklet);
++		/* clear ceq_len to avoid hw access host memory */
++		hinic_hwif_write_reg(eq->hwif,
++				     HINIC_CSR_CEQ_CTRL_1_ADDR(eq->q_id), 0);
+ 	}
+ 
++	/* update cons_idx to avoid invalid interrupt */
++	eq->cons_idx = hinic_hwif_read_reg(eq->hwif, EQ_PROD_IDX_REG_ADDR(eq));
++	eq_update_ci(eq, EQ_NOT_ARMED);
++
+ 	free_eq_pages(eq);
+ }
+ 
 -- 
 2.20.1
 
