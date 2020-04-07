@@ -2,130 +2,122 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5FFC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAADCC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE36206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D55206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:38:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qaqchf5j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgDGXia (ORCPT
+        id S1726605AbgDGXip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:38:30 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:42645 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgDGXia (ORCPT
+        Tue, 7 Apr 2020 19:38:45 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37886 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgDGXip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:38:30 -0400
-X-Originating-IP: 72.234.141.215
-Received: from tb.lan (udp224251uds.hawaiiantel.net [72.234.141.215])
-        (Authenticated sender: mail@aparcar.org)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E8F3020004;
-        Tue,  7 Apr 2020 23:38:21 +0000 (UTC)
-Message-ID: <004a2ef9c1e04f9ffbb9c3cc9907ca656a406713.camel@aparcar.org>
-Subject: Re: [PATCH 0/5] arm: dts: linksys: rename codename to model
-From:   Paul Spooren <mail@aparcar.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        jason@lakedaemon.net, gregory.clement@bootlin.com,
-        sebastian.hesselbarth@gmail.com, daniel@makrotopia.org,
-        freifunk@adrianschmutzler.de, kaloz@openwrt.org
-Date:   Tue, 07 Apr 2020 13:38:17 -1000
-In-Reply-To: <20200407224615.GA359603@lunn.ch>
-References: <20200407210816.866084-1-mail@aparcar.org>
-         <20200407224615.GA359603@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-1 
+        Tue, 7 Apr 2020 19:38:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id r4so2475868pgg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mOG8uXDl25YkIY1KwvU7WP+vA59IBuf+1/ymXSgkT1I=;
+        b=qaqchf5jB5Eqy41fV6WU2Pz9vxP8irw80dxERZBvo8vJlEUyLvQcVHqo4d7BqKi5mk
+         OzWDY3XOoxKXqyjI/WiJMwIx732T7Zasabr7mN8xRgxLdQugRkuLklMqQo+Ko7LHb3Jk
+         s6ekr19+LwPrmvkJCNgUquIJZGlUv7tY+a1Ynp/veuOitVrFvnVN0CibRse67tRCbWoB
+         Da7DlOB6sd3vxeH/eOHhilb8y74yZqq9KWgdDEQqkEVeKW/CelXsOB1V4m/Bl+mWGGG6
+         QCv8SivvGUS3W6VPJQSAru20CvvFR1SUImMZ681gh306B9PWC+k/syh4IpzC6qvd+HEq
+         lmCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mOG8uXDl25YkIY1KwvU7WP+vA59IBuf+1/ymXSgkT1I=;
+        b=lrJvVYyw+rkQkXFEH/bKaseWnyyFSNocojDglIbT26e7AlZA1hIb7AAA6WvmSw3scJ
+         0+pHS3ID0mdiMoFdQbJWaxmr263jvsFhP4x5B/smh0fdFNtJ6Mfga/pbLITiOnap6jAc
+         JoQ4TdcWwhMcjy2bIAFcJjT7xtloWvEHfywlfI7CPP3oacU5m1OIJRJ/lRN7w6/P1wxD
+         CUXJdwhxsbFZC4kb7RZ+YSZTDw/WolsgAAivfcXhOi7HSZHnJqFPDVOl7eRj4rp/2F4j
+         Z7yufdEI2r8gi1WW/Aoq0XT5OOK+StV+SLTYhRgalJMYhXciQzh+h1anFhCiBP6Je/S3
+         AK7Q==
+X-Gm-Message-State: AGi0Puau00keg9O73KtAJSdNavj+DyceM4aZ85Aao9XAGAU+iZbUkCJq
+        nJ93KYyd1DQ/DdrkOGdtgROVZA==
+X-Google-Smtp-Source: APiQypLJ4W6r4lUs3kl4+KovCBimfVWxesaytHb1fY7SpaerFs+CbFQPc75tWHX2dn9mukWlYUgjuw==
+X-Received: by 2002:a63:2e44:: with SMTP id u65mr4419244pgu.142.1586302722857;
+        Tue, 07 Apr 2020 16:38:42 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id hg20sm2573036pjb.3.2020.04.07.16.38.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 16:38:42 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 16:38:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        vinod.koul@linaro.org, Jack Pham <jackp@codeaurora.org>
+Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sm8150: Add USB and PHY device
+ nodes
+Message-ID: <20200407233848.GN20625@builder.lan>
+References: <1586298267-4722-1-git-send-email-wcheng@codeaurora.org>
+ <1586298267-4722-3-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586298267-4722-3-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Tue 07 Apr 15:24 PDT 2020, Wesley Cheng wrote:
 
-thank you very much for the quick response!
-
-On Wed, 2020-04-08 at 00:46 +0200, Andrew Lunn wrote:
-> On Tue, Apr 07, 2020 at 11:08:10AM -1000, Paul Spooren wrote:
-> > Linksys chose to use codenames for a few of their devices and sell
-> > their
-> > them under an entirely different name.
-> > 
-> > codename  model name
-> > rango  -> wrt3200acm
-> > mamba  -> wrt1900ac
-> > cobra  -> wrt1900ac-v2
-> > caiman -> wrt1200ac
-> > shelby -> wrt1900acs
+> From: Jack Pham <jackp@codeaurora.org>
 > 
-> Hi Paul
+> Add device nodes for the USB3 controller, QMP SS PHY and
+> SNPS HS PHY.
 > 
-> There was quite a bit of discussion about this when the first board
-> was added. If i remember correctly, it was Mamba.
-> 
-> Imre Kaloz, <kaloz@openwrt.org> was the one arguing for
-> the name armada-xp-linksys-mamba.dts.
-> 
-> So it seems that openwrt.org has now come full circle?
 
-I talked with three currently active OpenWrt core developers and all
-were in favor of a unification. I wasn't aware of any previous
-discussions nor any pro arguments to keep code names.
+Thanks for the respin Wesley, and thanks for testing Vinod. Just spotted
+one little details below.
 
-I've added Imre via CC so maybe he can share his opinion, too.
-> 
-> > This introduces some extra loops in OpenWrt, a distribution
-> > specialized
-> > on embedded Internet facing devices, as both codename and model
-> > name are
-> > used within the build system. The double naming requires developers
-> > to
-> > keep track of that mapping and introduces inconsistencies:
-> > 
-> > To build a specific device in OpenWrt profiles are used, named
-> > after the
-> > the compatible string for targets using device tree (similar to how
-> > .dts
-> > files are named in the linux source tree). However, the first item
-> > of
-> > the DT `compatible` list in this case is `linksys,rango`, which is
-> > inconsistent with the model name and not what common users would
-> > expect.
-> > 
-> > Such double naming complicates currently the automatic search for
-> > firmware upgrade as the build system does not support such mapping.
-> > Ideally the first item of the DT `compatible` list would contain a
-> > string suitable to be used as a filename recognizable by normal
-> > users to
-> > belong to that device.
-> > With this patch set the Linksys device tree files are moved from
-> > containing the codename to contain a sanitized model name and also
-> > use
-> > it as first entry of the DT `compatible` list.
-> 
-> I've no problems adding another compatible to the list. But i don't
-> like the idea of renaming the files. The file names could be
-> considered ABI! What installers/bootloaders are you going to break by
-> renaming them?
+> Signed-off-by: Jack Pham <jackp@codeaurora.org>
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Tested-by: Vinod Koul <vinod.koul@linaro.org>
+> ---
 
-Are you okay with adding the new compatible string as first element of
-the list? This would already simplify the OpenWrt build system.
+Please make a habit of documenting what changed since the previous
+version here, below the ---.
 
-What about the changed labels? Are they considered ABI too?
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 21 ++++++++
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 92 +++++++++++++++++++++++++++++++++
+>  2 files changed, 113 insertions(+)
+[..]
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+[..]
+> +		usb_1_hsphy: phy@88e2000 {
+> +			compatible = "qcom,usb-snps-hs-7nm-phy",
+> +							"qcom,sm8150-usb-hs-phy";
+[..]
+> +		usb_1: usb@a6f8800 {
+> +			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
 
-Regarding file names, I'm new to ABI policies. Within OpenWrt this is
-all done via a single line patch, I'm not familiar with any other
-installers/bootloaders. 
+The first cell here should be qcom,sm8150-dwc3. The Linux driver will
+"fall through" and match on the less specific "qcom,dwc3", but if we in
+the future realize that we have sm8150 specific behavior/quirks we can
+make the driver match on the more specific one to implement this.
 
-If renaming is a reason not to merge this I'd send a v2 containing only
-the the added compatible list and updated labels.
+And similarly the order of the compatibles in &usb_1_hsphy should be
+reversed as well.
 
-Best,
-Paul
-
+Regards,
+Bjorn
