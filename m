@@ -2,166 +2,231 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546C3C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1E8C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFA42074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7C52074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="RCzMih5p"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="dbeS0MN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgDGULZ (ORCPT
+        id S1727185AbgDGUMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:11:25 -0400
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:9813 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726436AbgDGULY (ORCPT
+        Tue, 7 Apr 2020 16:12:55 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44298 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726436AbgDGUMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:11:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1586290284;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=quurHnnNLF0M8WZ4vUq1YW38UCZI+5kCMuLuV15f4r0=;
-  b=RCzMih5pjqaJmoOa1e6tIRlKvnZFM7NCmexDxUQpN54A8Ip6kF/DcbDx
-   CD9n4I+AFLY1Lw0orDDM6aqOddJp8Px4rsItzdakFTwIWaWTmkPAJHYTA
-   G5iYmUuElkFiNWPQ89QD/P7zdwTDaOx1OI+4bzzPdVfx93Ub2hUG98sRo
-   M=;
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  andrew.cooper3@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="andrew.cooper3@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
-  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="Andrew.Cooper3@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="Andrew.Cooper3@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: rtcWbxk7c8SK6kJYticYxMe0smMHwTMG/FGKuATkjjZAr+joYGSVGtOEiiLbwx9KP4MupDFIlF
- 9mceB6Km/MzViGBrVK1Mf4nRwjHuYCk2YrB/62EItwXDwjVR34QPtKFq1oHcKqY+AtTi/UzMNb
- o7hrxV7UVZEK58R9PDhhID3++8SxLBzLCL6EifKEInglMs68NuwIrUCE3W+gZ0Ib6RZghXcNXv
- KPTPSyK6oOwQwS1xb4P6lmYXKulhe578dBJMyHVFN1lVMitovImEuXO024IkrtteGp9y3zJ+57
- XxY=
-X-SBRS: 2.7
-X-MesageID: 15338151
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.72,356,1580792400"; 
-   d="scan'208";a="15338151"
-Subject: Re: [PATCH 0/4] x86/module: Out-of-tree module decode and sanitize
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>,
-        <hch@infradead.org>, <sean.j.christopherson@intel.com>,
-        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
-        <x86@kernel.org>, <kenny@panix.com>, <jeyu@kernel.org>,
-        <rasmus.villemoes@prevas.dk>, <pbonzini@redhat.com>,
-        <fenghua.yu@intel.com>, <xiaoyao.li@intel.com>,
-        <nadav.amit@gmail.com>, <thellstrom@vmware.com>,
-        <tony.luck@intel.com>, <rostedt@goodmis.org>,
-        <gregkh@linuxfoundation.org>, <jannh@google.com>,
-        <keescook@chromium.org>, <David.Laight@aculab.com>,
-        <dcovelli@vmware.com>, <mhiramat@kernel.org>
-References: <20200407110236.930134290@infradead.org>
- <a53a01b9-2907-4eb3-a9fd-16e6e8029028@citrix.com>
- <20200407194112.GQ2452@worktop.programming.kicks-ass.net>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Message-ID: <e6d9f83e-e88c-c079-50b3-ff8ad8682074@citrix.com>
-Date:   Tue, 7 Apr 2020 21:11:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 7 Apr 2020 16:12:55 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i16so5645190edy.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:12:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=ERdwo2RxKpDOK4p9sBgyD8EfDBQBiS1CeSk+4MbDuLo=;
+        b=dbeS0MN9/EJQ3fggNXC1nK1uUYt10iU0apLVSEH2lCPObt7pASULUCRj1TKvWesF9I
+         tXowpOaEr7WftjnKcNnCIB4CFb1nfq7F3xpZt25V0Ai46x3gA/vRVIatVe8OuIg2Rs9/
+         kKGfqNxma3TP9sieXrLFktsbze97WTHdrk8gT1f58sPQYUTSReqS0aVL8y5OFkgTYO6J
+         rNV9QVhFpR1ce36cDiGUVpLp2R+I1+ZU0fGC9Ydesw1/AfNOL1mj9MlqvO8VFjRyPs0+
+         GMxNsQjRb2MDD6A81K6aw1NT1dowuIFjVNFzFcrmsAzJ54gd/IiDtwtMJQofT/YumJtg
+         LETA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=ERdwo2RxKpDOK4p9sBgyD8EfDBQBiS1CeSk+4MbDuLo=;
+        b=aRvQtLvfrfCYXlwYGvoSGuW/z5kuUJmAmENMK6Rl8khkLAJJBUSDHRHI14zgQq7u6y
+         DtrzbdX5fB5KacITxBamoWoDkXI8uqVSt0hIwSgHrVYsEUGF9jsT0UYJwadRfXAm6yPV
+         FjjJd4eMtfs7/QhrVVXfGUnEvWt1d+bD0IsAiVWTp9In5SBMq4HGsF16p83/YAzvGUmI
+         NL86LzlQKS71aQm5HmpDbAWmDhy5JWaukBlieoKJ4VOyTqPbDiekApbyLPB6LtDQbZk2
+         yhovY1FC5QVByOk0cIWpyZwG/7qRT0DVxce2Djx1BQIZ71khjxzazWMBqEY80jMqgAfV
+         ublg==
+X-Gm-Message-State: AGi0PuZIt63YVSoI2XgMxgKIM5pmQZKnD0/HKpvewz/tyWPGJZlJ+vHg
+        dhJYTsrb72eewcFp9VzvLJY14dR7M0+QNSGcPImaPbN/5X4=
+X-Google-Smtp-Source: APiQypLqMHbkAGx/soX1aAJZjS9L9/SvTpTczi6DQRJcOKfWMPKuekU/GfNR+TM93ozNNo+VwLWJ/pK9ZkYy174pSrA=
+X-Received: by 2002:aa7:c609:: with SMTP id h9mr3493057edq.93.1586290372385;
+ Tue, 07 Apr 2020 13:12:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200407194112.GQ2452@worktop.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 7 Apr 2020 13:12:41 -0700
+Message-ID: <CAPcyv4gKr57qNnMEupjcjQmH9Vy_iZuLPE1VA36QAkKhzEbzSA@mail.gmail.com>
+Subject: [GIT PULL] libnvdimm for v5.7
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/04/2020 20:41, Peter Zijlstra wrote:
-> On Tue, Apr 07, 2020 at 06:23:27PM +0100, Andrew Cooper wrote:
->> On 07/04/2020 12:02, Peter Zijlstra wrote:
->>> Hi all,
->>>
->>> Driven by the SLD vs VMX interaction, here are some patches that provide means
->>> to analyze the text of out-of-tree modules.
->>>
->>> The first user of that is refusing to load modules on VMX-SLD conflicts, but it
->>> also has a second patch that refulses to load any module that tries to modify
->>> CRn/DRn.
->>>
->>> I'm thinking people will quickly come up with more and more elaborate tests to
->>> which to subject out-of-tree modules.
->> Anything playing with LGDT & friends?  Shouldn't be substantially more
->> elaborate than CR/DR to check for.
-> More friends? (I wasn't sure on the Sxxx instructions, they appear
-> harmless, but what do I know..)
->
-> I was also eyeing LSL LTR LSS, none of which I figured a module has any
-> business of using. Are there more?
+Hi Linus, please pull from:
 
-Sorry - should have been more clear.  By friends, I meant LGDT, LIDT,
-LLDT and LTR which are the 4 system table loading instructions.  LLDT
-and LTR depend on being able to write into the GDT, but still have no
-business being used.
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-for-5.7
 
-Also, LMSW if you care about it, but its utility is somewhere close to 0
-these days, so probably not worth the cycles searching for.
+...to receive the libnvdimm and dax update for this cycle. There were
+multiple touches outside of drivers/nvdimm/ this round to add cross
+arch compatibility to the devm_memremap_pages() interface, enhance
+numa information for persistent memory ranges, and add a
+zero_page_range() dax operation. This cycle I switched from the
+patchwork api to Konstantin's b4 script for collecting tags (from x86,
+PowerPC, filesystem, and device-mapper folks), and everything looks to
+have gone ok there. This has all appeared in -next with no reported
+issues.
 
-The Sxxx instructions have no business being used, but are also harmless
-and similarly, probably not worth spending cycles searching for.
+Given the current environment where one might need to step away on
+short notice I thought it would be a good idea to highlight to you and
+others a backup maintainer for libnvdimm. Vishal, has agreed to step
+in if circumstances make me non-responsive for multiple days. Not
+expecting anything, just being proactive.
 
-L{D,E,F,S}S are functional equivalents to "MOV val1, %sreg; mov val2,
-%reg"  so harmless (also mode specific as to whether they are useable).
+---
 
+The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
 
-Other things to consider, while we're on a roll:
+  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
 
-WRMSR and RDMSR:  There is a lot of damage which can be done with these,
-and at least forcing people to use the regular hooks will get proper
-paravirt support and/or exception support.  That said, this might cause
-large carnage to out-of-tree modules which are a device driver for
-random platform things.
+are available in the Git repository at:
 
-POPF: Don't really want someone being able to set IOPL3.  However, this
-might quite easily show up as a false positive depending on how the
-irqsafe infrastructure gets inlined.
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-for-5.7
 
-SYSRET/SYSEXIT/IRET: Don't want a module returning to userspace behind
-the kernels back.  IRET may be a false positive for serialising
-purposes, as may be a write to CR2 for that matter.
+for you to fetch changes up to f6d2b802f80d0ca89ee1f51c1781b3f79cdb25d5:
 
-Looking over the list of other privileged instructions, CLTS,
-{,WB,WBNO}INVD, INVLPG and HLT might be candidates for "clearly doing
-something which shouldn't be done".  Not on the list is INVPCID which
-falls into the same category.
+  Merge branch 'for-5.7/libnvdimm' into libnvdimm-for-next (2020-04-02
+19:55:17 -0700)
 
-Come to think about it, it might be easier to gauge on CPL0 instructions
-and whitelist the ok ones, such as VMX and SVM for out-of-tree hypervisors.
+----------------------------------------------------------------
+libnvdimm for 5.7
 
-~Andrew
+- Add support for region alignment configuration and enforcement to
+  fix compatibility across architectures and PowerPC page size
+  configurations.
+
+- Introduce 'zero_page_range' as a dax operation. This facilitates
+  filesystem-dax operation without a block-device.
+
+- Introduce phys_to_target_node() to facilitate drivers that want to
+  know resulting numa node if a given reserved address range was
+  onlined.
+
+- Advertise a persistence-domain for of_pmem and papr_scm. The
+  persistence domain indicates where cpu-store cycles need to reach in
+  the platform-memory subsystem before the platform will consider them
+  power-fail protected.
+
+- Promote numa_map_to_online_node() to a cross-kernel generic facility.
+
+- Save x86 numa information to allow for node-id lookups for reserved
+  memory ranges, deploy that capability for the e820-pmem driver.
+
+- Pick up some miscellaneous minor fixes, that missed v5.6-final,
+  including a some smatch reports in the ioctl path and some unit test
+  compilation fixups.
+
+- Fixup some flexible-array declarations.
+
+----------------------------------------------------------------
+Aneesh Kumar K.V (1):
+      libnvdimm: Update persistence domain value for of_pmem and papr_scm device
+
+Dan Carpenter (2):
+      acpi/nfit: improve bounds checking for 'func'
+      libnvdimm: Out of bounds read in __nd_ioctl()
+
+Dan Williams (15):
+      ACPI: NUMA: Up-level "map to online node" functionality
+      mm/numa: Skip NUMA_NO_NODE and online nodes in numa_map_to_online_node()
+      powerpc/papr_scm: Switch to numa_map_to_online_node()
+      x86/mm: Introduce CONFIG_NUMA_KEEP_MEMINFO
+      x86/NUMA: Provide a range-to-target_node lookup facility
+      libnvdimm/e820: Retrieve and populate correct 'target_node' info
+      mm/memremap_pages: Kill unused __devm_memremap_pages()
+      mm/memremap_pages: Introduce memremap_compat_align()
+      libnvdimm/pfn: Prevent raw mode fallback if pfn-infoblock valid
+      libnvdimm/namespace: Enforce memremap_compat_align()
+      libnvdimm/region: Introduce NDD_LABELING
+      libnvdimm/region: Introduce an 'align' attribute
+      Merge branch 'for-5.6/libnvdimm-fixes' into libnvdimm-for-next
+      Merge branch 'for-5.7/numa' into libnvdimm-for-next
+      Merge branch 'for-5.7/libnvdimm' into libnvdimm-for-next
+
+Gustavo A. R. Silva (3):
+      ACPI: NFIT: Replace zero-length array with flexible-array member
+      libnvdimm/label: Replace zero-length array with flexible-array member
+      libnvdimm/region: Replace zero-length array with flexible-array member
+
+Jan Kara (1):
+      tools/testing/nvdimm: Fix compilation failure without
+CONFIG_DEV_DAX_PMEM_COMPAT
+
+Lukas Bulwahn (1):
+      MAINTAINERS: clarify maintenance of nvdimm testing tool
+
+Santosh Sivaraj (1):
+      tools/test/nvdimm: Fix out of tree build
+
+Vivek Goyal (7):
+      pmem: Add functions for reading/writing page to/from pmem
+      dax, pmem: Add a dax operation zero_page_range
+      s390,dcssblk,dax: Add dax zero_page_range operation to dcssblk driver
+      dm,dax: Add dax zero_page_range operation
+      dax: Use new dax zero page method for zeroing a page
+      dax,iomap: Add helper dax_iomap_zero() to zero a range
+      dax: Move mandatory ->zero_page_range() check in alloc_dax()
+
+YueHaibing (1):
+      libnvdimm/region: Fix build error
+
+ MAINTAINERS                               |   1 +
+ arch/powerpc/Kconfig                      |   1 +
+ arch/powerpc/mm/ioremap.c                 |  21 +++++
+ arch/powerpc/platforms/pseries/papr_scm.c |  27 ++-----
+ arch/x86/Kconfig                          |   1 +
+ arch/x86/mm/numa.c                        |  67 +++++++++++----
+ drivers/acpi/nfit/core.c                  |  14 ++--
+ drivers/acpi/nfit/nfit.h                  |  13 +--
+ drivers/acpi/numa/srat.c                  |  41 ----------
+ drivers/dax/bus.c                         |   4 +-
+ drivers/dax/super.c                       |  28 ++++++-
+ drivers/md/dm-linear.c                    |  18 +++++
+ drivers/md/dm-log-writes.c                |  17 ++++
+ drivers/md/dm-stripe.c                    |  23 ++++++
+ drivers/md/dm.c                           |  32 +++++++-
+ drivers/nvdimm/bus.c                      |   6 +-
+ drivers/nvdimm/dimm.c                     |   2 +-
+ drivers/nvdimm/dimm_devs.c                |  95 +++++++++++++++++-----
+ drivers/nvdimm/e820.c                     |  18 +----
+ drivers/nvdimm/label.h                    |   2 +-
+ drivers/nvdimm/namespace_devs.c           |  28 ++++++-
+ drivers/nvdimm/nd.h                       |   7 +-
+ drivers/nvdimm/of_pmem.c                  |   4 +-
+ drivers/nvdimm/pfn.h                      |  12 +++
+ drivers/nvdimm/pfn_devs.c                 |  40 +++++++--
+ drivers/nvdimm/pmem.c                     | 101 ++++++++++++++---------
+ drivers/nvdimm/region_devs.c              | 130 ++++++++++++++++++++++++++----
+ drivers/s390/block/dcssblk.c              |  20 ++++-
+ fs/dax.c                                  |  59 ++++++--------
+ fs/iomap/buffered-io.c                    |   9 +--
+ include/linux/acpi.h                      |  23 +++++-
+ include/linux/dax.h                       |  21 ++---
+ include/linux/device-mapper.h             |   3 +
+ include/linux/io.h                        |   2 -
+ include/linux/libnvdimm.h                 |   2 +
+ include/linux/memremap.h                  |   8 ++
+ include/linux/mmzone.h                    |   1 +
+ include/linux/numa.h                      |  30 ++++++-
+ lib/Kconfig                               |   3 +
+ mm/Kconfig                                |   5 ++
+ mm/mempolicy.c                            |  26 ++++++
+ mm/memremap.c                             |  23 ++++++
+ tools/testing/nvdimm/Kbuild               |   4 +-
+ tools/testing/nvdimm/test/Kbuild          |   4 +-
+ tools/testing/nvdimm/test/nfit.c          |   2 +
+ 45 files changed, 737 insertions(+), 261 deletions(-)
