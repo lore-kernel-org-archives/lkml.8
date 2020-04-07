@@ -2,179 +2,130 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE575C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37092C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691AF206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D44F207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:55:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="zSxTGofP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B6Rz7dKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgDGBxO (ORCPT
+        id S1726591AbgDGBzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:53:14 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:32880 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgDGBxN (ORCPT
+        Mon, 6 Apr 2020 21:55:42 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:50716 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726329AbgDGBzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:53:13 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c138so716275pfc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=eEaA4et6N84qklCqdXFFeqkzbhM+H6IHlqNEE2Wj9aY=;
-        b=zSxTGofP7P1Q0I/p64/KRPIbo0W1L3QCssd6UUnUcrfqNxKB5bKpV4Q48EqJVWvWlH
-         LRy2UTEETWtKCK6EKfCAMXmMpNI/91yZwv3q6WGWougTQZZyUYzUwgUcb3wu+TOqesE7
-         Hq4uDYDC9SdKLA99wDv5lwsLSUz9+WAOdlWvZLTmE0cT56JrkyFoGM/+zTiHQ1csh+qV
-         s6glj3JlVjyfkAyjibgTjdOEIpkNFBWFlgR51rVb0DHgfsVqzPoPIJkSy52RQ/xgLb58
-         mHEZ8tkScLVWVBDZ9ipMTm8Js+3FR4U3uC/Be8FCLZ4EuPk6TFiWdGmUmNYQ2NwxMncC
-         tKgw==
+        Mon, 6 Apr 2020 21:55:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586224540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oItCj2q8YHb63ZBfFyBFQkDD3U/LJfbIS9cHzfIZ+kg=;
+        b=B6Rz7dKmqjP/KZc/yHJLXh5qkViWKUmVdbJHXVWDpYNpF4GSCLOLl5E5YMazBfhaNyFkTf
+        7ZrCwbnlb4mfKto+XLkIQKRWmcjGxCdPfAGDGvaXqnos+7KVxeJOBDkw6tRlCGKPTc47mR
+        FSrvw5rjSd/jmmk+pa5K4YuaEh4t+Y8=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-2xOz6wj1N22t3dsDwhlmSA-1; Mon, 06 Apr 2020 21:55:38 -0400
+X-MC-Unique: 2xOz6wj1N22t3dsDwhlmSA-1
+Received: by mail-qt1-f198.google.com with SMTP id n89so1748662qte.15
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:55:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=eEaA4et6N84qklCqdXFFeqkzbhM+H6IHlqNEE2Wj9aY=;
-        b=aJur39Kzmm7C9lSw8JCSuBe1q/BKDIhfsIFvdJd5vu7pE9iGQs2JE7MOldPvNSwv36
-         DHlwki+NDE5Bsw5Xi9V38reLSfoS5HcfFRQGn/12W3JIkUmy5a/duVRtSWkH9ozIDrlY
-         m6LTBBScDLZxlCgoqjxbWh/qFt+ZQUYdWMo1dOW0W6S286KZujKpkR/FmCaYrWbMbtV5
-         9YO8gqoyetiragpe9YNcQu9TNlm5SDJmujPNI9ujeeaQUz7HqeY14kZG2vSGoEK7k0dr
-         O6pSWeuEUq/LdotKYSaI2ZFzu04afi8s+AxU59/dEpFIY56UInZVMinHMpFDbZExiq8z
-         dqfw==
-X-Gm-Message-State: AGi0PuaSqhcIjt4QFoFAb/PVgPi4blnfBE5A287id/Rx+rHMI/VJPEgU
-        N0K13m24S9xCD38BXravgM0nGw==
-X-Google-Smtp-Source: APiQypL07PtmER8pma69ww6IcdUNHtWrciRwvz/2Sz++W8I0rPzdaTu15PFRgimEMa34erbkoQkEWw==
-X-Received: by 2002:a63:700f:: with SMTP id l15mr1889527pgc.375.1586224392604;
-        Mon, 06 Apr 2020 18:53:12 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b064:7066:dc53:1479:9187:9f80? ([2600:1010:b064:7066:dc53:1479:9187:9f80])
-        by smtp.gmail.com with ESMTPSA id f3sm107921pjo.24.2020.04.06.18.53.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Apr 2020 18:53:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oItCj2q8YHb63ZBfFyBFQkDD3U/LJfbIS9cHzfIZ+kg=;
+        b=rAS68Ug9Up1JhHOXOWlTBX1Ta+iH+DNfq0epE4Pd+8yxcYbGfMFReANkGRs+EiDfFA
+         Amr8QnaPrEuIS6qYen1tHu2vDRAvGteSXTBgwGJJqsPRVQ7uSwR5a7k1MPvVrkJY+T5s
+         GwDf4ZVOXB2INzSAZdjo15hNhr81QqjrF6q6tXvxYhmEYZPfRIsSxpms8R0Yra9Cb5Yi
+         w+LHYn/TgfO/YaDOo1AlB9d6iXBMYEUw+j4j4Lh6BQ8JijSf2mNqvnjtld72Ni66kGdn
+         h1ogYc+rRzAbwjcAU29X2RtU7fOKaXWLkZqMnbZxgNpZ0ERwEnXagRcK1+SOHsJsZ2cr
+         VlGA==
+X-Gm-Message-State: AGi0PuY/AS8Okh8kT51rFT2/MjxEqMs3SxJOzfjHhzIOvKhvsTxOm108
+        01Nqve61XjeSFBxJD+HrxzSgi7e5mohordfxWJ4odkUfoKMD6Td/pyBMnXYAGHk44gi3LZE3m3q
+        bL2PDsqkV4GbY2XUr+dZUS+VX
+X-Received: by 2002:ac8:4d8b:: with SMTP id a11mr143478qtw.391.1586224538182;
+        Mon, 06 Apr 2020 18:55:38 -0700 (PDT)
+X-Google-Smtp-Source: APiQypK+gNlV/6Oyl3ckqIUc2Hc29srtoZnCqrcc5MKHtt+qWVWRdKpz+NvsF8oAGL3g8gWu3juB0g==
+X-Received: by 2002:ac8:4d8b:: with SMTP id a11mr143461qtw.391.1586224537863;
+        Mon, 06 Apr 2020 18:55:37 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::3])
+        by smtp.gmail.com with ESMTPSA id c6sm13998002qkg.88.2020.04.06.18.55.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 18:55:37 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 21:55:35 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     syzbot <syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com>,
+        bgeffon@google.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
+Subject: Re: BUG: unable to handle kernel paging request in
+ kernel_get_mempolicy
+Message-ID: <20200407015535.GC48345@xz-x1>
+References: <0000000000002b25f105a2a3434d@google.com>
+ <20200407004745.GA48345@xz-x1>
+ <20200406183941.38a2e52026e42dbfde239a56@linux-foundation.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] x86/cpufeatures: Add enumeration for serialize instruction
-Date:   Mon, 6 Apr 2020 18:53:10 -0700
-Message-Id: <5A5AF726-1D7C-4267-90D8-7E6BD464BA47@amacapital.net>
-References: <20200407013843.GB5587@ranerica-svr.sc.intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ricardo Neri <ricardo.neri@intel.com>, X86 ML <x86@kernel.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-In-Reply-To: <20200407013843.GB5587@ranerica-svr.sc.intel.com>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-X-Mailer: iPhone Mail (17E255)
+Content-Disposition: inline
+In-Reply-To: <20200406183941.38a2e52026e42dbfde239a56@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 06, 2020 at 06:39:41PM -0700, Andrew Morton wrote:
+> On Mon, 6 Apr 2020 20:47:45 -0400 Peter Xu <peterx@redhat.com> wrote:
+> 
+> > >From 23800bff6fa346a4e9b3806dc0cfeb74498df757 Mon Sep 17 00:00:00 2001
+> > From: Peter Xu <peterx@redhat.com>
+> > Date: Mon, 6 Apr 2020 20:40:13 -0400
+> > Subject: [PATCH] mm/mempolicy: Allow lookup_node() to handle fatal signal
+> > 
+> > lookup_node() uses gup to pin the page and get node information.  It
+> > checks against ret>=0 assuming the page will be filled in.  However
+> > it's also possible that gup will return zero, for example, when the
+> > thread is quickly killed with a fatal signal.  Teach lookup_node() to
+> > gracefully return an error -EFAULT if it happens.
+> > 
+> > ...
+> >
+> > --- a/mm/mempolicy.c
+> > +++ b/mm/mempolicy.c
+> > @@ -902,7 +902,10 @@ static int lookup_node(struct mm_struct *mm, unsigned long addr)
+> >  
+> >  	int locked = 1;
+> >  	err = get_user_pages_locked(addr & PAGE_MASK, 1, 0, &p, &locked);
+> > -	if (err >= 0) {
+> > +	if (err == 0) {
+> > +		/* E.g. GUP interupted by fatal signal */
+> > +		err = -EFAULT;
+> > +	} else if (err > 0) {
+> >  		err = page_to_nid(p);
+> >  		put_page(p);
+> >  	}
+> 
+> Doh.  Thanks.
+> 
+> Should it have been -EINTR?
 
+It looks ok to me too.  I was returning -EFAULT to follow the same
+value as get_vaddr_frames() (which is the other caller of
+get_user_pages_locked()).  So far the only path that I found can
+trigger this is when there's a fatal signal pending right after the
+gup.  If so, the userspace won't have a chance to see the -EINTR (or
+whatever we return) anyways.
 
-> On Apr 6, 2020, at 6:37 PM, Ricardo Neri <ricardo.neri-calderon@linux.inte=
-l.com> wrote:
->=20
-> =EF=BB=BFOn Sat, Apr 04, 2020 at 02:15:57PM -0700, Andy Lutomirski wrote:
->>> On Fri, Apr 3, 2020 at 10:19 PM Ricardo Neri
->>> <ricardo.neri-calderon@linux.intel.com> wrote:
->>>=20
->>> On Fri, Apr 03, 2020 at 10:12:17AM +0200, Borislav Petkov wrote:
->>>> On Thu, Apr 02, 2020 at 06:40:26PM -0700, Ricardo Neri wrote:
->>>>> The serialize instruction ensures that before the next instruction is
->>>>> fetched and executed, all the modifications to flags, registers, and m=
-emory
->>>>> made by previous instructions are completed, draining all buffered wri=
-tes
->>>>> to memory.
->>>>>=20
->>>>> Importantly, the serialize instruction does not modify registers,
->>>>> arithmetic flags or memory.
->>>>>=20
->>>>> Hence, the serialize instructions provides a better way for software
->>>>> to serialize execution than using instructions such as cpuid, which do=
-es
->>>>> modify registers and, in virtual machines, causes a VM exit.
->>>>>=20
->>>>> This instruction is supported by the CPU if CPUID.7H.EDX[bit 14] is
->>>>> set.
->>>>>=20
->>>>> Cc: x86@kernel.org
->>>>> Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
->>>>> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
->>>>> ---
->>>>> This new instruction is documented in the latest version of the Intel
->>>>> Architecture Instruction Set Extensions and Future Features Programmin=
-g
->>>>> Reference Chapter 2.1 located at
->>>>> https://software.intel.com/sites/default/files/managed/c5/15/architect=
-ure-instruction-set-extensions-programming-reference.pdf
->>>>> ---
->>>>> arch/x86/include/asm/cpufeatures.h | 1 +
->>>>> 1 file changed, 1 insertion(+)
->>>>>=20
->>>>> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm=
-/cpufeatures.h
->>>>> index db189945e9b0..cd9b1ec022ec 100644
->>>>> --- a/arch/x86/include/asm/cpufeatures.h
->>>>> +++ b/arch/x86/include/asm/cpufeatures.h
->>>>> @@ -364,6 +364,7 @@
->>>>> #define X86_FEATURE_AVX512_VP2INTERSECT (18*32+ 8) /* AVX-512 Intersec=
-t for D/Q */
->>>>> #define X86_FEATURE_MD_CLEAR               (18*32+10) /* VERW clears C=
-PU buffers */
->>>>> #define X86_FEATURE_TSX_FORCE_ABORT        (18*32+13) /* "" TSX_FORCE_=
-ABORT */
->>>>> +#define X86_FEATURE_SERIALIZE              (18*32+14) /* SERIALIZE in=
-struction */
->>>>> #define X86_FEATURE_PCONFIG                (18*32+18) /* Intel PCONFIG=
- */
->>>>> #define X86_FEATURE_SPEC_CTRL              (18*32+26) /* "" Speculatio=
-n Control (IBRS + IBPB) */
->>>>> #define X86_FEATURE_INTEL_STIBP            (18*32+27) /* "" Single Thr=
-ead Indirect Branch Predictors */
->>>>> --
->>>>=20
->>>> Send this together with code which is using it, pls.
->>>=20
->>> Do you mean code in the kernel using this instructions. Thus far, I
->>> don't have any kernel use cases for this instruction. My intention is to=
- expose
->>> this instruction to user space via /proc/cpuinfo. Is that not
->>> acceptable?
->>=20
->> Presumably sync_core() should do, roughly:
->>=20
->> if (static_cpu_has(X86_FEATURE_SERIALIZE)) {
->>  asm volatile("serialize");
->>  return;
->> }
->=20
-> Sure Andy, I will look at implementing something as you propose.
->=20
->>=20
->> but with the appropriate magic to build it on older binutils. =20
->=20
-> But old binutils will not be aware of this new instruction, right? How
-> could they be impacted?
+Thanks,
 
-Because old binutils will fail to assemble serialize :). You=E2=80=99re need=
- a macro that turns it into .byte, or, if there=E2=80=99s just one user, you=
- could open-code the .byte.
+-- 
+Peter Xu
 
->=20
->> should make sure that the in-kernel instruction decoder doesn't
->> explode when it sees serialize, presumably.
->=20
-> Sure Andy. I will also test for this.
->=20
-> Thanks and BR,
-> Ricardo
