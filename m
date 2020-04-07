@@ -2,105 +2,131 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE24C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD64C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E47402076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EB12076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:40:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="cn6DZ2Wj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eN291863"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgDGQj4 (ORCPT
+        id S1729616AbgDGQkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:39:56 -0400
-Received: from mout.gmx.net ([212.227.15.15]:57661 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728667AbgDGQjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:39:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586277585;
-        bh=mGcNn/hciDAa1MtlzL+yKAo9BVtXHK66bYlr9Vx0ozY=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=cn6DZ2WjYtKs62CRZOZRNdXp5CDg2YFifosNGXDjunNRe/aXDW/ktp7jR2sdLC5z9
-         r4t2W2nVixSJNC/4ERTtvFbhcD3qfm3VYeS3/+i1u+Zk0Xglbv7Tx0jv/YV6umIC+W
-         d0WYqCPZL6lqiGRewiUsD6exyP55On0xPpIb9NVU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([83.52.229.196]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MZCfD-1jqz2W1KwT-00V5jc; Tue, 07 Apr 2020 18:39:45 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Amir Mahdi Ghorbanian <indigoomega021@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] staging: vt6656: Remove unnecessary local variable initialization
-Date:   Tue,  7 Apr 2020 18:39:15 +0200
-Message-Id: <20200407163915.7491-3-oscar.carter@gmx.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200407163915.7491-1-oscar.carter@gmx.com>
-References: <20200407163915.7491-1-oscar.carter@gmx.com>
+        Tue, 7 Apr 2020 12:40:02 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36835 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729590AbgDGQjz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 12:39:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c23so1990503pgj.3;
+        Tue, 07 Apr 2020 09:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CtTj93RT22AUoZFV9c4kVk/vjcjiuKnw2EdzUfQTZt0=;
+        b=eN291863ill/D0ps7cEyICwH2C1xq0YcJ48Bn98XNA7sHeKK/iXZfeuHToctcHrTA4
+         P/lbHG9H6B3+7/6sHWt6AZ4ZmF4n0N2HS40kYqv8FDW976EXlzT8nxHcKTnWZY7GS4RX
+         QT3MTTfYCU6a1SE6ii09dqc9dLSRvVtCNIawV225JBhtHOvwWCfu8FpfDtRsSsSOTqf7
+         Md2Q3WzJY+OteJkmY9lle9z32yWPOYVYlH0AfUTKF3SKaZrR5AY2e3Q2THZ4lNrb322x
+         bb24qsRVvaeusVbkkz+VJrs7qvHnQ6ou9OwnfvuDXHjADL/nfBhW/5A1P3EMIskIVETN
+         tIVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CtTj93RT22AUoZFV9c4kVk/vjcjiuKnw2EdzUfQTZt0=;
+        b=cVhIOZGB/hCNGl7xxkhSAY6WOVfpzCd4NEgTI4YCL90bcQFpPE3M/O4+B4SLWr9lca
+         Ul6XUBYSvRZkqs5cjFU4j6Jcy4nU5Z9uEfr5OE1JuwEGaTaui+D0D6EZomIYkm6XVv8W
+         60uZ45igvKMqkFvThkd30B3SkZ0H+BuCLKE2DFe/6T6jD/ZO+GvoZbG7HfCiMRU/oQHP
+         z6DJDSO23qdgOZrwzBgEpCePPIvotq7bubct6O3nzbOO/7Ce3H9bth1a07efCNnONvd/
+         9VYXRtPdKhrJ4xosI+DPo2FYacNwk7GpTl8p6Sbi2SlS/+1rHIXsgyzsQ4h+LVu35d4y
+         s2tQ==
+X-Gm-Message-State: AGi0PuaDWW/IOxb6mL4dIRHNFnbws5EmSRi20U6hB+9D3OoUOiLufTTk
+        qacCd5765oxUl2dO4eIFHBc=
+X-Google-Smtp-Source: APiQypKgOgO87V/3IVFebGYD+dbDYVB4T5zd/xMsEgAziL9EiEf/0Ygg8/A0Kh1FwHIJxJw5Jufk2w==
+X-Received: by 2002:a62:154:: with SMTP id 81mr3308259pfb.228.1586277592492;
+        Tue, 07 Apr 2020 09:39:52 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id mq18sm2292956pjb.6.2020.04.07.09.39.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 09:39:52 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
+        nsekhar@ti.com, bgolaszewski@baylibre.com,
+        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        mika.westerberg@linux.intel.com, baruch@tkos.co.il,
+        wsa+renesas@sang-engineering.com, kgene@kernel.org,
+        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
+        khilman@baylibre.com, matthias.bgg@gmail.com,
+        gregory.clement@bootlin.com, rrichter@marvell.com,
+        afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, heiko@sntech.de,
+        baohua@kernel.org, linus.walleij@linaro.org, mripard@kernel.org,
+        wens@csie.org, ardb@kernel.org, michal.simek@xilinx.com,
+        gcherian@marvell.com, jun.nie@linaro.org, shawnguo@kernel.org,
+        rayagonda.kokatanur@broadcom.com, lori.hikichi@broadcom.com,
+        nishkadg.linux@gmail.com, kstewart@linuxfoundation.org,
+        allison@lohutok.net, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, bigeasy@linutronix.de, info@metux.net,
+        hslester96@gmail.com, narmstrong@baylibre.com,
+        martin.blumenstingl@googlemail.com, qii.wang@mediatek.com,
+        drinkcat@chromium.org, hsinyi@chromium.org, fparent@baylibre.com,
+        opensource@jilayne.com, swinslow@gmail.com,
+        linux-i2c@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v1 27/28] i2c: bcm-kona: convert to devm_platform_ioremap_resource
+Date:   Wed,  8 Apr 2020 00:37:40 +0800
+Message-Id: <20200407163741.17615-28-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200407163741.17615-1-zhengdejin5@gmail.com>
+References: <20200407163741.17615-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JrTaUvLuKsciovcEVi75pTrLYdNbPfCu5hJeSr2pBmookCPFny6
- neiE3yExWHRogwpjE3iAY3L7iG8M75o3peug+ZHIF+JDfu6HEumkc7xe1cyIo5UGIk2IHMd
- DyU4hsDiOCSbZncae30RHZWClOb/duMhJytWUfOTdA85jkUozZuRrrfU4K4QEpRD8FVKy3o
- dPjSxZFHf1O8ewXr0qh+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nng2L4oE85I=:zehfCa5Fv7gVuVuM/+8MD5
- tKo+2MJhT7R8zpgpYizHQEaGVj3f79mNY687TBmJGsKWfen8ENPDVXxxzYrej0r9tteSDeJDi
- J0f9MwwUbUE+o/3KKFXBZmnQkJO10U0Jk50HnsSQletDZt5yO8s6OcSNhSBguWYxo4dtsj/BM
- 431ZQwmc/prQHSL91rSPv9frVBpynlEbhTCALH7eOBom9/39nYNHn3dqxwEHzHe9T+KXInn3F
- +TmacHYiniiLhGgW/4eArAmUoP1R5eoX/Ifl06bRc4kNLZzR+7gYW7WbiqnJlpweObxIE8m1T
- RZ01yttXL9YFtNOwKWXaLMfx/YYJoSzWR+Rdij2xhRxzDIWnT4R3pxK01pESpGTl2djJ3PwrQ
- XgbtQxJDvTAKTBBF492KaIzcIowYAZ3EtdjVCRPru49bXLbbt30Flk0olvm9K/daq4CoPX5CR
- qYsGqlCZwQYXhVgxAyNVFdkcPahF3hNnnzUiaLtZkXCOHb9bimv0NJa2bHqVWx1Ie6C0K+GAH
- WhbkErZKwLVWzT4UP0t8XzqKSKHN7KjDf768hszM34Nh+PjyPOpnjHw/rDkth/h29bL0AsS9O
- 8fi4aHxybI72PtaFcovvEd+R+UhcBMqSAgzuf7FbHkUQ2Tud2DepyFhTbzeorSwsmF51eJsRB
- VyGCctny7NxXgA570MmP89pHncJ3xVNxMyy+oalRmVnGLjCmDNzw20n5Vs/vhAHCOtZLOARUN
- As1pOATkJrksZuN9pQvk2Z3ejQLF8/U0ElfzNOr0iikHDyMFQJsAfrF4ewpGYLiBZ8Z5QWjy6
- Z8ZWKUEbhBgAEcQj8KCldzUz/Nnda/IC0IINZGvzGrrgutDNiS29eREtAyWRaMxLXkYxC+5jN
- R30zIwRQzIOASCe5lQcIIjvImSPsJelFNBeD0cNMmu6fooFGkh6NPzMVGxcAdwSP03ct72rUc
- ZxLnTBH1FgVRM3+Wf4BhM3Hv60G3F1HYqRKD/ad1Z6hs1Mkhqe2AgEekCepI+0K9cbS3L+pWd
- ei4iB1hvFoRffcZWYCyVdXoBMPOFwGJmBSDjYo1oNy9Ks6goNwMKtagOHEgD1gTuJCjiotXVK
- 0qx97J6JBnyBpiLlsAyBmn4H2xDwzhy0epFEFFPVCns9AXur0tT1GyLyYSGoY/hVHPKv7m4Qw
- sgGYyRyM6mvrRE7YGISOaa8bjNjSR5Obza/MCnxQC6NYnt8CnNNRJ2HeNb1lUOyrLSu8uCmZk
- goUCWlTs2aSOKQkEs
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't initialize the rate variable as it is set a few lines later.
+use devm_platform_ioremap_resource() to simplify code, which
+contains platform_get_resource and devm_ioremap_resource.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-=2D--
- drivers/staging/vt6656/baseband.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/i2c/busses/i2c-bcm-kona.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/staging/vt6656/baseband.c b/drivers/staging/vt6656/ba=
-seband.c
-index 092e56668a09..5d9bc97916a5 100644
-=2D-- a/drivers/staging/vt6656/baseband.c
-+++ b/drivers/staging/vt6656/baseband.c
-@@ -135,7 +135,7 @@ unsigned int vnt_get_frame_time(u8 preamble_type, u8 p=
-kt_type,
- {
- 	unsigned int frame_time;
- 	unsigned int preamble;
--	unsigned int rate =3D 0;
-+	unsigned int rate;
-
- 	if (tx_rate > RATE_54M)
- 		return 0;
-=2D-
-2.20.1
+diff --git a/drivers/i2c/busses/i2c-bcm-kona.c b/drivers/i2c/busses/i2c-bcm-kona.c
+index 4e489a9d16fb..2bde3b5bad04 100644
+--- a/drivers/i2c/busses/i2c-bcm-kona.c
++++ b/drivers/i2c/busses/i2c-bcm-kona.c
+@@ -750,7 +750,6 @@ static int bcm_kona_i2c_probe(struct platform_device *pdev)
+ 	int rc = 0;
+ 	struct bcm_kona_i2c_dev *dev;
+ 	struct i2c_adapter *adap;
+-	struct resource *iomem;
+ 
+ 	/* Allocate memory for private data structure */
+ 	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+@@ -762,8 +761,7 @@ static int bcm_kona_i2c_probe(struct platform_device *pdev)
+ 	init_completion(&dev->done);
+ 
+ 	/* Map hardware registers */
+-	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	dev->base = devm_ioremap_resource(dev->device, iomem);
++	dev->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dev->base))
+ 		return -ENOMEM;
+ 
+-- 
+2.25.0
 
