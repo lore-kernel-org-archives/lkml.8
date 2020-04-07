@@ -2,123 +2,244 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED324C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813B8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3572074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B65220731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Mz/zvYDg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CN0nUyjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgDGLBa (ORCPT
+        id S1728451AbgDGLBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:01:30 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:50874 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728146AbgDGLBa (ORCPT
+        Tue, 7 Apr 2020 07:01:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54321 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726591AbgDGLBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 07:01:30 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037B1SAb012656;
-        Tue, 7 Apr 2020 07:01:28 -0400
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2109.outbound.protection.outlook.com [104.47.55.109])
-        by mx0a-00128a01.pphosted.com with ESMTP id 306q55j3b7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 07:01:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gL8fuJzvfWusUC+r8oI7glsTHOEwszc56GtQEiZZZmyLCzG2vov9s35Z0yjY9OGOVjzBOkPZ0lGAz2MRLUSYFKAP9btiFdbVW3PPkFNIodGBVH56XE8yLWQfaHjMGpF/i8Yi5c597aK9ksEtKtUGTEraeDRAcAhMCK3Z9Pbo42vbrW6+vV7r/19yIpJQ9znqJIT0/BKFTphSQ9Kjy3E1xyUFyZWmikMxPQtAjNK35kXJi26XUZfkVxzH/ZgEoRQJLUwH5Zl+IN6KMmkhIT3LVIknCHYsk4ieRngvcMSgiYWsPt15ciquBQF8kQ0CeMVLLr5kzSG/A7Fk4Vlt/4bJXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S9MFHYZXF7SdHf5Ltxl2TxrPw+isNcAmZO0cNAPKd8U=;
- b=EhLkG5VgVq2T2OFdgj/KBNJ6rMOTe9dXwQDDXh8OZKsUPKG4fKLsJcMt19ou6G7Q9vu6OeLsE5ZzyUlhMAu/Tv0LiktYYwZEGNLwjykPWVcM9PcNkLtZ55knttFQ8SWNKmqTLW6hI/s9BADWMBUk/VL10TLnbkCBeHKiBOBOMuMI7KgzQ2ayK/yS3XPe8FxfIi+IFZTvDF3ylhIsDswyMaKhNTv0Cr4eaafH/suelclb3MYePT7/bi8msIN5RFhl6W4d8Lu1mplq5YDKFrYFJC+lly+Tnu0Q3QX7F7w+i6j8QOUDP2QExyi/tWzjWMJd0J0vt8sYuIKhz7Hyg1dBkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S9MFHYZXF7SdHf5Ltxl2TxrPw+isNcAmZO0cNAPKd8U=;
- b=Mz/zvYDgqyXKXqm2LT9ftaqztUopsBJ0sFU6B27Q2BfPidwpbuqFAnpSP3dRc+6D8qgPMC0o0dL8f4o2yrLWe4koxygziq6oseXF4U5qb2eWWAvCn67FWmUCjxyyWgMtJHaC7Qo8z8vqmrgbfL7D6ehuWfEfNVMWW5adhMDx5QI=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB5033.namprd03.prod.outlook.com (2603:10b6:5:1e2::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Tue, 7 Apr
- 2020 11:01:23 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
- 11:01:23 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "Markus.Elfring@web.de" <Markus.Elfring@web.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-CC:     "jic23@kernel.org" <jic23@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [v2] iio: core: move 'indio_dev->info' null check first
-Thread-Topic: [v2] iio: core: move 'indio_dev->info' null check first
-Thread-Index: AQHWDMlSZrUp5iveZ0qk1mOyXvaT86htfiwA
-Date:   Tue, 7 Apr 2020 11:01:23 +0000
-Message-ID: <d25190f18a171d82f3300f00b00f50f62f636d28.camel@analog.com>
-References: <cb300eeb-6045-bd91-3e0e-902dd3b5d5d8@web.de>
-         <3725f882accda683815f04c0eff0bb36c285fe62.camel@analog.com>
-         <39d24c67-e83a-e414-e27e-041c7d5cea1a@web.de>
-In-Reply-To: <39d24c67-e83a-e414-e27e-041c7d5cea1a@web.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.27.135.58]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2e8375f6-7029-40a1-b8a1-08d7dae302e8
-x-ms-traffictypediagnostic: DM6PR03MB5033:
-x-microsoft-antispam-prvs: <DM6PR03MB503375A6B93E8DB92D9E0D7EF9C30@DM6PR03MB5033.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 036614DD9C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(136003)(39860400002)(396003)(376002)(366004)(346002)(71200400001)(8936002)(6512007)(186003)(8676002)(54906003)(86362001)(4744005)(26005)(110136005)(478600001)(2616005)(316002)(6486002)(4326008)(66946007)(66476007)(91956017)(76116006)(6506007)(5660300002)(2906002)(36756003)(81166006)(81156014)(66556008)(64756008)(66446008);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 98XM18tH3Tas/HDsjAHuYimKB0jauC24WZTFwWv2FLmLt7nIV8T9Sf6w+W8/Hy47huEbd6/3tMt9IrRfBm+KEGm8+TIiPwI3heGUd/TFQduAFbuoy76RQD5SocK5YSv0cLAboy22b0A4Wn4wF/xZsXzbLC+7JGhbCJ9VUyLmdLdmB9GmYsDyKC+gGiK56xGl++8J1J58Kb6lHmELCTrSzkHEomJ0yIR7tyJ2wsiu+alagqj8eACyAJgsQCYZbrYhHJP5QR2Y2s3yeyXghbNNGxo9TbC3S6gDzEOVpDzsfQEHieGHTPTVae69NHYnapB0g+cz2JYxtibg/lwnk+ANPf0KfLJzpmBEq/zqYFxuAKfETkLBa5JQGsz+DCKJhHyofZuQjWd67by0rQlYb3RpJ2MlFHqQ/4m88Df9MX0PwBSjYHzvqdFaYv1T4WMfLITj
-x-ms-exchange-antispam-messagedata: xDCJDP6p3ValM/WBVSTvhKLp+FSz3ztdPEwP4nXGNROxLEx1DLLC9rbW20FvOhwenixepGGuMix24X03VADY0OihsyANtqLREVao4TADRI7POlSWRtUOf72sB2xqNHKIWHzmHqpeGqHIdci+ohrTiQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BD47960F5ACF7A4FBF88E432A1741231@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586257288;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8h7WOmhqWbqsj2xXniOI5xjfIW2oGUv8L9dkNvwcCDM=;
+        b=CN0nUyjctr3dwHZ1NLyOO2uA1sMspQyqDq1Sd2DlnYMd/YjpH300QFwDM71cmrwrJ1ItZ5
+        DXNCKr9oi6MTnHK6y9WreMFKeSUc4/gABA/ZkI4r44rlXdEDCfhN88ik2EzO3SRFJ5JP2j
+        EYmSzLa5u8AFN7xtcVnHhAOtED3ONtQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-9ThSrBYlPeGPa8K6lERIRg-1; Tue, 07 Apr 2020 07:01:23 -0400
+X-MC-Unique: 9ThSrBYlPeGPa8K6lERIRg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1900B8017F3;
+        Tue,  7 Apr 2020 11:01:22 +0000 (UTC)
+Received: from localhost (ovpn-12-129.pek2.redhat.com [10.72.12.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33E0092F83;
+        Tue,  7 Apr 2020 11:01:17 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 19:01:15 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        dzickus@redhat.com, dyoung@redhat.com
+Subject: Re: [PATCH v2 0/3] KVM: VMX: Fix for kexec VMCLEAR and VMXON cleanup
+Message-ID: <20200407110115.GA14381@MiWiFi-R3L-srv>
+References: <20200321193751.24985-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e8375f6-7029-40a1-b8a1-08d7dae302e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2020 11:01:23.6572
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: b6a4BGGnN+mX2WPE6J3sbqf3GMToz5j70fNLuVJddAifgL90R3EjbJ7uMQLcOjmxBVRBgIhGAjkQoFRHOamjN0I9NPX9k5wj7a2ezgr6NQ0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5033
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_03:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
- phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070095
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200321193751.24985-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA0LTA3IGF0IDEyOjQyICswMjAwLCBNYXJrdXMgRWxmcmluZyB3cm90ZToN
-Cj4gW0V4dGVybmFsXQ0KPiANCj4gPiBTbywgb3ZlciB0aW1lIEkgZ290IHRoZSBoYWJpdCBvZiBt
-ZW50aW9uaW5nICdEb2Vzbid0IGZpeCBhbnl0aGluZy4nDQo+IA0KPiBJIHN1Z2dlc3QgdG8gcmVj
-b25zaWRlciBzdWNoIGluZm9ybWF0aW9uIG9uY2UgbW9yZS4NCj4gV2UgY29tZSBhbG9uZyBkaWZm
-ZXJlbnQgaW50ZXJwcmV0YXRpb25zIGZvciByZW1hcmthYmxlIHNvZnR3YXJlIGFkanVzdG1lbnRz
-Lg0KPiANCj4gDQo+ID4gaWYgdGhlIHBhdGNoIGRvZXNuJ3QgZml4IGFueXRoaW5nLg0KPiANCj4g
-RG8geW91IGltcHJvdmUgdGhlIGlucHV0IHBhcmFtZXRlciB2YWxpZGF0aW9uIGEgYml0IGluIHBy
-aW5jaXBsZSBoZXJlPw0KDQpJIHRob3VnaHQgdGhhdCB3YXMgb2J2aW91cyBmcm9tIHRoZSByZXN0
-IG9mIHRoZSBkZXNjcmlwdGlvbiArIHBhdGNoLg0KSSBndWVzcyBpdCBpc24ndC4NCg0KSSdsbCBz
-ZWUuDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IE1hcmt1cw0K
+On 03/21/20 at 12:37pm, Sean Christopherson wrote:
+> Patch 1 fixes a a theoretical bug where a crashdump NMI that arrives
+> while KVM is messing with the percpu VMCS list would result in one or more
+> VMCSes not being cleared, potentially causing memory corruption in the new
+> kexec'd kernel.
+
+I am wondering if this theoretical bug really exists. Now CKI of Redhat
+reported crash dumping failed on below commit. I reserved a
+intel machine and can reproduce it always. 
+
+Commit: 5364abc57993 - Merge tag 'arc-5.7-rc1' of
+
+From failure trace, it's the kvm vmx which caused this. I have reverted
+them and the failure disappeared.
+
+4f6ea0a87608 KVM: VMX: Gracefully handle faults on VMXON
+d260f9ef50c7 KVM: VMX: Fold loaded_vmcs_init() into alloc_loaded_vmcs()
+31603d4fc2bb KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support
+
+The trace is here. 
+
+[  132.476387] sysrq: Trigger a crash 
+[  132.479829] Kernel panic - not syncing: sysrq triggered crash 
+[  132.480817] CPU: 4 PID: 1975 Comm: runtest.sh Kdump: loaded Not tainted 5.6.0-5364abc.cki #1 
+[  132.480817] Hardware name: Dell Inc. Precision R7610/, BIOS A08 11/21/2014 
+[  132.480817] Call Trace: 
+[  132.480817]  dump_stack+0x66/0x90 
+[  132.480817]  panic+0x101/0x2e3 
+[  132.480817]  ? printk+0x58/0x6f 
+[  132.480817]  sysrq_handle_crash+0x11/0x20 
+[  132.480817]  __handle_sysrq.cold+0x48/0x104 
+[  132.480817]  write_sysrq_trigger+0x24/0x40 
+[  132.480817]  proc_reg_write+0x3c/0x60 
+[  132.480817]  vfs_write+0xb6/0x1a0 
+[  132.480817]  ksys_write+0x5f/0xe0 
+[  132.480817]  do_syscall_64+0x5b/0x1c0 
+[  132.480817]  entry_SYSCALL_64_after_hwframe+0x44/0xa9 
+[  132.480817] RIP: 0033:0x7f205575d4b7 
+[  132.480817] Code: 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24 
+[  132.480817] RSP: 002b:00007ffe6ab44a38 EFLAGS: 00000246 ORIG_RAX: 0000000000000001 
+[  132.480817] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f205575d4b7 
+[  132.480817] RDX: 0000000000000002 RSI: 000055e2876e1da0 RDI: 0000000000000001 
+[  132.480817] RBP: 000055e2876e1da0 R08: 000000000000000a R09: 0000000000000001 
+[  132.480817] R10: 000055e2879bf930 R11: 0000000000000246 R12: 0000000000000002 
+[  132.480817] R13: 00007f205582e500 R14: 0000000000000002 R15: 00007f205582e700 
+[  132.480817] BUG: unable to handle page fault for address: ffffffffffffffc8 
+[  132.480817] #PF: supervisor read access in kernel mode 
+[  132.480817] #PF: error_code(0x0000) - not-present page 
+[  132.480817] PGD 14460f067 P4D 14460f067 PUD 144611067 PMD 0  
+[  132.480817] Oops: 0000 [#12] SMP PTI 
+[  132.480817] CPU: 4 PID: 1975 Comm: runtest.sh Kdump: loaded Tainted: G      D           5.6.0-5364abc.cki #1 
+[  132.480817] Hardware name: Dell Inc. Precision R7610/, BIOS A08 11/21/2014 
+[  132.480817] RIP: 0010:crash_vmclear_local_loaded_vmcss+0x57/0xd0 [kvm_intel] 
+[  132.480817] Code: c7 c5 40 e0 02 00 4a 8b 04 f5 80 69 42 85 48 8b 14 28 48 01 e8 48 39 c2 74 4d 4c 8d 6a c8 bb 00 00 00 80 49 c7 c4 00 00 00 80 <49> 8b 7d 00 48 89 fe 48 01 de 72 5c 4c 89 e0 48 2b 05 13 a8 88 c4 
+[  132.480817] RSP: 0018:ffffa85d435dfcb0 EFLAGS: 00010007 
+[  132.480817] RAX: ffff9c82ebb2e040 RBX: 0000000080000000 RCX: 000000000000080f 
+[  132.480817] RDX: 0000000000000000 RSI: 00000000000000ff RDI: 000000000000080f 
+[  132.480817] RBP: 000000000002e040 R08: 000000717702c90c R09: 0000000000000004 
+[  132.480817] R10: 0000000000000009 R11: 0000000000000000 R12: ffffffff80000000 
+[  132.480817] R13: ffffffffffffffc8 R14: 0000000000000004 R15: 0000000000000000 
+[  132.480817] FS:  00007f2055668740(0000) GS:ffff9c82ebb00000(0000) knlGS:0000000000000000 
+[  132.480817] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
+[  132.480817] CR2: ffffffffffffffc8 CR3: 0000000151904003 CR4: 00000000000606e0 
+[  132.480817] Call Trace: 
+[  132.480817]  native_machine_crash_shutdown+0x45/0x190 
+[  132.480817]  __crash_kexec+0x61/0x130 
+[  132.480817]  ? __crash_kexec+0x9a/0x130 
+[  132.480817]  ? panic+0x11d/0x2e3 
+[  132.480817]  ? printk+0x58/0x6f 
+[  132.480817]  ? sysrq_handle_crash+0x11/0x20 
+[  132.480817]  ? __handle_sysrq.cold+0x48/0x104 
+[  132.480817]  ? write_sysrq_trigger+0x24/0x40 
+[  132.480817]  ? proc_reg_write+0x3c/0x60 
+[  132.480817]  ? vfs_write+0xb6/0x1a0 
+[  132.480817]  ? ksys_write+0x5f/0xe0 
+[  132.480817]  ? do_syscall_64+0x5b/0x1c0 
+[  132.480817]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9 
+
+> 
+> Patch 2 is cleanup that's made possible by patch 1.
+> 
+> Patch 3 isn't directly related, but it conflicts with the crash cleanup
+> changes, both from a code and a semantics perspective.  Without the crash
+> cleanup, IMO hardware_enable() should do crash_disable_local_vmclear()
+> if VMXON fails, i.e. clean up after itself.  But hardware_disable()
+> doesn't even do crash_disable_local_vmclear() (which is what got me
+> looking at that code in the first place).  Basing the VMXON change on top
+> of the crash cleanup avoids the debate entirely.
+> 
+> v2:
+>   - Inverted the code flow, i.e. move code from loaded_vmcs_init() to
+>     __loaded_vmcs_clear().  Trying to share loaded_vmcs_init() with
+>     alloc_loaded_vmcs() was taking more code than it saved. [Paolo]
+> 
+> 
+> Gory details on the crashdump bug:
+> 
+> I verified my analysis of the NMI bug by simulating what would happen if
+> an NMI arrived in the middle of list_add() and list_del().  The below
+> output matches expectations, e.g. nothing hangs, the entry being added
+> doesn't show up, and the entry being deleted _does_ show up.
+> 
+> [    8.205898] KVM: testing NMI in list_add()
+> [    8.205898] KVM: testing NMI in list_del()
+> [    8.205899] KVM: found e3
+> [    8.205899] KVM: found e2
+> [    8.205899] KVM: found e1
+> [    8.205900] KVM: found e3
+> [    8.205900] KVM: found e1
+> 
+> static void vmx_test_list(struct list_head *list, struct list_head *e1,
+>                           struct list_head *e2, struct list_head *e3)
+> {
+>         struct list_head *tmp;
+> 
+>         list_for_each(tmp, list) {
+>                 if (tmp == e1)
+>                         pr_warn("KVM: found e1\n");
+>                 else if (tmp == e2)
+>                         pr_warn("KVM: found e2\n");
+>                 else if (tmp == e3)
+>                         pr_warn("KVM: found e3\n");
+>                 else
+>                         pr_warn("KVM: kaboom\n");
+>         }
+> }
+> 
+> static int __init vmx_init(void)
+> {
+>         LIST_HEAD(list);
+>         LIST_HEAD(e1);
+>         LIST_HEAD(e2);
+>         LIST_HEAD(e3);
+> 
+>         pr_warn("KVM: testing NMI in list_add()\n");
+> 
+>         list.next->prev = &e1;
+>         vmx_test_list(&list, &e1, &e2, &e3);
+> 
+>         e1.next = list.next;
+>         vmx_test_list(&list, &e1, &e2, &e3);
+> 
+>         e1.prev = &list;
+>         vmx_test_list(&list, &e1, &e2, &e3);
+> 
+>         INIT_LIST_HEAD(&list);
+>         INIT_LIST_HEAD(&e1);
+> 
+>         list_add(&e1, &list);
+>         list_add(&e2, &list);
+>         list_add(&e3, &list);
+> 
+>         pr_warn("KVM: testing NMI in list_del()\n");
+> 
+>         e3.prev = &e1;
+>         vmx_test_list(&list, &e1, &e2, &e3);
+> 
+>         list_del(&e2);
+>         list.prev = &e1;
+>         vmx_test_list(&list, &e1, &e2, &e3);
+> }
+> 
+> Sean Christopherson (3):
+>   KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support
+>   KVM: VMX: Fold loaded_vmcs_init() into alloc_loaded_vmcs()
+>   KVM: VMX: Gracefully handle faults on VMXON
+> 
+>  arch/x86/kvm/vmx/vmx.c | 103 ++++++++++++++++-------------------------
+>  arch/x86/kvm/vmx/vmx.h |   1 -
+>  2 files changed, 40 insertions(+), 64 deletions(-)
+> 
+> -- 
+> 2.24.1
+> 
+
