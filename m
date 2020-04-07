@@ -2,108 +2,120 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB93C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28413C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD97D20644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB57220731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586255562;
+	bh=EaD1Kn8VYLmOGXzmva1zo3k7Zh6m00qrt36XnH0ewDc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IVKEGNZ3BwihNXxr3pamzfvAobtFfm7kWT8ZKqgIvfnXEk/Dv7c+seyJ+lT+nK81J
+	 EjwDl16mRCoMuIlui4rQpnhLSeKDA//O9I8InY5oVIHPZ92DqQzOZDiU9XTwP1bJCG
+	 t+7VeoPRbcG/46a9tKGDVVgDY9HM3iVe1ZeOmghc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgDGKa5 convert rfc822-to-8bit (ORCPT
+        id S1728303AbgDGKcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:30:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46992 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgDGKa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:30:56 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jLlVG-0004Aj-Kw; Tue, 07 Apr 2020 12:30:46 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 31A28101303; Tue,  7 Apr 2020 12:30:46 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andrei Vagin <avagin@gmail.com>,
-        "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
-Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Adrian Reber <adrian@lisas.de>
-Subject: Re: RFC: time_namespaces(7) manual page
-In-Reply-To: <20200407032318.GA494464@gmail.com>
-References: <7221df0a-435b-f8bc-ff91-c188af535e73@gmail.com> <20200407032318.GA494464@gmail.com>
-Date:   Tue, 07 Apr 2020 12:30:46 +0200
-Message-ID: <87r1wzk2p5.fsf@nanos.tec.linutronix.de>
+        Tue, 7 Apr 2020 06:32:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727994AbgDGKcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:32:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE64120644;
+        Tue,  7 Apr 2020 10:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586255560;
+        bh=EaD1Kn8VYLmOGXzmva1zo3k7Zh6m00qrt36XnH0ewDc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vA99e8UPNHYo3pYUYHDTE7eQ97fLq0UkdmEul5qO+W+/A5dsd3rL+D5x3dml2XvM5
+         pOEkwFVqEosxXA2U928ZlzIgu7rh9utz8EOLNwmOkJqQUyQkQQG1Xi8aijN1Vctnsp
+         Zmk/gPepk5R6DwBQpraJ3diS2Wh7OK5Ml4yvQEUc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4?= <ville.syrjala@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        "Souza, Jose" <jose.souza@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        SweeAun Khor <swee.aun.khor@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Giacomo Comes <comes@naic.edu>
+Subject: [PATCH 5.6 14/29] drm/i915/display: Fix mode private_flags comparison at atomic_check
+Date:   Tue,  7 Apr 2020 12:22:11 +0200
+Message-Id: <20200407101453.730127410@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
+References: <20200407101452.046058399@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrei Vagin <avagin@gmail.com> writes:
-> On Sat, Apr 04, 2020 at 01:08:50PM +0200, Michael Kerrisk (man-pages) wrote:
->>    /proc/PID/timens_offsets
->>        Associated  with  each  time namespace are offsets, expressed with
->>        respect to the initial time namespace, that define the  values  of
->>        the  monotonic  and  boot clocks in that namespace.  These offsets
->>        are exposed via the file  /proc/PID/timens_offsets.   Within  this
->>        file,  the  offsets  are  expressed  as  lines consisting of three
->>        space-delimited fields:
->> 
->>            <clock-id> <offset-secs> <offset-nanosecs>
->> 
->>        The clock-id identifies the clock whose offsets are  being  shown.
->>        This field is either 1, for CLOCK_MONOTONIC, or 7, for CLOCK_BOOT‐
->>        TIME.  The remaining  fields  express  the  offset  (seconds  plus
->>        nanoseconds)  for the clock in this time namespace.  These offsets
->>        are expressed relative to the clock values  in  the  initial  time
->>        namespace.   In  the  initial time namespace, the contents of this
->>        file are as follows:
->
-> I think we can mention that offset-secs can be negative, but
-> offset-nanosleep has to be 0 or positive.
+From: Uma Shankar <uma.shankar@intel.com>
 
-I assume you meant offset-nanosecs :)
+commit 2bdd4c28baff29163808677a70942de2b45f17dc upstream.
 
-That aside, there are also limitations in place.
+This patch fixes the private_flags of mode to be checked and
+compared against uapi.mode and not from hw.mode. This helps
+properly trigger modeset at boot if desired by driver.
 
-  1) Negative offsets which would offset time into negative space are
-     rejected, i.e. its enforced that
+It helps resolve audio_codec initialization issues if display
+is connected at boot. Initial discussion on this issue has happened
+on below thread:
+https://patchwork.freedesktop.org/series/74828/
 
-          now(CLOCK) + offset[CLOCK] >= 0
+v2: No functional change. Fixed the Closes tag and added
+Maarten's RB.
 
-     This is necessary as the kernel expects and also enforces that time
-     cannot be negative.
+v3: Added Fixes tag.
 
-  2) Positive offsets which would offset time above KTTIME_SEC_MAX / 2 are
-     rejected, i.e. it's enforced that
+Cc: Ville Syrjä <ville.syrjala@linux.intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Cc: Souza, Jose <jose.souza@intel.com>
+Fixes: 58d124ea2739 ("drm/i915: Complete crtc hw/uapi split, v6.")
+Closes: https://gitlab.freedesktop.org/drm/intel/issues/1363
+Suggested-by: Ville Syrjä <ville.syrjala@linux.intel.com>
+Signed-off-by: Uma Shankar <uma.shankar@intel.com>
+Signed-off-by: SweeAun Khor <swee.aun.khor@intel.com>
+Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200326125111.11081-1-uma.shankar@intel.com
+(cherry picked from commit d5e56705927e00f703b2eb5a98299dd6622d16e5)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Giacomo Comes <comes@naic.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-          now(CLOCK) + offset[CLOCK] <= KTIME_SEC_MAX / 2
+---
+ drivers/gpu/drm/i915/display/intel_display.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-     That is done to prevent that clocks wrap around if the offset would
-     bring it close enough to the wrap around point.
+--- a/drivers/gpu/drm/i915/display/intel_display.c
++++ b/drivers/gpu/drm/i915/display/intel_display.c
+@@ -14582,8 +14582,8 @@ static int intel_atomic_check(struct drm
+ 	/* Catch I915_MODE_FLAG_INHERITED */
+ 	for_each_oldnew_intel_crtc_in_state(state, crtc, old_crtc_state,
+ 					    new_crtc_state, i) {
+-		if (new_crtc_state->hw.mode.private_flags !=
+-		    old_crtc_state->hw.mode.private_flags)
++		if (new_crtc_state->uapi.mode.private_flags !=
++		    old_crtc_state->uapi.mode.private_flags)
+ 			new_crtc_state->uapi.mode_changed = true;
+ 	}
+ 
 
-     The cutoff value is a pretty arbitrary choice (~146 years). So to
-     hit this you'd need a system which has an uptime of > 146 years,
-     which is pretty much unrealistic.
 
-Thanks,
-
-        tglx
-
-     
-          
