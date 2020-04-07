@@ -2,104 +2,112 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587DEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78588C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B9620747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:19:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586301548;
-	bh=esnOlBQUNAip9DDpTR1+DfUPZ+TmrYUp8v+D8D9v8tA=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Er25UNRWh7yKTzWkdujb9ML3JnpCX75N6Q9BgG4zxnYoJ9WQrufbrKIDNubasbY64
-	 FHY549IHri2fldkeoi2a3D4ZEPfr/PVBxnkkNLos1KraB74dMwOJjcQC61IORy1v9o
-	 0ICkfUGmNC3HARMCgSB08lYCL0U0l5krJQiRRaAs=
+	by mail.kernel.org (Postfix) with ESMTP id 5886E206BE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:21:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgDGXTH (ORCPT
+        id S1726481AbgDGXVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:19:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726380AbgDGXTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:19:06 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 881E720678;
-        Tue,  7 Apr 2020 23:19:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586301545;
-        bh=esnOlBQUNAip9DDpTR1+DfUPZ+TmrYUp8v+D8D9v8tA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=1TFWy9I5TIiw3c28mE4UrqtkukSnxJWFIHBOllc3WJjbJ/zbh1xK+M5G0b+fvZP5a
-         vui3UXvo1Tvo6xr6UGuvqme0m93+DH6LOd+CaV0mQEDmWFaPriZmIGCa/88jkYchBk
-         jbrl2RTmEj7QxvJ3ZkQPsLJ2ahuPbVW4ca4slgWU=
-Subject: Re: [PATCH] selftests: add 'show_targets' make target
-To:     tbird20d@gmail.com
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tim.bird@sony.com, shuah <shuah@kernel.org>
-References: <1584138204-12238-1-git-send-email-tim.bird@sony.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <03793337-65b3-7b7a-3822-ee32f7d6943f@kernel.org>
-Date:   Tue, 7 Apr 2020 17:19:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 7 Apr 2020 19:21:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48654 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgDGXVn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 19:21:43 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jLxXG-0006vE-7B; Wed, 08 Apr 2020 01:21:38 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id B01FF10069D; Wed,  8 Apr 2020 01:21:37 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Vivek Goyal <vgoyal@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+In-Reply-To: <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com>
+References: <20200407172140.GB64635@redhat.com> <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net> <87eeszjbe6.fsf@nanos.tec.linutronix.de> <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com>
+Date:   Wed, 08 Apr 2020 01:21:37 +0200
+Message-ID: <874ktukhku.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1584138204-12238-1-git-send-email-tim.bird@sony.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/13/20 4:23 PM, tbird20d@gmail.com wrote:
-> From: Tim Bird <tim.bird@sony.com>
-> 
-> It is useful for CI systems to be able to query the list
-> of targets provided by kselftest by default, so that they
-> can construct their own loop over the targets if desired.
-> 
-> Signed-off-by: Tim Bird <tim.bird@sony.com>
-> ---
->   tools/testing/selftests/Makefile | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> index 63430e2..9955e71 100644
-> --- a/tools/testing/selftests/Makefile
-> +++ b/tools/testing/selftests/Makefile
-> @@ -246,4 +246,7 @@ clean:
->   		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET clean;\
->   	done;
->   
-> +show_targets:
-> +	@echo $(TARGETS)
-> +
->   .PHONY: khdr all run_tests hotplug run_hotplug clean_hotplug run_pstore_crash install clean
-> 
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-Hi Tim,
+> On 07/04/20 22:20, Thomas Gleixner wrote:
+>>>> Havind said that, I thought disabling interrupts does not mask exceptions.
+>>>> So page fault exception should have been delivered even with interrupts
+>>>> disabled. Is that correct? May be there was no vm exit/entry during
+>>>> those 10 seconds and that's why.
+>> No. Async PF is not a real exception. It has interrupt semantics and it
+>> can only be injected when the guest has interrupts enabled. It's bad
+>> design.
+>
+> Page-ready async PF has interrupt semantics.
+>
+> Page-not-present async PF however does not have interrupt semantics, it
+> has to be injected immediately or not at all (falling back to host page
+> fault in the latter case).
 
-It is useful addition. Output is hard to read though. It would
-be helpful to improve the printing targets.
+If interrupts are disabled in the guest then it is NOT injected and the
+guest is suspended. So it HAS interrupt semantics. Conditional ones,
+i.e. if interrupts are disabled, bail, if not then inject it.
 
-make -C tools/testing/selftests/ show_targets
-make: Entering directory '/lkml/linux_5.7/tools/testing/selftests'
-android arm64 bpf breakpoints capabilities cgroup clone3 cpufreq 
-cpu-hotplug drivers/dma-buf efivarfs exec filesystems 
-filesystems/binderfs filesystems/epoll firmware ftrace futex gpio 
-intel_pstate ipc ir kcmp kexec kvm lib livepatch lkdtm membarrier memfd 
-memory-hotplug mount mqueue net net/forwarding net/mptcp netfilter nsfs 
-pidfd pid_namespace powerpc proc pstore ptrace openat2 rseq rtc seccomp 
-sigaltstack size sparc64 splice static_keys sync sysctl timens timers 
-tmpfs tpm2 user vm x86 zram
+But that does not make it an exception by any means.
 
-thanks,
--- Shuah
+It never should have been hooked to #PF in the first place and it never
+should have been named that way. The functionality is to opportunisticly
+tell the guest to do some other stuff.
+
+So the proper name for this seperate interrupt vector would be:
+
+   VECTOR_OMG_DOS - Opportunisticly Make Guest Do Other Stuff
+
+and the counter part
+
+   VECTOR_STOP_DOS - Stop Doing Other Stuff 
+
+> So page-not-present async PF definitely needs to be an exception, this
+> is independent of whether it can be injected when IF=0.
+
+That wants to be a straight #PF. See my reply to Andy.
+
+> Hypervisors do not have any reserved exception vector, and must use
+> vectors up to 31, which is why I believe #PF was used in the first place
+> (though that predates my involvement in KVM by a few years).
+
+No. That was just bad taste or something worse. It has nothing to do
+with exceptions, see above. Stop proliferating the confusion.
+
+> These days, #VE would be a much better exception to use instead (and
+> it also has a defined mechanism to avoid reentrancy).
+
+#VE is not going to solve anything.
+
+The idea of OMG_DOS is to (opportunisticly) avoid that the guest (and
+perhaps host) sit idle waiting for I/O until the fault has been
+resolved. That makes sense as there might be enough other stuff to do
+which does not depend on that particular page. If not then fine, the
+guest will go idle.
+
+Thanks,
+
+        tglx
