@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A1CC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5FEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D40221473
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC772074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255023;
-	bh=zHf6rioeVhtooweuQYliiB150kH9YFprMHPlKJ3+gm4=;
+	s=default; t=1586255025;
+	bh=OTr7RM5lQrjJE8EzqxD/5LlOedA2SxaY+uJAxcNQoTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TpA4mz+PuwxzaSGCvKjVcsO651RVDlRHgGQbNt/GRJ+hp8eYRS+zwxg/523GKcPZk
-	 wrB2S41RxcFVijEPvm0SjL2QYVldzVBp3+86ZJFIMHYNeaT17GP338G1ZfmMySVN3J
-	 tZng2rsngGe3FxXzg/94/tpI4Z3tJQaWyA9aKXjg=
+	b=CTR3rBp17WXZ2OrN473lYGiz1XUBEDhc8YOfnk25ayX6mieyC9WDh8jwPaIpYgs0f
+	 T9UyhjuT5q9ZaoZ+fZ8iqpEMrq187AaL33sbAk5ETtvMhKBK+rr7JUeVfkZP01BQ/K
+	 xi6KMX+Uba7ETggJ/+LaGUwxoe6EHug/uP0MpBj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgDGKXm (ORCPT
+        id S1726716AbgDGKXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33516 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728525AbgDGKXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:23:39 -0400
+        id S1728533AbgDGKXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2798F2074B;
-        Tue,  7 Apr 2020 10:23:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EBF42078C;
+        Tue,  7 Apr 2020 10:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255018;
-        bh=zHf6rioeVhtooweuQYliiB150kH9YFprMHPlKJ3+gm4=;
+        s=default; t=1586255021;
+        bh=OTr7RM5lQrjJE8EzqxD/5LlOedA2SxaY+uJAxcNQoTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qq9tt5IKmi+hVerW1xc+brPvlbld+eauMVCD9j4ZrOYfg18MyzU7HBqO+0pPTNtzX
-         UB4G8omBRy46ylHyf3eWnRQRB5km5U0yGxnzU9mqaZG+vl56Uus+QiMj3U88tW7FFu
-         LeMqgnEu9PSVL2GoYNQnM6niUaHxJFpA+SdF7ifM=
+        b=o2GvLhpBqGxosMDoOSfmy0w/d2kX+7aDB8CPU/5UATFE3q0H0yUJ+xRLD46nAH2IX
+         TylFh2s+7MTX4neEvHOJUFDoIEGJscyfTfKVvkkIEuK4YX6Q36PkN8q7DUp/UInI5p
+         j0SXCz6kmGiiFh3vzJoI68ODwf71jPmga/Lxqqkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neal Cardwell <ncardwell@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 33/36] tcp: fix TFO SYNACK undo to avoid double-timestamp-undo
-Date:   Tue,  7 Apr 2020 12:22:06 +0200
-Message-Id: <20200407101458.459005973@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Volf <martin.volf.42@gmail.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.4 34/36] i2c: i801: Do not add ICH_RES_IO_SMI for the iTCO_wdt device
+Date:   Tue,  7 Apr 2020 12:22:07 +0200
+Message-Id: <20200407101458.567850603@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -61,68 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neal Cardwell <ncardwell@google.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit dad8cea7add96a353fa1898b5ccefbb72da66f29 upstream.
+commit 04bbb97d1b732b2d197f103c5818f5c214a4cf81 upstream.
 
-In a rare corner case the new logic for undo of SYNACK RTO could
-result in triggering the warning in tcp_fastretrans_alert() that says:
-        WARN_ON(tp->retrans_out != 0);
+Martin noticed that nct6775 driver does not load properly on his system
+in v5.4+ kernels. The issue was bisected to commit b84398d6d7f9 ("i2c:
+i801: Use iTCO version 6 in Cannon Lake PCH and beyond") but it is
+likely not the culprit because the faulty code has been in the driver
+already since commit 9424693035a5 ("i2c: i801: Create iTCO device on
+newer Intel PCHs"). So more likely some commit that added PCI IDs of
+recent chipsets made the driver to create the iTCO_wdt device on Martins
+system.
 
-The warning looked like:
+The issue was debugged to be PCI configuration access to the PMC device
+that is not present. This returns all 1's when read and this caused the
+iTCO_wdt driver to accidentally request resourses used by nct6775.
 
-WARNING: CPU: 1 PID: 1 at net/ipv4/tcp_input.c:2818 tcp_ack+0x13e0/0x3270
+It turns out that the SMI resource is only required for some ancient
+systems, not the ones supported by this driver. For this reason do not
+populate the SMI resource at all and drop all the related code. The
+driver now always populates the main I/O resource and only in case of SPT
+(Intel Sunrisepoint) compatible devices it adds another resource for the
+NO_REBOOT bit. These two resources are of different types so
+platform_get_resource() used by the iTCO_wdt driver continues to find
+the both resources at index 0.
 
-The sequence that tickles this bug is:
- - Fast Open server receives TFO SYN with data, sends SYNACK
- - (client receives SYNACK and sends ACK, but ACK is lost)
- - server app sends some data packets
- - (N of the first data packets are lost)
- - server receives client ACK that has a TS ECR matching first SYNACK,
-   and also SACKs suggesting the first N data packets were lost
-    - server performs TS undo of SYNACK RTO, then immediately
-      enters recovery
-    - buggy behavior then performed a *second* undo that caused
-      the connection to be in CA_Open with retrans_out != 0
-
-Basically, the incoming ACK packet with SACK blocks causes us to first
-undo the cwnd reduction from the SYNACK RTO, but then immediately
-enters fast recovery, which then makes us eligible for undo again. And
-then tcp_rcv_synrecv_state_fastopen() accidentally performs an undo
-using a "mash-up" of state from two different loss recovery phases: it
-uses the timestamp info from the ACK of the original SYNACK, and the
-undo_marker from the fast recovery.
-
-This fix refines the logic to only invoke the tcp_try_undo_loss()
-inside tcp_rcv_synrecv_state_fastopen() if the connection is still in
-CA_Loss.  If peer SACKs triggered fast recovery, then
-tcp_rcv_synrecv_state_fastopen() can't safely undo.
-
-Fixes: 794200d66273 ("tcp: undo cwnd on Fast Open spurious SYNACK retransmit")
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: Yuchung Cheng <ycheng@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://lore.kernel.org/linux-hwmon/CAM1AHpQ4196tyD=HhBu-2donSsuogabkfP03v1YF26Q7_BgvgA@mail.gmail.com/
+Fixes: 9424693035a5 ("i2c: i801: Create iTCO device on newer Intel PCHs")
+[wsa: complete fix needs all of http://patchwork.ozlabs.org/project/linux-i2c/list/?series=160959&state=*]
+Reported-by: Martin Volf <martin.volf.42@gmail.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/tcp_input.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-i801.c |   45 +++++++++++-------------------------------
+ 1 file changed, 12 insertions(+), 33 deletions(-)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6096,7 +6096,11 @@ static void tcp_rcv_synrecv_state_fastop
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -129,11 +129,6 @@
+ #define TCOBASE		0x050
+ #define TCOCTL		0x054
+ 
+-#define ACPIBASE		0x040
+-#define ACPIBASE_SMI_OFF	0x030
+-#define ACPICTRL		0x044
+-#define ACPICTRL_EN		0x080
+-
+ #define SBREG_BAR		0x10
+ #define SBREG_SMBCTRL		0xc6000c
+ #define SBREG_SMBCTRL_DNV	0xcf000c
+@@ -1544,7 +1539,7 @@ i801_add_tco_spt(struct i801_priv *priv,
+ 		pci_bus_write_config_byte(pci_dev->bus, devfn, 0xe1, hidden);
+ 	spin_unlock(&p2sb_spinlock);
+ 
+-	res = &tco_res[ICH_RES_MEM_OFF];
++	res = &tco_res[1];
+ 	if (pci_dev->device == PCI_DEVICE_ID_INTEL_DNV_SMBUS)
+ 		res->start = (resource_size_t)base64_addr + SBREG_SMBCTRL_DNV;
+ 	else
+@@ -1554,7 +1549,7 @@ i801_add_tco_spt(struct i801_priv *priv,
+ 	res->flags = IORESOURCE_MEM;
+ 
+ 	return platform_device_register_resndata(&pci_dev->dev, "iTCO_wdt", -1,
+-					tco_res, 3, &spt_tco_platform_data,
++					tco_res, 2, &spt_tco_platform_data,
+ 					sizeof(spt_tco_platform_data));
+ }
+ 
+@@ -1567,17 +1562,16 @@ static struct platform_device *
+ i801_add_tco_cnl(struct i801_priv *priv, struct pci_dev *pci_dev,
+ 		 struct resource *tco_res)
  {
- 	struct request_sock *req;
+-	return platform_device_register_resndata(&pci_dev->dev, "iTCO_wdt", -1,
+-					tco_res, 2, &cnl_tco_platform_data,
+-					sizeof(cnl_tco_platform_data));
++	return platform_device_register_resndata(&pci_dev->dev,
++			"iTCO_wdt", -1, tco_res, 1, &cnl_tco_platform_data,
++			sizeof(cnl_tco_platform_data));
+ }
  
--	tcp_try_undo_loss(sk, false);
-+	/* If we are still handling the SYNACK RTO, see if timestamp ECR allows
-+	 * undo. If peer SACKs triggered fast recovery, we can't undo here.
-+	 */
-+	if (inet_csk(sk)->icsk_ca_state == TCP_CA_Loss)
-+		tcp_try_undo_loss(sk, false);
+ static void i801_add_tco(struct i801_priv *priv)
+ {
+-	u32 base_addr, tco_base, tco_ctl, ctrl_val;
+ 	struct pci_dev *pci_dev = priv->pci_dev;
+-	struct resource tco_res[3], *res;
+-	unsigned int devfn;
++	struct resource tco_res[2], *res;
++	u32 tco_base, tco_ctl;
  
- 	/* Reset rtx states to prevent spurious retransmits_timed_out() */
- 	tcp_sk(sk)->retrans_stamp = 0;
+ 	/* If we have ACPI based watchdog use that instead */
+ 	if (acpi_has_watchdog())
+@@ -1592,30 +1586,15 @@ static void i801_add_tco(struct i801_pri
+ 		return;
+ 
+ 	memset(tco_res, 0, sizeof(tco_res));
+-
+-	res = &tco_res[ICH_RES_IO_TCO];
+-	res->start = tco_base & ~1;
+-	res->end = res->start + 32 - 1;
+-	res->flags = IORESOURCE_IO;
+-
+ 	/*
+-	 * Power Management registers.
++	 * Always populate the main iTCO IO resource here. The second entry
++	 * for NO_REBOOT MMIO is filled by the SPT specific function.
+ 	 */
+-	devfn = PCI_DEVFN(PCI_SLOT(pci_dev->devfn), 2);
+-	pci_bus_read_config_dword(pci_dev->bus, devfn, ACPIBASE, &base_addr);
+-
+-	res = &tco_res[ICH_RES_IO_SMI];
+-	res->start = (base_addr & ~1) + ACPIBASE_SMI_OFF;
+-	res->end = res->start + 3;
++	res = &tco_res[0];
++	res->start = tco_base & ~1;
++	res->end = res->start + 32 - 1;
+ 	res->flags = IORESOURCE_IO;
+ 
+-	/*
+-	 * Enable the ACPI I/O space.
+-	 */
+-	pci_bus_read_config_dword(pci_dev->bus, devfn, ACPICTRL, &ctrl_val);
+-	ctrl_val |= ACPICTRL_EN;
+-	pci_bus_write_config_dword(pci_dev->bus, devfn, ACPICTRL, ctrl_val);
+-
+ 	if (priv->features & FEATURE_TCO_CNL)
+ 		priv->tco_pdev = i801_add_tco_cnl(priv, pci_dev, tco_res);
+ 	else
 
 
