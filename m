@@ -2,140 +2,169 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0530C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D02EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EAAC20692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9ACD20692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cyK5E7Dv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbgDGPOK (ORCPT
+        id S1729402AbgDGPOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:14:10 -0400
-Received: from mga07.intel.com ([134.134.136.100]:62686 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbgDGPOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:14:10 -0400
-IronPort-SDR: e2F3fvYjJzLzH/gvI6FziCJ69bveB9/Tpr2xBALz/6Cl0EtnUP0pmxPWnoVCEaCVja+Qu1W3fw
- NFAEfBDow0Uw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 08:14:08 -0700
-IronPort-SDR: 8ckQHmyoRKj0DtORzCgo/m3++m+vmgjbBLXTRWkuf7wtA3ynA8bzDDWhMm9y+5VxyZAfQLA732
- 8roctUPLzFZw==
-X-IronPort-AV: E=Sophos;i="5.72,355,1580803200"; 
-   d="scan'208";a="243790804"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 08:14:03 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 4C0FF205C7; Tue,  7 Apr 2020 18:14:01 +0300 (EEST)
-Date:   Tue, 7 Apr 2020 18:14:01 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
- dt-property
-Message-ID: <20200407151401.GA5206@paasikivi.fi.intel.com>
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200406165108.GA7646@kekkonen.localdomain>
- <20200406173234.GD16885@pendragon.ideasonboard.com>
- <20200407062241.GA8883@kekkonen.localdomain>
- <20200407122106.GD4751@pendragon.ideasonboard.com>
+        Tue, 7 Apr 2020 11:14:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24790 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728943AbgDGPOt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:14:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586272487;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I3HE0reSfCDr1VSx9qdVWqxSYEu9yuUyo1SXBoLYuvY=;
+        b=cyK5E7DvWAKX+Ot+X1qcbcW7nARVzrcyxMw3Qb/D8Gyxx9C6Z/Zn25fMHQfuQAlT8F/ZTf
+        v7DRe0HB3u2kXZFyp6ULpPjksXvRqLqY5ssISzPxLSD7W7lREg59oQWkPrbP2w1wtIB88b
+        C69HPklTrTIeErnyCXoleBvn56mrdcY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-409-aQ0w5x38MQqrakDLAtHK7g-1; Tue, 07 Apr 2020 11:14:45 -0400
+X-MC-Unique: aQ0w5x38MQqrakDLAtHK7g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97653107ACCA;
+        Tue,  7 Apr 2020 15:14:43 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFDFA114819;
+        Tue,  7 Apr 2020 15:14:36 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 09:14:36 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: Re: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Message-ID: <20200407091436.76e980f8@w520.home>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D80E1AD@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
+        <20200402115017.0a0f55e2@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D807BB9@SHSMSX104.ccr.corp.intel.com>
+        <20200403091424.39383958@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E1AD@SHSMSX104.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407122106.GD4751@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+On Tue, 7 Apr 2020 04:42:02 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-On Tue, Apr 07, 2020 at 03:21:06PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
-> 
-> On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
-> > On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
-> > > On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
-> > > > On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
-> > > > > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
-> > > > > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
-> > > > > 24MHz. So instead making clock-frequency as dt-property just let the
-> > > > > driver enforce the required clock frequency.
-> > > > 
-> > > > Even if some current systems where the driver is used are using 24 MHz
-> > > > clock, that doesn't mean there wouldn't be systems using another frequency
-> > > > that the driver does not support right now.
-> > > > 
-> > > > The driver really should not set the frequency unless it gets it from DT,
-> > > > but I think the preferred means is to use assigned-clock-rates instead, and
-> > > > not to involve the driver with setting the frequency.
-> > > > 
-> > > > Otherwise we'll make it impossible to support other frequencies, at least
-> > > > without more or less random defaults.
-> > > 
-> > > We're running in circles here.
-> > > 
-> > > As the driver only supports 24MHz at the moment, the frequency should be
-> > > set by the driver, as it's a driver limitation. We can then work on
-> > > supporting additional frequencies, which will require DT to provide a
-> > > list of supported frequencies for the system, but that can be done on
-> > > top.
+> > From: Alex Williamson
+> > Sent: Friday, April 3, 2020 11:14 PM
 > > 
-> > I guess it would be possible to use different external clock frequencies on
-> > a sensor in a given system but that seems to be a bit far fetched, to the
-> > extent I've never seen anyone doing that in practice.
+> > On Fri, 3 Apr 2020 05:58:55 +0000
+> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> >   
+> > > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > > Sent: Friday, April 3, 2020 1:50 AM
+> > > >
+> > > > On Sun, 22 Mar 2020 05:31:58 -0700
+> > > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> > > >  
+> > > > > From: Liu Yi L <yi.l.liu@intel.com>
+> > > > >
+> > > > > For a long time, devices have only one DMA address space from  
+> > platform  
+> > > > > IOMMU's point of view. This is true for both bare metal and directed-
+> > > > > access in virtualization environment. Reason is the source ID of DMA in
+> > > > > PCIe are BDF (bus/dev/fnc ID), which results in only device granularity
+> > > > > DMA isolation. However, this is changing with the latest advancement in
+> > > > > I/O technology area. More and more platform vendors are utilizing the  
+> > > > PCIe  
+> > > > > PASID TLP prefix in DMA requests, thus to give devices with multiple  
+> > DMA  
+> > > > > address spaces as identified by their individual PASIDs. For example,
+> > > > > Shared Virtual Addressing (SVA, a.k.a Shared Virtual Memory) is able to
+> > > > > let device access multiple process virtual address space by binding the
+> > > > > virtual address space with a PASID. Wherein the PASID is allocated in
+> > > > > software and programmed to device per device specific manner.  
+> > Devices  
+> > > > > which support PASID capability are called PASID-capable devices. If such
+> > > > > devices are passed through to VMs, guest software are also able to bind
+> > > > > guest process virtual address space on such devices. Therefore, the  
+> > guest  
+> > > > > software could reuse the bare metal software programming model,  
+> > which  
+> > > > > means guest software will also allocate PASID and program it to device
+> > > > > directly. This is a dangerous situation since it has potential PASID
+> > > > > conflicts and unauthorized address space access. It would be safer to
+> > > > > let host intercept in the guest software's PASID allocation. Thus PASID
+> > > > > are managed system-wide.  
+> > > >
+> > > > Providing an allocation interface only allows for collaborative usage
+> > > > of PASIDs though.  Do we have any ability to enforce PASID usage or can
+> > > > a user spoof other PASIDs on the same BDF?  
+> > >
+> > > An user can access only PASIDs allocated to itself, i.e. the specific IOASID
+> > > set tied to its mm_struct.  
 > > 
-> > Originally, the driver set the frequency based on the clock-frequency
-> > property. If we're removing that but use a fixed frequency instead, then
-> > how is that going to work going forward when someone adds support for other
-> > frequencies in the driver and has a system requiring that, while there are
-> > some other platforms relying on the driver setting a particular frequency?
+> > A user is only _supposed_ to access PASIDs allocated to itself.  AIUI
+> > the mm_struct is used for managing the pool of IOASIDs from which the
+> > user may allocate that PASID.  We also state that programming the PASID
+> > into the device is device specific.  Therefore, are we simply trusting
+> > the user to use a PASID that's been allocated to them when they program
+> > the device?  If a user can program an arbitrary PASID into the device,
+> > then what prevents them from attempting to access data from another
+> > user via the device?   I think I've asked this question before, so if
+> > there's a previous explanation or spec section I need to review, please
+> > point me to it.  Thanks,
+> >   
 > 
-> The standard property for this is link-frequencies, not clock-frequency.
-> Deprecating clock-frequency now paves the way to use the standard
-> property later when/if someone implements support for additional
-> frequencies.
-
-The external clock frequency and link frequency are different indeed, but
-they are related. The link frequency has been selected in a way that it is
-possible to generate that exact frequency using the chosen external clock
-frequency. If you change the external clock frequency, chances are good
-there is no PLL configuration to generate that link frequency.
-
+> There are two scenarios:
 > 
-> > Although, if you're saying that this driver only needs to work with DT that
-> > comes with the kernel and you don't care about DT binary compatibility,
-> > this would be fine.
+> (1) for PF/VF, the iommu driver maintains an individual PASID table per
+> PDF. Although the PASID namespace is global, the per-BDF PASID table
+> contains only valid entries for those PASIDs which are allocated to the
+> mm_struct. The user is free to program arbitrary PASID into the assigned
+> device, but using invalid PASIDs simply hit iommu fault.
 > 
-> I believe this series to not break backward compatibility, as the driver
-> only works with a 24MHz clock, so I expect all DTs to specify that.
+> (2) for mdev, multiple mdev instances share the same PASID table of
+> the parent BDF. However, PASID programming is a privileged operation
+> in multiplexing usage, thus must be mediated by mdev device driver. 
+> The mediation logic will guarantee that only allocated PASIDs are 
+> forwarded to the device. 
 
-What you're still doing here is defining the DT bindings based on the
-current driver implementation, not the device properties.
+Thanks, I was confused about multiple tenants sharing a BDF when PASID
+programming to the device is device specific, and therefore not
+something we can virtualize.  However, the solution is device specific
+virtualization via mdev.  Thus, any time we're sharing a BDF between
+tenants, we must virtualize the PASID programming and therefore it must
+be an mdev device currently.  If a tenant is the exclusive user of the
+BDF, then no virtualization of the PASID programming is required.  I
+think it's clear now (again).  Thanks,
 
--- 
-Regards,
+Alex
 
-Sakari Ailus
