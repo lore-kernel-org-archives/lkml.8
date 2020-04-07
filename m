@@ -8,72 +8,71 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 639A8C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B953C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3944D206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5220620644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8ntfIrz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ro5qVrJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgDGKgw (ORCPT
+        id S1728395AbgDGKgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:36:52 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44447 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728213AbgDGKgt (ORCPT
+        Tue, 7 Apr 2020 06:36:50 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36382 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728209AbgDGKgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:36:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c15so3235458wro.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 03:36:48 -0700 (PDT)
+        Tue, 7 Apr 2020 06:36:48 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d202so1283229wmd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 03:36:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ol+vaCJYJOmb17xQ0UGT+1HdKXAsk3yj2s/uWUmOiBs=;
-        b=P8ntfIrzx7XCkvwrKYcQ2SFWvNNUMcR0yVny70SYCfEYYkh3uIZICwOYbT0IZAtmDS
-         vIXxJgPS08LBuoNOlTx9ZxzVQgvZ9sRVHYzqHNzQkWYnq8U1dR4xsnnk92Ihdv/mC7b1
-         FokX4LcFfBbWxXIeV+fRm72GjZh+Y5YUhA8etckXplszoVEL6XLGexmEUaAhTCMXs8uh
-         CkjznhoyaNlQPjoz5EHjjiteARj5o0yzvigTPX5roMYiFjLY9yXlJpwWjg0szsYTbJo6
-         /cjNieLchRC5jJumDkT86Str8t8J/ax2AS5ZcWRaMHWOuSh03KPS3tKNElNSK7YDBgMZ
-         zrGg==
+        bh=Hso2J7opfoi1MkF9CkeZd0bKFD2GyxBW+ac7H4bJoMg=;
+        b=Ro5qVrJkPFnjtYrlSuf/QfRk79xkL8m7WYpCs6ceAQ2l70aA6hP07c2uAKy4X2gwJd
+         67IwMKItcK23hnZF1SlVGJMyuqUGI20px9JNeguaMI/ym//WD+OIDbOcgGWrnAlWSchz
+         j3UuVvrnrwhWWuhSCVXS0alb3wnnh4dG0J30BeyiQlc4n5mTn6aVW/o4uIkkmw7Xk4rY
+         /swqWwxFOg8VqPr7bec+BbDjSto4j31edxuySuag9F830z7hqnd1CkJlepdomyU/1S87
+         mTEUALmihunfuZB/HvhCA+33bPBuz8ZQXRU3LxaLYFp7QMZTfh/bt1NHmljZTco0zota
+         3jiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ol+vaCJYJOmb17xQ0UGT+1HdKXAsk3yj2s/uWUmOiBs=;
-        b=cFO2o/GH+JGn/WoD9X9SYZlf1adNgGLaMzxaJettbKg1jwUKTif8VdU4s8i9mZh9tx
-         cGibEj4eoWjlb+yVwJ7UXo1FdcepD5UwhCywjGciBzWOh2dCI1nmfm5NTNXaeIL8nQ3u
-         lvh9R+fTjsF6pveEXUz62NsCLpz/hcWyxJWULKBG6yfghzsCgM88zrTYbPsjdj90WU6u
-         sBJuckQP4whHh1VwuyfxqTEUYKIq1t8kBQeCABRBTI28/TjRXfpJEvXL7MCOOtaIVK5P
-         gx1kMtUn0AruKtvKsD9YfVm5vHCEu3NQfVv0is++mIPPbCt/sr5VVWnifmAj8xdHuh49
-         qkzQ==
-X-Gm-Message-State: AGi0PuZvbQ/NUR4ibl0evHXroKmB/wrfe8gnfTKbXfk4vITzavZFOF5w
-        RW4KuR14n7Yu7jkqKRdxdnw=
-X-Google-Smtp-Source: APiQypIeZi8S0XuxSx9RZsD0A1xI/nmNPgHIHvzHTmy2n2WZAOlRPEd69ICfvzXVEFNtF/MOb76x5A==
-X-Received: by 2002:a5d:4d12:: with SMTP id z18mr2100522wrt.67.1586255807938;
+        bh=Hso2J7opfoi1MkF9CkeZd0bKFD2GyxBW+ac7H4bJoMg=;
+        b=jFV4DsUCmcZnWyIDyznfI9MAS4rvYFs50vJKQdIfChOUU3nMI9VNTmf4At/Q8Bm3zw
+         WbaUrQwyZczxkN2w7/esUY/adyKi7KOs/6VyDxLumJ6n7V0dj4OmoSkuTPp4E/dM9qk+
+         EZSIkKxPoyUUD5Zkx3VwumOwfPEInemQF8V4vokrONgHAK9LJPAxHReVw6L0tJ0R/y9M
+         avc/LnBGglMW5cpklE3WNXKsbfl+XKfkX8QXnn5VDoqkYwF7ah7pp/9obSbKqSx2kY77
+         bl2Fq8e/cjohXaRtjS1HPa3QKUXUABYVg90VBdSTqHOdFr4PRkD9ZRIPGh3VQYdfXfBC
+         OVEg==
+X-Gm-Message-State: AGi0Pua6S1U467BSnlC/Au0nH++YzY6J01dFWMXOFiWChUJh98NdCMWD
+        drmNKdp+FUjzQFaDmn4MQxg=
+X-Google-Smtp-Source: APiQypLrTiTAAK5rH+3jpeNejuPDIwUbyTsA42840oxs2Nv7LjBiUmVXh9o1TGwDcxXRzjEWIuvMVQ==
+X-Received: by 2002:a1c:b684:: with SMTP id g126mr1637639wmf.163.1586255807131;
         Tue, 07 Apr 2020 03:36:47 -0700 (PDT)
 Received: from linuxdev2.toradex.int (31-10-206-124.static.upc.ch. [31.10.206.124])
-        by smtp.gmail.com with ESMTPSA id c17sm25016722wrp.28.2020.04.07.03.36.47
+        by smtp.gmail.com with ESMTPSA id c17sm25016722wrp.28.2020.04.07.03.36.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 03:36:47 -0700 (PDT)
+        Tue, 07 Apr 2020 03:36:46 -0700 (PDT)
 From:   Max Krummenacher <max.oss.09@gmail.com>
 X-Google-Original-From: Max Krummenacher <max.krummenacher@toradex.com>
 To:     Max Krummenacher <max.krummenacher@toradex.com>
 Cc:     linux-arm-kernel@lists.infradead.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
+        Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org,
         Valentin Schneider <valentin.schneider@arm.com>,
         Anson Huang <Anson.Huang@nxp.com>,
         Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Olof Johansson <olof@lixom.net>, Li Yang <leoyang.li@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH 3/4] arm64: defconfig: ARCH_R8A7795: follow changed config symbol name
-Date:   Tue,  7 Apr 2020 12:35:36 +0200
-Message-Id: <20200407103537.4138-4-max.krummenacher@toradex.com>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 2/4] arm64: defconfig: PCIE_TEGRA194: follow changed config symbol name
+Date:   Tue,  7 Apr 2020 12:35:35 +0200
+Message-Id: <20200407103537.4138-3-max.krummenacher@toradex.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407103537.4138-1-max.krummenacher@toradex.com>
 References: <20200407103537.4138-1-max.krummenacher@toradex.com>
@@ -84,34 +83,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Completes commit b925adfceb52 ("soc: renesas: Add ARCH_R8A7795[01] for
-existing R-Car H3") and commit 361c5dbb446e ("arm64: dts: renesas:
-Remove use of ARCH_R8A7795").
+When adding PCIE EP functionality the config symbol name logic for
+PCIE RC was also changed.
 
-CONFIG_ARCH_R8A7795 was split in CONFIG_ARCH_R8A77950 and
-CONFIG_ARCH_R8A77951.
+Fixes commit c57247f940e8e ("PCI: tegra: Add support for PCIe endpoint
+mode in Tegra194")
 
 Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
 ---
 
- arch/arm64/configs/defconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/configs/defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 7e2690b449328..d43bd18bedf1e 100644
+index ae908c3f43c76..7e2690b449328 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -848,7 +848,8 @@ CONFIG_QCOM_APR=m
- CONFIG_ARCH_R8A774A1=y
- CONFIG_ARCH_R8A774B1=y
- CONFIG_ARCH_R8A774C0=y
--CONFIG_ARCH_R8A7795=y
-+CONFIG_ARCH_R8A77950=y
-+CONFIG_ARCH_R8A77951=y
- CONFIG_ARCH_R8A77960=y
- CONFIG_ARCH_R8A77961=y
- CONFIG_ARCH_R8A77965=y
+@@ -208,7 +208,7 @@ CONFIG_PCIE_QCOM=y
+ CONFIG_PCIE_ARMADA_8K=y
+ CONFIG_PCIE_KIRIN=y
+ CONFIG_PCIE_HISI_STB=y
+-CONFIG_PCIE_TEGRA194=m
++CONFIG_PCIE_TEGRA194_HOST=m
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_FW_LOADER_USER_HELPER=y
 -- 
 2.20.1
 
