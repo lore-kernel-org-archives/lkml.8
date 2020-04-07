@@ -2,120 +2,74 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE311C2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2893C2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D77820730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:15:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y1pqSFEk"
+	by mail.kernel.org (Postfix) with ESMTP id B58DC206F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgDGGPa (ORCPT
+        id S1726877AbgDGGQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:15:30 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40217 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726841AbgDGGPa (ORCPT
+        Tue, 7 Apr 2020 02:16:59 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47997 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgDGGQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:15:30 -0400
-Received: by mail-pj1-f66.google.com with SMTP id kx8so302025pjb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 23:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=fEIqeEmnHR4VL1Tnz06wxL1tDtYZh8O0YFMdittrvdc=;
-        b=y1pqSFEkmWsND2TA4O92usByCfgNi9LYD8b5RYzM2l4cL2WXaBRJQV/2+uhmDB8Aq6
-         yuEq/8npHPWpl5vGpknMxFP862x9r6JTehMqgpLw5iRpwi65aiU58j4a9pDG/WvhYPb7
-         bvcPFkeav++vUe9tGu9OJ0bHDyPwUYcxoZPi5rHq1V9nHvwVSl3SBaZe9w4oOj0qw9Jo
-         tZbK/kjQowFso4aSfNCfqNLRgmsAemcEiWrLNgCnNZCW6KCpj2M3Z6OEALkwO/9xEBLH
-         z/DMxC4Jej3xO6BMLJ7LzhKkdU2kR5z0UKbdX4PVFGkMWLdv61JFAiduFGrMwkNXEu7U
-         bazA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=fEIqeEmnHR4VL1Tnz06wxL1tDtYZh8O0YFMdittrvdc=;
-        b=LCXDA7XWzCRHtDrBlYtT02g7Kqc2T1bbgUPs2WFCh5KrH/+KOEv02nb/Klx9cdar/h
-         pvn6QN8Ecf9xIh8FLGSsVKhEK2rZ5tpx6yqMitRr49/s3KzUAIyhkgOGx8n2oxcWB53p
-         arCMbfAgs89ierKKp1bztIsGRdKV3EiW5tI0RulviAeMvN8neLj+iqLxHr9WRSaE0tKo
-         XDdudSeogJqeXvFNbkpMXHidaedZki/sXQq0rX5hc8iT2WbAVZtjDZUMeAjvENs5x3JU
-         Wd2m2Vm2gknbhTe5Co197+SZG2MmgJfUf7wjyyPIGr4PynnK+95+USSOR3i6Ag29upfF
-         hsPw==
-X-Gm-Message-State: AGi0PuZ9oGKdrLiL5IRBeiVgFByqWo1aMP2QRolTeBZIXwl0WDfMGUL5
-        VOuw+e7LFit/omEFuAM8OvMXHg==
-X-Google-Smtp-Source: APiQypIku5Lm6YYYlW1dpEix4cJ2o/v/7l1PWYoX6qIkRNJjo8wpaP+/Kt4RgOl+bpzsQHMzs6HUVA==
-X-Received: by 2002:a17:902:7c93:: with SMTP id y19mr961074pll.155.1586240128918;
-        Mon, 06 Apr 2020 23:15:28 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id na18sm688432pjb.31.2020.04.06.23.15.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 23:15:28 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 23:15:33 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: Re: [PATCH] soc: qcom: smp2p: Delete an error message in
- qcom_smp2p_probe()
-Message-ID: <20200407061533.GA576963@builder.lan>
-References: <eb92fcfb-6181-1f9d-2601-61e5231bd892@web.de>
+        Tue, 7 Apr 2020 02:16:59 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jLhXT-0007JL-Hs; Tue, 07 Apr 2020 08:16:47 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jLhXS-0008D1-Jd; Tue, 07 Apr 2020 08:16:46 +0200
+Date:   Tue, 7 Apr 2020 08:16:46 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [RFC PATCH v2 2/6] dt-bindings: pwm: document the PWM no-flag
+Message-ID: <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
+References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
+ <20200405192246.3741784-3-oleksandr.suvorov@toradex.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <eb92fcfb-6181-1f9d-2601-61e5231bd892@web.de>
+In-Reply-To: <20200405192246.3741784-3-oleksandr.suvorov@toradex.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 05 Apr 09:12 PDT 2020, Markus Elfring wrote:
+On Sun, Apr 05, 2020 at 10:22:42PM +0300, Oleksandr Suvorov wrote:
+> Add the description of PWM_NOFLAGS flag property.
+> 
+> Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
 
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sun, 5 Apr 2020 18:08:13 +0200
-> 
-> The function “platform_get_irq” can log an error already.
-> Thus omit a redundant message for the exception handling in the
-> calling function.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+As I already wrote in reply to the v1 series I'd prefer a name for 0
+that explicitly handles normal polarity.
 
-Thanks Markus, picked up for 5.8.
+Best regards
+Uwe
 
-Regards,
-Bjorn
-
-> ---
->  drivers/soc/qcom/smp2p.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-> index c7300d54e444..07183d731d74 100644
-> --- a/drivers/soc/qcom/smp2p.c
-> +++ b/drivers/soc/qcom/smp2p.c
-> @@ -474,10 +474,8 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
->  		goto report_read_failure;
-> 
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq < 0) {
-> -		dev_err(&pdev->dev, "unable to acquire smp2p interrupt\n");
-> +	if (irq < 0)
->  		return irq;
-> -	}
-> 
->  	smp2p->mbox_client.dev = &pdev->dev;
->  	smp2p->mbox_client.knows_txdone = true;
-> --
-> 2.26.0
-> 
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
