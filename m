@@ -2,117 +2,149 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA00C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC66C2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807742074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984B820678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgDGHT0 (ORCPT
+        id S1727717AbgDGHUk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 03:19:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42331 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbgDGHT0 (ORCPT
+        Tue, 7 Apr 2020 03:20:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36738 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbgDGHUk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 03:19:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z5so2053982oth.9;
-        Tue, 07 Apr 2020 00:19:26 -0700 (PDT)
+        Tue, 7 Apr 2020 03:20:40 -0400
+Received: from mail-pf1-f200.google.com ([209.85.210.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jLiXF-0001cm-V9
+        for linux-kernel@vger.kernel.org; Tue, 07 Apr 2020 07:20:38 +0000
+Received: by mail-pf1-f200.google.com with SMTP id s8so1744487pfd.23
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 00:20:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g+XZ6eWRxT51LkvH11c8+ThbAOFhSXYL8LBe1VIqCNE=;
-        b=DhwSCDl+7ACBPTLQdSB7RuMtuSpajTTFaV1s5fRlZGFa0BWnHe+V0taChTaUWC6W7A
-         kWwkl/gKNU7J5BatO4vIwrH1XMrbVISS6GtlUUWf40d4pMgvYIAn8387j7D+snj+MSfh
-         IUkh9ZjYemkKOd+bl3Xv6mGq1dY8P57c8aBJl2h95X19isxqf/E3y7/R/BrIW4ykbDFh
-         08EwCikjSIOXeTt5BxVOWZpAfRFdVNZCA4ROU60Da0jkTR9KuTnutfF4R2MHnJ25vEDo
-         aiXGi6CqoyHAskMtCWAvqQZ4tLfNgP/B1QXE2O9jQb+M2DQ8P35UxbPL9dJ+kUfN868s
-         rc1Q==
-X-Gm-Message-State: AGi0PuZ9wdcGdXn6NGmysV17i9bxElryOPtHOhgEmqWdo2623TrVwuUG
-        BFgOo0nQMlGye+NnRqxudQ/a/pjvUHdoLR2Yq2Q=
-X-Google-Smtp-Source: APiQypLUdsK7yU153RxjOxhNIxV/Xw9ACw8OtsLh0XZapYyedux3wnO9XAP0vLKBN6rHQlllM5GrmxNfKkWy8xkAWUo=
-X-Received: by 2002:a9d:7590:: with SMTP id s16mr479079otk.250.1586243965762;
- Tue, 07 Apr 2020 00:19:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586191361-16598-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1586191361-16598-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Apr 2020 09:19:14 +0200
-Message-ID: <CAMuHMdX4sGzVWPFYLBiySastZSR2afqMHxmaEh-WhRMAcXFeMQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] media: i2c: ov5645: Turn probe error into warning
- for xvclk frequency mismatch
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=D9wpwa0NndfexX1TCjkujJJlqtFXso1cUg7215eV4lg=;
+        b=pu7C8gbkyDtTt9AHAyZQIICccT+CZQF8N8xJoUnTIgGGx7jvEM/ohiCNPNuNsNG1Qg
+         kp5cz1HxsfB3Ax2PqvQD/rZXBmq17/T0pPou+P6ap8jI8d7GBfDaLRIDc7iNLeGBAGgS
+         6h5WzPBBOd7zyb/JkLs+KI2RYmvW+sVEPIIzkJmCDlBke7iOkYNrrBYgMFki9Z37owSx
+         iURhQuvhCFjYBemZ9FesnxoTkLG2apizaNeiqJm2eGRjuJ9sTrnZ2RyxjRf2zBriarzn
+         wL4cI/zYO3POEoCEferAgMRC6cjpaMEb8HpxJfsS2pFKoRNWt/Us4oyIzjiO/CAX+xv2
+         SEYA==
+X-Gm-Message-State: AGi0PuZEWPHbWqGuxKHSBNl6KxDFw1w2DSzpzyYWMovw6MShsbuSa4H+
+        k5W+53TlxcLJKhdvUjMNMXp22c9n9jIP3zDlUUVpQ8l4CBYw5EuPCoBzNA+L9a4FqabKIzMo+gh
+        MqkA4LYJ1t/h8Nh16MVX2IwMyhw2SxFrEdpmcMOzkqA==
+X-Received: by 2002:a63:8442:: with SMTP id k63mr728454pgd.11.1586244036554;
+        Tue, 07 Apr 2020 00:20:36 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIvttWs2PpNx5F/azwXTq270G+WVg1/eAhpUeAmVFhMz6KQT9Cf1f83uAYabfusCXHjXis5cA==
+X-Received: by 2002:a63:8442:: with SMTP id k63mr728433pgd.11.1586244036201;
+        Tue, 07 Apr 2020 00:20:36 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id w138sm13528050pff.145.2020.04.07.00.20.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 Apr 2020 00:20:35 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH] rtw88: Add delay on polling h2c command status bit
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <87k12syanf.fsf@kamboji.qca.qualcomm.com>
+Date:   Tue, 7 Apr 2020 15:20:33 +0800
+Cc:     Tony Chuang <yhchuang@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:REALTEK WIRELESS DRIVER (rtw88)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <E3E792CF-AC1A-466E-A1B2-F1CFAE9BC673@canonical.com>
+References: <20200406093623.3980-1-kai.heng.feng@canonical.com>
+ <87v9mczu4h.fsf@kamboji.qca.qualcomm.com>
+ <94EAAF7E-66C5-40E2-B6A9-0787CB13A3A9@canonical.com>
+ <87zhboycfr.fsf@kamboji.qca.qualcomm.com>
+ <83B3A3D8-833A-42BE-9EB0-59C95B349B01@canonical.com>
+ <87k12syanf.fsf@kamboji.qca.qualcomm.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
 
-On Mon, Apr 6, 2020 at 6:43 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> PLL's on platforms might not be so accurate enough to generate the
-> required clock frequency, so instead of erroring out on xvlck frequency
 
-xvclk? (but see below)
+> On Apr 6, 2020, at 22:03, Kalle Valo <kvalo@codeaurora.org> wrote:
+> 
+> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+> 
+>>> On Apr 6, 2020, at 21:24, Kalle Valo <kvalo@codeaurora.org> wrote:
+>>> 
+>>> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+>>> 
+>>>>> On Apr 6, 2020, at 20:17, Kalle Valo <kvalo@codeaurora.org> wrote:
+>>>>> 
+>>>>> Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
+>>>>> 
+>>>>>> --- a/drivers/net/wireless/realtek/rtw88/hci.h
+>>>>>> +++ b/drivers/net/wireless/realtek/rtw88/hci.h
+>>>>>> @@ -253,6 +253,10 @@ rtw_write8_mask(struct rtw_dev *rtwdev, u32
+>>>>>> addr, u32 mask, u8 data)
+>>>>>> 	rtw_write8(rtwdev, addr, set);
+>>>>>> }
+>>>>>> 
+>>>>>> +#define rr8(addr)      rtw_read8(rtwdev, addr)
+>>>>>> +#define rr16(addr)     rtw_read16(rtwdev, addr)
+>>>>>> +#define rr32(addr)     rtw_read32(rtwdev, addr)
+>>>>> 
+>>>>> For me these macros reduce code readability, not improve anything. They
+>>>>> hide the use of rtwdev variable, which is evil, and a name like rr8() is
+>>>>> just way too vague. Please keep the original function names as is.
+>>>> 
+>>>> The inspiration is from another driver.
+>>>> readx_poll_timeout macro only takes one argument for the op.
+>>>> Some other drivers have their own poll_timeout implementation,
+>>>> and I guess it makes sense to make one specific for rtw88.
+>>> 
+>>> I'm not even understanding the problem you are tying to fix with these
+>>> macros. The upstream philosopyhy is to have the source code readable and
+>>> maintainable, not to use minimal number of characters. There's a reason
+>>> why we don't name our functions a(), b(), c() and so on.
+>> 
+>> The current h2c polling doesn't have delay between each interval, so
+>> the polling is too fast and the following logic considers it's a
+>> timeout.
+>> The readx_poll_timeout() macro provides a generic mechanism to setup
+>> an interval delay and timeout which is what we need here.
+>> However readx_poll_timeout only accepts one parameter which usually is
+>> memory address, while we need to pass both rtwdev and address.
+>> 
+>> So if hiding rtwdev is evil, we can roll our own variant of
+>> readx_poll_timeout() to make the polling readable.
+> 
+> Can't you do:
+> 
+> ret = read_poll_timeout(rtw_read8, box_state,
+>                        !((box_state >> box) & 0x1), 100,
+>                        3000, false, rtw_dev, REG_HMETFR);
+> 
+> No ugly macros needed and it should function the same. But I did not
+> test this in any way, so no idea if it even compiles.
 
-> mismatch just warn the user and continue ahead in probe.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Yes that will do. Didn't notice the recently added macro.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Will send v2.
 
-Like for 2/5, what about the xvclk naming?
+Kai-Heng
 
-> --- a/drivers/media/i2c/ov5645.c
-> +++ b/drivers/media/i2c/ov5645.c
-> @@ -1103,11 +1103,8 @@ static int ov5645_probe(struct i2c_client *client)
->         }
->         /* external clock must be 24MHz, allow 1% tolerance */
->         xclk_freq = clk_get_rate(ov5645->xclk);
-> -       if (xclk_freq < 23760000 || xclk_freq > 24240000) {
-> -               dev_err(dev, "external clock frequency %u is not supported\n",
-> -                       xclk_freq);
-> -               return -EINVAL;
-> -       }
-> +       if (xclk_freq < 23760000 || xclk_freq > 24240000)
-> +               dev_warn(dev, "xvclk mismatched, modes are based on 24MHz\n");
+> 
+> -- 
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-Calling it "xvclk" here will confuse the user, as the clock is named
-"xclk" in DT?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
