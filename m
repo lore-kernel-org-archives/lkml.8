@@ -2,264 +2,148 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4D9C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EF4C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1909212CC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586274700;
-	bh=c0jLdhc6GrQbXSJF0eeBS4QF20hY2d4eCb8BGZSYd/M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=KiIK8flKPZGClb/GeC9cFhWV5JAZtXtGcPQCmI4W/5Id7Z5gXeu3ERwoAmoZmePvF
-	 jz1SA/qRLKnl7si5PLbpVFhOrvFvVHdDTU954fCzD5rc/zrDKevO/nVvu0GtiscZLC
-	 OZmlKigeO7TM03YNt2GkQcOzRkRmQKMbcnhjd4vg=
+	by mail.kernel.org (Postfix) with ESMTP id DB0752076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:52:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="l4GJooe1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgDGPvj convert rfc822-to-8bit (ORCPT
+        id S1727356AbgDGPw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:51:39 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52570 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726637AbgDGPvj (ORCPT
+        Tue, 7 Apr 2020 11:52:57 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.216]:34221 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgDGPw5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:51:39 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-YJR14UtLOt-0-mg4vgE9sw-1; Tue, 07 Apr 2020 11:51:33 -0400
-X-MC-Unique: YJR14UtLOt-0-mg4vgE9sw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 029D218AB2C2;
-        Tue,  7 Apr 2020 15:51:32 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.192.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1A04272A1;
-        Tue,  7 Apr 2020 15:51:29 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        "Frank Ch. Eigler" <fche@redhat.com>
-Subject: [PATCHv3] perf build-ids: Fall back to debuginfod query if debuginfo not found
-Date:   Tue,  7 Apr 2020 17:51:28 +0200
-Message-Id: <20200407155128.3203040-1-jolsa@kernel.org>
+        Tue, 7 Apr 2020 11:52:57 -0400
+X-Greylist: delayed 726 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Apr 2020 11:52:56 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586274775;
+        s=strato-dkim-0002; d=aepfle.de;
+        h=Message-ID:Subject:To:From:Date:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=0Vm5jvdMMayd/AwXXhj00PE8ghMFHjy0GR5Lfh87NN4=;
+        b=l4GJooe1P6ckza86t8onD0IM13cp0a0RIkOJk+fPoeoOHMIfotcZzApdq9CuETfm8s
+        SuZnuEkIaxdAcV5Mrxy+Gm/oWJucLWKNOTYOWrHto6R0wrCCGKtmQd8CAHAfqVOxd6p0
+        dW9RN92pbVApcPlHyF/AYs7PAoPqJ3RwVMqlpPlDgwVhO9t8tcBVOIbN3TKYZO48XjUb
+        6riG7udOrvlSSXUZd/oa7H3GU7KTBccPKJZxU9zzx/M+yXJ7KnfHS+WJnsY9Tx3InOvK
+        FZybhoAWhFXM14j8IKQKuAyWFI+8kCQGiHv9hPvblKZC+0fXKPJIZfedW51SAIJYbYRh
+        f5Kg==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QXkBR9MXjAuzBW/OdlBZQ4AHSS32kg"
+X-RZG-CLASS-ID: mo00
+Received: from aepfle.de
+        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
+        with ESMTPSA id 204e5fw37Fenh96
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Tue, 7 Apr 2020 17:40:49 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 17:40:46 +0200
+From:   Olaf Hering <olaf@aepfle.de>
+To:     linux-kernel@vger.kernel.org, git@vger.kernel.org
+Subject: get_maintainer.pl sends bogus addresses to git send-email
+Message-ID: <20200407154046.GA15368@aepfle.de>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Frank Ch. Eigler" <fche@redhat.com>
 
-During a perf-record, use the -ldebuginfod API to query a debuginfod
-server, should the debug data not be found in the usual system
-locations.  If successful, the usual $HOME/.debug dir is populated.
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested with:
+For me sending patches via git send-email fails because email address
+conversion is failing. Something appends a ')' to x86/lkml@kernel.org.
+I suspect the double '))' in MAINTAINERS is confusing the command.
+I tried to send the trivial patch from v5.0 and v5.6 tag.
 
-  $ find .
-  .
-  ./ctags-debuginfo-5.8-26.fc31.x86_64.rpm
-  ./usr
-  ./usr/lib
-  ./usr/lib/debug
-  ./usr/lib/debug/.build-id
-  ./usr/lib/debug/.build-id/ca
-  ./usr/lib/debug/.build-id/ca/46f6ae6a0cee57d85abc1d461c49074248908d
-  ./usr/lib/debug/.build-id/ca/46f6ae6a0cee57d85abc1d461c49074248908d.debug
-  ./usr/lib/debug/usr
-  ./usr/lib/debug/usr/bin
-  ./usr/lib/debug/usr/bin/ctags-5.8-26.fc31.x86_64.debug
+Is this a failure in ./scripts/get_maintainer.pl,
+or is this something git does internally?
+I'm sure others use such command on a daily basis, so likely something on
+my end became broken at some point in the past.
 
-  $ debuginfod  -F .
-  ...
+Olaf
 
-  $ rm -rf ~/.debug/ ; mkdir ~/.debug
+linux.git $ git send-email --reroll-count 1 --confirm=3Dalways --annotate -=
+-to-cmd ./scripts/get_maintainer.pl  HEAD^
 
-  $ perf record make tags
-    BUILD:   Doing 'make -j8' parallel build
-    GEN      tags
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.107 MB perf.data (1483 samples) ]
+(mbox) Adding cc: Olaf Hering <olaf@aepfle.de> from line 'From: Olaf Hering=
+ <olaf@aepfle.de>'
+(body) Adding cc: Olaf Hering <olaf@aepfle.de> from line 'Signed-off-by: Ol=
+af Hering <olaf@aepfle.de>'
+(to-cmd) Adding to: "K. Y. Srinivasan" <kys@microsoft.com> from: './scripts=
+/get_maintainer.pl'
+(to-cmd) Adding to: Haiyang Zhang <haiyangz@microsoft.com> from: './scripts=
+/get_maintainer.pl'
+(to-cmd) Adding to: Stephen Hemminger <sthemmin@microsoft.com> from: './scr=
+ipts/get_maintainer.pl'
+(to-cmd) Adding to: Sasha Levin <sashal@kernel.org> from: './scripts/get_ma=
+intainer.pl'
+(to-cmd) Adding to: Thomas Gleixner <tglx@linutronix.de> from: './scripts/g=
+et_maintainer.pl'
+(to-cmd) Adding to: Ingo Molnar <mingo@redhat.com> from: './scripts/get_mai=
+ntainer.pl'
+(to-cmd) Adding to: Borislav Petkov <bp@alien8.de> from: './scripts/get_mai=
+ntainer.pl'
+(to-cmd) Adding to: "H. Peter Anvin" <hpa@zytor.com> from: './scripts/get_m=
+aintainer.pl'
+(to-cmd) Adding to: x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND=
+ 64-BIT)) from: './scripts/get_maintainer.pl'
+(to-cmd) Adding to: devel@linuxdriverproject.org (open list:Hyper-V CORE AN=
+D DRIVERS) from: './scripts/get_maintainer.pl'
+(to-cmd) Adding to: linux-kernel@vger.kernel.org (open list:X86 ARCHITECTUR=
+E (32-BIT AND 64-BIT)) from: './scripts/get_maintainer.pl'
 
-  $ find ~/.debug | grep ctags
-  /home/jolsa/.debug/usr/bin/ctags
-  /home/jolsa/.debug/usr/bin/ctags/ca46f6ae6a0cee57d85abc1d461c49074248908d
-  /home/jolsa/.debug/usr/bin/ctags/ca46f6ae6a0cee57d85abc1d461c49074248908d/elf
-  /home/jolsa/.debug/usr/bin/ctags/ca46f6ae6a0cee57d85abc1d461c49074248908d/probes
+=46rom: Olaf Hering <olaf@aepfle.de>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        x86@kernel.org) (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT),
+        devel@linuxdriverproject.org (open list:Hyper-V CORE AND DRIVERS),
+        linux-kernel@vger.kernel.org) (open list:X86 ARCHITECTURE (32-BIT A=
+ND 64-BIT)
+Cc: Olaf Hering <olaf@aepfle.de>
+X-Mailer: git-send-email 2.16.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-  $ rm -rf ~/.debug/ ; mkdir ~/.debug
+Send this email? ([y]es|[n]o|[q]uit|[a]ll): y
+5.1.3 Invalid character in domain: <x86@kernel.org)>
 
-  $ DEBUGINFOD_URLS=http://localhost:8002 perf record make tags
-    BUILD:   Doing 'make -j8' parallel build
-    GEN      tags
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.108 MB perf.data (1531 samples) ]
 
-  $ find ~/.debug | grep ctag
-  /home/jolsa/.debug/usr/bin/ctags
-  /home/jolsa/.debug/usr/bin/ctags/ca46f6ae6a0cee57d85abc1d461c49074248908d
-  /home/jolsa/.debug/usr/bin/ctags/ca46f6ae6a0cee57d85abc1d461c49074248908d/debug
-  /home/jolsa/.debug/usr/bin/ctags/ca46f6ae6a0cee57d85abc1d461c49074248908d/elf
-  /home/jolsa/.debug/usr/bin/ctags/ca46f6ae6a0cee57d85abc1d461c49074248908d/probes
+--qDbXVdCdHGoSgWSk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Note the 'debug' file is created in the last run.
+-----BEGIN PGP SIGNATURE-----
 
-v3:
-    added NO_LIBDEBUGINFOD variable
-    moved the libdebuginfod check to FEATURE_TESTS_EXTRA
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl6MnvkACgkQ86SN7mm1
+DoBZWw//b1Rcjobavt7s5p1SIXjRUQLivHHKjVm7BgoPN30dtaltqRpZH/ngWUpz
+et96oqNdh5ATkSmWvbg0V53H1zc6BNfovcDnQU7hfEYs4VP6jil1tiQg3nKgc63P
+TXOnmuKQjOjzz1tSA40JEdB1CerNTVjAgpdHeNndv0fsxORjUownNPrTWNI+RWov
+wLn4ZWCTIp9181fYuHsX+8qKpqPYUK7oM7BcAPBq/IlQU5g8+YAckwRCU2cCbm4y
+DzUgYyUOyOpgxNfKKb2htcUwpwz77xFBmksiRsO1vY2i4QbU18josDdvqUeJZDJ1
+dwVOOYtbDbKq2yYoJu/vPv/RVamlKy42vh4m03l6KOuh/ZxZxtcN4uGqPKFFyxzy
+2zMx9RFautx+IcBE2ZJGPKeOycs1H9FdJSnUayFMBBuykaBj6/vnPUwR/jmNPkeP
+rYn1A9ZHvbuTWyox1ed1QMrS/sVsbRTNGvWUoYVz/kH/Z3qPQWYtZ5vkRjk2AvHY
+63baYKf7qAtTkS+95FCdrTc54kjNfFBetdn8vtw2AvspD3o+LHUklF/sVrVPhgPm
+pXUoaW0q1u5yuof0xPOvNeeac0EYyPQgeoG52R9tZHBNCWf4TgJZj3hzVv6IldQk
+5CV1nn9TSzjYEtkuVwM0eZdsVuhh9EfbmoLmWY8x/NjcCcIRQaU=
+=r0nd
+-----END PGP SIGNATURE-----
 
-v2: use #ifdef HAVE_DEBUGINFOD_SUPPORT guards
-    include feature test source file
-
-Note that currently the debuginfo data are downloaded only on record path,
-we still need add this support to perf build-id/report.. and test ;-)
-
-Tested-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Frank Ch. Eigler <fche@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/build/Makefile.feature             |  3 ++-
- tools/build/feature/Makefile             |  4 ++++
- tools/build/feature/test-libdebuginfod.c |  8 ++++++++
- tools/perf/Makefile.config               |  8 ++++++++
- tools/perf/Makefile.perf                 |  2 ++
- tools/perf/util/build-id.c               | 19 +++++++++++++++++++
- 6 files changed, 43 insertions(+), 1 deletion(-)
- create mode 100644 tools/build/feature/test-libdebuginfod.c
-
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 3e0c019ef297..8005608a2b78 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -98,7 +98,8 @@ FEATURE_TESTS_EXTRA :=                  \
-          llvm                           \
-          llvm-version                   \
-          clang                          \
--         libbpf
-+         libbpf                         \
-+         libdebuginfod
- 
- FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
- 
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 621f528f7822..f8a4105bc376 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -26,6 +26,7 @@ FILES=                                          \
-          test-libelf-gelf_getnote.bin           \
-          test-libelf-getshdrstrndx.bin          \
-          test-libelf-mmap.bin                   \
-+         test-libdebuginfod.bin                 \
-          test-libnuma.bin                       \
-          test-numa_num_possible_cpus.bin        \
-          test-libperl.bin                       \
-@@ -156,6 +157,9 @@ $(OUTPUT)test-libelf-gelf_getnote.bin:
- $(OUTPUT)test-libelf-getshdrstrndx.bin:
- 	$(BUILD) -lelf
- 
-+$(OUTPUT)test-libdebuginfod.bin:
-+	$(BUILD) -ldebuginfod
-+
- $(OUTPUT)test-libnuma.bin:
- 	$(BUILD) -lnuma
- 
-diff --git a/tools/build/feature/test-libdebuginfod.c b/tools/build/feature/test-libdebuginfod.c
-new file mode 100644
-index 000000000000..da22548b8413
---- /dev/null
-+++ b/tools/build/feature/test-libdebuginfod.c
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <elfutils/debuginfod.h>
-+
-+int main(void)
-+{
-+	debuginfod_client* c = debuginfod_begin();
-+	return (long)c;
-+}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 12a8204d63c6..5ff7d72688b1 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -480,6 +480,14 @@ ifndef NO_LIBELF
-     CFLAGS += -DHAVE_ELF_GETSHDRSTRNDX_SUPPORT
-   endif
- 
-+  ifndef NO_LIBDEBUGINFOD
-+    $(call feature_check,libdebuginfod)
-+    ifeq ($(feature-libdebuginfod), 1)
-+      CFLAGS += -DHAVE_DEBUGINFOD_SUPPORT
-+      EXTLIBS += -ldebuginfod
-+    endif
-+  endif
-+
-   ifndef NO_DWARF
-     ifeq ($(origin PERF_HAVE_DWARF_REGS), undefined)
-       msg := $(warning DWARF register mappings have not been defined for architecture $(SRCARCH), DWARF support disabled);
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d15a311408f1..5ccb5c694640 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -118,6 +118,8 @@ include ../scripts/utilities.mak
- #
- # Define LIBBPF_DYNAMIC to enable libbpf dynamic linking.
- #
-+# Define NO_LIBDEBUGINFOD if you do not want support debuginfod
-+#
- 
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index c076fc7fe025..31207b6e2066 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -31,6 +31,10 @@
- #include "probe-file.h"
- #include "strlist.h"
- 
-+#ifdef HAVE_DEBUGINFOD_SUPPORT
-+#include <elfutils/debuginfod.h>
-+#endif
-+
- #include <linux/ctype.h>
- #include <linux/zalloc.h>
- 
-@@ -636,6 +640,21 @@ static char *build_id_cache__find_debug(const char *sbuild_id,
- 	if (realname && access(realname, R_OK))
- 		zfree(&realname);
- 	nsinfo__mountns_exit(&nsc);
-+
-+#ifdef HAVE_DEBUGINFOD_SUPPORT
-+        if (realname == NULL) {
-+                debuginfod_client* c = debuginfod_begin();
-+                if (c != NULL) {
-+                        int fd = debuginfod_find_debuginfo(c,
-+                                                           (const unsigned char*)sbuild_id, 0,
-+                                                           &realname);
-+                        if (fd >= 0)
-+                                close(fd); /* retaining reference by realname */
-+                        debuginfod_end(c);
-+                }
-+        }
-+#endif
-+
- out:
- 	free(debugfile);
- 	return realname;
--- 
-2.25.2
-
+--qDbXVdCdHGoSgWSk--
