@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE4DC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A44C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F3DC207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620B3207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217887;
-	bh=ewKaz7VLHOf9HNs60KfzVpxH3IxyiCDrULONC5NIVjA=;
+	s=default; t=1586217898;
+	bh=jfwCsAvjDH3ZwiE9o8OYiI+Fbo15gpdgV44F0mGIzMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ygI02rsu57azKQmdY9GCNkzkL9uFHrpDz+IneCu36naZDFdWMMZkxyvdlvugUfXQR
-	 Tent+Ysioh9g8wetGm4MxwYP48qNbKtyoOPfYCA06DrRGN828euUHB8qoOLVGvwW1v
-	 PwLIb1SQNvCICxp7b0TyHN9SxYeaBJpQf8ndd1EU=
+	b=IkqpoEmCKdxGFEctBlghFq64+4oG2G6GcUiYhiMEYqPx2njeJrrqHzmfaYyiqQl6Y
+	 zIdN+fizVMo8NV4CsM10J8Lrvn3seDwulE9THZ4jpCdu+Cf1M/VV4dKR4XYMOSaajJ
+	 KFADAbqP9M1a7sgj+Mtb655jiD1t9YpjdslQTNiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgDGAEq (ORCPT
+        id S1728191AbgDGACn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37688 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbgDGACr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:47 -0400
+        id S1728159AbgDGACk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40E2A2080C;
-        Tue,  7 Apr 2020 00:02:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B97720857;
+        Tue,  7 Apr 2020 00:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217766;
-        bh=ewKaz7VLHOf9HNs60KfzVpxH3IxyiCDrULONC5NIVjA=;
+        s=default; t=1586217760;
+        bh=jfwCsAvjDH3ZwiE9o8OYiI+Fbo15gpdgV44F0mGIzMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qqnuL6s6Zl06zmuFKD7NdifO3Mk2jGL2bN7OPqNpWqlzIqaICwtWn3aG9QRi0XLi7
-         FLpmL7kYdiUQj3u0KcTvb4TQ9cE3cW7mKjSMxGOizxsoyCwhm7LnQDIZvL4WuVajZC
-         9zvqJyuC8fCtFA8MvXtV/3MrFosH03O+43R6pnBY=
+        b=r24j7I6PwCWm5LIQQz7YINNCPckTpHCliEQkHL4gXG/Uk2PkxZyeYYJqDkSjcKcoN
+         eoLuDYjmfe3WHJXp2bUYJAAgN7Ok/BCQp4iH8XWKVSmZJFWM2VIYzOPmtRKuubHSM2
+         1sD5ugX0zvyVXFispUXkP119T/4cfaM4P8xY0XpU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Brivio <sbrivio@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/13] netfilter: nft_set_rbtree: Introduce and use nft_rbtree_interval_start()
-Date:   Mon,  6 Apr 2020 20:02:30 -0400
-Message-Id: <20200407000234.17088-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/13] rxrpc: Fix sendmsg(MSG_WAITALL) handling
+Date:   Mon,  6 Apr 2020 20:02:25 -0400
+Message-Id: <20200407000234.17088-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000234.17088-1-sashal@kernel.org>
 References: <20200407000234.17088-1-sashal@kernel.org>
@@ -61,83 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 6f7c9caf017be8ab0fe3b99509580d0793bf0833 ]
+[ Upstream commit 498b577660f08cef5d9e78e0ed6dcd4c0939e98c ]
 
-Replace negations of nft_rbtree_interval_end() with a new helper,
-nft_rbtree_interval_start(), wherever this helps to visualise the
-problem at hand, that is, for all the occurrences except for the
-comparison against given flags in __nft_rbtree_get().
+Fix the handling of sendmsg() with MSG_WAITALL for userspace to round the
+timeout for when a signal occurs up to at least two jiffies as a 1 jiffy
+timeout may end up being effectively 0 if jiffies wraps at the wrong time.
 
-This gets especially useful in the next patch.
-
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ net/rxrpc/sendmsg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index 0221510328d4f..84d317418d184 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -36,6 +36,11 @@ static bool nft_rbtree_interval_end(const struct nft_rbtree_elem *rbe)
- 	       (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END);
- }
+diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
+index 68993439e1d91..7ee72053037a3 100644
+--- a/net/rxrpc/sendmsg.c
++++ b/net/rxrpc/sendmsg.c
+@@ -75,8 +75,8 @@ static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
  
-+static bool nft_rbtree_interval_start(const struct nft_rbtree_elem *rbe)
-+{
-+	return !nft_rbtree_interval_end(rbe);
-+}
-+
- static bool nft_rbtree_equal(const struct nft_set *set, const void *this,
- 			     const struct nft_rbtree_elem *interval)
- {
-@@ -67,7 +72,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 			if (interval &&
- 			    nft_rbtree_equal(set, this, interval) &&
- 			    nft_rbtree_interval_end(rbe) &&
--			    !nft_rbtree_interval_end(interval))
-+			    nft_rbtree_interval_start(interval))
- 				continue;
- 			interval = rbe;
- 		} else if (d > 0)
-@@ -92,7 +97,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 	rtt = READ_ONCE(call->peer->rtt);
+ 	rtt2 = nsecs_to_jiffies64(rtt) * 2;
+-	if (rtt2 < 1)
+-		rtt2 = 1;
++	if (rtt2 < 2)
++		rtt2 = 2;
  
- 	if (set->flags & NFT_SET_INTERVAL && interval != NULL &&
- 	    nft_set_elem_active(&interval->ext, genmask) &&
--	    !nft_rbtree_interval_end(interval)) {
-+	    nft_rbtree_interval_start(interval)) {
- 		*ext = &interval->ext;
- 		return true;
- 	}
-@@ -221,9 +226,9 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
- 			p = &parent->rb_right;
- 		else {
- 			if (nft_rbtree_interval_end(rbe) &&
--			    !nft_rbtree_interval_end(new)) {
-+			    nft_rbtree_interval_start(new)) {
- 				p = &parent->rb_left;
--			} else if (!nft_rbtree_interval_end(rbe) &&
-+			} else if (nft_rbtree_interval_start(rbe) &&
- 				   nft_rbtree_interval_end(new)) {
- 				p = &parent->rb_right;
- 			} else if (nft_set_elem_active(&rbe->ext, genmask)) {
-@@ -314,10 +319,10 @@ static void *nft_rbtree_deactivate(const struct net *net,
- 			parent = parent->rb_right;
- 		else {
- 			if (nft_rbtree_interval_end(rbe) &&
--			    !nft_rbtree_interval_end(this)) {
-+			    nft_rbtree_interval_start(this)) {
- 				parent = parent->rb_left;
- 				continue;
--			} else if (!nft_rbtree_interval_end(rbe) &&
-+			} else if (nft_rbtree_interval_start(rbe) &&
- 				   nft_rbtree_interval_end(this)) {
- 				parent = parent->rb_right;
- 				continue;
+ 	timeout = rtt2;
+ 	tx_start = READ_ONCE(call->tx_hard_ack);
 -- 
 2.20.1
 
