@@ -2,119 +2,231 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D61C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0FFC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B812137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7773820730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586285093;
+	bh=xbTx1gF3THMrIWWDcp9XCLrKrk+zgByu8EyqY3HDGoA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IE+40QWjGUSc+LUDi/SdnP92XLaHIdloaP3tK5aY6h4a4QA6v7cY0vg9zbTv3ZDmQ
+	 uWE0IohbgguPoLppYjN0HTyrxDPP78bnGXaiho2/kKEJMzQiXJh+SMjGGGLuLsa9yw
+	 RIelYJYY3cOizTX9w3xpcbka1GWeeFkjni77cMqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgDGSoc (ORCPT
+        id S1726956AbgDGSow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:44:32 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:37213 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGSob (ORCPT
+        Tue, 7 Apr 2020 14:44:52 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:37908 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgDGSow (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:44:31 -0400
-Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N1feo-1jAi7Z0sbQ-011x3p; Tue, 07 Apr 2020 20:44:29 +0200
-Received: by mail-qt1-f180.google.com with SMTP id b10so3526301qtt.9;
-        Tue, 07 Apr 2020 11:44:28 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZ8gFi2hvXVNh/IDfrZw+5XGrGfrdFNApJQkA7YIPOLIZvwIeKD
-        katH3iln/MTyHNH65SgN7SLdxT7ey3u+5NCGTKE=
-X-Google-Smtp-Source: APiQypKgeOSDBPfhB1u6KIP702ET7PgnervxCjGhHD+k7vVuRMCphJPctLEDVz7EFynIzXKRIHAMuiP/RJU2OhJDfVo=
-X-Received: by 2002:ac8:7292:: with SMTP id v18mr3736593qto.304.1586285067943;
- Tue, 07 Apr 2020 11:44:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190205133821.1a243836@gandalf.local.home> <20190206021611.2nsqomt6a7wuaket@treble>
- <20190206121638.3d2230c1@gandalf.local.home> <CAK8P3a1hsca02=jPQmBG68RTUAt-jDR-qo=UFwf13nZ0k-nDgA@mail.gmail.com>
- <20200406221614.ac2kl3vlagiaj5jf@treble> <CAK8P3a3QntCOJUeUfNmqogO51yh29i4NQCu=NBF4H1+h_m_Pug@mail.gmail.com>
- <CAK8P3a2Bvebrvj7XGBtCwV969g0WhmGr_xFNfSRsZ7WX1J308g@mail.gmail.com> <20200407163253.mji2z465ixaotnkh@treble>
-In-Reply-To: <20200407163253.mji2z465ixaotnkh@treble>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 7 Apr 2020 20:44:11 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3piAV7BbgH-y_zqj4XmLcBQqKZ-NHPcqo4OTF=4H3UFA@mail.gmail.com>
-Message-ID: <CAK8P3a3piAV7BbgH-y_zqj4XmLcBQqKZ-NHPcqo4OTF=4H3UFA@mail.gmail.com>
-Subject: Re: libelf-0.175 breaks objtool
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Tue, 7 Apr 2020 14:44:52 -0400
+Received: from grover.flets-west.jp (softbank126125134031.bbtec.net [126.125.134.31]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 037IhjLO002999;
+        Wed, 8 Apr 2020 03:43:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 037IhjLO002999
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586285027;
+        bh=XNTE7oEt9lkQ6ho43A7OCsPjG49xbLDUJDedlD0LjAE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=N1QRtUQFtTnark34hJEwsmB1H0bQyFIcOxtblQotSnSTaFoR0HirE0kBjk2BxdqGI
+         js6hLexf7u+pZqPLGnUj3P/1citAM79Ao8bithdm4dPdjKSH8k2MaANxBlHNiHLtt2
+         xMtagkHhe/zTfhNqrhuaIdcu4Lu4QT72QdNto5sPNwMjD1ejuVHYdO++gqZJBjGY24
+         gUhJ9x6do5VPi7Y0Juvpx0I6G7hzkDhGgqPVbNS8NiAI4bbvHNRPx1hbL6gdk1olQ/
+         5WEYp6LSgGRvy6i8b67v8OsY/ccilYxXEOxXNOwQ7NC2mP/6Jnpw8SHRItoM7I+t9i
+         7ibEawmfexnSw==
+X-Nifty-SrcIP: [126.125.134.31]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     clang-built-linux@googlegroups.com,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Michal Marek <michal.lkml@markovi.net>,
         Peter Zijlstra <peterz@infradead.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:FOE0EA54SyWtQIMENFoNs85TPCpb5Kcf9NUCi9wsMX9f+URGxgJ
- xX96trz1uEbdVhSSI8AhLDGfyoF4ZY3uQ8dqPbsMlHWW2xffg7FUuAcnpiv71c4e3wJTQ3R
- pSKIGb11Mwqa41Oqt9i8E+IBB+3wkEHjH1IGbYdhVoah1hxfFkJIWwfF9F44Ck3AiWojZ3B
- MDpo0qA6ddsTJnkdnV/Kg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5y9y3SeAyk8=:HpxMxQJf8uhJtzjNh/z4Cq
- vR1PABdsX0rkiriS72bCc1WRErctmtdhwdTSk8N3g2/7LOJ4V3X0/9zNJRxH/ptXY/+0Cwjz8
- DPPdNSad4bsZ/h/hv1G5jpyaG7rt98EZgaGLNdujCX+6mTw/qXG+a9LWTxRNGm/4yaYV3BvE1
- dwWf/8AGbtgf0NhNEhxxufGKfiTdArCWKAd/Z0rXU8bP+5K9zGx0d5wmSswgj3B+FE+j67nF3
- hYsJrwipBUym46aQD9rmL0xPwlYZKRKv0oIJlmP+d7qnHlHgab+3PCXejQYmerD2L+jZweRMA
- edbyk+nmtOyzJzbEcibQNis7Bug6K16her2Vupo2LT2+J+cJKrk2C4bt3TTBYD8XbeZoNSZC/
- hqcb0r5URdwjAsdUSKno5FQCo33qckSO1ScXz99MnRCRUwqQwM47iVrUEuebrWNFGG3V+bIUk
- buTe2W/Hh12QL7cOlBdulbebyva5hVwy1BKBVDIgC9Oj3Bb2WJGnlCEv0uixVxP6K5AX60MTW
- CJIVe4tHMuzYgIClLx0PA8H6CQdHd7zYkIaVyTqGfVaKMVSjsxSHaEv1z3FiXW5G9gv9LEONt
- MVGnh+LT9Z0w/MDaFJ1+16hea8JkMtAFxAvPPhg0age7YJ46ttprq7eS9hRLneCYcDYXfMzrL
- VUe3ewpyXyXwXQzaCwrpGVKyvd8vTcETUu92Ggzq2d//Cy1gUcQR6Yj6WREPy8FMkzMqONQ7B
- GSnHAzoazGxdyfoVjHN/s43ItDOpU6wEI5blL/t+V8soiPTmhr9X+uPSfZr2k6pwscFOAhG6h
- tqj18fNK3/+gTWkAB0Pc80W/Mbre5iOytgvaG1X/T5CEeDrcq0=
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] kbuild: support LLVM=1 to switch the default tools to Clang/LLVM
+Date:   Wed,  8 Apr 2020 03:43:36 +0900
+Message-Id: <20200407184336.14612-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200407184336.14612-1-masahiroy@kernel.org>
+References: <20200407184336.14612-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 6:33 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> On Tue, Apr 07, 2020 at 05:46:23PM +0200, Arnd Bergmann wrote:
-> > On Tue, Apr 7, 2020 at 12:31 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Tue, Apr 7, 2020 at 12:16 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > >
-> > > It's also odd that I only see the problem in two specific files:
-> > > arch/x86/realmode/rm/trampoline_64.o (in half of the randconfig builds)
-> > > and fs/xfs/xfs_trace.o  (in only one configuration so far).
-> > >
-> > > With this patch I can avoid the first one, which is unconditionally
-> > > built with -g (why?):
-> > >
-> > > --- a/arch/x86/realmode/rm/Makefile
-> > > +++ b/arch/x86/realmode/rm/Makefile
-> > > @@ -69,7 +69,7 @@ $(obj)/realmode.relocs: $(obj)/realmode.elf FORCE
-> > >  # ---------------------------------------------------------------------------
-> > >
-> > >  KBUILD_CFLAGS  := $(REALMODE_CFLAGS) -D_SETUP -D_WAKEUP \
-> > > -                  -I$(srctree)/arch/x86/boot
-> > > +                  -I$(srctree)/arch/x86/boot -gz=none
-> > >  KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
-> > >  KBUILD_CFLAGS  += -fno-asynchronous-unwind-tables
-> > >  GCOV_PROFILE := n
-> > >
-> > > I'll look at the other one tomorrow.
-> >
-> > I found where -g gets added in both cases, and adding -gz=none
-> > seems to address all randconfigs with CONFIG_DEBUG_INFO=n:
-> >
-> > --- a/fs/xfs/Makefile
-> > +++ b/fs/xfs/Makefile
-> > @@ -7,7 +7,7 @@
-> >  ccflags-y += -I $(srctree)/$(src)              # needed for trace events
-> >  ccflags-y += -I $(srctree)/$(src)/libxfs
-> >
-> > -ccflags-$(CONFIG_XFS_DEBUG) += -g
-> > +ccflags-$(CONFIG_XFS_DEBUG) += -g $(call cc-option,-gz=none)
->
-> Maybe they shouldn't have -g in the first place?
+As Documentation/kbuild/llvm.rst implies, building the kernel with a
+full set of LLVM tools gets very verbose and unwieldy.
 
-That is very possible. The -g has been there since xfs was originally merged
-back in 2002, and I could not figure out why it was there (unlike the
--DSTATIC=""
-and -DDEBUG flags that are set in the same line).
+Provide a single switch LLVM=1 to use Clang and LLVM tools instead
+of GCC and Binutils. You can pass it from the command line or as an
+environment variable.
 
-On the other hand, my feeling is that setting -g should not cause problems
-with objtool, if CONFIG_DEBUG_INFO is ok.
+Please note LLVM=1 does not turn on the integrated assembler. You need
+to pass LLVM_IA=1 to use it. When the upstream kernel is ready for the
+integrated assembler, I think we can make it default.
 
-       Arnd
+We discussed what we need, and we agreed to go with a simple boolean
+flag that switches both target and host tools:
+
+  https://lkml.org/lkml/2020/3/28/494
+  https://lkml.org/lkml/2020/4/3/43
+
+Some items discussed, but not adopted:
+
+- LLVM_DIR
+
+  When multiple versions of LLVM are installed, I just thought supporting
+  LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
+
+  CC      = $(LLVM_DIR)clang
+  LD      = $(LLVM_DIR)ld.lld
+    ...
+
+  However, we can handle this by modifying PATH. So, we decided to not do
+  this.
+
+- LLVM_SUFFIX
+
+  Some distributions (e.g. Debian) package specific versions of LLVM with
+  naming conventions that use the version as a suffix.
+
+  CC      = clang$(LLVM_SUFFIX)
+  LD      = ld.lld(LLVM_SUFFIX)
+    ...
+
+  will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
+  but the suffixed versions in /usr/bin/ are symlinks to binaries in
+  /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+
+Changes in v2:
+  - Switch host compilers as well as requested
+
+ Documentation/kbuild/kbuild.rst |  5 +++++
+ Documentation/kbuild/llvm.rst   |  8 ++++++--
+ Makefile                        | 29 +++++++++++++++++++++++------
+ tools/objtool/Makefile          |  6 ++++++
+ 4 files changed, 40 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
+index 510f38d7e78a..2d1fc03d346e 100644
+--- a/Documentation/kbuild/kbuild.rst
++++ b/Documentation/kbuild/kbuild.rst
+@@ -262,3 +262,8 @@ KBUILD_BUILD_USER, KBUILD_BUILD_HOST
+ These two variables allow to override the user@host string displayed during
+ boot and in /proc/version. The default value is the output of the commands
+ whoami and host, respectively.
++
++LLVM
++----
++If this variable is set to 1, Kbuild will use Clang and LLVM utilities instead
++of GCC and GNU binutils to build the kernel.
+diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+index 2b40afa58049..81f915c02c4c 100644
+--- a/Documentation/kbuild/llvm.rst
++++ b/Documentation/kbuild/llvm.rst
+@@ -47,8 +47,12 @@ example:
+ LLVM Utilities
+ --------------
+ 
+-LLVM has substitutes for GNU binutils utilities. These can be invoked as
+-additional parameters to `make`.
++LLVM has substitutes for GNU binutils utilities. Kbuild supports `LLVM=1`
++to enable them.
++
++	make LLVM=1
++
++They can be enabled individually. The full list of the parameters:
+ 
+ 	make CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
+ 	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-size \\
+diff --git a/Makefile b/Makefile
+index f9beb696d6d3..ffc1d2c618a7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -399,8 +399,13 @@ HOST_LFS_CFLAGS := $(shell getconf LFS_CFLAGS 2>/dev/null)
+ HOST_LFS_LDFLAGS := $(shell getconf LFS_LDFLAGS 2>/dev/null)
+ HOST_LFS_LIBS := $(shell getconf LFS_LIBS 2>/dev/null)
+ 
+-HOSTCC       = gcc
+-HOSTCXX      = g++
++ifneq ($(LLVM),)
++HOSTCC	= clang
++HOSTCXX	= clang++
++else
++HOSTCC	= gcc
++HOSTCXX	= g++
++endif
+ KBUILD_HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 \
+ 		-fomit-frame-pointer -std=gnu89 $(HOST_LFS_CFLAGS) \
+ 		$(HOSTCFLAGS)
+@@ -409,16 +414,28 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
+ KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+ 
+ # Make variables (CC, etc...)
+-LD		= $(CROSS_COMPILE)ld
+-CC		= $(CROSS_COMPILE)gcc
+ CPP		= $(CC) -E
++ifneq ($(LLVM),)
++CC		= clang
++LD		= ld.lld
++AR		= llvm-ar
++NM		= llvm-nm
++OBJCOPY		= llvm-objcopy
++OBJDUMP		= llvm-objdump
++READELF		= llvm-readelf
++OBJSIZE		= llvm-size
++STRIP		= llvm-strip
++else
++CC		= $(CROSS_COMPILE)gcc
++LD		= $(CROSS_COMPILE)ld
+ AR		= $(CROSS_COMPILE)ar
+ NM		= $(CROSS_COMPILE)nm
+-STRIP		= $(CROSS_COMPILE)strip
+ OBJCOPY		= $(CROSS_COMPILE)objcopy
+ OBJDUMP		= $(CROSS_COMPILE)objdump
+-OBJSIZE		= $(CROSS_COMPILE)size
+ READELF		= $(CROSS_COMPILE)readelf
++OBJSIZE		= $(CROSS_COMPILE)size
++STRIP		= $(CROSS_COMPILE)strip
++endif
+ PAHOLE		= pahole
+ LEX		= flex
+ YACC		= bison
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index ee08aeff30a1..f591c4d1b6fe 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -3,9 +3,15 @@ include ../scripts/Makefile.include
+ include ../scripts/Makefile.arch
+ 
+ # always use the host compiler
++ifneq ($(LLVM),)
++HOSTAR	?= llvm-ar
++HOSTCC	?= clang
++HOSTLD	?= ld.lld
++else
+ HOSTAR	?= ar
+ HOSTCC	?= gcc
+ HOSTLD	?= ld
++endif
+ AR	 = $(HOSTAR)
+ CC	 = $(HOSTCC)
+ LD	 = $(HOSTLD)
+-- 
+2.17.1
+
