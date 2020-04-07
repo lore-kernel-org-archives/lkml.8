@@ -2,149 +2,245 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29FDC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A6EC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6BD206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JCYoQl/U"
+	by mail.kernel.org (Postfix) with ESMTP id BE00D20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:09:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586279379;
+	bh=VB+SQrXLH+V56cXBmJ4Ico1K0KFD430OPxgvMiGQAe4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZN+7JqVBCDYwmh3sG222yZ8ApiAIRvGGoTYBq/QtZPNLi7ktnhxy4HP0H0Hex0YIN
+	 ELOzR1XA98lKuduUw5CzuSiTf7MuR15cru7LlTLY6Esh2Jhfprnys08DOuj4gyhf0M
+	 ghAYfS9nHAn2TjrcrGo9bpiyunA+IGbPLPnkAiUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgDGRCz (ORCPT
+        id S1726520AbgDGRJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:02:55 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38743 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgDGRCz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:02:55 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 13so1368847qtt.5;
-        Tue, 07 Apr 2020 10:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lubV0uwS0PhaWFReAExDn03E2JRmyIjYgI8tq8wZYAQ=;
-        b=JCYoQl/UYv0xHlgxUuvhhP4MOXQA+ieQOLJF3zFXnBOpzmA1+M7u5cEq/4SXoVlKHA
-         vG7Vnff6kUfGNwU8ABUNHSlWWr8xinfhLsY9xN2bEhodwCk+ntG6LWZ2im/W4qpeC/Y2
-         Goqf3F/GVrC29eZKjFNZa4QH40w4+TICPssQUEdH+rah3tVRnVGLdGzQojywsg3Rg4Rp
-         BSEtqINsTmi1269DWkTqWCJh27IH2s3C9EtbSSDbfQ99Uyqcuitw8b/YgkVK78gOfPJm
-         m3bnsqVxqhU3kGpsafXZ8+ntdH/PCCyhX+QAyV1+MIAPspwP6+cjgCLryU9wGt6n3F4F
-         Y7FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lubV0uwS0PhaWFReAExDn03E2JRmyIjYgI8tq8wZYAQ=;
-        b=VAkeZcMtRfzELFxlLh1KWlw58rUBypq06cq6L9AWUd/D9BccvdG894jviWyTrkMdBl
-         zDTCpqso+T23T9t/xTblNCLtHYd7ApxndcZW5WoX9ESkgEs1almfmlIoAXdSMU6vbBnh
-         QUG5ObFxNrPyeiswCCWdlIoFRMsF8/5dIw516LOX79BXppF40+Jc5Ou1hQvZ3B/EUTQS
-         QAfgThz4/RhupoaxfB3HjGclMiLmyHZLlTNCFF051RQA599sn/1/2v6KTU2tIzxXiefQ
-         ndqdjzyjtoMOs+CW/w/2hqKTP/sy27+JjPQ8yTdupOKRIoCMENpCJxaIT1u9whqHbh+J
-         vwog==
-X-Gm-Message-State: AGi0PuZQFYqRufd3E1LpDHfx3yX8yzZs+EV65sFEIxgZ4XPp38n9HsRI
-        YOGJqQbqTmB60QcwlXNEcNuPVoN5ygV1mg==
-X-Google-Smtp-Source: APiQypIjHnuzXuojSCppJsD78fxYKavB67p37aAGYyRBiBhjYwH4oUBe/V7etaIxr/j9xhiuNfUR5w==
-X-Received: by 2002:ac8:23af:: with SMTP id q44mr3292106qtq.54.1586278973911;
-        Tue, 07 Apr 2020 10:02:53 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id r40sm18041660qtc.39.2020.04.07.10.02.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 10:02:53 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2B1C8409A3; Tue,  7 Apr 2020 14:02:51 -0300 (-03)
-Date:   Tue, 7 Apr 2020 14:02:51 -0300
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-Message-ID: <20200407170251.GE12003@kernel.org>
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <20200407143014.GD11186@kernel.org>
- <20200407143551.GF11186@kernel.org>
- <10cc74ee-8587-8cdb-f85f-5724b370a2ce@linux.intel.com>
- <20200407163654.GB12003@kernel.org>
- <85da1e42-2cf2-98ca-1e0c-2cf3469b7d30@linux.intel.com>
+        Tue, 7 Apr 2020 13:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726365AbgDGRJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 13:09:38 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B20206C0;
+        Tue,  7 Apr 2020 17:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586279377;
+        bh=VB+SQrXLH+V56cXBmJ4Ico1K0KFD430OPxgvMiGQAe4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=f/jMwoUPj5wWoPwsm+cUdnJByPmlxldq/Gyk5soTngqsdF264Px4XclWyk7+th5If
+         5i3Ht9f/sLY9kioHa+cEPrAQvCf8i7X8OeqHq1xcHkesHAB58kC4y6jLD6RdAq1AK7
+         pfJ4u/2zloFCZfeQa36NodlPje3Db3m38O+aFSkQ=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86 <x86@kernel.org>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/apic: Fix circular locking dependency between console and hrtimer locks
+Date:   Tue,  7 Apr 2020 20:09:25 +0300
+Message-Id: <20200407170925.1775019-1-leon@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <85da1e42-2cf2-98ca-1e0c-2cf3469b7d30@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 07, 2020 at 07:52:56PM +0300, Alexey Budankov escreveu:
-> 
-> On 07.04.2020 19:36, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Apr 07, 2020 at 05:54:27PM +0300, Alexey Budankov escreveu:
-> >> Could makes sense adding cap_ipc_lock to the binary to isolate from this:
+From: Leon Romanovsky <leonro@mellanox.com>
 
-> >> kernel/events/core.c: 6101
-> >> 	if ((locked > lock_limit) && perf_is_paranoid() &&
-> >> 		!capable(CAP_IPC_LOCK)) {
-> >> 		ret = -EPERM;
-> >> 		goto unlock;
-> >> 	}
+clockevents_switch_state() calls printk() from under hrtimer_bases.lock.
+That causes lock inversion on scheduler locks because printk() can call
+into the scheduler. Lockdep puts it as:
 
-> > That did the trick, I'll update the documentation and include in my
-> > "Committer testing" section:
- 
-> Looks like top mode somehow reaches perf mmap limit described here [1].
-> Using -m option solves the issue avoiding cap_ipc_lock on my 8 cores machine:
-> perf top -e cycles -m 1
+ [  728.464312] ====================================================================================================
+ [  735.312580] TSC deadline timer enabled
+ [  735.324143]
+ [  735.324146] ======================================================
+ [  735.324148] WARNING: possible circular locking dependency detected
+ [  735.324150] 5.6.0-for-upstream-dbg-2020-04-03_10-44-43-70 #1 Not tainted
+ [  735.324152] ------------------------------------------------------
+ [  735.324154] swapper/3/0 is trying to acquire lock:
+ [  735.324155] ffffffff8442c858 ((console_sem).lock){-...}-{2:2}, at: down_trylock+0x13/0x70
+ [  735.324162]
+ [  735.324164] but task is already holding lock:
+ [  735.324165] ffff88842dfb9958 (hrtimer_bases.lock){-.-.}-{2:2}, at: lock_hrtimer_base+0x71/0x120
+ [  735.324171]
+ [  735.324173] which lock already depends on the new lock.
+ [  735.324174]
+ [  735.324175]
+ [  735.324177] the existing dependency chain (in reverse order) is:
+ [  735.324179]
+ [  735.324180] -> #4 (hrtimer_bases.lock){-.-.}-{2:2}:
+ [  735.324186]        _raw_spin_lock_irqsave+0x3c/0x4b
+ [  735.324187]        lock_hrtimer_base+0x71/0x120
+ [  735.324189]        hrtimer_start_range_ns+0xc6/0xaa0
+ [  735.324191]        __enqueue_rt_entity+0xc44/0xf50
+ [  735.324192]        enqueue_rt_entity+0x79/0xc0
+ [  735.324194]        enqueue_task_rt+0x5c/0x2e0
+ [  735.324195]        activate_task+0x15a/0x2c0
+ [  735.324197]        ttwu_do_activate+0xcf/0x120
+ [  735.324199]        sched_ttwu_pending+0x160/0x230
+ [  735.324200]        scheduler_ipi+0x1c0/0x530
+ [  735.324202]        reschedule_interrupt+0xf/0x20
+ [  735.324204]        tick_nohz_idle_enter+0x16c/0x250
+ [  735.324205]        do_idle+0x90/0x530
+ [  735.324207]        cpu_startup_entry+0x19/0x20
+ [  735.324208]        start_secondary+0x2ee/0x3e0
+ [  735.324210]        secondary_startup_64+0xa4/0xb0
+ [  735.324211]
+ [  735.324212] -> #3 (&rt_b->rt_runtime_lock){-...}-{2:2}:
+ [  735.324218]        _raw_spin_lock+0x25/0x30
+ [  735.324219]        rq_online_rt+0x288/0x550
+ [  735.324221]        set_rq_online+0x11f/0x190
+ [  735.324223]        sched_cpu_activate+0x1d4/0x390
+ [  735.324225]        cpuhp_invoke_callback+0x1c5/0x1560
+ [  735.324226]        cpuhp_thread_fun+0x3f8/0x6f0
+ [  735.324228]        smpboot_thread_fn+0x305/0x5f0
+ [  735.324229]        kthread+0x2f8/0x3b0
+ [  735.324231]        ret_from_fork+0x24/0x30
+ [  735.324232]
+ [  735.324233] -> #2 (&rq->lock){-.-.}-{2:2}:
+ [  735.324238]        _raw_spin_lock+0x25/0x30
+ [  735.324240]        task_fork_fair+0x34/0x430
+ [  735.324241]        sched_fork+0x48a/0xa60
+ [  735.324243]        copy_process+0x15df/0x5970
+ [  735.324244]        _do_fork+0x106/0xcd0
+ [  735.324246]        kernel_thread+0x9e/0xe0
+ [  735.324247]        rest_init+0x28/0x330
+ [  735.324249]        start_kernel+0x6ac/0x6ed
+ [  735.324251]        secondary_startup_64+0xa4/0xb0
+ [  735.324252]
+ [  735.324253] -> #1 (&p->pi_lock){-.-.}-{2:2}:
+ [  735.324258]        _raw_spin_lock_irqsave+0x3c/0x4b
+ [  735.324260]        try_to_wake_up+0x9a/0x1700
+ [  735.324261]        up+0x7a/0xb0
+ [  735.324263]        __up_console_sem+0x3c/0x70
+ [  735.324264]        console_unlock+0x4f4/0xab0
+ [  735.324266]        con_font_op+0x907/0x1010
+ [  735.324267]        vt_ioctl+0x10a6/0x2890
+ [  735.324269]        tty_ioctl+0x257/0x1240
+ [  735.324270]        ksys_ioctl+0x3e9/0x1190
+ [  735.324272]        __x64_sys_ioctl+0x6f/0xb0
+ [  735.324273]        do_syscall_64+0xe7/0x12c0
+ [  735.324275]        entry_SYSCALL_64_after_hwframe+0x49/0xb3
+ [  735.324276]
+ [  735.324277] -> #0 ((console_sem).lock){-...}-{2:2}:
+ [  735.324283]        __lock_acquire+0x374a/0x5210
+ [  735.324284]        lock_acquire+0x1b9/0x920
+ [  735.324286]        _raw_spin_lock_irqsave+0x3c/0x4b
+ [  735.324288]        down_trylock+0x13/0x70
+ [  735.324289]        __down_trylock_console_sem+0x33/0xa0
+ [  735.324291]        console_trylock+0x13/0x60
+ [  735.324292]        vprintk_emit+0xec/0x370
+ [  735.324294]        printk+0x9c/0xc3
+ [  735.324296]        lapic_timer_set_oneshot+0x4e/0x60
+ [  735.324297]        clockevents_switch_state+0x1e1/0x360
+ [  735.324299]        tick_program_event+0xae/0xc0
+ [  735.324301]        hrtimer_start_range_ns+0x4b6/0xaa0
+ [  735.324302]        tick_nohz_idle_stop_tick+0x67c/0xa90
+ [  735.324304]        do_idle+0x326/0x530
+ [  735.324305]        cpu_startup_entry+0x19/0x20
+ [  735.324307]        start_secondary+0x2ee/0x3e0
+ [  735.324309]        secondary_startup_64+0xa4/0xb0
+ [  735.324310]
+ [  735.324311] other info that might help us debug this:
+ [  735.324312]
+ [  735.324314] Chain exists of:
+ [  735.324315]   (console_sem).lock --> &rt_b->rt_runtime_lock --> hrtimer_bases.lock
+ [  735.324322]
+ [  735.324324]  Possible unsafe locking scenario:
+ [  735.324325]
+ [  735.324327]        CPU0                    CPU1
+ [  735.324328]        ----                    ----
+ [  735.324329]   lock(hrtimer_bases.lock);
+ [  735.324333]                                lock(&rt_b->rt_runtime_lock);
+ [  735.324337]                                lock(hrtimer_bases.lock);
+ [  735.324341]   lock((console_sem).lock);
+ [  735.324344]
+ [  735.324345]  *** DEADLOCK ***
+ [  735.324346]
+ [  735.324348] 1 lock held by swapper/3/0:
+ [  735.324349]  #0: ffff88842dfb9958 (hrtimer_bases.lock){-.-.}-{2:2}, at: lock_hrtimer_base+0x71/0x120
+ [  735.324356]
+ [  735.324357] stack backtrace:
+ [  735.324360] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.6.0-for-upstream-dbg-2020-04-03_10-44-43-70 #1
+ [  735.324363] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+ [  735.324364] Call Trace:
+ [  735.324366]  dump_stack+0xb7/0x10b
+ [  735.324367]  check_noncircular+0x37f/0x460
+ [  735.324369]  ? arch_stack_walk+0x7c/0xd0
+ [  735.324370]  ? print_circular_bug+0x4e0/0x4e0
+ [  735.324372]  ? mark_lock+0x1a4/0xb60
+ [  735.324373]  ? __lock_acquire+0x374a/0x5210
+ [  735.324375]  __lock_acquire+0x374a/0x5210
+ [  735.324376]  ? register_lock_class+0x17e0/0x17e0
+ [  735.324378]  ? register_lock_class+0x17e0/0x17e0
+ [  735.324380]  lock_acquire+0x1b9/0x920
+ [  735.324381]  ? down_trylock+0x13/0x70
+ [  735.324383]  ? check_flags.part.29+0x450/0x450
+ [  735.324384]  ? lock_downgrade+0x760/0x760
+ [  735.324386]  ? vprintk_emit+0xec/0x370
+ [  735.324387]  _raw_spin_lock_irqsave+0x3c/0x4b
+ [  735.324389]  ? down_trylock+0x13/0x70
+ [  735.324390]  down_trylock+0x13/0x70
+ [  735.324392]  __down_trylock_console_sem+0x33/0xa0
+ [  735.324393]  console_trylock+0x13/0x60
+ [  735.324395]  vprintk_emit+0xec/0x370
+ [  735.324396]  printk+0x9c/0xc3
+ [  735.324398]  ? kmsg_dump_rewind_nolock+0xd9/0xd9
+ [  735.324399]  lapic_timer_set_oneshot+0x4e/0x60
+ [  735.324401]  clockevents_switch_state+0x1e1/0x360
+ [  735.324402]  ? enqueue_hrtimer+0x116/0x310
+ [  735.324404]  tick_program_event+0xae/0xc0
+ [  735.324406]  hrtimer_start_range_ns+0x4b6/0xaa0
+ [  735.324407]  ? hrtimer_run_softirq+0x210/0x210
+ [  735.324409]  ? rcu_read_lock_sched_held+0xab/0xe0
+ [  735.324410]  ? rcu_read_lock_bh_held+0xe0/0xe0
+ [  735.324412]  tick_nohz_idle_stop_tick+0x67c/0xa90
+ [  735.324413]  ? tsc_verify_tsc_adjust+0x71/0x290
+ [  735.324415]  do_idle+0x326/0x530
+ [  735.324416]  ? arch_cpu_idle_exit+0x40/0x40
+ [  735.324418]  cpu_startup_entry+0x19/0x20
+ [  735.324419]  start_secondary+0x2ee/0x3e0
+ [  735.324421]  ? set_cpu_sibling_map+0x2f70/0x2f70
+ [  735.324423]  secondary_startup_64+0xa4/0xb0
+ [  760.028504] ====================================================================================================
 
-So this would read better?
+Fix by using deferred variant of printk which doesn't call to the scheduler.
 
-diff --git a/Documentation/admin-guide/perf-security.rst b/Documentation/admin-guide/perf-security.rst
-index ed33682e26b0..d44dd24b0244 100644
---- a/Documentation/admin-guide/perf-security.rst
-+++ b/Documentation/admin-guide/perf-security.rst
-@@ -127,8 +127,8 @@ taken to create such groups of privileged Perf users.
- 
- ::
- 
--   # setcap "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
--   # setcap -v "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-+   # setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-+   # setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-    perf: OK
-    # getcap perf
-    perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
-@@ -140,6 +140,10 @@ i.e.:
- 
-    # setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
- 
-+Note that you may need to have 'cap_ipc_lock' in the mix for tools such as
-+'perf top', alternatively use 'perf top -m N', to reduce the memory that
-+it uses for the perf ring buffer, see the memory allocation section below.
-+
- As a result, members of perf_users group are capable of conducting
- performance monitoring and observability by using functionality of the
- configured Perf tool executable that, when executes, passes perf_events
+Fixes: 279f1461432c ("x86: apic: Use tsc deadline for oneshot when available")
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+---
+It is far away from my main expertise and I'm not sure that the solution
+is correct, but it definitely fixed our regression.
+---
+ arch/x86/kernel/apic/apic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index d254cebdd3c3..6706b2cd9aec 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -353,7 +353,7 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
+ 		 */
+ 		asm volatile("mfence" : : : "memory");
+
+-		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
++		printk_deferred_once(KERN_DEBUG "TSC deadline timer enabled\n");
+ 		return;
+ 	}
+
+--
+2.25.1
+
