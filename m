@@ -2,146 +2,96 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FB6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B36C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA4D2078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706A3206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:16:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RtXu6P/4"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Hyx/r2qv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbgDGOO5 (ORCPT
+        id S1729022AbgDGOQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:14:57 -0400
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:51346 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbgDGOO5 (ORCPT
+        Tue, 7 Apr 2020 10:16:35 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42430 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728861AbgDGOQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:14:57 -0400
-Received: by mail-wm1-f74.google.com with SMTP id o26so899657wmh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:14:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=gOTUaqmgbGCsE0dVLTz9SOZ17zVq8RiTIkdhy3fA4uM=;
-        b=RtXu6P/4U4fHkpq2NJTWopKO2cpCfiMN7O8tch7NptGBMwdtYdHqh/THbw9Ct12QaE
-         kKT6cmNhVDe4hYgj2Cn/K30IGR+GPiJ8I2xavinT9NLHdgFbpBFJxfSPQVdkr3dhCw1U
-         zEYRvhaOiibxKn0gNechJZYO6jEQo2Kw6jxCR5GJSJH15OB6iWadkswM+KgfkDGuNOdW
-         wNCf4hgSTdOVE370FnCcOicjkT9irrs2APdaWKvl/m60kMT3YUxVLZ1M/tHUCe3lkAGJ
-         7CwBS5zJNuLNY6Xg4JwQnVaVgv0pgLLNlhLMTniAQEIL20LyNMPe14QP52rQXi/JVnJw
-         iWLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=gOTUaqmgbGCsE0dVLTz9SOZ17zVq8RiTIkdhy3fA4uM=;
-        b=GGa1kEJ98PcTT1auYlrjbC2ciD0Wh72lbzzhifbDC70gOaVRwKvGfS2uop4CzZbNRk
-         7WEUCcO6fzgBYbVbNP1UlcvlsmbGSqdk38crE+xc1krNFOHJOd5WkXm4+nZ2u94DzZhe
-         ibLrDBqQNmYESJkL4XtJCZq3ZYUDtRZ3Yu7f4p4hvIIKgI92SXGHugwc7zK45d+wrTsx
-         n8OIBwGXWeMvteZpqo8cuoOo/8zwYw0fcHq0cj4hgz7HNBMWWa72KuQoX5XtuHflgiIg
-         946+Jrr8SscF7g/p/8Gh+4P+Hu2IjPlp4dw0xnKq0HqFBNKL6UYDIjWS9mKSUloSjOU/
-         iXxw==
-X-Gm-Message-State: AGi0PuZMWgZ1XKvRoGf9/kr8auZVSU2xZtTapCzDUlXOsH3qiXPGnPpF
-        jGByKdECjLTOwBHcD7l0b1Ht96/RyYRQWyaT
-X-Google-Smtp-Source: APiQypIuCxxkxv9G1eKVjmIVs2yLdCdb1+xcFVQyqd0Yt5LJUlM//Nn9s+vfGRkkadqLefDR/ZUjlgfZuz1rYxUV
-X-Received: by 2002:adf:e691:: with SMTP id r17mr3023185wrm.421.1586268895116;
- Tue, 07 Apr 2020 07:14:55 -0700 (PDT)
-Date:   Tue,  7 Apr 2020 16:14:50 +0200
-Message-Id: <c4cedb13ee6159857ed7d9884e55718e4b1dede4.1586268809.git.andreyknvl@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-Subject: [PATCH v2] usb: raw-gadget: fix raw_event_queue_fetch locking
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Felipe Balbi <balbi@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Apr 2020 10:16:35 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B59B859E;
+        Tue,  7 Apr 2020 16:16:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586268993;
+        bh=CcU2iAia1wY4OY0Wlixli88UQl/oDVQJd3BN2oHVZs4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hyx/r2qvOlhW/upsn1igaKv3oxlLGcSnhX+2DoQ0FH+lQrwx8zYoWNsqDWEBT4CKj
+         oPNY9yZdASHuEJaHeFRyZAnMLIC3Fo9mHavnwXkFOAwGBriB9/5rKXn/AP7AqGoVFv
+         r5MsZwh13hLhgZBGK7HbMd3B5QlAYYCZcPkHptlA=
+Date:   Tue, 7 Apr 2020 17:16:24 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Max Krummenacher <max.oss.09@gmail.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>, Vidya Sagar <vidyas@nvidia.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 0/4] defconfig: fix changed configs and refresh
+Message-ID: <20200407141624.GG4751@pendragon.ideasonboard.com>
+References: <20200407103537.4138-1-max.krummenacher@toradex.com>
+ <CAMuHMdWrekHiADkMmgO5nDxFNYjLud7FD=7ArMZNQire_+7TQg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWrekHiADkMmgO5nDxFNYjLud7FD=7ArMZNQire_+7TQg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If queue->size check in raw_event_queue_fetch() fails (which normally
-shouldn't happen, that check is a fail-safe), the function returns
-without reenabling interrupts. This patch fixes that issue, along with
-propagating the cause of failure to the function caller.
+Hi Geert,
 
-Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
+On Tue, Apr 07, 2020 at 03:16:14PM +0200, Geert Uytterhoeven wrote:
+> On Tue, Apr 7, 2020 at 12:36 PM Max Krummenacher <max.oss.09@gmail.com> wrote:
+> > Three configs have been renamed and/or changed behaviour.
+> > Clean that by using the new config name.
+> > Then refresh the defconfig with make defconfig savedefconfig.
+> >
+> > The refreshed defconfig does result in a not changed .config.
+> >
+> > Applies on linux-next/master tag: next-20200407
+> >
+> > Max Krummenacher (4):
+> >   arm64: defconfig: DRM_DUMB_VGA_DAC: follow changed config symbol name
+> >   arm64: defconfig: PCIE_TEGRA194: follow changed config symbol name
+> >   arm64: defconfig: ARCH_R8A7795: follow changed config symbol name
+> >   arm64: defconfig: refresh
+> 
+> Probably CONFIG_DRM_DISPLAY_CONNECTOR should also be enabled for HDMI,
+> VGA, and composite display connectors on various boards since commit
+> 0c275c30176b2e78 ("drm/bridge: Add bridge driver for display
+> connectors"), but it's not clear to me when exactly this became a
+> requirement, as before there was no code that looked for e.g.
+> vga-connector.
+> Laurent?
 
-Changes in v2:
-- Added a comment before the WARN_ON() call.
+It's not required yet for R-Car DU, but I'm working on changing that :-)
+If we can enable CONFIG_DRM_DISPLAY_CONNECTOR in defconfig as part of
+this series, it would be useful for me.
 
-Greg, this should apply cleanly on top of Dan's "usb: raw-gadget: Fix
-copy_to/from_user() checks" patch.
-
----
- drivers/usb/gadget/legacy/raw_gadget.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
-index e490ffa1f58b..85dfbcd461ac 100644
---- a/drivers/usb/gadget/legacy/raw_gadget.c
-+++ b/drivers/usb/gadget/legacy/raw_gadget.c
-@@ -81,6 +81,7 @@ static int raw_event_queue_add(struct raw_event_queue *queue,
- static struct usb_raw_event *raw_event_queue_fetch(
- 				struct raw_event_queue *queue)
- {
-+	int ret;
- 	unsigned long flags;
- 	struct usb_raw_event *event;
- 
-@@ -89,11 +90,18 @@ static struct usb_raw_event *raw_event_queue_fetch(
- 	 * there's at least one event queued by decrementing the semaphore,
- 	 * and then take the lock to protect queue struct fields.
- 	 */
--	if (down_interruptible(&queue->sema))
--		return NULL;
-+	ret = down_interruptible(&queue->sema);
-+	if (ret)
-+		return ERR_PTR(ret);
- 	spin_lock_irqsave(&queue->lock, flags);
--	if (WARN_ON(!queue->size))
-+	/*
-+	 * queue->size must have the same value as queue->sema counter (before
-+	 * the down_interruptible() call above), so this check is a fail-safe.
-+	 */
-+	if (WARN_ON(!queue->size)) {
-+		spin_unlock_irqrestore(&queue->lock, flags);
- 		return NULL;
-+	}
- 	event = queue->events[0];
- 	queue->size--;
- 	memmove(&queue->events[0], &queue->events[1],
-@@ -522,10 +530,17 @@ static int raw_ioctl_event_fetch(struct raw_dev *dev, unsigned long value)
- 	spin_unlock_irqrestore(&dev->lock, flags);
- 
- 	event = raw_event_queue_fetch(&dev->queue);
--	if (!event) {
-+	if (PTR_ERR(event) == -EINTR) {
- 		dev_dbg(&dev->gadget->dev, "event fetching interrupted\n");
- 		return -EINTR;
- 	}
-+	if (IS_ERR_OR_NULL(event)) {
-+		dev_err(&dev->gadget->dev, "failed to fetch event\n");
-+		spin_lock_irqsave(&dev->lock, flags);
-+		dev->state = STATE_DEV_FAILED;
-+		spin_unlock_irqrestore(&dev->lock, flags);
-+		return -ENODEV;
-+	}
- 	length = min(arg.length, event->length);
- 	if (copy_to_user((void __user *)value, event, sizeof(*event) + length))
- 		return -EFAULT;
 -- 
-2.26.0.292.g33ef6b2f38-goog
+Regards,
 
+Laurent Pinchart
