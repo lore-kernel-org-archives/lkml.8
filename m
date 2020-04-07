@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF011C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A878C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB4320771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8752074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586254987;
-	bh=AOAvaLVkDHeMRUUOp5dsa0b0RO3eEiCYm6DzGZdjcBU=;
+	s=default; t=1586254989;
+	bh=YSM3qsOVOWSS2Q5ljx8VaWbZ544ASp2dwCLYH7JjW68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FqXef13n6LNzMjLK/o3TZ2oDneo6sqJepDP2v6In6h0JbhEVTAAivjAhH5manHJN7
-	 Qd98h3WprgP57kvyfNTGXjshgmdzFcDW992VfaTMdeF1Aracad7/zEY33nYsZ0PD9c
-	 rBET4mH2V7jZhxqzZ/TYrr/SUb+3IlXcv+OGzCJk=
+	b=r3pBSieYj8Zk4ZFUA7Pz7Il/sbP+Se1eL5C7Gzx4Np2Sg6yvg3EkmsSutLPlks9Ba
+	 /Tks+8EC4FR5I6VLn4V7k3EjJEDE5E+bZjMlA8kpXk2HD3VFvC93unN/w9i6bJoYgu
+	 Ct2IFjCunTh4vUNjz4SnSDP2WOv1iUtE4u8VUBBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgDGKXG (ORCPT
+        id S1728381AbgDGKXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgDGKXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:23:03 -0400
+        id S1728366AbgDGKXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8217820771;
-        Tue,  7 Apr 2020 10:23:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E60A720801;
+        Tue,  7 Apr 2020 10:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586254982;
-        bh=AOAvaLVkDHeMRUUOp5dsa0b0RO3eEiCYm6DzGZdjcBU=;
+        s=default; t=1586254984;
+        bh=YSM3qsOVOWSS2Q5ljx8VaWbZ544ASp2dwCLYH7JjW68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VrjRcHkQBSchuHhqaUkm+F5YhQm48OmtXk9PtgWPs+OBF7IJ4iU2cb2s7tg8YXcaq
-         IZcMX/RNMubhJalNEQFD/cScVnnwq8K5fkl/iiBlMQnbwTZgVi7ITNLx5dD8Jjqe5S
-         UN7FIMqHjs+vK+fqImvx8U7fQXnvM4tGU55k75JI=
+        b=bPpT/rJ5TI7C5H4E+84w7dSRieMgkFEf0XMkHYBsD7/OlW6mfNtUK/2oZZPdfFEAF
+         sMcX6FzElbQZmbhJaqzK/DievQnz+2EHqH+wF7alkSl9TvaUMxONKNDA1e7hbGE68M
+         ODoJl8zkCr4AqQZ63MjGv0IZB4wcV8mAGwsH1fp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: [PATCH 5.4 19/36] coresight: do not use the BIT() macro in the UAPI header
-Date:   Tue,  7 Apr 2020 12:21:52 +0200
-Message-Id: <20200407101456.858020538@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 5.4 20/36] mei: me: add cedar fork device ids
+Date:   Tue,  7 Apr 2020 12:21:53 +0200
+Message-Id: <20200407101456.950869274@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -59,39 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugene Syromiatnikov <esyr@redhat.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 9b6eaaf3db5e5888df7bca7fed7752a90f7fd871 upstream.
+commit 99397d33b763dc554d118aaa38cc5abc6ce985de upstream.
 
-The BIT() macro definition is not available for the UAPI headers
-(moreover, it can be defined differently in the user space); replace
-its usage with the _BITUL() macro that is defined in <linux/const.h>.
+Add Cedar Fork (CDF) device ids, those belongs to the cannon point family.
 
-Fixes: 237483aa5cf4 ("coresight: stm: adding driver for CoreSight STM component")
-Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20200324042213.GA10452@asgard.redhat.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200324210730.17672-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/coresight-stm.h |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/misc/mei/hw-me-regs.h |    2 ++
+ drivers/misc/mei/pci-me.c     |    2 ++
+ 2 files changed, 4 insertions(+)
 
---- a/include/uapi/linux/coresight-stm.h
-+++ b/include/uapi/linux/coresight-stm.h
-@@ -2,8 +2,10 @@
- #ifndef __UAPI_CORESIGHT_STM_H_
- #define __UAPI_CORESIGHT_STM_H_
+--- a/drivers/misc/mei/hw-me-regs.h
++++ b/drivers/misc/mei/hw-me-regs.h
+@@ -87,6 +87,8 @@
+ #define MEI_DEV_ID_CMP_H      0x06e0  /* Comet Lake H */
+ #define MEI_DEV_ID_CMP_H_3    0x06e4  /* Comet Lake H 3 (iTouch) */
  
--#define STM_FLAG_TIMESTAMPED   BIT(3)
--#define STM_FLAG_GUARANTEED    BIT(7)
-+#include <linux/const.h>
++#define MEI_DEV_ID_CDF        0x18D3  /* Cedar Fork */
 +
-+#define STM_FLAG_TIMESTAMPED   _BITUL(3)
-+#define STM_FLAG_GUARANTEED    _BITUL(7)
+ #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
  
- /*
-  * The CoreSight STM supports guaranteed and invariant timing
+ #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -109,6 +109,8 @@ static const struct pci_device_id mei_me
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC, MEI_ME_PCH12_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC_4, MEI_ME_PCH8_CFG)},
+ 
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CDF, MEI_ME_PCH8_CFG)},
++
+ 	/* required last entry */
+ 	{0, }
+ };
 
 
