@@ -2,141 +2,274 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21B4C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8818AC2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3812206F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51637206F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:12:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgDGHIJ (ORCPT
+        id S1727444AbgDGHM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 03:08:09 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43095 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgDGHII (ORCPT
+        Tue, 7 Apr 2020 03:12:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14450 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726808AbgDGHM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 03:08:08 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k5so600627oiw.10;
-        Tue, 07 Apr 2020 00:08:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9KPwW6gv1QSgTyaBqvuvuccR22yt8OHERtZtZ45QV20=;
-        b=WwSt2cfwloWFmAvZ4cKIWi95qAqUchfj3HUVgIOvUTpElpqq/n76tW7VnZqhh9d6Iy
-         FIfYV4M0yuMGym13r86/PIVYozv0HUYKC4nzvmRFCiTQCqXvvRD8FWogedPewwkXPlr5
-         JSzcg1QD41/V32E0EXrvAcFGs4pwVLrg95ts4Nh/o9+YvtcoLMLVlO5h7+1p4+fwEFUp
-         E334smNjM+MpZ7UlcLQhG+J5+FZlw5WpB5n7Ohby1OWtbYo33/SF5RL926aMqZCpfsrs
-         GCgp/N0ZG59umQBW8zSk5aofNMCKrmPPa0NP64+gkSeNc4LrdTpwkvCn+UNJSuWzNJdf
-         NJMg==
-X-Gm-Message-State: AGi0PubMLaG7PnzPg0IIpJA2bKW5B9SCBi8pM+qf0o1hpKT83dT4lP2N
-        oSvv93W+urB5DVUUMfDErPzgcBOlrLNlIU5BzAo=
-X-Google-Smtp-Source: APiQypJUPzMxv/4MrgNefdxeLOoU32bKKGVhjV9FcAL8pAgR+GgzTWByrZ8jvfBkCgjZ21+HvYrOL/5ps9Lu0L/nTBE=
-X-Received: by 2002:aca:cdd1:: with SMTP id d200mr591205oig.153.1586243287374;
- Tue, 07 Apr 2020 00:08:07 -0700 (PDT)
+        Tue, 7 Apr 2020 03:12:57 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03774eje007407;
+        Tue, 7 Apr 2020 03:11:52 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3082pe4myy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Apr 2020 03:11:51 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03774rI9009337;
+        Tue, 7 Apr 2020 03:11:51 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3082pe4mxy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Apr 2020 03:11:51 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0377ARFC026720;
+        Tue, 7 Apr 2020 07:11:49 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma02dal.us.ibm.com with ESMTP id 306hv6ur8j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Apr 2020 07:11:49 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0377BmJk53936562
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Apr 2020 07:11:48 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 877BE124052;
+        Tue,  7 Apr 2020 07:11:48 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 424CF124053;
+        Tue,  7 Apr 2020 07:11:40 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.51.156])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Apr 2020 07:11:39 +0000 (GMT)
+Subject: Re: [PATCH v8 1/7] perf expr: Add expr_ prefix for parse_ctx and
+ parse_id
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
+        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
+        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
+        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
+        tglx@linutronix.de
+References: <20200401203340.31402-1-kjain@linux.ibm.com>
+ <20200401203340.31402-2-kjain@linux.ibm.com>
+ <20200406141357.GG29826@kernel.org>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <e9a31950-8223-d68b-068a-ba95a6d6d30f@linux.ibm.com>
+Date:   Tue, 7 Apr 2020 12:41:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20200405025123.154688-1-sboyd@kernel.org> <20200405025123.154688-7-sboyd@kernel.org>
- <CAK8P3a2M54quhRNK4xvwjz9O9oZwgrobc_wtkGaeA2PMYwOUdg@mail.gmail.com>
- <158614207114.88454.6776609424163493475@swboyd.mtv.corp.google.com>
- <CAK8P3a3Yt2woG2LMcQ0jNPGuHdMtFbBmLvtBbrWFQ4J6x3v9aQ@mail.gmail.com> <8a2a142a-106a-4241-fca5-5ef12e66cd41@linux-m68k.org>
-In-Reply-To: <8a2a142a-106a-4241-fca5-5ef12e66cd41@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Apr 2020 09:07:56 +0200
-Message-ID: <CAMuHMdV=rqpfmxtS+_kFeSiPs7cg6h2nTw4YmBKb=4kn0PuGgg@mail.gmail.com>
-Subject: Re: [PATCH 6/9] clk: Allow the common clk framework to be selectable
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Russell King <linux@armlinux.org.uk>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        linux-c6x-dev@linux-c6x.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200406141357.GG29826@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_01:2020-04-07,2020-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On Tue, Apr 7, 2020 at 6:57 AM Greg Ungerer <gerg@linux-m68k.org> wrote:
-> On 6/4/20 5:35 pm, Arnd Bergmann wrote:
-> > On Mon, Apr 6, 2020 at 5:01 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> >> Quoting Arnd Bergmann (2020-04-05 05:45:20)
-> >>> On Sun, Apr 5, 2020 at 4:51 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> >>>> There's one snag with doing this, and that's making sure that randconfig
-> >>>> builds don't select this option when some architecture or platform
-> >>>> implements 'struct clk' outside of the common clk framework. Introduce a
-> >>>> new config option 'HAVE_LEGACY_CLK' to indicate those platforms that
-> >>>> haven't migrated to the common clk framework and therefore shouldn't be
-> >>>> allowed to select this new config option. Also add a note that we hope
-> >>>> one day to remove this config entirely.
-
-> >>>> --- a/arch/m68k/Kconfig.cpu
-> >>>> +++ b/arch/m68k/Kconfig.cpu
-> >>>
-> >>>     text    data     bss     dec     hex filename
-> >>> 1934726 263616   83284 2281626 22d09a obj/vmlinux-before
-> >>> 1971989 266192   83308 2321489 236c51 obj/vmlinux-after
-> >>>
-> >>> The coldfire clock implementation looks rather simple compared
-> >>> to chips from the 2010s: most chips have only fixed clocks,
-> >>> and three of them have one of two registers of clock gates.
-> >>>
-> >>> It shouldn't be hard to convert, but enabling common-clk will
-> >>> cause a noticeable kernel size increase on the fairly limited
-> >>> hardware.
-> >>>
-> >>> Simply enabling COMMON_CLK in m5475evb_defconfig
-> >>> results in a 1.7% or 40KB growth in kernel size, plus there
-> >>> would be additional dynamic memory usage:
-> >> There could certainly be some work done to reduce the code size of the
-> >> CCF. I haven't looked but perhaps we could save some memory by making
-> >> the basic types selectable too and then push a bunch of kconfig updates
-> >> through for that.
-> >
-> > Right, that might help. Another possibility would be to support both
-> > the common clk layer and the custom clk implementation on coldfire
-> > until we remove the other custom implementations, by which point
-> > even fewer people will care about coldfire.
-> >
-> > Let's see what Geert and Greg think would be the best path for coldfire,
-> > maybe the added 40KB is less of a problem after all.
->
-> Losing another 40k is not ideal, but not the end of the world.
-> It would not stop me running it on any platforms I regularly
-> run on. For sure some of the really old hardware just doesn't
-> have the RAM to spare.
->
-> Any way, I say we have to move forward and and move to using
-> the common clock framework for ColdFire sooner than later.
-
-Fine for me.
-
-Gr{oetje,eeting}s,
-
-                        Geert
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+On 4/6/20 7:43 PM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Apr 02, 2020 at 02:03:34AM +0530, Kajol Jain escreveu:
+>> From: Jiri Olsa <jolsa@kernel.org>
+>>
+>> Adding expr_ prefix for parse_ctx and parse_id,
+>> to straighten out the expr* namespace.
+>>
+>> There's no functional change.
+> 
+> Next time please add your Signed-off-by: as well when pushing 3rd party
+> patches.
+> 
+> Applied.
+> 
+> - Arnaldo
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Hi Arnaldo,
+	Thanks, I will take care of it next time.
+
+Regards,
+Kajol
+>  
+>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>> ---
+>>  tools/perf/tests/expr.c       |  4 ++--
+>>  tools/perf/util/expr.c        | 10 +++++-----
+>>  tools/perf/util/expr.h        | 12 ++++++------
+>>  tools/perf/util/expr.y        |  6 +++---
+>>  tools/perf/util/stat-shadow.c |  2 +-
+>>  5 files changed, 17 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+>> index 28313e59d6f6..ea10fc4412c4 100644
+>> --- a/tools/perf/tests/expr.c
+>> +++ b/tools/perf/tests/expr.c
+>> @@ -6,7 +6,7 @@
+>>  #include <string.h>
+>>  #include <linux/zalloc.h>
+>>  
+>> -static int test(struct parse_ctx *ctx, const char *e, double val2)
+>> +static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
+>>  {
+>>  	double val;
+>>  
+>> @@ -22,7 +22,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+>>  	const char **other;
+>>  	double val;
+>>  	int i, ret;
+>> -	struct parse_ctx ctx;
+>> +	struct expr_parse_ctx ctx;
+>>  	int num_other;
+>>  
+>>  	expr__ctx_init(&ctx);
+>> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+>> index fd192ddf93c1..c8ccc548a585 100644
+>> --- a/tools/perf/util/expr.c
+>> +++ b/tools/perf/util/expr.c
+>> @@ -11,7 +11,7 @@ extern int expr_debug;
+>>  #endif
+>>  
+>>  /* Caller must make sure id is allocated */
+>> -void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
+>> +void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
+>>  {
+>>  	int idx;
+>>  
+>> @@ -21,13 +21,13 @@ void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
+>>  	ctx->ids[idx].val = val;
+>>  }
+>>  
+>> -void expr__ctx_init(struct parse_ctx *ctx)
+>> +void expr__ctx_init(struct expr_parse_ctx *ctx)
+>>  {
+>>  	ctx->num_ids = 0;
+>>  }
+>>  
+>>  static int
+>> -__expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
+>> +__expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+>>  	      int start)
+>>  {
+>>  	YY_BUFFER_STATE buffer;
+>> @@ -52,7 +52,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
+>>  	return ret;
+>>  }
+>>  
+>> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
+>> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
+>>  {
+>>  	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
+>>  }
+>> @@ -75,7 +75,7 @@ int expr__find_other(const char *expr, const char *one, const char ***other,
+>>  		     int *num_other)
+>>  {
+>>  	int err, i = 0, j = 0;
+>> -	struct parse_ctx ctx;
+>> +	struct expr_parse_ctx ctx;
+>>  
+>>  	expr__ctx_init(&ctx);
+>>  	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
+>> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+>> index 9377538f4097..b9e53f2b5844 100644
+>> --- a/tools/perf/util/expr.h
+>> +++ b/tools/perf/util/expr.h
+>> @@ -5,19 +5,19 @@
+>>  #define EXPR_MAX_OTHER 20
+>>  #define MAX_PARSE_ID EXPR_MAX_OTHER
+>>  
+>> -struct parse_id {
+>> +struct expr_parse_id {
+>>  	const char *name;
+>>  	double val;
+>>  };
+>>  
+>> -struct parse_ctx {
+>> +struct expr_parse_ctx {
+>>  	int num_ids;
+>> -	struct parse_id ids[MAX_PARSE_ID];
+>> +	struct expr_parse_id ids[MAX_PARSE_ID];
+>>  };
+>>  
+>> -void expr__ctx_init(struct parse_ctx *ctx);
+>> -void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
+>> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
+>> +void expr__ctx_init(struct expr_parse_ctx *ctx);
+>> +void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
+>> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
+>>  int expr__find_other(const char *expr, const char *one, const char ***other,
+>>  		int *num_other);
+>>  
+>> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+>> index 4720cbe79357..cd17486c1c5d 100644
+>> --- a/tools/perf/util/expr.y
+>> +++ b/tools/perf/util/expr.y
+>> @@ -15,7 +15,7 @@
+>>  %define api.pure full
+>>  
+>>  %parse-param { double *final_val }
+>> -%parse-param { struct parse_ctx *ctx }
+>> +%parse-param { struct expr_parse_ctx *ctx }
+>>  %parse-param {void *scanner}
+>>  %lex-param {void* scanner}
+>>  
+>> @@ -39,14 +39,14 @@
+>>  
+>>  %{
+>>  static void expr_error(double *final_val __maybe_unused,
+>> -		       struct parse_ctx *ctx __maybe_unused,
+>> +		       struct expr_parse_ctx *ctx __maybe_unused,
+>>  		       void *scanner,
+>>  		       const char *s)
+>>  {
+>>  	pr_debug("%s\n", s);
+>>  }
+>>  
+>> -static int lookup_id(struct parse_ctx *ctx, char *id, double *val)
+>> +static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
+>>  {
+>>  	int i;
+>>  
+>> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+>> index 0fd713d3674f..402af3e8d287 100644
+>> --- a/tools/perf/util/stat-shadow.c
+>> +++ b/tools/perf/util/stat-shadow.c
+>> @@ -729,7 +729,7 @@ static void generic_metric(struct perf_stat_config *config,
+>>  			   struct runtime_stat *st)
+>>  {
+>>  	print_metric_t print_metric = out->print_metric;
+>> -	struct parse_ctx pctx;
+>> +	struct expr_parse_ctx pctx;
+>>  	double ratio, scale;
+>>  	int i;
+>>  	void *ctxp = out->ctx;
+>> -- 
+>> 2.21.0
+>>
+> 
