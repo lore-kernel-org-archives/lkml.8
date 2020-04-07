@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5BDC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A11A7C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E47592074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D5CC20644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255191;
-	bh=xmrT11w54ApBz4oohIkiyxhRNgVs9VCTrvI+89Llllc=;
+	s=default; t=1586255194;
+	bh=AOAvaLVkDHeMRUUOp5dsa0b0RO3eEiCYm6DzGZdjcBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04T4HrAScgbEsOBx619g+IsPoqILtDAv+nfc+eAYc65wjrrtn6tl/BOZVMNZgEp+7
-	 4MwFLgltnLSMnFQKyxyDqH+IDvpDROgjjqv6bzyNdLsI2kgZBUN+e+KLorTXKseR0q
-	 zIcDhaEFM8PK5/9tddDxFJSeDpVblFKwVQnIin9A=
+	b=mcNRXnMcaSwE56WI65EG8ptQKtyuSuu4ASY0NL3ByJ+A7jJhAlB3wmJKmMO1otQ+z
+	 XNyzTiMTZ50y6uGt0lJGJI5BKAlsXAEep0j6AjN0rhh+BI1UCAtVWYZ+8rFxGtwQgY
+	 a3hmjJy8TjuFZFh5ItaIlrbKK7a/IECfU/nhszP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgDGK03 (ORCPT
+        id S1729172AbgDGK0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:26:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38396 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:26:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729149AbgDGK00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:26:26 -0400
+        id S1729157AbgDGK02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:26:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CD3620644;
-        Tue,  7 Apr 2020 10:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A23D2074F;
+        Tue,  7 Apr 2020 10:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255185;
-        bh=xmrT11w54ApBz4oohIkiyxhRNgVs9VCTrvI+89Llllc=;
+        s=default; t=1586255188;
+        bh=AOAvaLVkDHeMRUUOp5dsa0b0RO3eEiCYm6DzGZdjcBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qP4Qmt0aXMrBd764FdPSgPQMUtkKzmm3+G+XZE1vbGEobYXMDpNWT3P2W+abAPvUB
-         ZYGeXHFZPRJ0NQzBOIvi0h3a6WUTwa4v75cY5VW5AIGOWC2bvbb0Yn+YKq4EvQe8nE
-         yrkkRBneJnHj8mY5MmdzeTNRUFLHtcNbXH8VKjfY=
+        b=Lj8GvnwLySwRQOjI36y6ONlUAFAp1kZnxeBe10GLTI7rL5TuQwC7RVhnNLKntL+wv
+         ODcHklJz3ICuzY4goPB75tvVGrqMwbLbqlpNjlEsQSzc4rKPr7KHPzr7VT4xe67XYE
+         DaSIpoSjmywz7y/enLe4xA9NTem79pNgZzxRRfgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kelsey Skunberg <kelsey.skunberg@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.6 18/29] PCI: sysfs: Revert "rescan" file renames
-Date:   Tue,  7 Apr 2020 12:22:15 +0200
-Message-Id: <20200407101454.240534387@linuxfoundation.org>
+        stable@vger.kernel.org, Eugene Syromiatnikov <esyr@redhat.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 5.6 19/29] coresight: do not use the BIT() macro in the UAPI header
+Date:   Tue,  7 Apr 2020 12:22:16 +0200
+Message-Id: <20200407101454.349819058@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
 References: <20200407101452.046058399@linuxfoundation.org>
@@ -60,60 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+From: Eugene Syromiatnikov <esyr@redhat.com>
 
-commit bd641fd8303a371e789e924291086268256766b0 upstream.
+commit 9b6eaaf3db5e5888df7bca7fed7752a90f7fd871 upstream.
 
-We changed these sysfs filenames:
+The BIT() macro definition is not available for the UAPI headers
+(moreover, it can be defined differently in the user space); replace
+its usage with the _BITUL() macro that is defined in <linux/const.h>.
 
-  .../pci_bus/<domain:bus>/rescan  ->  .../pci_bus/<domain:bus>/bus_rescan
-  .../<domain:bus:dev.fn>/rescan   ->  .../<domain:bus:dev.fn>/dev_rescan
-
-and Ruslan reported [1] that this broke a userspace application.
-
-Revert these name changes so both files are named "rescan" again.
-
-Note that we have to use __ATTR() to assign custom C symbols, i.e.,
-"struct device_attribute <symbol>".
-
-[1] https://lore.kernel.org/r/CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com
-
-[bhelgaas: commit log, use __ATTR() both places so we don't have to rename
-the attributes]
-Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
-Link: https://lore.kernel.org/r/20200325151708.32612-1-skunberg.kelsey@gmail.com
-Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org	# v5.4+
+Fixes: 237483aa5cf4 ("coresight: stm: adding driver for CoreSight STM component")
+Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20200324042213.GA10452@asgard.redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pci-sysfs.c |    6 ++++--
+ include/uapi/linux/coresight-stm.h |    6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -464,7 +464,8 @@ static ssize_t dev_rescan_store(struct d
- 	}
- 	return count;
- }
--static DEVICE_ATTR_WO(dev_rescan);
-+static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
-+							    dev_rescan_store);
+--- a/include/uapi/linux/coresight-stm.h
++++ b/include/uapi/linux/coresight-stm.h
+@@ -2,8 +2,10 @@
+ #ifndef __UAPI_CORESIGHT_STM_H_
+ #define __UAPI_CORESIGHT_STM_H_
  
- static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
-@@ -501,7 +502,8 @@ static ssize_t bus_rescan_store(struct d
- 	}
- 	return count;
- }
--static DEVICE_ATTR_WO(bus_rescan);
-+static struct device_attribute dev_attr_bus_rescan = __ATTR(rescan, 0200, NULL,
-+							    bus_rescan_store);
+-#define STM_FLAG_TIMESTAMPED   BIT(3)
+-#define STM_FLAG_GUARANTEED    BIT(7)
++#include <linux/const.h>
++
++#define STM_FLAG_TIMESTAMPED   _BITUL(3)
++#define STM_FLAG_GUARANTEED    _BITUL(7)
  
- #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
- static ssize_t d3cold_allowed_store(struct device *dev,
+ /*
+  * The CoreSight STM supports guaranteed and invariant timing
 
 
