@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E628C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2453C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DC42078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A191B20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217745;
-	bh=51H9TY8V5noS4FlXlFD3P5jsli5RDi0dx8xUt4ONeBk=;
+	s=default; t=1586217750;
+	bh=0NmjDoUM5gYgsEDS4Q8qgD6YSor5H2823HhLNhDpAmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xl6igp2ydCyuynFLfduQA9bhjDGGcvQq5faSttJSbp9SxvKb6GgUDgsFV1vdT2CKK
-	 LiZMKfzV4Mij28J3i+euH4+pwb3NoGqh1DJN4G1ttSk4gIjNUnt+fkxnosd3Bsyr6R
-	 /GA+BwnvdGfB4MAtM/g3TNTD/bOQlmL0zh7yCklo=
+	b=hmrhEJpgQXluBk/jeKifm+OKeiaU0PMpdJj1VBDoOBawsNvbbKUwvzz7WXJWbw4eG
+	 KsNd+9OQCW4s6L/0e46HYEiWhK2fzQb+JxDmxjR9s9dnGhuM2IAU89n9YCyhp1M/NN
+	 IhVvXTfPmN7alodCD7fpoTzf2OFospv5fR68dLuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgDGACX (ORCPT
+        id S1728101AbgDGAC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36642 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgDGACU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:20 -0400
+        id S1728064AbgDGACY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77E9120768;
-        Tue,  7 Apr 2020 00:02:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A8D620842;
+        Tue,  7 Apr 2020 00:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217739;
-        bh=51H9TY8V5noS4FlXlFD3P5jsli5RDi0dx8xUt4ONeBk=;
+        s=default; t=1586217743;
+        bh=0NmjDoUM5gYgsEDS4Q8qgD6YSor5H2823HhLNhDpAmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mJKh4VGhW0aZnDF4qsInoq2XyxQcnl1VxfUxIk52ofuLXhMMlPfx53TX7FneeweRQ
-         1eMP/YyMOL3BrC+6XRVIMedCH5X74dascO4xe+myUUz8ZrIb13vq2tuKQ6zggpzigV
-         QFcqo/dsUkfgsK5BQYpSavDZVsL1qXaxje4RcnFo=
+        b=jlcA+URwd9BtfVYZUbHw7KbMFXArUgbc8kdtXnBQNRLPSTLFMulo5V7UpNrkefXqN
+         r8lPDoDV8xPntq5ubXpf9vHX6gDECyytwuAQ0ln49GA8PVyvvnU+bj77tW0+0BTt/i
+         cmiMJ2d+BIE6LULD0PmYm1I8P1vJRI4XgiGDnJU0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 22/32] selftests/net: add definition for SOL_DCCP to fix compilation errors for old libc
-Date:   Mon,  6 Apr 2020 20:01:40 -0400
-Message-Id: <20200407000151.16768-22-sashal@kernel.org>
+Cc:     Stefano Brivio <sbrivio@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 25/32] netfilter: nft_set_rbtree: Introduce and use nft_rbtree_interval_start()
+Date:   Mon,  6 Apr 2020 20:01:43 -0400
+Message-Id: <20200407000151.16768-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
 References: <20200407000151.16768-1-sashal@kernel.org>
@@ -60,44 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Maguire <alan.maguire@oracle.com>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit 83a9b6f639e9f6b632337f9776de17d51d969c77 ]
+[ Upstream commit 6f7c9caf017be8ab0fe3b99509580d0793bf0833 ]
 
-Many systems build/test up-to-date kernels with older libcs, and
-an older glibc (2.17) lacks the definition of SOL_DCCP in
-/usr/include/bits/socket.h (it was added in the 4.6 timeframe).
+Replace negations of nft_rbtree_interval_end() with a new helper,
+nft_rbtree_interval_start(), wherever this helps to visualise the
+problem at hand, that is, for all the occurrences except for the
+comparison against given flags in __nft_rbtree_get().
 
-Adding the definition to the test program avoids a compilation
-failure that gets in the way of building tools/testing/selftests/net.
-The test itself will work once the definition is added; either
-skipping due to DCCP not being configured in the kernel under test
-or passing, so there are no other more up-to-date glibc dependencies
-here it seems beyond that missing definition.
+This gets especially useful in the next patch.
 
-Fixes: 11fb60d1089f ("selftests: net: reuseport_addr_any: add DCCP")
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/reuseport_addr_any.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/netfilter/nft_set_rbtree.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/net/reuseport_addr_any.c b/tools/testing/selftests/net/reuseport_addr_any.c
-index c6233935fed14..b8475cb29be7a 100644
---- a/tools/testing/selftests/net/reuseport_addr_any.c
-+++ b/tools/testing/selftests/net/reuseport_addr_any.c
-@@ -21,6 +21,10 @@
- #include <sys/socket.h>
- #include <unistd.h>
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index a9f804f7a04ac..95fcba34bfd35 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -33,6 +33,11 @@ static bool nft_rbtree_interval_end(const struct nft_rbtree_elem *rbe)
+ 	       (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END);
+ }
  
-+#ifndef SOL_DCCP
-+#define SOL_DCCP 269
-+#endif
++static bool nft_rbtree_interval_start(const struct nft_rbtree_elem *rbe)
++{
++	return !nft_rbtree_interval_end(rbe);
++}
 +
- static const char *IP4_ADDR = "127.0.0.1";
- static const char *IP6_ADDR = "::1";
- static const char *IP4_MAPPED6 = "::ffff:127.0.0.1";
+ static bool nft_rbtree_equal(const struct nft_set *set, const void *this,
+ 			     const struct nft_rbtree_elem *interval)
+ {
+@@ -64,7 +69,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 			if (interval &&
+ 			    nft_rbtree_equal(set, this, interval) &&
+ 			    nft_rbtree_interval_end(rbe) &&
+-			    !nft_rbtree_interval_end(interval))
++			    nft_rbtree_interval_start(interval))
+ 				continue;
+ 			interval = rbe;
+ 		} else if (d > 0)
+@@ -89,7 +94,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 
+ 	if (set->flags & NFT_SET_INTERVAL && interval != NULL &&
+ 	    nft_set_elem_active(&interval->ext, genmask) &&
+-	    !nft_rbtree_interval_end(interval)) {
++	    nft_rbtree_interval_start(interval)) {
+ 		*ext = &interval->ext;
+ 		return true;
+ 	}
+@@ -224,9 +229,9 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+ 			p = &parent->rb_right;
+ 		else {
+ 			if (nft_rbtree_interval_end(rbe) &&
+-			    !nft_rbtree_interval_end(new)) {
++			    nft_rbtree_interval_start(new)) {
+ 				p = &parent->rb_left;
+-			} else if (!nft_rbtree_interval_end(rbe) &&
++			} else if (nft_rbtree_interval_start(rbe) &&
+ 				   nft_rbtree_interval_end(new)) {
+ 				p = &parent->rb_right;
+ 			} else if (nft_set_elem_active(&rbe->ext, genmask)) {
+@@ -317,10 +322,10 @@ static void *nft_rbtree_deactivate(const struct net *net,
+ 			parent = parent->rb_right;
+ 		else {
+ 			if (nft_rbtree_interval_end(rbe) &&
+-			    !nft_rbtree_interval_end(this)) {
++			    nft_rbtree_interval_start(this)) {
+ 				parent = parent->rb_left;
+ 				continue;
+-			} else if (!nft_rbtree_interval_end(rbe) &&
++			} else if (nft_rbtree_interval_start(rbe) &&
+ 				   nft_rbtree_interval_end(this)) {
+ 				parent = parent->rb_right;
+ 				continue;
 -- 
 2.20.1
 
