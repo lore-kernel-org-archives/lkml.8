@@ -2,129 +2,108 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B397BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FCAC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF392072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1F12074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586269991;
+	bh=cminWrIgkRVEhjmai3BMkPP+WLA37jmwDe9yEHcu7Tg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=opiVYx7tqr7iJFzADBphXipYOY6O99jR7j041SbBP1JJKeDfE/r0Qgn+U97UexeTz
+	 r22ugI+8z8/NX7LiwB0a6VgLTj0gjCk9EefgxRo4X9wJdb/oORQ/T17Al2fdirJ3aG
+	 1L9ppNVnN38Kfm2I+iCELX6xdQuu5Eh7bGxG47ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgDGOb3 (ORCPT
+        id S1729187AbgDGOdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:31:29 -0400
-Received: from nibbler.cm4all.net ([82.165.145.151]:47581 "EHLO
-        nibbler.cm4all.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbgDGOb1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:31:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by nibbler.cm4all.net (Postfix) with ESMTP id DD1F5C01CB
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Apr 2020 16:23:08 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at nibbler.cm4all.net
-Received: from nibbler.cm4all.net ([127.0.0.1])
-        by localhost (nibbler.cm4all.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id IV_0DT5AAI7U for <linux-kernel@vger.kernel.org>;
-        Tue,  7 Apr 2020 16:23:08 +0200 (CEST)
-Received: from zero.intern.cm-ag (zero.intern.cm-ag [172.30.16.10])
-        by nibbler.cm4all.net (Postfix) with SMTP id 9EDEDC021A
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Apr 2020 16:23:08 +0200 (CEST)
-Received: (qmail 19689 invoked from network); 7 Apr 2020 17:35:21 +0200
-Received: from unknown (HELO rabbit.intern.cm-ag) (172.30.3.1)
-  by zero.intern.cm-ag with SMTP; 7 Apr 2020 17:35:21 +0200
-Received: by rabbit.intern.cm-ag (Postfix, from userid 1023)
-        id 61F4446143D; Tue,  7 Apr 2020 16:23:08 +0200 (CEST)
-From:   Max Kellermann <mk@cm4all.com>
-To:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        trond.myklebust@hammerspace.com
-Cc:     bfields@redhat.com, tytso@mit.edu, viro@zeniv.linux.org.uk,
-        agruenba@redhat.com, linux-kernel@vger.kernel.org,
-        Max Kellermann <mk@cm4all.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH v3 3/4] linux/fs.h: fix umask on NFS with CONFIG_FS_POSIX_ACL=n
-Date:   Tue,  7 Apr 2020 16:22:42 +0200
-Message-Id: <20200407142243.2032-3-mk@cm4all.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200407142243.2032-1-mk@cm4all.com>
-References: <20200407142243.2032-1-mk@cm4all.com>
+        Tue, 7 Apr 2020 10:33:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728975AbgDGOdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:33:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AC342072A;
+        Tue,  7 Apr 2020 14:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586269989;
+        bh=cminWrIgkRVEhjmai3BMkPP+WLA37jmwDe9yEHcu7Tg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T+mc3+rDHQN+IacAd+EmpTdDH2QE8aO0VMBd8RUfIZg7lMPcTqAmayi+OoDlmf724
+         ep5Duhdvj2XzEEsxx/jN5ENw5LdRt5/mEw/XJjh/e8Wnk+8niv71ZpkDUjqXuE+iWc
+         A9g/3oTOEG6F6VMW6AuzVTUNvoovPNd8kqkKV2DE=
+Date:   Tue, 7 Apr 2020 16:33:04 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        syzbot <syzbot+9627a92b1f9262d5d30c@syzkaller.appspotmail.com>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING in ib_umad_kill_port
+Message-ID: <20200407143304.GA876345@kroah.com>
+References: <00000000000075245205a2997f68@google.com>
+ <20200406172151.GJ80989@unreal>
+ <20200406174440.GR20941@ziepe.ca>
+ <CACT4Y+Zv_WXEn6u5a6kRZpkDJnSzeGF1L7JMw4g85TLEgAM7Lw@mail.gmail.com>
+ <20200407115548.GU20941@ziepe.ca>
+ <CACT4Y+Zy0LwpHkTMTtb08ojOxuEUFo1Z7wkMCYSVCvsVDcxayw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Zy0LwpHkTMTtb08ojOxuEUFo1Z7wkMCYSVCvsVDcxayw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make IS_POSIXACL() return false if POSIX ACL support is disabled and
-ignore SB_POSIXACL/MS_POSIXACL.
+On Tue, Apr 07, 2020 at 02:39:42PM +0200, Dmitry Vyukov wrote:
+> On Tue, Apr 7, 2020 at 1:55 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Tue, Apr 07, 2020 at 11:56:30AM +0200, Dmitry Vyukov wrote:
+> > > > I'm not sure what could be done wrong here to elicit this:
+> > > >
+> > > >  sysfs group 'power' not found for kobject 'umad1'
+> > > >
+> > > > ??
+> > > >
+> > > > I've seen another similar sysfs related trigger that we couldn't
+> > > > figure out.
+> > > >
+> > > > Hard to investigate without a reproducer.
+> > >
+> > > Based on all of the sysfs-related bugs I've seen, my bet would be on
+> > > some races. E.g. one thread registers devices, while another
+> > > unregisters these.
+> >
+> > I did check that the naming is ordered right, at least we won't be
+> > concurrently creating and destroying umadX sysfs of the same names.
+> >
+> > I'm also fairly sure we can't be destroying the parent at the same
+> > time as this child.
+> >
+> > Do you see the above commonly? Could it be some driver core thing? Or
+> > is it more likely something wrong in umad?
+> 
+> Mmmm... I can't say, I am looking at some bugs very briefly. I've
+> noticed that sysfs comes up periodically (or was it some other similar
+> fs?). General observation is that code frequently assumes only the
+> happy scenario and only, say, a single administrator doing one thing
+> at a time, slowly and carefully, and it is not really hardened against
+> armies of monkeys.
+> But I did not look at code abstractions, bug patterns, contracts, etc.
+> 
+> Greg KH may know better. Greg, as far as I remember you commented on
+> some of these reports along the lines of, for example, "the warning is
+> in sysfs code, but the bug is in the callers".
 
-Never skip applying the umask in namei.c and never bother to do any
-ACL specific checks if the filesystem falsely indicates it has ACLs
-enabled when the feature is completely disabled in the kernel.
-
-This fixes a problem where the umask is always ignored in the NFS
-client when compiled without CONFIG_FS_POSIX_ACL.  This is a 4 year
-old regression caused by commit 013cdf1088d723 which itself was not
-completely wrong, but failed to consider all the side effects by
-misdesigned VFS code.
-
-Prior to that commit, there were two places where the umask could be
-applied, for example when creating a directory:
-
- 1. in the VFS layer in SYSCALL_DEFINE3(mkdirat), but only if
-    !IS_POSIXACL()
-
- 2. again (unconditionally) in nfs3_proc_mkdir()
-
-The first one does not apply, because even without
-CONFIG_FS_POSIX_ACL, the NFS client sets MS_POSIXACL in
-nfs_fill_super().
-
-After that commit, (2.) was replaced by:
-
- 2b. in posix_acl_create(), called by nfs3_proc_mkdir()
-
-There's one branch in posix_acl_create() which applies the umask;
-however, without CONFIG_FS_POSIX_ACL, posix_acl_create() is an empty
-dummy function which does not apply the umask.
-
-The approach chosen by this patch is to make IS_POSIXACL() always
-return false when POSIX ACL support is disabled, so the umask always
-gets applied by the VFS layer.  This is consistent with the (regular)
-behavior of posix_acl_create(): that function returns early if
-IS_POSIXACL() is false, before applying the umask.
-
-Therefore, posix_acl_create() is responsible for applying the umask if
-there is ACL support enabled in the file system (SB_POSIXACL), and the
-VFS layer is responsible for all other cases (no SB_POSIXACL or no
-CONFIG_FS_POSIX_ACL).
-
-Signed-off-by: Max Kellermann <mk@cm4all.com>
-Reviewed-by: J. Bruce Fields <bfields@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@vger.kernel.org
----
- include/linux/fs.h | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index abedbffe2c9e..5721be1146b1 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2027,7 +2027,12 @@ static inline bool sb_rdonly(const struct super_block *sb) { return sb->s_flags
- #define IS_NOQUOTA(inode)	((inode)->i_flags & S_NOQUOTA)
- #define IS_APPEND(inode)	((inode)->i_flags & S_APPEND)
- #define IS_IMMUTABLE(inode)	((inode)->i_flags & S_IMMUTABLE)
-+
-+#ifdef CONFIG_FS_POSIX_ACL
- #define IS_POSIXACL(inode)	__IS_FLG(inode, SB_POSIXACL)
-+#else
-+#define IS_POSIXACL(inode)	0
-+#endif
- 
- #define IS_DEADDIR(inode)	((inode)->i_flags & S_DEAD)
- #define IS_NOCMTIME(inode)	((inode)->i_flags & S_NOCMTIME)
--- 
-2.20.1
+Yes, that is correct.
 
