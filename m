@@ -2,117 +2,171 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1766CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C0CC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D309A20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91D6D2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+Xs4edE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uJCQd6y0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgDGU1t (ORCPT
+        id S1726534AbgDGU2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:27:49 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43750 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgDGU1t (ORCPT
+        Tue, 7 Apr 2020 16:28:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42663 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgDGU2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:27:49 -0400
-Received: by mail-il1-f193.google.com with SMTP id g15so4553426ilj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:27:49 -0700 (PDT)
+        Tue, 7 Apr 2020 16:28:20 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so5371606wrx.9;
+        Tue, 07 Apr 2020 13:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=iLGzcOj0i6IhfKXOkbbCjFFFTb9Eq4X0i6RrvSaiIuc=;
-        b=O+Xs4edEibivypwS2nzt++g33I0S22oG9q1nEPqQ2F5NI132SbWl6FEzY4UMeiDvv4
-         55dDgRkw8amW7kbc6Q+MbmTEdTe5Dr63TrmPSLSwhFQwk+eG7ZL8CPGEo24iZcA/0D1b
-         Xkpstmhywe4n2+4ZWYlgwUb6dlBk+UcuWGAZ2KEnf5XO8psrNoSLRly/J4m887H8nkXL
-         yYRh3xlt5RAY71Ukkie1Wz26UuIehWC67khGX/lNmEyf0n41jELfI1oaMOmSoSP5ALWQ
-         IPWRREVLXVg+NrSbpzDTk5IioiD27WaPQBaiCU0wsRT0ISDq1sM7Id8qxQZdeqbwu1ya
-         wx9g==
+        h=from:subject:to:cc:references:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uw1qobyhOwh1ECUhRuCu3pTCZG/po5qg7eF9lLQI/HE=;
+        b=uJCQd6y0sUs+beH85/7XR2F4yV28MorM7f9hZf6NqxPOnAYj5pXxBo6DY2EtiYPaJK
+         ojtxM1bddZfSSnKT+sZHakaVJZSx1kwDgKZXOwYVof1/B2iQmpwN3p0PEpwk4E5JMyGq
+         8rZ3VogOnL3iHYcBxII14cJ5DA7YmGGMWQvWRR8AjPiU+AXvjkChRHGLPQlV/3VUR0OV
+         delzmuqSlTMNcY2okzLHSslG16j8zkmyprK6sLkfXL9bB2UREvJhZpUMEbO29YkTuYHz
+         R+iYOBbZJ1P0MZ8KVMddW5CkqRLWsf7mNRccBkqyCChrLyW9ILPG3hjJ+s0DYzihO/hr
+         froQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=iLGzcOj0i6IhfKXOkbbCjFFFTb9Eq4X0i6RrvSaiIuc=;
-        b=NY1yGI8bLv52/znOuGstYdPxQ2DzcpYmu6WWr/cuBqOkuyp+HJE+2REu5EJGgjGO9T
-         7KjPuIARzwzdTkLT/O08Mr544zqOLDOoV90UFNF0texG9cwFP6rxTm8yrQ355ugPugxd
-         h+NRDRns90wC1HnJuOjiI1rW11d2VYt71+G2zYVPmMfkBmbyDAsQ+GVCG8B+Jd1qEaki
-         JV7EQ/e0+EMZlyPCoBs+ep/5Lh+uYVdJuZbtw+JzS7FOvqAloEGKPBN+RYf2JhdDMnG+
-         pR9hDU1v5ZwFztloxLOpIy/WqvN3Yp+XuHaNhR6tRRIm2pUSRK+RTo7/vgMZTqBOs/9w
-         2XjQ==
-X-Gm-Message-State: AGi0PuYPE5oDU1b8SvvK4qgbqSbiJr3kKzhbKzgK0JsxQUoZltXAfWJM
-        nQ8yU8fnJmZ5iQMK3Dn73eE=
-X-Google-Smtp-Source: APiQypI3vNVBUmbtv/FLN1rb18EIq7DAQOvifzFXGukh1zv11Wiwoqd4T6wCaD1Q3CFqX7MLl7OcFw==
-X-Received: by 2002:a92:8659:: with SMTP id g86mr3963135ild.96.1586291268421;
-        Tue, 07 Apr 2020 13:27:48 -0700 (PDT)
-Received: from ?IPv6:2601:647:4700:9b2:1d50:a6a4:b3be:b3e4? ([2601:647:4700:9b2:1d50:a6a4:b3be:b3e4])
-        by smtp.gmail.com with ESMTPSA id m14sm7629066ilr.16.2020.04.07.13.27.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 Apr 2020 13:27:47 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <20200407193853.GP2452@worktop.programming.kicks-ass.net>
-Date:   Tue, 7 Apr 2020 13:27:45 -0700
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, hch@infradead.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        mingo <mingo@redhat.com>, bp <bp@alien8.de>, hpa@zytor.com,
-        x86 <x86@kernel.org>, "Kenneth R. Crudup" <kenny@panix.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        h=x-gm-message-state:from:subject:to:cc:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=uw1qobyhOwh1ECUhRuCu3pTCZG/po5qg7eF9lLQI/HE=;
+        b=nFAlACYUcgNux/4qMCcYHJGgH2ARA7pEEjapa6AGB24WDBPYcEAN0kxUDAOqjp4hUH
+         cqvGqOBNZCuG5O4KuoY5ZVGEBnFz9RRBselaxjAhvBOI2qdnbYyuWqtwZKFfu3J8qbkp
+         TTWitdYJ5Oj/cBE6nAHQ3rHXAcJZFPQ42zfFKUqrZRgA+XY5uP7SxZZdwQhCGL2Ep+a0
+         Bw0PZG18PjK4NT+hxNC07CKZfk0v23qfNVwsBwsladVpAfT8TZCuB6ND1Xmb8AgSw7ZG
+         o17YOMqIrEFZqPLRb2T6hofJsmGGzFI1UC13vJbiqULgyK309AT0UksOc4MKy0MTHlAG
+         l9zA==
+X-Gm-Message-State: AGi0PuY/mpDREfjRk7PGI9bfB43gFMoDToGB8yfHOjkCdaHG99l1eBuG
+        /w1Axb+2Zzys1vEbz3O1xHI=
+X-Google-Smtp-Source: APiQypJ3sai7j/e0sHtZWYtNYiegn1ScEPSLkQWQSHrcu9M8Ss/JsS1/irrUhosiryd3/zXYWbPzzQ==
+X-Received: by 2002:a5d:4d8c:: with SMTP id b12mr4480074wru.35.1586291296837;
+        Tue, 07 Apr 2020 13:28:16 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id b191sm3624373wmd.39.2020.04.07.13.28.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 13:28:16 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add Broadcom STB USB support
+To:     Rob Herring <robh@kernel.org>, Al Cooper <alcooperx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        Alan Stern <stern@rowland.harvard.edu>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        devicetree@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        jannh@google.com, keescook@chromium.org, David.Laight@aculab.com,
-        Doug Covelli <dcovelli@vmware.com>, mhiramat@kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <90B32DAE-0BB5-4455-8F73-C43037695E7C@gmail.com>
-References: <20200407110236.930134290@infradead.org>
- <20200407111007.429362016@infradead.org>
- <10ABBCEE-A74D-4100-99D9-05B4C1758FF6@gmail.com>
- <20200407193853.GP2452@worktop.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Mathias Nyman <mathias.nyman@intel.com>
+References: <20200327204711.10614-1-alcooperx@gmail.com>
+ <20200327204711.10614-2-alcooperx@gmail.com> <20200330154006.GA21478@bogus>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz7QnRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+iGYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSC5BA0ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU4hPBBgRAgAPAhsMBQJU
+ X9LxBQkeXB3fAAoJEGFXmRW1Y3YOj4UAn3nrFLPZekMeqX5aD/aq/dsbXSfyAKC45Go0YyxV
+ HGuUuzv+GKZ6nsysJ7kCDQRXG8fwARAA6q/pqBi5PjHcOAUgk2/2LR5LjjesK50bCaD4JuNc
+ YDhFR7Vs108diBtsho3w8WRd9viOqDrhLJTroVckkk74OY8r+3t1E0Dd4wHWHQZsAeUvOwDM
+ PQMqTUBFuMi6ydzTZpFA2wBR9x6ofl8Ax+zaGBcFrRlQnhsuXLnM1uuvS39+pmzIjasZBP2H
+ UPk5ifigXcpelKmj6iskP3c8QN6x6GjUSmYx+xUfs/GNVSU1XOZn61wgPDbgINJd/THGdqiO
+ iJxCLuTMqlSsmh1+E1dSdfYkCb93R/0ZHvMKWlAx7MnaFgBfsG8FqNtZu3PCLfizyVYYjXbV
+ WO1A23riZKqwrSJAATo5iTS65BuYxrFsFNPrf7TitM8E76BEBZk0OZBvZxMuOs6Z1qI8YKVK
+ UrHVGFq3NbuPWCdRul9SX3VfOunr9Gv0GABnJ0ET+K7nspax0xqq7zgnM71QEaiaH17IFYGS
+ sG34V7Wo3vyQzsk7qLf9Ajno0DhJ+VX43g8+AjxOMNVrGCt9RNXSBVpyv2AMTlWCdJ5KI6V4
+ KEzWM4HJm7QlNKE6RPoBxJVbSQLPd9St3h7mxLcne4l7NK9eNgNnneT7QZL8fL//s9K8Ns1W
+ t60uQNYvbhKDG7+/yLcmJgjF74XkGvxCmTA1rW2bsUriM533nG9gAOUFQjURkwI8jvMAEQEA
+ AYkCaAQYEQIACQUCVxvH8AIbAgIpCRBhV5kVtWN2DsFdIAQZAQIABgUCVxvH8AAKCRCH0Jac
+ RAcHBIkHD/9nmfog7X2ZXMzL9ktT++7x+W/QBrSTCTmq8PK+69+INN1ZDOrY8uz6htfTLV9+
+ e2W6G8/7zIvODuHk7r+yQ585XbplgP0V5Xc8iBHdBgXbqnY5zBrcH+Q/oQ2STalEvaGHqNoD
+ UGyLQ/fiKoLZTPMur57Fy1c9rTuKiSdMgnT0FPfWVDfpR2Ds0gpqWePlRuRGOoCln5GnREA/
+ 2MW2rWf+CO9kbIR+66j8b4RUJqIK3dWn9xbENh/aqxfonGTCZQ2zC4sLd25DQA4w1itPo+f5
+ V/SQxuhnlQkTOCdJ7b/mby/pNRz1lsLkjnXueLILj7gNjwTabZXYtL16z24qkDTI1x3g98R/
+ xunb3/fQwR8FY5/zRvXJq5us/nLvIvOmVwZFkwXc+AF+LSIajqQz9XbXeIP/BDjlBNXRZNdo
+ dVuSU51ENcMcilPr2EUnqEAqeczsCGpnvRCLfVQeSZr2L9N4svNhhfPOEscYhhpHTh0VPyxI
+ pPBNKq+byuYPMyk3nj814NKhImK0O4gTyCK9b+gZAVvQcYAXvSouCnTZeJRrNHJFTgTgu6E0
+ caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
+ 6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <7e980e08-bc4c-aad5-fce0-0133e4e479f8@gmail.com>
+Date:   Tue, 7 Apr 2020 13:28:11 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200330154006.GA21478@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Apr 7, 2020, at 12:38 PM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
->=20
-> On Tue, Apr 07, 2020 at 11:55:21AM -0700, Nadav Amit wrote:
->>> On Apr 7, 2020, at 4:02 AM, Peter Zijlstra <peterz@infradead.org> =
-wrote:
->>>=20
->>> Since we now have infrastructure to analyze module text, disallow
->>> modules that write to CRn and DRn registers.
->>=20
->> Assuming the kernel is built without CONFIG_PARAVIRT, what is the =
-right way
->> for out-of-tree modules to write to CRs? Let=E2=80=99s say CR2?
->=20
-> Most of them there is no real justification for ever writing to. CR2 I
-> suppose we can have an exception for given a sane rationale for why
-> you'd need to rewrite the fault address.
+On 3/30/2020 8:40 AM, Rob Herring wrote:
+> On Fri, 27 Mar 2020 16:47:08 -0400, Al Cooper wrote:
+>> Add DT bindings for Broadcom STB USB EHCI and XHCI drivers.
+>>
+>> NOTE: The OHCI driver is not included because it uses the generic
+>>       platform driver.
+>>
+>> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+>> ---
+>>  .../bindings/usb/brcm,bcm7445-ehci.yaml       | 61 +++++++++++++++++++
+>>  .../devicetree/bindings/usb/usb-xhci.txt      |  1 +
+>>  2 files changed, 62 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+>>
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: 'interrupt-names' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-For the same reason that KVM writes to CR2 - to restore CR2 before =
-entering
-a guest, since CR2 not architecturally loaded from the VMCS. I suspect =
-there
-are additional use-cases which are not covered by the kernel interfaces.
+This warning does not seem to be legitimate, the 'interrupt-names'
+property is a valid one, where do we update the schema such that it
+knows about it?
+
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.example.dt.yaml: ehci@f0b00300: $nodename:0: 'ehci@f0b00300' does not match '^usb(@.*)?'
+
+This one is a legitimate one and should be fixed.
+--
+Florian
+
 
