@@ -2,133 +2,249 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF164C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA57CC2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77477206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF9B0206F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:21:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Rv6t0CkD"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BBXCf1mS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbgDGIUq (ORCPT
+        id S1727919AbgDGIVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 04:20:46 -0400
-Received: from mout.web.de ([217.72.192.78]:40545 "EHLO mout.web.de"
+        Tue, 7 Apr 2020 04:21:46 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34400 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgDGIUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 04:20:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1586247638;
-        bh=axDv8zIhXE7bsjbz/f1ODbZWUdk+z3gkTTq0sfunDd8=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=Rv6t0CkD1heypLf+VI3RG0rXc2+oyCcwngbxRGCyrhMeofwrV0ICtrsC06a/yrMxl
-         evtKTbK4/K6PDwCGxerJbAJ8NIgCuAdTu6WT387F2uIfUgU08tiHhCZ/khybHoCkhm
-         ecxinLYOWoit0aN91aQ2xW9D8bPBmB+nFIMqlp4I=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.5.104]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lo0V2-1iorYk1mem-00fyoa; Tue, 07
- Apr 2020 10:20:38 +0200
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org
-Cc:     Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: core: move 'indio_dev->info' null check first
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <cb300eeb-6045-bd91-3e0e-902dd3b5d5d8@web.de>
-Date:   Tue, 7 Apr 2020 10:20:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727815AbgDGIVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 04:21:46 -0400
+Received: from zn.tnic (p200300EC2F0B270090FA9DB719D9D432.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:2700:90fa:9db7:19d9:d432])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D09641EC06AC;
+        Tue,  7 Apr 2020 10:21:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1586247705;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=inDAoDhnDNb+NR2o62zmukqy9U+t3PJ/y/kyLO8qPwY=;
+        b=BBXCf1mSEmtYhSZ6Gd8KbY/F1e3b3P2i1ZIjuRQM2gt8Ji/Y+Bh+GWZT+IA5IWvNCqXOp8
+        h0pa7dRl7TbU140b+Z0BDja3GkqOQgwqhmRWAq2AWGrBjOiCtqEQDrNN5thRMQw4w/xjM9
+        +dK8A3kp0EYkU4sD9MzmcyttFXpFbL0=
+Date:   Tue, 7 Apr 2020 10:21:41 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     x86@kernel.org, Andy Lutomirski <luto@kernel.org>,
+        linux-kernel@vger.kernel.org, Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: Re: [PATCH v2 4/7] x86/mce: Fix all mce notifiers to update the
+ mce->kflags bitmask
+Message-ID: <20200407082141.GA9616@zn.tnic>
+References: <20200212204652.1489-1-tony.luck@intel.com>
+ <20200214222720.13168-1-tony.luck@intel.com>
+ <20200214222720.13168-5-tony.luck@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aHOrZ7W7oehiuXC+BmesoutQg3MIGnbgyZ4wMISjdGAa2gj0zQM
- Gfh8Rt5ebQ4+E1TcW8C5kTZjKfyiEwzqdQeonY3GJKvrsLotwk6gS673PYLTTt5G7XLtXDN
- OUdFLMCJDvUoS7xkgelLHZ2+gaiAA69PoGyHpDiAxVUe86sqnFP0Yb0FZwDxKpZycslZYI3
- rvjPr9hOkPKBwcG3fig4w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IjsO9saZrLc=:HgBVfaxwtJVLHi/x3sjz/P
- DAjgT52cEVu7cVBXYd9thuhnxYieM01UXMrtK44opiKNoFI5TMB5joN3ucxX5REDqZh0RyjBC
- YCU6PvON4wDgAM1uyZLYR6q2x6GJvhDxjiZDqqOpnrdxY0JhNnyyNnf2jXXmRAldFtTa5JRDm
- pqOxekv+j3zj+OPgXkY91bSWjaF5XXgqvRDBOi7pjscHvJW8T9VwS1FKVhbuQG/s3eb36fLCU
- 2RDSgDXw9BeTBSwKSlQzc8voYf+gVRqv/p8+RcR1AZnwEBHlGb4ytNYpGE3DMSrzpnNsBn8sA
- 1Br3FwMd5s8NU59az97m8G3pzf1BnZ6Q+mg/SuaYx0XrDDAldKU11QoxCvnG1kWBoRhO50IcR
- BTD6B4nUc9Uxo+SG/CgMQbKWO4U14MDdbNWEEo/j94O0zsSwoZkygEnoewI+sDjg0bRJp77zl
- ZSB/VocwARZtPxqPzUqASfbjd8bv3ruAbjihej71VGV1dJXA2+sDfcOfeZhHepCJkIarPuIBv
- Htvr2/ZSl+CH5WBlAhrbAXEzCoZ5jtpfz+w5ThTMwwSs4oTwBy8FtpnRwQidzMj4EQs8ejtTs
- t7/cDnt8W9DlnMQ4zJ/96zFVVMyQkM1HENIw1SCuBOSPIMPkAuN+6P+UsrVqefk4PHmt2048f
- zlGh3FEXsUlx7vowCXiG1nAV3kj+h/5PJ9PwIBvXmnQWWQOsnTPLVb0ZlHX2hwmo+09ZEa3eM
- wgnI+rqrockR5c9zLYKqjwo8Ehx2B7qft3W0UOeiDwAsFf8gsApqqgAP3ANotl5cuCxIQVNpu
- +CtIycP66FKGwwgHOorVenSgS5+oRswBzhiGs5TAGFhg48WSiac9O7+6O+0+xqqR6LsddXUXV
- 2zORQrIHXkoS52GcEUtsp1HS69J8K8aQXNY7N7MddKyOkPnQNsipckAT9ZPSAYKpdHJe1y/uq
- ykt0POpn+c5Wu0I0xKOcmKaJVsygka+UNLJKKvkZFjZp8Qyj7gAXOvHCq++TOOJ4xInRolM3e
- vVJNO0FL8iM0y2devuqZzSSmvyRW/rTYaqpJWD6cHn94YP1HBl/tcfWNAPqPAad6kv1kSLt+u
- DTaoSucDDi4VpmLSWpoaA9skPYHCwfQNjoY65ZQk/z419wZBLpC1Ie6thKbaYPMPTD/1oX/X3
- I/5kCBpDc0ICOuDsOC4hGlDFoDuLuOvG1raXqqgyiMx7P2FxAUS5N7DHLQoKah76f6Q1fn0hs
- oPzbTVM2rc8j8EKG0
+Content-Disposition: inline
+In-Reply-To: <20200214222720.13168-5-tony.luck@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Doesn't fix anything.
+On Fri, Feb 14, 2020 at 02:27:17PM -0800, Tony Luck wrote:
+> If the handler took any action to log or deal with the error, set
+> a bit int mce->kflags so that the default handler on the end of
+> the machine check chain can see what has been done.
+> 
+> Get rid of NOTIFY_STOP (well almost ... mce_amd.c is currently using
+> it to filter out some GART TLB errors ... need to deal with that
+> later).
 
-Would the change description be nicer without this sentence?
+Here's me dealing with it :-)
 
+Btw, no need to resend with it - I'm already queueing it all locally
+here along with more rework ontop and send it all once done.
 
-> Just moves this =E2=80=A6
+Thx.
 
-I suggest to choose an imperative wording.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3D7e63420847ae5f1036e4f7c42f=
-0b3282e73efbc2#n151
+---
+From 3eee69c7cf32578aafe050051d0406a1e6fbacbb Mon Sep 17 00:00:00 2001
+From: Borislav Petkov <bp@suse.de>
+Date: Tue, 7 Apr 2020 09:55:10 +0200
+Subject: [PATCH] x86/mce/amd, edac: Remove report_gart_errors
 
-Regards,
-Markus
+... because no one should be interested in spurious MCEs anyway. Make
+the filtering unconditional and move it to amd_filter_mce().
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/include/asm/mce.h    |  3 ++-
+ arch/x86/kernel/cpu/mce/amd.c |  9 +++++++--
+ drivers/edac/amd64_edac.c     |  8 --------
+ drivers/edac/mce_amd.c        | 24 ------------------------
+ drivers/edac/mce_amd.h        |  2 --
+ 5 files changed, 9 insertions(+), 37 deletions(-)
+
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index f9cea081c05b..83b6ddafa032 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -127,6 +127,8 @@
+ #define MSR_AMD64_SMCA_MCx_DEADDR(x)	(MSR_AMD64_SMCA_MC0_DEADDR + 0x10*(x))
+ #define MSR_AMD64_SMCA_MCx_MISCy(x, y)	((MSR_AMD64_SMCA_MC0_MISC1 + y) + (0x10*(x)))
+ 
++#define XEC(x, mask)			(((x) >> 16) & mask)
++
+ /*
+  * This structure contains all data related to the MCE log.  Also
+  * carries a signature to make it easier to find from external
+@@ -347,5 +349,4 @@ umc_normaddr_to_sysaddr(u64 norm_addr, u16 nid, u8 umc, u64 *sys_addr)	{ return
+ #endif
+ 
+ static inline void mce_hygon_feature_init(struct cpuinfo_x86 *c)	{ return mce_amd_feature_init(c); }
+-
+ #endif /* _ASM_X86_MCE_H */
+diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
+index 15c87b87b901..ea3cf714b7ad 100644
+--- a/arch/x86/kernel/cpu/mce/amd.c
++++ b/arch/x86/kernel/cpu/mce/amd.c
+@@ -577,14 +577,19 @@ bool amd_filter_mce(struct mce *m)
+ {
+ 	enum smca_bank_types bank_type = smca_get_bank_type(m->bank);
+ 	struct cpuinfo_x86 *c = &boot_cpu_data;
+-	u8 xec = (m->status >> 16) & 0x3F;
+ 
+ 	/* See Family 17h Models 10h-2Fh Erratum #1114. */
+ 	if (c->x86 == 0x17 &&
+ 	    c->x86_model >= 0x10 && c->x86_model <= 0x2F &&
+-	    bank_type == SMCA_IF && xec == 10)
++	    bank_type == SMCA_IF && XEC(m->status, 0x3f) == 10)
+ 		return true;
+ 
++	/* NB GART TLB error reporting is disabled by default. */
++	if (c->x86 < 0x17) {
++		if (m->bank == 4 && XEC(m->status, 0x1f) == 0x5)
++			return true;
++	}
++
+ 	return false;
+ }
+ 
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index f91f3bc1e0b2..6bdc5bb8c8bc 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -4,9 +4,6 @@
+ 
+ static struct edac_pci_ctl_info *pci_ctl;
+ 
+-static int report_gart_errors;
+-module_param(report_gart_errors, int, 0644);
+-
+ /*
+  * Set by command line parameter. If BIOS has enabled the ECC, this override is
+  * cleared to prevent re-enabling the hardware by this driver.
+@@ -3681,9 +3678,6 @@ static int __init amd64_edac_init(void)
+ 	}
+ 
+ 	/* register stuff with EDAC MCE */
+-	if (report_gart_errors)
+-		amd_report_gart_errors(true);
+-
+ 	if (boot_cpu_data.x86 >= 0x17)
+ 		amd_register_ecc_decoder(decode_umc_error);
+ 	else
+@@ -3718,8 +3712,6 @@ static void __exit amd64_edac_exit(void)
+ 		edac_pci_release_generic_ctl(pci_ctl);
+ 
+ 	/* unregister from EDAC MCE */
+-	amd_report_gart_errors(false);
+-
+ 	if (boot_cpu_data.x86 >= 0x17)
+ 		amd_unregister_ecc_decoder(decode_umc_error);
+ 	else
+diff --git a/drivers/edac/mce_amd.c b/drivers/edac/mce_amd.c
+index 8874b7722b2f..e58644d9c92b 100644
+--- a/drivers/edac/mce_amd.c
++++ b/drivers/edac/mce_amd.c
+@@ -10,15 +10,8 @@ static struct amd_decoder_ops fam_ops;
+ 
+ static u8 xec_mask	 = 0xf;
+ 
+-static bool report_gart_errors;
+ static void (*decode_dram_ecc)(int node_id, struct mce *m);
+ 
+-void amd_report_gart_errors(bool v)
+-{
+-	report_gart_errors = v;
+-}
+-EXPORT_SYMBOL_GPL(amd_report_gart_errors);
+-
+ void amd_register_ecc_decoder(void (*f)(int, struct mce *))
+ {
+ 	decode_dram_ecc = f;
+@@ -1030,20 +1023,6 @@ static inline void amd_decode_err_code(u16 ec)
+ 	pr_cont("\n");
+ }
+ 
+-/*
+- * Filter out unwanted MCE signatures here.
+- */
+-static bool ignore_mce(struct mce *m)
+-{
+-	/*
+-	 * NB GART TLB error reporting is disabled by default.
+-	 */
+-	if (m->bank == 4 && XEC(m->status, 0x1f) == 0x5 && !report_gart_errors)
+-		return true;
+-
+-	return false;
+-}
+-
+ static const char *decode_error_status(struct mce *m)
+ {
+ 	if (m->status & MCI_STATUS_UC) {
+@@ -1067,9 +1046,6 @@ amd_decode_mce(struct notifier_block *nb, unsigned long val, void *data)
+ 	unsigned int fam = x86_family(m->cpuid);
+ 	int ecc;
+ 
+-	if (ignore_mce(m))
+-		return NOTIFY_STOP;
+-
+ 	pr_emerg(HW_ERR "%s\n", decode_error_status(m));
+ 
+ 	pr_emerg(HW_ERR "CPU:%d (%x:%x:%x) MC%d_STATUS[%s|%s|%s|%s|%s",
+diff --git a/drivers/edac/mce_amd.h b/drivers/edac/mce_amd.h
+index 4e9c5e596c6c..4811b18d9606 100644
+--- a/drivers/edac/mce_amd.h
++++ b/drivers/edac/mce_amd.h
+@@ -7,7 +7,6 @@
+ #include <asm/mce.h>
+ 
+ #define EC(x)				((x) & 0xffff)
+-#define XEC(x, mask)			(((x) >> 16) & mask)
+ 
+ #define LOW_SYNDROME(x)			(((x) >> 15) & 0xff)
+ #define HIGH_SYNDROME(x)		(((x) >> 24) & 0xff)
+@@ -77,7 +76,6 @@ struct amd_decoder_ops {
+ 	bool (*mc2_mce)(u16, u8);
+ };
+ 
+-void amd_report_gart_errors(bool);
+ void amd_register_ecc_decoder(void (*f)(int, struct mce *));
+ void amd_unregister_ecc_decoder(void (*f)(int, struct mce *));
+ 
+-- 
+2.21.0
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
