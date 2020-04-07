@@ -2,124 +2,121 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4D9C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F309C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD3920719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B4820731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:24:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C1VPA4l1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cacTnPy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgDGNYN (ORCPT
+        id S1728872AbgDGNYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 09:24:13 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43188 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbgDGNYN (ORCPT
+        Tue, 7 Apr 2020 09:24:20 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45140 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728812AbgDGNYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 09:24:13 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037DMX9S132958;
-        Tue, 7 Apr 2020 13:23:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=HUw+iF3lmkPYdLpCfY3zJ8y3YywDPB2OUxVRgTbL+5w=;
- b=C1VPA4l1iKpGlFUKd75dJWscvpQww4PyN8f9x9/DNZJUSEa/zSlsejjgZg8Q9ejahPNT
- F4t5eyLRrBNLEVd5z5uaP/uRbUOmxMerGjYUKv787gSbdS9HaqZAXix4xpp+dkU9RpAt
- Vnzu1r4/Wk3bC/SpmA+NRMFNV46SKn+F4M6YiqWIhd9jJKhhfYPMOd9PXIDOA2D1J2v1
- Fkw8WYJy33gNqmjLJnz0POpPGBwkp3vbdFry6UFTtLuBsOKDXbPDAE4KyJYlT1+Z23x/
- qK+GyFsvO7WnPe5C2GEC6lFf4bxyv7GoUJcCVhJjoSqiCTzUmcDJdvxxmJbUe+f6WeLX IQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 308ffdawqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Apr 2020 13:23:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037DMUSd010700;
-        Tue, 7 Apr 2020 13:23:57 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 30839tbkup-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 07 Apr 2020 13:23:57 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 037DNtoV003956;
-        Tue, 7 Apr 2020 13:23:56 GMT
-Received: from linux-1.home (/10.175.58.13)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Apr 2020 06:23:55 -0700
-Subject: Re: [PATCH V2 5/9] objtool: Add support for intra-function calls
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, tglx@linutronix.de
-References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
- <20200407073142.20659-6-alexandre.chartre@oracle.com>
- <20200407130729.GZ20730@hirez.programming.kicks-ass.net>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Message-ID: <40b19a8e-ae5e-623e-fb3f-261f9fec2ea5@oracle.com>
-Date:   Tue, 7 Apr 2020 15:28:21 +0200
+        Tue, 7 Apr 2020 09:24:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v5so3827536wrp.12;
+        Tue, 07 Apr 2020 06:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=iFpX0wEUvG52BzZ7ywOElH5HPg69y7nY2lI1Z/4058E=;
+        b=cacTnPy9+5VyruFofPGDS0EkZviISlV1JLgdCFMNWCTpqByHnXd4lVH/kyeuVfLuSk
+         bvfNyGjEuGNVoPPya49tYtz6EtEShONcF0OqQvA0jeDctqOz8xa6q1yeNrRr3qEBL9Yh
+         7hvfipzfk9hO1Q2MMqweAdpW9NWnPS7Ctl66BdiytK7u/WPq4TYsaTRiiRcIBHgKr2Gc
+         jipBHrYGOu5bQ8UeOkEZNKg1o9zAEuSwBVvqxyIBjhV7w29T3EELxn/WomGImtGt/izp
+         MhSg1MC8ORnwARxJmrdcZPAV74njOwM0/cZ469gCEQuNB5lHGl4uVHIEqnn27ptt3naf
+         F7Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=iFpX0wEUvG52BzZ7ywOElH5HPg69y7nY2lI1Z/4058E=;
+        b=sPgER/gmhT4IgVZNVeT5DDpH9uBJcmXYLWc9e5ka5kjXzAjSCyLW87uzqKB0WTSkqJ
+         gWYCAd2oe6NpfsVj5LYtrZpi4TIGO7aCcAXc5+ZAjocxHNEHUKphHQTacAs6F3bq1vU8
+         Kri0lIJWvOMtbBd9ivzstCGAWdJnSHadlCOg9NhEh+8+HZHDjzm5GMukLimqbetVghFV
+         cwBH5cY1vSInPE9xCF6+vYNr325J3y3VDtL+Zpz5PU99M0WPgQqYY0nLqGOMhN0QtMeP
+         nVj5PkQ6zrTuc6aW/UlHMX/h/Uyg17YCsMGgHnRWLisa34GMzp9k49z1fRqJG/CIESnM
+         mStQ==
+X-Gm-Message-State: AGi0PuYThowVWyAU3JmWt1/leAA2IS3FRbwv4j2gij9SQapzQxqnIPjB
+        sgQAJQOWOmaw2UHBUd2tt0Y=
+X-Google-Smtp-Source: APiQypK0r/YazavGUTlIY4JHsTSsbwUAsCWfi9PK6WteZTsCdKSSMHSBnbaRJSuqrJj1PfzveoBnZg==
+X-Received: by 2002:adf:e282:: with SMTP id v2mr2772924wri.329.1586265857555;
+        Tue, 07 Apr 2020 06:24:17 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id c11sm5696030wrt.24.2020.04.07.06.24.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 06:24:16 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrey Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>
+To:     Andrey Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Subject: A further though on /proc/PID/timens_offsets
+Message-ID: <703440af-031c-16b5-c1ff-54fb4bb5e10c@gmail.com>
+Date:   Tue, 7 Apr 2020 15:24:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200407130729.GZ20730@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
- mlxscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004070116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- impostorscore=0 malwarescore=0 mlxlogscore=999 lowpriorityscore=0
- clxscore=1015 phishscore=0 mlxscore=0 bulkscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004070115
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Dmitry, Andrei,
 
-On 4/7/20 3:07 PM, Peter Zijlstra wrote:
-> On Tue, Apr 07, 2020 at 09:31:38AM +0200, Alexandre Chartre wrote:
-> 
->> index a62e032863a8..7ee1561bf7ad 100644
->> --- a/tools/objtool/arch/x86/decode.c
->> +++ b/tools/objtool/arch/x86/decode.c
->> @@ -497,3 +497,15 @@ void arch_initial_func_cfi_state(struct cfi_state *state)
->>   	state->regs[16].base = CFI_CFA;
->>   	state->regs[16].offset = -8;
->>   }
->> +
->> +
->> +void arch_configure_intra_function_call(struct stack_op *op)
->> +{
->> +	/*
->> +	 * For the impact on the stack, make an intra-function
->> +	 * call behaves like a push of an immediate value (the
->> +	 * return address).
->> +	 */
->> +	op->src.type = OP_SRC_CONST;
->> +	op->dest.type = OP_DEST_PUSH;
->> +}
-> 
-> An alternative is to always set up stack ops for CALL/RET on decode, but
-> conditionally run update_insn_state() for them.
-> 
-> Not sure that makes more logical sense, but the patch would be simpler I
-> think.
+Quoting the draft time_namespaces manual page:
 
-Right, this would avoid adding a new arch dependent function and the patch
-will be simpler. This probably makes sense as the stack impact is the same
-for all calls (but objtool will use it only for intra-function calls).
+       Associated with each time namespace are  offsets,  expressed  with
+       respect  to  the initial time namespace, that define the values of
+       the monotonic and boot-time clocks in that namespace.  These  off‐
+       sets  are  exposed  via the file /proc/PID/timens_offsets.  Within
+       this file, the offsets are expressed as lines consisting of  three
+       space-delimited fields:
+
+           <clock-id> <offset-secs> <offset-nanosecs>
+
+       The  clock-id  identifies the clock whose offsets are being shown.
+       This field is either 1, for CLOCK_MONOTONIC, or 7, for CLOCK_BOOT‐
+       TIME.
+
+What was the reason for exposing numeric clock IDs in the
+timens_offsets file? In API terms, that seems a little ugly.
+
+I think it would have been much nicer if the clocks were defined
+symbolically in this file. I.e., that reading the file would have
+shown something like
+
+monotonic    x    y
+boottime     x    y
+
+And that records similarly with symbolic clock names could have
+been written to the file. Was there a reason not to do this?
 
 Thanks,
 
-alex.
+Michael
 
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
