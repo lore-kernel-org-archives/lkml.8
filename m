@@ -2,117 +2,129 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350AFC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45236C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14ABF20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A1A20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:29:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="yxRn/DMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgDGJ2F (ORCPT
+        id S1728069AbgDGJ3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:28:05 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:43934 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgDGJ2E (ORCPT
+        Tue, 7 Apr 2020 05:29:11 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32218 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726353AbgDGJ3L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:28:04 -0400
-IronPort-SDR: ZGroXjKKri4pdlkPsMBB5WOGAA9A/2ZUSD9A2NN8wB33pfg3DRYaYww7P1xOd6TDstN5jp/RUj
- JPl2/8fjbi7dgiWganQbgzpzrPP+4lqMXP1qhIwxc9rOfer8AyrWk6fyvyh2NAApLCay/wOKKZ
- +vsjBcZlXMuv5RO6fjcGsyls0rZ0jXR4dySZitIEPCpPnqG/FqGqsCQRRRMZcnSDs5QEs0Lxmk
- nilFl9oZUl7wvSayhuAZSO3RSSkw/97fMIpMjwU6EiabXXo5h6lucRvZY1yOq44fQnzO3z6h4f
- ryg=
-X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
-   d="scan'208";a="47422403"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 07 Apr 2020 01:27:55 -0800
-IronPort-SDR: mYeNVzai53H22P+qIY4UWkBDzXs+r/WaUZR9bewhQ75mLiPoLVGVRdI+H4hnIqxVyYkM+95MyN
- MkVgRUzhYICePJ+MQ11f6JYgxytY1QzRUvjEqp7+WQzAijIEfHMMRgcDlDLnmKGKHqFxXvsDf+
- 40EiOI94KMnQtSJPoRsKcnmDrlc6I6hs1042BmuwXJQ5DgGtOaH9wopqyHDQKy4//8g1hZjQx9
- oK6roMKzLrephT0E+H7fTdBMZWZBUHd1N1ByITwBfVpWwTGtaEegxCzcMhkCdOU1uHgCvur7r4
- jHw=
-Subject: Re: [PATCH v10 43/55] dt-bindings: input: atmel: support to set max
- bytes transferred
-To:     Dmitry Osipenko <digetx@gmail.com>, <nick@shmanahar.org>,
-        <dmitry.torokhov@gmail.com>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200331105051.58896-1-jiada_wang@mentor.com>
- <20200331105051.58896-44-jiada_wang@mentor.com>
- <a15d312d-587e-5b10-e031-dde1965f6f89@gmail.com>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <9b98a3fc-b7ee-fc01-dc5c-248df507d4a2@mentor.com>
-Date:   Tue, 7 Apr 2020 18:27:49 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <a15d312d-587e-5b10-e031-dde1965f6f89@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Tue, 7 Apr 2020 05:29:11 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0379RIce016784;
+        Tue, 7 Apr 2020 05:28:53 -0400
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
+        by mx0a-00128a01.pphosted.com with ESMTP id 306q55hw36-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Apr 2020 05:28:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jFQVyWWujxfhqLFGZ68pwxnjiESBagheuIUajMS9LwSZCENFqYW8A0n7silU4UDvgDcMTMlLXLwRw//cI9TyYdpjc41KHeiDBFbH35NrX0wmgMtYXEdqZLZIwpLoY4e2+Hdg9VuiBc5MRWCl+hmjvbWWAts7CgUMH9tN8fVkbyeqvAcxXZ5Oyi1y5DbAMBC/HSzYBxEjEAhRrVBfSeR9au6O69w5xcrz1S0j5rnIloD6eEiGwIF5g6KDSOMMrCWEK5rAkNnnak88zkMyPrGI7MRW9yNqHkhL3Rs0yC1/xI7CeQWflzXtkt39wHYQkWR7MIlin+sKkZSanQWpwdC0xg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1b0QhILor/VvDbCtMKGapbCbmZO3e6cMtm61odFRNsQ=;
+ b=kOQfxvi3IosX6KTKG8XK0KSsUDv4lRoypwqgzTsse69q8MfUKgH4a3lYiXodIDdD+cxbbtv7O050vLvkxrC3yAYX8uihRQt1Mu+kV0PrcPHLt3fwFwTm0VYHIICWnoDQbsLYAKkB+Bu5AiR3vUVBUTYtPVwxSoSUxCsIAvqIuiQWg2qHSiGSu0NkY/6elXj4mDUF0lUCQZ3mPILqWjp2AxltJRyLS/wgdESJJAy5BIqMs8z1ctActJB16KzGXQ4+XOldPqMSsdoT7amcXVeIxSlLamY6VefPKTDPCWjYEL8uHXUbuEm0sBIJUusK4mJ+UhqujLw4uiUHF97xz/iY0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1b0QhILor/VvDbCtMKGapbCbmZO3e6cMtm61odFRNsQ=;
+ b=yxRn/DMyqz9zCVGNTTyTLVkWuGACz1srTZxa2OBGGkfgM/KaUNYPYMVCjw6X7ZXqTBx9a2CpcBJDBTuZHVt1hYD1Ld9qqg61ao6fBPTCV8yeQYAOKh9C2OoRLwZXtGQIDil6a5Z/QJ38i9/LwvbJ6lIHccofuMY+3jscoVpSyzA=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB5051.namprd03.prod.outlook.com (2603:10b6:5:1ea::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Tue, 7 Apr
+ 2020 09:28:50 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
+ 09:28:50 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "Markus.Elfring@web.de" <Markus.Elfring@web.de>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+CC:     "jic23@kernel.org" <jic23@kernel.org>,
+        "lorenzo.bianconi83@gmail.com" <lorenzo.bianconi83@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH 2/3] iio: make use of iio_device_attach_kfifo_buffer()
+ where straightforward
+Thread-Topic: [PATCH 2/3] iio: make use of iio_device_attach_kfifo_buffer()
+ where straightforward
+Thread-Index: AQHWDL6X7y9OF2Hsf0WKb3NS9qDxRqhtZGcA
+Date:   Tue, 7 Apr 2020 09:28:50 +0000
+Message-ID: <a8fd15498fc71fb1d6a02e463aeaade44574c06a.camel@analog.com>
+References: <36669e0f-c41c-5cc8-7218-be5cad5cf8a5@web.de>
+In-Reply-To: <36669e0f-c41c-5cc8-7218-be5cad5cf8a5@web.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.27.135.58]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 30e329ea-06fa-4130-8814-08d7dad61535
+x-ms-traffictypediagnostic: DM6PR03MB5051:
+x-microsoft-antispam-prvs: <DM6PR03MB5051FAF4175AF4F8D051C36CF9C30@DM6PR03MB5051.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:466;
+x-forefront-prvs: 036614DD9C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(39860400002)(376002)(136003)(396003)(346002)(366004)(478600001)(36756003)(110136005)(4326008)(86362001)(71200400001)(5660300002)(54906003)(2906002)(316002)(6512007)(186003)(26005)(8676002)(81156014)(66556008)(4744005)(66476007)(66946007)(6506007)(91956017)(6486002)(8936002)(81166006)(66446008)(64756008)(2616005)(76116006);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZL/EaOI2Ef6D3oMF3xcK97eWH9uoP/PvZ+tJLx4eg0yJIHuj1mJEtR3bruUNfCjxlh9zN4zzp8n51sEYP3LfahxXtqbuK2nYFTDDQjNsZUTfTbUj6/JxahOb30m0JRdDrNAfwlDrHHN4uILoW2OSMGnogZ/raZrpOsH8rIywaku+NuhAhMm41gulb9RdhadyX3hVjyQdAZT/AOyCg6W9tQGzseBySFJf3xn4TRxOwEs5ncmZGePTxZ5B26wMDJsPfYhbUanB+0/KVD0JFdEhx5lxxBK5cf972ZXEwzBgYcA9uGFdcgdk6SJ2r0Zg5rilANZdcMjfUGXbD1T3IBhaM5MJPrr0MZ9M8kHERFZjAfiTaZCg4HP8hOzcOAqxS9lpjtgBY6JOxQk4qMS20J6cSjkCAxIriuZ9cJuzvCpzmoctNfKRgb3Tq5CyXftiMa+H
+x-ms-exchange-antispam-messagedata: Cohff/hpX2iCD+9aRgq+3XHCn4E8DK+vbyJ4+SV11ANfDcr/TItKtwHVf920YxroY+itOS+/cUHtvw8giFepm9rvDYzR+/4kSGEFtULr6/+Xdc+riUmCeuErIfYA50LDavbFfrop+7zUuJrHlA02Fg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <666B5620265F2C43AB29A5B29BE79C67@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30e329ea-06fa-4130-8814-08d7dad61535
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2020 09:28:50.8431
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: s8SR21q65W9lrBAhNGfKlhlDXQTyqrhk8kaqtxiAx+bE6krtdtL2cshz/OOh6Ed0TNkEwvgM76O80BA5bJcCE3NyuLeYrIRFr7nndqCYTpo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5051
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_01:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
+ phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=589 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
-
-On 2020/04/01 23:38, Dmitry Osipenko wrote:
-> 31.03.2020 13:50, Jiada Wang пишет:
->> Add support to set max bytes transferred in an i2c transaction
->>
->> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->> ---
->>   Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> index 126266891cdc..37a798cab0dd 100644
->> --- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> +++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
->> @@ -45,6 +45,8 @@ Optional properties for main touchpad device:
->>   
->>   - atmel,input_name: Override name of input device from the default.
->>   
->> +- atmel,mtu: Maximum number of bytes that can read/transferred in an i2c transaction
->> +
->>   Example:
->>   
->>   	touch@4b {
->> @@ -52,4 +54,5 @@ Example:
->>   		reg = <0x4b>;
->>   		interrupt-parent = <&gpio>;
->>   		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
->> +		atmel,mtu = <200>
->>   	};
->>
-> 
-> Is this a software (firmware) limitation which varies from version to
-> version?
-> 
-
-the timeout issue trying to be addressed in this patch is from software,
-one of our board a Serializer/Deserializer bridge exists between the SoC 
-(imx6) and the Atmel touch controller.
-imx6 i2c controller driver has a timeout value(100ms) for each i2c 
-transaction,
-Large i2c read transaction failed to complete within this timeout value 
-and therefore imx6 i2c controller driver aborts the transaction
-and returns failure.
-
-Therefore this patch was created to split the large i2c transaction into 
-smaller chunks which can complete
-within the timeout defined by i2c controller driver.
-
-Thanks,
-Jiada
-> If the limitation is per-hardware version, then perhaps should be better
-> to have a hardcoded per-hardware table of limits in the driver?
-> 
+T24gVHVlLCAyMDIwLTA0LTA3IGF0IDExOjI2ICswMjAwLCBNYXJrdXMgRWxmcmluZyB3cm90ZToN
+Cj4gW0V4dGVybmFsXQ0KPiANCj4gSG93IGRvIHlvdSB0aGluayBhYm91dCBhIHBhdGNoIHN1Ympl
+Y3QgbGlrZSDigJxpaW86IEluY3JlYXNlIHVzZSBvZg0KPiBpaW9fZGV2aWNlX2F0dGFjaF9rZmlm
+b19idWZmZXIoKeKAnT8NCj4gDQo+IA0KPiA+IFRoaXMgY2hhbmdlIGRvZXMgdGhhdC4NCj4gDQo+
+IEkgc3VnZ2VzdCB0byBpbXByb3ZlIGFsc28gdGhpcyBjb21taXQgbWVzc2FnZS4NCj4gDQo+ICog
+V291bGQgeW91IGxpa2UgdG8gY29uc2lkZXIgYSB3b3JkaW5nIGxpa2Ug4oCcQ29udmVydCBhIHNw
+ZWNpZmljIGZ1bmN0aW9uIGNhbGwNCj4gICBjb21iaW5hdGlvbiB0byBhIGJldHRlciBwcm9ncmFt
+bWluZyBpbnRlcmZhY2Uu4oCdPw0KPiANCj4gKiBEbyB5b3UgaW1hZ2luZSBhbnkgbW9yZSBzb2Z0
+d2FyZSBmaW5lLXR1bmluZyBiZWNhdXNlIG9mIHJlbGF0ZWQNCj4gICBjb2xsYXRlcmFsIGV2b2x1
+dGlvbj8NCj4gDQoNCkknbGwgc2VlLg0KVGhpcyBwYXRjaHNldCBpcyBraW5kIG9mIHN0b3BwZWQu
+DQpXaWxsIG5lZWQgYSByZXdvcmsgZm9yIGl0Lg0KDQo+IFJlZ2FyZHMsDQo+IE1hcmt1cw0K
