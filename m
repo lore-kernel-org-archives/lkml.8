@@ -2,214 +2,128 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6A0C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F63C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B665220801
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EB0207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586269088;
+	bh=wqhk/J974wrMnBr8AoFs9B8rawBF/JWsdYfnrQGuBHg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vEODYY8/RRt8+Hw3htry3mGfXh4m+8fYqSPB6f4B8xmeAPdJIRT5/7mgNrAzBpa0I
+	 70fowzViF3kiDy52RD5zegOXlyQl+LeBTUr2suzrRxO7OOom28ZvvmmWAtTsPlDnHd
+	 c2d/JcV0QJFuuqBilrCQEMI68OiMPK3cuBAiuFsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbgDGOR0 convert rfc822-to-8bit (ORCPT
+        id S1729048AbgDGOSH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:17:26 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12920 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbgDGORZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:17:25 -0400
-IronPort-SDR: zeB+OLmTnYV/HGJlXvqujkhLodlArGeWGD62WtRjFB53sAuxI7m46zHpSWaDvUWyBayaE28I14
- cvtKcXIc9hjw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 07:17:25 -0700
-IronPort-SDR: nLQ9Qj9Xs0hrrMydI0L0HBiUpkBkzTSe0+UiehNicEwpF7vPq+FFBPoSc8RrS2vkw4ogyLb8JQ
- uF+hbMtc3ptA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,354,1580803200"; 
-   d="scan'208";a="269440905"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga002.jf.intel.com with ESMTP; 07 Apr 2020 07:17:24 -0700
-Received: from fmsmsx163.amr.corp.intel.com (10.18.125.72) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Apr 2020 07:17:24 -0700
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- fmsmsx163.amr.corp.intel.com (10.18.125.72) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Apr 2020 07:17:24 -0700
-Received: from shsmsx108.ccr.corp.intel.com ([169.254.8.7]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.129]) with mapi id 14.03.0439.000;
- Tue, 7 Apr 2020 22:17:21 +0800
-From:   "Zhang, Rui" <rui.zhang@intel.com>
-To:     Takashi Iwai <tiwai@suse.de>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] thermal: Add a sanity check for invalid state at stats
- update
-Thread-Topic: [PATCH] thermal: Add a sanity check for invalid state at stats
- update
-Thread-Index: AQHWBpzH0NNV6tuj6kqI2uO2gMago6htLiyAgAALuQCAAIctYA==
-Date:   Tue, 7 Apr 2020 14:17:21 +0000
-Message-ID: <744357E9AAD1214791ACBA4B0B90926377CEDF41@SHSMSX108.ccr.corp.intel.com>
-References: <20200330140859.12535-1-tiwai@suse.de>
-        <CAHLCerOGgv8k1ce43jvmhZwXWVQ_uB1WgrQN_NbkBphWE9NfHA@mail.gmail.com>
- <s5himibmljz.wl-tiwai@suse.de>
-In-Reply-To: <s5himibmljz.wl-tiwai@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 7 Apr 2020 10:18:07 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58942 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728596AbgDGOSH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:18:07 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-453-6l2qDtB8Poe7U4226j9T-g-1; Tue, 07 Apr 2020 10:14:33 -0400
+X-MC-Unique: 6l2qDtB8Poe7U4226j9T-g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D7C36800D5C;
+        Tue,  7 Apr 2020 14:14:31 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.192.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B74315DA60;
+        Tue,  7 Apr 2020 14:14:28 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Kan Liang <kan.liang@intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH] perf: Disable page faults when getting phys address
+Date:   Tue,  7 Apr 2020 16:14:27 +0200
+Message-Id: <20200407141427.3184722-1-jolsa@kernel.org>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right, I have a V2 patch series, which will be post soon.
+We hit following warning when running tests on kernel
+compiled with CONFIG_DEBUG_ATOMIC_SLEEP:
 
-Thanks,
-rui
+ WARNING: CPU: 19 PID: 4472 at mm/gup.c:2381 __get_user_pages_fast+0x1a4/0x200
+ CPU: 19 PID: 4472 Comm: dummy Not tainted 5.6.0-rc6+ #3
+ RIP: 0010:__get_user_pages_fast+0x1a4/0x200
+ ...
+ Call Trace:
+  perf_prepare_sample+0xff1/0x1d90
+  perf_event_output_forward+0xe8/0x210
+  __perf_event_overflow+0x11a/0x310
+  __intel_pmu_pebs_event+0x657/0x850
+  intel_pmu_drain_pebs_nhm+0x7de/0x11d0
+  handle_pmi_common+0x1b2/0x650
+  intel_pmu_handle_irq+0x17b/0x370
+  perf_event_nmi_handler+0x40/0x60
+  nmi_handle+0x192/0x590
+  default_do_nmi+0x6d/0x150
+  do_nmi+0x2f9/0x3c0
+  nmi+0x8e/0xd7
 
------Original Message-----
-From: linux-pm-owner@vger.kernel.org <linux-pm-owner@vger.kernel.org> On Behalf Of Takashi Iwai
-Sent: Tuesday, April 07, 2020 10:13 PM
-To: Amit Kucheria <amit.kucheria@verdurent.com>
-Cc: Takashi Iwai <tiwai@suse.de>; Zhang, Rui <rui.zhang@intel.com>; Daniel Lezcano <daniel.lezcano@linaro.org>; Linux PM list <linux-pm@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] thermal: Add a sanity check for invalid state at stats update
-Importance: High
+While __get_user_pages_fast is IRQ-safe it calls access_ok,
+which warns on:
 
-On Tue, 07 Apr 2020 15:30:51 +0200,
-Amit Kucheria wrote:
-> 
-> On Mon, Mar 30, 2020 at 7:39 PM Takashi Iwai <tiwai@suse.de> wrote:
-> >
-> > The thermal sysfs handler keeps the statistics table with the fixed 
-> > size that was determined from the initial max_states() call, and the 
-> > table entry is updated at each sysfs cur_state write call.  And, 
-> > when the driver's set_cur_state() ops accepts the value given from 
-> > user-space, the thermal sysfs core blindly applies it to the 
-> > statistics table entry, which may overflow and cause an Oops.
-> > Although it's rather a bug in the driver's ops implementations, we 
-> > shouldn't crash but rather give a proper warning instead.
-> >
-> > This patch adds a sanity check for avoiding such an OOB access and 
-> > warns with a stack trace to show the suspicious device in question.
-> 
-> Hi Takashi,
-> 
-> Instead of this warning, I think we should reject such input when 
-> writing to cur_state.
-> 
-> See attached patch. If you think this OK, I'll submit it.
+  WARN_ON_ONCE(!in_task() && !pagefault_disabled())
 
-Actually the input value itself is correct, the problem is rather about the max_states that may vary depending on other driver.  So IMO, we don't want to refuse the input completely.
+Peter suggested disabling page faults around __get_user_pages_fast,
+which gets rid of the warning in access_ok call.
 
-Please see the thread:
-  https://lore.kernel.org/linux-acpi/s5h5zeiwd01.wl-tiwai@suse.de/
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ kernel/events/core.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 1569979c8912..ccbcb9049c70 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6916,9 +6916,12 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe __get_user_pages_fast first.
+ 		 * If failed, leave phys_addr as 0.
+ 		 */
+-		if ((current->mm != NULL) &&
+-		    (__get_user_pages_fast(virt, 1, 0, &p) == 1))
+-			phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++		if (current->mm != NULL) {
++			pagefault_disable();
++			if (__get_user_pages_fast(virt, 1, 0, &p) == 1)
++				phys_addr = page_to_phys(p) + virt % PAGE_SIZE;
++			pagefault_enable();
++		}
+ 
+ 		if (p)
+ 			put_page(p);
+-- 
+2.18.2
 
-thanks,
-
-Takashi
-
-
-> 
-> Regards,
-> Amit
-> 
-> > Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> > ---
-> >
-> > We've hit some crash by stress tests, and this patch at least works 
-> > around the crash itself.  While the actual bug fix of the buggy 
-> > driver is still being investigated, I submit the hardening in the 
-> > core side at first.
-> >
-> >  drivers/thermal/thermal_sysfs.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/thermal/thermal_sysfs.c 
-> > b/drivers/thermal/thermal_sysfs.c index aa99edb4dff7..a23c4e701d63 
-> > 100644
-> > --- a/drivers/thermal/thermal_sysfs.c
-> > +++ b/drivers/thermal/thermal_sysfs.c
-> > @@ -772,6 +772,11 @@ void thermal_cooling_device_stats_update(struct 
-> > thermal_cooling_device *cdev,
-> >
-> >         spin_lock(&stats->lock);
-> >
-> > +       if (dev_WARN_ONCE(&cdev->device, new_state >= stats->max_states,
-> > +                         "new state %ld exceeds max_state %ld",
-> > +                         new_state, stats->max_states))
-> > +               goto unlock;
-> > +
-> >         if (stats->state == new_state)
-> >                 goto unlock;
-> >
-> > --
-> > 2.16.4
-> >
-> From 54266260d483ab4476510dd4461a1cafc611e17d Mon Sep 17 00:00:00 2001
-> Message-Id: 
-> <54266260d483ab4476510dd4461a1cafc611e17d.1586266224.git.amit.kucheria
-> @linaro.org>
-> From: Amit Kucheria <amit.kucheria@linaro.org>
-> Date: Tue, 7 Apr 2020 18:48:14 +0530
-> Subject: [PATCH] thermal: Reject invalid cur_state input from 
-> userspace
-> 
-> We don't check if the cur_state value input in sysfs is greater than 
-> the maximum cooling state that the cooling device supports. This can 
-> cause access to unallocated memory in case THERMAL_STATISTICS in 
-> enabled and could also crash cooling devices that don't check for an 
-> invalid state in their set_cur_state() callback.
-> 
-> Return an error if the state being requested in greater than the 
-> maximum cooling state the device supports.
-> 
-> Reported-by: Takashi Iwai <tiwai@suse.de>
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  drivers/thermal/thermal_sysfs.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/thermal_sysfs.c 
-> b/drivers/thermal/thermal_sysfs.c index 7e1d11bdd258..8033e5a9386a 
-> 100644
-> --- a/drivers/thermal/thermal_sysfs.c
-> +++ b/drivers/thermal/thermal_sysfs.c
-> @@ -703,7 +703,7 @@ cur_state_store(struct device *dev, struct device_attribute *attr,
->  		const char *buf, size_t count)
->  {
->  	struct thermal_cooling_device *cdev = to_cooling_device(dev);
-> -	unsigned long state;
-> +	unsigned long state, max_state;
->  	int result;
->  
->  	if (sscanf(buf, "%ld\n", &state) != 1) @@ -712,6 +712,13 @@ 
-> cur_state_store(struct device *dev, struct device_attribute *attr,
->  	if ((long)state < 0)
->  		return -EINVAL;
->  
-> +	result = cdev->ops->get_max_state(cdev, &max_state);
-> +	if (result)
-> +		return result;
-> +
-> +	if (state >= max_state)
-> +		return -EINVAL;
-> +
->  	mutex_lock(&cdev->lock);
->  
->  	result = cdev->ops->set_cur_state(cdev, state);
-> --
-> 2.20.1
-> 
