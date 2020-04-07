@@ -2,121 +2,144 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D829EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACA8C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CF920692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380AB20692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:08:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgDGPGw (ORCPT
+        id S1729368AbgDGPI0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:06:52 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:22528 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728917AbgDGPGv (ORCPT
+        Tue, 7 Apr 2020 11:08:26 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51630 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728917AbgDGPI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:06:51 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037Esnkf031914;
-        Tue, 7 Apr 2020 11:06:50 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 306m36b23f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 11:06:49 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 037F6mIF004900
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 7 Apr 2020 11:06:48 -0400
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 7 Apr 2020 08:06:47 -0700
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 7 Apr 2020 08:06:47 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 7 Apr 2020 08:06:46 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 037F6i2a022691;
-        Tue, 7 Apr 2020 11:06:44 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3] iio: move 'indio_dev->info' null check first in __iio_device_register()
-Date:   Tue, 7 Apr 2020 18:07:43 +0300
-Message-ID: <20200407150743.8144-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200406123246.57684-1-alexandru.ardelean@analog.com>
-References: <20200406123246.57684-1-alexandru.ardelean@analog.com>
+        Tue, 7 Apr 2020 11:08:26 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037F82rh066732
+        for <linux-kernel@vger.kernel.org>; Tue, 7 Apr 2020 11:08:25 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3082pej4nf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 11:08:24 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
+        Tue, 7 Apr 2020 16:08:04 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 7 Apr 2020 16:08:00 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037F7Djk48431584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Apr 2020 15:07:13 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D721A4C04A;
+        Tue,  7 Apr 2020 15:08:17 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72EAE4C044;
+        Tue,  7 Apr 2020 15:08:17 +0000 (GMT)
+Received: from localhost (unknown [9.85.74.108])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Apr 2020 15:08:17 +0000 (GMT)
+Date:   Tue, 07 Apr 2020 20:38:13 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH v6 4/4] powerpc/vdso: Switch VDSO to generic C
+ implementation.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        Paul Mackerras <paulus@samba.org>
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, luto@kernel.org, tglx@linutronix.de,
+        vincenzo.frascino@arm.com
+References: <cover.1586265010.git.christophe.leroy@c-s.fr>
+        <56e0cc4bc8314ee4da87256fcafc03885977f0dd.1586265010.git.christophe.leroy@c-s.fr>
+In-Reply-To: <56e0cc4bc8314ee4da87256fcafc03885977f0dd.1586265010.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 20040715-0008-0000-0000-0000036C3AB7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040715-0009-0000-0000-00004A8DD4DB
+Message-Id: <1586271940.xja63xxjer.naveen@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-07_07:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070128
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
+ adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Moves this to be the first check, as it's very simple and fails the
-registration earlier, instead of potentially initializing the
-'indio_dev->label' and checking for duplicate indexes, and then failing
-with this simple-check.
+Christophe Leroy wrote:
+> powerpc is a bit special for VDSO as well as system calls in the
+> way that it requires setting CR SO bit which cannot be done in C.
+> Therefore, entry/exit needs to be performed in ASM.
+> 
+> Implementing __arch_get_vdso_data() would clobbers the link register,
+> requiring the caller to save it. As the ASM calling function already
+> has to set a stack frame and saves the link register before calling
+> the C vdso function, retriving the vdso data pointer there is lighter.
+> 
+> Implement __arch_vdso_capable() and:
+> - When the timebase is used, make it always return true.
+> - When the RTC clock is used, make it always return false.
+> 
 
-This is a minor optimization, since '__iio_device_register()' will waste
-fewer validation cycles in case 'indio_dev->info' is NULL.
+<snip>
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+> v6:
+> - Added missing prototypes in asm/vdso/gettimeofday.h for __c_kernel_ functions.
+> - Using STACK_FRAME_OVERHEAD instead of INT_FRAME_SIZE
+> - Rebased on powerpc/merge as of 7 Apr 2020
+> - Fixed build failure with gcc 9
+> - Added a patch to create asm/vdso/processor.h and more cpu_relax() in it
+> ---
+>  arch/powerpc/Kconfig                         |   2 +
+>  arch/powerpc/include/asm/clocksource.h       |   7 +
+>  arch/powerpc/include/asm/vdso/clocksource.h  |   7 +
+>  arch/powerpc/include/asm/vdso/gettimeofday.h | 175 +++++++++++
+>  arch/powerpc/include/asm/vdso/vsyscall.h     |  25 ++
+>  arch/powerpc/include/asm/vdso_datapage.h     |  40 +--
+>  arch/powerpc/kernel/asm-offsets.c            |  49 +---
+>  arch/powerpc/kernel/time.c                   |  91 +-----
+>  arch/powerpc/kernel/vdso.c                   |   5 +-
+>  arch/powerpc/kernel/vdso32/Makefile          |  32 +-
+>  arch/powerpc/kernel/vdso32/config-fake32.h   |  34 +++
+>  arch/powerpc/kernel/vdso32/gettimeofday.S    | 291 +------------------
+>  arch/powerpc/kernel/vdso32/vgettimeofday.c   |  29 ++
+>  arch/powerpc/kernel/vdso64/Makefile          |  23 +-
+>  arch/powerpc/kernel/vdso64/gettimeofday.S    | 243 +---------------
+>  arch/powerpc/kernel/vdso64/vgettimeofday.c   |  29 ++
+>  16 files changed, 391 insertions(+), 691 deletions(-)
+>  create mode 100644 arch/powerpc/include/asm/clocksource.h
+>  create mode 100644 arch/powerpc/include/asm/vdso/clocksource.h
+>  create mode 100644 arch/powerpc/include/asm/vdso/gettimeofday.h
+>  create mode 100644 arch/powerpc/include/asm/vdso/vsyscall.h
+>  create mode 100644 arch/powerpc/kernel/vdso32/config-fake32.h
+>  create mode 100644 arch/powerpc/kernel/vdso32/vgettimeofday.c
+>  create mode 100644 arch/powerpc/kernel/vdso64/vgettimeofday.c
 
-Changelog v1 -> v2:
-* fixed typo 'regitration' -> 'registration'
+You should also consider adding -fasynchronous-unwind-tables. For 
+background, please see:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ba96301ce9be7925cdaee677b1a2ff8eddba9fd4
 
-Changelog v2 -> v3:
-* title update to include __iio_device_register()
-* dropped 'Doesn't fix anything.' 
-* added sentence about the minor optimization
 
- drivers/iio/industrialio-core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 157d95a24faa..56ff24d7a174 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -1711,6 +1711,9 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
- {
- 	int ret;
- 
-+	if (!indio_dev->info)
-+		return -EINVAL;
-+
- 	indio_dev->driver_module = this_mod;
- 	/* If the calling driver did not initialize of_node, do it here */
- 	if (!indio_dev->dev.of_node && indio_dev->dev.parent)
-@@ -1723,9 +1726,6 @@ int __iio_device_register(struct iio_dev *indio_dev, struct module *this_mod)
- 	if (ret < 0)
- 		return ret;
- 
--	if (!indio_dev->info)
--		return -EINVAL;
--
- 	/* configure elements for the chrdev */
- 	indio_dev->dev.devt = MKDEV(MAJOR(iio_devt), indio_dev->id);
- 
--- 
-2.17.1
+- Naveen
 
