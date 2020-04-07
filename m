@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4549CC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89667C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182E520719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD812078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I3RE7Evh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wc2jK+O4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgDGBHj (ORCPT
+        id S1726559AbgDGBHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:07:39 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60312 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726403AbgDGBHg (ORCPT
+        Mon, 6 Apr 2020 21:07:42 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56379 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726528AbgDGBHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:07:36 -0400
+        Mon, 6 Apr 2020 21:07:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586221655;
+        s=mimecast20190719; t=1586221659;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=FHleMq6gEYUibDa/C/J3JExco78nMtVdL74tcT52HVU=;
-        b=I3RE7EvhVU+IlNEsodsUF2DjNNtEr/PBw4P4MYrnyif33ksstIe0Di7tLu7C+eaS7TsTNU
-        /eUuflBOiPb0wFmoSGLq22Kjr+YWLzBT9+P6ljm0rr2RNC6lL7KbFvXrRztUmAzc1dqxtu
-        hCl2rB12yOkD/mHVD8+OIv+CyQ2TE8s=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-HVdP8GZYPtO3OYzeczzZHg-1; Mon, 06 Apr 2020 21:07:33 -0400
-X-MC-Unique: HVdP8GZYPtO3OYzeczzZHg-1
-Received: by mail-wm1-f69.google.com with SMTP id f81so37452wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:07:33 -0700 (PDT)
+        bh=avaeRkZ1JnKDUOT0Z2Dx4o4wqMo2IiZX1JaGDR9LW2A=;
+        b=Wc2jK+O4L8cuHovyT7AddsE3SuaXUa8/tqbt/3wbz3PD4rlIdSgXY7l3KoDfk3yW+RQdOh
+        sXJzuuZv02kC79O+KQl0mw8Om5j+DdO1feYmNrJ/vLABJqAum0ev//4GTkh8YGQiovKkAk
+        /g8XdFt8ATVS8NUY7ikqhQqvGXqQrp8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-2JbT7Yv9NnOMm-aNd-dZ0A-1; Mon, 06 Apr 2020 21:07:35 -0400
+X-MC-Unique: 2JbT7Yv9NnOMm-aNd-dZ0A-1
+Received: by mail-wm1-f71.google.com with SMTP id d134so5849wmd.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:07:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=FHleMq6gEYUibDa/C/J3JExco78nMtVdL74tcT52HVU=;
-        b=PLWxUCvCoZpjF00B5E25znpYbp78ZcNZ7TvsWPylXtltBEAd6Z2rYptGXDCNODzKYA
-         sPWbROD5awxXBSSyZI5wWswurj/O0+fcyXYgG3ZkpTRMjhm25A1IaNO7lrwLIJy4JynX
-         w/dwwi7OK5cCqHXFl8snRvQaIfYEgf3DFxpgZJNfr4IjysgGBwxlKHnyFbQ/QmwlJo8R
-         VSadfW0k0rm3xnj0BuyrdyFV1TbrpjHTigfCuPnT8Xnl+altNvnycviYRQPQapI32t0N
-         ENaLLoRDoLuuufHPnCPQNs5wRZJdbomHXR2VDuHZ7ypqXC2lMdPLDsKIgvZi5FV4bjli
-         Rgig==
-X-Gm-Message-State: AGi0PuaDBodoaaH0/bSwQfk+onIB9GT0iBdeWC8teNn3dsr/NkODFEcS
-        WnUZlMLyptF3cgfPT5kH9MAg7MQYiP9cKrMomN5X+l9fF+/3TvcrnC7qaewAbR863wS3dbytRlz
-        NFt1wsTLQZJrq2DZSFsWLabBq
-X-Received: by 2002:a5d:4988:: with SMTP id r8mr1994153wrq.248.1586221652056;
-        Mon, 06 Apr 2020 18:07:32 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJtivYsg0cY33d8RdMzgiJx/R309eSMZK4FZ+i/kU2AyobBthaWz8wAQQB8wP7V80tAuPpK5Q==
-X-Received: by 2002:a5d:4988:: with SMTP id r8mr1994141wrq.248.1586221651849;
-        Mon, 06 Apr 2020 18:07:31 -0700 (PDT)
+        bh=avaeRkZ1JnKDUOT0Z2Dx4o4wqMo2IiZX1JaGDR9LW2A=;
+        b=HZQjqpAsku6cWEBSBoA548Wlus9SfwGj8mQYfmPCG2YKk2c9pQiLPLSrJNVKBLGpJ0
+         ooR8coAvtxF5YwV1LPiYqf0wmBZg+dwOXIc7IYbXmbHiY3BtKM8X0vaVynZemRk8Lcc3
+         WnlL1pQZkBDjDdTskvNfhLLMf2JAxazzzaXDzo9Pk+QjaWa2LohYbby8oV+gi1Fy6CNr
+         vErHJbADwlcjoM8pTW3wECuV7yRWuhm+hOyvCznSP1y5tWstDHseA052zZ/T4w2Zqrsn
+         SCvtjrx+gEBAgRSPElJfOK2GC3vs8HIFDd7EWj8JfX0Uzf/ZvCtD3GwM1vl6KsAD63r9
+         EJqQ==
+X-Gm-Message-State: AGi0PuZ/8pyMNuJWhYEAM3WqaidzLDlDf8afDeXV9aiNNUK/nOVXQbr6
+        3kU2SyTLSRMOFoqwbs3MgghSTR/835wGkF+tsrKg3mr0XTVk8xzox3NgpUm0I7ul1o+LJBCSqrm
+        UKv6pwDc7Wp2WyE/edWzc0Vm8
+X-Received: by 2002:a1c:2842:: with SMTP id o63mr1697292wmo.73.1586221654166;
+        Mon, 06 Apr 2020 18:07:34 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIxuMMzBcs/LvUTLzcWLGFp2EnijdskDTwCLcN2NKwovn4HRWiTvfYCo9g/8VdEVNOsiDnXLg==
+X-Received: by 2002:a1c:2842:: with SMTP id o63mr1697272wmo.73.1586221653949;
+        Mon, 06 Apr 2020 18:07:33 -0700 (PDT)
 Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id z17sm18521513wru.39.2020.04.06.18.07.30
+        by smtp.gmail.com with ESMTPSA id y22sm105023wma.18.2020.04.06.18.07.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 18:07:31 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 21:07:30 -0400
+        Mon, 06 Apr 2020 18:07:33 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 21:07:32 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jason Wang <jasowang@redhat.com>,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 02/19] tools/virtio: make asm/barrier.h self contained
-Message-ID: <20200407010700.446571-3-mst@redhat.com>
+Subject: [PATCH v7 03/19] tools/virtio: define __KERNEL__
+Message-ID: <20200407010700.446571-4-mst@redhat.com>
 References: <20200407010700.446571-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -80,23 +80,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are using abort() so let's include stdlib.h
+Even though we are building in userspace, we are emulating kernel bits.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- tools/virtio/asm/barrier.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/virtio/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/virtio/asm/barrier.h b/tools/virtio/asm/barrier.h
-index d0351f83aebe..04d563fc9b95 100644
---- a/tools/virtio/asm/barrier.h
-+++ b/tools/virtio/asm/barrier.h
-@@ -1,4 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+#include <stdlib.h>
- #if defined(__i386__) || defined(__x86_64__)
- #define barrier() asm volatile("" ::: "memory")
- #define virt_mb() __sync_synchronize()
+diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
+index b587b9a7a124..ea6674307507 100644
+--- a/tools/virtio/Makefile
++++ b/tools/virtio/Makefile
+@@ -4,7 +4,7 @@ test: virtio_test vringh_test
+ virtio_test: virtio_ring.o virtio_test.o
+ vringh_test: vringh_test.o vringh.o virtio_ring.o
+ 
+-CFLAGS += -g -O2 -Werror -Wall -I. -I../include/ -I ../../usr/include/ -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-common -MMD -U_FORTIFY_SOURCE -include ../../include/linux/kconfig.h
++CFLAGS += -g -O2 -Werror -Wall -I. -I../include/ -I ../../usr/include/ -Wno-pointer-sign -fno-strict-overflow -fno-strict-aliasing -fno-common -MMD -U_FORTIFY_SOURCE -include ../../include/linux/kconfig.h -D__KERNEL__
+ vpath %.c ../../drivers/virtio ../../drivers/vhost
+ mod:
+ 	${MAKE} -C `pwd`/../.. M=`pwd`/vhost_test V=${V}
 -- 
 MST
 
