@@ -2,68 +2,110 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF88C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 226D2C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA5C2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2D32072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:47:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qLfgk9Rc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgDGPqt (ORCPT
+        id S1727329AbgDGPrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:46:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59520 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgDGPqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:46:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6FA54AB89;
-        Tue,  7 Apr 2020 15:46:47 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 9018F1E1233; Tue,  7 Apr 2020 17:46:47 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrei Vagin <avagin@gmail.com>, Jan Kara <jack@suse.cz>
-Subject: [PATCH] ucount: Make sure ucounts in /proc/sys/user don't regress again
-Date:   Tue,  7 Apr 2020 17:46:43 +0200
-Message-Id: <20200407154643.10102-1-jack@suse.cz>
-X-Mailer: git-send-email 2.16.4
+        Tue, 7 Apr 2020 11:47:42 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:16053 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727002AbgDGPrl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:47:41 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586274461; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=9T9i2bhqi3VLaEw0ff7UrAhvelqlEdAg6Xi/18D6Cic=; b=qLfgk9RcwFz2kRIn5bHqsgNj1bBlyMLFhNTGOYGWXy7ZwtzvCHvhNZXnvjcQJr3CCTsxsLTR
+ lgyX1f6lV3+Qk61HFjKfNqpOld8DAoxFCS9SSvtn1RKmp1TJaPu65SKyXPOmiB9UPVpWe/uo
+ YBvTxqiMaVNGYRvSJs6NWJMhNNs=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8ca095.7f2f4870f848-smtp-out-n02;
+ Tue, 07 Apr 2020 15:47:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0686EC4478F; Tue,  7 Apr 2020 15:47:32 +0000 (UTC)
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C1695C433F2;
+        Tue,  7 Apr 2020 15:47:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C1695C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V5 0/4] Add support for WLED5
+Date:   Tue,  7 Apr 2020 21:17:06 +0530
+Message-Id: <1586274430-28402-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 769071ac9f20 "ns: Introduce Time Namespace" broke reporting of
-inotify ucounts (max_inotify_instances, max_inotify_watches) in
-/proc/sys/user because it has added UCOUNT_TIME_NAMESPACES into enum
-ucount_type but didn't properly update reporting in
-kernel/ucount.c:setup_userns_sysctls(). This problem got fixed in commit
-eeec26d5da82 "time/namespace: Add max_time_namespaces ucount". Add
-BUILD_BUG_ON to catch a similar problem in the future.
+Currently, WLED driver supports only WLED4 peripherals that is present
+on pmi8998 and pm660L. This patch series  converts the existing WLED4
+bindings from .txt to .yaml format and adds the support for WLED5 peripheral
+that is present on PM8150L.
 
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- kernel/ucount.c | 2 ++
- 1 file changed, 2 insertions(+)
+PM8150L WLED supports the following.
+    - Two modulators and each sink can use any of the modulator
+    - Multiple CABC selection options
+    - Multiple brightness width selection (12 bits to 15 bits)
 
-diff --git a/kernel/ucount.c b/kernel/ucount.c
-index a53cc2b4179c..3da4d868e452 100644
---- a/kernel/ucount.c
-+++ b/kernel/ucount.c
-@@ -81,6 +81,8 @@ bool setup_userns_sysctls(struct user_namespace *ns)
- {
- #ifdef CONFIG_SYSCTL
- 	struct ctl_table *tbl;
-+
-+	BUILD_BUG_ON(ARRAY_SIZE(user_table) != UCOUNT_COUNTS + 1);
- 	setup_sysctl_set(&ns->set, &set_root, set_is_seen);
- 	tbl = kmemdup(user_table, sizeof(user_table), GFP_KERNEL);
- 	if (tbl) {
+Changes from V1:
+	- Rebased on top of the below commit.
+	  backlight: qcom-wled: Fix unsigned comparison to zero
+
+Changes from V2:
+	- Addressed Bjorn's comments by splitting the WLED4 changes
+	  in a seperate patch.
+	- Added WLED5 auto calibration support
+
+Changes from V3:
+        - Addressed comments from Daniel Thompson and Rob Herring
+        - Seperated the WLED5 bindings from the driver changes
+        - Squashed wled5 auto string detection and wled5 basic changes
+          to avoid the NULL callback function pointer issue.
+
+Changes from V4:
+        - Addressed the yaml formatting comments from Rob Herring.
+        - Addressed the comments from Daniel Thompson on the below patch
+  	  "backlight: qcom-wled: Add callback functions"
+
+Kiran Gunda (3):
+  backlight: qcom-wled: convert the wled bindings to .yaml format
+  backlight: qcom-wled: Add callback functions
+  backlight: qcom-wled: Add WLED5 bindings
+
+Subbaraman Narayanamurthy (1):
+  backlight: qcom-wled: Add support for WLED5 peripheral that is present
+    on PM8150L PMICs
+
+ .../bindings/leds/backlight/qcom-wled.txt          | 154 -----
+ .../bindings/leds/backlight/qcom-wled.yaml         | 255 ++++++++
+ drivers/video/backlight/qcom-wled.c                | 659 ++++++++++++++++++---
+ 3 files changed, 841 insertions(+), 227 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+
 -- 
-2.16.4
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
