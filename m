@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D32EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B03FC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583DF20768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313922080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217799;
-	bh=eSKBnDUxZ9V7jiJVKTGVAU7pRMub9uPonVW5GejxE2g=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1WqU8jostVisftgL+jXyQHXGKS+HUNj15e6epOlg8GDe8cYZBmirguDXjt7RA2ws1
-	 sGtQ/6mipKmFL2AZtdXQRb4/fMXqhcx70L9gsNwjUBHZdZKlOa0t6DtJmpQL+2wUos
-	 rOjTH6ggoOmF9mDjX7xxGxw0nt1xjosAA4UTNG2Q=
+	s=default; t=1586217795;
+	bh=YHs2/2fKbJKHt2TGmwli4BHLGjQ0L9PxyYQF8nAUEOY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1ka8h8ZhKcudOagAwRzRWfk2DZkUyTR5hQeC4RB98RPwX55xk5l2jtoSe32Ryc8eO
+	 Bg1t5DjouwkAb9UwWO2aqgkqea7bBDRSS04iRWhbznskhXitgfHyOGXni6lwLUW7TO
+	 4jnE+W6Ma1Rk2ix5RNxBSP6sNFM7dLIOnr6K7JBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgDGADR (ORCPT
+        id S1728372AbgDGADO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:03:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38564 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbgDGADP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:03:15 -0400
+        id S1726776AbgDGADL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:03:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CD9420768;
-        Tue,  7 Apr 2020 00:03:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F98E2082D;
+        Tue,  7 Apr 2020 00:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217794;
-        bh=eSKBnDUxZ9V7jiJVKTGVAU7pRMub9uPonVW5GejxE2g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=b0oQd1+oDnOO3Kuq5g1mdZGh90HBY2le+UdEECuLux8t8Ni0Zm61cVodNt2Qy3U8B
-         sxYdvTcZnI/+2bT4xOtelIiUguKdCUoN6xQUbCNb5E7YuIl/XTiP0/wbUQDzi0QlcS
-         pt5Aq6Jup9hsWLrUz2Ec71hVmHpPYd6usl4ZOfPE=
+        s=default; t=1586217791;
+        bh=YHs2/2fKbJKHt2TGmwli4BHLGjQ0L9PxyYQF8nAUEOY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BeTA5iVFL7vH2KUXW0SsOYUtR+0/2ARrfrUILf9vQPCo6VMLyUIyxOzZx/KrvdnXF
+         hkKA/HmbVJHnLX9y8MCctBIowpBTL8NCNXmI1PSGbXrrIhQy9+fWRtYEykSJGEDVHE
+         9L4wfOcgcNYp6+XtlS0anR0ySO+uesQqlK5zhi7Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+Cc:     Alain Volmat <avolmat@me.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 1/4] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
-Date:   Mon,  6 Apr 2020 20:03:09 -0400
-Message-Id: <20200407000312.17447-1-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 5/5] i2c: st: fix missing struct parameter description
+Date:   Mon,  6 Apr 2020 20:03:04 -0400
+Message-Id: <20200407000304.17360-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200407000304.17360-1-sashal@kernel.org>
+References: <20200407000304.17360-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,62 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Alain Volmat <avolmat@me.com>
 
-[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
+[ Upstream commit f491c6687332920e296d0209e366fe2ca7eab1c6 ]
 
-When doing a 16-bit read that returns data in the MSB byte, the
-RSB_DATA register will keep the MSB byte unchanged when doing
-the following 8-bit read. sunxi_rsb_read() will then return
-a result that contains high byte from 16-bit read mixed with
-the 8-bit result.
+Fix a missing struct parameter description to allow
+warning free W=1 compilation.
 
-The consequence is that after this happens the PMIC's regmap will
-look like this: (0x33 is the high byte from the 16-bit read)
-
-% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
-00: 33
-01: 33
-02: 33
-03: 33
-04: 33
-05: 33
-06: 33
-07: 33
-08: 33
-09: 33
-0a: 33
-0b: 33
-0c: 33
-0d: 33
-0e: 33
-[snip]
-
-Fix this by masking the result of the read with the correct mask
-based on the size of the read. There are no 16-bit users in the
-mainline kernel, so this doesn't need to get into the stable tree.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Alain Volmat <avolmat@me.com>
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/sunxi-rsb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-st.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-index 0ffb247b42d65..d45f48de42a0c 100644
---- a/drivers/bus/sunxi-rsb.c
-+++ b/drivers/bus/sunxi-rsb.c
-@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
- 	if (ret)
- 		goto unlock;
- 
--	*buf = readl(rsb->regs + RSB_DATA);
-+	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
- 
- unlock:
- 	mutex_unlock(&rsb->lock);
+diff --git a/drivers/i2c/busses/i2c-st.c b/drivers/i2c/busses/i2c-st.c
+index 1371547ce1a3a..185653b8ec3a2 100644
+--- a/drivers/i2c/busses/i2c-st.c
++++ b/drivers/i2c/busses/i2c-st.c
+@@ -437,6 +437,7 @@ static void st_i2c_wr_fill_tx_fifo(struct st_i2c_dev *i2c_dev)
+ /**
+  * st_i2c_rd_fill_tx_fifo() - Fill the Tx FIFO in read mode
+  * @i2c_dev: Controller's private data
++ * @max: Maximum amount of data to fill into the Tx FIFO
+  *
+  * This functions fills the Tx FIFO with fixed pattern when
+  * in read mode to trigger clock.
 -- 
 2.20.1
 
