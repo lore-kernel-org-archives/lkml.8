@@ -4,148 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC72CC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E216BC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC862078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF1E2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKrU9yO+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLp/U4LX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgDGAWm (ORCPT
+        id S1726469AbgDGAYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:22:42 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44346 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgDGAWm (ORCPT
+        Mon, 6 Apr 2020 20:24:00 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34657 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgDGAYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:22:42 -0400
-Received: by mail-ed1-f67.google.com with SMTP id i16so1764919edy.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 17:22:41 -0700 (PDT)
+        Mon, 6 Apr 2020 20:24:00 -0400
+Received: by mail-pj1-f68.google.com with SMTP id q16so564907pje.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 17:24:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5USL9XxCiBrVUdZKeVK74BRqC2K8QZLDtTA+0ej1Qnw=;
-        b=NKrU9yO+G2yn4uJkV72gp6H8+NTVUvCmVbyJpNsEillz3U9Ndq6nBe43anGRtUvCqS
-         KyBH48IxgaVqs98yYgMskXZwEdsye/zYua+p91OFh/H87X1BWl4YePH5y909VzWm/WmS
-         KwJpfc7LLkhLoMfzS414h7JDQSSraS7gUPOmXTej5+tWtPJ3DuiyX3hrqzU39M0FJ/DV
-         nyTv1oq7unlhOLFrbUN588eNPppzNhiO/SQSdTyalT/rvZn/dwbJc6MfcwOGulLT0nnW
-         CF/3ltvMFJRrOGFtxn6gkfFAizYBVFwqCY9rvduFLJ2qBOK0XES6+m3fmLJiBnNXSOfQ
-         em8w==
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=fkkoXTqICrhfI0O291OsPi1le2LLISiv9KvqGzJ1lRM=;
+        b=cLp/U4LXlpw/S4H/fngDMWW48C/pnzAVPqAT/YjmmdcqLJitsCOl0bVKWyFJWzenSd
+         DbjOae9WWegv+7Kn+jum0aM0VRbUl3pWv8OAg5kScEPatj34FXZfkDervrGJtN4cCaXE
+         Zer8eZnpGSkFHcTqTLtufx8j+5kcYVQAwYKyCxxshH7ZRkMkdR0qbnl64cjLN9mBqG8I
+         hmd6MGQmpvouNDAUNs4FM/9OgF1D7bia6OLeiyA2TjZhbH7/uO6UhFToGimfHSZYlzpm
+         /UtWP2GEjyVWTRN++1wQ8Y4i3dxzdGbqSywEB3XL+GiSgUCDngAi6LGDo5ROQJFdwmJ3
+         sGyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5USL9XxCiBrVUdZKeVK74BRqC2K8QZLDtTA+0ej1Qnw=;
-        b=qtYe7pI8b2BSTnhw/u/amcnFVHREep7zcFEmZitVKIIvDbMOWxSvIL1HDaPXoE2H8o
-         +cplHfuXvuMeOXixYKV/8OSD6MeZi50moQWQICOANJTApLkDMgZBN1d+6jcFcHICgeyQ
-         +Yh5OTFonRpeNDmaykxCRmLuL85CHu3Ab6pNo11AWgKW/v09gz0ucHwKqBYeL22ep3+o
-         3vA6j1gK5+lqqyzUGen9ziO5nHvY4yTNKqI8/bhQcM5zU7cVXDHT2TQKQnyBE8WSK3Ol
-         0vMI+6X61hA1mb7oR186LD37w1+Ii2U1o4zxYzmnWvFouBYwQjR6nMQMSEUjI8if9/0o
-         zjjw==
-X-Gm-Message-State: AGi0PuYw6fj9YVaDzys/YSDNWWvuoGBa96Oahj22Wx78kCQSF0aesId1
-        k7Nm1Y762X4QJya92TC5PWAQp4nWzBMw6DXFhRw=
-X-Google-Smtp-Source: APiQypLJE6qwQ1ILlj8KqGCVmefoeqjeFzDja3cy9IT0+CyDOa0O18rWcYcX3aFneP6PJRqlMKemCARlBN/OETAtgMk=
-X-Received: by 2002:aa7:d9cb:: with SMTP id v11mr20903338eds.206.1586218960493;
- Mon, 06 Apr 2020 17:22:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=fkkoXTqICrhfI0O291OsPi1le2LLISiv9KvqGzJ1lRM=;
+        b=XsKfvKOCmqKH0zn86GAYTeFdgQIWe48yhhA2bfYYeIbF2do8qE+rXxe3EeWpgNA7rp
+         MfgVGSC2pSLiuLFx7hti9GH3Brj2nXeXX1P3Yl3j0vt5upfnr6y9piICFgFLCpmloeUn
+         wif6TfP+JCfn/kFHs8xI15Vv7J8m3RK0WD+qlXgKLUyx4ROli9d6kqHIuqV7I8VQe175
+         a4I2WZRK2j5DRq3kmaFPrSsmQ894ir7iIIjkA6bV/VaJbYOOQJfA897a7866SeLnDWXK
+         HlLxdUM0lbzOpGfMc5DdTm+ISN86A9tpQZpeQYoXSUcV+8KgV1bujtqdxynN+jG3uewR
+         QdoQ==
+X-Gm-Message-State: AGi0PuY7ws2L2vHK0LVVypoEMqB0FhGfaFcSp3Bpz7HaOGMZ2sluMnSw
+        zOlBa1h0p6GVLw7OQACz1wH5aOkg
+X-Google-Smtp-Source: APiQypJ1PmMXocM19uNmFSCVzSeP+x8zrMcsmsc5rJUdQsYouh5WdLMWmtNz6sxP1KZ/8kCis2jf7Q==
+X-Received: by 2002:a17:90b:2394:: with SMTP id mr20mr1998678pjb.79.1586219039523;
+        Mon, 06 Apr 2020 17:23:59 -0700 (PDT)
+Received: from localhost (60-241-117-97.tpgi.com.au. [60.241.117.97])
+        by smtp.gmail.com with ESMTPSA id r24sm3889293pgn.44.2020.04.06.17.23.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 17:23:58 -0700 (PDT)
+Date:   Tue, 07 Apr 2020 10:22:36 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [RFC PATCH v2 05/13] powerpc/syscall: Rename syscall_64.c into
+ syscall.c
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>, msuchanek@suse.de,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <029e1064b1ad738785718221ea468c9cfc282457.1586108649.git.christophe.leroy@c-s.fr>
+        <cacbc62ded444e26e15ca67e0ec91b05b7de6459.1586108649.git.christophe.leroy@c-s.fr>
+        <1586137301.c2ssus5vmb.astroid@bobo.none>
+        <1a154868-6849-ebd7-9d38-673d0954c2d7@c-s.fr>
+In-Reply-To: <1a154868-6849-ebd7-9d38-673d0954c2d7@c-s.fr>
 MIME-Version: 1.0
-References: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1585892447-32059-6-git-send-email-iamjoonsoo.kim@lge.com>
- <CAHbLzkqdupWUv7vPpqDpOARuYkBiTxmQxNi-zaw_TWVB1FsNjQ@mail.gmail.com> <CAAmzW4Mr7NtOpPKpskhnMABJeVoe-CvOuC6TEfJabS7HdcwLbQ@mail.gmail.com>
-In-Reply-To: <CAAmzW4Mr7NtOpPKpskhnMABJeVoe-CvOuC6TEfJabS7HdcwLbQ@mail.gmail.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Mon, 6 Apr 2020 17:22:28 -0700
-Message-ID: <CAHbLzkoL7zKOFtRghEfsfeKOERZmTkjfi8MynuHf4oKXD9mcvQ@mail.gmail.com>
-Subject: Re: [PATCH v5 05/10] mm/swap: charge the page when adding to the swap cache
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1586216862.v31svyhizc.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 5, 2020 at 6:03 PM Joonsoo Kim <js1304@gmail.com> wrote:
->
-> 2020=EB=85=84 4=EC=9B=94 4=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 3:29, =
-Yang Shi <shy828301@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> >
-> > On Thu, Apr 2, 2020 at 10:41 PM <js1304@gmail.com> wrote:
-> > >
-> > > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> > >
-> > > Currently, some swapped-in pages are not charged to the memcg until
-> > > actual access to the page happens. I checked the code and found that
-> > > it could cause a problem. In this implementation, even if the memcg
-> > > is enabled, one can consume a lot of memory in the system by exploiti=
-ng
-> > > this hole. For example, one can make all the pages swapped out and
-> > > then call madvise_willneed() to load the all swapped-out pages withou=
-t
-> > > pressing the memcg. Although actual access requires charging, it's re=
-ally
-> > > big benefit to load the swapped-out pages to the memory without press=
-ing
-> > > the memcg.
-> > >
-> > > And, for workingset detection which is implemented on the following p=
-atch,
-> > > a memcg should be committed before the workingset detection is execut=
-ed.
-> > > For this purpose, the best solution, I think, is charging the page wh=
-en
-> > > adding to the swap cache. Charging there is not that hard. Caller of
-> > > adding the page to the swap cache has enough information about the ch=
-arged
-> > > memcg. So, what we need to do is just passing this information to
-> > > the right place.
-> > >
-> > > With this patch, specific memcg could be pressured more since readahe=
-ad
-> > > pages are also charged to it now. This would result in performance
-> > > degradation to that user but it would be fair since that readahead is=
- for
-> > > that user.
-> >
-> > If I read the code correctly, the readahead pages may be *not* charged
-> > to it at all but other memcgs since mem_cgroup_try_charge() would
-> > retrieve the target memcg id from the swap entry then charge to it
-> > (generally it is the memcg from who the page is swapped out). So, it
-> > may open a backdoor to let one memcg stress other memcgs?
->
-> It looks like you talk about the call path on CONFIG_MEMCG_SWAP.
->
-> The owner (task) for a anonymous page cannot be changed. It means that
-> the previous owner written on the swap entry will be the next user. So,
-> I think that using the target memcg id from the swap entry for readahead =
-pages
-> is valid way.
->
-> As you concerned, if someone can control swap-readahead to readahead
-> other's swap entry, one memcg could stress other memcg by using the fact =
-above.
-> However, as far as I know, there is no explicit way to readahead other's =
-swap
-> entry so no problem.
+Christophe Leroy's on April 7, 2020 4:20 am:
+>=20
+>=20
+> Le 06/04/2020 =C3=A0 03:42, Nicholas Piggin a =C3=A9crit=C2=A0:
+>> Christophe Leroy's on April 6, 2020 3:44 am:
+>>> syscall_64.c will be reused almost as is for PPC32.
+>>>
+>>> Rename it syscall.c
+>>=20
+>> Don't mind this, but I wonder if we can rename it to interrupt.c.
+>=20
+> Interrupt for me is irq.
+>=20
+> Maybe exception.c ?
+>=20
+> Exceptions, that's what interrupts and system calls are.
 
-Swap cluster readahead would readahead in pages on consecutive swap
-entries which may belong to different memcgs, however I just figured
-out patch #8 ("mm/swap: do not readahead if the previous owner of the
-swap entry isn't me") would prevent from reading ahead pages belonging
-to other memcgs. This would kill the potential problem.
+It's not the same. An interrupt is caused by an exception, but an=20
+exception does not always cause an interrupt.
 
-> Thanks.
+The code here is handling interrupts, it is not handling the exceptions
+(those are handled by handlers that are called). We also handle
+exceptions without taking an interrupt, for example if we set=20
+decrementer or msgclr.
+
+And we often (especially in 64-bit with soft masking) take interrupts
+without handling the exception (we set EE=3D0 and return, leaving the
+exception existing).
+
+So I'm trying to fix terminology slowly. We are not "returning" from
+an exception for example, that doesn't make sense. An exception is a
+condition of processor state which is either satisfied or it is not.
+What the software returns from is an interrupt.
+
+I'd like irq to be ~=3D Linux irq, which in general means an asynchronous=20
+interrupt that can be blocked by local_irq_disable or sometimes a device=20
+irq specifically, as distinct from "interrupt" which is powerpc=20
+architecture definition.
+
+Thanks,
+Nick
+=
