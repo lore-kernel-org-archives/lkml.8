@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A844C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE1CC2BB86
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA9492074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8699D207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586254978;
-	bh=HDOf5iL2WzIZq9OFWuzWL8Xs5UhCelii0BSjOQdYEbQ=;
+	s=default; t=1586254982;
+	bh=YOtm7zAs79v1XBoTlS89YdTT4HhPrN1rh4uVtP3fu6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHHpxD2laZavt4kwxup0njGfjiXnrM/fAEC64I7iA3cpH/28ZLp6hIptgIqYuPrBM
-	 Gd3JqfhUsx26zqwaDJadjpOW3OtVt0qICMl/fIq4kvjG4IMq0xwSKPZ0lqzbRYFcdD
-	 DGOhMVyKNZoENjrr7EoM31qi4YtnSMsjLLDgxHc0=
+	b=iR8HIMjfBqhCrkYnsmvGgLAu9x+6WmRgodslj1mcPJkxI0IacJ86tLCgeNX72NYR2
+	 jwcdVbc+PO5eM+QdPWD7piJIEfgPqNpZTy0gpNbqdNDgh/eYL7SIFvdqJfQpKUmBwt
+	 S7/u0ZY/E0tMzPSWfoQzthCGvutLeeOu1axz534s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgDGKW5 (ORCPT
+        id S1728348AbgDGKXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60718 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbgDGKWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:22:52 -0400
+        id S1728327AbgDGKW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:22:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B56B22074F;
-        Tue,  7 Apr 2020 10:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D8B52074F;
+        Tue,  7 Apr 2020 10:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586254972;
-        bh=HDOf5iL2WzIZq9OFWuzWL8Xs5UhCelii0BSjOQdYEbQ=;
+        s=default; t=1586254977;
+        bh=YOtm7zAs79v1XBoTlS89YdTT4HhPrN1rh4uVtP3fu6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ord3UGA7Zf40tNvJVcCdxKNUQdxiOSjZhB8w9PAm9XanuFe27MvxMV++tkt0f8FIG
-         08yVscuvWWTRsScZ2uG7p+Q4IJBZy6lfpIC5wk5SmfHiurqUhPuqGj36UFhvUmbDuJ
-         ykMjCCpwgfvLcUtTytfvNq5nYr5+DrMikz1+/hlk=
+        b=WgTD3CtxnxrAP3A/EGF4gg2IKOIGi+NHFuCGPul+oFBITNy9xf4YrdEn1L3hH61h5
+         a42l41hLLPUJWDdL1xJE22UkXsr3fTld6Vb5aYtv0v/LTw7kJ/4QyVRS23J26j7vUP
+         qFgT9gYrZvatRJxQVlAqTILiC3JrIFrQ7f+qdaOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Len Brown <len.brown@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 07/36] tools/power turbostat: Fix gcc build warnings
-Date:   Tue,  7 Apr 2020 12:21:40 +0200
-Message-Id: <20200407101455.227110989@linuxfoundation.org>
+Subject: [PATCH 5.4 09/36] tools/power turbostat: Fix 32-bit capabilities warning
+Date:   Tue,  7 Apr 2020 12:21:42 +0200
+Message-Id: <20200407101455.518814105@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -61,36 +61,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Len Brown <len.brown@intel.com>
 
-[ Upstream commit d8d005ba6afa502ca37ced5782f672c4d2fc1515 ]
+[ Upstream commit fcaa681c03ea82193e60d7f2cdfd94fbbcd4cae9 ]
 
-Warning: ‘__builtin_strncpy’ specified bound 20 equals destination size
-	[-Wstringop-truncation]
-
-reduce param to strncpy, to guarantee that a null byte is always copied
-into destination buffer.
+warning: `turbostat' uses 32-bit capabilities (legacy support in use)
 
 Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/turbostat/turbostat.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/power/x86/turbostat/Makefile    |  2 +-
+ tools/power/x86/turbostat/turbostat.c | 46 +++++++++++++++++----------
+ 2 files changed, 31 insertions(+), 17 deletions(-)
 
+diff --git a/tools/power/x86/turbostat/Makefile b/tools/power/x86/turbostat/Makefile
+index 13f1e8b9ac525..2b6551269e431 100644
+--- a/tools/power/x86/turbostat/Makefile
++++ b/tools/power/x86/turbostat/Makefile
+@@ -16,7 +16,7 @@ override CFLAGS +=	-D_FORTIFY_SOURCE=2
+ 
+ %: %.c
+ 	@mkdir -p $(BUILD_OUTPUT)
+-	$(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS)
++	$(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS) -lcap
+ 
+ .PHONY : clean
+ clean :
 diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 5d0fddda842c4..78507cd479bb4 100644
+index 17e82eaf5c4f4..988326b67a916 100644
 --- a/tools/power/x86/turbostat/turbostat.c
 +++ b/tools/power/x86/turbostat/turbostat.c
-@@ -5323,9 +5323,9 @@ int add_counter(unsigned int msr_num, char *path, char *name,
+@@ -30,7 +30,7 @@
+ #include <sched.h>
+ #include <time.h>
+ #include <cpuid.h>
+-#include <linux/capability.h>
++#include <sys/capability.h>
+ #include <errno.h>
+ #include <math.h>
+ 
+@@ -3150,28 +3150,42 @@ void check_dev_msr()
+ 			err(-5, "no /dev/cpu/0/msr, Try \"# modprobe msr\" ");
+ }
+ 
+-void check_permissions()
++/*
++ * check for CAP_SYS_RAWIO
++ * return 0 on success
++ * return 1 on fail
++ */
++int check_for_cap_sys_rawio(void)
+ {
+-	struct __user_cap_header_struct cap_header_data;
+-	cap_user_header_t cap_header = &cap_header_data;
+-	struct __user_cap_data_struct cap_data_data;
+-	cap_user_data_t cap_data = &cap_data_data;
+-	extern int capget(cap_user_header_t hdrp, cap_user_data_t datap);
+-	int do_exit = 0;
+-	char pathname[32];
++	cap_t caps;
++	cap_flag_value_t cap_flag_value;
+ 
+-	/* check for CAP_SYS_RAWIO */
+-	cap_header->pid = getpid();
+-	cap_header->version = _LINUX_CAPABILITY_VERSION;
+-	if (capget(cap_header, cap_data) < 0)
+-		err(-6, "capget(2) failed");
++	caps = cap_get_proc();
++	if (caps == NULL)
++		err(-6, "cap_get_proc\n");
+ 
+-	if ((cap_data->effective & (1 << CAP_SYS_RAWIO)) == 0) {
+-		do_exit++;
++	if (cap_get_flag(caps, CAP_SYS_RAWIO, CAP_EFFECTIVE, &cap_flag_value))
++		err(-6, "cap_get\n");
++
++	if (cap_flag_value != CAP_SET) {
+ 		warnx("capget(CAP_SYS_RAWIO) failed,"
+ 			" try \"# setcap cap_sys_rawio=ep %s\"", progname);
++		return 1;
  	}
  
- 	msrp->msr_num = msr_num;
--	strncpy(msrp->name, name, NAME_BYTES);
-+	strncpy(msrp->name, name, NAME_BYTES - 1);
- 	if (path)
--		strncpy(msrp->path, path, PATH_BYTES);
-+		strncpy(msrp->path, path, PATH_BYTES - 1);
- 	msrp->width = width;
- 	msrp->type = type;
- 	msrp->format = format;
++	if (cap_free(caps) == -1)
++		err(-6, "cap_free\n");
++
++	return 0;
++}
++void check_permissions(void)
++{
++	int do_exit = 0;
++	char pathname[32];
++
++	/* check for CAP_SYS_RAWIO */
++	do_exit += check_for_cap_sys_rawio();
++
+ 	/* test file permissions */
+ 	sprintf(pathname, "/dev/cpu/%d/msr", base_cpu);
+ 	if (euidaccess(pathname, R_OK)) {
 -- 
 2.20.1
 
