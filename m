@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8A3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF38C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B3A20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946D3207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255083;
-	bh=4nPDAK8FhaKO//oce9RzisZ2p1XmrMAHJp8g7CR2YFg=;
+	s=default; t=1586255087;
+	bh=khVOaY2ujlcX/REye0ztyWAGD+5eMAaXklsRDjNbiUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BnvR1mnN5PAwKk/OhPUh1a0lBeQ7CbwKCxh2e0c/R1o518dTF2yOIZblCYl2oaNSh
-	 KIN6er+xiYvqQSeK4AmBli2I7HldTtGxmA5sIcLVU4JOI+mQIiWg8YdShYczBtaYzl
-	 3PJVtQKGVVCLFxheeOhiGH2OIw/63+dUF7YtRskE=
+	b=WPwqHfTXpcIXPrYc4U5JGGUQ/Ll/+LnN1nNIHUs4nYDqDIZfFh/K8/XS5EV15gpkG
+	 7vpGwMm7W/+gIESa9qn5Qnt6fvF5H7KZCF7GngNQ3uHk1fA4qZzYZRkGl6JYrbwiBi
+	 znQh6lfGc2by//VtF/C2JWmoTyBAe0L5TQKafIrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgDGKYm (ORCPT
+        id S1728789AbgDGKYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:24:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34902 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:24:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728747AbgDGKYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:24:35 -0400
+        id S1728747AbgDGKYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:24:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBFC92082F;
-        Tue,  7 Apr 2020 10:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2744A2082F;
+        Tue,  7 Apr 2020 10:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255075;
-        bh=4nPDAK8FhaKO//oce9RzisZ2p1XmrMAHJp8g7CR2YFg=;
+        s=default; t=1586255082;
+        bh=khVOaY2ujlcX/REye0ztyWAGD+5eMAaXklsRDjNbiUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tmgn4Ja4jt7JbcJfJ5vIvSfQ4e/muFiJA42Pn3k39cLqScqMVzPBSWI3pyenYW3Fw
-         XS4gdqzLKcCUqsKCbCmrl4QngF47SOOktCIUrsNSvqa02Jm+8TvvkCcyZB7eCAcjce
-         lFpSQimGU0XDzrFifsrqpnE8W1I5c0X6tG36RiqE=
+        b=1zEry82Ikal49LncbaqmuFMxrQQbU9fQ4wIc1/Qexu8nGPjEeWU661mRmavEe4Xl0
+         FfA4DMOqAh/JaX39BAy5LlOx372QOwSc0Qxx8CcYIQJ5iDvJcRwcwr4+0UTpAQxbrv
+         5/FH1o1sf46qtIqGz+FruwDxeLXKfYlp1i1U2ras=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 02/46] net: dsa: ksz: Select KSZ protocol tag
-Date:   Tue,  7 Apr 2020 12:21:33 +0200
-Message-Id: <20200407101459.777473459@linuxfoundation.org>
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 5.5 22/46] misc: pci_endpoint_test: Fix to support > 10 pci-endpoint-test devices
+Date:   Tue,  7 Apr 2020 12:21:53 +0200
+Message-Id: <20200407101501.881056561@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -63,31 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit f772148eb757b0823fbfdc2fe592d5e06c7f19b0 ]
+commit 6b443e5c80b67a7b8a85b33d052d655ef9064e90 upstream.
 
-KSZ protocol tag is needed by the KSZ DSA drivers.
+Adding more than 10 pci-endpoint-test devices results in
+"kobject_add_internal failed for pci-endpoint-test.1 with -EEXIST, don't
+try to register things with the same name in the same directory". This
+is because commit 2c156ac71c6b ("misc: Add host side PCI driver for PCI
+test function device") limited the length of the "name" to 20 characters.
+Change the length of the name to 24 in order to support upto 10000
+pci-endpoint-test devices.
 
-Fixes: 0b9f9dfbfab4 ("dsa: Allow tag drivers to be built as modules")
-Tested-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test function device")
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: stable@vger.kernel.org # v4.14+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/microchip/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/dsa/microchip/Kconfig
-+++ b/drivers/net/dsa/microchip/Kconfig
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config NET_DSA_MICROCHIP_KSZ_COMMON
-+	select NET_DSA_TAG_KSZ
- 	tristate
- 
- menuconfig NET_DSA_MICROCHIP_KSZ9477
+---
+ drivers/misc/pci_endpoint_test.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -633,7 +633,7 @@ static int pci_endpoint_test_probe(struc
+ {
+ 	int err;
+ 	int id;
+-	char name[20];
++	char name[24];
+ 	enum pci_barno bar;
+ 	void __iomem *base;
+ 	struct device *dev = &pdev->dev;
 
 
