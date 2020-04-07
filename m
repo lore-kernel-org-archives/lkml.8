@@ -2,128 +2,124 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F29BC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899DDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466F62063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E7DA2063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLanvurQ"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oD1Jg3Tu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgDGMUD (ORCPT
+        id S1728634AbgDGMVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:20:03 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35720 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgDGMUC (ORCPT
+        Tue, 7 Apr 2020 08:21:20 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41290 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728548AbgDGMVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 08:20:02 -0400
-Received: by mail-pj1-f68.google.com with SMTP id g9so705753pjp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 05:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=R4hvZR8SPgpRXTOdJt4oRMxXYe8DMEbopd6JEn/rddg=;
-        b=NLanvurQ+ZPjNlsHq1Eqo37ceC0rWKMgTTjMn9f1vBeiiXkP24I5O/82bQeGy/l7Eo
-         yMKva0N79AFo5oGBvW4HgRB/ROUCognwcHld7nmzH67RzRIUte3JNDxBarqioqw3mtyl
-         A70iziS5ofFmI47r0S0PMZI1gDHHUfyABy8iqGsnOzX39utmk6JYQIbsp5ByzXlc2xzY
-         KdhYzd0opCH2t8PAZm0H1t9hlGlh5eU4UOL8bylNF7Z4KVwjRZUk3wYQtiuID5WREagO
-         vsMhbg0gLx/nAFBg/VY0BgOm2Sod4FFDEGTDJJSZnChEmBw2jxQJeSNv89zs9in8sSn2
-         rPcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=R4hvZR8SPgpRXTOdJt4oRMxXYe8DMEbopd6JEn/rddg=;
-        b=rgECe1jkchbY5aJh+UWLMvmhheTWauenAlnDZo1eeoVfyigy6GW0WaTBpl+V6n7Bse
-         dlK6bGqy8ofDAseW+jIujzeH02KgrnNGarutaSfsyabuR40r8Grr9rsjMLVq3Ph8UTXL
-         V8Zv+o6BqcGu27FJQ+4vc0hshmj7KBDfuaTRwTVbR+CWfB1BFtbtnW/BQicLUQz/Q+zo
-         HLeHV2EWZtkLfSNvo+nrf10hX+4oW0zpxxx+uJaNDINkdb9BOra7uW+shZ/y8nKEZFOY
-         Xnmarleq2B6ioyl7HyeC+3sjYZZXYdmi9QPk1Bc1T6TIAbg0NzzKY3fCqjtodfZDV0LA
-         fHwQ==
-X-Gm-Message-State: AGi0PuZPO3K4jzef7gYgIW0mXVJT6NHeGLVNHc2M8cyhA1tOE5kBOM6J
-        QL+okp1z5C8hmC3DU5VIUCo=
-X-Google-Smtp-Source: APiQypJQMPX3R8hhbCk3y5ITo4/ipXEOgqTDUwx9oTXuJ3PEI8hMJEPkPisA9p4FuU+QC8Ynj93LrQ==
-X-Received: by 2002:a17:90a:c392:: with SMTP id h18mr2488966pjt.89.1586262001848;
-        Tue, 07 Apr 2020 05:20:01 -0700 (PDT)
-Received: from localhost (g54.222-224-167.ppp.wakwak.ne.jp. [222.224.167.54])
-        by smtp.gmail.com with ESMTPSA id r70sm13926024pfr.116.2020.04.07.05.20.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 05:20:01 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 21:19:58 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Openrisc <openrisc@lists.librecores.org>
-Subject: Re: [GIT PULL] OpenRISC updates for v5.6
-Message-ID: <20200407121958.GQ7926@lianli.shorne-pla.net>
+        Tue, 7 Apr 2020 08:21:20 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0C33159E;
+        Tue,  7 Apr 2020 14:21:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586262077;
+        bh=ccNWqTZBMcAMBu/tDHaT/nTS1utdy/HvpeGfWy7F6wE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oD1Jg3Tu+GArR9R2iri+k4MRwKhy9x4XUxz/P6UmD7HHZ42mE9skWot7T/lLdItZI
+         YIzE7TY1JVVNjcHcLfKlwZS7MqbsMRd1UdFUbk9NRsXpIqLhWUqRwhrVAtk3jtbQL1
+         3qDZaB9eWR/veW1hpqiebbXmNc0s9cT+bqBQ+l2Y=
+Date:   Tue, 7 Apr 2020 15:21:06 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200407122106.GD4751@pendragon.ideasonboard.com>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200406165108.GA7646@kekkonen.localdomain>
+ <20200406173234.GD16885@pendragon.ideasonboard.com>
+ <20200407062241.GA8883@kekkonen.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20200407062241.GA8883@kekkonen.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Er, Sorry, this should be for 5.7.
+Hi Sakari,
 
-I was a bit confused because of other things going on.  Let me know if you are
-ok with this or need a new tag.  It should apply just fine for 5.7.
+On Tue, Apr 07, 2020 at 09:22:41AM +0300, Sakari Ailus wrote:
+> On Mon, Apr 06, 2020 at 08:32:34PM +0300, Laurent Pinchart wrote:
+> > On Mon, Apr 06, 2020 at 07:51:08PM +0300, Sakari Ailus wrote:
+> > > On Mon, Apr 06, 2020 at 05:42:38PM +0100, Lad Prabhakar wrote:
+> > > > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> > > > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> > > > 24MHz. So instead making clock-frequency as dt-property just let the
+> > > > driver enforce the required clock frequency.
+> > > 
+> > > Even if some current systems where the driver is used are using 24 MHz
+> > > clock, that doesn't mean there wouldn't be systems using another frequency
+> > > that the driver does not support right now.
+> > > 
+> > > The driver really should not set the frequency unless it gets it from DT,
+> > > but I think the preferred means is to use assigned-clock-rates instead, and
+> > > not to involve the driver with setting the frequency.
+> > > 
+> > > Otherwise we'll make it impossible to support other frequencies, at least
+> > > without more or less random defaults.
+> > 
+> > We're running in circles here.
+> > 
+> > As the driver only supports 24MHz at the moment, the frequency should be
+> > set by the driver, as it's a driver limitation. We can then work on
+> > supporting additional frequencies, which will require DT to provide a
+> > list of supported frequencies for the system, but that can be done on
+> > top.
+> 
+> I guess it would be possible to use different external clock frequencies on
+> a sensor in a given system but that seems to be a bit far fetched, to the
+> extent I've never seen anyone doing that in practice.
+> 
+> Originally, the driver set the frequency based on the clock-frequency
+> property. If we're removing that but use a fixed frequency instead, then
+> how is that going to work going forward when someone adds support for other
+> frequencies in the driver and has a system requiring that, while there are
+> some other platforms relying on the driver setting a particular frequency?
 
--Stafford
+The standard property for this is link-frequencies, not clock-frequency.
+Deprecating clock-frequency now paves the way to use the standard
+property later when/if someone implements support for additional
+frequencies.
 
-On Tue, Apr 07, 2020 at 09:16:15PM +0900, Stafford Horne wrote:
-> Hi Linus,
-> 
-> Please consider pulling...
-> 
-> The following changes since commit d5226fa6dbae0569ee43ecfc08bdcd6770fc4755:
-> 
->   Linux 5.5 (2020-01-26 16:23:03 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://github.com/openrisc/linux.git tags/for-linus
-> 
-> for you to fetch changes up to 9737e2c5f0bc768b58416ec070bd96c91c52a153:
-> 
->   openrisc: Remove obsolete show_trace_task function (2020-03-18 22:10:44 +0900)
-> 
-> ----------------------------------------------------------------
-> OpenRISC updates for 5.6
-> 
-> A few cleanups all over the place, things of note:
->  - Enable the clone3 syscall
->  - Remove CONFIG_CROSS_COMPILE from Krzysztof Kozlowski
->  - Update to use mmgrab from Julia Lawall
-> 
-> ----------------------------------------------------------------
-> Julia Lawall (1):
->       openrisc: use mmgrab
-> 
-> Krzysztof Kozlowski (1):
->       openrisc: configs: Cleanup CONFIG_CROSS_COMPILE
-> 
-> Stafford Horne (4):
->       openrisc: Convert copy_thread to copy_thread_tls
->       openrisc: Enable the clone3 syscall
->       openrisc: Cleanup copy_thread_tls docs and comments
->       openrisc: Remove obsolete show_trace_task function
-> 
->  Documentation/openrisc/openrisc_port.rst   |  4 ++--
->  arch/openrisc/Kconfig                      |  1 +
->  arch/openrisc/configs/or1ksim_defconfig    |  1 -
->  arch/openrisc/configs/simple_smp_defconfig |  1 -
->  arch/openrisc/include/uapi/asm/unistd.h    |  1 +
->  arch/openrisc/kernel/process.c             | 18 ++++++------------
->  arch/openrisc/kernel/smp.c                 |  3 ++-
->  arch/openrisc/kernel/traps.c               |  7 -------
->  8 files changed, 12 insertions(+), 24 deletions(-)
+> Although, if you're saying that this driver only needs to work with DT that
+> comes with the kernel and you don't care about DT binary compatibility,
+> this would be fine.
+
+I believe this series to not break backward compatibility, as the driver
+only works with a 24MHz clock, so I expect all DTs to specify that.
+
+-- 
+Regards,
+
+Laurent Pinchart
