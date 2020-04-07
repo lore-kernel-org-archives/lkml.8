@@ -2,54 +2,53 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82DAC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E471C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB672083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33EE72083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255030;
-	bh=nekBzOBwg7MSUfjgB1WlnAg8CmwfUXUhpErEo3+ryck=;
+	s=default; t=1586255034;
+	bh=SnyYKb+p9HafguymzY8zN2qEjwCS+JtjSBcFvZqGnq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2tasrUbtp/uij5fIn36Ka3woke9p1pfBFIty98ARPhIRE2nEAf+mCwqCIvHdnEaz9
-	 GqX7pnkpCs9yQYeN5iXRokhV1Sej+gjTYqbAV2yJvkbSMGwh5ovHUVgwahcqFxbu0c
-	 2BLXuEpnrfDYWy6YDedf2TLeJ2DGDujbMYWGk05o=
+	b=QeA4Z3go4VpZcwFSyVhYttW36CoJqpl9liCDT03PCKPindl6HTrd0PDvi7yRyI0yP
+	 uDHzC8SF+wccZaEGEJJihKoQXIe7Ce93h0Ex041hzxKvabtdTuqUFxgFD5eBBAqQse
+	 HHCsCW/EAqs+R4To0LS0574tNSoSp5WwDmilz3tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgDGKXt (ORCPT
+        id S1728583AbgDGKXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33698 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbgDGKXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:23:47 -0400
+        id S1728566AbgDGKXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B2C62082F;
-        Tue,  7 Apr 2020 10:23:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5FE620857;
+        Tue,  7 Apr 2020 10:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255026;
-        bh=nekBzOBwg7MSUfjgB1WlnAg8CmwfUXUhpErEo3+ryck=;
+        s=default; t=1586255028;
+        bh=SnyYKb+p9HafguymzY8zN2qEjwCS+JtjSBcFvZqGnq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DNVFq+XqU5cx6eFcob+kdPCLbvsXjkIZIJLhvE1WsGVRKesou87Y3dJPkrlVo1inW
-         MdKz7qi69noGvjSTBWQtZGs9s9gkEK7WmKT3W+VDWu4WHJzApoLTQJSWudsN4vWWni
-         JnZhR3VzC4EY80/AyebIMbosG6szOf2QgG7+8I5A=
+        b=PzebdYBPAP8fVt1Ce5/T0r406XV6ASEwe+F8WLXhVF+MPoGnxloUKXtKqbZgVdfJ6
+         d0F/DrbNlwpHaLg6jcQcSwuXuE2eTTGDlF7Kn0DBbzz/mRuPSDBxq9jRJMVgh9O86r
+         sisZKjcnZQcnsIb3RtYt2jXTLXbHNvg6LQYjk6BM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH 5.4 36/36] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Tue,  7 Apr 2020 12:22:09 +0200
-Message-Id: <20200407101458.815698923@linuxfoundation.org>
+        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 11/36] net/mlx5e: kTLS, Fix TCP seq off-by-1 issue in TX resync flow
+Date:   Tue,  7 Apr 2020 12:21:44 +0200
+Message-Id: <20200407101455.794161541@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -62,67 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-commit 38228e8848cd7dd86ccb90406af32de0cad24be3 upstream.
+[ Upstream commit 56917766def72f5afdf4235adb91b6897ff26d9d ]
 
-lockdep complains when padata's paths to update cpumasks via CPU hotplug
-and sysfs are both taken:
+We have an off-by-1 issue in the TCP seq comparison.
+The last sequence number that belongs to the TCP packet's payload
+is not "start_seq + len", but one byte before it.
+Fix it so the 'ends_before' is evaluated properly.
 
-  # echo 0 > /sys/devices/system/cpu/cpu1/online
-  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+This fixes a bug that results in error completions in the
+kTLS HW offload flows.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
-  ------------------------------------------------------
-  bash/205 is trying to acquire lock:
-  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
-
-  but task is already holding lock:
-  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
-
-  which lock already depends on the new lock.
-
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: ffbd9ca94e2e ("net/mlx5e: kTLS, Fix corner-case checks in TX resync flow")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -643,8 +643,8 @@ int padata_set_cpumask(struct padata_ins
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+index f260dd96873bf..52a56622034a0 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls_tx.c
+@@ -218,7 +218,7 @@ tx_sync_info_get(struct mlx5e_ktls_offload_context_tx *priv_tx,
+ 	 *    this packet was already acknowledged and its record info
+ 	 *    was released.
+ 	 */
+-	ends_before = before(tcp_seq + datalen, tls_record_start_seq(record));
++	ends_before = before(tcp_seq + datalen - 1, tls_record_start_seq(record));
  
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
- 
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -662,8 +662,8 @@ int padata_set_cpumask(struct padata_ins
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
- 
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
+ 	if (unlikely(tls_record_is_start_marker(record))) {
+ 		ret = ends_before ? MLX5E_KTLS_SYNC_SKIP_NO_DATA : MLX5E_KTLS_SYNC_FAIL;
+-- 
+2.20.1
+
 
 
