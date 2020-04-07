@@ -2,82 +2,121 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B246FC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5F8C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760BD2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2BC2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586291691;
-	bh=YRABWMvwvHV0PmDLsBbttXpDhy97LPhtP+IKmrC+GN4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=MN65Dp6+pRwVKIHC1wWhhideBk1AAiMkZywjj7wImg5y8QpJPtYQ4BJJ1Ixb4d4QR
-	 9ja8+wklDsfVbe0ff49J5SAXuUa//jzMeyZBMKjZvHIJk9XEFDiFmfa+/XtIHcZi0w
-	 UtY1t/eZgZfeYqRh6arOHGhD9qhNNQEhA/lC/Dx4=
+	s=default; t=1586292137;
+	bh=eHcGgZ846Ryt7rh09LVZWCLBcok82M6/lo0T07EG498=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZKQGyxlh4SYYTMERLUfLkYmGvroyFOLwOrhmdt60pQTCCO482ZsWt1o0mRQf8kPBD
+	 p1fWfXQN+ph2aJnT30trujh40xwSkXfryj76hxcB8LwnfmXe3vVObZV6AauE+QBlR8
+	 Qv+dR7ImTpyHtfUwWfufHo86pQ22DbWFk3P3rg+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgDGUeu (ORCPT
+        id S1726426AbgDGUmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:34:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgDGUeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:34:50 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC62C2074B;
-        Tue,  7 Apr 2020 20:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586291689;
-        bh=YRABWMvwvHV0PmDLsBbttXpDhy97LPhtP+IKmrC+GN4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=myOh01Dmx+KkdWrwz40Cn7g/n00RxRMho1HYuUNqGKXOcalbV/rv3vk/Ni5UOFIMf
-         wjSfQFrDMjiu+Kpe0IwkQFz09Dx/Ah2ANqDryLaB5RDYetyY4DoKURVSBQ5BgWy9ux
-         oXBEvtnVgLj4JdHZEFyUDi4buGHDcpmErypEZF5Q=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 7 Apr 2020 16:42:15 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35034 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgDGUmP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 16:42:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r26so3280416wmh.0;
+        Tue, 07 Apr 2020 13:42:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/+kyW4mDgVYbrX53+0yy/aJtZBiiNTJiMN1q3teN/Bg=;
+        b=anNbNsEYurSzE6xrCEwNPSbQlO6BYjDLFtgLhqayNOahXLxt1d6078ev0yJ4D2AVwG
+         IXASDIpYVm3wME6K5+8RHUiSbvBr0T8c82VFlBxg09efC3wVeFQcxEgIjJ/xrzL58a7H
+         nP8D8ZzXKcKPBRPD/Oqpwidzt3Qf3sAfxuTiJ0GT6weFU96z1ccmFqq3Mr0c2/hvXpF7
+         H3ji4y3VsCuSEtEn+2d/fPlr575QkrJ0so+lApqqKhuO5mlq7cdxAomJomz/kRs8hUG0
+         R3nRrwg3oPtDS/NblBu2SIB+l4QcjhSmHJT+kHX0C3YAwSAsmUuxVI3gje4/sF0SGSWq
+         XrqA==
+X-Gm-Message-State: AGi0PubRtP68G/DouNfI8DOpiKa/k5MQDoeuoO13OR7MwWZQoDAFe5tq
+        L2r1htLl1GknOVuGpCzWz6A=
+X-Google-Smtp-Source: APiQypKRJ8P0Fsa153hShEIVJFf7A48GlpRok+1kr6C+mLHm9baJlhBfyOJ3pt5jmKv0OIN+ezqq4A==
+X-Received: by 2002:a7b:c051:: with SMTP id u17mr1022612wmc.129.1586292132710;
+        Tue, 07 Apr 2020 13:42:12 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id d13sm32503523wrv.34.2020.04.07.13.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 13:42:11 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 21:42:09 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     vkuznets <vkuznets@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: hv_hypercall_pg page permissios
+Message-ID: <20200407204209.ji655odu7b4tt7oh@debian>
+References: <20200407065500.GA28490@lst.de>
+ <87v9mblpq6.fsf@vitty.brq.redhat.com>
+ <HK0P153MB0273278D61381693E022B3ADBFC30@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAAfSe-u1VNDiY0MXGwrUqsNLBiai8zivxoPiyLnkJMZ7hcX+Eg@mail.gmail.com>
-References: <20200331104532.12698-1-chunyan.zhang@unisoc.com> <158605608663.158626.7732167785990086489@swboyd.mtv.corp.google.com> <CAAfSe-u1VNDiY0MXGwrUqsNLBiai8zivxoPiyLnkJMZ7hcX+Eg@mail.gmail.com>
-Subject: Re: [PATCH] clk: sprd: don't gate uart console clock
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Tue, 07 Apr 2020 13:34:48 -0700
-Message-ID: <158629168890.88454.8918367547173437575@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HK0P153MB0273278D61381693E022B3ADBFC30@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chunyan Zhang (2020-04-06 19:02:38)
-> On Sun, 5 Apr 2020 at 11:08, Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Chunyan Zhang (2020-03-31 03:45:32)
-> > > Don't gate uart1_eb which provides console clock, gating that clock w=
-ould
-> > > make serial stop working if serial driver didn't enable that explicit=
-ly.
+On Tue, Apr 07, 2020 at 06:10:42PM +0000, Dexuan Cui wrote:
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Vitaly Kuznetsov
+> > Sent: Tuesday, April 7, 2020 12:28 AM
+> > Christoph Hellwig <hch@lst.de> writes:
+> > 
+> > > Hi all,
 > > >
-> > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > ---
-> >
-> > Do you have a Fixes: tag?
->=20
-> I didn't leave a Fixed tag since that commit [1] will be merged into v5.7=
--rc1
->=20
-> [1] https://www.spinics.net/lists/linux-clk/msg46430.html
+> > > The x86 Hyper-V hypercall page (hv_hypercall_pg) is the only allocation
+> > > in the kernel using __vmalloc with exectutable persmissions, and the
+> > > only user of PAGE_KERNEL_RX.  Is there any good reason it needs to
+> > > be readable?  Otherwise we could use vmalloc_exec and kill off
+> > > PAGE_KERNEL_RX.  Note that before 372b1e91343e6 ("drivers: hv: Turn
+> > off
+> > > write permission on the hypercall page") it was even mapped writable..
+> > 
+> > [There is nothing secret in the hypercall page, by reading it you can
+> > figure out if you're running on Intel or AMD (VMCALL/VMMCALL) but it's
+> > likely not the only possible way :-)]
+> > 
+> > I see no reason for hv_hypercall_pg to remain readable. I just
+> > smoke-tested
+> > 
+> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > index 7581cab74acb..17845db67fe2 100644
+> > --- a/arch/x86/hyperv/hv_init.c
+> > +++ b/arch/x86/hyperv/hv_init.c
+> > @@ -382,7 +382,7 @@ void __init hyperv_init(void)
+> >         guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
+> >         wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
+> > 
+> > -       hv_hypercall_pg  = __vmalloc(PAGE_SIZE, GFP_KERNEL,
+> > PAGE_KERNEL_RX);
+> > +       hv_hypercall_pg  = vmalloc_exec(PAGE_SIZE);
+> 
+> If we try to write into the page, Hyper-V will kill the guest immediately
+> by a virtual double-fault (or triple fault?), IIRC.
+> 
 
-Please still provide a Fixes tag. It helps track what commit is fixed
-regardless.
+The guest would get injected a #GP fault in that case FWIW.  Perhaps
+that leads to further double-fault or triple-fault.
+
+Wei.
