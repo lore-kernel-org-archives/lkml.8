@@ -2,102 +2,93 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F82FC2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E698C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B74320857
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2082072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586244835;
+	bh=Pi97hCbEqeqPzISB0QRADPaO3CZx54vW9zxLnkiGNAM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TCuyg35oLAzZqxOt1dCZ9zHVUOonKvq/fPAyy4j2ldX94v9/VXBcaFr3uaMAthZXI
+	 wQXTEJncnlDF+Sd/YHqz1kQnnuEflcN4rMpU7n65AePc5ZxvFf90keyRR143ccHCcR
+	 6qkWmyon3DaneEvykcQnObx9eKUUn/Cj7Ah6kmwg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgDGHdn (ORCPT
+        id S1727837AbgDGHdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 03:33:43 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:36949 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgDGHdm (ORCPT
+        Tue, 7 Apr 2020 03:33:54 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41836 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgDGHdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 03:33:42 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jLijo-00029a-4E; Tue, 07 Apr 2020 07:33:36 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     yhchuang@realtek.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org (open list:REALTEK WIRELESS DRIVER
-        (rtw88)), netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] rtw88: Add delay on polling h2c command status bit
-Date:   Tue,  7 Apr 2020 15:33:31 +0800
-Message-Id: <20200407073331.397-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Apr 2020 03:33:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h9so2624159wrc.8;
+        Tue, 07 Apr 2020 00:33:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lgXMyzs13NuYA6W3haexk1rgQVEgjk0KCFI11uwcdlc=;
+        b=NuXUbyWhm2z6g4BSsw7fmGUCh7P5NzugVSQB2w6jW2cNSVcpRIU82SKZfgDlBlxosP
+         pDwupOge9Qyc7lAAkA+lRb1yk2II+GETPeZgiB2G72zuHxwGf1wOM9v0oAta2dFD4ia+
+         E63aEMZPvLoCuWv1iXUVlSn3KNpCnHbx/vT7PeE9EySgLnyQ4Lvow8B4z+Alux2Jgg4W
+         XSAyPI/TgZy+zCTgFIKbP+qy5BqL8EZc2d8J9jBq5Xnmuo9ejFy3RwK7NnBJXDiUJ25/
+         EJl04HyI2ENSw4yelPZBififdVwO84Tdo3+pg1uUGDRHZTb+Zh8A4znWjd3Q6dEFLmVM
+         LGtw==
+X-Gm-Message-State: AGi0PuYA2x4YDBiLk+FOtBCXJT/e8UuuV2T4WCKY6uhvHEt9Sjpw0jro
+        vMJJn3RvBu0L9IV/ESYTZa0=
+X-Google-Smtp-Source: APiQypJ/3DH6y3lJq5QBhGCj/quYn/846Af14/JDIMx2bKATqWIcwSSk8+oHxllRL2DjGdyzy6iPkQ==
+X-Received: by 2002:adf:fa85:: with SMTP id h5mr1182699wrr.63.1586244831851;
+        Tue, 07 Apr 2020 00:33:51 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id g186sm1184915wmg.36.2020.04.07.00.33.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 00:33:50 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 09:33:42 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@infradead.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2 - v2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK
+ instead.
+Message-ID: <20200407071148.GE18914@dhcp22.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name>
+ <87v9miydai.fsf@notabene.neil.brown.name>
+ <87sghmyd8v.fsf@notabene.neil.brown.name>
+ <87pncqyd7k.fsf@notabene.neil.brown.name>
+ <20200402151009.GA14130@infradead.org>
+ <87h7y1y0ra.fsf@notabene.neil.brown.name>
+ <20200403094220.GA29920@quack2.suse.cz>
+ <87k12sw5ws.fsf@notabene.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k12sw5ws.fsf@notabene.neil.brown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some systems we can constanly see rtw88 complains:
-[39584.721375] rtw_pci 0000:03:00.0: failed to send h2c command
+On Tue 07-04-20 09:28:19, Neil Brown wrote:
+> On Fri, Apr 03 2020, Jan Kara wrote:
+> >
+> > So I don't think we can just remove lines from procfs files like this. That
+> > has a high potential of breaking some userspace app that is not careful
+> > enough when parsing the file. So I think that we need to leave there the
+> > format string and just replace K(node_page_state(pgdat, NR_UNSTABLE_NFS))
+> > with 0.
+> 
+> OK.  I assume changing the static trace points isn't a problem though?
 
-Increase interval of each check to wait the status bit really changed.
-
-Use read_poll_timeout() macro which fits anything we need here.
-
-Suggested-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v2:
-- Use read_poll_timeout macro.
-
- drivers/net/wireless/realtek/rtw88/fw.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/wireless/realtek/rtw88/fw.c b/drivers/net/wireless/realtek/rtw88/fw.c
-index 05c430b3489c..8508b83d98ed 100644
---- a/drivers/net/wireless/realtek/rtw88/fw.c
-+++ b/drivers/net/wireless/realtek/rtw88/fw.c
-@@ -2,6 +2,8 @@
- /* Copyright(c) 2018-2019  Realtek Corporation
-  */
- 
-+#include <linux/iopoll.h>
-+
- #include "main.h"
- #include "coex.h"
- #include "fw.h"
-@@ -193,8 +195,8 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
- 	u8 box;
- 	u8 box_state;
- 	u32 box_reg, box_ex_reg;
--	u32 h2c_wait;
- 	int idx;
-+	int ret;
- 
- 	rtw_dbg(rtwdev, RTW_DBG_FW,
- 		"send H2C content %02x%02x%02x%02x %02x%02x%02x%02x\n",
-@@ -226,12 +228,11 @@ static void rtw_fw_send_h2c_command(struct rtw_dev *rtwdev,
- 		goto out;
- 	}
- 
--	h2c_wait = 20;
--	do {
--		box_state = rtw_read8(rtwdev, REG_HMETFR);
--	} while ((box_state >> box) & 0x1 && --h2c_wait > 0);
-+	ret = read_poll_timeout(rtw_read8, box_state,
-+				!((box_state >> box) & 0x1), 100, 3000, false,
-+				rtwdev, REG_HMETFR);
- 
--	if (!h2c_wait) {
-+	if (ret) {
- 		rtw_err(rtwdev, "failed to send h2c command\n");
- 		goto out;
- 	}
+It shouldn't be until we learn that somebody depends on it...
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
