@@ -2,156 +2,205 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B57C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B009C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAAD20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586274992;
-	bh=zBZKI+9jb0HjHyKoJhQhGw3onl80w3zMTcWXoDvhaXU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FtwIEb5DkPmZpbgSVbWADzMA/rlr4nDgGHz5Jf6Q/HSQCyEvXuGdfPqqoCIcgsbrp
-	 rJqMn9SMlngXzgzZ/57UVx5+FRb3fibIyKfqdGr0PpsO0Pj45gyRPD+28eX5AypNRJ
-	 A+6iZDN8jKU6VVEhOECiYUBfqLfXgVPYYMQvI6cc=
+	by mail.kernel.org (Postfix) with ESMTP id 2FC9020730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QXKT36Hq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbgDGP4b (ORCPT
+        id S1727751AbgDGP6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:56:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36790 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbgDGP4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:56:31 -0400
-Received: from cam-smtp0.cambridge.arm.com (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 7 Apr 2020 11:58:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47945 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726889AbgDGP6S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:58:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586275096;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yUYJ5bzo+BJgODaE1JfQ2ZwXtILNlfRLeWjodd722hM=;
+        b=QXKT36HqNxAknme6knr7Ko2ovswjbg6yzzWZ4zja+w+P4raeSR1UmhAQElcibhNZQaepQ5
+        tSm9mabjC1jh5OMgj3HMJxpxYvsyT/X2fDMSgWp5ij3U6fJYqjxYzWWZrEn60UhzkykB1t
+        tLHcx5c2R7paQORdBaQR78CiT547RGw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-dKrGDez7O2ilzpapPbNMew-1; Tue, 07 Apr 2020 11:58:12 -0400
+X-MC-Unique: dKrGDez7O2ilzpapPbNMew-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFB1F2072A;
-        Tue,  7 Apr 2020 15:56:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586274990;
-        bh=zBZKI+9jb0HjHyKoJhQhGw3onl80w3zMTcWXoDvhaXU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lOuxJUTy81I8lkRSs+9nwpscfhBZj1Iop08Xl15LtSE7HHamtL49h/qk3A9OFFS1L
-         mNl/pQCtzaVxCM0/dbQP7JbiMtCLb1W1u2FQGIhLI0StpvtrasdOkRhmHPFtwjYdYN
-         tmejFplx8h2fsnt4HhMSVlGbDdvOzq3RWxFWQIT8=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH] efi/libstub/file: merge filename buffers to reduce stack usage
-Date:   Tue,  7 Apr 2020 17:56:14 +0200
-Message-Id: <20200407155614.20440-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9A78DB61;
+        Tue,  7 Apr 2020 15:58:10 +0000 (UTC)
+Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EC4560BEC;
+        Tue,  7 Apr 2020 15:58:02 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 09:58:01 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Tian, Kevin" <kevin.tian@intel.com>
+Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: Re: [PATCH v1 2/2] vfio/pci: Emulate PASID/PRI capability for VFs
+Message-ID: <20200407095801.648b1371@w520.home>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+References: <1584880394-11184-1-git-send-email-yi.l.liu@intel.com>
+        <1584880394-11184-3-git-send-email-yi.l.liu@intel.com>
+        <20200402165954.48d941ee@w520.home>
+        <A2975661238FB949B60364EF0F2C25743A2204FE@SHSMSX104.ccr.corp.intel.com>
+        <20200403112545.6c115ba3@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E13D@SHSMSX104.ccr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd reports that commit
+On Tue, 7 Apr 2020 04:26:23 +0000
+"Tian, Kevin" <kevin.tian@intel.com> wrote:
 
-  9302c1bb8e47 ("efi/libstub: Rewrite file I/O routine")
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Saturday, April 4, 2020 1:26 AM  
+> [...]
+> > > > > +	if (!pasid_cap.control_reg.paside) {
+> > > > > +		pr_debug("%s: its PF's PASID capability is not enabled\n",
+> > > > > +			dev_name(&vdev->pdev->dev));
+> > > > > +		ret = 0;
+> > > > > +		goto out;
+> > > > > +	}  
+> > > >
+> > > > What happens if the PF's PASID gets disabled while we're using it??  
+> > >
+> > > This is actually the open I highlighted in cover letter. Per the reply
+> > > from Baolu, this seems to be an open for bare-metal all the same.
+> > > https://lkml.org/lkml/2020/3/31/95  
+> > 
+> > Seems that needs to get sorted out before we can expose this.  Maybe
+> > some sort of registration with the PF driver that PASID is being used
+> > by a VF so it cannot be disabled?  
+> 
+> I guess we may do vSVA for PF first, and then adding VF vSVA later
+> given above additional need. It's not necessarily to enable both
+> in one step.
+> 
+> [...]
+> > > > > @@ -1604,6 +1901,18 @@ static int vfio_ecap_init(struct  
+> > vfio_pci_device *vdev)  
+> > > > >  	if (!ecaps)
+> > > > >  		*(u32 *)&vdev->vconfig[PCI_CFG_SPACE_SIZE] = 0;
+> > > > >
+> > > > > +#ifdef CONFIG_PCI_ATS
+> > > > > +	if (pdev->is_virtfn) {
+> > > > > +		struct pci_dev *physfn = pdev->physfn;
+> > > > > +
+> > > > > +		ret = vfio_pci_add_emulated_cap_for_vf(vdev,
+> > > > > +					physfn, epos_max, prev);
+> > > > > +		if (ret)
+> > > > > +			pr_info("%s, failed to add special caps for VF %s\n",
+> > > > > +				__func__, dev_name(&vdev->pdev->dev));
+> > > > > +	}
+> > > > > +#endif  
+> > > >
+> > > > I can only imagine that we should place the caps at the same location
+> > > > they exist on the PF, we don't know what hidden registers might be
+> > > > hiding in config space.  
+> 
+> Is there vendor guarantee that hidden registers will locate at the
+> same offset between PF and VF config space? 
 
-reworks the file I/O routines in a way that triggers the following
-warning:
+I'm not sure if the spec really precludes hidden registers, but the
+fact that these registers are explicitly outside of the capability
+chain implies they're only intended for device specific use, so I'd say
+there are no guarantees about anything related to these registers.
 
-  drivers/firmware/efi/libstub/file.c:240:1: warning: the frame size
-            of 1200 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+FWIW, vfio started out being more strict about restricting config space
+access to defined capabilities, until...
 
-We can work around this issue by reusing the 'filename' field of the
-file info struct that we use to obtain file information from EFI (which
-contains the filename even though we already know it since we used it
-to open the file in the first place)
+commit a7d1ea1c11b33bda2691f3294b4d735ed635535a
+Author: Alex Williamson <alex.williamson@redhat.com>
+Date:   Mon Apr 1 09:04:12 2013 -0600
 
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- drivers/firmware/efi/libstub/file.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+    vfio-pci: Enable raw access to unassigned config space
+    
+    Devices like be2net hide registers between the gaps in capabilities
+    and architected regions of PCI config space.  Our choices to support
+    such devices is to either build an ever growing and unmanageable white
+    list or rely on hardware isolation to protect us.  These registers are
+    really no different than MMIO or I/O port space registers, which we
+    don't attempt to regulate, so treat PCI config space in the same way.
 
-diff --git a/drivers/firmware/efi/libstub/file.c b/drivers/firmware/efi/libstub/file.c
-index d4c7e5f59d2c..ea66b1f16a79 100644
---- a/drivers/firmware/efi/libstub/file.c
-+++ b/drivers/firmware/efi/libstub/file.c
-@@ -29,30 +29,31 @@
-  */
- #define EFI_READ_CHUNK_SIZE	SZ_1M
- 
-+struct finfo {
-+	efi_file_info_t info;
-+	efi_char16_t	filename[MAX_FILENAME_SIZE];
-+};
-+
- static efi_status_t efi_open_file(efi_file_protocol_t *volume,
--				  efi_char16_t *filename_16,
-+				  struct finfo *fi,
- 				  efi_file_protocol_t **handle,
- 				  unsigned long *file_size)
- {
--	struct {
--		efi_file_info_t info;
--		efi_char16_t	filename[MAX_FILENAME_SIZE];
--	} finfo;
- 	efi_guid_t info_guid = EFI_FILE_INFO_ID;
- 	efi_file_protocol_t *fh;
- 	unsigned long info_sz;
- 	efi_status_t status;
- 
--	status = volume->open(volume, &fh, filename_16, EFI_FILE_MODE_READ, 0);
-+	status = volume->open(volume, &fh, fi->filename, EFI_FILE_MODE_READ, 0);
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err("Failed to open file: ");
--		efi_char16_printk(filename_16);
-+		efi_char16_printk(fi->filename);
- 		efi_printk("\n");
- 		return status;
- 	}
- 
--	info_sz = sizeof(finfo);
--	status = fh->get_info(fh, &info_guid, &info_sz, &finfo);
-+	info_sz = sizeof(struct finfo);
-+	status = fh->get_info(fh, &info_guid, &info_sz, fi);
- 	if (status != EFI_SUCCESS) {
- 		pr_efi_err("Failed to get file info\n");
- 		fh->close(fh);
-@@ -60,7 +61,7 @@ static efi_status_t efi_open_file(efi_file_protocol_t *volume,
- 	}
- 
- 	*handle = fh;
--	*file_size = finfo.info.file_size;
-+	*file_size = fi->info.file_size;
- 	return EFI_SUCCESS;
- }
- 
-@@ -146,13 +147,13 @@ static efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
- 
- 	alloc_addr = alloc_size = 0;
- 	do {
--		efi_char16_t filename[MAX_FILENAME_SIZE];
-+		struct finfo fi;
- 		unsigned long size;
- 		void *addr;
- 
- 		offset = find_file_option(cmdline, cmdline_len,
- 					  optstr, optstr_size,
--					  filename, ARRAY_SIZE(filename));
-+					  fi.filename, ARRAY_SIZE(fi.filename));
- 
- 		if (!offset)
- 			break;
-@@ -166,7 +167,7 @@ static efi_status_t handle_cmdline_files(efi_loaded_image_t *image,
- 				return status;
- 		}
- 
--		status = efi_open_file(volume, filename, &file, &size);
-+		status = efi_open_file(volume, &fi, &file, &size);
- 		if (status != EFI_SUCCESS)
- 			goto err_close_volume;
- 
--- 
-2.17.1
+> > > but we are not sure whether the same location is available on VF. In
+> > > this patch, it actually places the emulated cap physically behind the
+> > > cap which lays farthest (its offset is largest) within VF's config space
+> > > as the PCIe caps are linked in a chain.  
+> > 
+> > But, as we've found on Broadcom NICs (iirc), hardware developers have a
+> > nasty habit of hiding random registers in PCI config space, outside of
+> > defined capabilities.  I feel like IGD might even do this too, is that
+> > true?  So I don't think we can guarantee that just because a section of
+> > config space isn't part of a defined capability that its unused.  It
+> > only means that it's unused by common code, but it might have device
+> > specific purposes.  So of the PCIe spec indicates that VFs cannot
+> > include these capabilities and virtialization software needs to
+> > emulate them, we need somewhere safe to place them in config space, and
+> > simply placing them off the end of known capabilities doesn't give me
+> > any confidence.  Also, hardware has no requirement to make compact use
+> > of extended config space.  The first capability must be at 0x100, the
+> > very next capability could consume all the way to the last byte of the
+> > 4K extended range, and the next link in the chain could be somewhere in
+> > the middle.  Thanks,
+> >   
+> 
+> Then what would be a viable option? Vendor nasty habit implies
+> no standard, thus I don't see how VFIO can find a safe location
+> by itself. Also curious how those hidden registers are identified
+> by VFIO and employed with proper r/w policy today. If sort of quirks
+> are used, then could such quirk way be extended to also carry
+> the information about vendor specific safe location? When no
+> such quirk info is provided (the majority case), VFIO then finds
+> out a free location to carry the new cap.
+
+See above commit, rather than quirks we allow raw access to any config
+space outside of the capability chain.  My preference for trying to
+place virtual capabilities at the same offset as the capability exists
+on the PF is my impression that the PF config space is often a template
+for the VF config space.  The PF and VF are clearly not independent
+devices, they share design aspects, and sometimes drivers.  Therefore
+if I was a lazy engineer trying to find a place to hide a register in
+config space (and ignoring vendor capabilities*), I'd probably put it
+in the same place on both devices.  Thus if we maintain the same
+capability footprint as the PF, we have a better chance of avoiding
+them.  It's a gamble and maybe we're overthinking it, but this has
+always been a concern when adding virtual capabilities to a physical
+device.  We can always fail over to an approach where we simply find
+free space.  Thanks,
+
+Alex
+
+* ISTR the Broadcom device implemented the hidden register in standard
+  config space, which was otherwise entirely packed, ie. there was no
+  room for the register to be implemented as a vendor cap.
 
