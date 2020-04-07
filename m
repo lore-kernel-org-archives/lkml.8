@@ -2,202 +2,166 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B113C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE90BC2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F6A20801
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:26:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vOoh/LI7"
+	by mail.kernel.org (Postfix) with ESMTP id C91BF20748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgDGE0h (ORCPT
+        id S1726657AbgDGEmJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 00:26:37 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:33018 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgDGE0g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 00:26:36 -0400
-Received: by mail-pg1-f201.google.com with SMTP id x16so1499753pgi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 21:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=QWUKDJQTRxWuVmOwgRvVPoWS0UavR+FekLqN1+lSVJ0=;
-        b=vOoh/LI74uP5oGTJtFVs6Wj0xTE8/y6MFdP3yrgFAKUCddTIF/l1UpDa8U199B88Ru
-         w9vQSEt0QtBFCZoQ2zSrGdEwEuiLUow0J7rStScAiPsb968sEU/qyfuiA0kYdaV+X3we
-         mdF+WBr/pbi0ZmjOdWtXyEW50KZW41qkvwyiJnX5NHvmTEKAJbN8SGS5DDX7v4lo/981
-         tWgMYlgRjMuDFYQgKoX43TZNCOmmHH9pWJ5iGZ+81QFYtqZYkBef/I4OntvBMmi7C3Vf
-         HeWvWUzmXa3/1sdg8OMFpEKJdYBwiT3Hw4PwYvyMAPagBmFgHZL95Tu+Ne+JOmFSVKGA
-         a8Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=QWUKDJQTRxWuVmOwgRvVPoWS0UavR+FekLqN1+lSVJ0=;
-        b=YUuTFX3rCZkZNVePGd26ipD+BBgS14d0bIUMXciF3JQ55yd2UHL9Bs+ji/20wrIby9
-         +iiRU4IKKnghn9gNIHFK7dW7b1y+8dQ6Tt9EmUATkO82hyTF+6h0BUPMOJw+x3Ol26EJ
-         iu3mAguoHjRCtLoGJ1w9YMA9hRBjjBIgUwIn/zLY3aIpJNReBf559wLswi4VrdIp9bB5
-         bl8zTt64Tt9yM7+XQ9KKiv0PheZ2NeT1TA9edRMx7EbZhJ0BV408XytP/MHuDO2pm51R
-         HyeyFIKo3ncuyToyxidjT5rqGdC/sC42rZrvXYPx+Y8QyN36jRa+GnOQeKltD6Q5pIds
-         HIzQ==
-X-Gm-Message-State: AGi0PuZO2bY3bEVmgrR4lhTgwoXKsv6YZarAuxVEP920AvXs8864xUVe
-        dVDxwM13hF5RuTCq5ySNkzGKgT/epW+5
-X-Google-Smtp-Source: APiQypLJCnHPeQcXq6SQEnVok3DreXL6u5mQfQikHBJHO0xSMfffYfbLHPybQF8KmADEvQ/NI6B62Eye81jN
-X-Received: by 2002:a17:90b:909:: with SMTP id bo9mr432591pjb.125.1586233595138;
- Mon, 06 Apr 2020 21:26:35 -0700 (PDT)
-Date:   Tue,  7 Apr 2020 12:26:27 +0800
-Message-Id: <20200407122522.v2.1.Ibfc500cbf0bf2dc8429b17f064e960e95bb228e9@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-Subject: [PATCH v2] Bluetooth: debugfs option to unset MITM flag
-From:   Archie Pusaka <apusaka@google.com>
-To:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Archie Pusaka <apusaka@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Apr 2020 00:42:09 -0400
+Received: from mga17.intel.com ([192.55.52.151]:17836 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgDGEmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 00:42:08 -0400
+IronPort-SDR: hUa8O12FfDkETebE29P0A0Lp6Dk8cIsy5l7z3Szq9FB/rg42W0SUvP2TCiAtw41m5d8viJb4GG
+ ra+cDHT9pkow==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 21:42:08 -0700
+IronPort-SDR: 4wrchvln1lQFNDC1/x6Jh7XDy16JIOWo1Y1Q8iiWViMp1DfJ4gs5bM6IOxf6z16mrLg5Es3a11
+ hEVmoXmvDIaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
+   d="scan'208";a="248295728"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by orsmga008.jf.intel.com with ESMTP; 06 Apr 2020 21:42:07 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 6 Apr 2020 21:42:06 -0700
+Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 6 Apr 2020 21:42:06 -0700
+Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
+ fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 6 Apr 2020 21:42:06 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
+ SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
+ Tue, 7 Apr 2020 12:42:03 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Hao" <hao.wu@intel.com>
+Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Topic: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
+Thread-Index: AQHWAEUbvuzF5+3jpEaYhihTFzMRG6hlp7CAgAFQhyCAABZAAIAGGnZw
+Date:   Tue, 7 Apr 2020 04:42:02 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D80E1AD@SHSMSX104.ccr.corp.intel.com>
+References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
+        <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
+        <20200402115017.0a0f55e2@w520.home>
+        <AADFC41AFE54684AB9EE6CBC0274A5D19D807BB9@SHSMSX104.ccr.corp.intel.com>
+ <20200403091424.39383958@w520.home>
+In-Reply-To: <20200403091424.39383958@w520.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Archie Pusaka <apusaka@chromium.org>
+> From: Alex Williamson
+> Sent: Friday, April 3, 2020 11:14 PM
+> 
+> On Fri, 3 Apr 2020 05:58:55 +0000
+> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> 
+> > > From: Alex Williamson <alex.williamson@redhat.com>
+> > > Sent: Friday, April 3, 2020 1:50 AM
+> > >
+> > > On Sun, 22 Mar 2020 05:31:58 -0700
+> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
+> > >
+> > > > From: Liu Yi L <yi.l.liu@intel.com>
+> > > >
+> > > > For a long time, devices have only one DMA address space from
+> platform
+> > > > IOMMU's point of view. This is true for both bare metal and directed-
+> > > > access in virtualization environment. Reason is the source ID of DMA in
+> > > > PCIe are BDF (bus/dev/fnc ID), which results in only device granularity
+> > > > DMA isolation. However, this is changing with the latest advancement in
+> > > > I/O technology area. More and more platform vendors are utilizing the
+> > > PCIe
+> > > > PASID TLP prefix in DMA requests, thus to give devices with multiple
+> DMA
+> > > > address spaces as identified by their individual PASIDs. For example,
+> > > > Shared Virtual Addressing (SVA, a.k.a Shared Virtual Memory) is able to
+> > > > let device access multiple process virtual address space by binding the
+> > > > virtual address space with a PASID. Wherein the PASID is allocated in
+> > > > software and programmed to device per device specific manner.
+> Devices
+> > > > which support PASID capability are called PASID-capable devices. If such
+> > > > devices are passed through to VMs, guest software are also able to bind
+> > > > guest process virtual address space on such devices. Therefore, the
+> guest
+> > > > software could reuse the bare metal software programming model,
+> which
+> > > > means guest software will also allocate PASID and program it to device
+> > > > directly. This is a dangerous situation since it has potential PASID
+> > > > conflicts and unauthorized address space access. It would be safer to
+> > > > let host intercept in the guest software's PASID allocation. Thus PASID
+> > > > are managed system-wide.
+> > >
+> > > Providing an allocation interface only allows for collaborative usage
+> > > of PASIDs though.  Do we have any ability to enforce PASID usage or can
+> > > a user spoof other PASIDs on the same BDF?
+> >
+> > An user can access only PASIDs allocated to itself, i.e. the specific IOASID
+> > set tied to its mm_struct.
+> 
+> A user is only _supposed_ to access PASIDs allocated to itself.  AIUI
+> the mm_struct is used for managing the pool of IOASIDs from which the
+> user may allocate that PASID.  We also state that programming the PASID
+> into the device is device specific.  Therefore, are we simply trusting
+> the user to use a PASID that's been allocated to them when they program
+> the device?  If a user can program an arbitrary PASID into the device,
+> then what prevents them from attempting to access data from another
+> user via the device?   I think I've asked this question before, so if
+> there's a previous explanation or spec section I need to review, please
+> point me to it.  Thanks,
+> 
 
-The BT qualification test SM/MAS/PKE/BV-01-C needs us to turn off
-the MITM flag when pairing, and at the same time also set the io
-capability to something other than no input no output.
+There are two scenarios:
 
-Currently the MITM flag is only unset when the io capability is set
-to no input no output, therefore the test cannot be executed.
+(1) for PF/VF, the iommu driver maintains an individual PASID table per
+PDF. Although the PASID namespace is global, the per-BDF PASID table
+contains only valid entries for those PASIDs which are allocated to the
+mm_struct. The user is free to program arbitrary PASID into the assigned
+device, but using invalid PASIDs simply hit iommu fault.
 
-This patch introduces a debugfs option to force MITM flag to be
-turned off.
+(2) for mdev, multiple mdev instances share the same PASID table of
+the parent BDF. However, PASID programming is a privileged operation
+in multiplexing usage, thus must be mediated by mdev device driver. 
+The mediation logic will guarantee that only allocated PASIDs are 
+forwarded to the device. 
 
-Signed-off-by: Archie Pusaka <apusaka@chromium.org>
----
-
-Changes in v2:
-- Rename flag to HCI_FORCE_NO_MITM
-- Move debugfs functions to hci_debugfs.c
-- Add comments on not setting SMP_AUTH_MITM
-
- include/net/bluetooth/hci.h |  1 +
- net/bluetooth/hci_debugfs.c | 46 +++++++++++++++++++++++++++++++++++++
- net/bluetooth/smp.c         | 15 ++++++++----
- 3 files changed, 57 insertions(+), 5 deletions(-)
-
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 79de2a659dd69..f4e8e2a0b7c15 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -298,6 +298,7 @@ enum {
- 	HCI_FORCE_STATIC_ADDR,
- 	HCI_LL_RPA_RESOLUTION,
- 	HCI_CMD_PENDING,
-+	HCI_FORCE_NO_MITM,
- 
- 	__HCI_NUM_FLAGS,
- };
-diff --git a/net/bluetooth/hci_debugfs.c b/net/bluetooth/hci_debugfs.c
-index 6b1314c738b8e..5e8af2658e44a 100644
---- a/net/bluetooth/hci_debugfs.c
-+++ b/net/bluetooth/hci_debugfs.c
-@@ -1075,6 +1075,50 @@ DEFINE_SIMPLE_ATTRIBUTE(auth_payload_timeout_fops,
- 			auth_payload_timeout_get,
- 			auth_payload_timeout_set, "%llu\n");
- 
-+static ssize_t force_no_mitm_read(struct file *file,
-+				  char __user *user_buf,
-+				  size_t count, loff_t *ppos)
-+{
-+	struct hci_dev *hdev = file->private_data;
-+	char buf[3];
-+
-+	buf[0] = hci_dev_test_flag(hdev, HCI_FORCE_NO_MITM) ? 'Y' : 'N';
-+	buf[1] = '\n';
-+	buf[2] = '\0';
-+	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+}
-+
-+static ssize_t force_no_mitm_write(struct file *file,
-+				   const char __user *user_buf,
-+				   size_t count, loff_t *ppos)
-+{
-+	struct hci_dev *hdev = file->private_data;
-+	char buf[32];
-+	size_t buf_size = min(count, (sizeof(buf) - 1));
-+	bool enable;
-+
-+	if (copy_from_user(buf, user_buf, buf_size))
-+		return -EFAULT;
-+
-+	buf[buf_size] = '\0';
-+	if (strtobool(buf, &enable))
-+		return -EINVAL;
-+
-+	if (enable == hci_dev_test_flag(hdev, HCI_FORCE_NO_MITM))
-+		return -EALREADY;
-+
-+	hci_dev_change_flag(hdev, HCI_FORCE_NO_MITM);
-+
-+	return count;
-+}
-+
-+static const struct file_operations force_no_mitm_fops = {
-+	.open		= simple_open,
-+	.read		= force_no_mitm_read,
-+	.write		= force_no_mitm_write,
-+	.llseek		= default_llseek,
-+};
-+
- DEFINE_QUIRK_ATTRIBUTE(quirk_strict_duplicate_filter,
- 		       HCI_QUIRK_STRICT_DUPLICATE_FILTER);
- DEFINE_QUIRK_ATTRIBUTE(quirk_simultaneous_discovery,
-@@ -1134,6 +1178,8 @@ void hci_debugfs_create_le(struct hci_dev *hdev)
- 			    &max_key_size_fops);
- 	debugfs_create_file("auth_payload_timeout", 0644, hdev->debugfs, hdev,
- 			    &auth_payload_timeout_fops);
-+	debugfs_create_file("force_no_mitm", 0644, hdev->debugfs, hdev,
-+			    &force_no_mitm_fops);
- 
- 	debugfs_create_file("quirk_strict_duplicate_filter", 0644,
- 			    hdev->debugfs, hdev,
-diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
-index d0b695ee49f63..a85e3e49cd0da 100644
---- a/net/bluetooth/smp.c
-+++ b/net/bluetooth/smp.c
-@@ -2393,12 +2393,17 @@ int smp_conn_security(struct hci_conn *hcon, __u8 sec_level)
- 			authreq |= SMP_AUTH_CT2;
- 	}
- 
--	/* Require MITM if IO Capability allows or the security level
--	 * requires it.
-+	/* Don't attempt to set MITM if setting is overridden by debugfs
-+	 * Needed to pass certification test SM/MAS/PKE/BV-01-C
- 	 */
--	if (hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT ||
--	    hcon->pending_sec_level > BT_SECURITY_MEDIUM)
--		authreq |= SMP_AUTH_MITM;
-+	if (!hci_dev_test_flag(hcon->hdev, HCI_FORCE_NO_MITM)) {
-+		/* Require MITM if IO Capability allows or the security level
-+		 * requires it.
-+		 */
-+		if (hcon->io_capability != HCI_IO_NO_INPUT_OUTPUT ||
-+		    hcon->pending_sec_level > BT_SECURITY_MEDIUM)
-+			authreq |= SMP_AUTH_MITM;
-+	}
- 
- 	if (hcon->role == HCI_ROLE_MASTER) {
- 		struct smp_cmd_pairing cp;
--- 
-2.26.0.292.g33ef6b2f38-goog
-
+Thanks
+Kevin
