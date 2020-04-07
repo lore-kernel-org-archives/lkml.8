@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517F6C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DACC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2995B20719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3687E20719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FGQruDoo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OT/L+d2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbgDGXvJ (ORCPT
+        id S1726484AbgDGXvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:51:09 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38357 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726603AbgDGXvE (ORCPT
+        Tue, 7 Apr 2020 19:51:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46486 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgDGXvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:51:04 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w3so1840692plz.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:51:04 -0700 (PDT)
+        Tue, 7 Apr 2020 19:51:08 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q3so1531662pff.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:51:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bBJzE53eaksNDmdb05BmcKfF0GccMZv3HofDPA/DfVk=;
-        b=FGQruDooKcNpsi9j7VDoiO49bKy9eYmUHUDg3Gvocl/eigw6X5+mqz0bu9PkGMWfku
-         rEjtJO1lF5c1bBFWT/73a2x8N/A55hSi/3+AQTK33LyC5Y+oeOmYC6yIHKDbZ83zW6ok
-         AuI2LFX6DuokvAZumPkRW7cYl3BAladfRVSTg=
+        bh=KvEJzMH6Rxi8JFDstC273KQ0bdGB37YijaATrtjA+Oo=;
+        b=OT/L+d2sOkBze7u7kCa/ul9nbt7FBPk4UFbvoXf7evUw860Zm7kdOTvn+/o1kPqp4C
+         1Y0MaFQ01GRIGs3AAZfSuNfnwO66ph7dkS6vDmTcUTZl5i6jIw+1+KFcO9KXV1wjqlrZ
+         PPO7T+JbzB1wgA8vitRJDvxObqOOuYYVZDiYo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bBJzE53eaksNDmdb05BmcKfF0GccMZv3HofDPA/DfVk=;
-        b=R37OYyAcZIzIg28ZaDHeblAmKOC8xhvsCVS+SlvcXTQ00+KGWXPVPxL78aLTDPBSI5
-         PC6U4Zx8X6C2Tp1Vt9jl7M4t4Z/CvPAW3FSju21BB0yrnG+bnSQLmOsJ9JzRFK/n4104
-         UKyusvr3KAZpvQZLNBx7QO/vMEpCPjmZVLmwU9/TjVaclxtdgCGzMvnu/xOik1zlp36i
-         o9H1Bgn3ls8xevJPft//OBNxHbOaYF8eI6PQ62kJAovLBGGP/X6d/ihAJ3oa0Prle8P/
-         y2Q0X6DKDH24AK7bn38P5OQDXVWSUxynf0wdxk4okgecQtHY9KRbz3xeaTtMQZ8oMSkP
-         PDdw==
-X-Gm-Message-State: AGi0Pua7ehFwMK9RjKUqWkBqyzOFRzaR2NVf0pj6T0I+1EskvkawKMpI
-        nzBKtsDt6gDNtXd5du5n/ihteRQERMbbYw==
-X-Google-Smtp-Source: APiQypJKaPUIpNKIeM1S4TQG4CqiQmoXpruLfwsRdw928lUopKp/PkcCkXUlo6cmMm2kQIc0Q/aUEQ==
-X-Received: by 2002:a17:90a:208f:: with SMTP id f15mr1724748pjg.60.1586303463664;
-        Tue, 07 Apr 2020 16:51:03 -0700 (PDT)
+        bh=KvEJzMH6Rxi8JFDstC273KQ0bdGB37YijaATrtjA+Oo=;
+        b=pbObw0DjDOJ5DWxemhZsRHQdOy9pqLywERkbPlqOyBQWx9zdSxo2ARlztIcFipIB4e
+         w7wofaRet6ADdMbVmwgNHFqC3wkCSGXg0gI7y9KO2yPgdTA1JqgBRkx4tNQ44aOwEQ0L
+         1yIfbBMcCozLHBn+VXV365aV2PVRHm3ME/HHxWlLcHZg1Znbk5u/e16ONFgKeaszfu88
+         IivGNMZyi5j9jjP8ik+8I7AQZqXqO+hD8THhteM9jCVNRXfc4F467cxdYaBZjX1tE1Mh
+         4Z2QTlMFwxlHRLVvkRSaRyFbfqyQmUpQGvLZu4vnAmcgMQ0N8RnyzH7SCthHMtczeS7g
+         uDlA==
+X-Gm-Message-State: AGi0PuYsQubxWvMf6/tOWzs35FD4V3jLbs6O3GyuA5zJ6g+Dk0CDTigW
+        PkdzqAIwMyvWbT5f3XP4ZR5tMg==
+X-Google-Smtp-Source: APiQypJMr4oUHM0Ta88xT7+6ntyKOqf33TdlrkpIUfBkSR/NP5bMYzT+8z/Iix1PO7MN42gvKmsSlg==
+X-Received: by 2002:aa7:8d90:: with SMTP id i16mr3456900pfr.126.1586303467414;
+        Tue, 07 Apr 2020 16:51:07 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id s27sm14467165pgn.90.2020.04.07.16.51.02
+        by smtp.gmail.com with ESMTPSA id s27sm14467165pgn.90.2020.04.07.16.51.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 16:51:03 -0700 (PDT)
+        Tue, 07 Apr 2020 16:51:06 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -61,9 +61,9 @@ Cc:     mka@chromium.org, Lina Iyer <ilina@codeaurora.org>,
         Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
         evgreen@chromium.org, Douglas Anderson <dianders@chromium.org>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 07/10] drivers: qcom: rpmh-rsc: tcs_is_free() can just check tcs_in_use
-Date:   Tue,  7 Apr 2020 16:50:21 -0700
-Message-Id: <20200407164915.v3.7.Icf2213131ea652087f100129359052c83601f8b0@changeid>
+Subject: [PATCH v3 10/10] drivers: qcom: rpmh-rsc: read_tcs_reg()/write_tcs_reg() are not for IRQ
+Date:   Tue,  7 Apr 2020 16:50:24 -0700
+Message-Id: <20200407164915.v3.10.I2adf93809c692d0b673e1a86ea97c45644aa8d97@changeid>
 X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 In-Reply-To: <20200407235024.260460-1-dianders@chromium.org>
 References: <20200407235024.260460-1-dianders@chromium.org>
@@ -74,48 +74,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tcs_is_free() had two checks in it: does the software think that the
-TCS is free and does the hardware think that the TCS is free.  I
-couldn't figure out in which case the hardware could think that a TCS
-was in-use but software thought it was free.  Apparently there is no
-case and the extra check can be removed.  This apparently has already
-been done in a downstream patch.
+The RSC_DRV_IRQ_ENABLE, RSC_DRV_IRQ_STATUS, and RSC_DRV_IRQ_CLEAR
+registers are not part of TCS 0.  Let's not pretend that they are by
+using read_tcs_reg() and write_tcs_reg() and passing a bogus tcs_id of
+0.  We could introduce a new wrapper for these registers but it
+wouldn't buy us much.  Let's just read/write directly.
 
-Suggested-by: Maulik Shah <mkshah@codeaurora.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v3:
-- Replace ("...warn if state mismatch") w/ ("...just check tcs_in_use")
+- ("...are not for IRQ") is new for v3.
 
-Changes in v2:
-- Comment tcs_is_free() new for v2; replaces old patch 6.
+Changes in v2: None
 
- drivers/soc/qcom/rpmh-rsc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/soc/qcom/rpmh-rsc.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index 84ae3e514eee..9502e7ea96be 100644
+index a3b015196f15..31a998e6f2e9 100644
 --- a/drivers/soc/qcom/rpmh-rsc.c
 +++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -177,7 +177,6 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
-  * @tcs_id: The global ID of this TCS.
-  *
-  * Returns true if nobody has claimed this TCS (by setting tcs_in_use).
-- * If the TCS looks free, checks that the hardware agrees.
-  *
-  * Must be called with the drv->lock held or the tcs_lock for the TCS being
-  * tested. If only the tcs_lock is held then it is possible that this
-@@ -188,8 +187,7 @@ static void write_tcs_reg_sync(struct rsc_drv *drv, int reg, int tcs_id,
-  */
- static bool tcs_is_free(struct rsc_drv *drv, int tcs_id)
+@@ -363,12 +363,12 @@ static void enable_tcs_irq(struct rsc_drv *drv, int tcs_id, bool enable)
  {
--	return !test_bit(tcs_id, drv->tcs_in_use) &&
--	       read_tcs_reg(drv, RSC_DRV_STATUS, tcs_id);
-+	return !test_bit(tcs_id, drv->tcs_in_use);
+ 	u32 data;
+ 
+-	data = read_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0);
++	data = readl_relaxed(drv->tcs_base + RSC_DRV_IRQ_ENABLE);
+ 	if (enable)
+ 		data |= BIT(tcs_id);
+ 	else
+ 		data &= ~BIT(tcs_id);
+-	write_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, data);
++	writel_relaxed(data, drv->tcs_base + RSC_DRV_IRQ_ENABLE);
  }
  
  /**
+@@ -389,7 +389,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
+ 	const struct tcs_request *req;
+ 	struct tcs_cmd *cmd;
+ 
+-	irq_status = read_tcs_reg(drv, RSC_DRV_IRQ_STATUS, 0);
++	irq_status = readl_relaxed(drv->tcs_base + RSC_DRV_IRQ_STATUS);
+ 
+ 	for_each_set_bit(i, &irq_status, BITS_PER_LONG) {
+ 		req = get_req_from_tcs(drv, i);
+@@ -426,7 +426,7 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
+ 		/* Reclaim the TCS */
+ 		write_tcs_reg(drv, RSC_DRV_CMD_ENABLE, i, 0);
+ 		write_tcs_reg(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, i, 0);
+-		write_tcs_reg(drv, RSC_DRV_IRQ_CLEAR, 0, BIT(i));
++		writel_relaxed(BIT(i), drv->tcs_base + RSC_DRV_IRQ_CLEAR);
+ 		spin_lock(&drv->lock);
+ 		clear_bit(i, drv->tcs_in_use);
+ 		/*
+@@ -969,7 +969,8 @@ static int rpmh_rsc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Enable the active TCS to send requests immediately */
+-	write_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, drv->tcs[ACTIVE_TCS].mask);
++	writel_relaxed(drv->tcs[ACTIVE_TCS].mask,
++		       drv->tcs_base + RSC_DRV_IRQ_ENABLE);
+ 
+ 	spin_lock_init(&drv->client.cache_lock);
+ 	INIT_LIST_HEAD(&drv->client.cache);
 -- 
 2.26.0.292.g33ef6b2f38-goog
 
