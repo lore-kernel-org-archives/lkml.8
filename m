@@ -2,178 +2,134 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F13AC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF13C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5955620748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C20A20748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586290631;
+	bh=0+v4SXWFjVfBsKDdWBzpGoJN3jfuHQ+Unyyghkdf4+Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=o1cO3F0ShwpHgwkgjzpaQLW4VqCXfzcOL3I4rtSdjcIJk6Pof/KC5mjKwPyQnLDLm
+	 GECwyJTvL7XvReLR4OHGDGVMLELqpaRaCCdAb5dOVWuD0vZVGG0oH0lEH7WKTeQSeK
+	 K91yqRBzW1GDUObZ1b1He23FQdFyMNMA7rlAg7jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgDGUQS (ORCPT
+        id S1727687AbgDGURK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:16:18 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:51160 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgDGUQO (ORCPT
+        Tue, 7 Apr 2020 16:17:10 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38985 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727461AbgDGURK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:16:14 -0400
-Received: by mail-il1-f200.google.com with SMTP id c9so4437898ill.17
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:16:11 -0700 (PDT)
+        Tue, 7 Apr 2020 16:17:10 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i20so5195266ljn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tqNU/lPOQShoDviss5cOicvqhvwtlk4dqmmrGpr1nC4=;
+        b=AestyY1vTqwruS2SjIrVNUtcv5M8Rgu+CcoXa2Ec6+EMfNUym7BLVuLaqMEg4Qo83h
+         Qnr6k3woR88ywv52t7EjGWsxUFiyzpMnJQ7/9g74RK12uuMuQBryg8i26qgkAh6zrbEf
+         bvModrsMiA1tyaJ0cX/reQrpKDKOb9pKz3p18=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Y1HsYdwbzzxLxaSNervbQ0xrzC6dYeEBfHnEhnfgEcI=;
-        b=TjhFt/MQfCvcSchzW+h2EiZJ3j3iZnItJhdFDjLETakRzCBboYqfOeHEUAv0PhgYpK
-         l2hpzkLunUrZjbMnnC7rR9puPsJtV4G1B6UiwaYB/6rofBl4JnGNVj6CB1miUxhwLl0N
-         JkKQV1LzjotWyBxinv+Vv5R6Wv1S60P3vBBjFjGsMT1t7S4ZL4DpjXDRMeUHpBPl1oZ8
-         hFL0mhnQa2jgKe4VacI0U9XtEsG3uscXFdLUSi/NP2YmWJYoVqzwCnROQKUfmCCiYYaW
-         kt0S2gyNQLRAtZVZuz5b+q4YyyU6zeP5HlO9nDKhbUYUSmRb6tOH/3sZUM1T/BTJzAth
-         +rYQ==
-X-Gm-Message-State: AGi0PuYGUwAYmbBrFjw6/TepP6DWOq7eZWLK5MNnpTCbTkZpT7+hTwZJ
-        Gy0g9mEB6w9zQiP129WVul7zDKqyUKoCPrW+fk0JHroxUOzF
-X-Google-Smtp-Source: APiQypLJX7+pIZCPl+4uCQYnCSc3m1SmiM5id1ljBPaFzs57HwMGr45n4HxEjX8rJ8HbcKAfoyz27tnZslh7n5bYcInGyolGEf65
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tqNU/lPOQShoDviss5cOicvqhvwtlk4dqmmrGpr1nC4=;
+        b=IHl8wC4A6Ciul5jMT3kat3IvtkD5Fx2t8ZOowm4ehcNSbHCrY6nlFv6R2cgQRV/1Bg
+         N1z5nj3cNuO8bsNp/2I6ZzhFyF7O87jwzvG2f31TPDUTAV4Aincmg4hJyQ+kHKxEJeB3
+         MtIyYbki6NkhubVke/GB4+Z7LRPXTrgBGyyAgADKcPao4QXmLlJ4VpjwGa71rY4LEWAE
+         jYE3IQafedDgM/ed+0b0f/zV/naLvq/VA2jutVT29j+2YE0fYTicTg3/0XmVIfcF/6iP
+         9KH1snQ9C8tB0SPIwqcs2fLxsnyTfEc+U6VCRDY0ypENGbYo2n7Zrd6/SKntfasnTF0y
+         uLOg==
+X-Gm-Message-State: AGi0PuYqEPAerfqpLoGmbyXF1RFCbgzNAMRmn0NzTnFerpAfTKd2XuVN
+        7UkUUOel05BP6Ci/nQm3zLnmU9m8HGE=
+X-Google-Smtp-Source: APiQypJWLWy00ET6fRIq+eC8sM1mbnZxo3t3cFyGIyi7nsxc5ZVbxM+yEifw4lR/M0fJzjx39MKR7A==
+X-Received: by 2002:a2e:6e15:: with SMTP id j21mr2790266ljc.42.1586290626452;
+        Tue, 07 Apr 2020 13:17:06 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id 4sm12198367lja.56.2020.04.07.13.17.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 13:17:04 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id m2so3399999lfo.6
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:17:04 -0700 (PDT)
+X-Received: by 2002:a19:9109:: with SMTP id t9mr2511760lfd.10.1586290623763;
+ Tue, 07 Apr 2020 13:17:03 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a92:1d4b:: with SMTP id d72mr4373589ild.14.1586290571196;
- Tue, 07 Apr 2020 13:16:11 -0700 (PDT)
-Date:   Tue, 07 Apr 2020 13:16:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000001be5205a2b90e71@google.com>
-Subject: KASAN: slab-out-of-bounds Read in __kvm_map_gfn
-From:   syzbot <syzbot+516667c144d77aa5ba3c@syzkaller.appspotmail.com>
-To:     alex.shi@linux.alibaba.com, armijn@tjaldur.nl,
-        gregkh@linuxfoundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        rfontana@redhat.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, willy@infradead.org
+References: <20200406185827.22249-1-longman@redhat.com> <c2c8adf48be7cb18bbdf0aef7d21e2defe3d2183.camel@perches.com>
+In-Reply-To: <c2c8adf48be7cb18bbdf0aef7d21e2defe3d2183.camel@perches.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 7 Apr 2020 13:16:47 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg_mkSc-pH8ntGHR=no9DOLRQyxdtU20p55DrM1su6QzA@mail.gmail.com>
+Message-ID: <CAHk-=wg_mkSc-pH8ntGHR=no9DOLRQyxdtU20p55DrM1su6QzA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive data objects
+To:     Joe Perches <joe@perches.com>
+Cc:     Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Apr 6, 2020 at 12:40 PM Joe Perches <joe@perches.com> wrote:
+>
+> 2.1.44 changed kfree(void *) to kfree(const void *) but
+> I didn't find a particular reason why.
 
-syzbot found the following crash on:
+Because "free()" should always have been const (and volatile, for that
+matter, but the kernel doesn't care since we eschew volatile data
+structures).
 
-HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12672c5de00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=91b674b8f0368e69
-dashboard link: https://syzkaller.appspot.com/bug?extid=516667c144d77aa5ba3c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1217010be00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=106c8febe00000
+It's a bug in the C library standard.
 
-The bug was bisected to:
+Think of it this way: free() doesn't really change the data, it kills
+the lifetime of it. You can't access it afterwards - you can neither
+read it nor write it validly. That is a completely different - and
+independent - operation from writing to it.
 
-commit 3a00e7c47c382b30524e78b36ab047c16b8fcfef
-Author: Alex Shi <alex.shi@linux.alibaba.com>
-Date:   Tue Jan 21 08:34:05 2020 +0000
+And  more importantly, it's perfectly fine to have a const data
+structure (or a volatile one) that you free. The allocation may have
+done something like this:
 
-    ida: remove abandoned macros
+   struct mystruct {
+       const struct dictionary *dictionary;
+       ...
+   };
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11c1efdbe00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13c1efdbe00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15c1efdbe00000
+and it was allocated and initialized before it was assigned to that
+"dictionary" pointer. That's _good_ code.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+516667c144d77aa5ba3c@syzkaller.appspotmail.com
-Fixes: 3a00e7c47c38 ("ida: remove abandoned macros")
+So it wasn't const before the allocation, but it turned const
+afterwards, and freeing it doesn't change that, it just kills the
+lifetime entirely.
 
-L1TF CPU bug present and SMT on, data leak possible. See CVE-2018-3646 and https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/l1tf.html for details.
-==================================================================
-BUG: KASAN: slab-out-of-bounds in search_memslots include/linux/kvm_host.h:1051 [inline]
-BUG: KASAN: slab-out-of-bounds in __gfn_to_memslot include/linux/kvm_host.h:1063 [inline]
-BUG: KASAN: slab-out-of-bounds in __kvm_map_gfn+0x933/0xa10 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2060
-Read of size 8 at addr ffff88808e20b468 by task syz-executor368/7090
+So "free()" should take a const pointer without complaining, and saying
 
-CPU: 0 PID: 7090 Comm: syz-executor368 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x315 mm/kasan/report.c:374
- __kasan_report.cold+0x35/0x4d mm/kasan/report.c:503
- kasan_report+0x33/0x50 mm/kasan/common.c:648
- search_memslots include/linux/kvm_host.h:1051 [inline]
- __gfn_to_memslot include/linux/kvm_host.h:1063 [inline]
- __kvm_map_gfn+0x933/0xa10 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2060
- kvm_steal_time_set_preempted arch/x86/kvm/x86.c:3609 [inline]
- kvm_arch_vcpu_put+0x3b9/0x530 arch/x86/kvm/x86.c:3642
- vcpu_put+0x1b/0x70 arch/x86/kvm/../../../virt/kvm/kvm_main.c:220
- kvm_arch_vcpu_ioctl+0x1ae/0x2c20 arch/x86/kvm/x86.c:4620
- kvm_vcpu_ioctl+0x866/0xe60 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3291
- kvm_vcpu_compat_ioctl+0x1ab/0x350 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3334
- __do_compat_sys_ioctl fs/ioctl.c:857 [inline]
- __se_compat_sys_ioctl fs/ioctl.c:808 [inline]
- __ia32_compat_sys_ioctl+0x23d/0x2b0 fs/ioctl.c:808
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+   free(mystruct->dictionary);
+   free(mystruct);
 
-Allocated by task 7090:
- save_stack+0x1b/0x80 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:518 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:491
- kmalloc_node include/linux/slab.h:578 [inline]
- kvmalloc_node+0x61/0xf0 mm/util.c:574
- kvmalloc include/linux/mm.h:733 [inline]
- kvzalloc include/linux/mm.h:741 [inline]
- kvm_dup_memslots arch/x86/kvm/../../../virt/kvm/kvm_main.c:1101 [inline]
- kvm_set_memslot+0x115/0x1530 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1118
- __kvm_set_memory_region+0xcf7/0x1320 arch/x86/kvm/../../../virt/kvm/kvm_main.c:1300
- __x86_set_memory_region+0x2a3/0x5a0 arch/x86/kvm/x86.c:9845
- alloc_apic_access_page arch/x86/kvm/vmx/vmx.c:3544 [inline]
- vmx_create_vcpu+0x2107/0x2b40 arch/x86/kvm/vmx/vmx.c:6772
- kvm_arch_vcpu_create+0x6ef/0xb80 arch/x86/kvm/x86.c:9365
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3030 [inline]
- kvm_vm_ioctl+0x15f7/0x23e0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3585
- kvm_vm_compat_ioctl+0x125/0x240 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3798
- __do_compat_sys_ioctl fs/ioctl.c:857 [inline]
- __se_compat_sys_ioctl fs/ioctl.c:808 [inline]
- __ia32_compat_sys_ioctl+0x23d/0x2b0 fs/ioctl.c:808
- do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
- do_fast_syscall_32+0x270/0xe90 arch/x86/entry/common.c:396
- entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+is a sensible an correct thing to do. Warning about - or requiring
+that dictionary pointer to be cast to be freed - is fundamentally
+wrong.
 
-Freed by task 0:
-(stack is not available)
+We're not bound by the fact that the C standard library got their
+rules wrong, so we can fix it in the kernel.
 
-The buggy address belongs to the object at ffff88808e20b000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 1128 bytes inside of
- 2048-byte region [ffff88808e20b000, ffff88808e20b800)
-The buggy address belongs to the page:
-page:ffffea00023882c0 refcount:1 mapcount:0 mapping:00000000044fe846 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00027cbcc8 ffffea0002591e08 ffff8880aa000e00
-raw: 0000000000000000 ffff88808e20b000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88808e20b300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88808e20b380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff88808e20b400: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
-                                                          ^
- ffff88808e20b480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88808e20b500: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+             Linus
