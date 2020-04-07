@@ -2,147 +2,105 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57531C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A886C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFFB2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:31:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E/4CNB6j"
+	by mail.kernel.org (Postfix) with ESMTP id 32A4F206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586299492;
+	bh=u9dcSn+VSA4u+YDhAu6BYcZUXtRI8Mg0fHxAg88/vrA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=D8jB/BW/eUSGVyyzPRMsYH9jyg0GMnrZ2fWmLLP2I6AYXnRpyXGTitJvIrzrQrwNt
+	 eXqP9tSNZsFW+/t9hvXlEFFqvWLUFSQflOvkNm2Lq5ANer+Awcw/dpDgUATDv7Owu4
+	 AVq08UH6n+5rfNzsiBWN06W0A1OsUooRVq9f8cgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDGWb6 (ORCPT
+        id S1726443AbgDGWov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:31:58 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:34776 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgDGWb5 (ORCPT
+        Tue, 7 Apr 2020 18:44:51 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45163 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgDGWov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:31:57 -0400
-Received: by mail-pj1-f66.google.com with SMTP id q16so1520511pje.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:31:57 -0700 (PDT)
+        Tue, 7 Apr 2020 18:44:51 -0400
+Received: by mail-il1-f196.google.com with SMTP id x16so4885381ilp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:44:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qO6Gs/+ghdNmMtlex3NyMgewM+o4zRjcI5tZj5v3DvQ=;
-        b=E/4CNB6jlUlu49qleV6KxQ3+rWw4kjJMdwVwcCMkXpPFpsTsPpua3C+WV/1jHf7ojh
-         d3ggmIOHNaoMdFAqls9uG2yiOEsUxEpwZdiqUR5WcqGodPzBn3sNFru+S+PHGC8zXRCL
-         1lW0Vj4/A0c7Mq4l8NSBevs1R13My8jeMCngI0uQA4wKcVyj/BCPlJ/W0AWf7zIiCiVf
-         oGp65mb0YqFPvovIDZ90RIw3PJAnD748V/z3rbc3AHfqLuC4jdypt0N2Y09pEVzOtoQ0
-         gi/5X0lL7SMCxo51fogti41+srdvAjuTmoCUE9UW7xmiog22pq7QLgsFRV5E4hnNDgCM
-         78rQ==
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oofgp/T6AW49TxBbYkC8nWUbJk1leoz17ITw6jj2QJ0=;
+        b=FQwZ9WExx4B4zYVFH4rDo7FKhKj9DJhOj95gcRjYqZLyNBTbpmzDfbpfvFKHM2MSww
+         HwpH/AXvsxgS7kSRpBe5si9OOfyZ0zu0rgafv0v9/J/yBCnfBY1+gCELGdPEsbadZjmu
+         /x+mh7ZsLn/Cy8h9jdWhUPYtDl2XGtz0pqrRw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qO6Gs/+ghdNmMtlex3NyMgewM+o4zRjcI5tZj5v3DvQ=;
-        b=Du7A4yclDufSba+rjbYKO+XboO+UHAQ0syzeEXe77upl/E5ASla/kuSVL2mTkTZOUs
-         8LvR45LLUYACjV3POQoqUZn/3kdOuiQd4MwSngl6f+MVhlIA9tRfMqerMO6J+IpcqSKj
-         FI4IL+ueGxEFoe2fWgjQ0jTVg/ir2WoXF5KKDHFFI8miciFZtMDIkNMn5fiHIjCLN3O2
-         DgPMa/XnwL+0YIq0z8nCYGYAAW4V+Qwqy1G+4Hbu/35IoA2QKm2R+d+fp41Ojz7sZVxc
-         b/97SKaDxRCcA2t1q5KNvijaATrRys+EScQ3VGSzlIvQ/6r59gdQh0wbinvSagq2DD4B
-         sNdg==
-X-Gm-Message-State: AGi0PubyrQgiqvMwXHPWMXvSTTXedIiXye9lDI3ZnW0qjZ7kq3C5lMGz
-        2vdtaoObtCdmWIKbcC5/OYfpEv+EMxOto9Jo0twaKxNGrf0=
-X-Google-Smtp-Source: APiQypLo9mflBOzty872Iorw5CxxpHfIgUrfJirngE1DvFdD8tgUthhA/36vO9mtelpunMqgUzFSuw8si7S4s/iyhe4=
-X-Received: by 2002:a17:90b:3783:: with SMTP id mz3mr1720959pjb.27.1586298716554;
- Tue, 07 Apr 2020 15:31:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oofgp/T6AW49TxBbYkC8nWUbJk1leoz17ITw6jj2QJ0=;
+        b=nyrRlgFqcdICWmg3RGaeIatwT0a8EvU2/3uk0gUZKzHDbavjuNpxKxDQAYNb5OdD+x
+         p49I+GQc9xlY7qv1DlLaZurcBXCdvBz30S/Na9C+cJJzjQBk1XNyC7FniZPQbQQLqYg6
+         LG7sNNyNXPqlpBxGgZwQsv1NcNfoOycrajmtEZeT2I2N3Vmd2a9q2A5mDhsQk/jPg9An
+         JkG8a+7kFBjzRaqWEYyXSienV/ZyUOuxBACi6pMLwhdPvf8emSDkM4YU2Msbn3kufR0e
+         2gokOHM/iZx47F62GMMZEM1kjoK8GsI61gzS56BoJykhGxykIB87fcer9U2cDALCvkhh
+         xOwQ==
+X-Gm-Message-State: AGi0PuYRFmSCVgkRBX6Mc7IsGK/4BKOvspazQ8hMTD1kENXoC198cHU0
+        E8xIWymEmCfLmE5XHC9NqvwTww==
+X-Google-Smtp-Source: APiQypKOH2Yw4cE+ZWnzZZK0xkO4YQUmuivtdVtcuJdE5RMdeBIN8GbObMxVNUWhUJgnY95NNqIyuA==
+X-Received: by 2002:a05:6e02:f43:: with SMTP id y3mr5288157ilj.112.1586299490170;
+        Tue, 07 Apr 2020 15:44:50 -0700 (PDT)
+Received: from localhost.localdomain (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id i4sm7315788ilq.4.2020.04.07.15.44.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 15:44:49 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     shuah@kernel.org, rong.a.chen@intel.com
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: Fix memfd test run-time regression
+Date:   Tue,  7 Apr 2020 16:44:46 -0600
+Message-Id: <20200407224446.1578-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <29b5043db9a51ef7a0cb6e3a8c69c91e36045cd6.1585944770.git.mirq-linux@rere.qmqm.pl>
- <202004050928.d6QhVcsQ%lkp@intel.com> <CAKwvOdm5BhMdAmXR0gCLntkbvF7ajaNoWoHVCCio1CqbGzS6aQ@mail.gmail.com>
- <20200407195546.GA744@qmqm.qmqm.pl> <CAKwvOdnSgp5fL1B1S02haeEDBTfyHjmMFvGZd+LA3j7BoSLsLw@mail.gmail.com>
-In-Reply-To: <CAKwvOdnSgp5fL1B1S02haeEDBTfyHjmMFvGZd+LA3j7BoSLsLw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 7 Apr 2020 15:31:44 -0700
-Message-ID: <CAKwvOd=mnCaFS2-4gSn+oGHtiZu-wObo4_LzN74fPNDyO0eegA@mail.gmail.com>
-Subject: Re: [PATCH v3 07/11] power: supply: core: tabularize HWMON
- temperature labels
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        Ilie Halip <ilie.halip@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Ilie
+Commit d3fd949abd3e ("selftests: Fix memfd to support relocatable
+build (O=objdir)") introduced regression run-time regression with
+a change to include programs that should be run from shell scripts
+to list of programs that run as independent tests. This fix restores
+the original designation.
 
-On Tue, Apr 7, 2020 at 12:57 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Tue, Apr 7, 2020 at 12:56 PM Micha=C5=82 Miros=C5=82aw <mirq-linux@rer=
-e.qmqm.pl> wrote:
-> >
-> > On Tue, Apr 07, 2020 at 11:13:50AM -0700, Nick Desaulniers wrote:
-> > > On Sat, Apr 4, 2020 at 6:53 PM kbuild test robot <lkp@intel.com> wrot=
-e:
-> > > >
-> > > > Hi "Micha=C5=82,
-> > > >
-> > > > I love your patch! Perhaps something to improve:
-> > > >
-> > > > [auto build test WARNING on power-supply/for-next]
-> > > > [also build test WARNING on hwmon/hwmon-next linus/master v5.6 next=
--20200404]
-> > > > [if your patch is applied to the wrong git tree, please drop us a n=
-ote to help
-> > > > improve the system. BTW, we also suggest to use '--base' option to =
-specify the
-> > > > base tree in git format-patch, please see https://stackoverflow.com=
-/a/37406982]
-> > > >
-> > > > url:    https://github.com/0day-ci/linux/commits/Micha-Miros-aw/ext=
-ensions-and-fixes/20200405-044024
-> > > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-p=
-ower-supply.git for-next
-> > > > config: x86_64-randconfig-b002-20200405 (attached as .config)
-> > > > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-projec=
-t 62f3a9650a9f289a07a5f480764fb655178c2334)
-> > > > reproduce:
-> > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/mast=
-er/sbin/make.cross -O ~/bin/make.cross
-> > > >         chmod +x ~/bin/make.cross
-> > > >         # save the attached .config to linux build tree
-> > > >         COMPILER=3Dclang make.cross ARCH=3Dx86_64
-> > > >
-> > > > If you fix the issue, kindly add following tag as appropriate
-> > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > >
-> > > > All warnings (new ones prefixed by >>):
-> > > >
-> > > > >> drivers/power/supply/power_supply_hwmon.o: warning: objtool: pow=
-er_supply_hwmon_read_string() falls through to next function power_supply_h=
-wmon_write()
-> > >
-> > > I'm guessing this is from the unreachable:
-> > > https://github.com/0day-ci/linux/commit/b8b2d14ca46ca54257f55c9af58ea=
-25695b9ee36
-> > > I'll need to play with this some more as I couldn't reproduce with a
-> > > simplified test case, but looks like a compiler bug.  Filed
-> > > https://github.com/ClangBuiltLinux/linux/issues/978 for me to track.
-> >
-> > Hi Nick,
-> >
-> > Just guessing: have you tried adding another unrelated function to the
-> > testcase? I would expect that 'fall through to next function' needs
-> > some other function to match.
+Fixes: d3fd949abd3e ("selftests: Fix memfd to support relocatable build (O=objdir)")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ tools/testing/selftests/memfd/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-See Ilie's suggestion:
-https://github.com/ClangBuiltLinux/linux/issues/978#issuecomment-610633039
+diff --git a/tools/testing/selftests/memfd/Makefile b/tools/testing/selftests/memfd/Makefile
+index 0a15f9e23431..187b14cad00c 100644
+--- a/tools/testing/selftests/memfd/Makefile
++++ b/tools/testing/selftests/memfd/Makefile
+@@ -4,8 +4,9 @@ CFLAGS += -I../../../../include/uapi/
+ CFLAGS += -I../../../../include/
+ CFLAGS += -I../../../../usr/include/
+ 
+-TEST_GEN_PROGS := memfd_test fuse_test fuse_mnt
++TEST_GEN_PROGS := memfd_test
+ TEST_PROGS := run_fuse_test.sh run_hugetlbfs_test.sh
++TEST_GEN_FILES := fuse_test fuse_mnt
+ 
+ fuse_mnt.o: CFLAGS += $(shell pkg-config fuse --cflags)
+ 
+-- 
+2.20.1
 
-
---=20
-Thanks,
-~Nick Desaulniers
