@@ -2,146 +2,252 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB257C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722E8C2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C992075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3215C206F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:28:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AXaKzs4Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2Rgae8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgDGI12 (ORCPT
+        id S1727954AbgDGI2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 04:27:28 -0400
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:33748 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgDGI12 (ORCPT
+        Tue, 7 Apr 2020 04:28:50 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:50373 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbgDGI2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 04:27:28 -0400
-Received: by mail-qv1-f68.google.com with SMTP id p19so1449436qve.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 01:27:27 -0700 (PDT)
+        Tue, 7 Apr 2020 04:28:49 -0400
+Received: by mail-pj1-f66.google.com with SMTP id v13so435997pjb.0;
+        Tue, 07 Apr 2020 01:28:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m0fv8G5tSR5zfgqRJ7kmXqHUjkYyQ4WMqgE23q9f+8k=;
-        b=AXaKzs4Y1JJ1yJjug64YQEfY47sgV0n1JjDaXos2mbA4eEd/too2PMZxpPO1+Y2/8i
-         kwaTaHFI1UbMT2aB6gF7e3ib6SYq0GbUTumyqsc2HWhg+fhy8Rn1C4eKQzUq3vqHznki
-         pDBgOGROQXx5pochMS97FO7ti8GD1Q3Calyphx4vkQksMqX2OzoxGwe4vJbaVcsvzP03
-         i1YfMQ/iaWMzdo8FwaLMxRwtf4GMkKAGXkS+uT3GDikgHDya7sj1aN4yTbDpLCYY64Mk
-         JNxYU/5ObVtr38AC6op9/gS+w06afMM0wrGm/3iX40kiVXlz1lNJIXmEBrP6C8h5Ptll
-         MWyg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QwWmobyOdR5r+7JJZxSrwfB56TjLUl825BwGgH9NRNQ=;
+        b=N2Rgae8zms+3LBxcOrnLBU6jO9Vokq7alwIwdkajm2FUP1feOjiHVPKSETTl9o9lJe
+         e7OTGKpv440s5Lfcetiy6u8IiLz7+Y65DDE1Du0iTM9Jc128kZeLDcwZDP2wvDVveaIc
+         7RE1k4T2JIo9iPgOk01c9xZ9YKhpy340rKlsPtWfXLmi3Rl4PlnuJxanwfKZO6hF/8M1
+         F74iN54bpM1rgEA+G2heoGYtF9uMSouwpX+N28YAE6gIllNTnzbD3G8DzQ6dtk3f1XX+
+         Ov0kmUIwGI1h6dIrIBQQX/RiKzAEJqbvWRGeU4xATH0LIQGyIeubVEtJ+ioJT0f5KCDv
+         ZI7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m0fv8G5tSR5zfgqRJ7kmXqHUjkYyQ4WMqgE23q9f+8k=;
-        b=VBqHKg0/GZ/GQzaaMlo0/min3p9Olzley3o4FHCVMzjMBOzIKbRbIVLM9Fb5Ez6OQg
-         3duKdh+8N1ewWl6GXi9SH1RIw6js+5g1+HN/7o69aKkBRyNqWwgYar5Rif0+WOICTPY5
-         sbvPBGAvGikkTa2HBW9gy2ecZ+Xba9r+KqvlDFKs4gg8cjkOvwQA+EJ9o0Wo5C58gGMI
-         coHXWSbBsGiVRVQx8x1B6z+6KfZE5h8GQXwjuLRdt7h8ftu1JjyUNoVGHrl1X/fp1oWL
-         JLQGM5M8e21SFTQvY7AgpJOWsFRZwTbxFqpDtXWlcZihbW12aK/w1wsgQo9f1TQRmjo9
-         vBqQ==
-X-Gm-Message-State: AGi0Pua4YGJDeM7S0uPTfzgpN+vtCDJKv8CzWGDX+B4YMTkdtSPQpBV4
-        9OFyPK5UgrXQ4nhwE67Y7fYLW3DX8Qf50LOUWy5Ywg==
-X-Google-Smtp-Source: APiQypIukN0mpQ0mqADuRT4G3/MTr+GVI1aZKhZS0qVMDYrulKWYXyvikpiCsukL/N1WMUtnGv1BUyfJDEYFmb4Hr70=
-X-Received: by 2002:a0c:b442:: with SMTP id e2mr1069768qvf.34.1586248046646;
- Tue, 07 Apr 2020 01:27:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <0000000000002b25f105a2a3434d@google.com> <20200407004745.GA48345@xz-x1>
- <20200406183941.38a2e52026e42dbfde239a56@linux-foundation.org>
- <20200407015535.GC48345@xz-x1> <20200406191534.aafd8f74406c242ba1a42549@linux-foundation.org>
- <20200407024254.GD48345@xz-x1>
-In-Reply-To: <20200407024254.GD48345@xz-x1>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 7 Apr 2020 10:27:15 +0200
-Message-ID: <CACT4Y+bxjLaK-QG+7WQ0S-N4_1-2-gtDU=ytUDd5fUOjsxEjdA@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel paging request in kernel_get_mempolicy
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com>,
-        Brian Geffon <bgeffon@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QwWmobyOdR5r+7JJZxSrwfB56TjLUl825BwGgH9NRNQ=;
+        b=bcMP05UarBvvw2ZLczV8sX8k1eoW4D+8Co1Jm3BDnZbseGIaG2D0bF2UU32Itc1Yv+
+         NcGeXswQhpm/vzWU2E0xv/qYhUAthPgU4FHQhjvwsua81DXCJElScTbvcGEixYkRNMcH
+         /8+r9eR7K6ekeiWwGefsxOWR0KvhCyI7M0H268YamJvWC6jzjhVgNxUpmFT7qfNAF8ZL
+         D/cucOGbHjp1miUo8f0zFvVFU/ymByDwDAaz+2hGocZp+uq/DnnpffBTkst2ZEEnZWMr
+         QX+5yi+JJzaO8twUkUHuSZpg/k4oLP5avbUDvYEm+NO9v+hKUHDW/Pi3zwv/F0YmDQe0
+         SDgA==
+X-Gm-Message-State: AGi0PuYiNAA8xo0camTArksjQVK+BSZMumlpUc+bOCzE1lqlpJpUWQIz
+        bkBRGCfCoBraFEyAzAj6byOsIZbq01Y=
+X-Google-Smtp-Source: APiQypJ4MXFHCvLmE8SCVaL1WlvfgUE4X19jgukoo7Kk6ggpuOGHWgDPmWpJtOQeHusGT0nP3uKCxA==
+X-Received: by 2002:a17:902:8ec1:: with SMTP id x1mr1381741plo.325.1586248128475;
+        Tue, 07 Apr 2020 01:28:48 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id h2sm13520526pfr.220.2020.04.07.01.28.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 07 Apr 2020 01:28:48 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Haiwei Li <lihaiwei@tencent.com>
+Subject: [PATCH] KVM: X86: Ultra fast single target IPI fastpath
+Date:   Tue,  7 Apr 2020 16:28:38 +0800
+Message-Id: <1586248118-19607-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 4:43 AM Peter Xu <peterx@redhat.com> wrote:
->
-> On Mon, Apr 06, 2020 at 07:15:34PM -0700, Andrew Morton wrote:
-> > On Mon, 6 Apr 2020 21:55:35 -0400 Peter Xu <peterx@redhat.com> wrote:
-> >
-> > > On Mon, Apr 06, 2020 at 06:39:41PM -0700, Andrew Morton wrote:
-> > > > On Mon, 6 Apr 2020 20:47:45 -0400 Peter Xu <peterx@redhat.com> wrote:
-> > > >
-> > > > > >From 23800bff6fa346a4e9b3806dc0cfeb74498df757 Mon Sep 17 00:00:00 2001
-> > > > > From: Peter Xu <peterx@redhat.com>
-> > > > > Date: Mon, 6 Apr 2020 20:40:13 -0400
-> > > > > Subject: [PATCH] mm/mempolicy: Allow lookup_node() to handle fatal signal
-> > > > >
-> > > > > lookup_node() uses gup to pin the page and get node information.  It
-> > > > > checks against ret>=0 assuming the page will be filled in.  However
-> > > > > it's also possible that gup will return zero, for example, when the
-> > > > > thread is quickly killed with a fatal signal.  Teach lookup_node() to
-> > > > > gracefully return an error -EFAULT if it happens.
-> > > > >
-> > > > > ...
-> > > > >
-> > > > > --- a/mm/mempolicy.c
-> > > > > +++ b/mm/mempolicy.c
-> > > > > @@ -902,7 +902,10 @@ static int lookup_node(struct mm_struct *mm, unsigned long addr)
-> > > > >
-> > > > >         int locked = 1;
-> > > > >         err = get_user_pages_locked(addr & PAGE_MASK, 1, 0, &p, &locked);
-> > > > > -       if (err >= 0) {
-> > > > > +       if (err == 0) {
-> > > > > +               /* E.g. GUP interupted by fatal signal */
-> > > > > +               err = -EFAULT;
-> > > > > +       } else if (err > 0) {
-> > > > >                 err = page_to_nid(p);
-> > > > >                 put_page(p);
-> > > > >         }
-> > > >
-> > > > Doh.  Thanks.
-> > > >
-> > > > Should it have been -EINTR?
-> > >
-> > > It looks ok to me too.  I was returning -EFAULT to follow the same
-> > > value as get_vaddr_frames() (which is the other caller of
-> > > get_user_pages_locked()).  So far the only path that I found can
-> > > trigger this is when there's a fatal signal pending right after the
-> > > gup.  If so, the userspace won't have a chance to see the -EINTR (or
-> > > whatever we return) anyways.
-> >
-> > Yup.  I guess we're a victim of get_user_pages()'s screwy return value
-> > conventions - the caller cannot distinguish between invalid-addr and
-> > fatal-signal.
->
-> Indeed.
->
-> >
-> > Which makes one wonder why lookup_node() ever worked.  What happens if
-> > get_mempolicy(MPOL_F_NODE) is passed a wild userspace address?
-> >
->
-> I'm not familiar with mempolicy at all, but do you mean MPOL_F_NODE
-> with MPOL_F_ADDR?  Asked since iiuc if only MPOL_F_NODE is specified,
-> the kernel should not use the userspace addr at all (which seems to be
-> the thing we do now).  get_mempolicy(MPOL_F_NODE|MPOL_F_ADDR) seems to
-> return -EFAULT as expected, though I agree maybe it would still be
-> nicer to differentiate the two cases.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Am I reading this correctly that we put an initialized struct page* in
-this case? If so, with stack spraying this looks like an "interesting"
-bug.
+IPI and Timer cause the main MSRs write vmexits in cloud environment 
+observation, let's optimize virtual IPI latency more aggressively to 
+inject target IPI as soon as possible.
+
+Running kvm-unit-tests/vmexit.flat IPI testing on SKX server, disable 
+adaptive advance lapic timer and adaptive halt-polling to avoid the 
+interference, this patch can give another 7% improvement.
+
+w/o fastpath -> fastpath            4238 -> 3543  16.4%
+fastpath     -> ultra fastpath      3543 -> 3293     7%
+w/o fastpath -> ultra fastpath      4338 -> 3293    24%
+
+This also revises the performance data in commit 1e9e2622a1 (KVM: VMX: 
+FIXED+PHYSICAL mode single target IPI fastpath), that testing exposes
+mwait to kvm-unit-tests guest which is unnecessary.
+
+Tested-by: Haiwei Li <lihaiwei@tencent.com>
+Cc: Haiwei Li <lihaiwei@tencent.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/include/asm/kvm_host.h |  6 +++---
+ arch/x86/kvm/svm.c              | 21 ++++++++++++++-------
+ arch/x86/kvm/vmx/vmx.c          | 19 +++++++++++++------
+ arch/x86/kvm/x86.c              |  4 ++--
+ 4 files changed, 32 insertions(+), 18 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 42a2d0d..932162f 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1114,7 +1114,8 @@ struct kvm_x86_ops {
+ 	 */
+ 	void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
+ 
+-	void (*run)(struct kvm_vcpu *vcpu);
++	void (*run)(struct kvm_vcpu *vcpu,
++		enum exit_fastpath_completion *exit_fastpath);
+ 	int (*handle_exit)(struct kvm_vcpu *vcpu,
+ 		enum exit_fastpath_completion exit_fastpath);
+ 	int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+@@ -1164,8 +1165,7 @@ struct kvm_x86_ops {
+ 			       struct x86_instruction_info *info,
+ 			       enum x86_intercept_stage stage,
+ 			       struct x86_exception *exception);
+-	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
+-		enum exit_fastpath_completion *exit_fastpath);
++	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
+ 
+ 	int (*check_nested_events)(struct kvm_vcpu *vcpu);
+ 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 851e9cc..683474b 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5755,7 +5755,18 @@ static void svm_cancel_injection(struct kvm_vcpu *vcpu)
+ 	svm_complete_interrupts(svm);
+ }
+ 
+-static void svm_vcpu_run(struct kvm_vcpu *vcpu)
++static enum exit_fastpath_completion svm_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
++{
++	if (!is_guest_mode(vcpu) &&
++	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
++	    to_svm(vcpu)->vmcb->control.exit_info_1)
++		return handle_fastpath_set_msr_irqoff(vcpu);
++
++	return EXIT_FASTPATH_NONE;
++}
++
++static void svm_vcpu_run(struct kvm_vcpu *vcpu,
++	enum exit_fastpath_completion *exit_fastpath)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 
+@@ -5946,6 +5957,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+ 	kvm_load_host_xsave_state(vcpu);
+ 	stgi();
+ 
++	*exit_fastpath = svm_exit_handlers_fastpath(vcpu);
+ 	/* Any pending NMI will happen here */
+ 
+ 	if (unlikely(svm->vmcb->control.exit_code == SVM_EXIT_NMI))
+@@ -6277,13 +6289,8 @@ static int svm_check_intercept(struct kvm_vcpu *vcpu,
+ 	return ret;
+ }
+ 
+-static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+-	enum exit_fastpath_completion *exit_fastpath)
++static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+ {
+-	if (!is_guest_mode(vcpu) &&
+-	    to_svm(vcpu)->vmcb->control.exit_code == SVM_EXIT_MSR &&
+-	    to_svm(vcpu)->vmcb->control.exit_info_1)
+-		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+ }
+ 
+ static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 91749f1..14d7a74 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6279,8 +6279,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
+ }
+ STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
+ 
+-static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+-	enum exit_fastpath_completion *exit_fastpath)
++static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 
+@@ -6288,9 +6287,6 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+ 		handle_external_interrupt_irqoff(vcpu);
+ 	else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
+ 		handle_exception_nmi_irqoff(vmx);
+-	else if (!is_guest_mode(vcpu) &&
+-		vmx->exit_reason == EXIT_REASON_MSR_WRITE)
+-		*exit_fastpath = handle_fastpath_set_msr_irqoff(vcpu);
+ }
+ 
+ static bool vmx_has_emulated_msr(int index)
+@@ -6495,9 +6491,19 @@ void vmx_update_host_rsp(struct vcpu_vmx *vmx, unsigned long host_rsp)
+ 	}
+ }
+ 
++static enum exit_fastpath_completion vmx_exit_handlers_fastpath(struct kvm_vcpu *vcpu)
++{
++	if (!is_guest_mode(vcpu) &&
++		to_vmx(vcpu)->exit_reason == EXIT_REASON_MSR_WRITE)
++		return handle_fastpath_set_msr_irqoff(vcpu);
++
++	return EXIT_FASTPATH_NONE;
++}
++
+ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
+ 
+-static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
++static void vmx_vcpu_run(struct kvm_vcpu *vcpu,
++	enum exit_fastpath_completion *exit_fastpath)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long cr3, cr4;
+@@ -6662,6 +6668,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	vmx->idt_vectoring_info = 0;
+ 
+ 	vmx->exit_reason = vmx->fail ? 0xdead : vmcs_read32(VM_EXIT_REASON);
++	*exit_fastpath = vmx_exit_handlers_fastpath(vcpu);
+ 	if ((u16)vmx->exit_reason == EXIT_REASON_MCE_DURING_VMENTRY)
+ 		kvm_machine_check();
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b8124b56..99f9a1a 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8392,7 +8392,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		vcpu->arch.switch_db_regs &= ~KVM_DEBUGREG_RELOAD;
+ 	}
+ 
+-	kvm_x86_ops.run(vcpu);
++	kvm_x86_ops.run(vcpu, &exit_fastpath);
+ 
+ 	/*
+ 	 * Do this here before restoring debug registers on the host.  And
+@@ -8424,7 +8424,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	vcpu->mode = OUTSIDE_GUEST_MODE;
+ 	smp_wmb();
+ 
+-	kvm_x86_ops.handle_exit_irqoff(vcpu, &exit_fastpath);
++	kvm_x86_ops.handle_exit_irqoff(vcpu);
+ 
+ 	/*
+ 	 * Consume any pending interrupts, including the possible source of
+-- 
+2.7.4
+
