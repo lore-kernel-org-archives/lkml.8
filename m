@@ -2,158 +2,114 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096FFC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146F9C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC152075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7602075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BiT/yyVr"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="jIN5hjrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgDGQDv (ORCPT
+        id S1728111AbgDGQD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:03:51 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54820 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbgDGQDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:03:49 -0400
-Received: by mail-pj1-f66.google.com with SMTP id np9so940422pjb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 09:03:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gP729yExvsKwcKrE86VBUvEUivRuAU1I4cifk756xg8=;
-        b=BiT/yyVr1rSfof6VFqWXygsiJDCQsZIVl3d4oHMX1AlwZu2InJRMzINblucNVGW/ZH
-         t+PA9lgM0DmQMakMUPj4R/C/CPo85Zx7iBKrQHz14noUlbYVtQ2CR0tcbxK52eUp/0by
-         XbWcQl93c78Jk4nzonwajBC96ypn5aCIxRxEE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gP729yExvsKwcKrE86VBUvEUivRuAU1I4cifk756xg8=;
-        b=Iy8b9DD03rUMAlD1XyTl6vmxcNyzzXI7pXyzgGKpZkoORAM2qCZZlSVfvRCA+rnYoU
-         PHn+7QJtb0TUyOsJF4BZ2yI4Y0IIWXA7zjDamcrcPQ/ZWn9ydhi7UBkU1nwC/P9XBfjz
-         geOp+tf+8u4AoB8ILXeHHWf+Kt2rADpK2ORRfk0V69murrm5AgqLL/b3Q9k6ntPbQzZP
-         5MD6Gc37bpW41HiLTsKVLl4Ah6BxYYaLO0nkb/PjN1hhCRq5LEhLPGB+bQf22lqFCWDG
-         xYBZJVteS0lScvllWd6oxjxnDo/bJgTi3xHpg73pKUfqr0eD9XbQ2/wRcQMWO8c/Buna
-         /lPw==
-X-Gm-Message-State: AGi0Puae1hpHjGkfWthLgHbGQJUpmgSd7NCjeoYTjsKYI7Be9gSfp7hh
-        oYeZGTNyBYP0zeEXpVrFwCv8cA==
-X-Google-Smtp-Source: APiQypJ9peVI9az7UwkHqtzSEwC0pTS1l9u9mH/FppWKiEPX2XYXZdvNpEolk4nHDToGI2lLSlyaXQ==
-X-Received: by 2002:a17:902:6acc:: with SMTP id i12mr3051101plt.61.1586275428262;
-        Tue, 07 Apr 2020 09:03:48 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id nh14sm2014218pjb.17.2020.04.07.09.03.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 09:03:47 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 09:03:46 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH 3/3] exec: Rename the flag called_exec_mmap
- point_of_no_return
-Message-ID: <202004070903.CC08A70A@keescook>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
- <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
- <87wo6s3wxd.fsf_-_@x220.int.ebiederm.org>
- <87d08k3wt4.fsf_-_@x220.int.ebiederm.org>
+        Tue, 7 Apr 2020 12:03:57 -0400
+Received: from mout.gmx.net ([212.227.15.19]:40645 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728000AbgDGQD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 12:03:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1586275414;
+        bh=e3mRm5CWAZ94bLSIQgu24+nnAMT62ywXZ1pN+mDxiVA=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=jIN5hjrSASiCcNRUHqRZCzPOYwhWWdaVRg9MoG+Uq2mqNFDGhB0vSQK/n2MN3VmSy
+         h92TJRIfqf5DB+Z+GEjspLoee1s236JsuuNPn/DHrq71lNusQKjsPgaa99S4s1hy8y
+         QKZlRV+KDzvHwXUAI5SagxvyAhK7cwpy6HywOOaE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from lenovo-laptop ([82.19.195.159]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MvbFs-1j3d5f3HN8-00sfoC; Tue, 07
+ Apr 2020 18:03:33 +0200
+Date:   Tue, 7 Apr 2020 17:03:30 +0100
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Allison Randal <allison@lohutok.net>,
+        Christoph Hellwig <hch@lst.de>,
+        Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Coccinelle: zalloc-simple: Fix patch mode for
+ dma_alloc_coherent()
+Message-ID: <20200407160330.5m75sfkhrrx3wgrl@lenovo-laptop>
+References: <beeed2c8-1b5a-66a8-ec41-f5770c04bae9@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87d08k3wt4.fsf_-_@x220.int.ebiederm.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <beeed2c8-1b5a-66a8-ec41-f5770c04bae9@web.de>
+X-Provags-ID: V03:K1:VyTCQk3EiMwZojK0lcw8VVypr4boid8PMeIUQcoFh5hfKXppl56
+ f55N+K3JBSSRb1BRquGaiX4iXL3AXghXl6kjS9BQyMfsiE7wKmAzQjMA6az0OKeLnxKig21
+ 0jtHzgLZDn7oelFHXALFodCvR1ijjVom5BFJsf81wct7THQwETUEq5ke8Cip0Y+QW5kyvzn
+ tgfNXExVv5a25wkN2Eo4g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7YENew970fU=:3ut9H6t0BFdslC+tkJ3dnR
+ 4vEXMQannVKiiPvU4Ifp81a8B/GXumK0AUngL5R0LwXPAGET5HxyNp9IvUET//yuSKo1LgWJM
+ zC+s4sn+xZ4ESLWwFE0oJX42w94ZdqosLisZaQqpAlkAF6Rkj/EWXNkNZ1tkmmlJOl/uzPIny
+ 5TTUVZMDkN4kxA9iOUGfSf9ikSxrPITG3E+urpXnOCVWM5ZgYfslrxuvyL0At4dFTTfiaYBW0
+ FqxTgTSDTCUOu52A+JEfZa65NvVBB2ldi4sU/VhalGYYa6FJGp85NsHrhzj+49K1RRJaUqd5D
+ 2+6bT+IMpLL+uiol8SpyBVsottPF2KlkEFLAnNT9+RG4hpjq6YDfJ6pKD5mds1KoNhaLiJQiy
+ 6tOGt/XM+4bkUFaqXGGLqC3Je+zto3vqMW5lx1y+R60pC1oA2FEWKsPYGkjWKvVu527zi6zyj
+ WRa1UT97yPy9FuKTlYoiPJ6DxehYCZ4b4rI8mfbrpwZCGJ0nySBWcrQ5yxRP0YkmOD39NYLYP
+ 2clVJS4sDs+vUpZY5kp882AvQyStkPuJZ5gYgzAkBsjaZd3YaKN9FXOJxhkDhKRBKRqj6T2J3
+ WgmXLgxDl10l8OveZP5X7QBUBbCC3RSvfYHyPp+nCbzZPHT2IXXikUE56feY34aZkpgqI9TD4
+ 7gH/zKpSlp9avP9PSCfkzfsYe8JEI7SI+VOLHVRZBl9RfLoOGZghWWrha6kVKZ8gNhixV2Npz
+ QeHs6xVdAgbt3RMfz1QEHOdGpHxsRyFcw/bZ1Uoo4dE2JH91/WFVeLl84J6iM+F5oF/oSXC8S
+ Yn4EbLN6PzaiIt4Sf7OPCssoA0uNr41i4mlZJoKbpwA+8lw+XYzWZM5JN77FnhHQynKcllLmb
+ LtamXhONciuKcqE9P0lJfLtKGrIbLlEQJmsj8fkeJGMZ0HH0rLXkIfgLMhVf9/++xVcA4/e4l
+ 2ZWGFPlANUS1cX6bjWcWmTnF6Kj+JMrm1ccvgCRVPgL+/I9QgG4g4RYofMrca4tSnX4bTPOHp
+ qpnXzrPel7V2RzxAARtJ8zrbP42Z/br8iNMZqfVMYmGq1eprif+D5ixyt8GHCstUw8kxjpycJ
+ Y9QqL2IDdi/tOtD7PgCjvKs/+cLQuvgFwDa0Fb5btAQraaJ2Px1Qu2zMg1tm0RsIDr8n2to2t
+ Uzdjg7ZfJQtSQj9uhiJB3P9Ne7Gr6KVZWrFsYRlfcJohjVJOFUUaRSP4hrNoYfA6tdLPSxlNR
+ iEBlZEtOjOrF1ex8v
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:32:23PM -0500, Eric W. Biederman wrote:
-> 
-> Update the comments and make the code easier to understand by
-> renaming this flag.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+On Sat, Apr 04, 2020 at 09:06:46AM +0200, Markus Elfring wrote:
+> > Commit dfd32cad146e ("dma-mapping: remove dma_zalloc_coherent()"), in
+> > removing dma_zalloc_coherent() treewide, inadvertently removed the pat=
+ch
+> > rule for dma_alloc_coherent(), leaving Coccinelle unable to auto-gener=
+ate
+> > patches for this case. Fix this.
+>
+> I suggest to reconsider also the distribution of recipients for your pat=
+ch
+> according to the fields =E2=80=9CCc=E2=80=9D and =E2=80=9CTo=E2=80=9D.
 
-I like it, yes!
+Good point.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+>
+> Will the software development attention grow in a way so that further
+> implementation details can be adjusted also for the mentioned SmPL scrip=
+t?
 
--Kees
+I'm not sure I understand what you mean. Would you mind clarifying?
 
-> ---
->  fs/exec.c               | 12 ++++++------
->  include/linux/binfmts.h |  6 +++---
->  2 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 28c87020da9b..a61987d6dc33 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1300,12 +1300,12 @@ int flush_old_exec(struct linux_binprm * bprm)
->  		goto out;
->  
->  	/*
-> -	 * After setting bprm->called_exec_mmap (to mark that current is
-> -	 * using the prepared mm now), we have nothing left of the original
-> -	 * process. If anything from here on returns an error, the check
-> -	 * in search_binary_handler() will SEGV current.
-> +	 * With the new mm installed it is completely impossible to
-> +	 * fail and return to the original process.  If anything from
-> +	 * here on returns an error, the check in
-> +	 * search_binary_handler() will SEGV current.
->  	 */
-> -	bprm->called_exec_mmap = 1;
-> +	bprm->point_of_no_return = true;
->  	bprm->mm = NULL;
->  
->  #ifdef CONFIG_POSIX_TIMERS
-> @@ -1694,7 +1694,7 @@ int search_binary_handler(struct linux_binprm *bprm)
->  
->  		read_lock(&binfmt_lock);
->  		put_binfmt(fmt);
-> -		if (retval < 0 && bprm->called_exec_mmap) {
-> +		if (retval < 0 && bprm->point_of_no_return) {
->  			/* we got to flush_old_exec() and failed after it */
->  			read_unlock(&binfmt_lock);
->  			force_sigsegv(SIGSEGV);
-> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-> index 6f564b9ad882..8f479dad7931 100644
-> --- a/include/linux/binfmts.h
-> +++ b/include/linux/binfmts.h
-> @@ -46,10 +46,10 @@ struct linux_binprm {
->  		 */
->  		secureexec:1,
->  		/*
-> -		 * Set by flush_old_exec, when exec_mmap has been called.
-> -		 * This is past the point of no return.
-> +		 * Set when errors can no longer be returned to the
-> +		 * original userspace.
->  		 */
-> -		called_exec_mmap:1;
-> +		point_of_no_return:1;
->  #ifdef __alpha__
->  	unsigned int taso:1;
->  #endif
-> -- 
-> 2.25.0
-> 
+Best,
+Alex
 
--- 
-Kees Cook
+>
+> Regards,
+> Markus
