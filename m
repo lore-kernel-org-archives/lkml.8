@@ -2,227 +2,124 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DCBC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D874C2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060AF206F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA19206F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:15:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="duuJ/dCM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgDGGOz (ORCPT
+        id S1727121AbgDGGPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:14:55 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:38292 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgDGGOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:14:48 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DC3E0200FE7;
-        Tue,  7 Apr 2020 08:14:46 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BD627200FFE;
-        Tue,  7 Apr 2020 08:14:42 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 67BB8402BF;
-        Tue,  7 Apr 2020 14:14:37 +0800 (SGT)
-From:   Biwen Li <biwen.li@oss.nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, ran.wang_1@nxp.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
-Subject: [PATCH 3/4] arm64: dts: ls1012a/ls1043a/ls1046a/ls1088a/ls208xa: add ftm_alarm0 node
-Date:   Tue,  7 Apr 2020 14:10:53 +0800
-Message-Id: <20200407061054.16912-3-biwen.li@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200407061054.16912-1-biwen.li@oss.nxp.com>
-References: <20200407061054.16912-1-biwen.li@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 7 Apr 2020 02:15:04 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34080 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727078AbgDGGPD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 02:15:03 -0400
+Received: by mail-pj1-f66.google.com with SMTP id q16so836121pje.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 23:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CPlaxgayQ+N8MMMgIjFe5Z07E3atFvajpg/1wJmrQ4E=;
+        b=duuJ/dCMH1GS2IhzjWHgtKDPtdz+mC+7tRLFQi833UXwl/X9ymcCGx3w54JBnlnMHP
+         TsM+ZPpNTH7E1SDzv15C0Wa8LS1j/5x8ZQUMUK5DTTbDJD84IaCN+n6uVLz6iCCHVSnf
+         ZH2ptMQk3aGfZAmSq6UpPl4GvsyCWYy+eBNsdrV8jHpIOt7MJVuLe8rL3yotvjuNixX2
+         U8tz2ylApBeEF7vtjckch4fkJ4kxt+zP5k5jVrqnmITz+vL2zlFzBTOFx/ECrQMFmBiI
+         OGfg+bnHgFoTK5whjS8hRyMLvowZizPJGeqHNC+YOlf8ata1t2miQN8YmKUfDA0CLL3A
+         5sZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CPlaxgayQ+N8MMMgIjFe5Z07E3atFvajpg/1wJmrQ4E=;
+        b=g1AQf8/8WOJG+rOtT+7nyLUvzcI0MkJpzHut0uDAANp08NnxI9acisZa0fY1onasf1
+         +HTuNJk0Lb7RMT+bMTPqmnnrMZpTE8ca4+EwqiURruTBUcT0WBc9YB/GRaW71/KKXdFE
+         sf4L2FUTU3/lvvsKriKebyY4TbP2LsHs6MxRHEcUS6NhqsBcD3E2afameB1RuYCo8S0b
+         UmL3ELLZj/UMusAFtXphnScWM6nMYKNDnC+99D1VOlov7S3zJOCQUQlmyKCxgyYac1G3
+         lscB2lNpYT2w/ZXzKOsYm9upB81brMU5YMaA3X0QLjtMVkkxh4rwWqfRC96WnQFe15Ob
+         P+1Q==
+X-Gm-Message-State: AGi0PuZE6u+nA9bOxtEAxx5v56cM0d7JKqiZHbBExG/XfIpRULvudNHt
+        aO0hUFMsWjJKRmVY81SNKRn7
+X-Google-Smtp-Source: APiQypKg9GQP7HSI0sIBC/WkLuQ+scrTQg6EQWIm62SUZwcY4ef1Iyh0wNK40QrAvAAmAh1HpTsdfQ==
+X-Received: by 2002:a17:90a:1784:: with SMTP id q4mr837275pja.174.1586240101941;
+        Mon, 06 Apr 2020 23:15:01 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6e86:d03b:80dc:a9ff:fe0a:9bd3])
+        by smtp.gmail.com with ESMTPSA id o19sm2403759pfp.119.2020.04.06.23.14.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Apr 2020 23:15:01 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 11:44:55 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] bus: mhi: core: Make sure to powerdown if
+ mhi_sync_power_up fails
+Message-ID: <20200407061455.GB2442@Mani-XPS-13-9360>
+References: <1586207077-22361-1-git-send-email-jhugo@codeaurora.org>
+ <1586207077-22361-3-git-send-email-jhugo@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1586207077-22361-3-git-send-email-jhugo@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Biwen Li <biwen.li@nxp.com>
+On Mon, Apr 06, 2020 at 03:04:36PM -0600, Jeffrey Hugo wrote:
+> Powerdown is necessary if mhi_sync_power_up fails due to a timeout, to
+> clean up the resources.  Otherwise a BUG could be triggered when
+> attempting to clean up MSIs because the IRQ is still active from a
+> request_irq().
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  drivers/bus/mhi/core/pm.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+> index cd6ba23..1bfa334 100644
+> --- a/drivers/bus/mhi/core/pm.c
+> +++ b/drivers/bus/mhi/core/pm.c
+> @@ -922,7 +922,11 @@ int mhi_sync_power_up(struct mhi_controller *mhi_cntrl)
+>  			   MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state),
+>  			   msecs_to_jiffies(mhi_cntrl->timeout_ms));
+>  
+> -	return (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
+> +	ret = (MHI_IN_MISSION_MODE(mhi_cntrl->ee)) ? 0 : -EIO;
+> +
+> +	if (ret)
+> +		mhi_power_down(mhi_cntrl, false);
+> +	return ret;
 
-The patch adds ftm_alarm0 DT node
-	- add new rcpm node
-	- add ftm_alarm0 node
-	- aliases ftm_alarm0 as rtc1
+I'd prefer the style of,
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 15 +++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 14 ++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 14 ++++++++++++++
- 5 files changed, 72 insertions(+)
+```
+statement
+if (cond)
+	statement
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 337919366dc8..ab8b19f4d750 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -22,6 +22,7 @@
- 		rtic-c = &rtic_c;
- 		rtic-d = &rtic_d;
- 		sec-mon = &sec_mon;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -499,6 +500,20 @@
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
-+
-+		rcpm: rcpm@1ee2140 {
-+			compatible = "fsl,ls1012a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee2140 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1012a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index c084c7a4b6a6..9dbcec8058de 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -27,6 +27,7 @@
- 		ethernet4 = &enet4;
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -764,6 +765,19 @@
- 			big-endian;
- 		};
- 
-+		rcpm: rcpm@1ee208c {
-+			compatible = "fsl,ls1043a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee208c 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1043a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <0 86 0x4>;
-+			big-endian;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index d4c1da3d4bde..acd6125fb7d3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -28,6 +28,7 @@
- 		ethernet5 = &enet5;
- 		ethernet6 = &enet6;
- 		ethernet7 = &enet7;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -765,6 +766,20 @@
- 			queue-sizes = <64 64>;
- 			big-endian;
- 		};
-+
-+		rcpm: rcpm@1ee208c {
-+			compatible = "fsl,ls1046a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1ee208c 0x0 0x4>;
-+			#fsl,rcpm-wakeup-cells = <1>;
-+		};
-+
-+		ftm_alarm0: timer@29d0000 {
-+			compatible = "fsl,ls1046a-ftm-alarm";
-+			reg = <0x0 0x29d0000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x20000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
-+		};
- 	};
- 
- 	reserved-memory {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index 594566265e3d..bd8528f224b3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -18,6 +18,7 @@
- 
- 	aliases {
- 		crypto = &crypto;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpus {
-@@ -777,6 +778,19 @@
- 				};
- 			};
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls1088a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls1088a-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	firmware {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index f96d06da96be..0e06b0e12cd3 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -24,6 +24,7 @@
- 		serial1 = &serial1;
- 		serial2 = &serial2;
- 		serial3 = &serial3;
-+		rtc1 = &ftm_alarm0;
- 	};
- 
- 	cpu: cpus {
-@@ -759,6 +760,19 @@
- 			reg = <0x0 0x04000000 0x0 0x01000000>;
- 			interrupts = <0 12 4>;
- 		};
-+
-+		rcpm: rcpm@1e34040 {
-+			compatible = "fsl,ls208xa-rcpm", "fsl,qoriq-rcpm-2.1+";
-+			reg = <0x0 0x1e34040 0x0 0x18>;
-+			#fsl,rcpm-wakeup-cells = <6>;
-+		};
-+
-+		ftm_alarm0: timer@2800000 {
-+			compatible = "fsl,ls208xa-ftm-alarm";
-+			reg = <0x0 0x2800000 0x0 0x10000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0>;
-+			interrupts = <0 44 4>;
-+		};
- 	};
- 
- 	ddr1: memory-controller@1080000 {
--- 
-2.17.1
+return
+```
 
+Please stick to this. The change itself looks good.
+
+Thanks,
+Mani
+
+>  }
+>  EXPORT_SYMBOL(mhi_sync_power_up);
+>  
+> -- 
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
