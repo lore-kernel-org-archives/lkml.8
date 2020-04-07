@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9AAC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166F4C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4468B2078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20EE20644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255105;
-	bh=qBRidKn+v/vs6r8HKnC3Y+FH+rNp4St2BFykGlKnhaM=;
+	s=default; t=1586255108;
+	bh=MunPn4yar4LQvXOnM4u+z9RULnq2Lbrbew8pDtjZ0zM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lzo6izVFYiuwzYxXov1SZFLFZ560XNbL0JmJ9mn0nYPhCN9xwighCtPal5eftYn8K
-	 rbZpO2ikEzgyjLY+nzKKB0FsBjeRCRUBQ0ImfFaDmVrvLfcOVkk3nrcv0vOjcDbEOv
-	 qK156XADYJwi/YmLlW5Bfovzfw1g27hxXprL2MmQ=
+	b=AMiwdIe5loVf9GDCl5Etilbf4O3kydIWTdbi2c41l78Wnk2NOt5rvem94nPSUtiUF
+	 0zHJ9pP1K2MbnenJSePY76YPf6dW7RWG9C8Albh8gV3Ri0K/3QSlpN1t8NZplFSC7t
+	 GbEwJsGEfRLe6NlWkIDZAz9i2+a0UymVQ5Hnnfqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgDGKZE (ORCPT
+        id S1728874AbgDGKZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728843AbgDGKZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:01 -0400
+        id S1728852AbgDGKZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86FB72078C;
-        Tue,  7 Apr 2020 10:24:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E2FB20644;
+        Tue,  7 Apr 2020 10:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255100;
-        bh=qBRidKn+v/vs6r8HKnC3Y+FH+rNp4St2BFykGlKnhaM=;
+        s=default; t=1586255102;
+        bh=MunPn4yar4LQvXOnM4u+z9RULnq2Lbrbew8pDtjZ0zM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUAXwQlYiC4hoSKiqRat89xGGu/oQaxUoOTT6vHj7ooDlc8iipevmW+lG3vvB+u7I
-         IF5pv/uCdTCxJA0ES7jPzPTq9m2NAFuQAbOGjcW/SEm0NtbVmQ+KVg1HPt4Lc5oahl
-         tDgsZDw9yErr+7WKXw0lgPlF46J3gtJG+69RtpLI=
+        b=FNWYErKb21ktqtnKNi8jWVpgxLNgcH/Wmg/D4J7xfTfmvAiLDBNA2mq9EcKNO/XOu
+         JvClL5T3N/msImmI0NeWwsmZHbf8ZuCw2LLwcL5XlSVQ+W4gizJzWXpPdmJGEYIbq8
+         X5uG/LAK96Iyll9dbDy6hBuMI/H66mKtBg5WuQ0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Marcelo Ricardo Leitner <mleitner@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-Subject: [PATCH 5.5 05/46] sctp: fix refcount bug in sctp_wfree
-Date:   Tue,  7 Apr 2020 12:21:36 +0200
-Message-Id: <20200407101500.086085972@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 06/46] net: macb: Fix handling of fixed-link node
+Date:   Tue,  7 Apr 2020 12:21:37 +0200
+Message-Id: <20200407101500.171147979@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -61,115 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-[ Upstream commit 5c3e82fe159622e46e91458c1a6509c321a62820 ]
+[ Upstream commit 79540d133ed6f65a37dacb54b7a704cc8a24c52d ]
 
-We should iterate over the datamsgs to move
-all chunks(skbs) to newsk.
+fixed-link nodes are treated as PHY nodes by of_mdiobus_child_is_phy().
+We must check if the interface is a fixed-link before looking up for PHY
+nodes.
 
-The following case cause the bug:
-for the trouble SKB, it was in outq->transmitted list
-
-sctp_outq_sack
-        sctp_check_transmitted
-                SKB was moved to outq->sacked list
-        then throw away the sack queue
-                SKB was deleted from outq->sacked
-(but it was held by datamsg at sctp_datamsg_to_asoc
-So, sctp_wfree was not called here)
-
-then migrate happened
-
-        sctp_for_each_tx_datachunk(
-        sctp_clear_owner_w);
-        sctp_assoc_migrate();
-        sctp_for_each_tx_datachunk(
-        sctp_set_owner_w);
-SKB was not in the outq, and was not changed to newsk
-
-finally
-
-__sctp_outq_teardown
-        sctp_chunk_put (for another skb)
-                sctp_datamsg_put
-                        __kfree_skb(msg->frag_list)
-                                sctp_wfree (for SKB)
-	SKB->sk was still oldsk (skb->sk != asoc->base.sk).
-
-Reported-and-tested-by: syzbot+cea71eec5d6de256d54d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <mleitner@redhat.com>
+Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+Tested-by: Cristian Birsan <cristian.birsan@microchip.com>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/socket.c |   31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -147,29 +147,44 @@ static void sctp_clear_owner_w(struct sc
- 	skb_orphan(chunk->skb);
- }
- 
-+#define traverse_and_process()	\
-+do {				\
-+	msg = chunk->msg;	\
-+	if (msg == prev_msg)	\
-+		continue;	\
-+	list_for_each_entry(c, &msg->chunks, frag_list) {	\
-+		if ((clear && asoc->base.sk == c->skb->sk) ||	\
-+		    (!clear && asoc->base.sk != c->skb->sk))	\
-+			cb(c);	\
-+	}			\
-+	prev_msg = msg;		\
-+} while (0)
-+
- static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
-+				       bool clear,
- 				       void (*cb)(struct sctp_chunk *))
- 
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -685,6 +685,9 @@ static int macb_mdiobus_register(struct
  {
-+	struct sctp_datamsg *msg, *prev_msg = NULL;
- 	struct sctp_outq *q = &asoc->outqueue;
-+	struct sctp_chunk *chunk, *c;
- 	struct sctp_transport *t;
--	struct sctp_chunk *chunk;
+ 	struct device_node *child, *np = bp->pdev->dev.of_node;
  
- 	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
- 		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
--			cb(chunk);
-+			traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
--		cb(chunk);
-+		traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->sacked, transmitted_list)
--		cb(chunk);
-+		traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->abandoned, transmitted_list)
--		cb(chunk);
-+		traverse_and_process();
- 
- 	list_for_each_entry(chunk, &q->out_chunk_list, list)
--		cb(chunk);
-+		traverse_and_process();
- }
- 
- static void sctp_for_each_rx_skb(struct sctp_association *asoc, struct sock *sk,
-@@ -9576,9 +9591,9 @@ static int sctp_sock_migrate(struct sock
- 	 * paths won't try to lock it and then oldsk.
- 	 */
- 	lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
--	sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
-+	sctp_for_each_tx_datachunk(assoc, true, sctp_clear_owner_w);
- 	sctp_assoc_migrate(assoc, newsk);
--	sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
-+	sctp_for_each_tx_datachunk(assoc, false, sctp_set_owner_w);
- 
- 	/* If the association on the newsk is already closed before accept()
- 	 * is called, set RCV_SHUTDOWN flag.
++	if (of_phy_is_fixed_link(np))
++		return mdiobus_register(bp->mii_bus);
++
+ 	/* Only create the PHY from the device tree if at least one PHY is
+ 	 * described. Otherwise scan the entire MDIO bus. We do this to support
+ 	 * old device tree that did not follow the best practices and did not
 
 
