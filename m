@@ -2,113 +2,131 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F50AC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDEBC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D252076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 368152078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:38:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZtSbL6m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oyTohD9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgDGQiH (ORCPT
+        id S1728661AbgDGQiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:38:07 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42465 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbgDGQiG (ORCPT
+        Tue, 7 Apr 2020 12:38:16 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34170 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbgDGQiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:38:06 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q19so4445935ljp.9;
-        Tue, 07 Apr 2020 09:38:03 -0700 (PDT)
+        Tue, 7 Apr 2020 12:38:15 -0400
+Received: by mail-pj1-f68.google.com with SMTP id q16so1292325pje.1;
+        Tue, 07 Apr 2020 09:38:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wJFq2XOe7RkgNC35l325ZwPjkblMAPqbWKh6AWFgEI0=;
-        b=LZtSbL6m49RtrXGKLs6ozpHCCZbdsGsKQFHI9bDe5IvhMKvsuEEobgcQcQhC+xgiYx
-         RXlUoeXJF7fOQUm/mxXaRyqAF97pTd4ZOqouJ87iVsazVMkNQ8+tfJCIcm8Ekw7P5szF
-         vVQvmXECwVU3ko/oKpjLx4Uu7sWBZlKAbRGB6UGttmr7RbNHhz74+a6S7O8B+6asnu89
-         JcMAQL6I2mpP7Q4+TFehmxU0eME9LFBO7J2mFbCHElMZjH/R3fwxIDRlqLbF/i9Km+6m
-         10ut7kt62Klk2PiMBkihw5YRC8NzXRjFs3M7NVqqBpByByJrUFGTOPcmWNkehvMnesDo
-         NVHg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gGgWZp6rMuFQA14rS1qbUgkNVqxLPRtd3BmKsf3Xf9Y=;
+        b=oyTohD9slwCU0i8iwyxnG86LDJxYVMZVxFuIz/pp0KtQUmI/717HIfdftZt0rBfzHo
+         NdWpF+4k5i64/ahO9KbhU2pqHIPdL/9NHXvNnQyUqa2jxjs7jfFB48tLarF8fMPTPLm5
+         7CX52oxB+n7fXXprKxjytHj9COeGUuumjYnruo+/gmETcW009B0yqcN0se5LaFF1VLze
+         uhXon+0NFer6X0hHB4VaeGKOYcY6MqX3bps9e5AoCBPyhatJFyC/Z0o3CZoimA9aubPz
+         eW6DzMN6us3np1Wz59wRXbW2kAKHtrr10v6VnbiYGuoSc8SEKbix5yRxhYTTyqLXmHDB
+         Qo7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wJFq2XOe7RkgNC35l325ZwPjkblMAPqbWKh6AWFgEI0=;
-        b=gY3aRiViPVjyzaMDm8zxP5IQD70fE5EIJM5duL5+8tMG3dp8WemWhYq4qT7gIrP0gg
-         hjjK5zuitdMQLfZ6z21H3HNi9j2B2amqQdhNkmwGpvVVE46pLClSYGyLLpVZAUodY3Yk
-         tjKxU/pYKK3xM0n/R+PsKvgfFWrHf3cytB6oPdnCLoobzs7oZMKep3ZSowUlz6l5h6fS
-         5E6JOXcmXQwuOSewAMPzk2zvF+nwTwmzLoV5OSyNnC749nhWOuSkSwaXHWfrooSasKN8
-         A/WBNhyINOLUGcKNKx+0wv183o3s5e+4bFtuYV1G+CQnuZ3huIJGsg9uzycAAT82YNQi
-         F9XA==
-X-Gm-Message-State: AGi0Pubr6nMK4mg0kYAHlSS/WDrpiHhH3JP1YE0sho5lsdK+MBO0tmwb
-        F5QlyYIG3HygA933JbQG6Vcsn3i6
-X-Google-Smtp-Source: APiQypLRXTVLhUyQXvlFZhdg1KqTBz6jb+pJgadbyCplIwX4sPW1MzmAkLnY16yhAcVeTQdzNFdVbA==
-X-Received: by 2002:a2e:920b:: with SMTP id k11mr2345064ljg.46.1586277482811;
-        Tue, 07 Apr 2020 09:38:02 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id j13sm3854133lfb.19.2020.04.07.09.38.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 09:38:02 -0700 (PDT)
-Subject: Re: [PATCH v2 6/6] ARM: tegra_defconfig: Enable options useful for
- Nexus 7 and Acer A500
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?Q?Pedro_=c3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200406194110.21283-1-digetx@gmail.com>
- <20200406194110.21283-7-digetx@gmail.com> <20200407100829.GB1720957@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <70ad6fd6-9603-a114-2d0f-608110b68c0b@gmail.com>
-Date:   Tue, 7 Apr 2020 19:38:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gGgWZp6rMuFQA14rS1qbUgkNVqxLPRtd3BmKsf3Xf9Y=;
+        b=bop1PxL1ThwwmKf4VweiEEtqzEbfPd/4QL/gtNfReeW3zduHKUHN4/Ygy3NJjhEMgE
+         Gg1OnF6XIYajsKfbFmyFxSWWESNkNJHlavUkfjJ7Y7XT86lgEvYVLk9kUXWKZwD+RpnJ
+         9hF77zQ+VSTKAKmf0sE5SwkQlqboQ5M4bWDFHHsyR1ikMDQqUBSt8fhYYDm7qPj2yYco
+         jmFu8ttCEieVYGgOtNtn156fW3VhrBr5daBkyznfdllCXEW2guXDEsOBaiXctNO6R/ei
+         7/exB1Aaml8RfaU6KrYTKG9DMImeRnjXURNKPmoNQ3bhkITRAhsOraegt+kqDskJ0ZMA
+         Z+tQ==
+X-Gm-Message-State: AGi0PuYAPyMdR7dl4gZb9/0eXvC38+FzvICSqJKIq6rKoYdgfyIwZQL5
+        tWBgbwdgigz46OR4a67EAJo=
+X-Google-Smtp-Source: APiQypIP7cQiTGQMS35KDYqx5pyUYU4fUqnAvpp78di/mJvVJ4dPfsjxdWLxnXPbeacQhXWm3e6nEw==
+X-Received: by 2002:a17:90b:46d0:: with SMTP id jx16mr151548pjb.155.1586277494188;
+        Tue, 07 Apr 2020 09:38:14 -0700 (PDT)
+Received: from localhost (89.208.244.140.16clouds.com. [89.208.244.140])
+        by smtp.gmail.com with ESMTPSA id v8sm10652849pfn.213.2020.04.07.09.38.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 09:38:13 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
+        nsekhar@ti.com, bgolaszewski@baylibre.com,
+        jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        mika.westerberg@linux.intel.com, baruch@tkos.co.il,
+        wsa+renesas@sang-engineering.com, kgene@kernel.org,
+        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
+        khilman@baylibre.com, matthias.bgg@gmail.com,
+        gregory.clement@bootlin.com, rrichter@marvell.com,
+        afaerber@suse.de, manivannan.sadhasivam@linaro.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, heiko@sntech.de,
+        baohua@kernel.org, linus.walleij@linaro.org, mripard@kernel.org,
+        wens@csie.org, ardb@kernel.org, michal.simek@xilinx.com,
+        gcherian@marvell.com, jun.nie@linaro.org, shawnguo@kernel.org,
+        rayagonda.kokatanur@broadcom.com, lori.hikichi@broadcom.com,
+        nishkadg.linux@gmail.com, kstewart@linuxfoundation.org,
+        allison@lohutok.net, gregkh@linuxfoundation.org,
+        tglx@linutronix.de, bigeasy@linutronix.de, info@metux.net,
+        hslester96@gmail.com, narmstrong@baylibre.com,
+        martin.blumenstingl@googlemail.com, qii.wang@mediatek.com,
+        drinkcat@chromium.org, hsinyi@chromium.org, fparent@baylibre.com,
+        opensource@jilayne.com, swinslow@gmail.com,
+        linux-i2c@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v1 04/28] i2c: exynos5: convert to devm_platform_ioremap_resource
+Date:   Wed,  8 Apr 2020 00:37:17 +0800
+Message-Id: <20200407163741.17615-5-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200407163741.17615-1-zhengdejin5@gmail.com>
+References: <20200407163741.17615-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200407100829.GB1720957@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.04.2020 13:08, Thierry Reding пишет:
-> On Mon, Apr 06, 2020 at 10:41:10PM +0300, Dmitry Osipenko wrote:
->> Enable several drivers for hardware that is found on Nexus 7 and Acer A500
->> tablet devices. Please note that some drivers may require firmware files
->> extracted from original Android image.
->>
->> Link: https://github.com/digetx/linux-firmware
-> 
-> What's the license for these files?
+use devm_platform_ioremap_resource() to simplify code, which
+contains platform_get_resource and devm_ioremap_resource.
 
-It's either GPL (like touchscreen config) or something else
-redistributeable.
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+---
+ drivers/i2c/busses/i2c-exynos5.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> Can they be made available through the official linux-firmware repository?
+diff --git a/drivers/i2c/busses/i2c-exynos5.c b/drivers/i2c/busses/i2c-exynos5.c
+index e7514c16b756..5bf716df88f4 100644
+--- a/drivers/i2c/busses/i2c-exynos5.c
++++ b/drivers/i2c/busses/i2c-exynos5.c
+@@ -740,7 +740,6 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct exynos5_i2c *i2c;
+-	struct resource *mem;
+ 	int ret;
+ 
+ 	i2c = devm_kzalloc(&pdev->dev, sizeof(struct exynos5_i2c), GFP_KERNEL);
+@@ -766,8 +765,7 @@ static int exynos5_i2c_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	i2c->regs = devm_ioremap_resource(&pdev->dev, mem);
++	i2c->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(i2c->regs)) {
+ 		ret = PTR_ERR(i2c->regs);
+ 		goto err_clk;
+-- 
+2.25.0
 
-Yes, but I don't know yet for sure whether it's really needed for all
-firmware files.
-
-For example, the T30 Broadcom WiFi doesn't work using stock
-linux-firmware, it's on my to-do list to try to figure out why.
-
-While Bluetooth FW seems to be reusable be many different devices,
-although (AFAIK) nobody cared to upstream it to the linux-firmware.
