@@ -2,112 +2,269 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95147C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF30C2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C88C20747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7486020748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QCDaE+PM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmLVHk5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgDGG6A (ORCPT
+        id S1727376AbgDGG62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:58:00 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:15619 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726591AbgDGG6A (ORCPT
+        Tue, 7 Apr 2020 02:58:28 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35459 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgDGG62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:58:00 -0400
-X-UUID: 65a262dc56ac42468293d65a1efd5524-20200407
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=90ccjNQIm3aIkIokkHZonC7L4E55DM1TNyxvh7zJNG8=;
-        b=QCDaE+PMKmfuJTJOZi+tcZCWZ0eU7d9ThVcUUrnEVw2JOV/qCxicEyyXAq8mmiSdPNl9A+3raP0nYdVeI5hwOqrCyOXGe7yVi6Lhp9Hk1BXT0gbd0mIPcR/kOV5Rx242O8PiwW2x1ni4iPoG0BAlDctTmKuJCtZa3odupYXSpGA=;
-X-UUID: 65a262dc56ac42468293d65a1efd5524-20200407
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1672264348; Tue, 07 Apr 2020 14:57:55 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 7 Apr 2020 14:57:53 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 7 Apr 2020 14:57:54 +0800
-Message-ID: <1586242674.19903.0.camel@mtkswgap22>
-Subject: Re: [PATCH v5 1/2] pinctrl: mediatek: make MediaTek pinctrl v2
- driver ready for buidling loadable module
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     Sean Wang <sean.wang@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>
-Date:   Tue, 7 Apr 2020 14:57:54 +0800
-In-Reply-To: <CAGp9LzoJ1MiqQhoRnqEgrTP6FycVGJLSQR41FOYK85ic2cgmLA@mail.gmail.com>
-References: <1585569648-14017-1-git-send-email-light.hsieh@mediatek.com>
-         <1585569648-14017-2-git-send-email-light.hsieh@mediatek.com>
-         <CAGp9LzoJ1MiqQhoRnqEgrTP6FycVGJLSQR41FOYK85ic2cgmLA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 7 Apr 2020 02:58:28 -0400
+Received: by mail-ed1-f65.google.com with SMTP id c7so2710820edl.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 23:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PTus1HhmAwjgtZusz47Cocd0rsgHoslXEjkAB1idN5Y=;
+        b=LmLVHk5Rma0Nob96e5PCxTU6PBnIl0GKYt6IMfMuzeXl+Cn+IpD0cHqvZKFogzUDYb
+         20M8qavHrZJ/oppK4Axr2ZxPsKYyRwS0c3r0ClLn+V3m9cUxz43hoiwh8Ht9t01HGuIl
+         aTvN0D+uzaCS6c8K3uVAILkdncJrNCXRr0W8N/zyEbrU3KaZJ+VpZW9yxL+oCRJgW69+
+         K11w5iz8ViJuSUUq72JQ5h3Pbs0q7pOUytT47Eg77EbM/Xa5HwkRuGX3Wk+6w7VR2E1a
+         OLZfq1v08YKU5Ya3f3ks/YBeH3UN9VPl7oQ5xHXJ2252OPK+Wf2jSoIFIVdGG9EZ3nqd
+         TiCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PTus1HhmAwjgtZusz47Cocd0rsgHoslXEjkAB1idN5Y=;
+        b=dCkhjxcAZ7cMIICruaK5y1aANiX2GIsXh16GlHvuJWzi6g2lliASNKiUJ8w1ux5ohP
+         VRJug2a7Sh9XYColqlhyiDLsnWa0eAwJNuSdq8H6xvKrel3yyTrMgWkQs/ajHqZ3CtRP
+         nxED/2EaayF2OHxJlg89hN6BbHUiA0u7+TW7oW9E9c00cXhqanrZKbX6E1s8cNOOZJes
+         uA4ZJfKU3F+Ro6btbOwjDZBLSLF3k925DWOa5HzjMnnwv9tx2wvDtpYmB9G4hNGXWzRE
+         fPakqEtGLlUgXf7NyKRoq+wi/tHNJKGG3UUju1bdWUnxWVHn3sTrqUQDCug7lnHMSI89
+         Bu+A==
+X-Gm-Message-State: AGi0Pua0vsvDKSuOOse7W7kdDVERztNSbde+R4hoZq+CyTPSfmkDNAC6
+        kEtvAWKRnLbojfyjCNmp7F7KrocQdhrt0dLqSBiDpKxsMsk=
+X-Google-Smtp-Source: APiQypLmjti+xb31CgGzLznKFFYtZ/CxeWVSEz3Rp3EHyb3R54c8nNJYU4UbSOv1BVwI4hIJZ78v77nix3e9VQlpHQk=
+X-Received: by 2002:a50:fa88:: with SMTP id w8mr617737edr.183.1586242705221;
+ Mon, 06 Apr 2020 23:58:25 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <a809feb7d7153a92e323416f744f1565e995da01.1586180592.git.angelo.ribeiro@synopsys.com>
+ <CAP-HsdQtdSeiSe3O8P6Pe587PYAqO48pGJLwf+Tvq20sY_nh=A@mail.gmail.com>
+In-Reply-To: <CAP-HsdQtdSeiSe3O8P6Pe587PYAqO48pGJLwf+Tvq20sY_nh=A@mail.gmail.com>
+From:   Adrian Pop <pop.adrian61@gmail.com>
+Date:   Tue, 7 Apr 2020 09:58:14 +0300
+Message-ID: <CAP-HsdRaSBrFHvVM1onwB1nj7P6k9Qwdpp547tNN9XZvXapqoQ@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/bridge: dw-mipi-dsi.c: Add VPG runtime config
+ through debugfs
+To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>
+Cc:     yannick.fertre@st.com, philippe.cornu@st.com,
+        benjamin.gaignard@st.com, airlied@linux.ie,
+        Daniel Vetter <daniel@ffwll.ch>, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, dri-devel@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTMxIGF0IDE0OjE1IC0wNzAwLCBTZWFuIFdhbmcgd3JvdGU6DQo+IEhp
-IExpZ2h0LA0KPiA+ICBpbnQgbXRrX3BpbmNvbmZfYmlhc19zZXRfcmV2MShzdHJ1Y3QgbXRrX3Bp
-bmN0cmwgKmh3LA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVj
-dCBtdGtfcGluX2Rlc2MgKmRlc2MsIGJvb2wgcHVsbHVwKQ0KPiA+IEBAIC00OTIsNiArNTAyLDcg
-QEAgaW50IG10a19waW5jb25mX2JpYXNfc2V0X3JldjEoc3RydWN0IG10a19waW5jdHJsICpodywN
-Cj4gPg0KPiA+ICAgICAgICAgcmV0dXJuIDA7DQo+ID4gIH0NCj4gPiArRVhQT1JUX1NZTUJPTF9H
-UEwobXRrX3BpbmNvbmZfYmlhc19zZXRfcmV2MSk7DQo+ID4NCj4gPiAgaW50IG10a19waW5jb25m
-X2JpYXNfZ2V0X3JldjEoc3RydWN0IG10a19waW5jdHJsICpodywNCj4gPiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9kZXNjICpkZXNjLCBib29sIHB1
-bGx1cCwNCj4gPiBAQCAtNTE3LDYgKzUyOCw3IEBAIGludCBtdGtfcGluY29uZl9iaWFzX2dldF9y
-ZXYxKHN0cnVjdCBtdGtfcGluY3RybCAqaHcsDQo+ID4NCj4gPiAgICAgICAgIHJldHVybiAwOw0K
-PiA+ICB9DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKG10a19waW5jb25mX2JpYXNfc2V0X3JldjEp
-Ow0KPiA+DQo+IA0KPiBJIGdvdCBidWlsZCBlcnJvciB3aXRoIHRoZSBwYXRjaA0KPiANCj4gLi4v
-ZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jOjUyOToxOiBl
-cnJvcjoNCj4gcmVkZWZpbml0aW9uIG9mICdfX2tzeW10YWJfbXRrX3BpbmNvbmZfYmlhc19zZXRf
-cmV2MScNCj4gLi4vZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12
-Mi5jOjUwMzoxOiBub3RlOg0KPiBwcmV2aW91cyBkZWZpbml0aW9uIG9mICdfX2tzeW10YWJfbXRr
-X3BpbmNvbmZfYmlhc19zZXRfcmV2MScgd2FzIGhlcmUNCj4gbWFrZVs0XTogKioqIFtkcml2ZXJz
-L3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLm9dIEVycm9yIDENCj4gDQoN
-Ckkgd2lsbCBjb3JyZWN0IGl0IG9uIHY2Lg0KDQo+ID4gIC8qIENvbWJvIGZvciB0aGUgZm9sbG93
-aW5nIHB1bGwgcmVnaXN0ZXIgdHlwZToNCj4gPiAgICogMS4gUFUgKyBQRA0KPiA+IEBAIC03MTcs
-NiArNzI5LDcgQEAgaW50IG10a19waW5jb25mX2JpYXNfc2V0X2NvbWJvKHN0cnVjdCBtdGtfcGlu
-Y3RybCAqaHcsDQo+ID4gIG91dDoNCj4gPiAgICAgICAgIHJldHVybiBlcnI7DQo+ID4gIH0NCj4g
-PiArRVhQT1JUX1NZTUJPTF9HUEwobXRrX3BpbmNvbmZfYmlhc19zZXRfY29tYm8pOw0KPiA+DQo+
-IDxzbmlwPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3Ry
-bC1wYXJpcy5jIGIvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYw0KPiA+
-IGluZGV4IDgzYmYyOWMuLjg4MjNjMGMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9waW5jdHJs
-L21lZGlhdGVrL3BpbmN0cmwtcGFyaXMuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9tZWRp
-YXRlay9waW5jdHJsLXBhcmlzLmMNCj4gPiBAQCAtMTAsNiArMTAsNyBAQA0KPiA+ICAgKi8NCj4g
-Pg0KPiA+ICAjaW5jbHVkZSA8bGludXgvZ3Bpby9kcml2ZXIuaD4NCj4gPiArI2luY2x1ZGUgPGxp
-bnV4L21vZHVsZS5oPg0KPiA+ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcGluY3RybC9tdDY1eHgu
-aD4NCj4gPiAgI2luY2x1ZGUgInBpbmN0cmwtcGFyaXMuaCINCj4gPg0KPiA+IEBAIC02MzMsNiAr
-NjM0LDcgQEAgc3NpemVfdCBtdGtfcGN0cmxfc2hvd19vbmVfcGluKHN0cnVjdCBtdGtfcGluY3Ry
-bCAqaHcsDQo+ID4NCj4gPiAgICAgICAgIHJldHVybiBsZW47DQo+ID4gIH0NCj4gPiArRVhQT1JU
-X1NZTUJPTF9HUEwobXRrX3BjdHJsX3Nob3dfb25lX3Bpbik7DQo+ID4NCj4gPiAgI2RlZmluZSBQ
-SU5fREJHX0JVRl9TWiA5Ng0KPiA+ICBzdGF0aWMgdm9pZCBtdGtfcGN0cmxfZGJnX3Nob3coc3Ry
-dWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LCBzdHJ1Y3Qgc2VxX2ZpbGUgKnMsDQo+ID4gQEAgLTEw
-MzcsMyArMTAzOSw3IEBAIHN0YXRpYyBpbnQgbXRrX3BhcmlzX3BpbmN0cmxfcmVzdW1lKHN0cnVj
-dCBkZXZpY2UgKmRldmljZSkNCj4gPiAgICAgICAgIC5zdXNwZW5kX25vaXJxID0gbXRrX3Bhcmlz
-X3BpbmN0cmxfc3VzcGVuZCwNCj4gPiAgICAgICAgIC5yZXN1bWVfbm9pcnEgPSBtdGtfcGFyaXNf
-cGluY3RybF9yZXN1bWUsDQo+ID4gIH07DQo+ID4gK0VYUE9SVF9TWU1CT0xfR1BMKG10a19wYXJp
-c19waW5jdHJsX3Byb2JlKTsNCj4gDQo+IHBsYWNlIEVYUE9SVF9TWU1CT0xfR1BMKG10a19wYXJp
-c19waW5jdHJsX3Byb2JlKSBleGFjdGx5IGF0IHRoZSB0YWlsDQo+IG9mIG10a19wYXJpc19waW5j
-dHJsX3Byb2JlIGRlZmluaXRpb24uDQo+IA0KDQpJIHdpbGwgbW92ZSBpdC4NCg0KPiA+ICsNCj4g
-PiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIpOw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1l
-ZGlhVGVrIFBpbmN0cmwgQ29tbW9uIERyaXZlciBWMiBQYXJpcyIpOw0KPiA+IC0tDQo+ID4gMS44
-LjEuMS5kaXJ0eQ0KDQo=
+Tested-by: Adrian Pop <pop.adrian61@gmail.com>
+Tested OK on STM32F769i-DISCO, DSI v1.30, on next-20200406.
 
+On Mon, Apr 6, 2020 at 8:45 PM Adrian Pop <pop.adrian61@gmail.com> wrote:
+>
+> Hello Angelo,
+>
+> Tested OK on STM32F769i-DISCO, DSI v1.30, on next-20200406. I guess
+> there is no horizontal for BER.
+>
+> Regards,
+> Adrian
+>
+> On Mon, Apr 6, 2020 at 4:49 PM Angelo Ribeiro
+> <Angelo.Ribeiro@synopsys.com> wrote:
+> >
+> > Add support for the video pattern generator (VPG) BER pattern mode and
+> > configuration in runtime.
+> >
+> > This enables using the debugfs interface to manipulate the VPG after
+> > the pipeline is set.
+> > Also, enables the usage of the VPG BER pattern.
+> >
+> > Changes in v2:
+> >   - Added VID_MODE_VPG_MODE
+> >   - Solved incompatible return type on __get and __set
+> >
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reported-by: Adrian Pop <pop.adrian61@gmail.com>
+> > Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > Cc: Joao Pinto <jpinto@synopsys.com>
+> > Cc: Jose Abreu <jose.abreu@synopsys.com>
+> > Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> > ---
+> >  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 98 ++++++++++++++++++++++++---
+> >  1 file changed, 90 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> > index b18351b..9de3645 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> > @@ -91,6 +91,7 @@
+> >  #define VID_MODE_TYPE_BURST                    0x2
+> >  #define VID_MODE_TYPE_MASK                     0x3
+> >  #define VID_MODE_VPG_ENABLE            BIT(16)
+> > +#define VID_MODE_VPG_MODE              BIT(20)
+> >  #define VID_MODE_VPG_HORIZONTAL                BIT(24)
+> >
+> >  #define DSI_VID_PKT_SIZE               0x3c
+> > @@ -221,6 +222,21 @@
+> >  #define PHY_STATUS_TIMEOUT_US          10000
+> >  #define CMD_PKT_STATUS_TIMEOUT_US      20000
+> >
+> > +#ifdef CONFIG_DEBUG_FS
+> > +#define VPG_DEFS(name, dsi) \
+> > +       ((void __force *)&((*dsi).vpg_defs.name))
+> > +
+> > +#define REGISTER(name, mask, dsi) \
+> > +       { #name, VPG_DEFS(name, dsi), mask, dsi }
+> > +
+> > +struct debugfs_entries {
+> > +       const char                              *name;
+> > +       bool                                    *reg;
+> > +       u32                                     mask;
+> > +       struct dw_mipi_dsi                      *dsi;
+> > +};
+> > +#endif /* CONFIG_DEBUG_FS */
+> > +
+> >  struct dw_mipi_dsi {
+> >         struct drm_bridge bridge;
+> >         struct mipi_dsi_host dsi_host;
+> > @@ -238,9 +254,12 @@ struct dw_mipi_dsi {
+> >
+> >  #ifdef CONFIG_DEBUG_FS
+> >         struct dentry *debugfs;
+> > -
+> > -       bool vpg;
+> > -       bool vpg_horizontal;
+> > +       struct debugfs_entries *debugfs_vpg;
+> > +       struct {
+> > +               bool vpg;
+> > +               bool vpg_horizontal;
+> > +               bool vpg_ber_pattern;
+> > +       } vpg_defs;
+> >  #endif /* CONFIG_DEBUG_FS */
+> >
+> >         struct dw_mipi_dsi *master; /* dual-dsi master ptr */
+> > @@ -530,9 +549,11 @@ static void dw_mipi_dsi_video_mode_config(struct dw_mipi_dsi *dsi)
+> >                 val |= VID_MODE_TYPE_NON_BURST_SYNC_EVENTS;
+> >
+> >  #ifdef CONFIG_DEBUG_FS
+> > -       if (dsi->vpg) {
+> > +       if (dsi->vpg_defs.vpg) {
+> >                 val |= VID_MODE_VPG_ENABLE;
+> > -               val |= dsi->vpg_horizontal ? VID_MODE_VPG_HORIZONTAL : 0;
+> > +               val |= dsi->vpg_defs.vpg_horizontal ?
+> > +                      VID_MODE_VPG_HORIZONTAL : 0;
+> > +               val |= dsi->vpg_defs.vpg_ber_pattern ? VID_MODE_VPG_MODE : 0;
+> >         }
+> >  #endif /* CONFIG_DEBUG_FS */
+> >
+> > @@ -961,6 +982,68 @@ static const struct drm_bridge_funcs dw_mipi_dsi_bridge_funcs = {
+> >
+> >  #ifdef CONFIG_DEBUG_FS
+> >
+> > +int dw_mipi_dsi_debugfs_write(void *data, u64 val)
+> > +{
+> > +       struct debugfs_entries *vpg = data;
+> > +       struct dw_mipi_dsi *dsi;
+> > +       u32 mode_cfg;
+> > +
+> > +       if (!vpg)
+> > +               return -ENODEV;
+> > +
+> > +       dsi = vpg->dsi;
+> > +
+> > +       *vpg->reg = (bool)val;
+> > +
+> > +       mode_cfg = dsi_read(dsi, DSI_VID_MODE_CFG);
+> > +
+> > +       if (*vpg->reg)
+> > +               mode_cfg |= vpg->mask;
+> > +       else
+> > +               mode_cfg &= ~vpg->mask;
+> > +
+> > +       dsi_write(dsi, DSI_VID_MODE_CFG, mode_cfg);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +int dw_mipi_dsi_debugfs_show(void *data, u64 *val)
+> > +{
+> > +       struct debugfs_entries *vpg = data;
+> > +
+> > +       if (!vpg)
+> > +               return -ENODEV;
+> > +
+> > +       *val = *vpg->reg;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_mipi_dsi_debugfs_show,
+> > +                        dw_mipi_dsi_debugfs_write, "%llu\n");
+> > +
+> > +static void debugfs_create_files(void *data)
+> > +{
+> > +       struct dw_mipi_dsi *dsi = data;
+> > +       struct debugfs_entries debugfs[] = {
+> > +               REGISTER(vpg, VID_MODE_VPG_ENABLE, dsi),
+> > +               REGISTER(vpg_horizontal, VID_MODE_VPG_HORIZONTAL, dsi),
+> > +               REGISTER(vpg_ber_pattern, VID_MODE_VPG_MODE, dsi),
+> > +       };
+> > +       int i;
+> > +
+> > +       dsi->debugfs_vpg = kmalloc(sizeof(debugfs), GFP_KERNEL);
+> > +       if (!dsi->debugfs_vpg)
+> > +               return;
+> > +
+> > +       memcpy(dsi->debugfs_vpg, debugfs, sizeof(debugfs));
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(debugfs); i++)
+> > +               debugfs_create_file(dsi->debugfs_vpg[i].name, 0644,
+> > +                                   dsi->debugfs, &dsi->debugfs_vpg[i],
+> > +                                   &fops_x32);
+> > +}
+> > +
+> >  static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi)
+> >  {
+> >         dsi->debugfs = debugfs_create_dir(dev_name(dsi->dev), NULL);
+> > @@ -969,14 +1052,13 @@ static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi)
+> >                 return;
+> >         }
+> >
+> > -       debugfs_create_bool("vpg", 0660, dsi->debugfs, &dsi->vpg);
+> > -       debugfs_create_bool("vpg_horizontal", 0660, dsi->debugfs,
+> > -                           &dsi->vpg_horizontal);
+> > +       debugfs_create_files(dsi);
+> >  }
+> >
+> >  static void dw_mipi_dsi_debugfs_remove(struct dw_mipi_dsi *dsi)
+> >  {
+> >         debugfs_remove_recursive(dsi->debugfs);
+> > +       kfree(dsi->debugfs_vpg);
+> >  }
+> >
+> >  #else
+> > --
+> > 2.7.4
+> >
