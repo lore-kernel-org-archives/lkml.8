@@ -2,126 +2,99 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F17C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7AFC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8FB2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7608920771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:14:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y+PUf4/I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZZoapT47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgDGSOE (ORCPT
+        id S1726681AbgDGSOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:14:04 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33559 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgDGSOE (ORCPT
+        Tue, 7 Apr 2020 14:14:07 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48754 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgDGSOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:14:04 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay1so1557162plb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 11:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PeiZnJCEZqQc3Rqpk45c1lEucyFQ8/zMMdEk9YtKXts=;
-        b=Y+PUf4/ItL0F+5y8tsRBf+kNreItmx9FrKwi5SiANr06qTw66OGN+bynO38NPjRCxF
-         dXLfvMaQcQxA4gXWi5uboU6rC8p1zSePp59K/vOjX1o6XWPy+1620KI7YA22wae9JRsX
-         KxEoRF8kdPb6y8ddg7dfVOwafjoUKtI0tZLmOaEunAqjoNKTNyRgtD74+rT2t/JwGye+
-         siU98mSYL3CG+KWPIzD/1F2vSrkqtl2Vauwv+IdVhin9oCylWjSxWx5bR5TExnuqTSTL
-         UIuWTmq6jv0kWnTgqKj/pxd0f/sZZWusq7acyEGXLPMI34hFInfYFj1Kjvj7VbMjVD5j
-         O5Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PeiZnJCEZqQc3Rqpk45c1lEucyFQ8/zMMdEk9YtKXts=;
-        b=aPYQxatBvB0WWatAgVTHGfHVtT7sCbxS2lDkQ688ieoQCFDn+/35Awwk1CbK0YoDjZ
-         eYV5r26MN8tRMa+af9K2dI3MyZPDstw7IpPbtqlYX5g38qT8KoJtdBHZcZu6XdWF4KVK
-         Y6nDV5WGZP6+D/m573u/GKkzYV21DQnLjRlZBsn9hq5ja1sdkS4ZCNw8XZsZQ2xJ+4+S
-         wRORx2nZh8sSeL0P6X91s7ROl4kpdolz7S/oIYoysjRCEyHKGlSH522a0mz01c97EU4j
-         sWXdaieP9ccrg4x6cIlAp8/xOmWlQPTmKCQ6Big2oQ4HwMnrfpTDs+OrxPfdkzwYYpTo
-         gOwQ==
-X-Gm-Message-State: AGi0PuYJq6c/jQC4ZQdb2ShcdL1W5vMU/M4B0T8b3rh/u+GKblElo++m
-        WO2DQLiNW7/F0PaOlcnn4KXdCDfqBms9PcLoH7sQ9A==
-X-Google-Smtp-Source: APiQypJKouIIKhONDkOghKTAW34SOEQnio5T0ysv+Iu/ELxMBu4fc4dVDMgQPcZZE3yIw33w58OEv/qC/oYsouUrQM0=
-X-Received: by 2002:a17:90a:8085:: with SMTP id c5mr568939pjn.186.1586283241410;
- Tue, 07 Apr 2020 11:14:01 -0700 (PDT)
+        Tue, 7 Apr 2020 14:14:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KI8clYhavNExjpTnyuAzjWnFiJ2tpeJN+uus0XHQTjA=; b=ZZoapT47u50iTPkKIzN25A0jLi
+        fPzgW9MDVU2fcs5aHyn5+WZ9R1PXnKVIAdUeklxxs1W5IviCKzO6OeLoTJqGKyPiohOxKlSQP0hx+
+        6vRS2jDcpo5XsleVDML2xIGc8hFSyRYwN5OZRfbgISYjOnYxzCnlqkfbSmXtXvM+DLpSd3vX1WCqp
+        ZdclOA4ptD+Y9De20/ePCZRJULb1r4aqnsqgz8Y30x7I5ZSIQILcw55zePsO1OQav73LgqwgYvZTb
+        XWrlcX9EgdokNUMSaE7wRi4psaHvjqtOmhhh46FKyqCACdM31e01pQ/qYuSP6ixgchktz74TTYiNn
+        wplao8Mg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLsj2-0006wZ-Fl; Tue, 07 Apr 2020 18:13:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8AF643007CD;
+        Tue,  7 Apr 2020 20:13:25 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6C9352BA2A486; Tue,  7 Apr 2020 20:13:25 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 20:13:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        hch@infradead.org, sean.j.christopherson@intel.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
+        pbonzini@redhat.com, fenghua.yu@intel.com, xiaoyao.li@intel.com,
+        nadav.amit@gmail.com, thellstrom@vmware.com, tony.luck@intel.com,
+        rostedt@goodmis.org, gregkh@linuxfoundation.org, jannh@google.com,
+        David.Laight@aculab.com, dcovelli@vmware.com, mhiramat@kernel.org
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+Message-ID: <20200407181325.GJ20730@hirez.programming.kicks-ass.net>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.429362016@infradead.org>
+ <202004070958.CB8A3DA71D@keescook>
 MIME-Version: 1.0
-References: <29b5043db9a51ef7a0cb6e3a8c69c91e36045cd6.1585944770.git.mirq-linux@rere.qmqm.pl>
- <202004050928.d6QhVcsQ%lkp@intel.com>
-In-Reply-To: <202004050928.d6QhVcsQ%lkp@intel.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 7 Apr 2020 11:13:50 -0700
-Message-ID: <CAKwvOdm5BhMdAmXR0gCLntkbvF7ajaNoWoHVCCio1CqbGzS6aQ@mail.gmail.com>
-Subject: Re: [PATCH v3 07/11] power: supply: core: tabularize HWMON
- temperature labels
-To:     kbuild test robot <lkp@intel.com>
-Cc:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202004070958.CB8A3DA71D@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 4, 2020 at 6:53 PM kbuild test robot <lkp@intel.com> wrote:
->
-> Hi "Micha=C5=82,
->
-> I love your patch! Perhaps something to improve:
->
-> [auto build test WARNING on power-supply/for-next]
-> [also build test WARNING on hwmon/hwmon-next linus/master v5.6 next-20200=
-404]
-> [if your patch is applied to the wrong git tree, please drop us a note to=
- help
-> improve the system. BTW, we also suggest to use '--base' option to specif=
-y the
-> base tree in git format-patch, please see https://stackoverflow.com/a/374=
-06982]
->
-> url:    https://github.com/0day-ci/linux/commits/Micha-Miros-aw/extension=
-s-and-fixes/20200405-044024
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-s=
-upply.git for-next
-> config: x86_64-randconfig-b002-20200405 (attached as .config)
-> compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 62f3=
-a9650a9f289a07a5f480764fb655178c2334)
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
-n/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER=3Dclang make.cross ARCH=3Dx86_64
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>):
->
-> >> drivers/power/supply/power_supply_hwmon.o: warning: objtool: power_sup=
-ply_hwmon_read_string() falls through to next function power_supply_hwmon_w=
-rite()
+On Tue, Apr 07, 2020 at 10:01:04AM -0700, Kees Cook wrote:
+> On Tue, Apr 07, 2020 at 01:02:40PM +0200, Peter Zijlstra wrote:
+> > Since we now have infrastructure to analyze module text, disallow
+> > modules that write to CRn and DRn registers.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  arch/x86/kernel/module.c |   21 +++++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> > 
+> > --- a/arch/x86/kernel/module.c
+> > +++ b/arch/x86/kernel/module.c
+> > @@ -266,6 +266,22 @@ static bool insn_is_vmx(struct insn *ins
+> >  	return false;
+> >  }
+> >  
+> > +static bool insn_is_mov_CRn(struct insn *insn)
+> > +{
+> > +	if (insn->opcode.bytes[0] == 0x0f && insn->opcode.bytes[1] == 0x22)
+> > +		return true;
+> 
+> I always cringe at numeric literals. Would it be overkill to add defines
+> for these (and the others that have comments next to them in 3/4)? It
+> makes stuff easier to grep, etc. (e.g. we have register names in
+> arch/x86/include/asm/asm.h, do we need instruction names somewhere else?
+> I assume objtool has a bunch of this too...)
 
-I'm guessing this is from the unreachable:
-https://github.com/0day-ci/linux/commit/b8b2d14ca46ca54257f55c9af58ea25695b=
-9ee36
-I'll need to play with this some more as I couldn't reproduce with a
-simplified test case, but looks like a compiler bug.  Filed
-https://github.com/ClangBuiltLinux/linux/issues/978 for me to track.
+objtool does not, have a peek at tools/objtool/arch/x86/decode.c
 
---=20
-Thanks,
-~Nick Desaulniers
+I'm not sure what the best way is here, the x86 opcode map is a
+disaster. Even the mnemonic doesn't help us here, as that's just MOV :/
