@@ -2,51 +2,53 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8086EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92503C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515942082D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686562078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217765;
-	bh=vdgwYlSOFs28XcipsvxT05S44fVtgoTHlfCzcQhrxhE=;
+	s=default; t=1586217772;
+	bh=BBHeFuIcrBYXQBzFmpKiIswHl6r7nRmKWeM0X9US+6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=akzrqwlYF33M9S3AxalNERG7KE6cCbcrw17radQk5WRgX/ujUBbag11fbkhjjYMjZ
-	 ASRW79P/6DY3ILolfHrS60kY9Phua/KHACRXCPb2CyyvlZYaHfPCUn+0Z59tX8bxQT
-	 o4pJkqAdUkBKALavHEzfuYiOamLWY83Gy+pgM9YM=
+	b=gCJ5MG+rFyqwD4+oehSyhuYpOJwngQHM7TSeSzCkXP4AQ54Bw4MzCJFVdUjOxvyz3
+	 Qbyw20N+KkWV7EKRYmSOVi7HhAyN5uFsRLIR8y0n/42KhhP2R1hEKK/TdN3Su9AHqg
+	 XwxlX189fZ+i5w8lElpMA3d8Z0bB0dQ0Li4GLmug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgDGACo (ORCPT
+        id S1728273AbgDGACv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37556 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728143AbgDGACm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:42 -0400
+        id S1728239AbgDGACs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA9D2080C;
-        Tue,  7 Apr 2020 00:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A9132082D;
+        Tue,  7 Apr 2020 00:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217761;
-        bh=vdgwYlSOFs28XcipsvxT05S44fVtgoTHlfCzcQhrxhE=;
+        s=default; t=1586217767;
+        bh=BBHeFuIcrBYXQBzFmpKiIswHl6r7nRmKWeM0X9US+6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2fMoTF9kuV7qBA0lxyFHz3T4i0duwXgMQRa3ChGTvulyAsksNCciSya2D4EbouTeg
-         neRzxrG/M+fiHTa32SyClsNTd3YT268aUUXkZmHg+YnXY+43Ou6uhZIoMXJ8DSYkZq
-         Fvnlujlq38PM38JseeMW8WAknT900DfvZ6PbFV64=
+        b=z1daN0a449f16DWzOTsm7YiiLZG342awquu+JBtBhwwADOvZdbJmhHH/SlT6y2eJ0
+         xUZA8QvZ1ePITD6Azlsjn6PSys2anPU2ouHsNKASBzMwL2lWdApKjZtbGL2zv2XvSC
+         cNnt1PHI1GtgwjnIxHXLxcNk/zWwgeAcmOD+NaNw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zheng Wei <wei.zheng@vivo.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/13] net: vxge: fix wrong __VA_ARGS__ usage
-Date:   Mon,  6 Apr 2020 20:02:26 -0400
-Message-Id: <20200407000234.17088-5-sashal@kernel.org>
+Cc:     Stefano Brivio <sbrivio@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/13] netfilter: nft_set_rbtree: Detect partial overlaps on insertion
+Date:   Mon,  6 Apr 2020 20:02:31 -0400
+Message-Id: <20200407000234.17088-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000234.17088-1-sashal@kernel.org>
 References: <20200407000234.17088-1-sashal@kernel.org>
@@ -59,96 +61,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Wei <wei.zheng@vivo.com>
+From: Stefano Brivio <sbrivio@redhat.com>
 
-[ Upstream commit b317538c47943f9903860d83cc0060409e12d2ff ]
+[ Upstream commit 7c84d41416d836ef7e533bd4d64ccbdf40c5ac70 ]
 
-printk in macro vxge_debug_ll uses __VA_ARGS__ without "##" prefix,
-it causes a build error when there is no variable
-arguments(e.g. only fmt is specified.).
+...and return -ENOTEMPTY to the front-end in this case, instead of
+proceeding. Currently, nft takes care of checking for these cases
+and not sending them to the kernel, but if we drop the set_overlap()
+call in nft we can end up in situations like:
 
-Signed-off-by: Zheng Wei <wei.zheng@vivo.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ # nft add table t
+ # nft add set t s '{ type inet_service ; flags interval ; }'
+ # nft add element t s '{ 1 - 5 }'
+ # nft add element t s '{ 6 - 10 }'
+ # nft add element t s '{ 4 - 7 }'
+ # nft list set t s
+ table ip t {
+ 	set s {
+ 		type inet_service
+ 		flags interval
+ 		elements = { 1-3, 4-5, 6-7 }
+ 	}
+ }
+
+This change has the primary purpose of making the behaviour
+consistent with nft_set_pipapo, but is also functional to avoid
+inconsistent behaviour if userspace sends overlapping elements for
+any reason.
+
+v2: When we meet the same key data in the tree, as start element while
+    inserting an end element, or as end element while inserting a start
+    element, actually check that the existing element is active, before
+    resetting the overlap flag (Pablo Neira Ayuso)
+
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/neterion/vxge/vxge-config.h |  2 +-
- drivers/net/ethernet/neterion/vxge/vxge-main.h   | 14 +++++++-------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ net/netfilter/nft_set_rbtree.c | 70 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 67 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-config.h b/drivers/net/ethernet/neterion/vxge/vxge-config.h
-index d743a37a3cee8..e5dda2c27f187 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-config.h
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-config.h
-@@ -2065,7 +2065,7 @@ vxge_hw_vpath_strip_fcs_check(struct __vxge_hw_device *hldev, u64 vpath_mask);
- 	if ((level >= VXGE_ERR && VXGE_COMPONENT_LL & VXGE_DEBUG_ERR_MASK) ||  \
- 	    (level >= VXGE_TRACE && VXGE_COMPONENT_LL & VXGE_DEBUG_TRACE_MASK))\
- 		if ((mask & VXGE_DEBUG_MASK) == mask)			       \
--			printk(fmt "\n", __VA_ARGS__);			       \
-+			printk(fmt "\n", ##__VA_ARGS__);		       \
- } while (0)
- #else
- #define vxge_debug_ll(level, mask, fmt, ...)
-diff --git a/drivers/net/ethernet/neterion/vxge/vxge-main.h b/drivers/net/ethernet/neterion/vxge/vxge-main.h
-index 59a57ff5e96af..9c86f4f9cd424 100644
---- a/drivers/net/ethernet/neterion/vxge/vxge-main.h
-+++ b/drivers/net/ethernet/neterion/vxge/vxge-main.h
-@@ -452,49 +452,49 @@ int vxge_fw_upgrade(struct vxgedev *vdev, char *fw_name, int override);
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index 84d317418d184..1769e8c473e11 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -210,8 +210,43 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+ 	u8 genmask = nft_genmask_next(net);
+ 	struct nft_rbtree_elem *rbe;
+ 	struct rb_node *parent, **p;
++	bool overlap = false;
+ 	int d;
  
- #if (VXGE_DEBUG_LL_CONFIG & VXGE_DEBUG_MASK)
- #define vxge_debug_ll_config(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_LL_CONFIG, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_ll_config(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_INIT & VXGE_DEBUG_MASK)
- #define vxge_debug_init(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_INIT, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_init(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_TX & VXGE_DEBUG_MASK)
- #define vxge_debug_tx(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_TX, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_tx(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_RX & VXGE_DEBUG_MASK)
- #define vxge_debug_rx(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_RX, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_rx(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_MEM & VXGE_DEBUG_MASK)
- #define vxge_debug_mem(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_MEM, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_mem(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_ENTRYEXIT & VXGE_DEBUG_MASK)
- #define vxge_debug_entryexit(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_ENTRYEXIT, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_entryexit(level, fmt, ...)
- #endif
- 
- #if (VXGE_DEBUG_INTR & VXGE_DEBUG_MASK)
- #define vxge_debug_intr(level, fmt, ...) \
--	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, __VA_ARGS__)
-+	vxge_debug_ll(level, VXGE_DEBUG_INTR, fmt, ##__VA_ARGS__)
- #else
- #define vxge_debug_intr(level, fmt, ...)
- #endif
++	/* Detect overlaps as we descend the tree. Set the flag in these cases:
++	 *
++	 * a1. |__ _ _?  >|__ _ _  (insert start after existing start)
++	 * a2. _ _ __>|  ?_ _ __|  (insert end before existing end)
++	 * a3. _ _ ___|  ?_ _ _>|  (insert end after existing end)
++	 * a4. >|__ _ _   _ _ __|  (insert start before existing end)
++	 *
++	 * and clear it later on, as we eventually reach the points indicated by
++	 * '?' above, in the cases described below. We'll always meet these
++	 * later, locally, due to tree ordering, and overlaps for the intervals
++	 * that are the closest together are always evaluated last.
++	 *
++	 * b1. |__ _ _!  >|__ _ _  (insert start after existing end)
++	 * b2. _ _ __>|  !_ _ __|  (insert end before existing start)
++	 * b3. !_____>|            (insert end after existing start)
++	 *
++	 * Case a4. resolves to b1.:
++	 * - if the inserted start element is the leftmost, because the '0'
++	 *   element in the tree serves as end element
++	 * - otherwise, if an existing end is found. Note that end elements are
++	 *   always inserted after corresponding start elements.
++	 *
++	 * For a new, rightmost pair of elements, we'll hit cases b1. and b3.,
++	 * in that order.
++	 *
++	 * The flag is also cleared in two special cases:
++	 *
++	 * b4. |__ _ _!|<_ _ _   (insert start right before existing end)
++	 * b5. |__ _ >|!__ _ _   (insert end right after existing start)
++	 *
++	 * which always happen as last step and imply that no further
++	 * overlapping is possible.
++	 */
++
+ 	parent = NULL;
+ 	p = &priv->root.rb_node;
+ 	while (*p != NULL) {
+@@ -220,17 +255,42 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+ 		d = memcmp(nft_set_ext_key(&rbe->ext),
+ 			   nft_set_ext_key(&new->ext),
+ 			   set->klen);
+-		if (d < 0)
++		if (d < 0) {
+ 			p = &parent->rb_left;
+-		else if (d > 0)
++
++			if (nft_rbtree_interval_start(new)) {
++				overlap = nft_rbtree_interval_start(rbe) &&
++					  nft_set_elem_active(&rbe->ext,
++							      genmask);
++			} else {
++				overlap = nft_rbtree_interval_end(rbe) &&
++					  nft_set_elem_active(&rbe->ext,
++							      genmask);
++			}
++		} else if (d > 0) {
+ 			p = &parent->rb_right;
+-		else {
++
++			if (nft_rbtree_interval_end(new)) {
++				overlap = nft_rbtree_interval_end(rbe) &&
++					  nft_set_elem_active(&rbe->ext,
++							      genmask);
++			} else if (nft_rbtree_interval_end(rbe) &&
++				   nft_set_elem_active(&rbe->ext, genmask)) {
++				overlap = true;
++			}
++		} else {
+ 			if (nft_rbtree_interval_end(rbe) &&
+ 			    nft_rbtree_interval_start(new)) {
+ 				p = &parent->rb_left;
++
++				if (nft_set_elem_active(&rbe->ext, genmask))
++					overlap = false;
+ 			} else if (nft_rbtree_interval_start(rbe) &&
+ 				   nft_rbtree_interval_end(new)) {
+ 				p = &parent->rb_right;
++
++				if (nft_set_elem_active(&rbe->ext, genmask))
++					overlap = false;
+ 			} else if (nft_set_elem_active(&rbe->ext, genmask)) {
+ 				*ext = &rbe->ext;
+ 				return -EEXIST;
+@@ -239,6 +299,10 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+ 			}
+ 		}
+ 	}
++
++	if (overlap)
++		return -ENOTEMPTY;
++
+ 	rb_link_node_rcu(&new->node, parent, p);
+ 	rb_insert_color(&new->node, &priv->root);
+ 	return 0;
 -- 
 2.20.1
 
