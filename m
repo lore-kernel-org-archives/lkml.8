@@ -2,162 +2,94 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3E8C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EF8C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508F620644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vJwu8vd7"
+	by mail.kernel.org (Postfix) with ESMTP id 820CE20692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbgDGGnn (ORCPT
+        id S1727308AbgDGGqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:43:43 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:37203 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbgDGGnm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:43:42 -0400
-Received: by mail-yb1-f196.google.com with SMTP id n2so1250881ybg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 23:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o+lddGcmZZMWCWY/hrwQ/sl6NL2A6Ox6QLM0MeNapFc=;
-        b=vJwu8vd7xgWlMCEr4QgadrLlWKjCvorA+xVbSYejayzEt+gA2FoHMzPUggmJLOFRBM
-         tDR7wgEEj9wM/JuVmS7Is+8Ri++9uuHQa8rxrOGrj+Od3SFd+d65RWF2XkJ86IEn3zoL
-         igGlkcx8HWrq1LF/8RoG+2LyyKR34yShR2CeCjpEyx29DR1+Yxd5MmiGwNgOcZyPVJgK
-         qM0xSQPdOzg5TFz50cjC3QaAYwy9ztVgS/Yeg5bEzmUcsw0iwiGDkM2+Gq7E387GPso4
-         rdjCaASc36vSK8qQZZHsYL+YC24MZISUYSg97fWM8D3oKcgNv4tdrP4yL1RJcdlGSF8i
-         7HhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o+lddGcmZZMWCWY/hrwQ/sl6NL2A6Ox6QLM0MeNapFc=;
-        b=aQjxWx4whaBqSvALNzTYPeEJy7jJCWQDM64P2/BOtz+7QgVAP7oPSsnIq8ISb6HDAn
-         tWkDdrDcWOu0qiEoncARIapedn+BGuFyVXC21P5gV2DasXoYb81QufZmiwxeDG8MZtia
-         p1pwUTx+TB1VdfhkkP/D52NBoW55y0RP0j32CCfYo5XalCrsTVEdbXPPoNgaTj8o+lGc
-         /HeXC0ObU9FxskACKRR4I9r1WxuwMD2NlLD3e7DKOARnEcvhp8utlIafnbANTF5nlzc0
-         O1L0eeudWUjs+bVKCiNP+wyLWKczL39rl3+zILz0O51IT6GT06Z42+uNse6trlNvu4jI
-         qK1A==
-X-Gm-Message-State: AGi0PuaZu4TItm/52/gL0Phu5YyuIQv3hWBOi+plY5tXr0+EwPDaSCfp
-        evOCv6aEZ+69rMgirT7ioGTUXwlHGX9xMd1Tc8eHTw==
-X-Google-Smtp-Source: APiQypLj57aHxYP8mfedHKGyTcUe1VwkNrUoXV0C492PLl4l8oHMQEo5CkNqqE8/55Bl77tsGd7tbKB9QXgfkdgO5zk=
-X-Received: by 2002:a25:4443:: with SMTP id r64mr1441717yba.41.1586241821140;
- Mon, 06 Apr 2020 23:43:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200323235846.104937-1-irogers@google.com> <20200324102732.GR1534489@krava>
-In-Reply-To: <20200324102732.GR1534489@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 6 Apr 2020 23:43:29 -0700
-Message-ID: <CAP-5=fX346zwohXP_xgoZHyq4JSbV8hdLPvBR3ZpS_iOHcX1hA@mail.gmail.com>
-Subject: Re: [PATCH v5] perf tools: add support for libpfm4
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 7 Apr 2020 02:46:43 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:42392 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgDGGqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 02:46:43 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C14CC1A1B55;
+        Tue,  7 Apr 2020 08:46:41 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 753331A1AD9;
+        Tue,  7 Apr 2020 08:46:37 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id BBB5040246;
+        Tue,  7 Apr 2020 14:46:31 +0800 (SGT)
+From:   Biwen Li <biwen.li@oss.nxp.com>
+To:     shawnguo@kernel.org, ran.wang_1@nxp.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiafei.pan@nxp.com, Biwen Li <biwen.li@nxp.com>
+Subject: [RESEND 1/4] arm64: dts: lx2160a: add ftm_alarm0 DT node
+Date:   Tue,  7 Apr 2020 14:42:48 +0800
+Message-Id: <20200407064251.39244-1-biwen.li@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 3:28 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
-> > This patch links perf with the libpfm4 library if it is available and
-> > NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
-> > event tables for all processors supported by perf_events. It is a helper
-> > library that helps convert from a symbolic event name to the event
-> > encoding required by the underlying kernel interface. This
-> > library is open-source and available from: http://perfmon2.sf.net.
-> >
-> > With this patch, it is possible to specify full hardware events
-> > by name. Hardware filters are also supported. Events must be
-> > specified via the --pfm-events and not -e option. Both options
-> > are active at the same time and it is possible to mix and match:
-> >
-> > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
-> >
-> > v5 is a rebase.
-> > v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-> >    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
-> >    missed in v3.
-> > v3 is against acme/perf/core and removes a diagnostic warning.
-> > v2 of this patch makes the --pfm-events man page documentation
-> > conditional on libpfm4 behing configured. It tidies some of the
-> > documentation and adds the feature test missed in the v1 patch.
-> >
-> > Author: Stephane Eranian <eranian@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> I still have some conflicts, but I merged it by hand
->
->
->         patching file tools/build/Makefile.feature
->         patching file tools/build/feature/Makefile
->         patching file tools/build/feature/test-libpfm4.c
->         patching file tools/perf/Documentation/Makefile
->         patching file tools/perf/Documentation/perf-record.txt
->         patching file tools/perf/Documentation/perf-stat.txt
->         patching file tools/perf/Documentation/perf-top.txt
->         patching file tools/perf/Makefile.config
->         patching file tools/perf/Makefile.perf
->         Hunk #3 FAILED at 834.
->         1 out of 3 hunks FAILED -- saving rejects to file tools/perf/Makefile.perf.rej
->         patching file tools/perf/builtin-list.c
->         patching file tools/perf/builtin-record.c
->         patching file tools/perf/builtin-stat.c
->         patching file tools/perf/builtin-top.c
->         Hunk #2 succeeded at 1549 (offset 2 lines).
->         Hunk #3 succeeded at 1567 (offset 2 lines).
->         patching file tools/perf/util/evsel.c
->         patching file tools/perf/util/evsel.h
->         patching file tools/perf/util/parse-events.c
->         patching file tools/perf/util/parse-events.h
->         patching file tools/perf/util/pmu.c
->         Hunk #1 succeeded at 869 (offset 5 lines).
->         patching file tools/perf/util/pmu.h
->         Hunk #1 succeeded at 65 (offset 1 line).
->
-> jirka
+From: Biwen Li <biwen.li@nxp.com>
 
-Thanks for looking at this! I sent a new version (v7):
-https://lore.kernel.org/lkml/20200407064018.158555-1-irogers@google.com/T/#u
-that adds Stephane's improvements for handling fallback when
-perf_event_open fails. Please let us know if there are issues we can
-address with the patch set.
+The patch adds ftm_alarm0 DT node for Soc LX2160A
+FlexTimer1 module is used to wakeup the system in deep sleep
 
-Thanks,
-Ian
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index e5ee5591e52b..e0d8d68ce070 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -16,6 +16,10 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		rtc1 = &ftm_alarm0;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -768,6 +772,20 @@
+ 			timeout-sec = <30>;
+ 		};
+ 
++		rcpm: rcpm@1e34040 {
++			compatible = "fsl,lx2160a-rcpm", "fsl,qoriq-rcpm-2.1+";
++			reg = <0x0 0x1e34040 0x0 0x1c>;
++			#fsl,rcpm-wakeup-cells = <7>;
++			little-endian;
++		};
++
++		ftm_alarm0: timer@2800000 {
++			compatible = "fsl,lx2160a-ftm-alarm";
++			reg = <0x0 0x2800000 0x0 0x10000>;
++			fsl,rcpm-wakeup = <&rcpm 0x0 0x0 0x0 0x0 0x4000 0x0 0x0>;
++			interrupts = <0 44 4>;
++		};
++
+ 		usb0: usb@3100000 {
+ 			compatible = "snps,dwc3";
+ 			reg = <0x0 0x3100000 0x0 0x10000>;
+-- 
+2.17.1
+
