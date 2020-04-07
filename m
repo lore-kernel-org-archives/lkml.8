@@ -2,217 +2,132 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F59C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97DCC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16D220730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855302082D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:12:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cIPb3Ap3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITb0PCiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgDGXHQ (ORCPT
+        id S1726467AbgDGXMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:07:16 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47582 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgDGXHQ (ORCPT
+        Tue, 7 Apr 2020 19:12:32 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46583 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgDGXMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:07:16 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 037N7C3c114713;
-        Tue, 7 Apr 2020 18:07:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1586300832;
-        bh=6WKZgInaT9hjUwbTam8NpZ66/XTRdie92DX6qrCz+Uk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cIPb3Ap3sGSTSqZPdSvuArxAfXrssWPHSgwQzJ5KtrBKi6hIvZQlQMlBttniN8hUI
-         2MwdZveunG5NkyUBmtCrjxD64pTKnrs+yNgY9eQeBBzf5/rfPme+jA+Tt9ekh3/jNF
-         1or4q235qln9sShyQUcvYxbszkUgnqOvVg33e+kI=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 037N7Ct2066448
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Apr 2020 18:07:12 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Apr
- 2020 18:07:12 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Apr 2020 18:07:11 -0500
-Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 037N7Bhh098908;
-        Tue, 7 Apr 2020 18:07:11 -0500
-Subject: Re: [PATCH v2] rpmsg: core: Add wildcard match for name service
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-CC:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200310155058.1607-1-mathieu.poirier@linaro.org>
- <591bd727-32af-9ea2-8c46-98f46ee3711e@ti.com>
- <CANLsYkyv+4cSCY27kA6qfo2XMzXy_h+DmXTe0nVZuUkC0kyRUQ@mail.gmail.com>
- <ca77fe73-3baf-64ff-c9e2-b2f35f96ffe3@ti.com>
- <CANLsYkz8iqiperjdQVcwAC3YGT5cmEvJcu8fPFGF5-X6eKVUDQ@mail.gmail.com>
- <34d1277f-c35e-5df8-7d0c-ea1e961a127f@st.com> <20200327193602.GA22939@xps15>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <77cba22f-5911-e88a-ec25-50cbe9b8fbbe@ti.com>
-Date:   Tue, 7 Apr 2020 18:07:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 7 Apr 2020 19:12:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id m19so1677410lfq.13;
+        Tue, 07 Apr 2020 16:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RwBDvU/d/RuyuOicf+LMSeUuB7FpaSGPCFNY8uUMcT8=;
+        b=ITb0PCiLvFvAVN7bpWpJlckTjQ8s/wjqbxLsbWXCFsj+XrR6vru92/JlT6lzOgpb0u
+         GvSyCbY86jIPTEp7Rr6UG3CpHXhrlyN6C7QMfn9hGHT5V94hmDalVuuw6l9Uj+jhnEpL
+         0w+zGOx2K4nyKvpPS1itml53GKUo/T2CDvs+jNKP83LXgAiqyUEMkQukAExr3FGhUMK0
+         /q2xBHo/iw98t6r1GJ1gaaC8/QbQZmkYgHikswey901fj0KneeQkZ/8Oq6B4+5lXpTPy
+         QCx3IlR4i1XwPUTGs2RiyEngHTxoZVbLXWuUTpGiGD93wuoUcU/BPwTEWWiry2rngf2P
+         dYpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RwBDvU/d/RuyuOicf+LMSeUuB7FpaSGPCFNY8uUMcT8=;
+        b=A8cj4Mm/6m7HBUghxwF8KyDY8QfJD5MoDA5jW8IJuOMEmFWCA6o3ihf2QRPynMe/9r
+         Hy9a1L7ur3XRdLN21rzampW7+uxxC+jypwsQe49wK4ZYGXEkMsfN5g50G9qBk/D+O27r
+         fT8j/ExA6jz8VSiE14WfNBACgYMY6471MnSbv+sRlU9aS1oP3wc6q7P4SgQNDCH39zEP
+         tDwkVeK9THQ0iv9o3nY8euBNmGokrOGuGm1v994Ckn613Gc7vzyrq5wgwNzcllPGynZM
+         qHhycVQ8jStsP3pay3g35A7mWT7LEJXZgSg1c2712EgsqlV3m7DTG/4hu3JhY7idIrCe
+         vDYw==
+X-Gm-Message-State: AGi0PuatZMcSzG14cIesifDWQDDJG8I2gc48bLlbKibvskhFrwa7tQZI
+        IyGILgnDNkiIXiD2dJRrKh4zTns6
+X-Google-Smtp-Source: APiQypLgfZ7BpY4nMrnJrXTT3z+5gBIe2iOt5bl8wLbbK0kgy8mwEcvrUJhccF8GU5G5Zh9WGlI4uw==
+X-Received: by 2002:ac2:5607:: with SMTP id v7mr2758744lfd.212.1586301148120;
+        Tue, 07 Apr 2020 16:12:28 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id c2sm14650894lfb.43.2020.04.07.16.12.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 16:12:27 -0700 (PDT)
+Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
+ <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
+ <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
+ <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
+ <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
+ <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
+ <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
+ <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
+ <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
+ <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
+ <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
+ <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
+ <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
+ <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
+ <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
+ <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
+ <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
+ <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <db7c7051-5674-cdb9-0aa4-ee94125b3024@gmail.com>
+Date:   Wed, 8 Apr 2020 02:12:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200327193602.GA22939@xps15>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <0c425505-347f-7418-af7e-d121fe0d06dc@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu, Arnaud,
-
-On 3/27/20 2:36 PM, Mathieu Poirier wrote:
-> On Fri, Mar 27, 2020 at 10:35:34AM +0100, Arnaud POULIQUEN wrote:
->> Hi
+08.04.2020 01:22, Sowjanya Komatineni пишет:
+> 
+> On 4/7/20 3:08 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
 >>
->> On 3/26/20 11:01 PM, Mathieu Poirier wrote:
->>> On Thu, 26 Mar 2020 at 14:42, Suman Anna <s-anna@ti.com> wrote:
->>>>
->>>> On 3/26/20 3:21 PM, Mathieu Poirier wrote:
->>>>> On Thu, 26 Mar 2020 at 09:06, Suman Anna <s-anna@ti.com> wrote:
->>>>>>
->>>>>> Hi Mathieu,
->>>>>>
->>>>>> On 3/10/20 10:50 AM, Mathieu Poirier wrote:
->>>>>>> Adding the capability to supplement the base definition published
->>>>>>> by an rpmsg_driver with a postfix description so that it is possible
->>>>>>> for several entity to use the same service.
->>>>>>>
->>>>>>> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->>>>>>> Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>>>>>
->>>>>> So, the concern I have here is that we are retrofitting this into the
->>>>>> existing 32-byte name field, and the question is if it is going to be
->>>>>> enough in general. That's the reason I went with the additional 32-byte
->>>>>> field with the "rpmsg: add a description field" patch.
->>>>>>
->>>>>
->>>>> That's a valid concern.
->>>>>
->>>>> Did you consider increasing the size of RPMSG_NAME_SIZE to 64? Have
->>>>> you found cases where that wouldn't work?  I did a survey of all the
->>>>> places the #define is used and all destination buffers are also using
->>>>> the same #define in their definition.  It would also be backward
->>>>> compatible with firmware implementations that use 32 byte.
->>>>
->>>> You can't directly bump the size without breaking the compatibility on
->>>> the existing rpmsg_ns_msg in firmwares right? All the Linux-side drivers
->>>> will be ok since they use the same macro but rpmsg_ns_msg has presence
->>>> on both kernel and firmware-sides.
+>>
+>> 08.04.2020 00:08, Sowjanya Komatineni пишет:
+>> ...
+>>>>> I think you need a semaphore with resource count = 2.
+>>>> we hold on to issuing capture if more than 2 buffers are queued and it
+>>>> continues only after fifo has min 1 slot empty
 >>>
->>> Ah yes yes... The amount of bytes coming out of the pipe won't match.
->>> Let me think a little...
+>>> Just want to close on this part of feedback. Hope above explanation is
+>>> clear regarding triggering/issuing at max 2 frame capture to VI HW and
+>>> also regarding capture threads where they use wait_event_interruptible
+>>> to prevent blocking waiting for buffers to be available for captures.
+>>>
+>>> So no changes related to this part are needed in v7.
+>>  From what I see in the code, you "hold on" by making kthread to spin in
+>> a busy-loop while caps_inflight >= SYNCPT_FIFO_DEPTH. So some change
+>> should be needed to prevent this.
 >>
->> +1 for Suman's concern.
->>
->> Anyway i would like to challenge the need of more than 32 bytes to
->> differentiate service instances.
->> "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", seems to me enough if we only need
->> to differentiate the instances.
-
-Remember that the rpmsg_device_id name takes some space within here. So,
-the shorter the rpmsg_device_id table name, the more room you have.
-
->>
->> But perhaps the need is also to provide a short description of the service?
-
-I am mostly using it to provide a unique instantiation name. In anycase,
-I have cross-checked against my current firmwares, and so far all of
-them happen to have the name + desc < 31 bytes.
-
-
->>
->> Suman, could you share some examples of your need?
+>> The wait_event_interruptible seems should be okay.
 > 
-> Looking at things further it is possible to extend the name of the service to
-> 64 byte while keeping backward compatibility by looking up the size of @len
-> in function rpmsg_ns_cb().  From there work with an rpmsg_ns_msg or a new
-> rpmsg_ns_msg64, pretty much the way you did in your patch[1].  In fact the
-> approach is the same except you are using 2 arrays of 32 byte and I'm using one
-> of 64. 
+> We don't want to prevent that as we already have buffers available for
+> capture so as soon as VI HW issuing single shot is done and when min 1
+> slot is empty we should continue with issuing for another capture.
 > 
-> As Arnaud mentioned, is there an immediate need to support a 64-byte name?  If
-> not than I suggest to move forward with this patch and address the issue when we
-> get there - at least we know there is room for extention. Otherwise I'll spin
-> off another revision but it will be bigger and more complex.
-
-Yeah ok. I have managed to get my downstream drivers that use the desc
-field working with this patch after modifying the firmwares to publish
-using combined name, and adding logic in probe to get the trailing
-portion of the name.
-
-So, the only thing that is missing or content for another patch is if we
-need to add some tooling/helper stuff for giving the trailing stuff to
-rpmsg drivers?
-
-regards
-Suman
-
+> As long as buffers are available, we should continue to capture and
+> should not hold
 > 
-> Thanks,
-> Mathieu
-> 
-> [1]. https://patchwork.kernel.org/patch/11096599/
-> 
->>>>>>
->>>>>>> ---
->>>>>>> Changes for V2:
->>>>>>> - Added Arnaud's Acked-by.
->>>>>>> - Rebased to latest rproc-next.
->>>>>>>
->>>>>>>  drivers/rpmsg/rpmsg_core.c | 20 +++++++++++++++++++-
->>>>>>>  1 file changed, 19 insertions(+), 1 deletion(-)
->>>>>>>
->>>>>>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
->>>>>>> index e330ec4dfc33..bfd25978fa35 100644
->>>>>>> --- a/drivers/rpmsg/rpmsg_core.c
->>>>>>> +++ b/drivers/rpmsg/rpmsg_core.c
->>>>>>> @@ -399,7 +399,25 @@ ATTRIBUTE_GROUPS(rpmsg_dev);
->>>>>>>  static inline int rpmsg_id_match(const struct rpmsg_device *rpdev,
->>>>>>>                                 const struct rpmsg_device_id *id)
->>>>>>>  {
->>>>>>> -     return strncmp(id->name, rpdev->id.name, RPMSG_NAME_SIZE) == 0;
->>>>>>> +     size_t len = min_t(size_t, strlen(id->name), RPMSG_NAME_SIZE);
->>>>>>> +
->>>>>>> +     /*
->>>>>>> +      * Allow for wildcard matches.  For example if rpmsg_driver::id_table
->>>>>>> +      * is:
->>>>>>> +      *
->>>>>>> +      * static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
->>>>>>> +      *      { .name = "rpmsg-client-sample" },
->>>>>>> +      *      { },
->>>>>>> +      * }
->>>>>>> +      *
->>>>>>> +      * Then it is possible to support "rpmsg-client-sample*", i.e:
->>>>>>> +      *      rpmsg-client-sample
->>>>>>> +      *      rpmsg-client-sample_instance0
->>>>>>> +      *      rpmsg-client-sample_instance1
->>>>>>> +      *      ...
->>>>>>> +      *      rpmsg-client-sample_instanceX
->>>>>>> +      */
->>>>>>> +     return strncmp(id->name, rpdev->id.name, len) == 0;
->>>>>>>  }
->>>>>>>
->>>>>>>  /* match rpmsg channel and rpmsg driver */
->>>>>>>
->>>>>>
->>>>
 
+I suppose that taking a shot takes at least few milliseconds, which
+should be unacceptable to waste.
