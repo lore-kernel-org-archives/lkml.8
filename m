@@ -2,71 +2,88 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96C5C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BE7C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F752072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C0C320768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:00:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586286053;
+	bh=4O9gloZg+PIbrsK5wsxu7tR1i8MGHoxvvzebU5q/Ggc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=tvJZKniTAzIAwJku6PT86DQcMi09skC4bDSnw8HBNdfPE/Y4fHbW+EnYzZhy1q52E
+	 Mm50yQh/hl5SUynOyoeAQxXvO/lfrpyK1Y82mP9jJcJrw58NbYWi3vlFkKJDh8jbjn
+	 ZTUx4a2dkVIgiSvIYBKp+87c5/0gEIO7U6ftxoBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgDGTAl (ORCPT
+        id S1726878AbgDGTAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:00:41 -0400
-Received: from smtp07.smtpout.orange.fr ([80.12.242.129]:23062 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgDGTAl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:00:41 -0400
-Received: from localhost.localdomain ([93.22.37.82])
-        by mwinf5d42 with ME
-        id Pv0c2200b1mLNr903v0dWk; Tue, 07 Apr 2020 21:00:38 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 07 Apr 2020 21:00:38 +0200
-X-ME-IP: 93.22.37.82
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     apw@canonical.com, joe@perches.com
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] checkpatch: Fix a typo in the regex for $allocFunctions
-Date:   Tue,  7 Apr 2020 21:00:29 +0200
-Message-Id: <20200407190029.892-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.20.1
+        Tue, 7 Apr 2020 15:00:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726332AbgDGTAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 15:00:52 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306E22072A;
+        Tue,  7 Apr 2020 19:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586286051;
+        bh=4O9gloZg+PIbrsK5wsxu7tR1i8MGHoxvvzebU5q/Ggc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=1T/0Jz0A9YRg6d1n1BEWu38UGxwLRXfN0xJlUlCjfFbxGfo9rO37VWRQMfKx7OOt4
+         swxRC9JeB/WlYJsAnsQotwdvTLhS8KUJJdlDVCeX3XkUKfPUerHJmEj5hJjA/J/ZxM
+         f1vrT1uJgwioqVUH7KCVZ1WVbqfitCHeyjdGBeBg=
+Subject: Re: [PATCH 5.4 00/38] 5.4.31-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200407154755.973323425@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <b052c2dd-618b-d5ab-e721-01d1c5ca4bca@kernel.org>
+Date:   Tue, 7 Apr 2020 13:00:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200407154755.973323425@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here, we look for function such as 'netdev_alloc_skb_ip_align', so a '_'
-is missing in the regex.
+On 4/7/20 10:38 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.31 release.
+> There are 38 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 09 Apr 2020 15:46:32 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.31-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-To make sure:
-   grep -r --include=*.c skbip_a * | wc   ==>   0 results
-   grep -r --include=*.c skb_ip_a * | wc  ==> 112 results
+Compiled and booted on my test system. No dmesg regressions.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
- scripts/checkpatch.pl | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 529c892722b9..c392ab8ea12e 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -479,7 +479,7 @@ our $allocFunctions = qr{(?x:
- 		(?:kv|k|v)[czm]alloc(?:_node|_array)? |
- 		kstrdup(?:_const)? |
- 		kmemdup(?:_nul)?) |
--	(?:\w+)?alloc_skb(?:ip_align)? |
-+	(?:\w+)?alloc_skb(?:_ip_align)? |
- 				# dev_alloc_skb/netdev_alloc_skb, et al
- 	dma_alloc_coherent
- )};
--- 
-2.20.1
+thanks,
+-- Shuah
 
