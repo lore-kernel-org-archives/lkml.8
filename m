@@ -2,434 +2,372 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC4CC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48330C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA4BD20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586251182;
-	bh=WAfuCFz4/P+hhewV0jt/cw3+NXc0NZAdSjXMURlp8gk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E9e8W/uzHSLPbCuUFmPAtlSiyZnpFBA0vksxnaYo+aXOE9Kg6k/K3yBOYPgX1132z
-	 TXD6I1bcwwb4qIzA78qfeuQFEy11X0H98Kjz/PeLbXFMS+wuDOZ6laa9uCML0L0CnR
-	 YLrr3ZIkbhsVqqquNfmlgK3f6BhnzWcrjNFK9MRA=
+	by mail.kernel.org (Postfix) with ESMTP id F3E08206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:25:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d1kRVUss"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgDGJTk (ORCPT
+        id S1727922AbgDGJZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:19:40 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41224 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgDGJTj (ORCPT
+        Tue, 7 Apr 2020 05:25:42 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34899 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbgDGJZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:19:39 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h9so2986899wrc.8;
-        Tue, 07 Apr 2020 02:19:36 -0700 (PDT)
+        Tue, 7 Apr 2020 05:25:42 -0400
+Received: by mail-lf1-f67.google.com with SMTP id r17so1825010lff.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:25:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hDWL/BNWVM4skkO5zbxiz7K0KSm79JAbtKShEn6aXkM=;
+        b=d1kRVUssLHcYjZhjJ1Mi9OsCvmz/lxUwhmzGfbLcb+zCsCb1JlnCIh1W86x0PI7Vom
+         Wpx6VXubjgwOefM9SrC6vfaVD61isoE6SEgxeIS7zKfB1bkAeAGb42EZOCPZ6wEolegH
+         jlJS8iND1jcVaVoOeUEIYzEHlHaSgCSBnlu0rJrcly9jMie/19yJLbDqqcg859uXzd3J
+         cyDghaJXjFURq8b2LpeZQU2lDClR6NsFRsu88BC/iBuh8LlQUiuGTMCIlQTqe5qlfTqS
+         S85GPUnn3rZyUqWdbrRLkbwri6AObkTnzOnXRcO5498IsbrvODvqmAiRXfRbEQyQJSAW
+         Aw3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=44LaSqNOSIlrUwBFMWTUV/RLjrVY7ijtgHpH2vSq1zk=;
-        b=PpEJctys24/go91llXd/iTi0oXvIBhYIhHJ85MczLbqH7YQortI496ZdK2/iPl7omY
-         Zg9soQW8Z5a4dcNj9dwUGiUHgZLuhICLkxSykySrx1F+M8OliLK/COqH9MttGl6u0A+J
-         tu7yxVzGG5ZZQIWEPNe//tzX4w7Kb10Co9OUCS1U5/sAYgzghePxTPFOaRWLD/9zS6Nz
-         l6nbL6bAw6KBZcwZsbf1vjgpNNItaWiWt+U8M5E4H1D6PGOh+hNUD/l191pO46MAdtNP
-         DwmVEhtKAb7p/GmmEaKY7nPtkqVrkLiRZbMwmUhNezIkkiXKJ5FUWWoWXaUIOQ2R3QQd
-         oW3Q==
-X-Gm-Message-State: AGi0PuZ8NBjmCT8QCckGOWBAUPmMAyCbCBS2g7T5mjpY1w0syjzyOXU0
-        EZt9tC+4QQDwuUz7VZ0WvuQ=
-X-Google-Smtp-Source: APiQypIhHMqdaYkt1rKHeYYIjgf/mXR9ALpnahhZ5ionU02sf91QmE6y9SLu4oa1cODJHsIaG0TrlA==
-X-Received: by 2002:adf:a1c3:: with SMTP id v3mr1691296wrv.19.1586251175433;
-        Tue, 07 Apr 2020 02:19:35 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id f12sm1522330wmh.4.2020.04.07.02.19.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 02:19:34 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 11:19:27 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@Netapp.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK
- instead.
-Message-ID: <20200407091927.GM18914@dhcp22.suse.cz>
-References: <draft-87d08kw57p.fsf@notabene.neil.brown.name>
- <878sj8w55y.fsf@notabene.neil.brown.name>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hDWL/BNWVM4skkO5zbxiz7K0KSm79JAbtKShEn6aXkM=;
+        b=RC7vofQKJstbJBtimc4b9TdqimiZI4babDOGVM7v38FoGVY0oA6Qsa6EiAFguP2y3w
+         kuWGPqA5N236nfGpaBwJ+jqazxpf7vV1RJg7XI5Az74QoQpVIFkULZis6gqnaWosIQ5c
+         pigoqJFqa9H2PSBczLrij8wdUymFvr94sCcpb+SigsLRamieuu0WUSzulazWeivFqoy0
+         bi2fr4R29xHNQqAmDjKTfdavb/e4EcBvJH4wLn8GC5uzVyz44IRikiNiACH8FVWBqrDn
+         Pxorh4/Y8SbAev30B0XFKJ7PD7nVSE9zQAsUzskmqdbyp2W6JbRGwH+8Lrm7qssFWU/c
+         iMsw==
+X-Gm-Message-State: AGi0PubCDV7F86d3gDk4gWHXSUrPSlFVUd01BaXB0G2HdTmeaKkHkP19
+        IRIC1xFGI0Dm+q6+zs9163cUqym/pb88GAXZtZULiA==
+X-Google-Smtp-Source: APiQypIbuQO84l0L4PZRD4lKJsUroBjA70Eif7Kn6qETQveY6hFDNqsrwCuRss2wYha5/GFVS0yCmpASHcn6EpziUl8=
+X-Received: by 2002:ac2:5559:: with SMTP id l25mr965103lfk.55.1586251538012;
+ Tue, 07 Apr 2020 02:25:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878sj8w55y.fsf@notabene.neil.brown.name>
+References: <CA+G9fYvRZ9eCE29FjXkv1dQfrdGO3uWp4Tvkip5Z_jsgjVJeAQ@mail.gmail.com>
+ <CAHp75VfhKoLtWkLHUyzg6m=rx833qiCVimWJVKU13qrX+aJz-Q@mail.gmail.com>
+ <CAFd5g45GbSX1BkuaH=8639ESHi-MCGkpFhEZZpycm9=jQb93rg@mail.gmail.com>
+ <CAFd5g47aaE+tGeHPrQmhfi6_nrvi1K4DvtRodh=zN21-uiQ1DQ@mail.gmail.com>
+ <20200305223350.GA2852@mara.localdomain> <20200306120525.GC68079@kuha.fi.intel.com>
+ <CAFd5g45c9L4BBRNtxtQf_NFr2bR6Wgt9uOHW86gzb6Ozeb0SBA@mail.gmail.com>
+ <CAFd5g45cdygYfxGoCkk710tLXFADeLNb+6w-=vhkDMLP9OM7bw@mail.gmail.com>
+ <20200310111837.GA1368052@kuha.fi.intel.com> <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
+In-Reply-To: <CAFd5g452sDMZToU+FDa-Odbkd_t1708gcRMAZQG+U4LnV=Xqgw@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 7 Apr 2020 14:55:26 +0530
+Message-ID: <CA+G9fYuwv+TEhgi46pjs2-GCe0mmMHyki9nAokvGCEA2syK5Dg@mail.gmail.com>
+Subject: Re: BUG: kernel NULL pointer dereference, address: 00 - ida_free+0x76/0x140
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "rafael.j.wysocki" <rafael.j.wysocki@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        lkft-triage@lists.linaro.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07-04-20 09:44:25, Neil Brown wrote:
-> 
-> After an NFS page has been written it is considered "unstable" until a
-> COMMIT request succeeds.  If the COMMIT fails, the page will be
-> re-written.
-> 
-> These "unstable" pages are currently accounted as "reclaimable", either
-> in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
-> 'reclaimable' count.  This might have made sense when sending the COMMIT
-> required a separate action by the VFS/MM (e.g.  releasepage() used to
-> send a COMMIT).  However now that all writes generated by ->writepages()
-> will automatically be followed by a COMMIT (since commit 919e3bd9a875
-> ("NFS: Ensure we commit after writeback is complete")) it makes more
-> sense to treat them as writeback pages.
-> 
-> So this patch removes NR_UNSTABLE_NFS and accounts unstable pages in
-> NR_WRITEBACK and WB_WRITEBACK.
-> 
-> A particular effect of this change is that when
-> wb_check_background_flush() calls wb_over_bg_threshold(), the latter
-> will report 'true' a lot less often as the 'unstable' pages are no
-> longer considered 'dirty' (as there is nothing that writeback can do
-> about them anyway).
-> 
-> Currently wb_check_background_flush() will trigger writeback to NFS even
-> when there are relatively few dirty pages (if there are lots of unstable
-> pages), this can result in small writes going to the server (10s of
-> Kilobytes rather than a Megabyte) which hurts throughput.
-> With this patch, there are fewer writes which are each larger on average.
-> 
-> Where the NR_UNSTABLE_NFS count was included in statistics
-> virtual-files, the entry is retained, but the value is hard-coded as
-> zero.  static trace points which record this counter no longer report
-> it.
+On Wed, 11 Mar 2020 at 02:16, Brendan Higgins <brendanhiggins@google.com> wrote:
+> > > > > > > > > > Steps reproduce by using kselftests,
+> > > > > > > > > >
+> > > > > > > > > >           - lsmod || true
+> > > > > > > > > >           - cd /opt/kselftests/default-in-kernel/lib/
+> > > > > > > > > >           - export PATH=/opt/kselftests/default-in-kernel/kselftest:$PATH
+> > > > > > > > > >           - ./printf.sh || true
+> > > > > > > > > >           - ./bitmap.sh || true
+> > > > > > > > > >           - ./prime_numbers.sh || true
+> > > > > > > > > >           - ./strscpy.sh || true
+> > > > > > > > > >
+> > > > > > > > > > x86_64 kernel BUG dump.
+> > > > > > > > > > + ./printf.sh
+> > > > > > > >
+> > > > > > > > Oops, I am wondering if I broke this with my change "Revert "software
+> > > > > > > > node: Simplify software_node_release() function"":
+> > > > > > > >
+> > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d1c19322388d6935b534b494a2c223dd089e30dd
+> > > > > > > >
+> > > > > > > > I am still investigating, will update later.
+> > > > > > >
+> > > > > > > Okay, yeah, I am pretty sure I caused the breakage. I got an email
+> > > > > > > from kernel test robot a couple days ago that I didn't see:
+> > > > > > >
+> > > > > > > https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/N3ZN5XH7HK24JVEJ5WSQD2SK6YCDRILR/
+> > > > > > >
+> > > > > > > It shows the same breakage after applying this change.
+> > > > > > >
+> > > > > > > I am still investigating how my change broke it, nevertheless.
+> > > > > >
+> > > > > > As nodes in the tree are being removed, the code before the patch that
+> > > > > > "simplified" the software_node_release() function accessed the node's parent
+> > > > > > in its release function.
+> > > > > >
+> > > > > > And if CONFIG_DEBUG_KOBJECT_RELEASE is defined, the release functions are no
+> > > > > > longer necessarily called in order, leading to referencing released memory.
+> > > > > > Oops!
+> > > > > >
+> > > > > > So Heikki's patch actually fixed a bug. :-)
+> > > > >
+> > > > > Well, I think it just hid the problem. It looks like the core
+> > > > > (lib/kobject.c) allows the parent kobject to be released before the
+> > > > > last child kobject is released. To be honest, that does not sound
+> > > > > right to me...
+> > > > >
+> > > > > I think we can workaround this problem by taking reference to the
+> > > > > parent when the child is added, and then releasing it when the child
+> > > > > is released, and in that way be guaranteed that the parent will not
+> > > > > disappear before the child is fully released, but that still does not
+> > > > > feel right. It feels more like the core is not doing it's job to me.
+> > > > > The parent just should not be released before its children.
+> > > > >
+> > > > > Either I'm wrong about that, and we still should take the reference on
+> > > > > the parent, or we revert my patch like Brendan proposed and then fix
+> > > >
+> > > > Either way, isn't it wrong to release the node ID before deleting the
+> > > > sysfs entry? I am not sure that my fix was the correct one, but I
+> > > > believe the bug that Heidi and I found is actually a bug.
+> >
+> > I agree.
+> >
+> > > > > the core with something like this (warning, I did not even try to
+> > > > > compile that):
+> > > >
+> > > > I will try it out.
+> > > >
+> > > > > diff --git a/lib/kobject.c b/lib/kobject.c
+> > > > > index 83198cb37d8d..ec5774992337 100644
+> > > > > --- a/lib/kobject.c
+> > > > > +++ b/lib/kobject.c
+> > > > > @@ -680,6 +680,12 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > > >                 kobject_uevent(kobj, KOBJ_REMOVE);
+> > > > >         }
+> > > > >
+> > > > > +       if (t && t->release) {
+> > > > > +               pr_debug("kobject: '%s' (%p): calling ktype release\n",
+> > > > > +                        kobject_name(kobj), kobj);
+> > > > > +               t->release(kobj);
+> > > > > +       }
+> > > > > +
+> > > > >         /* remove from sysfs if the caller did not do it */
+> > > > >         if (kobj->state_in_sysfs) {
+> > > > >                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+> > > > > @@ -687,12 +693,6 @@ static void kobject_cleanup(struct kobject *kobj)
+> > > > >                 kobject_del(kobj);
+> > > > >         }
+> > > > >
+> > > > > -       if (t && t->release) {
+> > > > > -               pr_debug("kobject: '%s' (%p): calling ktype release\n",
+> > > > > -                        kobject_name(kobj), kobj);
+> > > > > -               t->release(kobj);
+> > > > > -       }
+> > > > > -
+> > > > >         /* free name if we allocated it */
+> > > > >         if (name) {
+> > > > >                 pr_debug("kobject: '%s': free name\n", name);
+> > >
+> > > Alright, so I tried it and it looks like Heikki's suggestion worked.
+> > >
+> > > Is everyone comfortable going this route?
+> >
+> > Hold on. Another way to fix the problem is to increment the parent's
+> > reference count before that kobject_del(kobj) is called, and then
+> > decrementing it after t->release(kobj) is called. It may be safer to
+> > fix the problem like that.
+>
+> Right, this was your first suggestion above, right? That actually made
+> more sense to me, but you seemed skeptical of it due to it being
+> messier, which makes sense.
+>
+> Nevertheless, having children take a reference seems like the right
+> thing to do because the children need to degregister themselves from
+> the parent. Calling t->release() ahead of kobject_del() seems to
+> reintroduce the problem that I pointed out, albeit *much* more
+> briefly. If I understand correctly, it is always wrong to have a sysfs
+> entry that points to a partially deallocated kobject. Please correct
+> me if I am wrong.
+>
+> So I think there are two solutions: Either we have to ensure that each
+> child is deallocated first so we can preserve the kobject_del() and
+> then t->release() ordering, or we have to add some sort of "locking"
+> mechanism to prevent the kobject from being accessed by anything other
+> than the deallocation code until it is fully deallocated; well, it
+> would have to prevent any access at all :-). I think it goes without
+> saying that this "locking" idea is pretty flawed.
+>
+> The problem with just having children take a reference is that the
+> kobject children already take a reference to their parent, so it seems
+> like the kobject should be smart enough to deallocate children rather
+> than having swnode have to keep a separate tally of children, no?
+>
+> Sorry if this all seems obvious, I am not an expert on this part of the kernel.
+>
+> > My example above proofs that there is the problem, but it changes the
+> > order of execution which I think can always have other consequences.
+> >
+> > > Also, should I send this fix as a separate patch? Or do people want me
+> > > to send an updated revision of my revert patch with the fix?
+> >
+> > This needs to be send in its own separate patch. Ideally it could be
+> > send together with the revert in the same series, but I'm not sure
+> > that's possible anymore. Didn't Greg pick the revert already?
+>
+> Sounds good.
+>
+> I did already let Greg know when he emailed us on backporting the
+> patch to stable, and he acked saying he removed them. So as long as
+> these are not in the queue for 5.6 (it is not in Linus' tree yet), we
+> should be good.
 
-I do not have sufficient insight to nfs so I cannot judge that part but
-the core MM changes make sense and I do not see any problems there. It
-is PITA to keep the counter in user visible interfaces like meminfo and
-vmstat but I believe this really makes sense here as this is a counter
-that is usually considered. Maybe its non-existence will not be fatal
-for existing scripts but risking that is not worth it now. Maybe we can
-drop the fake value in future.
- 
-> Signed-off-by: NeilBrown <neilb@suse.de>
+The reported bug is still noticed on Linux mainline master branch
+The Kernel BUG noticed on x86_64 and i386 running selftest on Linux
+mainline kernel 5.6.0.
 
-Acked-by: Michal Hocko <mhocko@suse.com> # for MM parts
+Linux version 5.6.0 (oe-user@oe-host) (gcc version 7.3.0 (GCC)) #1 SMP
+Mon Apr 6 17:25:26 UTC 2020
+<>
+[  270.580905] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[  270.588978] #PF: supervisor read access in kernel mode
+[  270.594114] #PF: error_code(0x0000) - not-present page
+[  270.599247] PGD 800000026b340067 P4D 800000026b340067 PUD 26b34e067 PMD 0
+[  270.606119] Oops: 0000 [#1] SMP PTI
+[  270.609604] CPU: 1 PID: 4688 Comm: modprobe Tainted: G        W
+    5.6.0 #1
+[  270.616996] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[  270.624381] RIP: 0010:ida_free+0x76/0x140
+[  270.628391] Code: 45 d0 00 00 00 00 48 89 45 b0 0f 88 c4 00 00 00
+89 f3 e8 0d 51 02 00 48 8d 7d a8 49 89 c6 e8 e1 04 01 00 a8 01 49 89
+c5 75 42 <4c> 0f a3 20 72 76 48 8b 7d a8 4c 89 f6 e8 18 53 02 00 89 de
+48 c7
+[  270.647128] RSP: 0018:ffffbd8841d07a50 EFLAGS: 00010046
+[  270.652346] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff978be6ac48c0
+[  270.659468] RDX: 0000000000000000 RSI: ffff978beb346780 RDI: ffff978be6ac5138
+[  270.666595] RBP: ffffbd8841d07aa8 R08: 0000000000000001 R09: 0000000000000000
+[  270.673725] R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
+[  270.680850] R13: 0000000000000000 R14: 0000000000000246 R15: ffffffffc0383b3c
+[  270.687973] FS:  00007fc8e92c2740(0000) GS:ffff978befa80000(0000)
+knlGS:0000000000000000
+[  270.696052] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  270.701790] CR2: 0000000000000000 CR3: 000000021f2b0003 CR4: 00000000003606e0
+[  270.708920] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  270.716043] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  270.723169] Call Trace:
+[  270.725618]  software_node_release+0x2b/0xb0
+[  270.729886]  kobject_put+0xad/0x1c0
+[  270.733378]  kobject_del+0x4a/0x60
+[  270.736776]  kobject_put+0x92/0x1c0
+[  270.740270]  fwnode_remove_software_node+0x32/0x40
+[  270.745061]  software_node_unregister_nodes+0x2a/0x50
+[  270.750114]  test_printf_init+0xf30/0x1c16 [test_printf]
+[  270.755422]  ? test_hashed+0x75/0x75 [test_printf]
+[  270.760211]  ? test_hashed+0x75/0x75 [test_printf]
+[  270.765003]  do_one_initcall+0x61/0x2f0
+[  270.768842]  ? rcu_read_lock_sched_held+0x4f/0x80
+[  270.773541]  ? kmem_cache_alloc_trace+0x282/0x2b0
+[  270.778247]  do_init_module+0x5f/0x22b
+[  270.781999]  load_module+0x24e6/0x2ac0
+[  270.785754]  ? security_kernel_post_read_file+0x3f/0x60
+[  270.790979]  __do_sys_finit_module+0xfc/0x120
+[  270.795334]  ? __do_sys_finit_module+0xfc/0x120
+[  270.799862]  __x64_sys_finit_module+0x1a/0x20
+[  270.804219]  do_syscall_64+0x55/0x200
+[  270.807885]  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+[  270.812938] RIP: 0033:0x7fc8e8bcaf59
+[  270.816516] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00
+00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
+08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 0f ff 2b 00 f7 d8 64 89
+01 48
+[  270.835253] RSP: 002b:00007ffe9a4fb6f8 EFLAGS: 00000202 ORIG_RAX:
+0000000000000139
+[  270.842810] RAX: ffffffffffffffda RBX: 0000000000cdfaf0 RCX: 00007fc8e8bcaf59
+[  270.849934] RDX: 0000000000000000 RSI: 0000000000418cce RDI: 0000000000000005
+[  270.857057] RBP: 0000000000418cce R08: 0000000000000000 R09: 0000000000000000
+[  270.864180] R10: 0000000000000005 R11: 0000000000000202 R12: 0000000000000000
+[  270.871306] R13: 0000000000040000 R14: 0000000000000000 R15: 0000000000000000
+[  270.878433] Modules linked in: test_printf(+) cls_bpf sch_fq 8021q
+sch_ingress veth algif_hash x86_pkg_temp_thermal fuse [last unloaded:
+gpio_mockup]
+[  270.891812] CR2: 0000000000000000
+[  270.895130] ---[ end trace 151cfe414205f0bc ]---
+[  270.899742] RIP: 0010:ida_free+0x76/0x140
+[  270.903752] Code: 45 d0 00 00 00 00 48 89 45 b0 0f 88 c4 00 00 00
+89 f3 e8 0d 51 02 00 48 8d 7d a8 49 89 c6 e8 e1 04 01 00 a8 01 49 89
+c5 75 42 <4c> 0f a3 20 72 76 48 8b 7d a8 4c 89 f6 e8 18 53 02 00 89 de
+48 c7
+[  270.922489] RSP: 0018:ffffbd8841d07a50 EFLAGS: 00010046
+[  270.927706] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff978be6ac48c0
+[  270.934831] RDX: 0000000000000000 RSI: ffff978beb346780 RDI: ffff978be6ac5138
+[  270.941954] RBP: ffffbd8841d07aa8 R08: 0000000000000001 R09: 0000000000000000
+[  270.949078] R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
+[  270.956204] R13: 0000000000000000 R14: 0000000000000246 R15: ffffffffc0383b3c
+[  270.963328] FS:  00007fc8e92c2740(0000) GS:ffff978befa80000(0000)
+knlGS:0000000000000000
+[  270.971414] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  270.977158] CR2: 0000000000000000 CR3: 000000021f2b0003 CR4: 00000000003606e0
+[  270.984281] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  270.991407] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  270.998540] BUG: sleeping function called from invalid context at
+/usr/src/kernel/include/linux/percpu-rwsem.h:49
+[  271.008782] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid:
+4688, name: modprobe
+[  271.016771] INFO: lockdep is turned off.
+[  271.020691] irq event stamp: 4812
+[  271.024011] hardirqs last  enabled at (4811): [<ffffffffb5be42f1>]
+kfree+0x181/0x2e0
+[  271.031748] hardirqs last disabled at (4812): [<ffffffffb67d2b68>]
+_raw_spin_lock_irqsave+0x18/0x50
+[  271.040778] softirqs last  enabled at (4496): [<ffffffffb6a00348>]
+__do_softirq+0x348/0x459
+[  271.049117] softirqs last disabled at (4487): [<ffffffffb59be298>]
+irq_exit+0xb8/0xc0
+[  271.056933] CPU: 1 PID: 4688 Comm: modprobe Tainted: G      D W
+    5.6.0 #1
+[  271.064317] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.2 05/23/2018
+[  271.071702] Call Trace:
+[  271.074147]  dump_stack+0x7a/0xa5
+[  271.077465]  ___might_sleep+0x163/0x250
+[  271.081296]  __might_sleep+0x4a/0x80
+[  271.084868]  exit_signals+0x33/0x2f0
+[  271.088446]  do_exit+0xb6/0xcd0
+[  271.091586]  rewind_stack_do_exit+0x17/0x20
+[  271.095770] RIP: 0033:0x7fc8e8bcaf59
+[  271.099349] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00
+00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
+08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 0f ff 2b 00 f7 d8 64 89
+01 48
+[  271.118093] RSP: 002b:00007ffe9a4fb6f8 EFLAGS: 00000202 ORIG_RAX:
+0000000000000139
+[  271.125649] RAX: ffffffffffffffda RBX: 0000000000cdfaf0 RCX: 00007fc8e8bcaf59
+[  271.132775] RDX: 0000000000000000 RSI: 0000000000418cce RDI: 0000000000000005
+[  271.139897] RBP: 0000000000418cce R08: 0000000000000000 R09: 0000000000000000
+[  271.147022] R10: 0000000000000005 R11: 0000000000000202 R12: 0000000000000000
+[  271.154146] R13: 0000000000040000 R14: 0000000000000000 R15: 0000000000000000
+[  271.161274] note: modprobe[4688] exited with preempt_count 1
 
-Thanks!
-> ---
->  Documentation/filesystems/proc.rst |  4 ++--
->  drivers/base/node.c                |  2 +-
->  fs/fs-writeback.c                  |  1 -
->  fs/nfs/internal.h                  | 10 +++++++---
->  fs/nfs/write.c                     |  4 ++--
->  fs/proc/meminfo.c                  |  3 +--
->  include/linux/mmzone.h             |  1 -
->  include/trace/events/writeback.h   |  5 +----
->  mm/memcontrol.c                    |  1 -
->  mm/page-writeback.c                | 17 ++++-------------
->  mm/page_alloc.c                    |  6 ++----
->  mm/vmstat.c                        | 13 ++++++++++---
->  12 files changed, 30 insertions(+), 37 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-> index 38b606991065..092b7b44d158 100644
-> --- a/Documentation/filesystems/proc.rst
-> +++ b/Documentation/filesystems/proc.rst
-> @@ -1042,8 +1042,8 @@ PageTables
->                amount of memory dedicated to the lowest level of page
->                tables.
->  NFS_Unstable
-> -              NFS pages sent to the server, but not yet committed to stable
-> -	      storage
-> +              Always zero. Previous counted pages which had been written to
-> +              the server, but has not been committed to stable storage.
->  Bounce
->                Memory used for block device "bounce buffers"
->  WritebackTmp
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 10d7e818e118..15f5ed6a8830 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -439,7 +439,7 @@ static ssize_t node_read_meminfo(struct device *dev,
->  		       nid, K(i.sharedram),
->  		       nid, sum_zone_node_page_state(nid, NR_KERNEL_STACK_KB),
->  		       nid, K(sum_zone_node_page_state(nid, NR_PAGETABLE)),
-> -		       nid, K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
-> +		       nid, 0,
->  		       nid, K(sum_zone_node_page_state(nid, NR_BOUNCE)),
->  		       nid, K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
->  		       nid, K(sreclaimable +
-> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-> index 76ac9c7d32ec..c5bdf46e3b4b 100644
-> --- a/fs/fs-writeback.c
-> +++ b/fs/fs-writeback.c
-> @@ -1070,7 +1070,6 @@ static void bdi_split_work_to_wbs(struct backing_dev_info *bdi,
->  static unsigned long get_nr_dirty_pages(void)
->  {
->  	return global_node_page_state(NR_FILE_DIRTY) +
-> -		global_node_page_state(NR_UNSTABLE_NFS) +
->  		get_nr_dirty_inodes();
->  }
->  
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index f80c47d5ff27..749da02b547a 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -652,7 +652,8 @@ void nfs_super_set_maxbytes(struct super_block *sb, __u64 maxfilesize)
->  }
->  
->  /*
-> - * Record the page as unstable and mark its inode as dirty.
-> + * Record the page as unstable (an extra writeback period) and mark its
-> + * inode as dirty.
->   */
->  static inline
->  void nfs_mark_page_unstable(struct page *page, struct nfs_commit_info *cinfo)
-> @@ -660,8 +661,11 @@ void nfs_mark_page_unstable(struct page *page, struct nfs_commit_info *cinfo)
->  	if (!cinfo->dreq) {
->  		struct inode *inode = page_file_mapping(page)->host;
->  
-> -		inc_node_page_state(page, NR_UNSTABLE_NFS);
-> -		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_RECLAIMABLE);
-> +		/* This page is really still in write-back - just that the
-> +		 * writeback is happening on the server now.
-> +		 */
-> +		inc_node_page_state(page, NR_WRITEBACK);
-> +		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
->  		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
->  	}
->  }
-> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-> index c478b772cc49..2e15a56620b3 100644
-> --- a/fs/nfs/write.c
-> +++ b/fs/nfs/write.c
-> @@ -958,9 +958,9 @@ nfs_mark_request_commit(struct nfs_page *req, struct pnfs_layout_segment *lseg,
->  static void
->  nfs_clear_page_commit(struct page *page)
->  {
-> -	dec_node_page_state(page, NR_UNSTABLE_NFS);
-> +	dec_node_page_state(page, NR_WRITEBACK);
->  	dec_wb_stat(&inode_to_bdi(page_file_mapping(page)->host)->wb,
-> -		    WB_RECLAIMABLE);
-> +		    WB_WRITEBACK);
->  }
->  
->  /* Called holding the request lock on @req */
-> diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-> index 8c1f1bb1a5ce..9bd94b5a9658 100644
-> --- a/fs/proc/meminfo.c
-> +++ b/fs/proc/meminfo.c
-> @@ -106,8 +106,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
->  	show_val_kb(m, "PageTables:     ",
->  		    global_zone_page_state(NR_PAGETABLE));
->  
-> -	show_val_kb(m, "NFS_Unstable:   ",
-> -		    global_node_page_state(NR_UNSTABLE_NFS));
-> +	show_val_kb(m, "NFS_Unstable:   ", 0);
->  	show_val_kb(m, "Bounce:         ",
->  		    global_zone_page_state(NR_BOUNCE));
->  	show_val_kb(m, "WritebackTmp:   ",
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index e84d448988b6..3937f2be27d8 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -237,7 +237,6 @@ enum node_stat_item {
->  	NR_FILE_THPS,
->  	NR_FILE_PMDMAPPED,
->  	NR_ANON_THPS,
-> -	NR_UNSTABLE_NFS,	/* NFS unstable pages */
->  	NR_VMSCAN_WRITE,
->  	NR_VMSCAN_IMMEDIATE,	/* Prioritise for reclaim when writeback ends */
->  	NR_DIRTIED,		/* page dirtyings since bootup */
-> diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
-> index d94def25e4dc..45b5fbdb1f62 100644
-> --- a/include/trace/events/writeback.h
-> +++ b/include/trace/events/writeback.h
-> @@ -542,7 +542,6 @@ TRACE_EVENT(global_dirty_state,
->  	TP_STRUCT__entry(
->  		__field(unsigned long,	nr_dirty)
->  		__field(unsigned long,	nr_writeback)
-> -		__field(unsigned long,	nr_unstable)
->  		__field(unsigned long,	background_thresh)
->  		__field(unsigned long,	dirty_thresh)
->  		__field(unsigned long,	dirty_limit)
-> @@ -553,7 +552,6 @@ TRACE_EVENT(global_dirty_state,
->  	TP_fast_assign(
->  		__entry->nr_dirty	= global_node_page_state(NR_FILE_DIRTY);
->  		__entry->nr_writeback	= global_node_page_state(NR_WRITEBACK);
-> -		__entry->nr_unstable	= global_node_page_state(NR_UNSTABLE_NFS);
->  		__entry->nr_dirtied	= global_node_page_state(NR_DIRTIED);
->  		__entry->nr_written	= global_node_page_state(NR_WRITTEN);
->  		__entry->background_thresh = background_thresh;
-> @@ -561,12 +559,11 @@ TRACE_EVENT(global_dirty_state,
->  		__entry->dirty_limit	= global_wb_domain.dirty_limit;
->  	),
->  
-> -	TP_printk("dirty=%lu writeback=%lu unstable=%lu "
-> +	TP_printk("dirty=%lu writeback=%lu "
->  		  "bg_thresh=%lu thresh=%lu limit=%lu "
->  		  "dirtied=%lu written=%lu",
->  		  __entry->nr_dirty,
->  		  __entry->nr_writeback,
-> -		  __entry->nr_unstable,
->  		  __entry->background_thresh,
->  		  __entry->dirty_thresh,
->  		  __entry->dirty_limit,
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index ca194864d802..41b450b0ca29 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4326,7 +4326,6 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, unsigned long *pfilepages,
->  
->  	*pdirty = memcg_exact_page_state(memcg, NR_FILE_DIRTY);
->  
-> -	/* this should eventually include NR_UNSTABLE_NFS */
->  	*pwriteback = memcg_exact_page_state(memcg, NR_WRITEBACK);
->  	*pfilepages = memcg_exact_page_state(memcg, NR_INACTIVE_FILE) +
->  			memcg_exact_page_state(memcg, NR_ACTIVE_FILE);
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index 4c9875971de5..d16f6a59bce4 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -504,7 +504,6 @@ bool node_dirty_ok(struct pglist_data *pgdat)
->  	unsigned long nr_pages = 0;
->  
->  	nr_pages += node_page_state(pgdat, NR_FILE_DIRTY);
-> -	nr_pages += node_page_state(pgdat, NR_UNSTABLE_NFS);
->  	nr_pages += node_page_state(pgdat, NR_WRITEBACK);
->  
->  	return nr_pages <= limit;
-> @@ -758,7 +757,7 @@ static void mdtc_calc_avail(struct dirty_throttle_control *mdtc,
->   * bounded by the bdi->min_ratio and/or bdi->max_ratio parameters, if set.
->   *
->   * Return: @wb's dirty limit in pages. The term "dirty" in the context of
-> - * dirty balancing includes all PG_dirty, PG_writeback and NFS unstable pages.
-> + * dirty balancing includes all PG_dirty and PG_writeback pages.
->   */
->  static unsigned long __wb_calc_thresh(struct dirty_throttle_control *dtc)
->  {
-> @@ -1566,7 +1565,7 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
->  	struct dirty_throttle_control * const mdtc = mdtc_valid(&mdtc_stor) ?
->  						     &mdtc_stor : NULL;
->  	struct dirty_throttle_control *sdtc;
-> -	unsigned long nr_reclaimable;	/* = file_dirty + unstable_nfs */
-> +	unsigned long nr_reclaimable;	/* = file_dirty */
->  	long period;
->  	long pause;
->  	long max_pause;
-> @@ -1589,14 +1588,7 @@ static void balance_dirty_pages(struct bdi_writeback *wb,
->  		unsigned long m_thresh = 0;
->  		unsigned long m_bg_thresh = 0;
->  
-> -		/*
-> -		 * Unstable writes are a feature of certain networked
-> -		 * filesystems (i.e. NFS) in which data may have been
-> -		 * written to the server's write cache, but has not yet
-> -		 * been flushed to permanent storage.
-> -		 */
-> -		nr_reclaimable = global_node_page_state(NR_FILE_DIRTY) +
-> -					global_node_page_state(NR_UNSTABLE_NFS);
-> +		nr_reclaimable = global_node_page_state(NR_FILE_DIRTY);
->  		gdtc->avail = global_dirtyable_memory();
->  		gdtc->dirty = nr_reclaimable + global_node_page_state(NR_WRITEBACK);
->  
-> @@ -1940,8 +1932,7 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb)
->  	 * as we're trying to decide whether to put more under writeback.
->  	 */
->  	gdtc->avail = global_dirtyable_memory();
-> -	gdtc->dirty = global_node_page_state(NR_FILE_DIRTY) +
-> -		      global_node_page_state(NR_UNSTABLE_NFS);
-> +	gdtc->dirty = global_node_page_state(NR_FILE_DIRTY);
->  	domain_dirty_limits(gdtc);
->  
->  	if (gdtc->dirty > gdtc->bg_thresh)
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index e5f76da8cd4e..24678d6e308d 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5237,7 +5237,7 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
->  
->  	printk("active_anon:%lu inactive_anon:%lu isolated_anon:%lu\n"
->  		" active_file:%lu inactive_file:%lu isolated_file:%lu\n"
-> -		" unevictable:%lu dirty:%lu writeback:%lu unstable:%lu\n"
-> +		" unevictable:%lu dirty:%lu writeback:%lu unstable:0\n"
->  		" slab_reclaimable:%lu slab_unreclaimable:%lu\n"
->  		" mapped:%lu shmem:%lu pagetables:%lu bounce:%lu\n"
->  		" free:%lu free_pcp:%lu free_cma:%lu\n",
-> @@ -5250,7 +5250,6 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
->  		global_node_page_state(NR_UNEVICTABLE),
->  		global_node_page_state(NR_FILE_DIRTY),
->  		global_node_page_state(NR_WRITEBACK),
-> -		global_node_page_state(NR_UNSTABLE_NFS),
->  		global_node_page_state(NR_SLAB_RECLAIMABLE),
->  		global_node_page_state(NR_SLAB_UNRECLAIMABLE),
->  		global_node_page_state(NR_FILE_MAPPED),
-> @@ -5283,7 +5282,7 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
->  			" anon_thp: %lukB"
->  #endif
->  			" writeback_tmp:%lukB"
-> -			" unstable:%lukB"
-> +			" unstable:0kB"
->  			" all_unreclaimable? %s"
->  			"\n",
->  			pgdat->node_id,
-> @@ -5305,7 +5304,6 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
->  			K(node_page_state(pgdat, NR_ANON_THPS) * HPAGE_PMD_NR),
->  #endif
->  			K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
-> -			K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
->  			pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES ?
->  				"yes" : "no");
->  	}
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index c9c0d71f917f..228d9f6e1c5c 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1108,7 +1108,7 @@ int fragmentation_index(struct zone *zone, unsigned int order)
->  					TEXT_FOR_HIGHMEM(xx) xx "_movable",
->  
->  const char * const vmstat_text[] = {
-> -	/* enum zone_stat_item countes */
-> +	/* enum zone_stat_item counters */
->  	"nr_free_pages",
->  	"nr_zone_inactive_anon",
->  	"nr_zone_active_anon",
-> @@ -1162,7 +1162,6 @@ const char * const vmstat_text[] = {
->  	"nr_file_hugepages",
->  	"nr_file_pmdmapped",
->  	"nr_anon_transparent_hugepages",
-> -	"nr_unstable",
->  	"nr_vmscan_write",
->  	"nr_vmscan_immediate_reclaim",
->  	"nr_dirtied",
-> @@ -1707,8 +1706,16 @@ static void *vmstat_start(struct seq_file *m, loff_t *pos)
->  static void *vmstat_next(struct seq_file *m, void *arg, loff_t *pos)
->  {
->  	(*pos)++;
-> -	if (*pos >= NR_VMSTAT_ITEMS)
-> +	if (*pos >= NR_VMSTAT_ITEMS) {
-> +		/*
-> +		 * Deprecated counters which are no longer represented
-> +		 * in vmstat arrays. We just lie about them to be always
-> +		 * 0 to not break userspace which might expect them in
-> +		 * the output.
-> +		 */
-> +		seq_puts(m, "nr_unstable 0");
->  		return NULL;
-> +	}
->  	return (unsigned long *)m->private + *pos;
->  }
->  
-> -- 
-> 2.26.0
-> 
+Full test log:
+https://lkft.validation.linaro.org/scheduler/job/1341945#L8386
+https://lkft.validation.linaro.org/scheduler/job/1341969#L8023
 
 
-
--- 
-Michal Hocko
-SUSE Labs
+- Naresh
