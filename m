@@ -2,150 +2,112 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CEFC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C460C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 674C320730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:31:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Um+I6llq"
+	by mail.kernel.org (Postfix) with ESMTP id E678620748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586295079;
+	bh=4MWrsrBm5dOOLQJQuXWUv07Ij/HFWZoU4sb7RtDs7Po=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lOvJdptTvBnce4jTDgtxZGce9ESC868VQy3axC3J80TEjqT5G/40672c37/aOTU80
+	 t74dtc/poIjYjouTPae28N2nIFGcMx7j6lNirLAUesJW5kTqX6w1JOSioj9PodbNZl
+	 d/70nPaLKHJBvb72GR0w7KQkR/8It+C4ZFYRtdB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgDGVbH (ORCPT
+        id S1726416AbgDGVbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:31:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51886 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726416AbgDGVbH (ORCPT
+        Tue, 7 Apr 2020 17:31:18 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45120 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgDGVbR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:31:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586295065;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=qHR0CsCwZ0V31PL2BJqAGUsMlkV/uU0L7++NwyRQkxk=;
-        b=Um+I6llquRJ5Kg4SLEnji4aPAKM1j7vOdWJm1n6DfnpzmPuR+NYn3oBo7xt/avtADCrGFV
-        AKZojWQwyfBiSSA8vC5TXfGKv0YMlS0enYlGhL7Y6U4kKC/tGVY5xpc2w9MBbY2Uej5CAy
-        cQH0OwdCoINLcZ+31iLS42FIjuxV0BY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-zJCwTx1xNny4xDdybgXr8A-1; Tue, 07 Apr 2020 17:31:03 -0400
-X-MC-Unique: zJCwTx1xNny4xDdybgXr8A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEC5E149C3;
-        Tue,  7 Apr 2020 21:31:01 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-63.ams2.redhat.com [10.36.112.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 51AC75C1B0;
-        Tue,  7 Apr 2020 21:31:00 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxim Mikityanskiy <maxtram95@gmail.com>,
-        "5 . 3+" <stable@vger.kernel.org>
-Subject: [PATCH] platform/x86: intel_int0002_vgpio: Only bind to the INT0002 dev when using s2idle
-Date:   Tue,  7 Apr 2020 23:30:58 +0200
-Message-Id: <20200407213058.62870-1-hdegoede@redhat.com>
+        Tue, 7 Apr 2020 17:31:17 -0400
+Received: by mail-lf1-f67.google.com with SMTP id f8so3504120lfe.12
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iaANTB9nNT6txCWkp5q0unn31Ph9MDDOGwo0378128g=;
+        b=IG+R0/ryQyxsm3aoO9zzMJijTHkszFi1ngFSZdu48/cZWTT+aLwliZsS6eelWRzhug
+         Y4uVdfeOZeYoqfZDuNzkFzie3apptpcnSHImYRC3jQuhjNBu1vpBPHVxFh8BADZ/HBCH
+         KHCUUNqVfwbgte5zG7M9cn/4DkmoO81yuy+s8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iaANTB9nNT6txCWkp5q0unn31Ph9MDDOGwo0378128g=;
+        b=pK8uQK+hlxoFnp8howi4uv+vRuNGXLycWcPs1eBcrHlcg/Dirhkz0NWHDZkiE3OKPs
+         PiM/h1rAfV6BqAeuzxlBMzyGBrXGh3WZLWT8Q1uytnWmiJvNGFaq0SnPPPwZLGGm1HA2
+         RFlCkakgayCwMeBQXMe/yS5gXztDTW4HN9TmjU2o75HH7TOWT6GX4KAIgaUIWpi780xN
+         qJ4vvFV6qtDZBLKWmCbHHExsw0AcKTDhTGG7OA/WxfUwkV59PZeJU/ph9ZinTfZHt4Qw
+         XUb5lgcIDQlqbnuJ7Ofban4E6ciiqpQccjx4J6Ls0X5ZgCLwHjLCR6Ky7DlwJCNk5WSC
+         /8EA==
+X-Gm-Message-State: AGi0PuZ59aVxjsdviZ8xn9jj6PFHi0g2syBu9NgPlY6FpoW02bDmKdTT
+        OtpyOlTGLoi+vmGq7PmBUWhpDbcKfqs=
+X-Google-Smtp-Source: APiQypJHXd1/zlz3sbHqqFmS/UNJQ3MYmv0SfGpGCLGVHtyJOuuuIlC3VzCA8PXGgCnd8+T+yKtLcQ==
+X-Received: by 2002:ac2:457b:: with SMTP id k27mr2607437lfm.126.1586295074933;
+        Tue, 07 Apr 2020 14:31:14 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id k3sm12460024lji.43.2020.04.07.14.31.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 14:31:13 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id z23so3535124lfh.8
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:31:13 -0700 (PDT)
+X-Received: by 2002:ac2:4466:: with SMTP id y6mr2619685lfl.125.1586295072951;
+ Tue, 07 Apr 2020 14:31:12 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+References: <20200407200318.11711-1-longman@redhat.com> <0fe5dcaf078be61ef21c7f18b750c5dc14c69dd7.camel@perches.com>
+ <67c51b03-192c-3006-5071-452f351aee67@redhat.com> <CAHk-=whV5Z4XioUOW0UM-PBrW7iqb0HwWKQU5Vn8b5pmsDm=Ww@mail.gmail.com>
+ <20200407212447.GA29554@pc636>
+In-Reply-To: <20200407212447.GA29554@pc636>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 7 Apr 2020 14:30:56 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whrZLs=+VkBXS_KWrMwoM2PRmw6mKEPJHRBQ_e3raFh9Q@mail.gmail.com>
+Message-ID: <CAHk-=whrZLs=+VkBXS_KWrMwoM2PRmw6mKEPJHRBQ_e3raFh9Q@mail.gmail.com>
+Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive data objects
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Waiman Long <longman@redhat.com>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
-irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
-the parents IRQ because this was breaking suspend (causing immediate
-wakeups) on an Asus E202SA.
+On Tue, Apr 7, 2020 at 2:25 PM Uladzislau Rezki <urezki@gmail.com> wrote:
+>
+> Seems like there is only one place where we can "sleep". I mean when we
+> call vfree(). That is free_vmap_area_noflush() -> try_purge_vmap_area_lazy().
+> Basically try_purge_vmap_area_lazy() can call the schedule() what is not
+> allowed for IRQs. Instead of inlining the try_purge_vmap_area_lazy()
+> into current context we can schedule_work(). And i think it makes sense
+> from many point of views.
 
-This workaround for this issue is mostly fine, on most Cherry Trail
-devices where we need the INT0002 device for wakeups by e.g. USB kbds,
-the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
-anyways.
+I don't think that's the only case.
 
-But not on all devices, specifically on a Medion Akoya E1239T there is
-no SCI at all, and because the irq_set_wake request is not passed on to
-the parent IRQ, wake up by the builtin USB kbd does not work here.
+Or rather, that may be the only case of _sleeping_, but we also aren't
+irq-safe wrt locking.
 
-So the workaround for the Asus E202SA immediate wake problem is causing
-problems elsewhere; and in hindsight it is not the correct fix,
-the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
-Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
-actually is a Braswell device.
+And I'm not just talking about the vmap_purge_lock mutex, but all the
+spinlocks etc we have.
 
-Most (all?) Braswell devices use classic S3 mode suspend rather then
-s2idle suspend and in this case directly dealing with PME events as
-the INT0002 driver does likely is not the best idea, so that this is
-causing issues is not surprising.
+That said, I haven't looked at that code in _ages_. Maybe those things
+would be trivial to just turn into irq-safe ones and there are no real
+latency issues anywhere.
 
-Replace the workaround of not passing irq_set_wake requests on to the
-parents IRQ, by not binding to the INT0002 device when s2idle is not used=
-.
-This fixes USB kbd wakeups not working on some Cherry Trail devices,
-while still avoiding mucking with the wakeup flags on the Asus E202SA
-(and other Brasswell devices).
-
-Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
-Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
-Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement i=
-rq_set_wake on Bay Trail")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
- 1 file changed, 5 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platfor=
-m/x86/intel_int0002_vgpio.c
-index 55f088f535e2..e8bec72d3823 100644
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip =3D {
- 	.irq_set_wake		=3D int0002_irq_set_wake,
- };
-=20
--static struct irq_chip int0002_cht_irqchip =3D {
--	.name			=3D DRV_NAME,
--	.irq_ack		=3D int0002_irq_ack,
--	.irq_mask		=3D int0002_irq_mask,
--	.irq_unmask		=3D int0002_irq_unmask,
--	/*
--	 * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
--	 * and we don't want to mess with the ACPI SCI irq settings.
--	 */
--	.flags			=3D IRQCHIP_SKIP_SET_WAKE,
--};
--
- static const struct x86_cpu_id int0002_cpu_ids[] =3D {
- 	INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),	/* Valleyview, Ba=
-y Trail  */
--	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),	/* Braswell, Cherry =
-Trail */
-+	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_byt_irqchip),	/* Braswell, Cherry =
-Trail */
- 	{}
- };
-=20
-@@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pde=
-v)
- 	if (!cpu_id)
- 		return -ENODEV;
-=20
-+	/* We only need to directly deal with PMEs when using s2idle */
-+	if (!pm_suspend_default_s2idle())
-+		return -ENODEV;
-+
- 	irq =3D platform_get_irq(pdev, 0);
- 	if (irq < 0)
- 		return irq;
---=20
-2.26.0
-
+                Linus
