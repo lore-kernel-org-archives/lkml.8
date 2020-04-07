@@ -2,374 +2,174 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBC1C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104C4C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0EC42063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B0F206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbix+h57"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VC7ZWZ2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgDGLfA (ORCPT
+        id S1728499AbgDGLfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:35:00 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46267 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgDGLfA (ORCPT
+        Tue, 7 Apr 2020 07:35:10 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47037 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728075AbgDGLfK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:35:00 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j17so3416261wru.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 04:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=il8xBtLW16WXNK+wuzc/LJBVTLop6QSkf7DLUFmwyOc=;
-        b=gbix+h57+voX+m2naQYsbc2VTqDGxqJIJtfDRAdMEjQWNj+6xdbub1evgEdBKIjy4l
-         NJDlhMZNBF7Dq22ylAC8bUOHhU1R7IBosudCpqYfuHKuSzfxyTGQFtvLMTMB8aKFMv+l
-         fvFuUzu1W9uTUfHTlOKXUr/HpouS1PpVWD5oj99zc5YAcFeMk7ygHNrBrB7+VewFRrFn
-         mspajw5z2zycifmDOhwYgJ8cRqd6xiUclH0M1S4z4pTrVnLFxPlRPZ0vGsK49Jo0gqb5
-         xt9tt+gzswAEtNUi5Me4TtZtHEGCfjOCfCvW/T+gXLKHDHpSI9rUZ7JA8/TKpdMBMKSQ
-         TTww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=il8xBtLW16WXNK+wuzc/LJBVTLop6QSkf7DLUFmwyOc=;
-        b=AZDkmNT6JT4waSNCT0m/EixQhWv0W78ItCDkKuCrboZV3rR/IG9ylO3yXdzI4I5GGc
-         U4eC6mXCCvJGBJK0vxp+IVN4Ti+cyd6yJz7qeSNZ/nxb/rB5o77o4VbWxqER/eqAZfI/
-         0DK7AmIXvzdlktRURLqRY39G6MUBzySuUgJwH6BJ8+X6bIufYHUACD5PXec7TWiZOhDA
-         ZXzfTP1wP4s43QK4pDVDdX0nCKwLsbRX9mkYpIcbYiuFCC8vQf6BYzYQqcuoztTbUjC4
-         JGdBH6q2KHvjFICsi3UdSAOCcCvPZbrNu+7A38/1eIERfLrkrY6mtsxLb/7uB5/xO1CU
-         s2RQ==
-X-Gm-Message-State: AGi0PuaRJgBLYOni0kIiNxznBbtE7y23xKGZkb21vSjdyV2lSboiuLkB
-        af2wQO/nwMUnvuH6F/wm2jw=
-X-Google-Smtp-Source: APiQypKQcY0oEFBY3G0p5BZU3XbBHc15vggSpsP6EgED1KHiHq8d+uNyKaSQtS/3IAs9ZBpYW6dJ6g==
-X-Received: by 2002:a05:6000:120a:: with SMTP id e10mr2438433wrx.188.1586259297309;
-        Tue, 07 Apr 2020 04:34:57 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id u17sm2035588wmu.31.2020.04.07.04.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 04:34:56 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 13:34:54 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mripard@kernel.org, wens@csie.org, ebiederm@xmission.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: Trying to kexec on Allwinner A80
-Message-ID: <20200407113454.GA457@Red>
-References: <20200406082720.GA31279@Red>
- <20200407100203.GK25745@shell.armlinux.org.uk>
- <20200407101912.GL25745@shell.armlinux.org.uk>
+        Tue, 7 Apr 2020 07:35:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586259308;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=qpjtsSlf5dg8bytaCIXN5nNpvbIU9jzXLRpTtfMMYBI=;
+        b=VC7ZWZ2shbpJnWNo4bw4u3/4yfjsQqvwC2i6C2lQCPzATQY0y6Ev5KPY1dnpIJpx5NQqJp
+        4G6zHU9xl68sGSiEzUJSA79aVF4X0vHyPJ6z80pEwyWzBEdefM3WXrHKQW7eFskTQTeyxQ
+        1zHBxgsikqRHOd7gPFEaXbbsJk9JPPY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-413-3fVkbs98M8egPD6ZcYNwag-1; Tue, 07 Apr 2020 07:35:06 -0400
+X-MC-Unique: 3fVkbs98M8egPD6ZcYNwag-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B150107ACC4;
+        Tue,  7 Apr 2020 11:35:04 +0000 (UTC)
+Received: from [10.36.114.167] (ovpn-114-167.ams2.redhat.com [10.36.114.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B5EEDC0D89;
+        Tue,  7 Apr 2020 11:35:01 +0000 (UTC)
+Subject: Re: [PATCH v2 2/5] KVM: s390: vsie: Fix delivery of addressing
+ exceptions
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        stable@vger.kernel.org
+References: <20200403153050.20569-1-david@redhat.com>
+ <20200403153050.20569-3-david@redhat.com>
+ <20200407130013.2898fb57@p-imbrenda>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <7345a3fa-d790-5e9c-dbc0-58cfd1b6101e@redhat.com>
+Date:   Tue, 7 Apr 2020 13:35:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407101912.GL25745@shell.armlinux.org.uk>
+In-Reply-To: <20200407130013.2898fb57@p-imbrenda>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 11:19:12AM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Apr 07, 2020 at 11:02:03AM +0100, Russell King - ARM Linux admin wrote:
-> > On Mon, Apr 06, 2020 at 10:27:20AM +0200, Corentin Labbe wrote:
-> > > Hello
-> > > 
-> > > I am trying to add the last missing Allwinner Soc in kernelci: the A80.
-> > > But this SoC does not have any way to be used in kernelci, no USB nor network in uboot.
-> > > So I have tried to fake uboot since the kernel has network support and run the new kernel via kexec.
-> > > 
-> > > But kexec 2.0.18 fail to work:
-> > > kexec --force /tmp/kernel --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
-> > 
-> > As I mentioned in my other reply, this apparent "kexec" command line
-> > does not seem to reflect the arguments you actually used to invoke
-> > the kexec output below.
-> > 
-> > > syscall kexec_file_load not available.
-> > 
-> > This message is produced by do_kexec_file_load().  This function is only
-> > invoked if the do_kexec_file_syscall flag in main() is set.  This flag
-> > is only set if one of:
-> > 
-> > 	--kexec-file-syscall
-> > 	--kexec-syscall
-> > 	--kexec-syscall-auto
-> > 	-s
-> > 	-c
-> > 	-a
-> > 
-> > are provided on the kexec command line.  Your command line above does
-> > not contain any of those arguments, so either the command line is not
-> > what you used, or you are using a patched kexec, or your compiler is
-> > grossly miscompiling kexec.
-> > 
-> > > Try gzip decompression.
-> > > kernel: 0xb6535008 kernel_size: 0x853200
-> > > MEMORY RANGES
-> > > 0000000020000000-000000009fffffff (0)
-> > 
-> > Then there's the debug output, which is only produced if the
-> > kexec_debug global is set, which in turn is only set if --debug or -d
-> > is supplied on the kexec command line - which again, your kexec
-> > command line does not contain this.
-> > 
-> > > zImage header: 0x016f2818 0x00000000 0x00853200
-> > > zImage size 0x853200, file size 0x853200
-> > > zImage requires 0x00864200 bytes
-> > >   offset 0x0000bae4 tag 0x5a534c4b size 8
-> > > Decompressed kernel sizes:
-> > >  text+data 0x0158b3a0 bss 0x000632f0 total 0x015ee690
-> > > Resulting kernel space: 0x01def5a0
-> > > Kernel: address=0x20008000 size=0x01def5a0
-> > > Initrd: address=0x21df8000 size=0x0090b6fa
-> > > DT    : address=0x22704000 size=0x00005c09
-> > > kexec_load: entry = 0x20008000 flags = 0x280000
-> > > nr_segments = 3
-> > > segment[0].buf   = 0xb6535008
-> > > segment[0].bufsz = 0x853204
-> > > segment[0].mem   = 0x20008000
-> > > segment[0].memsz = 0x854000
-> > > segment[1].buf   = 0xb5c29008
-> > > segment[1].bufsz = 0x90b6fa
-> > > segment[1].mem   = 0x21df8000
-> > > segment[1].memsz = 0x90c000
-> > > segment[2].buf   = 0x4db50
-> > > segment[2].bufsz = 0x5c09
-> > > segm[   71.039126] kexec_core: Starting new kernel
-> > > ent[2].mem   = 0[   71.044712] Disabling non-boot CPUs ...
-> > > x22704000
-> > > segment[2].memsz = 0x6000
-> > > [   71.489070] Bye!
-> > > 
-> > > 
-> > > I have tried also kexec-2.0.20
-> > > Try gzip decompression.
-> > > zImage header: 0x00000000 0x000019b4 0x00001000
-> > > zImage requires 0x008641c0 bytes
-> > > Could not find a free area of memory of 0x86c1c0 bytes...
-> > > Cannot load /tmp/kernel
-> > 
-> > kexec 2.0.20 doesn't appear to have changed anything to do with how
-> > allocations are done.  The above output looks even more strange and
-> > confusing.  "zImage header" is produced by debugging prints, which
-> > imply that kexec_debug was set.
-> > 
-> > However, the "MEMORY RANGES" output is missing - this has not gone
-> > away with kexec 2.0.20, it's still there, and works for me (I've
-> > just built and tested kexec 2.0.20).
-> > 
-> > Also, the values on the "zImage header" line are completely messed
-> > up; the first should be the zImage magic value and it is not - that
-> > suggests that the file being loaded is not a zImage file, or is
-> > corrupted.
+On 07.04.20 13:00, Claudio Imbrenda wrote:
+> On Fri,  3 Apr 2020 17:30:47 +0200
+> David Hildenbrand <david@redhat.com> wrote:
 > 
-> Under a VM (the kernel doesn't have kexec support - but that's not a
-> problem, because the initial loading stages are the relevant parts
-> which all happen in userspace):
+>> Whenever we get an -EFAULT, we failed to read in guest 2 physical
+>> address space. Such addressing exceptions are reported via a program
+>> intercept to the nested hypervisor.
+>>
+>> We faked the intercept, we have to return to guest 2. Instead, right
+>> now we would be returning -EFAULT from the intercept handler,
+>> eventually crashing the VM.
+>>
+>> Addressing exceptions can only happen if the g2->g3 page tables
+>> reference invalid g2 addresses (say, either a table or the final page
+>> is not accessible - so something that basically never happens in sane
+>> environments.
+>>
+>> Identified by manual code inspection.
+>>
+>> Fixes: a3508fbe9dc6 ("KVM: s390: vsie: initial support for nested
+>> virtualization") Cc: <stable@vger.kernel.org> # v4.8+
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  arch/s390/kvm/vsie.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
+>> index 076090f9e666..4f6c22d72072 100644
+>> --- a/arch/s390/kvm/vsie.c
+>> +++ b/arch/s390/kvm/vsie.c
+>> @@ -1202,6 +1202,7 @@ static int vsie_run(struct kvm_vcpu *vcpu,
+>> struct vsie_page *vsie_page) scb_s->iprcc = PGM_ADDRESSING;
+>>  		scb_s->pgmilc = 4;
+>>  		scb_s->gpsw.addr = __rewind_psw(scb_s->gpsw, 4);
+>> +		rc = 1;
+>>  	}
+>>  	return rc;
+>>  }
 > 
-> # build/sbin/kexec --version
-> kexec-tools 2.0.20
-> # build/sbin/kexec --debug --load virt-vmlinuz-5.4.0+
-> Try gzip decompression.
-> kernel: 0xb6a6c008 kernel_size: 0x407358
-> MEMORY RANGES
-> 0000000040000000-000000007fffffff (0)
-> zImage header: 0x016f2818 0x00000000 0x00407358
-> zImage size 0x407358, file size 0x407358
-> zImage requires 0x00418358 bytes
->   offset 0x00007178 tag 0x5a534c4b size 12
-> Decompressed kernel sizes:
->  text+data 0x00c2ed24 bss 0x000319ec total 0x00c60710
-> Resulting kernel space: 0x0104707c
-> Kernel: address=0x40008000 size=0x0104707c
-> DT    : address=0x41051000 size=0x00100000
-> kexec_load: entry = 0x40008000 flags = 0x280000
-> nr_segments = 2
-> segment[0].buf   = 0xb6a6c008
-> segment[0].bufsz = 0x40735c
-> segment[0].mem   = 0x40008000
-> segment[0].memsz = 0x408000
-> segment[1].buf   = 0xb696b008
-> segment[1].bufsz = 0x100000
-> segment[1].mem   = 0x41051000
-> segment[1].memsz = 0x100000
-> kexec_load failed: Function not implemented
-> entry       = 0x40008000 flags = 0x280000
-> nr_segments = 2
-> segment[0].buf   = 0xb6aa0008
-> segment[0].bufsz = 0x40735c
-> segment[0].mem   = 0x40008000
-> segment[0].memsz = 0x408000
-> segment[1].buf   = 0xb699f008
-> segment[1].bufsz = 0x100000
-> segment[1].mem   = 0x41051000
-> segment[1].memsz = 0x100000
-> #
+> so, the reason why we never noticed this issue before is simply that
+> nobody tried running a misbehaving nested guest?
+
+Yes, actually, a misbehaving nested hypervisor.
+
 > 
-> On a SolidRun Hummingboard2 (iMX6 based, which has kexec support, same
-> kexec binary, first without an initrd, and then with):
-> 
-> # build/sbin/kexec --version
-> kexec-tools 2.0.20
-> # build/sbin/kexec --debug --load multi-vmlinuz-5.6.0+
-> Try gzip decompression.
-> kernel: 0xb6763008 kernel_size: 0x7273a8
-> MEMORY RANGES
-> 0000000010000000-000000004fffffff (0)
-> zImage header: 0x016f2818 0x00000000 0x007273a8
-> zImage size 0x7273a8, file size 0x7273a8
-> zImage requires 0x007383a8 bytes
->   offset 0x00004da8 tag 0x5a534c4b size 12
-> Decompressed kernel sizes:
->  text+data 0x00dbedb8 bss 0x007489f8 total 0x015077b0
-> Resulting kernel space: 0x015077b0
-> Kernel: address=0x10008000 size=0x015077b0
-> DT    : address=0x11511000 size=0x0000b000
-> kexec_load: entry = 0x10008000 flags = 0x280000
-> nr_segments = 2
-> segment[0].buf   = 0xb6763008
-> segment[0].bufsz = 0x7273ac
-> segment[0].mem   = 0x10008000
-> segment[0].memsz = 0x728000
-> segment[1].buf   = 0x1207cb0
-> segment[1].bufsz = 0xb000
-> segment[1].mem   = 0x11511000
-> segment[1].memsz = 0xb000
-> # build/sbin/kexec --unload
-> # build/sbin/kexec --debug --load multi-vmlinuz-5.6.0+ --initrd /boot/initrd.img-5.4.0+
-> Try gzip decompression.
-> kernel: 0xb65d8008 kernel_size: 0x7273a8
-> MEMORY RANGES
-> 0000000010000000-000000004fffffff (0)
-> zImage header: 0x016f2818 0x00000000 0x007273a8
-> zImage size 0x7273a8, file size 0x7273a8
-> zImage requires 0x007383a8 bytes
->   offset 0x00004da8 tag 0x5a534c4b size 12
-> Decompressed kernel sizes:
->  text+data 0x00dbedb8 bss 0x007489f8 total 0x015077b0
-> Resulting kernel space: 0x015077b0
-> Kernel: address=0x10008000 size=0x015077b0
-> Initrd: address=0x11510000 size=0x0053f46a
-> DT    : address=0x11a50000 size=0x0000b044
-> kexec_load: entry = 0x10008000 flags = 0x280000
-> nr_segments = 3
-> segment[0].buf   = 0xb65d8008
-> segment[0].bufsz = 0x7273ac
-> segment[0].mem   = 0x10008000
-> segment[0].memsz = 0x728000
-> segment[1].buf   = 0xb6098008
-> segment[1].bufsz = 0x53f46a
-> segment[1].mem   = 0x11510000
-> segment[1].memsz = 0x540000
-> segment[2].buf   = 0x993cf0
-> segment[2].bufsz = 0xb044
-> segment[2].mem   = 0x11a50000
-> segment[2].memsz = 0xc000
-> 
-> On clearfog (Armada 388):
-> 
-> # build/sbin/kexec --debug --load multi-vmlinuz-5.6.0+
-> Try gzip decompression.
-> kernel: 0xb6745008 kernel_size: 0x7273a8
-> MEMORY RANGES
-> 0000000000000000-000000003fffffff (0)
-> zImage header: 0x016f2818 0x00000000 0x007273a8
-> zImage size 0x7273a8, file size 0x7273a8
-> zImage requires 0x007383a8 bytes
->   offset 0x00004da8 tag 0x5a534c4b size 12
-> Decompressed kernel sizes:
->  text+data 0x00dbedb8 bss 0x007489f8 total 0x015077b0
-> Resulting kernel space: 0x015077b0
-> Kernel: address=0x00008000 size=0x015077b0
-> DT    : address=0x01511000 size=0x00007be3
-> kexec_load: entry = 0x8000 flags = 0x280000
-> nr_segments = 2
-> segment[0].buf   = 0xb6745008
-> segment[0].bufsz = 0x7273ac
-> segment[0].mem   = 0x8000
-> segment[0].memsz = 0x728000
-> segment[1].buf   = 0x1be7f68
-> segment[1].bufsz = 0x7be3
-> segment[1].mem   = 0x1511000
-> segment[1].memsz = 0x8000
-> 
-> All appears to work fine.
+> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 > 
 
-I have found a part of my problem, kexec-tool seems to always use the OPT_KEXEC_FILE_SYSCALL.
-Even if I set --kexec-syscall.
+Thanks!
 
-On my early tries I got "syscall kexec_file_load not available."
-When I did a full rebuild of my buildroot to go back to kexec-tool 2.0.18, this syscall become availlable.
-The get_memory_ranges seems to be called only from my_load() which is executed when !do_kexec_file_syscall.
+-- 
+Thanks,
 
-Since kexec-tool always set do_kexec_file_syscall, it is never called.
-I have added a print for each syscal option, and it seems that OPT_KEXEC_SYSCALL_AUTO is called after the handling of OPT_KEXEC_SYSCALL.
+David / dhildenb
 
-So I have hack to always set do_kexec_file_syscall=0
-
-So now my test go further, but the final kernel crash.
-DEBUG: bootz: run kexec with /tmp/kernel --debug --kexec-syscall --force --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
-Set DEBUG!
-main:1417 OPT_KEXEC_SYSCALL
-main:1422 OPT_KEXEC_SYSCALL_AUTO
-arch_process_options:119
-main:1500
-main:1517 res=0 do_load=1
-main:1519 res=0 do_kexec_file_syscall=0
-my_load:713
-Try gzip decompression.
-kernel: 0xb693b008 kernel_size: 0x443ac0
-get_memory_ranges:36
-MEMORY RANGES
-0000000020000000-000000009fffffff (0)
-DEBUG: my_load:737 memory_ranges=1
-zImage_arm_load:423
-zImage header: 0x016f2818 0x00000000 0x00443ac0
-zImage size 0x443ac0, file size 0x443ac0
-zImage requires 0x00454ac0 bytes
-  offset 0x00006678 tag 0x5a534c4b size 8
-Decompressed kernel sizes:
- text+data 0x00b78080 bss 0x0003d3c0 total 0x00bb5440
-Resulting kernel space: 0x00fccb40
-DEBUG: locate_hole:237 memory_ranges=1
-Check 0/1 536870912 0 type=-1610612737
-Check 0/1 536870912 0
-Kernel: address=0x20008000 size=0x00fccb40
-DEBUG: locate_hole:237 memory_ranges=1
-Check 0/1 536870912 0 type=-1610612737
-Check 0/1 536870912 0
-Initrd: address=0x20fd5000 size=0x0167213d
-DEBUG: locate_hole:237 memory_ranges=1
-Check 0/1 536870912 0 type=-1610612737
-Check 0/2 536870912 0
-Check 1/2 577011712 0
-DT    : address=0x22648000 size=0x00006043
-kexec_load: entry = 0x20008000 flags = 0x280000
-nr_segments = 3
-segment[0].buf   = 0xb693b008
-segment[0].bufsz = 0x443ac4
-segment[0].mem   = 0x20008000
-segment[0].memsz = 0x444000
-segment[1].buf   = 0xb52c8008
-segment[1].bufsz = 0x167213d
-segment[1].mem   = 0x20fd5000
-segment[1].memsz = 0x1673000
-segment[2].buf   = 0x4ef88
-segment[2].bufsz = 0x6043
-segment[2].mem   = 0x2[   31.265096] sun7i-dwmac 830000.ethernet eth0: Link is Down
-2648000
-segment[2].memsz = 0x7000
-main:1568 res=0
-main:1582 res=0 do_exec=1
-[   31.277297] kexec_core: Starting new kernel
-[   31.282700] Disabling non-boot CPUs ...
-[   31.692085] Bye!
-C:0x200080C0-0x2044BAC0->0x20B80B00-0x20FC4500
