@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0809CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14150C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B0620857
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AAB208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217722;
-	bh=qM8LL6uEKVv7hUeypNV5D5h6B/YiokxF949tvBiBp3s=;
+	s=default; t=1586217728;
+	bh=XQEArXGItVvaQZkfpdMmLcNNI8l93bdzj2TABmVv/Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q1TXjIBNz2JYO2tFD2qNChfMWeCsYkWwtvjiovgdRolIt+Ack8J1T/a5JaepuDw3R
-	 W+GEGIuCHwLqXOsuygx+FZ8wS3GbewaI1RSdSdwReiq0DXkmeFI0bQtuYivzpjJ+X6
-	 Xbm4I/vwU439q1kTUCprzANyso42vHcM/NDRYPog=
+	b=sOdLgtYeXh5bhsYePvdrHzP2pDydMnbNOOQRkR9KBeBusTUIc2UJvT2g8fnRWpzaK
+	 p5172zUDae6WzX9AFb4T1shfVaJ0Veec1yBTnQD78RMQfhjRwFP3n22FaMl/yuJZbS
+	 0Xz7noppB5MIzTTkJZEm3MxqGggKBV8ALWCz1GZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgDGACB (ORCPT
+        id S1727928AbgDGACI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35758 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727706AbgDGAB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:59 -0400
+        id S1727905AbgDGACH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 806022082F;
-        Tue,  7 Apr 2020 00:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46F1620857;
+        Tue,  7 Apr 2020 00:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217718;
-        bh=qM8LL6uEKVv7hUeypNV5D5h6B/YiokxF949tvBiBp3s=;
+        s=default; t=1586217726;
+        bh=XQEArXGItVvaQZkfpdMmLcNNI8l93bdzj2TABmVv/Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gj6o9DH2xFLmFpM6qblHLRiBLRn0aZAxkCSxvORrUg7MG9h/znLUc/kazXKqmeii/
-         tjUTmCfvPRM9/s2GVSjj16KIRsrzrTbyCkGURyS/8a21TTKbzCd3BdG/OYV1cbmAJJ
-         aK4rdsGkwMzXAqqgzO9sipPM77BPajLz51SxHjaQ=
+        b=z8sFap4/lh1WkI/Es3d7UcZwc4KOfNBSaHBUJJ7m3MZUFQ30KhQA7I6JtBH/rwy9x
+         cnpZAe+qKcOFi0uHPq0/QZip5obMf7C6aLg99aiY2ULLxcfYqh7lwoGU5ViI3dPc9F
+         fBEHYkYwdfzWZZ80zw8QC2A3M2iqXNlmY0JFHnEw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/32] net/mlx5e: kTLS, Fix wrong value in record tracker enum
-Date:   Mon,  6 Apr 2020 20:01:23 -0400
-Message-Id: <20200407000151.16768-5-sashal@kernel.org>
+Cc:     Grigore Popescu <grigore.popescu@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 11/32] soc: fsl: dpio: register dpio irq handlers after dpio create
+Date:   Mon,  6 Apr 2020 20:01:29 -0400
+Message-Id: <20200407000151.16768-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
 References: <20200407000151.16768-1-sashal@kernel.org>
@@ -61,37 +60,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+From: Grigore Popescu <grigore.popescu@nxp.com>
 
-[ Upstream commit f28ca65efa87b3fb8da3d69ca7cb1ebc0448de66 ]
+[ Upstream commit fe8fe7723a3a824790bda681b40efd767e2251a7 ]
 
-Fix to match the HW spec: TRACKING state is 1, SEARCHING is 2.
-No real issue for now, as these values are not currently used.
+The dpio irqs must be registered when you can actually
+receive interrupts, ie when the dpios are created.
+Kernel goes through NULL pointer dereference errors
+followed by kernel panic [1] because the dpio irqs are
+enabled before the dpio is created.
 
-Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+[1]
+Unable to handle kernel NULL pointer dereference at virtual address 0040
+fsl_mc_dpio dpio.14: probed
+fsl_mc_dpio dpio.13: Adding to iommu group 11
+  ISV = 0, ISS = 0x00000004
+Unable to handle kernel NULL pointer dereference at virtual address 0040
+Mem abort info:
+  ESR = 0x96000004
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000004
+  CM = 0, WnR = 0
+[0000000000000040] user address but active_mm is swapper
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 2 PID: 151 Comm: kworker/2:1 Not tainted 5.6.0-rc4-next-20200304 #1
+Hardware name: NXP Layerscape LX2160ARDB (DT)
+Workqueue: events deferred_probe_work_func
+pstate: 00000085 (nzcv daIf -PAN -UAO)
+pc : dpaa2_io_irq+0x18/0xe0
+lr : dpio_irq_handler+0x1c/0x28
+sp : ffff800010013e20
+x29: ffff800010013e20 x28: ffff0026d9b4c140
+x27: ffffa1d38a142018 x26: ffff0026d2953400
+x25: ffffa1d38a142018 x24: ffffa1d38a7ba1d8
+x23: ffff800010013f24 x22: 0000000000000000
+x21: 0000000000000072 x20: ffff0026d2953400
+x19: ffff0026d2a68b80 x18: 0000000000000001
+x17: 000000002fb37f3d x16: 0000000035eafadd
+x15: ffff0026d9b4c5b8 x14: ffffffffffffffff
+x13: ff00000000000000 x12: 0000000000000038
+x11: 0101010101010101 x10: 0000000000000040
+x9 : ffffa1d388db11e4 x8 : ffffa1d38a7e40f0
+x7 : ffff0026da414f38 x6 : 0000000000000000
+x5 : ffff0026da414d80 x4 : ffff5e5353d0c000
+x3 : ffff800010013f60 x2 : ffffa1d388db11c8
+x1 : ffff0026d2a67c00 x0 : 0000000000000000
+Call trace:
+ dpaa2_io_irq+0x18/0xe0
+ dpio_irq_handler+0x1c/0x28
+ __handle_irq_event_percpu+0x78/0x2c0
+ handle_irq_event_percpu+0x38/0x90
+ handle_irq_event+0x4c/0xd0
+ handle_fasteoi_irq+0xbc/0x168
+ generic_handle_irq+0x2c/0x40
+ __handle_domain_irq+0x68/0xc0
+ gic_handle_irq+0x64/0x150
+ el1_irq+0xb8/0x180
+ _raw_spin_unlock_irqrestore+0x14/0x48
+ irq_set_affinity_hint+0x6c/0xa0
+ dpaa2_dpio_probe+0x2a4/0x518
+ fsl_mc_driver_probe+0x28/0x70
+ really_probe+0xdc/0x320
+ driver_probe_device+0x5c/0xf0
+ __device_attach_driver+0x88/0xc0
+ bus_for_each_drv+0x7c/0xc8
+ __device_attach+0xe4/0x140
+ device_initial_probe+0x18/0x20
+ bus_probe_device+0x98/0xa0
+ device_add+0x41c/0x758
+ fsl_mc_device_add+0x184/0x530
+ dprc_scan_objects+0x280/0x370
+ dprc_probe+0x124/0x3b0
+ fsl_mc_driver_probe+0x28/0x70
+ really_probe+0xdc/0x320
+ driver_probe_device+0x5c/0xf0
+ __device_attach_driver+0x88/0xc0
+ bus_for_each_drv+0x7c/0xc8
+ __device_attach+0xe4/0x140
+ device_initial_probe+0x18/0x20
+ bus_probe_device+0x98/0xa0
+ deferred_probe_work_func+0x74/0xa8
+ process_one_work+0x1c8/0x470
+ worker_thread+0x1f8/0x428
+ kthread+0x124/0x128
+ ret_from_fork+0x10/0x18
+Code: a9bc7bfd 910003fd a9025bf5 a90363f7 (f9402015)
+---[ end trace 38298e1a29e7a570 ]---
+Kernel panic - not syncing: Fatal exception in interrupt
+SMP: stopping secondary CPUs
+Mem abort info:
+  ESR = 0x96000004
+  CM = 0, WnR = 0
+  EC = 0x25: DABT (current EL), IL = 32 bits
+[0000000000000040] user address but active_mm is swapper
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000004
+  CM = 0, WnR = 0
+[0000000000000040] user address but active_mm is swapper
+SMP: failed to stop secondary CPUs 0-2
+Kernel Offset: 0x21d378600000 from 0xffff800010000000
+PHYS_OFFSET: 0xffffe92180000000
+CPU features: 0x10002,21806008
+Memory Limit: none
+---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Signed-off-by: Grigore Popescu <grigore.popescu@nxp.com>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/soc/fsl/dpio/dpio-driver.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
-index a3efa29a4629d..63116be6b1d60 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
-@@ -38,8 +38,8 @@ enum {
+diff --git a/drivers/soc/fsl/dpio/dpio-driver.c b/drivers/soc/fsl/dpio/dpio-driver.c
+index 70014ecce2a7e..7b642c330977f 100644
+--- a/drivers/soc/fsl/dpio/dpio-driver.c
++++ b/drivers/soc/fsl/dpio/dpio-driver.c
+@@ -233,10 +233,6 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
+ 		goto err_allocate_irqs;
+ 	}
  
- enum {
- 	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_START     = 0,
--	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_SEARCHING = 1,
--	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_TRACKING  = 2,
-+	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_TRACKING  = 1,
-+	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_SEARCHING = 2,
- };
+-	err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
+-	if (err)
+-		goto err_register_dpio_irq;
+-
+ 	priv->io = dpaa2_io_create(&desc, dev);
+ 	if (!priv->io) {
+ 		dev_err(dev, "dpaa2_io_create failed\n");
+@@ -244,6 +240,10 @@ static int dpaa2_dpio_probe(struct fsl_mc_device *dpio_dev)
+ 		goto err_dpaa2_io_create;
+ 	}
  
- struct mlx5e_ktls_offload_context_tx {
++	err = register_dpio_irq_handlers(dpio_dev, desc.cpu);
++	if (err)
++		goto err_register_dpio_irq;
++
+ 	dev_info(dev, "probed\n");
+ 	dev_dbg(dev, "   receives_notifications = %d\n",
+ 		desc.receives_notifications);
 -- 
 2.20.1
 
