@@ -2,171 +2,94 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FC1C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67A6C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F336F206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA6D206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgDGRRX (ORCPT
+        id S1726477AbgDGRUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:17:23 -0400
-Received: from mga09.intel.com ([134.134.136.24]:7902 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgDGRRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:17:22 -0400
-IronPort-SDR: EvZql3krYj3kyZ/MUpIBSLzNPC/uALBZRxbkrcRG0v7azaqb37exafJrlNWb9aLF91c9Tk6uXT
- Js911c4J6xMQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 10:17:20 -0700
-IronPort-SDR: f+e98gTz84KNvlgovAVPTfEQ+3pXzSPnYUp+lSC72IsBa7QeERvkKZhPGBNFVKUHaEv9jQD1dA
- 7/YiU7dClaRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,355,1580803200"; 
-   d="scan'208";a="286288039"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Apr 2020 10:17:20 -0700
-Received: from [10.249.224.62] (abudanko-mobl.ccr.corp.intel.com [10.249.224.62])
-        by linux.intel.com (Postfix) with ESMTP id D9F375802BC;
-        Tue,  7 Apr 2020 10:17:15 -0700 (PDT)
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <20200407143014.GD11186@kernel.org> <20200407143551.GF11186@kernel.org>
- <10cc74ee-8587-8cdb-f85f-5724b370a2ce@linux.intel.com>
- <20200407163654.GB12003@kernel.org> <20200407164050.GC12003@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <ca8dc2ac-5a1d-d1a6-ca04-a4b5d9e9cbef@linux.intel.com>
-Date:   Tue, 7 Apr 2020 20:17:14 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 13:20:42 -0400
+Received: from smtprelay0023.hostedemail.com ([216.40.44.23]:34162 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726277AbgDGRUm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 13:20:42 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 62F4D18033F62;
+        Tue,  7 Apr 2020 17:20:41 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: army88_5e3ac7fd8b42
+X-Filterd-Recvd-Size: 2612
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  7 Apr 2020 17:20:40 +0000 (UTC)
+Message-ID: <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
+Subject: Re: get_maintainer.pl sends bogus addresses to git send-email
+From:   Joe Perches <joe@perches.com>
+To:     Jeff King <peff@peff.net>, Olaf Hering <olaf@aepfle.de>
+Cc:     linux-kernel@vger.kernel.org, git@vger.kernel.org
+Date:   Tue, 07 Apr 2020 10:18:41 -0700
+In-Reply-To: <20200407170257.GA1844923@coredump.intra.peff.net>
+References: <20200407154046.GA15368@aepfle.de>
+         <20200407170257.GA1844923@coredump.intra.peff.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200407164050.GC12003@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 07.04.2020 19:40, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Apr 07, 2020 at 01:36:54PM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Tue, Apr 07, 2020 at 05:54:27PM +0300, Alexey Budankov escreveu:
->>> On 07.04.2020 17:35, Arnaldo Carvalho de Melo wrote:
->>>> Em Tue, Apr 07, 2020 at 11:30:14AM -0300, Arnaldo Carvalho de Melo escreveu:
->>>>> [perf@five ~]$ type perf
->>>>> perf is hashed (/home/perf/bin/perf)
->>>>> [perf@five ~]$ getcap /home/perf/bin/perf
->>>>> /home/perf/bin/perf = cap_sys_ptrace,cap_syslog,38+ep
->>>>> [perf@five ~]$ groups
->>>>> perf perf_users
->>>>> [perf@five ~]$ id
->>>>> uid=1002(perf) gid=1002(perf) groups=1002(perf),1003(perf_users) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
->>>>> [perf@five ~]$ perf top --stdio
->>>>> Error:
->>>>> Failed to mmap with 1 (Operation not permitted)
->>>>> [perf@five ~]$ perf record -a
->>>>> ^C[ perf record: Woken up 1 times to write data ]
->>>>> [ perf record: Captured and wrote 1.177 MB perf.data (1552 samples) ]
->>>>>
->>>>> [perf@five ~]$ perf evlist
->>>>> cycles:u
->>>>> [perf@five ~]$
->>>>
->>>> Humm, perf record falls back to cycles:u after initially trying cycles
->>>> (i.e. kernel and userspace), lemme see trying 'perf top -e cycles:u',
->>>> lemme test, humm not really:
->>>>
->>>> [perf@five ~]$ perf top --stdio -e cycles:u
->>>> Error:
->>>> Failed to mmap with 1 (Operation not permitted)
->>>> [perf@five ~]$ perf record -e cycles:u -a sleep 1
->>>> [ perf record: Woken up 1 times to write data ]
->>>> [ perf record: Captured and wrote 1.123 MB perf.data (132 samples) ]
->>>> [perf@five ~]$
->>>>
->>>> Back to debugging this.
->>>
->>> Could makes sense adding cap_ipc_lock to the binary to isolate from this:
->>>
->>> kernel/events/core.c: 6101
->>> 	if ((locked > lock_limit) && perf_is_paranoid() &&
->>> 		!capable(CAP_IPC_LOCK)) {
->>> 		ret = -EPERM;
->>> 		goto unlock;
->>> 	}
->>
->>
->> That did the trick, I'll update the documentation and include in my
->> "Committer testing" section:
+On Tue, 2020-04-07 at 13:02 -0400, Jeff King wrote:
+> On Tue, Apr 07, 2020 at 05:40:46PM +0200, Olaf Hering wrote:
 > 
-> I ammended this to that patch, please check the wording:
+> > For me sending patches via git send-email fails because email address
+> > conversion is failing. Something appends a ')' to x86/lkml@kernel.org.
+> > I suspect the double '))' in MAINTAINERS is confusing the command.
+> > I tried to send the trivial patch from v5.0 and v5.6 tag.
+> > 
+> > Is this a failure in ./scripts/get_maintainer.pl,
+> > or is this something git does internally?
+> > I'm sure others use such command on a daily basis, so likely something on
+> > my end became broken at some point in the past.
 > 
-> - Arnaldo
-> 
-> diff --git a/Documentation/admin-guide/perf-security.rst b/Documentation/admin-guide/perf-security.rst
-> index c0ca0c1a6804..ed33682e26b0 100644
-> --- a/Documentation/admin-guide/perf-security.rst
-> +++ b/Documentation/admin-guide/perf-security.rst
-> @@ -127,12 +127,19 @@ taken to create such groups of privileged Perf users.
->  
->  ::
->  
-> -   # setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-> -   # setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-> +   # setcap "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-> +   # setcap -v "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
->     perf: OK
->     # getcap perf
->     perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
->  
-> +If the libcap installed doesn't yet support "cap_perfmon", use "38" instead,
-> +i.e.:
-> +
-> +::
-> +
-> +   # setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-> +
->  As a result, members of perf_users group are capable of conducting
->  performance monitoring and observability by using functionality of the
->  configured Perf tool executable that, when executes, passes perf_events
-> 
+> It's a bug in send-email's hand-rolled address parser, which was fixed
+> in bd869f67b9 (send-email: add and use a local copy of Mail::Address,
+> 2018-01-05). Upgrade to Git v2.17.0 or newer.
 
-Looks good to me. The paragraph just above should then also be extended to
-mention that perf_events subsystem memory limit is ignored due to usage of
-CAP_IPC_LOCK:
+Not really.
+You need to add --norolestats on the get_maintainer command line
 
-"As a result, members of perf_users group are capable of conducting
- performance monitoring and observability by using functionality of the
- configured Perf tool executable that, when executes, passes perf_events
- subsystem scope and perf_event_mlock_kb locking limit checks."
+git send-email expects bare email addresses, not ones annotated
+with additional content.
 
-~Alexey
+
+For instance:
+
+$ ./scripts/get_maintainer.pl -f lib/vsprintf.c
+Petr Mladek <pmladek@suse.com> (maintainer:VSPRINTF)
+Steven Rostedt <rostedt@goodmis.org> (maintainer:VSPRINTF)
+Sergey Senozhatsky <sergey.senozhatsky@gmail.com> (maintainer:VSPRINTF)
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> (reviewer:VSPRINTF)
+Rasmus Villemoes <linux@rasmusvillemoes.dk> (reviewer:VSPRINTF)
+linux-kernel@vger.kernel.org (open list)
+
+vs:
+
+$ ./scripts/get_maintainer.pl -f --norolestats lib/vsprintf.c
+Petr Mladek <pmladek@suse.com>
+Steven Rostedt <rostedt@goodmis.org>
+Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Rasmus Villemoes <linux@rasmusvillemoes.dk>
+linux-kernel@vger.kernel.org
+
+
