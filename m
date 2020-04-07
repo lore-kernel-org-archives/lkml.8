@@ -2,78 +2,110 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26CCC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D8DC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D51020719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C9E20731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:34:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cXqt2Apb"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZeZ6N1Y1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgDGJd7 (ORCPT
+        id S1728150AbgDGJeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:33:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42344 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgDGJd6 (ORCPT
+        Tue, 7 Apr 2020 05:34:01 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53744 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbgDGJeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:33:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ALLpFhoRwFcaZVxVwmpORwXzqCLllgkOW88XxNP1czw=; b=cXqt2Apb0IYUWCtEG/qZtDMcnU
-        GDRnm2aNxxGoLxkuAR2tr8mHb6Rbt51JplL2wsHcw0XXes/p9vuKk2dRBjziu0pj+AMLXBIVXd5MB
-        gvV51G/O02Ml2mfOfroshmH9vvT7b25V5u29s96NWMaLGhnQ3eRcS49vwwXdNV7XAE1sQ6TTUm338
-        r+cGgmsDwefFnOAQBzqSeJN/mQh9Y7/rvYUJ2/a5zxNSS+8KqyAQ55Tz9rvkDZQAS6eOCTxFKzMz0
-        EHTPlUb/iGsSM621kD101DfYjXLrGVEVLN5aOlUfGqxkJf7cU2Lpm3CWVfvPvyK+JQrjpvISps5WE
-        4y29vzZQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLkcH-0006yf-F2; Tue, 07 Apr 2020 09:33:57 +0000
-Date:   Tue, 7 Apr 2020 02:33:57 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        bgregg@netflix.com
-Subject: Re: Question on "uaccess: Add strict non-pagefault kernel-space read
- function"
-Message-ID: <20200407093357.GA24309@infradead.org>
-References: <20200403133533.GA3424@infradead.org>
- <5ddc8c04-279d-9a14-eaa7-755467902ead@iogearbox.net>
- <20200404093105.GA445@infradead.org>
- <2adc77e1-e84d-f303-fd88-133ec950c33f@iogearbox.net>
+        Tue, 7 Apr 2020 05:34:00 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0379Xooq042120;
+        Tue, 7 Apr 2020 09:33:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=qcmA2k2UwC4imiuARVmbmTLIEvubWj//Z2k36MvdxtE=;
+ b=ZeZ6N1Y1EEjkLRdUdneRzCv6B6vuAwBBvW2gzit89rzQpCkn7Dvb7tf8xOwCyY37/jZp
+ ETym6Mo6eHnJjQ/Xg6iyUhCMSq16AhHYd0EMA/K5xIWUN6UDNiOjVGpan6YSyrFAkFYO
+ MVUpXxc5OUqpvtOKZoWvq2KsQXPKrYGbmD1yIKJ9lDyO0BQRpuw+JoVE22TOJ8U35jMi
+ FRHHyJglDo0oiX3hrv4agAHgVdls4bQ8KErxCR8EQO2tFPtLVxulxNFrn6EwldINmHBT
+ 3F83ZgeABH9jtuaadYZ3frt60pFt9mMxHGk8AVGksGXfBCVjOCFR42XPQTWS7It0AckJ ag== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 306j6mbrgn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 09:33:50 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0379RGdW041436;
+        Tue, 7 Apr 2020 09:31:43 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 3073qfgg4y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 09:31:43 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0379VfL9028581;
+        Tue, 7 Apr 2020 09:31:42 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Apr 2020 02:31:41 -0700
+Date:   Tue, 7 Apr 2020 12:31:33 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Hemant Kumar <hemantk@codeaurora.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Siddartha Mohanadoss <smohanad@codeaurora.org>,
+        Sujeev Dias <sdias@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] bus: mhi: core: Fix a NULL vs IS_ERR check in
+ mhi_create_devices()
+Message-ID: <20200407093133.GM68494@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2adc77e1-e84d-f303-fd88-133ec950c33f@iogearbox.net>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070080
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9583 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 11:03:23AM +0200, Daniel Borkmann wrote:
-> 
-> ... where archs with non-overlapping user and kernel address range would
-> only end up having to implementing kernel_range_ok() check. Or, instead of
-> a generic kernel_range_ok() this could perhaps be more probing-specific as
-> in probe_kernel_range_ok() where this would then also cover the special
-> cases we seem to have in parisc and um. Then, this would allow to get rid
-> of all the __weak aliasing as well which may just be confusing. I could look
-> into coming up with something along these lines. Thoughts?
+The mhi_alloc_device() function never returns NULL, it returns error
+pointers.
 
-FYI, this is what I cooked up a few days ago:
+Fixes: da1c4f856924 ("bus: mhi: core: Add support for creating and destroying MHI devices")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/bus/mhi/core/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/maccess-fixups
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index eb4256b81406..55928feea0c9 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -294,7 +294,7 @@ void mhi_create_devices(struct mhi_controller *mhi_cntrl)
+ 		    !(mhi_chan->ee_mask & BIT(mhi_cntrl->ee)))
+ 			continue;
+ 		mhi_dev = mhi_alloc_device(mhi_cntrl);
+-		if (!mhi_dev)
++		if (IS_ERR(mhi_dev))
+ 			return;
+ 
+ 		mhi_dev->dev_type = MHI_DEVICE_XFER;
+-- 
+2.25.1
 
-Still misses the final work to switch probe_kernel_read to be the
-strict version.  Any good naming suggestion for the non-strict one?
