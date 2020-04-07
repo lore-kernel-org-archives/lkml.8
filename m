@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7709DC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF582C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4533C20644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83CE020644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255003;
-	bh=LajlwZRWozrByV7K911L5FLO5HDq7i1yOkPN4glUwB0=;
+	s=default; t=1586255005;
+	bh=CiDUe5Q2TUEW9mCUg7IqKdEful4ga79obeogsJc9u9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nGRTF+HDYu7HptjlyXceXaWD0lSFXxPl7oCezQe2eK//EMaK+P1tK44CF873Nwews
-	 J09n3sj6xSWGaIwnYtxKxlsxV+Y0vSzupstdoFaGRBAft2XkjcTMVjB4awZFz43oTg
-	 GA7m2kXoEeJOBnOzGC8kPignbAAOex10IjWxGl8U=
+	b=rdPEPB1HS49Zu2ytH92fZMg6vk3ydrJq9JBC9Pzm0nS4Ni7iVRXLB7YFmobJo0RXd
+	 bGbHKkJNPVAh6t6eRRCE7UT9EUnBeVZ0e/15UE4M8ImKkhdwdvooJbTupfvHUh069k
+	 n6LYUHtlvtVDqRxts+x/37vylfmRaVxSNqhDJhpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgDGKXV (ORCPT
+        id S1728457AbgDGKXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32984 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbgDGKXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:23:15 -0400
+        id S1728443AbgDGKXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAEDF20771;
-        Tue,  7 Apr 2020 10:23:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19F862074B;
+        Tue,  7 Apr 2020 10:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586254994;
-        bh=LajlwZRWozrByV7K911L5FLO5HDq7i1yOkPN4glUwB0=;
+        s=default; t=1586255001;
+        bh=CiDUe5Q2TUEW9mCUg7IqKdEful4ga79obeogsJc9u9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YIw4I+L46A2BpA13B2M0tWU9QemgB72Xc047WkKshGwW1uKzcrREHrBv8UF2t7ZYH
-         iLkoRJRSbzYgOwR6SCFK7/aFVH97n2FQPjohOFj3DzqAS53F1J8WVpx5AD/yHUbqjM
-         FpD68I8DvFsWdFRc4CKsRtK8Iyms+8/obxajRoOY=
+        b=rb06Lpbmoyi+3ELZATlcARVNN6X9o7RygfzuL0+557m4t3X8AHx1UlbGbpc/OCiq1
+         LSj3xWpsNsCBm6qhpEgn6DM37edn3/rSIJG6BbJxVFHkMc8nL5ukNEHxCAw5mUQxO/
+         pMZjwzv5uvDqudIm18uF4gfPVISFhiKHDa8RCtO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
-        Barry Marson <bmarson@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 24/36] Revert "dm: always call blk_queue_split() in dm_process_bio()"
-Date:   Tue,  7 Apr 2020 12:21:57 +0200
-Message-Id: <20200407101457.374690045@linuxfoundation.org>
+        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 27/36] net/mlx5e: kTLS, Fix wrong value in record tracker enum
+Date:   Tue,  7 Apr 2020 12:22:00 +0200
+Message-Id: <20200407101457.716113746@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -60,110 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-commit 120c9257f5f19e5d1e87efcbb5531b7cd81b7d74 upstream.
+commit f28ca65efa87b3fb8da3d69ca7cb1ebc0448de66 upstream.
 
-This reverts commit effd58c95f277744f75d6e08819ac859dbcbd351.
+Fix to match the HW spec: TRACKING state is 1, SEARCHING is 2.
+No real issue for now, as these values are not currently used.
 
-blk_queue_split() is causing excessive IO splitting -- because
-blk_max_size_offset() depends on 'chunk_sectors' limit being set and
-if it isn't (as is the case for DM targets!) it falls back to
-splitting on a 'max_sectors' boundary regardless of offset.
-
-"Fix" this by reverting back to _not_ using blk_queue_split() in
-dm_process_bio() for normal IO (reads and writes).  Long-term fix is
-still TBD but it should focus on training blk_max_size_offset() to
-call into a DM provided hook (to call DM's max_io_len()).
-
-Test results from simple misaligned IO test on 4-way dm-striped device
-with chunksize of 128K and stripesize of 512K:
-
-xfs_io -d -c 'pread -b 2m 224s 4072s' /dev/mapper/stripe_dev
-
-before this revert:
-
-253,0   21        1     0.000000000  2206  Q   R 224 + 4072 [xfs_io]
-253,0   21        2     0.000008267  2206  X   R 224 / 480 [xfs_io]
-253,0   21        3     0.000010530  2206  X   R 224 / 256 [xfs_io]
-253,0   21        4     0.000027022  2206  X   R 480 / 736 [xfs_io]
-253,0   21        5     0.000028751  2206  X   R 480 / 512 [xfs_io]
-253,0   21        6     0.000033323  2206  X   R 736 / 992 [xfs_io]
-253,0   21        7     0.000035130  2206  X   R 736 / 768 [xfs_io]
-253,0   21        8     0.000039146  2206  X   R 992 / 1248 [xfs_io]
-253,0   21        9     0.000040734  2206  X   R 992 / 1024 [xfs_io]
-253,0   21       10     0.000044694  2206  X   R 1248 / 1504 [xfs_io]
-253,0   21       11     0.000046422  2206  X   R 1248 / 1280 [xfs_io]
-253,0   21       12     0.000050376  2206  X   R 1504 / 1760 [xfs_io]
-253,0   21       13     0.000051974  2206  X   R 1504 / 1536 [xfs_io]
-253,0   21       14     0.000055881  2206  X   R 1760 / 2016 [xfs_io]
-253,0   21       15     0.000057462  2206  X   R 1760 / 1792 [xfs_io]
-253,0   21       16     0.000060999  2206  X   R 2016 / 2272 [xfs_io]
-253,0   21       17     0.000062489  2206  X   R 2016 / 2048 [xfs_io]
-253,0   21       18     0.000066133  2206  X   R 2272 / 2528 [xfs_io]
-253,0   21       19     0.000067507  2206  X   R 2272 / 2304 [xfs_io]
-253,0   21       20     0.000071136  2206  X   R 2528 / 2784 [xfs_io]
-253,0   21       21     0.000072764  2206  X   R 2528 / 2560 [xfs_io]
-253,0   21       22     0.000076185  2206  X   R 2784 / 3040 [xfs_io]
-253,0   21       23     0.000077486  2206  X   R 2784 / 2816 [xfs_io]
-253,0   21       24     0.000080885  2206  X   R 3040 / 3296 [xfs_io]
-253,0   21       25     0.000082316  2206  X   R 3040 / 3072 [xfs_io]
-253,0   21       26     0.000085788  2206  X   R 3296 / 3552 [xfs_io]
-253,0   21       27     0.000087096  2206  X   R 3296 / 3328 [xfs_io]
-253,0   21       28     0.000093469  2206  X   R 3552 / 3808 [xfs_io]
-253,0   21       29     0.000095186  2206  X   R 3552 / 3584 [xfs_io]
-253,0   21       30     0.000099228  2206  X   R 3808 / 4064 [xfs_io]
-253,0   21       31     0.000101062  2206  X   R 3808 / 3840 [xfs_io]
-253,0   21       32     0.000104956  2206  X   R 4064 / 4096 [xfs_io]
-253,0   21       33     0.001138823     0  C   R 4096 + 200 [0]
-
-after this revert:
-
-253,0   18        1     0.000000000  4430  Q   R 224 + 3896 [xfs_io]
-253,0   18        2     0.000018359  4430  X   R 224 / 256 [xfs_io]
-253,0   18        3     0.000028898  4430  X   R 256 / 512 [xfs_io]
-253,0   18        4     0.000033535  4430  X   R 512 / 768 [xfs_io]
-253,0   18        5     0.000065684  4430  X   R 768 / 1024 [xfs_io]
-253,0   18        6     0.000091695  4430  X   R 1024 / 1280 [xfs_io]
-253,0   18        7     0.000098494  4430  X   R 1280 / 1536 [xfs_io]
-253,0   18        8     0.000114069  4430  X   R 1536 / 1792 [xfs_io]
-253,0   18        9     0.000129483  4430  X   R 1792 / 2048 [xfs_io]
-253,0   18       10     0.000136759  4430  X   R 2048 / 2304 [xfs_io]
-253,0   18       11     0.000152412  4430  X   R 2304 / 2560 [xfs_io]
-253,0   18       12     0.000160758  4430  X   R 2560 / 2816 [xfs_io]
-253,0   18       13     0.000183385  4430  X   R 2816 / 3072 [xfs_io]
-253,0   18       14     0.000190797  4430  X   R 3072 / 3328 [xfs_io]
-253,0   18       15     0.000197667  4430  X   R 3328 / 3584 [xfs_io]
-253,0   18       16     0.000218751  4430  X   R 3584 / 3840 [xfs_io]
-253,0   18       17     0.000226005  4430  X   R 3840 / 4096 [xfs_io]
-253,0   18       18     0.000250404  4430  Q   R 4120 + 176 [xfs_io]
-253,0   18       19     0.000847708     0  C   R 4096 + 24 [0]
-253,0   18       20     0.000855783     0  C   R 4120 + 176 [0]
-
-Fixes: effd58c95f27774 ("dm: always call blk_queue_split() in dm_process_bio()")
-Cc: stable@vger.kernel.org
-Reported-by: Andreas Gruenbacher <agruenba@redhat.com>
-Tested-by: Barry Marson <bmarson@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1760,8 +1760,9 @@ static blk_qc_t dm_process_bio(struct ma
- 	 * won't be imposed.
- 	 */
- 	if (current->bio_list) {
--		blk_queue_split(md->queue, &bio);
--		if (!is_abnormal_io(bio))
-+		if (is_abnormal_io(bio))
-+			blk_queue_split(md->queue, &bio);
-+		else
- 			dm_queue_split(md, ti, &bio);
- 	}
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
+@@ -38,8 +38,8 @@ enum {
  
+ enum {
+ 	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_START     = 0,
+-	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_SEARCHING = 1,
+-	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_TRACKING  = 2,
++	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_TRACKING  = 1,
++	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_SEARCHING = 2,
+ };
+ 
+ struct mlx5e_ktls_offload_context_tx {
 
 
