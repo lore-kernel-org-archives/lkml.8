@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B815C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F87C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCBB2082F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 974052078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217862;
-	bh=ayGMqr2YAgREXgmNx7uslr0j0P7JHAp6o6CM/Bz+Luw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FnnvNIrnxtEp1sKt593DGOVsv74Bvxam4mHgBaRBzJiLLY5DtAmUuUExmMTogsc6H
-	 6tbtk9hsxj/bvoV9hYfXEX+GQ5qvRlfBf7z8fR5qJ2lHD8KwIbAYe1/ZKJjG8IW9gg
-	 rs4drYPL5otp9YBkajtnhiFK4oqkci8HCNswwIYY=
+	s=default; t=1586217870;
+	bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qG+XSjfnxw9OqUZiJx6gIGZx4tVwg1GxpLY3LkJCew39F6WXp2R6wl6poj0FxWJMi
+	 EthQ/69J11mdHMIJagUcgGlEW8kZekATUtuDmgNjs+/y63a+YWWdfGA3Y/pQmv+NHb
+	 ZSMcC8YrZvd8enYmE+dx4vK3SJkUyiTBA1Rn6Ks0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbgDGAEV (ORCPT
+        id S1727677AbgDGAE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:04:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37994 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:04:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgDGAC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:57 -0400
+        id S1726901AbgDGACz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD462214DB;
-        Tue,  7 Apr 2020 00:02:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8651F2080C;
+        Tue,  7 Apr 2020 00:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217776;
-        bh=ayGMqr2YAgREXgmNx7uslr0j0P7JHAp6o6CM/Bz+Luw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+DGg1idAvffaS7MqFfCxGEwbeEU8nTOKvVdfonapga+RYiiMbMcpSHKQvMppe9eH
-         kUp0uHOzCDqJhl0KBuo/1fK+WkYOxBecpmjQ3qlSTrC3E67gLxok8BGzNJHnNb0ib8
-         R5a5pRSus5Rdivl6SD9ZM8t6Pl2NDLQIyEN0EFB4=
+        s=default; t=1586217774;
+        bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LWPAoqwjJSfXONl5mpc55y19hzsQEeE2ESu+FdIsYYmvEyAegkv8wuEuQYTw1n2Xd
+         0SmiRWq/YqkCo7UjxRQvblKmYvdoAglLC2l+W9UPebTfaFQtTa4FdjvAqMUW8QA8QH
+         5lakBvgYJX9LQcrHAYvoLd/sIcU7JxODKvJAMSB4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luo bin <luobin9@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 3/9] hinic: fix a bug of waitting for IO stopped
-Date:   Mon,  6 Apr 2020 20:02:46 -0400
-Message-Id: <20200407000252.17241-3-sashal@kernel.org>
+Cc:     Ondrej Jirman <megous@megous.com>, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 1/9] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
+Date:   Mon,  6 Apr 2020 20:02:44 -0400
+Message-Id: <20200407000252.17241-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200407000252.17241-1-sashal@kernel.org>
-References: <20200407000252.17241-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,90 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo bin <luobin9@huawei.com>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit 96758117dc528e6d84bd23d205e8cf7f31eda029 ]
+[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
 
-it's unreliable for fw to check whether IO is stopped, so driver
-wait for enough time to ensure IO process is done in hw before
-freeing resources
+When doing a 16-bit read that returns data in the MSB byte, the
+RSB_DATA register will keep the MSB byte unchanged when doing
+the following 8-bit read. sunxi_rsb_read() will then return
+a result that contains high byte from 16-bit read mixed with
+the 8-bit result.
 
-Signed-off-by: Luo bin <luobin9@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The consequence is that after this happens the PMIC's regmap will
+look like this: (0x33 is the high byte from the 16-bit read)
+
+% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
+00: 33
+01: 33
+02: 33
+03: 33
+04: 33
+05: 33
+06: 33
+07: 33
+08: 33
+09: 33
+0a: 33
+0b: 33
+0c: 33
+0d: 33
+0e: 33
+[snip]
+
+Fix this by masking the result of the read with the correct mask
+based on the size of the read. There are no 16-bit users in the
+mainline kernel, so this doesn't need to get into the stable tree.
+
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
- 1 file changed, 2 insertions(+), 49 deletions(-)
+ drivers/bus/sunxi-rsb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-index 46aba02b8672b..5763e333a9afe 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
-@@ -373,50 +373,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
- 	return -EFAULT;
- }
+diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+index 1b76d95859027..2ca2cc56bcef6 100644
+--- a/drivers/bus/sunxi-rsb.c
++++ b/drivers/bus/sunxi-rsb.c
+@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+ 	if (ret)
+ 		goto unlock;
  
--static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
--{
--	struct hinic_cmd_io_status cmd_io_status;
--	struct hinic_hwif *hwif = hwdev->hwif;
--	struct pci_dev *pdev = hwif->pdev;
--	struct hinic_pfhwdev *pfhwdev;
--	unsigned long end;
--	u16 out_size;
--	int err;
--
--	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
--		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
--		return -EINVAL;
--	}
--
--	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
--
--	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
--
--	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
--	do {
--		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
--					HINIC_COMM_CMD_IO_STATUS_GET,
--					&cmd_io_status, sizeof(cmd_io_status),
--					&cmd_io_status, &out_size,
--					HINIC_MGMT_MSG_SYNC);
--		if ((err) || (out_size != sizeof(cmd_io_status))) {
--			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
--				err);
--			return err;
--		}
--
--		if (cmd_io_status.status == IO_STOPPED) {
--			dev_info(&pdev->dev, "IO stopped\n");
--			return 0;
--		}
--
--		msleep(20);
--	} while (time_before(jiffies, end));
--
--	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
--	return -ETIMEDOUT;
--}
--
- /**
-  * clear_io_resource - set the IO resources as not active in the NIC
-  * @hwdev: the NIC HW device
-@@ -436,11 +392,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
- 		return -EINVAL;
- 	}
+-	*buf = readl(rsb->regs + RSB_DATA);
++	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
  
--	err = wait_for_io_stopped(hwdev);
--	if (err) {
--		dev_err(&pdev->dev, "IO has not stopped yet\n");
--		return err;
--	}
-+	/* sleep 100ms to wait for firmware stopping I/O */
-+	msleep(100);
- 
- 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
- 
+ unlock:
+ 	mutex_unlock(&rsb->lock);
 -- 
 2.20.1
 
