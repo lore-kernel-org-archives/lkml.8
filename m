@@ -2,119 +2,160 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF48C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0ECC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174E120644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6558D2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586254961;
-	bh=Yes23aRlJ3lv9ES/aLXStRHl7yqUHk0MZHOigrmI3TE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OBQxHBYiiL++gyJ7L0R156SheQ3ABSk0j78a5upY0SJ4xy+tdVRk5UMCk2RGqs37n
-	 VqILGFWNT9cwyu2j6fsxpQnlV0QxJJukocTGLgPrD6NJMaQXYZo21KhC+nUJVUYDXs
-	 zoQlTzAMpHeDCYOGa6WlCoSUR7sIbf6hsUG2ZROg=
+	s=default; t=1586254964;
+	bh=juQKuUZDgyyxGgsF7uNhckuR4k0PFa3vOdCv8igXe0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zJ8bmu1ryURyLWcuiyV6Gk/5tl/Je9uO3LeEDHGG/xR9edIjWu7+MksOG7k7lsa2O
+	 0fTp4bbmMe1IgkZmGs3vRUGCHBTk2QK7M1x67Urmqo8hNooeMtf5WhlpwGsmi/HgGx
+	 goE85RcFlcX5dHKahNUepeF5/dSHLk/CAX5hKpj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgDGKWk (ORCPT
+        id S1728243AbgDGKWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:22:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60060 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgDGKWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:22:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725883AbgDGKWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:22:41 -0400
+Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 011D020644;
-        Tue,  7 Apr 2020 10:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4281720771;
+        Tue,  7 Apr 2020 10:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586254957;
-        bh=Yes23aRlJ3lv9ES/aLXStRHl7yqUHk0MZHOigrmI3TE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DQ11FSio7FCxzgkBsuLmkVxQeJfj9C3oSSpbsQsGISxTpef3tW0LcY6RTjgfiUZg2
-         xCkX1EQUis1yNQIrR8OmTsl6FoKuP16Qm6wXneSu+V4I9W+Yv5yitVyd/sWUEg1Edr
-         cvEGs6mohJ+PTT6xTd3x9tp4YWt0yVfMbhnCdhTA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roland Dreier <roland@purestorage.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Prabhath Sajeepa <psajeepa@purestorage.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 01/36] nvme-rdma: Avoid double freeing of async event data
-Date:   Tue,  7 Apr 2020 12:21:34 +0200
-Message-Id: <20200407101454.484006015@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
-References: <20200407101454.281052964@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+        s=default; t=1586254960;
+        bh=juQKuUZDgyyxGgsF7uNhckuR4k0PFa3vOdCv8igXe0Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sgYqeamJWAiaBCp2NFSD03QPo70At2AUr/IUVrprBg+Ml5NDCfoPAKTNJYYXNX6an
+         vAQ7e3e2LWUeFyKv98p4GoBGzkyh2TeRFOvdvOm18bZZP3vlg38k0CTydolrBFmEWu
+         29LGMbGbHOxwLRXzrU3Ok29lE8bw89yC7XaBAWNk=
+Received: by pali.im (Postfix)
+        id 418C85F1; Tue,  7 Apr 2020 12:22:38 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 12:22:38 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Thomas Hebb <tommyhebb@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v2] hwmon: (dell-smm) Use one DMI match for all XPS models
+Message-ID: <20200407102238.zweh7s7t6rn5cwhf@pali>
+References: <5d7e498b83e89ce7c41a449b61919c65d0770b73.1586033337.git.tommyhebb@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <5d7e498b83e89ce7c41a449b61919c65d0770b73.1586033337.git.tommyhebb@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prabhath Sajeepa <psajeepa@purestorage.com>
+Hi!
 
-[ Upstream commit 9134ae2a2546cb96abddcd4469a79c77ee3a4480 ]
+On Saturday 04 April 2020 16:49:00 Thomas Hebb wrote:
+> Currently, each new XPS has to be added manually for module autoloading
+> to work. Since fan multiplier autodetection should work fine on all XPS
+> models, just match them all with one block like is done for Precision
+> and Studio.
 
-The timeout of identify cmd, which is invoked as part of admin queue
-creation, can result in freeing of async event data both in
-nvme_rdma_timeout handler and error handling path of
-nvme_rdma_configure_admin queue thus causing NULL pointer reference.
-Call Trace:
- ? nvme_rdma_setup_ctrl+0x223/0x800 [nvme_rdma]
- nvme_rdma_create_ctrl+0x2ba/0x3f7 [nvme_rdma]
- nvmf_dev_write+0xa54/0xcc6 [nvme_fabrics]
- __vfs_write+0x1b/0x40
- vfs_write+0xb2/0x1b0
- ksys_write+0x61/0xd0
- __x64_sys_write+0x1a/0x20
- do_syscall_64+0x60/0x1e0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+It makes sense. We already load driver for all Inspirion, Latitude,
+Precision, Vostro and Studio models so I do not see reason why not to
+load it also for all XPS models. I doubt that Dell uses one base
+firmware for all mentioned models and second one specially for XPS.
 
-Reviewed-by: Roland Dreier <roland@purestorage.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvme/host/rdma.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+> The only match we replace that doesn't already use autodetection is
+> "XPS13" which, according to Google, only matches the XPS 13 9333. (All
+> other XPS 13 models have "XPS" as its own word, surrounded by spaces.)
+> According to the thread at [1], autodetection works for the XPS 13 9333,
+> meaning this shouldn't regress it. I do not own one to confirm with,
+> though.
+> 
+> Tested on an XPS 13 9350 and confirmed the module now autoloads and
+> reports reasonable-looking data. I am using BIOS 1.12.2 and do not see
+> any freezes when querying fan speed.
+> 
+> [1] https://lore.kernel.org/patchwork/patch/525367/
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 4ff51da3b13fa..73e8475ddc8ab 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -850,9 +850,11 @@ out_free_tagset:
- 	if (new)
- 		blk_mq_free_tag_set(ctrl->ctrl.admin_tagset);
- out_free_async_qe:
--	nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
--		sizeof(struct nvme_command), DMA_TO_DEVICE);
--	ctrl->async_event_sqe.data = NULL;
-+	if (ctrl->async_event_sqe.data) {
-+		nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
-+			sizeof(struct nvme_command), DMA_TO_DEVICE);
-+		ctrl->async_event_sqe.data = NULL;
-+	}
- out_free_queue:
- 	nvme_rdma_free_queue(&ctrl->queues[0]);
- 	return error;
--- 
-2.20.1
+I guess that these two tests are enough based on the fact that lot of
+XPS models are already whitelisted.
 
+Guenter, it is fine for you now? Or is something else needed?
 
+> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
 
+Acked-by: Pali Rohár <pali@kernel.org>
+
+> ---
+> 
+> Changes in v2:
+> - Remove another now-redundant XPS entry that I'd missed.
+> 
+>  drivers/hwmon/dell-smm-hwmon.c | 26 ++------------------------
+>  1 file changed, 2 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
+> index d4c83009d625..ca30bf903ec7 100644
+> --- a/drivers/hwmon/dell-smm-hwmon.c
+> +++ b/drivers/hwmon/dell-smm-hwmon.c
+> @@ -1072,13 +1072,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro"),
+>  		},
+>  	},
+> -	{
+> -		.ident = "Dell XPS421",
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> -			DMI_MATCH(DMI_PRODUCT_NAME, "XPS L421X"),
+> -		},
+> -	},
+>  	{
+>  		.ident = "Dell Studio",
+>  		.matches = {
+> @@ -1087,14 +1080,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
+>  		},
+>  		.driver_data = (void *)&i8k_config_data[DELL_STUDIO],
+>  	},
+> -	{
+> -		.ident = "Dell XPS 13",
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> -			DMI_MATCH(DMI_PRODUCT_NAME, "XPS13"),
+> -		},
+> -		.driver_data = (void *)&i8k_config_data[DELL_XPS],
+> -	},
+>  	{
+>  		.ident = "Dell XPS M140",
+>  		.matches = {
+> @@ -1104,17 +1089,10 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
+>  		.driver_data = (void *)&i8k_config_data[DELL_XPS],
+>  	},
+>  	{
+> -		.ident = "Dell XPS 15 9560",
+> -		.matches = {
+> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> -			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9560"),
+> -		},
+> -	},
+> -	{
+> -		.ident = "Dell XPS 15 9570",
+> +		.ident = "Dell XPS",
+>  		.matches = {
+>  			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> -			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9570"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "XPS"),
+>  		},
+>  	},
+>  	{ }
+> -- 
+> 2.25.2
+> 
