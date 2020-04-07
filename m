@@ -2,86 +2,192 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D039C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9BBC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35331206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B2142074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uK6rpj/I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YlVIPEym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgDGMxb (ORCPT
+        id S1728720AbgDGMxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:53:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35490 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728146AbgDGMxb (ORCPT
+        Tue, 7 Apr 2020 08:53:36 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:55861 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728146AbgDGMxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 08:53:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aepFZdwloQbse+rSl/5D2c4bJ4JNDDeUhJa+t/r8qFA=; b=uK6rpj/IHqJZzPhVKilSgGk3b3
-        cgvFBQf043PVyfJcdz7h+yDis3442KITV+QoShsc1gs4mHWbm8Ot+zPHwreNLvPmPQtnDIJ56n4Ze
-        ZGY3ooICNxHSPbrbreMshLmswIDzvRwT7meyvmL44Zut8KCAgSWWArp/nBX+s3xyk6c8yILWgBP+z
-        XoUZjUTe/sJ0rHYtrNM/sB3gZ7cfplnrAGRlzxFsK4oXu/iVq7OGfAXbUSaufOYutWgrhejtbdg4+
-        viNj+ljul8fKbdl0LBRToqIzQXJqwwgSOvM4sCSoxfdEeVCKurwBNaRiu/fU74wUuMUwZlpA9NbID
-        hijjj5sA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLnjJ-0007jV-ER; Tue, 07 Apr 2020 12:53:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC0383010C8;
-        Tue,  7 Apr 2020 14:53:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 96A252B907A90; Tue,  7 Apr 2020 14:53:23 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 14:53:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
-        jthierry@redhat.com, tglx@linutronix.de
-Subject: Re: [PATCH V2 1/9] objtool: Introduce HINT_RET_OFFSET
-Message-ID: <20200407125323.GY20730@hirez.programming.kicks-ass.net>
-References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
- <20200407073142.20659-2-alexandre.chartre@oracle.com>
+        Tue, 7 Apr 2020 08:53:36 -0400
+Received: by mail-wm1-f46.google.com with SMTP id e26so1609216wmk.5;
+        Tue, 07 Apr 2020 05:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Djsn5L3wuOf5V4MbgSkLprg1uFPVvVgq4aej/IVjACs=;
+        b=YlVIPEym+l/GSODXyh2JshtfWewO6UBzo8au9gbCuGPRbW1eU+207czLwDBBthjf9b
+         HYdKmFs6mzTlJjxtYAKC4CcPhUg4oGSCg3xP4KI9y5he6d96iG78MY1qMO0wdwUPEgHf
+         8DmsFT0WFWCJ0l6qCKawzZXAwrEVh4Jokirhe9Mk3IHyrWRqKzFO8faKNQZ30kGfdVbA
+         PzmdhAcqZAR1HPTLk9UUzfWZMdKX5+3sO1GsRAYv+/WRe1SqcfISGcWBqykUiZIzmZDA
+         AdxgUPMhiB6xUbNzPROQnE0CQhBmRk+RJkF2F2tEKB1Wy3PecqOdzR1+oe/IuH0cXCgO
+         WVVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Djsn5L3wuOf5V4MbgSkLprg1uFPVvVgq4aej/IVjACs=;
+        b=tHCMmxIWcj+yzcUtKl7UhJWS58EmayciB/bWdLW/fnCHZ7gHaG0wD5kKHFgPrMyBhQ
+         RRymK3IwvI7MTzGOlJWlUUtwGvISCJRBlLpHE8itUEFank0wTQvZkcHWmhRcujGQePjQ
+         96dUlMhhElXE5yhZVUo5I06WJspBT+A+33Bs+RU86kGxOis0qiXmtdIl6G7M8Js95Dfz
+         vnFDdlleM6JuAKnDM/L2VoVjwKMkOGb6RhGyBiVs7PySfIl35UBUENJRbMGi90fXP1gM
+         GZ0eo0wNE1ePH+O9n+s2qO450RIcQSaUrbqZ5sXEJvIBuN0ANEg5uHY5dldi1cWIPwxH
+         cN2A==
+X-Gm-Message-State: AGi0PubKrAHaotSam3XHrhpJDI5vvB0KnJDJnW03T5jQq6Oyc5LRjfvy
+        AemDktByeV6qPH7JxC1W6ls=
+X-Google-Smtp-Source: APiQypKaai1PvkdI/Zo4DdPi9KJtrWTsxxIJn0+prZO9/dVAAR4O5h6NxatJXm4Mjr7NOzAsKTY5Bg==
+X-Received: by 2002:a1c:7f8e:: with SMTP id a136mr2345170wmd.33.1586264012962;
+        Tue, 07 Apr 2020 05:53:32 -0700 (PDT)
+Received: from ?IPv6:2001:a61:2482:101:3351:6160:8173:cc31? ([2001:a61:2482:101:3351:6160:8173:cc31])
+        by smtp.gmail.com with ESMTPSA id y7sm2375wmb.43.2020.04.07.05.53.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 05:53:32 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, Andrei Vagin <avagin@openvz.org>,
+        Dmitry Safonov <dima@arista.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Adrian Reber <adrian@lisas.de>
+Subject: Re: RFC: time_namespaces(7) manual page
+To:     Andrei Vagin <avagin@gmail.com>
+References: <7221df0a-435b-f8bc-ff91-c188af535e73@gmail.com>
+ <20200407032318.GA494464@gmail.com>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <5a5d01d5-5930-7825-38b4-e9d6e67afd3c@gmail.com>
+Date:   Tue, 7 Apr 2020 14:53:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407073142.20659-2-alexandre.chartre@oracle.com>
+In-Reply-To: <20200407032318.GA494464@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 09:31:34AM +0200, Alexandre Chartre wrote:
-> diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-> index 6d875ca6fce0..7a91497fee7e 100644
-> --- a/tools/objtool/check.h
-> +++ b/tools/objtool/check.h
-> @@ -33,9 +33,12 @@ struct instruction {
->  	unsigned int len;
->  	enum insn_type type;
->  	unsigned long immediate;
-> -	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
-> +	unsigned int alt_group;
+Hello Andrei,
 
-^^ that wants to be in a later patch I'm thinking
-
-> +	bool dead_end, ignore, ignore_alts;
-> +	bool hint, save, restore;
->  	bool retpoline_safe;
->  	u8 visited;
-> +	u8 ret_offset;
->  	struct symbol *call_dest;
->  	struct instruction *jump_dest;
->  	struct instruction *first_jump_src;
-> -- 
-> 2.18.2
+On 4/7/20 5:23 AM, Andrei Vagin wrote:
+> Hi Michael,
 > 
+> The man page looks good to me. A few comments are inline.
+
+Thanks for looking the page over!
+
+> On Sat, Apr 04, 2020 at 01:08:50PM +0200, Michael Kerrisk (man-pages) wrote:
+>> Hello Dmitry, Andrei, et al.
+>>
+>> I have written a manual page to document time namespaces.
+>> Could you please take a look and let me know of any
+>> corrections, improvements, etc.
+>>
+>> The rendered page is shown below. Th epage source is at the foot of
+>> this mail.
+>>
+>> Thanks,
+>>
+>> Michael
+>>
+>>
+>> NAME
+>>        time_namespaces - overview of Linux time namespaces
+>>
+>> DESCRIPTION
+>>        Time namespaces virtualize the values of two system clocks:
+>>
+>>        · CLOCK_MONOTONIC   (and   likewise   CLOCK_MONOTONIC_COARSE   and
+>>          CLOCK_MONOTONIC_RAW), a nonsettable clock that represents  mono‐
+>>          tonic  time   since—as  described   by  POSIX—"some  unspecified
+>>          point in the past".
+>>
+>>        · CLOCK_BOOTTIME (and likewise CLOCK_BOOTTIME_ALARM), a clock that
+>>          is  identical  to  CLOCK_MONOTONIC, except that it also includes
+>>          any time that the system is suspended.
+>>
+>>        Thus, the processes in a time namespace share per-namespace values
+>>        for  these clocks.  This affects various APIs that measure against
+>>        these   clocks,   including:   clock_nanosleep(2),   nanosleep(2),
+>>        clock_gettime(2), and /proc/uptime.
+> 
+> timer_settime, timerfd_settime
+
+Added.
+
+>>        Currently,  the  only way to create a time namespace is by calling
+>>        unshare(2) with the CLONE_NEWTIME flag.  This call creates  a  new
+>>        time  namespace  but does not place the calling process in the new
+>>        namespace.  Instead, the calling  process's  subsequently  created
+>>        children  are placed in the new namespace.  This allows clock off‐
+>>        sets (see below) for the new namespace to be set before the  first
+>>        process      is      placed     in     the     namespace.      The
+>>        /proc/[pid]/ns/time_for_children  symbolic  link  shows  the  time
+>>        namespace in which the children of a process will be created.
+> 
+> We can mention that the current process can enter the namespace if it
+> call setns on /proc/self/ns/time_for_children.
+
+Yes, thanks. I overlooked that, and I was puzzled about how setns() could
+be useful before the first process was created in a time NS.
+
+I added:
+
+    (A process can use a file descriptor opened on this symbolic
+    link in a call to setns(2) in order to move into the namespace.)
+
+>>    /proc/PID/timens_offsets
+>>        Associated  with  each  time namespace are offsets, expressed with
+>>        respect to the initial time namespace, that define the  values  of
+>>        the  monotonic  and  boot clocks in that namespace.  These offsets
+>>        are exposed via the file  /proc/PID/timens_offsets.   Within  this
+>>        file,  the  offsets  are  expressed  as  lines consisting of three
+>>        space-delimited fields:
+>>
+>>            <clock-id> <offset-secs> <offset-nanosecs>
+>>
+>>        The clock-id identifies the clock whose offsets are  being  shown.
+>>        This field is either 1, for CLOCK_MONOTONIC, or 7, for CLOCK_BOOT‐
+>>        TIME.  The remaining  fields  express  the  offset  (seconds  plus
+>>        nanoseconds)  for the clock in this time namespace.  These offsets
+>>        are expressed relative to the clock values  in  the  initial  time
+>>        namespace.   In  the  initial time namespace, the contents of this
+>>        file are as follows:
+> 
+> I think we can mention that offset-secs can be negative, but
+> offset-nanosleep has to be 0 or positive.
+
+Thanks. See my upcoming reply to Thomas.
+
+Cheers,
+
+Michael
+
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
