@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A21AC2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62D1C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7110C2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BCF208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="AHDDzmDi"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JBxizfUV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbgDGOrS (ORCPT
+        id S1729371AbgDGOrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:47:18 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43438 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729328AbgDGOrO (ORCPT
+        Tue, 7 Apr 2020 10:47:19 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33700 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729344AbgDGOrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:47:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s4so1819396pgk.10
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:47:13 -0700 (PDT)
+        Tue, 7 Apr 2020 10:47:17 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d17so1844570pgo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:47:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Quhy5/QZPA8/P4q/9fnjufmjHKuWjkZaQYF9/wabbVw=;
-        b=AHDDzmDiFHiECrdMx/1zHadC9VdetNvA12RpoCsdBdCEK14bBlGUUaj0dd2H3A+BCH
-         L6TKBWsntI3ec6isKAfpwrdF8gp0hEaVoFmoYPb+coyfeDRwebMhUEHgh1ipHAiVF+Gt
-         10VKtKonkggb5aWtTNpPY+j9eZcgqAFpLDjyDKnYkMUot/ajync8iCZ+8UgpSFPY7xSL
-         gjON/Bei/AQgPSnbtG4wiHaMXKv+oyO1uxc/6HJCHDrs8EkA0debASne5ARpkVJ0R+FG
-         OlfKbwiqhzHZt9pBeOyExXRS/dhnZB4yK/WSaSA6cpLorZk7MXsQvxmaE7X3t1hFGzjX
-         5ORw==
+        bh=geDMvpdyp4eREUjGenxPiMAgszPzsf8hdgTrRUcyDVI=;
+        b=JBxizfUVQ4VwCje90RdukKZBh/ywXEy+VAtWwgau09WHsbrygimeUgLaDGNihbFdPZ
+         eDybrac2/Ma3vtwVtZ+dV10ejldg12V79mPPn+6PEcb+pYiamkJfHvdVCc3pQywEgffS
+         61nByA/bmGC+KvIQ961VXAVS+jeOKfdvsn2YvlzRhS4+b9g+s7hBJOhV9Zurmg6tfc88
+         hRFeb/pdtnq4jQdvIW1maqRVT/GoZMh6q3OCXYlUAxtVz2Sa7KW7AhM451d55reG1kbv
+         bdvnAWUvHjr7PiJ0CRL0hEJnBVdf4VVNAcT2NTV9xOdaANofRCoMNuG4j0Ia+W6wAhRU
+         xUww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Quhy5/QZPA8/P4q/9fnjufmjHKuWjkZaQYF9/wabbVw=;
-        b=fiTPsOmVfU/1si3yn4Moj/qYnHqWWCpUKyxdDvjkqnC4PW6ZLHFKxFc0lAEbTnLkca
-         x/L9DQtf3sV/YEAisQAMwREZIxFQSZ1PVxMqpvt8wDxyDtNaBh0ADaMhqwwcIlvoA9k4
-         zyu8FsHcLH25zXWEG6YflHe8WoF4wlXw+m1hO5fIAOcNjfOCPyQ7tx21LkLmwOT9J9xa
-         6rU6MCDbDXFKoutcUXpUnede3VWPpW7b7pCdJD0B+yBptH+iOU3u8jgrf52ynd2b/nEO
-         PL+lvKR1pDEIzfUq2Co1FkGNxc2b0jpXl81jpV8O6vZsyKFv6QvE3/vr8fsqj/KTh/MK
-         rZVw==
-X-Gm-Message-State: AGi0PuZGjsG/UHln0300l2NfrGpzt2nqKHcZ2GYme8Pt/203n+UI7zxJ
-        Y6Tt7AII0yV4UvqYFxo7APTQVA==
-X-Google-Smtp-Source: APiQypIu7xZA7V1YhEkwC7XML1SD8uFsocdPfcN93OJKoMqGsb76XglFSxzjrLHKYnXDd+XsfzKmUg==
-X-Received: by 2002:a62:154:: with SMTP id 81mr2864787pfb.228.1586270833015;
-        Tue, 07 Apr 2020 07:47:13 -0700 (PDT)
+        bh=geDMvpdyp4eREUjGenxPiMAgszPzsf8hdgTrRUcyDVI=;
+        b=PDD+Wp1b4qdo/aC5XpAIHJ8i2ULXGhhUh0nY5LVwinExX6VVkivLQgimS6RXsRkRH9
+         9m8lg0fZ8b1mreDEua8dy4kKJzxXPQndPgDO2o2tCmqY5nOGavljq+AyRuy8Yn9KHvQQ
+         rtklDlZNMMeDmKCxVNe8Rqu0CiaZ5uEqRRIUMYVwZYfDONLchU1Jv5lC5wlSbjvKxFud
+         nU7dniQTItKIMPyrPVDtzOSFcBNPVpJ1wf/nPK7dE81oXcyvWFOnzI6LenqZdaL06RIy
+         D7w/F3La2MkiVolGCyxF2oqfQbX7EYU2QsXOsjovPJsDKd8P1WhWPQissFncGlPUpwLM
+         mz7g==
+X-Gm-Message-State: AGi0PuZ6tW8rIyB1tzMIBHteVrVyz1PyIWRAmWc+IfIVEXw8ogkUi41R
+        ie4fTZxWAV4K6DIDib0Levlbwg==
+X-Google-Smtp-Source: APiQypJSC+TFUHwlK7PTtzsWm3RbNjRWth5EDoVm2mJoigQnMWAkG6PwXQSKKLPQx1AAHMmzFA/bEg==
+X-Received: by 2002:aa7:9a08:: with SMTP id w8mr2724871pfj.317.1586270835251;
+        Tue, 07 Apr 2020 07:47:15 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id y15sm14190093pfc.206.2020.04.07.07.47.11
+        by smtp.gmail.com with ESMTPSA id y15sm14190093pfc.206.2020.04.07.07.47.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 07:47:12 -0700 (PDT)
+        Tue, 07 Apr 2020 07:47:14 -0700 (PDT)
 From:   Zong Li <zong.li@sifive.com>
 To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
         aou@eecs.berkeley.edu, mhiramat@kernel.org,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Zong Li <zong.li@sifive.com>,
         Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH v4 7/9] riscv: move exception table immediately after RO_DATA
-Date:   Tue,  7 Apr 2020 22:46:52 +0800
-Message-Id: <1d1d278ca3957db9103f40ddda008128365d6d72.1586265122.git.zong.li@sifive.com>
+Subject: [PATCH v4 8/9] riscv: add alignment for text, rodata and data sections
+Date:   Tue,  7 Apr 2020 22:46:53 +0800
+Message-Id: <24d705447a3033ee94c3dc9687b97870e2521090.1586265122.git.zong.li@sifive.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1586265122.git.zong.li@sifive.com>
 References: <cover.1586265122.git.zong.li@sifive.com>
@@ -75,41 +75,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move EXCEPTION_TABLE immediately after RO_DATA. Make it easy to set the
-attribution of the sections which should be read-only at a time.
-Add _data to specify the start of data section with write permission.
+The kernel mapping will tried to optimize its mapping by using bigger
+size. In rv64, it tries to use PMD_SIZE, and tryies to use PGDIR_SIZE in
+rv32. To ensure that the start address of these sections could fit the
+mapping entry size, make them align to the biggest alignment.
+
+Define a macro SECTION_ALIGN because the HPAGE_SIZE or PMD_SIZE, etc.,
+are invisible in linker script.
+
 This patch is prepared for STRICT_KERNEL_RWX support.
 
 Signed-off-by: Zong Li <zong.li@sifive.com>
-Suggested-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
 ---
- arch/riscv/kernel/vmlinux.lds.S | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/riscv/include/asm/set_memory.h | 13 +++++++++++++
+ arch/riscv/kernel/vmlinux.lds.S     |  5 ++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
+diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
+index 620d81c372d9..4c5bae7ca01c 100644
+--- a/arch/riscv/include/asm/set_memory.h
++++ b/arch/riscv/include/asm/set_memory.h
+@@ -6,6 +6,7 @@
+ #ifndef _ASM_RISCV_SET_MEMORY_H
+ #define _ASM_RISCV_SET_MEMORY_H
+ 
++#ifndef __ASSEMBLY__
+ /*
+  * Functions to change memory attributes.
+  */
+@@ -24,4 +25,16 @@ static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
+ int set_direct_map_invalid_noflush(struct page *page);
+ int set_direct_map_default_noflush(struct page *page);
+ 
++#endif /* __ASSEMBLY__ */
++
++#ifdef CONFIG_ARCH_HAS_STRICT_KERNEL_RWX
++#ifdef CONFIG_64BIT
++#define SECTION_ALIGN (1 << 21)
++#else
++#define SECTION_ALIGN (1 << 22)
++#endif
++#else /* !CONFIG_ARCH_HAS_STRICT_KERNEL_RWX */
++#define SECTION_ALIGN L1_CACHE_BYTES
++#endif /* CONFIG_ARCH_HAS_STRICT_KERNEL_RWX */
++
+ #endif /* _ASM_RISCV_SET_MEMORY_H */
 diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index 1e0193ded420..02e948b620af 100644
+index 02e948b620af..ef87deea0350 100644
 --- a/arch/riscv/kernel/vmlinux.lds.S
 +++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -58,6 +58,10 @@ SECTIONS
+@@ -9,6 +9,7 @@
+ #include <asm/page.h>
+ #include <asm/cache.h>
+ #include <asm/thread_info.h>
++#include <asm/set_memory.h>
+ 
+ OUTPUT_ARCH(riscv)
+ ENTRY(_start)
+@@ -36,6 +37,7 @@ SECTIONS
+ 	PERCPU_SECTION(L1_CACHE_BYTES)
+ 	__init_end = .;
+ 
++	. = ALIGN(SECTION_ALIGN);
+ 	.text : {
+ 		_text = .;
+ 		_stext = .;
+@@ -53,13 +55,14 @@ SECTIONS
+ 
+ 	/* Start of data section */
+ 	_sdata = .;
+-	RO_DATA(L1_CACHE_BYTES)
++	RO_DATA(SECTION_ALIGN)
+ 	.srodata : {
  		*(.srodata*)
  	}
  
-+	EXCEPTION_TABLE(0x10)
-+
-+	_data = .;
-+
+ 	EXCEPTION_TABLE(0x10)
+ 
++	. = ALIGN(SECTION_ALIGN);
+ 	_data = .;
+ 
  	RW_DATA(L1_CACHE_BYTES, PAGE_SIZE, THREAD_SIZE)
- 	.sdata : {
- 		__global_pointer$ = . + 0x800;
-@@ -69,8 +73,6 @@ SECTIONS
- 
- 	BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
- 
--	EXCEPTION_TABLE(0x10)
--
- 	.rel.dyn : {
- 		*(.rel.dyn*)
- 	}
 -- 
 2.26.0
 
