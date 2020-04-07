@@ -2,148 +2,150 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAF8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A2FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F78C20747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B7A2082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Z95WsXja"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BNEPSE0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgDGOrj (ORCPT
+        id S1729400AbgDGOsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:47:39 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36571 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729275AbgDGOrJ (ORCPT
+        Tue, 7 Apr 2020 10:48:03 -0400
+Received: from mail-wm1-f74.google.com ([209.85.128.74]:35921 "EHLO
+        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728943AbgDGOsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:47:09 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g2so1334939plo.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:47:09 -0700 (PDT)
+        Tue, 7 Apr 2020 10:48:03 -0400
+Received: by mail-wm1-f74.google.com with SMTP id 2so825498wmf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:48:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1qkEQ73ghM61/BXRvlDJEs7SEg6hkPYIpkfLFdxJqkM=;
-        b=Z95WsXjaZ4R1OiZAjtFWozqj9735nUzepdNDu+Rm+ykKmZ1QhMW1WXzh4mh+TxtIUE
-         3up1bhUw0eoHYPS2z8u6Mz4s5j4A2KaKT+b3o5aWzvtjB2dNihRQ+qXe8mFuGaUjOb7e
-         PHR/jKA1Ybc0M0HAbqxdcQ4Id/syAJDH5PBKE8wm9I8phudmq4vsXT6ifv3WXy0nXAIB
-         AH2lCtDzZ8wqQyWQ5t3ZAaLK/NdSJoIrbi78EcorwBkK9t45hMs/R6/CQqwUJ3hI8RZL
-         W9QEv1DPVnBiArLheGHAnGn1vDRriUf+GqOdmk4bKQW2fK7NCvaaEyPjormnBQMmeELy
-         Pchg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=kBwtinCCbQD3d1i0W2BxWgZFWTEf8D3Zw/F9mdZ06Jo=;
+        b=BNEPSE0i8ARIophwmS/TfQV8URnTXgM7H88FFcYI1mefm7MRNzS602/NFMRBGmANX1
+         di6r/78+mPNVawgfAa1U7JL9oJ2BHxq8FuZO/Ea4b6mFUR6sjAWEtcRwlOFiduw8n+cX
+         3JL8Jiwp4Td+bDdkGXF/4+H4YwlauOSM3JhmLN8as860cROD2yFXU1EpN8XUg6C1V1z1
+         XbfrcT0K7ztziOhy0f+xSeAxi3vMvjIfR0qj1V7b07b6ALk8fgtlv1E9UXc29IvyJ7rp
+         MgT8aNYQox7waYe1/EpaJEiEjIac/Olz53DSDXWB8uhX0NlXDuVs2oW04SXjpgoEtFvh
+         Zstw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1qkEQ73ghM61/BXRvlDJEs7SEg6hkPYIpkfLFdxJqkM=;
-        b=ZHGF7sw/pAZ/SGM/OU2FMTPRKe3UCLSUjBE9yfSBOypBd395cGistjeY0aS0nGVna5
-         WtAFeXkDRh0Gwfa4CNNt9NKi/gWqLB3gntpXf5XWC6QRyj7MevCRtL5BsveunWoT/LWy
-         qHOUXr2nJ/SEk3hiVoPrlMFGDVgFH1yj2bczcSZuaGc+L1xqtzOdKT1TT8xQ4326FgOn
-         QBSTQnrmHsfuoYVKW7lsT6ub6vmLYY+8hcQ2zVB9HBjq4PUTh06Y35FYugz96p26JnYY
-         KyvXE1Co18vE1EzvdL9zgzrRScvkd2Lc03BdUPu8/nVe52qc2kLU8NZTDu/MzSSXozdD
-         I3hA==
-X-Gm-Message-State: AGi0PuZ5TyyRaxGMNRpMDgDL6sR0kzt2ENkextHTCJOSMzWH/k7mla7o
-        RwocN9k1T3bD6AVugT/efR6JqQ==
-X-Google-Smtp-Source: APiQypL0QZL2CpYGkPcslhSMRE9aqJtSat2xKN9cJ0wG3hkbm7awrwBq0Y0CDoR4ztQTWLcG3pAU6A==
-X-Received: by 2002:a17:902:8609:: with SMTP id f9mr2675736plo.203.1586270828988;
-        Tue, 07 Apr 2020 07:47:08 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id y15sm14190093pfc.206.2020.04.07.07.47.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 07:47:08 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        aou@eecs.berkeley.edu, mhiramat@kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH v4 5/9] riscv: add ARCH_HAS_SET_DIRECT_MAP support
-Date:   Tue,  7 Apr 2020 22:46:50 +0800
-Message-Id: <1b9ab6009c1d70451e21a35ed7fea47c139bc65f.1586265122.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <cover.1586265122.git.zong.li@sifive.com>
-References: <cover.1586265122.git.zong.li@sifive.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=kBwtinCCbQD3d1i0W2BxWgZFWTEf8D3Zw/F9mdZ06Jo=;
+        b=kh1lYVHfF17bSBrQ4eOOJTQ7KIpYwKVtJvoqO9UqIDn5DbaCirfZGcThLYaglZXCbZ
+         2IGhj9YP+q0X1Te1bsLElfQ//WHjlCZsk7P6kJ+gGc03l0HRE7lMM/NtKLtP9qPePSCs
+         5/km3cwsJ4yFn2mYJ+N0r5NybUKGnOx3LNhs0y63k34FYCEk8XQDudxxrkxJqRFRtkrE
+         Us5nybIo40POCJJJ5pxH+89/IqD8E+xgNfTW0ziFO2hQiHqZpLlk/Fr1Cf3hV7knLJYj
+         PF/a/hqKkaWwLCEnvaDStmOR/YRTvvJ7ogVrXpe3YK2VIc3kp40pP3Vq2tB77EdY8Ynh
+         /4JA==
+X-Gm-Message-State: AGi0PuZ/17wgUDzcIVxkS8zHSLJm3AQRusdZ8fy/9HvQd8xNM8Oh2PA8
+        ChsdFIrPb4F7ckqSPIi0eYV7o6yYKLf+CFKY
+X-Google-Smtp-Source: APiQypI9dbRfSFBjBzZlPOeHHSm0VSKX2n7bXJQdB3MU8o7qN8FqnsRORojqoLqm6nFbaGri/ULx5j08PxaoYWUk
+X-Received: by 2002:adf:92a3:: with SMTP id 32mr3356166wrn.254.1586270881011;
+ Tue, 07 Apr 2020 07:48:01 -0700 (PDT)
+Date:   Tue,  7 Apr 2020 16:47:54 +0200
+Message-Id: <9f7ce7a1472cfb9447f6c5a494186fa1f2670f6f.1586270396.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+Subject: [PATCH v3] usb: raw-gadget: fix raw_event_queue_fetch locking
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add set_direct_map_*() functions for setting the direct map alias for
-the page to its default permissions and to an invalid state that cannot
-be cached in a TLB. (See d253ca0c ("x86/mm/cpa: Add set_direct_map_*()
-functions")) Add a similar implementation for RISC-V.
+If queue->size check in raw_event_queue_fetch() fails (which normally
+shouldn't happen, that check is a fail-safe), the function returns
+without reenabling interrupts. This patch fixes that issue, along with
+propagating the cause of failure to the function caller.
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Fixes: f2c2e717642c ("usb: gadget: add raw-gadget interface"
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- arch/riscv/Kconfig                  |  1 +
- arch/riscv/include/asm/set_memory.h |  3 +++
- arch/riscv/mm/pageattr.c            | 24 ++++++++++++++++++++++++
- 3 files changed, 28 insertions(+)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 9044e0dd95ea..a94d0f064d9c 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -59,6 +59,7 @@ config RISCV
- 	select HAVE_EBPF_JIT if 64BIT
- 	select EDAC_SUPPORT
- 	select ARCH_HAS_GIGANTIC_PAGE
-+	select ARCH_HAS_SET_DIRECT_MAP
- 	select ARCH_HAS_SET_MEMORY
- 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
- 	select SPARSEMEM_STATIC if 32BIT
-diff --git a/arch/riscv/include/asm/set_memory.h b/arch/riscv/include/asm/set_memory.h
-index 79a810f0f38b..620d81c372d9 100644
---- a/arch/riscv/include/asm/set_memory.h
-+++ b/arch/riscv/include/asm/set_memory.h
-@@ -21,4 +21,7 @@ static inline int set_memory_x(unsigned long addr, int numpages) { return 0; }
- static inline int set_memory_nx(unsigned long addr, int numpages) { return 0; }
- #endif
- 
-+int set_direct_map_invalid_noflush(struct page *page);
-+int set_direct_map_default_noflush(struct page *page);
-+
- #endif /* _ASM_RISCV_SET_MEMORY_H */
-diff --git a/arch/riscv/mm/pageattr.c b/arch/riscv/mm/pageattr.c
-index fcd59ef2835b..7be6cd67e2ef 100644
---- a/arch/riscv/mm/pageattr.c
-+++ b/arch/riscv/mm/pageattr.c
-@@ -148,3 +148,27 @@ int set_memory_nx(unsigned long addr, int numpages)
+Changes in v3:
+- Don't return NULL from raw_event_queue_fetch() in case on an error.
+
+Changes in v2:
+- Added a comment before the WARN_ON() call.
+
+Greg, this should apply cleanly on top of Dan's "usb: raw-gadget: Fix
+copy_to/from_user() checks" patch.
+
+---
+ drivers/usb/gadget/legacy/raw_gadget.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/usb/gadget/legacy/raw_gadget.c b/drivers/usb/gadget/legacy/raw_gadget.c
+index e490ffa1f58b..ca7d95bf7397 100644
+--- a/drivers/usb/gadget/legacy/raw_gadget.c
++++ b/drivers/usb/gadget/legacy/raw_gadget.c
+@@ -81,6 +81,7 @@ static int raw_event_queue_add(struct raw_event_queue *queue,
+ static struct usb_raw_event *raw_event_queue_fetch(
+ 				struct raw_event_queue *queue)
  {
- 	return __set_memory(addr, numpages, __pgprot(0), __pgprot(_PAGE_EXEC));
- }
-+
-+int set_direct_map_invalid_noflush(struct page *page)
-+{
-+	unsigned long start = (unsigned long)page_address(page);
-+	unsigned long end = start + PAGE_SIZE;
-+	struct pageattr_masks masks = {
-+		.set_mask = __pgprot(0),
-+		.clear_mask = __pgprot(_PAGE_PRESENT)
-+	};
-+
-+	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+}
-+
-+int set_direct_map_default_noflush(struct page *page)
-+{
-+	unsigned long start = (unsigned long)page_address(page);
-+	unsigned long end = start + PAGE_SIZE;
-+	struct pageattr_masks masks = {
-+		.set_mask = PAGE_KERNEL,
-+		.clear_mask = __pgprot(0)
-+	};
-+
-+	return walk_page_range(&init_mm, start, end, &pageattr_ops, &masks);
-+}
++	int ret;
+ 	unsigned long flags;
+ 	struct usb_raw_event *event;
+ 
+@@ -89,11 +90,18 @@ static struct usb_raw_event *raw_event_queue_fetch(
+ 	 * there's at least one event queued by decrementing the semaphore,
+ 	 * and then take the lock to protect queue struct fields.
+ 	 */
+-	if (down_interruptible(&queue->sema))
+-		return NULL;
++	ret = down_interruptible(&queue->sema);
++	if (ret)
++		return ERR_PTR(ret);
+ 	spin_lock_irqsave(&queue->lock, flags);
+-	if (WARN_ON(!queue->size))
+-		return NULL;
++	/*
++	 * queue->size must have the same value as queue->sema counter (before
++	 * the down_interruptible() call above), so this check is a fail-safe.
++	 */
++	if (WARN_ON(!queue->size)) {
++		spin_unlock_irqrestore(&queue->lock, flags);
++		return ERR_PTR(-ENODEV);
++	}
+ 	event = queue->events[0];
+ 	queue->size--;
+ 	memmove(&queue->events[0], &queue->events[1],
+@@ -522,10 +530,17 @@ static int raw_ioctl_event_fetch(struct raw_dev *dev, unsigned long value)
+ 	spin_unlock_irqrestore(&dev->lock, flags);
+ 
+ 	event = raw_event_queue_fetch(&dev->queue);
+-	if (!event) {
++	if (PTR_ERR(event) == -EINTR) {
+ 		dev_dbg(&dev->gadget->dev, "event fetching interrupted\n");
+ 		return -EINTR;
+ 	}
++	if (IS_ERR(event)) {
++		dev_err(&dev->gadget->dev, "failed to fetch event\n");
++		spin_lock_irqsave(&dev->lock, flags);
++		dev->state = STATE_DEV_FAILED;
++		spin_unlock_irqrestore(&dev->lock, flags);
++		return -ENODEV;
++	}
+ 	length = min(arg.length, event->length);
+ 	if (copy_to_user((void __user *)value, event, sizeof(*event) + length))
+ 		return -EFAULT;
 -- 
-2.26.0
+2.26.0.292.g33ef6b2f38-goog
 
