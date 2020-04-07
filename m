@@ -2,160 +2,106 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0ECC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE83C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6558D2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB07320801
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586254964;
-	bh=juQKuUZDgyyxGgsF7uNhckuR4k0PFa3vOdCv8igXe0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zJ8bmu1ryURyLWcuiyV6Gk/5tl/Je9uO3LeEDHGG/xR9edIjWu7+MksOG7k7lsa2O
-	 0fTp4bbmMe1IgkZmGs3vRUGCHBTk2QK7M1x67Urmqo8hNooeMtf5WhlpwGsmi/HgGx
-	 goE85RcFlcX5dHKahNUepeF5/dSHLk/CAX5hKpj0=
+	s=default; t=1586254968;
+	bh=JZKbPbuU2UHbrb6VuFFKYu3d0IBGpuh9U6WpdN5Q95o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=E1Z2J6Ms5hcMOrWjWt8SIsWC7otBgVdUmbqR1gBef7wpUEujQeNxICyxUwzsknl/5
+	 0zDzl3ofbh/S8kbi+c+12VRwO+x1YIdhqURiwWy2NvvZzzl13xqRPO1Bxg6FGz9rpT
+	 jELSRocwcuIYMpdmAUYNURTXh9WmyTFGY9D+gjfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgDGKWn (ORCPT
+        id S1728296AbgDGKWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:22:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60204 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:22:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbgDGKWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:22:41 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S1728255AbgDGKWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:22:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4281720771;
-        Tue,  7 Apr 2020 10:22:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69BF32074F;
+        Tue,  7 Apr 2020 10:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586254960;
-        bh=juQKuUZDgyyxGgsF7uNhckuR4k0PFa3vOdCv8igXe0Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sgYqeamJWAiaBCp2NFSD03QPo70At2AUr/IUVrprBg+Ml5NDCfoPAKTNJYYXNX6an
-         vAQ7e3e2LWUeFyKv98p4GoBGzkyh2TeRFOvdvOm18bZZP3vlg38k0CTydolrBFmEWu
-         29LGMbGbHOxwLRXzrU3Ok29lE8bw89yC7XaBAWNk=
-Received: by pali.im (Postfix)
-        id 418C85F1; Tue,  7 Apr 2020 12:22:38 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 12:22:38 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Thomas Hebb <tommyhebb@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v2] hwmon: (dell-smm) Use one DMI match for all XPS models
-Message-ID: <20200407102238.zweh7s7t6rn5cwhf@pali>
-References: <5d7e498b83e89ce7c41a449b61919c65d0770b73.1586033337.git.tommyhebb@gmail.com>
+        s=default; t=1586254964;
+        bh=JZKbPbuU2UHbrb6VuFFKYu3d0IBGpuh9U6WpdN5Q95o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SkVZFRCSAaIXxDSQ4nk2O6uiS+1h+CGqyM0boZev8rJvOyqKZO4f8hCFpb3AM4KOy
+         vac7EmXppem49t1R0t7EcOzXsOruhOAZS6TKC8NnOJK1izltV3jKZad01bN2Pyu2Pc
+         7kf47JntV6NncoTrMtVheC/QIalsQV+LV6E5aMtg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 04/36] drm/bochs: downgrade pci_request_region failure from error to warning
+Date:   Tue,  7 Apr 2020 12:21:37 +0200
+Message-Id: <20200407101454.837793251@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
+References: <20200407101454.281052964@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5d7e498b83e89ce7c41a449b61919c65d0770b73.1586033337.git.tommyhebb@gmail.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-On Saturday 04 April 2020 16:49:00 Thomas Hebb wrote:
-> Currently, each new XPS has to be added manually for module autoloading
-> to work. Since fan multiplier autodetection should work fine on all XPS
-> models, just match them all with one block like is done for Precision
-> and Studio.
+[ Upstream commit 8c34cd1a7f089dc03933289c5d4a4d1489549828 ]
 
-It makes sense. We already load driver for all Inspirion, Latitude,
-Precision, Vostro and Studio models so I do not see reason why not to
-load it also for all XPS models. I doubt that Dell uses one base
-firmware for all mentioned models and second one specially for XPS.
+Shutdown of firmware framebuffer has a bunch of problems.  Because
+of this the framebuffer region might still be reserved even after
+drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
 
-> The only match we replace that doesn't already use autodetection is
-> "XPS13" which, according to Google, only matches the XPS 13 9333. (All
-> other XPS 13 models have "XPS" as its own word, surrounded by spaces.)
-> According to the thread at [1], autodetection works for the XPS 13 9333,
-> meaning this shouldn't regress it. I do not own one to confirm with,
-> though.
-> 
-> Tested on an XPS 13 9350 and confirmed the module now autoloads and
-> reports reasonable-looking data. I am using BIOS 1.12.2 and do not see
-> any freezes when querying fan speed.
-> 
-> [1] https://lore.kernel.org/patchwork/patch/525367/
+Don't consider pci_request_region() failure for the framebuffer
+region as fatal error to workaround this issue.
 
-I guess that these two tests are enough based on the fact that lot of
-XPS models are already whitelisted.
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200313084152.2734-1-kraxel@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Guenter, it is fine for you now? Or is something else needed?
+diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
+index e567bdfa2ab8e..bb1391784caf0 100644
+--- a/drivers/gpu/drm/bochs/bochs_hw.c
++++ b/drivers/gpu/drm/bochs/bochs_hw.c
+@@ -156,10 +156,8 @@ int bochs_hw_init(struct drm_device *dev)
+ 		size = min(size, mem);
+ 	}
+ 
+-	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
+-		DRM_ERROR("Cannot request framebuffer\n");
+-		return -EBUSY;
+-	}
++	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
++		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
+ 
+ 	bochs->fb_map = ioremap(addr, size);
+ 	if (bochs->fb_map == NULL) {
+-- 
+2.20.1
 
-> Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
 
-Acked-by: Pali Rohár <pali@kernel.org>
 
-> ---
-> 
-> Changes in v2:
-> - Remove another now-redundant XPS entry that I'd missed.
-> 
->  drivers/hwmon/dell-smm-hwmon.c | 26 ++------------------------
->  1 file changed, 2 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/hwmon/dell-smm-hwmon.c b/drivers/hwmon/dell-smm-hwmon.c
-> index d4c83009d625..ca30bf903ec7 100644
-> --- a/drivers/hwmon/dell-smm-hwmon.c
-> +++ b/drivers/hwmon/dell-smm-hwmon.c
-> @@ -1072,13 +1072,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
->  			DMI_MATCH(DMI_PRODUCT_NAME, "Vostro"),
->  		},
->  	},
-> -	{
-> -		.ident = "Dell XPS421",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "XPS L421X"),
-> -		},
-> -	},
->  	{
->  		.ident = "Dell Studio",
->  		.matches = {
-> @@ -1087,14 +1080,6 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
->  		},
->  		.driver_data = (void *)&i8k_config_data[DELL_STUDIO],
->  	},
-> -	{
-> -		.ident = "Dell XPS 13",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "XPS13"),
-> -		},
-> -		.driver_data = (void *)&i8k_config_data[DELL_XPS],
-> -	},
->  	{
->  		.ident = "Dell XPS M140",
->  		.matches = {
-> @@ -1104,17 +1089,10 @@ static const struct dmi_system_id i8k_dmi_table[] __initconst = {
->  		.driver_data = (void *)&i8k_config_data[DELL_XPS],
->  	},
->  	{
-> -		.ident = "Dell XPS 15 9560",
-> -		.matches = {
-> -			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9560"),
-> -		},
-> -	},
-> -	{
-> -		.ident = "Dell XPS 15 9570",
-> +		.ident = "Dell XPS",
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> -			DMI_MATCH(DMI_PRODUCT_NAME, "XPS 15 9570"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "XPS"),
->  		},
->  	},
->  	{ }
-> -- 
-> 2.25.2
-> 
