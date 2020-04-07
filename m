@@ -2,185 +2,65 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD91C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2220C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033BF207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8BBD20747
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:09:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HmM7U5io"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iCObDzZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgDGWIu (ORCPT
+        id S1726636AbgDGWJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:08:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51530 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726406AbgDGWIt (ORCPT
+        Tue, 7 Apr 2020 18:09:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51950 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgDGWJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:08:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586297328;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TssMTWHxygIKNi11mIoil8mbiwzaSax2CgW48VSAyh0=;
-        b=HmM7U5ioX5WBPydFLWi5wXkx5How/5yF/+CEi1r6w23wVBgFdMdcXHKCPRzrICVEzmy6SV
-        yfkbPmGBdpKqa2QEVIE7Hw4s7tTVHcGAyEExh0oMVMV8ib/4TUfzLSRxRq7aTkysg81S/B
-        yqLvfsJsBRKKTiqn6J41tpG1jv9Qtls=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-Xg6elKaFOYuGSoUXTT95sg-1; Tue, 07 Apr 2020 18:08:43 -0400
-X-MC-Unique: Xg6elKaFOYuGSoUXTT95sg-1
-Received: by mail-wr1-f69.google.com with SMTP id u16so2924897wrp.14
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 15:08:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TssMTWHxygIKNi11mIoil8mbiwzaSax2CgW48VSAyh0=;
-        b=BSm4OJHX4SknryGVULgkPfRtVaa8ZA487QGZSflajrC1rrk9kVDb9O0HNZQlmUN8Ll
-         EI+A6bxazWE6h9bameOgj7Sjenk/Xmpv6eL84AJwEDe1g6yGZhOfy59CrlRcmy5lm8bG
-         xg7YItdmmiFyhNr7UihvTgGTNXcYQ6jSpblVz1u9Y5v0FgodmoQ6OVdOI1yLgn4W6zvr
-         cvhb6WNA86/TunkOohfDj+cApAm9T89xqx4QElkZ/pAKg5fUNMvomaIM2VNL+/pWiII6
-         JrKx+SUdhQKfZDRMG9uJVz1silYvhkyF0LVQ3CriFHpq0SCWlGfCxUfkeL3TA8hBFIC7
-         fUZw==
-X-Gm-Message-State: AGi0PuaMO6fNgAFXtG92/YWp1Ea/DLj6p8sDVuaajSQMx8fy39hRYj/v
-        pByedkgzpsakHuZJzL0XaC7LgeK5Sr4xq0hAS3ocfRjdLuNyxy8+NPtOsp8MMPpNdtHuiI+btOQ
-        5e7HqXimKupADfxVXsz2FznvF
-X-Received: by 2002:a5d:4305:: with SMTP id h5mr4695011wrq.69.1586297321502;
-        Tue, 07 Apr 2020 15:08:41 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKQy1KrIKKuFiITfqiBqf0sbYrIWOWJVSKMi3ArFHZ4ikwM9Y3iCrCtqPKvnaU6G3z5Y1UkEQ==
-X-Received: by 2002:a5d:4305:: with SMTP id h5mr4694976wrq.69.1586297321131;
-        Tue, 07 Apr 2020 15:08:41 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::3])
-        by smtp.gmail.com with ESMTPSA id q187sm3951406wma.41.2020.04.07.15.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 15:08:40 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 18:08:37 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     syzbot <syzbot+18638e81a805a2d96682@syzkaller.appspotmail.com>
-Cc:     akpm@linux-foundation.org, bgeffon@google.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
-Subject: Re: BUG: unable to handle kernel paging request in
- get_pfnblock_flags_mask
-Message-ID: <20200407220837.GB66033@xz-x1>
-References: <00000000000018a92305a2ba57e0@google.com>
+        Tue, 7 Apr 2020 18:09:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VJbgJAe6SzFkTbL5NsrOiwu1YrOSYf9AuTvbCQyh2as=; b=iCObDzZc2zb180nZviio0/UZ4M
+        XbD2xLkOJKVKFtTzRB3pQtU1xuFg/mRiketYbkyo95gNuUZu/RYpMLGMLEtNjHEFf7IUJiQjLva9c
+        V/6o4/8pp8afW0q+98Mhf3vK/KJizovWUEE6NotVQG8QCQGNKuhMUZ45DKyoYSldfD7oC2X5h7/JN
+        CcmVAAc5VuOI5b6glfDC6QslCfsjxmkUvhTZuNtXXJTL+qcGOdPgkiJaUwOLm8srO7XhUGKeHVoGQ
+        o39NivE5EyBKfTdB71zGmQ+TxBYN2hahpWqCc2+9EelwrMbdoyfaQuFR6rMMvbPHE08JvTkYr4wX4
+        sFty8Y8g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLwOx-0002CD-HJ; Tue, 07 Apr 2020 22:08:59 +0000
+Date:   Tue, 7 Apr 2020 15:08:59 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     syzbot <syzbot+516667c144d77aa5ba3c@syzkaller.appspotmail.com>
+Cc:     alex.shi@linux.alibaba.com, armijn@tjaldur.nl,
+        gregkh@linuxfoundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        rfontana@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Subject: Re: KASAN: slab-out-of-bounds Read in __kvm_map_gfn
+Message-ID: <20200407220859.GL21484@bombadil.infradead.org>
+References: <00000000000001be5205a2b90e71@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <00000000000018a92305a2ba57e0@google.com>
+In-Reply-To: <00000000000001be5205a2b90e71@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 02:48:12PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1685901be00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=91b674b8f0368e69
-> dashboard link: https://syzkaller.appspot.com/bug?extid=18638e81a805a2d96682
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11379efbe00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10172c5de00000
-> 
+On Tue, Apr 07, 2020 at 01:16:11PM -0700, syzbot wrote:
 > The bug was bisected to:
 > 
-> commit 4426e945df588f2878affddf88a51259200f7e29
-> Author: Peter Xu <peterx@redhat.com>
-> Date:   Thu Apr 2 04:08:49 2020 +0000
+> commit 3a00e7c47c382b30524e78b36ab047c16b8fcfef
+> Author: Alex Shi <alex.shi@linux.alibaba.com>
+> Date:   Tue Jan 21 08:34:05 2020 +0000
 > 
->     mm/gup: allow VM_FAULT_RETRY for multiple times
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16122ac7e00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15122ac7e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11122ac7e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+18638e81a805a2d96682@syzkaller.appspotmail.com
-> Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
-> 
-> BUG: unable to handle page fault for address: fffff11043f9c809
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 0 P4D 0 
-> Oops: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 7170 Comm: syz-executor720 Not tainted 5.6.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> RIP: 0010:__nr_to_section include/linux/mmzone.h:1256 [inline]
-> RIP: 0010:__pfn_to_section include/linux/mmzone.h:1335 [inline]
-> RIP: 0010:get_pageblock_bitmap mm/page_alloc.c:452 [inline]
-> RIP: 0010:__get_pfnblock_flags_mask mm/page_alloc.c:487 [inline]
-> RIP: 0010:get_pfnblock_flags_mask+0x5b/0x190 mm/page_alloc.c:501
-> Code: 0d ea e0 be 0a 48 85 c9 0f 84 aa 00 00 00 48 89 f7 48 c1 ef 16 48 8d 2c f9 48 b9 00 00 00 00 00 fc ff df 49 89 e8 49 c1 e8 03 <41> 80 3c 08 00 0f 85 87 00 00 00 48 8b 7d 00 48 85 ff 74 7a 83 e3
-> RSP: 0000:ffffc90001697d40 EFLAGS: 00010a06
-> RAX: 0000000000000007 RBX: 0001fffffcf404f2 RCX: dffffc0000000000
-> RDX: 0000000000000002 RSI: fffffe7a02793d05 RDI: 000003fffff9e809
-> RBP: ffffa8821fce4048 R08: 1ffff51043f9c809 R09: ffffed1013c9e829
-> R10: ffff88809e4f4147 R11: ffffed1013c9e828 R12: ffff88809e4f4140
-> R13: ffff88809e4f4148 R14: 0000000000000000 R15: ffff88809e4f4140
-> FS:  000000000268a940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: fffff11043f9c809 CR3: 000000009f94c000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  __dump_page+0x122/0x1a40 mm/debug.c:57
->  put_page_testzero include/linux/mm.h:675 [inline]
->  put_page include/linux/mm.h:1136 [inline]
->  lookup_node mm/mempolicy.c:907 [inline]
->  do_get_mempolicy mm/mempolicy.c:970 [inline]
->  kernel_get_mempolicy+0xe3f/0xfb0 mm/mempolicy.c:1615
->  __do_sys_get_mempolicy mm/mempolicy.c:1633 [inline]
->  __se_sys_get_mempolicy mm/mempolicy.c:1629 [inline]
->  __x64_sys_get_mempolicy+0xba/0x150 mm/mempolicy.c:1629
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> RIP: 0033:0x441789
-> Code: e8 ac e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffe6d5ec848 EFLAGS: 00000246 ORIG_RAX: 00000000000000ef
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441789
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: 0000000000021c9b R08: 0000000000000003 R09: 0000000000402590
-> R10: 000000002073b000 R11: 0000000000000246 R12: 0000000000402500
-> R13: 0000000000402590 R14: 0000000000000000 R15: 0000000000000000
-> Modules linked in:
-> CR2: fffff11043f9c809
-> ---[ end trace bdfbd15c6d2a525e ]---
-> RIP: 0010:__nr_to_section include/linux/mmzone.h:1256 [inline]
-> RIP: 0010:__pfn_to_section include/linux/mmzone.h:1335 [inline]
-> RIP: 0010:get_pageblock_bitmap mm/page_alloc.c:452 [inline]
-> RIP: 0010:__get_pfnblock_flags_mask mm/page_alloc.c:487 [inline]
-> RIP: 0010:get_pfnblock_flags_mask+0x5b/0x190 mm/page_alloc.c:501
-> Code: 0d ea e0 be 0a 48 85 c9 0f 84 aa 00 00 00 48 89 f7 48 c1 ef 16 48 8d 2c f9 48 b9 00 00 00 00 00 fc ff df 49 89 e8 49 c1 e8 03 <41> 80 3c 08 00 0f 85 87 00 00 00 48 8b 7d 00 48 85 ff 74 7a 83 e3
-> RSP: 0000:ffffc90001697d40 EFLAGS: 00010a06
-> RAX: 0000000000000007 RBX: 0001fffffcf404f2 RCX: dffffc0000000000
-> RDX: 0000000000000002 RSI: fffffe7a02793d05 RDI: 000003fffff9e809
-> RBP: ffffa8821fce4048 R08: 1ffff51043f9c809 R09: ffffed1013c9e829
-> R10: ffff88809e4f4147 R11: ffffed1013c9e828 R12: ffff88809e4f4140
-> R13: ffff88809e4f4148 R14: 0000000000000000 R15: ffff88809e4f4140
-> FS:  000000000268a940(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: fffff11043f9c809 CR3: 000000009f94c000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>     ida: remove abandoned macros
 
-Thanks; I think this is a dup of previous one too:
-
-https://lore.kernel.org/lkml/0000000000002b25f105a2a3434d@google.com/
-
-#syz dup: BUG: unable to handle kernel paging request in kernel_get_mempolicy
-
--- 
-Peter Xu
-
+Definitely a bad bisect.
