@@ -2,92 +2,166 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F59C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E022AC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF612074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:29:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNBVjKjk"
+	by mail.kernel.org (Postfix) with ESMTP id A72C020719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586262565;
+	bh=hrXJIm2yARS2f7WqTD+GSOvFj12Qjg9tKPNB5u2C4Zw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IfYWrUDzDV58VZpS7jEXIIWLiBkTMht+S+Mx7QegrRif+ozFcIaHoG+udmNy7zqyy
+	 LcLEpqYd6OzkBdbjpYjHsN2a6KSD/9VYF2LarRjbu/1J95rtE6UdQoyqy/Ds+zSqqX
+	 9+UoyFFk3TiVLamwuuUTUv94UwAFpbJDbROi3xlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgDGM3N (ORCPT
+        id S1728639AbgDGM3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:29:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44606 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgDGM3N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 08:29:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n13so230123pgp.11;
-        Tue, 07 Apr 2020 05:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vOQTjEsc/b9nWGCQMtsVYfPJl+HytGkwz1UpCx9vwX8=;
-        b=MNBVjKjkXAaGGC+lGJMT5/YHMphzZ/i2GJoK2Vs0pV4BMdNwgyWmFrn2nPs24yAMGJ
-         VXKWNoh7Tq2+SsQSnNksB1r/ZUKdvgd+ahRqmeC71sBlC1IikzKclwP+8qlOMR9T63mk
-         QLbVUqEXCZJbp0p6YgQ3nkmX1DidzROnBaSxHa8PSWfH1RJh23rsl3U7IdLvTKKH2F3O
-         7/qXeBRwIKJkRMzWae0vjLHG+eovzgzqc0rFwY5c29JGobY2CKRepLCoJUVXGaXUWKHv
-         fK7GY0uhz3a7erjY3f8IdrCjL63ftba2Myvi6pIGzvasS+8dbBoyPzuMFN1cvWooRiOD
-         f0iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vOQTjEsc/b9nWGCQMtsVYfPJl+HytGkwz1UpCx9vwX8=;
-        b=t9Mj1QPnccWZ8kiKvsUjSNb7LiHYk91gY9gpTxw/ykkhruHLXkd+afL2BpWohf05hB
-         IKCJUAv7luPVvxdm0uw0VqLgNQy8afSFazS7/zWraB96kvUSt8RFNJGiN5Juk9+0oU7P
-         Xqbx/zvlbWFlu4PzfH46TIMyk7SCwHk8+OHDy0fIsW7n4HI/F4o657kNqP4QCoLE+V5c
-         EYx8xRa4AOl7ZyyvLlpxpCnSy9iPquy4jmtbnJNrors4xVzX+26Sjlv9ntRbXkVDoVRc
-         4ra3sCnpGMhdCR+7ilCfLPx/Z+fntfzW4hAHJL4lplPahTQDCSytiqNIzaZ/2EmxUoPE
-         Qs2Q==
-X-Gm-Message-State: AGi0PuYlJIUUVTKe+749FNSLaufCI02+4CT0SvlxW1mE023CpGBYYvqP
-        7/8euNR9sicgnsnFxcRiS2pHgzK0qo1j3CC2
-X-Google-Smtp-Source: APiQypLEkKHjYIC1deoz+QQ8rx+ZY4YXbE5tVqk1ceCDuNWxjpvIjZpICuv5ce0ib1fz3VKkOSOl3Q==
-X-Received: by 2002:a62:2b07:: with SMTP id r7mr2220138pfr.273.1586262551588;
-        Tue, 07 Apr 2020 05:29:11 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:600d:c36b:d50:b01b:c4e4:35ad])
-        by smtp.gmail.com with ESMTPSA id o11sm12966626pgh.78.2020.04.07.05.29.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 05:29:10 -0700 (PDT)
-From:   Aishwarya R <aishwaryarj100@gmail.com>
-Cc:     aishwaryarj100@gmail.com, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] spi: spi-fsl-spi: Fix checkpatch error "foo * bar" should be "foo *bar"
-Date:   Tue,  7 Apr 2020 17:58:55 +0530
-Message-Id: <20200407122855.5531-1-aishwaryarj100@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 7 Apr 2020 08:29:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728075AbgDGM3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 08:29:24 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50D0F2051A;
+        Tue,  7 Apr 2020 12:29:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586262562;
+        bh=hrXJIm2yARS2f7WqTD+GSOvFj12Qjg9tKPNB5u2C4Zw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kUGwajbMjegrZ9/FXEfvB/C/P+YdB3LOk1YwoNOBffm+Plv2nIpa/cAVirE/B3fGw
+         V2yjSVgwFPyr9GPyB0RsXD2GdCV4E2PYH7lMIfzcrtsGMJbG00wMWvVY/7AGuIoJ6I
+         fwU5Z+J4ITndAyObWgHa4x5VUu35POgDzptHveRk=
+Date:   Tue, 7 Apr 2020 21:29:18 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 8/9] riscv: introduce interfaces to patch kernel code
+Message-Id: <20200407212918.235324cbc82e9e4deb839b14@kernel.org>
+In-Reply-To: <CANXhq0psUB4OaFuoTu-VuQNdaVOBs2UCv5kjx1Oad6rwajA1_Q@mail.gmail.com>
+References: <cover.1583772574.git.zong.li@sifive.com>
+        <d27d9e68491e1df67dbee6c22df6a72ff95bab18.1583772574.git.zong.li@sifive.com>
+        <20200401003233.17fe4b6f7075e5b8f0ed5114@kernel.org>
+        <CANXhq0ra3o+mgenbYLq_q0eZY2KiXNpWmo2V0amD0cFDqCQkXw@mail.gmail.com>
+        <20200402101733.1ef240faeaeada6e4d38ae80@kernel.org>
+        <CANXhq0rMbkNxQ3_qqYEKe8DSbL-vfQku6V9a81Hy9cxW4LaW9g@mail.gmail.com>
+        <20200404121428.596911ba5653f8b18a80eab2@kernel.org>
+        <CANXhq0rc+6jor7CMaa-zqSn3vNBdJhj3gD5wGxPkXAtVVHDHdQ@mail.gmail.com>
+        <CANXhq0psUB4OaFuoTu-VuQNdaVOBs2UCv5kjx1Oad6rwajA1_Q@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes checkpatch error "foo * bar" should be "foo *bar"
+On Mon, 6 Apr 2020 18:36:42 +0800
+Zong Li <zong.li@sifive.com> wrote:
 
-Signed-off-by: Aishwarya R <aishwaryarj100@gmail.com>
----
- drivers/spi/spi-fsl-spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Sat, Apr 4, 2020 at 8:12 PM Zong Li <zong.li@sifive.com> wrote:
+> >
+> > On Sat, Apr 4, 2020 at 11:14 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > >
+> > > Hi Zong,
+> > >
+> > > On Fri, 3 Apr 2020 17:04:51 +0800
+> > > Zong Li <zong.li@sifive.com> wrote:
+> > >
+> > > > > > > > +{
+> > > > > > > > +     void *waddr = addr;
+> > > > > > > > +     bool across_pages = (((uintptr_t) addr & ~PAGE_MASK) + len) > PAGE_SIZE;
+> > > > > > > > +     unsigned long flags = 0;
+> > > > > > > > +     int ret;
+> > > > > > > > +
+> > > > > > > > +     raw_spin_lock_irqsave(&patch_lock, flags);
+> > > > > > >
+> > > > > > > This looks a bit odd since stop_machine() is protected by its own mutex,
+> > > > > > > and also the irq is already disabled here.
+> > > > > >
+> > > > > > We need it because we don't always enter the riscv_patch_text_nosync()
+> > > > > > through stop_machine mechanism. If we call the
+> > > > > > riscv_patch_text_nosync() directly, we need a lock to protect the
+> > > > > > page.
+> > > > >
+> > > > > Oh, OK, but it leads another question. Is that safe to patch the
+> > > > > text without sync? Would you use it for UP system?
+> > > > > I think it is better to clarify "in what case user can call _nosync()"
+> > > > > and add a comment on it.
+> > > >
+> > > > The ftrace is one of the cases, as documentation of ftrace said, when
+> > > > dynamic ftrace is initialized, it calls kstop_machine to make the
+> > > > machine act like a uniprocessor so that it can freely modify code
+> > > > without worrying about other processors executing that same code. So
+> > > > the ftrace called the _nosync interface here directly.
+> > >
+> > > Hmm, even though, since it already running under kstop_machine(), no
+> > > other thread will run.
+> > > Could you consider to use text_mutex instead of that? The text_mutex
+> > > is already widely used in x86 and kernel/kprobes.c etc.
+> > >
+> > > (Hmm, it seems except for x86, alternative code don't care about
+> > >  racing...)
+> > >
+> 
+> The mutex_lock doesn't seem to work in ftrace context, I think it
+> might be the reason why other architectures didn't use text_mutex in
+> somewhere.
 
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index 3b81772fea0d..67f022b8c81d 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -588,7 +588,7 @@ static void fsl_spi_grlib_probe(struct device *dev)
- 	pdata->cs_control = fsl_spi_grlib_cs_control;
- }
- 
--static struct spi_master * fsl_spi_probe(struct device *dev,
-+static struct spi_master *fsl_spi_probe(struct device *dev,
- 		struct resource *mem, unsigned int irq)
- {
- 	struct fsl_spi_platform_data *pdata = dev_get_platdata(dev);
+Yes, you need to implement ftrace_arch_code_modify_prepare() and
+ftrace_arch_code_modify_post_process() in arch/riscv/kernel/ftrace.c.
+Please see arch/x86/kernel/ftrace.c.
+
+Thank you,
+
+> 
+> # echo function > current_tracer
+> [   28.198070] BUG: sleeping function called from invalid context at
+> kernel/locking/mutex.c:281
+> [   28.198663] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid:
+> 11, name: migration/0
+> [   28.199491] CPU: 0 PID: 11 Comm: migration/0 Not tainted
+> 5.6.0-00012-gd6f56a7a4be2-dirty #10
+> [   28.200330] Call Trace:
+> [   28.200798] [<ffffffe00060319a>] walk_stackframe+0x0/0xcc
+> [   28.201395] [<ffffffe000603442>] show_stack+0x3c/0x46
+> [   28.200798] [<ffffffe00060319a>] walk_stackframe+0x0/0xcc
+> [   28.201395] [<ffffffe000603442>] show_stack+0x3c/0x46
+> [   28.201898] [<ffffffe000d498b0>] dump_stack+0x76/0x90
+> [   28.202329] [<ffffffe00062c3f0>] ___might_sleep+0x100/0x10e
+> [   28.202720] [<ffffffe00062c448>] __might_sleep+0x4a/0x78
+> [   28.203033] [<ffffffe000d61622>] mutex_lock+0x2c/0x54
+> [   28.203397] [<ffffffe00060393e>] patch_insn_write+0x32/0xd8
+> [   28.203780] [<ffffffe000603a94>] patch_text_nosync+0x10/0x32
+> [   28.204139] [<ffffffe0006051b0>] __ftrace_modify_call+0x5c/0x6c
+> [   28.204497] [<ffffffe0006052c6>] ftrace_update_ftrace_func+0x20/0x4a
+> [   28.204919] [<ffffffe000697742>] ftrace_modify_all_code+0xa0/0x148
+> [   28.205378] [<ffffffe0006977fc>] __ftrace_modify_code+0x12/0x1c
+> [   28.205793] [<ffffffe0006924b6>] multi_cpu_stop+0xa2/0x158
+> [   28.206147] [<ffffffe0006921b0>] cpu_stopper_thread+0xa4/0x13a
+> [   28.206510] [<ffffffe000629f38>] smpboot_thread_fn+0xf8/0x1da
+> [   28.206868] [<ffffffe000625f36>] kthread+0xfa/0x12a
+> [   28.207201] [<ffffffe0006017e2>] ret_from_exception+0x0/0xc
+> 
+> >
+> > Yes, text_mutex seems to be great. I'll change to use text_mutex in
+> > the next version if it works fine after testing. Thanks.
+> >
+> > > Thank you,
+> > > --
+> > > Masami Hiramatsu <mhiramat@kernel.org>
+
+
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
