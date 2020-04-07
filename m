@@ -2,120 +2,195 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65823C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F811C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407FA2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE8320730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 22:15:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAbkst+f"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="k1N1g9Zt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgDGWOK (ORCPT
+        id S1726477AbgDGWPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 18:14:10 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36116 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726380AbgDGWOK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 18:14:10 -0400
-Received: by mail-lf1-f65.google.com with SMTP id w145so3627481lff.3;
-        Tue, 07 Apr 2020 15:14:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6uRUHjT3H2vueqpdrwwP13xe2CMDcv0WafFpeyYI7lU=;
-        b=rAbkst+fkeSxUghjYacRPqyPdtQYTMTxLi0WEDiLh/eeZIOXvyTJMVDNdpP7PCvHKj
-         UbvmD4JHXfPK56f/bwbNd63eJem8edKGcsuJ5TFFIIyr5fvsv7D5XJrg2AVYmEbFZ1sN
-         fUQEAuLZ4WqDpYFUeEWRWwdNcEh4Okv0DTOlKYHi0PuHzvBVyJi65DHjEax9WpbKyWmK
-         1t39Snwf4LIo5wv4RoHnO47DmCIh0tA3qXUp17JpCc+dGFA1oWCfj41VTXsbr7UEMJBf
-         5pUceT7Y8uET2RHGMktMxypggnKcT4sc3XJyCmY1P8hQSDUM/mBJDbq21AAsL3ijkAR4
-         b+TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6uRUHjT3H2vueqpdrwwP13xe2CMDcv0WafFpeyYI7lU=;
-        b=Ttbe0enW28GkvvD4dElaRdHa9FhrL6wzCwZd2tqUb5M3h9GJ8SZjJaYr3qhs5gv/Rb
-         t4m6jz4oQDJHANBspppCTZWhDT6SqauNEcOAbuDtDThvsi+2mXqVUgBy7glxnJdB5TMt
-         BBTALXyNhn7tMhKk5p7trKeNaDPip8IO87kwKG31a9qw5LPKUr/UTSoIpSyaU+wl3Sp1
-         grH2jijQmrAMpB1D9AIv/MWzK4ydT2NdRa10cksuGI4YNPIKyignK9vdpUQZI0UvfeMf
-         2H+MDkRhQ2HBL0TAEg6th9IHPN5pzy2DdjKKWnxzzUVQ1yh3aVRRdK4JMysEzc9ltSlv
-         /wnQ==
-X-Gm-Message-State: AGi0PuaD1dsQQiKYYLmmBaVTku+zITE3NWqA7wTcJGKG9yjokdeLRyFH
-        +6RYWsRyiBAP3MXyj3kC+oUdIrrp
-X-Google-Smtp-Source: APiQypIugZXxUsd6hzBRHuCzJVvozH9gSOdzFAkV/cOyC5kvexLHlgQQHLEyOFzolrIVXQv3Be/QaA==
-X-Received: by 2002:ac2:46e5:: with SMTP id q5mr1912441lfo.11.1586297646938;
-        Tue, 07 Apr 2020 15:14:06 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id l13sm12381613ljc.84.2020.04.07.15.14.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 15:14:06 -0700 (PDT)
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, sakari.ailus@iki.fi, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <200bb96e-2d07-764f-9e14-55538dc742fd@gmail.com>
- <23bfab09-b464-6e51-9843-06d13000e9b9@nvidia.com>
- <be77b0ef-d605-8357-4180-f40b2886d07a@gmail.com>
- <08cd31d5-e8b9-4d3a-fb0e-0e4462947d96@nvidia.com>
- <12a834ac-52b1-6dc0-7d3a-3e6a1fa85a2a@gmail.com>
- <e3712e7b-b335-b35b-a94f-24eb85122dca@nvidia.com>
- <b1726d33-0d35-9323-a747-407148d0104e@gmail.com>
- <eb80178f-30f4-8f46-51cd-ea3f4914b81d@nvidia.com>
- <dd16c560-ba8f-e7df-5dc4-5227e0043196@nvidia.com>
- <fea4f0a1-4a20-34d4-9eda-e4a599eeeffc@nvidia.com>
- <760d071e-0cbc-b3eb-9231-fb9f9ecb44a6@nvidia.com>
- <9e317f65-8a02-3b15-cfec-8e0d8374130e@gmail.com>
- <97b35910-4c93-123a-43a0-eb14476ed0f3@nvidia.com>
- <84ad4e2d-6ac1-e1f4-1c55-5edaae850631@nvidia.com>
- <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
-Message-ID: <ee4cce05-2c60-6de1-2639-fe54abbf8345@gmail.com>
-Date:   Wed, 8 Apr 2020 01:14:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 7 Apr 2020 18:15:09 -0400
+Received: from mail-eopbgr140107.outbound.protection.outlook.com ([40.107.14.107]:23061
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726380AbgDGWPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 18:15:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Kx5gHT+0jbkwmX+b8AOx/2RQq5QQd2iz2JeNf4bfYDsgPCcWW6dvruBhoN6iDnBLovOBpDveYqwc8r/WciX2QsVsoAGAF/zRAXaPBkaPLuQzAgNBC5Hu/YkHad1pjTNaOYibDvMijSVyOb7tRrywUipa4MKDvhnyWKn7OGNRB6ns649g41cdf8I8xqQCIBBB1CL12jQp+IronSnkuWXh5c+eBAqQX57eo17pDPNilZBlf5OPnmAg7p/lkKNTQUw3clp7z1bwFR1U25ZV8haG4Fcf34s8GMPAv0ZrtfPrxh07zpRk0kxf/f5OzqNEXBc58pIxMVUqXoFX2lM1W0C3/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vObIaU106vGPdhOii1gJgdfsj4lAYkLdnDaDSeWPXDw=;
+ b=bGqHwnfwDsbuHa+LEz9pRaVUl0ZRfFHQHj5EtTwsYrJIYoJdAowPqgBZmd+SwYQASqI3sUPItImMQ2Dk2z94C+ugcqgEqKn1B087L9hsmTGfI0c5xg27TJ72qnQT/DWM7EpRpHFoMACqhPAdlK6Bt+x9BMklb6waP1hOJxKvR9jhlE562UGw9NrIlp0utoCABXAKZROruBYx2PpLOlBXCdpKpU3h82bxFDMI3smWucgqxcLVKS4boFKq0LPOaPWkieefYkV7kWTbfKNBeFBckWCCLGtRaPXDlBDWkqPvxiwKNQF/ud9wxYzLjCxq9pRBh/vs9L5D2mjjp3c3Jw4itA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vObIaU106vGPdhOii1gJgdfsj4lAYkLdnDaDSeWPXDw=;
+ b=k1N1g9ZtcSCnvq++33NRCW7/PklmVlUs5ix8eVl2DAc5e06G9PUuFO9mqs4OELalEuodAVkAkqYXjE5o5BmUFIjQHP+Sq55413anpHjjYY1nYXhFj/+o/tvnk+VxdM3JRvl4Vc4Y84KzZdsi6XoSDP8NsD/PB3tJ7sT+Ru/dH1Q=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=vadym.kochan@plvision.eu; 
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
+ VI1P190MB0526.EURP190.PROD.OUTLOOK.COM (10.165.190.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.15; Tue, 7 Apr 2020 22:15:03 +0000
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::f983:c9a8:573a:751c]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::f983:c9a8:573a:751c%7]) with mapi id 15.20.2878.021; Tue, 7 Apr 2020
+ 22:15:03 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     netdev@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Madhu Challa <challa@noironetworks.com>,
+        linux-kernel@vger.kernel.org,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Vadym Kochan <vadym.kochan@plvision.eu>
+Subject: [PATCH net] net: ipv4: devinet: Fix crash when add/del multicast IP with autojoin
+Date:   Wed,  8 Apr 2020 01:13:28 +0300
+Message-Id: <20200407221328.32603-1-vadym.kochan@plvision.eu>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: BE0P281CA0006.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:a::16) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:35::10)
 MIME-Version: 1.0
-In-Reply-To: <15a879b3-8fb9-6821-3cdc-104ba583ac12@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc60716vkochan.x.ow.s (217.20.186.93) by BE0P281CA0006.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:a::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Tue, 7 Apr 2020 22:15:02 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7a9a4e0b-bfa5-488a-81ec-08d7db411e7e
+X-MS-TrafficTypeDiagnostic: VI1P190MB0526:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1P190MB05262B3DA5F3E235BE6E586095C30@VI1P190MB0526.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 036614DD9C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(396003)(366004)(376002)(346002)(136003)(39830400003)(2906002)(8676002)(6486002)(44832011)(107886003)(4326008)(186003)(52116002)(6916009)(16526019)(6506007)(1076003)(26005)(81156014)(81166006)(8936002)(36756003)(66556008)(6512007)(2616005)(6666004)(508600001)(86362001)(956004)(5660300002)(316002)(66476007)(54906003)(66946007);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: plvision.eu does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 04BY0BM0GvrCFbJAxUh/Gr8bIv9ii+9m2CzGRQvVat0gF3OAqTSxYUsdbox9bkua7dL7PgZUrodBIxf+nA+HFC0+Cq4cX0JQ/XfA4sgu6sTyY02XOmJlCF5/mqzwvYmctMsdibi+TEupnYEBXbcoNPN/DrpULHYufDCM3cZL8f3Ea7Sm9BJ4pceP3gZalkYqUZcJ5G9jIX6SZlWSHF4+KpDjkPB3YaiRrvu2qBJbTY7agEIex7fjr1Ly9wFvjgab6HtMtW18OTWv8K/PRa9lTBeyrwQ+lGBG0PeqEFLmt1hYognoVQxblDKJG3Pv4fCmmbesC4tfU2yuDvbYDvg/iaNGcsDp2059e54BNKp2BeZwju4gT71T0OGu8GkJJR09/FxkHNe/IYs8NUHYXV4QojKSakk0zz7m3BeH2y2QWjL/7iuHOrLtgv4zYScW2c/b
+X-MS-Exchange-AntiSpam-MessageData: TFyIFN12ya3JzRyAXtiYOlL7b+kYqDpwQIO3Dy8mjew05V4TawZ+U1eSdl8lS4rodCZy2hjqOq63kQ0WOL8a4BmoMKQ84XoxQ1nOjA7/+ab7/T5k5yWtuVqRS9Lst4oD2HklAVXD6vfHf0HtbAkePA==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a9a4e0b-bfa5-488a-81ec-08d7db411e7e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 22:15:02.8897
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DqestgH0SVVMbECNDzIvS1S5dI/XG1Pxt321XmNdFBx+i7Ai+V9xbwuyoVmsjDNTGOZscET0iCJaA+FIQHZB6gkLVau/DqEje20daddWfwo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0526
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.04.2020 01:08, Dmitry Osipenko пишет:
-> 08.04.2020 00:08, Sowjanya Komatineni пишет:
-> ...
->>>> I think you need a semaphore with resource count = 2.
->>> we hold on to issuing capture if more than 2 buffers are queued and it
->>> continues only after fifo has min 1 slot empty
->>
->>
->> Just want to close on this part of feedback. Hope above explanation is
->> clear regarding triggering/issuing at max 2 frame capture to VI HW and
->> also regarding capture threads where they use wait_event_interruptible
->> to prevent blocking waiting for buffers to be available for captures.
->>
->> So no changes related to this part are needed in v7.
-> From what I see in the code, you "hold on" by making kthread to spin in
-> a busy-loop while caps_inflight >= SYNCPT_FIFO_DEPTH. So some change
-> should be needed to prevent this.
+From: Taras Chornyi <taras.chornyi@plvision.eu>
 
-Looks like some other media drivers do:
+When CONFIG_IP_MULTICAST is not set and multicast ip is added to the device
+with autojoin flag or when multicast ip is deleted kernel will crash.
 
-	schedule_timeout_uninterruptible(1);
+steps to reptoduse:
 
-to avoid CPU hogging when contention is detected.
+ip addr add 224.0.0.0/32 dev eth0
+ip addr del 224.0.0.0/32 dev eth0
+
+or
+
+ip addr add 224.0.0.0/32 dev eth0 autojoin
+
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000088
+ pc : _raw_write_lock_irqsave+0x1e0/0x2ac
+ lr : lock_sock_nested+0x1c/0x60
+ Call trace:
+  _raw_write_lock_irqsave+0x1e0/0x2ac
+  lock_sock_nested+0x1c/0x60
+  ip_mc_config.isra.28+0x50/0xe0
+  inet_rtm_deladdr+0x1a8/0x1f0
+  rtnetlink_rcv_msg+0x120/0x350
+  netlink_rcv_skb+0x58/0x120
+  rtnetlink_rcv+0x14/0x20
+  netlink_unicast+0x1b8/0x270
+  netlink_sendmsg+0x1a0/0x3b0
+  ____sys_sendmsg+0x248/0x290
+  ___sys_sendmsg+0x80/0xc0
+  __sys_sendmsg+0x68/0xc0
+  __arm64_sys_sendmsg+0x20/0x30
+  el0_svc_common.constprop.2+0x88/0x150
+  do_el0_svc+0x20/0x80
+ el0_sync_handler+0x118/0x190
+  el0_sync+0x140/0x180
+
+Fixes: 93a714d (multicast: Extend ip address command to enable multicast group join/leave on)
+Signed-off-by: Taras Chornyi <taras.chornyi@plvision.eu>
+Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+---
+ net/ipv4/devinet.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/net/ipv4/devinet.c b/net/ipv4/devinet.c
+index 30fa42f5997d..c0dd561aa190 100644
+--- a/net/ipv4/devinet.c
++++ b/net/ipv4/devinet.c
+@@ -614,12 +614,15 @@ struct in_ifaddr *inet_ifa_byprefix(struct in_device *in_dev, __be32 prefix,
+ 	return NULL;
+ }
+ 
+-static int ip_mc_config(struct sock *sk, bool join, const struct in_ifaddr *ifa)
++static int ip_mc_autojoin_config(struct net *net, bool join,
++				 const struct in_ifaddr *ifa)
+ {
++#if defined(CONFIG_IP_MULTICAST)
+ 	struct ip_mreqn mreq = {
+ 		.imr_multiaddr.s_addr = ifa->ifa_address,
+ 		.imr_ifindex = ifa->ifa_dev->dev->ifindex,
+ 	};
++	struct sock *sk = net->ipv4.mc_autojoin_sk;
+ 	int ret;
+ 
+ 	ASSERT_RTNL();
+@@ -632,6 +635,9 @@ static int ip_mc_config(struct sock *sk, bool join, const struct in_ifaddr *ifa)
+ 	release_sock(sk);
+ 
+ 	return ret;
++#else
++	return -EOPNOTSUPP;
++#endif
+ }
+ 
+ static int inet_rtm_deladdr(struct sk_buff *skb, struct nlmsghdr *nlh,
+@@ -675,7 +681,7 @@ static int inet_rtm_deladdr(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 			continue;
+ 
+ 		if (ipv4_is_multicast(ifa->ifa_address))
+-			ip_mc_config(net->ipv4.mc_autojoin_sk, false, ifa);
++			ip_mc_autojoin_config(net, false, ifa);
+ 		__inet_del_ifa(in_dev, ifap, 1, nlh, NETLINK_CB(skb).portid);
+ 		return 0;
+ 	}
+@@ -940,8 +946,7 @@ static int inet_rtm_newaddr(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		 */
+ 		set_ifa_lifetime(ifa, valid_lft, prefered_lft);
+ 		if (ifa->ifa_flags & IFA_F_MCAUTOJOIN) {
+-			int ret = ip_mc_config(net->ipv4.mc_autojoin_sk,
+-					       true, ifa);
++			int ret = ip_mc_autojoin_config(net, true, ifa);
+ 
+ 			if (ret < 0) {
+ 				inet_free_ifa(ifa);
+-- 
+2.17.1
+
