@@ -2,92 +2,112 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB4EC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E75C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2042C206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D50B20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgDGXoN (ORCPT
+        id S1726520AbgDGXq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:44:13 -0400
-Received: from www62.your-server.de ([213.133.104.62]:57580 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgDGXoN (ORCPT
+        Tue, 7 Apr 2020 19:46:28 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:35741 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726386AbgDGXq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:44:13 -0400
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jLxt0-0001PO-3o; Wed, 08 Apr 2020 01:44:06 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jLxsz-0008rw-Hi; Wed, 08 Apr 2020 01:44:05 +0200
-Subject: Re: [PATCH bpf] riscv, bpf: Fix offset range checking for auipc+jalr
- on RV64
-To:     Luke Nelson <lukenels@cs.washington.edu>, bpf@vger.kernel.org
-Cc:     Xi Wang <xi.wang@gmail.com>, Luke Nelson <luke.r.nels@gmail.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>, netdev@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200406221604.18547-1-luke.r.nels@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <bdea1a61-53d6-dc03-7cdb-4b6b0710be2e@iogearbox.net>
-Date:   Wed, 8 Apr 2020 01:44:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 7 Apr 2020 19:46:27 -0400
+Received: from dread.disaster.area (pa49-180-164-3.pa.nsw.optusnet.com.au [49.180.164.3])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id DA3287ECC36;
+        Wed,  8 Apr 2020 09:46:22 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1jLxvB-0005aB-PY; Wed, 08 Apr 2020 09:46:21 +1000
+Date:   Wed, 8 Apr 2020 09:46:21 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 1/8] fs/xfs: Remove unnecessary initialization of
+ i_rwsem
+Message-ID: <20200407234621.GD24067@dread.disaster.area>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-2-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200406221604.18547-1-luke.r.nels@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25775/Tue Apr  7 14:53:51 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407182958.568475-2-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=K0+o7W9luyMo1Ua2eXjR1w==:117 a=K0+o7W9luyMo1Ua2eXjR1w==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
+        a=QyXUC8HyAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=-IQXNzbcgNwCz_NF7soA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/20 12:16 AM, Luke Nelson wrote:
-> The existing code in emit_call on RV64 checks that the PC-relative offset
-> to the function fits in 32 bits before calling emit_jump_and_link to emit
-> an auipc+jalr pair. However, this check is incorrect because offsets in
-> the range [2^31 - 2^11, 2^31 - 1] cannot be encoded using auipc+jalr on
-> RV64 (see discussion [1]). The RISC-V spec has recently been updated
-> to reflect this fact [2, 3].
+On Tue, Apr 07, 2020 at 11:29:51AM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> This patch fixes the problem by moving the check on the offset into
-> emit_jump_and_link and modifying it to the correct range of encodable
-> offsets, which is [-2^31 - 2^11, 2^31 - 2^11). This also enforces the
-> check on the offset to other uses of emit_jump_and_link (e.g., BPF_JA)
-> as well.
+> An earlier call of xfs_reinit_inode() from xfs_iget_cache_hit() already
+> handles initialization of i_rwsem.
 > 
-> Currently, this bug is unlikely to be triggered, because the memory
-> region from which JITed images are allocated is close enough to kernel
-> text for the offsets to not become too large; and because the bounds on
-> BPF program size are small enough. This patch prevents this problem from
-> becoming an issue if either of these change.
+> Doing so again is unneeded.
 > 
-> [1]: https://groups.google.com/a/groups.riscv.org/forum/#!topic/isa-dev/bwWFhBnnZFQ
-> [2]: https://github.com/riscv/riscv-isa-manual/commit/b1e42e09ac55116dbf9de5e4fb326a5a90e4a993
-> [3]: https://github.com/riscv/riscv-isa-manual/commit/4c1b2066ebd2965a422e41eb262d0a208a7fea07
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
+> ---
+> Changes from V4:
+> 	Update commit message to make it clear the xfs_iget_cache_hit()
+> 	is actually doing the initialization via xfs_reinit_inode()
+> 
+> New for V4:
+> 
+> NOTE: This was found while ensuring the new i_aops_sem was properly
+> handled.  It seems like this is a layering violation so I think it is
+> worth cleaning up so as to not confuse others.
+> ---
+>  fs/xfs/xfs_icache.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index 8dc2e5414276..836a1f09be03 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -419,6 +419,7 @@ xfs_iget_cache_hit(
+>  		spin_unlock(&ip->i_flags_lock);
+>  		rcu_read_unlock();
+>  
+> +		ASSERT(!rwsem_is_locked(&inode->i_rwsem));
+>  		error = xfs_reinit_inode(mp, inode);
+>  		if (error) {
+>  			bool wake;
+> @@ -452,9 +453,6 @@ xfs_iget_cache_hit(
+>  		ip->i_sick = 0;
+>  		ip->i_checked = 0;
+>  
+> -		ASSERT(!rwsem_is_locked(&inode->i_rwsem));
+> -		init_rwsem(&inode->i_rwsem);
+> -
+>  		spin_unlock(&ip->i_flags_lock);
+>  		spin_unlock(&pag->pag_ici_lock);
+>  	} else {
 
-Applied, thanks!
+Looks good.
+
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+-- 
+Dave Chinner
+david@fromorbit.com
