@@ -6,266 +6,107 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B56C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0B6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7189E20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:57:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hE/GJQCN"
+	by mail.kernel.org (Postfix) with ESMTP id 47C642075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586293285;
+	bh=SeaEaHFnXbhpQrCCYQ6v8rsvEnzeKDxOkkNQ7B9VOJs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FAXrTx/cYp08vE22p9RpK0CPvUoNL7cs3BDQh/JRnpdyQTe4BQ8Zq0s7Ek1XuHdSR
+	 W1bajVDL2l79q1QJu0lM2WrzqgGDe9AamCp3pRua5OyCrPoC3lNOSVGvNkdifktisu
+	 3BoDTHyfY98MqLZrHBwQVeES2CKv2wSAqUXWjMZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgDGU5v (ORCPT
+        id S1726444AbgDGVBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:57:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53542 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726403AbgDGU5u (ORCPT
+        Tue, 7 Apr 2020 17:01:24 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34362 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgDGVBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:57:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586293068;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=H8B5NoGqu8tQRGAEZ9OE3JoK+IEkffevD1+IZAtw1Lc=;
-        b=hE/GJQCNmFsvbHj/gxsp2bZbRFX6/dHHs+O3ML8woLsyYEn5joWRpRW6IOZnJsKNaQWWrQ
-        tahKntUP5FVGaQGvMiUAxwBZimff9PgEOSVsT/KA7xi2Mdvlf9e08FRCexcbzm2rn3FYqy
-        76mjeK32BfFLWGVJwknBQ0AZGjFQtHQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-0LaS2oQhNFicRqHdRPCGQw-1; Tue, 07 Apr 2020 16:57:44 -0400
-X-MC-Unique: 0LaS2oQhNFicRqHdRPCGQw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6DD73107ACC4;
-        Tue,  7 Apr 2020 20:57:43 +0000 (UTC)
-Received: from redhat.com (ovpn-112-68.phx2.redhat.com [10.3.112.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7505C119589;
-        Tue,  7 Apr 2020 20:57:42 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 16:57:40 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Petr Mladek <pmladek@suse.com>, Jiri Kosina <jikos@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Nicolai Stange <nstange@suse.de>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [POC 19/23] module/livepatch: Allow to use exported symbols from
- livepatch module for "vmlinux"
-Message-ID: <20200407205740.GA17061@redhat.com>
-References: <20200117150323.21801-1-pmladek@suse.com>
- <20200117150323.21801-20-pmladek@suse.com>
- <20200406184833.GA6023@redhat.com>
- <alpine.LSU.2.21.2004070915040.1817@pobox.suse.cz>
+        Tue, 7 Apr 2020 17:01:23 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x23so3505109lfq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:01:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=epjd3hRndDDxUzNxhGw+kNUEWswsyoCP1k+ltMRz2F0=;
+        b=Rea+dN4Po4ublGuumqEu1Z9YdmnTeD34HLjcUPAn4kHYHWLUNPIQ/VZCsT6xyf8JiS
+         bmcrncrGMpFp3ozkp1oN3IxqZ435NGWt/x7uln8afuzN0jgjeD5EbAAwriXLYujNsWDj
+         hGtKlgxlKKZWInJKxtH5YVmPqsKEobcBPvotE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=epjd3hRndDDxUzNxhGw+kNUEWswsyoCP1k+ltMRz2F0=;
+        b=cPdaQWXj08G39/LHQAYJBAu4mFgoZNIEel1r7WVQtZ4gBVWT0GXSqONkBNVztxs0Eq
+         xyXv9Iw7+BDtGfRE0VqzGUzp/3QFSVbx0DQbegbe/U2Y/oIZ6NVZ+6P9Cmj6yUiB3N2e
+         uNzQn63zCuh6LojVa5Id552/NLNNoHkjIvxwyPSo9UCB0D/odWGWSnfHT/wt2rpvD3ei
+         v2Fya6VKqD1xVL4IobzuIEJmrWL+mvquoSZjZ5BV0FP7pY2vDpRcShIfj6I+L86iEuXf
+         NXu76ksi4C/PrlUuFBoaLeEv0OJNrAM+W4R+G1Aom8hLeRtvPecpbU3xddf9QKqTVgUH
+         S5kw==
+X-Gm-Message-State: AGi0PuZvTYYe1RlwlL/nVR67IbnXgX/ZUlkw9MztpLCnEYEVdrkAYbwV
+        4m4aRupF2N6o/e/9gGoZr1zFVrZ+GNI=
+X-Google-Smtp-Source: APiQypIdYEsEGhl4RnzTophC58IU+xs4IQ44GLK4EXwsv+rW/Ug22tevKD8+3IH4zrA39pELAM5/1A==
+X-Received: by 2002:a19:494f:: with SMTP id l15mr2518612lfj.33.1586293279685;
+        Tue, 07 Apr 2020 14:01:19 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id o2sm12314195ljm.2.2020.04.07.14.01.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 14:01:17 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id z26so1203288ljz.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:01:17 -0700 (PDT)
+X-Received: by 2002:a05:651c:50e:: with SMTP id o14mr2769380ljp.241.1586293277007;
+ Tue, 07 Apr 2020 14:01:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2004070915040.1817@pobox.suse.cz>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200407200318.11711-1-longman@redhat.com> <0fe5dcaf078be61ef21c7f18b750c5dc14c69dd7.camel@perches.com>
+ <67c51b03-192c-3006-5071-452f351aee67@redhat.com>
+In-Reply-To: <67c51b03-192c-3006-5071-452f351aee67@redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 7 Apr 2020 14:01:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whV5Z4XioUOW0UM-PBrW7iqb0HwWKQU5Vn8b5pmsDm=Ww@mail.gmail.com>
+Message-ID: <CAHk-=whV5Z4XioUOW0UM-PBrW7iqb0HwWKQU5Vn8b5pmsDm=Ww@mail.gmail.com>
+Subject: Re: [PATCH v3] mm: Add kvfree_sensitive() for freeing sensitive data objects
+To:     Waiman Long <longman@redhat.com>
+Cc:     Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linux-MM <linux-mm@kvack.org>, keyrings@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 09:33:08AM +0200, Miroslav Benes wrote:
-> On Mon, 6 Apr 2020, Joe Lawrence wrote:
-> 
-> > On Fri, Jan 17, 2020 at 04:03:19PM +0100, Petr Mladek wrote:
-> > > HINT: Get some coffee before reading this commit message.
-> > > 
-> > > [ ... snip ... ]
-> > > 
-> > > B. Livepatch module using an exported symbol from the patched module.
-> > > 
-> > >    It should be avoided even with the non-split livepatch module. The module
-> > >    loader automatically takes reference to make sure the modules are
-> > >    unloaded in the right order. This would basically prevent the livepatched
-> > >    module from unloading.
-> > > 
-> > >    Note that it would be perfectly safe to remove this automatic
-> > >    dependency. The livepatch framework makes sure that the livepatch
-> > >    module is loaded only when the patched one is loaded. But it cannot
-> > >    be implemented easily, see below.
-> > 
-> > Do you envision klp-convert providing this functionality?
-> > 
-> > [ ... snip ... ]
-> 
-> That is one way to get around the dependency problem. And I think it 
-> should work even with the PoC. It should (and I don't remember all details 
-> now unfortunately) guarantee that the patched module is always available 
-> for the livepatch and since there is no explicit dependency, the recursion 
-> issue is gone.
-> 
-> However, I think the goal was to follow the most natural road and leverage 
-> the existing dependency system. Meaning, since the presence of a patched 
-> module in the system before its patching is guaranteed now, there is no 
-> reason not to use its exported symbols directly like anywhere else. But it 
-> introduces the recursion problem, so we may drop it.
-> 
-> > FWIW, I have been working an updated klp-convert for v5.6 that includes
-> > a bunch of fixes and such... modifying it to convert module-export
-> > references like this was quite easy.
-> 
-> *THUMBS UP* :)
+On Tue, Apr 7, 2020 at 1:45 PM Waiman Long <longman@redhat.com> wrote:
+>
+> If the memory is really virtually mapped, the only way to find out the
+> size of the object is to use find_vm_area() which can be relatively high
+> cost and no simple helper function is available.
 
-Hi Miroslav,
+We _could_ just push it down to a "vfree_sensitive()", and do it
+inside the vfree logic. That ends up obviously figuring out the size
+of the area eventually.
 
-Perhaps the following bug report is premature, but it was far easier to
-start playing with the PoC code than audit all the individual race
-conditions :) This came out of the mentioned klp-convert rebase that I
-later put on-top of Petr's PoC, and then started writing up some more
-selftests to see how the new livepatching world might look.
+But since the vmalloc data structures fundamentally aren't irq-safe,
+vfree() actually has magical things like "if called in an interrupt,
+we'll delay it to work context".
 
-Forgive me if I'm violating some obvious assumption that the PoC makes,
-but I think the experiment may still be useful in pointing out a
-problematic use-case / potential pitfall a livepatch author might
-encounter.
+So that "eventually" can be quite a bit later, and it would delay the
+overwriting of the sensitive data if we did that.
 
-tl;dr: prepare_coming_module() calls jump_label_add_module() *after* it
-       calls klp_module_coming().  In the PoC, the latter function now
-       searches for any livepatches that may apply to the loading
-       module and tries to load them before proceeding.  If one of
-       those livepatch modules references any static key defined by the
-       originally loading module, the static key entry structures may
-       not be setup correctly.
+So this patch does end up simpler, but for vfree data it is actually
+technically the better approach too (since overwriting the sensitive
+data asap is what you want).
 
-
-The test case:
-
-- A kernel module defines a static key called test_klp_true_key and on
-  __init, calls static_branch_disable().  I don't think the __init part
-  is required for this case, however it was just the easiest way to
-  write the test that I was working on at the time.  AFAIK we could
-  change the key any where else with the same problem.
-
-- A livepatch module that references test_klp_true_key.  The overarching
-  test case was for the key's module owner (target) and 
-  livepatch (livepatch__target) to toggle the key and for both target
-  and livepatch__target modules to be patched accordingly.
-
-- klp-convert was enhanced to modify relocations to test_klp_true_key in
-  both .text and __jump_table sections.  It previously could not handle
-  this scenario.
-
-
-Pseudocode
-==========
-
-target.c
---------
-static DEFINE_STATIC_KEY_TRUE(test_klp_true_key);
-...
-__init function() {
-	static_branch_disable(&test_klp_true_key);
-}
-
-livepatch__target.c
--------------------
-extern struct static_key_true test_klp_true_key;
-...
-pr_info("static_branch_likely(&test_klp_true_key) is %s\n",
-	static_branch_likely(&test_klp_true_key) ? "true" : "false");
-
-
-Test
-====
-
-% modprobe livepatch    # livepatch__target only loads when target loads
-% modprobe target
-
-(crash in jump_label_update)
-
-
-Callchain and notes
-===================
-
-(livepatch is already loaded)
-
-target
-------
-load_module
-  apply_relocations
-  post_relocations
-    module_finalize
-      jump_label_apply_nops
-  complete_formation
-    mod->state = MODULE_STATE_COMING
-  prepare_coming_module
-    klp_module_coming
-      klp_try_load_object
-        patch_name = livepatch, obj_name = target
-
-    livepatch__target
-    -----------------
-    load_module
-      apply_relocations
-      post_relocations
-        module_finalize
-          jump_label_apply_nops
-      complete_formation
-        mod->state = MODULE_STATE_COMING
-      prepare_coming_module
-        blocking_notifier_call_chain(MODULE_STATE_COMING)
-          jump_label_module_notify (MODULE_STATE_COMING)
-            jump_label_add_module
-
-              first time processing test_klp_true_key, within_module()
-              returns false (the key is defined in the other module),
-              and we treat it as !static_key_linked() so the code goes
-              ahead and makes it linked
-
-              static_key_set_linked
-                key->type |= JUMP_TYPE_LINKED
-
-      do_init_module
-        mod->state = MODULE_STATE_LIVE;
-        blocking_notifier_call_chain(MODULE_STATE_LIVE)
-          jump_label_module_notify (MODULE_STATE_LIVE)
-
-target
-------
-  (prepare_coming_module cont...)
-    blocking_notifier_call_chain(MODULE_STATE_COMING)
-     jump_label_module_notify(MODULE_STATE_COMING)
-       jump_label_add_module
-
-         second time processing test_klp_true_key, within_module()
-	 returns true this time and we go straight to
-	 static_key_set_entries(), which is careful enough to verify the
-         that the entries aren't already linked, but not the key itself
-
-         static_key_set_entries
-           WARN_ON_ONCE((unsigned long)entries & JUMP_TYPE_MASK)
-
-
-  do_init_module
-    mod->state = MODULE_STATE_LIVE;
-    blocking_notifier_call_chain(MODULE_STATE_LIVE)
-      jump_label_module_notify (MODULE_STATE_LIVE)
-
-
-Ok, so it seems that jump_label_add_module() assumes that any given key
-that isn't present in said module, is assumed to have already been
-initialized and therefore it enters that convoluted JUMP_TYPE_LINKED
-code.
-
-When we later try call jump_label_add_module() for the target module,
-the same function assumes that the key is not linked and we're left with
-a weird static_key_mod entry that later crashes the box.
-
-tl;dr2: Could we safely reorder klp_module_{coming,going}() with respect
-        to the module_notifier callbacks?  i.e.
-
-        blocking_notifier_call_chain(&module_notify_list, MODULE_STATE_COMING, mod);
-        klp_module_coming(mod);
-          ... and ...
-        klp_module_going(mod);
-        blocking_notifier_call_chain(&module_notify_list, MODULE_STATE_GOING, mod);
-
-This fixes the above test case, but I wasn't sure if it now violates
-some other part of the PoC or consistency model.
-
--- Joe
-
+            Linus
