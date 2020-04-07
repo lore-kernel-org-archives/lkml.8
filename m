@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24BCC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C243C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2F220857
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C982082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255075;
-	bh=DCZ2l5F56FR9NskugDQGc4jykl12y8rfDISYAsN/Awo=;
+	s=default; t=1586255081;
+	bh=MgUBkgRyGDEoet7WkJIpUu01v9uuWx0w0BQHOcz/Zoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVPSY0WEyEgnttyyzwOOPHPmV3DZX5krVkScpQljG12jBlRxsGdkvmObAsowug53e
-	 3msqVE/dl5m3N7tKdHaLtimNfu+gW6muSVB9fWBh6fqvzc/tA3bMYnEJYa2Sd+ITDg
-	 cR1ZWt2pH7olDiX0fs6Nxsfl2b9jWdeGrVI7Jivs=
+	b=D9X5+0XquPFjMXzFHZRzpZsDKIto17E1/BNCiaPPuTLlxbRizn+bd6MNo9UqsE9RJ
+	 dmyj8WyZ0DlSyPtBYNd38zuKPXJRXbzxz5VIu78e/3OG9MkYzlHXkBzQvwsEadTOGJ
+	 aBWQusweqI7ny37ZO5F0njDJoy4vXSbyxgO/QMUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbgDGKYe (ORCPT
+        id S1728764AbgDGKYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:24:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34782 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:24:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728720AbgDGKYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:24:30 -0400
+        id S1728739AbgDGKYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:24:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2EA620801;
-        Tue,  7 Apr 2020 10:24:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B92F2080C;
+        Tue,  7 Apr 2020 10:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255070;
-        bh=DCZ2l5F56FR9NskugDQGc4jykl12y8rfDISYAsN/Awo=;
+        s=default; t=1586255072;
+        bh=MgUBkgRyGDEoet7WkJIpUu01v9uuWx0w0BQHOcz/Zoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ZpoRXpN8jx1+gbVYZSgeBKfnuo9UHdJYvEt20DAdoyTZFj1V7773cGSgFOwPtHF/
-         bs70Nm3yjF4k4iZ92NoK6Ct/UAvW4lBDJJNKs5YpNyC9iP/bOZ5VrxuJm9UylgcAc9
-         lF7jdq+hoJdYO0rPNhDfIRGOrYYkXQ0s0DxDdH78=
+        b=a6si5W56L2IR1TdjwHMt/EjGkhtsLCqjQgOxsn4GL5T9jDj2Q66gPs7poTdbDEE7L
+         pvxKYxvJ4rhZlw043xfLxV8NH+lZegSysyXJXlg2O4m1vkGUK7rIYchSZAvAdOx+r2
+         3GLc1H+lGC1DqX4gGFB+/oW2M3PfFCiFRTi6+xG8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, franky.lin@broadcom.com,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 18/46] brcmfmac: abort and release host after error
-Date:   Tue,  7 Apr 2020 12:21:49 +0200
-Message-Id: <20200407101501.481443066@linuxfoundation.org>
+Subject: [PATCH 5.5 19/46] bpf: Fix tnum constraints for 32-bit comparisons
+Date:   Tue,  7 Apr 2020 12:21:50 +0200
+Message-Id: <20200407101501.574740613@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -64,55 +61,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit 863844ee3bd38219c88e82966d1df36a77716f3e ]
+[ Upstream commit 604dca5e3af1db98bd123b7bfc02b017af99e3a0 ]
 
-With commit 216b44000ada ("brcmfmac: Fix use after free in
-brcmf_sdio_readframes()") applied, we see locking timeouts in
-brcmf_sdio_watchdog_thread().
+The BPF verifier tried to track values based on 32-bit comparisons by
+(ab)using the tnum state via 581738a681b6 ("bpf: Provide better register
+bounds after jmp32 instructions"). The idea is that after a check like
+this:
 
-brcmfmac: brcmf_escan_timeout: timer expired
-INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
-Not tainted 4.19.94-07984-g24ff99a0f713 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
-[<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
-[<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
-[<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
-[<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
+    if ((u32)r0 > 3)
+      exit
 
-In addition to restarting or exiting the loop, it is also necessary to
-abort the command and to release the host.
+We can't meaningfully constrain the arithmetic-range-based tracking, but
+we can update the tnum state to (value=0,mask=0xffff'ffff'0000'0003).
+However, the implementation from 581738a681b6 didn't compute the tnum
+constraint based on the fixed operand, but instead derives it from the
+arithmetic-range-based tracking. This means that after the following
+sequence of operations:
 
-Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: franky.lin@broadcom.com
-Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+    if (r0 >= 0x1'0000'0001)
+      exit
+    if ((u32)r0 > 7)
+      exit
+
+The verifier assumed that the lower half of r0 is in the range (0, 0)
+and apply the tnum constraint (value=0,mask=0xffff'ffff'0000'0000) thus
+causing the overall tnum to be (value=0,mask=0x1'0000'0000), which was
+incorrect. Provide a fixed implementation.
+
+Fixes: 581738a681b6 ("bpf: Provide better register bounds after jmp32 instructions")
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200330160324.15259-3-daniel@iogearbox.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/bpf/verifier.c | 108 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 72 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index a935993a3c514..d43247a95ce53 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -1934,6 +1934,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
- 			if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
- 					       BRCMF_SDIO_FT_NORMAL)) {
- 				rd->len = 0;
-+				brcmf_sdio_rxfail(bus, true, true);
-+				sdio_release_host(bus->sdiodev->func1);
- 				brcmu_pkt_buf_free_skb(pkt);
- 				continue;
- 			}
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 79f38a281390d..f6476c4e9037a 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -5550,6 +5550,70 @@ static bool cmp_val_with_extended_s64(s64 sval, struct bpf_reg_state *reg)
+ 		reg->smax_value <= 0 && reg->smin_value >= S32_MIN);
+ }
+ 
++/* Constrain the possible values of @reg with unsigned upper bound @bound.
++ * If @is_exclusive, @bound is an exclusive limit, otherwise it is inclusive.
++ * If @is_jmp32, @bound is a 32-bit value that only constrains the low 32 bits
++ * of @reg.
++ */
++static void set_upper_bound(struct bpf_reg_state *reg, u64 bound, bool is_jmp32,
++			    bool is_exclusive)
++{
++	if (is_exclusive) {
++		/* There are no values for `reg` that make `reg<0` true. */
++		if (bound == 0)
++			return;
++		bound--;
++	}
++	if (is_jmp32) {
++		/* Constrain the register's value in the tnum representation.
++		 * For 64-bit comparisons this happens later in
++		 * __reg_bound_offset(), but for 32-bit comparisons, we can be
++		 * more precise than what can be derived from the updated
++		 * numeric bounds.
++		 */
++		struct tnum t = tnum_range(0, bound);
++
++		t.mask |= ~0xffffffffULL; /* upper half is unknown */
++		reg->var_off = tnum_intersect(reg->var_off, t);
++
++		/* Compute the 64-bit bound from the 32-bit bound. */
++		bound += gen_hi_max(reg->var_off);
++	}
++	reg->umax_value = min(reg->umax_value, bound);
++}
++
++/* Constrain the possible values of @reg with unsigned lower bound @bound.
++ * If @is_exclusive, @bound is an exclusive limit, otherwise it is inclusive.
++ * If @is_jmp32, @bound is a 32-bit value that only constrains the low 32 bits
++ * of @reg.
++ */
++static void set_lower_bound(struct bpf_reg_state *reg, u64 bound, bool is_jmp32,
++			    bool is_exclusive)
++{
++	if (is_exclusive) {
++		/* There are no values for `reg` that make `reg>MAX` true. */
++		if (bound == (is_jmp32 ? U32_MAX : U64_MAX))
++			return;
++		bound++;
++	}
++	if (is_jmp32) {
++		/* Constrain the register's value in the tnum representation.
++		 * For 64-bit comparisons this happens later in
++		 * __reg_bound_offset(), but for 32-bit comparisons, we can be
++		 * more precise than what can be derived from the updated
++		 * numeric bounds.
++		 */
++		struct tnum t = tnum_range(bound, U32_MAX);
++
++		t.mask |= ~0xffffffffULL; /* upper half is unknown */
++		reg->var_off = tnum_intersect(reg->var_off, t);
++
++		/* Compute the 64-bit bound from the 32-bit bound. */
++		bound += gen_hi_min(reg->var_off);
++	}
++	reg->umin_value = max(reg->umin_value, bound);
++}
++
+ /* Adjusts the register min/max values in the case that the dst_reg is the
+  * variable register that we are working on, and src_reg is a constant or we're
+  * simply doing a BPF_K check.
+@@ -5605,15 +5669,8 @@ static void reg_set_min_max(struct bpf_reg_state *true_reg,
+ 	case BPF_JGE:
+ 	case BPF_JGT:
+ 	{
+-		u64 false_umax = opcode == BPF_JGT ? val    : val - 1;
+-		u64 true_umin = opcode == BPF_JGT ? val + 1 : val;
+-
+-		if (is_jmp32) {
+-			false_umax += gen_hi_max(false_reg->var_off);
+-			true_umin += gen_hi_min(true_reg->var_off);
+-		}
+-		false_reg->umax_value = min(false_reg->umax_value, false_umax);
+-		true_reg->umin_value = max(true_reg->umin_value, true_umin);
++		set_upper_bound(false_reg, val, is_jmp32, opcode == BPF_JGE);
++		set_lower_bound(true_reg, val, is_jmp32, opcode == BPF_JGT);
+ 		break;
+ 	}
+ 	case BPF_JSGE:
+@@ -5634,15 +5691,8 @@ static void reg_set_min_max(struct bpf_reg_state *true_reg,
+ 	case BPF_JLE:
+ 	case BPF_JLT:
+ 	{
+-		u64 false_umin = opcode == BPF_JLT ? val    : val + 1;
+-		u64 true_umax = opcode == BPF_JLT ? val - 1 : val;
+-
+-		if (is_jmp32) {
+-			false_umin += gen_hi_min(false_reg->var_off);
+-			true_umax += gen_hi_max(true_reg->var_off);
+-		}
+-		false_reg->umin_value = max(false_reg->umin_value, false_umin);
+-		true_reg->umax_value = min(true_reg->umax_value, true_umax);
++		set_lower_bound(false_reg, val, is_jmp32, opcode == BPF_JLE);
++		set_upper_bound(true_reg, val, is_jmp32, opcode == BPF_JLT);
+ 		break;
+ 	}
+ 	case BPF_JSLE:
+@@ -5717,15 +5767,8 @@ static void reg_set_min_max_inv(struct bpf_reg_state *true_reg,
+ 	case BPF_JGE:
+ 	case BPF_JGT:
+ 	{
+-		u64 false_umin = opcode == BPF_JGT ? val    : val + 1;
+-		u64 true_umax = opcode == BPF_JGT ? val - 1 : val;
+-
+-		if (is_jmp32) {
+-			false_umin += gen_hi_min(false_reg->var_off);
+-			true_umax += gen_hi_max(true_reg->var_off);
+-		}
+-		false_reg->umin_value = max(false_reg->umin_value, false_umin);
+-		true_reg->umax_value = min(true_reg->umax_value, true_umax);
++		set_lower_bound(false_reg, val, is_jmp32, opcode == BPF_JGE);
++		set_upper_bound(true_reg, val, is_jmp32, opcode == BPF_JGT);
+ 		break;
+ 	}
+ 	case BPF_JSGE:
+@@ -5743,15 +5786,8 @@ static void reg_set_min_max_inv(struct bpf_reg_state *true_reg,
+ 	case BPF_JLE:
+ 	case BPF_JLT:
+ 	{
+-		u64 false_umax = opcode == BPF_JLT ? val    : val - 1;
+-		u64 true_umin = opcode == BPF_JLT ? val + 1 : val;
+-
+-		if (is_jmp32) {
+-			false_umax += gen_hi_max(false_reg->var_off);
+-			true_umin += gen_hi_min(true_reg->var_off);
+-		}
+-		false_reg->umax_value = min(false_reg->umax_value, false_umax);
+-		true_reg->umin_value = max(true_reg->umin_value, true_umin);
++		set_upper_bound(false_reg, val, is_jmp32, opcode == BPF_JLE);
++		set_lower_bound(true_reg, val, is_jmp32, opcode == BPF_JLT);
+ 		break;
+ 	}
+ 	case BPF_JSLE:
 -- 
 2.20.1
 
