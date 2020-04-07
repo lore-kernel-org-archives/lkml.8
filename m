@@ -2,204 +2,229 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29DFC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1459C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93AA2074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:26:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="C3lsODew";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UeAiZXWD"
+	by mail.kernel.org (Postfix) with ESMTP id B7DDE20753
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:26:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgDGP0L (ORCPT
+        id S1729421AbgDGP0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:26:11 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:9280 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728306AbgDGP0K (ORCPT
+        Tue, 7 Apr 2020 11:26:16 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:51624 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728306AbgDGP0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:26:10 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037FJVAE022811;
-        Tue, 7 Apr 2020 08:25:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=Ov0JJBn8SuoSDprUs0ICLQsf381cjMDXy6+AsMOcd6I=;
- b=C3lsODew9Re9uIioUoXrUhNSRySZbUx/quk7zVHJzepQGL/4MrE1JT0DL+WJ5+h50LD/
- cXjo+uNhHexAM+JRFOVZeKBCtYsMAsEd4xFQ0JV1NcCUKb1+7F0/iAfOVQ/fz3nI2uXc
- LEjIFnCSSFqJaUcYBnhOirSBkbZ5cly0L8Q= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 308s0j3xy6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 07 Apr 2020 08:25:53 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Tue, 7 Apr 2020 08:25:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YPW0trdu8qIVLi/G0NoDH8WrknWbageGnplFcd1Xekm8qJaEwUOmfUjA37P6xI+VEY0s3xaL0bh6BjWDjLsvqaHxJ2jfOTNJb6ukPnwqHlruwjgG5pGtezsISnF/t40yMPfQ7z0tfA/Gk5P7bWQAIMDXv1dvjz/Nnp2rU2l2ReBFHpAjxZ5UPq199TGjvP+AazmDcyNnx0WXccj+y+5na1YAKaHzRjvxJqyw5TgFn32yy4VRapvJDAPlWzXV812H+V9we/4SW7vzEImYpV1a5pIdSi6Hnpqoydoq+Is9PAc5aLN51aR8hP0vWBoBp7Nro6Kw1CNlRRj7wwdb/JKAdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ov0JJBn8SuoSDprUs0ICLQsf381cjMDXy6+AsMOcd6I=;
- b=FPKtriUhZTVveMLuYDH3nWYF/JiBvCh0PW66uxeJvSEP+Es/6IAWT7Ok3cqJiWFY7AdmpcqCxlT1r9eDdGM4xgiytAFx/64styNV3oMVXc3vvp6wjFkIpzmdvz2Gmal6A7/8BOpzpqebzwBKz3noTWNHhsaY+20w28LlVhJQJ3gb86AvWb1vt0bDkp7BNJYpWlLvcBYKKBhiRQKkuucjtYH1PV54X4Qg/OWJRT4d5RTUrB449NCZ9liLWe6WkTgL4rKMYb3EtKdb953o08vLIBMZwm6LmfTGv811yZbF0nbynd68cpJpJv51M0d8HuY1EboMcxqjcoYvDvQXGTQBBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ov0JJBn8SuoSDprUs0ICLQsf381cjMDXy6+AsMOcd6I=;
- b=UeAiZXWDvRDANorbYDdv0SVSFQ0edjye/G56TvzAlnJz4bXKhxvhIxldXg5HTGXhfgIbOGQ4Ef6aua84fd3FqvYAonFhbkIMRDTfPcKUeY/lS2n06wmJjDwAUVAF0ioVHeTWFfwOGqrfmYiNEKLz1GkCz7wntjr6RdPs3S3TNiI=
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2197.namprd15.prod.outlook.com (2603:10b6:a02:8e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15; Tue, 7 Apr
- 2020 15:25:49 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
- 15:25:49 +0000
-Date:   Tue, 7 Apr 2020 08:25:44 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Aslan Bakirov <aslan@fb.com>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andreas Schaufler <andreas.schaufler@gmx.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joonsoo Kim <js1304@gmail.com>
-Subject: Re: [PATCH v4 2/2] mm: hugetlb: optionally allocate gigantic
- hugepages using cma
-Message-ID: <20200407152544.GA9557@carbon.lan>
-References: <20200407010431.1286488-1-guro@fb.com>
- <20200407010431.1286488-3-guro@fb.com>
- <20200407070331.GD18914@dhcp22.suse.cz>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407070331.GD18914@dhcp22.suse.cz>
-X-ClientProxiedBy: MWHPR13CA0032.namprd13.prod.outlook.com
- (2603:10b6:300:95::18) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Tue, 7 Apr 2020 11:26:16 -0400
+Received: by mail-il1-f199.google.com with SMTP id i13so2275056ilq.18
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 08:26:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=WKgMTxpneZJpT8xkB31XsXrdQwAGZDBOWhtHN/FxeTw=;
+        b=eEWZOawBomVETBnaLBtKRpXEn31nW2irbx9KNdml752qz9dYLAX1yTTk1Qdwqc0g1N
+         xWtRbgRRdLLCIK8T/iFVwdTj26CU8EYkBZedYLfzx2sXncY2koIlTEfjIKC9w1XjibyW
+         f4ffuhfTpU4M5jl6K8RYOkoXwsO0+PQWApaG67WPMNOQgI5aSvzox34pH2lHQ1BK/NrB
+         YVFeSzDuAluCG2Mk1mklHEQnAu4FumYKNL3HLF5ScEvtAneJdnYjOtdbs/4PsS4SR3yN
+         lCdlO4jabAmYb2B6yromYhasfRa40U1+oqcI/1QwHdAjkFh5jvJf29FpMBQ1AAz5maaQ
+         0yfw==
+X-Gm-Message-State: AGi0Pua8PRxx6sn2ErhaQt/bWgSRYYyzfKdPJR2Q77M2Yzf3POQvJSvz
+        jwPgNrq4F/4Dy0BwW0nrQ9hgAmd0uAd13xsbLzQJx9iP9hRr
+X-Google-Smtp-Source: APiQypKeixnQfrFpngo82S7v4tUmHDCcBHb47LOdc82xkSO5L2AR5VGU5adtBMIjPEhCeynL+UYDCa1S2A2Lzgqr+IJRPkURWF9/
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.lan (2620:10d:c090:400::5:d8de) by MWHPR13CA0032.namprd13.prod.outlook.com (2603:10b6:300:95::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.6 via Frontend Transport; Tue, 7 Apr 2020 15:25:47 +0000
-X-Originating-IP: [2620:10d:c090:400::5:d8de]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d387ef4c-2569-4ae5-1d61-08d7db07f350
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2197:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2197BDA4E6ADF10580E0AF0ABEC30@BYAPR15MB2197.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-Forefront-PRVS: 036614DD9C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(136003)(376002)(346002)(366004)(396003)(39860400002)(36756003)(52116002)(186003)(7696005)(66476007)(5660300002)(66946007)(316002)(6506007)(33656002)(4326008)(55016002)(9686003)(54906003)(66556008)(6916009)(8936002)(966005)(6666004)(2906002)(81166006)(1076003)(86362001)(16526019)(8676002)(81156014)(478600001)(8886007);DIR:OUT;SFP:1102;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3k/dDXLrAy1yHQO9HLztiEwCJRZhmAa/mCJdOa6sQwt2CAHTrqxTcUPXfOkLb9EqDP5deUIgEyWIwAmLRGCk5abXJ+5sUSZZ8haqHJrhOdHByvwKXWgAkftSignlSwNFp9uFMS86UyY2QYA7N8w+5W26TBuKsyGtENLZXbjDUY7jjTULlwjr8tVE61jbV4k5nc0kPf2275BjNKnXAHFWfKPdKZmtfTAgQglG3XFkaKxNy3zBbD+yMT2sS9E3vZDF7R3yZgwxtqE2GrtHANIDvuJcHVKZMGnLGDgxeEFrOHYM7fGukGV12lGa1X1/K4xhKAq7oVeZIg00S3MTa5Y5Wxl5fLPr3dzwpqlN8GOgw0B6brBXGanpF5sVlP506U1RQxchYjEm4XVUBClfWNZM9jOVGPFmde0KNUJxVsEwFKwadHoE19924LPGFegZIsoTUwQBEDCZzsTCikqCJrfc+nC5eemu0K6fZQwAKQdr2G00y1nMbYdqy/bPiadbjDO0vR3TxnjOiVjplj88MoQdJg==
-X-MS-Exchange-AntiSpam-MessageData: aLD/H/4E1AiQcucHL4/5j7O6KoicCWeIL6LVgVjVIlnsuOPtb8vncePW27vfrYQvL3LNJ30HLbOEoNGyuFD/w+mheB+PzrTiIO1lLa5EvO4k1Dn4iR3+gQ1rzpZdt/Ii34DSChOQPIB8pP6GJT9Fnl0ZS/Gbls0zdzQCtaOmlZ48S/jV+X7J4sXAoXbYwnp7
-X-MS-Exchange-CrossTenant-Network-Message-Id: d387ef4c-2569-4ae5-1d61-08d7db07f350
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 15:25:49.2410
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6lliWYoMBqgUIou8BpZX3okJHy/hk06nUvBlXp/XF/u0GP6Geq0KYGoTIVNXHZBO
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2197
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_07:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0 phishscore=0
- mlxlogscore=804 malwarescore=0 suspectscore=0 priorityscore=1501
- bulkscore=0 adultscore=0 impostorscore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070129
-X-FB-Internal: deliver
+X-Received: by 2002:a6b:f305:: with SMTP id m5mr2634563ioh.44.1586273175348;
+ Tue, 07 Apr 2020 08:26:15 -0700 (PDT)
+Date:   Tue, 07 Apr 2020 08:26:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000222c4905a2b50102@google.com>
+Subject: KASAN: use-after-free Read in usbhid_close (3)
+From:   syzbot <syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        ingrassia@epigenesys.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 09:03:31AM +0200, Michal Hocko wrote:
-> On Mon 06-04-20 18:04:31, Roman Gushchin wrote:
-> [...]
-> My ack still applies but I have only noticed two minor things now.
+Hello,
 
-Hello, Michal!
+syzbot found the following crash on:
 
-> 
-> [...]
-> > @@ -1281,8 +1308,14 @@ static void update_and_free_page(struct hstate *h, struct page *page)
-> >  	set_compound_page_dtor(page, NULL_COMPOUND_DTOR);
-> >  	set_page_refcounted(page);
-> >  	if (hstate_is_gigantic(h)) {
-> > +		/*
-> > +		 * Temporarily drop the hugetlb_lock, because
-> > +		 * we might block in free_gigantic_page().
-> > +		 */
-> > +		spin_unlock(&hugetlb_lock);
-> >  		destroy_compound_gigantic_page(page, huge_page_order(h));
-> >  		free_gigantic_page(page, huge_page_order(h));
-> > +		spin_lock(&hugetlb_lock);
-> 
-> This is OK with the current code because existing paths do not have to
-> revalidate the state AFAICS but it is a bit subtle. I have checked the
-> cma_free path and it can only sleep on the cma->lock unless I am missing
-> something. This lock is only used for cma bitmap manipulation and the
-> mutex sounds like an overkill there and it can be replaced by a
-> spinlock.
-> 
-> Sounds like a follow up patch material to me.
+HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=14f1695de00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
+dashboard link: https://syzkaller.appspot.com/bug?extid=7bf5a7b0f0a1f9446f4c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-I had the same idea and even posted a patch:
-https://lore.kernel.org/linux-mm/20200403174559.GC220160@carbon.lan/T/#m87be98bdacda02cea3dd6759b48a28bd23f29ff0
+Unfortunately, I don't have any reproducer for this crash yet.
 
-However, Joonsoo pointed out that in some cases the bitmap operation might
-be too long for a spinlock.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com
 
-Alternatively, we can implement an asynchronous delayed release on the cma side,
-I just don't know if it's worth it (I mean adding code/complexity).
+==================================================================
+BUG: KASAN: use-after-free in atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+BUG: KASAN: use-after-free in usb_kill_urb drivers/usb/core/urb.c:696 [inline]
+BUG: KASAN: use-after-free in usb_kill_urb+0x24b/0x2c0 drivers/usb/core/urb.c:688
+Read of size 4 at addr ffff8881d8e72310 by task systemd-udevd/5778
 
-> 
-> [...]
-> > +	for_each_node_state(nid, N_ONLINE) {
-> > +		int res;
-> > +
-> > +		size = min(per_node, hugetlb_cma_size - reserved);
-> > +		size = round_up(size, PAGE_SIZE << order);
-> > +
-> > +		res = cma_declare_contiguous_nid(0, size, 0, PAGE_SIZE << order,
-> > +						 0, false, "hugetlb",
-> > +						 &hugetlb_cma[nid], nid);
-> > +		if (res) {
-> > +			pr_warn("hugetlb_cma: reservation failed: err %d, node %d",
-> > +				res, nid);
-> > +			break;
-> 
-> Do we really have to break out after a single node failure? There might
-> be other nodes that can satisfy the allocation. You are not cleaning up
-> previous allocations so there is a partial state and then it would make
-> more sense to me to simply s@break@continue@ here.
+CPU: 1 PID: 5778 Comm: systemd-udevd Not tainted 5.6.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+ __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:641
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x152/0x1c0 mm/kasan/generic.c:192
+ atomic_read include/asm-generic/atomic-instrumented.h:26 [inline]
+ usb_kill_urb drivers/usb/core/urb.c:696 [inline]
+ usb_kill_urb+0x24b/0x2c0 drivers/usb/core/urb.c:688
+ usbhid_close+0x15c/0x210 drivers/hid/usbhid/hid-core.c:750
+ hid_hw_close+0xa8/0xd0 drivers/hid/hid-core.c:2100
+ wacom_close+0x66/0x80 drivers/hid/wacom_sys.c:192
+ input_close_device+0x110/0x1a0 drivers/input/input.c:682
+ evdev_close_device drivers/input/evdev.c:428 [inline]
+ evdev_release+0x188/0x1c0 drivers/input/evdev.c:466
+ __fput+0x2d7/0x840 fs/file_table.c:280
+ task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:164
+ prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+ do_syscall_64+0x4e0/0x5a0 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7fc61b05f270
+Code: 73 01 c3 48 8b 0d 38 7d 20 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 59 c1 20 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 ee fb ff ff 48 89 04 24
+RSP: 002b:00007ffc7605c618 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000007 RCX: 00007fc61b05f270
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000007
+RBP: 00007fc61bf18710 R08: 0000556bb325a33c R09: 0000000000000078
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000016
+R13: 0000000000000000 R14: 00007ffc7605c6c4 R15: 0000000000000000
 
-But then we should iterate over all nodes in alloc_gigantic_page()?
-Currently if hugetlb_cma[0] is NULL it will immediately switch back
-to the fallback approach.
+Allocated by task 5:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:488
+ kmalloc include/linux/slab.h:560 [inline]
+ usb_alloc_urb+0x65/0xb0 drivers/usb/core/urb.c:74
+ usbhid_start+0xb26/0x22f0 drivers/hid/usbhid/hid-core.c:1121
+ hid_hw_start+0x5d/0x130 drivers/hid/hid-core.c:2030
+ wacom_parse_and_register+0x28f3/0x5260 drivers/hid/wacom_sys.c:2365
+ wacom_probe+0x94d/0xba0 drivers/hid/wacom_sys.c:2748
+ hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2263
+ really_probe+0x290/0xac0 drivers/base/dd.c:551
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:724
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:831
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x217/0x390 drivers/base/dd.c:897
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2500
+ hid_add_device drivers/hid/hid-core.c:2419 [inline]
+ hid_add_device+0x33c/0x9a0 drivers/hid/hid-core.c:2368
+ usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
+ usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:374
+ really_probe+0x290/0xac0 drivers/base/dd.c:551
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:724
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:831
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x217/0x390 drivers/base/dd.c:897
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2500
+ usb_set_configuration+0xece/0x1840 drivers/usb/core/message.c:2025
+ usb_generic_driver_probe+0x9d/0xe0 drivers/usb/core/generic.c:241
+ usb_probe_device+0xd9/0x230 drivers/usb/core/driver.c:272
+ really_probe+0x290/0xac0 drivers/base/dd.c:551
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:724
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:831
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:431
+ __device_attach+0x217/0x390 drivers/base/dd.c:897
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:491
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2500
+ usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2548
+ hub_port_connect drivers/usb/core/hub.c:5195 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5335 [inline]
+ port_event drivers/usb/core/hub.c:5481 [inline]
+ hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5563
+ process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Actually, Idk how realistic are use cases with complex node configuration,
-so that we can hugetlb_cma areas can be allocated only on some of them.
-I'd leave it up to the moment when we'll have a real world example.
-Then we probably want something more sophisticated anyway...
+Freed by task 5:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x117/0x160 mm/kasan/common.c:476
+ slab_free_hook mm/slub.c:1444 [inline]
+ slab_free_freelist_hook mm/slub.c:1477 [inline]
+ slab_free mm/slub.c:3034 [inline]
+ kfree+0xd5/0x300 mm/slub.c:3995
+ urb_destroy drivers/usb/core/urb.c:26 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ usb_free_urb.part.0+0xaf/0x110 drivers/usb/core/urb.c:96
+ usb_free_urb+0x1b/0x30 drivers/usb/core/urb.c:95
+ usbhid_stop+0x1d4/0x460 drivers/hid/usbhid/hid-core.c:1217
+ wacom_remove+0x88/0x3b0 drivers/hid/wacom_sys.c:2772
+ hid_device_remove+0xed/0x240 drivers/hid/hid-core.c:2296
+ __device_release_driver drivers/base/dd.c:1135 [inline]
+ device_release_driver_internal+0x231/0x500 drivers/base/dd.c:1168
+ bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
+ device_del+0x481/0xd30 drivers/base/core.c:2677
+ hid_remove_device drivers/hid/hid-core.c:2467 [inline]
+ hid_destroy_device+0xe1/0x150 drivers/hid/hid-core.c:2486
+ usbhid_disconnect+0x9f/0xe0 drivers/hid/usbhid/hid-core.c:1413
+ usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:436
+ __device_release_driver drivers/base/dd.c:1137 [inline]
+ device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1168
+ bus_remove_device+0x2eb/0x5a0 drivers/base/bus.c:533
+ device_del+0x481/0xd30 drivers/base/core.c:2677
+ usb_disable_device+0x23d/0x790 drivers/usb/core/message.c:1238
+ usb_disconnect+0x293/0x900 drivers/usb/core/hub.c:2211
+ hub_port_connect drivers/usb/core/hub.c:5046 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5335 [inline]
+ port_event drivers/usb/core/hub.c:5481 [inline]
+ hub_event+0x1a1d/0x4300 drivers/usb/core/hub.c:5563
+ process_one_work+0x94b/0x1620 kernel/workqueue.c:2266
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2412
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-I have no strong opinion here, so if you really think we should s/break/continue,
-I'm fine with it too.
+The buggy address belongs to the object at ffff8881d8e72300
+ which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 16 bytes inside of
+ 192-byte region [ffff8881d8e72300, ffff8881d8e723c0)
+The buggy address belongs to the page:
+page:ffffea0007639c80 refcount:1 mapcount:0 mapping:ffff8881da002a00 index:0x0
+flags: 0x200000000000200(slab)
+raw: 0200000000000200 ffffea0007628f80 0000000400000004 ffff8881da002a00
+raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
-Thanks!
+Memory state around the buggy address:
+ ffff8881d8e72200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881d8e72280: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ffff8881d8e72300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                         ^
+ ffff8881d8e72380: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8881d8e72400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
