@@ -2,116 +2,134 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD6FC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91042C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0605820748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58ED620748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:11:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQ1rrBhz"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uqvNasyP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgDGTJL (ORCPT
+        id S1726873AbgDGTLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:09:11 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55875 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgDGTJK (ORCPT
+        Tue, 7 Apr 2020 15:11:50 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:45576 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726759AbgDGTLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:09:10 -0400
-Received: by mail-pj1-f66.google.com with SMTP id fh8so147282pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 12:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LDxb1cWgmjR2rFQEK0+5JpvDE312cPS2zScBr2bujHE=;
-        b=OQ1rrBhzVf0fJC3M4ocRBLsWOLwIev84mAm14MNsK1lJKOeqK2JSQPVIN0X4dgWaMe
-         PbXUXIhIddautej6PdwCqFJK0e2lTP+L+YB+8ciP3SM72Phf996FeN091bdS6O1f/PBr
-         YLZyGadFtUIbyZEbN3BYBn1Jn5n9lT0+Xupjn3WiTbMtGsoYHmNRQf2wJz8SQbTRXH0O
-         +r4uXZ2BdTJVFaujA+96JNAFQMG9KGFwXswQnycKHlmBhF/ywFOhBAZpKjy7AYCgIBkN
-         TlBcucvVruI8VPia6fG8s30mOQUpw0cIqGf7B9zZhSBO7K3SVw2ItS+k+aejklwUxcx9
-         oykw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LDxb1cWgmjR2rFQEK0+5JpvDE312cPS2zScBr2bujHE=;
-        b=asHGm9l4EDsZ5mQJ06N4VLY5CEciietnsSzbx56j4BQPVeEpl5eK9lpN/Ks7O7kpKu
-         Amq1Pw1vr5fdIf+OcQCGpfmiheJXhi0EDvYq5Xnb+ZpK1rRR9Hiix90KrJR52ffcH8GV
-         mG+7J7kW2c2DrPooxo7Jryb9FLLJLahF/N6EoWFGiIsmmjQEHtSkm2ROkbAp79jMhX4O
-         nEuIk5uQHoX3xLxD3rKH6j0hoE7oKMw8b2kJ/6PTQrR9zm59o6MvUjp2+a6IfaFvirXz
-         DNYkkms6JEwvIeJqx+Ddor7Ry6uziNBSkuezwqsLI59ddF8n4M58Tl7+Jnq32atarNks
-         55HA==
-X-Gm-Message-State: AGi0PuaHXpS/X3bnL8HcqY2COKPbzvcjsifuR5xNGiCZtPTKdNCDWp26
-        QltVb11MiNDufzO/Au/cItoFUiSLLpw=
-X-Google-Smtp-Source: APiQypIAweHpsgOBRcq92pnGKdIS++5/gxov6spI1gTUH2o53lpimCMwTYCCEJfCGkDl1fke9lad7w==
-X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr3787069plo.45.1586286549841;
-        Tue, 07 Apr 2020 12:09:09 -0700 (PDT)
-Received: from jiancai.svl.corp.google.com ([2620:15c:2ce:0:b7ed:16a3:9dc0:21bb])
-        by smtp.googlemail.com with ESMTPSA id q12sm13833090pgi.86.2020.04.07.12.09.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 12:09:09 -0700 (PDT)
-From:   Jian Cai <caij2003@gmail.com>
-Cc:     caij2003@gmail.com, ndesaulniers@google.com, manojgupta@google.com,
-        stefan@agner.ch, Russell King <linux@armlinux.org.uk>,
-        Enrico Weigelt <info@metux.net>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] ARM: replace the sole use of a symbol with its definition
-Date:   Tue,  7 Apr 2020 12:05:57 -0700
-Message-Id: <20200407190558.196865-1-caij2003@gmail.com>
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 7 Apr 2020 15:11:50 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037J84Ik060043;
+        Tue, 7 Apr 2020 19:09:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=swajKYutGq2J/flsUm50gGY9cMazIJGr09EB2ZsOi40=;
+ b=uqvNasyPkZpE0WsJm/4dH/pnZTwFH534H6Bpy3rYZYrfwrrqJ05K5H6q7F18wb3tTUmS
+ rfeWUx0o7WvySvFmsuUL57BNGwbFfOc74I1kjs2wNlX42h5GpPurIvPuBSNY3oFLZYti
+ DToHOgan1AWxGSRzkw7rCUKp6KRUjhjFNnQeKhDyi5M8/LggfceYItVbDjaSaE4EEJVV
+ Jlh+CHAXc9W0cdThRXIhzCSn4k9TvQv6/a08YmXe1++VyHXAUbE1hwsRVQTsNtv7zHM3
+ FYdaidr+anDEh310RLE+QEJQo4wrEdDoRN3tiTYQ7fysYCLp1CFnFT8V3vsAYkENA5P9 rQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 306j6mexrx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 19:09:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 037J7hUD095632;
+        Tue, 7 Apr 2020 19:09:34 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 3073qgxx5t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 07 Apr 2020 19:09:33 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 037J9WFu028390;
+        Tue, 7 Apr 2020 19:09:32 GMT
+Received: from [192.168.0.110] (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 07 Apr 2020 12:09:32 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [RFC] Renaming page_offset() to page_pos()
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20200403153323.GQ21484@bombadil.infradead.org>
+Date:   Tue, 7 Apr 2020 13:09:31 -0600
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <FE9117E6-D432-439D-836F-9805986C29DD@oracle.com>
+References: <20200403153323.GQ21484@bombadil.infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 mlxlogscore=827
+ spamscore=0 bulkscore=0 adultscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070153
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=875 spamscore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004070153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ALT_UP_B macro sets symbol up_b_offset via .equ to an expression
-involving another symbol. The macro gets expanded twice when
-arch/arm/kernel/sleep.S is assembled, creating a scenario where
-up_b_offset is set to another expression involving symbols while its
-current value is based on symbols. LLVM integrated assembler does not
-allow such cases, and based on the documentation of binutils, "Values
-that are based on expressions involving other symbols are allowed, but
-some targets may restrict this to only being done once per assembly", so
-it may be better to avoid such cases as it is not clearly stated which
-targets should support or disallow them. The fix in this case is simple,
-as up_b_offset has only one use, so we can replace the use with the
-definition and get rid of up_b_offset.
+page_pos seems quite reasonable to me.
 
-Signed-off-by: Jian Cai <caij2003@gmail.com>
----
- arch/arm/include/asm/assembler.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
 
-diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
-index 99929122dad7..adee13126c62 100644
---- a/arch/arm/include/asm/assembler.h
-+++ b/arch/arm/include/asm/assembler.h
-@@ -269,10 +269,9 @@
- 	.endif							;\
- 	.popsection
- #define ALT_UP_B(label)					\
--	.equ	up_b_offset, label - 9998b			;\
- 	.pushsection ".alt.smp.init", "a"			;\
- 	.long	9998b						;\
--	W(b)	. + up_b_offset					;\
-+	W(b)	. + (label - 9998b)					;\
- 	.popsection
- #else
- #define ALT_SMP(instr...)
--- 
-2.26.0.292.g33ef6b2f38-goog
+
+> On Apr 3, 2020, at 9:33 AM, Matthew Wilcox <willy@infradead.org> =
+wrote:
+>=20
+> Without looking at the source, can you tell me what page_offset() =
+does?
+>=20
+> At least one regular contributor thought it meant the pgoff_t of this
+> page within the file.  It's actually the byte offset of this page into
+> the file.
+>=20
+> We have a perfectly good name for byte offset into the file --
+> file->f_pos.  So I propose renaming it to page_pos().  To minimise
+> disruption to other development, I'm going to send Linus a pull =
+request
+> at the end of the merge window with the results of this coccinelle =
+script:
+>=20
+> @@ expression a; @@
+> -       page_offset(a)
+> +       page_pos(a)
+>=20
+> I've reviewed the output and the only slight weirdness is an extra =
+space
+> in casts:
+>=20
+>                btrfs_warn(BTRFS_I(page->mapping->host)->root->fs_info,
+>                           "page private not zero on page %llu",
+> -                          (unsigned long long)page_offset(page));
+> +                          (unsigned long long) page_pos(page));
+>=20
+> Sometimes Coccinelle fixes the surrounding whitespace to be better
+> than it currently is:
+>=20
+> -               ow->bv[i].bv_len =3D min(page_offset(ow->pages[i]) + =
+PAGE_SIZE,
+> -                   ow->off + ow->len) -
+> -                   max(ow->off, page_offset(ow->pages[i]));
+> +               ow->bv[i].bv_len =3D min(page_pos(ow->pages[i]) + =
+PAGE_SIZE,
+> +                                      ow->off + ow->len) -
+> +                   max(ow->off, page_pos(ow->pages[i]));
+>=20
+> (it's still bad, but it's an improvement)
+>=20
+> Any objections?  Anyone got a better name than page_pos()?
+>=20
 
