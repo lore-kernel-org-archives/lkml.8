@@ -2,85 +2,81 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3292DC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E15B6C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08ED620719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB47420719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hrg+Vqac"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fdAVkdZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgDGMee (ORCPT
+        id S1728692AbgDGMfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:34:34 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35637 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728768AbgDGMed (ORCPT
+        Tue, 7 Apr 2020 08:35:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31073 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728447AbgDGMfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 08:34:33 -0400
+        Tue, 7 Apr 2020 08:35:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586262872;
+        s=mimecast20190719; t=1586262923;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TfvECcAWRcxfXpKI3PWwEQlcjFRStOQz8jHjDBJz+ic=;
-        b=Hrg+Vqacu2A/ZdKLGrNUw2ytAt3nGi3iWZOfuqHH6ahxieYVz6GFduWGByEvmKlbORFECU
-        U7XrVyqr1kYZw+xNTCgMX3CgA+G42HwQIhMwYenK7s+pMAdHHb68u4beW1wB0YvKr6/fy1
-        syCq2Mf1vxTWWlqH4Lr2OJUMfGVjrOI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-PiVNzPQtM6eKW61s9UXY-w-1; Tue, 07 Apr 2020 08:34:30 -0400
-X-MC-Unique: PiVNzPQtM6eKW61s9UXY-w-1
-Received: by mail-wr1-f72.google.com with SMTP id w12so1684687wrl.23
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 05:34:30 -0700 (PDT)
+        bh=Qj/NCHNTy8cKBQLrOFei5N4fXMJmrkSwVdyGWxnI98o=;
+        b=fdAVkdZHggSIqrSDUjpbbS/xXC4yKtpJiWA7z6Qrun7nmRcPo0bSPLI5CKHgUDSgUM56OE
+        y4lWiAcbq/V8Cgmo08pRUtyjSpS8YmvyvSbomWYezpcJIXxBbqI0r4fK/Y71r4KzI6BGOG
+        H756abaY8HU5QqJ3K+7O9GNiUZcuqAU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-186-meKj4tUhP_qrewzk8yUyMA-1; Tue, 07 Apr 2020 08:35:21 -0400
+X-MC-Unique: meKj4tUhP_qrewzk8yUyMA-1
+Received: by mail-wr1-f69.google.com with SMTP id w12so1687895wrl.23
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 05:35:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=TfvECcAWRcxfXpKI3PWwEQlcjFRStOQz8jHjDBJz+ic=;
-        b=Uj95ffM7x8JGb7BL2Wab/AKwHggSmp8QkkYa6orGpoWVLon29sP1v7FAuUtCTrZvTj
-         3W1hb3z1eMfMm3f/naVFcuWk5e8cis2zRC1rJVBVjz3qBl4dMPPLxtTOYO+NTbibUZex
-         HL6+v/h0vuI1pv6IRFe/peV8fgywypcEVZ6dudNbb8jhmGY7OwMHE0jzU8F+CKdDBile
-         od6EEdBRk0whwiv3i0kQRMtpcOw73zb5jnksJcCRYI25g68sxaq+hhJvHGMcuTlcvCkJ
-         SISCdVSvDswL5ZC8XdXxiYJ7mL13+p4YdNMXozMnaIyXg7h7onsScXKspe1vReGKllal
-         W4oA==
-X-Gm-Message-State: AGi0PuZDvFMCM+xQ9xhaYy8Wci8nGkzvXsQ2hTEJVZrrXIXu/xJfErh/
-        8S1gqqnwsWPKUgLxnyna7CH6l95WBGLuXsFvRrB6erbshD7CT2rXSkStBMtzoddxYorsTg+89bB
-        Q8nAeajaEZR+fxXvlncyJZ8wX
-X-Received: by 2002:a7b:c157:: with SMTP id z23mr2168405wmi.178.1586262869153;
-        Tue, 07 Apr 2020 05:34:29 -0700 (PDT)
-X-Google-Smtp-Source: APiQypL8bzCcr/8mV3878eAIAzlhZ29BFvVRcleYPOt87SpSL4fEJ//M96BIuOmKEW8v4wpvRHjT5Q==
-X-Received: by 2002:a7b:c157:: with SMTP id z23mr2168385wmi.178.1586262868931;
-        Tue, 07 Apr 2020 05:34:28 -0700 (PDT)
+        bh=Qj/NCHNTy8cKBQLrOFei5N4fXMJmrkSwVdyGWxnI98o=;
+        b=mVGRqWG7eWo7RuybDMhPu/m6zUNdMkjaAAjWs0PCPJmdcMZFlK9PfwiRMDMxYUAEPI
+         ONAue5LU0BucpaiOrtHPWXF/ouQgKraNb7E8Xzjhzd7zozHfYsVyy/aIG3qQyOIPiSOs
+         kpk6+9F2/Ez9XjjX3fl2m4IG7Pkx6LkjVUW2z86ZQlOBHolzMh8Sk+gszUxM5GEG7GQG
+         zE36jTdU99Xa4bFVkk4kKtQUFR79I5A5PaxfS5ura84Yu/BtOv2OxgtedNfoZmdfnIKy
+         /eaDBJ8yZxJUK5Ue1GPCba2Ji4gHnMjEDHWghijO1QapQI4t/vw3K8zXAiZsh0hft4/0
+         XYdQ==
+X-Gm-Message-State: AGi0PubAsRi7xA4ltlu4217Fv++DHw4NhM9mghMSR6lcOUrWmYNMDTP2
+        HL224egDhv1HeJB0h68deIU5gOdP3ge5AiyxeKY9ZIy1y9i83Jtzkn1OOtwUxNivi+LhGsSxPDE
+        6zYZvcm5iDKXwosSjtlSxuCbY
+X-Received: by 2002:a7b:cf02:: with SMTP id l2mr2224569wmg.4.1586262920073;
+        Tue, 07 Apr 2020 05:35:20 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKpOChN8tGzByvwHEKGAyg4BmSbrzIK1wsR3YYnAfmm17DVuuJcLPkB5PdpW+tBGHaK6JYitA==
+X-Received: by 2002:a7b:cf02:: with SMTP id l2mr2224546wmg.4.1586262919855;
+        Tue, 07 Apr 2020 05:35:19 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:bd61:914:5c2f:2580? ([2001:b07:6468:f312:bd61:914:5c2f:2580])
-        by smtp.gmail.com with ESMTPSA id o129sm2245808wma.20.2020.04.07.05.34.28
+        by smtp.gmail.com with ESMTPSA id f1sm32628821wrv.37.2020.04.07.05.35.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 05:34:28 -0700 (PDT)
-Subject: Re: [PATCH v3] KVM: X86: Filter out the broadcast dest for IPI
- fastpath
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1585815626-28370-1-git-send-email-wanpengli@tencent.com>
+        Tue, 07 Apr 2020 05:35:19 -0700 (PDT)
+Subject: Re: [PATCH] KVM: VMX: fix crash cleanup when KVM wasn't used
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200401081348.1345307-1-vkuznets@redhat.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <59287b27-188b-6c97-9e48-8362d655df68@redhat.com>
-Date:   Tue, 7 Apr 2020 14:34:27 +0200
+Message-ID: <0c2504c0-8dac-4bbf-bd50-a503be755d3f@redhat.com>
+Date:   Tue, 7 Apr 2020 14:35:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1585815626-28370-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <20200401081348.1345307-1-vkuznets@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -89,66 +85,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/20 10:20, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
+On 01/04/20 10:13, Vitaly Kuznetsov wrote:
+> If KVM wasn't used at all before we crash the cleanup procedure fails with
+>  BUG: unable to handle page fault for address: ffffffffffffffc8
+>  #PF: supervisor read access in kernel mode
+>  #PF: error_code(0x0000) - not-present page
+>  PGD 23215067 P4D 23215067 PUD 23217067 PMD 0
+>  Oops: 0000 [#8] SMP PTI
+>  CPU: 0 PID: 3542 Comm: bash Kdump: loaded Tainted: G      D           5.6.0-rc2+ #823
+>  RIP: 0010:crash_vmclear_local_loaded_vmcss.cold+0x19/0x51 [kvm_intel]
 > 
-> Except destination shorthand, a destination value 0xffffffff is used to
-> broadcast interrupts, let's also filter out this for single target IPI 
-> fastpath.
+> The root cause is that loaded_vmcss_on_cpu list is not yet initialized,
+> we initialize it in hardware_enable() but this only happens when we start
+> a VM.
 > 
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> Previously, we used to have a bitmap with enabled CPUs and that was
+> preventing [masking] the issue.
+> 
+> Initialized loaded_vmcss_on_cpu list earlier, right before we assign
+> crash_vmclear_loaded_vmcss pointer. blocked_vcpu_on_cpu list and
+> blocked_vcpu_on_cpu_lock are moved altogether for consistency.
+> 
+> Fixes: 31603d4fc2bb ("KVM: VMX: Always VMCLEAR in-use VMCSes during crash with kexec support")
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > ---
-> v1 -> v2:
->  * update subject and patch description
+>  arch/x86/kvm/vmx/vmx.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
 > 
->  arch/x86/kvm/lapic.c | 3 ---
->  arch/x86/kvm/lapic.h | 3 +++
->  arch/x86/kvm/x86.c   | 3 ++-
->  3 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index e24d405..d528bed 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -59,9 +59,6 @@
->  #define MAX_APIC_VECTOR			256
->  #define APIC_VECTORS_PER_REG		32
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 3aba51d782e2..39a5dde12b79 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2257,10 +2257,6 @@ static int hardware_enable(void)
+>  	    !hv_get_vp_assist_page(cpu))
+>  		return -EFAULT;
 >  
-> -#define APIC_BROADCAST			0xFF
-> -#define X2APIC_BROADCAST		0xFFFFFFFFul
+> -	INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+> -	INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+> -	spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
 > -
->  static bool lapic_timer_advance_dynamic __read_mostly;
->  #define LAPIC_TIMER_ADVANCE_ADJUST_MIN	100	/* clock cycles */
->  #define LAPIC_TIMER_ADVANCE_ADJUST_MAX	10000	/* clock cycles */
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index bc76860..25b77a6 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -17,6 +17,9 @@
->  #define APIC_BUS_CYCLE_NS       1
->  #define APIC_BUS_FREQUENCY      (1000000000ULL / APIC_BUS_CYCLE_NS)
+>  	r = kvm_cpu_vmxon(phys_addr);
+>  	if (r)
+>  		return r;
+> @@ -8006,7 +8002,7 @@ module_exit(vmx_exit);
 >  
-> +#define APIC_BROADCAST			0xFF
-> +#define X2APIC_BROADCAST		0xFFFFFFFFul
+>  static int __init vmx_init(void)
+>  {
+> -	int r;
+> +	int r, cpu;
+>  
+>  #if IS_ENABLED(CONFIG_HYPERV)
+>  	/*
+> @@ -8060,6 +8056,12 @@ static int __init vmx_init(void)
+>  		return r;
+>  	}
+>  
+> +	for_each_possible_cpu(cpu) {
+> +		INIT_LIST_HEAD(&per_cpu(loaded_vmcss_on_cpu, cpu));
+> +		INIT_LIST_HEAD(&per_cpu(blocked_vcpu_on_cpu, cpu));
+> +		spin_lock_init(&per_cpu(blocked_vcpu_on_cpu_lock, cpu));
+> +	}
 > +
->  enum lapic_mode {
->  	LAPIC_MODE_DISABLED = 0,
->  	LAPIC_MODE_INVALID = X2APIC_ENABLE,
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 5e95950..5a645df 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1559,7 +1559,8 @@ static int handle_fastpath_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64 data
->  
->  	if (((data & APIC_SHORT_MASK) == APIC_DEST_NOSHORT) &&
->  		((data & APIC_DEST_MASK) == APIC_DEST_PHYSICAL) &&
-> -		((data & APIC_MODE_MASK) == APIC_DM_FIXED)) {
-> +		((data & APIC_MODE_MASK) == APIC_DM_FIXED) &&
-> +		((u32)(data >> 32) != X2APIC_BROADCAST)) {
->  
->  		data &= ~(1 << 12);
->  		kvm_apic_send_ipi(vcpu->arch.apic, (u32)data, (u32)(data >> 32));
+>  #ifdef CONFIG_KEXEC_CORE
+>  	rcu_assign_pointer(crash_vmclear_loaded_vmcss,
+>  			   crash_vmclear_local_loaded_vmcss);
 > 
 
 Queued, thanks.
