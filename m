@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B632C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6063C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F322078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEA420768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217811;
-	bh=mh6KviTIlJ5Yfq+GJHAkUOq84+76MdnD8KTn8MMt++w=;
+	s=default; t=1586217818;
+	bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XurEsXvc5j9YlUSK1PJyw9ZJnkWoqqBAPJoOQyo60WC/qorE6Ebi/NLd6MfHx7AX5
-	 LAe02ZNztyZevOS8hOTqSaVCfZPUJv3keH25l7XKM2yvRHu0MkCOa2vE1pL5dJvlF7
-	 6z2EyBsHgxMJcrHxCF9rlF3t8fZrKbyGyfH9Dxic=
+	b=ziOqit0cRvd8aXvXVhKmxztexu9RHAaq/TD0Ta4wuJtyNgJZ0yn2FpUfTy22msXc1
+	 Sx+BG7ZbOdkBZIGgfZvt1LmCtw+URJ47AMbMxDUg/Moyj3Y8O9PmAQBbsvFJ/aVtVk
+	 aLjyjwM8EXcTCSk7GENfN8y0VJRkc28r7MKK2tp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgDGADa (ORCPT
+        id S1728424AbgDGADh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38662 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:03:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbgDGADR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:03:17 -0400
+        id S1727308AbgDGADL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:03:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 675B820842;
-        Tue,  7 Apr 2020 00:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EECF2080C;
+        Tue,  7 Apr 2020 00:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217797;
-        bh=mh6KviTIlJ5Yfq+GJHAkUOq84+76MdnD8KTn8MMt++w=;
+        s=default; t=1586217790;
+        bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOzbVWhG0LRgPLEBfiepVvYQ5YpvTG7b17UyR2ArEUGdEqyMMoQLo5ZMT01EmjNqS
-         OXtvhk1rm71S20QImXY/b27n9VWyHOyzfKnLJ3ZB50zVZyYv1uJhZBLhRJo2Anz9q+
-         8nH/4TCFceqhffYp9iLpEWVmWZ4xCF71YJqWOvrU=
+        b=cUXHyP8Mql0fL+f0Ob7mjAaPbsRuxr4hWxBGssd7jJhnTNfZvNZagxSBb/W9C0hww
+         apU/1M7jbJv07HEnxGAz1Y2mZShLhcj6wR43ZCuRY5QFO4w5mWBP/Uuqs0ltppVuno
+         cYoVI8iHMoXQJp3aIQevjuc5G3EtlamjhNlsPQAo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Xu Wang <vulab@iscas.ac.cn>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 3/4] qlcnic: Fix bad kzalloc null test
-Date:   Mon,  6 Apr 2020 20:03:11 -0400
-Message-Id: <20200407000312.17447-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 4/5] qlcnic: Fix bad kzalloc null test
+Date:   Mon,  6 Apr 2020 20:03:03 -0400
+Message-Id: <20200407000304.17360-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200407000312.17447-1-sashal@kernel.org>
-References: <20200407000312.17447-1-sashal@kernel.org>
+In-Reply-To: <20200407000304.17360-1-sashal@kernel.org>
+References: <20200407000304.17360-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -74,10 +74,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index 26263a192a77e..083aeca77c758 100644
+index 07f9067affc65..cda5b0a9e9489 100644
 --- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
 +++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -1724,7 +1724,7 @@ static int qlcnic_83xx_get_reset_instruction_template(struct qlcnic_adapter *p_d
+@@ -1720,7 +1720,7 @@ static int qlcnic_83xx_get_reset_instruction_template(struct qlcnic_adapter *p_d
  
  	ahw->reset.seq_error = 0;
  	ahw->reset.buff = kzalloc(QLC_83XX_RESTART_TEMPLATE_SIZE, GFP_KERNEL);
