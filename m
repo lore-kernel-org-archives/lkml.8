@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54742C3815B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EB4C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2375D20771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEE920730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgDGSjz (ORCPT
+        id S1728114AbgDGSjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:39:55 -0400
-Received: from 8bytes.org ([81.169.241.247]:57434 "EHLO theia.8bytes.org"
+        Tue, 7 Apr 2020 14:39:40 -0400
+Received: from 8bytes.org ([81.169.241.247]:57616 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726883AbgDGSh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726882AbgDGSh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 14:37:58 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id EB8953D0; Tue,  7 Apr 2020 20:37:50 +0200 (CEST)
+        id DA73D455; Tue,  7 Apr 2020 20:37:50 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -45,9 +45,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [RFC PATCH 14/34] iommu/amd: Remove dev_data->passthrough
-Date:   Tue,  7 Apr 2020 20:37:22 +0200
-Message-Id: <20200407183742.4344-15-joro@8bytes.org>
+Subject: [RFC PATCH 13/34] iommu: Export bus_iommu_probe() and make is safe for re-probing
+Date:   Tue,  7 Apr 2020 20:37:21 +0200
+Message-Id: <20200407183742.4344-14-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200407183742.4344-1-joro@8bytes.org>
 References: <20200407183742.4344-1-joro@8bytes.org>
@@ -58,64 +58,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Make use of generic IOMMU infrastructure to gather the same information
-carried in dev_data->passthrough and remove the struct member.
+Add a check to the bus_iommu_probe() call-path to make sure it ignores
+devices which have already been successfully probed. Then export the
+bus_iommu_probe() function so it can be used by IOMMU drivers.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/amd_iommu.c       | 10 +++++-----
- drivers/iommu/amd_iommu_types.h |  1 -
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ drivers/iommu/iommu.c | 6 +++++-
+ include/linux/iommu.h | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 3e0d27f7622e..0b4b4faa876d 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2047,8 +2047,8 @@ static int pdev_iommuv2_enable(struct pci_dev *pdev)
- static int attach_device(struct device *dev,
- 			 struct protection_domain *domain)
- {
--	struct pci_dev *pdev;
- 	struct iommu_dev_data *dev_data;
-+	struct pci_dev *pdev;
- 	unsigned long flags;
- 	int ret;
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 844613850595..cf25c1e48830 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1615,6 +1615,10 @@ static int probe_iommu_group(struct device *dev, void *data)
+ 	if (!dev_iommu_get(dev))
+ 		return -ENOMEM;
  
-@@ -2067,8 +2067,10 @@ static int attach_device(struct device *dev,
- 
- 	pdev = to_pci_dev(dev);
- 	if (domain->flags & PD_IOMMUV2_MASK) {
-+		struct iommu_domain *def_domain = iommu_get_dma_domain(dev);
++	/* Device is probed already if in a group */
++	if (iommu_group_get(dev) != NULL)
++		return 0;
 +
+ 	if (!try_module_get(ops->owner)) {
  		ret = -EINVAL;
--		if (!dev_data->passthrough)
-+		if (def_domain->type != IOMMU_DOMAIN_IDENTITY)
- 			goto out;
+ 		goto err_free_dev_iommu;
+@@ -1783,7 +1787,7 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group)
+ 					  iommu_do_create_direct_mappings);
+ }
  
- 		if (dev_data->iommu_v2) {
-@@ -2189,9 +2191,7 @@ static int amd_iommu_add_device(struct device *dev)
+-static int bus_iommu_probe(struct bus_type *bus)
++int bus_iommu_probe(struct bus_type *bus)
+ {
+ 	const struct iommu_ops *ops = bus->iommu_ops;
+ 	int ret;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 30170d191e5e..fea1622408ad 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -445,6 +445,7 @@ static inline void iommu_iotlb_gather_init(struct iommu_iotlb_gather *gather)
+ #define IOMMU_GROUP_NOTIFY_UNBOUND_DRIVER	6 /* Post Driver unbind */
  
- 	/* Domains are initialized for this device - have a look what we ended up with */
- 	domain = iommu_get_domain_for_dev(dev);
--	if (domain->type == IOMMU_DOMAIN_IDENTITY)
--		dev_data->passthrough = true;
--	else if (domain->type == IOMMU_DOMAIN_DMA)
-+	if (domain->type == IOMMU_DOMAIN_DMA)
- 		iommu_setup_dma_ops(dev, IOVA_START_PFN << PAGE_SHIFT, 0);
- 
- out:
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index ca8c4522045b..d0d7b6a0c3d8 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -640,7 +640,6 @@ struct iommu_dev_data {
- 	struct pci_dev *pdev;
- 	u16 devid;			  /* PCI Device ID */
- 	bool iommu_v2;			  /* Device can make use of IOMMUv2 */
--	bool passthrough;		  /* Device is identity mapped */
- 	struct {
- 		bool enabled;
- 		int qdep;
+ extern int bus_set_iommu(struct bus_type *bus, const struct iommu_ops *ops);
++extern int bus_iommu_probe(struct bus_type *bus);
+ extern bool iommu_present(struct bus_type *bus);
+ extern bool iommu_capable(struct bus_type *bus, enum iommu_cap cap);
+ extern struct iommu_domain *iommu_domain_alloc(struct bus_type *bus);
 -- 
 2.17.1
 
