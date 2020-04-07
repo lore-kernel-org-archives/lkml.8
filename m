@@ -2,122 +2,138 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A86C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA401C2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03D2206F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6962072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="N+1FgKa0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9gztiIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727796AbgDGHjn (ORCPT
+        id S1727798AbgDGHke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 03:39:43 -0400
-Received: from mail-eopbgr150053.outbound.protection.outlook.com ([40.107.15.53]:53382
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726591AbgDGHjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 03:39:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LfRr7TMf39WO2IUr9wQ03nZL1bm6CeFQyUWDoTZQuaDybTvDaGESIwXdVr72YajZHPNUcTy9KM1GES7IC/38bE2pWL3eddNC3D6t25tk1pC17hCTSJo2eZDnKO8C6ozZ17RROFuAdH3Rdtrn9Nv07OxpqK9GgoXGMLpG8Y/rDhbRofL541x3UBrOycyXwV8C+WQ5FjxYSKdnpZPDraeIz7iAV4G57PUat3umtxa2uTh2/huHNjbZC8341ZU2T3fLRx5atr2dm8gJ166IVbxZHF8VwbZyV9f9xkQQLC5Q00bcF5VHwUcMVFP0BWGCe+kkCcOlOX0pzJI/rVFVYXZnAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cEyNNEoh+9JoZIjNisIQIVqVDqK3/qxxSVzG9O29Jxg=;
- b=M7PcMuz0GASW6A+q7RSkyA4EUTqK8wWJQiiHdSlRcUAr4tTASlZ1poIoSFyMlHqCOUslBF+/5NEgYJ/LouI+dXh11ah2Ka1wK8GaGVB3LW34L3nxIibMoG9QlLPSVJiZ0i3ZsyFew6e9mWTERYGshOPlhXUngihONB/aTQiTLOvZaeJ9eRezUnHQo31X5yT7nRPLIve5SBS+Ht09XHFEfBK+F8PSr2TEGB/tjF7v/L9kH3s/LtGWRSqOUrCF+/dHDrx55LdQCncvpluW9PtfEktZK7b0K+Hp8b7hZ9/VGDESsDupJWGXco1mWyXxiZueX2SoQ1DrcXDcXm+fj1/0Lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cEyNNEoh+9JoZIjNisIQIVqVDqK3/qxxSVzG9O29Jxg=;
- b=N+1FgKa0sfOQea+lhtlEHwIpRhmLL0mJUR6SkiOuDoyz6jJoRaIZUh6iRTs+G3aqKFG/ubcpF8lJiV9YtFjoeGF0gDM/El+uqorahNKJKegK6b80e+3Gf0VQv5CGrH7p0mR6pNOGFHOQ/qjaVYTGp4nlz0AyUo0NCVB5Cs4aA64=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (2603:10a6:803:7::25)
- by VI1PR0402MB2861.eurprd04.prod.outlook.com (2603:10a6:800:b5::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Tue, 7 Apr
- 2020 07:39:39 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::751e:7e8d:ed4:ef5f%7]) with mapi id 15.20.2878.021; Tue, 7 Apr 2020
- 07:39:39 +0000
-Subject: Re: [PATCH v2 0/4] crypto: caam - fix use-after-free KASAN issue
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-References: <1586213248-4230-1-git-send-email-iuliana.prodan@nxp.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <a0715aa8-e19e-1a1d-a924-e8a2d3f076fa@nxp.com>
-Date:   Tue, 7 Apr 2020 10:39:33 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-In-Reply-To: <1586213248-4230-1-git-send-email-iuliana.prodan@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR10CA0057.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:20b:150::37) To VI1PR0402MB3485.eurprd04.prod.outlook.com
- (2603:10a6:803:7::25)
+        Tue, 7 Apr 2020 03:40:34 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38210 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgDGHkd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 03:40:33 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t28so2129968ott.5;
+        Tue, 07 Apr 2020 00:40:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wxx6OlhiR+h9ms32GkBM7ZWBPZ4G+uFx6VWz+Zv0PTA=;
+        b=D9gztiIVWfLTyMwY9pRqGBK81vBdNlLpluKWmhYh0n69JJQ0RSrlPCzrCmGtfkygcp
+         8wqCMEQ6VaUShxIpKWCiZlUx3+MqmfZ5UY0qoVnTwxE8A+4ZgECIh491lbEyvX18oGyT
+         9DDSo0G0yhaasTNXbUhk8fk07SdBIYaAm4uvwfCaPf/dDhCiUbKqPWhnkjGn6MSz7dSQ
+         AiaCuolC7Qv6FCYDHngg+kUPBv41ImdVWFsDFVV7Ani27T2lGgUtW+yVSeQpbZd6jb0T
+         RRJKKU1J9HjCeVVfsgJJmnr43vBVc9Bc1GX+9W8ngaP0LNP39/nun/tEvngE/cJO+QJ3
+         xC9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wxx6OlhiR+h9ms32GkBM7ZWBPZ4G+uFx6VWz+Zv0PTA=;
+        b=sVvcazyY8vq4YMAnOQS8v0s/R14AYv/3mueGfAJfTvI1tx7vK/JqXiWvsAVDsknYjf
+         zCZtvpG9I6IzjeCvf1Nlvqn5gHZ10r1tVc2DyeE8ZyevAYGY5BX1aoUQsjBPYYGTWn26
+         4TeJcxHSV9gFb81skTgKMzun+uenKp/9Bjyjl0soGCG+MgDVy/W+6CS6iCJHkt7qfqpr
+         aqmSdwabWtgw055OiDK0Q7hswfdauG/aqRqbA6YEeakU6F23DoVXv9LHoJxcDArj4YlZ
+         iD+FP3/YhA/QHls4+Y+hLZLqYkvEEKpbN0E+auRE3B0BI80IAKGFjTc7QMqL0lzHCO0D
+         aj8A==
+X-Gm-Message-State: AGi0PuY5AlY0SaGOjtNd8hNm+dU84gxz6+kN7pvKztWbGAxPuLJoLKwP
+        uaAje+U2Cm7Ot7ZzvU4lSiuURW7B8efu/iCFB44=
+X-Google-Smtp-Source: APiQypK8SGsEPq42GhfF0Dfe/vf+FBubxyorRMxV73nV35Eh0GJOOxbn8GdFE9fSkj1azHzzH6p7KtGVItJOhKwXWdM=
+X-Received: by 2002:a9d:220e:: with SMTP id o14mr504851ota.88.1586245232626;
+ Tue, 07 Apr 2020 00:40:32 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM0PR10CA0057.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:150::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend Transport; Tue, 7 Apr 2020 07:39:35 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d08c685a-6772-4a98-b5fe-08d7dac6d24f
-X-MS-TrafficTypeDiagnostic: VI1PR0402MB2861:|VI1PR0402MB2861:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR0402MB2861D721D4A0C070E8870A4D98C30@VI1PR0402MB2861.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3383;
-X-Forefront-PRVS: 036614DD9C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(26005)(186003)(66946007)(2616005)(16526019)(86362001)(956004)(36756003)(8936002)(5660300002)(966005)(54906003)(52116002)(478600001)(66556008)(16576012)(316002)(8676002)(81166006)(66476007)(110136005)(81156014)(53546011)(4326008)(31686004)(2906002)(6486002)(31696002)(6636002)(4744005);DIR:OUT;SFP:1101;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: YBkK89yuPTSmSRaenyYKCySBsuaf5ui4rbUlLG5fHx4uP9pjtnCcsqjkTgR+LTRQ3gdtMMXfWv4XsvmGKrOsUXFS7tUgEQp1JMxKK73nuRRekNm3w5BPydAvm6xLp0NchAxGVfpY1/si9RCxBa8KcDDf/ysUs3sgYqw5iTp8Ymkk6g6nVaWb2ScgKnhSc8JdsrVz9YV7hmbmq5uW54oDimikwi5tBekFoc/AqNONkf7+dZI/UeuvOx6oqVTtWmBcKUbCp+rzUBj126NReRD760zX5pYbmUDEQdydfH1QMUoeAuD1G4f7vdVkCF06Yo1PP0gq2Ek0FnR5ZOkaXimbACi+8K4lu0PkG8a5TPaeFTGrcX6MyS4JhwuOrPpiSw3DibLQPKh9BiUCOYeZ3IAm5uzTURcmM5QD1i9KLFvRWIlVTR+WYoE80rSoulfT063aH/DNv+HQAsYo6BIGG12YCcgapNSq0FfutJbfInkW4FEYrWpW5euVCmv2Ar466wVCCZnNgbNn5IE2qylHoq1P3g==
-X-MS-Exchange-AntiSpam-MessageData: 6xs208hv1jdQXXx1LgC6jvlM3SK+V7lC6YbqnBs0L6MUwdf4FdOdcuOG0QvY7ODfk9KUkCx2Qf92U28qypJZqxPBuwto4+bmoxMAus6W//Gcs4Yjofy9b1QhnHQ/yZ2WvI1bI5y/wQ3R2epExUnOCw==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d08c685a-6772-4a98-b5fe-08d7dac6d24f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 07:39:36.4962
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 01tCiGIKXfEvaR6SkqP5o4i1qAFQjPDrfbc19RbCdlNltNqx2OtR8NxlTJu7guwtfunqnkuPiIXCcFqJpVsiXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2861
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWiVLt23a0JBDX6ZiKDiru9-ecgt3XF4Y5qzVOWXhLcCw@mail.gmail.com>
+In-Reply-To: <CAMuHMdWiVLt23a0JBDX6ZiKDiru9-ecgt3XF4Y5qzVOWXhLcCw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 7 Apr 2020 08:40:06 +0100
+Message-ID: <CA+V-a8tHb1OomhfdsWV5duyuypTKC_EWT4o=mMjWVsxu+aOnBQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency dt-property
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/2020 1:47 AM, Iuliana Prodan wrote:
-> This series fixes a use-after-free KASAN issue that was introduce
-> by CAAM backlogging support[1].
-> This is fixed for SKCIPHER, HASH, RSA and AEAD algorithms.
-> 
-> [1] https://patchwork.kernel.org/cover/11378941/
-> 
-For the series:
-Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+Hi Geert,
 
-though the Cc: stable should be removed, since the commits being fixed
-will only show up in v5.7-rc1.
+Thank you for the review.
 
-Herbert, could you do this when merging or you prefer instead v3?
+On Tue, Apr 7, 2020 at 8:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, Apr 6, 2020 at 6:43 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> > 24MHz. So instead making clock-frequency as dt-property just let the
+> > driver enforce the required clock frequency.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> However, still wondering about the "xvclk" name above and in the definition
+> below.  Is this the naming from the datasheet?
+> The DT bindings nor the driver use the "xvclk" naming.
+>
+xvclk naming is from the datasheet, although the 0v5645 datasheet on
+publicly available I have referred [1]/[2].
+If I am not wrong all the ov sensors have the same naming convention as xvclk.
 
-Thanks,
-Horia
+[1] https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datasheet.pdf
+[2] https://www.ovt.com/download/sensorpdf/126/OmniVision_OV5645.pdf
+
+Cheers,
+--Prabhakar
+
+> > --- a/drivers/media/i2c/ov5645.c
+> > +++ b/drivers/media/i2c/ov5645.c
+> > @@ -61,6 +61,8 @@
+> >  #define OV5645_SDE_SAT_U               0x5583
+> >  #define OV5645_SDE_SAT_V               0x5584
+> >
+> > +#define OV5645_XVCLK_FREQ              24000000
+> > +
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
