@@ -2,53 +2,52 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166F4C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCDCC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20EE20644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3C92078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255108;
-	bh=MunPn4yar4LQvXOnM4u+z9RULnq2Lbrbew8pDtjZ0zM=;
+	s=default; t=1586255115;
+	bh=q7wvOp/B+vcsKe//MRTz/um2sZICyj6+bgXMc/jce7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AMiwdIe5loVf9GDCl5Etilbf4O3kydIWTdbi2c41l78Wnk2NOt5rvem94nPSUtiUF
-	 0zHJ9pP1K2MbnenJSePY76YPf6dW7RWG9C8Albh8gV3Ri0K/3QSlpN1t8NZplFSC7t
-	 GbEwJsGEfRLe6NlWkIDZAz9i2+a0UymVQ5Hnnfqs=
+	b=CIGMGagaJAa5IZoqwl/VgTL+RWEiyurW/hBi8vk/LIxDE6QCk9cRp7g0rYMd7H+Lm
+	 nE9Iq5RGjqK1kt/sdxap0UiMicl/wvicNShY6FoYTBpZjNuaXaYXgNTlIbOvTdZD0M
+	 PuXvcVTCp3QxSLGRnvW0pmPxifyJRd4/KuLU+otA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgDGKZG (ORCPT
+        id S1728902AbgDGKZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:25:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:25:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728852AbgDGKZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:03 -0400
+        id S1728497AbgDGKZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2FB20644;
-        Tue,  7 Apr 2020 10:25:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 842CA20644;
+        Tue,  7 Apr 2020 10:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255102;
-        bh=MunPn4yar4LQvXOnM4u+z9RULnq2Lbrbew8pDtjZ0zM=;
+        s=default; t=1586255110;
+        bh=q7wvOp/B+vcsKe//MRTz/um2sZICyj6+bgXMc/jce7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FNWYErKb21ktqtnKNi8jWVpgxLNgcH/Wmg/D4J7xfTfmvAiLDBNA2mq9EcKNO/XOu
-         JvClL5T3N/msImmI0NeWwsmZHbf8ZuCw2LLwcL5XlSVQ+W4gizJzWXpPdmJGEYIbq8
-         X5uG/LAK96Iyll9dbDy6hBuMI/H66mKtBg5WuQ0g=
+        b=KuNRWLG0fboRy3+wTx8zjgBPnsM8s6RUZPQltm29vqsZ+9CH3HvZ4zD7oNP3N1Z+h
+         hR5P38nGDhGiSZYCU4wwktYVai2sZN55DLcofTrJQHxIGFrWJ7wmhDwiuFaZrvoYVB
+         8ecNBkHKFsxlrhVMA7oPwVFobK04KwMFoEIcwbEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 06/46] net: macb: Fix handling of fixed-link node
-Date:   Tue,  7 Apr 2020 12:21:37 +0200
-Message-Id: <20200407101500.171147979@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 09/46] drm/amdgpu: add fbdev suspend/resume on gpu reset
+Date:   Tue,  7 Apr 2020 12:21:40 +0200
+Message-Id: <20200407101500.474076886@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -61,34 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 79540d133ed6f65a37dacb54b7a704cc8a24c52d ]
+[ Upstream commit 063e768ebd27d3ec0d6908b7f8ea9b0a732b9949 ]
 
-fixed-link nodes are treated as PHY nodes by of_mdiobus_child_is_phy().
-We must check if the interface is a fixed-link before looking up for PHY
-nodes.
+This can fix the baco reset failure seen on Navi10.
+And this should be a low risk fix as the same sequence
+is already used for system suspend/resume.
 
-Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-Tested-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -685,6 +685,9 @@ static int macb_mdiobus_register(struct
- {
- 	struct device_node *child, *np = bp->pdev->dev.of_node;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 332b9c24a2cd0..9a8a1c6ca3210 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3854,6 +3854,8 @@ static int amdgpu_do_asic_reset(struct amdgpu_hive_info *hive,
+ 				if (r)
+ 					goto out;
  
-+	if (of_phy_is_fixed_link(np))
-+		return mdiobus_register(bp->mii_bus);
++				amdgpu_fbdev_set_suspend(tmp_adev, 0);
 +
- 	/* Only create the PHY from the device tree if at least one PHY is
- 	 * described. Otherwise scan the entire MDIO bus. We do this to support
- 	 * old device tree that did not follow the best practices and did not
+ 				/* must succeed. */
+ 				amdgpu_ras_resume(tmp_adev);
+ 
+@@ -4023,6 +4025,8 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+ 		 */
+ 		amdgpu_unregister_gpu_instance(tmp_adev);
+ 
++		amdgpu_fbdev_set_suspend(adev, 1);
++
+ 		/* disable ras on ALL IPs */
+ 		if (!in_ras_intr && amdgpu_device_ip_need_full_reset(tmp_adev))
+ 			amdgpu_ras_suspend(tmp_adev);
+-- 
+2.20.1
+
 
 
