@@ -2,111 +2,133 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67072C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397AEC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390A220678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586260827;
-	bh=Uqf4rhYga9NNaBB0Dvwp58Stj1GsGS4Ihxkd+ju3McQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=urmh0iroGJD6vD95Qmf1qXsXaMXkL3ImIaQ9o1MKFVYhWoHOvpjbcIuRELTBxA7q9
-	 LVKNWaIIM41Ib58Bffjrk4EQxdsCPo5xJXOivBX5kJKpZu8AzxaCzZFztumA27FJgS
-	 TnZJWBjw0B2i9HQnho1w7asM75yBbu9I9N1vcDKw=
+	by mail.kernel.org (Postfix) with ESMTP id 19EEB20678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgDGMA0 (ORCPT
+        id S1728511AbgDGMCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:00:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgDGMAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 08:00:25 -0400
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6A6320936
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Apr 2020 12:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586260825;
-        bh=Uqf4rhYga9NNaBB0Dvwp58Stj1GsGS4Ihxkd+ju3McQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=E935JBusz1dhcXd3k8A7zx8suuSJMLf0ayQTBsmc45RUI8lyhrdrtTnNAJzYj5xNA
-         xLcqMb2m5Wkp9tmsyPfaUElwuRYUAtn0Uzc3nJVlsN0CeeXhByB1bPusMB8jCgB2DI
-         L1XZSs/zEpyiinCUV/kxNIp6wYGvhhMxZuAOTsN8=
-Received: by mail-wr1-f51.google.com with SMTP id p10so3551177wrt.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 05:00:24 -0700 (PDT)
-X-Gm-Message-State: AGi0PuZeQC8SISUijGAS2fyZNnBpbwmGdzwOp0lxmBKB/hLDPYT4uEY/
-        a3/XKZF1ammc6aITqZ60UzGBrx3KbEy6CLB0kYL4vA==
-X-Google-Smtp-Source: APiQypJI+zUUJefqkI1wPoN1P7O6CrZHHpERpheNKfgg8qCaXTmeul5CgCiQbYpjls0Awj/83RzxNXZ+ny+VOSB9RbA=
-X-Received: by 2002:a05:6000:1002:: with SMTP id a2mr2399545wrx.151.1586260823114;
- Tue, 07 Apr 2020 05:00:23 -0700 (PDT)
+        Tue, 7 Apr 2020 08:02:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12621 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728054AbgDGMCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 08:02:23 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A996815DFE328D95E41A;
+        Tue,  7 Apr 2020 20:02:18 +0800 (CST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.82.134) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 7 Apr 2020 20:02:12 +0800
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <bp@alien8.de>, <james.morse@arm.com>, <helgaas@kernel.org>,
+        <lenb@kernel.org>, <tony.luck@intel.com>,
+        <dan.carpenter@oracle.com>, <gregkh@linuxfoundation.org>,
+        <zhangliguang@linux.alibaba.com>, <tglx@linutronix.de>
+CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
+        Shiju Jose <shiju.jose@huawei.com>
+Subject: [v7 PATCH 0/6] ACPI / APEI: Add support to notify non-fatal HW errors
+Date:   Tue, 7 Apr 2020 13:00:39 +0100
+Message-ID: <20200407120045.958-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
+In-Reply-To: <Shiju Jose>
+References: <Shiju Jose>
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200406164121.154322-1-samitolvanen@google.com> <20200406164121.154322-13-samitolvanen@google.com>
-In-Reply-To: <20200406164121.154322-13-samitolvanen@google.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 7 Apr 2020 14:00:12 +0200
-X-Gmail-Original-Message-ID: <CAKv+Gu9psVBSdUvcRWNrEvjK4ckyA-vGKmZ33O2NUm-Pt4eJig@mail.gmail.com>
-Message-ID: <CAKv+Gu9psVBSdUvcRWNrEvjK4ckyA-vGKmZ33O2NUm-Pt4eJig@mail.gmail.com>
-Subject: Re: [PATCH v10 12/12] efi/libstub: disable SCS
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.82.134]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 6 Apr 2020 at 18:42, Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> Shadow stacks are not available in the EFI stub, filter out SCS flags.
->
-> Suggested-by: James Morse <james.morse@arm.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Add common interface for queuing up the non-fatal HW errors and notify
+the registered kernel drivers.The interface supports drivers to register
+to receive the callback for the non-fatal HW errors, including the vendor
+specific HW errors, for the recovery and supports handling the non-fatal
+errors in the bottom half.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Patch set
+1. add the new interface to the APEI driver for the non-fatal HW
+   error notification.
+2. change the existing error handling for the standard errors
+   to use the above notification interface.
+2. add driver to handle HiSilicon hip PCIe controller's errors.
 
-> ---
->  drivers/firmware/efi/libstub/Makefile | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index 094eabdecfe6..fa0bb64f93d6 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -32,6 +32,9 @@ KBUILD_CFLAGS                 := $(cflags-y) -DDISABLE_BRANCH_PROFILING \
->                                    $(call cc-option,-fno-stack-protector) \
->                                    -D__DISABLE_EXPORTS
->
-> +#  remove SCS flags from all objects in this directory
-> +KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
-> +
->  GCOV_PROFILE                   := n
->  KASAN_SANITIZE                 := n
->  UBSAN_SANITIZE                 := n
-> --
-> 2.26.0.292.g33ef6b2f38-goog
->
+Changes:
+
+V7:
+1. Add changes in the APEI driver suggested by Borislav Petkov, for
+   queuing up all the non-fatal HW errors to the work queue and
+   notify the registered kernel drivers from the bottom half using
+   blocking notifier, common interface for both standard and
+   vendor-spcific errors.
+2. Fix for further feedbacks in v5 HIP PCIe error handler driver
+   by Bjorn Helgaas.
+
+V6:
+1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
+
+V5:
+1. Fix comments from James Morse.
+1.1 Changed the notification method to use the atomic_notifier_chain.
+1.2 Add the error handled status for the user space.  
+
+V4:
+1. Fix for the following smatch warning in the PCIe error driver,
+   reported by kbuild test robot<lkp@intel.com>:
+   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+
+V3:
+1. Fix the comments from Bjorn Helgaas.
+
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
+
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (5):
+  ACPI / APEI: Add support to queuing up the non-fatal HW errors and
+    notify
+  ACPI / APEI: Add callback for memory errors to the GHES notifier
+  ACPI / APEI: Add callback for AER to the GHES notifier
+  ACPI / APEI: Add callback for ARM HW errors to the GHES notifier
+  ACPI / APEI: Add callback for non-standard HW errors to the GHES
+    notifier
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+
+ drivers/acpi/apei/ghes.c                 | 268 ++++++++++++++++---
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 323 +++++++++++++++++++++++
+ include/acpi/ghes.h                      |  28 ++
+ 5 files changed, 595 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
+-- 
+2.17.1
+
+
