@@ -2,133 +2,97 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5372DC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412F8C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28CB520857
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DyB/tyn8"
+	by mail.kernel.org (Postfix) with ESMTP id 22B5020936
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:06:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgDGDFt (ORCPT
+        id S1726331AbgDGDGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 23:05:49 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45569 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgDGDFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 23:05:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48xC2y1QR0z9sP7;
-        Tue,  7 Apr 2020 13:05:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1586228746;
-        bh=4jItGZbMT8Xb1UNdcXfJm/hRV2V4Q6ciJoIaU9vs9NI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DyB/tyn8jBuhsBprcd1O0K7yvkig6NL/shFbPjx4V8FYIFqwgj/nkEVDhefyZi3Np
-         K1T1I7djraV0KfB40tc9OcRwd09E1UqTKWbdMV/ip+OgW5CiTk+EStGHqaFLgRS8hf
-         A8s8L4Xjo3HY0xZNJ54gf0rip4c2Y0vGNLITzq0z/OXSKYwLtnO3NwWBdq7jMZuvb5
-         KucVpj7PrgjlsUlxA4dm72BypWG4HfrCpJX/XHljAV2mWj9oADHKm9f4H1awI3eW+t
-         ElIpIHoaX33Zx97Aaju7QIjABeSmKroOY5BZNVFClKl/6HmRx5PF8F9yR8T4r9x//l
-         nw2UFZs3KwRFQ==
-Date:   Tue, 7 Apr 2020 13:05:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gerd Hoffmann <kraxel@redhat.com>
-Subject: linux-next: build failure after merge of the vhost tree
-Message-ID: <20200407130542.0e3b5d9d@canb.auug.org.au>
+        Mon, 6 Apr 2020 23:06:54 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:35264 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgDGDGx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 23:06:53 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLeXx-00Cj0A-0P; Tue, 07 Apr 2020 03:05:05 +0000
+Date:   Tue, 7 Apr 2020 04:05:04 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Levi <ppbuk5246@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, gnault@redhat.com,
+        nicolas.dichtel@6wind.com, edumazet@google.com,
+        lirongqing@baidu.com, tglx@linutronix.de, johannes.berg@intel.com,
+        dhowells@redhat.com, daniel@iogearbox.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] netns: dangling pointer on netns bind mount point.
+Message-ID: <20200407030504.GX23230@ZenIV.linux.org.uk>
+References: <20200407023512.GA25005@ubuntu>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DQefj_VsLdP6ZiNGGyHotvI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407023512.GA25005@ubuntu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/DQefj_VsLdP6ZiNGGyHotvI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 07, 2020 at 11:35:46AM +0900, Levi wrote:
+> When we try to bind mount on network namespace (ex) /proc/{pid}/ns/net,
+> inode's private data can have dangling pointer to net_namespace that was
+> already freed in below case.
+> 
+>     1. Forking the process.
+>     2. [PARENT] Waiting the Child till the end.
+>     3. [CHILD] call unshare for creating new network namespace
+>     4. [CHILD] Bind mount with /proc/self/ns/net to some mount point.
+>     5. [CHILD] Exit child.
+>     6. [PARENT] Try to setns with binded mount point
+> 
+> In step 5, net_namespace made by child process'll be freed,
+> But in bind mount point, it still held the pointer to net_namespace made
+> by child process.
+> In this situation, when parent try to call "setns" systemcall with the
+> bind mount point, parent process try to access to freed memory, That
+> makes memory corruption.
+> 
+> This patch fix the above scenario by increaseing reference count.
 
-Hi all,
+This can't be the right fix.
 
-After merging the vhost tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+> +#ifdef CONFIG_NET_NS
+> +	if (!(flag & CL_COPY_MNT_NS_FILE) && is_net_ns_file(root)) {
+> +		ns = get_proc_ns(d_inode(root));
+> +		if (ns == NULL || ns->ops->type != CLONE_NEWNET) {
+> +			err = -EINVAL;
+> +
+> +			goto out_free;
+> +		}
+> +
+> +		net = to_net_ns(ns);
+> +		net = get_net(net);
 
-drivers/gpu/drm/virtio/virtgpu_kms.c: In function 'virtio_gpu_init':
-drivers/gpu/drm/virtio/virtgpu_kms.c:153:38: error: 'VIRTIO_RING_F_INDIRECT=
-_DESC' undeclared (first use in this function)
-  153 |  if (virtio_has_feature(vgdev->vdev, VIRTIO_RING_F_INDIRECT_DESC)) {
-      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpu/drm/virtio/virtgpu_kms.c:153:38: note: each undeclared identifi=
-er is reported only once for each function it appears in
+No.  This is completely wrong.  You have each struct mount pointing to
+that sucker to grab an extra reference on an object; you do *NOT* drop
+said reference when struct mount is destroyed.  You are papering over
+a dangling pointer of some sort by introducing a trivially exploitable
+leak that happens to hit your scenario.
 
-Caused by commit
+Hell, do (your step 4 + umount your mountpoint) in a loop, then watch what
+happens to refcounts with that patch.
 
-  898952f9597e ("virtio: stop using legacy struct vring in kernel")
+This is bollocks; the reference is *NOT* in struct mount.  At all.
+It's not even in struct dentry.  What it's attached to is struct
+inode and it should be pinned as long as that inode is alive -
+it's dropped in nsfs_evict().  And if _that_ gets called while
+dentry is still pinned (as ->mnt_root of something), you have
+much worse problems.
 
-interacting with commit
-
-  5edbb5608256 ("drm/virtio: fix ring free check")
-
-from Linus' tree (post v5.6).
-
-I have added the following merge fix patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 7 Apr 2020 12:58:26 +1000
-Subject: [PATCH] drm/virtio: fix up for include file changes
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/gpu/drm/virtio/virtgpu_kms.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/=
-virtgpu_kms.c
-index 023a030ca7b9..f4ea4cef5e23 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -25,6 +25,7 @@
-=20
- #include <linux/virtio.h>
- #include <linux/virtio_config.h>
-+#include <linux/virtio_ring.h>
-=20
- #include <drm/drm_file.h>
-=20
---=20
-2.25.0
-
-I do have to wonder why all this code has been added to the vhost tree
-during the second week of the merge window (especially when I see it
-rebased 4 times in one day :-().  Is it really intended for v5.7?
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/DQefj_VsLdP6ZiNGGyHotvI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6L7gYACgkQAVBC80lX
-0Gyo+QgAlmFf+SXu2mXp4y3oDXo3FyBwEqOKYpWQYFP0gbuPPLMK+wY8qjneo0yf
-R40AWCz9UHY7+TPzlZ0+cz0C99zQgO2mzWT6xcKOenGcyA93jDo5TpxNcN0SfVJI
-/CANM7NrVgNo0gc0aexw47fiBr/l4FL3LruLkfSHgnWV83UqS7rhzgPUcU9761NU
-LID6R0xLk+SU2u5ydjCWFwy5AER2oU8UjSLDiZuq6ZJn7j2tkegz+W2gqQauSNN3
-S2knxLbhLDKcNkFwDApZ8K7g0OdmnjIkDBWlXr/huk9onQnohjCgCaHa+8+U3rWj
-gIYSGXJYmbMm6yfUbQgvMd3g/VslqA==
-=aVgB
------END PGP SIGNATURE-----
-
---Sig_/DQefj_VsLdP6ZiNGGyHotvI--
+Could you post a reproducer, preferably one that would trigger an oops
+on mainline?
