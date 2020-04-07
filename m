@@ -7,439 +7,239 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C690C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF40C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D8920719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797B02063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Lz30Oln4"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="uWDbAoU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgDGKyG (ORCPT
+        id S1728346AbgDGK5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:54:06 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45234 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgDGKyG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:54:06 -0400
-Received: by mail-ot1-f68.google.com with SMTP id c9so1230722otl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 03:54:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RN6iwjaWxIunMmL8QdfQpUmYP7DLox7aE1L1I4XVcLY=;
-        b=Lz30Oln4zPOuLnoJL4TgWloTJSht5CAs/hC9RRbuhEwaUBAQY4oW92ZfUjV+OrrwkO
-         3BMIKuI2Cs7gSOPc4Va0o2u3+Z35U9rKLFehkOTpVOx+PMCkQGGXAh5xVQKlTenO5KQ9
-         mDcZ4H7hiL5kpmYJa58LpzMZN76qHeP/SATPjYzjI3cQ/9SAYle/+8+lJgRHHE1N25yr
-         khgOXvzv/Zj6qXNGcrJCB3qiGq/KcQ/ULZg+2WDk0j9oxEYv8kJSpcxC+w4LOdeiKcuP
-         QbRz/OxMibA6nD1gr7OI1dnHs6+kx04BZaj/cuXIQkdqeVqk3gnqSoOe6FTdnmGDWtcr
-         Z9iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RN6iwjaWxIunMmL8QdfQpUmYP7DLox7aE1L1I4XVcLY=;
-        b=nx5WsV7xP7yQVBFgmfzzhScZ79pOf1i/8cYlbhxZlu0lL/8quHShnfWs2YPlEFjkAP
-         WUrtb+E5ZoCvl+Cfv6MTmL256eNNaMGuFsEtKZntS5x3ID9pft4tvN90eUKV/G4OyZ5h
-         QpE2xx2afay6wg7nb2bIuE7NI1k+0Sq7wcv7zkV5GwkjJDo4iglr1dkGPhgAvmd2CYqy
-         JWOod2vk4pQ9PI6Z/2SxLSXfUSbsh/CkNAwzk87ZGhbH8h9t4GvPoze+yTkWWi/j+QjX
-         TWP06d8oV7o9K6TEnwHOaSXiTgdAqW+T5qkE6zMyGFY2+WHGJ4IzpikITOnQ+d2hAQGV
-         ZxAQ==
-X-Gm-Message-State: AGi0PuZtXPZnwOKmmLMWEZW+9jwUcHbX7l0CA9wc4ZAnPFx+Qd9gXIXe
-        snFqYXTHpPNo3qApG18H9SmUrFPmwkSsz5fIMCT5bQ==
-X-Google-Smtp-Source: APiQypIhZ6ABVBJBYVwwKuEytVT6+8HNz7o9tmFkJH/hS+fcg0T0TTSrL0qz23RbpeZGq/SM2FikusIw3yk3H3k+DK0=
-X-Received: by 2002:a4a:c28e:: with SMTP id b14mr1320189ooq.39.1586256843514;
- Tue, 07 Apr 2020 03:54:03 -0700 (PDT)
+        Tue, 7 Apr 2020 06:57:14 -0400
+Received: from mail-db8eur05on2120.outbound.protection.outlook.com ([40.107.20.120]:5526
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726562AbgDGK5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:57:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lq0JiMMYuI5tEjiBCaUiPml8lKPRy6EKzbnJAj3fmvdSQViEnmma9+NNBpG4uYomH54vc8APxUQP3PfOlcqWgXf2i5dJ6Qe6Lmc1i8cN9fWlvVgmZQuLBOs0G+hfq+jiTHQNSgjDoxmVPEOuHKf8fAr18tQg3ReZ7oDBgTleHi3MMQlDJG4AUzFLo5q6W3YiLZ1QIsMvJ92jdN/tFPxeOysxQbnJmzD7YsHip8gJEX8mLc+Q5nAaBR9MR8Si7ypHRH/x83eNjBvus6dtR0QqRo2L/Qs9djuKg4SpYVfIWBaz0k1MI0/bZvIzncHGLPivzumC7ivuNb1HU88KYPSvqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MBigxvV/BuH7LVzVY8Hv8l5OAVehBfk82G2z6C2UoUg=;
+ b=H4ifPJ6h0CHgylwKWQOK2XTrSaDl0fsRGUrMLzW84SkPwF4r2tXfYSB+fLLgSd20RgCJtUoEyTgAzcyNblFNnOoAzkFsWcCH3VN4OI8EBkshJ1O8vVrWXoyrqyzxhyNBNj/IAcrePMfEzCazjyQ4V9lHSTpbjRST1GuBpoguOXe7ljve1RstiTxKaKca8nRaT10TtYp4TU4SmZ2V8IxWOYpRf77PaUzPTjKsfHf1DxRsoVeBwiPZ5g9r/COD4KQdLdtIQNaMlsPnOiMNSZ/a3yMFjM6ShrqjGIrAPQHrt4lvLHwOAJn6EVBsojCaSl/72iHNmrZkATCvVuV0S0XCxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MBigxvV/BuH7LVzVY8Hv8l5OAVehBfk82G2z6C2UoUg=;
+ b=uWDbAoU46akok2sDpvGAVhYpYysGxE6qWhppB0OqFECoOU3lYL26LcXDrbW56FhARABdQthEKt70uoqdQm6B8krBoQmyY6+RXtDYZKCcF2YKWMWC9JlgLKw0NfDGnq/kAt0ZzYmHihu9jTl1AntxfK7HoP+95K4ze7qI6/uJSSk=
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (2603:10a6:20b:a8::25)
+ by AM6PR05MB5351.eurprd05.prod.outlook.com (2603:10a6:20b:65::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Tue, 7 Apr
+ 2020 10:57:08 +0000
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::44ad:bee7:b765:b9c7]) by AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::44ad:bee7:b765:b9c7%7]) with mapi id 15.20.2878.021; Tue, 7 Apr 2020
+ 10:57:07 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+CC:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "david@protonic.nl" <david@protonic.nl>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+ the KSZ9031 PHY
+Thread-Topic: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+ the KSZ9031 PHY
+Thread-Index: AQHWDMAdAKh4okIfHEScpK5LI+w0J6htfQ6A
+Date:   Tue, 7 Apr 2020 10:57:07 +0000
+Message-ID: <699bf716ce12178655b47ce77227e4e42b85de1b.camel@toradex.com>
+References: <20200407093654.26095-1-o.rempel@pengutronix.de>
+In-Reply-To: <20200407093654.26095-1-o.rempel@pengutronix.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.1 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-originating-ip: [51.154.7.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5464b94f-cf35-4e6f-e71f-08d7dae26a78
+x-ms-traffictypediagnostic: AM6PR05MB5351:
+x-microsoft-antispam-prvs: <AM6PR05MB53518CC3989C7C67C2EA5C25F4C30@AM6PR05MB5351.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 036614DD9C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6120.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(366004)(346002)(396003)(376002)(39840400004)(71200400001)(4326008)(54906003)(110136005)(478600001)(36756003)(86362001)(2616005)(316002)(6486002)(66446008)(64756008)(186003)(7416002)(5660300002)(66476007)(6512007)(8936002)(26005)(8676002)(2906002)(91956017)(76116006)(6506007)(66556008)(44832011)(81166006)(81156014)(66946007);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uH/h3C86Y3u5TFKgjh6ayrjMybBPrEjvs7vM9D0REQWkEHb3bkwXCJMS3nU6J7augeRtVrzhMHENDeXoLrLCZtzg0sjNWHe35CdH9C2sKDHZOuRXRg51SvT28Grn/O/ezkhjg1wiQVirAT3ZSY04YRp8QAmc/d4FhZ+nb98M/zNXWIVzTUXmuEkFI26Ww5p1pt8LJeNX+dX2HFyOKS9ZFHci34XW/KxqFYPr1JeEj7qVNVkKF3kyAZ5+me9Qm5JENRzhD7UO5fALjMiJi/D8RWUR1qGih7Ol2X9dfLDr3jtcgsMBntyA87VEdhbu/nO1gOYbG7OXAkmSj0n7DeLQyeCt9tmKFnqyIV4q3dtU+/0rrXqDprPKX0fdsvHwOXYpJvyQ65wgNFEdIhhi7RUiEk6b/Yq0/LvM1ZZwuDoikT22dhIV20XtuIoM8OkwdNTJ
+x-ms-exchange-antispam-messagedata: ZOA/qyCESh5ed7LA4YAOx6OhFds7kBN+S0eR/SCQllopoyn/0waqatp3R+Y0ShzMdLU9r5b1dBXkTeHjwrSwou2eZEjyKYIZvquCq3/QQXg/C/x+t3L4var6ELwmMd3cN3zy+R1NrI3f0IXkEEZmTQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <069228F9C9A338469247819907C9232C@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <cover.1584352425.git.zong.li@sifive.com> <16924c3f07b142688a3c0562d229cd67dc7bf8e6.1584352425.git.zong.li@sifive.com>
- <71cc2070-e867-17e1-cc64-66b634e3f48e@ghiti.fr>
-In-Reply-To: <71cc2070-e867-17e1-cc64-66b634e3f48e@ghiti.fr>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Tue, 7 Apr 2020 18:53:53 +0800
-Message-ID: <CANXhq0rQ_YqmBBDEgOCcu8vr+5NWqNdnfZ+EX8ofaaD6PuBAFQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/8] riscv/kaslr: randomize the kernel image offset
-To:     Alex Ghiti <alex@ghiti.fr>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5464b94f-cf35-4e6f-e71f-08d7dae26a78
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2020 10:57:07.8927
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LYhTRIrHaJWF2AAKFBz01Uo9Y2Dy0349V1xxCR/NVaEVD4uBGxEaQA8TwyOZ5LNsw/fcZ1k+Rv1LIyMDrJtBzFHyxThYIAxcQBxL4Q4SjXQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5351
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 1:11 PM Alex Ghiti <alex@ghiti.fr> wrote:
->
->
-> On 3/24/20 3:30 AM, Zong Li wrote:
-> > Entropy is derived from the banner and timer, it is better than nothing
-> > but not enough secure, so previous stage may pass entropy via the device
-> > tree /chosen/kaslr-seed node.
-> >
-> > We limit randomization range within 1GB, so we can exploit early page
-> > table to map new destination of kernel image. Additionally, the kernel
-> > offset need 2M alignment to ensure it's good in PMD page table.
-> >
-> > We also checks the kernel offset whether it's safe by avoiding to
-> > overlaps with dtb, initrd and reserved memory regions.
-> >
->
-> That maybe changes the way my sv48 patchset will be implemented: I can't
-> get user preference (3-level or 4-level) by any means, device-tree or
-> kernel parameter.
->
-> But I don't see how you could get a random offset without info from the
-> device tree anyway (reserved memory regions especially), so maybe I
-> could parse dtb for allowing the user to choose. I'll move this
-> discussion to the sv48 introduction.
-
-Maybe I'm a little bit misunderstanding here, but I think I got the
-random offset through some information by parsing dtb.
-
->
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > ---
-> >   arch/riscv/kernel/kaslr.c | 274 +++++++++++++++++++++++++++++++++++++-
-> >   arch/riscv/mm/init.c      |   2 +-
-> >   2 files changed, 273 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/kaslr.c b/arch/riscv/kernel/kaslr.c
-> > index 281b5fcca5c8..9ec2b608eb7f 100644
-> > --- a/arch/riscv/kernel/kaslr.c
-> > +++ b/arch/riscv/kernel/kaslr.c
-> > @@ -11,23 +11,293 @@
-> >   #include <asm/cacheflush.h>
-> >
-> >   extern char _start[], _end[];
-> > +extern void *dtb_early_va;
-> > +extern phys_addr_t dtb_early_pa;
-> >   extern void secondary_random_target(void);
-> >   extern void kaslr_create_page_table(uintptr_t start, uintptr_t end);
-> >
-> >   uintptr_t secondary_next_target __initdata;
-> >   static uintptr_t kaslr_offset __initdata;
-> >
-> > +static const __init u32 *get_reg_address(int root_cells,
-> > +                                      const u32 *value, u64 *result)
-> > +{
-> > +     int cell;
-> > +     *result = 0;
-> > +
-> > +     for (cell = root_cells; cell > 0; --cell)
-> > +             *result = (*result << 32) + fdt32_to_cpu(*value++);
-> > +
-> > +     return value;
-> > +}
-> > +
-> > +static __init int get_node_addr_size_cells(const char *path, int *addr_cell,
-> > +                                        int *size_cell)
-> > +{
-> > +     int node = fdt_path_offset(dtb_early_va, path);
-> > +     fdt64_t *prop;
-> > +
-> > +     if (node < 0)
-> > +             return -EINVAL;
-> > +
-> > +     prop = fdt_getprop_w(dtb_early_va, node, "#address-cells", NULL);
-> > +     if (!prop)
-> > +             return -EINVAL;
-> > +     *addr_cell = fdt32_to_cpu(*prop);
-> > +
-> > +     prop = fdt_getprop_w(dtb_early_va, node, "#size-cells", NULL);
-> > +     if (!prop)
-> > +             return -EINVAL;
-> > +     *size_cell = fdt32_to_cpu(*prop);
-> > +
-> > +     return node;
-> > +}
-> > +
-> > +static __init void kaslr_get_mem_info(uintptr_t *mem_start,
-> > +                                   uintptr_t *mem_size)
-> > +{
-> > +     int node, root, addr_cells, size_cells;
-> > +     u64 base, size;
-> > +
-> > +     /* Get root node's address cells and size cells. */
-> > +     root = get_node_addr_size_cells("/", &addr_cells, &size_cells);
-> > +     if (root < 0)
-> > +             return;
-> > +
-> > +     /* Get memory base address and size. */
-> > +     fdt_for_each_subnode(node, dtb_early_va, root) {
-> > +             const char *dev_type;
-> > +             const u32 *reg;
-> > +
-> > +             dev_type = fdt_getprop(dtb_early_va, node, "device_type", NULL);
-> > +             if (!dev_type)
-> > +                     continue;
-> > +
-> > +             if (!strcmp(dev_type, "memory")) {
-> > +                     reg = fdt_getprop(dtb_early_va, node, "reg", NULL);
-> > +                     if (!reg)
-> > +                             return;
-> > +
-> > +                     reg = get_reg_address(addr_cells, reg, &base);
-> > +                     reg = get_reg_address(size_cells, reg, &size);
-> > +
-> > +                     *mem_start = base;
-> > +                     *mem_size = size;
-> > +
-> > +                     break;
-> > +             }
-> > +     }
-> > +}
-> > +
-> > +/* Return a default seed if there is no HW generator. */
-> > +static u64 kaslr_default_seed = ULL(-1);
-> > +static __init u64 kaslr_get_seed(void)
-> > +{
-> > +     int node, len;
-> > +     fdt64_t *prop;
-> > +     u64 ret;
-> > +
-> > +     node = fdt_path_offset(dtb_early_va, "/chosen");
-> > +     if (node < 0)
-> > +             return kaslr_default_seed++;
-> > +
-> > +     prop = fdt_getprop_w(dtb_early_va, node, "kaslr-seed", &len);
-> > +     if (!prop || len != sizeof(u64))
-> > +             return kaslr_default_seed++;
-> > +
-> > +     ret = fdt64_to_cpu(*prop);
-> > +
-> > +     /* Re-write to zero for checking whether get seed at second time */
-> > +     *prop = 0;
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static __init bool is_overlap(uintptr_t s1, uintptr_t e1, uintptr_t s2,
-> > +                           uintptr_t e2)
-> > +{
-> > +     return e1 >= s2 && e2 >= s1;
-> > +}
->
-> Inline this function or use a macro maybe.
-
-Yes, sure. Thanks.
-
->
-> > +
-> > +static __init bool is_overlap_reserved_mem(uintptr_t start_addr,
-> > +                                        uintptr_t end_addr)
-> > +{
-> > +     int node, rsv_mem, addr_cells, size_cells;
-> > +
-> > +     /* Get the reserved-memory node. */
-> > +     rsv_mem = get_node_addr_size_cells("/reserved-memory",
-> > +                                        &addr_cells,
-> > +                                        &size_cells);
-> > +     if (rsv_mem < 0)
-> > +             return false;
-> > +
-> > +     /* Get memory base address and size. */
-> > +     fdt_for_each_subnode(node, dtb_early_va, rsv_mem) {
-> > +             uint64_t base, size;
-> > +             const uint32_t *reg;
-> > +
-> > +             reg = fdt_getprop(dtb_early_va, node, "reg", NULL);
-> > +             if (!reg)
-> > +                     return 0;
-> > +
-> > +             reg = get_reg_address(addr_cells, reg, &base);
-> > +             reg = get_reg_address(size_cells, reg, &size);
-> > +
-> > +             if (is_overlap(start_addr, end_addr, base, base + size))
-> > +                     return true;
-> > +     }
-> > +
-> > +     return false;
-> > +}
-> > +
-> > +static __init bool is_overlap_initrd(uintptr_t start_addr, uintptr_t end_addr)
-> > +{
-> > +     int node;
-> > +     uintptr_t initrd_start, initrd_end;
-> > +     fdt64_t *prop;
-> > +
-> > +     node = fdt_path_offset(dtb_early_va, "/chosen");
-> > +     if (node < 0)
-> > +             return false;
-> > +
-> > +     prop = fdt_getprop_w(dtb_early_va, node, "linux,initrd-start", NULL);
-> > +     if (!prop)
-> > +             return false;
-> > +
-> > +     initrd_start = fdt64_to_cpu(*prop);
-> > +
-> > +     prop = fdt_getprop_w(dtb_early_va, node, "linux,initrd-end", NULL);
-> > +     if (!prop)
-> > +             return false;
-> > +
-> > +     initrd_end = fdt64_to_cpu(*prop);
-> > +
-> > +     return is_overlap(start_addr, end_addr, initrd_start, initrd_end);
-> > +}
-> > +
-> > +static __init bool is_overlap_dtb(uintptr_t start_addr, uintptr_t end_addr)
-> > +{
-> > +     uintptr_t dtb_start = dtb_early_pa;
-> > +     uintptr_t dtb_end = dtb_start + fdt_totalsize(dtb_early_va);
-> > +
-> > +     return is_overlap(start_addr, end_addr, dtb_start, dtb_end);
-> > +}
-> > +
-> > +static __init bool has_regions_overlapping(uintptr_t start_addr,
-> > +                                        uintptr_t end_addr)
-> > +{
-> > +     if (is_overlap_dtb(start_addr, end_addr))
-> > +             return true;
-> > +
-> > +     if (is_overlap_initrd(start_addr, end_addr))
-> > +             return true;
-> > +
-> > +     if (is_overlap_reserved_mem(start_addr, end_addr))
-> > +             return true;
-> > +
-> > +     return false;
-> > +}
-> > +
-> > +static inline __init unsigned long get_legal_offset(int random_index,
-> > +                                                 int max_index,
-> > +                                                 uintptr_t mem_start,
-> > +                                                 uintptr_t kernel_size)
-> > +{
-> > +     uintptr_t start_addr, end_addr;
-> > +     int idx, stop_idx;
-> > +
-> > +     idx = stop_idx = random_index;
-> > +
-> > +     do {
-> > +             start_addr = mem_start + idx * SZ_2M + kernel_size;
-> > +             end_addr = start_addr + kernel_size;
-> > +
-> > +             /* Check overlap to other regions. */
-> > +             if (!has_regions_overlapping(start_addr, end_addr))
-> > +                     return idx * SZ_2M + kernel_size;
-> > +
-> > +             if (idx-- < 0)
-> > +                     idx = max_index;
->
-> Isn't the fallback to max_index a security breach ? Because at some
-> point, the kernel will be loaded at this specific address.
-
-The max_index is the maximum safe index for destination of new kernel
-image. Could you give more explain here?
-
->
-> > +
-> > +     } while (idx != stop_idx);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static inline __init u64 rotate_xor(u64 hash, const void *area, size_t size)
-> > +{
-> > +     size_t i;
-> > +     uintptr_t *ptr = (uintptr_t *) area;
-> > +
-> > +     for (i = 0; i < size / sizeof(hash); i++) {
-> > +             /* Rotate by odd number of bits and XOR. */
-> > +             hash = (hash << ((sizeof(hash) * 8) - 7)) | (hash >> 7);
-> > +             hash ^= ptr[i];
-> > +     }
-> > +
-> > +     return hash;
-> > +}
-> > +
-> > +#define MEM_RESERVE_START    __pa(PAGE_OFFSET)
-> > +static __init uintptr_t get_random_offset(u64 seed, uintptr_t kernel_size)
-> > +{
-> > +     uintptr_t mem_start = 0, mem_size= 0, random_size;
-> > +     uintptr_t kernel_size_align = round_up(kernel_size, SZ_2M);
-> > +     int index;
-> > +     u64 random = 0;
-> > +     cycles_t time_base;
-> > +
-> > +     /* Attempt to create a simple but unpredictable starting entropy */
-> > +     random = rotate_xor(random, linux_banner, strlen(linux_banner));
-> > +
-> > +     /*
-> > +      * If there is no HW random number generator, use timer to get a random
-> > +      * number. This is better than nothing but not enough secure.
-> > +      */
-> > +     time_base = get_cycles() << 32;
-> > +     time_base ^= get_cycles();
-> > +     random = rotate_xor(random, &time_base, sizeof(time_base));
-> > +
-> > +     if (seed)
-> > +             random = rotate_xor(random, &seed, sizeof(seed));
-> > +
-> > +     kaslr_get_mem_info(&mem_start, &mem_size);
-> > +     if (!mem_size)
-> > +             return 0;
-> > +
-> > +     if (mem_start < MEM_RESERVE_START) {
-> > +             mem_size -= MEM_RESERVE_START - mem_start;
-> > +             mem_start = MEM_RESERVE_START;
-> > +     }
-> > +
-> > +     /*
-> > +      * Limit randomization range within 1G, so we can exploit
-> > +      * early_pmd/early_pte during early page table phase.
-> > +      */
-> > +     random_size = min_t(u64,
-> > +                         mem_size - (kernel_size_align * 2),
-> > +                         SZ_1G - (kernel_size_align * 2));
->
-> pgdir size is 30 bits in sv39, but it's 39 bits in sv48, you should use
-> PGDIR_SIZE macro here.
-
-OK, change it in the next version. Thanks.
-
->
-> > +
-> > +     /* The index of 2M block in whole avaliable region */
-> > +     index = random % (random_size / SZ_2M);
-> > +
-> > +     return get_legal_offset(index, random_size / SZ_2M,
-> > +                             mem_start, kernel_size_align);
-> > +}
-> > +
-> >   uintptr_t __init kaslr_early_init(void)
-> >   {
-> > +     u64 seed;
-> >       uintptr_t dest_start, dest_end;
-> >       uintptr_t kernel_size = (uintptr_t) _end - (uintptr_t) _start;
-> >
-> >       /* Get zero value at second time to avoid doing randomization again. */
-> > -     if (kaslr_offset)
-> > +     seed = kaslr_get_seed();
-> > +     if (!seed)
-> >               return 0;
-> >
-> >       /* Get the random number for kaslr offset. */
-> > -     kaslr_offset = 0x10000000;
-> > +     kaslr_offset = get_random_offset(seed, kernel_size);
-> >
-> >       /* Update kernel_virt_addr for get_kaslr_offset. */
-> >       kernel_virt_addr += kaslr_offset;
-> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> > index 2f5b25f02b6c..34c6ecf2c599 100644
-> > --- a/arch/riscv/mm/init.c
-> > +++ b/arch/riscv/mm/init.c
-> > @@ -125,7 +125,7 @@ static void __init setup_initrd(void)
-> >   }
-> >   #endif /* CONFIG_BLK_DEV_INITRD */
-> >
-> > -static phys_addr_t dtb_early_pa __initdata;
-> > +phys_addr_t dtb_early_pa __initdata;
-> >
-> >   void __init setup_bootmem(void)
-> >   {
-> >
->
-> Alex
+T24gVHVlLCAyMDIwLTA0LTA3IGF0IDExOjM2ICswMjAwLCBPbGVrc2lqIFJlbXBlbCB3cm90ZToN
+Cj4gQWRkIHN1cHBvcnQgZm9yIGZvbGxvd2luZyBwaHktbW9kZXM6IHJnbWlpLCByZ21paS1pZCwg
+cmdtaWktdHhpZCwNCj4gcmdtaWktcnhpZC4NCj4gDQo+IFRoaXMgUEhZIGhhcyBhbiBpbnRlcm5h
+bCBSWCBkZWxheSBvZiAxLjJucyBhbmQgbm8gZGVsYXkgZm9yIFRYLg0KPiANCj4gVGhlIHBhZCBz
+a2V3IHJlZ2lzdGVycyBhbGxvdyB0byBzZXQgdGhlIHRvdGFsIFRYIGRlbGF5IHRvIG1heCAxLjM4
+bnMNCj4gYW5kDQo+IHRoZSB0b3RhbCBSWCBkZWxheSB0byBtYXggb2YgMi41OG5zIChjb25maWd1
+cmFibGUgMS4zOG5zICsgYnVpbGQgaW4NCj4gMS4ybnMpIGFuZCBhIG1pbmltYWwgZGVsYXkgb2Yg
+MG5zLg0KPiANCj4gQWNjb3JkaW5nIHRvIHRoZSBSR01JSSB2MS4zIHNwZWNpZmljYXRpb24gdGhl
+IGRlbGF5IHByb3ZpZGVkIGJ5IFBDQg0KPiB0cmFjZXMNCj4gc2hvdWxkIGJlIGJldHdlZW4gMS41
+bnMgYW5kIDIuMG5zLiBUaGUgUkdNSUkgdjIuMCBhbGxvd3MgdG8gcHJvdmlkZQ0KPiB0aGlzDQo+
+IGRlbGF5IGJ5IE1BQyBvciBQSFkuIFNvLCB3ZSBjb25maWd1cmUgdGhpcyBQSFkgdG8gdGhlIGJl
+c3QgdmFsdWVzIHdlDQo+IGNhbg0KPiBnZXQgYnkgdGhpcyBIVzogVFggZGVsYXkgdG8gMS4zOG5z
+IChtYXggc3VwcG9ydGVkIHZhbHVlKSBhbmQgUlggZGVsYXkNCj4gdG8NCj4gMS44MG5zIChiZXN0
+IGNhbGN1bGF0ZWQgZGVsYXkpDQo+IA0KPiBUaGUgcGh5LW1vZGVzIGNhbiBzdGlsbCBiZSBmaW5l
+IHR1bmVkL292ZXJ3cml0dGVuIGJ5ICotc2tldy1wcw0KPiBkZXZpY2UgdHJlZSBwcm9wZXJ0aWVz
+IGRlc2NyaWJlZCBpbjoNCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9t
+aWNyZWwta3N6OTB4MS50eHQNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE9sZWtzaWogUmVtcGVsIDxv
+LnJlbXBlbEBwZW5ndXRyb25peC5kZT4NCg0KTWFrZSBzdXJlIHlvdSBkbyBub3QgZXhjZWV0IDgw
+IGNoYXJzIHdpdGggeW91ciBwaHlkZXZfd2Fybi4gQmVzaWRlcw0KdGhhdDoNCg0KUmV2aWV3ZWQt
+Ynk6IFBoaWxpcHBlIFNjaGVua2VyIDxwaGlsaXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4NCg0K
+PiAtLS0NCj4gY2hhbmdlcyB2MzoNCj4gLSBjaGFuZ2UgZGVsYXkgb24gUlggbGluZSB0byAxLjgw
+bnMNCj4gLSBhZGQgd2FybmluZyBpZiAqLXNrZXctcHMgcHJvcGVydGllcyBhcmUgdXNlZCB0b2dl
+dGhlciB3aXRoIG5vdCByZ21paQ0KPiAgIG1vZGUuIA0KPiANCj4gY2hhbmdlcyB2MjoNCj4gLSBj
+aGFuZ2UgUlhfSUQgdmFsdWUgZnJvbSAweDFhIHRvIDB4YS4gVGhlIG92ZXJmbG93IGJpdCB3YXMg
+ZGV0ZWN0ZWQNCj4gYnkNCj4gICBGSUVMRF9QUkVQKCkgYnVpbGQgY2hlY2suDQo+ICAgUmVwb3J0
+ZWQtYnk6IGtidWlsZCB0ZXN0IHJvYm90IDxsa3BAaW50ZWwuY29tPg0KPiANCj4gIGRyaXZlcnMv
+bmV0L3BoeS9taWNyZWwuYyB8IDEyOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrLQ0KPiAtDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTIzIGluc2VydGlvbnMoKyksIDUgZGVsZXRp
+b25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvcGh5L21pY3JlbC5jIGIvZHJp
+dmVycy9uZXQvcGh5L21pY3JlbC5jDQo+IGluZGV4IDA1ZDIwMzQzYjgxNjEuLjA0NTc4M2ViNGJj
+NzAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L3BoeS9taWNyZWwuYw0KPiArKysgYi9kcml2
+ZXJzL25ldC9waHkvbWljcmVsLmMNCj4gQEAgLTE5LDYgKzE5LDcgQEANCj4gICAqCQkJIGtzejk0
+NzcNCj4gICAqLw0KPiAgDQo+ICsjaW5jbHVkZSA8bGludXgvYml0ZmllbGQuaD4NCj4gICNpbmNs
+dWRlIDxsaW51eC9rZXJuZWwuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gICNp
+bmNsdWRlIDxsaW51eC9waHkuaD4NCj4gQEAgLTQ5MCw5ICs0OTEsNTAgQEAgc3RhdGljIGludCBr
+c3o5MDIxX2NvbmZpZ19pbml0KHN0cnVjdCBwaHlfZGV2aWNlDQo+ICpwaHlkZXYpDQo+ICANCj4g
+IC8qIE1NRCBBZGRyZXNzIDB4MiAqLw0KPiAgI2RlZmluZSBNSUlfS1NaOTAzMVJOX0NPTlRST0xf
+UEFEX1NLRVcJNA0KPiArI2RlZmluZSBNSUlfS1NaOTAzMVJOX1JYX0NUTF9NCQlHRU5NQVNLKDcs
+IDQpDQo+ICsjZGVmaW5lIE1JSV9LU1o5MDMxUk5fVFhfQ1RMX00JCUdFTk1BU0soMywgMCkNCj4g
+Kw0KPiAgI2RlZmluZSBNSUlfS1NaOTAzMVJOX1JYX0RBVEFfUEFEX1NLRVcJNQ0KPiArI2RlZmlu
+ZSBNSUlfS1NaOTAzMVJOX1JYRDMJCUdFTk1BU0soMTUsIDEyKQ0KPiArI2RlZmluZSBNSUlfS1Na
+OTAzMVJOX1JYRDIJCUdFTk1BU0soMTEsIDgpDQo+ICsjZGVmaW5lIE1JSV9LU1o5MDMxUk5fUlhE
+MQkJR0VOTUFTSyg3LCA0KQ0KPiArI2RlZmluZSBNSUlfS1NaOTAzMVJOX1JYRDAJCUdFTk1BU0so
+MywgMCkNCj4gKw0KPiAgI2RlZmluZSBNSUlfS1NaOTAzMVJOX1RYX0RBVEFfUEFEX1NLRVcJNg0K
+PiArI2RlZmluZSBNSUlfS1NaOTAzMVJOX1RYRDMJCUdFTk1BU0soMTUsIDEyKQ0KPiArI2RlZmlu
+ZSBNSUlfS1NaOTAzMVJOX1RYRDIJCUdFTk1BU0soMTEsIDgpDQo+ICsjZGVmaW5lIE1JSV9LU1o5
+MDMxUk5fVFhEMQkJR0VOTUFTSyg3LCA0KQ0KPiArI2RlZmluZSBNSUlfS1NaOTAzMVJOX1RYRDAJ
+CUdFTk1BU0soMywgMCkNCj4gKw0KPiAgI2RlZmluZSBNSUlfS1NaOTAzMVJOX0NMS19QQURfU0tF
+Vwk4DQo+ICsjZGVmaW5lIE1JSV9LU1o5MDMxUk5fR1RYX0NMSwkJR0VOTUFTSyg5LCA1KQ0KPiAr
+I2RlZmluZSBNSUlfS1NaOTAzMVJOX1JYX0NMSwkJR0VOTUFTSyg0LCAwKQ0KPiArDQo+ICsvKiBL
+U1o5MDMxIGhhcyBpbnRlcm5hbCBSR01JSV9JRFJYID0gMS4ybnMgYW5kIFJHTUlJX0lEVFggPSAw
+bnMuIFRvDQo+ICsgKiBwcm92aWRlIGRpZmZlcmVudCBSR01JSSBvcHRpb25zIHdlIG5lZWQgdG8g
+Y29uZmlndXJlIGRlbGF5IG9mZnNldA0KPiArICogZm9yIGVhY2ggcGFkIHJlbGF0aXZlIHRvIGJ1
+aWxkIGluIGRlbGF5Lg0KPiArICovDQo+ICsvKiBrZWVwIHJ4IGFzICJObyBkZWxheSBhZGp1c3Rt
+ZW50IiBhbmQgc2V0IHJ4X2NsayB0byArMC42MG5zIHRvIGdldA0KPiBkZWxheXMgb2YNCj4gKyAq
+IDEuODBucw0KPiArICovDQo+ICsjZGVmaW5lIFJYX0lECQkJCTB4Nw0KPiArI2RlZmluZSBSWF9D
+TEtfSUQJCQkweDE5DQo+ICsNCj4gKy8qIHNldCByeCB0byArMC4zMG5zIGFuZCByeF9jbGsgdG8g
+LTAuOTBucyB0byBjb21wZW5zYXRlIHRoZQ0KPiArICogaW50ZXJuYWwgMS4ybnMgZGVsYXkuDQo+
+ICsgKi8NCj4gKyNkZWZpbmUgUlhfTkQJCQkJMHhjDQo+ICsjZGVmaW5lIFJYX0NMS19ORAkJCTB4
+MA0KPiArDQo+ICsvKiBzZXQgdHggdG8gLTAuNDJucyBhbmQgdHhfY2xrIHRvICswLjk2bnMgdG8g
+Z2V0IDEuMzhucyBkZWxheSAqLw0KPiArI2RlZmluZSBUWF9JRAkJCQkweDANCj4gKyNkZWZpbmUg
+VFhfQ0xLX0lECQkJMHgxZg0KPiArDQo+ICsvKiBzZXQgdHggYW5kIHR4X2NsayB0byAiTm8gZGVs
+YXkgYWRqdXN0bWVudCIgdG8ga2VlcCAwbnMNCj4gKyAqIGRlYWx5DQo+ICsgKi8NCj4gKyNkZWZp
+bmUgVFhfTkQJCQkJMHg3DQo+ICsjZGVmaW5lIFRYX0NMS19ORAkJCTB4Zg0KPiAgDQo+ICAvKiBN
+TUQgQWRkcmVzcyAweDFDICovDQo+ICAjZGVmaW5lIE1JSV9LU1o5MDMxUk5fRURQRAkJMHgyMw0K
+PiBAQCAtNTAxLDcgKzU0Myw4IEBAIHN0YXRpYyBpbnQga3N6OTAyMV9jb25maWdfaW5pdChzdHJ1
+Y3QgcGh5X2RldmljZQ0KPiAqcGh5ZGV2KQ0KPiAgc3RhdGljIGludCBrc3o5MDMxX29mX2xvYWRf
+c2tld192YWx1ZXMoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldiwNCj4gIAkJCQkgICAgICAgY29u
+c3Qgc3RydWN0IGRldmljZV9ub2RlDQo+ICpvZl9ub2RlLA0KPiAgCQkJCSAgICAgICB1MTYgcmVn
+LCBzaXplX3QgZmllbGRfc3osDQo+IC0JCQkJICAgICAgIGNvbnN0IGNoYXIgKmZpZWxkW10sIHU4
+DQo+IG51bWZpZWxkcykNCj4gKwkJCQkgICAgICAgY29uc3QgY2hhciAqZmllbGRbXSwgdTgNCj4g
+bnVtZmllbGRzLA0KPiArCQkJCSAgICAgICBib29sICp1cGRhdGUpDQo+ICB7DQo+ICAJaW50IHZh
+bFs0XSA9IHstMSwgLTIsIC0zLCAtNH07DQo+ICAJaW50IG1hdGNoZXMgPSAwOw0KPiBAQCAtNTE3
+LDYgKzU2MCw4IEBAIHN0YXRpYyBpbnQga3N6OTAzMV9vZl9sb2FkX3NrZXdfdmFsdWVzKHN0cnVj
+dA0KPiBwaHlfZGV2aWNlICpwaHlkZXYsDQo+ICAJaWYgKCFtYXRjaGVzKQ0KPiAgCQlyZXR1cm4g
+MDsNCj4gIA0KPiArCSp1cGRhdGUgfD0gdHJ1ZTsNCj4gKw0KPiAgCWlmIChtYXRjaGVzIDwgbnVt
+ZmllbGRzKQ0KPiAgCQluZXd2YWwgPSBwaHlfcmVhZF9tbWQocGh5ZGV2LCAyLCByZWcpOw0KPiAg
+CWVsc2UNCj4gQEAgLTU2NSw2ICs2MTAsNjcgQEAgc3RhdGljIGludCBrc3o5MDMxX2VuYWJsZV9l
+ZHBkKHN0cnVjdCBwaHlfZGV2aWNlDQo+ICpwaHlkZXYpDQo+ICAJCQkgICAgIHJlZyB8IE1JSV9L
+U1o5MDMxUk5fRURQRF9FTkFCTEUpOw0KPiAgfQ0KPiAgDQo+ICtzdGF0aWMgaW50IGtzejkwMzFf
+Y29uZmlnX3JnbWlpX2RlbGF5KHN0cnVjdCBwaHlfZGV2aWNlICpwaHlkZXYpDQo+ICt7DQo+ICsJ
+dTE2IHJ4LCB0eCwgcnhfY2xrLCB0eF9jbGs7DQo+ICsJaW50IHJldDsNCj4gKw0KPiArCXN3aXRj
+aCAocGh5ZGV2LT5pbnRlcmZhY2UpIHsNCj4gKwljYXNlIFBIWV9JTlRFUkZBQ0VfTU9ERV9SR01J
+SToNCj4gKwkJdHggPSBUWF9ORDsNCj4gKwkJdHhfY2xrID0gVFhfQ0xLX05EOw0KPiArCQlyeCA9
+IFJYX05EOw0KPiArCQlyeF9jbGsgPSBSWF9DTEtfTkQ7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2Ug
+UEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJX0lEOg0KPiArCQl0eCA9IFRYX0lEOw0KPiArCQl0eF9j
+bGsgPSBUWF9DTEtfSUQ7DQo+ICsJCXJ4ID0gUlhfSUQ7DQo+ICsJCXJ4X2NsayA9IFJYX0NMS19J
+RDsNCj4gKwkJYnJlYWs7DQo+ICsJY2FzZSBQSFlfSU5URVJGQUNFX01PREVfUkdNSUlfUlhJRDoN
+Cj4gKwkJdHggPSBUWF9ORDsNCj4gKwkJdHhfY2xrID0gVFhfQ0xLX05EOw0KPiArCQlyeCA9IFJY
+X0lEOw0KPiArCQlyeF9jbGsgPSBSWF9DTEtfSUQ7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgUEhZ
+X0lOVEVSRkFDRV9NT0RFX1JHTUlJX1RYSUQ6DQo+ICsJCXR4ID0gVFhfSUQ7DQo+ICsJCXR4X2Ns
+ayA9IFRYX0NMS19JRDsNCj4gKwkJcnggPSBSWF9ORDsNCj4gKwkJcnhfY2xrID0gUlhfQ0xLX05E
+Ow0KPiArCQlicmVhazsNCj4gKwlkZWZhdWx0Og0KPiArCQlyZXR1cm4gMDsNCj4gKwl9DQo+ICsN
+Cj4gKwlyZXQgPSBwaHlfd3JpdGVfbW1kKHBoeWRldiwgMiwgTUlJX0tTWjkwMzFSTl9DT05UUk9M
+X1BBRF9TS0VXLA0KPiArCQkJICAgIEZJRUxEX1BSRVAoTUlJX0tTWjkwMzFSTl9SWF9DVExfTSwg
+cngpIHwNCj4gKwkJCSAgICBGSUVMRF9QUkVQKE1JSV9LU1o5MDMxUk5fVFhfQ1RMX00sIHR4KSk7
+DQo+ICsJaWYgKHJldCA8IDApDQo+ICsJCXJldHVybiByZXQ7DQo+ICsNCj4gKwlyZXQgPSBwaHlf
+d3JpdGVfbW1kKHBoeWRldiwgMiwgTUlJX0tTWjkwMzFSTl9SWF9EQVRBX1BBRF9TS0VXLA0KPiAr
+CQkJICAgIEZJRUxEX1BSRVAoTUlJX0tTWjkwMzFSTl9SWEQzLCByeCkgfA0KPiArCQkJICAgIEZJ
+RUxEX1BSRVAoTUlJX0tTWjkwMzFSTl9SWEQyLCByeCkgfA0KPiArCQkJICAgIEZJRUxEX1BSRVAo
+TUlJX0tTWjkwMzFSTl9SWEQxLCByeCkgfA0KPiArCQkJICAgIEZJRUxEX1BSRVAoTUlJX0tTWjkw
+MzFSTl9SWEQwLCByeCkpOw0KPiArCWlmIChyZXQgPCAwKQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiAr
+DQo+ICsJcmV0ID0gcGh5X3dyaXRlX21tZChwaHlkZXYsIDIsIE1JSV9LU1o5MDMxUk5fVFhfREFU
+QV9QQURfU0tFVywNCj4gKwkJCSAgICBGSUVMRF9QUkVQKE1JSV9LU1o5MDMxUk5fVFhEMywgdHgp
+IHwNCj4gKwkJCSAgICBGSUVMRF9QUkVQKE1JSV9LU1o5MDMxUk5fVFhEMiwgdHgpIHwNCj4gKwkJ
+CSAgICBGSUVMRF9QUkVQKE1JSV9LU1o5MDMxUk5fVFhEMSwgdHgpIHwNCj4gKwkJCSAgICBGSUVM
+RF9QUkVQKE1JSV9LU1o5MDMxUk5fVFhEMCwgdHgpKTsNCj4gKwlpZiAocmV0IDwgMCkNCj4gKwkJ
+cmV0dXJuIHJldDsNCj4gKw0KPiArCXJldHVybiBwaHlfd3JpdGVfbW1kKHBoeWRldiwgMiwgTUlJ
+X0tTWjkwMzFSTl9DTEtfUEFEX1NLRVcsDQo+ICsJCQkgICAgIEZJRUxEX1BSRVAoTUlJX0tTWjkw
+MzFSTl9HVFhfQ0xLLCB0eF9jbGspIHwNCj4gKwkJCSAgICAgRklFTERfUFJFUChNSUlfS1NaOTAz
+MVJOX1JYX0NMSywgcnhfY2xrKSk7DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBpbnQga3N6OTAzMV9j
+b25maWdfaW5pdChzdHJ1Y3QgcGh5X2RldmljZSAqcGh5ZGV2KQ0KPiAgew0KPiAgCWNvbnN0IHN0
+cnVjdCBkZXZpY2UgKmRldiA9ICZwaHlkZXYtPm1kaW8uZGV2Ow0KPiBAQCAtNTk3LDIxICs3MDMs
+MzMgQEAgc3RhdGljIGludCBrc3o5MDMxX2NvbmZpZ19pbml0KHN0cnVjdCBwaHlfZGV2aWNlDQo+
+ICpwaHlkZXYpDQo+ICAJfSB3aGlsZSAoIW9mX25vZGUgJiYgZGV2X3dhbGtlcik7DQo+ICANCj4g
+IAlpZiAob2Zfbm9kZSkgew0KPiArCQlib29sIHVwZGF0ZSA9IGZhbHNlOw0KPiArDQo+ICsJCWlm
+IChwaHlfaW50ZXJmYWNlX2lzX3JnbWlpKHBoeWRldikpIHsNCj4gKwkJCXJlc3VsdCA9IGtzejkw
+MzFfY29uZmlnX3JnbWlpX2RlbGF5KHBoeWRldik7DQo+ICsJCQlpZiAocmVzdWx0IDwgMCkNCj4g
+KwkJCQlyZXR1cm4gcmVzdWx0Ow0KPiArCQl9DQo+ICsNCj4gIAkJa3N6OTAzMV9vZl9sb2FkX3Nr
+ZXdfdmFsdWVzKHBoeWRldiwgb2Zfbm9kZSwNCj4gIAkJCQlNSUlfS1NaOTAzMVJOX0NMS19QQURf
+U0tFVywgNSwNCj4gLQkJCQljbGtfc2tld3MsIDIpOw0KPiArCQkJCWNsa19za2V3cywgMiwgJnVw
+ZGF0ZSk7DQo+ICANCj4gIAkJa3N6OTAzMV9vZl9sb2FkX3NrZXdfdmFsdWVzKHBoeWRldiwgb2Zf
+bm9kZSwNCj4gIAkJCQlNSUlfS1NaOTAzMVJOX0NPTlRST0xfUEFEX1NLRVcsIDQsDQo+IC0JCQkJ
+Y29udHJvbF9za2V3cywgMik7DQo+ICsJCQkJY29udHJvbF9za2V3cywgMiwgJnVwZGF0ZSk7DQo+
+ICANCj4gIAkJa3N6OTAzMV9vZl9sb2FkX3NrZXdfdmFsdWVzKHBoeWRldiwgb2Zfbm9kZSwNCj4g
+IAkJCQlNSUlfS1NaOTAzMVJOX1JYX0RBVEFfUEFEX1NLRVcsIDQsDQo+IC0JCQkJcnhfZGF0YV9z
+a2V3cywgNCk7DQo+ICsJCQkJcnhfZGF0YV9za2V3cywgNCwgJnVwZGF0ZSk7DQo+ICANCj4gIAkJ
+a3N6OTAzMV9vZl9sb2FkX3NrZXdfdmFsdWVzKHBoeWRldiwgb2Zfbm9kZSwNCj4gIAkJCQlNSUlf
+S1NaOTAzMVJOX1RYX0RBVEFfUEFEX1NLRVcsIDQsDQo+IC0JCQkJdHhfZGF0YV9za2V3cywgNCk7
+DQo+ICsJCQkJdHhfZGF0YV9za2V3cywgNCwgJnVwZGF0ZSk7DQo+ICsNCj4gKwkJaWYgKHVwZGF0
+ZSAmJiBwaHlkZXYtPmludGVyZmFjZSAhPQ0KPiBQSFlfSU5URVJGQUNFX01PREVfUkdNSUkpDQo+
+ICsJCQlwaHlkZXZfd2FybihwaHlkZXYsDQo+ICsJCQkJICAgICIqLXNrZXctcHMgdmFsdWVzIHNo
+b3VsZCBiZSB1c2VkDQo+IG9ubHkgd2l0aCBwaHktbW9kZSA9IFwicmdtaWlcIlxuIik7DQo+ICAN
+Cj4gIAkJLyogU2lsaWNvbiBFcnJhdGEgU2hlZXQgKERTODAwMDA2OTFEIG9yIERTODAwMDA2OTJE
+KToNCj4gIAkJICogV2hlbiB0aGUgZGV2aWNlIGxpbmtzIGluIHRoZSAxMDAwQkFTRS1UIHNsYXZl
+IG1vZGUNCj4gb25seSwNCg==
