@@ -2,122 +2,111 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAADCC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71743C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D55206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43615206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 23:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qaqchf5j"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XbDd30vv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgDGXip (ORCPT
+        id S1726613AbgDGXjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 19:38:45 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37886 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgDGXip (ORCPT
+        Tue, 7 Apr 2020 19:39:18 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10197 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgDGXjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 19:38:45 -0400
-Received: by mail-pg1-f194.google.com with SMTP id r4so2475868pgg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 16:38:43 -0700 (PDT)
+        Tue, 7 Apr 2020 19:39:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mOG8uXDl25YkIY1KwvU7WP+vA59IBuf+1/ymXSgkT1I=;
-        b=qaqchf5jB5Eqy41fV6WU2Pz9vxP8irw80dxERZBvo8vJlEUyLvQcVHqo4d7BqKi5mk
-         OzWDY3XOoxKXqyjI/WiJMwIx732T7Zasabr7mN8xRgxLdQugRkuLklMqQo+Ko7LHb3Jk
-         s6ekr19+LwPrmvkJCNgUquIJZGlUv7tY+a1Ynp/veuOitVrFvnVN0CibRse67tRCbWoB
-         Da7DlOB6sd3vxeH/eOHhilb8y74yZqq9KWgdDEQqkEVeKW/CelXsOB1V4m/Bl+mWGGG6
-         QCv8SivvGUS3W6VPJQSAru20CvvFR1SUImMZ681gh306B9PWC+k/syh4IpzC6qvd+HEq
-         lmCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mOG8uXDl25YkIY1KwvU7WP+vA59IBuf+1/ymXSgkT1I=;
-        b=lrJvVYyw+rkQkXFEH/bKaseWnyyFSNocojDglIbT26e7AlZA1hIb7AAA6WvmSw3scJ
-         0+pHS3ID0mdiMoFdQbJWaxmr263jvsFhP4x5B/smh0fdFNtJ6Mfga/pbLITiOnap6jAc
-         JoQ4TdcWwhMcjy2bIAFcJjT7xtloWvEHfywlfI7CPP3oacU5m1OIJRJ/lRN7w6/P1wxD
-         CUXJdwhxsbFZC4kb7RZ+YSZTDw/WolsgAAivfcXhOi7HSZHnJqFPDVOl7eRj4rp/2F4j
-         Z7yufdEI2r8gi1WW/Aoq0XT5OOK+StV+SLTYhRgalJMYhXciQzh+h1anFhCiBP6Je/S3
-         AK7Q==
-X-Gm-Message-State: AGi0Puau00keg9O73KtAJSdNavj+DyceM4aZ85Aao9XAGAU+iZbUkCJq
-        nJ93KYyd1DQ/DdrkOGdtgROVZA==
-X-Google-Smtp-Source: APiQypLJ4W6r4lUs3kl4+KovCBimfVWxesaytHb1fY7SpaerFs+CbFQPc75tWHX2dn9mukWlYUgjuw==
-X-Received: by 2002:a63:2e44:: with SMTP id u65mr4419244pgu.142.1586302722857;
-        Tue, 07 Apr 2020 16:38:42 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id hg20sm2573036pjb.3.2020.04.07.16.38.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 16:38:42 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 16:38:48 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        vinod.koul@linaro.org, Jack Pham <jackp@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sm8150: Add USB and PHY device
- nodes
-Message-ID: <20200407233848.GN20625@builder.lan>
-References: <1586298267-4722-1-git-send-email-wcheng@codeaurora.org>
- <1586298267-4722-3-git-send-email-wcheng@codeaurora.org>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1586302757; x=1617838757;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=atnYjxiyKdQFWwXp0PXFdPTtxkh6WFqlWjXNyrLv5sU=;
+  b=XbDd30vvRkpwuWUH+/ptes2kd/aVcBmeFvX3fo3jDRGcnXfAM1SAdFLV
+   XNfEs8KduHsejv6k3+08f7c478Gjadavz+ojmjP+UKqAqAfyGyaWYX2uG
+   jJVWNPHwgh80213nlsKYZlGwcIQ5dLN9zdEZi+tf6G0xt8c/Z5OD9LFYs
+   I=;
+IronPort-SDR: my4cwCRqMA/z2RwjyvFN1C6ahNSR6snq7AWhsbU/AtAM2UZaayhRuNNBGauPOEs0eU9eSwkyms
+ 1ZSV36OS7LVg==
+X-IronPort-AV: E=Sophos;i="5.72,356,1580774400"; 
+   d="scan'208";a="37258086"
+Subject: Re: [PATCH v2 3/4] arch/x86: Optionally flush L1D on context switch
+Thread-Topic: [PATCH v2 3/4] arch/x86: Optionally flush L1D on context switch
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 07 Apr 2020 23:39:16 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 16B161A0E81;
+        Tue,  7 Apr 2020 23:39:15 +0000 (UTC)
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Apr 2020 23:39:14 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13d01UWB002.ant.amazon.com (10.43.161.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 7 Apr 2020 23:39:14 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
+ Tue, 7 Apr 2020 23:39:14 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "keescook@chromium.org" <keescook@chromium.org>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>
+Thread-Index: AQHWC8KR9rJxTIXiWkGqeY4o6Uqz/aht/HqAgABXfYA=
+Date:   Tue, 7 Apr 2020 23:39:14 +0000
+Message-ID: <728ba30fdc269d4b24c4fb16832e0151e8270cba.camel@amazon.com>
+References: <20200406031946.11815-1-sblbir@amazon.com>
+         <20200406031946.11815-4-sblbir@amazon.com> <202004071125.605F665@keescook>
+In-Reply-To: <202004071125.605F665@keescook>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.85]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <11D50BCF4228804F861678344F60F66D@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1586298267-4722-3-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 07 Apr 15:24 PDT 2020, Wesley Cheng wrote:
-
-> From: Jack Pham <jackp@codeaurora.org>
-> 
-> Add device nodes for the USB3 controller, QMP SS PHY and
-> SNPS HS PHY.
-> 
-
-Thanks for the respin Wesley, and thanks for testing Vinod. Just spotted
-one little details below.
-
-> Signed-off-by: Jack Pham <jackp@codeaurora.org>
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Tested-by: Vinod Koul <vinod.koul@linaro.org>
-> ---
-
-Please make a habit of documenting what changed since the previous
-version here, below the ---.
-
->  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 21 ++++++++
->  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 92 +++++++++++++++++++++++++++++++++
->  2 files changed, 113 insertions(+)
-[..]
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-[..]
-> +		usb_1_hsphy: phy@88e2000 {
-> +			compatible = "qcom,usb-snps-hs-7nm-phy",
-> +							"qcom,sm8150-usb-hs-phy";
-[..]
-> +		usb_1: usb@a6f8800 {
-> +			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
-
-The first cell here should be qcom,sm8150-dwc3. The Linux driver will
-"fall through" and match on the less specific "qcom,dwc3", but if we in
-the future realize that we have sm8150 specific behavior/quirks we can
-make the driver match on the more specific one to implement this.
-
-And similarly the order of the compatibles in &usb_1_hsphy should be
-reversed as well.
-
-Regards,
-Bjorn
+T24gVHVlLCAyMDIwLTA0LTA3IGF0IDExOjI2IC0wNzAwLCBLZWVzIENvb2sgd3JvdGU6DQo+IA0K
+PiANCj4gT24gTW9uLCBBcHIgMDYsIDIwMjAgYXQgMDE6MTk6NDVQTSArMTAwMCwgQmFsYmlyIFNp
+bmdoIHdyb3RlOg0KPiA+IEltcGxlbWVudCBhIG1lY2hhbmlzbSB0byBzZWxlY3RpdmVseSBmbHVz
+aCB0aGUgTDFEIGNhY2hlLiBUaGUgZ29hbCBpcyB0bw0KPiA+IGFsbG93IHRhc2tzIHRoYXQgYXJl
+IHBhcmFub2lkIGR1ZSB0byB0aGUgcmVjZW50IHNub29wIGFzc2lzdGVkIGRhdGENCj4gPiBzYW1w
+bGluZw0KPiA+IHZ1bG5lcmFiaWxpdGVzLCB0byBmbHVzaCB0aGVpciBMMUQgb24gYmVpbmcgc3dp
+dGNoZWQgb3V0LiAgVGhpcyBwcm90ZWN0cw0KPiA+IHRoZWlyIGRhdGEgZnJvbSBiZWluZyBzbm9v
+cGVkIG9yIGxlYWtlZCB2aWEgc2lkZSBjaGFubmVscyBhZnRlciB0aGUgdGFzaw0KPiA+IGhhcyBj
+b250ZXh0IHN3aXRjaGVkIG91dC4NCj4gPiANCj4gPiBUaGVyZSBhcmUgdHdvIHNjZW5hcmlvcyB3
+ZSBtaWdodCB3YW50IHRvIHByb3RlY3QgYWdhaW5zdCwgYSB0YXNrIGxlYXZpbmcNCj4gPiB0aGUg
+Q1BVIHdpdGggZGF0YSBzdGlsbCBpbiBMMUQgKHdoaWNoIGlzIHRoZSBtYWluIGNvbmNlcm4gb2Yg
+dGhpcyBwYXRjaCksDQo+ID4gdGhlIHNlY29uZCBzY2VuYXJpbyBpcyBhIG1hbGljaW91cyB0YXNr
+IGNvbWluZyBpbiAobm90IHNvIHdlbGwgdHJ1c3RlZCkNCj4gPiBmb3Igd2hpY2ggd2Ugd2FudCB0
+byBjbGVhbiB1cCB0aGUgY2FjaGUgYmVmb3JlIGl0IHN0YXJ0cy4gT25seSB0aGUgY2FzZQ0KPiA+
+IGZvciB0aGUgZm9ybWVyIGlzIGFkZHJlc3NlZC4NCj4gPiANCj4gPiBBZGQgYXJjaCBzcGVjaWZp
+YyBwcmN0bCgpJ3MgdG8gb3B0LWluIHRvIHRoZSBMMUQgY2FjaGUgb24gY29udGV4dCBzd2l0Y2gN
+Cj4gPiBvdXQsIHRoZSBleGlzdGluZyBtZWNoYW5pc21zIG9mIHRyYWNraW5nIHByZXZfbW0gdmlh
+IGNwdV90bGJzdGF0ZSBpcw0KPiA+IHJldXNlZC4gY29uZF9pYnBiKCkgaXMgcmVmYWN0b3JlZCBh
+bmQgcmVuYW1lZCBpbnRvIGNvbmRfbWl0aWdhdGlvbigpLg0KPiANCj4gSSBzdGlsbCB0aGluayB0
+aGlzIHNob3VsZCBiZSBhIGdlbmVyaWMgcHJjdGwoKS4gSWYgdGhlcmUgaXMgYSBzdHJvbmcNCj4g
+cmVhc29uIG5vdCB0byBkbyB0aGlzLCBjYW4gaXQgYmUgZGVzY3JpYmVkIGluIHRoZSBjb21taXQg
+bG9nIGhlcmU/DQo+IA0KPiAtS2Vlcw0KPiANCg0KSSBjYW4gbW92ZSB0byBwcmN0bCgpIGlmIHRo
+YXQgaXMgd2hhdCB5b3UgcHJlZmVyLCB0aGUgcHJjdGwoKSBjYW4gdGhlbiBkbyBhcmNoDQpzcGVj
+aWZpYyB0aGluZ3MuIEkgdGhvdWdodCBpbiBteSBxdWVzdGlvbiBhcm91bmQgd291bGQgb3RoZXIg
+YXJjaCdzIGxpa2UgdG8gZG8NCnRoaXMsIEkgZGlkIG5vdCBoZWFyIGFueXRoaW5nIHNwZWNpZmlj
+LCBidXQgSSBhbSBoYXBweSB0byBjb252ZXJ0IHRoZQ0KaW50ZXJmYWNlIG92ZXIuDQoNCkJhbGJp
+ciBTaW5naC4NCg0KDQo=
