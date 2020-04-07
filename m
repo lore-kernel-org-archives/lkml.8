@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B401C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97275C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55CC20719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CC620719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbgDGBGC (ORCPT
+        id S1726495AbgDGBGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:06:02 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:51425 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgDGBGB (ORCPT
+        Mon, 6 Apr 2020 21:06:05 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:53644 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgDGBGE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:06:01 -0400
-Received: by mail-il1-f198.google.com with SMTP id i13so308555ilq.18
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:06:00 -0700 (PDT)
+        Mon, 6 Apr 2020 21:06:04 -0400
+Received: by mail-io1-f69.google.com with SMTP id f6so1639347ioc.20
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:06:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to:cc;
-        bh=kzFJ2v3bJT+NUGBNF+ppCHPCx99mB/dWM/15ZQXwVFg=;
-        b=cKzdoWPAhDCRMN1YfNPXXWhyDDIhkmp4Z5UjKZSpZOjI1S9wE1Luz3IQs1fFWrTR4g
-         5PT/tb2HlSUvhruZcUows/2pjeCgc/9K6FcjjFSNx4VVbOXwItcMBXpQbATzmUTN3BL+
-         AE08LW7/NpTB1FHidwmzBpGDihX4zr5sHcusS2TAjszGmvVDaEhz/3SMQLBJgw8uUkTW
-         xSjCtUcM5fqf3JrwRA8sBa66vnHoyk5BPencseLcg4Sf7sqMyRiH00sInWYBU8M6Yrex
-         qQEBfb+SOP6Vzb5cGNx2U6A8/CykSOtVqR3jmB9K5hACYi3nSF79iiWvOyJUpn0igtPK
-         +CYw==
-X-Gm-Message-State: AGi0PuY/ZpI7w6TK5Z3TBYWSVTr8YYqK5hdNtnZTM5age2Ceov04DMM2
-        RBMDFJoYLNNVNpW5MliVBPq9/S0BpIDacKoOc3fCUYSmK0xm
-X-Google-Smtp-Source: APiQypJvuDvSZ9FFBPkY5dWrm9ATDPiidpqgxBcQlU45+tLkGj9Cr5dlQRyKppMkc5WNZrDlvQ7lhTCnq+ehX4WIK7wINH2DdX/N
+        bh=e0jEEa+pjjlUz/FmgtgfrMc7L6f9YFcKjGa20T02Fkk=;
+        b=N77a58szUoxmMYBzPOWEP8j/7wt8ayBs+0JyJHLdqE3HvC+MsDIoidQ7e99DNO7/sP
+         UaH7DnJk7c6iAvZuXX1v0GdvIi3XojHSMB5xS0iZW5cDDyNUFcUK7p+66ExbPdwHYvTe
+         cW1RBWtQAFCTBX0KCIfnWpodgsznWyNjWGV45gLGE8hSdxNejTkzDlZVsqCUgbN7IVAE
+         +CV0CEyywlEus2AXoFHk4ZhYA7Yor/OIHKCMoyKvG9Na7QDrwv6Hs+e+CvAjwHUq+rx1
+         CG7XwsuUHAkr6FNeeE+K2WEHHs96eJic9e9iCfOlmG6Jzp28lix9n8ljCj69HTyw2hDT
+         c3vQ==
+X-Gm-Message-State: AGi0PuaBczLo33wg9WXF7XtlDyQLy6JdiiZ9QQZlTKUoXMNNAERuJoFM
+        6WP9MW//oRcRP1IdZDmrylwvx4B5ei3bVkeNmiHe5Bod5tIT
+X-Google-Smtp-Source: APiQypJCzmFeaF1N49v+EvGzOgO9RTUeIQneWmNPHzGtgQsWYivAe5gsFfhTl+GcaUOXqXj7JoabDrYL3tUuFgsPjpQ0AwZoddGZ
 MIME-Version: 1.0
-X-Received: by 2002:a92:8352:: with SMTP id f79mr2321852ild.58.1586221559857;
- Mon, 06 Apr 2020 18:05:59 -0700 (PDT)
-Date:   Mon, 06 Apr 2020 18:05:59 -0700
+X-Received: by 2002:a5d:8742:: with SMTP id k2mr15906792iol.120.1586221563224;
+ Mon, 06 Apr 2020 18:06:03 -0700 (PDT)
+Date:   Mon, 06 Apr 2020 18:06:03 -0700
 In-Reply-To: <3ff20c8a-5a26-5e38-42f7-ec751735d47c@infradead.org>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009c47d505a2a8fc23@google.com>
+Message-ID: <000000000000cfac8f05a2a8fc83@google.com>
 Subject: Re: Re: BUG: unable to handle kernel paging request in kernel_get_mempolicy
 From:   syzbot <syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com>
 To:     Randy Dunlap <rdunlap@infradead.org>
@@ -210,8 +210,3 @@ want 2 args (repo, branch), got 3
 > -- 
 > ~Randy
 > Reported-by: Randy Dunlap <rdunlap@infradead.org>
->
-> -- 
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/3ff20c8a-5a26-5e38-42f7-ec751735d47c%40infradead.org.
