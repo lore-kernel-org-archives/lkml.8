@@ -2,185 +2,158 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D62ACC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A192C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE1F92076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1C62076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r3Amgov5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgDGSia (ORCPT
+        id S1727903AbgDGSil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:38:30 -0400
-Received: from 8bytes.org ([81.169.241.247]:57778 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbgDGSiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:38:03 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id CF58C694; Tue,  7 Apr 2020 20:37:53 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [RFC PATCH 29/34] iommu/omap: Remove orphan_dev tracking
-Date:   Tue,  7 Apr 2020 20:37:37 +0200
-Message-Id: <20200407183742.4344-30-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200407183742.4344-1-joro@8bytes.org>
-References: <20200407183742.4344-1-joro@8bytes.org>
+        Tue, 7 Apr 2020 14:38:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36168 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727849AbgDGSii (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 14:38:38 -0400
+Received: by mail-ot1-f66.google.com with SMTP id l23so4225210otf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 11:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DfU5H29fCXE3UgX+4sVCKl7laMGWi7iSdKnWzwJAqFc=;
+        b=r3Amgov5t5gHc1Vo6J48zl+Kwo3vO8poNSiulyIrPrwzvvmc+vbExumlXUUezgp2e0
+         ahmpdd62XIm162m5mZX27P7RzSvQAjLc8hopGL9glBIVZT4cxLnIkZiayMsUpTYERFhE
+         kCIkAEBhIgZXyoUB9Nzt5UtNj7sEwP0fWY129L/TacgRefrZ7gOkLBCoRLwlUnT7xk+w
+         cuEjeefzyNNNQWc8hThFdp1JqyLnAoEimChKY9ubvSA0d+CN8nCpBFy6VQfHNkEuMF2N
+         Ahk4ha84IJF27fgAaDOlQV1GuDyNZISxoWXaTkz7i4u+BfZKS8a3wvroUIExmQcz7E1v
+         5h3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DfU5H29fCXE3UgX+4sVCKl7laMGWi7iSdKnWzwJAqFc=;
+        b=X3bXEfcDAt1BWUIvirYyIL35M7rMqvmgXJrrZZrt95MUwBlu7jX7j4//SvrCiZgdhs
+         d7d2v/0P7Mf7eYodmZZvzxxo2qBAPXMOQuPdf+zHUsA0mskvrW9kSoqGxIrQv/lTLtFI
+         YLDycre4wqmGnCCmFQN2dhoo+q7SQnXGLgtbDYv5K1ro4utqprvNobsBXDqGIeJUI09f
+         DMzMebQjUL3KYBc+57RMMvuo4r5+ThJE62/q6Uzt1nhSnjhmUSBSRUF7OoRO57qmCAyH
+         yXZ/yjbxACz7bDvJ15QXAZcIvLwuDfC9mU7dPqPwpsjm1AX37UaJKJ1zcvBxXg5FFJpT
+         EObg==
+X-Gm-Message-State: AGi0PubX4j8z+dQTEwvwjkbKNAKXYcrum3aQzm5+6OHWZAOXh8aFX+JK
+        Odz0QYN6fAYkhOqqvD3xA6Ptp0P2ecTrEPdtMYHehDwM
+X-Google-Smtp-Source: APiQypKvRIslouspebvmyiyTT8xoA5MiR6UfoN24Yzn6dDPf3VJZJrZVbdZ4mwOwB4jJHmwtHVaBzLtq5nJkixnQyVY=
+X-Received: by 2002:a9d:7349:: with SMTP id l9mr601660otk.221.1586284717081;
+ Tue, 07 Apr 2020 11:38:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <TYAPR01MB45443FA43152C0091D6EBF9AD8C20@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <20200407070609.42865-1-john.stultz@linaro.org> <CAMuHMdWSXvHN5zEh7A+CygxEHP42qFrum+ntiL=m+ATwYOOB0Q@mail.gmail.com>
+ <CAMuHMdXuv1jcuDZLh9TfBQH5Oyf9S8qhVfFbui0a5OpbwUzT8Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdXuv1jcuDZLh9TfBQH5Oyf9S8qhVfFbui0a5OpbwUzT8Q@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 7 Apr 2020 11:38:25 -0700
+Message-ID: <CALAqxLVCMbHO33P1wF-4bXZ5r7T9Xgw569eVp8e7oM7QSQtjzA@mail.gmail.com>
+Subject: Re: [RFC][PATCH] driver core: Ensure wait_for_device_probe() waits
+ until the deferred_probe_timeout fires
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+On Tue, Apr 7, 2020 at 9:46 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi John,
+>
+> On Tue, Apr 7, 2020 at 9:50 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Apr 7, 2020 at 9:06 AM John Stultz <john.stultz@linaro.org> wrote:
+> > > In commit c8c43cee29f6 ("driver core: Fix
+> > > driver_deferred_probe_check_state() logic"), we set the default
+> > > driver_deferred_probe_timeout value to 30 seconds to allow for
+> > > drivers that are missing dependencies to have some time so that
+> > > the dependency may be loaded from userland after initcalls_done
+> > > is set.
+> > >
+> > > However, Yoshihiro Shimoda reported that on his device that
+> > > expects to have unmet dependencies (due to "optional links" in
+> > > its devicetree), was failing to mount the NFS root.
+> > >
+> > > In digging further, it seemed the problem was that while the
+> > > device properly probes after waiting 30 seconds for any missing
+> > > modules to load, the ip_auto_config() had already failed,
+> > > resulting in NFS to fail. This was due to ip_auto_config()
+> > > calling wait_for_device_probe() which doesn't wait for the
+> > > driver_deferred_probe_timeout to fire.
+> > >
+> > > This patch tries to fix the issue by creating a waitqueue
+> > > for the driver_deferred_probe_timeout, and calling wait_event()
+> > > to make sure driver_deferred_probe_timeout is zero in
+> > > wait_for_device_probe() to make sure all the probing is
+> > > finished.
+> > >
+> > > NOTE: I'm not 100% sure this won't have other unwanted side
+> > > effects (I don't have failing hardware myself to validate),
+> > > so I'd apprecate testing and close review.
+> > >
+> > > If this approach doesn't work, I'll simply set the default
+> > > driver_deferred_probe_timeout value back to zero, to avoid any
+> > > behavioral change from before.
+> > >
+> > > Thanks to Geert for chasing down that ip_auto_config was why NFS
+> > > was failing in this case!
+> > >
+> > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+> > > Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+> > > Cc: Jakub Kicinski <kuba@kernel.org>
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > Cc: netdev <netdev@vger.kernel.org>
+> > > Cc: linux-pm@vger.kernel.org
+> > > Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state() logic")
+> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> >
+> > Thanks, this fixes the issue for me!
+> >
+> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Unfortunately this adds another delay of ca. 30 s to mounting NFS root
+> when using a kernel config that does include IOMMU and MODULES
+> support.
 
-Remove the tracking of device which could not be probed because
-their IOMMU is not probed yet. Replace it with a call to
-bus_iommu_probe() when a new IOMMU is probed.
+Yea. I worry the other downside is that systems with no missing
+dependencies will also see the stall here since we're waiting for the
+timeout regardless of if there's any drivers missing.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- drivers/iommu/omap-iommu.c | 54 +++-----------------------------------
- 1 file changed, 4 insertions(+), 50 deletions(-)
+So in the light of morning (well, just barely), I think just setting
+the probe timeout to zero by default is the best approach. The series
+then doesn't change behavior but just cleans things up.
 
-diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-index 887fefcb03b4..ecc9d0829a91 100644
---- a/drivers/iommu/omap-iommu.c
-+++ b/drivers/iommu/omap-iommu.c
-@@ -35,15 +35,6 @@
- 
- static const struct iommu_ops omap_iommu_ops;
- 
--struct orphan_dev {
--	struct device *dev;
--	struct list_head node;
--};
--
--static LIST_HEAD(orphan_dev_list);
--
--static DEFINE_SPINLOCK(orphan_lock);
--
- #define to_iommu(dev)	((struct omap_iommu *)dev_get_drvdata(dev))
- 
- /* bitmap of the page sizes currently supported */
-@@ -62,8 +53,6 @@ static DEFINE_SPINLOCK(orphan_lock);
- static struct platform_driver omap_iommu_driver;
- static struct kmem_cache *iopte_cachep;
- 
--static int _omap_iommu_add_device(struct device *dev);
--
- /**
-  * to_omap_domain - Get struct omap_iommu_domain from generic iommu_domain
-  * @dom:	generic iommu domain handle
-@@ -1177,7 +1166,6 @@ static int omap_iommu_probe(struct platform_device *pdev)
- 	struct omap_iommu *obj;
- 	struct resource *res;
- 	struct device_node *of = pdev->dev.of_node;
--	struct orphan_dev *orphan_dev, *tmp;
- 
- 	if (!of) {
- 		pr_err("%s: only DT-based devices are supported\n", __func__);
-@@ -1260,13 +1248,8 @@ static int omap_iommu_probe(struct platform_device *pdev)
- 
- 	dev_info(&pdev->dev, "%s registered\n", obj->name);
- 
--	list_for_each_entry_safe(orphan_dev, tmp, &orphan_dev_list, node) {
--		err = _omap_iommu_add_device(orphan_dev->dev);
--		if (!err) {
--			list_del(&orphan_dev->node);
--			kfree(orphan_dev);
--		}
--	}
-+	/* Re-probe bus to probe device attached to this IOMMU */
-+	bus_iommu_probe(&platform_bus_type);
- 
- 	return 0;
- 
-@@ -1657,7 +1640,7 @@ static phys_addr_t omap_iommu_iova_to_phys(struct iommu_domain *domain,
- 	return ret;
- }
- 
--static int _omap_iommu_add_device(struct device *dev)
-+static int omap_iommu_add_device(struct device *dev)
- {
- 	struct omap_iommu_arch_data *arch_data, *tmp;
- 	struct omap_iommu *oiommu;
-@@ -1666,8 +1649,6 @@ static int _omap_iommu_add_device(struct device *dev)
- 	struct platform_device *pdev;
- 	int num_iommus, i;
- 	int ret;
--	struct orphan_dev *orphan_dev;
--	unsigned long flags;
- 
- 	/*
- 	 * Allocate the archdata iommu structure for DT-based devices.
-@@ -1702,23 +1683,7 @@ static int _omap_iommu_add_device(struct device *dev)
- 		if (!pdev) {
- 			of_node_put(np);
- 			kfree(arch_data);
--			spin_lock_irqsave(&orphan_lock, flags);
--			list_for_each_entry(orphan_dev, &orphan_dev_list,
--					    node) {
--				if (orphan_dev->dev == dev)
--					break;
--			}
--			spin_unlock_irqrestore(&orphan_lock, flags);
--
--			if (orphan_dev && orphan_dev->dev == dev)
--				return -EPROBE_DEFER;
--
--			orphan_dev = kzalloc(sizeof(*orphan_dev), GFP_KERNEL);
--			orphan_dev->dev = dev;
--			spin_lock_irqsave(&orphan_lock, flags);
--			list_add(&orphan_dev->node, &orphan_dev_list);
--			spin_unlock_irqrestore(&orphan_lock, flags);
--			return -EPROBE_DEFER;
-+			return -ENODEV;
- 		}
- 
- 		oiommu = platform_get_drvdata(pdev);
-@@ -1764,17 +1729,6 @@ static int _omap_iommu_add_device(struct device *dev)
- 	return 0;
- }
- 
--static int omap_iommu_add_device(struct device *dev)
--{
--	int ret;
--
--	ret = _omap_iommu_add_device(dev);
--	if (ret == -EPROBE_DEFER)
--		return 0;
--
--	return ret;
--}
--
- static void omap_iommu_remove_device(struct device *dev)
- {
- 	struct omap_iommu_arch_data *arch_data = dev->archdata.iommu;
--- 
-2.17.1
+Though, I guess one could argue this fix should go along with setting
+the value to zero, so at least if folks specify a delay on the boot
+cmd, things don't fail because they didn't wait.
 
+thanks
+-john
