@@ -2,54 +2,50 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135CEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8569C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC8720771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7146C2078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255038;
-	bh=kbZl1uDjGDqe9P85bbeC5tlO3WXKxc6I56W8sgaOY54=;
+	s=default; t=1586255042;
+	bh=HqEmlzxufOwa6YagG4mTNMv27CCEvyFSPzld7zaEp8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LF7jcFFYGh91wvBFoXqLAnGyyabL/D1QZS8BOtn1TOkUlCLGS7HANFkz+/j2Q6/7h
-	 TXzoV/aproFo36LhaEl0CfE6pAo89g3gbh239GXXOyp2kQxUaNg7kXTlA3BdnIt6jF
-	 fELMU3oY3wkBUwx46OaFk+0BOKdWgkKmnsB/Lm+k=
+	b=is1QiXCtV3JvsZmleiwiISmP0CP+hGOR0i6XOnKPQnQsR9kebErssFBUrx2ki0D5Z
+	 v1iHo0FKDFWViua1xqho5cEPWIi2B1+FVn5rgQkoGYn8RPrZ9zoUQE4UPc22XW1lxO
+	 IF9dNTtcK/RnDcIxwG+zxW4lcags1dBw2cjLUtac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgDGKX5 (ORCPT
+        id S1728250AbgDGKYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33882 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:24:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgDGKXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:23:53 -0400
+        id S1728606AbgDGKX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFE4420644;
-        Tue,  7 Apr 2020 10:23:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAD5B2082D;
+        Tue,  7 Apr 2020 10:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255033;
-        bh=kbZl1uDjGDqe9P85bbeC5tlO3WXKxc6I56W8sgaOY54=;
+        s=default; t=1586255038;
+        bh=HqEmlzxufOwa6YagG4mTNMv27CCEvyFSPzld7zaEp8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C8B8bevqcdGusAgVCN8q3YFS56P8XJ8fmuRW4uGU/TQraEKurKYqnsVBczPR+aQIX
-         mqbbJ6nXkweNDrQ074AOaGB65h0k/nY8zVNnRT4/se+gnnupy84fPQCAkAnrl3093B
-         mVjALNsYG2t6dQ4kO0wpwjS1vgcIYaNeA4JBbrQ4=
+        b=Sd2MZWRQdQSntVvEFreA4IaqCZkF1BPNhBwfTa+pG662s4jpYsitmduZXLbbIaQvp
+         mzGZ2GsxpAPmORs2N5AWLtR4WFoXiyiF8s65RWh5+m8I/hUpQv8hUAa7O/dIzZ/BsU
+         sLFlebY6EoD23Ct/xEZKzhD9Z6kSpf0lC4wwiPlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 13/36] padata: fix uninitialized return value in padata_replace()
-Date:   Tue,  7 Apr 2020 12:21:46 +0200
-Message-Id: <20200407101456.064759735@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH 5.4 15/36] misc: rtsx: set correct pcr_ops for rts522A
+Date:   Tue,  7 Apr 2020 12:21:48 +0200
+Message-Id: <20200407101456.294777610@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -62,51 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 41ccdbfd5427bbbf3ed58b16750113b38fad1780 ]
+commit 10cea23b6aae15e8324f4101d785687f2c514fe5 upstream.
 
-According to Geert's report[0],
+rts522a should use rts522a_pcr_ops, which is
+diffrent with rts5227 in phy/hw init setting.
 
-  kernel/padata.c: warning: 'err' may be used uninitialized in this
-    function [-Wuninitialized]:  => 539:2
+Fixes: ce6a5acc9387 ("mfd: rtsx: Add support for rts522A")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200326032618.20472-1-yuehaibing@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Warning is seen only with older compilers on certain archs.  The
-runtime effect is potentially returning garbage down the stack when
-padata's cpumasks are modified before any pcrypt requests have run.
-
-Simplest fix is to initialize err to the success value.
-
-[0] http://lkml.kernel.org/r/20200210135506.11536-1-geert@linux-m68k.org
-
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: bbefa1dd6a6d ("crypto: pcrypt - Avoid deadlock by using per-instance padata queues")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/cardreader/rts5227.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index fda7a7039422d..7bd37dd9ec55b 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -516,7 +516,7 @@ static int padata_replace(struct padata_instance *pinst)
+--- a/drivers/misc/cardreader/rts5227.c
++++ b/drivers/misc/cardreader/rts5227.c
+@@ -394,6 +394,7 @@ static const struct pcr_ops rts522a_pcr_
+ void rts522a_init_params(struct rtsx_pcr *pcr)
  {
- 	int notification_mask = 0;
- 	struct padata_shell *ps;
--	int err;
-+	int err = 0;
+ 	rts5227_init_params(pcr);
++	pcr->ops = &rts522a_pcr_ops;
+ 	pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 20, 11);
+ 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
  
- 	pinst->flags |= PADATA_RESET;
- 
--- 
-2.20.1
-
 
 
