@@ -2,59 +2,55 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCEAC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27652C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8152080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BDE2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255170;
-	bh=QAjVBsd8e5IbA+b+qruEdohp9CjMqPCmCzLociEPK+o=;
+	s=default; t=1586255173;
+	bh=TorpH4uEST+U3yxKOkCZL/m53n9xz2lDBNqCEdKUsyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qgut+B0sHEoJ3fgwUP1Eir2eQyez5aG8zOL564QD7uBg6wMGojQ0kAWQMDWiwBtZw
-	 irl1Rivc8ifKNVFTBbgdRKHeBq8oL6VJEc3HnLFx2gH2agSeGhhSMiIcyqB3VZfbM5
-	 tIuHAPw//VvHs5YtL6LJlzup62AXzA6Rb9MUt76g=
+	b=vdtluH80s9Ocs7VHJL4TniBOWt4YtPLeQesUHarvJJ7AquN+xsjykD6BxrSQVaY/8
+	 JCtTLEFxu/7omUWN8vUsyb9jL8MRkCs1jXWylSUELX3iK6pm3jw9Qu0Q094w00bAaQ
+	 hS5khNUcPOiCHDRtn6+Ag6kA2c2w6Q5V00nCfv+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgDGK0J (ORCPT
+        id S1729084AbgDGK0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37096 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:26:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729079AbgDGK0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:26:08 -0400
+        id S1728303AbgDGK0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:26:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39F7220771;
-        Tue,  7 Apr 2020 10:26:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A49F2082D;
+        Tue,  7 Apr 2020 10:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255166;
-        bh=QAjVBsd8e5IbA+b+qruEdohp9CjMqPCmCzLociEPK+o=;
+        s=default; t=1586255161;
+        bh=TorpH4uEST+U3yxKOkCZL/m53n9xz2lDBNqCEdKUsyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfbbyNGVdUPrWzoBiwBk5m146hNghYWWxiHES8iprjgbtainVmdmiMG4gTjHMnSKj
-         /8pC5dG4m/d8M/6zYI2KVcoyLSyCBfAAiHGhbxWpUi1q8fMplZa8gc4WD1jh2TIE/A
-         YrS0Rii0BH+eD2PmoRUoN8XKzS2bkEsRG4kwy8TI=
+        b=prSI+ab112bbw4dTnIPAXRWID7LqEeq8w1y44QgJnsxtTUqVm2GBxYxxE30p+3Lch
+         FJ2FXftIukuLnP9wy11gHya54ztFJ4H/lIk9OAxoOiU4rpIEwrgWeiKnz/T9m6f+61
+         qOvhx2mLemAdYAAabFdx7QAiDbVYyhj7I9DP7l2U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, franky.lin@broadcom.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 10/29] brcmfmac: abort and release host after error
-Date:   Tue,  7 Apr 2020 12:22:07 +0200
-Message-Id: <20200407101453.241931574@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 5.5 27/46] nvmem: check for NULL reg_read and reg_write before dereferencing
+Date:   Tue,  7 Apr 2020 12:21:58 +0200
+Message-Id: <20200407101502.416106818@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
-References: <20200407101452.046058399@linuxfoundation.org>
+In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
+References: <20200407101459.502593074@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,57 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 
-[ Upstream commit 863844ee3bd38219c88e82966d1df36a77716f3e ]
+commit 3c91ef69a3e94f78546b246225ed573fbf1735b4 upstream.
 
-With commit 216b44000ada ("brcmfmac: Fix use after free in
-brcmf_sdio_readframes()") applied, we see locking timeouts in
-brcmf_sdio_watchdog_thread().
+Return -EPERM if reg_read is NULL in bin_attr_nvmem_read() or if
+reg_write is NULL in bin_attr_nvmem_write().
 
-brcmfmac: brcmf_escan_timeout: timer expired
-INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
-Not tainted 4.19.94-07984-g24ff99a0f713 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
-[<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
-[<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
-[<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
-[<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
+This prevents NULL dereferences such as the one described in
+03cd45d2e219 ("thunderbolt: Prevent crash if non-active NVMem file is
+read")
 
-In addition to restarting or exiting the loop, it is also necessary to
-abort the command and to release the host.
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200310132257.23358-10-srinivas.kandagatla@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: franky.lin@broadcom.com
-Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvmem/nvmem-sysfs.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index f9047db6a11d8..3a08252f1a53f 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -1938,6 +1938,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
- 			if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
- 					       BRCMF_SDIO_FT_NORMAL)) {
- 				rd->len = 0;
-+				brcmf_sdio_rxfail(bus, true, true);
-+				sdio_release_host(bus->sdiodev->func1);
- 				brcmu_pkt_buf_free_skb(pkt);
- 				continue;
- 			}
--- 
-2.20.1
-
+--- a/drivers/nvmem/nvmem-sysfs.c
++++ b/drivers/nvmem/nvmem-sysfs.c
+@@ -56,6 +56,9 @@ static ssize_t bin_attr_nvmem_read(struc
+ 
+ 	count = round_down(count, nvmem->word_size);
+ 
++	if (!nvmem->reg_read)
++		return -EPERM;
++
+ 	rc = nvmem->reg_read(nvmem->priv, pos, buf, count);
+ 
+ 	if (rc)
+@@ -90,6 +93,9 @@ static ssize_t bin_attr_nvmem_write(stru
+ 
+ 	count = round_down(count, nvmem->word_size);
+ 
++	if (!nvmem->reg_write)
++		return -EPERM;
++
+ 	rc = nvmem->reg_write(nvmem->priv, pos, buf, count);
+ 
+ 	if (rc)
 
 
