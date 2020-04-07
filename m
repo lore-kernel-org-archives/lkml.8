@@ -2,290 +2,408 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDF3C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4413FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7B8206F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:33:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Ar3NjO7F"
+	by mail.kernel.org (Postfix) with ESMTP id 0BA8B206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgDGCdM (ORCPT
+        id S1726571AbgDGCea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 22:33:12 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45049 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbgDGCdL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 22:33:11 -0400
-Received: by mail-qk1-f194.google.com with SMTP id j4so217791qkc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 19:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=uax8Vw7cr47kYDlPCC6mjCWXp++1P7m65jf9YFpEfWc=;
-        b=Ar3NjO7FCZ94/tNNAFxcwpMwHkdDsa0U809VKkJK/8PBlgc8jJUW5m0dXN4SgFPXzX
-         FpeL9ZNXXNllKVxMZEH5vSG/rjFjJDOVOfMb6Dkd4qMGDZYIUK5eywdXE4XMAS6nsC/9
-         A6wQD48g4BWSMzOONXefwEtTgJK2kYp2H54JMiDgM1EBTYcY5onMvSRIt98sOWenz6E+
-         b0qeAFE9yXRw4xruGEyb+upirYD3TrkltkL7eZWzHCbIP8xtPk4qkCYtI3mwlgFsPkfm
-         gxxI3bgiKwh3D50nHo26Mjrl7ISIJnglYFWk5RQFMyX37wpa5zykSGWPJSw/W4sK6fwr
-         mQJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=uax8Vw7cr47kYDlPCC6mjCWXp++1P7m65jf9YFpEfWc=;
-        b=e/lsU5WaqJ22LqqFZbTbx2do1Ntd+nMhikOqLGgOapcaFV8OjELj8jZereaffET6oc
-         E5ZLOl0hO6b2b5zy7UQejPXajZ4laX1dV2FctmreADdD9xzIZr2sMFWwk+ZAV7flPXvn
-         xAkFvsUSG27z57f2cTpT5EYSjT79YL7h7ggBNI65BR8drZt4DDFcpc/Q3tsQigszUetK
-         xrFhif91Zpn5Xzavy9hDsUO770JhzFcoROs9AYR6H5EgEtMNgBAgEeOv7NDPRQwBZaG3
-         3KQhztOF6Z+PGy2feezs97xjYwujPP0eEQSwAS1ri9Ar5yCy9GsH0NCD9GUU6eZTGaI2
-         YhbQ==
-X-Gm-Message-State: AGi0Puad4uuIlWGVpm22kFmtDUO0PGIR3Rasupwu+zB3c19PM+4RHo01
-        Aj8/90RdAyeXkQl17gEMQOS5xg==
-X-Google-Smtp-Source: APiQypITGOR01c7paKFFY/ZQpvBBHth4fc8eYWxzcXMgA8nbMWaYizx4G6Zhck/ZzdGhoaXg+reQbQ==
-X-Received: by 2002:a37:9e17:: with SMTP id h23mr67691qke.315.1586226790004;
-        Mon, 06 Apr 2020 19:33:10 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id h17sm4849738qkh.33.2020.04.06.19.33.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Apr 2020 19:33:09 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: spontaneous crash with "ext4: move ext4 bmap to use iomap
- infrastructure"
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200403113410.6ECFFAE045@d06av26.portsmouth.uk.ibm.com>
-Date:   Mon, 6 Apr 2020 22:33:08 -0400
-Cc:     Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <70DAEC29-7D79-49CC-BC14-3C964BAA8C13@lca.pw>
-References: <B97A26CF-3511-40D2-82B6-D8BCC7F2DE74@lca.pw>
- <0024FD7B-D28A-4158-B9F8-76FDD6E6CF98@lca.pw>
- <20200403113410.6ECFFAE045@d06av26.portsmouth.uk.ibm.com>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Mon, 6 Apr 2020 22:34:30 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60472 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726329AbgDGCe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 22:34:29 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4E1C6AEAD2CAE43C0EFE;
+        Tue,  7 Apr 2020 10:34:22 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 7 Apr 2020
+ 10:34:19 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent meta updates while checkpoint is
+ in progress
+To:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sahitya Tummala <stummala@codeaurora.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <1585219019-24831-1-git-send-email-stummala@codeaurora.org>
+ <20200331035419.GB79749@google.com> <20200331090608.GZ20234@codeaurora.org>
+ <20200331184307.GA198665@google.com> <20200401050801.GA20234@codeaurora.org>
+ <20200403171727.GB68460@google.com> <20200403172750.GD68460@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <8ab6c209-8fbf-eadb-17cb-d96cc10f868d@huawei.com>
+Date:   Tue, 7 Apr 2020 10:34:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200403172750.GD68460@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/4/4 1:27, Jaegeuk Kim wrote:
+> On 04/03, Jaegeuk Kim wrote:
+>> On 04/01, Sahitya Tummala wrote:
+>>> Hi Jaegeuk,
+>>>
+>>> Got it.
+>>> The diff below looks good to me.
+>>> Would you like me to test it and put a patch for this?
+>>
+>> Sahitya, Chao,
+>>
+>> Could you please take a look at this patch and test intensively?
+>>
+>> Thanks,
+> 
+> v2:
+> 
+>>From 6bf7d5b227d466b0fe90d4957af29bd184fb646e Mon Sep 17 00:00:00 2001
+> From: Jaegeuk Kim <jaegeuk@kernel.org>
+> Date: Tue, 31 Mar 2020 11:43:07 -0700
+> Subject: [PATCH] f2fs: refactor resize_fs to avoid meta updates in progress
+> 
+> Sahitya raised an issue:
+> - prevent meta updates while checkpoint is in progress
+> 
+> allocate_segment_for_resize() can cause metapage updates if
+> it requires to change the current node/data segments for resizing.
+> Stop these meta updates when there is a checkpoint already
+> in progress to prevent inconsistent CP data.
+> 
+> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+>  fs/f2fs/checkpoint.c        |   6 +-
+>  fs/f2fs/f2fs.h              |   2 +-
+>  fs/f2fs/file.c              |   5 +-
+>  fs/f2fs/gc.c                | 107 +++++++++++++++++++-----------------
+>  fs/f2fs/super.c             |   1 -
+>  include/trace/events/f2fs.h |   4 +-
+>  6 files changed, 67 insertions(+), 58 deletions(-)
+> 
+> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> index 852890b72d6ac..531995192b714 100644
+> --- a/fs/f2fs/checkpoint.c
+> +++ b/fs/f2fs/checkpoint.c
+> @@ -1553,7 +1553,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>  			return 0;
+>  		f2fs_warn(sbi, "Start checkpoint disabled!");
+>  	}
+> -	mutex_lock(&sbi->cp_mutex);
+> +	if (cpc->reason != CP_RESIZE)
+> +		mutex_lock(&sbi->cp_mutex);
+>  
+>  	if (!is_sbi_flag_set(sbi, SBI_IS_DIRTY) &&
+>  		((cpc->reason & CP_FASTBOOT) || (cpc->reason & CP_SYNC) ||
+> @@ -1622,7 +1623,8 @@ int f2fs_write_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
+>  	f2fs_update_time(sbi, CP_TIME);
+>  	trace_f2fs_write_checkpoint(sbi->sb, cpc->reason, "finish checkpoint");
+>  out:
+> -	mutex_unlock(&sbi->cp_mutex);
+> +	if (cpc->reason != CP_RESIZE)
+> +		mutex_unlock(&sbi->cp_mutex);
+>  	return err;
+>  }
+>  
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index be02a5cadd944..f9b2caa2135bd 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -193,6 +193,7 @@ enum {
+>  #define	CP_DISCARD	0x00000010
+>  #define CP_TRIMMED	0x00000020
+>  #define CP_PAUSE	0x00000040
+> +#define CP_RESIZE 	0x00000080
+>  
+>  #define MAX_DISCARD_BLOCKS(sbi)		BLKS_PER_SEC(sbi)
+>  #define DEF_MAX_DISCARD_REQUEST		8	/* issue 8 discards per round */
+> @@ -1421,7 +1422,6 @@ struct f2fs_sb_info {
+>  	unsigned int segs_per_sec;		/* segments per section */
+>  	unsigned int secs_per_zone;		/* sections per zone */
+>  	unsigned int total_sections;		/* total section count */
+> -	struct mutex resize_mutex;		/* for resize exclusion */
+>  	unsigned int total_node_count;		/* total node block count */
+>  	unsigned int total_valid_node_count;	/* valid node block count */
+>  	loff_t max_file_blocks;			/* max block index of file */
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 257e61d0afffb..b4c12370bb3d6 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -3305,7 +3305,6 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+>  {
+>  	struct f2fs_sb_info *sbi = F2FS_I_SB(file_inode(filp));
+>  	__u64 block_count;
+> -	int ret;
+>  
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EPERM;
+> @@ -3317,9 +3316,7 @@ static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+>  			   sizeof(block_count)))
+>  		return -EFAULT;
+>  
+> -	ret = f2fs_resize_fs(sbi, block_count);
+> -
+> -	return ret;
+> +	return f2fs_resize_fs(sbi, block_count);
+>  }
+>  
+>  static int f2fs_ioc_enable_verity(struct file *filp, unsigned long arg)
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 26248c8936db0..46c75ecb64a2e 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -1399,12 +1399,29 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
+>  				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
+>  }
+>  
+> -static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+> -							unsigned int end)
+> +static int free_segment_range(struct f2fs_sb_info *sbi,
+> +				unsigned int secs, bool gc_only)
+>  {
+> -	int type;
+> -	unsigned int segno, next_inuse;
+> +	unsigned int segno, next_inuse, start, end;
+> +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+> +	int gc_mode, gc_type;
+>  	int err = 0;
+> +	int type;
+> +
+> +	/* Force block allocation for GC */
+> +	MAIN_SECS(sbi) -= secs;
+> +	start = MAIN_SECS(sbi) * sbi->segs_per_sec;
+> +	end = MAIN_SEGS(sbi) - 1;
+> +
+> +	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+> +	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
+> +		if (SIT_I(sbi)->last_victim[gc_mode] >= start)
+> +			SIT_I(sbi)->last_victim[gc_mode] = 0;
+> +
+> +	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
+> +		if (sbi->next_victim_seg[gc_type] >= start)
+> +			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
+> +	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
+>  
+>  	/* Move out cursegs from the target range */
+>  	for (type = CURSEG_HOT_DATA; type < NR_CURSEG_TYPE; type++)
+> @@ -1417,18 +1434,20 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+>  			.iroot = RADIX_TREE_INIT(gc_list.iroot, GFP_NOFS),
+>  		};
+>  
+> -		down_write(&sbi->gc_lock);
+>  		do_garbage_collect(sbi, segno, &gc_list, FG_GC);
+> -		up_write(&sbi->gc_lock);
+>  		put_gc_inode(&gc_list);
+>  
+> -		if (get_valid_blocks(sbi, segno, true))
+> -			return -EAGAIN;
+> +		if (!gc_only && get_valid_blocks(sbi, segno, true)) {
+> +			err = -EAGAIN;
+> +			goto out;
+> +		}
+>  	}
+> +	if (gc_only)
+> +		goto out;
+>  
+> -	err = f2fs_sync_fs(sbi->sb, 1);
+> +	err = f2fs_write_checkpoint(sbi, &cpc);
+>  	if (err)
+> -		return err;
+> +		goto out;
+>  
+>  	next_inuse = find_next_inuse(FREE_I(sbi), end + 1, start);
+>  	if (next_inuse <= end) {
+> @@ -1436,6 +1455,8 @@ static int free_segment_range(struct f2fs_sb_info *sbi, unsigned int start,
+>  			 next_inuse);
+>  		f2fs_bug_on(sbi, 1);
+>  	}
+> +out:
+> +	MAIN_SECS(sbi) -= secs;
+>  	return err;
+>  }
+>  
+> @@ -1481,6 +1502,7 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+>  
+>  	SM_I(sbi)->segment_count = (int)SM_I(sbi)->segment_count + segs;
+>  	MAIN_SEGS(sbi) = (int)MAIN_SEGS(sbi) + segs;
+> +	MAIN_SECS(sbi) += secs;
+>  	FREE_I(sbi)->free_sections = (int)FREE_I(sbi)->free_sections + secs;
+>  	FREE_I(sbi)->free_segments = (int)FREE_I(sbi)->free_segments + segs;
+>  	F2FS_CKPT(sbi)->user_block_count = cpu_to_le64(user_block_count + blks);
+> @@ -1502,8 +1524,8 @@ static void update_fs_metadata(struct f2fs_sb_info *sbi, int secs)
+>  int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  {
+>  	__u64 old_block_count, shrunk_blocks;
+> +	struct cp_control cpc = { CP_RESIZE, 0, 0, 0 };
+>  	unsigned int secs;
+> -	int gc_mode, gc_type;
+>  	int err = 0;
+>  	__u32 rem;
+>  
+> @@ -1538,10 +1560,22 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  		return -EINVAL;
+>  	}
+>  
+> -	freeze_bdev(sbi->sb->s_bdev);
+> -
+>  	shrunk_blocks = old_block_count - block_count;
+>  	secs = div_u64(shrunk_blocks, BLKS_PER_SEC(sbi));
+> +
+> +	/* protect MAIN_SEC in free_segment_range */
+> +	f2fs_lock_op(sbi);
+> +	err = free_segment_range(sbi, secs, true);
 
+For this path, we break the rule that we need hold gc_lock during
+do_garbage_collect().
 
-> On Apr 3, 2020, at 7:34 AM, Ritesh Harjani <riteshh@linux.ibm.com> =
-wrote:
->=20
->=20
->=20
-> On 4/3/20 4:56 PM, Qian Cai wrote:
->>> On Apr 1, 2020, at 8:38 AM, Qian Cai <cai@lca.pw> wrote:
->>>=20
->>> It is not always reproducible so far, but it start to show up on =
-today=E2=80=99s linux-next. Look
->>> Trough the commits and noticed this recent one matched the new call =
-traces,
->>>=20
->>> ac58e4fb03f9 (=E2=80=9Cext4: move ext4 bmap to use iomap =
-infrastructure")
->>>=20
->>> Thought?
->> FYI, this starts to become more reproducible that happens again with =
-today=E2=80=99s linux-next as well.
->=20
->=20
-> Do you have the crash dump and vmlinux for this crash pls?
-> Could you share it somehow with me.
+One other concern is that still the granularity of lock_op is too large,
+to avoid potential hang if it triggers heavy gc migration, how about using
+a timeout mechanism in free_segment_range() like we did in
+f2fs_disable_checkpoint()?
 
-FYI.
+> +	f2fs_unlock_op(sbi);
+> +	if (err)
+> +		return err;
+> +
+> +	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> +
+> +	freeze_super(sbi->sb);
+> +	down_write(&sbi->gc_lock);
+> +	mutex_lock(&sbi->cp_mutex);
+> +
+>  	spin_lock(&sbi->stat_lock);
+>  	if (shrunk_blocks + valid_user_blocks(sbi) +
+>  		sbi->current_reserved_blocks + sbi->unusable_block_count +
+> @@ -1550,69 +1584,44 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  	else
+>  		sbi->user_block_count -= shrunk_blocks;
+>  	spin_unlock(&sbi->stat_lock);
+> -	if (err) {
+> -		thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+> -		return err;
+> -	}
+> -
+> -	mutex_lock(&sbi->resize_mutex);
+> -	set_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> -
+> -	mutex_lock(&DIRTY_I(sbi)->seglist_lock);
+> -
+> -	MAIN_SECS(sbi) -= secs;
+> -
+> -	for (gc_mode = 0; gc_mode < MAX_GC_POLICY; gc_mode++)
+> -		if (SIT_I(sbi)->last_victim[gc_mode] >=
+> -					MAIN_SECS(sbi) * sbi->segs_per_sec)
+> -			SIT_I(sbi)->last_victim[gc_mode] = 0;
+> -
+> -	for (gc_type = BG_GC; gc_type <= FG_GC; gc_type++)
+> -		if (sbi->next_victim_seg[gc_type] >=
+> -					MAIN_SECS(sbi) * sbi->segs_per_sec)
+> -			sbi->next_victim_seg[gc_type] = NULL_SEGNO;
+> -
+> -	mutex_unlock(&DIRTY_I(sbi)->seglist_lock);
+> +	if (err)
+> +		goto out_err;
+>  
+> -	err = free_segment_range(sbi, MAIN_SECS(sbi) * sbi->segs_per_sec,
+> -			MAIN_SEGS(sbi) - 1);
+> +	err = free_segment_range(sbi, secs, false);
 
-At this point, it is more likely due to something powerpc rather than =
-ext4. See,
+Lock coverage is still large here, what about just checking the resize condition
+with find_next_inuse(, end + 1, start), if the migration finished, then let's call
+write_checkpoint(), otherwise, returning -EAGAIN.
 
-=
-https://lore.kernel.org/lkml/15AC5B0E-A221-4B8C-9039-FA96B8EF7C88@lca.pw/
-
->=20
-> I tried reproducing this (fallocate04) for more than 6000 iterations.
-> But I couldn't see this on my setup.
->=20
-> Let me try it again with today's linux-next.
->=20
-> -ritesh
->=20
->=20
->> [  375.277947][T13110] LTP: starting fallocate04
->> [  375.892545][T27575] /dev/zero: Can't open blockdev
->> [  376.899021][T27575] EXT4-fs (loop0): mounting ext3 file system =
-using the ext4 subsystem
->> [  376.905283][T27575] BUG: Unable to handle kernel instruction fetch =
-(NULL pointer?)
->> [  376.905308][T27575] Faulting instruction address: 0x00000000
->> [  376.905333][T27575] Oops: Kernel access of bad area, sig: 11 [#1]
->> [  376.905346][T27575] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256=
- DEBUG_PAGEALLOC NUMA PowerNV
->> [  376.905371][T27575] Modules linked in: ext4 crc16 mbcache jbd2 =
-loop kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci tg3 mdio =
-libahci libphy libata firmware_class dm_mirror dm_region_hash dm_log =
-dm_mod
->> [  376.905419][T27575] CPU: 64 PID: 27575 Comm: fallocate04 Tainted: =
-G        W    L    5.6.0-next-20200403+ #347
->> [  376.905456][T27575] NIP:  0000000000000000 LR: c008000010b90048 =
-CTR: 0000000000000000
->> [  376.905479][T27575] REGS: c000200aaeb0f3b0 TRAP: 0400   Tainted: G =
-       W    L     (5.6.0-next-20200403+)
->> [  376.905513][T27575] MSR:  900000004280b033 =
-<SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 42022228  XER: 20040000
->> [  376.905545][T27575] CFAR: c008000010bfc494 IRQMASK: 0
->> [  376.905545][T27575] GPR00: c0000000005af3b8 c000200aaeb0f640 =
-c00000000165ce00 c000201aa7924ec0
->> [  376.905545][T27575] GPR04: 0000000000000000 0000000000000400 =
-0000000000000000 0000000000000000
->> [  376.905545][T27575] GPR08: c000200aaeb0f678 c008000010b90040 =
-000000007fffffff c00000000163c580
->> [  376.905545][T27575] GPR12: 0000000000000000 c000201fff7fb380 =
-0000000000000000 0000000000000002
->> [  376.905545][T27575] GPR16: 0000000000000002 0000000000040001 =
-c000201bd4ee4000 c000201bd4ee4548
->> [  376.905545][T27575] GPR20: c0000000015fbd18 c00000000168c654 =
-c000200aaeb0f7a8 c0000000005b7bf0
->> [  376.905545][T27575] GPR24: 0000000000000000 c008000010c065b8 =
-c000201aa7924ec0 0000000000000400
->> [  376.905545][T27575] GPR28: c00000000168c3a8 0000000000000000 =
-0000000000000000 0000000000000000
->> [  376.905768][T27575] NIP [0000000000000000] 0x0
->> [  376.905798][T27575] LR [c008000010b90048] ext4_iomap_end+0x8/0x30 =
-[ext4]
->> [  376.905820][T27575] Call Trace:
->> [  376.905844][T27575] [c000200aaeb0f640] [c0000000005af37c] =
-iomap_apply+0x20c/0x920 (unreliable)
->> [  376.905870][T27575] [c000200aaeb0f780] [c0000000005b7abc] =
-iomap_bmap+0xfc/0x160
->> [  376.905911][T27575] [c000200aaeb0f7e0] [c008000010b92c1c] =
-ext4_bmap+0xa4/0x180 [ext4]
->> [  376.905937][T27575] [c000200aaeb0f820] [c0000000004fa22c] =
-bmap+0x4c/0x80
->> [  376.905962][T27575] [c000200aaeb0f850] [c00800000fcf0acc] =
-jbd2_journal_init_inode+0x44/0x1a0 [jbd2]
->> [  376.906005][T27575] [c000200aaeb0f8f0] [c008000010bec808] =
-ext4_load_journal+0x440/0x860 [ext4]
->> [  376.906059][T27575] [c000200aaeb0f9c0] [c008000010bf2a14] =
-ext4_fill_super+0x342c/0x3ab0 [ext4]
->> [  376.906086][T27575] [c000200aaeb0fb30] [c0000000004ce0ec] =
-mount_bdev+0x25c/0x290
->> [  376.906107][T27575] [c000200aaeb0fbd0] [c008000010be0250] =
-ext4_mount+0x28/0x50 [ext4]
->> [  376.906143][T27575] [c000200aaeb0fbf0] [c0000000005353cc] =
-legacy_get_tree+0x4c/0xb0
->> [  376.906177][T27575] [c000200aaeb0fc20] [c0000000004cb67c] =
-vfs_get_tree+0x4c/0x130
->> [  376.906213][T27575] [c000200aaeb0fc90] [c00000000050d1f8] =
-do_mount+0xa18/0xc50
->> [  376.906257][T27575] [c000200aaeb0fd60] [c00000000050d9d8] =
-sys_mount+0x158/0x180
->> [  376.906307][T27575] [c000200aaeb0fdb0] [c00000000003cc30] =
-system_call_exception+0x110/0x1e0
->> [  376.906334][T27575] [c000200aaeb0fe20] [c00000000000c9f0] =
-system_call_common+0xf0/0x278
->> [  376.906367][T27575] Instruction dump:
->> [  376.906387][T27575] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
-XXXXXXXX XXXXXXXX XXXXXXXX
->> [  376.906434][T27575] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
-XXXXXXXX XXXXXXXX XXXXXXXX
->> [  376.906472][T27575] ---[ end trace fa91408cebc70be1 ]---
->> [  377.389381][T27575]
->> [  378.389480][T27575] Kernel panic - not syncing: Fatal exception
->> [  379.824028][
->>>=20
->>> [  206.744625][T13224] LTP: starting fallocate04
->>> [  207.601583][T27684] /dev/zero: Can't open blockdev
->>> [  208.674301][T27684] EXT4-fs (loop0): mounting ext3 file system =
-using the ext4 subsystem
->>> [  208.680347][T27684] BUG: Unable to handle kernel instruction =
-fetch (NULL pointer?)
->>> [  208.680383][T27684] Faulting instruction address: 0x00000000
->>> [  208.680406][T27684] Oops: Kernel access of bad area, sig: 11 [#1]
->>> [  208.680439][T27684] LE PAGE_SIZE=3D64K MMU=3DRadix SMP =
-NR_CPUS=3D256 DEBUG_PAGEALLOC NUMA PowerNV
->>> [  208.680474][T27684] Modules linked in: ext4 crc16 mbcache jbd2 =
-loop kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci libahci mdio =
-tg3 libata libphy firmware_class dm_mirror dm_region_hash dm_log dm_mod
->>> [  208.680576][T27684] CPU: 117 PID: 27684 Comm: fallocate04 =
-Tainted: G        W         5.6.0-next-20200401+ #288
->>> [  208.680614][T27684] NIP:  0000000000000000 LR: c0080000102c0048 =
-CTR: 0000000000000000
->>> [  208.680657][T27684] REGS: c000200361def420 TRAP: 0400   Tainted: =
-G        W          (5.6.0-next-20200401+)
->>> [  208.680700][T27684] MSR:  900000004280b033 =
-<SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 42022228  XER: 20040000
->>> [  208.680760][T27684] CFAR: c00800001032c494 IRQMASK: 0
->>> [  208.680760][T27684] GPR00: c0000000005ac3f8 c000200361def6b0 =
-c00000000165c200 c00020107dae0bd0
->>> [  208.680760][T27684] GPR04: 0000000000000000 0000000000000400 =
-0000000000000000 0000000000000000
->>> [  208.680760][T27684] GPR08: c000200361def6e8 c0080000102c0040 =
-000000007fffffff c000000001614e80
->>> [  208.680760][T27684] GPR12: 0000000000000000 c000201fff671280 =
-0000000000000000 0000000000000002
->>> [  208.680760][T27684] GPR16: 0000000000000002 0000000000040001 =
-c00020030f5a1000 c00020030f5a1548
->>> [  208.680760][T27684] GPR20: c0000000015fbad8 c00000000168c654 =
-c000200361def818 c0000000005b4c10
->>> [  208.680760][T27684] GPR24: 0000000000000000 c0080000103365b8 =
-c00020107dae0bd0 0000000000000400
->>> [  208.680760][T27684] GPR28: c00000000168c3a8 0000000000000000 =
-0000000000000000 0000000000000000
->>> [  208.681014][T27684] NIP [0000000000000000] 0x0
->>> [  208.681065][T27684] LR [c0080000102c0048] ext4_iomap_end+0x8/0x30 =
-[ext4]
->>> [  208.681091][T27684] Call Trace:
->>> [  208.681129][T27684] [c000200361def6b0] [c0000000005ac3bc] =
-iomap_apply+0x20c/0x920 (unreliable)
->>> iomap_apply at fs/iomap/apply.c:80 (discriminator 4)
->>> [  208.681173][T27684] [c000200361def7f0] [c0000000005b4adc] =
-iomap_bmap+0xfc/0x160
->>> iomap_bmap at fs/iomap/fiemap.c:142
->>> [  208.681228][T27684] [c000200361def850] [c0080000102c2c1c] =
-ext4_bmap+0xa4/0x180 [ext4]
->>> ext4_bmap at fs/ext4/inode.c:3213
->>> [  208.681260][T27684] [c000200361def890] [c0000000004f71fc] =
-bmap+0x4c/0x80
->>> [  208.681281][T27684] [c000200361def8c0] [c00800000fdb0acc] =
-jbd2_journal_init_inode+0x44/0x1a0 [jbd2]
->>> jbd2_journal_init_inode at fs/jbd2/journal.c:1255
->>> [  208.681326][T27684] [c000200361def960] [c00800001031c808] =
-ext4_load_journal+0x440/0x860 [ext4]
->>> [  208.681371][T27684] [c000200361defa30] [c008000010322a14] =
-ext4_fill_super+0x342c/0x3ab0 [ext4]
->>> [  208.681414][T27684] [c000200361defba0] [c0000000004cb0bc] =
-mount_bdev+0x25c/0x290
->>> [  208.681478][T27684] [c000200361defc40] [c008000010310250] =
-ext4_mount+0x28/0x50 [ext4]
->>> [  208.681520][T27684] [c000200361defc60] [c00000000053242c] =
-legacy_get_tree+0x4c/0xb0
->>> [  208.681556][T27684] [c000200361defc90] [c0000000004c864c] =
-vfs_get_tree+0x4c/0x130
->>> [  208.681593][T27684] [c000200361defd00] [c00000000050a1c8] =
-do_mount+0xa18/0xc50
->>> [  208.681641][T27684] [c000200361defdd0] [c00000000050a9a8] =
-sys_mount+0x158/0x180
->>> [  208.681679][T27684] [c000200361defe20] [c00000000000b3f8] =
-system_call+0x5c/0x68
->>> [  208.681726][T27684] Instruction dump:
->>> [  208.681747][T27684] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
-XXXXXXXX XXXXXXXX XXXXXXXX
->>> [  208.681797][T27684] XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX =
-XXXXXXXX XXXXXXXX XXXXXXXX
->>> [  208.681839][T27684] ---[ end trace 4e9e2bab7f1d4048 ]---
->>> [  208.802259][T27684]
->>> [  209.802373][T27684] Kernel panic - not syncing: Fatal exception
->=20
-
+>  	if (err)
+> -		goto out;
+> +		goto recover_out;
+>  
+>  	update_sb_metadata(sbi, -secs);
+>  
+>  	err = f2fs_commit_super(sbi, false);
+>  	if (err) {
+>  		update_sb_metadata(sbi, secs);
+> -		goto out;
+> +		goto recover_out;
+>  	}
+>  
+> -	mutex_lock(&sbi->cp_mutex);
+>  	update_fs_metadata(sbi, -secs);
+>  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+>  	set_sbi_flag(sbi, SBI_IS_DIRTY);
+> -	mutex_unlock(&sbi->cp_mutex);
+>  
+> -	err = f2fs_sync_fs(sbi->sb, 1);
+> +	err = f2fs_write_checkpoint(sbi, &cpc);
+>  	if (err) {
+> -		mutex_lock(&sbi->cp_mutex);
+>  		update_fs_metadata(sbi, secs);
+> -		mutex_unlock(&sbi->cp_mutex);
+>  		update_sb_metadata(sbi, secs);
+>  		f2fs_commit_super(sbi, false);
+>  	}
+> -out:
+> +recover_out:
+>  	if (err) {
+>  		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>  		f2fs_err(sbi, "resize_fs failed, should run fsck to repair!");
+>  
+> -		MAIN_SECS(sbi) += secs;
+>  		spin_lock(&sbi->stat_lock);
+>  		sbi->user_block_count += shrunk_blocks;
+>  		spin_unlock(&sbi->stat_lock);
+>  	}
+> +out_err:
+> +	mutex_unlock(&sbi->cp_mutex);
+> +	up_write(&sbi->gc_lock);
+> +	thaw_super(sbi->sb);
+>  	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
+> -	mutex_unlock(&sbi->resize_mutex);
+> -	thaw_bdev(sbi->sb->s_bdev, sbi->sb);
+>  	return err;
+>  }
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index b83b17b54a0a6..1e7b1d21d0177 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -3412,7 +3412,6 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>  	init_rwsem(&sbi->gc_lock);
+>  	mutex_init(&sbi->writepages);
+>  	mutex_init(&sbi->cp_mutex);
+> -	mutex_init(&sbi->resize_mutex);
+>  	init_rwsem(&sbi->node_write);
+>  	init_rwsem(&sbi->node_change);
+>  
+> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+> index 4d7d4c391879d..5d1a72001fdb4 100644
+> --- a/include/trace/events/f2fs.h
+> +++ b/include/trace/events/f2fs.h
+> @@ -50,6 +50,7 @@ TRACE_DEFINE_ENUM(CP_RECOVERY);
+>  TRACE_DEFINE_ENUM(CP_DISCARD);
+>  TRACE_DEFINE_ENUM(CP_TRIMMED);
+>  TRACE_DEFINE_ENUM(CP_PAUSE);
+> +TRACE_DEFINE_ENUM(CP_RESIZE);
+>  
+>  #define show_block_type(type)						\
+>  	__print_symbolic(type,						\
+> @@ -126,7 +127,8 @@ TRACE_DEFINE_ENUM(CP_PAUSE);
+>  		{ CP_RECOVERY,	"Recovery" },				\
+>  		{ CP_DISCARD,	"Discard" },				\
+>  		{ CP_PAUSE,	"Pause" },				\
+> -		{ CP_TRIMMED,	"Trimmed" })
+> +		{ CP_TRIMMED,	"Trimmed" },				\
+> +		{ CP_RESIZE,	"Resize" })
+>  
+>  #define show_fsync_cpreason(type)					\
+>  	__print_symbolic(type,						\
+> 
