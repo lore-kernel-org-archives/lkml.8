@@ -2,109 +2,92 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D318C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC048C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2E0206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586266525;
-	bh=t4bv0J28enUiM60tnCiClhpvroA/fwreaN1V/SU8S6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LUG/dLVlaNzp69qkO9lq27K5isGw0wxCbehi+iHvPtPxtnHEihq/LXTaHk3jUW7ML
-	 XzzeyQw6SsHMJ6aVtyhL1bC/pO83DyHBu6uoSFh4IpecGCT2LvqJgqeuohUJmDcWHD
-	 3azUwT3T/eb4OLNExvkVgQAUA8ow4D4ZQO0BLQSw=
+	by mail.kernel.org (Postfix) with ESMTP id 886E7206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 13:35:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cD3Q/HT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgDGNfY (ORCPT
+        id S1728930AbgDGNfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 09:35:24 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39580 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbgDGNfY (ORCPT
+        Tue, 7 Apr 2020 09:35:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36548 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728915AbgDGNfg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 09:35:24 -0400
-Received: by mail-qk1-f195.google.com with SMTP id b62so1587474qkf.6;
-        Tue, 07 Apr 2020 06:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=odzEhtuT1mkH5cv+06XvJ0mo1X9dWs4O45m8red/YFE=;
-        b=lLPy54IqRiVI+gbF9bXttpMrnAgkCN0tMMlu1yiVIlS2/nkavZOJukt5viyskCkZCp
-         /a3SWshrpdGsMCXv86eLzNPxbhRKSq1M1Ot/P5T8kc+zlZg61ebkbREN6INJiTb9T/nd
-         bnWH7iDmLuseRsFocSas0ZOCT1ZaGSfA8inB2kUB37Q0d++qtW3YXbb6oyUtpgmgRj4B
-         Ag0sQG+/+CRN2rKLdq+v2y00f8KGMwhdteP1POMgqhxUMBoefVpWT42aNaOUUb/cTIFw
-         gWOHqN/gsvLlUHfCdmtSVn+SNDRwcyPuDSBY5pHYyLlkWMElV+QQ+GpDCw1CYnZ1hXk4
-         gGXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=odzEhtuT1mkH5cv+06XvJ0mo1X9dWs4O45m8red/YFE=;
-        b=jepqtQPF9DWDGySZZdgJM9Gavkslj+uAIWAq2pC41CjWoQhMNaDlarPPZ6k5hpHNM9
-         nTKKkZiyUyCb5gw/g0CYw4xxUYLVbFNbMGMZvMFGW/0URbRFuM2Nc2oJoVk4O+6TxJAN
-         OANLdArJgH6/FYAk5aa7CBrE7VMvKbsqejH/BDoGiTPS75bhV5PK+7LI3cxcFtznirQU
-         f72A2HZyBM5yIGkRTrkaEIj6OW63ZaoYgX+TI6e6yGmPPdd0x+9XkDJxWjgOSUbmhe3b
-         pmi9BAv8LxQcZjTUIQSOKiWVw0Sno8pfYqbbSSs/08qiZZ0KNdaa9ciRiMyLm4cnLkj3
-         ZnQA==
-X-Gm-Message-State: AGi0PuZtfMJVetA2jXrpHyt+CsyXLaxDQ/fBmzsCRVZef3WXF8bpgjRp
-        nOLL2hEHibl8miZdfdptxBI=
-X-Google-Smtp-Source: APiQypLEqD0fQclX3tUCPeigphzqR8Cy8D/rzw25UKOBzyLv8uRQqnVSNxgvxJozLd7DoX9+FIVO+A==
-X-Received: by 2002:a37:670a:: with SMTP id b10mr2205766qkc.342.1586266522385;
-        Tue, 07 Apr 2020 06:35:22 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::ceda])
-        by smtp.gmail.com with ESMTPSA id a19sm16799360qtp.5.2020.04.07.06.35.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 06:35:21 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 09:35:20 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Qian Cai <cai@lca.pw>, Prateek Sood <prsood@codeaurora.org>,
-        Li Zefan <lizefan@huawei.com>, cgroups@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: Deadlock due to "cpuset: Make cpuset hotplug synchronous"
-Message-ID: <20200407133520.GI162390@mtj.duckdns.org>
-References: <F0388D99-84D7-453B-9B6B-EEFF0E7BE4CC@lca.pw>
- <20200325191922.GM162390@mtj.duckdns.org>
- <20200326101529.xh763j5frq2r7mqv@e107158-lin>
- <20200403145523.GC162390@mtj.duckdns.org>
- <20200406105522.c66p4vzzzylety5d@e107158-lin.cambridge.arm.com>
- <20200406143405.GH162390@mtj.duckdns.org>
- <20200407130725.jhtth3bneo33zex6@e107158-lin.cambridge.arm.com>
+        Tue, 7 Apr 2020 09:35:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586266535;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2H/nDRAzZ+OGlMxBcAYNBB1VSVG7oxv1UHGK2TnTwUQ=;
+        b=cD3Q/HT8x9FfpXf8EEETVWHUgssq0/FyXnaPMKwUZN8lR22FBT4W9gwFGtgNXM81axSAjh
+        3uwv5LNRJbyM3GUPJ6yCEdlUzbU+G/hAYhycVTsIEIp2RlTtEB7sjZJZuBJwqSjD63Etez
+        id6prq9Wgaxfqxjj/ErtrNGgQ2/ph2w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-436-SSra-W0VMfC3O-cIc41Dsg-1; Tue, 07 Apr 2020 09:35:33 -0400
+X-MC-Unique: SSra-W0VMfC3O-cIc41Dsg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48CD21926DA0;
+        Tue,  7 Apr 2020 13:35:32 +0000 (UTC)
+Received: from treble (ovpn-116-24.rdu2.redhat.com [10.10.116.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E89AB92FA2;
+        Tue,  7 Apr 2020 13:35:30 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 08:35:28 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+        jthierry@redhat.com, tglx@linutronix.de
+Subject: Re: [PATCH V2 0/9] objtool changes to remove all
+ ANNOTATE_NOSPEC_ALTERNATIVE
+Message-ID: <20200407133528.htoxyrfc7fv625lh@treble>
+References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200407130725.jhtth3bneo33zex6@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20200407073142.20659-1-alexandre.chartre@oracle.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 02:07:26PM +0100, Qais Yousef wrote:
-> On 04/06/20 10:34, Tejun Heo wrote:
-> > On Mon, Apr 06, 2020 at 11:55:23AM +0100, Qais Yousef wrote:
-> > > What would be the right approach to get a fix in then? We have been skipping
-> > > this test for a while and we'd like to enable it but this failure is a
-> > > blocking issue.
-> > 
-> > Update the test so that it accounts for the async nature of the operation?
+On Tue, Apr 07, 2020 at 09:31:33AM +0200, Alexandre Chartre wrote:
+> Hi,
 > 
-> With a sleep() between the hp ops and the read? Isn't this a nasty hack?
+> This is version v2 of this patchset based on the different comments
+> received so far. It now uses and includes PeterZ patch to add
+> UNWIND_HINT_RET_OFFSET. Other changes are described below.
+> 
+> Code like retpoline or RSB stuffing, which is used to mitigate some of
+> the speculative execution issues, is currently ignored by objtool with
+> the ANNOTATE_NOSPEC_ALTERNATIVE directive. This series adds support
+> for intra-function calls to objtool so that it can handle such a code.
+> With these changes, we can remove all ANNOTATE_NOSPEC_ALTERNATIVE
+> directives.
+> 
+> Changes:
+>  - replace RETPOLINE_RET with PeterZ UNWIND_HINT_RET_OFFSET
+>  - make objtool intra-function call action architecture dependent
+>  - objtool now automatically detects and validates all intra-function
+>    calls but it issues a warning if the call was not explicitly tagged
+>  - change __FILL_RETURN_BUFFER to work with objtool
+>  - add generic ANNOTATE_INTRA_FUNCTION_CALL macro
+>  - remove all ANNOTATE_SPEC_ALTERNATIVE (even for __FILL_RETURN_BUFFER)
 
-Some operations are just async. Why is that inherently wrong?
-
-> I was just trying to find out what can be done for 5.7. But based on your
-> response this is sadly a dead end. For no reason I can comprehend.
-
-Because it's creating real issues while trying to address a non-real problem.
-It's dumb. Fix the non-real part.
-
-Thanks.
+I had trouble applying the patches.  What branch are they based on?  In
+general the latest tip/master is good.
 
 -- 
-tejun
+Josh
+
