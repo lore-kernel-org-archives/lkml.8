@@ -2,138 +2,301 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF6CC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8795C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA2E206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F31206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EfzBlZT6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ma3VTOaM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgDGRBI (ORCPT
+        id S1726647AbgDGRBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:01:08 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39179 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbgDGRBI (ORCPT
+        Tue, 7 Apr 2020 13:01:19 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37395 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbgDGRBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:01:08 -0400
-Received: by mail-pg1-f196.google.com with SMTP id g32so2011557pgb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:01:06 -0700 (PDT)
+        Tue, 7 Apr 2020 13:01:18 -0400
+Received: by mail-pl1-f193.google.com with SMTP id x1so1473526plm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:01:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xqDOkMuBtgyJ7rmZyLLXy0pUwYBbf9fngbp9l/A1q9w=;
-        b=EfzBlZT6Migud1cbymqjQ7chSvrijlPI53UumBI2O0NW8OVSWP1Ty9sy4NKai3nMSl
-         uil3R9N1lA2aF7Z1m+ktMadyEMso4jH8o6/tuB5EAf4KSfAsRWgt3la2KOcrGQXJyTAE
-         heDRHhbmRQ+enMFMCT4xpYkWdJ+rQUXlX/6mg=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BKA4RM51A82x/5SpJbkyD9gWBCDUmnDILyC/0E/dflg=;
+        b=ma3VTOaM3ccztMgbWUch6c9Nop0cKlddfRdpAgSYy7156lYP1wdkteuId5JaVDSzgv
+         pstITV0JnBjl18ZnTE6upqD3TrTmYjV1BhYYPm/isptuMEyFwY+neCeERdoMYIA7FceE
+         xNVwlvSMjCG83B8EHkpPJnmePjhK+X4KiRdfPjVc0byiuKoVyK5E3bk9YI6Dlvga6ir7
+         cVDQCpvkxG0SJFNfsJ0E5vidb8x267+9UBHEhnGyzZW9eCxi1GQ3ezR3fHYst8oiLvLz
+         IFstetzqRlAla/WuwKTX5ClMVQozR86gOzJMPoKJLbYQRPkqoo62sEBKwhW77lGPmRfM
+         5SKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xqDOkMuBtgyJ7rmZyLLXy0pUwYBbf9fngbp9l/A1q9w=;
-        b=AaRYa/b1CvLUuLOJOtlMq0UCsh9J9ABnGBcc7o1loa6d36znHfrBZeN4v3Ggk4xgvO
-         XHR0LM6pbMDeFy5aGPLjjOo5Z39PuWddL9aZ10LSwpceCQokhGfhlajHzbwLxAAfgWRR
-         XEzNJYEHAF5zp38rcXdIq60/0+NLlnAo6kSx0XsE5ICULRgMsZNmaM8VBO8OQ3MSNpeY
-         RRQn13dA3aIoUL6N6AaH7Fu5Tox6UjEnVnOdBpEmvBmV+Nyg44akioF6R37sH1kZ/wIB
-         wCUL1VdfFGwyhRBhvl7DN/w6vxoWAhTxlZ2K4HZgdJy1Cp7k2cAicmCE4GZ+HZ5IcDtL
-         r5Kw==
-X-Gm-Message-State: AGi0PuYmDrCnoZBnzzlywCOlCVsABLwuTaKt77WByntUezPDykLkpExF
-        xS0omNJakMib/cQNdNISXxI0KQ==
-X-Google-Smtp-Source: APiQypJ2PeBWyQxiaBSTGv1/qVRWN8VXMYFPRmo9eANgehsqxiJroRmqgqqTG6LdNxkqOwmw70QjjQ==
-X-Received: by 2002:aa7:962d:: with SMTP id r13mr3629831pfg.244.1586278866117;
-        Tue, 07 Apr 2020 10:01:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d23sm14463482pfq.210.2020.04.07.10.01.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 10:01:05 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 10:01:04 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        hch@infradead.org, sean.j.christopherson@intel.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
-        pbonzini@redhat.com, fenghua.yu@intel.com, xiaoyao.li@intel.com,
-        nadav.amit@gmail.com, thellstrom@vmware.com, tony.luck@intel.com,
-        rostedt@goodmis.org, gregkh@linuxfoundation.org, jannh@google.com,
-        David.Laight@aculab.com, dcovelli@vmware.com, mhiramat@kernel.org
-Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
-Message-ID: <202004070958.CB8A3DA71D@keescook>
-References: <20200407110236.930134290@infradead.org>
- <20200407111007.429362016@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BKA4RM51A82x/5SpJbkyD9gWBCDUmnDILyC/0E/dflg=;
+        b=eRJlCJGBMNpI3aur01IU8bA06I4tkXOU9PMiJ4GqnO643M5SIXq9AoMpC0n8e5I0Fa
+         ggfbZfXg05RlabC6OG5qiV1CuCkloUJomzP9UuCm3X6O10oR4rjGuTlFzd9sBnycjz3n
+         1wzdwWCEhf9pmsdyedl5zQK0txYgvi16vFCCviITBYvZ8OZZ3A9m0ln1rMLyuY5k3ukm
+         DaVrdBSl53stGPosNy+Pi3tLEmPOp5+VfthdWJBiKRUlNFToLNngjlsFdDZaAoCDvvY8
+         NLqC6e8piG7xdHMEvk6NleWqt5vKtcg/1HJePsdze627Hf06narimFfqNIspx91WoZr3
+         KINw==
+X-Gm-Message-State: AGi0Pua5apzyVpH90OIxsWcq4FkIhFNlC8NsMhfixpcsiHwnMEmahOoI
+        Gj8aMO3P9k3nkpgouXvkw1gHe3fZc9rKcrJrLiiQfw==
+X-Google-Smtp-Source: APiQypLwGulDH+WJsMgYCIEQ0C1UrzVbHqpMJvqU9FEJJ+53A81wLeMpTOTAACHxZBxyCdDBD0SwVckZrPDO4CnpsWc=
+X-Received: by 2002:a17:90a:8085:: with SMTP id c5mr276765pjn.186.1586278877201;
+ Tue, 07 Apr 2020 10:01:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407111007.429362016@infradead.org>
+References: <20200403051709.22407-1-masahiroy@kernel.org> <20200406112220.GB126804@google.com>
+ <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com>
+In-Reply-To: <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 7 Apr 2020 10:01:04 -0700
+Message-ID: <CAKwvOdmHxeZ+T1OsOhW25pPygHM4D21OgZqRk141xbjP437-1w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 01:02:40PM +0200, Peter Zijlstra wrote:
-> Since we now have infrastructure to analyze module text, disallow
-> modules that write to CRn and DRn registers.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/kernel/module.c |   21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> --- a/arch/x86/kernel/module.c
-> +++ b/arch/x86/kernel/module.c
-> @@ -266,6 +266,22 @@ static bool insn_is_vmx(struct insn *ins
->  	return false;
->  }
->  
-> +static bool insn_is_mov_CRn(struct insn *insn)
-> +{
-> +	if (insn->opcode.bytes[0] == 0x0f && insn->opcode.bytes[1] == 0x22)
-> +		return true;
+On Tue, Apr 7, 2020 at 9:17 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Mon, Apr 6, 2020 at 8:22 PM 'Matthias Maennich' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
+> >
+> > On Fri, Apr 03, 2020 at 02:17:09PM +0900, Masahiro Yamada wrote:
+> > >As Documentation/kbuild/llvm.rst implies, building the kernel with a
+> > >full set of LLVM tools gets very verbose and unwieldy.
+> > >
+> > >Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
+> > >GCC and Binutils. You can pass LLVM=1 from the command line or as an
+> > >environment variable. Then, Kbuild will use LLVM toolchains in your
+> > >PATH environment.
+> > >
+> > >Please note LLVM=1 does not turn on the LLVM integrated assembler.
+> > >You need to explicitly pass AS=clang to use it. When the upstream
+> > >kernel is ready for the integrated assembler, I think we can make
+> > >it default.
+> > >
+> > >We discussed what we need, and we agreed to go with a simple boolean
+> > >switch (https://lkml.org/lkml/2020/3/28/494).
+> > >
+> > >Some items in the discussion:
+> > >
+> > >- LLVM_DIR
+> > >
+> > >  When multiple versions of LLVM are installed, I just thought supporting
+> > >  LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
+> > >
+> > >  CC      = $(LLVM_DIR)clang
+> > >  LD      = $(LLVM_DIR)ld.lld
+> > >    ...
+> > >
+> > >  However, we can handle this by modifying PATH. So, we decided to not do
+> > >  this.
+> > >
+> > >- LLVM_SUFFIX
+> > >
+> > >  Some distributions (e.g. Debian) package specific versions of LLVM with
+> > >  naming conventions that use the version as a suffix.
+> > >
+> > >  CC      = clang$(LLVM_SUFFIX)
+> > >  LD      = ld.lld(LLVM_SUFFIX)
+> > >    ...
+> > >
+> > >  will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
+> > >  but the suffixed versions in /usr/bin/ are symlinks to binaries in
+> > >  /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
+> > >
+> > >- HOSTCC, HOSTCXX, etc.
+> > >
+> > >  We can switch the host compilers in the same way:
+> > >
+> > >  ifneq ($(LLVM),)
+> > >  HOSTCC       = clang
+> > >  HOSTCXX      = clang++
+> > >  else
+> > >  HOSTCC       = gcc
+> > >  HOSTCXX      = g++
+> > >  endif
+> > >
+> > >  This may the right thing to do, but I could not make up my mind.
+> > >  Because we do not frequently switch the host compiler, a counter
+> > >  solution I had in my mind was to leave it to the default of the
+> > >  system.
+> > >
+> > >  HOSTCC       = cc
+> > >  HOSTCXX      = c++
+> >
+> > What about HOSTLD ? I saw recently, that setting HOSTLD=ld.lld is not
+> > yielding the expected result (some tools, like e.g. fixdep still require
+> > an `ld` to be in PATH to be built). I did not find the time to look into
+> > that yet, but I would like to consistently switch to the llvm toolchain
+> > (including linker and possibly more) also for hostprogs.
+>
+>
+> HOSTLD=ld.lld worked for me, but HOSTCC=clang did not.
+>
+>
+>
+> HOSTCC=clang without CC=clang fails to build objtool.
+>
+> The build system of objtool is meh.  :(
 
-I always cringe at numeric literals. Would it be overkill to add defines
-for these (and the others that have comments next to them in 3/4)? It
-makes stuff easier to grep, etc. (e.g. we have register names in
-arch/x86/include/asm/asm.h, do we need instruction names somewhere else?
-I assume objtool has a bunch of this too...)
+Let's tackle that in a follow up, with the goal of build hermiticity
+in mind.  I think there's good feedback in this thread to inform the
+design of a v2:
+1. CLANG_AS=0 to disable integrated as.  Hopefully we won't need this
+much longer, so we don't need to spend too much time on this, Masahiro
+please just choose a name for this.  llvm-as naming conventions
+doesn't follow the rest of binutils.
+2. HOSTCC=clang HOSTLD=ld.lld set by LLVM=1 for helping with build hermiticity.
 
--Kees
+>
+>
+>   HOSTCC  scripts/mod/sumversion.o
+>   HOSTLD  scripts/mod/modpost
+>   CALL    scripts/checksyscalls.sh
+>   CALL    scripts/atomic/check-atomics.sh
+>   DESCEND  objtool
+> error: unknown warning option '-Wstrict-aliasing=3'; did you mean
+> '-Wstring-plus-int'? [-Werror,-Wunknown-warning-option]
+>   HOSTCC   /home/masahiro/workspace/linux-kbuild/tools/objtool/fixdep.o
+>   HOSTLD   /home/masahiro/workspace/linux-kbuild/tools/objtool/fixdep-in.o
+>   LINK     /home/masahiro/workspace/linux-kbuild/tools/objtool/fixdep
+>   CC       /home/masahiro/workspace/linux-kbuild/tools/objtool/exec-cmd.o
+>   CC       /home/masahiro/workspace/linux-kbuild/tools/objtool/help.o
+>   CC       /home/masahiro/workspace/linux-kbuild/tools/objtool/pager.o
+>
+>
+>
+>
+>
+>
+> > Cheers,
+> > Matthias
+> >
+> > >
+> > >  Many distributions support update-alternatives to switch the default
+> > >  to GCC, Clang, or whatever, but reviewers were opposed to this
+> > >  approach. So, this commit does not touch the host tools.
+> > >
+> > >Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > >---
+> > >
+> > > Documentation/kbuild/kbuild.rst |  5 +++++
+> > > Documentation/kbuild/llvm.rst   |  5 +++++
+> > > Makefile                        | 20 ++++++++++++++++----
+> > > 3 files changed, 26 insertions(+), 4 deletions(-)
+> > >
+> > >diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
+> > >index 510f38d7e78a..2d1fc03d346e 100644
+> > >--- a/Documentation/kbuild/kbuild.rst
+> > >+++ b/Documentation/kbuild/kbuild.rst
+> > >@@ -262,3 +262,8 @@ KBUILD_BUILD_USER, KBUILD_BUILD_HOST
+> > > These two variables allow to override the user@host string displayed during
+> > > boot and in /proc/version. The default value is the output of the commands
+> > > whoami and host, respectively.
+> > >+
+> > >+LLVM
+> > >+----
+> > >+If this variable is set to 1, Kbuild will use Clang and LLVM utilities instead
+> > >+of GCC and GNU binutils to build the kernel.
+> > >diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> > >index d6c79eb4e23e..4602369f6a4f 100644
+> > >--- a/Documentation/kbuild/llvm.rst
+> > >+++ b/Documentation/kbuild/llvm.rst
+> > >@@ -55,6 +55,11 @@ additional parameters to `make`.
+> > >         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
+> > >         HOSTLD=ld.lld
+> > >
+> > >+You can use a single switch `LLVM=1` to use LLVM utilities by default (except
+> > >+for building host programs).
+> > >+
+> > >+      make LLVM=1 HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar HOSTLD=ld.lld
+> > >+
+> > > Getting Help
+> > > ------------
+> > >
+> > >diff --git a/Makefile b/Makefile
+> > >index c91342953d9e..6db89ecdd942 100644
+> > >--- a/Makefile
+> > >+++ b/Makefile
+> > >@@ -409,16 +409,28 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
+> > > KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+> > >
+> > > # Make variables (CC, etc...)
+> > >-LD            = $(CROSS_COMPILE)ld
+> > >-CC            = $(CROSS_COMPILE)gcc
+> > > CPP           = $(CC) -E
+> > >+ifneq ($(LLVM),)
+> > >+CC            = clang
+> > >+LD            = ld.lld
+> > >+AR            = llvm-ar
+> > >+NM            = llvm-nm
+> > >+OBJCOPY               = llvm-objcopy
+> > >+OBJDUMP               = llvm-objdump
+> > >+READELF               = llvm-readelf
+> > >+OBJSIZE               = llvm-size
+> > >+STRIP         = llvm-strip
+> > >+else
+> > >+CC            = $(CROSS_COMPILE)gcc
+> > >+LD            = $(CROSS_COMPILE)ld
+> > > AR            = $(CROSS_COMPILE)ar
+> > > NM            = $(CROSS_COMPILE)nm
+> > >-STRIP         = $(CROSS_COMPILE)strip
+> > > OBJCOPY               = $(CROSS_COMPILE)objcopy
+> > > OBJDUMP               = $(CROSS_COMPILE)objdump
+> > >-OBJSIZE               = $(CROSS_COMPILE)size
+> > > READELF               = $(CROSS_COMPILE)readelf
+> > >+OBJSIZE               = $(CROSS_COMPILE)size
+> > >+STRIP         = $(CROSS_COMPILE)strip
+> > >+endif
+> > > PAHOLE                = pahole
+> > > LEX           = flex
+> > > YACC          = bison
+> > >--
+> > >2.17.1
+> > >
+> > >--
+> > >You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> > >To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> > >To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200403051709.22407-1-masahiroy%40kernel.org.
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200406112220.GB126804%40google.com.
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA%40mail.gmail.com.
 
-> +
-> +	return false;
-> +}
-> +
-> +static bool insn_is_mov_DRn(struct insn *insn)
-> +{
-> +	if (insn->opcode.bytes[0] == 0x0f && insn->opcode.bytes[1] == 0x23)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  static int decode_module(struct module *mod, void *text, void *text_end, bool sld_safe)
->  {
->  	bool allow_vmx = sld_safe || !split_lock_enabled();
-> @@ -285,6 +301,11 @@ static int decode_module(struct module *
->  			return -ENOEXEC;
->  		}
->  
-> +		if (insn_is_mov_CRn(&insn) || insn_is_mov_DRn(&insn)) {
-> +			pr_err("Module writes to CRn or DRn, please use the proper accessors: %s\n", mod->name);
-> +			return -ENOEXEC;
-> +		}
-> +
->  		text += insn.length;
->  	}
->  
-> 
-> 
+
 
 -- 
-Kees Cook
+Thanks,
+~Nick Desaulniers
