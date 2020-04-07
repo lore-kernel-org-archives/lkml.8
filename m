@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF639C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F24C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7422E2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5402082D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217759;
-	bh=VOfh+h2MtQqoZ+YNlZDh/acRHYS0plv1SE5C2r/svls=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bsGqpuvyLZ6Y8Wtx/kSDJp9+ZCl5tcmTZvA2wZVEtFs1YjV5heypwJ4e51S0n+1wO
-	 4oh7/ytPk6mgxUyMhvcFmPIlX6amjSVAQGxude/E4kS+TRiy617E1ED4q4c0vVDeU4
-	 Cra0wBuQux0lV5/fMw96Ihsmp3/F+46h999aSUEc=
+	s=default; t=1586217762;
+	bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KDbgU5zvIshl9UO64WDFg0ejrhDOLj5YVdsCagEX3i8OzbbQE1509mQ+5BuJ7jO8b
+	 wDgeFmMknUwKdK9PB9kqw4xTkYP0/Fsk6Mdh69NJjVcwhTfXYT6UfPzQc76kheGezy
+	 Xnu9OW3OTREXQ9qPDnA3BdyWSWJzZSzunRrBk0ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbgDGACi (ORCPT
+        id S1728167AbgDGACk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726709AbgDGACh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:37 -0400
+        id S1728143AbgDGACi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E661D2078A;
-        Tue,  7 Apr 2020 00:02:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32B3E20801;
+        Tue,  7 Apr 2020 00:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217756;
-        bh=VOfh+h2MtQqoZ+YNlZDh/acRHYS0plv1SE5C2r/svls=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mftwb1PFM1Tn+abTQFcfDb7yLIxR3icOBJY94ZcgeZ9hK6q8vvUXxyC+6TUM32tZx
-         eDv/NrFNEzy3Pu5izFXu2+dFFNgcITQOEzhg4cHlOmGPcL291xXa0NGThU60Vxtacl
-         JHsfyyi9ZA0LwWPy6C5QWkuhKdL3+RvBZxq1awUk=
+        s=default; t=1586217757;
+        bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FvnvxwNAI+sM8ISRCA7++6SYLEh0clavCUjIHyAm1jJFZybMrRO0H5tt/BRAFj5XC
+         J706rqkzZkLFDdBGxCrd512vmEXv2Wi+l65Zv0pKN9ETTx3swqtQ6TCQsdmgScx+2B
+         59fAq0YRT0rUb4MZriYGZzsBilf6vGmXb8bQC/aQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>,
+Cc:     Ondrej Jirman <megous@megous.com>, Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 01/13] ARM: dts: sun8i-a83t-tbs-a711: HM5065 doesn't like such a high voltage
-Date:   Mon,  6 Apr 2020 20:02:22 -0400
-Message-Id: <20200407000234.17088-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 02/13] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
+Date:   Mon,  6 Apr 2020 20:02:23 -0400
+Message-Id: <20200407000234.17088-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200407000234.17088-1-sashal@kernel.org>
+References: <20200407000234.17088-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,33 +62,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit a40550952c000667b20082d58077bc647da6c890 ]
+[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
 
-Lowering the voltage solves the quick image degradation over time
-(minutes), that was probably caused by overheating.
+When doing a 16-bit read that returns data in the MSB byte, the
+RSB_DATA register will keep the MSB byte unchanged when doing
+the following 8-bit read. sunxi_rsb_read() will then return
+a result that contains high byte from 16-bit read mixed with
+the 8-bit result.
+
+The consequence is that after this happens the PMIC's regmap will
+look like this: (0x33 is the high byte from the 16-bit read)
+
+% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
+00: 33
+01: 33
+02: 33
+03: 33
+04: 33
+05: 33
+06: 33
+07: 33
+08: 33
+09: 33
+0a: 33
+0b: 33
+0c: 33
+0d: 33
+0e: 33
+[snip]
+
+Fix this by masking the result of the read with the correct mask
+based on the size of the read. There are no 16-bit users in the
+mainline kernel, so this doesn't need to get into the stable tree.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bus/sunxi-rsb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index 49547a43cc90a..54cbdaf7ffdcc 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -318,8 +318,8 @@
- };
+diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+index 1b76d95859027..2ca2cc56bcef6 100644
+--- a/drivers/bus/sunxi-rsb.c
++++ b/drivers/bus/sunxi-rsb.c
+@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+ 	if (ret)
+ 		goto unlock;
  
- &reg_dldo3 {
--	regulator-min-microvolt = <2800000>;
--	regulator-max-microvolt = <2800000>;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
- 	regulator-name = "vdd-csi";
- };
+-	*buf = readl(rsb->regs + RSB_DATA);
++	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
  
+ unlock:
+ 	mutex_unlock(&rsb->lock);
 -- 
 2.20.1
 
