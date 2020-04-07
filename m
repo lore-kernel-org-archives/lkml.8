@@ -3,150 +3,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A0EC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED324C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE87206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3572074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="duiM5LY4"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Mz/zvYDg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgDGLBS (ORCPT
+        id S1728426AbgDGLBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:01:18 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54461 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgDGLBR (ORCPT
+        Tue, 7 Apr 2020 07:01:30 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:50874 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728146AbgDGLBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:01:17 -0400
-Received: by mail-wm1-f66.google.com with SMTP id h2so1281101wmb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 04:01:16 -0700 (PDT)
+        Tue, 7 Apr 2020 07:01:30 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037B1SAb012656;
+        Tue, 7 Apr 2020 07:01:28 -0400
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2109.outbound.protection.outlook.com [104.47.55.109])
+        by mx0a-00128a01.pphosted.com with ESMTP id 306q55j3b7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Apr 2020 07:01:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gL8fuJzvfWusUC+r8oI7glsTHOEwszc56GtQEiZZZmyLCzG2vov9s35Z0yjY9OGOVjzBOkPZ0lGAz2MRLUSYFKAP9btiFdbVW3PPkFNIodGBVH56XE8yLWQfaHjMGpF/i8Yi5c597aK9ksEtKtUGTEraeDRAcAhMCK3Z9Pbo42vbrW6+vV7r/19yIpJQ9znqJIT0/BKFTphSQ9Kjy3E1xyUFyZWmikMxPQtAjNK35kXJi26XUZfkVxzH/ZgEoRQJLUwH5Zl+IN6KMmkhIT3LVIknCHYsk4ieRngvcMSgiYWsPt15ciquBQF8kQ0CeMVLLr5kzSG/A7Fk4Vlt/4bJXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S9MFHYZXF7SdHf5Ltxl2TxrPw+isNcAmZO0cNAPKd8U=;
+ b=EhLkG5VgVq2T2OFdgj/KBNJ6rMOTe9dXwQDDXh8OZKsUPKG4fKLsJcMt19ou6G7Q9vu6OeLsE5ZzyUlhMAu/Tv0LiktYYwZEGNLwjykPWVcM9PcNkLtZ55knttFQ8SWNKmqTLW6hI/s9BADWMBUk/VL10TLnbkCBeHKiBOBOMuMI7KgzQ2ayK/yS3XPe8FxfIi+IFZTvDF3ylhIsDswyMaKhNTv0Cr4eaafH/suelclb3MYePT7/bi8msIN5RFhl6W4d8Lu1mplq5YDKFrYFJC+lly+Tnu0Q3QX7F7w+i6j8QOUDP2QExyi/tWzjWMJd0J0vt8sYuIKhz7Hyg1dBkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7e9JekbMjRN4qPP6TudcyC7igTWSIzN2Q0/JhAQisHk=;
-        b=duiM5LY4uZHmex4Jt6wly7w4b8nz+kynRNmoYgzVHI2ALnmCS9o3l7eRxd0wjBwdyV
-         gbkolDuuheNfRxLCT24aNDLzV/Z2m9v70GkrEG6cWYU0/omnLSKHNfvfTG3gwej2D9H1
-         4f+gjsxAGivrRr9lb70weK10C4ni2WemjUf5V1iDy6Xawp2sdtat5DSgNf5panWRyt0h
-         rcRw1t4IDFCYct9gfq/Dnia8VNNMyQfOAST2/TqQExF+77UzzScDP5wRwIrk4ShggYV6
-         BAymg2P98k6WxZdHTpRYAoZipthquxivlmzUzDPOKHxUvbZk35ywy5kODtjk+5RLjD56
-         A1ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7e9JekbMjRN4qPP6TudcyC7igTWSIzN2Q0/JhAQisHk=;
-        b=WI2tR+7K8bOjcnG6TuVjB/dSxT0VT+DnWXW2K7tyVU3Lsj2hU65kFhN9VOaCE5BNky
-         T03Kq7fVjCibXxwYaJ4AqtTcDzB8FnRZG7U0Y5c73eBVcCSdERxWhMB1yQ7BuXShK8A5
-         tyk5Z/nFxNRO+wN8SxterjBFCqG402EQwQdmTCzsrAMDtevHtcfWzu2ncOJyF6D90Qe7
-         gOwnAQPqdEJuRDhF6tUE7qYsYxOA/1rAaRddgy7Gcz3zwmoznwJwe0xNiFxgno8LtwdG
-         z8A+2kwQcbdzzyfvKOYI28K8dsPSH0y0DEXrbqx7s8SyZb9A30ZlLUZBgCalzeNSsJtO
-         xKcA==
-X-Gm-Message-State: AGi0Pubb7a0dniL2/Kaj5PrwqTrS6stqVDOExU+J4v+azKpFHyWqRDbP
-        XViCiPuFSBfLgM/3X1XoFMK/oiRBkms=
-X-Google-Smtp-Source: APiQypJpn4ESFTAnvOZvBKGgLWqORpMqhwZ+ndImgbUVp841Jgn4bvs28o6JGa3FczBgoHt12e4o+A==
-X-Received: by 2002:a1c:2489:: with SMTP id k131mr1905062wmk.86.1586257275550;
-        Tue, 07 Apr 2020 04:01:15 -0700 (PDT)
-Received: from myrica ([2001:171b:226b:54a0:6097:1406:6470:33b5])
-        by smtp.gmail.com with ESMTPSA id u16sm30205510wro.23.2020.04.07.04.01.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 04:01:14 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 13:01:07 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH 03/10] iommu/ioasid: Introduce per set allocation APIs
-Message-ID: <20200407110107.GA285264@myrica>
-References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1585158931-1825-4-git-send-email-jacob.jun.pan@linux.intel.com>
- <20200401134745.GE882512@myrica>
- <20200406130245.690cfe15@jacob-builder>
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S9MFHYZXF7SdHf5Ltxl2TxrPw+isNcAmZO0cNAPKd8U=;
+ b=Mz/zvYDgqyXKXqm2LT9ftaqztUopsBJ0sFU6B27Q2BfPidwpbuqFAnpSP3dRc+6D8qgPMC0o0dL8f4o2yrLWe4koxygziq6oseXF4U5qb2eWWAvCn67FWmUCjxyyWgMtJHaC7Qo8z8vqmrgbfL7D6ehuWfEfNVMWW5adhMDx5QI=
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
+ by DM6PR03MB5033.namprd03.prod.outlook.com (2603:10b6:5:1e2::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Tue, 7 Apr
+ 2020 11:01:23 +0000
+Received: from DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
+ ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
+ 11:01:23 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "Markus.Elfring@web.de" <Markus.Elfring@web.de>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+CC:     "jic23@kernel.org" <jic23@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [v2] iio: core: move 'indio_dev->info' null check first
+Thread-Topic: [v2] iio: core: move 'indio_dev->info' null check first
+Thread-Index: AQHWDMlSZrUp5iveZ0qk1mOyXvaT86htfiwA
+Date:   Tue, 7 Apr 2020 11:01:23 +0000
+Message-ID: <d25190f18a171d82f3300f00b00f50f62f636d28.camel@analog.com>
+References: <cb300eeb-6045-bd91-3e0e-902dd3b5d5d8@web.de>
+         <3725f882accda683815f04c0eff0bb36c285fe62.camel@analog.com>
+         <39d24c67-e83a-e414-e27e-041c7d5cea1a@web.de>
+In-Reply-To: <39d24c67-e83a-e414-e27e-041c7d5cea1a@web.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.27.135.58]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2e8375f6-7029-40a1-b8a1-08d7dae302e8
+x-ms-traffictypediagnostic: DM6PR03MB5033:
+x-microsoft-antispam-prvs: <DM6PR03MB503375A6B93E8DB92D9E0D7EF9C30@DM6PR03MB5033.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 036614DD9C
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(136003)(39860400002)(396003)(376002)(366004)(346002)(71200400001)(8936002)(6512007)(186003)(8676002)(54906003)(86362001)(4744005)(26005)(110136005)(478600001)(2616005)(316002)(6486002)(4326008)(66946007)(66476007)(91956017)(76116006)(6506007)(5660300002)(2906002)(36756003)(81166006)(81156014)(66556008)(64756008)(66446008);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 98XM18tH3Tas/HDsjAHuYimKB0jauC24WZTFwWv2FLmLt7nIV8T9Sf6w+W8/Hy47huEbd6/3tMt9IrRfBm+KEGm8+TIiPwI3heGUd/TFQduAFbuoy76RQD5SocK5YSv0cLAboy22b0A4Wn4wF/xZsXzbLC+7JGhbCJ9VUyLmdLdmB9GmYsDyKC+gGiK56xGl++8J1J58Kb6lHmELCTrSzkHEomJ0yIR7tyJ2wsiu+alagqj8eACyAJgsQCYZbrYhHJP5QR2Y2s3yeyXghbNNGxo9TbC3S6gDzEOVpDzsfQEHieGHTPTVae69NHYnapB0g+cz2JYxtibg/lwnk+ANPf0KfLJzpmBEq/zqYFxuAKfETkLBa5JQGsz+DCKJhHyofZuQjWd67by0rQlYb3RpJ2MlFHqQ/4m88Df9MX0PwBSjYHzvqdFaYv1T4WMfLITj
+x-ms-exchange-antispam-messagedata: xDCJDP6p3ValM/WBVSTvhKLp+FSz3ztdPEwP4nXGNROxLEx1DLLC9rbW20FvOhwenixepGGuMix24X03VADY0OihsyANtqLREVao4TADRI7POlSWRtUOf72sB2xqNHKIWHzmHqpeGqHIdci+ohrTiQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BD47960F5ACF7A4FBF88E432A1741231@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200406130245.690cfe15@jacob-builder>
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e8375f6-7029-40a1-b8a1-08d7dae302e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2020 11:01:23.6572
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: b6a4BGGnN+mX2WPE6J3sbqf3GMToz5j70fNLuVJddAifgL90R3EjbJ7uMQLcOjmxBVRBgIhGAjkQoFRHOamjN0I9NPX9k5wj7a2ezgr6NQ0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5033
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-07_03:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 suspectscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
+ phishscore=0 mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 01:02:45PM -0700, Jacob Pan wrote:
-> > > +	sdata = kzalloc(sizeof(*sdata), GFP_KERNEL);
-> > > +	if (!sdata)
-> > > +		return -ENOMEM;  
-> > 
-> > I don't understand why we need this structure at all, nor why we need
-> > the SID. Users have already allocated an ioasid_set, so why not just
-> > stick the content of ioasid_set_data in there, and pass the
-> > ioasid_set pointer to ioasid_alloc()?
-> > 
-> 
-> My thinking was that ioasid_set is an opaque user token, e.g. we use mm
-> to identify a common set belong to a VM.
-> 
-> This sdata is an IOASID internal structure for managing & servicing per
-> set data. If we let user fill in the content, some of the entries need
-> to be managed by the IOASID code under a lock.
-
-We don't have to let users fill the content. A bit like iommu_domain:
-device drivers don't modify it, they pass it to iommu_map() rather than
-passing a domain ID.
-
-> IMO, not suitable to let user allocate and manage.
-> 
-> Perhaps we should rename struct ioasid_set to ioasid_set_token?
-
-Is the token actually used anywhere?  As far as I can tell VFIO does its
-own uniqueness check before calling ioasid_alloc_set(), and consumers of
-notifications don't read the token.
-
-> 
-> /**
->  * struct ioasid_set_data - Meta data about ioasid_set
->  *
->  * @token:	Unique to identify an IOASID set
->  * @xa:		XArray to store ioasid_set private ID to
-> system-wide IOASID
->  *		mapping
->  * @max_id:	Max number of IOASIDs can be allocated within the set
->  * @nr_id	Number of IOASIDs allocated in the set
->  * @sid		ID of the set
->  */
-> struct ioasid_set_data {
-> 	struct ioasid_set *token;
-> 	struct xarray xa;
-> 	int size;
-> 	int nr_ioasids;
-> 	int sid;
-> 	struct rcu_head rcu;
-> };
-
-How about we remove the current ioasid_set, call this structure ioasid_set
-instead of ioasid_set_data, and have ioasid_alloc_set() return it, rather
-than requiring users to allocate the ioasid_set themselves?
-
-	struct ioasid_set *ioasid_alloc_set(ioasid_t quota):
-
-This way ioasid_set is opaque to users (we could have the definition in
-ioasid.c), but it can be passed to ioasid_alloc() and avoids the lookup by
-SID. Could also add the unique token as a void * argument to
-ioasid_alloc_set(), if needed.
-
-Thanks,
-Jean
+T24gVHVlLCAyMDIwLTA0LTA3IGF0IDEyOjQyICswMjAwLCBNYXJrdXMgRWxmcmluZyB3cm90ZToN
+Cj4gW0V4dGVybmFsXQ0KPiANCj4gPiBTbywgb3ZlciB0aW1lIEkgZ290IHRoZSBoYWJpdCBvZiBt
+ZW50aW9uaW5nICdEb2Vzbid0IGZpeCBhbnl0aGluZy4nDQo+IA0KPiBJIHN1Z2dlc3QgdG8gcmVj
+b25zaWRlciBzdWNoIGluZm9ybWF0aW9uIG9uY2UgbW9yZS4NCj4gV2UgY29tZSBhbG9uZyBkaWZm
+ZXJlbnQgaW50ZXJwcmV0YXRpb25zIGZvciByZW1hcmthYmxlIHNvZnR3YXJlIGFkanVzdG1lbnRz
+Lg0KPiANCj4gDQo+ID4gaWYgdGhlIHBhdGNoIGRvZXNuJ3QgZml4IGFueXRoaW5nLg0KPiANCj4g
+RG8geW91IGltcHJvdmUgdGhlIGlucHV0IHBhcmFtZXRlciB2YWxpZGF0aW9uIGEgYml0IGluIHBy
+aW5jaXBsZSBoZXJlPw0KDQpJIHRob3VnaHQgdGhhdCB3YXMgb2J2aW91cyBmcm9tIHRoZSByZXN0
+IG9mIHRoZSBkZXNjcmlwdGlvbiArIHBhdGNoLg0KSSBndWVzcyBpdCBpc24ndC4NCg0KSSdsbCBz
+ZWUuDQoNCj4gDQo+IFJlZ2FyZHMsDQo+IE1hcmt1cw0K
