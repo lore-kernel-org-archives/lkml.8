@@ -2,208 +2,115 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A729C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFFEC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AAA1206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F4B206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:54:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i1PKqifD"
+	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="JeDpPAtu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgDGJxn (ORCPT
+        id S1728160AbgDGJyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:53:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47299 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726716AbgDGJxm (ORCPT
+        Tue, 7 Apr 2020 05:54:24 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38553 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728143AbgDGJyX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:53:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586253220;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=oLjV0dR06CVtDijV8G+MbnTLMMQSd3QfbOWe/4e1HKY=;
-        b=i1PKqifD4QGR8wH/WYuRMB7V80Tkg7h1YcxXwGZLZI/xiVxN8wyqgxJSePsYD+513q70Bt
-        d7+S63CqIlA9jH+Qdwq3d0v0wbpOVkD9bNRz9RtunQDrQVS+CP266XK7OziE658E+VXjZf
-        DrmAv58awp7YBhM0fASCHKfjfs1xCWM=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-185-LIkpwkE2OdO3SCv4nrg4eQ-1; Tue, 07 Apr 2020 05:53:38 -0400
-X-MC-Unique: LIkpwkE2OdO3SCv4nrg4eQ-1
-Received: by mail-wm1-f69.google.com with SMTP id o26so497862wmh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:53:38 -0700 (PDT)
+        Tue, 7 Apr 2020 05:54:23 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f20so1139216wmh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=8/bdQL/GmPPxSd9AJZqtaufR2ST8hYg8tzUWt1zLb48=;
+        b=JeDpPAtufPkXqiPpvE1eHc7+VencpjO1K8RLp7VOkYOnbizQAqNmBqpX6SLW6rhYHy
+         ceXIGZJskMf/nWZcL4RDcmgqx+DG2+R1Isy5Dm+cD4l0bUiAME3mGQXxQfDB8uNlinkF
+         YPuLM8DAQqjLJcrjW70Jq1jtROQ1qHVFOZ8Idb7eaIHbV+j/B9zHbIBuCKZtELI/xHzc
+         DQHqFIB1etUTTF4UwsN1QkTqkh1R/sxCiX8mqYbwTLUMzEo5mx8r9hR8cpHtkPBRzZ6M
+         n4qGATH/lnV1UqtQvST+KJVNnKkvomYd/iPg3RiFHuv7rFXKb5dBG9gZN3kSqg7kOqVk
+         ha8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=oLjV0dR06CVtDijV8G+MbnTLMMQSd3QfbOWe/4e1HKY=;
-        b=bTK6zljHfoW+mPGLfZY6wAsFBZfXcPJojn9LukRvueHGKlV8WYKJeptYb6qlYA/w3s
-         WDLJRgxvxFOBYODqSFiZiK//sfardDTlPkAvOzIUW6K0ihFr8hKSqbfqYCHCUVch3lPR
-         RYzfe8aGlkVsdRptN0dMq9/GQGA0Dx5+zaUegWl62HDMthJSmuGmBSUnSGpQX9k/TiKF
-         9VjMZwpZyqqhOwStZVsXUYJQRYKwIY9Su737m8Pzx10U3ys1pu8R5VbOZCmFs+yaPrHn
-         hJjVw2n+CE4yZcbLqAu+izhh4J3j+ayuxooXGOfn8NcDqx1mmDpnfSMCK0gFqtctvjYQ
-         qFkQ==
-X-Gm-Message-State: AGi0PuYVXaYGXJpFVdbZyDuXJYNoxV+UumWGXT7fL610UQ6xVZPu9I1o
-        kTi9riK/b5kVsI5fUC7Wgttl5nkxkdAaCZYz5RUNPAdqmM3ws6QUWM+pj1kGRf8TPaEp4U+j2do
-        5mohso8ROLqsmRG+HYGUV7mAH
-X-Received: by 2002:a1c:f205:: with SMTP id s5mr1517465wmc.101.1586253217555;
-        Tue, 07 Apr 2020 02:53:37 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK618C35lkaLXiYs/X9jCrBU5V7/q45Do9tU/BXiD39k7buPrgl8FVD4cfYPT2PEopWOaQJtQ==
-X-Received: by 2002:a1c:f205:: with SMTP id s5mr1517441wmc.101.1586253217223;
-        Tue, 07 Apr 2020 02:53:37 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id v7sm30308497wrs.96.2020.04.07.02.53.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 02:53:36 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 05:53:34 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alexander.h.duyck@linux.intel.com, david@redhat.com,
-        eperezma@redhat.com, jasowang@redhat.com, lingshan.zhu@intel.com,
-        mhocko@kernel.org, mst@redhat.com, namit@vmware.com,
-        rdunlap@infradead.org, rientjes@google.com, tiwei.bie@intel.com,
-        tysand@google.com, wei.w.wang@intel.com, xiao.w.wang@intel.com,
-        yuri.benditovich@daynix.com
-Subject: [GIT PULL v2] vhost: cleanups and fixes
-Message-ID: <20200407055334-mutt-send-email-mst@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mutt-Fcc: =sent
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8/bdQL/GmPPxSd9AJZqtaufR2ST8hYg8tzUWt1zLb48=;
+        b=KcAuVFPLiYneChqRko7PUqy54LteLVwqVfkdi9KVhjxHhjEEnqT3LAhFS2Xd6Ks6Kt
+         oboaSNbodN+SI7ty39+neoIarou4B4jBRE4GqDFOK2QXWzFwyQ6eXJae/DyI/53YpVQK
+         G8JOhjk4KUPg3uU982BPIs7S9GJYiF/rrEP+KHPN437EXH1Y0M4L47fWoBAu1EBxOJ4y
+         DMIhxbUFDnlBgT+6B+gr7LPzJOawlgMQkrt2BkSkyOX20+wJYH0CeO9/OJj2Y4QEbdWQ
+         bywMRTBGkvfS5ru36a6iHQYia9BUfhSwAZFKVrYnn1cCMNduxX1vdSZt0gm3n6tt0x2o
+         ktlQ==
+X-Gm-Message-State: AGi0PubU/Fym1I2Icddq/eo5PiOdS1m2uoGXBS4xsOSj72WfeIzurfU7
+        xB9zPrlNRNG6fFqbtuAQd+Fr2Q==
+X-Google-Smtp-Source: APiQypI+HFqQl1kgTxDgY5zvNo5sadaklQK60WPZtGE9G2DqDhArmyObDdOTxgfZCBXkDWVgChAM6A==
+X-Received: by 2002:a7b:c343:: with SMTP id l3mr1602706wmj.38.1586253261817;
+        Tue, 07 Apr 2020 02:54:21 -0700 (PDT)
+Received: from localhost (bcde70f4.skybroadband.com. [188.222.112.244])
+        by smtp.gmail.com with ESMTPSA id n11sm33168582wrg.72.2020.04.07.02.54.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 02:54:21 -0700 (PDT)
+From:   Matt Fleming <matt@codeblueprint.co.uk>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-rt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Wagner <wagi@monom.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>
+Subject: [PATCH RT] signal: Prevent double-free of user struct
+Date:   Tue,  7 Apr 2020 10:54:13 +0100
+Message-Id: <20200407095413.30039-1-matt@codeblueprint.co.uk>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes from PULL v1:
-	reverted a commit that was also in Andrew Morton's tree,
-	to resolve a merge conflict:
-	this is what Stephen Rothwell was doing to resolve it
-	in linux-next.
+The way user struct reference counting works changed significantly with,
 
+  fda31c50292a ("signal: avoid double atomic counter increments for user accounting")
 
-Now that many more architectures build vhost, a couple of these (um, and
-arm with deprecated oabi) have reported build failures with randconfig,
-however fixes for that need a bit more discussion/testing and will be
-merged separately.
+Now user structs are only freed once the last pending signal is
+dequeued. Make sigqueue_free_current() follow this new convention to
+avoid freeing the user struct multiple times and triggering this
+warning:
 
-Not a regression - these previously simply didn't have vhost at all.
-Also, there's some DMA API code in the vdpa simulator is hacky - if no
-solution surfaces soon we can always disable it before release:
-it's not a big deal either way as it's just test code.
+ refcount_t: underflow; use-after-free.
+ WARNING: CPU: 0 PID: 6794 at lib/refcount.c:288 refcount_dec_not_one+0x45/0x50
+ Call Trace:
+  refcount_dec_and_lock_irqsave+0x16/0x60
+  free_uid+0x31/0xa0
+  ? schedule_hrtimeout_range_clock+0x104/0x110
+  __dequeue_signal+0x17c/0x190
+  dequeue_signal+0x5a/0x1b0
+  do_sigtimedwait+0x208/0x250
+  __x64_sys_rt_sigtimedwait+0x6f/0xd0
+  do_syscall_64+0x72/0x200
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
+Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
+Reported-by: Daniel Wagner <wagi@monom.org>
+---
+ kernel/signal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
-
-  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-
-for you to fetch changes up to 835a6a649d0dd1b1f46759eb60fff2f63ed253a7:
-
-  virtio-balloon: Revert "virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM" (2020-04-07 05:44:57 -0400)
-
-----------------------------------------------------------------
-virtio: fixes, vdpa
-
-Some bug fixes.
-The new vdpa subsystem with two first drivers.
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-
-----------------------------------------------------------------
-David Hildenbrand (1):
-      virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM
-
-Jason Wang (7):
-      vhost: refine vhost and vringh kconfig
-      vhost: allow per device message handler
-      vhost: factor out IOTLB
-      vringh: IOTLB support
-      vDPA: introduce vDPA bus
-      virtio: introduce a vDPA based transport
-      vdpasim: vDPA device simulator
-
-Michael S. Tsirkin (3):
-      tools/virtio: option to build an out of tree module
-      vdpa: move to drivers/vdpa
-      virtio-balloon: Revert "virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM"
-
-Tiwei Bie (1):
-      vhost: introduce vDPA-based backend
-
-Yuri Benditovich (3):
-      virtio-net: Introduce extended RSC feature
-      virtio-net: Introduce RSS receive steering feature
-      virtio-net: Introduce hash report feature
-
-Zhu Lingshan (1):
-      virtio: Intel IFC VF driver for VDPA
-
- MAINTAINERS                      |   3 +
- arch/arm/kvm/Kconfig             |   2 -
- arch/arm64/kvm/Kconfig           |   2 -
- arch/mips/kvm/Kconfig            |   2 -
- arch/powerpc/kvm/Kconfig         |   2 -
- arch/s390/kvm/Kconfig            |   4 -
- arch/x86/kvm/Kconfig             |   4 -
- drivers/Kconfig                  |   4 +
- drivers/Makefile                 |   1 +
- drivers/misc/mic/Kconfig         |   4 -
- drivers/net/caif/Kconfig         |   4 -
- drivers/vdpa/Kconfig             |  37 ++
- drivers/vdpa/Makefile            |   4 +
- drivers/vdpa/ifcvf/Makefile      |   3 +
- drivers/vdpa/ifcvf/ifcvf_base.c  | 389 +++++++++++++++++
- drivers/vdpa/ifcvf/ifcvf_base.h  | 118 ++++++
- drivers/vdpa/ifcvf/ifcvf_main.c  | 435 +++++++++++++++++++
- drivers/vdpa/vdpa.c              | 180 ++++++++
- drivers/vdpa/vdpa_sim/Makefile   |   2 +
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 629 ++++++++++++++++++++++++++++
- drivers/vhost/Kconfig            |  45 +-
- drivers/vhost/Kconfig.vringh     |   6 -
- drivers/vhost/Makefile           |   6 +
- drivers/vhost/iotlb.c            | 177 ++++++++
- drivers/vhost/net.c              |   5 +-
- drivers/vhost/scsi.c             |   2 +-
- drivers/vhost/vdpa.c             | 883 +++++++++++++++++++++++++++++++++++++++
- drivers/vhost/vhost.c            | 233 ++++-------
- drivers/vhost/vhost.h            |  45 +-
- drivers/vhost/vringh.c           | 421 ++++++++++++++++++-
- drivers/vhost/vsock.c            |   2 +-
- drivers/virtio/Kconfig           |  13 +
- drivers/virtio/Makefile          |   1 +
- drivers/virtio/virtio_vdpa.c     | 396 ++++++++++++++++++
- include/linux/vdpa.h             | 253 +++++++++++
- include/linux/vhost_iotlb.h      |  47 +++
- include/linux/vringh.h           |  36 ++
- include/uapi/linux/vhost.h       |  24 ++
- include/uapi/linux/vhost_types.h |   8 +
- include/uapi/linux/virtio_net.h  | 102 ++++-
- tools/virtio/Makefile            |  27 +-
- 41 files changed, 4310 insertions(+), 251 deletions(-)
- create mode 100644 drivers/vdpa/Kconfig
- create mode 100644 drivers/vdpa/Makefile
- create mode 100644 drivers/vdpa/ifcvf/Makefile
- create mode 100644 drivers/vdpa/ifcvf/ifcvf_base.c
- create mode 100644 drivers/vdpa/ifcvf/ifcvf_base.h
- create mode 100644 drivers/vdpa/ifcvf/ifcvf_main.c
- create mode 100644 drivers/vdpa/vdpa.c
- create mode 100644 drivers/vdpa/vdpa_sim/Makefile
- create mode 100644 drivers/vdpa/vdpa_sim/vdpa_sim.c
- delete mode 100644 drivers/vhost/Kconfig.vringh
- create mode 100644 drivers/vhost/iotlb.c
- create mode 100644 drivers/vhost/vdpa.c
- create mode 100644 drivers/virtio/virtio_vdpa.c
- create mode 100644 include/linux/vdpa.h
- create mode 100644 include/linux/vhost_iotlb.h
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 267fce07df5d..3651483bd4d8 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -494,8 +494,8 @@ static void sigqueue_free_current(struct sigqueue *q)
+ 
+ 	up = q->user;
+ 	if (rt_prio(current->normal_prio) && !put_task_cache(current, q)) {
+-		atomic_dec(&up->sigpending);
+-		free_uid(up);
++		if (atomic_dec_and_test(&up->sigpending))
++			free_uid(up);
+ 	} else
+ 		  __sigqueue_free(q);
+ }
+-- 
+2.16.4
 
