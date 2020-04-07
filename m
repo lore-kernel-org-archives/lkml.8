@@ -2,162 +2,108 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49990C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BE5C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12BCA2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3B112076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u5kSqJxd"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="UNqco5YJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgDGPzD (ORCPT
+        id S1727894AbgDGPzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:55:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51062 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727751AbgDGPzC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:55:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=evMROeiOPSEkTnQc1NkJrMpIxagj6DaDwYzvXfWtXk0=; b=u5kSqJxduuO9fYXZ3frJ35LDTQ
-        u4TE3Sro3SU6PZZxQlQijr/vWMx/RVh4apLfQxiRt2B8MtVSYq3CD1UHyLgyy7L0RGU6PMVPXvMh7
-        TqE0Jg5bc2seVALXHMZGoGQ1REQBZ8ZL1F4mEHW9hZC2HKFLvsXR2qzOpkevZTklYKQ/frNhDOc42
-        xOkgD7i1RFuljZNlpUkagNBwD8pmh0lAkVRYHTR8N+CvdjuU7GnnfnrSlA00fDxfP8Mgsh0bVSA1x
-        I7xicMeSV1OJaxTbzJvsmJdTaag12QxQhTFtGQSwsG1h/UFn3QkIqKn9P7NM6kwSMxq28mmMgBl3g
-        FhDGxsCw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLqYv-0002Jv-Kr; Tue, 07 Apr 2020 15:54:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F0B023010C8;
-        Tue,  7 Apr 2020 17:54:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D96D62B99BB3E; Tue,  7 Apr 2020 17:54:49 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 17:54:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jann Horn <jannh@google.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: AMD DC graphics display code enables -mhard-float, -msse, -msse2
- without any visible FPU state protection
-Message-ID: <20200407155449.GF20730@hirez.programming.kicks-ass.net>
-References: <20200402141308.GB20730@hirez.programming.kicks-ass.net>
- <20200403142837.f61a18d7bd32fd73777479ad@kernel.org>
- <20200403112113.GN20730@hirez.programming.kicks-ass.net>
- <20200404120808.05e9aa61500265be2e031bd6@kernel.org>
- <20200404143224.GL2452@worktop.programming.kicks-ass.net>
- <20200405121930.e3ea3e7acc7588102de483e2@kernel.org>
- <20200406102107.GI20730@hirez.programming.kicks-ass.net>
- <20200407185008.c819005f0174cae76c44a135@kernel.org>
- <20200407111535.GT20730@hirez.programming.kicks-ass.net>
- <20200408004111.3dd597f2a7c6172b4c71a9ba@kernel.org>
+        Tue, 7 Apr 2020 11:55:10 -0400
+Received: from mout.gmx.net ([212.227.15.18]:41155 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727751AbgDGPzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:55:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1586274896;
+        bh=Y8CqZtz4ZQRui/81eNNZ4TzaarQvXmyN232y605+P9A=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=UNqco5YJjj80TjB5wUg4dOMO5e6ss+DUzeQ1yF4sPyNVmplnmXKjH0t7GuSpYPN3C
+         46A0o/EI1wxDODDHE+BbWw19OPPsihMwQG53wdtnTBHS4WIj+Tqo6F2P8CbpMKKC5+
+         PcOxQCa35fG7Ir+1roGUm7N5biraogjz61DTJOQQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from lenovo-laptop ([82.19.195.159]) by mail.gmx.com (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1M2O2W-1jJ6jh3gZ4-003xIe; Tue, 07
+ Apr 2020 17:54:56 +0200
+Date:   Tue, 7 Apr 2020 16:54:53 +0100
+From:   Alex Dewar <alex.dewar@gmx.co.uk>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Qiujun Huang <hqjagain@gmail.com>, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        "James E. J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] scsi: aic7xxx: Remove null pointer checks before kfree()
+Message-ID: <20200407155453.sosj4brsw6r7fnot@lenovo-laptop>
+References: <72bc89d5-cf50-3f3a-41e0-b46b134e754d@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200408004111.3dd597f2a7c6172b4c71a9ba@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <72bc89d5-cf50-3f3a-41e0-b46b134e754d@web.de>
+X-Provags-ID: V03:K1:DRRYbwkGmYsREHIOQQ6uPlqCNtM02NmcNjBlpaZ90sJF1rM80yD
+ e6ihZf4UqFhDcC/0GKnGcIGdGicWIbcwH50hoPPm68oO/1GIkkY8/wL6swu9SaoQHlsP6gd
+ VsgZ6OaQUaVOWzKlt1b5GzLN8gyd4EbO8/stVkQkAIe0NM8a/YnchitewJpWmVSMYt6+FUz
+ g6WBqlo1KbyQPLwKvrEuQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3n0zuGOgyNY=:CeZhKBZNkmIH8o8ERdVx8w
+ yAJNkOcj0WwBjV5YyMFrzIxnlBd1PUx0nKGN9mjQH9+ZLTCmd/DIK/RMNCm080Qc60iU45TMo
+ 7A/YH6OYNTxIhvPjE3QNdWji1ogSiGnR6FkkOhzNOnXRpERIGLCLYDdhRcZQG9YxP4GO4tu/q
+ Fg/MDID8Ea16ZOsd1tynnFJDZsyDMUoWwwqWw1QQLct3YHleAkM0oRgm/+17gCaJyc9ZSH+d6
+ je6u0z7Q54AH/kKvgMYwk4ycLTOn5NgmGIiCZoI6AIYSPMTQGsS9Nyfl6Nz8zbnukWK5mtLTA
+ bj8fqyn2M6lQEurtMFvczN454ditDio9rvbIMv1GO1eH14nMsgTIPwKUUN8l4+se8JPwVBqV2
+ xeZul3eEh7YI0VTfFfqCfQYv3dTqPOvbxzTNkCnUm1T30ZQAxAB99EwNxEWRGzEhfda4p6e0k
+ 9F4vVjY2goQNmcOLRb0oXWEXegudfQtYU+0kKSOVRJyxCKLUiVZENmtpC//HxqK7n4VhVBHI1
+ TqW4KK44FltpBa+CtWee/q08s7/G8bwvAC7u5+qtchjAt7xZtYDzjakneeQNpGyYSTIcLj5WZ
+ 5BBoAh7ErtUgOXHmMvPK8e5W3jTOQl6wx67zBjz1h/wlWym81vtHYAnMrZB7q3UR8ohYa/+bE
+ j5MqL3QYgH8r+dbjTYIyXFqdM8AxpLn+5kWR/uO957zxI2Hvss0XN1wRsfGuFAL1bKU0JPmVb
+ zPCDS8cOY42japw/qLEnVW6d2vR5v0Eyju5sdcN8F0wdI1VthlZE2OaosZPEdnjG/SvSxstll
+ 6bGhk0vpAFyuxhPIknln6SAqOs8BxjZRbt4wl5WE5I3SIqpCiEJJRGZRzu1B184z9tBZ9aVRK
+ M0wSbBM3R938190r+zeahYBrw5VbZ9+EunLEEYWPigsT3mpnJhH62FKbd170CdNvFkZRPmP9a
+ YW+GUdc+VEXczdusxzvuEOmZNo/AUrbQDwUbU6sJ9jM70VHKPerhs7Jt6vhJKmcNiihZ2dE0K
+ ZFY8QMMqRqBl3izHcVsX4WBnXp9RkmTO3TpjRJ1ImNOD9SD7yvI9QA0ZBKyTYsJpT2PMO3ctQ
+ WAMb0o8aUGHdHK6U4g88cXMPpg/DoNoLGcY8bSBPUlFcWXSiQght345P98gW2clhiDzZdycTM
+ AdUpLwupL08mJdFrczskJmOlg2VwyX2ghQJtjY3+PX0KeSiQER5lUKF+tO8hkSzmDEDKdPxz0
+ 21NGO6xZJUEDN3NOP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 12:41:11AM +0900, Masami Hiramatsu wrote:
-> On Tue, 7 Apr 2020 13:15:35 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+Markus,
 
-> > > > Also, all the VMX bits seems to qualify as FPU (I can't remember seeing
-> > > > that previously):
-> > > 
-> > > Oops, let me check it.
-> > 
-> > I just send you another patch that could do with insn_is_vmx()
-> > (sorry!!!)
-> 
-> Hmm, it is hard to find out the vmx insns. Maybe we need to clarify it by
-> opcode pattern. (like "VM.*")
+On Sun, Apr 05, 2020 at 10:02:47PM +0200, Markus Elfring wrote:
+> > NULL check before kfree is unnecessary so remove it.
+>
+> I hope that you would like to take another update suggestion into accoun=
+t
+> (besides a typo correction for your commit message).
+> https://lore.kernel.org/patchwork/patch/1220189/
+> https://lore.kernel.org/linux-scsi/20200403164712.49579-1-alex.dewar@gmx=
+.co.uk/
 
-Yeah, I know. Maybe I should just keep it as I have for now.
+I'm not sure I understand the relevance. Are you saying I should
+reference this other patch?
 
-One thing I thought of is we could perhaps add manual markers in
-x86-opcode-map.txt. The '{','}' characters appear unused so far, we
-perhaps we can use them to classify things.
+>
+> Do you find a previous update suggestion like =E2=80=9CSCSI-aic7...: Del=
+ete unnecessary
+> checks before the function call "kfree"=E2=80=9D also interesting?
+> https://lore.kernel.org/linux-scsi/54D3E057.9030600@users.sourceforge.ne=
+t/
+> https://lore.kernel.org/patchwork/patch/540593/
+> https://lkml.org/lkml/2015/2/5/650
+>
 
-That could maybe replace "mmx_expr" as well. That is, something like so:
+Thanks for the reference. I'll mention it in the commit if I do a v2.
 
----
+Best,
+Alex
 
-diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
-index ec31f5b60323..e01b76e0a294 100644
---- a/arch/x86/lib/x86-opcode-map.txt
-+++ b/arch/x86/lib/x86-opcode-map.txt
-@@ -462,9 +462,9 @@ AVXcode: 1
- 75: pcmpeqw Pq,Qq | vpcmpeqw Vx,Hx,Wx (66),(v1)
- 76: pcmpeqd Pq,Qq | vpcmpeqd Vx,Hx,Wx (66),(v1)
- # Note: Remove (v), because vzeroall and vzeroupper becomes emms without VEX.
--77: emms | vzeroupper | vzeroall
--78: VMREAD Ey,Gy | vcvttps2udq/pd2udq Vx,Wpd (evo) | vcvttsd2usi Gv,Wx (F2),(ev) | vcvttss2usi Gv,Wx (F3),(ev) | vcvttps2uqq/pd2uqq Vx,Wx (66),(ev)
--79: VMWRITE Gy,Ey | vcvtps2udq/pd2udq Vx,Wpd (evo) | vcvtsd2usi Gv,Wx (F2),(ev) | vcvtss2usi Gv,Wx (F3),(ev) | vcvtps2uqq/pd2uqq Vx,Wx (66),(ev)
-+77: emms {FPU} | vzeroupper | vzeroall
-+78: VMREAD Ey,Gy {VMX} | vcvttps2udq/pd2udq Vx,Wpd (evo) | vcvttsd2usi Gv,Wx (F2),(ev) | vcvttss2usi Gv,Wx (F3),(ev) | vcvttps2uqq/pd2uqq Vx,Wx (66),(ev)
-+79: VMWRITE Gy,Ey {VMX} | vcvtps2udq/pd2udq Vx,Wpd (evo) | vcvtsd2usi Gv,Wx (F2),(ev) | vcvtss2usi Gv,Wx (F3),(ev) | vcvtps2uqq/pd2uqq Vx,Wx (66),(ev)
- 7a: vcvtudq2pd/uqq2pd Vpd,Wx (F3),(ev) | vcvtudq2ps/uqq2ps Vpd,Wx (F2),(ev) | vcvttps2qq/pd2qq Vx,Wx (66),(ev)
- 7b: vcvtusi2sd Vpd,Hpd,Ev (F2),(ev) | vcvtusi2ss Vps,Hps,Ev (F3),(ev) | vcvtps2qq/pd2qq Vx,Wx (66),(ev)
- 7c: vhaddpd Vpd,Hpd,Wpd (66) | vhaddps Vps,Hps,Wps (F2)
-@@ -965,9 +965,9 @@ GrpTable: Grp6
- EndTable
- 
- GrpTable: Grp7
--0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B) | PCONFIG (101),(11B) | ENCLV (000),(11B)
-+0: SGDT Ms | VMCALL (001),(11B) {VMX} | VMLAUNCH (010),(11B) {VMX} | VMRESUME (011),(11B) {VMX} | VMXOFF (100),(11B) {VMX} | PCONFIG (101),(11B) | ENCLV (000),(11B)
- 1: SIDT Ms | MONITOR (000),(11B) | MWAIT (001),(11B) | CLAC (010),(11B) | STAC (011),(11B) | ENCLS (111),(11B)
--2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
-+2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) {VMX} | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
- 3: LIDT Ms
- 4: SMSW Mw/Rv
- 5: rdpkru (110),(11B) | wrpkru (111),(11B) | SAVEPREVSSP (F3),(010),(11B) | RSTORSSP Mq (F3) | SETSSBSY (F3),(000),(11B)
-@@ -987,8 +987,8 @@ GrpTable: Grp9
- 3: xrstors
- 4: xsavec
- 5: xsaves
--6: VMPTRLD Mq | VMCLEAR Mq (66) | VMXON Mq (F3) | RDRAND Rv (11B)
--7: VMPTRST Mq | VMPTRST Mq (F3) | RDSEED Rv (11B)
-+6: VMPTRLD Mq {VMX} | VMCLEAR Mq (66) {VMX} | VMXON Mq (F3) {VMX} | RDRAND Rv (11B)
-+7: VMPTRST Mq {VMX} | VMPTRST Mq (F3) {VMX} | RDSEED Rv (11B)
- EndTable
- 
- GrpTable: Grp10
-@@ -1036,10 +1036,10 @@ GrpTable: Grp14
- EndTable
- 
- GrpTable: Grp15
--0: fxsave | RDFSBASE Ry (F3),(11B)
--1: fxstor | RDGSBASE Ry (F3),(11B)
--2: vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
--3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
-+0: fxsave {FPU} | RDFSBASE Ry (F3),(11B)
-+1: fxrstor {FPU} | RDGSBASE Ry (F3),(11B)
-+2: ldmxcsr {FPU} | vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
-+3: stmxcsr {FPU} | vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
- 4: XSAVE | ptwrite Ey (F3),(11B)
- 5: XRSTOR | lfence (11B) | INCSSPD/Q Ry (F3),(11B)
- 6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B) | CLRSSBSY Mq (F3)
+> Regards,
+> Markus
