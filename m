@@ -2,149 +2,96 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A17CC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CABDC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2537C2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343C82076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:07:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="zVLHo5qr"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="gf0FiKG7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbgDGUGy (ORCPT
+        id S1727648AbgDGUHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:06:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39432 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgDGUGx (ORCPT
+        Tue, 7 Apr 2020 16:07:01 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:42014 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726760AbgDGUHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:06:53 -0400
-Received: by mail-pf1-f195.google.com with SMTP id k15so1301805pfh.6
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 13:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=fukz/tfuybeiqmTM+2SV38GcrGMp3Az6WJlxhUcp1Jg=;
-        b=zVLHo5qrTOfpYQNwKeA5+MIylxoUib8I0GtH/Y+Cmo++MYy64FE/v7wXZjNkQH002a
-         zzUprnJvk1W0X2/SnK/xvoH7UojYXsg3WOwAES3ctkOqA/2FTGwcjiO1rLQU59bq5jOR
-         hDa+ow+9amWea0ivFbDyXF7ofGg9e6tJRctBd0nCbV53fMDLKbGPb0JspwPE15KW5pGc
-         2epGWoOEVA0ugWMwBForhSf6RWTnDJrZnfCgWqufmR1nvBp1atmKYlz5KZ2yVjdbjgLJ
-         H67lm7vKqRz4Oo4q1MtRDG9kq+cpSSiIojY7BfFeyTUF6zAreIvfOmN0F0wCZo9Mu9cK
-         YFLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fukz/tfuybeiqmTM+2SV38GcrGMp3Az6WJlxhUcp1Jg=;
-        b=nBv+W1YZlbp83CfQu72HSUCqIelgjc5JE+OYpoCFcHaG6iiPZv+2o0DCptqpTTVp+1
-         eZ6Rjq6Lp5FIXjVAsItnp236lAS17hgek2PBUnxfKvwVD1PkvSPTDK41+FBpiOPTdBVw
-         VE8ytKo/4oHvbcCOwgQGbjxPBR8t/yEjGMdRsUhog5B0zy5uhSpFfb+ip2bwERyrQTCp
-         qwPoNcZwaomFz/YII5QYahZT3l4xvWO0VLbWiwpbRxOJp6ZazX+BmONnaQ9O7O9KumqN
-         7mufUStvBNNLoVbt39mnaEFSyMSf4SPytC5erTSavkDpwWlNzUGfRd7ia1RpwcRHnGQI
-         f/RA==
-X-Gm-Message-State: AGi0Puaud6EZeY+xQWoLSH69ybgxZanboQN8GAEUWsMIplYwjv2M2uBs
-        S3I6+YcT+zQvZ64Xcc8BItFSM1zw7t+jUQ==
-X-Google-Smtp-Source: APiQypLHXQYs2KZJCJAwqvJ0ui6yuU+LpsEl6acBu+kqfe5a4Zhxr6gwepf3yior3ML4qF678231AQ==
-X-Received: by 2002:a62:5a03:: with SMTP id o3mr4061495pfb.301.1586290012300;
-        Tue, 07 Apr 2020 13:06:52 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:ec7d:96d3:6e2d:dcab? ([2605:e000:100e:8c61:ec7d:96d3:6e2d:dcab])
-        by smtp.gmail.com with ESMTPSA id w63sm4433951pgb.5.2020.04.07.13.06.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 13:06:51 -0700 (PDT)
-Subject: Re: [PATCH 1/2] eventfd: Make wake counter work for single fd instead
- of all
-To:     zhe.he@windriver.com, viro@zeniv.linux.org.uk, bcrl@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1586257192-58369-1-git-send-email-zhe.he@windriver.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3f395813-a497-aa25-71cc-8aed345b9f75@kernel.dk>
-Date:   Tue, 7 Apr 2020 13:06:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 7 Apr 2020 16:07:00 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 86FF2C009F;
+        Tue,  7 Apr 2020 20:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1586290020; bh=NrhHNH3f+3FQE+9DPc/+IuZm7ze9b7W1iIHaLrTu378=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gf0FiKG7/WzEnZJtMc01f2npq2NV+VghtZTUbh/WVkUVfxtNQgKcClL5XCcbDwoHF
+         1JEvvYP99/aJekihiIdW2egHnEA4ZUyxfcrG7doJcvm35oZtOdHpAP18aVFu4FGFE0
+         Z+FP+1HpYAN/qnXPtiRKk2YPXpfooGLcoN2WeMj/xDOaeQAvAaFJuhewMUHs7U4vxV
+         bmkO6eFZFoxgoErVyoQV7veLl6qRecAQWt8wu5Vc5Pk8eiA3n9zm1PvZXg5SbXJgTB
+         yg/n1q8GS5tzI1jzGTUb6IrhWnGamqC8mD81W3QwCh0cY4HOANz5bLNT5hJ5O0ot2s
+         y1WCjCyQICkLw==
+Received: from paltsev-e7480.internal.synopsys.com (ru20-e7250.internal.synopsys.com [10.225.49.23])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 35A64A005C;
+        Tue,  7 Apr 2020 20:06:54 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v2] ARC: [plat-hsdk]: fix USB regression
+Date:   Tue,  7 Apr 2020 23:06:42 +0300
+Message-Id: <20200407200642.12749-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-In-Reply-To: <1586257192-58369-1-git-send-email-zhe.he@windriver.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/20 3:59 AM, zhe.he@windriver.com wrote:
-> From: He Zhe <zhe.he@windriver.com>
-> 
-> commit b5e683d5cab8 ("eventfd: track eventfd_signal() recursion depth")
-> introduces a percpu counter that tracks the percpu recursion depth and
-> warn if it greater than one, to avoid potential deadlock and stack
-> overflow.
-> 
-> However sometimes different eventfds may be used in parallel.
-> Specifically, when high network load goes through kvm and vhost, working
-> as below, it would trigger the following call trace.
-> 
-> -  100.00%
->    - 66.51%
->         ret_from_fork
->         kthread
->       - vhost_worker
->          - 33.47% handle_tx_kick
->               handle_tx
->               handle_tx_copy
->               vhost_tx_batch.isra.0
->               vhost_add_used_and_signal_n
->               eventfd_signal
->          - 33.05% handle_rx_net
->               handle_rx
->               vhost_add_used_and_signal_n
->               eventfd_signal
->    - 33.49%
->         ioctl
->         entry_SYSCALL_64_after_hwframe
->         do_syscall_64
->         __x64_sys_ioctl
->         ksys_ioctl
->         do_vfs_ioctl
->         kvm_vcpu_ioctl
->         kvm_arch_vcpu_ioctl_run
->         vmx_handle_exit
->         handle_ept_misconfig
->         kvm_io_bus_write
->         __kvm_io_bus_write
->         eventfd_signal
-> 
-> 001: WARNING: CPU: 1 PID: 1503 at fs/eventfd.c:73 eventfd_signal+0x85/0xa0
-> ---- snip ----
-> 001: Call Trace:
-> 001:  vhost_signal+0x15e/0x1b0 [vhost]
-> 001:  vhost_add_used_and_signal_n+0x2b/0x40 [vhost]
-> 001:  handle_rx+0xb9/0x900 [vhost_net]
-> 001:  handle_rx_net+0x15/0x20 [vhost_net]
-> 001:  vhost_worker+0xbe/0x120 [vhost]
-> 001:  kthread+0x106/0x140
-> 001:  ? log_used.part.0+0x20/0x20 [vhost]
-> 001:  ? kthread_park+0x90/0x90
-> 001:  ret_from_fork+0x35/0x40
-> 001: ---[ end trace 0000000000000003 ]---
-> 
-> This patch moves the percpu counter into eventfd control structure and
-> does the clean-ups, so that eventfd can still be protected from deadlock
-> while allowing different ones to work in parallel.
-> 
-> As to potential stack overflow, we might want to figure out a better
-> solution in the future to warn when the stack is about to overflow so it
-> can be better utilized, rather than break the working flow when just the
-> second one comes.
+As of today the CONFIG_USB isn't explicitly present in HSDK defconfig
+as it is implicitly forcibly enabled by UDL driver which selects CONFIG_USB
+in its kconfig.
+The commit 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+reverse the dependencies between UDL and USB so UDL now depends on
+CONFIG_USB and not selects it. This introduces regression for ARC HSDK
+board as HSDK defconfig wasn't adjusted and now it misses USB support
+due to lack of CONFIG_USB enabled.
 
-This doesn't work for the infinite recursion case, the state has to be
-global, or per thread.
+Fix that.
 
+Cc: <stable@vger.kernel.org> # 5.6.x
+Fixes: 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+Changes v1->v2:
+ * fix typo, add tag for stable
+
+ arch/arc/configs/hsdk_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 0974226fab55..aa000075a575 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -65,6 +65,7 @@ CONFIG_DRM_UDL=y
+ CONFIG_DRM_ETNAVIV=y
+ CONFIG_FB=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_USB=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_EHCI_HCD_PLATFORM=y
+ CONFIG_USB_OHCI_HCD=y
 -- 
-Jens Axboe
+2.21.1
 
