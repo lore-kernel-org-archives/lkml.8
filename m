@@ -2,100 +2,138 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF6CC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CEAC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E0F2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:29:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="GfhmcrnW"
+	by mail.kernel.org (Postfix) with ESMTP id 6247A20771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgDGR36 (ORCPT
+        id S1726512AbgDGRc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:29:58 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:25834 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgDGR36 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:29:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1586280596;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=3FGuj7N8e29gKvPlFnzIwsDBtK6iaslDZO/2Jm/LaGU=;
-        b=GfhmcrnWyzcQmUa5Lz3s3bRLyaocHib8/gkI7bKngEYf0qBXU+9ZkVkApCoJi6Wm8P
-        GtLINSe7uD6w0tp8Cs6uc1TBmF1a/sKQlvdX2Q8OT1T+yHpoUoNBaMp0x73xBdXbWTwi
-        Gbc9m7MxysiWheSTPAFJe37jIzPzU8cmPHMfwkxTlnaHzEtwqGT0ObgQQPu+MrI0bFXU
-        urTpXPiEyQpWxzY9SgcEgdPTlR57/33FD6vmFRHckAeEOqe+174ZsCe/K7yq+9AKaI43
-        e8/v1gcbPiJ0TqIw+KAY8qVrx2NjjZeubwTksDrGrVu5RLJQRz9tqTUrW47LVl4sFJbs
-        +/lg==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4AUztn93FPS2dyuY88K"
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 46.2.1 DYNA|AUTH)
-        with ESMTPSA id 204e5fw37HTuhOV
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 7 Apr 2020 19:29:56 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 19:29:49 +0200
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Joe Perches <joe@perches.com>
-Cc:     Jeff King <peff@peff.net>, linux-kernel@vger.kernel.org,
-        git@vger.kernel.org
-Subject: Re: get_maintainer.pl sends bogus addresses to git send-email
-Message-ID: <20200407192949.586159e7.olaf@aepfle.de>
-In-Reply-To: <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
-References: <20200407154046.GA15368@aepfle.de>
-        <20200407170257.GA1844923@coredump.intra.peff.net>
-        <2e6975d606846c834a387c07ee11cdce52356586.camel@perches.com>
-X-Mailer: Claws Mail 2019.12.31 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        Tue, 7 Apr 2020 13:32:56 -0400
+Received: from mga02.intel.com ([134.134.136.20]:37436 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbgDGRcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 13:32:55 -0400
+IronPort-SDR: SiEaPv8kCtD9RrYOm4JVh9RojFbBfpGr29qJTW9qDSpR+fyfrsMxuoNnAua+K4Lj2i28snGAjo
+ mlpJaiPt8hbQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 10:32:06 -0700
+IronPort-SDR: 0dN2uk5PE2UgARM11tbMKg7mcMpR7+n/WA5Rh9SUwkMp2YjAgenijHApg1r0OQUVlhgA3i7Uf+
+ CL6T7AxCQMpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,356,1580803200"; 
+   d="scan'208";a="250310948"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 07 Apr 2020 10:32:06 -0700
+Received: from [10.249.224.62] (abudanko-mobl.ccr.corp.intel.com [10.249.224.62])
+        by linux.intel.com (Postfix) with ESMTP id AED7858048A;
+        Tue,  7 Apr 2020 10:32:01 -0700 (PDT)
+Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
+ performance monitoring and observability
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+ <20200407143014.GD11186@kernel.org> <20200407143551.GF11186@kernel.org>
+ <10cc74ee-8587-8cdb-f85f-5724b370a2ce@linux.intel.com>
+ <20200407163654.GB12003@kernel.org>
+ <85da1e42-2cf2-98ca-1e0c-2cf3469b7d30@linux.intel.com>
+ <20200407170251.GE12003@kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <369aaea6-3532-859e-7f1a-4df7806351c5@linux.intel.com>
+Date:   Tue, 7 Apr 2020 20:32:00 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/gyvhdOKHJllakF_ac6Obz20"; protocol="application/pgp-signature"
+In-Reply-To: <20200407170251.GE12003@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/gyvhdOKHJllakF_ac6Obz20
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Am Tue, 07 Apr 2020 10:18:41 -0700
-schrieb Joe Perches <joe@perches.com>:
+On 07.04.2020 20:02, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Apr 07, 2020 at 07:52:56PM +0300, Alexey Budankov escreveu:
+>>
+>> On 07.04.2020 19:36, Arnaldo Carvalho de Melo wrote:
+>>> Em Tue, Apr 07, 2020 at 05:54:27PM +0300, Alexey Budankov escreveu:
+>>>> Could makes sense adding cap_ipc_lock to the binary to isolate from this:
+> 
+>>>> kernel/events/core.c: 6101
+>>>> 	if ((locked > lock_limit) && perf_is_paranoid() &&
+>>>> 		!capable(CAP_IPC_LOCK)) {
+>>>> 		ret = -EPERM;
+>>>> 		goto unlock;
+>>>> 	}
+> 
+>>> That did the trick, I'll update the documentation and include in my
+>>> "Committer testing" section:
+>  
+>> Looks like top mode somehow reaches perf mmap limit described here [1].
+>> Using -m option solves the issue avoiding cap_ipc_lock on my 8 cores machine:
+>> perf top -e cycles -m 1
+> 
+> So this would read better?
+> 
+> diff --git a/Documentation/admin-guide/perf-security.rst b/Documentation/admin-guide/perf-security.rst
+> index ed33682e26b0..d44dd24b0244 100644
+> --- a/Documentation/admin-guide/perf-security.rst
+> +++ b/Documentation/admin-guide/perf-security.rst
+> @@ -127,8 +127,8 @@ taken to create such groups of privileged Perf users.
+>  
+>  ::
+>  
+> -   # setcap "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
+> -   # setcap -v "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
+> +   # setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
+> +   # setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
+>     perf: OK
+>     # getcap perf
+>     perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
+> @@ -140,6 +140,10 @@ i.e.:
+>  
+>     # setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
+>  
+> +Note that you may need to have 'cap_ipc_lock' in the mix for tools such as
+> +'perf top', alternatively use 'perf top -m N', to reduce the memory that
+> +it uses for the perf ring buffer, see the memory allocation section below.
+> +
 
-> You need to add --norolestats on the get_maintainer command line
+Let's stay with the first variant of you addition to this patch and also 
+extend the paragraph below as suggested in other mail in the thread.
 
-Thanks, this can be used as a workaround for the time being.
-Not sure why anyone would actually care about such details in default mode.=
-..
+>  As a result, members of perf_users group are capable of conducting
+>  performance monitoring and observability by using functionality of the
+>  configured Perf tool executable that, when executes, passes perf_events
+> 
 
+Thanks,
+Alexey
 
-Olaf
-
---Sig_/gyvhdOKHJllakF_ac6Obz20
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl6MuI0ACgkQ86SN7mm1
-DoDElRAAoKPmoW8t03Z5XrOYrmXy2RJPzRRguC/zAbQL+N3AK+xfNHqy93bBDyPF
-xonrACp9WyHtLNywMLH+5k2PecEch70kGyzbw6P1O/H530rN1wWWdbdwywguKpgm
-JVaWu5AEQHWukFfqsZH3BduY8ThOPbsGCar0l+ZtRAlUAs2eYeXv8tcdu0NeVaGS
-9ZyzLO2w7i/wX2MQUfGyJAeJTLFEkXGi+4jy4z+9c05zUqPzmXSncMR5njCytNjD
-W7lEOthcFVKMAUmIvMlnT8KvraKdbJ229Cqs5vlA9LCQK6bd0Xg0MAkH6tHOH61U
-31EV5C4zn5j+/QZdk9qYmlPjyKz7AWp88OiC17ZOqzugILIxGFU2QZwRcxcsVvGK
-dn2llTaTuzen77ifvNhcAjZPhlwrMStqAs0GSFD54XczCNnGUBV6PR/kPt/PhTWT
-ICHAE5HOC+/QmWwI4LsXGwi8l6i+HEd49sr+Egl/iu7mLERmtEY7tROtyYfi+oul
-/oaLYwuXV/kJsLgR2Y2V+D3iWjadyGl9OWbXNaN8AuKXL7dNP1bELbwiqBdJfu6c
-CZsxfi1pzzicw+2s3Hg/phjCgYKlhf9DjVdU9SdQCUY3qF9nGHrJlB0heJBGL+6U
-o/uIBId7siYE3oB3W9OBlp/ZsuQnBAnwx9FiohN5JJTjQo/5uoU=
-=HUNz
------END PGP SIGNATURE-----
-
---Sig_/gyvhdOKHJllakF_ac6Obz20--
