@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB22C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B18C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5679420748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E859220730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586289333;
-	bh=X8SARuotaC6mxy/ctY3ZlwjUF2pQ/3bmecn8BGIhhAE=;
+	s=default; t=1586289335;
+	bh=7YL7XPotzRGCWzzchqO5OTCahGneC+7ehXGVZsikb0Q=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=2JXT0esZ1piikfvT+ajOXWYZHuTYYTBcMsmj1UisBfE1tvx7Um6nwMYcAMHa1B1ZY
-	 gkIicGkbEpIyjfOCrzYTUX61uVjAfPoHTPf39nKxzg0MUFNvPPrgZ4OLOZMZDlUlj6
-	 okyRCbOaq2Jy4OWt9kUj89Gs1otsFFo0m8MqpIkw=
+	b=HwvIFAtePj1CBBJIhxoLaySgiOrWaux3TL4XN3Af/YGgshi+IMdBkgziGBU8ZMBYj
+	 14xStoJU9mCQejVp6ug7pvzFhbLdXf980voedtG4EQEbcQ3RozVtG4D5DFKprvtam/
+	 QaE8uVEnoLSAATD4nti/KtiJkEmZ0+rR4ussHvlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgDGTz3 (ORCPT
+        id S1727883AbgDGTz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:55:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56546 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 15:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbgDGTz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:55:26 -0400
-Subject: Re: [GIT PULL] OpenRISC updates for v5.6
+        id S1727832AbgDGTzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 15:55:24 -0400
+Subject: Re: [GIT] Sparc
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586289325;
-        bh=X8SARuotaC6mxy/ctY3ZlwjUF2pQ/3bmecn8BGIhhAE=;
+        s=default; t=1586289324;
+        bh=7YL7XPotzRGCWzzchqO5OTCahGneC+7ehXGVZsikb0Q=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=c/XBGjzE5XMyfx+zpkZdxkxk2QleADHbPwLivvocpZhjRLEXbSQnabVH6VB63HslF
-         6GbMWvauRkva/MHK0CfCRIsgpsNrd2gk5QLJeK7pJT1F76VQ0QaFz0M/HUS0q3qKD6
-         8m7Mv5z6QXQ+PSwdCebOhpeadntXhn7pSocbaYhA=
+        b=YegKSEKXGKQDH/ANtEDy3qOcj6a9EQ/Ht5XTidZzD+cBFeakk1KA5lDo2Wt4zs3SO
+         z76MlW92rSMbwh+HBmnPU1lxFtNqpjYg5vMSL1cWxiaup45YTgEQS7yFcqDGEWe7Rn
+         suA7tJfqTUwEGVmqAYQHBBE2QRniRRGwqD24fWYU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200407121628.GP7926@lianli.shorne-pla.net>
-References: <20200407121628.GP7926@lianli.shorne-pla.net>
+In-Reply-To: <20200406.112528.895031681027517472.davem@davemloft.net>
+References: <20200406.112528.895031681027517472.davem@davemloft.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200407121628.GP7926@lianli.shorne-pla.net>
-X-PR-Tracked-Remote: git://github.com/openrisc/linux.git tags/for-linus
-X-PR-Tracked-Commit-Id: 9737e2c5f0bc768b58416ec070bd96c91c52a153
+X-PR-Tracked-Message-Id: <20200406.112528.895031681027517472.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git
+ refs/heads/master
+X-PR-Tracked-Commit-Id: 255a69a94b8cbbcfef142137b5e7f99b5d168771
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d5d247661e869b71e4db5ca69b08b9607895d496
-Message-Id: <158628932584.3792.16656826106512591465.pr-tracker-bot@kernel.org>
-Date:   Tue, 07 Apr 2020 19:55:25 +0000
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Openrisc <openrisc@lists.librecores.org>
+X-PR-Merge-Commit-Id: 12782fbe0f77dcc36c48de8b0ab36d336620a3e7
+Message-Id: <158628932413.3792.18059030227180244818.pr-tracker-bot@kernel.org>
+Date:   Tue, 07 Apr 2020 19:55:24 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 7 Apr 2020 21:16:28 +0900:
+The pull request you sent on Mon, 06 Apr 2020 11:25:28 -0700 (PDT):
 
-> git://github.com/openrisc/linux.git tags/for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git refs/heads/master
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d5d247661e869b71e4db5ca69b08b9607895d496
+https://git.kernel.org/torvalds/c/12782fbe0f77dcc36c48de8b0ab36d336620a3e7
 
 Thank you!
 
