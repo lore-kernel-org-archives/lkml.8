@@ -2,276 +2,162 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C75C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49990C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B52752076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:55:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586274902;
-	bh=G5gL1J+jIVypzoiZAOb1VM69Je8gSYnBQt0grLYaY2c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Oe+RPq8Ju4sRV3cRKGW17NphmmfCu4gFnAYEcZCtf8HIGuK0IFB+w2EzzZ4pv7zCg
-	 slBrNTLSR0LCQKSseC38Wma91OncZ01KxkY1cnkeJllJJcHp5PQbeyy60hTP/AZJyJ
-	 4xAlEMiLF42/4r8PEfVY35IerI1HdhfBFjGrwdRs=
+	by mail.kernel.org (Postfix) with ESMTP id 12BCA2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:55:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u5kSqJxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgDGPzB (ORCPT
+        id S1727856AbgDGPzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:55:01 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:46188 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbgDGPzA (ORCPT
+        Tue, 7 Apr 2020 11:55:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51062 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727751AbgDGPzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:55:00 -0400
-Received: from grover.flets-west.jp (softbank126125134031.bbtec.net [126.125.134.31]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 037FsdHg020057;
-        Wed, 8 Apr 2020 00:54:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 037FsdHg020057
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586274879;
-        bh=RihD+3vJve3dKcBqfqiQl0DbSzyeAk9yAyld1jRP0K0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=p2frPYgTsf7tVg+PFyQUIyMN+cUwbAj6L8yFA4uaXGpcUDnwOBE9D2C1SX16JAq16
-         LLKO0p6SUnXVyQRQVlZVCTBOsNwic/OireZvY3tI1mez62slDU+u/fqtsvsGo0NF59
-         EsbZ/7kIFE2FN53Br3Lo9FlvkZVYIieN2tHKJBL69/RY6Gd+iOO3R40pc+QAG2CPpl
-         m3jumLkwKdyZwtvu1w6uwiIJXzK9A9eREoE2yjoHTOOD8pqZd7NFRk2KJTv/Btx/dQ
-         AWgYLCzFMKpgVxmRcv90pXwTs+84VEb411KLVSot/OoeMJez+N6CIyx48PgbLnqCar
-         elkeWqAgeyWIg==
-X-Nifty-SrcIP: [126.125.134.31]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Jeremy Cline <jcline@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] kbuild: add dummy toolchains to enable all cc-option etc. in Kconfig
-Date:   Wed,  8 Apr 2020 00:53:52 +0900
-Message-Id: <20200407155352.16617-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Apr 2020 11:55:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=evMROeiOPSEkTnQc1NkJrMpIxagj6DaDwYzvXfWtXk0=; b=u5kSqJxduuO9fYXZ3frJ35LDTQ
+        u4TE3Sro3SU6PZZxQlQijr/vWMx/RVh4apLfQxiRt2B8MtVSYq3CD1UHyLgyy7L0RGU6PMVPXvMh7
+        TqE0Jg5bc2seVALXHMZGoGQ1REQBZ8ZL1F4mEHW9hZC2HKFLvsXR2qzOpkevZTklYKQ/frNhDOc42
+        xOkgD7i1RFuljZNlpUkagNBwD8pmh0lAkVRYHTR8N+CvdjuU7GnnfnrSlA00fDxfP8Mgsh0bVSA1x
+        I7xicMeSV1OJaxTbzJvsmJdTaag12QxQhTFtGQSwsG1h/UFn3QkIqKn9P7NM6kwSMxq28mmMgBl3g
+        FhDGxsCw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLqYv-0002Jv-Kr; Tue, 07 Apr 2020 15:54:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F0B023010C8;
+        Tue,  7 Apr 2020 17:54:49 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D96D62B99BB3E; Tue,  7 Apr 2020 17:54:49 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 17:54:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Jann Horn <jannh@google.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>, amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: AMD DC graphics display code enables -mhard-float, -msse, -msse2
+ without any visible FPU state protection
+Message-ID: <20200407155449.GF20730@hirez.programming.kicks-ass.net>
+References: <20200402141308.GB20730@hirez.programming.kicks-ass.net>
+ <20200403142837.f61a18d7bd32fd73777479ad@kernel.org>
+ <20200403112113.GN20730@hirez.programming.kicks-ass.net>
+ <20200404120808.05e9aa61500265be2e031bd6@kernel.org>
+ <20200404143224.GL2452@worktop.programming.kicks-ass.net>
+ <20200405121930.e3ea3e7acc7588102de483e2@kernel.org>
+ <20200406102107.GI20730@hirez.programming.kicks-ass.net>
+ <20200407185008.c819005f0174cae76c44a135@kernel.org>
+ <20200407111535.GT20730@hirez.programming.kicks-ass.net>
+ <20200408004111.3dd597f2a7c6172b4c71a9ba@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408004111.3dd597f2a7c6172b4c71a9ba@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
-options your compiler does not support. This works well if you configure
-and build the kernel on the same host machine.
+On Wed, Apr 08, 2020 at 12:41:11AM +0900, Masami Hiramatsu wrote:
+> On Tue, 7 Apr 2020 13:15:35 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 
-It is inconvenient if you prepare the .config that is carried to a
-different build environment (typically this happens when you package
-the kernel for distros) because using a different compiler potentially
-produces different CONFIG options than the real build environment.
-So, you probably want to make as many options visible as possible.
-In other words, you need to create a super-set of CONFIG options that
-cover any build environment. If some of the CONFIG options turned out
-to be unsupported on the build machine, they are automatically disabled
-by the nature of Kconfig.
+> > > > Also, all the VMX bits seems to qualify as FPU (I can't remember seeing
+> > > > that previously):
+> > > 
+> > > Oops, let me check it.
+> > 
+> > I just send you another patch that could do with insn_is_vmx()
+> > (sorry!!!)
+> 
+> Hmm, it is hard to find out the vmx insns. Maybe we need to clarify it by
+> opcode pattern. (like "VM.*")
 
-However, it is not feasible to get a full-featured compiler for every
-arch.
+Yeah, I know. Maybe I should just keep it as I have for now.
 
-This issue was discussed here:
+One thing I thought of is we could perhaps add manual markers in
+x86-opcode-map.txt. The '{','}' characters appear unused so far, we
+perhaps we can use them to classify things.
 
-  https://lkml.org/lkml/2019/12/9/620
+That could maybe replace "mmx_expr" as well. That is, something like so:
 
-Other than distros, savedefconfig is also a problem. Some arch sub-systems
-periodically resync defconfig files. If you use a less-capable compiler
-for savedefconfig, options that do not meet 'depends on $(cc-option,...)'
-will be forcibly disabled. So, 'make defconfig && make savedefconfig'
-may silently change the behavior.
-
-This commit adds a set of dummy toolchains that pretend to support any
-feature.
-
-Most of compiler features are tested by cc-option, which simply checks
-the exit code of $(CC). The dummy tools are shell scripts that always
-exit with 0. So, $(cc-option, ...) is evaluated as 'y'.
-
-There are more complicated checks such as:
-
-  scripts/gcc-x86_{32,64}-has-stack-protector.sh
-  scripts/gcc-plugin.sh
-  scripts/tools-support-relr.sh
-
-scripts/dummy-tools/gcc passes all checks.
-
-From the top directory of the source tree, you can do:
-
-   $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
 ---
 
-Changes in v2:
-  - support --version and -v for ld, objdump, nm
-
- scripts/dummy-tools/gcc     | 91 +++++++++++++++++++++++++++++++++++++
- scripts/dummy-tools/ld      | 30 ++++++++++++
- scripts/dummy-tools/nm      |  1 +
- scripts/dummy-tools/objcopy |  1 +
- 4 files changed, 123 insertions(+)
- create mode 100755 scripts/dummy-tools/gcc
- create mode 100755 scripts/dummy-tools/ld
- create mode 120000 scripts/dummy-tools/nm
- create mode 120000 scripts/dummy-tools/objcopy
-
-diff --git a/scripts/dummy-tools/gcc b/scripts/dummy-tools/gcc
-new file mode 100755
-index 000000000000..33487e99d83e
---- /dev/null
-+++ b/scripts/dummy-tools/gcc
-@@ -0,0 +1,91 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
-+# options your compiler does not support. This works well if you configure and
-+# build the kernel on the same host machine.
-+#
-+# It is inconvenient if you prepare the .config that is carried to a different
-+# build environment (typically this happens when you package the kernel for
-+# distros) because using a different compiler potentially produces different
-+# CONFIG options than the real build environment. So, you probably want to make
-+# as many options visible as possible. In other words, you need to create a
-+# super-set of CONFIG options that cover any build environment. If some of the
-+# CONFIG options turned out to be unsupported on the build machine, they are
-+# automatically disabled by the nature of Kconfig.
-+#
-+# However, it is not feasible to get a full-featured compiler for every arch.
-+# Hence these dummy toolchains to make all compiler tests pass.
-+#
-+# Usage:
-+#
-+# From the top directory of the source tree, run
-+#
-+#   $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
-+#
-+# Most of compiler features are tested by cc-option, which simply checks the
-+# exit code of $(CC). This script does nothing and just exits with 0 in most
-+# cases. So, $(cc-option, ...) is evaluated as 'y'.
-+#
-+# This scripts caters to more checks; handle --version and pre-process __GNUC__
-+# etc. to pretend to be GCC, and also do right things to satisfy some scripts.
-+
-+# Check if the first parameter appears in the rest. Succeeds if found.
-+# This helper is useful if a particular option was passed to this script.
-+# Typically used like this:
-+#   arg_contain <word-you-are-searching-for> "$@"
-+arg_contain ()
-+{
-+	search="$1"
-+	shift
-+
-+	while [ $# -gt 0 ]
-+	do
-+		if [ "$search" = "$1" ]; then
-+			return 0
-+		fi
-+		shift
-+	done
-+
-+	return 1
-+}
-+
-+# To set CONFIG_CC_IS_GCC=y
-+if arg_contain --version "$@"; then
-+	echo "gcc (scripts/dummy-tools/gcc)"
-+	exit 0
-+fi
-+
-+if arg_contain -E "$@"; then
-+	# For scripts/gcc-version.sh; This emulates GCC 20.0.0
-+	if arg_contain - "$@"; then
-+		sed 's/^__GNUC__$/20/; s/^__GNUC_MINOR__$/0/; s/^__GNUC_PATCHLEVEL__$/0/'
-+		exit 0
-+	else
-+		echo "no input files" >&2
-+		exit 1
-+	fi
-+fi
-+
-+if arg_contain -S "$@"; then
-+	# For scripts/gcc-x86-*-has-stack-protector.sh
-+	if arg_contain -fstack-protector "$@"; then
-+		echo "%gs"
-+		exit 0
-+	fi
-+fi
-+
-+# For scripts/gcc-plugin.sh
-+if arg_contain -print-file-name=plugin "$@"; then
-+	plugin_dir=$(mktemp -d)
-+
-+	sed -n 's/.*#include "\(.*\)"/\1/p' $(dirname $0)/../gcc-plugins/gcc-common.h |
-+	while read header
-+	do
-+		mkdir -p $plugin_dir/include/$(dirname $header)
-+		touch $plugin_dir/include/$header
-+	done
-+
-+	echo $plugin_dir
-+	exit 0
-+fi
-diff --git a/scripts/dummy-tools/ld b/scripts/dummy-tools/ld
-new file mode 100755
-index 000000000000..f68233050405
---- /dev/null
-+++ b/scripts/dummy-tools/ld
-@@ -0,0 +1,30 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+# Dummy script that always succeeds.
-+
-+# Check if the first parameter appears in the rest. Succeeds if found.
-+# This helper is useful if a particular option was passed to this script.
-+# Typically used like this:
-+#   arg_contain <word-you-are-searching-for> "$@"
-+arg_contain ()
-+{
-+	search="$1"
-+	shift
-+
-+	while [ $# -gt 0 ]
-+	do
-+		if [ "$search" = "$1" ]; then
-+			return 0
-+		fi
-+		shift
-+	done
-+
-+	return 1
-+}
-+
-+if arg_contain --version "$@" || arg_contain -v "$@"; then
-+	progname=$(basename $0)
-+	echo "GNU $progname (scripts/dummy-tools/$progname) 2.50"
-+	exit 0
-+fi
-diff --git a/scripts/dummy-tools/nm b/scripts/dummy-tools/nm
-new file mode 120000
-index 000000000000..c0648b38dd42
---- /dev/null
-+++ b/scripts/dummy-tools/nm
-@@ -0,0 +1 @@
-+ld
-\ No newline at end of file
-diff --git a/scripts/dummy-tools/objcopy b/scripts/dummy-tools/objcopy
-new file mode 120000
-index 000000000000..c0648b38dd42
---- /dev/null
-+++ b/scripts/dummy-tools/objcopy
-@@ -0,0 +1 @@
-+ld
-\ No newline at end of file
--- 
-2.17.1
-
+diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+index ec31f5b60323..e01b76e0a294 100644
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -462,9 +462,9 @@ AVXcode: 1
+ 75: pcmpeqw Pq,Qq | vpcmpeqw Vx,Hx,Wx (66),(v1)
+ 76: pcmpeqd Pq,Qq | vpcmpeqd Vx,Hx,Wx (66),(v1)
+ # Note: Remove (v), because vzeroall and vzeroupper becomes emms without VEX.
+-77: emms | vzeroupper | vzeroall
+-78: VMREAD Ey,Gy | vcvttps2udq/pd2udq Vx,Wpd (evo) | vcvttsd2usi Gv,Wx (F2),(ev) | vcvttss2usi Gv,Wx (F3),(ev) | vcvttps2uqq/pd2uqq Vx,Wx (66),(ev)
+-79: VMWRITE Gy,Ey | vcvtps2udq/pd2udq Vx,Wpd (evo) | vcvtsd2usi Gv,Wx (F2),(ev) | vcvtss2usi Gv,Wx (F3),(ev) | vcvtps2uqq/pd2uqq Vx,Wx (66),(ev)
++77: emms {FPU} | vzeroupper | vzeroall
++78: VMREAD Ey,Gy {VMX} | vcvttps2udq/pd2udq Vx,Wpd (evo) | vcvttsd2usi Gv,Wx (F2),(ev) | vcvttss2usi Gv,Wx (F3),(ev) | vcvttps2uqq/pd2uqq Vx,Wx (66),(ev)
++79: VMWRITE Gy,Ey {VMX} | vcvtps2udq/pd2udq Vx,Wpd (evo) | vcvtsd2usi Gv,Wx (F2),(ev) | vcvtss2usi Gv,Wx (F3),(ev) | vcvtps2uqq/pd2uqq Vx,Wx (66),(ev)
+ 7a: vcvtudq2pd/uqq2pd Vpd,Wx (F3),(ev) | vcvtudq2ps/uqq2ps Vpd,Wx (F2),(ev) | vcvttps2qq/pd2qq Vx,Wx (66),(ev)
+ 7b: vcvtusi2sd Vpd,Hpd,Ev (F2),(ev) | vcvtusi2ss Vps,Hps,Ev (F3),(ev) | vcvtps2qq/pd2qq Vx,Wx (66),(ev)
+ 7c: vhaddpd Vpd,Hpd,Wpd (66) | vhaddps Vps,Hps,Wps (F2)
+@@ -965,9 +965,9 @@ GrpTable: Grp6
+ EndTable
+ 
+ GrpTable: Grp7
+-0: SGDT Ms | VMCALL (001),(11B) | VMLAUNCH (010),(11B) | VMRESUME (011),(11B) | VMXOFF (100),(11B) | PCONFIG (101),(11B) | ENCLV (000),(11B)
++0: SGDT Ms | VMCALL (001),(11B) {VMX} | VMLAUNCH (010),(11B) {VMX} | VMRESUME (011),(11B) {VMX} | VMXOFF (100),(11B) {VMX} | PCONFIG (101),(11B) | ENCLV (000),(11B)
+ 1: SIDT Ms | MONITOR (000),(11B) | MWAIT (001),(11B) | CLAC (010),(11B) | STAC (011),(11B) | ENCLS (111),(11B)
+-2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
++2: LGDT Ms | XGETBV (000),(11B) | XSETBV (001),(11B) | VMFUNC (100),(11B) {VMX} | XEND (101)(11B) | XTEST (110)(11B) | ENCLU (111),(11B)
+ 3: LIDT Ms
+ 4: SMSW Mw/Rv
+ 5: rdpkru (110),(11B) | wrpkru (111),(11B) | SAVEPREVSSP (F3),(010),(11B) | RSTORSSP Mq (F3) | SETSSBSY (F3),(000),(11B)
+@@ -987,8 +987,8 @@ GrpTable: Grp9
+ 3: xrstors
+ 4: xsavec
+ 5: xsaves
+-6: VMPTRLD Mq | VMCLEAR Mq (66) | VMXON Mq (F3) | RDRAND Rv (11B)
+-7: VMPTRST Mq | VMPTRST Mq (F3) | RDSEED Rv (11B)
++6: VMPTRLD Mq {VMX} | VMCLEAR Mq (66) {VMX} | VMXON Mq (F3) {VMX} | RDRAND Rv (11B)
++7: VMPTRST Mq {VMX} | VMPTRST Mq (F3) {VMX} | RDSEED Rv (11B)
+ EndTable
+ 
+ GrpTable: Grp10
+@@ -1036,10 +1036,10 @@ GrpTable: Grp14
+ EndTable
+ 
+ GrpTable: Grp15
+-0: fxsave | RDFSBASE Ry (F3),(11B)
+-1: fxstor | RDGSBASE Ry (F3),(11B)
+-2: vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
+-3: vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
++0: fxsave {FPU} | RDFSBASE Ry (F3),(11B)
++1: fxrstor {FPU} | RDGSBASE Ry (F3),(11B)
++2: ldmxcsr {FPU} | vldmxcsr Md (v1) | WRFSBASE Ry (F3),(11B)
++3: stmxcsr {FPU} | vstmxcsr Md (v1) | WRGSBASE Ry (F3),(11B)
+ 4: XSAVE | ptwrite Ey (F3),(11B)
+ 5: XRSTOR | lfence (11B) | INCSSPD/Q Ry (F3),(11B)
+ 6: XSAVEOPT | clwb (66) | mfence (11B) | TPAUSE Rd (66),(11B) | UMONITOR Rv (F3),(11B) | UMWAIT Rd (F2),(11B) | CLRSSBSY Mq (F3)
