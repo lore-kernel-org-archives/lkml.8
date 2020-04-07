@@ -2,137 +2,181 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C6CC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7159AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8493620748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2839B20748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:21:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgDGUUl convert rfc822-to-8bit (ORCPT
+        id S1727548AbgDGUVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:20:41 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48531 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgDGUUl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:20:41 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jLui2-0004ak-1Y; Tue, 07 Apr 2020 22:20:34 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 595CA101273; Tue,  7 Apr 2020 22:20:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Vivek Goyal <vgoyal@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
-In-Reply-To: <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net>
-References: <20200407172140.GB64635@redhat.com> <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net>
-Date:   Tue, 07 Apr 2020 22:20:33 +0200
-Message-ID: <87eeszjbe6.fsf@nanos.tec.linutronix.de>
+        Tue, 7 Apr 2020 16:21:38 -0400
+Received: from mga02.intel.com ([134.134.136.20]:49791 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726712AbgDGUVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 16:21:37 -0400
+IronPort-SDR: BIaomF4KtIAak56v/1CDUdIEoqAHi+pdWoPN7Kpj2hq1KzHywh7wrh8mk+4Yv/uwTRyTDzpuMy
+ Stm/fzaeWNjA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 13:21:36 -0700
+IronPort-SDR: 7HIdM4Nl6qxtUCFxEpzsUZM2iV3EnWn6AFvbCF5JQ+Q9/IWGUwninM5SB+h6gzHA+q7a+s8ymq
+ hhK5QO/V+SyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,356,1580803200"; 
+   d="scan'208";a="254575428"
+Received: from chenb-mobl1.amr.corp.intel.com (HELO [10.255.231.128]) ([10.255.231.128])
+  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 13:21:35 -0700
+Subject: Re: [RFC PATCH v2] x86/arch_prctl: Add ARCH_SET_XCR0 to set XCR0
+ per-thread
+To:     Keno Fischer <keno@juliacomputing.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        Kyle Huey <khuey@kylehuey.com>,
+        Robert O'Callahan <robert@ocallahan.org>
+References: <20200407011259.GA72735@juliacomputing.com>
+ <8f95e8b4-415f-1652-bb02-0a7c631c72ac@intel.com>
+ <CABV8kRw1TQsqs+z43bSfZ5isctuFGMB4g_ztDYihiiXHcy4nVA@mail.gmail.com>
+ <5208ad1e-cd9b-d57e-15b0-0ca935fccacd@intel.com>
+ <CABV8kRzfR32+MpAvTAPHCN902WtHSxySujcO2yAB3OT0caVDJg@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <9921cb2e-a7cb-c1d0-b120-c08f06be7c7f@intel.com>
+Date:   Tue, 7 Apr 2020 13:21:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <CABV8kRzfR32+MpAvTAPHCN902WtHSxySujcO2yAB3OT0caVDJg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@amacapital.net> writes:
->> On Apr 7, 2020, at 10:21 AM, Vivek Goyal <vgoyal@redhat.com> wrote:
->> Whether interrupts are enabled or not check only happens before we decide
->> if async pf protocol should be followed or not. Once we decide to
->> send PAGE_NOT_PRESENT, later notification PAGE_READY does not check
->> if interrupts are enabled or not. And it kind of makes sense otherwise
->> guest process will wait infinitely to receive PAGE_READY.
->> 
->> I modified the code a bit to disable interrupt and wait 10 seconds (after
->> getting PAGE_NOT_PRESENT message). And I noticed that error async pf
->> got delivered after 10 seconds after enabling interrupts. So error
->> async pf was not lost because interrupts were disabled.
+On 4/7/20 10:55 AM, Keno Fischer wrote:
+> On Tue, Apr 7, 2020 at 12:27 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>>
+>>>> How does this work with things like xstateregs_[gs]et() where the format
+>>>> of the kernel buffer and thus the kernel XCR0 is exposed as part of our
+>>>> ABI?  With this patch, wouldn't a debugger app see a state buffer that
+>>>> looks invalid?
+>>>
+>>> Since those operate on the in-kernel buffer of these, which
+>>> in this patch always uses the unmodified XCR0, ptracers
+>>> should not observe a difference.
+>>
+>> Those operate on *BOTH* kernel and userspace buffers.  They copy between
+>> them.  That's kinda the point. :)
+> 
+> Right, what I meant was that in this patch the kernel level
+> xsaves that populates the struct fpu always runs with
+> an unmodified XCR0, so the contents of the xsave area
+> in struct fpu does not change layout (this is the major
+> change in this patch over v1).
 
-Async PF is not the same as a real #PF. It just hijacked the #PF vector
-because someone thought this is a brilliant idea.
+The userspace buffer is... a userspace buffer.  It is not and should not
+be tied to the format of the kernel buffer.
 
->> Havind said that, I thought disabling interrupts does not mask exceptions.
->> So page fault exception should have been delivered even with interrupts
->> disabled. Is that correct? May be there was no vm exit/entry during
->> those 10 seconds and that's why.
+> Are you referring to a ptracer which runs with a modified XCR0, and
+> assumes that the value it gets back from ptrace will have an
+> XSTATE_BV equal to its own observed XCR0 and thus get confused about
+> the layout of the buffer (or potentially have not copied all of the
+> relevant xstate because it calculated a wrong buffer size)?
 
-No. Async PF is not a real exception. It has interrupt semantics and it
-can only be injected when the guest has interrupts enabled. It's bad
-design.
+I don't think it's insane for a process to assume that it can XRSTOR a
+buffer that it gets back from ptrace.  That seems like something that
+could clearly be an ABI that apps depend on.
 
-> My point is that the entire async pf is nonsense. There are two types of events right now:
->
-> “Page not ready”: normally this isn’t even visible to the guest — the
-> guest just waits. With async pf, the idea is to try to tell the guest
-> that a particular instruction would block and the guest should do
-> something else instead. Sending a normal exception is a poor design,
-> though: the guest may not expect this instruction to cause an
-> exception. I think KVM should try to deliver an *interrupt* and, if it
-> can’t, then just block the guest.
+Also, let's look at the comment about where XCR0 shows up in the ABI
+(arch/x86/include/asm/user.h):
 
-That's pretty much what it does, just that it runs this through #PF and
-has the checks for interrupts disabled - i.e can't right now' around
-that. If it can't then KVM schedules the guest out until the situation
-has been resolved.
+>  * For now, only the first 8 bytes of the software usable bytes[464..471] will
+>  * be used and will be set to OS enabled xstate mask (which is same as the
+>  * 64bit mask returned by the xgetbv's xCR0).
 
-> “Page ready”: this is a regular asynchronous notification just like,
-> say, a virtio completion. It should be an ordinary interrupt.  Some in
-> memory data structure should indicate which pages are ready.
->
-> “Page is malfunctioning” is tricky because you *must* deliver the
-> event. x86’s #MC is not exactly a masterpiece, but it does kind of
-> work.
+That also makes it sound like we expect there to be a *SINGLE* value
+across the entire system.  It also makes me wonder *which* xgetbv is
+expected to match USER_XSTATE_XCR0_WORD.  It can't be the ptracee since
+we expect them to change XCR0.  It can't be the ptracer because they can
+use this new prctl too.  So does it refer to the kernel?  Or, should the
+new prctl() *disable* future ptrace()s?
 
-Nooooo. This does not need #MC at all. Don't even think about it.
+> If so, I think that's just a buggy ptracer. The kernel's xfeature
+> mask is available via ptrace and a well-behaved ptracer should use
+> that (e.g. gdb does, though it looks like it then also assumes that
+> the xstate has no holes, so it potentially gets the layout wrong
+> anyway).
 
-The point is that the access to such a page is either happening in user
-space or in kernel space with a proper exception table fixup.
+I'm trying to figure out what the semantics are of this whole thing.  It
+can't be "don't let userspace observe the real XCR0" because ptrace
+exposes that.  Is it, "make memory images portable, unless it's a memory
+image from ptrace"?
 
-That means a real #PF is perfectly fine. That can be injected any time
-and does not have the interrupt semantics of async PF.
+> In general, I don't really want the modified XCR0 to affect
+> anything other than the particular instructions that depend
+> on it and maybe the signal frame (though as I said before,
+> I'm open to either here).
 
-So now lets assume we distangled async PF from #PF and made it a regular
-interrupt, then the following situation still needs to be dealt with:
+Just remember that, in the end, we don't get to say what a good ptracer
+or bad ptracer is.  If they're expecting semantics that we've kept
+constant for 10 years, we change the semantics, and the app breaks, the
+kernel is in the wrong.
 
-   guest -> access faults
-
-host -> injects async fault
-
-   guest -> handles and blocks the task
-
-host figures out that the page does not exist anymore and now needs to
-fixup the situation.
-
-host -> injects async wakeup
-
-   guest -> returns from aysnc PF interrupt and retries the instruction
-            which faults again.
-
-host -> knows by now that this is a real fault and injects a proper #PF
-
-   guest -> #PF runs and either sends signal to user space or runs
-            the exception table fixup for a kernel fault.
-
-Thanks,
-
-        tglx
-
-
-
-
+I also don't feel like I have a good handle on what ptracers *do* with
+their XSAVE buffers that they get/set.  How many apps in a distro do
+something with this interface?
