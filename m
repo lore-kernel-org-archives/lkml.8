@@ -2,104 +2,162 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB6CC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3E8C2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADB920644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508F620644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vJwu8vd7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbgDGGnZ (ORCPT
+        id S1727509AbgDGGnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:43:25 -0400
-Received: from smtprelay0124.hostedemail.com ([216.40.44.124]:39070 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726865AbgDGGnY (ORCPT
+        Tue, 7 Apr 2020 02:43:43 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:37203 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726865AbgDGGnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:43:24 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 6F365838437C;
-        Tue,  7 Apr 2020 06:43:23 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: bell44_74a655a6ef330
-X-Filterd-Recvd-Size: 2602
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  7 Apr 2020 06:43:21 +0000 (UTC)
-Message-ID: <07e49a285eff9a22476c6b1c396485f6d5d39002.camel@perches.com>
-Subject: Re: [PATCH v2] mm: Add kvfree_sensitive() for freeing sensitive
- data objects
-From:   Joe Perches <joe@perches.com>
-To:     Waiman Long <longman@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-Date:   Mon, 06 Apr 2020 23:41:23 -0700
-In-Reply-To: <1e4a6174-04be-6c05-fd6e-b43fefd317fc@redhat.com>
-References: <20200406185827.22249-1-longman@redhat.com>
-         <c2c8adf48be7cb18bbdf0aef7d21e2defe3d2183.camel@perches.com>
-         <1e4a6174-04be-6c05-fd6e-b43fefd317fc@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 7 Apr 2020 02:43:42 -0400
+Received: by mail-yb1-f196.google.com with SMTP id n2so1250881ybg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 23:43:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o+lddGcmZZMWCWY/hrwQ/sl6NL2A6Ox6QLM0MeNapFc=;
+        b=vJwu8vd7xgWlMCEr4QgadrLlWKjCvorA+xVbSYejayzEt+gA2FoHMzPUggmJLOFRBM
+         tDR7wgEEj9wM/JuVmS7Is+8Ri++9uuHQa8rxrOGrj+Od3SFd+d65RWF2XkJ86IEn3zoL
+         igGlkcx8HWrq1LF/8RoG+2LyyKR34yShR2CeCjpEyx29DR1+Yxd5MmiGwNgOcZyPVJgK
+         qM0xSQPdOzg5TFz50cjC3QaAYwy9ztVgS/Yeg5bEzmUcsw0iwiGDkM2+Gq7E387GPso4
+         rdjCaASc36vSK8qQZZHsYL+YC24MZISUYSg97fWM8D3oKcgNv4tdrP4yL1RJcdlGSF8i
+         7HhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o+lddGcmZZMWCWY/hrwQ/sl6NL2A6Ox6QLM0MeNapFc=;
+        b=aQjxWx4whaBqSvALNzTYPeEJy7jJCWQDM64P2/BOtz+7QgVAP7oPSsnIq8ISb6HDAn
+         tWkDdrDcWOu0qiEoncARIapedn+BGuFyVXC21P5gV2DasXoYb81QufZmiwxeDG8MZtia
+         p1pwUTx+TB1VdfhkkP/D52NBoW55y0RP0j32CCfYo5XalCrsTVEdbXPPoNgaTj8o+lGc
+         /HeXC0ObU9FxskACKRR4I9r1WxuwMD2NlLD3e7DKOARnEcvhp8utlIafnbANTF5nlzc0
+         O1L0eeudWUjs+bVKCiNP+wyLWKczL39rl3+zILz0O51IT6GT06Z42+uNse6trlNvu4jI
+         qK1A==
+X-Gm-Message-State: AGi0PuaZu4TItm/52/gL0Phu5YyuIQv3hWBOi+plY5tXr0+EwPDaSCfp
+        evOCv6aEZ+69rMgirT7ioGTUXwlHGX9xMd1Tc8eHTw==
+X-Google-Smtp-Source: APiQypLj57aHxYP8mfedHKGyTcUe1VwkNrUoXV0C492PLl4l8oHMQEo5CkNqqE8/55Bl77tsGd7tbKB9QXgfkdgO5zk=
+X-Received: by 2002:a25:4443:: with SMTP id r64mr1441717yba.41.1586241821140;
+ Mon, 06 Apr 2020 23:43:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200323235846.104937-1-irogers@google.com> <20200324102732.GR1534489@krava>
+In-Reply-To: <20200324102732.GR1534489@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 6 Apr 2020 23:43:29 -0700
+Message-ID: <CAP-5=fX346zwohXP_xgoZHyq4JSbV8hdLPvBR3ZpS_iOHcX1hA@mail.gmail.com>
+Subject: Re: [PATCH v5] perf tools: add support for libpfm4
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jiwei Sun <jiwei.sun@windriver.com>,
+        yuzhoujian <yuzhoujian@didichuxing.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-06 at 22:16 -0400, Waiman Long wrote:
-> On 4/6/20 3:38 PM, Joe Perches wrote:
-> > On Mon, 2020-04-06 at 14:58 -0400, Waiman Long wrote:
-> > > For kvmalloc'ed data object that contains sensitive information like
-> > > cryptographic key, we need to make sure that the buffer is always
-> > > cleared before freeing it. Using memset() alone for buffer clearing may
-> > > not provide certainty as the compiler may compile it away. To be sure,
-> > > the special memzero_explicit() has to be used.
-> > [] 
-> > >  extern void kvfree(const void *addr);
-> > > +extern void kvfree_sensitive(const void *addr, size_t len);
-> > Question: why should this be const?
-> > 
-> > 2.1.44 changed kfree(void *) to kfree(const void *) but
-> > I didn't find a particular reason why.
-> 
-> I am just following the function prototype used by kvfree(). Even
-> kzfree(const void *) use const. I can remove "const" if others agree.
+On Tue, Mar 24, 2020 at 3:28 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
+> > This patch links perf with the libpfm4 library if it is available and
+> > NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
+> > event tables for all processors supported by perf_events. It is a helper
+> > library that helps convert from a symbolic event name to the event
+> > encoding required by the underlying kernel interface. This
+> > library is open-source and available from: http://perfmon2.sf.net.
+> >
+> > With this patch, it is possible to specify full hardware events
+> > by name. Hardware filters are also supported. Events must be
+> > specified via the --pfm-events and not -e option. Both options
+> > are active at the same time and it is possible to mix and match:
+> >
+> > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> >
+> > v5 is a rebase.
+> > v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+> >    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+> >    missed in v3.
+> > v3 is against acme/perf/core and removes a diagnostic warning.
+> > v2 of this patch makes the --pfm-events man page documentation
+> > conditional on libpfm4 behing configured. It tidies some of the
+> > documentation and adds the feature test missed in the v1 patch.
+> >
+> > Author: Stephane Eranian <eranian@google.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> I still have some conflicts, but I merged it by hand
+>
+>
+>         patching file tools/build/Makefile.feature
+>         patching file tools/build/feature/Makefile
+>         patching file tools/build/feature/test-libpfm4.c
+>         patching file tools/perf/Documentation/Makefile
+>         patching file tools/perf/Documentation/perf-record.txt
+>         patching file tools/perf/Documentation/perf-stat.txt
+>         patching file tools/perf/Documentation/perf-top.txt
+>         patching file tools/perf/Makefile.config
+>         patching file tools/perf/Makefile.perf
+>         Hunk #3 FAILED at 834.
+>         1 out of 3 hunks FAILED -- saving rejects to file tools/perf/Makefile.perf.rej
+>         patching file tools/perf/builtin-list.c
+>         patching file tools/perf/builtin-record.c
+>         patching file tools/perf/builtin-stat.c
+>         patching file tools/perf/builtin-top.c
+>         Hunk #2 succeeded at 1549 (offset 2 lines).
+>         Hunk #3 succeeded at 1567 (offset 2 lines).
+>         patching file tools/perf/util/evsel.c
+>         patching file tools/perf/util/evsel.h
+>         patching file tools/perf/util/parse-events.c
+>         patching file tools/perf/util/parse-events.h
+>         patching file tools/perf/util/pmu.c
+>         Hunk #1 succeeded at 869 (offset 5 lines).
+>         patching file tools/perf/util/pmu.h
+>         Hunk #1 succeeded at 65 (offset 1 line).
+>
+> jirka
 
-No worries.  Nevermind me...
+Thanks for looking at this! I sent a new version (v7):
+https://lore.kernel.org/lkml/20200407064018.158555-1-irogers@google.com/T/#u
+that adds Stephane's improvements for handling fallback when
+perf_event_open fails. Please let us know if there are issues we can
+address with the patch set.
 
-Lots of warnings if allocated pointers are const, so const is necessary
-in the definition and declaration.
-
-struct foo {
-	...
-};
-
-struct bar {
-	const struct foo *baz;
-	...
-};
-
-some_func(void)
-{
-	bar.baz = kvalloc(...);
-}
-
-kvfree can't free bar.baz if it's defined with void * without warning,
-so it must be const void *.
-
-Apologies for the noise.
-
-
+Thanks,
+Ian
