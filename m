@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F24C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7788FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5402082D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6B22082F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217762;
-	bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
+	s=default; t=1586217768;
+	bh=KjIgsmEUpssOTxJ9H+XzmEZEXKagli/FFlfnov3lprI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KDbgU5zvIshl9UO64WDFg0ejrhDOLj5YVdsCagEX3i8OzbbQE1509mQ+5BuJ7jO8b
-	 wDgeFmMknUwKdK9PB9kqw4xTkYP0/Fsk6Mdh69NJjVcwhTfXYT6UfPzQc76kheGezy
-	 Xnu9OW3OTREXQ9qPDnA3BdyWSWJzZSzunRrBk0ws=
+	b=Q+xzqsePNYk9NHqoH/YPHF+L6EDSuxL8q+OUzxUavgtfzwXxLzIjE+9CZUxClwmCK
+	 x2JWfGK+x7yHj8VuiMbNh54y9YzGcwWOdrzYlqjloX+zLUVNl2LirJT7e0FuzYt8KE
+	 Qg5ZqRXYwg8PPtvWPXRJ939QfiXLC+0Hl61iso20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgDGACk (ORCPT
+        id S1728240AbgDGACr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37466 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728143AbgDGACi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:38 -0400
+        id S1728143AbgDGACp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B3E20801;
-        Tue,  7 Apr 2020 00:02:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D63AE20936;
+        Tue,  7 Apr 2020 00:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217757;
-        bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
+        s=default; t=1586217764;
+        bh=KjIgsmEUpssOTxJ9H+XzmEZEXKagli/FFlfnov3lprI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FvnvxwNAI+sM8ISRCA7++6SYLEh0clavCUjIHyAm1jJFZybMrRO0H5tt/BRAFj5XC
-         J706rqkzZkLFDdBGxCrd512vmEXv2Wi+l65Zv0pKN9ETTx3swqtQ6TCQsdmgScx+2B
-         59fAq0YRT0rUb4MZriYGZzsBilf6vGmXb8bQC/aQ=
+        b=0sbRZrLW9Frg4IXC7N2FDBQOsoQqB5m+tp8In+ZcgKlzMDd42snjWed1s1xtQCpB6
+         bhCSiFiWWtMeUHwkrNAgR62b2CIjazxN8KgwelHVuH47frl3rbX8ZmvYOw7Or3hDUA
+         3bePHfYL9k64a+vwZG6XvVd+dO2gbFxJDd9L+ltk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, Phil Sutter <phil@nwl.cc>,
+        Stefano Brivio <sbrivio@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 02/13] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
-Date:   Mon,  6 Apr 2020 20:02:23 -0400
-Message-Id: <20200407000234.17088-2-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/13] netfilter: nf_tables: Allow set back-ends to report partial overlaps on insertion
+Date:   Mon,  6 Apr 2020 20:02:29 -0400
+Message-Id: <20200407000234.17088-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000234.17088-1-sashal@kernel.org>
 References: <20200407000234.17088-1-sashal@kernel.org>
@@ -60,62 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
+[ Upstream commit 8c2d45b2b65ca1f215244be1c600236e83f9815f ]
 
-When doing a 16-bit read that returns data in the MSB byte, the
-RSB_DATA register will keep the MSB byte unchanged when doing
-the following 8-bit read. sunxi_rsb_read() will then return
-a result that contains high byte from 16-bit read mixed with
-the 8-bit result.
+Currently, the -EEXIST return code of ->insert() callbacks is ambiguous: it
+might indicate that a given element (including intervals) already exists as
+such, or that the new element would clash with existing ones.
 
-The consequence is that after this happens the PMIC's regmap will
-look like this: (0x33 is the high byte from the 16-bit read)
+If identical elements already exist, the front-end is ignoring this without
+returning error, in case NLM_F_EXCL is not set. However, if the new element
+can't be inserted due an overlap, we should report this to the user.
 
-% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
-00: 33
-01: 33
-02: 33
-03: 33
-04: 33
-05: 33
-06: 33
-07: 33
-08: 33
-09: 33
-0a: 33
-0b: 33
-0c: 33
-0d: 33
-0e: 33
-[snip]
+To this purpose, allow set back-ends to return -ENOTEMPTY on collision with
+existing elements, translate that to -EEXIST, and return that to userspace,
+no matter if NLM_F_EXCL was set.
 
-Fix this by masking the result of the read with the correct mask
-based on the size of the read. There are no 16-bit users in the
-mainline kernel, so this doesn't need to get into the stable tree.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Reported-by: Phil Sutter <phil@nwl.cc>
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/sunxi-rsb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_tables_api.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-index 1b76d95859027..2ca2cc56bcef6 100644
---- a/drivers/bus/sunxi-rsb.c
-+++ b/drivers/bus/sunxi-rsb.c
-@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
- 	if (ret)
- 		goto unlock;
- 
--	*buf = readl(rsb->regs + RSB_DATA);
-+	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
- 
- unlock:
- 	mutex_unlock(&rsb->lock);
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 5881f66688171..71d6170e60b4f 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -4527,6 +4527,11 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
+ 				err = -EBUSY;
+ 			else if (!(nlmsg_flags & NLM_F_EXCL))
+ 				err = 0;
++		} else if (err == -ENOTEMPTY) {
++			/* ENOTEMPTY reports overlapping between this element
++			 * and an existing one.
++			 */
++			err = -EEXIST;
+ 		}
+ 		goto err5;
+ 	}
 -- 
 2.20.1
 
