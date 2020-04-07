@@ -2,115 +2,120 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFFEC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F1BC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F4B206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA187206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="JeDpPAtu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IumPu7+P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgDGJyY (ORCPT
+        id S1728173AbgDGJy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:54:24 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38553 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728143AbgDGJyX (ORCPT
+        Tue, 7 Apr 2020 05:54:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23775 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728093AbgDGJy6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:54:23 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f20so1139216wmh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=8/bdQL/GmPPxSd9AJZqtaufR2ST8hYg8tzUWt1zLb48=;
-        b=JeDpPAtufPkXqiPpvE1eHc7+VencpjO1K8RLp7VOkYOnbizQAqNmBqpX6SLW6rhYHy
-         ceXIGZJskMf/nWZcL4RDcmgqx+DG2+R1Isy5Dm+cD4l0bUiAME3mGQXxQfDB8uNlinkF
-         YPuLM8DAQqjLJcrjW70Jq1jtROQ1qHVFOZ8Idb7eaIHbV+j/B9zHbIBuCKZtELI/xHzc
-         DQHqFIB1etUTTF4UwsN1QkTqkh1R/sxCiX8mqYbwTLUMzEo5mx8r9hR8cpHtkPBRzZ6M
-         n4qGATH/lnV1UqtQvST+KJVNnKkvomYd/iPg3RiFHuv7rFXKb5dBG9gZN3kSqg7kOqVk
-         ha8w==
+        Tue, 7 Apr 2020 05:54:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586253297;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=el11Oz/pQuOVMF2uMBXTZlpAn+Yh+0JzX31amVwM/8s=;
+        b=IumPu7+PvqZB+vlBy/v6pRSpP0bs9jI16cEHoKAdAKQyrntKgFF9W6z4YxrAEihSheeCG6
+        zMd90VSN0qep5e64V1aV/wD1nXc6fqbm80emF7OI9K/u+Y6PS9BfaB3JegNGSSlX4WD6vY
+        I1cVGUePf11dt0gd9kbJgpsG057hMrc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-186-DUDGuDzsPNCuEpthtoJ2bA-1; Tue, 07 Apr 2020 05:54:54 -0400
+X-MC-Unique: DUDGuDzsPNCuEpthtoJ2bA-1
+Received: by mail-wm1-f71.google.com with SMTP id f8so381908wmh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:54:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8/bdQL/GmPPxSd9AJZqtaufR2ST8hYg8tzUWt1zLb48=;
-        b=KcAuVFPLiYneChqRko7PUqy54LteLVwqVfkdi9KVhjxHhjEEnqT3LAhFS2Xd6Ks6Kt
-         oboaSNbodN+SI7ty39+neoIarou4B4jBRE4GqDFOK2QXWzFwyQ6eXJae/DyI/53YpVQK
-         G8JOhjk4KUPg3uU982BPIs7S9GJYiF/rrEP+KHPN437EXH1Y0M4L47fWoBAu1EBxOJ4y
-         DMIhxbUFDnlBgT+6B+gr7LPzJOawlgMQkrt2BkSkyOX20+wJYH0CeO9/OJj2Y4QEbdWQ
-         bywMRTBGkvfS5ru36a6iHQYia9BUfhSwAZFKVrYnn1cCMNduxX1vdSZt0gm3n6tt0x2o
-         ktlQ==
-X-Gm-Message-State: AGi0PubU/Fym1I2Icddq/eo5PiOdS1m2uoGXBS4xsOSj72WfeIzurfU7
-        xB9zPrlNRNG6fFqbtuAQd+Fr2Q==
-X-Google-Smtp-Source: APiQypI+HFqQl1kgTxDgY5zvNo5sadaklQK60WPZtGE9G2DqDhArmyObDdOTxgfZCBXkDWVgChAM6A==
-X-Received: by 2002:a7b:c343:: with SMTP id l3mr1602706wmj.38.1586253261817;
-        Tue, 07 Apr 2020 02:54:21 -0700 (PDT)
-Received: from localhost (bcde70f4.skybroadband.com. [188.222.112.244])
-        by smtp.gmail.com with ESMTPSA id n11sm33168582wrg.72.2020.04.07.02.54.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Apr 2020 02:54:21 -0700 (PDT)
-From:   Matt Fleming <matt@codeblueprint.co.uk>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Wagner <wagi@monom.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>
-Subject: [PATCH RT] signal: Prevent double-free of user struct
-Date:   Tue,  7 Apr 2020 10:54:13 +0100
-Message-Id: <20200407095413.30039-1-matt@codeblueprint.co.uk>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=el11Oz/pQuOVMF2uMBXTZlpAn+Yh+0JzX31amVwM/8s=;
+        b=ogNnir5n5hDSh9OCnBO0J+nHh4nqpo+zz1KVKbcFLSf04txvcM2OQvHd+GHRxJugB+
+         kknBL0yZBS/pHJqGDQHGkvBmqV5SnzQcakFln83VbDCdpGNAIa2CTl+UvqBwAw1Wipuq
+         6qNiN5sCE/WWGZTwxkgmvWFHsxjtfvF0cU0cdbzDgC17qMvvMkVlqDh8qBGHvK27KgrV
+         arBgtaFNBJJma7ZT0/rVgEoDy0DWJoMzrAhsJcLgs1TtCv0O+xf6olKCWPt1+SWnoY4j
+         IA0SXjVgQrqRJwzW+o6Xml4hkdCh1Zvc/5ftVyn9QAp4y4agGDLutdhfplgpypehWfXk
+         URyg==
+X-Gm-Message-State: AGi0PuZJKdV+ZDPQZ6peQeSsOzrmq78Ww/TiFTRlcdGaYDFWLks6gH72
+        cPs5KN3ROhiqsU15migKIYH5Q6ZTwcZI8qQomMa0Jp8THPj8K+AklJTcoJX2mHuF2usSJEssEZG
+        tKgmg4hHYdY8JY9/efpleJVHL
+X-Received: by 2002:adf:b6a9:: with SMTP id j41mr1857789wre.70.1586253292984;
+        Tue, 07 Apr 2020 02:54:52 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL4AzzGuCb+/SPuBeTLQChENkJSntsNvAOSf15+PWge49hAPyo9lPsh2y5yXRV3JLlzDNv2+g==
+X-Received: by 2002:adf:b6a9:: with SMTP id j41mr1857768wre.70.1586253292819;
+        Tue, 07 Apr 2020 02:54:52 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id t81sm1629697wmb.15.2020.04.07.02.54.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 02:54:52 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 05:54:49 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: Re: linux-next: manual merge of the akpm-current tree with the vhost
+ tree
+Message-ID: <20200407055243-mutt-send-email-mst@kernel.org>
+References: <20200330193137.44fd70c9@canb.auug.org.au>
+ <20200407132521.656db6fa@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407132521.656db6fa@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The way user struct reference counting works changed significantly with,
+On Tue, Apr 07, 2020 at 01:25:21PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Mon, 30 Mar 2020 19:31:37 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Today's linux-next merge of the akpm-current tree got a conflict in:
+> > 
+> >   drivers/virtio/virtio_balloon.c
+> > 
+> > between commit:
+> > 
+> >   5a6b4cc5b7a1 ("virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM")
+> > 
+> > from the vhost tree and commits:
+> > 
+> >   5193acb63eef ("virtio-balloon: pull page poisoning config out of free page hinting")o
+> >   226d0484a676 ("virtio-balloon: add support for providing free page reports to host")
+> >   49006aae9e94 ("virtio-balloon: switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM")
+> > 
+> > from the akpm-current tree.
+> > 
+> > OK, this is such a mess that all I could do was to revert commit
+> > 5a6b4cc5b7a1 from the vhost tree and keep all the akpm-current tree
+> > patches. Please sort this out before Linus gets to see it.
+> 
+> I am still reverting that commit ...
 
-  fda31c50292a ("signal: avoid double atomic counter increments for user accounting")
+Oh. Thanks for reminding me. And I sent a pull with this :(
+Sorry.  I pushed the revert now and sent PULL request v2.
+Hope I did it in time ...
 
-Now user structs are only freed once the last pending signal is
-dequeued. Make sigqueue_free_current() follow this new convention to
-avoid freeing the user struct multiple times and triggering this
-warning:
+> -- 
+> Cheers,
+> Stephen Rothwell
 
- refcount_t: underflow; use-after-free.
- WARNING: CPU: 0 PID: 6794 at lib/refcount.c:288 refcount_dec_not_one+0x45/0x50
- Call Trace:
-  refcount_dec_and_lock_irqsave+0x16/0x60
-  free_uid+0x31/0xa0
-  ? schedule_hrtimeout_range_clock+0x104/0x110
-  __dequeue_signal+0x17c/0x190
-  dequeue_signal+0x5a/0x1b0
-  do_sigtimedwait+0x208/0x250
-  __x64_sys_rt_sigtimedwait+0x6f/0xd0
-  do_syscall_64+0x72/0x200
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-Reported-by: Daniel Wagner <wagi@monom.org>
----
- kernel/signal.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 267fce07df5d..3651483bd4d8 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -494,8 +494,8 @@ static void sigqueue_free_current(struct sigqueue *q)
- 
- 	up = q->user;
- 	if (rt_prio(current->normal_prio) && !put_task_cache(current, q)) {
--		atomic_dec(&up->sigpending);
--		free_uid(up);
-+		if (atomic_dec_and_test(&up->sigpending))
-+			free_uid(up);
- 	} else
- 		  __sigqueue_free(q);
- }
--- 
-2.16.4
 
