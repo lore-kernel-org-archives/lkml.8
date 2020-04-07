@@ -2,235 +2,133 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6627EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FFEC2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8742072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D0AB2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 07:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgDGHuJ (ORCPT
+        id S1727882AbgDGHu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 03:50:09 -0400
-Received: from mga12.intel.com ([192.55.52.136]:62597 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726393AbgDGHuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 03:50:08 -0400
-IronPort-SDR: pm6f7THqPho4bo7QAey7AA+9x4HO8kAhCHqYj4Lhs4IgE0WF52zluVHUFIVTdF+RAoC7tpr76Q
- d04bJJd8ql8w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 00:50:06 -0700
-IronPort-SDR: mwk3zoqDjCEzhHpNZwcmW7j/MwCVSrT20MG41h/zROG6hkKyhmRGhlvEzZZk7uQuRpOtYcWrt5
- c4pE/sdcbmxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
-   d="scan'208";a="451140446"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Apr 2020 00:50:05 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jLizk-0008Pt-Tr; Tue, 07 Apr 2020 15:50:04 +0800
-Date:   Tue, 07 Apr 2020 15:49:35 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.04.05b] BUILD REGRESSION
- 805020c8028f6e95a8fc57132af5f896a8ad6391
-Message-ID: <5e8c308f.lrYLVBtn3ewBhvpf%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 7 Apr 2020 03:50:57 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37861 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgDGHu4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 03:50:56 -0400
+Received: by mail-oi1-f193.google.com with SMTP id u20so704036oic.4;
+        Tue, 07 Apr 2020 00:50:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0xy6duWOZRsuHgXNoNpThMEK6ifcrseX8Tb2v5L0t3w=;
+        b=GjmjozCa9XABCQsxu8udzhj+4g0cFo/678VvU34pINIJ8YH8Kji7kPBBFpOI0n47LI
+         kgDmxgHmsgUcrQtxFBCPHmB1sTfdzCQQytFnlcL84+rnVc99mBS2FAJSpcZzRWBUdrHq
+         jtgtMMx+FV+KN1J0e/ppLVeV/I/vaOcbQQgk0S6rkkVN4l+ZBRFU8RZXWSE0wGglg2Ob
+         oDgy7RVN5YwIyoeI2IE3lk8AEtEF5e/wAHZkUGzg1rGmo7SvM5HUZyEZRfUrKgMwkBn9
+         ewNBSQhbpMEx5TXUm5mjElvabw7m2HHiLRaIKgJeu1eDyFnQBHztb0jkqO0XPYOns61d
+         Bw1w==
+X-Gm-Message-State: AGi0Puasw42vU11wl0+z1T4pdTwV4oS+tQ/G98zWBLrUaatDZvuP2E8J
+        A+5HJoUpOVO9j6kM9fle04EjIPZw7EK5pbMUXvgnYg==
+X-Google-Smtp-Source: APiQypKCWFOch3oAwMdPxUdedE4Y/iCDOJ6IAetbFPjyMJpK27zl1aQSrHJKlOtCDvanLpz5/kdr8tkFj2evA3On/xc=
+X-Received: by 2002:aca:cdd1:: with SMTP id d200mr671758oig.153.1586245855947;
+ Tue, 07 Apr 2020 00:50:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <TYAPR01MB45443FA43152C0091D6EBF9AD8C20@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+ <20200407070609.42865-1-john.stultz@linaro.org>
+In-Reply-To: <20200407070609.42865-1-john.stultz@linaro.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Apr 2020 09:50:44 +0200
+Message-ID: <CAMuHMdWSXvHN5zEh7A+CygxEHP42qFrum+ntiL=m+ATwYOOB0Q@mail.gmail.com>
+Subject: Re: [RFC][PATCH] driver core: Ensure wait_for_device_probe() waits
+ until the deferred_probe_timeout fires
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.04.05b
-branch HEAD: 805020c8028f6e95a8fc57132af5f896a8ad6391  squash! rcu-tasks: Add an RCU Tasks Trace to simplify protection of tracing hooks
+Hi John,
 
-Error/Warning in current branch:
+On Tue, Apr 7, 2020 at 9:06 AM John Stultz <john.stultz@linaro.org> wrote:
+> In commit c8c43cee29f6 ("driver core: Fix
+> driver_deferred_probe_check_state() logic"), we set the default
+> driver_deferred_probe_timeout value to 30 seconds to allow for
+> drivers that are missing dependencies to have some time so that
+> the dependency may be loaded from userland after initcalls_done
+> is set.
+>
+> However, Yoshihiro Shimoda reported that on his device that
+> expects to have unmet dependencies (due to "optional links" in
+> its devicetree), was failing to mount the NFS root.
+>
+> In digging further, it seemed the problem was that while the
+> device properly probes after waiting 30 seconds for any missing
+> modules to load, the ip_auto_config() had already failed,
+> resulting in NFS to fail. This was due to ip_auto_config()
+> calling wait_for_device_probe() which doesn't wait for the
+> driver_deferred_probe_timeout to fire.
+>
+> This patch tries to fix the issue by creating a waitqueue
+> for the driver_deferred_probe_timeout, and calling wait_event()
+> to make sure driver_deferred_probe_timeout is zero in
+> wait_for_device_probe() to make sure all the probing is
+> finished.
+>
+> NOTE: I'm not 100% sure this won't have other unwanted side
+> effects (I don't have failing hardware myself to validate),
+> so I'd apprecate testing and close review.
+>
+> If this approach doesn't work, I'll simply set the default
+> driver_deferred_probe_timeout value back to zero, to avoid any
+> behavioral change from before.
+>
+> Thanks to Geert for chasing down that ip_auto_config was why NFS
+> was failing in this case!
+>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: netdev <netdev@vger.kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state() logic")
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
-kprobes.c:(.text+0x2bc8): undefined reference to `.synchronize_rcu_tasks'
-trampoline.c:(.text+0x630): undefined reference to `.synchronize_rcu_tasks'
+Thanks, this fixes the issue for me!
 
-Error/Warning ids grouped by kconfigs:
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-recent_errors
-`-- powerpc-defconfig
-    |-- kprobes.c:(.text):undefined-reference-to-synchronize_rcu_tasks
-    `-- trampoline.c:(.text):undefined-reference-to-synchronize_rcu_tasks
+Gr{oetje,eeting}s,
 
-elapsed time: 483m
+                        Geert
 
-configs tested: 159
-configs skipped: 0
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                           efm32_defconfig
-arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
-arm                        multi_v7_defconfig
-sparc                            allyesconfig
-sh                               allmodconfig
-sparc64                             defconfig
-i386                                defconfig
-openrisc                 simple_smp_defconfig
-riscv                               defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                    or1ksim_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                       h8s-sim_defconfig
-h8300                     edosk2674_defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                           sun3_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-mips                             allyesconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                           32r2_defconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a003-20200407
-i386                 randconfig-a002-20200407
-x86_64               randconfig-a002-20200407
-x86_64               randconfig-a001-20200407
-i386                 randconfig-a001-20200407
-i386                 randconfig-a003-20200407
-mips                 randconfig-a001-20200407
-nds32                randconfig-a001-20200407
-m68k                 randconfig-a001-20200407
-parisc               randconfig-a001-20200407
-alpha                randconfig-a001-20200407
-riscv                randconfig-a001-20200407
-alpha                randconfig-a001-20200406
-m68k                 randconfig-a001-20200406
-nds32                randconfig-a001-20200406
-parisc               randconfig-a001-20200406
-riscv                randconfig-a001-20200406
-sparc64              randconfig-a001-20200406
-h8300                randconfig-a001-20200406
-nios2                randconfig-a001-20200406
-microblaze           randconfig-a001-20200406
-c6x                  randconfig-a001-20200406
-csky                 randconfig-a001-20200406
-openrisc             randconfig-a001-20200406
-s390                 randconfig-a001-20200406
-sh                   randconfig-a001-20200406
-xtensa               randconfig-a001-20200406
-s390                 randconfig-a001-20200407
-xtensa               randconfig-a001-20200407
-csky                 randconfig-a001-20200407
-openrisc             randconfig-a001-20200407
-sh                   randconfig-a001-20200407
-x86_64               randconfig-b001-20200406
-x86_64               randconfig-b002-20200406
-x86_64               randconfig-b003-20200406
-i386                 randconfig-b001-20200406
-i386                 randconfig-b002-20200406
-i386                 randconfig-b003-20200406
-i386                 randconfig-c003-20200407
-i386                 randconfig-c001-20200407
-x86_64               randconfig-c002-20200407
-x86_64               randconfig-c003-20200407
-i386                 randconfig-c002-20200407
-x86_64               randconfig-c001-20200407
-i386                 randconfig-e001-20200407
-i386                 randconfig-e003-20200407
-x86_64               randconfig-e002-20200407
-x86_64               randconfig-e001-20200407
-i386                 randconfig-e002-20200407
-x86_64               randconfig-e003-20200407
-x86_64               randconfig-g003-20200406
-i386                 randconfig-g003-20200406
-x86_64               randconfig-g002-20200406
-i386                 randconfig-g001-20200406
-i386                 randconfig-g002-20200406
-x86_64               randconfig-g001-20200406
-x86_64               randconfig-h002-20200407
-i386                 randconfig-h002-20200407
-arm64                randconfig-a001-20200406
-sparc                randconfig-a001-20200406
-ia64                 randconfig-a001-20200406
-arc                  randconfig-a001-20200406
-arm                  randconfig-a001-20200406
-powerpc              randconfig-a001-20200406
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                             alldefconfig
-s390                                defconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
