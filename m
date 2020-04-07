@@ -2,121 +2,103 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726E8C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED662C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432F62074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586260355;
-	bh=II1pwoRWO506IHM9BklJPMIsQjRlhdCQnZOBbPZ90Cw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xZ5zpLox8Ag4EC5K1dz9pm8qgNRN4auu0/qDxZ3MV4Yb7uTmVvwKyNppXredJyYF9
-	 UytNZ/IzrSt0g8xUjvSa0L8wbX29J1fItt+lS9kB5YoT0S8UkTi6Z0hllkEoMldyrr
-	 ji1iTsR3a+QbWmrhrmJ5uVOPPBCpAG/S+1OYWkzQ=
+	by mail.kernel.org (Postfix) with ESMTP id BEB6520731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:53:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ebfedmCe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgDGLwe (ORCPT
+        id S1728465AbgDGLxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbgDGLwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:52:34 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 192F620678;
-        Tue,  7 Apr 2020 11:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586260353;
-        bh=II1pwoRWO506IHM9BklJPMIsQjRlhdCQnZOBbPZ90Cw=;
+        Tue, 7 Apr 2020 07:53:51 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38540 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgDGLxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 07:53:51 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DD9D759E;
+        Tue,  7 Apr 2020 13:53:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586260429;
+        bh=Tpiom0/9HXYeqjAE4DHHDRRZxBkeLOXqxIpsYWIHF6g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SifwQlr3atkEZLhSnM4MAmtZm71biNi+AX4LOKYaXknDWl/wCp1Lmk4UVN9+zLMF2
-         lDF98dn00tOYCCIZK9KAbfg5Pz8IusxzfNqvIAPiMORjcAfr44WrVFdk3f/6eqBgTX
-         8Irnm5JZE0Fp81oQjeh7NcrHG6lEjRvPcf3CPRmw=
-Received: by pali.im (Postfix)
-        id C19B05F1; Tue,  7 Apr 2020 13:52:30 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 13:52:30 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
- use use platform api"
-Message-ID: <20200407115230.7dsepjfxwbk53x2v@pali>
-References: <20200324004413.14355-1-marek.behun@nic.cz>
- <20200324122017.GR3819@lunn.ch>
+        b=ebfedmCea0DfNA0f42wlzHUJ2BLM0TWCtj0eEBAhriSjwzr+qKv8H2+0Lx01A4caG
+         4OkfkWpzk03YQcri6vBUkj8jqfzHs4PRp3P2krRIerPxxioqldAa6fk2Y8ZlF2dKf1
+         aeddqev8gIsaNCw8Z5vfBkNMMp++zEf/oT8a8Gcg=
+Date:   Tue, 7 Apr 2020 14:53:38 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Max Krummenacher <max.oss.09@gmail.com>
+Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Olof Johansson <olof@lixom.net>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/4] arm64: defconfig: DRM_DUMB_VGA_DAC: follow changed
+ config symbol name
+Message-ID: <20200407115338.GB4751@pendragon.ideasonboard.com>
+References: <20200407103537.4138-1-max.krummenacher@toradex.com>
+ <20200407103537.4138-2-max.krummenacher@toradex.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200324122017.GR3819@lunn.ch>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200407103537.4138-2-max.krummenacher@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 24 March 2020 13:20:17 Andrew Lunn wrote:
-> On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
-> > This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
-> > 
-> > This commit caused a regression on Armada 37xx. The pinctrl driver says
-> >   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
-> >   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
-> > and afterwards other drivers cannot use GPIOs by this driver as IRQs.
-> > 
-> > Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
-> > Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> > Cc: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
-> >  1 file changed, 3 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > index 32f12a388b3c..5f125bd6279d 100644
-> > --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/of.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/of_irq.h>
-> >  #include <linux/pinctrl/pinconf-generic.h>
-> >  #include <linux/pinctrl/pinconf.h>
-> >  #include <linux/pinctrl/pinctrl.h>
-> > @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
-> >  		return ret;
-> >  	}
-> >  
-> > -	nr_irq_parent = platform_irq_count(pdev);
-> 
-> Hi Marek
-> 
-> Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
+Hi Max,
 
-Hello Andrew! I have tested it with 5.6 kernel and return value in
-nr_irq_parent is in both cases zero. So it is not -EPROBE_DEFER. And
-return value of of_irq_count(np) is 12 for d0013800.pinctrl and 5 for
-d0018800.pinctrl.
+Thank you for the patch.
 
-So this is a clear regression introduced by that patch.
+On Tue, Apr 07, 2020 at 12:35:34PM +0200, Max Krummenacher wrote:
+> This occurrence wasn't changed in the original rename commit.
+> 
+> Fixes commit 0411374bdf2b3 ("drm/bridge: dumb-vga-dac: Rename driver to
+> simple-bridge").
+> 
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
-> This patch has removed the handling of that.
+My bad, sorry about the trouble.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > 
-> > -	if (nr_irq_parent < 0) {
-> > -		if (nr_irq_parent != -EPROBE_DEFER)
-> > -			dev_err(dev, "Couldn't determine irq count: %pe\n",
-> > -				ERR_PTR(nr_irq_parent));
-> > -		return nr_irq_parent;
-> > -	}
+> ---
 > 
-> Thanks
-> 	Andrew
+>  arch/arm64/configs/defconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 24e534d850454..ae908c3f43c76 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -610,7 +610,7 @@ CONFIG_DRM_MSM=m
+>  CONFIG_DRM_TEGRA=m
+>  CONFIG_DRM_PANEL_LVDS=m
+>  CONFIG_DRM_PANEL_SIMPLE=m
+> -CONFIG_DRM_DUMB_VGA_DAC=m
+> +CONFIG_DRM_SIMPLE_BRIDGE=m
+>  CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
+>  CONFIG_DRM_SII902X=m
+>  CONFIG_DRM_THINE_THC63LVD1024=m
+
+-- 
+Regards,
+
+Laurent Pinchart
