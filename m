@@ -2,117 +2,83 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A89DC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41126C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AEA206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A36D206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:14:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="N9VSIZQu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgDGJJ7 (ORCPT
+        id S1728005AbgDGJO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:09:59 -0400
-Received: from www62.your-server.de ([213.133.104.62]:46680 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725817AbgDGJJ7 (ORCPT
+        Tue, 7 Apr 2020 05:14:28 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]:34319 "EHLO
+        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgDGJO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:09:59 -0400
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jLkEy-00032R-Aa; Tue, 07 Apr 2020 11:09:52 +0200
-Received: from [178.195.186.98] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jLkEx-000KHk-Um; Tue, 07 Apr 2020 11:09:52 +0200
-Subject: Re: [PATCH v2 1/4] powerpc/64s: implement probe_kernel_read/write
- without touching AMR
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Alexei Starovoitov <ast@kernel.org>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org
-References: <20200403093529.43587-1-npiggin@gmail.com>
- <558b6131-60b4-98b7-dc40-25d8dacea05a@c-s.fr>
- <1585911072.njtr9qmios.astroid@bobo.none>
- <1586230235.0xvc3pjkcj.astroid@bobo.none>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <e01d8139-dca4-2239-d660-bfc962426c7a@iogearbox.net>
-Date:   Tue, 7 Apr 2020 11:09:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 7 Apr 2020 05:14:27 -0400
+Received: by mail-lf1-f44.google.com with SMTP id x23so1802264lfq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:14:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6OtopnAAEq7RcaO3cYzbThDgjEImIu/ZUC/MK9b+8Qk=;
+        b=N9VSIZQuml59Tid/3BT8Vv4Sl3yokkoCg6reujsWc0KVmCdZMyecSp/JlJ5bRFLMfx
+         3oEg5dE+ElyxX76iOxKMp8b439iMCs5lrNXjrIO3VqB+0WP4iInZWzceXD0wNI+VqQPk
+         n8LP6LTxMSNYh6XvAAoh/2rLEUZfgWzlTbFU+ThhE+qFEcYl3fTFc99sVuIHcvh2oRVo
+         F/7Y9Lj4MEndi2rtAbUwoyLYjzu10I+wrv0GkyOXtzYsT+h2jZyY4KZUOX/q6fLO2+Sk
+         crkqYg8AcOeIXQfefQQYKJRFd3hBg5pkw0LosD1pDaBbXt8u6BEY/WXxDULmROayJbJ5
+         VwNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6OtopnAAEq7RcaO3cYzbThDgjEImIu/ZUC/MK9b+8Qk=;
+        b=FOaXdbeVw/ln8eb4g0tiyfr1OS3Dy08qRgsgEEYGvrdKu+QSJcahFWE7ZXylnNaGZp
+         47DzG+NszANLSaskl99ZyFnuUM+RY+p/c3b0I2KHEP5ykWPgOgbVCb8BmPTC1QW2rMb+
+         q/5YGxRN/yrne22AFSmaAFtFFNak18u3PoVyRpGfN0vNuWmaekfuxdjZAg5JdN6tqEE3
+         MkokSpK+N+LMukGYjLYCOHCdJQoR1U4rI0im4WineMiE/Lp7e00fy0JSsCqDXU7el+Sb
+         OKVOOd9blTlamMRxCRZ3DwgEMNMGF7vyAW97A4nM8XxgLbA5ToCE71RGdm0XMA9CKleO
+         bAPA==
+X-Gm-Message-State: AGi0PuaeJlBNtYRsgyFEQ6lXZDiTxhJnCwVzfaK/CDC9M/aO8nmuR1un
+        0z9lV4iaCuJFMup3fLVexKByjg==
+X-Google-Smtp-Source: APiQypJGoa7tB+BMSHzRLxg2kNe/UtYrewh2+8LZfB0dIpTElAeYYLhQvYMMPeS2DRMexOD8gZbQCw==
+X-Received: by 2002:ac2:5559:: with SMTP id l25mr936737lfk.55.1586250864387;
+        Tue, 07 Apr 2020 02:14:24 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:46df:46e6:40f1:f0a5:2488:8311? ([2a00:1fa0:46df:46e6:40f1:f0a5:2488:8311])
+        by smtp.gmail.com with ESMTPSA id m17sm11470733ljb.61.2020.04.07.02.14.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 02:14:23 -0700 (PDT)
+Subject: Re: [PATCH] libata: Return correct rc status in
+ sata_pmp_eh_recover_pm() pwhen ATA_DFLAG_DETACH is set
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, axboe@kernel.dk
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20190327090254.10365-1-kai.heng.feng@canonical.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <6c0f9cd4-13a7-3f5c-020f-2401de9e42b7@cogentembedded.com>
+Date:   Tue, 7 Apr 2020 12:14:18 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1586230235.0xvc3pjkcj.astroid@bobo.none>
+In-Reply-To: <20190327090254.10365-1-kai.heng.feng@canonical.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25774/Mon Apr  6 14:53:25 2020)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Nicholas,
+Hello!
 
-On 4/7/20 6:01 AM, Nicholas Piggin wrote:
-> Nicholas Piggin's on April 3, 2020 9:05 pm:
->> Christophe Leroy's on April 3, 2020 8:31 pm:
->>> Le 03/04/2020 à 11:35, Nicholas Piggin a écrit :
->>>> There is no need to allow user accesses when probing kernel addresses.
->>>
->>> I just discovered the following commit
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=75a1a607bb7e6d918be3aca11ec2214a275392f4
->>>
->>> This commit adds probe_kernel_read_strict() and probe_kernel_write_strict().
->>>
->>> When reading the commit log, I understand that probe_kernel_read() may
->>> be used to access some user memory. Which will not work anymore with
->>> your patch.
->>
->> Hmm, I looked at _strict but obviously not hard enough. Good catch.
->>
->> I don't think probe_kernel_read() should ever access user memory,
->> the comment certainly says it doesn't, but that patch sort of implies
->> that they do.
->>
->> I think it's wrong. The non-_strict maybe could return userspace data to
->> you if you did pass a user address? I don't see why that shouldn't just
->> be disallowed always though.
->>
->> And if the _strict version is required to be safe, then it seems like a
->> bug or security issue to just allow everyone that doesn't explicitly
->> override it to use the default implementation.
->>
->> Also, the way the weak linkage is done in that patch, means parisc and
->> um archs that were previously overriding probe_kernel_read() now get
->> the default probe_kernel_read_strict(), which would be wrong for them.
-> 
-> The changelog in commit 75a1a607bb7 makes it a bit clearer. If the
-> non-_strict variant is used on non-kernel addresses, then it might not
-> return -EFAULT or it might cause a kernel warning. The _strict variant
-> is supposed to be usable with any address and it will return -EFAULT if
-> it was not a valid and mapped kernel address.
-> 
-> The non-_strict variant can not portably access user memory because it
-> uses KERNEL_DS, and its documentation says its only for kernel pointers.
-> So powerpc should be fine to run that under KUAP AFAIKS.
-> 
-> I don't know why the _strict behaviour is not just made default, but
-> the implementation of it does seem to be broken on the archs that
-> override the non-_strict variant.
+    s/pwhen/when/ in the subject? Also, I don't think "rc" is needed there...
 
-Yeah, we should make it default and only add a "opt out" for the old legacy
-cases; there was also same discussion started over here just recently [0].
-
-Thanks,
-Daniel
-
-   [0] https://lore.kernel.org/lkml/20200403133533.GA3424@infradead.org/T/
+MBR, Sergei
