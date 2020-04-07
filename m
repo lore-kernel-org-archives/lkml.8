@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9364DC2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC95CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C27F2074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F102074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255140;
-	bh=Wh7+AJAc0sRg46fVl7Ybp0b9uAqplY9N7kq8TJFnsXM=;
+	s=default; t=1586255146;
+	bh=h2kS5Qz/xwausVLpxQPYmK+Zqwh3u5tCcA85lqQVuNo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ypd97plTtdPDzAuGcJzZ+AZWOSAwfOuy894tnFjI9OQ3oNm5LPZL4A67pLV4ykOy3
-	 RGDcpQE7ak2Ip4B9JnVky/i1Z6kCGtfFXNYD2N3K7/Ym5nB3bwzvFbE+1zVN8ihyWW
-	 O9rgQicVAcV9yfDRw0mE03ji12QPkT3q9NdM4QJg=
+	b=LiK227fNbPts/YulBvPxXpYSLqt7zCz4BnS1U381XFNVYRsiD06a3mhNmkI9YauBU
+	 JcroV9zySgp/DMuZUnmhTHYOpwfNqFKEAlqDC7QNIZOMs+jErpmD6gPyFHKZPItKgo
+	 acberoJDbRPsZnAurjgXlU9PWSGyl62ok8XC5SNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgDGKZj (ORCPT
+        id S1729017AbgDGKZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36296 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:25:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbgDGKZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:38 -0400
+        id S1728629AbgDGKZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB5AA20644;
-        Tue,  7 Apr 2020 10:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A034420771;
+        Tue,  7 Apr 2020 10:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255137;
-        bh=Wh7+AJAc0sRg46fVl7Ybp0b9uAqplY9N7kq8TJFnsXM=;
+        s=default; t=1586255142;
+        bh=h2kS5Qz/xwausVLpxQPYmK+Zqwh3u5tCcA85lqQVuNo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aacAbNXJDMifQ1yWwkgoyZ4fjcyzvXsNOhJzm93TDz0gRxTvvyuJ+XTlFS5XqyMAH
-         53qdDrLQ87POrgl1JmtjYIELAp7nkzV+pYyLvcbRrmZvnPZ9eHnwRCD1LZ0bfbjHEm
-         iBIJ6xCbxN/PFaRvQbZeUpHlHNZPA/mz+u1VQUfA=
+        b=O2JJXIYuBIX2iXBZWLCGTr4AqwhCRowYpWlk92UcmB8D/j+0sfyTVHo2EOXXJJSf3
+         Im91JUms5Y26HyjFJx0WOeMZaLYo0VfaNTUOA934PrpDAA8umuVz1HlWxdaWv33iSY
+         u9YLV59WygwexJP9Ho3p1w8/JJ+4XwekVTqttIZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 45/46] net/smc: fix cleanup for linkgroup setup failures
-Date:   Tue,  7 Apr 2020 12:22:16 +0200
-Message-Id: <20200407101504.120133480@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 5.5 29/46] extcon: axp288: Add wakeup support
+Date:   Tue,  7 Apr 2020 12:22:00 +0200
+Message-Id: <20200407101502.607883725@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -60,155 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 51e3dfa8906ace90c809235b3d3afebc166b6433 upstream.
+commit 9c94553099efb2ba873cbdddfd416a8a09d0e5f1 upstream.
 
-If an SMC connection to a certain peer is setup the first time,
-a new linkgroup is created. In case of setup failures, such a
-linkgroup is unusable and should disappear. As a first step the
-linkgroup is removed from the linkgroup list in smc_lgr_forget().
+On devices with an AXP288, we need to wakeup from suspend when a charger
+is plugged in, so that we can do charger-type detection and so that the
+axp288-charger driver, which listens for our extcon events, can configure
+the input-current-limit accordingly.
 
-There are 2 problems:
-smc_listen_decline() might be called before linkgroup creation
-resulting in a crash due to calling smc_lgr_forget() with
-parameter NULL.
-If a setup failure occurs after linkgroup creation, the connection
-is never unregistered from the linkgroup, preventing linkgroup
-freeing.
-
-This patch introduces an enhanced smc_lgr_cleanup_early() function
-which
-* contains a linkgroup check for early smc_listen_decline()
-  invocations
-* invokes smc_conn_free() to guarantee unregistering of the
-  connection.
-* schedules fast linkgroup removal of the unusable linkgroup
-
-And the unused function smcd_conn_free() is removed from smc_core.h.
-
-Fixes: 3b2dec2603d5b ("net/smc: restructure client and server code in af_smc")
-Fixes: 2a0674fffb6bc ("net/smc: improve abnormal termination of link groups")
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/smc/af_smc.c   |   25 +++++++++++++++----------
- net/smc/smc_core.c |   12 ++++++++++++
- net/smc/smc_core.h |    2 +-
- 3 files changed, 28 insertions(+), 11 deletions(-)
+ drivers/extcon/extcon-axp288.c |   32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -512,15 +512,18 @@ static int smc_connect_decline_fallback(
- static int smc_connect_abort(struct smc_sock *smc, int reason_code,
- 			     int local_contact)
- {
-+	bool is_smcd = smc->conn.lgr->is_smcd;
+--- a/drivers/extcon/extcon-axp288.c
++++ b/drivers/extcon/extcon-axp288.c
+@@ -443,9 +443,40 @@ static int axp288_extcon_probe(struct pl
+ 	/* Start charger cable type detection */
+ 	axp288_extcon_enable(info);
+ 
++	device_init_wakeup(dev, true);
++	platform_set_drvdata(pdev, info);
 +
- 	if (local_contact == SMC_FIRST_CONTACT)
--		smc_lgr_forget(smc->conn.lgr);
--	if (smc->conn.lgr->is_smcd)
-+		smc_lgr_cleanup_early(&smc->conn);
-+	else
-+		smc_conn_free(&smc->conn);
-+	if (is_smcd)
- 		/* there is only one lgr role for SMC-D; use server lock */
- 		mutex_unlock(&smc_server_lgr_pending);
- 	else
- 		mutex_unlock(&smc_client_lgr_pending);
- 
--	smc_conn_free(&smc->conn);
- 	smc->connect_nonblock = 0;
- 	return reason_code;
- }
-@@ -1091,7 +1094,6 @@ static void smc_listen_out_err(struct sm
- 	if (newsmcsk->sk_state == SMC_INIT)
- 		sock_put(&new_smc->sk); /* passive closing */
- 	newsmcsk->sk_state = SMC_CLOSED;
--	smc_conn_free(&new_smc->conn);
- 
- 	smc_listen_out(new_smc);
- }
-@@ -1102,12 +1104,13 @@ static void smc_listen_decline(struct sm
- {
- 	/* RDMA setup failed, switch back to TCP */
- 	if (local_contact == SMC_FIRST_CONTACT)
--		smc_lgr_forget(new_smc->conn.lgr);
-+		smc_lgr_cleanup_early(&new_smc->conn);
-+	else
-+		smc_conn_free(&new_smc->conn);
- 	if (reason_code < 0) { /* error, no fallback possible */
- 		smc_listen_out_err(new_smc);
- 		return;
- 	}
--	smc_conn_free(&new_smc->conn);
- 	smc_switch_to_fallback(new_smc);
- 	new_smc->fallback_rsn = reason_code;
- 	if (reason_code && reason_code != SMC_CLC_DECL_PEERDECL) {
-@@ -1170,16 +1173,18 @@ static int smc_listen_ism_init(struct sm
- 			    new_smc->conn.lgr->vlan_id,
- 			    new_smc->conn.lgr->smcd)) {
- 		if (ini->cln_first_contact == SMC_FIRST_CONTACT)
--			smc_lgr_forget(new_smc->conn.lgr);
--		smc_conn_free(&new_smc->conn);
-+			smc_lgr_cleanup_early(&new_smc->conn);
-+		else
-+			smc_conn_free(&new_smc->conn);
- 		return SMC_CLC_DECL_SMCDNOTALK;
- 	}
- 
- 	/* Create send and receive buffers */
- 	if (smc_buf_create(new_smc, true)) {
- 		if (ini->cln_first_contact == SMC_FIRST_CONTACT)
--			smc_lgr_forget(new_smc->conn.lgr);
--		smc_conn_free(&new_smc->conn);
-+			smc_lgr_cleanup_early(&new_smc->conn);
-+		else
-+			smc_conn_free(&new_smc->conn);
- 		return SMC_CLC_DECL_MEM;
- 	}
- 
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -162,6 +162,18 @@ static void smc_lgr_unregister_conn(stru
- 	conn->lgr = NULL;
- }
- 
-+void smc_lgr_cleanup_early(struct smc_connection *conn)
-+{
-+	struct smc_link_group *lgr = conn->lgr;
-+
-+	if (!lgr)
-+		return;
-+
-+	smc_conn_free(conn);
-+	smc_lgr_forget(lgr);
-+	smc_lgr_schedule_free_work_fast(lgr);
++	return 0;
 +}
 +
- /* Send delete link, either as client to request the initiation
-  * of the DELETE LINK sequence from server; or as server to
-  * initiate the delete processing. See smc_llc_rx_delete_link().
---- a/net/smc/smc_core.h
-+++ b/net/smc/smc_core.h
-@@ -296,6 +296,7 @@ struct smc_clc_msg_accept_confirm;
- struct smc_clc_msg_local;
++static int __maybe_unused axp288_extcon_suspend(struct device *dev)
++{
++	struct axp288_extcon_info *info = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(info->irq[VBUS_RISING_IRQ]);
++
+ 	return 0;
+ }
  
- void smc_lgr_forget(struct smc_link_group *lgr);
-+void smc_lgr_cleanup_early(struct smc_connection *conn);
- void smc_lgr_terminate(struct smc_link_group *lgr, bool soft);
- void smc_port_terminate(struct smc_ib_device *smcibdev, u8 ibport);
- void smc_smcd_terminate(struct smcd_dev *dev, u64 peer_gid,
-@@ -316,7 +317,6 @@ int smc_vlan_by_tcpsk(struct socket *clc
++static int __maybe_unused axp288_extcon_resume(struct device *dev)
++{
++	struct axp288_extcon_info *info = dev_get_drvdata(dev);
++
++	/*
++	 * Wakeup when a charger is connected to do charger-type
++	 * connection and generate an extcon event which makes the
++	 * axp288 charger driver set the input current limit.
++	 */
++	if (device_may_wakeup(dev))
++		disable_irq_wake(info->irq[VBUS_RISING_IRQ]);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(axp288_extcon_pm_ops, axp288_extcon_suspend,
++			 axp288_extcon_resume);
++
+ static const struct platform_device_id axp288_extcon_table[] = {
+ 	{ .name = "axp288_extcon" },
+ 	{},
+@@ -457,6 +488,7 @@ static struct platform_driver axp288_ext
+ 	.id_table = axp288_extcon_table,
+ 	.driver = {
+ 		.name = "axp288_extcon",
++		.pm = &axp288_extcon_pm_ops,
+ 	},
+ };
  
- void smc_conn_free(struct smc_connection *conn);
- int smc_conn_create(struct smc_sock *smc, struct smc_init_info *ini);
--void smcd_conn_free(struct smc_connection *conn);
- void smc_lgr_schedule_free_work_fast(struct smc_link_group *lgr);
- int smc_core_init(void);
- void smc_core_exit(void);
 
 
