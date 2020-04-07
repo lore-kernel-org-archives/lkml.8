@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F30C2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD55C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C732074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60EA12078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255121;
-	bh=zMvRv1xvSRez/I8XS6dOdstcuN71d0iQj0e9cGUUUMI=;
+	s=default; t=1586255125;
+	bh=hHJhgpsWRpualoY12/XLaw4edCex+4GAUYWIyfeAsjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zJKzj4w60VzbXy6eFToKNwPsQ98t7xCM/l0/kpo7+TL2wWy4EX6dQ85kHOFwn1Hjd
-	 8CLbcWUmuO8H6ZhfbJkbasWEH9khGX33e8bb3z85x7rH0P1pUxGSEZR2EvU1gaD/WD
-	 n7lVyH4JZMf/yNwpyC1SAHbI69NnG1ip8zKk2xBQ=
+	b=vsTS2pZidKTlWBJgkIA0jFth8O1rX2sdnVQDE2rnQwiUgtPfqOurPaiDS1cD3JEFW
+	 SPqvOjC/CvaciJ3x8SDJ5Gjzw+DM7S9W3Yyo9Qo5HQhUYJeP/bE28wTdaYDFJ8haQi
+	 bWIHUmmrM60CeLNpm6h7n1h4H+tP+u/expB46AWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgDGKZU (ORCPT
+        id S1728938AbgDGKZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:25:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35732 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:25:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728907AbgDGKZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:15 -0400
+        id S1728911AbgDGKZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AE7E2074B;
-        Tue,  7 Apr 2020 10:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0508D2074F;
+        Tue,  7 Apr 2020 10:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255115;
-        bh=zMvRv1xvSRez/I8XS6dOdstcuN71d0iQj0e9cGUUUMI=;
+        s=default; t=1586255117;
+        bh=hHJhgpsWRpualoY12/XLaw4edCex+4GAUYWIyfeAsjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RviyVA1F8wLV9ZCRmEGoPw7v07uQ98W5w5eGn4wi+IY52lYG6zrzsfjBhAp7B0STq
-         wd4Bs2fLxUMmaUdCpN6xAs2nfWC0K+eycY3htFiRjEZmK6Bz3iX17O5ZBNStxB2OmR
-         I+Rz4wz5R9YB0u+XBBbxVlbI3ixdhTPFswVR00hU=
+        b=gC2LJSFyqH3etd6zVgcwC4/pjfgss0eLgd5KufWF2eSDkNeIPLqmgaCcmZRjKOqL5
+         KEZwZT7RIczob31jENkhuxgEUk0BAsVWqXNI/UebxPM0GqUgjODYhJXT4QU17CNTx8
+         cGrfd+trSELQomgw8zocoDlG+6JdqK+7d0c2P4uE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Freeman Liu <freeman.liu@unisoc.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 5.5 28/46] nvmem: sprd: Fix the block lock operation
-Date:   Tue,  7 Apr 2020 12:21:59 +0200
-Message-Id: <20200407101502.527377529@linuxfoundation.org>
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>
+Subject: [PATCH 5.5 37/46] iwlwifi: dbg: dont abort if sending DBGC_SUSPEND_RESUME fails
+Date:   Tue,  7 Apr 2020 12:22:08 +0200
+Message-Id: <20200407101503.423514591@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -60,35 +58,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Freeman Liu <freeman.liu@unisoc.com>
+From: Luca Coelho <luciano.coelho@intel.com>
 
-commit c66ebde4d988b592e8f0008e04c47cc4950a49d3 upstream.
+commit 699b760bd29edba736590fffef7654cb079c753e upstream.
 
-According to the Spreadtrum eFuse specification, we should write 0 to
-the block to trigger the lock operation.
+If the firmware is in a bad state or not initialized fully, sending
+the DBGC_SUSPEND_RESUME command fails but we can still collect logs.
 
-Fixes: 096030e7f449 ("nvmem: sprd: Add Spreadtrum SoCs eFuse support")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200323150007.7487-2-srinivas.kandagatla@linaro.org
+Instead of aborting the entire dump process, simply ignore the error.
+By removing the last callpoint that was checking the return value, we
+can also convert the function to return void.
+
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: 576058330f2d ("iwlwifi: dbg: support debug recording suspend resume command")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200306151129.dcec37b2efd4.I8dcd190431d110a6a0e88095ce93591ccfb3d78d@changeid
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvmem/sprd-efuse.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c |   15 +++++----------
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.h |    6 +++---
+ 2 files changed, 8 insertions(+), 13 deletions(-)
 
---- a/drivers/nvmem/sprd-efuse.c
-+++ b/drivers/nvmem/sprd-efuse.c
-@@ -239,7 +239,7 @@ static int sprd_efuse_raw_prog(struct sp
- 		ret = -EBUSY;
- 	} else {
- 		sprd_efuse_set_prog_lock(efuse, lock);
--		writel(*data, efuse->base + SPRD_EFUSE_MEM(blk));
-+		writel(0, efuse->base + SPRD_EFUSE_MEM(blk));
- 		sprd_efuse_set_prog_lock(efuse, false);
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+@@ -2491,10 +2491,7 @@ static void iwl_fw_dbg_collect_sync(stru
+ 		goto out;
  	}
  
+-	if (iwl_fw_dbg_stop_restart_recording(fwrt, &params, true)) {
+-		IWL_ERR(fwrt, "Failed to stop DBGC recording, aborting dump\n");
+-		goto out;
+-	}
++	iwl_fw_dbg_stop_restart_recording(fwrt, &params, true);
+ 
+ 	IWL_DEBUG_FW_INFO(fwrt, "WRT: Data collection start\n");
+ 	if (iwl_trans_dbg_ini_valid(fwrt->trans))
+@@ -2659,14 +2656,14 @@ static int iwl_fw_dbg_restart_recording(
+ 	return 0;
+ }
+ 
+-int iwl_fw_dbg_stop_restart_recording(struct iwl_fw_runtime *fwrt,
+-				      struct iwl_fw_dbg_params *params,
+-				      bool stop)
++void iwl_fw_dbg_stop_restart_recording(struct iwl_fw_runtime *fwrt,
++				       struct iwl_fw_dbg_params *params,
++				       bool stop)
+ {
+ 	int ret = 0;
+ 
+ 	if (test_bit(STATUS_FW_ERROR, &fwrt->trans->status))
+-		return 0;
++		return;
+ 
+ 	if (fw_has_capa(&fwrt->fw->ucode_capa,
+ 			IWL_UCODE_TLV_CAPA_DBG_SUSPEND_RESUME_CMD_SUPP))
+@@ -2683,7 +2680,5 @@ int iwl_fw_dbg_stop_restart_recording(st
+ 			iwl_fw_set_dbg_rec_on(fwrt);
+ 	}
+ #endif
+-
+-	return ret;
+ }
+ IWL_EXPORT_SYMBOL(iwl_fw_dbg_stop_restart_recording);
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.h
+@@ -239,9 +239,9 @@ _iwl_fw_dbg_trigger_simple_stop(struct i
+ 	_iwl_fw_dbg_trigger_simple_stop((fwrt), (wdev),		\
+ 					iwl_fw_dbg_get_trigger((fwrt)->fw,\
+ 							       (trig)))
+-int iwl_fw_dbg_stop_restart_recording(struct iwl_fw_runtime *fwrt,
+-				      struct iwl_fw_dbg_params *params,
+-				      bool stop);
++void iwl_fw_dbg_stop_restart_recording(struct iwl_fw_runtime *fwrt,
++				       struct iwl_fw_dbg_params *params,
++				       bool stop);
+ 
+ #ifdef CONFIG_IWLWIFI_DEBUGFS
+ static inline void iwl_fw_set_dbg_rec_on(struct iwl_fw_runtime *fwrt)
 
 
