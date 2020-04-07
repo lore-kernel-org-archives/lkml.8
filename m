@@ -2,125 +2,116 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B172C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD6FC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5010B20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0605820748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="M8VtUxkw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQ1rrBhz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgDGTGC (ORCPT
+        id S1726794AbgDGTJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:06:02 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14419 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgDGTGB (ORCPT
+        Tue, 7 Apr 2020 15:09:11 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:55875 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgDGTJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:06:01 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8ccf0c0000>; Tue, 07 Apr 2020 12:05:48 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 07 Apr 2020 12:06:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 07 Apr 2020 12:06:01 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr
- 2020 19:06:00 +0000
-Received: from [10.2.171.175] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr 2020
- 19:05:59 +0000
-Subject: Re: [RFC PATCH v6 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1585963507-12610-1-git-send-email-skomatineni@nvidia.com>
- <1585963507-12610-7-git-send-email-skomatineni@nvidia.com>
- <40102767-ecdb-e958-66f4-45d11464069c@gmail.com>
- <b7b77258-6309-7ed2-489d-337cf273ba1e@nvidia.com>
- <6014fee9-ce97-7ced-f2ba-82176b8b36db@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <55ca95a0-41d9-a071-ab9d-08d26b3f8698@nvidia.com>
-Date:   Tue, 7 Apr 2020 12:05:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Apr 2020 15:09:10 -0400
+Received: by mail-pj1-f66.google.com with SMTP id fh8so147282pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 12:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LDxb1cWgmjR2rFQEK0+5JpvDE312cPS2zScBr2bujHE=;
+        b=OQ1rrBhzVf0fJC3M4ocRBLsWOLwIev84mAm14MNsK1lJKOeqK2JSQPVIN0X4dgWaMe
+         PbXUXIhIddautej6PdwCqFJK0e2lTP+L+YB+8ciP3SM72Phf996FeN091bdS6O1f/PBr
+         YLZyGadFtUIbyZEbN3BYBn1Jn5n9lT0+Xupjn3WiTbMtGsoYHmNRQf2wJz8SQbTRXH0O
+         +r4uXZ2BdTJVFaujA+96JNAFQMG9KGFwXswQnycKHlmBhF/ywFOhBAZpKjy7AYCgIBkN
+         TlBcucvVruI8VPia6fG8s30mOQUpw0cIqGf7B9zZhSBO7K3SVw2ItS+k+aejklwUxcx9
+         oykw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LDxb1cWgmjR2rFQEK0+5JpvDE312cPS2zScBr2bujHE=;
+        b=asHGm9l4EDsZ5mQJ06N4VLY5CEciietnsSzbx56j4BQPVeEpl5eK9lpN/Ks7O7kpKu
+         Amq1Pw1vr5fdIf+OcQCGpfmiheJXhi0EDvYq5Xnb+ZpK1rRR9Hiix90KrJR52ffcH8GV
+         mG+7J7kW2c2DrPooxo7Jryb9FLLJLahF/N6EoWFGiIsmmjQEHtSkm2ROkbAp79jMhX4O
+         nEuIk5uQHoX3xLxD3rKH6j0hoE7oKMw8b2kJ/6PTQrR9zm59o6MvUjp2+a6IfaFvirXz
+         DNYkkms6JEwvIeJqx+Ddor7Ry6uziNBSkuezwqsLI59ddF8n4M58Tl7+Jnq32atarNks
+         55HA==
+X-Gm-Message-State: AGi0PuaHXpS/X3bnL8HcqY2COKPbzvcjsifuR5xNGiCZtPTKdNCDWp26
+        QltVb11MiNDufzO/Au/cItoFUiSLLpw=
+X-Google-Smtp-Source: APiQypIAweHpsgOBRcq92pnGKdIS++5/gxov6spI1gTUH2o53lpimCMwTYCCEJfCGkDl1fke9lad7w==
+X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr3787069plo.45.1586286549841;
+        Tue, 07 Apr 2020 12:09:09 -0700 (PDT)
+Received: from jiancai.svl.corp.google.com ([2620:15c:2ce:0:b7ed:16a3:9dc0:21bb])
+        by smtp.googlemail.com with ESMTPSA id q12sm13833090pgi.86.2020.04.07.12.09.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 12:09:09 -0700 (PDT)
+From:   Jian Cai <caij2003@gmail.com>
+Cc:     caij2003@gmail.com, ndesaulniers@google.com, manojgupta@google.com,
+        stefan@agner.ch, Russell King <linux@armlinux.org.uk>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] ARM: replace the sole use of a symbol with its definition
+Date:   Tue,  7 Apr 2020 12:05:57 -0700
+Message-Id: <20200407190558.196865-1-caij2003@gmail.com>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
 MIME-Version: 1.0
-In-Reply-To: <6014fee9-ce97-7ced-f2ba-82176b8b36db@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586286348; bh=7t/2hBzkGE2FuWGhPFMgSIueDjtcOTTLwFTzLicufH0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=M8VtUxkwY4lt7B0+68GJzxSBImPxb9H/gfjuA+dKsjvSpuoQavo9IR3cdWt2JMBrG
-         HKdD1OGl3acnmDWMe9ZPflMVWi9J8wsjbl6+KRBvFhQhUZeMbfWExwhyedr5bWJZvX
-         akWNxOPL2ufAyt/bybX4OMkPnA3okeZzehS6b0KfVR0FRJkk8wPXtw6AQ2JUGMvZzu
-         h1P8qm+PcfnTL+KvhW/inCEftVsuWkW0xsuhzH4wpmpYQQu+TcAw+HhVOktgMHBFj8
-         hKx62HbzhxQu2zL/zVFrabC/J1Suce7z3p6Z1lQ+oOF3C5dZMdRYM/H3/e+Oko7ccq
-         K/L2d7j1BudTA==
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ALT_UP_B macro sets symbol up_b_offset via .equ to an expression
+involving another symbol. The macro gets expanded twice when
+arch/arm/kernel/sleep.S is assembled, creating a scenario where
+up_b_offset is set to another expression involving symbols while its
+current value is based on symbols. LLVM integrated assembler does not
+allow such cases, and based on the documentation of binutils, "Values
+that are based on expressions involving other symbols are allowed, but
+some targets may restrict this to only being done once per assembly", so
+it may be better to avoid such cases as it is not clearly stated which
+targets should support or disallow them. The fix in this case is simple,
+as up_b_offset has only one use, so we can replace the use with the
+definition and get rid of up_b_offset.
 
-On 4/6/20 9:11 AM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 06.04.2020 18:41, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 4/5/20 2:11 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 04.04.2020 04:25, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>> +static int tegra_vi_tpg_channels_alloc(struct tegra_vi *vi)
->>>> +{
->>>> +     struct tegra_vi_channel *chan, *tmp;
->>>> +     unsigned int port_num;
->>>> +     unsigned int nchannels =3D vi->soc->vi_max_channels;
->>>> +     int ret =3D 0;
->>>> +
->>>> +     for (port_num =3D 0; port_num < nchannels; port_num++) {
->>>> +             /*
->>>> +              * Do not use devm_kzalloc as memory is freed immediatel=
-y
->>>> +              * when device instance is unbound but application
->>>> might still
->>>> +              * be holding the device node open. Channel memory
->>>> allocated
->>>> +              * with kzalloc is freed during video device release
->>>> callback.
->>>> +              */
->>>> +             chan =3D kzalloc(sizeof(*chan), GFP_KERNEL);
->>> Why anyone would want to unbind this driver in practice?
->>>
->>> I think it should make more sense to set suppress_bind_attrs=3Dtrue.
->>  From the previous feedback of patch series, we need to support
->> unbind/bind and looks like this driver should also support to built as a
->> module.
-> If module unloading is also affected, then perhaps you should use
-> get/put_device() to not allow freeing the resources until they're still
-> in-use.
->
-> I suppose that it should be up to the V4L core to keep the device alive
-> while needed, rather than to put the burden to the individual drivers.
+Signed-off-by: Jian Cai <caij2003@gmail.com>
+---
+ arch/arm/include/asm/assembler.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Hans/Thierry, Can you please comment on this?
+diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
+index 99929122dad7..adee13126c62 100644
+--- a/arch/arm/include/asm/assembler.h
++++ b/arch/arm/include/asm/assembler.h
+@@ -269,10 +269,9 @@
+ 	.endif							;\
+ 	.popsection
+ #define ALT_UP_B(label)					\
+-	.equ	up_b_offset, label - 9998b			;\
+ 	.pushsection ".alt.smp.init", "a"			;\
+ 	.long	9998b						;\
+-	W(b)	. + up_b_offset					;\
++	W(b)	. + (label - 9998b)					;\
+ 	.popsection
+ #else
+ #define ALT_SMP(instr...)
+-- 
+2.26.0.292.g33ef6b2f38-goog
 
