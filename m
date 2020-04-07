@@ -2,106 +2,150 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA5AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CEFC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3765207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674C320730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GHbNDz0o"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Um+I6llq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgDGVaH (ORCPT
+        id S1726495AbgDGVbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:30:07 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37315 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgDGVaH (ORCPT
+        Tue, 7 Apr 2020 17:31:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51886 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726416AbgDGVbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:30:07 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w10so5546330wrm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 14:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xeOb7bw7ZU05WWRpiZXDbb732pxeQMi4LbeTnQvk5RI=;
-        b=GHbNDz0o8lcP5xbu+Wb/yshUnWPBucml6fsGMRJi7IBP7dlySYYTU+1q09y0DGhMZ5
-         l+vEnigD2NFXbI2q9UGJX0uKIiYrZHR6Z0PPksE81MY8Ij18sJ15Swrxe+rgJxmlxvHG
-         wgmgqsIm4ZTFD/9Uck+I6zXU2Phju7lN0KT6wsP9QYYd5Zf/hxU0LKqjFyLjLzPDpsd0
-         HCnXfUYrCTWW/GmGqoRSbUOCYwpq8WpJQPJGI5n1IhUT96jNUjfacOh4zsltx4qHHbIr
-         4JCy2UJtZyDC14m7/+K42dxM9U71fsoXZNlZcS3a215KLEzfZzN+CV9GBtnoFqijrgHE
-         PskQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xeOb7bw7ZU05WWRpiZXDbb732pxeQMi4LbeTnQvk5RI=;
-        b=P2cfadZ9m5eQtIfxZXcpd8WJ/7E/1BQZl2j2XDlVjRqRPbThDP7s0ntRQ3DqamU4kn
-         LWZiHyxB38qV30Jytdo/nf6GuQ8u5oX/kZNba78I7NMZCvSmcSozSGT5M0L2OkrBWQku
-         SzZLRxKsEHc7CzjCxr8Po5uFwFc9ezi8E8WUUcxXlwZMmNT+mh5P7rTVYvLydDyRLR+g
-         Rh+ymhiO8hkmP30tMRV7MUhInK51Ydj4Lbs6MfXabPQwMhYvc+HfbueCUnulu+gckAtz
-         /a3uLEn+1u+JisE//3tS3uIy5kABsjQFuOJMC22rNK9mQVfOhtd/XDmYS+D5vZ1phGNT
-         B2Dw==
-X-Gm-Message-State: AGi0PuYLFPLa4hYpDyGksuIh4xe/Jh0wuEP6m6jmWWKZBFvxulWnIGFm
-        85VxdbSy4AZ9YiLww6uTUhs=
-X-Google-Smtp-Source: APiQypLgEgrDf34HSgRuIR4yNy76OxilPFRw0shtbt54IFPaMkrRIaOXKXmW1ahdPA+N0lBTKuGvuw==
-X-Received: by 2002:adf:916f:: with SMTP id j102mr4530675wrj.335.1586295005505;
-        Tue, 07 Apr 2020 14:30:05 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id t67sm4438171wmg.40.2020.04.07.14.30.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Apr 2020 14:30:04 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 21:30:04 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: Re: [PATCH v1 2/2] mm/memory_hotplug: remove
- is_mem_section_removable()
-Message-ID: <20200407213004.xeipetht4eq5g72r@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200407135416.24093-1-david@redhat.com>
- <20200407135416.24093-3-david@redhat.com>
+        Tue, 7 Apr 2020 17:31:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586295065;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=qHR0CsCwZ0V31PL2BJqAGUsMlkV/uU0L7++NwyRQkxk=;
+        b=Um+I6llquRJ5Kg4SLEnji4aPAKM1j7vOdWJm1n6DfnpzmPuR+NYn3oBo7xt/avtADCrGFV
+        AKZojWQwyfBiSSA8vC5TXfGKv0YMlS0enYlGhL7Y6U4kKC/tGVY5xpc2w9MBbY2Uej5CAy
+        cQH0OwdCoINLcZ+31iLS42FIjuxV0BY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-zJCwTx1xNny4xDdybgXr8A-1; Tue, 07 Apr 2020 17:31:03 -0400
+X-MC-Unique: zJCwTx1xNny4xDdybgXr8A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BEC5E149C3;
+        Tue,  7 Apr 2020 21:31:01 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-112-63.ams2.redhat.com [10.36.112.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 51AC75C1B0;
+        Tue,  7 Apr 2020 21:31:00 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maxim Mikityanskiy <maxtram95@gmail.com>,
+        "5 . 3+" <stable@vger.kernel.org>
+Subject: [PATCH] platform/x86: intel_int0002_vgpio: Only bind to the INT0002 dev when using s2idle
+Date:   Tue,  7 Apr 2020 23:30:58 +0200
+Message-Id: <20200407213058.62870-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407135416.24093-3-david@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 03:54:16PM +0200, David Hildenbrand wrote:
->Fortunately, all users of is_mem_section_removable() are gone. Get rid of
->it, including some now unnecessary functions.
->
->Cc: Michael Ellerman <mpe@ellerman.id.au>
->Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->Cc: Michal Hocko <mhocko@suse.com>
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Oscar Salvador <osalvador@suse.de>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Wei Yang <richard.weiyang@gmail.com>
->Signed-off-by: David Hildenbrand <david@redhat.com>
+Commit 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement
+irq_set_wake on Bay Trail") stopped passing irq_set_wake requests on to
+the parents IRQ because this was breaking suspend (causing immediate
+wakeups) on an Asus E202SA.
 
-Nice.
+This workaround for this issue is mostly fine, on most Cherry Trail
+devices where we need the INT0002 device for wakeups by e.g. USB kbds,
+the parent IRQ is shared with the ACPI SCI and that is marked as wakeup
+anyways.
 
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+But not on all devices, specifically on a Medion Akoya E1239T there is
+no SCI at all, and because the irq_set_wake request is not passed on to
+the parent IRQ, wake up by the builtin USB kbd does not work here.
 
--- 
-Wei Yang
-Help you, Help me
+So the workaround for the Asus E202SA immediate wake problem is causing
+problems elsewhere; and in hindsight it is not the correct fix,
+the Asus E202SA uses Airmont CPU cores, but this does not mean it is a
+Cherry Trail based device, Brasswell uses Airmont CPU cores too and this
+actually is a Braswell device.
+
+Most (all?) Braswell devices use classic S3 mode suspend rather then
+s2idle suspend and in this case directly dealing with PME events as
+the INT0002 driver does likely is not the best idea, so that this is
+causing issues is not surprising.
+
+Replace the workaround of not passing irq_set_wake requests on to the
+parents IRQ, by not binding to the INT0002 device when s2idle is not used=
+.
+This fixes USB kbd wakeups not working on some Cherry Trail devices,
+while still avoiding mucking with the wakeup flags on the Asus E202SA
+(and other Brasswell devices).
+
+Cc: Maxim Mikityanskiy <maxtram95@gmail.com>
+Cc: 5.3+ <stable@vger.kernel.org> # 5.3+
+Fixes: 871f1f2bcb01 ("platform/x86: intel_int0002_vgpio: Only implement i=
+rq_set_wake on Bay Trail")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/intel_int0002_vgpio.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platfor=
+m/x86/intel_int0002_vgpio.c
+index 55f088f535e2..e8bec72d3823 100644
+--- a/drivers/platform/x86/intel_int0002_vgpio.c
++++ b/drivers/platform/x86/intel_int0002_vgpio.c
+@@ -143,21 +143,9 @@ static struct irq_chip int0002_byt_irqchip =3D {
+ 	.irq_set_wake		=3D int0002_irq_set_wake,
+ };
+=20
+-static struct irq_chip int0002_cht_irqchip =3D {
+-	.name			=3D DRV_NAME,
+-	.irq_ack		=3D int0002_irq_ack,
+-	.irq_mask		=3D int0002_irq_mask,
+-	.irq_unmask		=3D int0002_irq_unmask,
+-	/*
+-	 * No set_wake, on CHT the IRQ is typically shared with the ACPI SCI
+-	 * and we don't want to mess with the ACPI SCI irq settings.
+-	 */
+-	.flags			=3D IRQCHIP_SKIP_SET_WAKE,
+-};
+-
+ static const struct x86_cpu_id int0002_cpu_ids[] =3D {
+ 	INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),	/* Valleyview, Ba=
+y Trail  */
+-	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),	/* Braswell, Cherry =
+Trail */
++	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_byt_irqchip),	/* Braswell, Cherry =
+Trail */
+ 	{}
+ };
+=20
+@@ -181,6 +169,10 @@ static int int0002_probe(struct platform_device *pde=
+v)
+ 	if (!cpu_id)
+ 		return -ENODEV;
+=20
++	/* We only need to directly deal with PMEs when using s2idle */
++	if (!pm_suspend_default_s2idle())
++		return -ENODEV;
++
+ 	irq =3D platform_get_irq(pdev, 0);
+ 	if (irq < 0)
+ 		return irq;
+--=20
+2.26.0
+
