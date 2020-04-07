@@ -2,169 +2,203 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D02EC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86802C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9ACD20692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA9820692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:17:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cyK5E7Dv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DA923uRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgDGPOt (ORCPT
+        id S1729280AbgDGPRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:14:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24790 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728943AbgDGPOt (ORCPT
+        Tue, 7 Apr 2020 11:17:44 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:50210 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728943AbgDGPRo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:14:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586272487;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I3HE0reSfCDr1VSx9qdVWqxSYEu9yuUyo1SXBoLYuvY=;
-        b=cyK5E7DvWAKX+Ot+X1qcbcW7nARVzrcyxMw3Qb/D8Gyxx9C6Z/Zn25fMHQfuQAlT8F/ZTf
-        v7DRe0HB3u2kXZFyp6ULpPjksXvRqLqY5ssISzPxLSD7W7lREg59oQWkPrbP2w1wtIB88b
-        C69HPklTrTIeErnyCXoleBvn56mrdcY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-aQ0w5x38MQqrakDLAtHK7g-1; Tue, 07 Apr 2020 11:14:45 -0400
-X-MC-Unique: aQ0w5x38MQqrakDLAtHK7g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97653107ACCA;
-        Tue,  7 Apr 2020 15:14:43 +0000 (UTC)
-Received: from w520.home (ovpn-112-162.phx2.redhat.com [10.3.112.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EFDFA114819;
-        Tue,  7 Apr 2020 15:14:36 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 09:14:36 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Tian, Kevin" <kevin.tian@intel.com>
-Cc:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: Re: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Message-ID: <20200407091436.76e980f8@w520.home>
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D80E1AD@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
-        <20200402115017.0a0f55e2@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D807BB9@SHSMSX104.ccr.corp.intel.com>
-        <20200403091424.39383958@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D80E1AD@SHSMSX104.ccr.corp.intel.com>
+        Tue, 7 Apr 2020 11:17:44 -0400
+Received: by mail-pj1-f65.google.com with SMTP id v13so896565pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 08:17:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CpJ1T/6PM5jGUGyvWbbqnbr6LLmGmBCE77aleYwC6+4=;
+        b=DA923uRIVsPDPdoHY3hLXnZMfkeLCGcQ7QtTXLzc13IIbq57iQCj2zozaJG6MnDYvs
+         ykAHGjTwGfm0S0qTVQQylHL1La+FIsWacAMiLksGci0wanynu1WEo6+wbsidp5q7rSyO
+         Y5cc4HEVUwpFJXSUBLPO3UFPduxnDcfpr88DvMXPAyzTQnYbY/9NM5jFlsQNKnKSmBjS
+         b7gNnHUkgTxNPPm2FXBpfEsFxgx4fWwJ6e4MTIWQEewhlI8mJHqQcOxeNTbI0gxnb6cK
+         3OIbhpQ5/79wWr/XwMc6JgEffyN0DAxH3vno1pRH6TolTWw+niQc2WAkQhRZxITNv3MX
+         M8sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CpJ1T/6PM5jGUGyvWbbqnbr6LLmGmBCE77aleYwC6+4=;
+        b=eMm/bRfmZVadwFiRcT7AQWZKIHFS5/ma2ctXN0345y4jB25Beq6Ws062d3jHGj1XNb
+         y3nxIn5kbi5CeIGPC/sSn0S7aTvfoZPDD6LVnk4NjvG2H8aLldjValfKRyvss7Js3hlF
+         k55wU1w4lJRPA0vngNcL/zxl+MjWxFMy0SQozcwSr+9MAxMflLjpDiKthrv1gGZBk+1+
+         BW7LvW2ireWfcY4hiBDuijbKMQOPsLRuzSoKt45xZ7Oaawq6lPywORcd1Bqo6WpqPfzb
+         QmWUaxM9hfYpNsmxFv+v4IKWWATpLCKlXHyM+Je36YVhdBWUgQk87h9GC6ncz2lTN/o+
+         Pvuw==
+X-Gm-Message-State: AGi0PubWVf8KF/ZroFN5uWVmxPB32NjvrdAJXW+61YPEpl1ecZnFoVbB
+        ta3o2bSdYuLT7Qa56Lrw34Ji
+X-Google-Smtp-Source: APiQypIQ8T+h8WWp2+J46fA+QsEsxPR5GHxN19/dUb3NMEgMEAb6YtYmrhb/QwCY1tpIZyinXPI+aQ==
+X-Received: by 2002:a17:90a:1946:: with SMTP id 6mr3507089pjh.42.1586272661943;
+        Tue, 07 Apr 2020 08:17:41 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6e86:d03b:65ee:cb40:6d79:8376])
+        by smtp.gmail.com with ESMTPSA id c1sm1871243pje.24.2020.04.07.08.17.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 08:17:41 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 20:47:36 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] bus: mhi: core: Remove link_status() callback
+Message-ID: <20200407151736.GI2442@Mani-XPS-13-9360>
+References: <1586207077-22361-1-git-send-email-jhugo@codeaurora.org>
+ <1586207077-22361-4-git-send-email-jhugo@codeaurora.org>
+ <20200407055809.GA2442@Mani-XPS-13-9360>
+ <c28124c2-4bd1-c5e1-5ecd-e8dd6042f818@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c28124c2-4bd1-c5e1-5ecd-e8dd6042f818@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Apr 2020 04:42:02 +0000
-"Tian, Kevin" <kevin.tian@intel.com> wrote:
-
-> > From: Alex Williamson
-> > Sent: Friday, April 3, 2020 11:14 PM
+On Tue, Apr 07, 2020 at 09:03:28AM -0600, Jeffrey Hugo wrote:
+> On 4/6/2020 11:58 PM, Manivannan Sadhasivam wrote:
+> > Hi Jeff,
 > > 
-> > On Fri, 3 Apr 2020 05:58:55 +0000
-> > "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> >   
-> > > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > > Sent: Friday, April 3, 2020 1:50 AM
-> > > >
-> > > > On Sun, 22 Mar 2020 05:31:58 -0700
-> > > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > > >  
-> > > > > From: Liu Yi L <yi.l.liu@intel.com>
-> > > > >
-> > > > > For a long time, devices have only one DMA address space from  
-> > platform  
-> > > > > IOMMU's point of view. This is true for both bare metal and directed-
-> > > > > access in virtualization environment. Reason is the source ID of DMA in
-> > > > > PCIe are BDF (bus/dev/fnc ID), which results in only device granularity
-> > > > > DMA isolation. However, this is changing with the latest advancement in
-> > > > > I/O technology area. More and more platform vendors are utilizing the  
-> > > > PCIe  
-> > > > > PASID TLP prefix in DMA requests, thus to give devices with multiple  
-> > DMA  
-> > > > > address spaces as identified by their individual PASIDs. For example,
-> > > > > Shared Virtual Addressing (SVA, a.k.a Shared Virtual Memory) is able to
-> > > > > let device access multiple process virtual address space by binding the
-> > > > > virtual address space with a PASID. Wherein the PASID is allocated in
-> > > > > software and programmed to device per device specific manner.  
-> > Devices  
-> > > > > which support PASID capability are called PASID-capable devices. If such
-> > > > > devices are passed through to VMs, guest software are also able to bind
-> > > > > guest process virtual address space on such devices. Therefore, the  
-> > guest  
-> > > > > software could reuse the bare metal software programming model,  
-> > which  
-> > > > > means guest software will also allocate PASID and program it to device
-> > > > > directly. This is a dangerous situation since it has potential PASID
-> > > > > conflicts and unauthorized address space access. It would be safer to
-> > > > > let host intercept in the guest software's PASID allocation. Thus PASID
-> > > > > are managed system-wide.  
-> > > >
-> > > > Providing an allocation interface only allows for collaborative usage
-> > > > of PASIDs though.  Do we have any ability to enforce PASID usage or can
-> > > > a user spoof other PASIDs on the same BDF?  
-> > >
-> > > An user can access only PASIDs allocated to itself, i.e. the specific IOASID
-> > > set tied to its mm_struct.  
+> > On Mon, Apr 06, 2020 at 03:04:37PM -0600, Jeffrey Hugo wrote:
+> > > If the MHI core detects invalid data due to a PCI read, it calls into
+> > > the controller via link_status() to double check that the link is infact
+> > > down.  All in all, this is pretty pointless, and racy.  There are no good
+> > > reasons for this, and only drawbacks.
+> > > 
+> > > Its pointless because chances are, the controller is going to do the same
+> > > thing to determine if the link is down - attempt a PCI access and compare
+> > > the result.  This does not make the link status decision any smarter.
+> > > 
+> > > Its racy because its possible that the link was down at the time of the
+> > > MHI core access, but then recovered before the controller access.  In this
+> > > case, the controller will indicate the link is not down, and the MHI core
+> > > will precede to use a bad value as the MHI core does not attempt to retry
+> > > the access.
+> > > 
+> > > Retrying the access in the MHI core is a bad idea because again, it is
+> > > racy - what if the link is down again?  Furthermore, there may be some
+> > > higher level state associated with the link status, that is now invalid
+> > > because the link went down.
+> > > 
+> > > The only reason why the MHI core could see "invalid" data when doing a PCI
+> > > access, that is actually valid, is if the register actually contained the
+> > > PCI spec defined sentinel for an invalid access.  In this case, it is
+> > > arguable that the MHI implementation broken, and should be fixed, not
+> > > worked around.
+> > > 
+> > > Therefore, remove the link_status() callback before anyone attempts to
+> > > implement it.
+> > > 
+> > > Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 > > 
-> > A user is only _supposed_ to access PASIDs allocated to itself.  AIUI
-> > the mm_struct is used for managing the pool of IOASIDs from which the
-> > user may allocate that PASID.  We also state that programming the PASID
-> > into the device is device specific.  Therefore, are we simply trusting
-> > the user to use a PASID that's been allocated to them when they program
-> > the device?  If a user can program an arbitrary PASID into the device,
-> > then what prevents them from attempting to access data from another
-> > user via the device?   I think I've asked this question before, so if
-> > there's a previous explanation or spec section I need to review, please
-> > point me to it.  Thanks,
-> >   
+> > LGTM. But as per the IRC discussion I'd like the mhi_reg_read() to be
+> > implemented as a callback in mhi_controller struct inorder to truly make MHI
+> > a PCI agnostic bus.
+> > 
+> > Since we don't have any controller driver in mainline, I think it is the
+> > good time to do this change.
 > 
-> There are two scenarios:
+> No problem.  I thought you might prefer that approach, hence the discussion.
+> :)
 > 
-> (1) for PF/VF, the iommu driver maintains an individual PASID table per
-> PDF. Although the PASID namespace is global, the per-BDF PASID table
-> contains only valid entries for those PASIDs which are allocated to the
-> mm_struct. The user is free to program arbitrary PASID into the assigned
-> device, but using invalid PASIDs simply hit iommu fault.
+> Do you want that included in this change, or as a follow up?
 > 
-> (2) for mdev, multiple mdev instances share the same PASID table of
-> the parent BDF. However, PASID programming is a privileged operation
-> in multiplexing usage, thus must be mediated by mdev device driver. 
-> The mediation logic will guarantee that only allocated PASIDs are 
-> forwarded to the device. 
 
-Thanks, I was confused about multiple tenants sharing a BDF when PASID
-programming to the device is device specific, and therefore not
-something we can virtualize.  However, the solution is device specific
-virtualization via mdev.  Thus, any time we're sharing a BDF between
-tenants, we must virtualize the PASID programming and therefore it must
-be an mdev device currently.  If a tenant is the exclusive user of the
-BDF, then no virtualization of the PASID programming is required.  I
-think it's clear now (again).  Thanks,
+You can add a patch in this series itself.
 
-Alex
+Thanks,
+Mani
 
+> > 
+> > For this,
+> > 
+> > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > ---
+> > >   drivers/bus/mhi/core/init.c | 6 ++----
+> > >   drivers/bus/mhi/core/main.c | 5 ++---
+> > >   include/linux/mhi.h         | 2 --
+> > >   3 files changed, 4 insertions(+), 9 deletions(-)
+> > > 
+> > > diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+> > > index b38359c..2af08d57 100644
+> > > --- a/drivers/bus/mhi/core/init.c
+> > > +++ b/drivers/bus/mhi/core/init.c
+> > > @@ -812,10 +812,8 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+> > >   	if (!mhi_cntrl)
+> > >   		return -EINVAL;
+> > > -	if (!mhi_cntrl->runtime_get || !mhi_cntrl->runtime_put)
+> > > -		return -EINVAL;
+> > > -
+> > > -	if (!mhi_cntrl->status_cb || !mhi_cntrl->link_status)
+> > > +	if (!mhi_cntrl->runtime_get || !mhi_cntrl->runtime_put ||
+> > > +	    !mhi_cntrl->status_cb)
+> > >   		return -EINVAL;
+> > >   	ret = parse_config(mhi_cntrl, config);
+> > > diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> > > index eb4256b..473278b8 100644
+> > > --- a/drivers/bus/mhi/core/main.c
+> > > +++ b/drivers/bus/mhi/core/main.c
+> > > @@ -20,9 +20,8 @@ int __must_check mhi_read_reg(struct mhi_controller *mhi_cntrl,
+> > >   {
+> > >   	u32 tmp = readl(base + offset);
+> > > -	/* If there is any unexpected value, query the link status */
+> > > -	if (PCI_INVALID_READ(tmp) &&
+> > > -	    mhi_cntrl->link_status(mhi_cntrl))
+> > > +	/* If the value is invalid, the link is down */
+> > > +	if (PCI_INVALID_READ(tmp))
+> > >   		return -EIO;
+> > >   	*out = tmp;
+> > > diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+> > > index ad19960..be704a4 100644
+> > > --- a/include/linux/mhi.h
+> > > +++ b/include/linux/mhi.h
+> > > @@ -335,7 +335,6 @@ struct mhi_controller_config {
+> > >    * @syserr_worker: System error worker
+> > >    * @state_event: State change event
+> > >    * @status_cb: CB function to notify power states of the device (required)
+> > > - * @link_status: CB function to query link status of the device (required)
+> > >    * @wake_get: CB function to assert device wake (optional)
+> > >    * @wake_put: CB function to de-assert device wake (optional)
+> > >    * @wake_toggle: CB function to assert and de-assert device wake (optional)
+> > > @@ -417,7 +416,6 @@ struct mhi_controller {
+> > >   	void (*status_cb)(struct mhi_controller *mhi_cntrl,
+> > >   			  enum mhi_callback cb);
+> > > -	int (*link_status)(struct mhi_controller *mhi_cntrl);
+> > >   	void (*wake_get)(struct mhi_controller *mhi_cntrl, bool override);
+> > >   	void (*wake_put)(struct mhi_controller *mhi_cntrl, bool override);
+> > >   	void (*wake_toggle)(struct mhi_controller *mhi_cntrl);
+> > > -- 
+> > > Qualcomm Technologies, Inc. is a member of the
+> > > Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
+> 
+> -- 
+> Jeffrey Hugo
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
