@@ -2,158 +2,126 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF94EC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604CBC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0532075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:02:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Jl8BqXl7"
+	by mail.kernel.org (Postfix) with ESMTP id 336A720768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586275430;
+	bh=7+Qjrh0YcimyZVfzAbkeA3ARTzovSstBA2/aYhCx1X8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ey1fRxQtRhm94qoSC6dR8zGcQcpHajZHg2l3AHVi2UfA0KeHmqu2bVI1hDBYhLosl
+	 JjEidPA+yPad/Bb4eBOhzCCv50NiV8I7kwxT00YtzO0zRFvETLcZ7CmTlGLsH9FKy4
+	 Au85D0SZOemOfql95KT6dUG3dwJIkyMZtkYbVxyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgDGQCq (ORCPT
+        id S1728048AbgDGQDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:02:46 -0400
-Received: from mout.gmx.net ([212.227.17.20]:49349 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726889AbgDGQCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:02:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1586275336;
-        bh=MjED2rL8qFcaewF1yuTCY8oY81g21cBSfIGHWAJZhMU=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Jl8BqXl73a3riwsYbnv+x7UmfvkDw9tKZL2TNz/DJ0vFDfMaN2+x19lbN9xx87+lC
-         3+ZL2kMK+WiwDySFJZjTn3TmI3NAhZWNhxh0yMPypCuDv1dcm6cPNINx9XNyuxNGul
-         rH8nkZklPVh2RmUjRZp9o9qblbOHX95hYR+B1LCE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from lenovo-laptop ([82.19.195.159]) by mail.gmx.com (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1N1wll-1jB2250hY1-012FWj; Tue, 07
- Apr 2020 18:02:16 +0200
-Date:   Tue, 7 Apr 2020 17:02:13 +0100
-From:   Alex Dewar <alex.dewar@gmx.co.uk>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Allison Randal <allison@lohutok.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Chaitra Basappa <chaitra.basappa@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-scsi@vger.kernel.org, aacraid@microsemi.com,
-        MPT-FusionLinux.pdl@broadcom.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: Remove unnecessary calls to memset after
- dma_alloc_coherent
-Message-ID: <20200407160213.qh64de6ebrj7qkmx@lenovo-laptop>
-References: <e2401a31-e9fd-e849-e27c-6e079f5556d2@web.de>
+        Tue, 7 Apr 2020 12:03:49 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:24499 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgDGQDt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 12:03:49 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 037G3Ue9024707;
+        Wed, 8 Apr 2020 01:03:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 037G3Ue9024707
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586275411;
+        bh=H1J7FezWT1dgglGN/erJ3S7DC6IYDiQ5DhPkx5GnfYo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=djBLvGd0L88sTtMnV7Ktcs7LOCu7upEpPBj4r3AIG6B3UH80aD6p0N80wXfqBwexX
+         GmI2q73EAYBwYtYWbCYlXFHLvCk0pmkSQe7agC/KKcQcmjoZR+h0rbU2Yq0JACA1ny
+         XCKJt7iKiI+sEqKyVoMsaqGz1LsWXxTKQvfWa3Ud3YJaWoQ+vr/7oZU4wZ0cAyyBBZ
+         LEi0D3KUjNTJbnHCtOGF976xzP0f7k0HYwaZx3Pi5729+UL1iRziZsZbOIigrzHzxj
+         TE8La+DxQ1PoUTkQxvPG38FHx+NP2C5EJ6yAZ3l13CasR4auPyw7KC8VV3UwbW2lJp
+         qrMaiN+3XQoeQ==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id s10so2507357vsi.9;
+        Tue, 07 Apr 2020 09:03:30 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYav1JspkgY3FaVtAbcoJieQT8N6gSe4oRdkT3VJJ3lNyFxMjKR
+        g+Z3gcVjx7pdfSgZmeW6gZSA0aLxFTOrN+iId8M=
+X-Google-Smtp-Source: APiQypJdib1woalCQ47LsPcjFIUt+uD0oJywtqnU3blPMN/3x09w4VC5A1Jftlia+RledGNP4o+h/SP9BtoezdZD7j8=
+X-Received: by 2002:a67:6542:: with SMTP id z63mr2511247vsb.179.1586275409554;
+ Tue, 07 Apr 2020 09:03:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <e2401a31-e9fd-e849-e27c-6e079f5556d2@web.de>
-X-Provags-ID: V03:K1:d/rbaoVneuFo0laPsfO0MaLfxIn2+jKJUs/i7ZOLORm+LfbBtQT
- ESuMc1oTz+fMZ0oStoWZwfeViYqrbeO1LXx1GGgpaEVPnqsXdzsBP1CCn5fNSGlUyZljOui
- I7fgj9QWPd7jJBqYvNLWXFsWvl2e2GA/b/izskTEJrxpVWWfI/dvT66HeAuXqJJEoWAwBWc
- jebJmfW9Kw6uZBru7hWMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:U2Pjpg2Ki7w=:xq6163nCcOwVZqGtXA1HMf
- 19/Gs5h+3UI36/aBiaBU1kuksy+wup06rLtbVmc5WwxmfLOYa99iZHzKR77kev6SwPaMOnf/5
- gyQJ2ZHoFnzVuAkgIB4AA0Ddz+Egx6RS7JGbLkoEmd6dDu1KnS5TAEDxko2eNMA/EojMz/Rq8
- nEBeKbpf0mtSuVqb5v3BM4IqKZ8IGWRUhSs7U9OYEXUS2TLPUWLZ6eGeT+J0WSJo8ZL4sEVYq
- lMmuzOXowBoWvVsv8G6jGuvzupEfa1iEb8CVK5FIXTcP+GmbLrqNKyoI2mFt9IFAbhjpPm92s
- JoWRcvh4wpQAeDq/0cs7PycSMpvvSVM1MxkylDZaeVr+8uBaqbhc9sAy8JlBlJeEAF+u1TDIJ
- YvZ7vttcV/EiFjAi1RSy4MM4WbTATmAS5TK2XvKM2kq3RzLJDaZQ9R9Ih5b6/ln83Gmun3Bwj
- w917gxTNOlglO8uETEOIRSydDoio5a0xWEZz7jELD/+xPPDP8lRqfl9Io/7f3Y3UhjksL+EMG
- Ear5+fdik64Jksxf89roRGribeIswgpWy3uRU4aeQL8rNqJZPRlxnoiGdaTDowt4zYG2v4v+X
- y8sxAZq1dRQWSQEjq1V0u5ckgIDkKlfJeivxKd/K2mWLlO0OCnCYyKcIBpHZI3BCDgyqTCRGw
- GviZQW73dh2jkjG/xyanglkDtGbqy4dYjOb8XFSZS9w+cN5tx7gkz5P4RvStdA63mfV9tiLhQ
- Ub5RUHfXr9E9bNmYwRSBdlF1PGkEkAY765SL3J4PFJqeKVs00z0SRSdL3AJPZg7YlUDIwrdMp
- M4/KAFkk50NkU/AmGF8ROcfm858qfZtYTaN6ZPqF1uSYXu2D6nOMKE3e3tiyTjfannSXer6hw
- ysT9Hwdl/g46QipspSaTNFAZUsW/P+8V4mjOdzi3vzx9wv82cHpJAaClCqHAZv4ZWJN338IFw
- Nkgspk0qtotriu5gwEaJsm6l1wZYIXQurHkHXl5qRWVtVrKDBHM5VkcrERXbDdVqPrlAqmPPm
- b4RsFafzc8NkynJrJhD60LW4E6cli01gC5F9gGfd6yeFGheimpNcUtqtoP8OAge2GnpH+ohne
- 3R/CqDXTi26RVR9IzGv2uAsfSRWiYhY9yaitv/VIiqPai8vxdHCTK4BJ6YUkO3EQq/sz9/qfi
- +afwyyOiaN+FTiEEN/FgmPUa14e6fuJ08jHShjGl8Vmhflh8gMXL8/SXk01mM8856ZH1uP1v7
- YUw3hrs2eYKFne8Sc
+References: <20200405163052.18942-1-masahiroy@kernel.org> <20200406110333.GA6266@alpha.franken.de>
+In-Reply-To: <20200406110333.GA6266@alpha.franken.de>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 8 Apr 2020 01:02:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARGO5ciqaseZ7z1k+e-dVh9rU+HY3-1H0XYMwq6+5PqaQ@mail.gmail.com>
+Message-ID: <CAK7LNARGO5ciqaseZ7z1k+e-dVh9rU+HY3-1H0XYMwq6+5PqaQ@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: fw: arc: add __weak to prom_meminit and prom_free_prom_memory
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux-MIPS <linux-mips@linux-mips.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 04, 2020 at 01:14:52PM +0200, Markus Elfring wrote:
-> > dma_alloc_coherent() now zeroes memory after allocation, so additional
-> > calls to memset() afterwards are unnecessary. Remove them.
+On Mon, Apr 6, 2020 at 8:36 PM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
 >
-> I suggest to reconsider the distribution of recipients also for this pat=
-ch
-> according to the fields =E2=80=9CCc=E2=80=9D and =E2=80=9CTo=E2=80=9D.
-
-Thanks. I'll do this in a v2/RESEND.
->
->
-> =E2=80=A6
-> > +++ b/drivers/scsi/dpt_i2o.c
-> =E2=80=A6
-> > @@ -3067,13 +3064,12 @@ static int adpt_i2o_build_sys_table(void)
-> >  	sys_tbl_len =3D sizeof(struct i2o_sys_tbl) +	// Header + IOPs
-> >  				(hba_count) * sizeof(struct i2o_sys_tbl_entry);
+> On Mon, Apr 06, 2020 at 01:30:52AM +0900, Masahiro Yamada wrote:
+> > As far as I understood, prom_meminit() in arch/mips/fw/arc/memory.c
+> > is overridden by the one in arch/mips/sgi-ip32/ip32-memory.c if
+> > CONFIG_SGI_IP32 is enabled.
 > >
-> > -	sys_tbl =3D dma_alloc_coherent(&pHba->pDev->dev,
-> > -				sys_tbl_len, &sys_tbl_pa, GFP_KERNEL);
-> > +	sys_tbl =3D dma_alloc_coherent(&pHba->pDev->dev, sys_tbl_len,
-> > +				     &sys_tbl_pa, GFP_KERNEL);
-> >  	if (!sys_tbl) {
-> =E2=80=A6
-> > +++ b/drivers/scsi/mvsas/mv_init.c
-> > @@ -244,28 +244,22 @@ static int mvs_alloc(struct mvs_info *mvi, struc=
-t Scsi_Host *shost)
-> =E2=80=A6
-> > -	mvi->slot =3D dma_alloc_coherent(mvi->dev,
-> > -				       sizeof(*mvi->slot) * slot_nr,
-> > +	mvi->slot =3D dma_alloc_coherent(mvi->dev, sizeof(*mvi->slot) * slot=
-_nr,
-> >  				       &mvi->slot_dma, GFP_KERNEL);
-> >  	if (!mvi->slot)
-> =E2=80=A6
-> > +++ b/drivers/scsi/qla2xxx/qla_isr.c
-> > @@ -79,7 +79,7 @@ qla24xx_process_abts(struct scsi_qla_host *vha, void=
- *pkt)
-> >  	    (uint8_t *)abts, sizeof(*abts));
+> > The use of EXPORT_SYMBOL in static libraries potentially causes a
+> > problem for the llvm linker [1]. So, I want to forcibly link lib-y
+> > objects to vmlinux when CONFIG_MODULES=y.
 > >
-> >  	rsp_els =3D dma_alloc_coherent(&ha->pdev->dev, sizeof(*rsp_els), &dm=
-a,
-> > -	    GFP_KERNEL);
-> > +				     GFP_KERNEL);
-> >  	if (!rsp_els) {
-> =E2=80=A6
-> > +++ b/drivers/scsi/qla2xxx/qla_mbx.c
-> > @@ -4887,15 +4887,13 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t=
- *vha)
-> >  	    "Entered %s.\n", __func__);
+> > As a groundwork, we must fix multiple definitions that have previously
+> > been hidden by lib-y.
 > >
-> >  	els_cmd_map =3D dma_alloc_coherent(&ha->pdev->dev, ELS_CMD_MAP_SIZE,
-> > -	    &els_cmd_map_dma, GFP_KERNEL);
-> > +					 &els_cmd_map_dma, GFP_KERNEL);
-> >  	if (!els_cmd_map) {
-> =E2=80=A6
+> > The prom_cleanup() in this file is already marked as __weak (because
+> > it is overridden by the one in arch/mips/sgi-ip22/ip22-mc.c).
+> > I think it should be OK to do the same for these two.
+> >
+> > [1]: https://github.com/ClangBuiltLinux/linux/issues/515
+> >
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> > If MIPS maintainers ack this patch,
+> > I want to inser it before the following patch:
 >
-> I find it safer to integrate such source code reformattings by
-> another update step which will be separated from the proposed deletion
-> of unwanted function calls.
+>
+> Acked-By: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+>
+> Thomas.
 
-Good point. This whitespace was autoformatted by Coccinelle, probably
-due to my bad SmPL skills.
 
-Best,
-Alex
+Applied to linux-kbuild with Thomas' Ack.
+
+Thanks.
 
 
 >
-> Regards,
-> Markus
+> --
+> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> good idea.                                                [ RFC1925, 2.3 ]
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200406110333.GA6266%40alpha.franken.de.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
