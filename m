@@ -2,166 +2,116 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE90BC2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E1DC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91BF20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0F620748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:42:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586234554;
+	bh=GxpQspwTAWCLkkNgg/VDtRi6wG258pn0cjX6BZfGeH0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mj+Fh2ubRhDg6acow+RKIdXpKg4wzIZ4Y3qEOgxkA1wsDJ/xIaL3vCE0uUo7iecbu
+	 iIypw1fL+EtINhwHjusKMH/uZU9rloEK+4tAYxRJLVrgXJo4jfx2LDylFqT6NcU6V+
+	 pNbXf+QU8oU+ITNbpbQ8ISgAU2GLgWjekmjdYXc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgDGEmJ convert rfc822-to-8bit (ORCPT
+        id S1726704AbgDGEmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 00:42:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:17836 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726030AbgDGEmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 00:42:08 -0400
-IronPort-SDR: hUa8O12FfDkETebE29P0A0Lp6Dk8cIsy5l7z3Szq9FB/rg42W0SUvP2TCiAtw41m5d8viJb4GG
- ra+cDHT9pkow==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2020 21:42:08 -0700
-IronPort-SDR: 4wrchvln1lQFNDC1/x6Jh7XDy16JIOWo1Y1Q8iiWViMp1DfJ4gs5bM6IOxf6z16mrLg5Es3a11
- hEVmoXmvDIaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,353,1580803200"; 
-   d="scan'208";a="248295728"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by orsmga008.jf.intel.com with ESMTP; 06 Apr 2020 21:42:07 -0700
-Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 6 Apr 2020 21:42:06 -0700
-Received: from fmsmsx605.amr.corp.intel.com (10.18.126.85) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 6 Apr 2020 21:42:06 -0700
-Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
- fmsmsx605.amr.corp.intel.com (10.18.126.85) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 6 Apr 2020 21:42:06 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
- Tue, 7 Apr 2020 12:42:03 +0800
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Topic: [PATCH v1 1/8] vfio: Add VFIO_IOMMU_PASID_REQUEST(alloc/free)
-Thread-Index: AQHWAEUbvuzF5+3jpEaYhihTFzMRG6hlp7CAgAFQhyCAABZAAIAGGnZw
-Date:   Tue, 7 Apr 2020 04:42:02 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D80E1AD@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-2-git-send-email-yi.l.liu@intel.com>
-        <20200402115017.0a0f55e2@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D807BB9@SHSMSX104.ccr.corp.intel.com>
- <20200403091424.39383958@w520.home>
-In-Reply-To: <20200403091424.39383958@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 7 Apr 2020 00:42:33 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:40782 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbgDGEmd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 00:42:33 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 0374gOCM012174;
+        Tue, 7 Apr 2020 13:42:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 0374gOCM012174
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586234546;
+        bh=CdHc/8sVSQ4d6Ie7iKvR0diSkrEOJeL+mmH/Yszwrqk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OYrYl+i5TyWoIDy8ou+xLJVQz7jQ3RExm87aMzCiZSQkD52lfg980nHjlnySg+wkd
+         8hZdwg5xevIEKuaEVYbUsuDgkeCYY1l6EMIJC+s6LPt1MaD4FnrUPlj0Szhqbwt6e0
+         Vd5Bde2RppOuy31cFj/MHbGv73U1swsvcMWxSgxJSgbAh2etrhPF/xPhct5kjXn7fy
+         Zt2e9myNKRwivnfmhRPfiwCej1o7U+8JfD1wSS4Vs71kcSTJs9W18FkflbKsTQdNwO
+         j90796TmbNrBZkdBIIb2j04nAs91WWONQAJb9cTmWJtyZPK/gypzIU2eiyTp6TJ222
+         Lco/IeNi9m/WA==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id e138so1365016vsc.11;
+        Mon, 06 Apr 2020 21:42:25 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZDhgDT9fKWnKwWBEZed02J0qa4aFPubpLszlWRRW/NONaiKMYp
+        RsEXO2M4YVcCTsDVsK5CRh5XoDChVrPxQbjlGPk=
+X-Google-Smtp-Source: APiQypLJKZXPrcYP365otvzBGyKcE5PdVeCX/bi+e3i7zA78jwrbZGMKGAcIVoHe2gh5W7oSuj3CMX1NHHJtqLuoeQI=
+X-Received: by 2002:a67:2d55:: with SMTP id t82mr423662vst.215.1586234544251;
+ Mon, 06 Apr 2020 21:42:24 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200406123403.4f20fbb1@canb.auug.org.au>
+In-Reply-To: <20200406123403.4f20fbb1@canb.auug.org.au>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 7 Apr 2020 13:41:47 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATjRY8RT4vAjhT=L0xJY2nnVHR2VdrkfZxTkFV2YC_iXQ@mail.gmail.com>
+Message-ID: <CAK7LNATjRY8RT4vAjhT=L0xJY2nnVHR2VdrkfZxTkFV2YC_iXQ@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the kbuild tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Alex Williamson
-> Sent: Friday, April 3, 2020 11:14 PM
-> 
-> On Fri, 3 Apr 2020 05:58:55 +0000
-> "Tian, Kevin" <kevin.tian@intel.com> wrote:
-> 
-> > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > Sent: Friday, April 3, 2020 1:50 AM
-> > >
-> > > On Sun, 22 Mar 2020 05:31:58 -0700
-> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > >
-> > > > From: Liu Yi L <yi.l.liu@intel.com>
-> > > >
-> > > > For a long time, devices have only one DMA address space from
-> platform
-> > > > IOMMU's point of view. This is true for both bare metal and directed-
-> > > > access in virtualization environment. Reason is the source ID of DMA in
-> > > > PCIe are BDF (bus/dev/fnc ID), which results in only device granularity
-> > > > DMA isolation. However, this is changing with the latest advancement in
-> > > > I/O technology area. More and more platform vendors are utilizing the
-> > > PCIe
-> > > > PASID TLP prefix in DMA requests, thus to give devices with multiple
-> DMA
-> > > > address spaces as identified by their individual PASIDs. For example,
-> > > > Shared Virtual Addressing (SVA, a.k.a Shared Virtual Memory) is able to
-> > > > let device access multiple process virtual address space by binding the
-> > > > virtual address space with a PASID. Wherein the PASID is allocated in
-> > > > software and programmed to device per device specific manner.
-> Devices
-> > > > which support PASID capability are called PASID-capable devices. If such
-> > > > devices are passed through to VMs, guest software are also able to bind
-> > > > guest process virtual address space on such devices. Therefore, the
-> guest
-> > > > software could reuse the bare metal software programming model,
-> which
-> > > > means guest software will also allocate PASID and program it to device
-> > > > directly. This is a dangerous situation since it has potential PASID
-> > > > conflicts and unauthorized address space access. It would be safer to
-> > > > let host intercept in the guest software's PASID allocation. Thus PASID
-> > > > are managed system-wide.
-> > >
-> > > Providing an allocation interface only allows for collaborative usage
-> > > of PASIDs though.  Do we have any ability to enforce PASID usage or can
-> > > a user spoof other PASIDs on the same BDF?
-> >
-> > An user can access only PASIDs allocated to itself, i.e. the specific IOASID
-> > set tied to its mm_struct.
-> 
-> A user is only _supposed_ to access PASIDs allocated to itself.  AIUI
-> the mm_struct is used for managing the pool of IOASIDs from which the
-> user may allocate that PASID.  We also state that programming the PASID
-> into the device is device specific.  Therefore, are we simply trusting
-> the user to use a PASID that's been allocated to them when they program
-> the device?  If a user can program an arbitrary PASID into the device,
-> then what prevents them from attempting to access data from another
-> user via the device?   I think I've asked this question before, so if
-> there's a previous explanation or spec section I need to review, please
-> point me to it.  Thanks,
-> 
+On Mon, Apr 6, 2020 at 11:34 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the kbuild tree, today's linux-next build (powercp
+> allyesconfig) failed like this:
+>
+> In file included from net/netfilter/nft_set_pipapo.c:342:
+> net/netfilter/nft_set_pipapo_avx2.h:4:10: fatal error: asm/fpu/xstate.h: No such file or directory
+>     4 | #include <asm/fpu/xstate.h>
+>       |          ^~~~~~~~~~~~~~~~~~
+>
+> Caused by commit
+>
+>   b851fc367202 ("x86: update AS_* macros to binutils >=2.23, supporting ADX and AVX2")
+>
+> I have reverted that commit for today.
 
-There are two scenarios:
+I will fix as follows:
 
-(1) for PF/VF, the iommu driver maintains an individual PASID table per
-PDF. Although the PASID namespace is global, the per-BDF PASID table
-contains only valid entries for those PASIDs which are allocated to the
-mm_struct. The user is free to program arbitrary PASID into the assigned
-device, but using invalid PASIDs simply hit iommu fault.
 
-(2) for mdev, multiple mdev instances share the same PASID table of
-the parent BDF. However, PASID programming is a privileged operation
-in multiplexing usage, thus must be mediated by mdev device driver. 
-The mediation logic will guarantee that only allocated PASIDs are 
-forwarded to the device. 
+diff --git a/net/netfilter/nft_set_pipapo_avx2.h
+b/net/netfilter/nft_set_pipapo_avx2.h
+index 8467337c5f4c..a1cde35fdad6 100644
+--- a/net/netfilter/nft_set_pipapo_avx2.h
++++ b/net/netfilter/nft_set_pipapo_avx2.h
+@@ -1,6 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0-only */
+ #ifndef _NFT_SET_PIPAPO_AVX2_H
 
-Thanks
-Kevin
++#ifdef CONFIG_X86_64
+ #include <asm/fpu/xstate.h>
+ #define NFT_PIPAPO_ALIGN       (XSAVE_YMM_SIZE / BITS_PER_BYTE)
+
+@@ -8,4 +9,6 @@ bool nft_pipapo_avx2_lookup(const struct net *net,
+const struct nft_set *set,
+                            const u32 *key, const struct nft_set_ext **ext);
+ bool nft_pipapo_avx2_estimate(const struct nft_set_desc *desc, u32 features,
+                              struct nft_set_estimate *est);
++#endif /* CONFIG_X86_64 */
++
+ #endif /* _NFT_SET_PIPAPO_AVX2_H */
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
