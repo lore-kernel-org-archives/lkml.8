@@ -2,83 +2,118 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACABBC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45262C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727B220730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B26320730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XxmL2UTj"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y95j6Rcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgDGQvZ (ORCPT
+        id S1726632AbgDGQv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:51:25 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44521 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726365AbgDGQvZ (ORCPT
+        Tue, 7 Apr 2020 12:51:28 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:36139 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726365AbgDGQv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:51:25 -0400
+        Tue, 7 Apr 2020 12:51:27 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586278284; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=KWYz9mvUkdbBY6VxSARV2NYFIwTTBdGFRZi6/OrS2Zo=; b=XxmL2UTjjqujfS7j1NtfV7PW2tRIAX91YbdGozPCki9NKj8HVYeKgvH+GYJOZCvM6Q6MVfLd
- 67g6jo3lpHwKEGGZvvMApt1CgSS5rlyHPcvLHpvN1lkNWtYoqnGNJCzXEBjwy+pWBB3rlXqz
- E1JLOVfivaat4mY5kFQ6oTfw4a4=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ s=smtp; t=1586278286; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=GwM28tXHyTVLLRgeS3lHKUJcxxN/qgERFpLmSBazGwI=; b=Y95j6Rcm7ECX8cfF+Au1y1cKbSRcZHVYjeEXm/XdFvAlxtZh7Gm6R11GlkLY++9uWOPDPk05
+ 4Qs6pzPy4w+WfchLxv16gPKEqIdjR8oDlRdUBQf/7L3VXmV+g8LYp4TZFhjeAXYrX8dA/xhs
+ U4BBtPKXIRDKqwZKLWemWTHuBH4=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8caf8b.7f8ce554a6f8-smtp-out-n02;
- Tue, 07 Apr 2020 16:51:23 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e8caf8d.7f2d6b02dce0-smtp-out-n02;
+ Tue, 07 Apr 2020 16:51:25 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B9BB9C433BA; Tue,  7 Apr 2020 16:51:23 +0000 (UTC)
+        id C50C2C433BA; Tue,  7 Apr 2020 16:51:25 +0000 (UTC)
 Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E1AC3C433D2;
-        Tue,  7 Apr 2020 16:51:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E1AC3C433D2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C9EB2C433F2;
+        Tue,  7 Apr 2020 16:51:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C9EB2C433F2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
 From:   Jeffrey Hugo <jhugo@codeaurora.org>
 To:     manivannan.sadhasivam@linaro.org, hemantk@codeaurora.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v2 0/5] Misc MHI fixes
-Date:   Tue,  7 Apr 2020 10:50:25 -0600
-Message-Id: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
+Subject: [PATCH v2 1/5] bus: mhi: core: Handle syserr during power_up
+Date:   Tue,  7 Apr 2020 10:50:26 -0600
+Message-Id: <1586278230-29565-2-git-send-email-jhugo@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
+References: <1586278230-29565-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few (independent) fixes to the MHI bus for issues that I have come across
-while developing against the mainline code.
+The MHI device may be in the syserr state when we attempt to init it in
+power_up().  Since we have no local state, the handling is simple -
+reset the device and wait for it to transition out of the reset state.
 
-v2:
--fix syserr reset log message
--fix power up error check code style
--add change to remove pci assumptions for register accesses
--add comment typo fix
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ drivers/bus/mhi/core/pm.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Jeffrey Hugo (5):
-  bus: mhi: core: Handle syserr during power_up
-  bus: mhi: core: Make sure to powerdown if mhi_sync_power_up fails
-  bus: mhi: core: Remove link_status() callback
-  bus: mhi: core: Offload register accesses to the controller
-  bus: mhi: core: Fix typo in comment
-
- drivers/bus/mhi/core/init.c     |  7 +++----
- drivers/bus/mhi/core/internal.h |  3 ---
- drivers/bus/mhi/core/main.c     | 13 ++-----------
- drivers/bus/mhi/core/pm.c       | 26 +++++++++++++++++++++++++-
- include/linux/mhi.h             | 10 +++++++---
- 5 files changed, 37 insertions(+), 22 deletions(-)
-
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index 52690cb..3285c9e 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -9,6 +9,7 @@
+ #include <linux/dma-direction.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/interrupt.h>
++#include <linux/iopoll.h>
+ #include <linux/list.h>
+ #include <linux/mhi.h>
+ #include <linux/module.h>
+@@ -760,6 +761,7 @@ static void mhi_deassert_dev_wake(struct mhi_controller *mhi_cntrl,
+ 
+ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+ {
++	enum mhi_state state;
+ 	enum mhi_ee_type current_ee;
+ 	enum dev_st_transition next_state;
+ 	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+@@ -829,6 +831,24 @@ int mhi_async_power_up(struct mhi_controller *mhi_cntrl)
+ 		goto error_bhi_offset;
+ 	}
+ 
++	state = mhi_get_mhi_state(mhi_cntrl);
++	if (state == MHI_STATE_SYS_ERR) {
++		mhi_set_mhi_state(mhi_cntrl, MHI_STATE_RESET);
++		ret = readl_poll_timeout(mhi_cntrl->regs + MHICTRL, val,
++					 !(val & MHICTRL_RESET_MASK), 1000,
++					 mhi_cntrl->timeout_ms * 1000);
++		if (ret) {
++			dev_info(dev, "Failed to reset MHI due to syserr state\n");
++			goto error_bhi_offset;
++		}
++
++		/*
++		 * device cleares INTVEC as part of RESET processing,
++		 * re-program it
++		 */
++		mhi_write_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_INTVEC, 0);
++	}
++
+ 	/* Transition to next state */
+ 	next_state = MHI_IN_PBL(current_ee) ?
+ 		DEV_ST_TRANSITION_PBL : DEV_ST_TRANSITION_READY;
 -- 
 Qualcomm Technologies, Inc. is a member of the
 Code Aurora Forum, a Linux Foundation Collaborative Project.
