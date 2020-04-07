@@ -2,189 +2,195 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF17C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A743C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E896D206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB72C2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WMueFxck"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="ZBNFyjs2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbgDGPBq (ORCPT
+        id S1729167AbgDGPDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:01:46 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58714 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728917AbgDGPBq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:01:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586271705;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=AF7Rel5LO4XBz6MttPesae+/BrIA3c18+PEN6n9w9Hw=;
-        b=WMueFxck1YhSDWZChYKIQQ8qvH5wkpOZrIu1qUdLWY+l6pZ/ew82DyR/JyQGQBxR+LecxF
-        zIQHMt+C9CGfZCL+5iRo5wMcN+GtactIF6eSkPRNHBzPmxUu+Da8jzBYaT0PVlrlYWN5nO
-        bYh4+MsW3Et9SEo7ZVwUwl2rwJegy0Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-421-U-pgugmlO62_SadVrITTjQ-1; Tue, 07 Apr 2020 11:01:41 -0400
-X-MC-Unique: U-pgugmlO62_SadVrITTjQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9B95B190B2A2;
-        Tue,  7 Apr 2020 15:01:39 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C36A910027A4;
-        Tue,  7 Apr 2020 15:01:36 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 037F1auk029412;
-        Tue, 7 Apr 2020 11:01:36 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 037F1XBj029408;
-        Tue, 7 Apr 2020 11:01:33 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Tue, 7 Apr 2020 11:01:33 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-cc:     x86@kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dm-devel@redhat.com
-Subject: [PATCH] memcpy_flushcache: use cache flusing for larger lengths
-Message-ID: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Tue, 7 Apr 2020 11:03:22 -0400
+Received: from mail-vi1eur05on2096.outbound.protection.outlook.com ([40.107.21.96]:61358
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728306AbgDGPDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:03:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kj04heUr+HYusf6oIWXyyp5nqeSBxBWFEb6oHSgt3lsvxLMeQpuZXs5NXc3HUW1D718tN/VZ+KpC1ex94ItWdztqL0papBDCFaUoLilr9iNYmEiSWj7mnARPHO/nPgh/XJ4l0JpH/OPOJv0by6sfodHhjQdjrQGeZneV3VhGOJL2+KD3LCeDV4PEn0oHaFc+yYk+dicG+2wP5nUvd35IGm0MFreuuY43AUYRNFA3hbeNQukNOoHK6EB1c7PAcSMQtJYX/Lq/YQsLwxI4UA6OaNO5Gs0q7EoHeuJTEk2NHOs5ncCpLORr7N5TDFjQY0DzTFMKCctkxyskGSZUun+/mQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z7g9CIIbfpIxg6D5MyZN7sIGSrgpv7q7e5h4qDbWFHw=;
+ b=EH+Bje7KmYoYa9K/F5yrLx4OtHVjtmp2z6Ts80HZbWPPh3TMUU3zjEj8Hvh5XUFKSMbP9DikaloL0pgFe7T6ZOplImyv19GSz5N9L7LtTr2VucfwcTi8p3KKc4aqugJL1wi306kjHkzabSTDJJfWWQZWpG+8IXFFtZa+BfCn6PdOCv/HzSBiZ+SlGxsOUwziovvMBOK/UKt8RBkX1vj/NQYg5z+jXnCV7LkUin8D/KFg1FHTv4u/XFkOktcW7+7gLQGBb5nHRE7Z44DhYlPhqCONBJlFuRcrXrMhQiQLwmtqkB3gDche3OyJis5l64edYp4b3eLEkGWtu2zwFvIhuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z7g9CIIbfpIxg6D5MyZN7sIGSrgpv7q7e5h4qDbWFHw=;
+ b=ZBNFyjs2OdPdpHMGADX13DDJ6aQHnNfEggEQfBUoPRBm5agjW5FnHpMmJBsygSDlFj8pDz+M6LILGtSwrmntdO/tZQ/EWP6j1z3rhStRr3LoFcPR5PUgFVzVL8TpGT1f2J+wFWUhGPV2DDdcwagUU0TCngGaoVvB7i2rgwIiJM8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (2603:10a6:802:1c::24)
+ by VI1PR05MB3197.eurprd05.prod.outlook.com (2603:10a6:802:1e::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16; Tue, 7 Apr
+ 2020 15:02:43 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::7cdd:4feb:a8b6:a6d2%7]) with mapi id 15.20.2878.018; Tue, 7 Apr 2020
+ 15:02:43 +0000
+X-Gm-Message-State: AGi0Pua2Woas8iaQqvpmTEO+VJLyhEl+EQv2BcP5/D2g5fZ0njoAzNE5
+        r/CakPEF4MrJncFXG8BfFXBcagUP7NW6NOR2H4Q=
+X-Google-Smtp-Source: APiQypJecAGSzh6EfVMbgGC7Y20UIVAsV7RXFyihwphTgBjyxSXKRhk249Ab4SbtSokg3ekIHhX2jUhq74sTTTwY1kE=
+X-Received: by 2002:ad4:54d4:: with SMTP id j20mr2526844qvx.75.1586271329677;
+ Tue, 07 Apr 2020 07:55:29 -0700 (PDT)
+References: <20200405192246.3741784-1-oleksandr.suvorov@toradex.com>
+ <20200405192246.3741784-3-oleksandr.suvorov@toradex.com> <20200407061646.pcglaw43kfmrag6a@pengutronix.de>
+ <CAGgjyvH5nmnXH068QTNPKzsjocNXfEP_yh0HO=L-oGaqQdYRuA@mail.gmail.com> <20200407111842.hp7mhrlsuesa74ep@pengutronix.de>
+In-Reply-To: <20200407111842.hp7mhrlsuesa74ep@pengutronix.de>
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Date:   Tue, 7 Apr 2020 17:55:18 +0300
+X-Gmail-Original-Message-ID: <CAGgjyvEP8q9AmXr5nnHiw6zEhoTwFNOW4=wP8eeALfsxtj7L-g@mail.gmail.com>
+Message-ID: <CAGgjyvEP8q9AmXr5nnHiw6zEhoTwFNOW4=wP8eeALfsxtj7L-g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/6] dt-bindings: pwm: document the PWM no-flag
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     devicetree@vger.kernel.org, Paul Barker <pbarker@konsulko.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: MWHPR13CA0025.namprd13.prod.outlook.com
+ (2603:10b6:300:95::11) To VI1PR05MB3279.eurprd05.prod.outlook.com
+ (2603:10a6:802:1c::24)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mail-pg1-f179.google.com (209.85.215.179) by MWHPR13CA0025.namprd13.prod.outlook.com (2603:10b6:300:95::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.5 via Frontend Transport; Tue, 7 Apr 2020 15:02:42 +0000
+Received: by mail-pg1-f179.google.com with SMTP id m17so1852860pgj.5;        Tue, 07 Apr 2020 08:02:42 -0700 (PDT)
+X-Gm-Message-State: AGi0Pua2Woas8iaQqvpmTEO+VJLyhEl+EQv2BcP5/D2g5fZ0njoAzNE5
+        r/CakPEF4MrJncFXG8BfFXBcagUP7NW6NOR2H4Q=
+X-Google-Smtp-Source: APiQypJecAGSzh6EfVMbgGC7Y20UIVAsV7RXFyihwphTgBjyxSXKRhk249Ab4SbtSokg3ekIHhX2jUhq74sTTTwY1kE=
+X-Received: by 2002:ad4:54d4:: with SMTP id j20mr2526844qvx.75.1586271329677;
+ Tue, 07 Apr 2020 07:55:29 -0700 (PDT)
+X-Gmail-Original-Message-ID: <CAGgjyvEP8q9AmXr5nnHiw6zEhoTwFNOW4=wP8eeALfsxtj7L-g@mail.gmail.com>
+X-Originating-IP: [209.85.215.179]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d617f09e-eb50-4b32-09e0-08d7db04b927
+X-MS-TrafficTypeDiagnostic: VI1PR05MB3197:
+X-Microsoft-Antispam-PRVS: <VI1PR05MB319799A1BCD75094045343ABF9C30@VI1PR05MB3197.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 036614DD9C
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB3279.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(136003)(366004)(346002)(39850400004)(376002)(316002)(478600001)(81156014)(52116002)(42186006)(5660300002)(186003)(55446002)(8676002)(26005)(9686003)(2906002)(86362001)(81166006)(966005)(44832011)(54906003)(55236004)(66556008)(66946007)(53546011)(450100002)(6862004)(4326008)(66476007)(8936002)(6666004);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: J87O5YKbc/Uu15/8JJDoH0tCcA6WBGlYqbUdZitaGotre1kWO5SUbkeirn1aca7nsvg6NJIyJJ1yJd8ciGk5oVnGXqfkj8g8c43IYGkCS/93AIUCE51EJOmAABeCNjAKVA2rO1GVwF59g4pFmiSeUpPJ1PHp+nqN5yZ74KOD4K7cclAfOvcxpXKbG6q1nj+yZdgJ0SCJGH1Mkzgd3LTzNojEyOD2/TMqCnBqsvbMyOpdWWarBzjeJ9SV/EcAVxyvSGETJh8EtZ7UQn5BynmkQq3senyB9tpEPkkojsOAf1XHVHbxRucIi2k/z6EGQnjWB4rHVnQ0jS3vj3AZURKDsh1n9tEUAApDVQyNLd6J2PdZ5XSW3pu4acsdwVSn0DaJaE/AcgD+M5VRUhhMoSksQAJJLx99vvcjIs0E3p9RDbdukUO3TZUDe2vUhgDUhCQZWdbCEz7yRAA1yAa7OYOyFUwMXNifA7puGCLsLkVutH+aY/+BvVs37RqEazoTvCUesCaJ7nZ1cPhFiolXQepaJA==
+X-MS-Exchange-AntiSpam-MessageData: yCnjryy0mQRGQcbswCCozBY6FK5qzrhclWe5Bjb6vRLgU2fmvpTGZC6p2AVrjgdzRSM6h6Wvrv+f9Lxttxc8vaT5IqjAcSSFoTQfpIvVnptBt3C5Wxk6lEEs24E1je+RijiiSuQWfQtvN0tKYdzKGQ==
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d617f09e-eb50-4b32-09e0-08d7db04b927
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Apr 2020 15:02:42.9809
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dpJ7TC0OhxvwrC/oa40wq71iyPLobCejS+DFmnIBJxNW/DxHwkJSjS7cNY2z0JdPTscWyyM2iqWz+My+0qwIQppGhOJ+pkE1SyaLNp/lXzA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ resending this to x86 maintainers ]
+On Tue, Apr 7, 2020 at 2:19 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Tue, Apr 07, 2020 at 01:51:42PM +0300, Oleksandr Suvorov wrote:
+> > On Tue, Apr 7, 2020 at 9:17 AM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > >
+> > > On Sun, Apr 05, 2020 at 10:22:42PM +0300, Oleksandr Suvorov wrote:
+> > > > Add the description of PWM_NOFLAGS flag property.
+> > > >
+> > > > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+> > >
+> > > As I already wrote in reply to the v1 series I'd prefer a name for 0
+> > > that explicitly handles normal polarity.
+> >
+> > Uwe, AFAIU, there is no flag that forces normal polarity, the normal po=
+larity
+> > is the default state if there is no flag to invert the polarity is set.
+>
+> Yes, that's the status quo.
+>
+> > '0' value in the bit flags cell really means there are no flags set
+> > for the PWM instance.
+>
+> For me the relevance of giving 0 a name is mostly for human consumption.
+> Currently there is only a single flag encoded in the number in question.
+> But as soon as we add another, say PWM_AUTOSTART we have the following
+> possible settings:
+>
+>         PWM_NOFLAGS
+>         PWM_POLARITY_INVERTED
+>         PWM_AUTOSTART
+>         PWM_POLARITY_INVERTED | PWM_AUTOSTART
+>
+> Then for the first two a reader doesn't see if autostart is not in use
+> because the dt author doesn't know this feature (e.g. because autostart
+> is too new) or if they don't want autostart at all.
+>
+> If however we had PWM_POLARITY_NORMAL and PWM_NO_AUTOSTART to complement
+> PWM_POLARITY_INVERTED and PWM_AUTOSTART
 
-Hi
+So using this approach, in theory, we'll have several flags that all
+just equals to 0 (0 << 0, 0 << 1, 0 << 2 ...).
+What if just describe default states for each flag in the DT documentation?
 
-I tested performance of various methods how to write to optane-based 
-persistent memory, and found out that non-temporal stores achieve 
-throughput 1.3 GB/s. 8 cached stores immediatelly followed by clflushopt 
-or clwb achieve throughput 1.6 GB/s.
+> every flag's setting could be explicit and if there is a device tree that=
+ only has
+>
+>         PWM_POLARITY_NORMAL
+>
+> it would be obvious that nobody thought enough about autostarting to
+> explicitly mention it.
 
-memcpy_flushcache uses non-temporal stores, I modified it to use cached 
-stores + clflushopt and it improved performance of the dm-writecache 
-target significantly:
+If you insist on the flag complement model, I have another suggestion.
+As the normal polarity is the default state, can we use PWM_NO_POLARITY_INV=
+ERTED
+instead of PWM_POLARITY_NORMAL?
+It gives us 2 benefits:
+1. The name will not interfere with enum PWM_POLARITY_NORMAL in <linux/pmw.=
+h>
+2. Each flag complement will be made with the same scheme:
+PWM_flagA -> PWM_NO_flagA...
 
-dm-writecache throughput:
-(dd if=/dev/zero of=/dev/mapper/wc bs=64k oflag=direct)
-writecache block size   512             1024            2048            4096
-movnti                  496 MB/s        642 MB/s        725 MB/s        744 MB/s
-clflushopt              373 MB/s        688 MB/s        1.1 GB/s        1.2 GB/s
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
 
-For block size 512, movnti works better, for larger block sizes, 
-clflushopt is better.
+--
+Best regards
+Oleksandr Suvorov
 
-I was also testing the novafs filesystem, it is not upstream, but it 
-benefitted from similar change in __memcpy_flushcache and 
-__copy_user_nocache:
-write throughput on big files - movnti: 662 MB/s, clwb: 1323 MB/s
-write throughput on small files - movnti: 621 MB/s, clwb: 1013 MB/s
-
-
-I submit this patch for __memcpy_flushcache that improves dm-writecache 
-performance.
-
-Other ideas - should we introduce memcpy_to_pmem instead of modifying 
-memcpy_flushcache and move this logic there? Or should I modify the 
-dm-writecache target directly to use clflushopt with no change to the 
-architecture-specific code?
-
-Mikulas
-
-
-
-
-From: Mikulas Patocka <mpatocka@redhat.com>
-
-I tested dm-writecache performance on a machine with Optane nvdimm and it
-turned out that for larger writes, cached stores + cache flushing perform
-better than non-temporal stores. This is the throughput of dm-writecache
-measured with this command:
-dd if=/dev/zero of=/dev/mapper/wc bs=64 oflag=direct
-
-block size	512		1024		2048		4096
-movnti		496 MB/s	642 MB/s	725 MB/s	744 MB/s
-clflushopt	373 MB/s	688 MB/s	1.1 GB/s	1.2 GB/s
-
-We can see that for smaller block, movnti performs better, but for larger
-blocks, clflushopt has better performance.
-
-This patch changes the function __memcpy_flushcache accordingly, so that
-with size >= 768 it performs cached stores and cache flushing. Note that
-we must not use the new branch if the CPU doesn't have clflushopt - in
-that case, the kernel would use inefficient "clflush" instruction that has
-very bad performance.
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-
----
- arch/x86/lib/usercopy_64.c |   36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-Index: linux-2.6/arch/x86/lib/usercopy_64.c
-===================================================================
---- linux-2.6.orig/arch/x86/lib/usercopy_64.c	2020-03-24 15:15:36.644945091 -0400
-+++ linux-2.6/arch/x86/lib/usercopy_64.c	2020-03-30 07:17:51.450290007 -0400
-@@ -152,6 +152,42 @@ void __memcpy_flushcache(void *_dst, con
- 			return;
- 	}
- 
-+	if (static_cpu_has(X86_FEATURE_CLFLUSHOPT) && size >= 768 && likely(boot_cpu_data.x86_clflush_size == 64)) {
-+		while (!IS_ALIGNED(dest, 64)) {
-+			asm("movq    (%0), %%r8\n"
-+			    "movnti  %%r8,   (%1)\n"
-+			    :: "r" (source), "r" (dest)
-+			    : "memory", "r8");
-+			dest += 8;
-+			source += 8;
-+			size -= 8;
-+		}
-+		do {
-+			asm("movq    (%0), %%r8\n"
-+			    "movq   8(%0), %%r9\n"
-+			    "movq  16(%0), %%r10\n"
-+			    "movq  24(%0), %%r11\n"
-+			    "movq    %%r8,   (%1)\n"
-+			    "movq    %%r9,  8(%1)\n"
-+			    "movq   %%r10, 16(%1)\n"
-+			    "movq   %%r11, 24(%1)\n"
-+			    "movq  32(%0), %%r8\n"
-+			    "movq  40(%0), %%r9\n"
-+			    "movq  48(%0), %%r10\n"
-+			    "movq  56(%0), %%r11\n"
-+			    "movq    %%r8, 32(%1)\n"
-+			    "movq    %%r9, 40(%1)\n"
-+			    "movq   %%r10, 48(%1)\n"
-+			    "movq   %%r11, 56(%1)\n"
-+			    :: "r" (source), "r" (dest)
-+			    : "memory", "r8", "r9", "r10", "r11");
-+			clflushopt((void *)dest);
-+			dest += 64;
-+			source += 64;
-+			size -= 64;
-+		} while (size >= 64);
-+	}
-+
- 	/* 4x8 movnti loop */
- 	while (size >= 32) {
- 		asm("movq    (%0), %%r8\n"
-
+Toradex AG
+Ebenaustrasse 10 | 6048 Horw | Switzerland | T: +41 41 500 48 00
