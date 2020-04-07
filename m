@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB89C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D733C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E6E20768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2EAC2075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:21:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgDGTVC (ORCPT
+        id S1727826AbgDGTVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:21:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63668 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727435AbgDGTUn (ORCPT
+        Tue, 7 Apr 2020 15:21:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60168 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727447AbgDGTUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 15:20:43 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037J50C3000740;
-        Tue, 7 Apr 2020 15:20:42 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037J40cI043212;
+        Tue, 7 Apr 2020 15:20:39 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082pes0ku-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3082nab2f3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 15:20:42 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 037J5A4R002062;
-        Tue, 7 Apr 2020 15:20:41 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082pes0kf-1
+        Tue, 07 Apr 2020 15:20:38 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 037J4JX5045292;
+        Tue, 7 Apr 2020 15:20:38 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3082nab2er-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 15:20:41 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 037JKaWc027396;
-        Tue, 7 Apr 2020 19:20:40 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma02dal.us.ibm.com with ESMTP id 306hv71392-1
+        Tue, 07 Apr 2020 15:20:38 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 037JKUra011493;
+        Tue, 7 Apr 2020 19:20:37 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma03dal.us.ibm.com with ESMTP id 306hv6s2d9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 19:20:40 +0000
+        Tue, 07 Apr 2020 19:20:37 +0000
 Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037JKcfU53936562
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037JKZ8r14025540
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 19:20:38 GMT
+        Tue, 7 Apr 2020 19:20:35 GMT
 Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D3A972805A;
-        Tue,  7 Apr 2020 19:20:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id AE7AA28060;
+        Tue,  7 Apr 2020 19:20:35 +0000 (GMT)
 Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28FE628058;
-        Tue,  7 Apr 2020 19:20:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id EEF9C28058;
+        Tue,  7 Apr 2020 19:20:34 +0000 (GMT)
 Received: from cpe-172-100-173-215.stny.res.rr.com.com (unknown [9.85.207.206])
         by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Apr 2020 19:20:38 +0000 (GMT)
+        Tue,  7 Apr 2020 19:20:34 +0000 (GMT)
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
 To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org
@@ -62,9 +62,9 @@ Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
         alex.williamson@redhat.com, kwankhede@nvidia.com,
         jjherne@linux.ibm.com, fiuczy@linux.ibm.com,
         Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v7 13/15] s390/vfio-ap: handle host AP config change notification
-Date:   Tue,  7 Apr 2020 15:20:13 -0400
-Message-Id: <20200407192015.19887-14-akrowiak@linux.ibm.com>
+Subject: [PATCH v7 09/15] s390/vfio-ap: allow assignment of unavailable AP queues to mdev device
+Date:   Tue,  7 Apr 2020 15:20:09 -0400
+Message-Id: <20200407192015.19887-10-akrowiak@linux.ibm.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200407192015.19887-1-akrowiak@linux.ibm.com>
 References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
@@ -73,254 +73,323 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-07_08:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- clxscore=1015 spamscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0
- adultscore=0 mlxlogscore=999 suspectscore=3 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004070151
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 suspectscore=3 mlxscore=0 phishscore=0 spamscore=0
+ malwarescore=0 clxscore=1015 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements the driver callback invoked by the AP bus when the host
-AP configuration has changed. Since this callback is invoked prior to
-unbinding a device from its device driver, the vfio_ap driver will
-respond by unplugging the AP adapters, domains and control domains
-removed from the host's AP configuration from the guests using them.
+The current implementation does not allow assignment of an AP adapter or
+domain to an mdev device if the APQNs resulting from the assignment
+do not reference AP queue devices that are bound to the vfio_ap device
+driver. This patch allows assignment of AP resources to the matrix mdev as
+long as the APQNs resulting from the assignment:
+   1. Are not reserved by the AP BUS for use by the zcrypt device drivers.
+   2. Are not assigned to another matrix mdev.
+
+The rationale behind this is twofold:
+   1. The AP architecture does not preclude assignment of APQNs to an AP
+      configuration that are not available to the system.
+   2. APQNs that do not reference a queue device bound to the vfio_ap
+      device driver will not be assigned to the guest's CRYCB, so the
+      guest will not get access to queues not bound to the vfio_ap driver.
 
 Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 ---
- drivers/s390/crypto/vfio_ap_drv.c     |   5 +-
- drivers/s390/crypto/vfio_ap_ops.c     | 136 ++++++++++++++++++++++++--
- drivers/s390/crypto/vfio_ap_private.h |   7 +-
- 3 files changed, 140 insertions(+), 8 deletions(-)
+ drivers/s390/crypto/vfio_ap_ops.c | 213 ++++++------------------------
+ 1 file changed, 37 insertions(+), 176 deletions(-)
 
-diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-index 5197a1fe14d4..9f6c5d82dfb5 100644
---- a/drivers/s390/crypto/vfio_ap_drv.c
-+++ b/drivers/s390/crypto/vfio_ap_drv.c
-@@ -113,9 +113,11 @@ static int vfio_ap_matrix_dev_create(void)
- 
- 	/* Fill in config info via PQAP(QCI), if available */
- 	if (test_facility(12)) {
--		ret = ap_qci(&matrix_dev->info);
-+		ret = ap_qci(&matrix_dev->config_info);
- 		if (ret)
- 			goto matrix_alloc_err;
-+		memcpy(&matrix_dev->config_info_prev, &matrix_dev->config_info,
-+		       sizeof(struct ap_config_info));
- 	}
- 
- 	mutex_init(&matrix_dev->lock);
-@@ -176,6 +178,7 @@ static int __init vfio_ap_init(void)
- 	vfio_ap_drv.remove = vfio_ap_queue_dev_remove;
- 	vfio_ap_drv.in_use = vfio_ap_mdev_resource_in_use;
- 	vfio_ap_drv.ids = ap_queue_ids;
-+	vfio_ap_drv.on_config_changed = vfio_ap_on_cfg_changed;
- 
- 	ret = ap_driver_register(&vfio_ap_drv, THIS_MODULE, VFIO_AP_DRV_NAME);
- 	if (ret) {
 diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 88a4aef5193f..f1dd77729dd9 100644
+index 6ee1ebe3f207..b5cfa3a967c0 100644
 --- a/drivers/s390/crypto/vfio_ap_ops.c
 +++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -336,8 +336,9 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
- 	}
- 
- 	matrix_mdev->mdev = mdev;
--	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
--	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->shadow_crycb);
-+	vfio_ap_matrix_init(&matrix_dev->config_info, &matrix_mdev->matrix);
-+	vfio_ap_matrix_init(&matrix_dev->config_info,
-+			    &matrix_mdev->shadow_crycb);
- 	hash_init(matrix_mdev->qtable);
- 	mdev_set_drvdata(mdev, matrix_mdev);
- 	matrix_mdev->pqap_hook.hook = handle_pqap;
-@@ -485,8 +486,8 @@ static int vfio_ap_mdev_filter_matrix(struct ap_matrix_mdev *matrix_mdev,
- 		 * If the APID is not assigned to the host AP configuration,
- 		 * we can not assign it to the guest's AP configuration
- 		 */
--		if (!test_bit_inv(apid,
--				  (unsigned long *)matrix_dev->info.apm)) {
-+		if (!test_bit_inv(apid, (unsigned long *)
-+				  matrix_dev->config_info.apm)) {
- 			clear_bit_inv(apid, shadow_crycb->apm);
- 			continue;
- 		}
-@@ -499,7 +500,7 @@ static int vfio_ap_mdev_filter_matrix(struct ap_matrix_mdev *matrix_mdev,
- 			 * guest's AP configuration
- 			 */
- 			if (!test_bit_inv(apqi, (unsigned long *)
--					  matrix_dev->info.aqm)) {
-+					  matrix_dev->config_info.aqm)) {
- 				clear_bit_inv(apqi, shadow_crycb->aqm);
- 				continue;
- 			}
-@@ -1617,7 +1618,7 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
- void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
- {
- 	struct vfio_ap_queue *q;
--	int apid, apqi;
-+	unsigned long apid, apqi;
- 
- 	mutex_lock(&matrix_dev->lock);
- 	q = dev_get_drvdata(&queue->ap_dev.device);
-@@ -1643,3 +1644,126 @@ bool vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm)
- 
- 	return in_use;
- }
-+
-+/**
-+ * vfio_ap_mdev_unassign_apids
-+ *
-+ * @matrix_mdev: The matrix mediated device
-+ *
-+ * @aqm: A bitmap with 256 bits. Each bit in the map represents an APID from 0
-+ *	 to 255 (with the leftmost bit corresponding to APID 0).
-+ *
-+ * Unassigns each APID specified in @aqm that is assigned to the shadow CRYCB
-+ * of @matrix_mdev. Returns true if at least one APID is unassigned; otherwise,
-+ * returns false.
-+ */
-+bool vfio_ap_mdev_unassign_apids(struct ap_matrix_mdev *matrix_mdev,
-+				 unsigned long *apm_unassign)
-+{
-+	unsigned long apid;
-+	bool unassigned = false;
-+
-+	/*
-+	 * If the matrix mdev is not in use by a KVM guest, return indicating
-+	 * that no APIDs have been unassigned.
-+	 */
-+	if (!vfio_ap_mdev_has_crycb(matrix_mdev))
-+		return false;
-+
-+	for_each_set_bit_inv(apid, apm_unassign, AP_DEVICES) {
-+		unassigned |= vfio_ap_mdev_unassign_guest_apid(matrix_mdev,
-+							       apid);
-+	}
-+
-+	return unassigned;
-+}
-+
-+/**
-+ * vfio_ap_mdev_unassign_apqis
-+ *
-+ * @matrix_mdev: The matrix mediated device
-+ *
-+ * @aqm: A bitmap with 256 bits. Each bit in the map represents an APQI from 0
-+ *	 to 255 (with the leftmost bit corresponding to APQI 0).
-+ *
-+ * Unassigns each APQI specified in @aqm that is assigned to the shadow CRYCB
-+ * of @matrix_mdev. Returns true if at least one APQI is unassigned; otherwise,
-+ * returns false.
-+ */
-+bool vfio_ap_mdev_unassign_apqis(struct ap_matrix_mdev *matrix_mdev,
-+				 unsigned long *aqm_unassign)
-+{
-+	unsigned long apqi;
-+	bool unassigned = false;
-+
-+	/*
-+	 * If the matrix mdev is not in use by a KVM guest, return indicating
-+	 * that no APQIs have been unassigned.
-+	 */
-+	if (!vfio_ap_mdev_has_crycb(matrix_mdev))
-+		return false;
-+
-+	for_each_set_bit_inv(apqi, aqm_unassign, AP_DOMAINS) {
-+		unassigned |= vfio_ap_mdev_unassign_guest_apqi(matrix_mdev,
-+							       apqi);
-+	}
-+
-+	return unassigned;
-+}
-+
-+void vfio_ap_on_cfg_changed(struct ap_config_info *new_config_info,
-+			    struct ap_config_info *old_config_info)
-+{
-+	bool unassigned;
-+	int ap_remove, aq_remove;
-+	struct ap_matrix_mdev *matrix_mdev;
-+	DECLARE_BITMAP(apm_unassign, AP_DEVICES);
-+	DECLARE_BITMAP(aqm_unassign, AP_DOMAINS);
-+
-+	unsigned long *cur_apm, *cur_aqm, *prev_apm, *prev_aqm;
-+
-+	if (matrix_dev->flags & AP_MATRIX_CFG_CHG) {
-+		WARN_ONCE(1, "AP host configuration change already reported");
-+		return;
-+	}
-+
-+	memcpy(&matrix_dev->config_info, new_config_info,
-+	       sizeof(struct ap_config_info));
-+	memcpy(&matrix_dev->config_info_prev, old_config_info,
-+	       sizeof(struct ap_config_info));
-+
-+	cur_apm = (unsigned long *)matrix_dev->config_info.apm;
-+	cur_aqm = (unsigned long *)matrix_dev->config_info.aqm;
-+	prev_apm = (unsigned long *)matrix_dev->config_info_prev.apm;
-+	prev_aqm = (unsigned long *)matrix_dev->config_info_prev.aqm;
-+
-+	ap_remove = bitmap_andnot(apm_unassign, prev_apm, cur_apm, AP_DEVICES);
-+	aq_remove = bitmap_andnot(aqm_unassign, prev_aqm, cur_aqm, AP_DOMAINS);
-+
-+	mutex_lock(&matrix_dev->lock);
-+	matrix_dev->flags |= AP_MATRIX_CFG_CHG;
-+
-+	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
-+		if (!vfio_ap_mdev_has_crycb(matrix_mdev))
-+			continue;
-+
-+		unassigned = false;
-+
-+		if (ap_remove)
-+			if (bitmap_intersects(matrix_mdev->shadow_crycb.apm,
-+					      apm_unassign, AP_DEVICES))
-+				if (vfio_ap_mdev_unassign_apids(matrix_mdev,
-+								apm_unassign))
-+					unassigned = true;
-+		if (aq_remove)
-+			if (bitmap_intersects(matrix_mdev->shadow_crycb.aqm,
-+					      aqm_unassign, AP_DOMAINS))
-+				if (vfio_ap_mdev_unassign_apqis(matrix_mdev,
-+								aqm_unassign))
-+					unassigned = true;
-+
-+		if (unassigned)
-+			vfio_ap_mdev_commit_crycb(matrix_mdev);
-+	}
-+	mutex_unlock(&matrix_dev->lock);
-+}
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index 794c60a767d2..82abbf03781f 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -40,11 +40,14 @@
- struct ap_matrix_dev {
- 	struct device device;
- 	atomic_t available_instances;
--	struct ap_config_info info;
-+	struct ap_config_info config_info;
-+	struct ap_config_info config_info_prev;
- 	struct list_head mdev_list;
- 	struct mutex lock;
- 	struct ap_driver  *vfio_ap_drv;
- 	DECLARE_HASHTABLE(qtable, 8);
-+	#define AP_MATRIX_CFG_CHG (1UL << 0)
-+	unsigned long flags;
+@@ -409,122 +409,6 @@ static struct attribute_group *vfio_ap_mdev_type_groups[] = {
+ 	NULL,
  };
  
- extern struct ap_matrix_dev *matrix_dev;
-@@ -109,5 +112,7 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue);
- void vfio_ap_mdev_remove_queue(struct ap_queue *queue);
+-struct vfio_ap_queue_reserved {
+-	unsigned long *apid;
+-	unsigned long *apqi;
+-	bool reserved;
+-};
+-
+-/**
+- * vfio_ap_has_queue
+- *
+- * @dev: an AP queue device
+- * @data: a struct vfio_ap_queue_reserved reference
+- *
+- * Flags whether the AP queue device (@dev) has a queue ID containing the APQN,
+- * apid or apqi specified in @data:
+- *
+- * - If @data contains both an apid and apqi value, then @data will be flagged
+- *   as reserved if the APID and APQI fields for the AP queue device matches
+- *
+- * - If @data contains only an apid value, @data will be flagged as
+- *   reserved if the APID field in the AP queue device matches
+- *
+- * - If @data contains only an apqi value, @data will be flagged as
+- *   reserved if the APQI field in the AP queue device matches
+- *
+- * Returns 0 to indicate the input to function succeeded. Returns -EINVAL if
+- * @data does not contain either an apid or apqi.
+- */
+-static int vfio_ap_has_queue(struct device *dev, void *data)
+-{
+-	struct vfio_ap_queue_reserved *qres = data;
+-	struct ap_queue *ap_queue = to_ap_queue(dev);
+-	ap_qid_t qid;
+-	unsigned long id;
+-
+-	if (qres->apid && qres->apqi) {
+-		qid = AP_MKQID(*qres->apid, *qres->apqi);
+-		if (qid == ap_queue->qid)
+-			qres->reserved = true;
+-	} else if (qres->apid && !qres->apqi) {
+-		id = AP_QID_CARD(ap_queue->qid);
+-		if (id == *qres->apid)
+-			qres->reserved = true;
+-	} else if (!qres->apid && qres->apqi) {
+-		id = AP_QID_QUEUE(ap_queue->qid);
+-		if (id == *qres->apqi)
+-			qres->reserved = true;
+-	} else {
+-		return -EINVAL;
+-	}
+-
+-	return 0;
+-}
+-
+-/**
+- * vfio_ap_verify_queue_reserved
+- *
+- * @matrix_dev: a mediated matrix device
+- * @apid: an AP adapter ID
+- * @apqi: an AP queue index
+- *
+- * Verifies that the AP queue with @apid/@apqi is reserved by the VFIO AP device
+- * driver according to the following rules:
+- *
+- * - If both @apid and @apqi are not NULL, then there must be an AP queue
+- *   device bound to the vfio_ap driver with the APQN identified by @apid and
+- *   @apqi
+- *
+- * - If only @apid is not NULL, then there must be an AP queue device bound
+- *   to the vfio_ap driver with an APQN containing @apid
+- *
+- * - If only @apqi is not NULL, then there must be an AP queue device bound
+- *   to the vfio_ap driver with an APQN containing @apqi
+- *
+- * Returns 0 if the AP queue is reserved; otherwise, returns -EADDRNOTAVAIL.
+- */
+-static int vfio_ap_verify_queue_reserved(unsigned long *apid,
+-					 unsigned long *apqi)
+-{
+-	int ret;
+-	struct vfio_ap_queue_reserved qres;
+-
+-	qres.apid = apid;
+-	qres.apqi = apqi;
+-	qres.reserved = false;
+-
+-	ret = driver_for_each_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+-				     &qres, vfio_ap_has_queue);
+-	if (ret)
+-		return ret;
+-
+-	if (qres.reserved)
+-		return 0;
+-
+-	return -EADDRNOTAVAIL;
+-}
+-
+-static int
+-vfio_ap_mdev_verify_queues_reserved_for_apid(struct ap_matrix_mdev *matrix_mdev,
+-					     unsigned long apid)
+-{
+-	int ret;
+-	unsigned long apqi;
+-	unsigned long nbits = matrix_mdev->matrix.aqm_max + 1;
+-
+-	if (find_first_bit_inv(matrix_mdev->matrix.aqm, nbits) >= nbits)
+-		return vfio_ap_verify_queue_reserved(&apid, NULL);
+-
+-	for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm, nbits) {
+-		ret = vfio_ap_verify_queue_reserved(&apid, &apqi);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ /**
+  * vfio_ap_mdev_verify_no_sharing
+  *
+@@ -533,6 +417,8 @@ vfio_ap_mdev_verify_queues_reserved_for_apid(struct ap_matrix_mdev *matrix_mdev,
+  * mediated device. AP queue sharing is not allowed.
+  *
+  * @matrix_mdev: the mediated matrix device
++ * @mdev_apm: the mask identifying the adapters assigned to mdev
++ * @mdev_aqm: the mask identifying the domains (queues) assigned to mdev
+  *
+  * Returns 0 if the APQNs are not shared, otherwise; returns -EADDRINUSE.
+  */
+@@ -545,6 +431,11 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev,
+ 	DECLARE_BITMAP(aqm, AP_DOMAINS);
  
- bool vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm);
-+void vfio_ap_on_cfg_changed(struct ap_config_info *new_config_info,
-+			    struct ap_config_info *old_config_info);
+ 	list_for_each_entry(lstdev, &matrix_dev->mdev_list, node) {
++		/*
++		 * If either of the input masks belongs to the mdev to which an
++		 * AP resource is being assigned, then we don't need to verify
++		 * that mdev's masks.
++		 */
+ 		if (matrix_mdev == lstdev)
+ 			continue;
  
- #endif /* _VFIO_AP_PRIVATE_H_ */
+@@ -567,6 +458,20 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev,
+ 	return 0;
+ }
+ 
++static int vfio_ap_mdev_validate_masks(struct ap_matrix_mdev *matrix_mdev,
++				       unsigned long *mdev_apm,
++				       unsigned long *mdev_aqm)
++{
++	DECLARE_BITMAP(apm, AP_DEVICES);
++	DECLARE_BITMAP(aqm, AP_DOMAINS);
++
++	if (bitmap_and(apm, mdev_apm, ap_perms.apm, AP_DEVICES) &&
++	    bitmap_and(aqm, mdev_aqm, ap_perms.aqm, AP_DOMAINS))
++		return -EADDRNOTAVAIL;
++
++	return vfio_ap_mdev_verify_no_sharing(matrix_mdev, mdev_apm, mdev_aqm);
++}
++
+ static int vfio_ap_mdev_filter_matrix(struct ap_matrix_mdev *matrix_mdev,
+ 				      struct ap_matrix *shadow_crycb,
+ 				      bool filter_apids)
+@@ -771,33 +676,21 @@ static ssize_t assign_adapter_store(struct device *dev,
+ 	if (apid > matrix_mdev->matrix.apm_max)
+ 		return -ENODEV;
+ 
+-	/*
+-	 * Set the bit in the AP mask (APM) corresponding to the AP adapter
+-	 * number (APID). The bits in the mask, from most significant to least
+-	 * significant bit, correspond to APIDs 0-255.
+-	 */
+-	mutex_lock(&matrix_dev->lock);
+-
+-	ret = vfio_ap_mdev_verify_queues_reserved_for_apid(matrix_mdev, apid);
+-	if (ret)
+-		goto done;
+-
+ 	memset(apm, 0, sizeof(apm));
+ 	set_bit_inv(apid, apm);
+ 
+-	ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev, apm,
+-					     matrix_mdev->matrix.aqm);
+-	if (ret)
+-		goto done;
+-
++	mutex_lock(&matrix_dev->lock);
++	ret = vfio_ap_mdev_validate_masks(matrix_mdev, apm,
++					  matrix_mdev->matrix.aqm);
++	if (ret) {
++		mutex_unlock(&matrix_dev->lock);
++		return ret;
++	}
+ 	set_bit_inv(apid, matrix_mdev->matrix.apm);
+ 	vfio_ap_mdev_qlinks_for_apid(matrix_mdev, apid);
+-	ret = count;
+-
+-done:
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+-	return ret;
++	return count;
+ }
+ static DEVICE_ATTR_WO(assign_adapter);
+ 
+@@ -847,26 +740,6 @@ static ssize_t unassign_adapter_store(struct device *dev,
+ }
+ static DEVICE_ATTR_WO(unassign_adapter);
+ 
+-static int
+-vfio_ap_mdev_verify_queues_reserved_for_apqi(struct ap_matrix_mdev *matrix_mdev,
+-					     unsigned long apqi)
+-{
+-	int ret;
+-	unsigned long apid;
+-	unsigned long nbits = matrix_mdev->matrix.apm_max + 1;
+-
+-	if (find_first_bit_inv(matrix_mdev->matrix.apm, nbits) >= nbits)
+-		return vfio_ap_verify_queue_reserved(NULL, &apqi);
+-
+-	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm, nbits) {
+-		ret = vfio_ap_verify_queue_reserved(&apid, &apqi);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ /**
+  * vfio_ap_mdev_qlinks_for_apqi
+  *
+@@ -947,28 +820,21 @@ static ssize_t assign_domain_store(struct device *dev,
+ 	if (apqi > max_apqi)
+ 		return -ENODEV;
+ 
+-	mutex_lock(&matrix_dev->lock);
+-
+-	ret = vfio_ap_mdev_verify_queues_reserved_for_apqi(matrix_mdev, apqi);
+-	if (ret)
+-		goto done;
+-
+ 	memset(aqm, 0, sizeof(aqm));
+ 	set_bit_inv(apqi, aqm);
+ 
+-	ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev,
+-					     matrix_mdev->matrix.apm, aqm);
+-	if (ret)
+-		goto done;
+-
++	mutex_lock(&matrix_dev->lock);
++	ret = vfio_ap_mdev_validate_masks(matrix_mdev, matrix_mdev->matrix.apm,
++					  aqm);
++	if (ret) {
++		mutex_unlock(&matrix_dev->lock);
++		return ret;
++	}
+ 	set_bit_inv(apqi, matrix_mdev->matrix.aqm);
+ 	vfio_ap_mdev_qlinks_for_apqi(matrix_mdev, apqi);
+-	ret = count;
+-
+-done:
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+-	return ret;
++	return count;
+ }
+ static DEVICE_ATTR_WO(assign_domain);
+ 
+@@ -1055,11 +921,6 @@ static ssize_t assign_control_domain_store(struct device *dev,
+ 	if (id > matrix_mdev->matrix.adm_max)
+ 		return -ENODEV;
+ 
+-	/* Set the bit in the ADM (bitmask) corresponding to the AP control
+-	 * domain number (id). The bits in the mask, from most significant to
+-	 * least significant, correspond to IDs 0 up to the one less than the
+-	 * number of control domains that can be assigned.
+-	 */
+ 	mutex_lock(&matrix_dev->lock);
+ 	set_bit_inv(id, matrix_mdev->matrix.adm);
+ 	mutex_unlock(&matrix_dev->lock);
 -- 
 2.21.1
 
