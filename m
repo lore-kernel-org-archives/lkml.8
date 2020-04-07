@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB68C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D57FC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D567C20801
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6B22078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586218005;
-	bh=P4mihfxv14d3mYrlZSFYDB506Er2e2jwCb818HK4qwI=;
+	s=default; t=1586218015;
+	bh=fJFGi6T4K+Duqo6Kk0lU0Jzj/CXZAnUEMHj1mfeAFuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vg3hAzWR+ThI4/dYJUFk6/IzIjVqH/fyr5fPjK8DN+/d8+WO9dxfV7qytNU70yCS+
-	 6xXixPnowM7J/OJiOcTCqq62jwc7r3jMGna1F7kZW8PWpKFhi3Cn2xQ8zWvtxlYdl2
-	 mPPrDfR94HV2odjpgRMoszn4ZHG6thUqI/D6/cqs=
+	b=IhGMEWgQicDDc5N01X5K29vbfV+AAP5aUEfQFc5pE3oXyxk1Aq6GqJVXDmUVKRWFF
+	 OVFQv6/igLcZVOxjfTykrQkbjiutTMuOl/NuNYxMoFpjwnVMlYF+0nSjOKlUcALLNh
+	 SJW2/AZsyZ2R5KQEfPuXcbcfB/Hr4kn6d8LPR1Y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgDGACL (ORCPT
+        id S1727953AbgDGAGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:06:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbgDGACH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:07 -0400
+        id S1727929AbgDGACK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8249F20842;
-        Tue,  7 Apr 2020 00:02:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08BD220936;
+        Tue,  7 Apr 2020 00:02:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217727;
-        bh=P4mihfxv14d3mYrlZSFYDB506Er2e2jwCb818HK4qwI=;
+        s=default; t=1586217730;
+        bh=fJFGi6T4K+Duqo6Kk0lU0Jzj/CXZAnUEMHj1mfeAFuI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrEP7ELDc/BeedJIbrZXPFFQ3AFffLMtgi/NqhyAJUvGjo0THR/q1kqqZ5aN2Q+bC
-         f4Vd6W4zHIj+5u7Y6rMFyOkx6Dia4QQes4jS5wgYDvZZvO/n2vYzeEyRH8+3q6dymO
-         s1G1KCJg1m1Jds6GNIc9swSA7wrhVBwTUh+C/On4=
+        b=BhDknfINzBk4RteC7cEKuJr7trNi452KZWZStsfqK+Hnnt3uQq49W+RLwNkWtJgKs
+         zkAF5KXtenJcz42zUSEX+zmEr8xMMmgwjb3050TbxG/206BmJt+qyuaFe+dRQ7q3bQ
+         ALZ5gCQNobfkrvg49jXYzbuZSLvRb/4eZVNqJQmk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 12/32] rxrpc: Abstract out the calculation of whether there's Tx space
-Date:   Mon,  6 Apr 2020 20:01:30 -0400
-Message-Id: <20200407000151.16768-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 14/32] rxrpc: Fix sendmsg(MSG_WAITALL) handling
+Date:   Mon,  6 Apr 2020 20:01:32 -0400
+Message-Id: <20200407000151.16768-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
 References: <20200407000151.16768-1-sashal@kernel.org>
@@ -61,76 +61,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 158fe6665389964a1de212818b4a5c52b7f7aff4 ]
+[ Upstream commit 498b577660f08cef5d9e78e0ed6dcd4c0939e98c ]
 
-Abstract out the calculation of there being sufficient Tx buffer space.
-This is reproduced several times in the rxrpc sendmsg code.
+Fix the handling of sendmsg() with MSG_WAITALL for userspace to round the
+timeout for when a signal occurs up to at least two jiffies as a 1 jiffy
+timeout may end up being effectively 0 if jiffies wraps at the wrong time.
 
+Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/sendmsg.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ net/rxrpc/sendmsg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 813fd68881429..a13051d380973 100644
+index 1eccfb92c9e15..0fcf157aa09f8 100644
 --- a/net/rxrpc/sendmsg.c
 +++ b/net/rxrpc/sendmsg.c
-@@ -17,6 +17,21 @@
- #include <net/af_rxrpc.h>
- #include "ar-internal.h"
+@@ -71,8 +71,8 @@ static int rxrpc_wait_for_tx_window_waitall(struct rxrpc_sock *rx,
  
-+/*
-+ * Return true if there's sufficient Tx queue space.
-+ */
-+static bool rxrpc_check_tx_space(struct rxrpc_call *call, rxrpc_seq_t *_tx_win)
-+{
-+	unsigned int win_size =
-+		min_t(unsigned int, call->tx_winsize,
-+		      call->cong_cwnd + call->cong_extra);
-+	rxrpc_seq_t tx_win = READ_ONCE(call->tx_hard_ack);
-+
-+	if (_tx_win)
-+		*_tx_win = tx_win;
-+	return call->tx_top - tx_win < win_size;
-+}
-+
- /*
-  * Wait for space to appear in the Tx queue or a signal to occur.
-  */
-@@ -26,9 +41,7 @@ static int rxrpc_wait_for_tx_window_intr(struct rxrpc_sock *rx,
- {
- 	for (;;) {
- 		set_current_state(TASK_INTERRUPTIBLE);
--		if (call->tx_top - call->tx_hard_ack <
--		    min_t(unsigned int, call->tx_winsize,
--			  call->cong_cwnd + call->cong_extra))
-+		if (rxrpc_check_tx_space(call, NULL))
- 			return 0;
+ 	rtt = READ_ONCE(call->peer->rtt);
+ 	rtt2 = nsecs_to_jiffies64(rtt) * 2;
+-	if (rtt2 < 1)
+-		rtt2 = 1;
++	if (rtt2 < 2)
++		rtt2 = 2;
  
- 		if (call->state >= RXRPC_CALL_COMPLETE)
-@@ -68,9 +81,7 @@ static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
- 		set_current_state(TASK_UNINTERRUPTIBLE);
- 
- 		tx_win = READ_ONCE(call->tx_hard_ack);
--		if (call->tx_top - tx_win <
--		    min_t(unsigned int, call->tx_winsize,
--			  call->cong_cwnd + call->cong_extra))
-+		if (rxrpc_check_tx_space(call, &tx_win))
- 			return 0;
- 
- 		if (call->state >= RXRPC_CALL_COMPLETE)
-@@ -302,9 +313,7 @@ static int rxrpc_send_data(struct rxrpc_sock *rx,
- 
- 			_debug("alloc");
- 
--			if (call->tx_top - call->tx_hard_ack >=
--			    min_t(unsigned int, call->tx_winsize,
--				  call->cong_cwnd + call->cong_extra)) {
-+			if (!rxrpc_check_tx_space(call, NULL)) {
- 				ret = -EAGAIN;
- 				if (msg->msg_flags & MSG_DONTWAIT)
- 					goto maybe_error;
+ 	timeout = rtt2;
+ 	tx_start = READ_ONCE(call->tx_hard_ack);
 -- 
 2.20.1
 
