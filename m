@@ -5,71 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E734C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32472C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63F420719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A1820719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L8QApNe0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VbnKDal2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbgDGBIF (ORCPT
+        id S1726799AbgDGBIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:08:05 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48020 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726706AbgDGBID (ORCPT
+        Mon, 6 Apr 2020 21:08:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35934 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726668AbgDGBH4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:08:03 -0400
+        Mon, 6 Apr 2020 21:07:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586221682;
+        s=mimecast20190719; t=1586221675;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=/M9T/d7F7GNQ12ZgHWGcHvn2ujMc8mdiW+Qm6YeUJhk=;
-        b=L8QApNe00Qw6xB1SNpZm2M7bfkf3dbk+ySBM+1cXkM9U220NeS8P+DFlp1vwYH5OQUH4dS
-        ry2gcRZzMva3RGD60lV5jzidi3ddgoOQ49njKKVtzqQtVlTQ8fR9IITcGqJC5yO/IZ9/Jj
-        31cJ2WSCKGgRQr+dNQFmL+KHCmdFSmo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-cwBctd2yOQuB0gx-suKHKg-1; Mon, 06 Apr 2020 21:08:00 -0400
-X-MC-Unique: cwBctd2yOQuB0gx-suKHKg-1
-Received: by mail-wm1-f70.google.com with SMTP id l13so7290wme.7
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:07:59 -0700 (PDT)
+        bh=b+P99eoGOE59dzJri6nDdYTRF/iHp1rUM821OiEBSWI=;
+        b=VbnKDal2mW3x/8uUyaF/BmNOSYJhExtZEV+4YPbdf2MotyPb8XTuUwVhMq6iT+0p7sRLN8
+        X8tHVPtNtNJkdwDWBJ5XrTtic8SPeS8FaCWedB6SlASJbpDexktmz2LxsFDt6TMKVRn7/g
+        efMH/vzxsVniMRICtNnUv8wdzO0RK7Q=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-rkvNepdsNvOIIbonyTSGUA-1; Mon, 06 Apr 2020 21:07:51 -0400
+X-MC-Unique: rkvNepdsNvOIIbonyTSGUA-1
+Received: by mail-wr1-f71.google.com with SMTP id c8so837794wru.20
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:07:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=/M9T/d7F7GNQ12ZgHWGcHvn2ujMc8mdiW+Qm6YeUJhk=;
-        b=MCBdrg7hSWugtHQ9qntpLc6JyWxAMKa2Py25Hfixtjmtkhm7b77G3ZqDXZ0QoFec+n
-         5myBrEvSTsZiUJCf4Mv6qgnWINobaR5WBVTrdrj1KXWP/VFZ9tABmsWEKRrlSW2pGH8+
-         7ZuZq3TuiQPXxWy+LL2XLHjss6QwIch8uBk3eE6ZN9S9/J/chnzQUmJSLo2qH+OIFuhG
-         L93Ts0uLHIqMhat1s5Tuzb+gRBaibKKRgVID3MMgpMFw3RsHB9surelf9OQuVLoxSooC
-         zBjQa6bVian6s3Pn+h9Z5RTVma38AKIUUK9EFF/QJeTZDwtllXlAkroLmN4qpQ5bEo0O
-         YZag==
-X-Gm-Message-State: AGi0PubNacFdwxBbsgAKQXonPsib9zG0bKmLEujm0ZP0dMx5Dm0V48om
-        VAM0iQr5q0rPDDL6VtQLRPPsi7OQMv0bc+MMiLWV7GuD8ZN7TsPorI0UANuo83REPDaDF6awuFU
-        Ka7HGKmvHb77Z7a4MElmkqsW1
-X-Received: by 2002:a1c:a7c4:: with SMTP id q187mr1859595wme.56.1586221678151;
-        Mon, 06 Apr 2020 18:07:58 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKcPTB/8YZslvf852PatGi7YE39/8BDpyMgxRBk/2sE3K+Zn2tD6JMpJeCeEPQb89wAPdRBzg==
-X-Received: by 2002:a1c:a7c4:: with SMTP id q187mr1859584wme.56.1586221677915;
-        Mon, 06 Apr 2020 18:07:57 -0700 (PDT)
+        bh=b+P99eoGOE59dzJri6nDdYTRF/iHp1rUM821OiEBSWI=;
+        b=i3oCbjoXOk6nPnSmE1xkBViwP6Auv278cQpHLyG280W0VpAQ7se1/inHc+2Scz1s1Q
+         KKSR5WB5YG5kVEHXqpV1l1UakvSMMc+gmuO1rwITriEkMKs8woredBt3OQA06JOBeUW3
+         x6146E5Q9+sZdfuJd8jLIqhAc6bhbT1MIChtCuiZW/zU4lPDrKyHbtkR5SyRe6UwWdO5
+         RqaMS+6sipaWKSdmEXDsTUE+gz01BCM28TlJho3Rxa2OVdHGbUGtF2HPSSNheDkIhJfI
+         LIkWuo+zE4Lxy1Ra8lS+SxDt/e0klgGQEmRtGFhO2aKowM/BQqXMaezrJU+qa7hzOJfm
+         oFnw==
+X-Gm-Message-State: AGi0PuZzrfiridHEcegdbvVepZ5QNHSOurSietbbuB+o6Am6QVaPNb8d
+        MT6sEqpXc9w1UiDhAJ1nNtpPw1ZIJyDO4sbQH/FhcuhColWAqgZIByhIqLhWNzI1Y2egE9qCfxp
+        twyZF4Cs0tyALkX2EdtHCFYUY
+X-Received: by 2002:adf:f98b:: with SMTP id f11mr1998834wrr.259.1586221669694;
+        Mon, 06 Apr 2020 18:07:49 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJ7vAsHxvjmiu+bo7NHbyExOgBSbxXMZd7IkvuAC9tnfoRSEzkPJmWDYEX8+2JgtuNqELnN8w==
+X-Received: by 2002:adf:f98b:: with SMTP id f11mr1998816wrr.259.1586221669436;
+        Mon, 06 Apr 2020 18:07:49 -0700 (PDT)
 Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id y189sm90107wmb.26.2020.04.06.18.07.56
+        by smtp.gmail.com with ESMTPSA id j11sm28630487wrt.14.2020.04.06.18.07.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 18:07:57 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 21:07:56 -0400
+        Mon, 06 Apr 2020 18:07:48 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 21:07:47 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Sudeep Dutt <sudeep.dutt@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v7 14/19] vop: switch to virtio_legacy_init/size
-Message-ID: <20200407010700.446571-15-mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH v7 10/19] vhost: force spec specified alignment on types
+Message-ID: <20200407010700.446571-11-mst@redhat.com>
 References: <20200407010700.446571-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -82,72 +80,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are used for legacy ring format, switch to APIs that make this
-explicit.
+The ring element addresses are passed between components with different
+alignments assumptions. Thus, if guest/userspace selects a pointer and
+host then gets and dereferences it, we might need to decrease the
+compiler-selected alignment to prevent compiler on the host from
+assuming pointer is aligned.
 
-Acked-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
+This actually triggers on ARM with -mabi=apcs-gnu - which is a
+deprecated configuration, but it seems safer to handle this
+generally.
+
+I verified that the produced binary is exactly identical on x86.
+
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/misc/mic/vop/vop_main.c   | 5 +++--
- drivers/misc/mic/vop/vop_vringh.c | 8 +++++---
- 2 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/vhost/vhost.h       |  6 +++---
+ include/linux/virtio_ring.h | 24 +++++++++++++++++++++---
+ 2 files changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/misc/mic/vop/vop_main.c b/drivers/misc/mic/vop/vop_main.c
-index 85942f6717c5..829b3b14b1d7 100644
---- a/drivers/misc/mic/vop/vop_main.c
-+++ b/drivers/misc/mic/vop/vop_main.c
-@@ -283,7 +283,7 @@ static struct virtqueue *vop_new_virtqueue(unsigned int index,
- 	bool weak_barriers = false;
- 	struct vring vring;
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index f8403bd46b85..60cab4c78229 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -67,9 +67,9 @@ struct vhost_virtqueue {
+ 	/* The actual ring of buffers. */
+ 	struct mutex mutex;
+ 	unsigned int num;
+-	struct vring_desc __user *desc;
+-	struct vring_avail __user *avail;
+-	struct vring_used __user *used;
++	vring_desc_t __user *desc;
++	vring_avail_t __user *avail;
++	vring_used_t __user *used;
+ 	const struct vhost_iotlb_map *meta_iotlb[VHOST_NUM_ADDRS];
+ 	struct file *kick;
+ 	struct eventfd_ctx *call_ctx;
+diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
+index 11680e74761a..c3f9ca054250 100644
+--- a/include/linux/virtio_ring.h
++++ b/include/linux/virtio_ring.h
+@@ -60,14 +60,32 @@ static inline void virtio_store_mb(bool weak_barriers,
+ struct virtio_device;
+ struct virtqueue;
  
--	vring_init(&vring, num, pages, MIC_VIRTIO_RING_ALIGN);
-+	vring_legacy_init(&vring, num, pages, MIC_VIRTIO_RING_ALIGN);
- 	vring.used = used;
++/*
++ * The ring element addresses are passed between components with different
++ * alignments assumptions. Thus, we might need to decrease the compiler-selected
++ * alignment, and so must use a typedef to make sure the __aligned attribute
++ * actually takes hold:
++ *
++ * https://gcc.gnu.org/onlinedocs//gcc/Common-Type-Attributes.html#Common-Type-Attributes
++ *
++ * When used on a struct, or struct member, the aligned attribute can only
++ * increase the alignment; in order to decrease it, the packed attribute must
++ * be specified as well. When used as part of a typedef, the aligned attribute
++ * can both increase and decrease alignment, and specifying the packed
++ * attribute generates a warning.
++ */
++typedef struct vring_desc __aligned(VRING_DESC_ALIGN_SIZE) vring_desc_t;
++typedef struct vring_avail __aligned(VRING_AVAIL_ALIGN_SIZE) vring_avail_t;
++typedef struct vring_used __aligned(VRING_USED_ALIGN_SIZE) vring_used_t;
++
+ struct vring {
+ 	unsigned int num;
  
- 	return __vring_new_virtqueue(index, vring, vdev, weak_barriers, context,
-@@ -320,7 +320,8 @@ static struct virtqueue *vop_find_vq(struct virtio_device *dev,
- 	/* First assign the vring's allocated in host memory */
- 	vqconfig = _vop_vq_config(vdev->desc) + index;
- 	memcpy_fromio(&config, vqconfig, sizeof(config));
--	_vr_size = vring_size(le16_to_cpu(config.num), MIC_VIRTIO_RING_ALIGN);
-+	_vr_size = vring_legacy_size(le16_to_cpu(config.num),
-+				     MIC_VIRTIO_RING_ALIGN);
- 	vr_size = PAGE_ALIGN(_vr_size + sizeof(struct _mic_vring_info));
- 	va = vpdev->hw_ops->remap(vpdev, le64_to_cpu(config.address), vr_size);
- 	if (!va)
-diff --git a/drivers/misc/mic/vop/vop_vringh.c b/drivers/misc/mic/vop/vop_vringh.c
-index 30eac172f017..0535c02d637d 100644
---- a/drivers/misc/mic/vop/vop_vringh.c
-+++ b/drivers/misc/mic/vop/vop_vringh.c
-@@ -296,7 +296,8 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
+-	struct vring_desc *desc;
++	vring_desc_t *desc;
  
- 		num = le16_to_cpu(vqconfig[i].num);
- 		mutex_init(&vvr->vr_mutex);
--		vr_size = PAGE_ALIGN(vring_size(num, MIC_VIRTIO_RING_ALIGN) +
-+		vr_size = PAGE_ALIGN(vring_legacy_size(num,
-+						       MIC_VIRTIO_RING_ALIGN) +
- 			sizeof(struct _mic_vring_info));
- 		vr->va = (void *)
- 			__get_free_pages(GFP_KERNEL | __GFP_ZERO,
-@@ -308,7 +309,8 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
- 			goto err;
- 		}
- 		vr->len = vr_size;
--		vr->info = vr->va + vring_size(num, MIC_VIRTIO_RING_ALIGN);
-+		vr->info = vr->va + vring_legacy_size(num,
-+						      MIC_VIRTIO_RING_ALIGN);
- 		vr->info->magic = cpu_to_le32(MIC_MAGIC + vdev->virtio_id + i);
- 		vr_addr = dma_map_single(&vpdev->dev, vr->va, vr_size,
- 					 DMA_BIDIRECTIONAL);
-@@ -321,7 +323,7 @@ static int vop_virtio_add_device(struct vop_vdev *vdev,
- 		}
- 		vqconfig[i].address = cpu_to_le64(vr_addr);
+-	struct vring_avail *avail;
++	vring_avail_t *avail;
  
--		vring_init(&vr->vr, num, vr->va, MIC_VIRTIO_RING_ALIGN);
-+		vring_legacy_init(&vr->vr, num, vr->va, MIC_VIRTIO_RING_ALIGN);
- 		ret = vringh_init_kern(&vvr->vrh,
- 				       *(u32 *)mic_vq_features(vdev->dd),
- 				       num, false, vr->vr.desc, vr->vr.avail,
+-	struct vring_used *used;
++	vring_used_t *used;
+ };
+ 
+ /*
 -- 
 MST
 
