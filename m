@@ -2,106 +2,156 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360AAC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC469C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1840C206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852BB2074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 04:01:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Q6VjkvOn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbgDGEA7 (ORCPT
+        id S1726687AbgDGEBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 00:00:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7028 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725802AbgDGEA6 (ORCPT
+        Tue, 7 Apr 2020 00:01:16 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31731 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725802AbgDGEBQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 00:00:58 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0373Wnpn135350
-        for <linux-kernel@vger.kernel.org>; Tue, 7 Apr 2020 00:00:57 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082nw9tmc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 00:00:57 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bharata@linux.ibm.com>;
-        Tue, 7 Apr 2020 05:00:37 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 Apr 2020 05:00:35 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03740qoE46465516
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 04:00:52 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DAC184203F;
-        Tue,  7 Apr 2020 04:00:51 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7039D4205E;
-        Tue,  7 Apr 2020 04:00:49 +0000 (GMT)
-Received: from in.ibm.com (unknown [9.79.188.166])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  7 Apr 2020 04:00:49 +0000 (GMT)
-Date:   Tue, 7 Apr 2020 09:30:46 +0530
-From:   Bharata B Rao <bharata@linux.ibm.com>
-To:     Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, Allison Randal <allison@lohutok.net>
-Subject: Re: [PATCH v3 1/1] powerpc/kernel: Enables memory hot-remove after
- reboot on pseries guests
-Reply-To: bharata@linux.ibm.com
-References: <20200402195156.626430-1-leonardo@linux.ibm.com>
- <20200403143831.GA12662@in.ibm.com>
- <6c09a6e1a1f790ad87a2591ff8f8a6e1c7d6b079.camel@linux.ibm.com>
+        Tue, 7 Apr 2020 00:01:16 -0400
+X-UUID: 01ecef53abd240e3b45fe3e134db50d8-20200407
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=tDfNg15w+Ek3LL7rOou7wOOIqGnTslzbpPXl9hJyd+0=;
+        b=Q6VjkvOnS8xSsd7Yb90johBvvQVleE/Z7yyQ8y8gZn9YdLTQkCDvFvaW9TECp6w0c9oO5Yte8zsKWfe8eesrqFoV5TKKfdDGYDzmvgHPJAOAc6r/zVpxEhqv20hiPrPTw5Qs9Cze1rdXNCArf/j/zL2fy4A9nXS66LzKay177gs=;
+X-UUID: 01ecef53abd240e3b45fe3e134db50d8-20200407
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1589193616; Tue, 07 Apr 2020 12:01:08 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 7 Apr 2020 12:01:02 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 7 Apr 2020 12:01:03 +0800
+Message-ID: <1586232063.17821.2.camel@mtksdaap41>
+Subject: Re: [PATCH v11 4/5] rtc: mt6397: Add support for the MediaTek
+ MT6358 RTC
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <linux-rtc@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-pm@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 7 Apr 2020 12:01:03 +0800
+In-Reply-To: <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1585627657-3265-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1585627657-3265-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c09a6e1a1f790ad87a2591ff8f8a6e1c7d6b079.camel@linux.ibm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-TM-AS-GCONF: 00
-x-cbid: 20040704-0008-0000-0000-0000036BE47E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040704-0009-0000-0000-00004A8D7CB3
-Message-Id: <20200407040046.GA12609@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_01:2020-04-07,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=652 malwarescore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 clxscore=1015
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004070026
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 12:41:01PM -0300, Leonardo Bras wrote:
-> Hello Bharata,
-> 
-> On Fri, 2020-04-03 at 20:08 +0530, Bharata B Rao wrote:
-> > The patch would be more complete with the following change that ensures
-> > that DRCONF_MEM_HOTREMOVABLE flag is set for non-boot-time hotplugged
-> > memory too. This will ensure that ibm,dynamic-memory-vN property
-> > reflects the right flags value for memory that gets hotplugged
-> > post boot.
-> > 
-> 
-> You just sent that on a separated patchset, so I think it's dealt with.
-> Do you have any other comments on the present patch?
-
-None, thanks.
-
-Regards,
-Bharata.
+T24gVHVlLCAyMDIwLTAzLTMxIGF0IDEyOjA3ICswODAwLCBIc2luLUhzaXVuZyBXYW5nIHdyb3Rl
+Og0KPiBGcm9tOiBSYW4gQmkgPHJhbi5iaUBtZWRpYXRlay5jb20+DQo+IA0KPiBUaGlzIGFkZCBz
+dXBwb3J0IGZvciB0aGUgTWVkaWFUZWsgTVQ2MzU4IFJUQy4gRHJpdmVyIHVzaW5nDQo+IGNvbXBh
+dGlibGUgZGF0YSB0byBzdG9yZSBkaWZmZXJlbnQgUlRDX1dSVEdSIGFkZHJlc3Mgb2Zmc2V0Lg0K
+PiBUaGlzIHJlcGxhY2UgUlRDX1dSVEdSIHRvIFJUQ19XUlRHUl9NVDYzMjMgaW4gbXQ2MzIzLXBv
+d2Vyb2ZmDQo+IGRyaXZlciB3aGljaCBvbmx5IG5lZWRlZCBieSBhcm12NyBDUFUgd2l0aG91dCBB
+VEYuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBSYW4gQmkgPHJhbi5iaUBtZWRpYXRlay5jb20+DQo+
+IFNpZ25lZC1vZmYtYnk6IEhzaW4tSHNpdW5nIFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0
+ZWsuY29tPg0KDQoNCkxvb2tzIGdvb2QgdG8gbWUsIHRoYW5rcy4NCg0KUmV2aWV3ZWQtYnk6IFlp
+bmdqb2UgQ2hlbiA8eWluZ2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NCg0KDQpKb2UuQw0KDQo+IC0t
+LQ0KPiAgZHJpdmVycy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJvZmYuYyB8ICAyICstDQo+ICBk
+cml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMgICAgICAgICAgICAgIHwgMjMgKysrKysrKysrKysrKysr
+KysrKy0tLS0NCj4gIGluY2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMuaCAgICAgICAgfCAgOSAr
+KysrKysrKy0NCj4gIDMgZmlsZXMgY2hhbmdlZCwgMjggaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlv
+bnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bvd2VyL3Jlc2V0L210NjMyMy1wb3dl
+cm9mZi5jIGIvZHJpdmVycy9wb3dlci9yZXNldC9tdDYzMjMtcG93ZXJvZmYuYw0KPiBpbmRleCAx
+Y2FmNDNkLi4wNTMyODAzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3Bvd2VyL3Jlc2V0L210NjMy
+My1wb3dlcm9mZi5jDQo+ICsrKyBiL2RyaXZlcnMvcG93ZXIvcmVzZXQvbXQ2MzIzLXBvd2Vyb2Zm
+LmMNCj4gQEAgLTMwLDcgKzMwLDcgQEAgc3RhdGljIHZvaWQgbXQ2MzIzX2RvX3B3cm9mZih2b2lk
+KQ0KPiAgCWludCByZXQ7DQo+ICANCj4gIAlyZWdtYXBfd3JpdGUocHdyYy0+cmVnbWFwLCBwd3Jj
+LT5iYXNlICsgUlRDX0JCUFUsIFJUQ19CQlBVX0tFWSk7DQo+IC0JcmVnbWFwX3dyaXRlKHB3cmMt
+PnJlZ21hcCwgcHdyYy0+YmFzZSArIFJUQ19XUlRHUiwgMSk7DQo+ICsJcmVnbWFwX3dyaXRlKHB3
+cmMtPnJlZ21hcCwgcHdyYy0+YmFzZSArIFJUQ19XUlRHUl9NVDYzMjMsIDEpOw0KPiAgDQo+ICAJ
+cmV0ID0gcmVnbWFwX3JlYWRfcG9sbF90aW1lb3V0KHB3cmMtPnJlZ21hcCwNCj4gIAkJCQkJcHdy
+Yy0+YmFzZSArIFJUQ19CQlBVLCB2YWwsDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3J0Yy9ydGMt
+bXQ2Mzk3LmMgYi9kcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMNCj4gaW5kZXggY2RhMjM4ZC4uN2Yz
+ZGZkMiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ydGMvcnRjLW10NjM5Ny5jDQo+ICsrKyBiL2Ry
+aXZlcnMvcnRjL3J0Yy1tdDYzOTcuYw0KPiBAQCAtOSw2ICs5LDcgQEANCj4gICNpbmNsdWRlIDxs
+aW51eC9tZmQvbXQ2Mzk3L2NvcmUuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4g
+ICNpbmNsdWRlIDxsaW51eC9tdXRleC5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5o
+Pg0KPiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiAgI2luY2x1ZGUgPGxp
+bnV4L3JlZ21hcC5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3J0Yy5oPg0KPiBAQCAtMjAsNyArMjEs
+NyBAQCBzdGF0aWMgaW50IG10a19ydGNfd3JpdGVfdHJpZ2dlcihzdHJ1Y3QgbXQ2Mzk3X3J0YyAq
+cnRjKQ0KPiAgCWludCByZXQ7DQo+ICAJdTMyIGRhdGE7DQo+ICANCj4gLQlyZXQgPSByZWdtYXBf
+d3JpdGUocnRjLT5yZWdtYXAsIHJ0Yy0+YWRkcl9iYXNlICsgUlRDX1dSVEdSLCAxKTsNCj4gKwly
+ZXQgPSByZWdtYXBfd3JpdGUocnRjLT5yZWdtYXAsIHJ0Yy0+YWRkcl9iYXNlICsgcnRjLT5kYXRh
+LT53cnRnciwgMSk7DQo+ICAJaWYgKHJldCA8IDApDQo+ICAJCXJldHVybiByZXQ7DQo+ICANCj4g
+QEAgLTI2OSw2ICsyNzAsOCBAQCBzdGF0aWMgaW50IG10a19ydGNfcHJvYmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikNCj4gIAlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwg
+SU9SRVNPVVJDRV9NRU0sIDApOw0KPiAgCXJ0Yy0+YWRkcl9iYXNlID0gcmVzLT5zdGFydDsNCj4g
+IA0KPiArCXJ0Yy0+ZGF0YSA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsN
+Cj4gKw0KPiAgCXJ0Yy0+aXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsNCj4gIAlpZiAo
+cnRjLT5pcnEgPCAwKQ0KPiAgCQlyZXR1cm4gcnRjLT5pcnE7DQo+IEBAIC0zMjUsMTAgKzMyOCwy
+MiBAQCBzdGF0aWMgaW50IG10NjM5N19ydGNfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4g
+IHN0YXRpYyBTSU1QTEVfREVWX1BNX09QUyhtdDYzOTdfcG1fb3BzLCBtdDYzOTdfcnRjX3N1c3Bl
+bmQsDQo+ICAJCQltdDYzOTdfcnRjX3Jlc3VtZSk7DQo+ICANCj4gK3N0YXRpYyBjb25zdCBzdHJ1
+Y3QgbXRrX3J0Y19kYXRhIG10NjM1OF9ydGNfZGF0YSA9IHsNCj4gKwkud3J0Z3IgPSBSVENfV1JU
+R1JfTVQ2MzU4LA0KPiArfTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfcnRjX2Rh
+dGEgbXQ2Mzk3X3J0Y19kYXRhID0gew0KPiArCS53cnRnciA9IFJUQ19XUlRHUl9NVDYzOTcsDQo+
+ICt9Ow0KPiArDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdDYzOTdfcnRj
+X29mX21hdGNoW10gPSB7DQo+IC0JeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzMjMtcnRj
+IiwgfSwNCj4gLQl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjM5Ny1ydGMiLCB9LA0KPiAt
+CXsgfQ0KPiArCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzIzLXJ0YyIsDQo+ICsJCS5k
+YXRhID0gJm10NjM5N19ydGNfZGF0YSwgfSwNCj4gKwl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVr
+LG10NjM1OC1ydGMiLA0KPiArCQkuZGF0YSA9ICZtdDYzNThfcnRjX2RhdGEsIH0sDQo+ICsJeyAu
+Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDYzOTctcnRjIiwNCj4gKwkJLmRhdGEgPSAmbXQ2Mzk3
+X3J0Y19kYXRhLCB9LA0KPiArCXt9DQo+ICB9Ow0KPiAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwg
+bXQ2Mzk3X3J0Y19vZl9tYXRjaCk7DQo+ICANCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgv
+bWZkL210NjM5Ny9ydGMuaCBiL2luY2x1ZGUvbGludXgvbWZkL210NjM5Ny9ydGMuaA0KPiBpbmRl
+eCA3ZGZiNjNiLi42MjAwZjNiIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L21mZC9tdDYz
+OTcvcnRjLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9tZmQvbXQ2Mzk3L3J0Yy5oDQo+IEBAIC0x
+OCw3ICsxOCw5IEBADQo+ICAjZGVmaW5lIFJUQ19CQlBVX0NCVVNZICAgICAgICAgQklUKDYpDQo+
+ICAjZGVmaW5lIFJUQ19CQlBVX0tFWSAgICAgICAgICAgICgweDQzIDw8IDgpDQo+ICANCj4gLSNk
+ZWZpbmUgUlRDX1dSVEdSICAgICAgICAgICAgICAweDAwM2MNCj4gKyNkZWZpbmUgUlRDX1dSVEdS
+X01UNjM1OCAgICAgICAweDNhDQo+ICsjZGVmaW5lIFJUQ19XUlRHUl9NVDYzOTcgICAgICAgMHgz
+Yw0KPiArI2RlZmluZSBSVENfV1JUR1JfTVQ2MzIzICAgICAgIFJUQ19XUlRHUl9NVDYzOTcNCj4g
+IA0KPiAgI2RlZmluZSBSVENfSVJRX1NUQSAgICAgICAgICAgIDB4MDAwMg0KPiAgI2RlZmluZSBS
+VENfSVJRX1NUQV9BTCAgICAgICAgIEJJVCgwKQ0KPiBAQCAtNjUsNiArNjcsMTAgQEANCj4gICNk
+ZWZpbmUgTVRLX1JUQ19QT0xMX0RFTEFZX1VTICAxMA0KPiAgI2RlZmluZSBNVEtfUlRDX1BPTExf
+VElNRU9VVCAgIChqaWZmaWVzX3RvX3VzZWNzKEhaKSkNCj4gIA0KPiArc3RydWN0IG10a19ydGNf
+ZGF0YSB7DQo+ICsJdTMyICAgICAgICAgICAgICAgICAgICAgd3J0Z3I7DQo+ICt9Ow0KPiArDQo+
+ICBzdHJ1Y3QgbXQ2Mzk3X3J0YyB7DQo+ICAJc3RydWN0IGRldmljZSAgICAgICAgICAgKmRldjsN
+Cj4gIAlzdHJ1Y3QgcnRjX2RldmljZSAgICAgICAqcnRjX2RldjsNCj4gQEAgLTc0LDYgKzgwLDcg
+QEAgc3RydWN0IG10NjM5N19ydGMgew0KPiAgCXN0cnVjdCByZWdtYXAgICAgICAgICAgICpyZWdt
+YXA7DQo+ICAJaW50ICAgICAgICAgICAgICAgICAgICAgaXJxOw0KPiAgCXUzMiAgICAgICAgICAg
+ICAgICAgICAgIGFkZHJfYmFzZTsNCj4gKwljb25zdCBzdHJ1Y3QgbXRrX3J0Y19kYXRhICpkYXRh
+Ow0KPiAgfTsNCj4gIA0KPiAgI2VuZGlmIC8qIF9MSU5VWF9NRkRfTVQ2Mzk3X1JUQ19IXyAqLw0K
+DQo=
 
