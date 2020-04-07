@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B571FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B56C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DA12074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1D820644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255330;
-	bh=hFSSaaFZs7iS34JeOV/LO3xxtt/qCl6SQ6F3A3HPIlg=;
+	s=default; t=1586255334;
+	bh=HqEmlzxufOwa6YagG4mTNMv27CCEvyFSPzld7zaEp8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rL4b+Z34TQkVcYVF4NYjNkPdKSMcYVXq+YAPtH4xNKcPjFi2834fAHAe1LwVG0Mtz
-	 NtM4p2sRY0sQaG2/CnY51x9hCgA+qN5quyBYo/cDNHT8MoJuiI5JeK9c0KS3CkehEp
-	 M1nexWNU5PSgnYy2BCYCZ+jIVxk8HHa87KiwWAJM=
+	b=j8BODz2xaiLKcxmgvnOjYnqAraxJVLo94xZNhfqFBvanhpo+vGRv+vxUyif5W0IDr
+	 E+rk8+Ea6dlLJUPq2yNF3qPpvCRh1aJGql8qpWDGedqganesRqtHpXhq/+3TZTr7eM
+	 /0eHsBt6J3/uy/ghVvRgTMtG09Xx1lRVGz7zOnww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgDGKYt (ORCPT
+        id S1728779AbgDGKYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:24:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbgDGKYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 06:24:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728767AbgDGKYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:24:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 995BF2080C;
-        Tue,  7 Apr 2020 10:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D2D12083E;
+        Tue,  7 Apr 2020 10:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255085;
-        bh=hFSSaaFZs7iS34JeOV/LO3xxtt/qCl6SQ6F3A3HPIlg=;
+        s=default; t=1586255080;
+        bh=HqEmlzxufOwa6YagG4mTNMv27CCEvyFSPzld7zaEp8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P2iIPHSW+XUIoOQQRoFSPUFx1EvZwE4fgpjoKmc+oq3UrZBnK1zUXSKgf/c86+Tzr
-         7gam58cjoQeIqwKv6//W7LxfBy19H1W6zTmHZT7Smb8eH7xyowOuMa6k2Fn3IUo2Z+
-         GSoO+meAVAvVKZDLSr1dQvS6n/5ARm5OSETZgaxw=
+        b=UzM786Q/Cpo5EA+ytJnq5SdLYvmFSmYNzA0ZrbnUpSXxM0/Rb7Al0N4hJQG1pxkT8
+         jLwrH3+e7GW1OljqnKfSyVMFmU2KYLnNtT/8kV0APt3g48xi8z6uDVD2fHnAnMNLpS
+         Km0tYqhnAULC1kAs/2+TSnOIyX6z7yif8gaZBoV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 5.5 23/46] misc: pci_endpoint_test: Avoid using module parameter to determine irqtype
-Date:   Tue,  7 Apr 2020 12:21:54 +0200
-Message-Id: <20200407101501.970264355@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH 5.5 21/46] misc: rtsx: set correct pcr_ops for rts522A
+Date:   Tue,  7 Apr 2020 12:21:52 +0200
+Message-Id: <20200407101501.776964498@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -59,109 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit b2ba9225e0313b1de631a44b7b48c109032bffec upstream.
+commit 10cea23b6aae15e8324f4101d785687f2c514fe5 upstream.
 
-commit e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
-uses module parameter 'irqtype' in pci_endpoint_test_set_irq()
-to check if IRQ vectors of a particular type (MSI or MSI-X or
-LEGACY) is already allocated. However with multi-function devices,
-'irqtype' will not correctly reflect the IRQ type of the PCI device.
+rts522a should use rts522a_pcr_ops, which is
+diffrent with rts5227 in phy/hw init setting.
 
-Fix it here by adding 'irqtype' for each PCI device to show the
-IRQ type of a particular PCI device.
-
-Fixes: e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: stable@vger.kernel.org # v4.19+
+Fixes: ce6a5acc9387 ("mfd: rtsx: Add support for rts522A")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200326032618.20472-1-yuehaibing@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/pci_endpoint_test.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/misc/cardreader/rts5227.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -98,6 +98,7 @@ struct pci_endpoint_test {
- 	struct completion irq_raised;
- 	int		last_irq;
- 	int		num_irqs;
-+	int		irq_type;
- 	/* mutex to protect the ioctls */
- 	struct mutex	mutex;
- 	struct miscdevice miscdev;
-@@ -157,6 +158,7 @@ static void pci_endpoint_test_free_irq_v
- 	struct pci_dev *pdev = test->pdev;
+--- a/drivers/misc/cardreader/rts5227.c
++++ b/drivers/misc/cardreader/rts5227.c
+@@ -394,6 +394,7 @@ static const struct pcr_ops rts522a_pcr_
+ void rts522a_init_params(struct rtsx_pcr *pcr)
+ {
+ 	rts5227_init_params(pcr);
++	pcr->ops = &rts522a_pcr_ops;
+ 	pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 20, 11);
+ 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
  
- 	pci_free_irq_vectors(pdev);
-+	test->irq_type = IRQ_TYPE_UNDEFINED;
- }
- 
- static bool pci_endpoint_test_alloc_irq_vectors(struct pci_endpoint_test *test,
-@@ -191,6 +193,8 @@ static bool pci_endpoint_test_alloc_irq_
- 		irq = 0;
- 		res = false;
- 	}
-+
-+	test->irq_type = type;
- 	test->num_irqs = irq;
- 
- 	return res;
-@@ -330,6 +334,7 @@ static bool pci_endpoint_test_copy(struc
- 	dma_addr_t orig_dst_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	int irq_type = test->irq_type;
- 	u32 src_crc32;
- 	u32 dst_crc32;
- 
-@@ -426,6 +431,7 @@ static bool pci_endpoint_test_write(stru
- 	dma_addr_t orig_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	int irq_type = test->irq_type;
- 	u32 crc32;
- 
- 	if (size > SIZE_MAX - alignment)
-@@ -494,6 +500,7 @@ static bool pci_endpoint_test_read(struc
- 	dma_addr_t orig_phys_addr;
- 	size_t offset;
- 	size_t alignment = test->alignment;
-+	int irq_type = test->irq_type;
- 	u32 crc32;
- 
- 	if (size > SIZE_MAX - alignment)
-@@ -555,7 +562,7 @@ static bool pci_endpoint_test_set_irq(st
- 		return false;
- 	}
- 
--	if (irq_type == req_irq_type)
-+	if (test->irq_type == req_irq_type)
- 		return true;
- 
- 	pci_endpoint_test_release_irq(test);
-@@ -567,12 +574,10 @@ static bool pci_endpoint_test_set_irq(st
- 	if (!pci_endpoint_test_request_irq(test))
- 		goto err;
- 
--	irq_type = req_irq_type;
- 	return true;
- 
- err:
- 	pci_endpoint_test_free_irq_vectors(test);
--	irq_type = IRQ_TYPE_UNDEFINED;
- 	return false;
- }
- 
-@@ -652,6 +657,7 @@ static int pci_endpoint_test_probe(struc
- 	test->test_reg_bar = 0;
- 	test->alignment = 0;
- 	test->pdev = pdev;
-+	test->irq_type = IRQ_TYPE_UNDEFINED;
- 
- 	if (no_msi)
- 		irq_type = IRQ_TYPE_LEGACY;
 
 
