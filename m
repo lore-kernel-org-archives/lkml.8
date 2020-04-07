@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B686FC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE68C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C98B20644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF98220644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255295;
-	bh=nekBzOBwg7MSUfjgB1WlnAg8CmwfUXUhpErEo3+ryck=;
+	s=default; t=1586255299;
+	bh=3cR19qKiPaDwlXrsWSDSoSc5ShG6sGpNsCElSxC29fE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qjsb+fr2eoDrDrZCSi6g/w4pL7eapc5vpkR3f1J/+gATV9STq26OxDiZSB1PZJAYL
-	 H4ZXrrZYa7U/BNhnsN7a/HeLCLi6gv47S41aAkGJVxX2VY7kjk1V6SEdzRqTBnPOlU
-	 uwGz7eZvRHTHLtnNzERn+E3gncH/LmtyamCP8qm0=
+	b=XpPoiIyYg79KXqGni+JNOB2sIt/0aKrzL+YrjAsf6oXwSPmsdDaVYkGIZeRvT3WkA
+	 3YbOe7pzs1Zd7mT8KtBHNyIONWKKzMqiv1QPBoW/LqOT4WfIKjzrM6gMgfg0T1FJrh
+	 QP19i+CBXKAiqd2brSGxN/Tmfgq8c6Jhiit72NdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgDGKZo (ORCPT
+        id S1728984AbgDGKZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36348 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:25:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbgDGKZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:40 -0400
+        id S1728608AbgDGKZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 214AB2078A;
-        Tue,  7 Apr 2020 10:25:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC256207FF;
+        Tue,  7 Apr 2020 10:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255139;
-        bh=nekBzOBwg7MSUfjgB1WlnAg8CmwfUXUhpErEo3+ryck=;
+        s=default; t=1586255132;
+        bh=3cR19qKiPaDwlXrsWSDSoSc5ShG6sGpNsCElSxC29fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yc6fNzoWI3kHBDrte4ztLgPpcUjpQZYD6BgKlDxhcEywLOQZiNNDYxX2fl7BotNy2
-         rJtx92mQnTDJ8yG9edRJjUWdUFRDfMREZ7Je5UiDyeXPViWaPi2i9t7BWzitQqpPzk
-         TscHrYgpkBRlcy1kGdU4+lUpBZqemTe164Ol8BAE=
+        b=lV4Ig1EWzbFQPsi0tF3V8LkJvx1KK+tOu3yCzmgMdvw65CUsRnGFWdyaLUFfPRoUA
+         RNWnDw0O969aDqVncbsIev3hWt7vcHl2OsHC5i3Ub/g7pX7y17Hqhya3Jh6uHSD3Mh
+         T1UJRxHF8k+nL7tBUIfGW2fQ2RtPhnF25ORoaVHc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH 5.5 46/46] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Tue,  7 Apr 2020 12:22:17 +0200
-Message-Id: <20200407101504.206060352@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 43/46] net: genetlink: return the error code when attribute parsing fails.
+Date:   Tue,  7 Apr 2020 12:22:14 +0200
+Message-Id: <20200407101503.947995141@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -62,67 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit 38228e8848cd7dd86ccb90406af32de0cad24be3 upstream.
+commit 39f3b41aa7cae917f928ef9f31d09da28188e5ed upstream.
 
-lockdep complains when padata's paths to update cpumasks via CPU hotplug
-and sysfs are both taken:
+Currently if attribute parsing fails and the genl family
+does not support parallel operation, the error code returned
+by __nlmsg_parse() is discarded by genl_family_rcv_msg_attrs_parse().
 
-  # echo 0 > /sys/devices/system/cpu/cpu1/online
-  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+Be sure to report the error for all genl families.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
-  ------------------------------------------------------
-  bash/205 is trying to acquire lock:
-  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
-
-  but task is already holding lock:
-  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
-
-  which lock already depends on the new lock.
-
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: c10e6cf85e7d ("net: genetlink: push attrbuf allocation and parsing to a separate function")
+Fixes: ab5b526da048 ("net: genetlink: always allocate separate attrs for dumpit ops")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/padata.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/netlink/genetlink.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -643,8 +643,8 @@ int padata_set_cpumask(struct padata_ins
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
+--- a/net/netlink/genetlink.c
++++ b/net/netlink/genetlink.c
+@@ -497,8 +497,9 @@ genl_family_rcv_msg_attrs_parse(const st
  
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
- 
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -662,8 +662,8 @@ int padata_set_cpumask(struct padata_ins
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
- 
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
+ 	err = __nlmsg_parse(nlh, hdrlen, attrbuf, family->maxattr,
+ 			    family->policy, validate, extack);
+-	if (err && parallel) {
+-		kfree(attrbuf);
++	if (err) {
++		if (parallel)
++			kfree(attrbuf);
+ 		return ERR_PTR(err);
+ 	}
+ 	return attrbuf;
 
 
