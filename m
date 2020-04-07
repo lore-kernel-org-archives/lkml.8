@@ -2,141 +2,135 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E360FC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E11C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADD52072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057662072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:33:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HXd2UwNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgDGQdQ (ORCPT
+        id S1728343AbgDGQdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:33:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59068 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726833AbgDGQdQ (ORCPT
+        Tue, 7 Apr 2020 12:33:20 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44365 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbgDGQdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:33:16 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037GWCOF109057;
-        Tue, 7 Apr 2020 12:32:55 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 306mjdwncb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 12:32:55 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 037GV4UU008867;
-        Tue, 7 Apr 2020 16:32:54 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma02dal.us.ibm.com with ESMTP id 306hv6yww7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 16:32:54 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037GWrMc46858584
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 16:32:53 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C5F1AC062;
-        Tue,  7 Apr 2020 16:32:53 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4A9D6AC05E;
-        Tue,  7 Apr 2020 16:32:50 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.172.25])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Apr 2020 16:32:50 +0000 (GMT)
-Message-ID: <dfa8c0d60f171b5cd475d6a5441e94d4dbafbc77.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 1/1] powerpc/kernel: Enables memory hot-remove after
- reboot on pseries guests
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Allison Randal <allison@lohutok.net>,
-        Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
-        Hari Bathini <hbathini@linux.ibm.com>, bharata@linux.ibm.com
-Date:   Tue, 07 Apr 2020 13:32:41 -0300
-In-Reply-To: <20200407040046.GA12609@in.ibm.com>
-References: <20200402195156.626430-1-leonardo@linux.ibm.com>
-         <20200403143831.GA12662@in.ibm.com>
-         <6c09a6e1a1f790ad87a2591ff8f8a6e1c7d6b079.camel@linux.ibm.com>
-         <20200407040046.GA12609@in.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-6w+DgFjDZwO6PZH9+FP6"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 7 Apr 2020 12:33:19 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n13so540753pgp.11
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 09:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=AlcwjOm+1Oh931lo1HzGT/5VUetrnzxIQ7HJJpMAkSA=;
+        b=HXd2UwNSpZv1U6uiJdGL+SA6oIP70AZXhiqqbtCpORm55myGT6F8YoYz1KcqrXBzpQ
+         6PhnHzrI/1egYgCS4yivmIhASptb/TJE+LdK4qoo7Avb8yNPjTxfipFQpfqNBtoTtKOS
+         IPLiKFb99PyptFPWiEJPD71sdfoIvojaqEh0A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=AlcwjOm+1Oh931lo1HzGT/5VUetrnzxIQ7HJJpMAkSA=;
+        b=fO7BbgJw2J8ykAAkYipb3zHfnF9XtCoIfLhD+ewa3a88+M/AjmHQwIoveVc0F1KKk7
+         0YLeEB0gY9VG8/LUZAzIBFPIeb0Zl95X1IyfI2pp0Cmx4nDGdq5sIMrxV1frItFsKYx6
+         v+vuEU58YZkPBlz4uo2lUABGi53a8uDk/Tb1tEq882FIRP5csb13w8mHpeeMhx2FFxgb
+         DH5ERBhAZGKyfhNFkiypAaGeXZ4umGhwqJlaqs55qBA7nwCuy/ZIw1apBGXgb8OXMP22
+         E93j1N6+GyvuSszk586bjE1stRfu9rwRarnteHGgW1qFZstOy3TfpB7WSeYWkiJDegMr
+         oYrQ==
+X-Gm-Message-State: AGi0PubUj7mEqH/4DWTDE7QPS7YAU40RAHV4Ax2dmOYQP9WN/NG6olAU
+        4nmcsJHYEcF0NcWv8ZdY2OQtMw==
+X-Google-Smtp-Source: APiQypKeLFLniNnmBEATU0CRT1p7cx8eVojEZZ/MBtMP+nCynVZQytfYdqaR6xyI5TtllI5gK89mGg==
+X-Received: by 2002:a63:be09:: with SMTP id l9mr2829851pgf.439.1586277198229;
+        Tue, 07 Apr 2020 09:33:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b26sm11802653pfd.98.2020.04.07.09.33.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 09:33:17 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 09:33:16 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     kernel-hardening@lists.openwall.com,
+        Emese Revfy <re.emese@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gcc-plugins/stackleak: Avoid assignment for unused macro
+ argument
+Message-ID: <202004070933.5112AA6@keescook>
+References: <202004020103.731F201@keescook>
+ <13c90df4-a422-bb73-a119-b8ccd11fc4f1@linux.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_07:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=677
- clxscore=1015 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070131
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <13c90df4-a422-bb73-a119-b8ccd11fc4f1@linux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 07, 2020 at 06:30:18PM +0300, Alexander Popov wrote:
+> Hello Kees,
+> 
+> On 02.04.2020 11:10, Kees Cook wrote:
+> > With GCC version >= 8, the cgraph_create_edge() macro argument using
+> > "frequency" goes unused. Instead of assigning a temporary variable for
+> > the argument, pass the compute_call_stmt_bb_frequency() call directly
+> > as the macro argument so that it will just not be uncalled when it is
+> > not wanted by the macros.
+> 
+> Do you mean "it will just not be called"?
 
---=-6w+DgFjDZwO6PZH9+FP6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I really did. ;) Thanks, I'll adjust this.
 
-Hello Michael,
+-Kees
 
-Would it be ok to add this patch for 5.7 ? Or too late?
+> 
+> Thanks!
+> 
+> > Silences the warning:
+> > 
+> > scripts/gcc-plugins/stackleak_plugin.c:54:6: warning: variable ‘frequency’ set but not used [-Wunused-but-set-variable]
+> > 
+> > Now builds cleanly with gcc-7 and gcc-9. Both boot and pass
+> > STACKLEAK_ERASING LKDTM test.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  scripts/gcc-plugins/stackleak_plugin.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/scripts/gcc-plugins/stackleak_plugin.c b/scripts/gcc-plugins/stackleak_plugin.c
+> > index dbd37460c573..cc75eeba0be1 100644
+> > --- a/scripts/gcc-plugins/stackleak_plugin.c
+> > +++ b/scripts/gcc-plugins/stackleak_plugin.c
+> > @@ -51,7 +51,6 @@ static void stackleak_add_track_stack(gimple_stmt_iterator *gsi, bool after)
+> >  	gimple stmt;
+> >  	gcall *stackleak_track_stack;
+> >  	cgraph_node_ptr node;
+> > -	int frequency;
+> >  	basic_block bb;
+> >  
+> >  	/* Insert call to void stackleak_track_stack(void) */
+> > @@ -68,9 +67,9 @@ static void stackleak_add_track_stack(gimple_stmt_iterator *gsi, bool after)
+> >  	bb = gimple_bb(stackleak_track_stack);
+> >  	node = cgraph_get_create_node(track_function_decl);
+> >  	gcc_assert(node);
+> > -	frequency = compute_call_stmt_bb_frequency(current_function_decl, bb);
+> >  	cgraph_create_edge(cgraph_get_node(current_function_decl), node,
+> > -			stackleak_track_stack, bb->count, frequency);
+> > +			stackleak_track_stack, bb->count,
+> > +			compute_call_stmt_bb_frequency(current_function_decl, bb));
+> >  }
+> >  
+> >  static bool is_alloca(gimple stmt)
+> > 
+> 
 
-Regards,
-
-On Tue, 2020-04-07 at 09:30 +0530, Bharata B Rao wrote:
-> On Mon, Apr 06, 2020 at 12:41:01PM -0300, Leonardo Bras wrote:
-> > Hello Bharata,
-> >=20
-> > On Fri, 2020-04-03 at 20:08 +0530, Bharata B Rao wrote:
-> > > The patch would be more complete with the following change that ensur=
-es
-> > > that DRCONF_MEM_HOTREMOVABLE flag is set for non-boot-time hotplugged
-> > > memory too. This will ensure that ibm,dynamic-memory-vN property
-> > > reflects the right flags value for memory that gets hotplugged
-> > > post boot.
-> > >=20
-> >=20
-> > You just sent that on a separated patchset, so I think it's dealt with.
-> > Do you have any other comments on the present patch?
->=20
-> None, thanks.
->=20
-> Regards,
-> Bharata.
->=20
-
---=-6w+DgFjDZwO6PZH9+FP6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl6MqykACgkQlQYWtz9S
-ttRMzA/+PmdXf6V5z8ndbT/KNBi9gdUk91oks3AMHhMzDPDchaVqeEL8DVlp5Coz
-kOU2f2oIef2yRAlFNbSU2BFgzTe2E28AezUj9O4+TqCw+SSeimAfAqhxR/avZYXJ
-+TFXctQFvmUPKFnNFySgjhBqqBi1iF4C9yWpw+cJbr8Soc5OTlMTjXkgaXEddjip
-+WIs4sCJCAvfoIEmIDqbE64BIjwEGP0Hm2vp+Kb0/BjcmZBbXCReZ2VNz5+pqQCX
-+KEfIT02zRgl8WV1jDg6FGHA9ImOBPLaEvAEmYKaNjDiZYCNo3LULipa5++pevmc
-30jjTj44k+fYIuSDcVB87P9HbS+bNxow7y2wCG8kqZZHDItLvBWR3tnnNzgX8vr3
-iyZB+yJgw0YR4yQ/agPJgOqkIeSbQcYsQtI/U8C7m4dlNKxlsk3QTwFq0iJnj2g3
-SqtACtJmr383hjRnkowLMvIY8ETCQTGdMfipfFD2lHY0qVvoMefAHrpAt1dFHaqK
-QNJFicFyua2INKMt/3NJd4HEp43ltAgdUpA1GFVHx40HDQn3wfgHRewBC21fhmJL
-9orQ6tluAMaCC/EFbny7RyW4zqNO3R+3fuhlyTi1GWs3nXrxy9RecA3MmL6AsEK6
-JnN5awDDilnCmswf5d5bBBC/MFwozTl2ZTG4Lg3cOSPmG21h04Q=
-=+f+k
------END PGP SIGNATURE-----
-
---=-6w+DgFjDZwO6PZH9+FP6--
-
+-- 
+Kees Cook
