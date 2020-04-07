@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A44C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A488AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620B3207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE8520768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217898;
-	bh=jfwCsAvjDH3ZwiE9o8OYiI+Fbo15gpdgV44F0mGIzMU=;
+	s=default; t=1586217908;
+	bh=SXAong0dK9Zt1RqkvYCfwsNxtQBl+WYaOrbAXLIv3TA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IkqpoEmCKdxGFEctBlghFq64+4oG2G6GcUiYhiMEYqPx2njeJrrqHzmfaYyiqQl6Y
-	 zIdN+fizVMo8NV4CsM10J8Lrvn3seDwulE9THZ4jpCdu+Cf1M/VV4dKR4XYMOSaajJ
-	 KFADAbqP9M1a7sgj+Mtb655jiD1t9YpjdslQTNiA=
+	b=FNLzIvfLSbaRcMVfpMz0AHoEfjof2ZSsZhDvEN1cxJmPmuGmoAz/jqbB0vWlwPO5w
+	 zKYuz+00IkDnWmXuY5Pm/PsDDFUeAPlMLnfw2aOM+EAFLRMrta0Fgysd3fccjdpnJ3
+	 9mRNWrDtt7mRRhFmAVraPx5nrE3zbvQPdQRvCSEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgDGACn (ORCPT
+        id S1727703AbgDGAFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37536 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:05:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728159AbgDGACk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:40 -0400
+        id S1728173AbgDGACm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B97720857;
-        Tue,  7 Apr 2020 00:02:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B10EC2082F;
+        Tue,  7 Apr 2020 00:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217760;
-        bh=jfwCsAvjDH3ZwiE9o8OYiI+Fbo15gpdgV44F0mGIzMU=;
+        s=default; t=1586217762;
+        bh=SXAong0dK9Zt1RqkvYCfwsNxtQBl+WYaOrbAXLIv3TA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r24j7I6PwCWm5LIQQz7YINNCPckTpHCliEQkHL4gXG/Uk2PkxZyeYYJqDkSjcKcoN
-         eoLuDYjmfe3WHJXp2bUYJAAgN7Ok/BCQp4iH8XWKVSmZJFWM2VIYzOPmtRKuubHSM2
-         1sD5ugX0zvyVXFispUXkP119T/4cfaM4P8xY0XpU=
+        b=HqP7dVgU9K7xu7ukPxH+YnNAGO2J6vyMgsp4pUwS/t61Yf4AHtPqsW6h3J7c8TlcC
+         Rdawkg4Fh1xhN30Jtb0uKjGqnoDpmbh8oLiz6HZOR4wytTYz1QhyjXRqoTfHAhRZEa
+         Ajd5RnFaRXJfMxN8O7ipbWoFSTpEKjpHIHctzWug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/13] rxrpc: Fix sendmsg(MSG_WAITALL) handling
-Date:   Mon,  6 Apr 2020 20:02:25 -0400
-Message-Id: <20200407000234.17088-4-sashal@kernel.org>
+Cc:     Luo bin <luobin9@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/13] hinic: fix a bug of waitting for IO stopped
+Date:   Mon,  6 Apr 2020 20:02:27 -0400
+Message-Id: <20200407000234.17088-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000234.17088-1-sashal@kernel.org>
 References: <20200407000234.17088-1-sashal@kernel.org>
@@ -59,36 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit 498b577660f08cef5d9e78e0ed6dcd4c0939e98c ]
+[ Upstream commit 96758117dc528e6d84bd23d205e8cf7f31eda029 ]
 
-Fix the handling of sendmsg() with MSG_WAITALL for userspace to round the
-timeout for when a signal occurs up to at least two jiffies as a 1 jiffy
-timeout may end up being effectively 0 if jiffies wraps at the wrong time.
+it's unreliable for fw to check whether IO is stopped, so driver
+wait for enough time to ensure IO process is done in hw before
+freeing resources
 
-Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporarily ignore signals")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Luo bin <luobin9@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/sendmsg.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
+ 1 file changed, 2 insertions(+), 49 deletions(-)
 
-diff --git a/net/rxrpc/sendmsg.c b/net/rxrpc/sendmsg.c
-index 68993439e1d91..7ee72053037a3 100644
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -75,8 +75,8 @@ static int rxrpc_wait_for_tx_window_nonintr(struct rxrpc_sock *rx,
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+index 9deec13d98e93..4c91c8ceac5f9 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+@@ -370,50 +370,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
+ 	return -EFAULT;
+ }
  
- 	rtt = READ_ONCE(call->peer->rtt);
- 	rtt2 = nsecs_to_jiffies64(rtt) * 2;
--	if (rtt2 < 1)
--		rtt2 = 1;
-+	if (rtt2 < 2)
-+		rtt2 = 2;
+-static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
+-{
+-	struct hinic_cmd_io_status cmd_io_status;
+-	struct hinic_hwif *hwif = hwdev->hwif;
+-	struct pci_dev *pdev = hwif->pdev;
+-	struct hinic_pfhwdev *pfhwdev;
+-	unsigned long end;
+-	u16 out_size;
+-	int err;
+-
+-	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
+-		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
+-		return -EINVAL;
+-	}
+-
+-	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
+-
+-	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+-
+-	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
+-	do {
+-		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
+-					HINIC_COMM_CMD_IO_STATUS_GET,
+-					&cmd_io_status, sizeof(cmd_io_status),
+-					&cmd_io_status, &out_size,
+-					HINIC_MGMT_MSG_SYNC);
+-		if ((err) || (out_size != sizeof(cmd_io_status))) {
+-			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
+-				err);
+-			return err;
+-		}
+-
+-		if (cmd_io_status.status == IO_STOPPED) {
+-			dev_info(&pdev->dev, "IO stopped\n");
+-			return 0;
+-		}
+-
+-		msleep(20);
+-	} while (time_before(jiffies, end));
+-
+-	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
+-	return -ETIMEDOUT;
+-}
+-
+ /**
+  * clear_io_resource - set the IO resources as not active in the NIC
+  * @hwdev: the NIC HW device
+@@ -433,11 +389,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
+ 		return -EINVAL;
+ 	}
  
- 	timeout = rtt2;
- 	tx_start = READ_ONCE(call->tx_hard_ack);
+-	err = wait_for_io_stopped(hwdev);
+-	if (err) {
+-		dev_err(&pdev->dev, "IO has not stopped yet\n");
+-		return err;
+-	}
++	/* sleep 100ms to wait for firmware stopping I/O */
++	msleep(100);
+ 
+ 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+ 
 -- 
 2.20.1
 
