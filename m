@@ -2,121 +2,101 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5F8C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E09C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2BC2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:42:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586292137;
-	bh=eHcGgZ846Ryt7rh09LVZWCLBcok82M6/lo0T07EG498=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZKQGyxlh4SYYTMERLUfLkYmGvroyFOLwOrhmdt60pQTCCO482ZsWt1o0mRQf8kPBD
-	 p1fWfXQN+ph2aJnT30trujh40xwSkXfryj76hxcB8LwnfmXe3vVObZV6AauE+QBlR8
-	 Qv+dR7ImTpyHtfUwWfufHo86pQ22DbWFk3P3rg+0=
+	by mail.kernel.org (Postfix) with ESMTP id 5601C2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:42:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="XybXO52B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgDGUmP (ORCPT
+        id S1726467AbgDGUmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:42:15 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35034 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgDGUmP (ORCPT
+        Tue, 7 Apr 2020 16:42:44 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:42870 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgDGUmo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:42:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r26so3280416wmh.0;
-        Tue, 07 Apr 2020 13:42:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/+kyW4mDgVYbrX53+0yy/aJtZBiiNTJiMN1q3teN/Bg=;
-        b=anNbNsEYurSzE6xrCEwNPSbQlO6BYjDLFtgLhqayNOahXLxt1d6078ev0yJ4D2AVwG
-         IXASDIpYVm3wME6K5+8RHUiSbvBr0T8c82VFlBxg09efC3wVeFQcxEgIjJ/xrzL58a7H
-         nP8D8ZzXKcKPBRPD/Oqpwidzt3Qf3sAfxuTiJ0GT6weFU96z1ccmFqq3Mr0c2/hvXpF7
-         H3ji4y3VsCuSEtEn+2d/fPlr575QkrJ0so+lApqqKhuO5mlq7cdxAomJomz/kRs8hUG0
-         R3nRrwg3oPtDS/NblBu2SIB+l4QcjhSmHJT+kHX0C3YAwSAsmUuxVI3gje4/sF0SGSWq
-         XrqA==
-X-Gm-Message-State: AGi0PubRtP68G/DouNfI8DOpiKa/k5MQDoeuoO13OR7MwWZQoDAFe5tq
-        L2r1htLl1GknOVuGpCzWz6A=
-X-Google-Smtp-Source: APiQypKRJ8P0Fsa153hShEIVJFf7A48GlpRok+1kr6C+mLHm9baJlhBfyOJ3pt5jmKv0OIN+ezqq4A==
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr1022612wmc.129.1586292132710;
-        Tue, 07 Apr 2020 13:42:12 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id d13sm32503523wrv.34.2020.04.07.13.42.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 13:42:11 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 21:42:09 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     vkuznets <vkuznets@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: hv_hypercall_pg page permissios
-Message-ID: <20200407204209.ji655odu7b4tt7oh@debian>
-References: <20200407065500.GA28490@lst.de>
- <87v9mblpq6.fsf@vitty.brq.redhat.com>
- <HK0P153MB0273278D61381693E022B3ADBFC30@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+        Tue, 7 Apr 2020 16:42:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1586292160; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q+FvC4XrLYIWwIznQtEtJGiSIyNwCJPa2O+6Y13/D1Y=;
+        b=XybXO52Bb73UeY0k0PUQZJ/7CBWIlD7SV5NlZYvlki77j/NDjXjVwlh+VITccU6RFW0lnf
+        8MDVY0ltU8aUJmuFboD6n2wHHxS6IMvzWX2HqtdXhbV+K8q8TWErm+272Snz3zkr7O9S9d
+        XnL1eM1/weVj7em5PTi9oZEWBC2htKY=
+Date:   Tue, 07 Apr 2020 22:42:29 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] gpu/drm: ingenic: Delete an error message in
+ ingenic_drm_probe()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>
+Message-Id: <TUQF8Q.MM4L7PYRPUYD@crapouillou.net>
+In-Reply-To: <e03e7106-0f22-99c4-ad21-b288e8990b5a@web.de>
+References: <e03e7106-0f22-99c4-ad21-b288e8990b5a@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <HK0P153MB0273278D61381693E022B3ADBFC30@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 06:10:42PM +0000, Dexuan Cui wrote:
-> > From: linux-hyperv-owner@vger.kernel.org
-> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Vitaly Kuznetsov
-> > Sent: Tuesday, April 7, 2020 12:28 AM
-> > Christoph Hellwig <hch@lst.de> writes:
-> > 
-> > > Hi all,
-> > >
-> > > The x86 Hyper-V hypercall page (hv_hypercall_pg) is the only allocation
-> > > in the kernel using __vmalloc with exectutable persmissions, and the
-> > > only user of PAGE_KERNEL_RX.  Is there any good reason it needs to
-> > > be readable?  Otherwise we could use vmalloc_exec and kill off
-> > > PAGE_KERNEL_RX.  Note that before 372b1e91343e6 ("drivers: hv: Turn
-> > off
-> > > write permission on the hypercall page") it was even mapped writable..
-> > 
-> > [There is nothing secret in the hypercall page, by reading it you can
-> > figure out if you're running on Intel or AMD (VMCALL/VMMCALL) but it's
-> > likely not the only possible way :-)]
-> > 
-> > I see no reason for hv_hypercall_pg to remain readable. I just
-> > smoke-tested
-> > 
-> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> > index 7581cab74acb..17845db67fe2 100644
-> > --- a/arch/x86/hyperv/hv_init.c
-> > +++ b/arch/x86/hyperv/hv_init.c
-> > @@ -382,7 +382,7 @@ void __init hyperv_init(void)
-> >         guest_id = generate_guest_id(0, LINUX_VERSION_CODE, 0);
-> >         wrmsrl(HV_X64_MSR_GUEST_OS_ID, guest_id);
-> > 
-> > -       hv_hypercall_pg  = __vmalloc(PAGE_SIZE, GFP_KERNEL,
-> > PAGE_KERNEL_RX);
-> > +       hv_hypercall_pg  = vmalloc_exec(PAGE_SIZE);
-> 
-> If we try to write into the page, Hyper-V will kill the guest immediately
-> by a virtual double-fault (or triple fault?), IIRC.
-> 
+Hi Markus,
 
-The guest would get injected a #GP fault in that case FWIW.  Perhaps
-that leads to further double-fault or triple-fault.
+Le dim. 5 avril 2020 =C3=A0 11:30, Markus Elfring <Markus.Elfring@web.de> a=
+=20
+=C3=A9crit :
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sun, 5 Apr 2020 11:25:30 +0200
+>=20
+> The function =E2=80=9Cplatform_get_irq=E2=80=9D can log an error already.
+> Thus omit a redundant message for the exception handling in the
+> calling function.
+>=20
+> This issue was detected by using the Coccinelle software.
+>=20
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Wei.
+Applied to drm-misc-next, thanks.
+
+-Paul
+
+> ---
+>  drivers/gpu/drm/ingenic/ingenic-drm.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c=20
+> b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> index 9dfe7cb530e1..06ca752b76ee 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+> @@ -661,10 +661,8 @@ static int ingenic_drm_probe(struct=20
+> platform_device *pdev)
+>  	}
+>=20
+>  	irq =3D platform_get_irq(pdev, 0);
+> -	if (irq < 0) {
+> -		dev_err(dev, "Failed to get platform irq");
+> +	if (irq < 0)
+>  		return irq;
+> -	}
+>=20
+>  	if (soc_info->needs_dev_clk) {
+>  		priv->lcd_clk =3D devm_clk_get(dev, "lcd");
+> --
+> 2.26.0
+>=20
+
+
