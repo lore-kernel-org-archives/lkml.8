@@ -2,105 +2,83 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E113BC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2DEC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA24C2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A8F2072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 21:28:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EcH2LrXb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgDGV0C (ORCPT
+        id S1726436AbgDGV2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 17:26:02 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:53197 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726380AbgDGV0C (ORCPT
+        Tue, 7 Apr 2020 17:28:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50848 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgDGV2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 17:26:02 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-52-92QqPk1OMtCG-Q0ygmijTQ-1; Tue, 07 Apr 2020 22:25:57 +0100
-X-MC-Unique: 92QqPk1OMtCG-Q0ygmijTQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 7 Apr 2020 22:25:56 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 7 Apr 2020 22:25:56 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Peter Zijlstra' <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "hch@infradead.org" <hch@infradead.org>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kenny@panix.com" <kenny@panix.com>,
-        "jeyu@kernel.org" <jeyu@kernel.org>,
-        "rasmus.villemoes@prevas.dk" <rasmus.villemoes@prevas.dk>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "xiaoyao.li@intel.com" <xiaoyao.li@intel.com>,
-        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
-        "thellstrom@vmware.com" <thellstrom@vmware.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jannh@google.com" <jannh@google.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "dcovelli@vmware.com" <dcovelli@vmware.com>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>
-Subject: RE: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
-Thread-Topic: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
-Thread-Index: AQHWDM13xoy91raOhkKuBOKktFSrAahuK2jQ
-Date:   Tue, 7 Apr 2020 21:25:56 +0000
-Message-ID: <23787a63b28744b1906c4d4b6209b6af@AcuMS.aculab.com>
+        Tue, 7 Apr 2020 17:28:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dF5pQpdVBqNC0kSnylLZyPWPJXxXRLznWdsyFigAa+Y=; b=EcH2LrXbGkY/A0oFSOCNRu8Kzn
+        Jm1L3B8w2Z0EJIp1E6FXqTJGekUCp/ghbnSAyfVRBBjan/Awl8/21Lfwj/nIyORskbTf1sSOFcZud
+        Viil12cmJ+sFXFpXtS22jYZXLfyNjo18kIQh0BOV2LpsI0NNohRe0UpZaQ9kVJO5EJ/fcROu58KjZ
+        XOD9UXnK1HSXIqXhb7u7Lf9lwNhiyEAfyFSLG0wBF5L/yd2bY0nLJ0Ac9wAJbdktKkmjjS6dG8Rtg
+        UTdM6fuAZpK8buCxz7vmKIRKqZOglWpvEJd5/g0W5TXtXmJtSisb2P4mDRXgwuNbVxFs9rL6W6SqR
+        Mul4V5hg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLvlF-0002vH-0a; Tue, 07 Apr 2020 21:27:57 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E13B89803E1; Tue,  7 Apr 2020 23:27:54 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 23:27:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <nadav.amit@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, hch@infradead.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        mingo <mingo@redhat.com>, bp <bp@alien8.de>, hpa@zytor.com,
+        x86 <x86@kernel.org>, "Kenneth R. Crudup" <kenny@panix.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jannh@google.com, keescook@chromium.org, David.Laight@aculab.com,
+        Doug Covelli <dcovelli@vmware.com>, mhiramat@kernel.org
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+Message-ID: <20200407212754.GU2452@worktop.programming.kicks-ass.net>
 References: <20200407110236.930134290@infradead.org>
- <20200407111007.352324393@infradead.org>
-In-Reply-To: <20200407111007.352324393@infradead.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+ <20200407111007.429362016@infradead.org>
+ <10ABBCEE-A74D-4100-99D9-05B4C1758FF6@gmail.com>
+ <20200407193853.GP2452@worktop.programming.kicks-ass.net>
+ <90B32DAE-0BB5-4455-8F73-C43037695E7C@gmail.com>
+ <20200407205042.GT2452@worktop.programming.kicks-ass.net>
+ <96C2F23A-D6F4-4A04-82B6-284788C5D2CC@gmail.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96C2F23A-D6F4-4A04-82B6-284788C5D2CC@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUGV0ZXIgWmlqbHN0cmENCj4gU2VudDogMDcgQXByaWwgMjAyMCAxMjowMw0KPiANCj4g
-SXQgdHVybnMgb3V0IHRoYXQgd2l0aCBTcGxpdC1Mb2NrLURldGVjdCBlbmFibGVkIChkZWZhdWx0
-KSBhbnkgVk1YDQo+IGh5cGVydmlzb3IgbmVlZHMgYXQgbGVhc3QgYSBsaXR0bGUgbW9kaWZpY2F0
-aW9uIGluIG9yZGVyIHRvIG5vdCBibGluZGx5DQo+IGluamVjdCB0aGUgI0FDIGludG8gdGhlIGd1
-ZXN0IHdpdGhvdXQgdGhlIGd1ZXN0IGJlaW5nIHJlYWR5IGZvciBpdC4NCj4gDQo+IFNpbmNlIHRo
-ZXJlIGlzIG5vIHRlbGxpbmcgd2hpY2ggbW9kdWxlIGltcGxlbWVudHMgYSBoeXBlcnZpc29yLCBz
-Y2FuDQo+IGFsbCBvdXQtb2YtdHJlZSBtb2R1bGVzJyB0ZXh0IGFuZCBsb29rIGZvciBWTVggaW5z
-dHJ1Y3Rpb25zIGFuZCByZWZ1c2UNCj4gdG8gbG9hZCBpdCB3aGVuIFNMRCBpcyBlbmFibGVkIChk
-ZWZhdWx0KSBhbmQgdGhlIG1vZHVsZSBpc24ndCBtYXJrZWQNCj4gJ3NsZF9zYWZlJy4NCi4uLg0K
-PiArCXdoaWxlICh0ZXh0IDwgdGV4dF9lbmQpIHsNCj4gKwkJa2VybmVsX2luc25faW5pdCgmaW5z
-biwgdGV4dCwgdGV4dF9lbmQgLSB0ZXh0KTsNCj4gKwkJaW5zbl9nZXRfbGVuZ3RoKCZpbnNuKTsN
-Cj4gKw0KPiArCQlpZiAoV0FSTl9PTl9PTkNFKCFpbnNuX2NvbXBsZXRlKCZpbnNuKSkpIHsNCj4g
-KwkJCXByX2VycigiTW9kdWxlIHRleHQgbWFsZm9ybWVkOiAlc1xuIiwgbW9kLT5uYW1lKTsNCj4g
-KwkJCXJldHVybiAtRU5PRVhFQzsNCj4gKwkJfQ0KPiArDQo+ICsJCWlmICghYWxsb3dfdm14ICYm
-IGluc25faXNfdm14KCZpbnNuKSkgew0KPiArCQkJcHJfZXJyKCJNb2R1bGUgaGFzIFZNWCBpbnN0
-cnVjdGlvbnMgYW5kIGlzIG5vdCBtYXJrZWQgJ3NsZF9zYWZlJywgYm9vdCB3aXRoOg0KPiAnc3Bs
-aXRfbG9ja19kZXRlY3Q9b2ZmJzogJXNcbiIsIG1vZC0+bmFtZSk7DQo+ICsJCQlyZXR1cm4gLUVO
-T0VYRUM7DQo+ICsJCX0NCj4gKw0KPiArCQl0ZXh0ICs9IGluc24ubGVuZ3RoOw0KPiArCX0NCg0K
-VGhlcmUgaXMgYSBzbGlnaHQgZmxhdyBpbiB0aGUgYWJvdmUuDQpBIG1hbGljaW91cyBtb2R1bGUg
-Y2FuIGhpZGUgdGhlIHJlcXVpcmVkIGluc3RydWN0aW9uIGJ5IGp1bXBpbmcgaW50byB0aGUNCm1p
-ZGRsZSBvZiBhIGxvbmcgaW5zdHJ1Y3Rpb24uDQoNCkV2ZW4gY2hlY2tpbmcgYnJhbmNoIHRhcmdl
-dHMgaGl0IGluc3RydWN0aW9uIGJhcnJpZXJzIGlzbid0IGVub3VnaCwNCmFuIGluZGlyZWN0IGp1
-bXAgY291bGQgYmUgdXNlZC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
-c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
-Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Tue, Apr 07, 2020 at 02:22:11PM -0700, Nadav Amit wrote:
+> Anyhow, I do not think it is the only use-case which is not covered by your
+> patches (even considering CRs/DRs alone). For example, there is no kernel
+> function to turn on CR4.VMXE, which is required to run hypervisors on x86.
 
+That needs an exported function; there is no way we'll allow random
+writes to CR4, there's too much dodgy stuff in there.
