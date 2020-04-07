@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DE3C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F52FC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C37A2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7614E2074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255163;
-	bh=T/gxYwkr6ionYU18uJNrAb27pxUoEUdBjhg+6cFkrBE=;
+	s=default; t=1586255167;
+	bh=lgSttysFDVvu+oC6gu+5HLnGkjnVdiiFpHo8cQiPQaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZEgJJ+iMFjLunvIAeS9ACkN55Y8OA3T38ygxfijQI71+Y1QOynSYeC3seMShL/V1R
-	 +tzjACFkXX4Lo6Q3n5Cpn3oc+AfezipNDyt734Ypvy/1+JGqx9mcHIEL4Q/LbpYXZp
-	 YgOWYj6NpdOjbLdboqMJpxwVJ+CV7kNpfYPoAuuA=
+	b=JNjKZ8zTE8y3tYRmDT2VhbohMWkQa8plZqqvNRD3H9b/7NqjycF/mj6i5/aexiM3T
+	 z8lpSVFN8LXKxrHj/L2+e+31qS4Ot9Tq1Z8c/Rw7LAXSH/XY2E9YsejVODOCoMWpjp
+	 NvuAV5dVINcRs53CRqCdlszgUol2bjNbOoOHy7p4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgDGK0B (ORCPT
+        id S1729091AbgDGK0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:26:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36788 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:26:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729068AbgDGKZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:59 -0400
+        id S1729079AbgDGK0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:26:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC57C2074F;
-        Tue,  7 Apr 2020 10:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B88A32074F;
+        Tue,  7 Apr 2020 10:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255159;
-        bh=T/gxYwkr6ionYU18uJNrAb27pxUoEUdBjhg+6cFkrBE=;
+        s=default; t=1586255164;
+        bh=lgSttysFDVvu+oC6gu+5HLnGkjnVdiiFpHo8cQiPQaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gD1Ka6J3FZEsXxCoy3ry5ZyQNWuTikxihuhpEZXfR9bujCDPGGYLUr4GpZAiRZuXz
-         1IN3Te/Hib8UbVsjF+WAyORCffy0ibvuhq8DZE2UhGiz5bur7suT9Cm/s6VchoZuhf
-         wozjvkHYLzmQhsAUyhinCQXd/lkIi+2+ZCubrrcs=
+        b=gfxN0/j/ZtFb40VlZrBflaly3T9URCPTDlacyG9A27KQl4RropozbvS3lQ29GXQLl
+         JcDrbDKcVG88qmeod/7VkRW2BIsAfa/XTTHPLgd8N5GcEFOJ7b2zWZlBehWVxn1rFc
+         9oJJvrO2AX/NGHh2OXQ2ymJ2J08UENOaGGgqukog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.5 36/46] iwlwifi: yoyo: dont add TLV offset when reading FIFOs
-Date:   Tue,  7 Apr 2020 12:22:07 +0200
-Message-Id: <20200407101503.317654678@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 01/29] ipv4: fix a RCU-list lock in fib_triestat_seq_show
+Date:   Tue,  7 Apr 2020 12:21:58 +0200
+Message-Id: <20200407101452.188484947@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
-References: <20200407101459.502593074@linuxfoundation.org>
+In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
+References: <20200407101452.046058399@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,59 +62,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+From: Qian Cai <cai@lca.pw>
 
-commit a5688e600e78f9fc68102bf0fe5c797fc2826abe upstream.
+[ Upstream commit fbe4e0c1b298b4665ee6915266c9d6c5b934ef4a ]
 
-The TLV offset is only used to read registers, while the offset used for
-the FIFO addresses are hard coded in the driver and not given by the
-TLV.
+fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
+tb_hlist) without rcu_read_lock() will trigger a warning,
 
-If we try to apply the TLV offset when reading the FIFOs, we'll read
-from invalid addresses, causing the driver to hang.
+ net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
 
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Fixes: 8d7dea25ada7 ("iwlwifi: dbg_ini: implement Rx fifos dump")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/iwlwifi.20200306151129.fbab869c26fa.I4ddac20d02f9bce41855a816aa6855c89bc3874e@changeid
+ other info that might help us debug this:
+
+ rcu_scheduler_active = 2, debug_locks = 1
+ 1 lock held by proc01/115277:
+  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
+
+ Call Trace:
+  dump_stack+0xf4/0x164 (unreliable)
+  lockdep_rcu_suspicious+0x140/0x164
+  fib_triestat_seq_show+0x750/0x880
+  seq_read+0x1a0/0x670
+  proc_reg_read+0x10c/0x1b0
+  __vfs_read+0x3c/0x70
+  vfs_read+0xac/0x170
+  ksys_read+0x7c/0x140
+  system_call+0x5c/0x68
+
+Fix it by adding a pair of rcu_read_lock/unlock() and use
+cond_resched_rcu() to avoid the situation where walking of a large
+number of items  may prevent scheduling for a long time.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ net/ipv4/fib_trie.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -8,7 +8,7 @@
-  * Copyright(c) 2008 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2018 - 2020 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -31,7 +31,7 @@
-  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
-  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
-- * Copyright(c) 2018 - 2019 Intel Corporation
-+ * Copyright(c) 2018 - 2020 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -1407,11 +1407,7 @@ static int iwl_dump_ini_rxf_iter(struct
- 		goto out;
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -2577,6 +2577,7 @@ static int fib_triestat_seq_show(struct
+ 		   " %zd bytes, size of tnode: %zd bytes.\n",
+ 		   LEAF_SIZE, TNODE_SIZE(0));
+ 
++	rcu_read_lock();
+ 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
+ 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
+ 		struct fib_table *tb;
+@@ -2596,7 +2597,9 @@ static int fib_triestat_seq_show(struct
+ 			trie_show_usage(seq, t->stats);
+ #endif
+ 		}
++		cond_resched_rcu();
  	}
++	rcu_read_unlock();
  
--	/*
--	 * region register have absolute value so apply rxf offset after
--	 * reading the registers
--	 */
--	offs += rxf_data.offset;
-+	offs = rxf_data.offset;
- 
- 	/* Lock fence */
- 	iwl_write_prph_no_grab(fwrt->trans, RXF_SET_FENCE_MODE + offs, 0x1);
+ 	return 0;
+ }
 
 
