@@ -2,159 +2,88 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BB7C2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3F6C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD74020719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D698E206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:26:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AISqMdEd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aBj6/lGP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgDGRXq (ORCPT
+        id S1726525AbgDGR0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:23:46 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:43015 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGRXp (ORCPT
+        Tue, 7 Apr 2020 13:26:40 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45696 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbgDGR0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:23:45 -0400
-Received: by mail-qk1-f175.google.com with SMTP id 13so137941qko.10;
-        Tue, 07 Apr 2020 10:23:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=K+MMhgwbQedUfosyD2Cw+pAjWD5r/4ySukc35JXfHtQ=;
-        b=AISqMdEd8PmC6p044QKzmqRvTEknmQL37J3YiXyuydqqLA9II7+ikNL1/d1tev4diw
-         4quCsK0SbFHe16ewvETijwjSegnewllWpsYE9/RmuzbJzWeof90cD8xTKghvASkb5YCH
-         dRKhp4Rea3pGc0yerTbItjCt5X7Q8nHrSdPObogOtuRJj1IWe5klvpHR/WnB/7mbgXra
-         voptzu1KNaqfjBPeOBjpm5QxutfUDr8T9uglWizgQ6zcyAGPT2NqX77iU7bjsLV8ATIV
-         g/ERhpCiQDGEaTqr22AW+xneH6DFGgLRiqvNdYmUHEv4QCOZCr7VYviX87oE7r/2kDCY
-         WuDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=K+MMhgwbQedUfosyD2Cw+pAjWD5r/4ySukc35JXfHtQ=;
-        b=LuX7QPV7b5FuRkuH4V4jH96qruJE8eVNWyap3qt0UFGZmjngmzOZVTKeKPW4wnT97x
-         adCKBQXNeMPhp6T5m+4vLyvBxTkeoyAGssjPQIondu1kEFvV7Wdru/RG90m7bpV5dqRt
-         9bqgF/+gY1aOV7olcmyAa6XFpugNXLePsW+yQgkq6rieff0ScI1fUuXwRDdyhIvPK5kl
-         zBPJofjeKEZm+z0heIIrFUVSImPhs1iXYqoQdq4zVP1YVcSl/O5oFGHBGlxBSfPZlqWX
-         QSKapXg4x0ygbbPNzkDZNodBaBL1JdAIQffzLaVN90dV2Mdy6EV/wqPdI0iahEpK5h9B
-         SfEg==
-X-Gm-Message-State: AGi0Pub9nqPDtu/LrsIvhmIaQzaaP7bFmsvfwFwAU+qM3wIZQGhqLnDQ
-        xae0A59xh01MemnOfhbkv+0=
-X-Google-Smtp-Source: APiQypKsro8wjK4xTL2iHaRs1nV2makOkwiSA9zQ+y+DTWaEm6VBA1HeGxqxnp89G+j6RhEQBYILJg==
-X-Received: by 2002:a37:6213:: with SMTP id w19mr3134388qkb.447.1586280222882;
-        Tue, 07 Apr 2020 10:23:42 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id l7sm16781124qkb.47.2020.04.07.10.23.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 10:23:42 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1678C409A3; Tue,  7 Apr 2020 14:23:40 -0300 (-03)
-Date:   Tue, 7 Apr 2020 14:23:40 -0300
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-Message-ID: <20200407172340.GF12003@kernel.org>
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <20200407143014.GD11186@kernel.org>
- <20200407143551.GF11186@kernel.org>
- <10cc74ee-8587-8cdb-f85f-5724b370a2ce@linux.intel.com>
- <20200407163654.GB12003@kernel.org>
- <20200407165643.GD12003@kernel.org>
+        Tue, 7 Apr 2020 13:26:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QHtKlTs2KaIESq55FMaA9+K4wJtVD9YC1RoEo72D/Xg=; b=aBj6/lGPkdMbz8tsqagUCQuEfi
+        4Eaneh2MHE6feFLtR/4iAWcOGiiqFluGWIZRIqTACrSlgc8O9mk2/qQNTsLd/DTb4NmtDhk4WXOmf
+        3bnc5eybaCrkd8rd8uQokPi7CiRLYr023r5lIDFeJ9cmFGwijaJOX108M15YwEIvCPIwBvxtgBVuw
+        O5Vj+EeEYVYEWTx7a+qc48r3mJMHqTZ6cqXkljDMPRaOXi9L6+shxxaEmavmMNiwwgxqGGUy0p1nv
+        UztOgnaAKZsS268OgV+t90IP2TllJZsXUDxtYoaYI/P/Y/V6tkW9sLeefzxdOwVz4r68s0ZDVxdOo
+        Fh7YDcBw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLrzd-0005w4-2Y; Tue, 07 Apr 2020 17:26:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B73CB3010C8;
+        Tue,  7 Apr 2020 19:26:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A34D42B0A1247; Tue,  7 Apr 2020 19:26:30 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 19:26:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, jthierry@redhat.com,
+        tglx@linutronix.de
+Subject: Re: [PATCH V2 9/9] x86/speculation: Remove all
+ ANNOTATE_NOSPEC_ALTERNATIVE directives
+Message-ID: <20200407172630.GH20730@hirez.programming.kicks-ass.net>
+References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
+ <20200407073142.20659-10-alexandre.chartre@oracle.com>
+ <20200407132837.GA20730@hirez.programming.kicks-ass.net>
+ <20200407133454.n55u5nx33ruj73gx@treble>
+ <89b10eb8-c030-b954-6be3-8830fc6a8daa@oracle.com>
+ <3eb36fd2-9827-4c1b-681c-9c1d65c7582f@oracle.com>
+ <20200407162838.5hlh6oom4oa45ugt@treble>
+ <06605b1c-c9ae-fd18-bcb1-e4a48f2cb60e@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200407165643.GD12003@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <06605b1c-c9ae-fd18-bcb1-e4a48f2cb60e@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 07, 2020 at 01:56:43PM -0300, Arnaldo Carvalho de Melo escreveu:
-> 
-> But then, even with that attr.exclude_kernel set to 1 we _still_ get
-> kernel samples, which looks like another bug, now trying with strace,
-> which leads us to another rabbit hole:
-> 
-> [perf@five ~]$ strace -e perf_event_open -o /tmp/out.put perf top --stdio
-> Error:
-> You may not have permission to collect system-wide stats.
-> 
-> Consider tweaking /proc/sys/kernel/perf_event_paranoid,
-> which controls use of the performance events system by
-> unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).
-> 
-> The current value is 2:
-> 
->   -1: Allow use of (almost) all events by all users
->       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-> >= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN
->       Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN
-> >= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN
-> >= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN
-> 
-> To make this setting permanent, edit /etc/sysctl.conf too, e.g.:
-> 
-> 	kernel.perf_event_paranoid = -1
-> 
-> [perf@five ~]$
-> 
-> If I remove that strace -e ... from the front, 'perf top' is back
-> working as a non-cap_sys_admin user, just with cap_perfmon.
-> 
+On Tue, Apr 07, 2020 at 07:01:43PM +0200, Alexandre Chartre wrote:
 
-So I couldn't figure it out so far why is that exclude_kernel is being
-set to 1, as perf-top when no event is passed defaults to this to find
-out what to use as a default event:
+> I think that's the case with smap_save:
+> 
+> static __always_inline unsigned long smap_save(void)
+> {
+>         unsigned long flags;
+> 
+>         asm volatile (ALTERNATIVE("", "pushf; pop %0; " __ASM_CLAC,
+>                                   X86_FEATURE_SMAP)
+>                       : "=rm" (flags) : : "memory", "cc");
+> 
+>         return flags;
+> }
+> 
+> The alternative does change the stack but objtool won't complain
+> because it handles the pushf and pop instruction.
 
-  perf_evlist__add_default(top.evlist)
-     perf_evsel__new_cycles(true);
-	struct perf_event_attr attr = {
-                .type   = PERF_TYPE_HARDWARE,
-                .config = PERF_COUNT_HW_CPU_CYCLES,
-                .exclude_kernel = !perf_event_can_profile_kernel(),
-        };
-
-			perf_event_paranoid_check(1);
-			        return perf_cap__capable(CAP_SYS_ADMIN) ||
-				       perf_cap__capable(CAP_PERFMON) ||
-				       perf_event_paranoid() <= max_level;
-
-
-And then that second condition should hold true, it returns true, and
-then .exclude_kernel should be set to !true -> zero.o
-
-Now the wallclock says I need to stop being a programmer and turn into a
-daycare provider for Pedro, cya!
-
-- Arnaldo
+Oh bugger; indeed! That'll wreck unwinding.
