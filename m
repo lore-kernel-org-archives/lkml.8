@@ -2,76 +2,98 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F2EC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36935C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C82E2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1C920771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:11:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rQePjIhN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgDGQLK (ORCPT
+        id S1727969AbgDGQLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:11:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55614 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726776AbgDGQLJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:11:09 -0400
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jLqoc-0006Wa-6G; Tue, 07 Apr 2020 16:11:06 +0000
-Date:   Tue, 7 Apr 2020 18:11:05 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH 1/3] binfmt: Move install_exec_creds after setup_new_exec
- to match binfmt_elf
-Message-ID: <20200407161105.qwyxcwgakxpjuclr@wittgenstein>
-References: <87blobnq02.fsf@x220.int.ebiederm.org>
- <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org>
- <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
- <87wo6s3wxd.fsf_-_@x220.int.ebiederm.org>
- <87o8s43wuq.fsf_-_@x220.int.ebiederm.org>
+        Tue, 7 Apr 2020 12:11:35 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:54272 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726776AbgDGQLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 12:11:34 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48xXTb0gyqz9v16D;
+        Tue,  7 Apr 2020 18:11:31 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=rQePjIhN; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Ql_PfMohPlTm; Tue,  7 Apr 2020 18:11:31 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48xXTZ6YCHz9v16C;
+        Tue,  7 Apr 2020 18:11:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1586275890; bh=0/rdVOr3u5i2ymBgDoIN9hE0ZQznL4f0oL64O+q9Kv8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=rQePjIhNGThb9qEO4Fu3PoBYHijoaw3WYYMkhu5bBY/+MoZcwE1oKEJKpRiN1ZTcL
+         9BoWbCvcFH84Os6RDKM9cVG4Qdzp1VGJkbp7tSqlwyGq/O76EAIz6vI/HUQFrejBaK
+         4CXn0HHFvmjFW1S4dGnC6zeKXnBVSw7xLYkB2x9s=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 549098B7EE;
+        Tue,  7 Apr 2020 18:11:32 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 6sj_Lv0zLOAp; Tue,  7 Apr 2020 18:11:32 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C7C0F8B7EC;
+        Tue,  7 Apr 2020 18:11:31 +0200 (CEST)
+Subject: Re: [PATCH vdsotest] Use vdso wrapper for gettimeofday()
+To:     Nathan Lynch <nathanl@linux.ibm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <0eddeeb64c97b8b5ce0abd74e88d2cc0303e49c6.1579090596.git.christophe.leroy@c-s.fr>
+ <871rrzjq5j.fsf@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <1c2c6da1-e10f-d2a8-fc5e-ecf405879df5@c-s.fr>
+Date:   Tue, 7 Apr 2020 18:11:20 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87o8s43wuq.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <871rrzjq5j.fsf@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 08:31:25PM -0500, Eric W. Biederman wrote:
-> 
-> In 2016 Linus moved install_exec_creds immediately after
-> setup_new_exec, in binfmt_elf as a cleanup and as part of closing a
-> potential information leak.
-> 
-> Perform the same cleanup for the other binary formats.
-> 
-> Different binary formats doing the same things the same way makes exec
-> easier to reason about and easier to maintain.
-> 
-> Putting install_exec_creds immediate after setup_new_exec makes many
-> simplifications possible in the code.
-> 
-> Ref: 9f834ec18def ("binfmt_elf: switch to new creds when switching to new mm")
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Hi Nathan,
 
-Sure, why not.
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Le 16/01/2020 à 17:56, Nathan Lynch a écrit :
+> Hi Christophe,
+> 
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> To properly handle errors returned by gettimeofday(), the
+>> DO_VDSO_CALL() macro has to be used, otherwise vdsotest
+>> misinterpret VDSO function return on error.
+>>
+>> This has gone unnoticed until now because the powerpc VDSO
+>> gettimeofday() always succeed, but while porting powerpc to
+>> generic C VDSO, the following has been encountered:
+> 
+> Thanks for this, I'll review it soon.
+> 
+> Can you point me to patches for the powerpc generic vdso work?
+> 
+
+I have not seen any update on the vdsotest repository, have you been 
+able to have a look at the patch ?
+
+Thanks
+Christophe
