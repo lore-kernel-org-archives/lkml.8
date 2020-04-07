@@ -2,126 +2,158 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604CBC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096FFC2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336A720768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586275430;
-	bh=7+Qjrh0YcimyZVfzAbkeA3ARTzovSstBA2/aYhCx1X8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ey1fRxQtRhm94qoSC6dR8zGcQcpHajZHg2l3AHVi2UfA0KeHmqu2bVI1hDBYhLosl
-	 JjEidPA+yPad/Bb4eBOhzCCv50NiV8I7kwxT00YtzO0zRFvETLcZ7CmTlGLsH9FKy4
-	 Au85D0SZOemOfql95KT6dUG3dwJIkyMZtkYbVxyI=
+	by mail.kernel.org (Postfix) with ESMTP id CFC152075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:03:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BiT/yyVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgDGQDt (ORCPT
+        id S1728071AbgDGQDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:03:49 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:24499 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgDGQDt (ORCPT
+        Tue, 7 Apr 2020 12:03:51 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54820 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbgDGQDt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 12:03:49 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 037G3Ue9024707;
-        Wed, 8 Apr 2020 01:03:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 037G3Ue9024707
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586275411;
-        bh=H1J7FezWT1dgglGN/erJ3S7DC6IYDiQ5DhPkx5GnfYo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=djBLvGd0L88sTtMnV7Ktcs7LOCu7upEpPBj4r3AIG6B3UH80aD6p0N80wXfqBwexX
-         GmI2q73EAYBwYtYWbCYlXFHLvCk0pmkSQe7agC/KKcQcmjoZR+h0rbU2Yq0JACA1ny
-         XCKJt7iKiI+sEqKyVoMsaqGz1LsWXxTKQvfWa3Ud3YJaWoQ+vr/7oZU4wZ0cAyyBBZ
-         LEi0D3KUjNTJbnHCtOGF976xzP0f7k0HYwaZx3Pi5729+UL1iRziZsZbOIigrzHzxj
-         TE8La+DxQ1PoUTkQxvPG38FHx+NP2C5EJ6yAZ3l13CasR4auPyw7KC8VV3UwbW2lJp
-         qrMaiN+3XQoeQ==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id s10so2507357vsi.9;
-        Tue, 07 Apr 2020 09:03:30 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYav1JspkgY3FaVtAbcoJieQT8N6gSe4oRdkT3VJJ3lNyFxMjKR
-        g+Z3gcVjx7pdfSgZmeW6gZSA0aLxFTOrN+iId8M=
-X-Google-Smtp-Source: APiQypJdib1woalCQ47LsPcjFIUt+uD0oJywtqnU3blPMN/3x09w4VC5A1Jftlia+RledGNP4o+h/SP9BtoezdZD7j8=
-X-Received: by 2002:a67:6542:: with SMTP id z63mr2511247vsb.179.1586275409554;
- Tue, 07 Apr 2020 09:03:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200405163052.18942-1-masahiroy@kernel.org> <20200406110333.GA6266@alpha.franken.de>
-In-Reply-To: <20200406110333.GA6266@alpha.franken.de>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 8 Apr 2020 01:02:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARGO5ciqaseZ7z1k+e-dVh9rU+HY3-1H0XYMwq6+5PqaQ@mail.gmail.com>
-Message-ID: <CAK7LNARGO5ciqaseZ7z1k+e-dVh9rU+HY3-1H0XYMwq6+5PqaQ@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: fw: arc: add __weak to prom_meminit and prom_free_prom_memory
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux-MIPS <linux-mips@linux-mips.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
+Received: by mail-pj1-f66.google.com with SMTP id np9so940422pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 09:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gP729yExvsKwcKrE86VBUvEUivRuAU1I4cifk756xg8=;
+        b=BiT/yyVr1rSfof6VFqWXygsiJDCQsZIVl3d4oHMX1AlwZu2InJRMzINblucNVGW/ZH
+         t+PA9lgM0DmQMakMUPj4R/C/CPo85Zx7iBKrQHz14noUlbYVtQ2CR0tcbxK52eUp/0by
+         XbWcQl93c78Jk4nzonwajBC96ypn5aCIxRxEE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gP729yExvsKwcKrE86VBUvEUivRuAU1I4cifk756xg8=;
+        b=Iy8b9DD03rUMAlD1XyTl6vmxcNyzzXI7pXyzgGKpZkoORAM2qCZZlSVfvRCA+rnYoU
+         PHn+7QJtb0TUyOsJF4BZ2yI4Y0IIWXA7zjDamcrcPQ/ZWn9ydhi7UBkU1nwC/P9XBfjz
+         geOp+tf+8u4AoB8ILXeHHWf+Kt2rADpK2ORRfk0V69murrm5AgqLL/b3Q9k6ntPbQzZP
+         5MD6Gc37bpW41HiLTsKVLl4Ah6BxYYaLO0nkb/PjN1hhCRq5LEhLPGB+bQf22lqFCWDG
+         xYBZJVteS0lScvllWd6oxjxnDo/bJgTi3xHpg73pKUfqr0eD9XbQ2/wRcQMWO8c/Buna
+         /lPw==
+X-Gm-Message-State: AGi0Puae1hpHjGkfWthLgHbGQJUpmgSd7NCjeoYTjsKYI7Be9gSfp7hh
+        oYeZGTNyBYP0zeEXpVrFwCv8cA==
+X-Google-Smtp-Source: APiQypJ9peVI9az7UwkHqtzSEwC0pTS1l9u9mH/FppWKiEPX2XYXZdvNpEolk4nHDToGI2lLSlyaXQ==
+X-Received: by 2002:a17:902:6acc:: with SMTP id i12mr3051101plt.61.1586275428262;
+        Tue, 07 Apr 2020 09:03:48 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id nh14sm2014218pjb.17.2020.04.07.09.03.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 09:03:47 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 09:03:46 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Paul Burton <paulburton@kernel.org>, linux-mips@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: Re: [PATCH 3/3] exec: Rename the flag called_exec_mmap
+ point_of_no_return
+Message-ID: <202004070903.CC08A70A@keescook>
+References: <87blobnq02.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
+ <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
+ <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
+ <87lfnda3w3.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjuv_J+2KOi+Fhr_nBKYf5CXr76DQKThA3uxXm3rCC3Uw@mail.gmail.com>
+ <87wo6s3wxd.fsf_-_@x220.int.ebiederm.org>
+ <87d08k3wt4.fsf_-_@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d08k3wt4.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 8:36 PM Thomas Bogendoerfer
-<tsbogend@alpha.franken.de> wrote:
->
-> On Mon, Apr 06, 2020 at 01:30:52AM +0900, Masahiro Yamada wrote:
-> > As far as I understood, prom_meminit() in arch/mips/fw/arc/memory.c
-> > is overridden by the one in arch/mips/sgi-ip32/ip32-memory.c if
-> > CONFIG_SGI_IP32 is enabled.
-> >
-> > The use of EXPORT_SYMBOL in static libraries potentially causes a
-> > problem for the llvm linker [1]. So, I want to forcibly link lib-y
-> > objects to vmlinux when CONFIG_MODULES=y.
-> >
-> > As a groundwork, we must fix multiple definitions that have previously
-> > been hidden by lib-y.
-> >
-> > The prom_cleanup() in this file is already marked as __weak (because
-> > it is overridden by the one in arch/mips/sgi-ip22/ip22-mc.c).
-> > I think it should be OK to do the same for these two.
-> >
-> > [1]: https://github.com/ClangBuiltLinux/linux/issues/515
-> >
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> > If MIPS maintainers ack this patch,
-> > I want to inser it before the following patch:
->
->
-> Acked-By: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
->
-> Thomas.
+On Mon, Apr 06, 2020 at 08:32:23PM -0500, Eric W. Biederman wrote:
+> 
+> Update the comments and make the code easier to understand by
+> renaming this flag.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
+I like it, yes!
 
-Applied to linux-kbuild with Thomas' Ack.
+Acked-by: Kees Cook <keescook@chromium.org>
 
-Thanks.
+-Kees
 
-
->
-> --
-> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-> good idea.                                                [ RFC1925, 2.3 ]
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200406110333.GA6266%40alpha.franken.de.
-
-
+> ---
+>  fs/exec.c               | 12 ++++++------
+>  include/linux/binfmts.h |  6 +++---
+>  2 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 28c87020da9b..a61987d6dc33 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1300,12 +1300,12 @@ int flush_old_exec(struct linux_binprm * bprm)
+>  		goto out;
+>  
+>  	/*
+> -	 * After setting bprm->called_exec_mmap (to mark that current is
+> -	 * using the prepared mm now), we have nothing left of the original
+> -	 * process. If anything from here on returns an error, the check
+> -	 * in search_binary_handler() will SEGV current.
+> +	 * With the new mm installed it is completely impossible to
+> +	 * fail and return to the original process.  If anything from
+> +	 * here on returns an error, the check in
+> +	 * search_binary_handler() will SEGV current.
+>  	 */
+> -	bprm->called_exec_mmap = 1;
+> +	bprm->point_of_no_return = true;
+>  	bprm->mm = NULL;
+>  
+>  #ifdef CONFIG_POSIX_TIMERS
+> @@ -1694,7 +1694,7 @@ int search_binary_handler(struct linux_binprm *bprm)
+>  
+>  		read_lock(&binfmt_lock);
+>  		put_binfmt(fmt);
+> -		if (retval < 0 && bprm->called_exec_mmap) {
+> +		if (retval < 0 && bprm->point_of_no_return) {
+>  			/* we got to flush_old_exec() and failed after it */
+>  			read_unlock(&binfmt_lock);
+>  			force_sigsegv(SIGSEGV);
+> diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+> index 6f564b9ad882..8f479dad7931 100644
+> --- a/include/linux/binfmts.h
+> +++ b/include/linux/binfmts.h
+> @@ -46,10 +46,10 @@ struct linux_binprm {
+>  		 */
+>  		secureexec:1,
+>  		/*
+> -		 * Set by flush_old_exec, when exec_mmap has been called.
+> -		 * This is past the point of no return.
+> +		 * Set when errors can no longer be returned to the
+> +		 * original userspace.
+>  		 */
+> -		called_exec_mmap:1;
+> +		point_of_no_return:1;
+>  #ifdef __alpha__
+>  	unsigned int taso:1;
+>  #endif
+> -- 
+> 2.25.0
+> 
 
 -- 
-Best Regards
-Masahiro Yamada
+Kees Cook
