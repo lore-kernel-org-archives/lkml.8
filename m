@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6777DC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB2BC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 377D72078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EEB2078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586218116;
-	bh=+tDhdjPDbjaCxf9tPz+nxKTRrunX02hgzKXcO8H4XSM=;
+	s=default; t=1586218128;
+	bh=uCDUcXmEwX5SSUfpabvQs8S1gdekkxZT6ihr0BNLMug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bWCoNbGS+bjKInQSK8wYG5U30BOOnGWFG7TKNwr4/OHBtvvzcHV8k3GFoVtUkDNnB
-	 9Y/I3cKbh2Pga3zWKd/Ae45Bxn79Xn8CXJD7cl++36HZEOW2BzDOw8rmIifL/rYFCL
-	 cw0xfwZiZZtZjZitugZkSJUfUqIKIs8uQDUMc16k=
+	b=e3xNtkBv2L1WcKvO7xwqi7Bw5+eOAiRpIPoez4q+V8l0kGHpoys4zY2oFtAuES9nz
+	 oQ/KAu+hTznMK6P24IzM4it7BOWoJmMk4CrM2vI8aJxI1gLzgpDewSGM42N3mOPvRp
+	 YFNMrsAAXRPjREQ/avUtI+vDBUryH1jOzPRrEYpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgDGAIf (ORCPT
+        id S1728380AbgDGAIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34400 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbgDGAB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:27 -0400
+        id S1726795AbgDGABZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3692D2078A;
-        Tue,  7 Apr 2020 00:01:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA61720857;
+        Tue,  7 Apr 2020 00:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217687;
-        bh=+tDhdjPDbjaCxf9tPz+nxKTRrunX02hgzKXcO8H4XSM=;
+        s=default; t=1586217684;
+        bh=uCDUcXmEwX5SSUfpabvQs8S1gdekkxZT6ihr0BNLMug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A/Ryu38fkjGxpHD8xCNIp0LZxQInotRjLD4L1HUOnhvYfL00hF6DDauC9yXTkT4xv
-         jpWBCUD9OBfhfv8MB06DagSS/jRq7EUpd8xEfgyXNn/iS0EcwnKvjv5dRkbiomznx8
-         pQo51F5E6htw5pupNUVN/Uxck+5AbyYSON+rUblM=
+        b=pfW+VS4sMb8Ipvjb61jX0bbHN5aL12raeeSS0aTdXpQCt3SEhtRJKtr9PvwCwvqrj
+         WOCr2G2xYqprl+gC8Ynx/ZfxD+PxV01oGY/B77yZ4HXs+Fs8R/MpHKfFcNBV4cDB8q
+         CNE7NiQiXT1N7afgHl43Ihqu91u3Rle/BuK76gSA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Luo bin <luobin9@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 22/35] hinic: fix out-of-order excution in arm cpu
-Date:   Mon,  6 Apr 2020 20:00:44 -0400
-Message-Id: <20200407000058.16423-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 20/35] hinic: fix a bug of waitting for IO stopped
+Date:   Mon,  6 Apr 2020 20:00:42 -0400
+Message-Id: <20200407000058.16423-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
 References: <20200407000058.16423-1-sashal@kernel.org>
@@ -61,75 +61,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit 33f15da216a1f4566b4ec880942556ace30615df ]
+[ Upstream commit 96758117dc528e6d84bd23d205e8cf7f31eda029 ]
 
-add read barrier in driver code to keep from reading other fileds
-in dma memory which is writable for hw until we have verified the
-memory is valid for driver
+it's unreliable for fw to check whether IO is stopped, so driver
+wait for enough time to ensure IO process is done in hw before
+freeing resources
 
 Signed-off-by: Luo bin <luobin9@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c | 2 ++
- drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c  | 2 ++
- drivers/net/ethernet/huawei/hinic/hinic_rx.c      | 3 +++
- drivers/net/ethernet/huawei/hinic/hinic_tx.c      | 2 ++
- 4 files changed, 9 insertions(+)
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  | 51 +------------------
+ 1 file changed, 2 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
-index eb53c15b13f33..33f93cc25193a 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
-@@ -623,6 +623,8 @@ static int cmdq_cmd_ceq_handler(struct hinic_cmdq *cmdq, u16 ci,
- 	if (!CMDQ_WQE_COMPLETED(be32_to_cpu(ctrl->ctrl_info)))
- 		return -EBUSY;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+index 79b3d53f2fbfa..c7c75b772a866 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+@@ -360,50 +360,6 @@ static int wait_for_db_state(struct hinic_hwdev *hwdev)
+ 	return -EFAULT;
+ }
  
-+	dma_rmb();
-+
- 	errcode = CMDQ_WQE_ERRCODE_GET(be32_to_cpu(status->status_info), VAL);
+-static int wait_for_io_stopped(struct hinic_hwdev *hwdev)
+-{
+-	struct hinic_cmd_io_status cmd_io_status;
+-	struct hinic_hwif *hwif = hwdev->hwif;
+-	struct pci_dev *pdev = hwif->pdev;
+-	struct hinic_pfhwdev *pfhwdev;
+-	unsigned long end;
+-	u16 out_size;
+-	int err;
+-
+-	if (!HINIC_IS_PF(hwif) && !HINIC_IS_PPF(hwif)) {
+-		dev_err(&pdev->dev, "Unsupported PCI Function type\n");
+-		return -EINVAL;
+-	}
+-
+-	pfhwdev = container_of(hwdev, struct hinic_pfhwdev, hwdev);
+-
+-	cmd_io_status.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+-
+-	end = jiffies + msecs_to_jiffies(IO_STATUS_TIMEOUT);
+-	do {
+-		err = hinic_msg_to_mgmt(&pfhwdev->pf_to_mgmt, HINIC_MOD_COMM,
+-					HINIC_COMM_CMD_IO_STATUS_GET,
+-					&cmd_io_status, sizeof(cmd_io_status),
+-					&cmd_io_status, &out_size,
+-					HINIC_MGMT_MSG_SYNC);
+-		if ((err) || (out_size != sizeof(cmd_io_status))) {
+-			dev_err(&pdev->dev, "Failed to get IO status, ret = %d\n",
+-				err);
+-			return err;
+-		}
+-
+-		if (cmd_io_status.status == IO_STOPPED) {
+-			dev_info(&pdev->dev, "IO stopped\n");
+-			return 0;
+-		}
+-
+-		msleep(20);
+-	} while (time_before(jiffies, end));
+-
+-	dev_err(&pdev->dev, "Wait for IO stopped - Timeout\n");
+-	return -ETIMEDOUT;
+-}
+-
+ /**
+  * clear_io_resource - set the IO resources as not active in the NIC
+  * @hwdev: the NIC HW device
+@@ -423,11 +379,8 @@ static int clear_io_resources(struct hinic_hwdev *hwdev)
+ 		return -EINVAL;
+ 	}
  
- 	cmdq_sync_cmd_handler(cmdq, ci, errcode);
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
-index 6a723c4757bce..c0b6bcb067cd4 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_eqs.c
-@@ -235,6 +235,8 @@ static void aeq_irq_handler(struct hinic_eq *eq)
- 		if (HINIC_EQ_ELEM_DESC_GET(aeqe_desc, WRAPPED) == eq->wrapped)
- 			break;
+-	err = wait_for_io_stopped(hwdev);
+-	if (err) {
+-		dev_err(&pdev->dev, "IO has not stopped yet\n");
+-		return err;
+-	}
++	/* sleep 100ms to wait for firmware stopping I/O */
++	msleep(100);
  
-+		dma_rmb();
-+
- 		event = HINIC_EQ_ELEM_DESC_GET(aeqe_desc, TYPE);
- 		if (event >= HINIC_MAX_AEQ_EVENTS) {
- 			dev_err(&pdev->dev, "Unknown AEQ Event %d\n", event);
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-index 2695ad69fca60..815649e37cb15 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-@@ -350,6 +350,9 @@ static int rxq_recv(struct hinic_rxq *rxq, int budget)
- 		if (!rq_wqe)
- 			break;
+ 	cmd_clear_io_res.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
  
-+		/* make sure we read rx_done before packet length */
-+		dma_rmb();
-+
- 		cqe = rq->cqe[ci];
- 		status =  be32_to_cpu(cqe->status);
- 		hinic_rq_get_sge(rxq->rq, rq_wqe, ci, &sge);
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-index 0e13d1c7e4746..375d81d03e866 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
-@@ -622,6 +622,8 @@ static int free_tx_poll(struct napi_struct *napi, int budget)
- 	do {
- 		hw_ci = HW_CONS_IDX(sq) & wq->mask;
- 
-+		dma_rmb();
-+
- 		/* Reading a WQEBB to get real WQE size and consumer index. */
- 		sq_wqe = hinic_sq_read_wqebb(sq, &skb, &wqe_size, &sw_ci);
- 		if ((!sq_wqe) ||
 -- 
 2.20.1
 
