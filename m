@@ -2,51 +2,52 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE1CC2BB86
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BFEC352B6
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8699D207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8AB2074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586254982;
-	bh=YOtm7zAs79v1XBoTlS89YdTT4HhPrN1rh4uVtP3fu6A=;
+	s=default; t=1586254983;
+	bh=xmrT11w54ApBz4oohIkiyxhRNgVs9VCTrvI+89Llllc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iR8HIMjfBqhCrkYnsmvGgLAu9x+6WmRgodslj1mcPJkxI0IacJ86tLCgeNX72NYR2
-	 jwcdVbc+PO5eM+QdPWD7piJIEfgPqNpZTy0gpNbqdNDgh/eYL7SIFvdqJfQpKUmBwt
-	 S7/u0ZY/E0tMzPSWfoQzthCGvutLeeOu1axz534s=
+	b=HjmsV6X2FSWdnc01Ekwixr8RtJml8quTkHE9FjI7JsfkYRi44Nn3/PacW1ebl3CxK
+	 vm1i9QuyWnaJaomvFGriY8EDenaOrGZW8Nkw/ME46mV5H5oz2ls1tumEgq+tj71MCA
+	 4epKgQ8ktOPTuoWZx05tPH4ey1SlxOzD/VvVxSnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgDGKXB (ORCPT
+        id S1728357AbgDGKXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:23:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:23:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbgDGKW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:22:58 -0400
+        id S1728336AbgDGKXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:23:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D8B52074F;
-        Tue,  7 Apr 2020 10:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 167322074F;
+        Tue,  7 Apr 2020 10:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586254977;
-        bh=YOtm7zAs79v1XBoTlS89YdTT4HhPrN1rh4uVtP3fu6A=;
+        s=default; t=1586254979;
+        bh=xmrT11w54ApBz4oohIkiyxhRNgVs9VCTrvI+89Llllc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WgTD3CtxnxrAP3A/EGF4gg2IKOIGi+NHFuCGPul+oFBITNy9xf4YrdEn1L3hH61h5
-         a42l41hLLPUJWDdL1xJE22UkXsr3fTld6Vb5aYtv0v/LTw7kJ/4QyVRS23J26j7vUP
-         qFgT9gYrZvatRJxQVlAqTILiC3JrIFrQ7f+qdaOA=
+        b=0r9DP5/FW8qBH3/ok9vqIeBcC+clkm02C8M3+xqpP0o7hJ+fC8PsrTNaoS1/1cdek
+         xVDstaPtIbD7VdUPC3mWgT5TSqpnBO3yFTxXRhUT92XyeLF+MoZ6XCZmziYF4wNW3o
+         6JOEZYCAWjXsGEhx5kARF5GoovQvaGKEQ/AsJEOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 09/36] tools/power turbostat: Fix 32-bit capabilities warning
-Date:   Tue,  7 Apr 2020 12:21:42 +0200
-Message-Id: <20200407101455.518814105@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kelsey Skunberg <kelsey.skunberg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.4 18/36] PCI: sysfs: Revert "rescan" file renames
+Date:   Tue,  7 Apr 2020 12:21:51 +0200
+Message-Id: <20200407101456.738796475@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101454.281052964@linuxfoundation.org>
 References: <20200407101454.281052964@linuxfoundation.org>
@@ -59,105 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
+From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
 
-[ Upstream commit fcaa681c03ea82193e60d7f2cdfd94fbbcd4cae9 ]
+commit bd641fd8303a371e789e924291086268256766b0 upstream.
 
-warning: `turbostat' uses 32-bit capabilities (legacy support in use)
+We changed these sysfs filenames:
 
-Signed-off-by: Len Brown <len.brown@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  .../pci_bus/<domain:bus>/rescan  ->  .../pci_bus/<domain:bus>/bus_rescan
+  .../<domain:bus:dev.fn>/rescan   ->  .../<domain:bus:dev.fn>/dev_rescan
+
+and Ruslan reported [1] that this broke a userspace application.
+
+Revert these name changes so both files are named "rescan" again.
+
+Note that we have to use __ATTR() to assign custom C symbols, i.e.,
+"struct device_attribute <symbol>".
+
+[1] https://lore.kernel.org/r/CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com
+
+[bhelgaas: commit log, use __ATTR() both places so we don't have to rename
+the attributes]
+Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
+Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+Link: https://lore.kernel.org/r/20200325151708.32612-1-skunberg.kelsey@gmail.com
+Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org	# v5.4+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/power/x86/turbostat/Makefile    |  2 +-
- tools/power/x86/turbostat/turbostat.c | 46 +++++++++++++++++----------
- 2 files changed, 31 insertions(+), 17 deletions(-)
+ drivers/pci/pci-sysfs.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/power/x86/turbostat/Makefile b/tools/power/x86/turbostat/Makefile
-index 13f1e8b9ac525..2b6551269e431 100644
---- a/tools/power/x86/turbostat/Makefile
-+++ b/tools/power/x86/turbostat/Makefile
-@@ -16,7 +16,7 @@ override CFLAGS +=	-D_FORTIFY_SOURCE=2
- 
- %: %.c
- 	@mkdir -p $(BUILD_OUTPUT)
--	$(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS)
-+	$(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS) -lcap
- 
- .PHONY : clean
- clean :
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 17e82eaf5c4f4..988326b67a916 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -30,7 +30,7 @@
- #include <sched.h>
- #include <time.h>
- #include <cpuid.h>
--#include <linux/capability.h>
-+#include <sys/capability.h>
- #include <errno.h>
- #include <math.h>
- 
-@@ -3150,28 +3150,42 @@ void check_dev_msr()
- 			err(-5, "no /dev/cpu/0/msr, Try \"# modprobe msr\" ");
- }
- 
--void check_permissions()
-+/*
-+ * check for CAP_SYS_RAWIO
-+ * return 0 on success
-+ * return 1 on fail
-+ */
-+int check_for_cap_sys_rawio(void)
- {
--	struct __user_cap_header_struct cap_header_data;
--	cap_user_header_t cap_header = &cap_header_data;
--	struct __user_cap_data_struct cap_data_data;
--	cap_user_data_t cap_data = &cap_data_data;
--	extern int capget(cap_user_header_t hdrp, cap_user_data_t datap);
--	int do_exit = 0;
--	char pathname[32];
-+	cap_t caps;
-+	cap_flag_value_t cap_flag_value;
- 
--	/* check for CAP_SYS_RAWIO */
--	cap_header->pid = getpid();
--	cap_header->version = _LINUX_CAPABILITY_VERSION;
--	if (capget(cap_header, cap_data) < 0)
--		err(-6, "capget(2) failed");
-+	caps = cap_get_proc();
-+	if (caps == NULL)
-+		err(-6, "cap_get_proc\n");
- 
--	if ((cap_data->effective & (1 << CAP_SYS_RAWIO)) == 0) {
--		do_exit++;
-+	if (cap_get_flag(caps, CAP_SYS_RAWIO, CAP_EFFECTIVE, &cap_flag_value))
-+		err(-6, "cap_get\n");
-+
-+	if (cap_flag_value != CAP_SET) {
- 		warnx("capget(CAP_SYS_RAWIO) failed,"
- 			" try \"# setcap cap_sys_rawio=ep %s\"", progname);
-+		return 1;
+--- a/drivers/pci/pci-sysfs.c
++++ b/drivers/pci/pci-sysfs.c
+@@ -464,7 +464,8 @@ static ssize_t dev_rescan_store(struct d
  	}
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(dev_rescan);
++static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
++							    dev_rescan_store);
  
-+	if (cap_free(caps) == -1)
-+		err(-6, "cap_free\n");
-+
-+	return 0;
-+}
-+void check_permissions(void)
-+{
-+	int do_exit = 0;
-+	char pathname[32];
-+
-+	/* check for CAP_SYS_RAWIO */
-+	do_exit += check_for_cap_sys_rawio();
-+
- 	/* test file permissions */
- 	sprintf(pathname, "/dev/cpu/%d/msr", base_cpu);
- 	if (euidaccess(pathname, R_OK)) {
--- 
-2.20.1
-
+ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+ 			    const char *buf, size_t count)
+@@ -501,7 +502,8 @@ static ssize_t bus_rescan_store(struct d
+ 	}
+ 	return count;
+ }
+-static DEVICE_ATTR_WO(bus_rescan);
++static struct device_attribute dev_attr_bus_rescan = __ATTR(rescan, 0200, NULL,
++							    bus_rescan_store);
+ 
+ #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+ static ssize_t d3cold_allowed_store(struct device *dev,
 
 
