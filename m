@@ -2,81 +2,92 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CE2C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51065C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD79206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEBF20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:15:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586247312;
+	bh=dEmA4cuG8bN53q2x0ul8u7PDRTuM3LEq8qspwvwBuBs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=obWntruZV4EUqVuxBx6UNt3et9slfG8wKSidJd1c0Em7ZBaVsZE4k0MJCC+BV9rxL
+	 Fpgedm8wSuEJDC5ytBMc3frc4K60pY7PxW6EuE1rMzpH+BEuGaBazfFhEoDi1r+RMH
+	 dXBJdkuQURh3V/HTwXkfy0i20Gy7+ZCqb1barh/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgDGIOI (ORCPT
+        id S1727874AbgDGIPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 04:14:08 -0400
-Received: from proxmox-new.maurer-it.com ([212.186.127.180]:14397 "EHLO
-        proxmox-new.maurer-it.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgDGIOH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 04:14:07 -0400
-X-Greylist: delayed 555 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Apr 2020 04:14:06 EDT
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-        by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 28CD14597C;
-        Tue,  7 Apr 2020 10:04:50 +0200 (CEST)
-Subject: Re: [PATCH] net/bpfilter: remove superfluous testing message
-To:     David Miller <davem@davemloft.net>, bmeneg@redhat.com
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20200331130630.633400-1-bmeneg@redhat.com>
- <20200331.100806.878847626011762877.davem@davemloft.net>
-From:   Thomas Lamprecht <t.lamprecht@proxmox.com>
-Message-ID: <f6af51c3-0875-c394-f6c4-2f51c7d1280c@proxmox.com>
-Date:   Tue, 7 Apr 2020 10:04:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101
- Thunderbird/75.0
+        Tue, 7 Apr 2020 04:15:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726393AbgDGIPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 04:15:10 -0400
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB04120801;
+        Tue,  7 Apr 2020 08:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586247309;
+        bh=dEmA4cuG8bN53q2x0ul8u7PDRTuM3LEq8qspwvwBuBs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sEPhxcAf0XJ1a/fHnUbFabJSW9BJgkWw4M+iMRNsfNAGz9pwcvkddldUVoXII9uYX
+         DwpG9K6MA9N81tQfTVll8qFqqcFLU4IAVX+LbbjyLsOkhWunUJUJGSOkldcLUzNyCb
+         +W1xJXUSztqeWWqOXN1G6jsKXGr5QKksADzEDQWU=
+Received: by mail-vk1-f170.google.com with SMTP id q7so49897vkb.9;
+        Tue, 07 Apr 2020 01:15:09 -0700 (PDT)
+X-Gm-Message-State: AGi0PubOEp3yAodyOl46Q+Hr5HvCFljR+cWpjzfuKuwjiVme3TAM90yY
+        2Abm1aiSK3Y7ddrXefyQQDW+x8nUpK0ljDrvt4Q=
+X-Google-Smtp-Source: APiQypLzXB/kSZidaZLKVq0R9ObzvkBjKLK6kgXeMYHi+lv2tPUK43YS2V0Y/KpoI0sDDmaev+p5BRyXgal4YlIrpWo=
+X-Received: by 2002:ac5:cbd5:: with SMTP id h21mr587035vkn.60.1586247308681;
+ Tue, 07 Apr 2020 01:15:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200331.100806.878847626011762877.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200402000002.7442-1-mcgrof@kernel.org> <20200402000002.7442-3-mcgrof@kernel.org>
+ <3640b16b-abda-5160-301a-6a0ee67365b4@acm.org> <b827d03c-e097-06c3-02ab-00df42b5fc0e@sandeen.net>
+ <75aa4cff-1b90-ebd4-17a4-c1cb6d390b30@acm.org> <87d08lj7l6.fsf@suse.de> <20200406151907.GD11244@42.do-not-panic.com>
+In-Reply-To: <20200406151907.GD11244@42.do-not-panic.com>
+From:   Luis Chamberlain <mcgrof@kernel.org>
+Date:   Tue, 7 Apr 2020 02:15:03 -0600
+X-Gmail-Original-Message-ID: <CAB=NE6VJW4TiPHSqr8GXQ326WCbFa_rgT6kKz0bHus6i0Coz4Q@mail.gmail.com>
+Message-ID: <CAB=NE6VJW4TiPHSqr8GXQ326WCbFa_rgT6kKz0bHus6i0Coz4Q@mail.gmail.com>
+Subject: Re: [RFC 2/3] blktrace: fix debugfs use after free
+To:     Nicolai Stange <nstange@suse.de>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        Jens Axboe <axboe@kernel.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Jan Kara <jack@suse.cz>,
+        Ming Lei <ming.lei@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        linux-block@vger.kernel.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        syzbot+603294af2d01acfdd6da@syzkaller.appspotmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/31/20 7:08 PM, David Miller wrote:
-> From: Bruno Meneguele <bmeneg@redhat.com>
-> Date: Tue, 31 Mar 2020 10:06:30 -0300
-> 
->> A testing message was brought by 13d0f7b814d9 ("net/bpfilter: fix dprintf
->> usage for /dev/kmsg") but should've been deleted before patch submission.
->> Although it doesn't cause any harm to the code or functionality itself, it's
->> totally unpleasant to have it displayed on every loop iteration with no real
->> use case. Thus remove it unconditionally.
->>
->> Fixes: 13d0f7b814d9 ("net/bpfilter: fix dprintf usage for /dev/kmsg")
->> Signed-off-by: Bruno Meneguele <bmeneg@redhat.com>
-> 
-> Applied, thanks.
-> 
+On Mon, Apr 6, 2020 at 9:19 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Mon, Apr 06, 2020 at 11:18:13AM +0200, Nicolai Stange wrote:
+> > Bart Van Assche <bvanassche@acm.org> writes:
+>
+> > So I'd suggest to drop patch [3/3] from this series and modify this
+> > patch [2/3] here to move the blk_q_debugfs_unregister(q) invocation from
+> > __blk_release_queue() to blk_unregister_queue() instead.
+>
+> I'll take a stab.
 
-As the commit this fixes was included in a stable release (at least 5.4.29[0],
-I did not checked others - sorry) it could make sense to backport this also
-to the 5.4 stable tree?
+That didn't work. I'll look for alternatives.
 
-Per documentation[1], I checked the netdev and Greg's queues, but did not found
-it to be included anywhere yet.
-
-I hope I handled this request somewhat correctly, please tell me if I should
-propose the backported patch more directly to the respective stable list. As is,
-the patch[2] applies fine here on top of 5.4.30.
-
-cheers,
-Thomas
-
-[0]: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.4.y&id=712c39d9319a864b74b44fd03b0e083afa2d8af2
-[1]: https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html#q-how-can-i-tell-what-patches-are-queued-up-for-backporting-to-the-various-stable-releases
-[2]: https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/patch/?id=41c55ea6c2a7ca4c663eeec05bdf54f4e2419699
-
+  Luis
