@@ -2,237 +2,257 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A24C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48B0C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C64D2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F05820730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="iv4SUzZ+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fNlj5grk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgDGTgg (ORCPT
+        id S1727181AbgDGTgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:36:36 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46278 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbgDGTgf (ORCPT
+        Tue, 7 Apr 2020 15:36:42 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45996 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726719AbgDGTgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:36:35 -0400
-Received: by mail-qv1-f67.google.com with SMTP id bu9so2419761qvb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 12:36:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=pCLPL0JnUyOXfXfamhd1KYiAt+I94C6hDARt0PzER6M=;
-        b=iv4SUzZ+wPaPvelHvTIV/L7sT6/Ses0zb2Tbg+j76RBsT5yQeyxbztpRsppzh8SVI1
-         imum52orGD4bWHHbBs4eNRNnuNFF8E3tIl/UIO6WIpCzmDI/P5eVImng6cov8Uqi/+HL
-         /5J3KM7F+wWNKIUvlhy1db1u8ZNkEAQku4YvQ4bU/qFwViuRK7ptwyrLCu57CaixN0Pc
-         G4xvL1byUnLF4ItCpYaROQ4kk/x0yVWf+6ZRPELbITWpFzHWJAlSB2DRKhW5HoKVAUuY
-         qMEGoJ3IxOoQ7dsNDu5Ip7fy/eZPJDQrcnPrmA08baBxG7OQQ+Po+aiybxjC7dEETmdV
-         Zxfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=pCLPL0JnUyOXfXfamhd1KYiAt+I94C6hDARt0PzER6M=;
-        b=mtBAIIejTQJen5YfpfLTkJpJkyPgi/v+1ez6gzV6+pAvdSmACEMYuCQLdWcBQLThnU
-         39rqvggo68wV+X9vhMUrhlPlpDZkMOD5XDBmBtyqzs57xUWPf83Uw2HYYsFJ4Q/8sePB
-         Qrle4UqVYFWA9ZkGKxNPY/KQcg6fjsAxK15vILwJ/E2z1kRnQRp5+Mlp5fwgEV28Hu11
-         OBaeNU9fPZo+46MjNkDFcCzEYYnNfTDLg9GvQODjlOYiGqqxjNsA3bvMN97nP0B4ptff
-         0GPr8AflmSjjFJO50JZviWtNnJbZhckuTxeC0aWWY7RM3Ua/vEspl2NoMHzlrY6fVsz7
-         RGlA==
-X-Gm-Message-State: AGi0PuYYkYsAjSQvgGGNqx0nBpx5aqnistod+cuLxlJJ+tLJf2ezZoxn
-        PiFmYKHWI8RKp12aT9vrbvS4rQ==
-X-Google-Smtp-Source: APiQypK74epx4+Z0DDlpxpU9KwxL4Jh/72vQvUCksY2TgaoTyWLqAOPtXgI8bV1dGPwkGhaQbLL6Vg==
-X-Received: by 2002:a05:6214:12f1:: with SMTP id w17mr3807952qvv.132.1586288194290;
-        Tue, 07 Apr 2020 12:36:34 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id m5sm16364954qtk.85.2020.04.07.12.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 12:36:33 -0700 (PDT)
-Message-ID: <abe902f2ebdfa41bd4d99b7beb3b6c7ec91d2a8f.camel@ndufresne.ca>
-Subject: Re: [PATCH v8 4/5] media: rkvdec: Add the rkvdec driver
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     DVB_Linux_Media <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Date:   Tue, 07 Apr 2020 15:36:32 -0400
-In-Reply-To: <5c417620e1baeed7ec4ac750ab481366df2aa590.camel@collabora.com>
-References: <20200403221345.16702-1-ezequiel@collabora.com>
-         <20200403221345.16702-5-ezequiel@collabora.com>
-         <CAKQmDh_pCX_s2Ze7b1YBqgvEZHNrgzDUfcjPos8_GZq8x6=5Ng@mail.gmail.com>
-         <5c417620e1baeed7ec4ac750ab481366df2aa590.camel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 7 Apr 2020 15:36:41 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 037JabDC024925;
+        Tue, 7 Apr 2020 14:36:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1586288197;
+        bh=qXO+CEBbW20kZSlZvvG5fTSeziOe0x+altp1AXlXAF4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fNlj5grkvpVCV0udFKSXYeM1zzM+gVxHRk7f4J3ety+prQdbGW9VQn55VB54ThoBO
+         dGHN0uHqRmWsuz/OCpg+53KaEtVOG1iyP45DtT7tYrwZBo3inetFcGW3jXySfD7PQF
+         85FrJBmuXBXEVOZd0B68xuLiJNeHRnluozFwesMU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 037JabMQ083240
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Apr 2020 14:36:37 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Apr
+ 2020 14:36:36 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Apr 2020 14:36:36 -0500
+Received: from [10.250.86.212] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 037Jaa4C061276;
+        Tue, 7 Apr 2020 14:36:36 -0500
+Subject: Re: [PATCH v2 1/2] remoteproc: fall back to using parent memory pool
+ if no dedicated available
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200319162321.20632-1-s-anna@ti.com>
+ <20200319162321.20632-2-s-anna@ti.com> <20200325203812.GA9384@xps15>
+ <207036a8-b34e-6311-5ad6-3289eb9f7a06@ti.com>
+ <CANLsYkzU79LDVWO=wtoOY-=iW0a4EUf5sruwWicyj+2EAFZ4rg@mail.gmail.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <31e64312-c80c-a1a8-a8cb-c87e54233d4f@ti.com>
+Date:   Tue, 7 Apr 2020 14:36:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANLsYkzU79LDVWO=wtoOY-=iW0a4EUf5sruwWicyj+2EAFZ4rg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le mardi 07 avril 2020 à 11:35 -0300, Ezequiel Garcia a écrit :
-> On Mon, 2020-04-06 at 16:27 -0400, Nicolas Dufresne wrote:
-> > Le ven. 3 avr. 2020 à 18:14, Ezequiel Garcia <ezequiel@collabora.com> a écrit :
-> > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > 
-> > > The rockchip vdec block is a stateless decoder that's able to decode
-> > > H264, HEVC and VP9 content. This commit adds the core infrastructure
-> > > and the H264 backend. Support for VP9 and HEVS will be added later on.
-> > > 
-> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > 
-> > Sorry for the late feedback (got a comment lower) ...
-> > 
-> > Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > 
-> 
-> Nice, thank you.
-> 
-> > > --
-> > > v8:
-> > > * Fix kfree and style changes, as suggested by Andriy.
-> > > v7:
-> > > * hverkuil-cisco@xs4all.nl: replaced VFL_TYPE_GRABBER by _VIDEO
-> > > * Use macros and ARRAY_SIZE instead of magic numbers,
-> > >   as suggested by Mauro.
-> > > * Renamed M_N macro, suggested by Mauro.
-> > > * Use v4l2_m2m_buf_done_and_job_finish.
-> > > * Set buffers' zeroth plane payload in .buf_prepare
-> > > * Refactor try/s_fmt for spec compliance.
-> > > ---
-> > >  MAINTAINERS                                |    7 +
-> > >  drivers/staging/media/Kconfig              |    2 +
-> > >  drivers/staging/media/Makefile             |    1 +
-> > >  drivers/staging/media/rkvdec/Kconfig       |   15 +
-> > >  drivers/staging/media/rkvdec/Makefile      |    3 +
-> > >  drivers/staging/media/rkvdec/TODO          |   11 +
-> > >  drivers/staging/media/rkvdec/rkvdec-h264.c | 1156 ++++++++++++++++++++
-> > >  drivers/staging/media/rkvdec/rkvdec-regs.h |  223 ++++
-> > >  drivers/staging/media/rkvdec/rkvdec.c      | 1103 +++++++++++++++++++
-> > >  drivers/staging/media/rkvdec/rkvdec.h      |  121 ++
-> > >  10 files changed, 2642 insertions(+)
-> > >  create mode 100644 drivers/staging/media/rkvdec/Kconfig
-> > >  create mode 100644 drivers/staging/media/rkvdec/Makefile
-> > >  create mode 100644 drivers/staging/media/rkvdec/TODO
-> > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264.c
-> > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-regs.h
-> > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec.c
-> > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec.h
-> > > 
-> [..]
-> > > +
-> > > +static void set_ps_field(u32 *buf, struct rkvdec_ps_field field, u32 value)
-> > > +{
-> > > +       u8 bit = field.offset % 32, word = field.offset / 32;
-> > > +       u64 mask = GENMASK_ULL(bit + field.len - 1, bit);
-> > > +       u64 val = ((u64)value << bit) & mask;
-> > > +
-> > > +       buf[word] &= ~mask;
-> > > +       buf[word] |= val;
-> > > +       if (bit + field.len > 32) {
-> > > +               buf[word + 1] &= ~(mask >> 32);
-> > > +               buf[word + 1] |= val >> 32;
-> > > +       }
-> > > +}
-> > > +
-> > > +static void assemble_hw_pps(struct rkvdec_ctx *ctx,
-> > > +                           struct rkvdec_h264_run *run)
-> > > +{
-> > > +       struct rkvdec_h264_ctx *h264_ctx = ctx->priv;
-> > > +       const struct v4l2_ctrl_h264_sps *sps = run->sps;
-> > > +       const struct v4l2_ctrl_h264_pps *pps = run->pps;
-> > > +       const struct v4l2_ctrl_h264_decode_params *dec_params = run->decode_params;
-> > > +       const struct v4l2_h264_dpb_entry *dpb = dec_params->dpb;
-> > > +       struct rkvdec_h264_priv_tbl *priv_tbl = h264_ctx->priv_tbl.cpu;
-> > > +       struct rkvdec_sps_pps_packet *hw_ps;
-> > > +       dma_addr_t scaling_list_address;
-> > > +       u32 scaling_distance;
-> > > +       u32 i;
-> > > +
-> > > +       /*
-> > > +        * HW read the SPS/PPS information from PPS packet index by PPS id.
-> > > +        * offset from the base can be calculated by PPS_id * 32 (size per PPS
-> > > +        * packet unit). so the driver copy SPS/PPS information to the exact PPS
-> > > +        * packet unit for HW accessing.
-> > > +        */
-> > > +       hw_ps = &priv_tbl->param_set[pps->pic_parameter_set_id];
-> > > +       memset(hw_ps, 0, sizeof(*hw_ps));
-> > > +
-> > > +#define WRITE_PPS(value, field) set_ps_field(hw_ps->info, field, value)
-> > > +       /* write sps */
-> > > +       WRITE_PPS(0xf, SEQ_PARAMETER_SET_ID);
-> > > +       WRITE_PPS(0xff, PROFILE_IDC);
-> > > +       WRITE_PPS(1, CONSTRAINT_SET3_FLAG);
-> > 
-> > At first I found that part rather interesting, but I see this
-> > hardcoding matches what Rockchip do.
-> > 
-> > https://github.com/rockchip-linux/mpp/blob/release/mpp/hal/rkdec/h264d/hal_h264d_rkv_reg.c#L266
-> > 
-> > > +       WRITE_PPS(sps->chroma_format_idc, CHROMA_FORMAT_IDC);
-> > 
-> > But here's it's not so great. This driver does not implement any kind
-> > of validation. In fact, if I pass 3
-> > here  (YCbCr 4:4:4) it will accept it, and kind of decode some frames,
-> > but eventually with crash and
-> > reboot is needed. We should (as defined in the Statelss CODEC spec)
-> > validate the SPS and refuse if
-> > an unsupported profile idc, chroma idc, luma/chroma depth or coded
-> > size is requested.
-> 
-> Perhaps we could validate that at request_validate time,
-> or maybe ops.try_ctrl is better.
-> 
-> </thinking_out_loud>
-> 
-> > Validating the
-> > S_FMT is not sufficient as one can trick the driver in allocating
-> > buffers that are too small.
-> > 
-> 
-> I am not sure I follow you: how do you think the driver
-> can be tricked like this?
+Hi Mathieu,
 
-What I see is that there is no cross validation between the SPS
-register configuration and the frame allocations done through S_FMT. So
-if I cheat in S_FMT, and then pass an SPS that is larger then
-announced, the HW could potentially overrun buffers. That entirely
-depends on how much robustness there is in the HW implementation iself
-(and if we have a register to pass the buffer size).
+On 3/27/20 4:09 PM, Mathieu Poirier wrote:
+> On Wed, 25 Mar 2020 at 17:39, Suman Anna <s-anna@ti.com> wrote:
+>>
+>> Hi Mathieu,
+>>
+>> On 3/25/20 3:38 PM, Mathieu Poirier wrote:
+>>> On Thu, Mar 19, 2020 at 11:23:20AM -0500, Suman Anna wrote:
+>>>> From: Tero Kristo <t-kristo@ti.com>
+>>>>
+>>>> In some cases, like with OMAP remoteproc, we are not creating dedicated
+>>>> memory pool for the virtio device. Instead, we use the same memory pool
+>>>> for all shared memories. The current virtio memory pool handling forces
+>>>> a split between these two, as a separate device is created for it,
+>>>> causing memory to be allocated from bad location if the dedicated pool
+>>>> is not available. Fix this by falling back to using the parent device
+>>>> memory pool if dedicated is not available.
+>>>>
+>>>> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
+>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> ---
+>>>> v2:
+>>>>  - Address Arnaud's concerns about hard-coded memory-region index 0
+>>>>  - Update the comment around the new code addition
+>>>> v1: https://patchwork.kernel.org/patch/11422721/
+>>>>
+>>>>  drivers/remoteproc/remoteproc_virtio.c | 15 +++++++++++++++
+>>>>  include/linux/remoteproc.h             |  2 ++
+>>>>  2 files changed, 17 insertions(+)
+>>>>
+>>>> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
+>>>> index eb817132bc5f..b687715cdf4b 100644
+>>>> --- a/drivers/remoteproc/remoteproc_virtio.c
+>>>> +++ b/drivers/remoteproc/remoteproc_virtio.c
+>>>> @@ -369,6 +369,21 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
+>>>>                              goto out;
+>>>>                      }
+>>>>              }
+>>>> +    } else {
+>>>> +            struct device_node *np = rproc->dev.parent->of_node;
+>>>> +
+>>>> +            /*
+>>>> +             * If we don't have dedicated buffer, just attempt to re-assign
+>>>> +             * the reserved memory from our parent. A default memory-region
+>>>> +             * at index 0 from the parent's memory-regions is assigned for
+>>>> +             * the rvdev dev to allocate from, and this can be customized
+>>>> +             * by updating the vdevbuf_mem_id in platform drivers if
+>>>> +             * desired. Failure is non-critical and the allocations will
+>>>> +             * fall back to global pools, so don't check return value
+>>>> +             * either.
+>>>
+>>> I'm perplex...  In the changelog it is indicated that if a memory pool is
+>>> not dedicated allocation happens from a bad location but here failure of
+>>> getting a hold of a dedicated memory pool is not critical.
+>>
+>> So, the comment here is a generic one while the bad location part in the
+>> commit description is actually from OMAP remoteproc usage perspective
+>> (if you remember the dev_warn messages we added to the memory-region
+>> parse logic in the driver).
+> 
+> I can't tell... Are you referring to the comment lines after
+> of_reserved_mem_device_init() in omap_rproc_probe()?
 
-This is of course a gut feeling, I haven't found time to test this yet,
-but it came to my mind after I notice that passing a 4:4:4 choma_idc
-stream causes driver failure (no visible memory corruption or overrun
-though, the driver just stops working). So the resulting issues might
-not be that bad, but you endup loosing the decoder.
+Yes indeed, the dev_warn traces after of_reserved_mem_device_init().
 
 > 
-> > What I suspect is that we need to be careful with this HW, as it seems
-> > to be a bit half backed, which
-> > means it might be supporting more features then supported by the TRM
-> > or reference code, and we
-> > must disable this with software.
-> > 
-> > (p.s. I can provide a stream to reproduce the 4:4:4 driver failure)
-> > 
+>>
+>> Before the fixed-memory carveout support, all the DMA allocations in
+>> remoteproc core were made from the rproc platform device's DMA pool (
+>> which can be NULL). That is lost after the fixed-memory support, and
+>> they were always allocated from global DMA pools if no dedicated pools
+>> are used. After this patch, that continues to be case for drivers that
+>> still do not use any dedicated pools, while it does restore the usage of
+>> the platform device's DMA pool if a driver uses one (OMAP remoteproc
+>> falls into the latter).
+>>
+>>>
+>>>> +             */
+>>>> +            of_reserved_mem_device_init_by_idx(dev, np,
+>>>> +                                               rproc->vdevbuf_mem_id);
+>>>
+>>> I wonder if using an index setup by platform code is really the best way
+>>> forward when we already have the carveout mechanic available to us.  I see the
+>>> platform code adding a carveout that would have the same name as rproc->name.
+>>> From there in rproc_add_virtio_dev() we could have something like:
+>>>
+>>>         mem = rproc_find_carveout_by_name(rproc, "%s", rproc->name);
+>>>
+>>>
+>>> That would be very flexible, the location of the reserved memory withing the
+>>> memory-region could change without fear of breaking things and no need to add to
+>>> struct rproc.
+>>>
+>>> Let me know what you think.
+>>
+>> I think that can work as well but I feel it is lot more cumbersome. It
+>> does require every platform driver to add code adding/registering that
+>> carveout, and parse the reserved memory region etc. End of the day, we
+>> rely on DMA API and we just have to assign the region to the newly
+>> created device. The DMA pool assignment for devices using
+>> reserved-memory nodes has simply been the of_reserved_mem_device_init()
+>> function.
+> 
+> Given all the things happening in the platform drivers adding and
+> registering a single carveout doesn't seem that onerous to me.   I
+> also expect setting rproc->vdevbuf_mem_id would involve some form of
+> parsing.  
+
+So, no additional parsing other than to know which id if you have
+multiple regions. A device can only be assigned one default DMA/CMA pool
+to use with the DMA API. One would need to add the assignment statement
+only if region 0 is not being used as the device DMA-API pool.
+
+Lastly if a couple of platforms end up doing the same thing
+> might as well bring the code in the core, hence choosing a generic
+> name such as rproc->name for the memory region.
+
+That is actually lot more code than the current code. First you would
+need to lookup and parse the reserved mem to get the address and size to
+initialize the rproc mem structure, and then use the filled in values to
+declare the DMA pool.
+
+> 
+> At the very least I would use of_reserved_mem_device_init_by_idx(dev,
+> np, 0).  I agree it is not flexible but I'll take that over adding a
+> new field to structure rproc.
+
+Yep, I started out indeed with exactly that code in v1, and only
+introduced the new field to address Arnaud's comments. Even the new
+field is intrinsically initialized to 0, so the code is equivalent, and
+supports the cases in case you need to use a different reserved-memory
+region than at index 0.
+
+regards
+Suman
+
+
 > 
 > Thanks,
-> Ezequiel
+> Mathieu
 > 
+>>
+>> regards
+>> Suman
+>>
+>>>
+>>> Thanks,
+>>> Mathieu
+>>>
+>>>>      }
+>>>>
+>>>>      /* Allocate virtio device */
+>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>>> index ed127b2d35ca..07bd73a6d72a 100644
+>>>> --- a/include/linux/remoteproc.h
+>>>> +++ b/include/linux/remoteproc.h
+>>>> @@ -481,6 +481,7 @@ struct rproc_dump_segment {
+>>>>   * @auto_boot: flag to indicate if remote processor should be auto-started
+>>>>   * @dump_segments: list of segments in the firmware
+>>>>   * @nb_vdev: number of vdev currently handled by rproc
+>>>> + * @vdevbuf_mem_id: default memory-region index for allocating vdev buffers
+>>>>   */
+>>>>  struct rproc {
+>>>>      struct list_head node;
+>>>> @@ -514,6 +515,7 @@ struct rproc {
+>>>>      bool auto_boot;
+>>>>      struct list_head dump_segments;
+>>>>      int nb_vdev;
+>>>> +    u8 vdevbuf_mem_id;
+>>>>      u8 elf_class;
+>>>>  };
+>>>>
+>>>> --
+>>>> 2.23.0
+>>>>
+>>
 
