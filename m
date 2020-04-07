@@ -2,148 +2,159 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF94BC2BA80
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBDAC2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903A02051A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC3D2051A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:13:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xrq+pk9Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgDGGJj convert rfc822-to-8bit (ORCPT
+        id S1726840AbgDGGNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:09:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34665 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbgDGGJj (ORCPT
+        Tue, 7 Apr 2020 02:13:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43854 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbgDGGNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:09:39 -0400
-Received: from mail-pf1-f199.google.com ([209.85.210.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jLhQX-0005eq-Kr
-        for linux-kernel@vger.kernel.org; Tue, 07 Apr 2020 06:09:37 +0000
-Received: by mail-pf1-f199.google.com with SMTP id 20so1660349pfw.10
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 23:09:37 -0700 (PDT)
+        Tue, 7 Apr 2020 02:13:11 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w15so2397258wrv.10;
+        Mon, 06 Apr 2020 23:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8etR1CFejVLVV7lIaOkWLfh+67hUJYeYv/uOXoSbqAk=;
+        b=Xrq+pk9ZBZFhr78R37fPiEJRJ/QBMtPjUh/iw6q4R1EShJjUnWUCBRniyMbRxWdleD
+         V1M4KylOmk9OIOMowRT8X03CpfDKv6MKdEJ5mpg8kyVa1Bbm8BMr8nLhHQGDcT1MDImz
+         /HsY2j01dpiijHNYAmFnLIxNM4gpn+EFylErKXiM4gzhU+uwExiMwR6DWeFvAcNpYi8d
+         3F36Mh9Puxl8Qtnk56ziuqOUwyG9uK0Th2jqShzCMCm/vkf52qu9I5alswXsWhRCc+WC
+         s6E3oEaGgf3eWFuJWO/bmhkcsESBnoSdKw+k7K6XoPSCV8zczXwHQrF5ZMvRSP4iJ+rD
+         teLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=UZI8JedmnuHToXu7Q/I7xx7S7a3ItUDjPQAoytpljgU=;
-        b=IkkWEZynGP4E1flQ+jFutvjBPNwJ0DQaJ9cscvsldbDQBBk97YcGxcmMIjcsAP0Ieb
-         qxTCYDBiGo9lU6oXO2eH1CaDNeHNg+azACK5xdV3fgdUcjpiABFGlqk+XAUi/18re9Bi
-         hE7lttw57gRSNiPdpEbTs8XwP0sRZxljz4Q+Fau2XbmVEj8csN08zGGWaB6dODdWI4fw
-         AYz6YAi+TqS4uEy/UTwp/95J4KIKw0p3S9NEyMkVlOLg+Smr2UM+n7YfvGJV7SGlAveU
-         TYOgUQ1BPzcGyO3usS/Qkm/GRueIXMGkeqnMruJ7tO8WeEpsb2wF81d8f8A4g/C38qMu
-         MbXw==
-X-Gm-Message-State: AGi0PubzLYJIGAi0Gg8WuUZo2z3I9bzwt6iLhAP8BGTgoq7zKuxwZk3d
-        7PE75i/iZlaS2bHTzmyCBy3apIOjQ3nHTekuwxWJBEObcP1hv3fsdRnFRaddg6c611BmN251L0t
-        zQOuOC+suev32sbDseftinusfgDOinCAGptlBCYRnAw==
-X-Received: by 2002:aa7:98c9:: with SMTP id e9mr1038785pfm.204.1586239775970;
-        Mon, 06 Apr 2020 23:09:35 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLoN6nnx4YD3X7VJk9A66/0ZEp9elDgbImAvoNuoS7c7bQNoEObS/YpnSfIY6drzOS7Fwmadw==
-X-Received: by 2002:aa7:98c9:: with SMTP id e9mr1038773pfm.204.1586239775668;
-        Mon, 06 Apr 2020 23:09:35 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id o128sm12965746pfb.58.2020.04.06.23.09.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Apr 2020 23:09:35 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] libata: Return correct rc status in
- sata_pmp_eh_recover_pm() pwhen ATA_DFLAG_DETACH is set
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190327090254.10365-1-kai.heng.feng@canonical.com>
-Date:   Tue, 7 Apr 2020 14:09:33 +0800
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <A7C20983-8C32-4B63-AAEB-BFA2AE0DBAE9@canonical.com>
-References: <20190327090254.10365-1-kai.heng.feng@canonical.com>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=8etR1CFejVLVV7lIaOkWLfh+67hUJYeYv/uOXoSbqAk=;
+        b=b7QHTra3L7jVia07A7Q+mIcyNSK8hm16sMjslWGLByn/Aph6Dm09Zmp1eJOJ122YZc
+         NlGEP5ybb3Hrhe702/xD/tmx/2egGeKgtYIOeCT3e1X3Or/e8PQAOteCeDChoMZIerTp
+         VLuCiOrVUGpHBTAKkwyXs7i+6w7MMzvGekuL4OT4krff9+jKNDlAcIp0sTCvNQoyRIud
+         scZ9+mNMcGE6vRK6f1ez9YwMkhCgUfyYm33pSGFjuLVN0DJ71/BfA1X9iPvhqnF41rVX
+         jfnSb6oR24kZoWOFlzc3c0qxWM4t3bi+GIslyrlMHszUFoYmt1L7gpxARqTjG/G1Ehhx
+         YIwg==
+X-Gm-Message-State: AGi0PuZGVGPx3lJJe9WZ2xTBPlQrJHxY6rZAqfs9udrzPQs6THbwFhxR
+        QuhuFbSMNhW/FfeNHFNbZ3jmQ9Jt
+X-Google-Smtp-Source: APiQypJz3aouSR3QwOXMTTllaAt9cRgpZjrg9bL4L/TqTfUjxt4UxUDUbr0VggwT/bh2iIMHbBYAAQ==
+X-Received: by 2002:a5d:498b:: with SMTP id r11mr849739wrq.368.1586239987014;
+        Mon, 06 Apr 2020 23:13:07 -0700 (PDT)
+Received: from [192.168.43.134] ([109.126.129.227])
+        by smtp.gmail.com with ESMTPSA id h10sm30867497wrq.33.2020.04.06.23.13.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Apr 2020 23:13:06 -0700 (PDT)
+To:     Colin King <colin.king@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, linux-fsdevel@vger.kernel.org,
+        io-uring@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200406225439.654486-1-colin.king@canonical.com>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH] io_uring: remove redundant variable pointer nxt and
+ io_wq_assign_next call
+Message-ID: <e9fba5b9-7dd9-c9ef-c978-94615169351b@gmail.com>
+Date:   Tue, 7 Apr 2020 09:12:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200406225439.654486-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
-
-> On Mar 27, 2019, at 17:02, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+On 07/04/2020 01:54, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> During system resume from suspend, this can be observed on ASM1062 PMP
-> controller:
-> <6>[12007.593358] ata10.01: SATA link down (SStatus 0 SControl 330)
-> <6>[12007.593469] ata10.02: hard resetting link
-> <6>[12007.908353] ata10.02: SATA link down (SStatus 0 SControl 330)
-> <6>[12007.911149] ata10.00: configured for UDMA/133
-> <0>[12007.972508] Kernel panic - not syncing: stack-protector: Kernel
-> stack is corrupted in: sata_pmp_eh_recover+0xa2b/0xa40
-> <0>[12007.972508]
-> <4>[12007.972515] CPU: 2 PID: 230 Comm: scsi_eh_9 Tainted: P OE
-> 4.15.0-46-generic #49-Ubuntu
-> <4>[12007.972517] Hardware name: System manufacturer System Product
-> Name/A320M-C, BIOS 1001 12/10/2017
-> <4>[12007.972518] Call Trace:
-> <4>[12007.972525] dump_stack+0x63/0x8b
-> <4>[12007.972530] panic+0xe4/0x244
-> <4>[12007.972533] ? sata_pmp_eh_recover+0xa2b/0xa40
-> <4>[12007.972536] __stack_chk_fail+0x19/0x20
-> <4>[12007.972538] sata_pmp_eh_recover+0xa2b/0xa40
-> <4>[12007.972543] ? ahci_do_softreset+0x260/0x260 [libahci]
-> <4>[12007.972545] ? ahci_do_hardreset+0x140/0x140 [libahci]
-> <4>[12007.972547] ? ata_phys_link_offline+0x60/0x60
-> <4>[12007.972549] ? ahci_stop_engine+0xc0/0xc0 [libahci]
-> <4>[12007.972552] sata_pmp_error_handler+0x22/0x30
-> <4>[12007.972554] ahci_error_handler+0x45/0x80 [libahci]
-> <4>[12007.972556] ata_scsi_port_error_handler+0x29b/0x770
-> <4>[12007.972558] ? ata_scsi_cmd_error_handler+0x101/0x140
-> <4>[12007.972559] ata_scsi_error+0x95/0xd0
-> <4>[12007.972562] ? scsi_try_target_reset+0x90/0x90
-> <4>[12007.972563] scsi_error_handler+0xd0/0x5b0
-> <4>[12007.972566] kthread+0x121/0x140
-> <4>[12007.972567] ? scsi_eh_get_sense+0x200/0x200
-> <4>[12007.972569] ? kthread_create_worker_on_cpu+0x70/0x70
-> <4>[12007.972572] ret_from_fork+0x22/0x40
-> <0>[12007.972591] Kernel Offset: 0xcc00000 from 0xffffffff81000000
-> (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> An earlier commit "io_uring: remove @nxt from handlers" removed the
+> setting of pointer nxt and now it is always null, hence the non-null
+> check and call to io_wq_assign_next is redundant and can be removed.
 > 
-> Since sata_pmp_eh_recover_pmp() doens't set rc when ATA_DFLAG_DETACH is
-> set, sata_pmp_eh_recover() continues to run. During retry it triggers
-> the stack protector.
-> 
-> Set correct rc in sata_pmp_eh_recover_pmp() to let sata_pmp_eh_recover()
-> jump to pmp_fail directly.
-> 
-> BugLink: https://bugs.launchpad.net/bugs/1821434
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-
-Any suggestion for this patch?
-
-Kai-Heng
-
+> Addresses-Coverity: ("'Constant' variable guard")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
-> drivers/ata/libata-pmp.c | 1 +
-> 1 file changed, 1 insertion(+)
+>  fs/io_uring.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> diff --git a/drivers/ata/libata-pmp.c b/drivers/ata/libata-pmp.c
-> index 2ae1799f4992..51eeaea65833 100644
-> --- a/drivers/ata/libata-pmp.c
-> +++ b/drivers/ata/libata-pmp.c
-> @@ -764,6 +764,7 @@ static int sata_pmp_eh_recover_pmp(struct ata_port *ap,
-> 
-> 	if (dev->flags & ATA_DFLAG_DETACH) {
-> 		detach = 1;
-> +		rc = -ENODEV;
-> 		goto fail;
-> 	}
-> 
-> -- 
-> 2.17.1
-> 
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index 14efcf0a3070..b594fa0bd210 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -3509,14 +3509,11 @@ static void __io_sync_file_range(struct io_kiocb *req)
+>  static void io_sync_file_range_finish(struct io_wq_work **workptr)
+>  {
+>  	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+> -	struct io_kiocb *nxt = NULL;
+>  
+>  	if (io_req_cancelled(req))
+>  		return;
+>  	__io_sync_file_range(req);
+>  	io_put_req(req); /* put submission ref */
+> -	if (nxt)
+> -		io_wq_assign_next(workptr, nxt);
 
+Works, but it should be io_steal_work() instead
+
+-- 
+Pavel Begunkov
