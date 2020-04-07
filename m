@@ -2,80 +2,115 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0644C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7237BC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A98D20731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490372074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 12:18:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ki3AHBrZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgDGMSV (ORCPT
+        id S1728615AbgDGMSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 08:18:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47832 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbgDGMSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 08:18:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 50ABFABE9;
-        Tue,  7 Apr 2020 12:18:19 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 02F171E1233; Tue,  7 Apr 2020 14:18:18 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andrei Vagin <avagin@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH] ucount: Fix wrong inotify ucounts in /proc/sys/user
-Date:   Tue,  7 Apr 2020 14:18:14 +0200
-Message-Id: <20200407121814.26073-1-jack@suse.cz>
-X-Mailer: git-send-email 2.16.4
+        Tue, 7 Apr 2020 08:18:31 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41218 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgDGMSb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 08:18:31 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ACABD59E;
+        Tue,  7 Apr 2020 14:18:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1586261909;
+        bh=fPdYE8A3jszFhj8Ia41Q61eXHMMvA97zhV0Z1oSNhpo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ki3AHBrZ4A1pHq9QyVUJmBRoyYy6r5XgnCvPLxfUMdFWAd+t6vap0lPuXVl4Exjrn
+         QGGFNT4zOWrpzji+6HaLIZro4VSBmpIW0R27U01g31cKRxQ33UG9t2g5bFRqwJzII4
+         BTM6sXy8JiOEaVdicsbrqxvEd0mfTiJATCkYEotA=
+Date:   Tue, 7 Apr 2020 15:18:18 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v5 2/5] media: i2c: ov5645: Drop reading clock-frequency
+ dt-property
+Message-ID: <20200407121818.GC4751@pendragon.ideasonboard.com>
+References: <1586191361-16598-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586191361-16598-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWiVLt23a0JBDX6ZiKDiru9-ecgt3XF4Y5qzVOWXhLcCw@mail.gmail.com>
+ <CA+V-a8tHb1OomhfdsWV5duyuypTKC_EWT4o=mMjWVsxu+aOnBQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8tHb1OomhfdsWV5duyuypTKC_EWT4o=mMjWVsxu+aOnBQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 769071ac9f20 "ns: Introduce Time Namespace" broke reporting of
-inotify ucounts (max_inotify_instances, max_inotify_watches) in
-/proc/sys/user because it has added UCOUNT_TIME_NAMESPACES into enum
-ucount_type but didn't properly update reporting in
-kernel/ucount.c:setup_userns_sysctls(). Update the reporting to fix the
-issue and also add BUILD_BUG_ON to catch a similar problem in the
-future.
+Hi Prabhakar,
 
-Fixes: 769071ac9f20 "ns: Introduce Time Namespace"
-CC: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- kernel/ucount.c | 3 +++
- 1 file changed, 3 insertions(+)
+On Tue, Apr 07, 2020 at 08:40:06AM +0100, Lad, Prabhakar wrote:
+> On Tue, Apr 7, 2020 at 8:17 AM Geert Uytterhoeven wrote:
+> > On Mon, Apr 6, 2020 at 6:43 PM Lad Prabhakar wrote:
+> > > Modes in the driver are based on xvclk frequency fixed to 24MHz, but where
+> > > as the OV5645 sensor can support the xvclk frequency ranging from 6MHz to
+> > > 24MHz. So instead making clock-frequency as dt-property just let the
+> > > driver enforce the required clock frequency.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > However, still wondering about the "xvclk" name above and in the definition
+> > below.  Is this the naming from the datasheet?
+> > The DT bindings nor the driver use the "xvclk" naming.
+> >
+> xvclk naming is from the datasheet, although the 0v5645 datasheet on
+> publicly available I have referred [1]/[2].
+> If I am not wrong all the ov sensors have the same naming convention as xvclk.
+> 
+> [1] https://cdn.sparkfun.com/datasheets/Sensors/LightImaging/OV5640_datasheet.pdf
+> [2] https://www.ovt.com/download/sensorpdf/126/OmniVision_OV5645.pdf
 
-diff --git a/kernel/ucount.c b/kernel/ucount.c
-index a53cc2b4179c..11b1596e2542 100644
---- a/kernel/ucount.c
-+++ b/kernel/ucount.c
-@@ -69,6 +69,7 @@ static struct ctl_table user_table[] = {
- 	UCOUNT_ENTRY("max_net_namespaces"),
- 	UCOUNT_ENTRY("max_mnt_namespaces"),
- 	UCOUNT_ENTRY("max_cgroup_namespaces"),
-+	UCOUNT_ENTRY("max_time_namespaces"),
- #ifdef CONFIG_INOTIFY_USER
- 	UCOUNT_ENTRY("max_inotify_instances"),
- 	UCOUNT_ENTRY("max_inotify_watches"),
-@@ -81,6 +82,8 @@ bool setup_userns_sysctls(struct user_namespace *ns)
- {
- #ifdef CONFIG_SYSCTL
- 	struct ctl_table *tbl;
-+
-+	BUILD_BUG_ON(ARRAY_SIZE(user_table) != UCOUNT_COUNTS + 1);
- 	setup_sysctl_set(&ns->set, &set_root, set_is_seen);
- 	tbl = kmemdup(user_table, sizeof(user_table), GFP_KERNEL);
- 	if (tbl) {
+The clock in DT should really have been named xvclk, but it's too late
+to change that. We can follow one of two approaches, either naming
+everything xclk, and naming everything but the DT property xvclk. Both
+have pros and cons, feel free to pick your preferred option, but in any
+case a comment to explain the issue would be useful.
+
+> > > --- a/drivers/media/i2c/ov5645.c
+> > > +++ b/drivers/media/i2c/ov5645.c
+> > > @@ -61,6 +61,8 @@
+> > >  #define OV5645_SDE_SAT_U               0x5583
+> > >  #define OV5645_SDE_SAT_V               0x5584
+> > >
+> > > +#define OV5645_XVCLK_FREQ              24000000
+> > > +
+
 -- 
-2.16.4
+Regards,
 
+Laurent Pinchart
