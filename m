@@ -2,278 +2,78 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B36BC2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FAEC2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6304620748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E4320719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgDGIsN (ORCPT
+        id S1727967AbgDGIur (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 04:48:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29798 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727958AbgDGIsN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 04:48:13 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0378YOIZ028781;
-        Tue, 7 Apr 2020 04:48:06 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 306mjdg4e8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 04:48:05 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0378iarI016876;
-        Tue, 7 Apr 2020 08:48:05 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04dal.us.ibm.com with ESMTP id 306hv64bkt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 08:48:04 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0378m3vN37028306
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 08:48:03 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EDDF136051;
-        Tue,  7 Apr 2020 08:48:03 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 001F413605D;
-        Tue,  7 Apr 2020 08:48:02 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.79.178.96])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Apr 2020 08:48:02 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id DE1BD2E3225; Tue,  7 Apr 2020 14:17:58 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v5 1/5] powerpc: Move idle_loop_prolog()/epilog() functions to header file
-Date:   Tue,  7 Apr 2020 14:17:39 +0530
-Message-Id: <1586249263-14048-2-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1586249263-14048-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1586249263-14048-1-git-send-email-ego@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_01:2020-04-07,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- clxscore=1015 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- suspectscore=0 malwarescore=0 phishscore=0 spamscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070068
+        Tue, 7 Apr 2020 04:50:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:53700 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725817AbgDGIuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 04:50:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CAA430E;
+        Tue,  7 Apr 2020 01:50:46 -0700 (PDT)
+Received: from [10.163.1.2] (unknown [10.163.1.2])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D21EE3F73D;
+        Tue,  7 Apr 2020 01:50:36 -0700 (PDT)
+Subject: Re: [PATCH 0/6] Introduce ID_PFR2 and other CPU feature changes
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+References: <1580215149-21492-1-git-send-email-anshuman.khandual@arm.com>
+ <20200406170911.GA7446@willie-the-truck>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <05f6eb1e-a82c-bd02-1871-e44ea00683d8@arm.com>
+Date:   Tue, 7 Apr 2020 14:20:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200406170911.GA7446@willie-the-truck>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-Currently prior to entering an idle state on a Linux Guest, the
-pseries cpuidle driver implement an idle_loop_prolog() and
-idle_loop_epilog() functions which ensure that idle_purr is correctly
-computed, and the hypervisor is informed that the CPU cycles have been
-donated.
 
-These prolog and epilog functions are also required in the default
-idle call, i.e pseries_lpar_idle(). Hence move these accessor
-functions to a common header file and call them from
-pseries_lpar_idle(). Since the existing header files such as
-asm/processor.h have enough clutter, create a new header file
-asm/idle.h. Finally rename idle_loop_prolog() and idle_loop_epilog()
-to pseries_idle_prolog() and pseries_idle_epilog() as they are only
-relavent for on pseries guests.
+On 04/06/2020 10:39 PM, Will Deacon wrote:
+> On Tue, Jan 28, 2020 at 06:09:03PM +0530, Anshuman Khandual wrote:
+>> This series is primarily motivated from an adhoc list from Mark Rutland
+>> during our ID_ISAR6 discussion [1]. Besides, it also includes a patch
+>> which does macro replacement for various open bits shift encodings in
+>> various CPU ID registers. This series is based on linux-next 20200124.
+>>
+>> [1] https://patchwork.kernel.org/patch/11287805/
+>>
+>> Is there anything else apart from these changes which can be accommodated
+>> in this series, please do let me know. Thank you.
+> 
+> The latest Arm ARM also talks about DFR1 and MMFR5. Please can you include
 
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- arch/powerpc/include/asm/idle.h        | 31 +++++++++++++++++++++++++++++
- arch/powerpc/platforms/pseries/setup.c |  7 +++++--
- drivers/cpuidle/cpuidle-pseries.c      | 36 +++++++---------------------------
- 3 files changed, 43 insertions(+), 31 deletions(-)
- create mode 100644 arch/powerpc/include/asm/idle.h
+Sure, will do.
 
-diff --git a/arch/powerpc/include/asm/idle.h b/arch/powerpc/include/asm/idle.h
-new file mode 100644
-index 0000000..32064a4c
---- /dev/null
-+++ b/arch/powerpc/include/asm/idle.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef _ASM_POWERPC_IDLE_H
-+#define _ASM_POWERPC_IDLE_H
-+#include <asm/runlatch.h>
-+#include <asm/paca.h>
-+
-+#ifdef CONFIG_PPC_PSERIES
-+static inline void pseries_idle_prolog(unsigned long *in_purr)
-+{
-+	ppc64_runlatch_off();
-+	*in_purr = mfspr(SPRN_PURR);
-+	/*
-+	 * Indicate to the HV that we are idle. Now would be
-+	 * a good time to find other work to dispatch.
-+	 */
-+	get_lppaca()->idle = 1;
-+}
-+
-+static inline void pseries_idle_epilog(unsigned long in_purr)
-+{
-+	u64 wait_cycles;
-+
-+	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
-+	wait_cycles += mfspr(SPRN_PURR) - in_purr;
-+	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
-+	get_lppaca()->idle = 0;
-+
-+	ppc64_runlatch_on();
-+}
-+#endif /* CONFIG_PPC_PSERIES */
-+#endif
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 0c8421d..2f53e6b 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -68,6 +68,7 @@
- #include <asm/isa-bridge.h>
- #include <asm/security_features.h>
- #include <asm/asm-const.h>
-+#include <asm/idle.h>
- #include <asm/swiotlb.h>
- #include <asm/svm.h>
- 
-@@ -319,6 +320,8 @@ static int alloc_dispatch_log_kmem_cache(void)
- 
- static void pseries_lpar_idle(void)
- {
-+	unsigned long in_purr;
-+
- 	/*
- 	 * Default handler to go into low thread priority and possibly
- 	 * low power mode by ceding processor to hypervisor
-@@ -328,7 +331,7 @@ static void pseries_lpar_idle(void)
- 		return;
- 
- 	/* Indicate to hypervisor that we are idle. */
--	get_lppaca()->idle = 1;
-+	pseries_idle_prolog(&in_purr);
- 
- 	/*
- 	 * Yield the processor to the hypervisor.  We return if
-@@ -339,7 +342,7 @@ static void pseries_lpar_idle(void)
- 	 */
- 	cede_processor();
- 
--	get_lppaca()->idle = 0;
-+	pseries_idle_epilog(in_purr);
- }
- 
- /*
-diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
-index 74c2479..46d5e05 100644
---- a/drivers/cpuidle/cpuidle-pseries.c
-+++ b/drivers/cpuidle/cpuidle-pseries.c
-@@ -19,6 +19,7 @@
- #include <asm/machdep.h>
- #include <asm/firmware.h>
- #include <asm/runlatch.h>
-+#include <asm/idle.h>
- #include <asm/plpar_wrappers.h>
- 
- struct cpuidle_driver pseries_idle_driver = {
-@@ -31,29 +32,6 @@ struct cpuidle_driver pseries_idle_driver = {
- static u64 snooze_timeout __read_mostly;
- static bool snooze_timeout_en __read_mostly;
- 
--static inline void idle_loop_prolog(unsigned long *in_purr)
--{
--	ppc64_runlatch_off();
--	*in_purr = mfspr(SPRN_PURR);
--	/*
--	 * Indicate to the HV that we are idle. Now would be
--	 * a good time to find other work to dispatch.
--	 */
--	get_lppaca()->idle = 1;
--}
--
--static inline void idle_loop_epilog(unsigned long in_purr)
--{
--	u64 wait_cycles;
--
--	wait_cycles = be64_to_cpu(get_lppaca()->wait_state_cycles);
--	wait_cycles += mfspr(SPRN_PURR) - in_purr;
--	get_lppaca()->wait_state_cycles = cpu_to_be64(wait_cycles);
--	get_lppaca()->idle = 0;
--
--	ppc64_runlatch_on();
--}
--
- static int snooze_loop(struct cpuidle_device *dev,
- 			struct cpuidle_driver *drv,
- 			int index)
-@@ -63,7 +41,7 @@ static int snooze_loop(struct cpuidle_device *dev,
- 
- 	set_thread_flag(TIF_POLLING_NRFLAG);
- 
--	idle_loop_prolog(&in_purr);
-+	pseries_idle_prolog(&in_purr);
- 	local_irq_enable();
- 	snooze_exit_time = get_tb() + snooze_timeout;
- 
-@@ -87,7 +65,7 @@ static int snooze_loop(struct cpuidle_device *dev,
- 
- 	local_irq_disable();
- 
--	idle_loop_epilog(in_purr);
-+	pseries_idle_epilog(in_purr);
- 
- 	return index;
- }
-@@ -115,7 +93,7 @@ static int dedicated_cede_loop(struct cpuidle_device *dev,
- {
- 	unsigned long in_purr;
- 
--	idle_loop_prolog(&in_purr);
-+	pseries_idle_prolog(&in_purr);
- 	get_lppaca()->donate_dedicated_cpu = 1;
- 
- 	HMT_medium();
-@@ -124,7 +102,7 @@ static int dedicated_cede_loop(struct cpuidle_device *dev,
- 	local_irq_disable();
- 	get_lppaca()->donate_dedicated_cpu = 0;
- 
--	idle_loop_epilog(in_purr);
-+	pseries_idle_epilog(in_purr);
- 
- 	return index;
- }
-@@ -135,7 +113,7 @@ static int shared_cede_loop(struct cpuidle_device *dev,
- {
- 	unsigned long in_purr;
- 
--	idle_loop_prolog(&in_purr);
-+	pseries_idle_prolog(&in_purr);
- 
- 	/*
- 	 * Yield the processor to the hypervisor.  We return if
-@@ -147,7 +125,7 @@ static int shared_cede_loop(struct cpuidle_device *dev,
- 	check_and_cede_processor();
- 
- 	local_irq_disable();
--	idle_loop_epilog(in_purr);
-+	pseries_idle_epilog(in_purr);
- 
- 	return index;
- }
--- 
-1.9.4
+> those too? Might also be worth checking to see if anything is missing on
+> the 64-bit side as well (I didn't look).
 
+Yeah. Now there some missing ones, will add those as well.
+
+> 
+> Will
+> 
