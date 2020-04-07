@@ -2,156 +2,218 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF09FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AAFC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B50320731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E71220731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586268049;
+	bh=2w5sH6h2pN9ftiCQ9aQDnwVXxqYKcZjwJu9ddTMXg3A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JGUOapM4GHtbSR82pXVNJsIpE+WuHdWK0M7rym3X8qudzNf0JlrKyWbyvi/mBm67Y
+	 7TZ0NaiGzEoox7aag1aRr2rhnPRUC34xD8iVZ5gzEKgH37FcdF8rm5901iKG0XPPWM
+	 Jl/wENHcMXzEg1kqChA3VkDObeCOJ7DE/r9bOec0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgDGOAR (ORCPT
+        id S1729020AbgDGOAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:00:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40192 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbgDGOAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:00:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E3B4AADCD;
-        Tue,  7 Apr 2020 14:00:13 +0000 (UTC)
-Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
- commands
-To:     John Garry <john.garry@huawei.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com,
-        ming.lei@redhat.com, bvanassche@acm.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        esc.storagedev@microsemi.com, chenxiang66@hisilicon.com,
-        Hannes Reinecke <hare@suse.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-3-git-send-email-john.garry@huawei.com>
- <20200310183243.GA14549@infradead.org>
- <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
- <20200311062228.GA13522@infradead.org>
- <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
- <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
-From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <39bc2d82-2676-e329-5d32-8acb99b0a204@suse.de>
-Date:   Tue, 7 Apr 2020 16:00:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 10:00:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33492 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728555AbgDGOAs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:00:48 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a25so4072116wrd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 07:00:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=85uYzIYLpB2MYaLC8rzrAx+z7Cwj0As1rWHW278xDPo=;
+        b=bElxHQHTu5bIIIC/hpUBloMSeq/yrvRPz5uEwUuwg2sbAaXB5AW0inVPBeYT2E8DKY
+         y+1+/MiZkOeqXt96tdICX258TyX5KE1gsITA74Q1Gmgz4h3pdgH3ErFG+xVNo4nkrRTX
+         q3aRUgOrZHmgoAe1OMhZarWVVTCX3+Z6bUrsmvSwr2OUnlkLJvbo6N6OKSGWJrqI0Jew
+         wlbBDEEJJ+Of9TIIlM7QYPHq9N0sr3r+M0f2fSFk9l9o4NZy3Nf9Z0c/YmT2fiP0mNMK
+         O+WN+WR9tw/jz3tfvc9D9PrWVbQutfzC2O4HOSgPoLfhAwmKdBRtFvL9fqiFR0Ph5Wta
+         SQ+Q==
+X-Gm-Message-State: AGi0Pub/qVvYDW9A8L5El9weKBAiX9rCB8mUK10JCYoIsX/jB8oh72lO
+        yJFwOOwIR0y2LD4EEUb54+A=
+X-Google-Smtp-Source: APiQypImQFPPXUMgFY6K5WDlmtafD7U+zunnmfuk3kzE+z1nl24TQB9VD0Ss3D+cVVp8jxutcNevsQ==
+X-Received: by 2002:adf:ce90:: with SMTP id r16mr3047177wrn.237.1586268045808;
+        Tue, 07 Apr 2020 07:00:45 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id c6sm5637232wrm.0.2020.04.07.07.00.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 07:00:45 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 16:00:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Subject: Re: [PATCH v1 2/2] mm/memory_hotplug: remove
+ is_mem_section_removable()
+Message-ID: <20200407140044.GR18914@dhcp22.suse.cz>
+References: <20200407135416.24093-1-david@redhat.com>
+ <20200407135416.24093-3-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407135416.24093-3-david@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/7/20 1:54 PM, John Garry wrote:
-> On 06/04/2020 10:05, Hannes Reinecke wrote:
->> On 3/11/20 7:22 AM, Christoph Hellwig wrote:
->>> On Tue, Mar 10, 2020 at 09:08:56PM +0000, John Garry wrote:
->>>> On 10/03/2020 18:32, Christoph Hellwig wrote:
->>>>> On Wed, Mar 11, 2020 at 12:25:28AM +0800, John Garry wrote:
->>>>>> From: Hannes Reinecke <hare@suse.com>
->>>>>>
->>>>>> Allocate a separate 'reserved_cmd_q' for sending reserved commands.
->>>>>
->>>>> Why?  Reserved command specifically are not in any way tied to queues.
->>>>> .
->>>>>
->>>>
->>>> So the v1 series used a combination of the sdev queue and the per-host
->>>> reserved_cmd_q. Back then you questioned using the sdev queue for 
->>>> virtio
->>>> scsi, and the unconfirmed conclusion was to use a common per-host q. 
->>>> This is
->>>> the best link I can find now:
->>>>
->>>> https://www.mail-archive.com/linux-scsi@vger.kernel.org/msg83177.html
->>>
->>> That was just a question on why virtio uses the per-device tags, which
->>> didn't look like it made any sense.  What I'm worried about here is
->>> mixing up the concept of reserved tags in the tagset, and queues to use
->>> them.  Note that we already have the scsi_get_host_dev to allocate
->>> a scsi_device and thus a request_queue for the host itself.  That seems
->>> like the better interface to use a tag for a host wide command vs
->>> introducing a parallel path.
->>>
->> Thinking about it some more, I don't think that scsi_get_host_dev() is
->> the best way of handling it.
->> Problem is that it'll create a new scsi_device with <hostno:this_id:0>,
->> which will then show up via eg 'lsscsi'.
+On Tue 07-04-20 15:54:16, David Hildenbrand wrote:
+> Fortunately, all users of is_mem_section_removable() are gone. Get rid of
+> it, including some now unnecessary functions.
 > 
-> are you sure? Doesn't this function just allocate the sdev, but do 
-> nothing with it, like probing it?
-> 
-> I bludgeoned it in here for PoC:
-> 
-> https://github.com/hisilicon/kernel-dev/commit/ef0ae8540811e32776f64a5b42bd76cbed17ba47 
-> 
-> 
-> And then still:
-> 
-> john@ubuntu:~$ lsscsi
-> [0:0:0:0] disk SEAGATE  ST2000NM0045  N004  /dev/sda
-> [0:0:1:0] disk SEAGATE  ST2000NM0045  N004  /dev/sdb
-> [0:0:2:0] disk ATASAMSUNG HM320JI  0_01  /dev/sdc
-> [0:0:3:0] disk SEAGATE  ST1000NM0023  0006  /dev/sdd
-> [0:0:4:0] enclosu HUAWEIExpander 12Gx16  128-
-> john@ubuntu:~$
-> 
-> Some proper plumbing would be needed, though.
-> 
->> This would be okay if 'this_id' would have been defined by the driver;
->> sadly, most drivers which are affected here do set 'this_id' to -1.
->> So we wouldn't have a nice target ID to allocate the device from, let
->> alone the problem that we would have to emulate a complete scsi device
->> with all required minimal command support etc.
->> And I'm not quite sure how well that would play with the exising SCSI
->> host template; the device we'll be allocating would have basically
->> nothing in common with the 'normal' SCSI devices.
->>
->> What we could do, though, is to try it the other way round:
->> Lift the request queue from scsi_get_host_dev() into the scsi host
->> itself, so that scsi_get_host_dev() can use that queue, but we also
->> would be able to use it without a SCSI device attached.
-> 
-> wouldn't that limit 1x scsi device per host, not that I know if any more 
-> would ever be required? But it does still seem better to use the request 
-> queue in the scsi device.
-> 
-My concern is this:
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-struct scsi_device *scsi_get_host_dev(struct Scsi_Host *shost)
-{
-	[ .. ]
-	starget = scsi_alloc_target(&shost->shost_gendev, 0, shost->this_id);
-	[ .. ]
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-and we have typically:
+> ---
+>  include/linux/memory_hotplug.h |  7 ----
+>  mm/memory_hotplug.c            | 75 ----------------------------------
 
-drivers/scsi/hisi_sas/hisi_sas_v3_hw.c: .this_id                = -1,
+\o/
 
-It's _very_ uncommon to have a negative number as the SCSI target 
-device; in fact, it _is_ an unsigned int already.
+Thanks!
 
-But alright, I'll give it a go; let's see what I'll end up with.
+>  2 files changed, 82 deletions(-)
+> 
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 93d9ada74ddd..7dca9cd6076b 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -314,19 +314,12 @@ static inline void pgdat_resize_init(struct pglist_data *pgdat) {}
+>  
+>  #ifdef CONFIG_MEMORY_HOTREMOVE
+>  
+> -extern bool is_mem_section_removable(unsigned long pfn, unsigned long nr_pages);
+>  extern void try_offline_node(int nid);
+>  extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
+>  extern int remove_memory(int nid, u64 start, u64 size);
+>  extern void __remove_memory(int nid, u64 start, u64 size);
+>  
+>  #else
+> -static inline bool is_mem_section_removable(unsigned long pfn,
+> -					unsigned long nr_pages)
+> -{
+> -	return false;
+> -}
+> -
+>  static inline void try_offline_node(int nid) {}
+>  
+>  static inline int offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 47cf6036eb31..4d338d546d52 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1112,81 +1112,6 @@ int add_memory(int nid, u64 start, u64 size)
+>  EXPORT_SYMBOL_GPL(add_memory);
+>  
+>  #ifdef CONFIG_MEMORY_HOTREMOVE
+> -/*
+> - * A free page on the buddy free lists (not the per-cpu lists) has PageBuddy
+> - * set and the size of the free page is given by page_order(). Using this,
+> - * the function determines if the pageblock contains only free pages.
+> - * Due to buddy contraints, a free page at least the size of a pageblock will
+> - * be located at the start of the pageblock
+> - */
+> -static inline int pageblock_free(struct page *page)
+> -{
+> -	return PageBuddy(page) && page_order(page) >= pageblock_order;
+> -}
+> -
+> -/* Return the pfn of the start of the next active pageblock after a given pfn */
+> -static unsigned long next_active_pageblock(unsigned long pfn)
+> -{
+> -	struct page *page = pfn_to_page(pfn);
+> -
+> -	/* Ensure the starting page is pageblock-aligned */
+> -	BUG_ON(pfn & (pageblock_nr_pages - 1));
+> -
+> -	/* If the entire pageblock is free, move to the end of free page */
+> -	if (pageblock_free(page)) {
+> -		int order;
+> -		/* be careful. we don't have locks, page_order can be changed.*/
+> -		order = page_order(page);
+> -		if ((order < MAX_ORDER) && (order >= pageblock_order))
+> -			return pfn + (1 << order);
+> -	}
+> -
+> -	return pfn + pageblock_nr_pages;
+> -}
+> -
+> -static bool is_pageblock_removable_nolock(unsigned long pfn)
+> -{
+> -	struct page *page = pfn_to_page(pfn);
+> -	struct zone *zone;
+> -
+> -	/*
+> -	 * We have to be careful here because we are iterating over memory
+> -	 * sections which are not zone aware so we might end up outside of
+> -	 * the zone but still within the section.
+> -	 * We have to take care about the node as well. If the node is offline
+> -	 * its NODE_DATA will be NULL - see page_zone.
+> -	 */
+> -	if (!node_online(page_to_nid(page)))
+> -		return false;
+> -
+> -	zone = page_zone(page);
+> -	pfn = page_to_pfn(page);
+> -	if (!zone_spans_pfn(zone, pfn))
+> -		return false;
+> -
+> -	return !has_unmovable_pages(zone, page, MIGRATE_MOVABLE,
+> -				    MEMORY_OFFLINE);
+> -}
+> -
+> -/* Checks if this range of memory is likely to be hot-removable. */
+> -bool is_mem_section_removable(unsigned long start_pfn, unsigned long nr_pages)
+> -{
+> -	unsigned long end_pfn, pfn;
+> -
+> -	end_pfn = min(start_pfn + nr_pages,
+> -			zone_end_pfn(page_zone(pfn_to_page(start_pfn))));
+> -
+> -	/* Check the starting page of each pageblock within the range */
+> -	for (pfn = start_pfn; pfn < end_pfn; pfn = next_active_pageblock(pfn)) {
+> -		if (!is_pageblock_removable_nolock(pfn))
+> -			return false;
+> -		cond_resched();
+> -	}
+> -
+> -	/* All pageblocks in the memory block are likely to be hot-removable */
+> -	return true;
+> -}
+> -
+>  /*
+>   * Confirm all pages in a range [start, end) belong to the same zone (skipping
+>   * memory holes). When true, return the zone.
+> -- 
+> 2.25.1
+> 
 
-Cheers,
-
-Hannes
 -- 
-Dr. Hannes Reinecke            Teamlead Storage & Networking
-hare@suse.de                               +49 911 74053 688
-SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
-HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
+Michal Hocko
+SUSE Labs
