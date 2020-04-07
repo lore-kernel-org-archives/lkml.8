@@ -2,275 +2,92 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B5CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF27C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C77520771
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586276270;
-	bh=1Ii/fUZbmODAmt3UvY6LyNgYB/xr8/fw9wqMh33TMJk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A6Yg4Ks70y1KJUv8RtQTb8uWO0lEDt8DTU7e+g09Nc1Xd1cJzmtkPqf8Xm1GbQ307
-	 j1rTJGeXLj0kF+P5T0lXkG13C25/Q9oMNZHytKRu6A3syLmXyXqx64YsrG1HMWO7bv
-	 d3YKSjrslxDyzvmi6auPYBcUU+jLQvigSnIAsgx4=
+	by mail.kernel.org (Postfix) with ESMTP id 1C9C4206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:19:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="E46NZKV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgDGQRt (ORCPT
+        id S1727877AbgDGQTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:17:49 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:44477 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbgDGQRt (ORCPT
+        Tue, 7 Apr 2020 12:19:46 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:46346 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726840AbgDGQTq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:17:49 -0400
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 037GHUZs032382;
-        Wed, 8 Apr 2020 01:17:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 037GHUZs032382
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586276252;
-        bh=DV4fQlgdI60yXyAogQu5G2vroWmj19GJw8loLCiMBRg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tIcqkHoLC5M96nj3x2YzVV9UUsr/y742KxfC3UNs1GBac2JewzoFBmOxYTBtiKndB
-         0fKUAY50qcGORe5YCImxGdRuRa8tR3wIWQzDQpEkyAVLOdJM+cbFHpwolrd75zt7P4
-         X9oArUiTTwEfKgzYa46h4TpYxzB1vc9PpcQYx3h9q+5Fb5lzIIg0BTucTxMZdoBSZP
-         766dWaGeXVX2PdFEXprPqVmnz97T0SVMGkg74/vwy61+EtuaY/JnHTxmXPlM6KkMy3
-         7C7/wdy8TuAseKrHrhZabi8aschGhRkjicjWUmVpsMfB8PuJveBkVzMqNTeibJOmPA
-         rjx5BY4ZgtMPg==
-X-Nifty-SrcIP: [209.85.222.42]
-Received: by mail-ua1-f42.google.com with SMTP id y17so1444131uap.13;
-        Tue, 07 Apr 2020 09:17:31 -0700 (PDT)
-X-Gm-Message-State: AGi0Puap5sTB/c8cgnYuW05LFJiu/G08Em97wd2/OOp+4tGZvb+Gcq+P
-        29Ka5deyMu5KENxpSKCUeTO496g8bViG7FV+hbY=
-X-Google-Smtp-Source: APiQypL4774Th5H69SOlepN/aoOiTYdYrF9dl4AWXBc+K+44ia0npli6ilqGytimcT0x8H+qc/pPnnfHO64GS5LOK6M=
-X-Received: by 2002:a9f:28c5:: with SMTP id d63mr2335006uad.25.1586276250105;
- Tue, 07 Apr 2020 09:17:30 -0700 (PDT)
+        Tue, 7 Apr 2020 12:19:46 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 71533C03A4;
+        Tue,  7 Apr 2020 16:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1586276385; bh=kz+JCBOqLBdnfrj6mI4BVaUtvHunmgJaO/61mEwBLGc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=E46NZKV/uzVpQj4Oi7ZddQXl4JMvMNcj0zQjfdYnK2x130ic30ZejPmh8xx3LRR3y
+         hJvsGg9lO0ITqB36crJ44plenZNIDiv84qlVZRkzRDHSukriGISM5hnPvdtO9dAfRj
+         ZriP6M7oUVfEkO0JynRHaLebYEwz/7Ot6B3dW6PbLl86siD1GzBOPmZSamgI6BJBnL
+         vNMkvtcp/fCwKh/p9T9vAULUyWbWjSgaVNp2DNCxfFSUwb62SntTZgNP7QxhSodLkf
+         WGPHAhdT4JY+tvemFC6GfpRP/8NMB17/ZtB363/Povj5qqNzC2JzU7aFGulfUM/eNi
+         z2RQfqd2hPj2w==
+Received: from paltsev-e7480.internal.synopsys.com (ru20-e7250.internal.synopsys.com [10.225.49.23])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6DAB2A005C;
+        Tue,  7 Apr 2020 16:19:37 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH] ARC: [plat-hsdk]: fix USB regression
+Date:   Tue,  7 Apr 2020 19:19:33 +0300
+Message-Id: <20200407161933.10874-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-References: <20200403051709.22407-1-masahiroy@kernel.org> <20200406112220.GB126804@google.com>
-In-Reply-To: <20200406112220.GB126804@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 8 Apr 2020 01:16:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com>
-Message-ID: <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
-To:     Matthias Maennich <maennich@google.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 8:22 PM 'Matthias Maennich' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> On Fri, Apr 03, 2020 at 02:17:09PM +0900, Masahiro Yamada wrote:
-> >As Documentation/kbuild/llvm.rst implies, building the kernel with a
-> >full set of LLVM tools gets very verbose and unwieldy.
-> >
-> >Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
-> >GCC and Binutils. You can pass LLVM=1 from the command line or as an
-> >environment variable. Then, Kbuild will use LLVM toolchains in your
-> >PATH environment.
-> >
-> >Please note LLVM=1 does not turn on the LLVM integrated assembler.
-> >You need to explicitly pass AS=clang to use it. When the upstream
-> >kernel is ready for the integrated assembler, I think we can make
-> >it default.
-> >
-> >We discussed what we need, and we agreed to go with a simple boolean
-> >switch (https://lkml.org/lkml/2020/3/28/494).
-> >
-> >Some items in the discussion:
-> >
-> >- LLVM_DIR
-> >
-> >  When multiple versions of LLVM are installed, I just thought supporting
-> >  LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
-> >
-> >  CC      = $(LLVM_DIR)clang
-> >  LD      = $(LLVM_DIR)ld.lld
-> >    ...
-> >
-> >  However, we can handle this by modifying PATH. So, we decided to not do
-> >  this.
-> >
-> >- LLVM_SUFFIX
-> >
-> >  Some distributions (e.g. Debian) package specific versions of LLVM with
-> >  naming conventions that use the version as a suffix.
-> >
-> >  CC      = clang$(LLVM_SUFFIX)
-> >  LD      = ld.lld(LLVM_SUFFIX)
-> >    ...
-> >
-> >  will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
-> >  but the suffixed versions in /usr/bin/ are symlinks to binaries in
-> >  /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
-> >
-> >- HOSTCC, HOSTCXX, etc.
-> >
-> >  We can switch the host compilers in the same way:
-> >
-> >  ifneq ($(LLVM),)
-> >  HOSTCC       = clang
-> >  HOSTCXX      = clang++
-> >  else
-> >  HOSTCC       = gcc
-> >  HOSTCXX      = g++
-> >  endif
-> >
-> >  This may the right thing to do, but I could not make up my mind.
-> >  Because we do not frequently switch the host compiler, a counter
-> >  solution I had in my mind was to leave it to the default of the
-> >  system.
-> >
-> >  HOSTCC       = cc
-> >  HOSTCXX      = c++
->
-> What about HOSTLD ? I saw recently, that setting HOSTLD=ld.lld is not
-> yielding the expected result (some tools, like e.g. fixdep still require
-> an `ld` to be in PATH to be built). I did not find the time to look into
-> that yet, but I would like to consistently switch to the llvm toolchain
-> (including linker and possibly more) also for hostprogs.
+As of today the CONFIG_USB isn't explicitly present in HSDK defconfig
+as it is implicitly forcibly enabled by UDL driver which selects CONFIG_USB
+in its kconfig.
+The commit 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+reverse the dependencies between UDL and USB so UDL now depends on
+CONFIG_USB and not selects it. This introduces regression for ARC HSDK
+board as HSDK defconfig wasn't adjusted and now it misses USB support
+due to lack of CONFIG_USB enabled.
 
+Fix that.
 
-HOSTLD=ld.lld worked for me, but HOSTCC=clang did not.
+Fixes: 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/configs/hsdk_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-
-HOSTCC=clang without CC=clang fails to build objtool.
-
-The build system of objtool is meh.  :(
-
-
-  HOSTCC  scripts/mod/sumversion.o
-  HOSTLD  scripts/mod/modpost
-  CALL    scripts/checksyscalls.sh
-  CALL    scripts/atomic/check-atomics.sh
-  DESCEND  objtool
-error: unknown warning option '-Wstrict-aliasing=3'; did you mean
-'-Wstring-plus-int'? [-Werror,-Wunknown-warning-option]
-  HOSTCC   /home/masahiro/workspace/linux-kbuild/tools/objtool/fixdep.o
-  HOSTLD   /home/masahiro/workspace/linux-kbuild/tools/objtool/fixdep-in.o
-  LINK     /home/masahiro/workspace/linux-kbuild/tools/objtool/fixdep
-  CC       /home/masahiro/workspace/linux-kbuild/tools/objtool/exec-cmd.o
-  CC       /home/masahiro/workspace/linux-kbuild/tools/objtool/help.o
-  CC       /home/masahiro/workspace/linux-kbuild/tools/objtool/pager.o
-
-
-
-
-
-
-> Cheers,
-> Matthias
->
-> >
-> >  Many distributions support update-alternatives to switch the default
-> >  to GCC, Clang, or whatever, but reviewers were opposed to this
-> >  approach. So, this commit does not touch the host tools.
-> >
-> >Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> >---
-> >
-> > Documentation/kbuild/kbuild.rst |  5 +++++
-> > Documentation/kbuild/llvm.rst   |  5 +++++
-> > Makefile                        | 20 ++++++++++++++++----
-> > 3 files changed, 26 insertions(+), 4 deletions(-)
-> >
-> >diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
-> >index 510f38d7e78a..2d1fc03d346e 100644
-> >--- a/Documentation/kbuild/kbuild.rst
-> >+++ b/Documentation/kbuild/kbuild.rst
-> >@@ -262,3 +262,8 @@ KBUILD_BUILD_USER, KBUILD_BUILD_HOST
-> > These two variables allow to override the user@host string displayed during
-> > boot and in /proc/version. The default value is the output of the commands
-> > whoami and host, respectively.
-> >+
-> >+LLVM
-> >+----
-> >+If this variable is set to 1, Kbuild will use Clang and LLVM utilities instead
-> >+of GCC and GNU binutils to build the kernel.
-> >diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-> >index d6c79eb4e23e..4602369f6a4f 100644
-> >--- a/Documentation/kbuild/llvm.rst
-> >+++ b/Documentation/kbuild/llvm.rst
-> >@@ -55,6 +55,11 @@ additional parameters to `make`.
-> >         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
-> >         HOSTLD=ld.lld
-> >
-> >+You can use a single switch `LLVM=1` to use LLVM utilities by default (except
-> >+for building host programs).
-> >+
-> >+      make LLVM=1 HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar HOSTLD=ld.lld
-> >+
-> > Getting Help
-> > ------------
-> >
-> >diff --git a/Makefile b/Makefile
-> >index c91342953d9e..6db89ecdd942 100644
-> >--- a/Makefile
-> >+++ b/Makefile
-> >@@ -409,16 +409,28 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
-> > KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
-> >
-> > # Make variables (CC, etc...)
-> >-LD            = $(CROSS_COMPILE)ld
-> >-CC            = $(CROSS_COMPILE)gcc
-> > CPP           = $(CC) -E
-> >+ifneq ($(LLVM),)
-> >+CC            = clang
-> >+LD            = ld.lld
-> >+AR            = llvm-ar
-> >+NM            = llvm-nm
-> >+OBJCOPY               = llvm-objcopy
-> >+OBJDUMP               = llvm-objdump
-> >+READELF               = llvm-readelf
-> >+OBJSIZE               = llvm-size
-> >+STRIP         = llvm-strip
-> >+else
-> >+CC            = $(CROSS_COMPILE)gcc
-> >+LD            = $(CROSS_COMPILE)ld
-> > AR            = $(CROSS_COMPILE)ar
-> > NM            = $(CROSS_COMPILE)nm
-> >-STRIP         = $(CROSS_COMPILE)strip
-> > OBJCOPY               = $(CROSS_COMPILE)objcopy
-> > OBJDUMP               = $(CROSS_COMPILE)objdump
-> >-OBJSIZE               = $(CROSS_COMPILE)size
-> > READELF               = $(CROSS_COMPILE)readelf
-> >+OBJSIZE               = $(CROSS_COMPILE)size
-> >+STRIP         = $(CROSS_COMPILE)strip
-> >+endif
-> > PAHOLE                = pahole
-> > LEX           = flex
-> > YACC          = bison
-> >--
-> >2.17.1
-> >
-> >--
-> >You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> >To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> >To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200403051709.22407-1-masahiroy%40kernel.org.
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200406112220.GB126804%40google.com.
-
-
-
+diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+index 0974226fab55..f79c15892704 100644
+--- a/arch/arc/configs/hsdk_defconfig
++++ b/arch/arc/configs/hsdk_defconfig
+@@ -65,6 +65,7 @@ CONFIG_DRM_UDL=y
+ CONFIG_DRM_ETNAVIV=y
+ CONFIG_FB=y
+ CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_USB
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_EHCI_HCD_PLATFORM=y
+ CONFIG_USB_OHCI_HCD=y
 -- 
-Best Regards
-Masahiro Yamada
+2.21.1
+
