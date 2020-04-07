@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A238EC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C000BC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5A12076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915A020768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586218164;
-	bh=lmDFwSRJINaEuNcm0imgBOH7qPo597f26/3MDbu0cUE=;
+	s=default; t=1586218171;
+	bh=pXKRpwwHtbm90DIBd74/wZF5z6Ew8Gi8Rdz4A52o3G8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PSKiaC3PHohY5lyBV7lQ3XnWKFXH8PMzz3B9lVk8k80nBSEIc1spcl4PSplzoD9nJ
-	 VXXnQAC54SLZgmJice6MW3X5EqmtPlBgSceL4L8w1k7A3ZhX5IyyA291bsuQEX1vKG
-	 eUGUB5n9xmUhIwWGO8IzPXjj0DlHQJ0BLRgOT7Po=
+	b=iFc21cW6FnPUd1NLQtlU3PYtLvuh1SL4VwQlkk2WEuicgi4Jq9ZUaKa58NhQk8bqJ
+	 D9Ph0099FZy+lFFg9RLTuLkCHNnYJhRw6Fz3nb/HLQ65qZuSw6MSp9Qr++nV0fZlcs
+	 s+HMODQKxdo4sJU33fWgv85RMNZMgvVMMiCJlOAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgDGAJW (ORCPT
+        id S1726684AbgDGABM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:09:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33828 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:01:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbgDGABN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:13 -0400
+        id S1726633AbgDGABK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 792E120768;
-        Tue,  7 Apr 2020 00:01:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 992B12078A;
+        Tue,  7 Apr 2020 00:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217673;
-        bh=lmDFwSRJINaEuNcm0imgBOH7qPo597f26/3MDbu0cUE=;
+        s=default; t=1586217669;
+        bh=pXKRpwwHtbm90DIBd74/wZF5z6Ew8Gi8Rdz4A52o3G8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j7vjnn88a06IFpTQDiNr8n6aYbqBBUfvK0etQFjsST2RGyB2KANGk1F3svjoENEp+
-         og+fNLumAtQs9y6DcEpygtWpEF8ighP3mUwYseKcjeUb4NcOMVZZ1eviYyZ16pxr5C
-         soNYNVyqV7vzAmZU/0Xgq4sBOW0C6bw869AZGXXY=
+        b=biYnjtFgvDBXrlocXIFdt2BcsmJpLtGwgIiteml2s/rs5eYHbQrSPu5OqWEPg19VD
+         Pe9TS72Np7dVq8IgwdEFvoME8yG9pAum+8LxJchJv/FMfZAJoIDq8OFfFZBZ5wZ2Sj
+         0tdwuYH0Z5SarbQDaD8zrJTzYXoosDnSY1/bzfWc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Reitemeyer <nick.reitemeyer@web.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 11/35] Input: tm2-touchkey - add support for Coreriver TC360 variant
-Date:   Mon,  6 Apr 2020 20:00:33 -0400
-Message-Id: <20200407000058.16423-11-sashal@kernel.org>
+Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 08/35] iwlwifi: yoyo: don't add TLV offset when reading FIFOs
+Date:   Mon,  6 Apr 2020 20:00:30 -0400
+Message-Id: <20200407000058.16423-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
 References: <20200407000058.16423-1-sashal@kernel.org>
@@ -59,50 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Reitemeyer <nick.reitemeyer@web.de>
+From: Mordechay Goodstein <mordechay.goodstein@intel.com>
 
-[ Upstream commit da3289044833769188c0da945d2cec90af35e87e ]
+[ Upstream commit a5688e600e78f9fc68102bf0fe5c797fc2826abe ]
 
-The Coreriver TouchCore 360 is like the midas board touchkey, but it is
-using a fixed regulator.
+The TLV offset is only used to read registers, while the offset used for
+the FIFO addresses are hard coded in the driver and not given by the
+TLV.
 
-Signed-off-by: Nick Reitemeyer <nick.reitemeyer@web.de>
-Link: https://lore.kernel.org/r/20200121141525.3404-3-nick.reitemeyer@web.de
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+If we try to apply the TLV offset when reading the FIFOs, we'll read
+from invalid addresses, causing the driver to hang.
+
+Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
+Fixes: 8d7dea25ada7 ("iwlwifi: dbg_ini: implement Rx fifos dump")
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/iwlwifi.20200306151129.fbab869c26fa.I4ddac20d02f9bce41855a816aa6855c89bc3874e@changeid
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/tm2-touchkey.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/input/keyboard/tm2-touchkey.c b/drivers/input/keyboard/tm2-touchkey.c
-index 14b55bacdd0f1..fb078e049413f 100644
---- a/drivers/input/keyboard/tm2-touchkey.c
-+++ b/drivers/input/keyboard/tm2-touchkey.c
-@@ -75,6 +75,14 @@ static struct touchkey_variant aries_touchkey_variant = {
- 	.cmd_led_off = ARIES_TOUCHKEY_CMD_LED_OFF,
- };
+diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+index 4c60f9959f7bf..e5c9149099886 100644
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+@@ -8,7 +8,7 @@
+  * Copyright(c) 2008 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -31,7 +31,7 @@
+  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -1407,11 +1407,7 @@ static int iwl_dump_ini_rxf_iter(struct iwl_fw_runtime *fwrt,
+ 		goto out;
+ 	}
  
-+static const struct touchkey_variant tc360_touchkey_variant = {
-+	.keycode_reg = 0x00,
-+	.base_reg = 0x00,
-+	.fixed_regulator = true,
-+	.cmd_led_on = TM2_TOUCHKEY_CMD_LED_ON,
-+	.cmd_led_off = TM2_TOUCHKEY_CMD_LED_OFF,
-+};
-+
- static int tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
- 					    enum led_brightness brightness)
- {
-@@ -327,6 +335,9 @@ static const struct of_device_id tm2_touchkey_of_match[] = {
- 	}, {
- 		.compatible = "cypress,aries-touchkey",
- 		.data = &aries_touchkey_variant,
-+	}, {
-+		.compatible = "coreriver,tc360-touchkey",
-+		.data = &tc360_touchkey_variant,
- 	},
- 	{ },
- };
+-	/*
+-	 * region register have absolute value so apply rxf offset after
+-	 * reading the registers
+-	 */
+-	offs += rxf_data.offset;
++	offs = rxf_data.offset;
+ 
+ 	/* Lock fence */
+ 	iwl_write_prph_no_grab(fwrt->trans, RXF_SET_FENCE_MODE + offs, 0x1);
 -- 
 2.20.1
 
