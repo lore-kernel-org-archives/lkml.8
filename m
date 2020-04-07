@@ -7,161 +7,126 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9124C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9C2C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0872072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F47920719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BXQpAnMQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LC7iFwmk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726552AbgDGBKt (ORCPT
+        id S1726587AbgDGBLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:10:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45471 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbgDGBKt (ORCPT
+        Mon, 6 Apr 2020 21:11:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58226 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726230AbgDGBLH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:10:49 -0400
-Received: by mail-pf1-f194.google.com with SMTP id r14so1571pfl.12
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VC3SLvTdq/V2XxQBnHjlxlGQ9Dy4ljty56rsxBscTDI=;
-        b=BXQpAnMQQSyCB146l8URqZ2NIcvdkaAWa8O3LXjlYJhbUiZEOIKrGfQijuUSX2YUKg
-         AirN2lQ5RMnhXlgd9H17zi1z9m57+SRLkOsjphYXmyzYaRYbCTXQmwipvdNplSjRaFNZ
-         PLL/cxojRiufInioI52TJKNQuyK1ff7vJ7n1Y=
+        Mon, 6 Apr 2020 21:11:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586221865;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qWI++drUheRLgJRLP25chFJvpGmbc+MWUzzhPso8aKg=;
+        b=LC7iFwmkYlw5Am1oWjbtbCxllEVPlaTthuiXvufhiXus4y1qiGOei8bqjdV73qpBxr/6NP
+        854RelzkQ6apnTT+/d94b9dVveNjaJTxQOCBuJvui/33C2whh0QXYANBshUp/poVH4PZsB
+        IqYq5HCIa8xb1PmFkS6MG+rst30Hp9U=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-415-7MS7PKzQMz-rV0SmhUm_Ig-1; Mon, 06 Apr 2020 21:07:37 -0400
+X-MC-Unique: 7MS7PKzQMz-rV0SmhUm_Ig-1
+Received: by mail-wm1-f72.google.com with SMTP id l13so7131wme.7
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:07:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VC3SLvTdq/V2XxQBnHjlxlGQ9Dy4ljty56rsxBscTDI=;
-        b=JETf0LZrmR1SOAZbSGeaRtT0jVmoZrQJGcBUjK3BXzHIM2qPz1FrmL7eUxucbvb4Vp
-         QF+ktc8g+UyozquIRmbcnP0AV5e1Z1yB5jvhxhlm1r3Adnn6wteSZHGRnIX7wL6tY75c
-         rDwrwbJ9mFh/z7rvFw9UHZs7w/0v7OvX2PfD9Awrf1nJFkFQ9Y1KLe6sHAHXwXBv2u9a
-         xrI/98nSUznQHouQqxjmt9KCibs4O4wgUAfm9CDvaLYVqh7hlLMPXHL0sP1ohvaYm7MM
-         +ibfvtNsYhzlnzyB3mcIZfzeB8WmdRumDIqmZckNdMDNGynPxrCxPuiBFFBy6Y7VuO5o
-         ls1A==
-X-Gm-Message-State: AGi0PuZtPaQ888UhvqvhZ811v8n/C7CNFPOftd/r0DKjjBn96UiwWw50
-        gJwO0KWG0Q2O8X07Xzzdj26AYCAuxEc=
-X-Google-Smtp-Source: APiQypLt1r4EN/iF/v8O5tnGt6DOgfO0Qce0u0Dn3zlL5aoDaVCfgwyGQNR+ou3+yJ7OZubxzfzg+Q==
-X-Received: by 2002:a63:f50c:: with SMTP id w12mr1771730pgh.253.1586221847593;
-        Mon, 06 Apr 2020 18:10:47 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id s27sm12086500pgn.90.2020.04.06.18.10.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qWI++drUheRLgJRLP25chFJvpGmbc+MWUzzhPso8aKg=;
+        b=UXJRCoVydDaRTUs5+YOYbJ7ZzRMIkBu1VWdDbNL6Ggk1+RVlUCHlX6ny429QnpGlUB
+         1XpSX5GIZayXhg+Hz18OfDfrB1Q1Zdq2KkKB9R7cr5aC/kIuwXaLtd2X4hIfiJhA9NJV
+         A4w4k9o0Fafq7bftXH2Zsu/YkxvHYvuSGaACm8XhDFmo0Oy7MglrB3zm2xY9ZvFYw+yY
+         2RnN0t+9SR2RhAIFSYMMB/6HFaKxEN0jZu6Wq8UM3arSVh/xHKDphytlYNCNI5Bs991C
+         wHvAkcRXR3OSycM2TyEKW/RE2wGtzaluo2iGsktBnHw+Dr+AcCjzEW0Xgwq5b5r2VU7e
+         yD2g==
+X-Gm-Message-State: AGi0PuaQf328UV94IXSDUVyhuHyZFiK3/ElcQr4gIHWAOrqRyaZAxWQJ
+        Zotd5nXYFa6VnCPU1R+IGddW9nkJ5TcoP9uF1R9Xmo1JKQMDqMWtojWBSrJLlqxFmzQiUK2o272
+        4HgEpMoW8e5yD6a47I7afVfZq
+X-Received: by 2002:a7b:c051:: with SMTP id u17mr1924685wmc.129.1586221656373;
+        Mon, 06 Apr 2020 18:07:36 -0700 (PDT)
+X-Google-Smtp-Source: APiQypL1VPym0WV2AUNWF3nePrQ1HrbzKWkz96fRM10+GRgtdRjalH82OhlghtMpKVrLdSxpzpVYzw==
+X-Received: by 2002:a7b:c051:: with SMTP id u17mr1924673wmc.129.1586221656136;
+        Mon, 06 Apr 2020 18:07:36 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id p21sm78486wmg.34.2020.04.06.18.07.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 18:10:47 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
+        Mon, 06 Apr 2020 18:07:35 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 21:07:34 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Prashant Malani <pmalani@chromium.org>,
-        Jon Flatley <jflat@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH 3/3] platform/chrome: typec: Register port partner
-Date:   Mon,  6 Apr 2020 18:09:42 -0700
-Message-Id: <20200407010940.155490-4-pmalani@chromium.org>
-X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
-In-Reply-To: <20200407010940.155490-1-pmalani@chromium.org>
-References: <20200407010940.155490-1-pmalani@chromium.org>
+Cc:     Matej Genci <matej.genci@nutanix.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v7 04/19] virtio: add VIRTIO_RING_NO_LEGACY
+Message-ID: <20200407010700.446571-5-mst@redhat.com>
+References: <20200407010700.446571-1-mst@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407010700.446571-1-mst@redhat.com>
+X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
+X-Mutt-Fcc: =sent
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register (and unregister) the port partner when a connect (and
-disconnect) is detected.
+From: Matej Genci <matej.genci@nutanix.com>
 
-Co-developed-by: Jon Flatley <jflat@chromium.org>
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Add macro to disable legacy vring functions.
+
+Signed-off-by: Matej Genci <matej.genci@nutanix.com>
+Link: https://lore.kernel.org/r/20190911124942.243713-1-matej.genci@nutanix.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/platform/chrome/cros_ec_typec.c | 47 +++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ drivers/virtio/virtio_pci_modern.c | 1 +
+ include/uapi/linux/virtio_ring.h   | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 1955e1dfebc6d..e7d4d6ccccca6 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -22,6 +22,9 @@ struct cros_typec_port {
- 	struct typec_port *port;
- 	/* Initial capabilities for the port. */
- 	struct typec_capability caps;
-+	struct typec_partner *partner;
-+	/* Port partner PD identity info. */
-+	struct usb_pd_identity p_identity;
- };
+diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+index 7abcc50838b8..db93cedd262f 100644
+--- a/drivers/virtio/virtio_pci_modern.c
++++ b/drivers/virtio/virtio_pci_modern.c
+@@ -16,6 +16,7 @@
  
- /* Platform-specific data for the Chrome OS EC Type C controller. */
-@@ -191,6 +194,29 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
- 	return ret;
+ #include <linux/delay.h>
+ #define VIRTIO_PCI_NO_LEGACY
++#define VIRTIO_RING_NO_LEGACY
+ #include "virtio_pci_common.h"
+ 
+ /*
+diff --git a/include/uapi/linux/virtio_ring.h b/include/uapi/linux/virtio_ring.h
+index 559f42e73315..9223c3a5c46a 100644
+--- a/include/uapi/linux/virtio_ring.h
++++ b/include/uapi/linux/virtio_ring.h
+@@ -135,6 +135,8 @@ struct vring {
+ #define VRING_USED_ALIGN_SIZE 4
+ #define VRING_DESC_ALIGN_SIZE 16
+ 
++#ifndef VIRTIO_RING_NO_LEGACY
++
+ /* The standard layout for the ring is a continuous chunk of memory which looks
+  * like this.  We assume num is a power of 2.
+  *
+@@ -181,6 +183,8 @@ static inline unsigned vring_size(unsigned int num, unsigned long align)
+ 		+ sizeof(__virtio16) * 3 + sizeof(struct vring_used_elem) * num;
  }
  
-+static int cros_typec_add_partner(struct cros_typec_data *typec, int port_num,
-+				  bool pd_en)
-+{
-+	struct cros_typec_port *port = typec->ports[port_num];
-+	struct typec_partner_desc p_desc = {
-+		.usb_pd = pd_en,
-+	};
++#endif /* VIRTIO_RING_NO_LEGACY */
 +
-+	/*
-+	 * Fill an initial PD identity, which will then be updated with info
-+	 * from the EC.
-+	 */
-+	p_desc.identity = &port->p_identity;
-+
-+	port->partner = typec_register_partner(port->port, &p_desc);
-+	if (IS_ERR_OR_NULL(port->partner)) {
-+		port->partner = NULL;
-+		return PTR_ERR(port->partner);
-+	}
-+
-+	return 0;
-+}
-+
- static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
- 		int port_num, struct ec_response_usb_pd_control *resp)
- {
-@@ -213,6 +239,8 @@ static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
- {
- 	struct typec_port *port = typec->ports[port_num]->port;
- 	enum typec_orientation polarity;
-+	bool pd_en;
-+	int ret;
- 
- 	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
- 		polarity = TYPEC_ORIENTATION_NONE;
-@@ -227,6 +255,25 @@ static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
- 			TYPEC_SOURCE : TYPEC_SINK);
- 	typec_set_vconn_role(port, resp->role & PD_CTRL_RESP_ROLE_VCONN ?
- 			TYPEC_SOURCE : TYPEC_SINK);
-+
-+	/* Register/remove partners when a connect/disconnect occurs. */
-+	if (resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED) {
-+		if (typec->ports[port_num]->partner)
-+			return;
-+
-+		pd_en = resp->enabled & PD_CTRL_RESP_ENABLED_PD_CAPABLE;
-+		ret = cros_typec_add_partner(typec, port_num, pd_en);
-+		if (!ret)
-+			dev_warn(typec->dev,
-+				 "Failed to register partner on port: %d\n",
-+				 port_num);
-+	} else {
-+		if (!typec->ports[port_num]->partner)
-+			return;
-+
-+		typec_unregister_partner(typec->ports[port_num]->partner);
-+		typec->ports[port_num]->partner = NULL;
-+	}
- }
- 
- static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
+ /* The following is used with USED_EVENT_IDX and AVAIL_EVENT_IDX */
+ /* Assuming a given event_idx value from the other side, if
+  * we have just incremented index from old to new_idx,
 -- 
-2.26.0.292.g33ef6b2f38-goog
+MST
 
