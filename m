@@ -2,74 +2,54 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41126C2BB85
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F36C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A36D206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="N9VSIZQu"
+	by mail.kernel.org (Postfix) with ESMTP id 303E420771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgDGJO2 (ORCPT
+        id S1728018AbgDGJPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:14:28 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:34319 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgDGJO1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:14:27 -0400
-Received: by mail-lf1-f44.google.com with SMTP id x23so1802264lfq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:14:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6OtopnAAEq7RcaO3cYzbThDgjEImIu/ZUC/MK9b+8Qk=;
-        b=N9VSIZQuml59Tid/3BT8Vv4Sl3yokkoCg6reujsWc0KVmCdZMyecSp/JlJ5bRFLMfx
-         3oEg5dE+ElyxX76iOxKMp8b439iMCs5lrNXjrIO3VqB+0WP4iInZWzceXD0wNI+VqQPk
-         n8LP6LTxMSNYh6XvAAoh/2rLEUZfgWzlTbFU+ThhE+qFEcYl3fTFc99sVuIHcvh2oRVo
-         F/7Y9Lj4MEndi2rtAbUwoyLYjzu10I+wrv0GkyOXtzYsT+h2jZyY4KZUOX/q6fLO2+Sk
-         crkqYg8AcOeIXQfefQQYKJRFd3hBg5pkw0LosD1pDaBbXt8u6BEY/WXxDULmROayJbJ5
-         VwNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6OtopnAAEq7RcaO3cYzbThDgjEImIu/ZUC/MK9b+8Qk=;
-        b=FOaXdbeVw/ln8eb4g0tiyfr1OS3Dy08qRgsgEEYGvrdKu+QSJcahFWE7ZXylnNaGZp
-         47DzG+NszANLSaskl99ZyFnuUM+RY+p/c3b0I2KHEP5ykWPgOgbVCb8BmPTC1QW2rMb+
-         q/5YGxRN/yrne22AFSmaAFtFFNak18u3PoVyRpGfN0vNuWmaekfuxdjZAg5JdN6tqEE3
-         MkokSpK+N+LMukGYjLYCOHCdJQoR1U4rI0im4WineMiE/Lp7e00fy0JSsCqDXU7el+Sb
-         OKVOOd9blTlamMRxCRZ3DwgEMNMGF7vyAW97A4nM8XxgLbA5ToCE71RGdm0XMA9CKleO
-         bAPA==
-X-Gm-Message-State: AGi0PuaeJlBNtYRsgyFEQ6lXZDiTxhJnCwVzfaK/CDC9M/aO8nmuR1un
-        0z9lV4iaCuJFMup3fLVexKByjg==
-X-Google-Smtp-Source: APiQypJGoa7tB+BMSHzRLxg2kNe/UtYrewh2+8LZfB0dIpTElAeYYLhQvYMMPeS2DRMexOD8gZbQCw==
-X-Received: by 2002:ac2:5559:: with SMTP id l25mr936737lfk.55.1586250864387;
-        Tue, 07 Apr 2020 02:14:24 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:46df:46e6:40f1:f0a5:2488:8311? ([2a00:1fa0:46df:46e6:40f1:f0a5:2488:8311])
-        by smtp.gmail.com with ESMTPSA id m17sm11470733ljb.61.2020.04.07.02.14.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 02:14:23 -0700 (PDT)
-Subject: Re: [PATCH] libata: Return correct rc status in
- sata_pmp_eh_recover_pm() pwhen ATA_DFLAG_DETACH is set
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, axboe@kernel.dk
-Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20190327090254.10365-1-kai.heng.feng@canonical.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <6c0f9cd4-13a7-3f5c-020f-2401de9e42b7@cogentembedded.com>
-Date:   Tue, 7 Apr 2020 12:14:18 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 05:15:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:53870 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726562AbgDGJPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 05:15:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20BE830E;
+        Tue,  7 Apr 2020 02:15:46 -0700 (PDT)
+Received: from [10.37.12.138] (unknown [10.37.12.138])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10B563F73D;
+        Tue,  7 Apr 2020 02:15:42 -0700 (PDT)
+Subject: Re: [PATCH] kernel/time: Add max_time_namespaces ucount
+To:     mtk.manpages@gmail.com, Andrei Vagin <avagin@gmail.com>
+Cc:     Dmitry Safonov via Containers 
+        <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrey Vagin <avagin@openvz.org>,
+        Dmitry Safonov <dima@arista.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>, stable@kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Adrian Reber <adrian@lisas.de>
+References: <20200406171342.128733-1-dima@arista.com>
+ <20200407033148.GB494464@gmail.com>
+ <CAKgNAkgTdND5m60Adb2O+SnogcUcho15F9cF5sZt_yrDF0REYg@mail.gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <e6718888-3a18-45da-e091-577c3822d6ac@arm.com>
+Date:   Tue, 7 Apr 2020 10:16:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190327090254.10365-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAKgNAkgTdND5m60Adb2O+SnogcUcho15F9cF5sZt_yrDF0REYg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,8 +57,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On 4/7/20 9:22 AM, Michael Kerrisk (man-pages) wrote:
+> On Tue, 7 Apr 2020 at 05:31, Andrei Vagin <avagin@gmail.com> wrote:
+>>
+>> On Mon, Apr 06, 2020 at 06:13:42PM +0100, Dmitry Safonov via Containers wrote:
+>>> Introduce missing time namespaces limit per-userns.
+>>> Michael noticed that userns limit for number of time namespaces is
+>>> missing.
+>>>
+>>> Furthermore, time namespace introduced UCOUNT_TIME_NAMESPACES, but
+>>> didn't introduce an array member in user_table[]. It would make array's
+>>> initialisation OOB write, but by luck the user_table array has
+>>> an excessive empty member (all accesses to the array are limited with
+>>> UCOUNT_COUNTS - so it silently reuses the last free member.
+>>>
+>>> Fixes user-visible regression: max_inotify_instances by reason of the
+>>> missing UCOUNT_ENTRY() has limited max number of namespaces instead of
+>>> the number of inotify instances.
+>>>
+>>> Fixes: 769071ac9f20 ("ns: Introduce Time Namespace")
+>>> Cc: Adrian Reber <adrian@lisas.de>
+>>> Cc: Andrey Vagin <avagin@openvz.org>
+>>> Cc: Christian Brauner <christian.brauner@ubuntu.com>
+>>> Cc: Eric W. Biederman <ebiederm@xmission.com>
+>>> Cc: Ingo Molnar <mingo@redhat.com>
+>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>>> Cc: Containers <containers@lists.linux-foundation.org>
+>>> Cc: Linux API <linux-api@vger.kernel.org>
+>>> Cc: stable@kernel.org # v5.6+
+>>> Reported-by: Michael Kerrisk (man-pages) <mtk.manpages@gmail.com>
+>>
+>> Acked-by: Andrei Vagin <avagin@gmail.com>
+> 
+> Acked-by: Michael Kerrisk <mtk.manpages@gmail.com>
+> 
+> 
+> 
 
-    s/pwhen/when/ in the subject? Also, I don't think "rc" is needed there...
+Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-MBR, Sergei
+-- 
+Regards,
+Vincenzo
