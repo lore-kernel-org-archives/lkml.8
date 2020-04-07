@@ -2,114 +2,119 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143D3C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D61C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7432075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586285070;
-	bh=8RRjH68DqqAxky1+NDDYWTakK8zvBWeAWjk22BZRmdA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0VJcsu+gnytTdZ74JHyzRCwjHU6o4dMvsVa7xbQKQiUh3GqRnjKxl1jZwnd1nNCzn
-	 ExHDzJjHhLSyKZbSde270FsyvmCXX+fFzGT7Z+5OUlc0oz89r6QsHC7AVTjbC4IwqI
-	 B+zfUrJ6iMuS19KnfFuWE9T3nCFZiwuCdXSUURNc=
+	by mail.kernel.org (Postfix) with ESMTP id A6B812137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:44:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgDGSo3 (ORCPT
+        id S1726910AbgDGSoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:44:29 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:37547 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGSo3 (ORCPT
+        Tue, 7 Apr 2020 14:44:32 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:37213 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgDGSob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:44:29 -0400
-Received: from grover.flets-west.jp (softbank126125134031.bbtec.net [126.125.134.31]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 037IhjLN002999;
-        Wed, 8 Apr 2020 03:43:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 037IhjLN002999
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586285026;
-        bh=/yE3LtMyJqmOAt80CTdVzlZEIo8PmfJ0HPkqvDRfiHw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vslyEss3HgL6TFI+NV5adg9iEdqzvyVhB6k42WIqKa/xMGD2qZ58lVcts2Jzs9uBe
-         sDROrOFLyTHN1gozmIaOLAK+vDpbxQMdH4QeeWN0DqFMBX+1aI6k5f0LsF//K+Cg1P
-         b53Orq1U3cDQMlfhqW3w7bafXpuxr608ve5JK51HQkAyhxOrCA/LuR19Xa1EbLoGNU
-         JoVgnhBqgpxnFycAhUqrE4BaLLHCtPmahPxGuaHOLdKv9p1FiTVHBm/xXARyigwUa8
-         Gdn7J7MnGzlJMRhHaEFLAzEQcEjQFoh2V85YRFC2u8uyqh4sR8TiuEhQlK/EyCu1Bq
-         PaHzhLjE6D20A==
-X-Nifty-SrcIP: [126.125.134.31]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     clang-built-linux@googlegroups.com,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] kbuild: replace AS=clang with LLVM_IA=1
-Date:   Wed,  8 Apr 2020 03:43:35 +0900
-Message-Id: <20200407184336.14612-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 7 Apr 2020 14:44:31 -0400
+Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N1feo-1jAi7Z0sbQ-011x3p; Tue, 07 Apr 2020 20:44:29 +0200
+Received: by mail-qt1-f180.google.com with SMTP id b10so3526301qtt.9;
+        Tue, 07 Apr 2020 11:44:28 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZ8gFi2hvXVNh/IDfrZw+5XGrGfrdFNApJQkA7YIPOLIZvwIeKD
+        katH3iln/MTyHNH65SgN7SLdxT7ey3u+5NCGTKE=
+X-Google-Smtp-Source: APiQypKgeOSDBPfhB1u6KIP702ET7PgnervxCjGhHD+k7vVuRMCphJPctLEDVz7EFynIzXKRIHAMuiP/RJU2OhJDfVo=
+X-Received: by 2002:ac8:7292:: with SMTP id v18mr3736593qto.304.1586285067943;
+ Tue, 07 Apr 2020 11:44:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190205133821.1a243836@gandalf.local.home> <20190206021611.2nsqomt6a7wuaket@treble>
+ <20190206121638.3d2230c1@gandalf.local.home> <CAK8P3a1hsca02=jPQmBG68RTUAt-jDR-qo=UFwf13nZ0k-nDgA@mail.gmail.com>
+ <20200406221614.ac2kl3vlagiaj5jf@treble> <CAK8P3a3QntCOJUeUfNmqogO51yh29i4NQCu=NBF4H1+h_m_Pug@mail.gmail.com>
+ <CAK8P3a2Bvebrvj7XGBtCwV969g0WhmGr_xFNfSRsZ7WX1J308g@mail.gmail.com> <20200407163253.mji2z465ixaotnkh@treble>
+In-Reply-To: <20200407163253.mji2z465ixaotnkh@treble>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 7 Apr 2020 20:44:11 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3piAV7BbgH-y_zqj4XmLcBQqKZ-NHPcqo4OTF=4H3UFA@mail.gmail.com>
+Message-ID: <CAK8P3a3piAV7BbgH-y_zqj4XmLcBQqKZ-NHPcqo4OTF=4H3UFA@mail.gmail.com>
+Subject: Re: libelf-0.175 breaks objtool
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:FOE0EA54SyWtQIMENFoNs85TPCpb5Kcf9NUCi9wsMX9f+URGxgJ
+ xX96trz1uEbdVhSSI8AhLDGfyoF4ZY3uQ8dqPbsMlHWW2xffg7FUuAcnpiv71c4e3wJTQ3R
+ pSKIGb11Mwqa41Oqt9i8E+IBB+3wkEHjH1IGbYdhVoah1hxfFkJIWwfF9F44Ck3AiWojZ3B
+ MDpo0qA6ddsTJnkdnV/Kg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5y9y3SeAyk8=:HpxMxQJf8uhJtzjNh/z4Cq
+ vR1PABdsX0rkiriS72bCc1WRErctmtdhwdTSk8N3g2/7LOJ4V3X0/9zNJRxH/ptXY/+0Cwjz8
+ DPPdNSad4bsZ/h/hv1G5jpyaG7rt98EZgaGLNdujCX+6mTw/qXG+a9LWTxRNGm/4yaYV3BvE1
+ dwWf/8AGbtgf0NhNEhxxufGKfiTdArCWKAd/Z0rXU8bP+5K9zGx0d5wmSswgj3B+FE+j67nF3
+ hYsJrwipBUym46aQD9rmL0xPwlYZKRKv0oIJlmP+d7qnHlHgab+3PCXejQYmerD2L+jZweRMA
+ edbyk+nmtOyzJzbEcibQNis7Bug6K16her2Vupo2LT2+J+cJKrk2C4bt3TTBYD8XbeZoNSZC/
+ hqcb0r5URdwjAsdUSKno5FQCo33qckSO1ScXz99MnRCRUwqQwM47iVrUEuebrWNFGG3V+bIUk
+ buTe2W/Hh12QL7cOlBdulbebyva5hVwy1BKBVDIgC9Oj3Bb2WJGnlCEv0uixVxP6K5AX60MTW
+ CJIVe4tHMuzYgIClLx0PA8H6CQdHd7zYkIaVyTqGfVaKMVSjsxSHaEv1z3FiXW5G9gv9LEONt
+ MVGnh+LT9Z0w/MDaFJ1+16hea8JkMtAFxAvPPhg0age7YJ46ttprq7eS9hRLneCYcDYXfMzrL
+ VUe3ewpyXyXwXQzaCwrpGVKyvd8vTcETUu92Ggzq2d//Cy1gUcQR6Yj6WREPy8FMkzMqONQ7B
+ GSnHAzoazGxdyfoVjHN/s43ItDOpU6wEI5blL/t+V8soiPTmhr9X+uPSfZr2k6pwscFOAhG6h
+ tqj18fNK3/+gTWkAB0Pc80W/Mbre5iOytgvaG1X/T5CEeDrcq0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'AS' variable is unused for building the kernel. Only the remaining
-usage is to turn on the integrated assembler. A boolean flag is a better
-fit for this purpose.
+On Tue, Apr 7, 2020 at 6:33 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> On Tue, Apr 07, 2020 at 05:46:23PM +0200, Arnd Bergmann wrote:
+> > On Tue, Apr 7, 2020 at 12:31 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Tue, Apr 7, 2020 at 12:16 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > >
+> > > It's also odd that I only see the problem in two specific files:
+> > > arch/x86/realmode/rm/trampoline_64.o (in half of the randconfig builds)
+> > > and fs/xfs/xfs_trace.o  (in only one configuration so far).
+> > >
+> > > With this patch I can avoid the first one, which is unconditionally
+> > > built with -g (why?):
+> > >
+> > > --- a/arch/x86/realmode/rm/Makefile
+> > > +++ b/arch/x86/realmode/rm/Makefile
+> > > @@ -69,7 +69,7 @@ $(obj)/realmode.relocs: $(obj)/realmode.elf FORCE
+> > >  # ---------------------------------------------------------------------------
+> > >
+> > >  KBUILD_CFLAGS  := $(REALMODE_CFLAGS) -D_SETUP -D_WAKEUP \
+> > > -                  -I$(srctree)/arch/x86/boot
+> > > +                  -I$(srctree)/arch/x86/boot -gz=none
+> > >  KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+> > >  KBUILD_CFLAGS  += -fno-asynchronous-unwind-tables
+> > >  GCOV_PROFILE := n
+> > >
+> > > I'll look at the other one tomorrow.
+> >
+> > I found where -g gets added in both cases, and adding -gz=none
+> > seems to address all randconfigs with CONFIG_DEBUG_INFO=n:
+> >
+> > --- a/fs/xfs/Makefile
+> > +++ b/fs/xfs/Makefile
+> > @@ -7,7 +7,7 @@
+> >  ccflags-y += -I $(srctree)/$(src)              # needed for trace events
+> >  ccflags-y += -I $(srctree)/$(src)/libxfs
+> >
+> > -ccflags-$(CONFIG_XFS_DEBUG) += -g
+> > +ccflags-$(CONFIG_XFS_DEBUG) += -g $(call cc-option,-gz=none)
+>
+> Maybe they shouldn't have -g in the first place?
 
-AS=clang was added for experts. So, I replaced it with LLVM_IA=1,
-breaking the backward compatibility.
+That is very possible. The -g has been there since xfs was originally merged
+back in 2002, and I could not figure out why it was there (unlike the
+-DSTATIC=""
+and -DDEBUG flags that are set in the same line).
 
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+On the other hand, my feeling is that setting -g should not cause problems
+with objtool, if CONFIG_DEBUG_INFO is ok.
 
-Changes in v2:
-  - new patch
-
- Documentation/kbuild/llvm.rst | 5 ++++-
- Makefile                      | 2 +-
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-index eefbdfa3e4d9..2b40afa58049 100644
---- a/Documentation/kbuild/llvm.rst
-+++ b/Documentation/kbuild/llvm.rst
-@@ -50,11 +50,14 @@ LLVM Utilities
- LLVM has substitutes for GNU binutils utilities. These can be invoked as
- additional parameters to `make`.
- 
--	make CC=clang AS=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
-+	make CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
- 	  OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-size \\
- 	  READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
- 	  HOSTLD=ld.lld
- 
-+Currently, the integrated assembler is disabled by default. You can pass
-+LLVM_IA=1 to enable it.
-+
- Getting Help
- ------------
- 
-diff --git a/Makefile b/Makefile
-index 1b2691057cb5..f9beb696d6d3 100644
---- a/Makefile
-+++ b/Makefile
-@@ -538,7 +538,7 @@ endif
- ifneq ($(GCC_TOOLCHAIN),)
- CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
- endif
--ifeq ($(if $(AS),$(shell $(AS) --version 2>&1 | head -n 1 | grep clang)),)
-+ifneq ($(LLVM_IA),1)
- CLANG_FLAGS	+= -no-integrated-as
- endif
- CLANG_FLAGS	+= -Werror=unknown-warning-option
--- 
-2.17.1
-
+       Arnd
