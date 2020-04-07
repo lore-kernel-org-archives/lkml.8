@@ -2,297 +2,164 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8791CC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8650FC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC5A20730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5469F20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:57:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCu0XFbi"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="RzD4waIt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgDGQ4t (ORCPT
+        id S1726513AbgDGQ5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:56:49 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:46533 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgDGQ4s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:56:48 -0400
-Received: by mail-qv1-f66.google.com with SMTP id bu9so2140012qvb.13;
-        Tue, 07 Apr 2020 09:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ttVTDWvDUE2qStBRzIO3f1EibC3mcgA/+aBRHYOyWyg=;
-        b=VCu0XFbiL/ioeMWf3d0DmcyjXbKFEcqt0Iq5E56vhpaYXy6fo6NMYPCPzMp2I6xrhl
-         2DIvqTU7gFEOe6ilXw8bv49bzJ/itrR1WKkqCk9fjCP0KfnI7UxpzhU8aL4/zBJdOpYN
-         P0AURKKI5B9rHGvyX6hznYepctg1aBomsUEdlSyxCrDsaLaxWL/pUrDQckExK+33T4IF
-         7BpNIKiSGQkUWamxRg3ViYS7JJWTpb49X5iGq+2uy2U8iKKqOKu6ElsMIdOALDBA8RTL
-         +mPSaKaOJdcL+HrFioKHVEekBaUVxondXzLLDn1TVCumBNfsHdbnvLba9W04zuRE6psP
-         qNIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ttVTDWvDUE2qStBRzIO3f1EibC3mcgA/+aBRHYOyWyg=;
-        b=XPg5DQ0Ec34xQWg62Rt+L87NQ6FVZ5yV68Mw2N3dJMrDEIwb05bN+38oeZ/E6/vMlW
-         1l9QS0yryrpEQS8sHefMHGKFyfUJ4eUne9VgqA2jClIFRZVZ2pEpITIBFGI2D3pfdFYg
-         dbNvwpk9mwhqN92JKQWaicC4tDfFXelxr/p8JbU9+P1zh23GJIsXJG7BqjBD3CnQ0cKk
-         YxJvUSU2QakIDy8kGdLqENyhTG7ewVi4iEKM5pd3SJD2+kZ9UyKHshXRmezntiZuK/Uu
-         wKqbscPDcoY3LSeYWxM2tVvcxAYe1vAaAtAfW3Txgt7uueTSViSYkpJ8xQrjmASLhlwL
-         Kziw==
-X-Gm-Message-State: AGi0PuYG/NeHmFtjtYmhHGa0mI/h0mlhHaAcVgG7KeQWqXHQQNLP4+1q
-        9OWdCdKqViWfQO+oCrpw5hw=
-X-Google-Smtp-Source: APiQypIxOjrb0yQEzFMKAO6PcPMee5NNKWkp6L2koFL+gMEYejH9Za4s5KUD8s4DZ9GnxlZFuacI4w==
-X-Received: by 2002:a0c:a899:: with SMTP id x25mr3292954qva.232.1586278606135;
-        Tue, 07 Apr 2020 09:56:46 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id u26sm2981184qku.54.2020.04.07.09.56.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 09:56:45 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 61B98409A3; Tue,  7 Apr 2020 13:56:43 -0300 (-03)
-Date:   Tue, 7 Apr 2020 13:56:43 -0300
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
+        Tue, 7 Apr 2020 12:57:04 -0400
+Received: from mout.web.de ([212.227.17.12]:36377 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbgDGQ5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 12:57:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1586278590;
+        bh=VYjOv751hGIO6e6H/n6kePCjB92E1MhJ+L5qHzX+zDE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=RzD4waItOMY8lSgIUk0z6+zbjsSFeoo7US2rQqfBf7A6ai9rWB8qev86ySIDyvq3L
+         qaKGTxojGuBiocXZSArJMZ94pvlUlPOB5GrxSaiit6+SzfXJ7pIIpz6cCRo/4JMfqH
+         IADodRq8KSlE97/hD+75Icf9gE2p+c4UlcnbtTBc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.49.5.104]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MOzsZ-1jPyeX2T71-006Mj7; Tue, 07
+ Apr 2020 18:56:30 +0200
+Subject: Re: [PATCH] scsi: Remove unnecessary calls to memset after
+ dma_alloc_coherent
+To:     Alex Dewar <alex.dewar@gmx.co.uk>
+Cc:     Allison Randal <allison@lohutok.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "James E. J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-Message-ID: <20200407165643.GD12003@kernel.org>
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <20200407143014.GD11186@kernel.org>
- <20200407143551.GF11186@kernel.org>
- <10cc74ee-8587-8cdb-f85f-5724b370a2ce@linux.intel.com>
- <20200407163654.GB12003@kernel.org>
+        linux-scsi@vger.kernel.org, aacraid@microsemi.com,
+        MPT-FusionLinux.pdl@broadcom.com, linux-kernel@vger.kernel.org
+References: <e2401a31-e9fd-e849-e27c-6e079f5556d2@web.de>
+ <20200407160213.qh64de6ebrj7qkmx@lenovo-laptop>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <807090f6-f2ee-0e5b-6e35-b0c148c7a22f@web.de>
+Date:   Tue, 7 Apr 2020 18:56:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407163654.GB12003@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200407160213.qh64de6ebrj7qkmx@lenovo-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xxr66DgWr9Hg+3ovkVmwDGvM8UNKsWnP0Z+iO1MYs+PzBAu+yQ2
+ wsbpITBnAILzGzz1Pt4x7p48ohW6Ifp/9PKZhANqRNS25KePYJZqYAivm6h5kfHHIYxwpGX
+ Ir5eJMGI9ri9XPfOeOcW6mhxSmw8xFzpSQeeJYAP14NCEuNWBkC/TO2ZKjWZ9lk61c9gxnz
+ lD7hyaQFFzryBMdJP38ng==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8K5Lsa2On1M=:bZI8QkuaaXEYH8gc8RSd4Z
+ L4df/ORXTpaTqMfPaIUJSouqwjOi7HbaT9LWdU44w1SJn8XqAonSpiFewqlY7mW5m+btz6l6b
+ WSeE0GUPS24kAv93557YsDNxwA8d460Foog9HAcGWzs1Nenc3DQmern2Lb+aAAHdM5/QxuNcr
+ ZZ+oHp618ANYJEofirk+u7mEG2o6+TcBAfH/5qpskK5YgSKwvXS4lEa8hDvEW7EQIgQ0APRzP
+ 8WlQ3oYsWk+ytozMv0hF24FnxPDwOTgxHCu+PMeITq0xyMulSxGoq4nSQ6ZpMYULnH6zhrU0v
+ Nj5qeLpz4J4jJ/DTVc7lHZKcL9UYSucjs5bNbl8e+qtFGxUVGLT5q3GNvLy2P+VHcnc2K7e9i
+ Oi3A7u0v1R6CelJ16OL9k2blm9ezVi3AUSMj709et3u+pPxEYI4KObtYTyl/ODlNOXOR3g8QT
+ S1mghFPwlxENaHVlaYAE/+LfvlptVGGvrobGZwjBOBLNGUX4E7oyAABI5uobpGrqIvcVzVV3o
+ 8lnmAUxpnH3tTD0luVtHFtczZ/Y4kdQti1UxcJp1/KAapE+5MFoZs/WFqYGzB8aP6HBYtzLXn
+ /nO1xAA5Tzf16CngBpKQ7GiuuOIvJrtyn+xnzHPn90VJD3SL5QcGNJ2C1qJCUBhk4WWXzD8+1
+ FBQ9/T4PFQxIeCVI6899RgHcvZPI0H0VVt3J+j1IjNUVSdz5lak0VoP5mgIUzYMiKn9knGD++
+ AYuWneJd3oUrejK0XuKS1memjXFYNsR4YfVm0IQtSWzqmFRBZQYKzbMniAp84UzwZzD7Ots1i
+ YMfLS3sCINIPtBeawdcvJlnokBHDpCF34pqHtoG5gaRDWx8FkNajmxXK8HyIiuPBQZHdt4E3M
+ rHhECF0nJ22Ylh0WtCGvR9El7E7t92HGHP2cXy4DXU02cD9t9KxGTZ8IhKnd2cG3a2Od7KDV7
+ xdSynT448JDfarZH0LHElCbdKx9bVehmgavHnx38cUjR5yM7Z1UupjQFFwjdToGGEFLNYr90k
+ U3IexsxHfnUK6qvVOAyfBciZw5H9XZTLoUqGwOUE3B6WDqxtbBFn+kQrgvXoy30BD7Lkvq55X
+ aKlBRZaFC8o6cx1M6yUD0H/xhkIQyTHUzw/LoKQcQ0er8gsXoihpzeiaaZa/35lX8lP58glT2
+ DYaQG7jOsMPsvsl6fdy0MtC1f5oWEFIZAsIJJl4OGVLL5JAW56ctpos67mN9SYUbGZxXU0k5T
+ BfmPKdPnLC9jLIgL6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 07, 2020 at 01:36:54PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Apr 07, 2020 at 05:54:27PM +0300, Alexey Budankov escreveu:
-> > On 07.04.2020 17:35, Arnaldo Carvalho de Melo wrote:
-> > > Em Tue, Apr 07, 2020 at 11:30:14AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > >> [perf@five ~]$ type perf
-> > >> perf is hashed (/home/perf/bin/perf)
-> > >> [perf@five ~]$ getcap /home/perf/bin/perf
-> > >> /home/perf/bin/perf = cap_sys_ptrace,cap_syslog,38+ep
-> > >> [perf@five ~]$ groups
-> > >> perf perf_users
-> > >> [perf@five ~]$ id
-> > >> uid=1002(perf) gid=1002(perf) groups=1002(perf),1003(perf_users) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
-> > >> [perf@five ~]$ perf top --stdio
-> > >> Error:
-> > >> Failed to mmap with 1 (Operation not permitted)
-> > >> [perf@five ~]$ perf record -a
-> > >> ^C[ perf record: Woken up 1 times to write data ]
-> > >> [ perf record: Captured and wrote 1.177 MB perf.data (1552 samples) ]
-> > >>
-> > >> [perf@five ~]$ perf evlist
-> > >> cycles:u
-> > >> [perf@five ~]$
-> > > 
-> > > Humm, perf record falls back to cycles:u after initially trying cycles
-> > > (i.e. kernel and userspace), lemme see trying 'perf top -e cycles:u',
-> > > lemme test, humm not really:
-> > > 
-> > > [perf@five ~]$ perf top --stdio -e cycles:u
-> > > Error:
-> > > Failed to mmap with 1 (Operation not permitted)
-> > > [perf@five ~]$ perf record -e cycles:u -a sleep 1
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 1.123 MB perf.data (132 samples) ]
-> > > [perf@five ~]$
-> > > 
-> > > Back to debugging this.
-> > 
-> > Could makes sense adding cap_ipc_lock to the binary to isolate from this:
-> > 
-> > kernel/events/core.c: 6101
-> > 	if ((locked > lock_limit) && perf_is_paranoid() &&
-> > 		!capable(CAP_IPC_LOCK)) {
-> > 		ret = -EPERM;
-> > 		goto unlock;
-> > 	}
-> 
-> 
-> That did the trick, I'll update the documentation and include in my
-> "Committer testing" section:
-> 
-> [perf@five ~]$ groups
-> perf perf_users
-> [perf@five ~]$ ls -lahF bin/perf
-> -rwxr-x---. 1 root perf_users 24M Apr  7 10:34 bin/perf*
-> [perf@five ~]$ getcap bin/perf
-> bin/perf = cap_ipc_lock,cap_sys_ptrace,cap_syslog,38+ep
-> [perf@five ~]$
-> [perf@five ~]$ perf top --stdio
-> 
-> 
->    PerfTop:     652 irqs/sec  kernel:73.8%  exact: 99.7% lost: 0/0 drop: 0/0 [4000Hz cycles:u],  (all, 12 CPUs)
-> ---------------------------------------------------------------------------------------------------------------
-> 
->     13.03%  [kernel]               [k] module_get_kallsym
->      5.25%  [kernel]               [k] kallsyms_expand_symbol.constprop.0
->      5.00%  libc-2.30.so           [.] __GI_____strtoull_l_internal
->      4.41%  [kernel]               [k] memcpy
->      3.42%  [kernel]               [k] vsnprintf
->      2.98%  perf                   [.] map__process_kallsym_symbol
->      2.86%  [kernel]               [k] format_decode
->      2.73%  [kernel]               [k] number
->      2.70%  perf                   [.] rb_next
->      2.59%  perf                   [.] maps__split_kallsyms
->      2.54%  [kernel]               [k] string_nocheck
->      1.90%  libc-2.30.so           [.] _IO_getdelim
->      1.86%  [kernel]               [k] __x86_indirect_thunk_rax
->      1.53%  libc-2.30.so           [.] _int_malloc
->      1.48%  libc-2.30.so           [.] __memmove_avx_unaligned_erms
->      1.40%  [kernel]               [k] clear_page_rep
->      1.07%  perf                   [.] rb_insert_color
->      1.01%  libc-2.30.so           [.] _IO_feof
->      0.99%  perf                   [.] __dso__load_kallsyms
->      0.98%  [kernel]               [k] s_next
->      0.96%  perf                   [.] __rblist__findnew
->      0.95%  [kernel]               [k] strlen
->      0.95%  perf                   [.] arch__symbols__fixup_end
->      0.94%  libpixman-1.so.0.38.4  [.] 0x000000000006f4af
->      0.94%  perf                   [.] symbol__new
->      0.89%  libpixman-1.so.0.38.4  [.] 0x000000000006f4a0
->      0.86%  [kernel]               [k] seq_read
->      0.81%  libpixman-1.so.0.38.4  [.] 0x000000000006f4ab
->      0.80%  perf                   [.] __symbols__insert
->      0.73%  libpixman-1.so.0.38.4  [.] 0x000000000006f4a7
->      0.67%  [kernel]               [k] s_show
->      0.66%  libc-2.30.so           [.] __libc_calloc
->      0.61%  libpixman-1.so.0.38.4  [.] 0x000000000006f4bb
->      0.59%  [kernel]               [k] get_page_from_freelist
->      0.59%  perf                   [.] memcpy@plt
->      0.58%  perf                   [.] eprintf
-> exiting.
-> [perf@five ~]$
-> 
-> There is still something strange in here, the event is cycles:u (see at
-> the PerfTop line, but it is getting kernel samples :-\
+>> =E2=80=A6
+>>> +++ b/drivers/scsi/qla2xxx/qla_mbx.c
+>>> @@ -4887,15 +4887,13 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t=
+ *vha)
+>>>  	    "Entered %s.\n", __func__);
+>>>
+>>>  	els_cmd_map =3D dma_alloc_coherent(&ha->pdev->dev, ELS_CMD_MAP_SIZE,
+>>> -	    &els_cmd_map_dma, GFP_KERNEL);
+>>> +					 &els_cmd_map_dma, GFP_KERNEL);
+>>>  	if (!els_cmd_map) {
+>> =E2=80=A6
+>>
+>> I find it safer to integrate such source code reformattings by
+>> another update step which will be separated from the proposed deletion
+>> of unwanted function calls.
+>
+> Good point. This whitespace was autoformatted by Coccinelle,
+> probably due to my bad SmPL skills.
 
-So running with 'perf top --stdio -vv 2> /tmp/output' I see we try
-create three events, the first is some capability querying, then we try
-to determine the max precision level, but continue with
-attr.exclude_kernel=1, which shouldn't be the case, perhaps we're seeing
-that it is not the root in the tooling part, and end up setting that to
-1 as, previously, we knew it would fail, so we should switch to checking
-if we have cap_perfmon too, will check that:
+Some system factors can be involved here.
 
-------------------------------------------------------------
-perf_event_attr:
-  type                             1
-  size                             120
-  config                           0x9
-  watermark                        1
-  sample_id_all                    1
-  bpf_event                        1
-  { wakeup_events, wakeup_watermark } 1
-------------------------------------------------------------
-------------------------------------------------------------
-perf_event_attr:
-  size                             120
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|CPU|PERIOD
-  read_format                      ID
-  disabled                         1
-  inherit                          1
-  exclude_kernel                   1
-  mmap                             1
-  comm                             1
-  freq                             1
-  task                             1
-  precise_ip                       3
-  sample_id_all                    1
-  exclude_guest                    1
-  mmap2                            1
-  comm_exec                        1
-  ksymbol                          1
-  bpf_event                        1
-------------------------------------------------------------
-------------------------------------------------------------
-perf_event_attr:
-  size                             120
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|CPU|PERIOD
-  read_format                      ID
-  disabled                         1
-  inherit                          1
-  exclude_kernel                   1
-  mmap                             1
-  comm                             1
-  freq                             1
-  task                             1
-  precise_ip                       2
-  sample_id_all                    1
-  exclude_guest                    1
-  mmap2                            1
-  comm_exec                        1
-  ksymbol                          1
-  bpf_event                        1
-------------------------------------------------------------
+* The source code formatting can occasionally be improvable
+  in further ways (despite of help by a software like Coccinelle).
 
-But then, even with that attr.exclude_kernel set to 1 we _still_ get
-kernel samples, which looks like another bug, now trying with strace,
-which leads us to another rabbit hole:
+* A change mixture can become more challenging.
 
-[perf@five ~]$ strace -e perf_event_open -o /tmp/out.put perf top --stdio
-Error:
-You may not have permission to collect system-wide stats.
+* Would you like to extend your skills in corresponding areas anyhow?
 
-Consider tweaking /proc/sys/kernel/perf_event_paranoid,
-which controls use of the performance events system by
-unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).
-
-The current value is 2:
-
-  -1: Allow use of (almost) all events by all users
-      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN
-      Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN
->= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN
->= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN
-
-To make this setting permanent, edit /etc/sysctl.conf too, e.g.:
-
-	kernel.perf_event_paranoid = -1
-
-[perf@five ~]$
-
-If I remove that strace -e ... from the front, 'perf top' is back
-working as a non-cap_sys_admin user, just with cap_perfmon.
-
-- Arnaldo
+Regards,
+Markus
