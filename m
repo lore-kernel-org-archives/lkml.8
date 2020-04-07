@@ -7,70 +7,68 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E0CC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18834C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C382078C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E251A2078A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:08:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NGAt4mXc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HTU0yNaM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgDGBIp (ORCPT
+        id S1726626AbgDGBHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:08:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27343 "EHLO
+        Mon, 6 Apr 2020 21:07:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52928 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726681AbgDGBIJ (ORCPT
+        with ESMTP id S1726586AbgDGBHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:08:09 -0400
+        Mon, 6 Apr 2020 21:07:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586221688;
+        s=mimecast20190719; t=1586221665;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tGzj3Xy5+PE0S44YeXdrCLBeKxIojEvp8oKLEKl/XHc=;
-        b=NGAt4mXczMWBLXOgRxKJezwDCixDpGlk93Fgn+5CpoxloSvQIudDCzxDX9QXx3brTXK9qm
-        YDiPp/K7ZIOr5477XNSNnGB7IvyFUX/tt0rmX9kPna5dJQu+aVp8BDNF4bAHrbZ9KFBWVN
-        3j79QZrytd0rzyBJskMM6FIrwOMQ/zU=
+        bh=5TH7w/JfrvK6PO93eOn/asqSkXlWjc9e7s1Mrzet5kE=;
+        b=HTU0yNaMAGcK2lPvKssnI/NFrI342ixHfXQrfWXTpjpzzZeW1vtgklwxdlm6FneHSe/IUP
+        tyyI1pF+0QfVhhz2jGA8Fz1CiuF99K8ASMoyf4bwY8QjekvY/N6oqPMFSe4T9O33xZvW6n
+        LYYnUFJBV8HrPP3t860m5qKIWrapj3Q=
 Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
  [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-500-nrLPphOFN82ELZDbxA-Yhw-1; Mon, 06 Apr 2020 21:08:06 -0400
-X-MC-Unique: nrLPphOFN82ELZDbxA-Yhw-1
-Received: by mail-wr1-f69.google.com with SMTP id w12so830745wrl.23
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:08:06 -0700 (PDT)
+ us-mta-252-nIjJUe9NP7m2a0SDWwDV8A-1; Mon, 06 Apr 2020 21:07:44 -0400
+X-MC-Unique: nIjJUe9NP7m2a0SDWwDV8A-1
+Received: by mail-wr1-f69.google.com with SMTP id q9so829192wrw.22
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:07:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=tGzj3Xy5+PE0S44YeXdrCLBeKxIojEvp8oKLEKl/XHc=;
-        b=ruHRkRPuhy3GBbuWQiJBIcvG7w96/ZGsX87ivDVu/rmUmNqm0I6ft8XOXDr+caFXh4
-         BAYixbW3KAx1ZIVnURPBMVQ2sSZIcPfUlyflSr+tRNapHHawgDZd0JtvUsVnpMSgOtDu
-         ElnA68Z0IPMBUCcrTbZMGQK/p1K2k9OlYQhhGcZorJTC50QY4FOTS2jhB99A32Ciy6+x
-         RlhllOp2DTRi3S5JVn25oB5tItCHlxF4GyL5aPi9hRe46S8Ms8Tonw/KqQg3iXxXL20B
-         +4Eh4qeDEnJmugOu+wKKR5k8qI2+T2VS/xQldTCMvPB/6Gm9SweZLOyoaTLr0I2nLfPY
-         f1Lw==
-X-Gm-Message-State: AGi0PuYd0i4PK2gvnsL3Z+HCJ8JWUGP6Zh9mVuynrroiLPrFY4f78zb0
-        l0nLPvqbZCGdXYC4wWy1yn3xYXhIruiFfOIxCc1y6kFoahMGhTqVLqeycrajbLBkmUr7X8fzFDL
-        JLyrY1WxaNvYaUjy61heRNnpi
-X-Received: by 2002:a5d:6a43:: with SMTP id t3mr1944490wrw.87.1586221685578;
-        Mon, 06 Apr 2020 18:08:05 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJOYPrm0BpL822A167zoqe2yatDB+PJHHZa0T7EJnIUzZJgCtY2T5VptGribbSNFHHfdJHOOA==
-X-Received: by 2002:a5d:6a43:: with SMTP id t3mr1944479wrw.87.1586221685374;
-        Mon, 06 Apr 2020 18:08:05 -0700 (PDT)
+        bh=5TH7w/JfrvK6PO93eOn/asqSkXlWjc9e7s1Mrzet5kE=;
+        b=pVLlJeIZ+KoukYcgQWHEOK2Ly6WEyERzQTG69I4V++ep/zqIRqx18Wau2NFY0X/LGl
+         a25sU+9e0UmJ4Ntna8fEmDRdaJB2v/XjJxt8u1KWvCUD+UGRpzVAm/dAo4HGRxPImiCn
+         CnSgPKC+GfWPny9Qf+ZY5D5vTQCL9HVvy0cQbc3h4j1oxGT8swr1F5GFIWZ/QdJaxJ6u
+         fYYCHFimdetgm8ZwUnFjc+Ow+Jxj0kaFxEzweyxcUej38NeeECTcKhresAUQkV5ruIA9
+         eM6XurUfwx+VmBltMUu5KATwqKVICB/oNASQrOahQUZ009uFqkkNvmZv8SFvvOh/Up9Y
+         alow==
+X-Gm-Message-State: AGi0PuZ6kw5AY3n5skSsNJNRb5JcR4INFiamfJw4Be8uz3HAQVWFWA+4
+        E2Ez5jG3i5CS09FtOFC5ddDVJoqJ7lvj0BejA82qDx8hPcAVm+B44jlD2tdGIojE6Gd+lger9iC
+        52cZJ82LT73Q6m+HnrCSeAub1
+X-Received: by 2002:a7b:cb45:: with SMTP id v5mr1992025wmj.17.1586221662967;
+        Mon, 06 Apr 2020 18:07:42 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKi5SDLXVoxB05X0Fa1g9oKsnmtj3oVbQGLHfVW+Qb94Vy8QZNx7bP9RNsJ+Ug6e0rfRynbiA==
+X-Received: by 2002:a7b:cb45:: with SMTP id v5mr1992013wmj.17.1586221662773;
+        Mon, 06 Apr 2020 18:07:42 -0700 (PDT)
 Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id n11sm31357283wrg.72.2020.04.06.18.08.04
+        by smtp.gmail.com with ESMTPSA id o16sm28751497wrw.75.2020.04.06.18.07.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 18:08:04 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 21:08:03 -0400
+        Mon, 06 Apr 2020 18:07:42 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 21:07:40 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v7 16/19] mellanox: switch to virtio_legacy_init/size
-Message-ID: <20200407010700.446571-17-mst@redhat.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH v7 07/19] remoteproc: pull in slab.h
+Message-ID: <20200407010700.446571-8-mst@redhat.com>
 References: <20200407010700.446571-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -83,46 +81,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are used for legacy ring format, switch to APIs that make this
-explicit.
+In preparation to virtio header changes, include slab.h directly as
+this module is using it.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/platform/mellanox/mlxbf-tmfifo.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/remoteproc/remoteproc_sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index 5739a9669b29..f42b1fb713f1 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -214,7 +214,7 @@ static void mlxbf_tmfifo_free_vrings(struct mlxbf_tmfifo *fifo,
- 	for (i = 0; i < ARRAY_SIZE(tm_vdev->vrings); i++) {
- 		vring = &tm_vdev->vrings[i];
- 		if (vring->va) {
--			size = vring_size(vring->num, vring->align);
-+			size = vring_legacy_size(vring->num, vring->align);
- 			dma_free_coherent(tm_vdev->vdev.dev.parent, size,
- 					  vring->va, vring->dma);
- 			vring->va = NULL;
-@@ -245,7 +245,7 @@ static int mlxbf_tmfifo_alloc_vrings(struct mlxbf_tmfifo *fifo,
- 		vring->vdev_id = tm_vdev->vdev.id.device;
- 		dev = &tm_vdev->vdev.dev;
+diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+index 7f8536b73295..52b871327b55 100644
+--- a/drivers/remoteproc/remoteproc_sysfs.c
++++ b/drivers/remoteproc/remoteproc_sysfs.c
+@@ -4,6 +4,7 @@
+  */
  
--		size = vring_size(vring->num, vring->align);
-+		size = vring_legacy_size(vring->num, vring->align);
- 		va = dma_alloc_coherent(dev->parent, size, &dma, GFP_KERNEL);
- 		if (!va) {
- 			mlxbf_tmfifo_free_vrings(fifo, tm_vdev);
-@@ -935,7 +935,7 @@ static int mlxbf_tmfifo_virtio_find_vqs(struct virtio_device *vdev,
- 		vring = &tm_vdev->vrings[i];
+ #include <linux/remoteproc.h>
++#include <linux/slab.h>
  
- 		/* zero vring */
--		size = vring_size(vring->num, vring->align);
-+		size = vring_legacy_size(vring->num, vring->align);
- 		memset(vring->va, 0, size);
- 		vq = vring_new_virtqueue(i, vring->num, vring->align, vdev,
- 					 false, false, vring->va,
+ #include "remoteproc_internal.h"
+ 
 -- 
 MST
 
