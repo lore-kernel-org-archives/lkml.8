@@ -6,21 +6,21 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B42C38A2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930F4C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A79720857
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6103B20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgDGSiw (ORCPT
+        id S1727977AbgDGSi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:38:52 -0400
-Received: from 8bytes.org ([81.169.241.247]:57434 "EHLO theia.8bytes.org"
+        Tue, 7 Apr 2020 14:38:57 -0400
+Received: from 8bytes.org ([81.169.241.247]:57536 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgDGSiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726873AbgDGSiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 7 Apr 2020 14:38:02 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id D53E25D8; Tue,  7 Apr 2020 20:37:52 +0200 (CEST)
+        id 6667D642; Tue,  7 Apr 2020 20:37:53 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
@@ -45,9 +45,9 @@ Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         Joerg Roedel <jroedel@suse.de>
-Subject: [RFC PATCH 24/34] iommu/mediatek-v1 Convert to probe/release_device() call-backs
-Date:   Tue,  7 Apr 2020 20:37:32 +0200
-Message-Id: <20200407183742.4344-25-joro@8bytes.org>
+Subject: [RFC PATCH 27/34] iommu/tegra: Convert to probe/release_device() call-backs
+Date:   Tue,  7 Apr 2020 20:37:35 +0200
+Message-Id: <20200407183742.4344-28-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200407183742.4344-1-joro@8bytes.org>
 References: <20200407183742.4344-1-joro@8bytes.org>
@@ -58,109 +58,149 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Convert the Mediatek-v1 IOMMU driver to use the probe_device() and
+Convert the Tegra IOMMU drivers to use the probe_device() and
 release_device() call-backs of iommu_ops, so that the iommu core code
 does the group and sysfs setup.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/mtk_iommu_v1.c | 50 +++++++++++++++---------------------
- 1 file changed, 20 insertions(+), 30 deletions(-)
+ drivers/iommu/tegra-gart.c | 24 ++++++------------------
+ drivers/iommu/tegra-smmu.c | 31 ++++++++-----------------------
+ 2 files changed, 14 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
-index a31be05601c9..7bdd74c7cb9f 100644
---- a/drivers/iommu/mtk_iommu_v1.c
-+++ b/drivers/iommu/mtk_iommu_v1.c
-@@ -416,14 +416,12 @@ static int mtk_iommu_create_mapping(struct device *dev,
+diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
+index db6559e8336f..5fbdff6ff41a 100644
+--- a/drivers/iommu/tegra-gart.c
++++ b/drivers/iommu/tegra-gart.c
+@@ -243,28 +243,16 @@ static bool gart_iommu_capable(enum iommu_cap cap)
+ 	return false;
+ }
+ 
+-static int gart_iommu_add_device(struct device *dev)
++static struct iommu_device *gart_iommu_probe_device(struct device *dev)
+ {
+-	struct iommu_group *group;
+-
+ 	if (!dev_iommu_fwspec_get(dev))
+-		return -ENODEV;
+-
+-	group = iommu_group_get_for_dev(dev);
+-	if (IS_ERR(group))
+-		return PTR_ERR(group);
+-
+-	iommu_group_put(group);
++		return ERR_PTR(-ENODEV);
+ 
+-	iommu_device_link(&gart_handle->iommu, dev);
+-
+-	return 0;
++	return &gart_handle->iommu;
+ }
+ 
+-static void gart_iommu_remove_device(struct device *dev)
++static void gart_iommu_release_device(struct device *dev)
+ {
+-	iommu_group_remove_device(dev);
+-	iommu_device_unlink(&gart_handle->iommu, dev);
+ }
+ 
+ static int gart_iommu_of_xlate(struct device *dev,
+@@ -290,8 +278,8 @@ static const struct iommu_ops gart_iommu_ops = {
+ 	.domain_free	= gart_iommu_domain_free,
+ 	.attach_dev	= gart_iommu_attach_dev,
+ 	.detach_dev	= gart_iommu_detach_dev,
+-	.add_device	= gart_iommu_add_device,
+-	.remove_device	= gart_iommu_remove_device,
++	.probe_device	= gart_iommu_probe_device,
++	.release_device	= gart_iommu_release_device,
+ 	.device_group	= generic_device_group,
+ 	.map		= gart_iommu_map,
+ 	.unmap		= gart_iommu_unmap,
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 63a147b623e6..7426b7666e2b 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -757,11 +757,10 @@ static int tegra_smmu_configure(struct tegra_smmu *smmu, struct device *dev,
  	return 0;
  }
  
--static int mtk_iommu_add_device(struct device *dev)
-+static struct iommu_device *mtk_iommu_probe_device(struct device *dev)
+-static int tegra_smmu_add_device(struct device *dev)
++static struct iommu_device *tegra_smmu_probe_device(struct device *dev)
  {
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
--	struct dma_iommu_mapping *mtk_mapping;
- 	struct of_phandle_args iommu_spec;
- 	struct of_phandle_iterator it;
- 	struct mtk_iommu_data *data;
+ 	struct device_node *np = dev->of_node;
+ 	struct tegra_smmu *smmu = NULL;
 -	struct iommu_group *group;
+ 	struct of_phandle_args args;
+ 	unsigned int index = 0;
  	int err;
+@@ -774,7 +773,7 @@ static int tegra_smmu_add_device(struct device *dev)
+ 			of_node_put(args.np);
  
- 	of_for_each_phandle(&it, err, dev->of_node, "iommus",
-@@ -442,35 +440,28 @@ static int mtk_iommu_add_device(struct device *dev)
+ 			if (err < 0)
+-				return err;
++				return ERR_PTR(err);
+ 
+ 			/*
+ 			 * Only a single IOMMU master interface is currently
+@@ -783,8 +782,6 @@ static int tegra_smmu_add_device(struct device *dev)
+ 			 */
+ 			dev->archdata.iommu = smmu;
+ 
+-			iommu_device_link(&smmu->iommu, dev);
+-
+ 			break;
+ 		}
+ 
+@@ -793,26 +790,14 @@ static int tegra_smmu_add_device(struct device *dev)
  	}
  
- 	if (!fwspec || fwspec->ops != &mtk_iommu_ops)
--		return -ENODEV; /* Not a iommu client device */
-+		return ERR_PTR(-ENODEV); /* Not a iommu client device */
- 
--	/*
--	 * This is a short-term bodge because the ARM DMA code doesn't
--	 * understand multi-device groups, but we have to call into it
--	 * successfully (and not just rely on a normal IOMMU API attach
--	 * here) in order to set the correct DMA API ops on @dev.
--	 */
--	group = iommu_group_alloc();
+ 	if (!smmu)
+-		return -ENODEV;
+-
+-	group = iommu_group_get_for_dev(dev);
 -	if (IS_ERR(group))
 -		return PTR_ERR(group);
-+	data = dev_iommu_priv_get(dev);
- 
--	err = iommu_group_add_device(group, dev);
--	iommu_group_put(group);
--	if (err)
--		return err;
-+	return &data->iommu;
-+}
- 
--	data = dev_iommu_priv_get(dev);
-+static void mtk_iommu_probe_finalize(struct device *dev)
-+{
-+	struct dma_iommu_mapping *mtk_mapping;
-+	struct mtk_iommu_data *data;
-+	int err;
-+
-+	data        = dev_iommu_priv_get(dev);
- 	mtk_mapping = data->dev->archdata.iommu;
--	err = arm_iommu_attach_device(dev, mtk_mapping);
--	if (err) {
--		iommu_group_remove_device(dev);
--		return err;
--	}
- 
--	return iommu_device_link(&data->iommu, dev);
-+	err = arm_iommu_attach_device(dev, mtk_mapping);
-+	if (err)
-+		dev_err(dev, "Can't create IOMMU mapping - DMA-OPS will not work\n");
- }
- 
--static void mtk_iommu_remove_device(struct device *dev)
-+static void mtk_iommu_release_device(struct device *dev)
- {
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	struct mtk_iommu_data *data;
-@@ -479,9 +470,6 @@ static void mtk_iommu_remove_device(struct device *dev)
- 		return;
- 
- 	data = dev_iommu_priv_get(dev);
--	iommu_device_unlink(&data->iommu, dev);
 -
--	iommu_group_remove_device(dev);
- 	iommu_fwspec_free(dev);
+-	iommu_group_put(group);
++		return ERR_PTR(-ENODEV);
+ 
+-	return 0;
++	return &smmu->iommu;
  }
  
-@@ -534,8 +522,10 @@ static const struct iommu_ops mtk_iommu_ops = {
- 	.map		= mtk_iommu_map,
- 	.unmap		= mtk_iommu_unmap,
- 	.iova_to_phys	= mtk_iommu_iova_to_phys,
--	.add_device	= mtk_iommu_add_device,
--	.remove_device	= mtk_iommu_remove_device,
-+	.probe_device	= mtk_iommu_probe_device,
-+	.probe_finalize = mtk_iommu_probe_finalize,
-+	.release_device	= mtk_iommu_release_device,
-+	.device_group	= generic_device_group,
- 	.pgsize_bitmap	= ~0UL << MT2701_IOMMU_PAGE_SHIFT,
- };
+-static void tegra_smmu_remove_device(struct device *dev)
++static void tegra_smmu_release_device(struct device *dev)
+ {
+-	struct tegra_smmu *smmu = dev->archdata.iommu;
+-
+-	if (smmu)
+-		iommu_device_unlink(&smmu->iommu, dev);
+-
+ 	dev->archdata.iommu = NULL;
+-	iommu_group_remove_device(dev);
+ }
  
+ static const struct tegra_smmu_group_soc *
+@@ -895,8 +880,8 @@ static const struct iommu_ops tegra_smmu_ops = {
+ 	.domain_free = tegra_smmu_domain_free,
+ 	.attach_dev = tegra_smmu_attach_dev,
+ 	.detach_dev = tegra_smmu_detach_dev,
+-	.add_device = tegra_smmu_add_device,
+-	.remove_device = tegra_smmu_remove_device,
++	.probe_device = tegra_smmu_probe_device,
++	.release_device = tegra_smmu_release_device,
+ 	.device_group = tegra_smmu_device_group,
+ 	.map = tegra_smmu_map,
+ 	.unmap = tegra_smmu_unmap,
+@@ -1015,7 +1000,7 @@ struct tegra_smmu *tegra_smmu_probe(struct device *dev,
+ 	 * value. However the IOMMU registration process will attempt to add
+ 	 * all devices to the IOMMU when bus_set_iommu() is called. In order
+ 	 * not to rely on global variables to track the IOMMU instance, we
+-	 * set it here so that it can be looked up from the .add_device()
++	 * set it here so that it can be looked up from the .probe_device()
+ 	 * callback via the IOMMU device's .drvdata field.
+ 	 */
+ 	mc->smmu = smmu;
 -- 
 2.17.1
 
