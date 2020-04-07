@@ -2,125 +2,206 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076D5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD9CC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7DC520644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4460F206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:42:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZVsIwruV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgDGKmJ (ORCPT
+        id S1728384AbgDGKmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:42:09 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47032 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgDGKmF (ORCPT
+        Tue, 7 Apr 2020 06:42:14 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53358 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbgDGKmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:42:05 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jLlg8-0004LN-Kj; Tue, 07 Apr 2020 12:42:01 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 277331C0082;
-        Tue,  7 Apr 2020 12:42:00 +0200 (CEST)
-Date:   Tue, 07 Apr 2020 10:41:59 -0000
-From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] time/namespace: Add max_time_namespaces ucount
-Cc:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        stable@kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200406171342.128733-1-dima@arista.com>
-References: <20200406171342.128733-1-dima@arista.com>
-MIME-Version: 1.0
-Message-ID: <158625611966.28353.8687396873950102990.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 7 Apr 2020 06:42:13 -0400
+Received: by mail-wm1-f68.google.com with SMTP id d77so1233728wmd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 03:42:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=qwoI7riVDu0AahmoSXPZbaJVLWK9qNlpZnhfM3M9Fk0=;
+        b=ZVsIwruVeUye+mQQvLbyyVdlLUN12dHiYTZbkDZJRK5mBmzn1kqKnXKpHb1VZtkLTS
+         ecHYgPu0S0sKnUd1uNQ+MzHs8zoxJFHoVC8rfc3mGxyWFwPUfXc6TjY2CKSBhfabbPGp
+         puRg2p8PL9QRfce2n6nRy8s4OxClPWst8M78PMHXPyNHXDmIDQLcdxrR//WsZGSOSOaK
+         qHeHL41NiYQvhz6e4sGihGccVYVbPrDmsaGDEdpt5dftN/eO7T+7V3jIjoNLLp5BbCyO
+         5Uvks8G63sZJzf/toQyi3VLYIToL55zReTlvS1aLNpmwf6ylLh6KCE1AHJfoLcwtd/3Q
+         EhCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=qwoI7riVDu0AahmoSXPZbaJVLWK9qNlpZnhfM3M9Fk0=;
+        b=Ywv9e6M2GJ+tu0L+pJz6QZwPREO8yxfiI0gXclXrB92FINTS+9710TACivs36tdyB1
+         hOAQGDK2LNbpjBhNmJGV35WWq9314IENrlPgCj7A38ARk+trRYDpNMSoDAiIjWkIvsW+
+         YVTTWLZNPWFtQS3c+IG7yHkoyV1PMdpEDBJ8E314d6dHWHu57twgVRTeBmFcktAW645Z
+         X8OeokwMu0xed+m+PSOCNZekfpwauBeJ1/c5i9sQFBVLsfudRnXxeQxNHnagulMgUu+6
+         b770PsrBFUcaP1iiF7WXoLx+AQKqZi5O7eWTTGs+/gOW8n4INCGC7W7HCkh0PSuii0/2
+         aYeg==
+X-Gm-Message-State: AGi0PuazyGJjkX7N+MKPis/svtR0ElYvg+KyzJnNR5vcSlBYyv1xdl3k
+        s6McI6iYAY4ixOyKuAVZiJIY5g==
+X-Google-Smtp-Source: APiQypKDHeqfnBtlcrpc5vBuaPo8+WiRBN+xcEEELjZAHyRBT1S85K8BXirTii7Uh5nK4VgEhCiSlA==
+X-Received: by 2002:a1c:5502:: with SMTP id j2mr1756335wmb.93.1586256131946;
+        Tue, 07 Apr 2020 03:42:11 -0700 (PDT)
+Received: from [192.168.0.105] ([84.33.141.156])
+        by smtp.gmail.com with ESMTPSA id y22sm1908552wma.18.2020.04.07.03.42.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 Apr 2020 03:42:11 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2 2/2] blk-mq: Rerun dispatching in the case of budget
+ contention
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <CAD=FV=UK=4OW2Q5i2FhrJw_+A-q+R=K8E5ui-PCQXvYhDY3ZHw@mail.gmail.com>
+Date:   Tue, 7 Apr 2020 12:43:58 +0200
+Cc:     Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Salman Qazi <sqazi@google.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, Guenter Roeck <groeck@chromium.org>,
+        Ajay Joshi <ajay.joshi@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Hou Tao <houtao1@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B7C03D1F-7048-4FDF-AAAF-BCD0F95132E6@linaro.org>
+References: <20200402155130.8264-1-dianders@chromium.org>
+ <20200402085050.v2.2.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
+ <20200403013356.GA6987@ming.t460p>
+ <CAD=FV=Ub6zhVvTj79SWPUv19RDvD0gt5EjJV-FZSbYxUy_T1OA@mail.gmail.com>
+ <CAD=FV=Vsk0SjkA+DbUwJxvO6NFcr0CO9=H1FD7okJ2PxMt5pYA@mail.gmail.com>
+ <20200405091446.GA3421@localhost.localdomain>
+ <CAD=FV=X_S_YHvKkp96f3HVM3uX0VFTCKBxNK3fEu9Yt=NB8wEQ@mail.gmail.com>
+ <E316A36E-1B2B-47E8-A78C-7DD3F354425A@linaro.org>
+ <CAD=FV=UK=4OW2Q5i2FhrJw_+A-q+R=K8E5ui-PCQXvYhDY3ZHw@mail.gmail.com>
+To:     Doug Anderson <dianders@chromium.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
 
-Commit-ID:     eeec26d5da8248ea4e240b8795bb4364213d3247
-Gitweb:        https://git.kernel.org/tip/eeec26d5da8248ea4e240b8795bb4364213d3247
-Author:        Dmitry Safonov <dima@arista.com>
-AuthorDate:    Mon, 06 Apr 2020 18:13:42 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 07 Apr 2020 12:37:21 +02:00
 
-time/namespace: Add max_time_namespaces ucount
+> Il giorno 5 apr 2020, alle ore 18:16, Doug Anderson =
+<dianders@chromium.org> ha scritto:
+>=20
+> Hi,
+>=20
+> On Sun, Apr 5, 2020 at 7:55 AM Paolo Valente =
+<paolo.valente@linaro.org> wrote:
+>>=20
+>>> Il giorno 5 apr 2020, alle ore 16:00, Doug Anderson =
+<dianders@chromium.org> ha scritto:
+>>>=20
+>>> Hi,
+>>>=20
+>>> On Sun, Apr 5, 2020 at 2:15 AM Ming Lei <ming.lei@redhat.com> wrote:
+>>>>=20
+>>>> OK, looks it isn't specific on BFQ any more.
+>>>>=20
+>>>> Follows another candidate approach for this issue, given it is so =
+hard
+>>>> to trigger, we can make it more reliable by rerun queue when =
+has_work()
+>>>> returns true after ops->dispath_request() returns NULL.
+>>>>=20
+>>>> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+>>>> index 74cedea56034..4408e5d4fcd8 100644
+>>>> --- a/block/blk-mq-sched.c
+>>>> +++ b/block/blk-mq-sched.c
+>>>> @@ -80,6 +80,7 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx =
+*hctx)
+>>>>       blk_mq_run_hw_queue(hctx, true);
+>>>> }
+>>>>=20
+>>>> +#define BLK_MQ_BUDGET_DELAY    3               /* ms units */
+>>>> /*
+>>>> * Only SCSI implements .get_budget and .put_budget, and SCSI =
+restarts
+>>>> * its queue by itself in its completion handler, so we don't need =
+to
+>>>> @@ -103,6 +104,9 @@ static void blk_mq_do_dispatch_sched(struct =
+blk_mq_hw_ctx *hctx)
+>>>>               rq =3D e->type->ops.dispatch_request(hctx);
+>>>>               if (!rq) {
+>>>>                       blk_mq_put_dispatch_budget(hctx);
+>>>> +
+>>>> +                       if (e->type->ops.has_work && =
+e->type->ops.has_work(hctx))
+>>>> +                               blk_mq_delay_run_hw_queue(hctx, =
+BLK_MQ_BUDGET_DELAY);
+>>>=20
+>>> I agree that your patch should solve the race.  With the current =
+BFQ's
+>>> has_work() it's a bit of a disaster though. It will essentially put
+>>> blk-mq into a busy-wait loop (with a 3 ms delay between each poll)
+>>> while BFQ's has_work() says "true" but BFQ doesn't dispatch =
+anything.
+>>>=20
+>>> ...so I guess the question that still needs to be answered: does
+>>> has_work() need to be exact?  If so then we need the patch you =
+propose
+>>> plus one to BFQ.  If not, we should continue along the lines of my
+>>> patch.
+>>>=20
+>>=20
+>> Some more comments.  BFQ's I/O plugging lasts 9 ms by default.  So,
+>> with this last Ming's patch, BFQ may happen to be polled every 3ms,
+>> for at most three times.
+>=20
+> Ah!  I did not know this.  OK, then Ming's patch seems like it should
+> work.  If nothing else it should fix the problem.  If this ends up
+> making BFQ chew up too much CPU time then presumably someone will
+> notice and BFQ's has_work() can be improved.
+>=20
+> Ming: how do you want to proceed?  Do you want to formally post the
+> patch?  Do you want me to post a v3 of my series where I place patch
+> #2 with your patch?  Do you want authorship (which implies adding your
+> Signed-off-by)?
+>=20
+>=20
+>> On the opposite end, making bfq_has_work plugging aware costs more
+>> complexity, and possibly one more lock.  While avoiding the above
+>> occasional polling, this may imply a lot of overhead or CPU stalls on
+>> every dispatch.
+>=20
+> I still think it would be interesting to run performance tests with my
+> proof-of-concept solution for has_work().  Even if it's not ideal,
+> knowing whether performance increased, decreased, or stayed the same
+> would give information about how much more effort should be put into
+> this.
+>=20
 
-Michael noticed that userns limit for number of time namespaces is missing.
+Why not?  It is however hard to hope that we add only negligible
+overhead and CPU stalls if we move from one lock-protected section per
+I/O-request dispatch, to two or more lock-protected sections per
+request (has_work may be invoked several times per request).
 
-Furthermore, time namespace introduced UCOUNT_TIME_NAMESPACES, but didn't
-introduce an array member in user_table[]. It would make array's
-initialisation OOB write, but by luck the user_table array has an excessive
-empty member (all accesses to the array are limited with UCOUNT_COUNTS - so
-it silently reuses the last free member.
+At any rate, if useful, one of the scripts in my S benchmark suite can
+also measure max IOPS (when limited only by I/O processing) [1].  The
+script is for Linux distros; I don't know whether it works in your
+environments of interest, Doug.
 
-Fixes user-visible regression: max_inotify_instances by reason of the
-missing UCOUNT_ENTRY() has limited max number of namespaces instead of the
-number of inotify instances.
+Paolo
 
-Fixes: 769071ac9f20 ("ns: Introduce Time Namespace")
-Reported-by: Michael Kerrisk (man-pages) <mtk.manpages@gmail.com>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Andrei Vagin <avagin@gmail.com>
-Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: stable@kernel.org
-Link: https://lkml.kernel.org/r/20200406171342.128733-1-dima@arista.com
+[1] =
+https://github.com/Algodev-github/S/blob/master/throughput-sync/throughput=
+-sync.sh
 
----
- Documentation/admin-guide/sysctl/user.rst | 6 ++++++
- kernel/ucount.c                           | 1 +
- 2 files changed, 7 insertions(+)
+> -Doug
 
-diff --git a/Documentation/admin-guide/sysctl/user.rst b/Documentation/admin-guide/sysctl/user.rst
-index 650eaa0..c458245 100644
---- a/Documentation/admin-guide/sysctl/user.rst
-+++ b/Documentation/admin-guide/sysctl/user.rst
-@@ -65,6 +65,12 @@ max_pid_namespaces
-   The maximum number of pid namespaces that any user in the current
-   user namespace may create.
- 
-+max_time_namespaces
-+===================
-+
-+  The maximum number of time namespaces that any user in the current
-+  user namespace may create.
-+
- max_user_namespaces
- ===================
- 
-diff --git a/kernel/ucount.c b/kernel/ucount.c
-index a53cc2b..29c60eb 100644
---- a/kernel/ucount.c
-+++ b/kernel/ucount.c
-@@ -69,6 +69,7 @@ static struct ctl_table user_table[] = {
- 	UCOUNT_ENTRY("max_net_namespaces"),
- 	UCOUNT_ENTRY("max_mnt_namespaces"),
- 	UCOUNT_ENTRY("max_cgroup_namespaces"),
-+	UCOUNT_ENTRY("max_time_namespaces"),
- #ifdef CONFIG_INOTIFY_USER
- 	UCOUNT_ENTRY("max_inotify_instances"),
- 	UCOUNT_ENTRY("max_inotify_watches"),
