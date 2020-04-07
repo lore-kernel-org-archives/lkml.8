@@ -2,58 +2,60 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F52FC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCEAC2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7614E2074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F8152080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255167;
-	bh=lgSttysFDVvu+oC6gu+5HLnGkjnVdiiFpHo8cQiPQaU=;
+	s=default; t=1586255170;
+	bh=QAjVBsd8e5IbA+b+qruEdohp9CjMqPCmCzLociEPK+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JNjKZ8zTE8y3tYRmDT2VhbohMWkQa8plZqqvNRD3H9b/7NqjycF/mj6i5/aexiM3T
-	 z8lpSVFN8LXKxrHj/L2+e+31qS4Ot9Tq1Z8c/Rw7LAXSH/XY2E9YsejVODOCoMWpjp
-	 NvuAV5dVINcRs53CRqCdlszgUol2bjNbOoOHy7p4=
+	b=Qgut+B0sHEoJ3fgwUP1Eir2eQyez5aG8zOL564QD7uBg6wMGojQ0kAWQMDWiwBtZw
+	 irl1Rivc8ifKNVFTBbgdRKHeBq8oL6VJEc3HnLFx2gH2agSeGhhSMiIcyqB3VZfbM5
+	 tIuHAPw//VvHs5YtL6LJlzup62AXzA6Rb9MUt76g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgDGK0G (ORCPT
+        id S1728351AbgDGK0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:26:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:26:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729079AbgDGK0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:26:04 -0400
+        id S1729079AbgDGK0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:26:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B88A32074F;
-        Tue,  7 Apr 2020 10:26:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39F7220771;
+        Tue,  7 Apr 2020 10:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255164;
-        bh=lgSttysFDVvu+oC6gu+5HLnGkjnVdiiFpHo8cQiPQaU=;
+        s=default; t=1586255166;
+        bh=QAjVBsd8e5IbA+b+qruEdohp9CjMqPCmCzLociEPK+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gfxN0/j/ZtFb40VlZrBflaly3T9URCPTDlacyG9A27KQl4RropozbvS3lQ29GXQLl
-         JcDrbDKcVG88qmeod/7VkRW2BIsAfa/XTTHPLgd8N5GcEFOJ7b2zWZlBehWVxn1rFc
-         9oJJvrO2AX/NGHh2OXQ2ymJ2J08UENOaGGgqukog=
+        b=pfbbyNGVdUPrWzoBiwBk5m146hNghYWWxiHES8iprjgbtainVmdmiMG4gTjHMnSKj
+         /8pC5dG4m/d8M/6zYI2KVcoyLSyCBfAAiHGhbxWpUi1q8fMplZa8gc4WD1jh2TIE/A
+         YrS0Rii0BH+eD2PmoRUoN8XKzS2bkEsRG4kwy8TI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 01/29] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-Date:   Tue,  7 Apr 2020 12:21:58 +0200
-Message-Id: <20200407101452.188484947@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>, franky.lin@broadcom.com,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 10/29] brcmfmac: abort and release host after error
+Date:   Tue,  7 Apr 2020 12:22:07 +0200
+Message-Id: <20200407101453.241931574@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101452.046058399@linuxfoundation.org>
 References: <20200407101452.046058399@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,63 +64,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit fbe4e0c1b298b4665ee6915266c9d6c5b934ef4a ]
+[ Upstream commit 863844ee3bd38219c88e82966d1df36a77716f3e ]
 
-fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
-tb_hlist) without rcu_read_lock() will trigger a warning,
+With commit 216b44000ada ("brcmfmac: Fix use after free in
+brcmf_sdio_readframes()") applied, we see locking timeouts in
+brcmf_sdio_watchdog_thread().
 
- net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
+brcmfmac: brcmf_escan_timeout: timer expired
+INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
+Not tainted 4.19.94-07984-g24ff99a0f713 #1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
+[<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
+[<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
+[<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
+[<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
 
- other info that might help us debug this:
+In addition to restarting or exiting the loop, it is also necessary to
+abort the command and to release the host.
 
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by proc01/115277:
-  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
-
- Call Trace:
-  dump_stack+0xf4/0x164 (unreliable)
-  lockdep_rcu_suspicious+0x140/0x164
-  fib_triestat_seq_show+0x750/0x880
-  seq_read+0x1a0/0x670
-  proc_reg_read+0x10c/0x1b0
-  __vfs_read+0x3c/0x70
-  vfs_read+0xac/0x170
-  ksys_read+0x7c/0x140
-  system_call+0x5c/0x68
-
-Fix it by adding a pair of rcu_read_lock/unlock() and use
-cond_resched_rcu() to avoid the situation where walking of a large
-number of items  may prevent scheduling for a long time.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Matthias Kaehlcke <mka@chromium.org>
+Cc: Brian Norris <briannorris@chromium.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: franky.lin@broadcom.com
+Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_trie.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2577,6 +2577,7 @@ static int fib_triestat_seq_show(struct
- 		   " %zd bytes, size of tnode: %zd bytes.\n",
- 		   LEAF_SIZE, TNODE_SIZE(0));
- 
-+	rcu_read_lock();
- 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
- 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
- 		struct fib_table *tb;
-@@ -2596,7 +2597,9 @@ static int fib_triestat_seq_show(struct
- 			trie_show_usage(seq, t->stats);
- #endif
- 		}
-+		cond_resched_rcu();
- 	}
-+	rcu_read_unlock();
- 
- 	return 0;
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+index f9047db6a11d8..3a08252f1a53f 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+@@ -1938,6 +1938,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
+ 			if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
+ 					       BRCMF_SDIO_FT_NORMAL)) {
+ 				rd->len = 0;
++				brcmf_sdio_rxfail(bus, true, true);
++				sdio_release_host(bus->sdiodev->func1);
+ 				brcmu_pkt_buf_free_skb(pkt);
+ 				continue;
+ 			}
+-- 
+2.20.1
+
 
 
