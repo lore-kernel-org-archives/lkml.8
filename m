@@ -2,152 +2,213 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F7FC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EAFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BADF20719
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:32:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCTnUVnY"
+	by mail.kernel.org (Postfix) with ESMTP id 5A82B2078C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgDGJc6 (ORCPT
+        id S1728128AbgDGJdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:32:58 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52633 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgDGJc6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:32:58 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t203so1026495wmt.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:32:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VdXdseig1JC7hYsKG08hvusxa6/a4PjFvmwj1PCqWVE=;
-        b=BCTnUVnY9ydPXeCcuXlX0gP4wDXnqTWOFivVKneAdskZIhsPUvZYr5mkMDIEqsWM/w
-         HCM709DCJfmAemVQvDTU5wBfzxejYRXMPVjJyumfU7EWi0iAcAd8O9sg/Ymw0NJC7PJl
-         0DawBQhe/fwljAQzAd9LZJ/lDTlbdDzHuQjSoTds7+4ewm4n1D/aC4qUHUvJNJU9vYOA
-         CLokp0dAVLj+XswWT8qRc/x6uG1xOI1bacA/u6frv8c/HbiYv/aR5EPNja6NAn/vvtWd
-         /6NB5rOf5O5YQUNz9YFfZiV3PSECfEc3wKeu90V3vbbjp4S3tzIX5WCWBiR6EvAo1bNS
-         LBJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VdXdseig1JC7hYsKG08hvusxa6/a4PjFvmwj1PCqWVE=;
-        b=LYLE/DgOJMEVUdvy63qSnAoumGwJlVlpmwSba+Gg2f0pTKorB0VEIZ52S+IhdXVQ2K
-         att9M1t4vRYnnkkJAiZ5FxkL2FYsxa6Q28Ki7+BakZpmE8MXNENixxkQTXNC/H8FXzcY
-         yr2+oKVn3zizghLAmdRpgxjcfEZutSXkLE/PFhLdrl9Oge7wMxDlaO4ej4h3oRpsjRM2
-         gYLPdQx+fc0cCtWx5KfM4Japj1aDFGerNiBIvhr2gtjvE87PEXyXia6ZP0NxxWVJTS7S
-         7J/Wy3vpwt0FxtMJb6ktIBinhkDrQC1j8oDkasgAYHuonvUegIbWV/iQ4HbXNg/Phwn2
-         Oi4Q==
-X-Gm-Message-State: AGi0PuYBXoT1okLCZ+ekgv3wvGORh3pc3YAO+7qqw8osVXVUxkyT/+wZ
-        bmZCAjuf8m+aDeDecPxbi104CZUp
-X-Google-Smtp-Source: APiQypJuZw5cMHdVTEWcphAoIqDvCosEFGkn7RmxDUYMsKdM0oKVezrFvj9Ee3UjADzAy5iZMOptOg==
-X-Received: by 2002:a1c:770a:: with SMTP id t10mr1469989wmi.150.1586251976051;
-        Tue, 07 Apr 2020 02:32:56 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id t67sm1487742wmt.48.2020.04.07.02.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 02:32:55 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 11:32:53 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     ebiederm@xmission.com, kexec@lists.infradead.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, mripard@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Trying to kexec on Allwinner A80
-Message-ID: <20200407093253.GA4630@Red>
-References: <20200406082720.GA31279@Red>
- <20200406091600.GF25745@shell.armlinux.org.uk>
- <20200406092540.GB31279@Red>
- <20200406093729.GG25745@shell.armlinux.org.uk>
- <20200406201053.GA10931@Red>
- <20200407073117.GH25745@shell.armlinux.org.uk>
- <20200407080144.GA20773@Red>
- <20200407081257.GI25745@shell.armlinux.org.uk>
+        Tue, 7 Apr 2020 05:33:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:54020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbgDGJdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 05:33:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A29930E;
+        Tue,  7 Apr 2020 02:33:08 -0700 (PDT)
+Received: from [10.37.12.4] (unknown [10.37.12.4])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5A483F73D;
+        Tue,  7 Apr 2020 02:32:57 -0700 (PDT)
+Subject: Re: [PATCH v5 1/5] PM / EM: add devices to Energy Model
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
+        javi.merino@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, rostedt@goodmis.org,
+        qperret@google.com, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200318114548.19916-1-lukasz.luba@arm.com>
+ <20200318114548.19916-2-lukasz.luba@arm.com>
+ <09b680a5-a118-8c6e-0ae1-03ab5f10c573@linaro.org>
+ <cb7f670a-a04f-ba6f-1486-0421f3cce2e9@arm.com>
+ <6b980e2a-c15c-0718-14b8-e8aa7510c832@linaro.org>
+ <2a70b4ed-f18f-c1e6-1e8c-e4747807f276@arm.com>
+ <4cee98ce-62a6-7448-a99c-3a1af6c87cf4@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <6c2fcd42-5245-ff45-1852-0f2ec800517f@arm.com>
+Date:   Tue, 7 Apr 2020 10:32:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200407081257.GI25745@shell.armlinux.org.uk>
+In-Reply-To: <4cee98ce-62a6-7448-a99c-3a1af6c87cf4@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 09:12:57AM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Apr 07, 2020 at 10:01:44AM +0200, Corentin Labbe wrote:
-> > On Tue, Apr 07, 2020 at 08:31:17AM +0100, Russell King - ARM Linux admin wrote:
-> > > On Mon, Apr 06, 2020 at 10:10:53PM +0200, Corentin Labbe wrote:
-> > > > On Mon, Apr 06, 2020 at 10:37:29AM +0100, Russell King - ARM Linux admin wrote:
-> > > > > On Mon, Apr 06, 2020 at 11:25:40AM +0200, Corentin Labbe wrote:
-> > > > > > On Mon, Apr 06, 2020 at 10:16:00AM +0100, Russell King - ARM Linux admin wrote:
-> > > > > > > On Mon, Apr 06, 2020 at 10:27:20AM +0200, Corentin Labbe wrote:
-> > > > > > > > Hello
-> > > > > > > > 
-> > > > > > > > I am trying to add the last missing Allwinner Soc in kernelci: the A80.
-> > > > > > > > But this SoC does not have any way to be used in kernelci, no USB nor network in uboot.
-> > > > > > > > So I have tried to fake uboot since the kernel has network support and run the new kernel via kexec.
-> > > > > > > > 
-> > > > > > > > But kexec 2.0.18 fail to work:
-> > > > > > > > kexec --force /tmp/kernel --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
-> > > > > > > 
-> > > > > > > What happens if you omit the dtb argument?
-> > > > > > > 
-> > > > > > 
-> > > > > > No change without dtb
-> > > > > > 
-> > > > > > I have also tried to add --mem-mim and --mem-max without any change.
-> > > > > > I given mem according to what I saw in /proc/iomem
-> > > > > > 20000000-9fffffff : System RAM
-> > > > > >   20008000-207fffff : Kernel code
-> > > > > >   20900000-209a0c87 : Kernel data
-> > > > > > So I gave --mem-min 0x30000000 --mem-max 0x9fffffff
-> > > > > > Anyway, the result is always the same.
-> > > > > 
-> > > > > The next step is to enable the early debugging - first in the
-> > > > > decompressor - add #define DEBUG to the top of
-> > > > > arch/arm/boot/compressed/head.S
-> > > > > 
-> > > > > Also enable DEBUG_LL in the kernel and use earlyprintk to see if you can
-> > > > > get anything from the new kernel.
-> > > > > 
-> > > > 
-> > > > I dont know what happened, but now I always get "Could not find a free area of memory of 0x86c1c0 bytes..." (even with kexec 2.0.18)
-> > > > Furthermore, I have added crashkernel=128M to the cmdlist
-> > > > I have verified that the reservation is working:
-> > > > 20000000-9fffffff : System RAM
-> > > >   20008000-207fffff : Kernel code
-> > > >   20900000-209a0c87 : Kernel data
-> > > >   40000000-47ffffff : Crash kernel
-> > > > But even with this reservation, no change.
-> > > 
-> > > crashkernel is only necessary if you're loading a kenrel image to be
-> > > booted when the existing one has crashed. For the problem you're
-> > > seeing, it's an unnecessary additional change; please drop that.
-> > > 
-> > > You could try running kexec with debug enabled to see more information.
-> > > 
-> > 
-> > I am already running with --debug
-> 
-> That was not reflected in the command lines given to kexec that you
-> quoted previously, so I'm now wondering if you're giving me the full
-> information.
-> 
-> In any case, based on the information you've supplied thus far, I have
-> no further suggetsions to make.
-> 
 
-Sorry I have added --debug after my initial mail.
-But I am surprised that no debug output like "MEMORY RANGES" is done (like I got in my first try).
-I have started to patch kexec-tools to check it, and debug is enabled.
-Furthermore, I got in locate_hole:237 memory_ranges=0.
-So the memory region in struct kexec_info is not initialized (and so cannot be printed)
 
+On 4/6/20 10:17 PM, Daniel Lezcano wrote:
+> On 06/04/2020 18:07, Lukasz Luba wrote:
+>>
+>>
+>> On 4/6/20 3:58 PM, Daniel Lezcano wrote:
+>>>
+>>> Hi Lukasz,
+>>>
+>>>
+>>> On 06/04/2020 15:29, Lukasz Luba wrote:
+>>>> Hi Daniel,
+>>>>
+>>>> Thank you for the review.
+>>>>
+>>>> On 4/3/20 5:05 PM, Daniel Lezcano wrote:
+>>>>>
+>>>>> Hi Lukasz,
+>>>>>
+>>>>>
+>>>>> On 18/03/2020 12:45, Lukasz Luba wrote:
+>>>>>> Add support of other devices into the Energy Model framework not only
+>>>>>> the
+>>>>>> CPUs. Change the interface to be more unified which can handle other
+>>>>>> devices as well.
+>>>>>
+>>>>> thanks for taking care of that. Overall I like the changes in this
+>>>>> patch
+>>>>> but it hard to review in details because the patch is too big :/
+>>>>>
+>>>>> Could you split this patch into smaller ones?
+>>>>>
+>>>>> eg. (at your convenience)
+>>>>>
+>>>>>     - One patch renaming s/cap/perf/
+>>>>>
+>>>>>     - One patch adding a new function:
+>>>>>
+>>>>>        em_dev_register_perf_domain(struct device *dev,
+>>>>>                   unsigned int nr_states,
+>>>>>                   struct em_data_callback *cb);
+>>>>>
+>>>>>       (+ EXPORT_SYMBOL_GPL)
+>>>>>
+>>>>>        And em_register_perf_domain() using it.
+>>>>>
+>>>>>     - One converting the em_register_perf_domain() user to
+>>>>>       em_dev_register_perf_domain
+>>>>>
+>>>>>     - One adding the different new 'em' functions
+>>>>>
+>>>>>     - And finally one removing em_register_perf_domain().
+>>>>
+>>>> I agree and will do the split. I could also break the dependencies
+>>>> for future easier merge.
+>>>>
+>>>>>
+>>>>>
+>>>>>> Acked-by: Quentin Perret <qperret@google.com>
+>>>>>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>>>>>> ---
+>>>>>
+>>>>> [ ... ]
+>>>>>
+>>>>>>     2. Core APIs
+>>>>>> @@ -70,14 +72,16 @@ CONFIG_ENERGY_MODEL must be enabled to use the EM
+>>>>>> framework.
+>>>>>>     Drivers are expected to register performance domains into the EM
+>>>>>> framework by
+>>>>>>     calling the following API::
+>>>>>>     -  int em_register_perf_domain(cpumask_t *span, unsigned int
+>>>>>> nr_states,
+>>>>>> -                  struct em_data_callback *cb);
+>>>>>> +  int em_register_perf_domain(struct device *dev, unsigned int
+>>>>>> nr_states,
+>>>>>> +        struct em_data_callback *cb, cpumask_t *cpus);
+>>>>>
+>>>>> Isn't possible to get rid of this cpumask by using
+>>>>> cpufreq_cpu_get() which returns the cpufreq's policy and from their get
+>>>>> the related cpus ?
+>>>>
+>>>> We had similar thoughts with Quentin and I've checked this.
+>>>
+>>> Yeah, I suspected you already think about that :)
+>>>
+>>>> Unfortunately, if the policy is a 'new policy' [1] it gets
+>>>> allocated and passed into cpufreq driver ->init(policy) [2].
+>>>> Then that policy is set into per_cpu pointer for each related_cpu [3]:
+>>>>
+>>>> for_each_cpu(j, policy->related_cpus)
+>>>>       per_cpu(cpufreq_cpu_data, j) = policy;
+>>>>
+>>>>    Thus, any calls of functions (i.e. cpufreq_cpu_get()) which try to
+>>>> take this ptr before [3] won't work.
+>>>>
+>>>> We are trying to register EM from cpufreq_driver->init(policy) and the
+>>>> per_cpu policy is likely to be not populated at that phase.
+>>>
+>>> What is the problem of registering at the end of the cpufreq_online ?
+>>
+>> We want to enable driver developers to choose one of two options for the
+>> registration of Energy Model:
+>> 1. a simple one via dev_pm_opp_of_register_em(), which uses default
+>>     callback function calculating power based on: voltage, freq
+>>     and DT entry 'dynamic-power-coefficient' for each OPP
+>> 2. a more sophisticated, when driver provides callback function, which
+>>    will be called from EM for each OPP to ask for related power;
+>>    This interface could also be used by devices which relay not only
+>>    on one source of 'voltage', i.e. manipulate body bias or have
+>>    other controlling voltage for gates in the new 3D transistors. They
+>>    might provide custom callback function in their cpufreq driver.
+>>    This is used i.e. in cpufreq drivers which use firmware to get power,
+>>    like scmi-cpufreq.c;
+>>
+>> To meet this requirement the registration of EM is moved into cpufreq
+>> drivers, not in the framework i.e cpufreq_online(). If we could limit
+>> the support for only option 1. then we could move the registration
+>> call into cpufreq framework and clean the cpufreq drivers.
+> 
+> I'm not sure to get your point but I think a series setting the scene by
+> moving the dev_pm_opp_of_register_em() to cpufreq_online() and remove
+> the cpumask may make sense.
+
+Some of the cpufreq drivers don't use dev_pm_opp_of_register_em() but 
+instead em_register_perf_domain() with their em_data_callback [1].
+It is because of point 2. described above. The dev_pm_opp_of_register_em
+won't work for them, so it's not a good candidate to cover all use cases
+in the framework.
+
+> 
+> Can you send the split version of patch 1/5 as a series without the
+> other changes ? So we can focus on first ?
+
+Sure, I will only split patch 1/5 as you suggested and send v6.
+Thank you for your time and help.
+
+Regards,
+Lukasz
+
+[1] 
+https://elixir.bootlin.com/linux/latest/source/drivers/cpufreq/scmi-cpufreq.c#L203
