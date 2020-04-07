@@ -2,237 +2,125 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1697CC2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67F3C2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A1ED206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CCB20719
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 08:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="W5neKHtj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i4ZrWVhx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgDGIa5 (ORCPT
+        id S1727957AbgDGIdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 04:30:57 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44203 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgDGIa5 (ORCPT
+        Tue, 7 Apr 2020 04:33:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27829 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725883AbgDGIdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 04:30:57 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c15so2786031wro.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 01:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Yx+tINXIME57q+zwEQX7GUc2q689uTp0DHJLLnExQdI=;
-        b=W5neKHtjNtN2qdnv1EvBBnImqR/p9wXjP7dgPXGwM/blFqUYA7aAi2smhDGUZHSlHm
-         GC+u8nxbhK0TtsfGPwGJaxlYofw4lDL03SA0S9RtvV7czkvO7xqJ7uaSF5uxlpKqIKu3
-         XDWeph6xHiOQQus/xjYANK53ks31G8BjXyA1wlGzZ3z3CczDE7U8l0YEXy6Qvx4JoKUa
-         lXcfhPtLMEhFrudtWs5VSyUsGdD59bWXr17rDRV8XFntWaRx5kWpRA/rkg8sl7EcGu2E
-         IqYh4TseoEft8/r2v6EV6fP9pplaWVVAnI6cwL5KydbTXhgPID/CpHCE78eQNZVXH35u
-         hnQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Yx+tINXIME57q+zwEQX7GUc2q689uTp0DHJLLnExQdI=;
-        b=Itx9eIHW7BzGd9ftcPCn3IGyoRnY3LVNZ/ImjGRQcHEj8Rzmr2QzoxVZ8/YFpWyOvc
-         rG4h8RclJxSwHD6WfSMiHg9Mo5GnDfqbPf01BjB/1smd5XzDM9aPncJQGP7VsQmaqt8H
-         0/kCuSo7vU4BI1VxbfmjFIMgVGenikA0dcVp8r2297bIl6B1QUKWhlXVz77RkIih5CIN
-         mO0Sv0MVwLbZZGLmCabWZZGNsFtNIMAx8gSpUp4eRWxRR2NF3kHkzPJsUXFupssw4zVE
-         zQuifcPdPfbCMNUh6TIwNLHdwifIuvOSN4K/w841eOenha5W6YLFvt2h5agdwilSS2uh
-         zTAA==
-X-Gm-Message-State: AGi0PubDCm/85/NSh9EZsTZjaEMXLb2gcH+7eQqgKdxVJMeX79Iv8IFk
-        8wy/DPbiQnbCJrVW7sgDfgLmayRC1LD1UUxl
-X-Google-Smtp-Source: APiQypLn1I5bDOjHiqrEKv9WNcKpmBw+2qlHgD1bJnnUppVm6vexnSseG8TsgmdvTfuAFULHBEUvrQ==
-X-Received: by 2002:a5d:5447:: with SMTP id w7mr270939wrv.312.1586248254215;
-        Tue, 07 Apr 2020 01:30:54 -0700 (PDT)
-Received: from localhost.localdomain (ip-94-114-101-228.unity-media.net. [94.114.101.228])
-        by smtp.gmail.com with ESMTPSA id t16sm31190743wra.17.2020.04.07.01.30.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 01:30:53 -0700 (PDT)
-From:   patrick.rudolph@9elements.com
-To:     linux-kernel@vger.kernel.org
-Cc:     coreboot@coreboot.org,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Julius Werner <jwerner@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v4 2/2] firmware: google: Expose coreboot tables over sysfs
-Date:   Tue,  7 Apr 2020 10:29:07 +0200
-Message-Id: <20200407082923.2001556-3-patrick.rudolph@9elements.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200407082923.2001556-1-patrick.rudolph@9elements.com>
-References: <20200407082923.2001556-1-patrick.rudolph@9elements.com>
+        Tue, 7 Apr 2020 04:33:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586248386;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tq+OpIRxnn+Zk8S9fkUt7kbbJEzkzq8nr2igicyRqKM=;
+        b=i4ZrWVhxy7nsHVQUf/hVfUjMn+5ueqkvQKDOEHfriUpnHNjuYZC/EKjWnOGpEUiN/pGewF
+        ScYgaSxqU47hcJlutboFB+C453yr4slu5dwdDN+JxHQM6Yd3PNyZGg4RVEwQp9avn3AKhd
+        ocInM8yeGTuz9jDeNiylY4Ml7zmxFlE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-9m_XtjzwNRWLGIgdO_C1CA-1; Tue, 07 Apr 2020 04:33:02 -0400
+X-MC-Unique: 9m_XtjzwNRWLGIgdO_C1CA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9638818FF663;
+        Tue,  7 Apr 2020 08:33:01 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.40.194.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C54BD60BE1;
+        Tue,  7 Apr 2020 08:32:54 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 10:32:51 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Wainer dos Santos Moschetta <wainersm@redhat.com>
+Cc:     pbonzini@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] selftests: kvm: Add mem_slot_test test
+Message-ID: <20200407083251.3zgjscwhldcm5hce@kamzik.brq.redhat.com>
+References: <20200403172428.15574-1-wainersm@redhat.com>
+ <20200403172428.15574-3-wainersm@redhat.com>
+ <20200404073240.grcsylznemd3pmxz@kamzik.brq.redhat.com>
+ <64a47faa-74f5-60ad-9b74-8c295072c719@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64a47faa-74f5-60ad-9b74-8c295072c719@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
+On Mon, Apr 06, 2020 at 02:10:53PM -0300, Wainer dos Santos Moschetta wrote:
+> 
+> On 4/4/20 4:32 AM, Andrew Jones wrote:
+> > On Fri, Apr 03, 2020 at 02:24:28PM -0300, Wainer dos Santos Moschetta wrote:
+> > > This patch introduces the mem_slot_test test which checks
+> > > an VM can have added memory slots up to the limit defined in
+> > > KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
+> > > verify it fails as expected.
+> > > 
+> > > Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+> > > ---
+> > >   tools/testing/selftests/kvm/.gitignore      |  1 +
+> > >   tools/testing/selftests/kvm/Makefile        |  3 +
+> > >   tools/testing/selftests/kvm/mem_slot_test.c | 85 +++++++++++++++++++++
+> > >   3 files changed, 89 insertions(+)
+> > >   create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
+> > > 
+> > > diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
+> > > index 16877c3daabf..232f24d6931a 100644
+> > > --- a/tools/testing/selftests/kvm/.gitignore
+> > > +++ b/tools/testing/selftests/kvm/.gitignore
+> > > @@ -22,3 +22,4 @@
+> > >   /dirty_log_test
+> > >   /kvm_create_max_vcpus
+> > >   /steal_time
+> > > +/mem_slot_test
+> > > diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> > > index 712a2ddd2a27..69b44178f48b 100644
+> > > --- a/tools/testing/selftests/kvm/Makefile
+> > > +++ b/tools/testing/selftests/kvm/Makefile
+> > > @@ -33,12 +33,14 @@ TEST_GEN_PROGS_x86_64 += demand_paging_test
+> > >   TEST_GEN_PROGS_x86_64 += dirty_log_test
+> > >   TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
+> > >   TEST_GEN_PROGS_x86_64 += steal_time
+> > > +TEST_GEN_PROGS_x86_64 += mem_slot_test
+> > >   TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
+> > >   TEST_GEN_PROGS_aarch64 += demand_paging_test
+> > >   TEST_GEN_PROGS_aarch64 += dirty_log_test
+> > >   TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
+> > >   TEST_GEN_PROGS_aarch64 += steal_time
+> > > +TEST_GEN_PROGS_aarch64 += mem_slot_test
+> > kvm selftests has a bad case of OCD when it comes to lists of tests. In
+> > the .gitignore and the Makefile we keep our tests in alphabetical order.
+> > Maybe we should stop, because it's a bit annoying to maintain, but my
+> > personal OCD won't allow it to be on my watch. Please fix the above
+> > three lists.
+> 
+> I will fix it on v3.
+> 
+> Kind of related... has ever been discussed a naming convention for kvm
+> selftests? It would allow the use of regex on both .gitignore and
+> Makefile...and bye-bye those sorted lists.
 
-Make all coreboot table entries available to userland. This is useful for
-tools that are currently using /dev/mem.
+It's never been discussed that I know of. Feel free to send an RFC if
+you'd like to kick off the discussion :-)
 
-Besides the tag and size also expose the raw table data itself.
-
-Update the ABI documentation to explain the new sysfs interface.
-
-Tools can easily scan for the right coreboot table by reading
-/sys/bus/coreboot/devices/coreboot*/attributes/id
-The binary table data can then be read from
-/sys/bus/coreboot/devices/coreboot*/attributes/data
-
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
----
- -v2:
-        - Add ABI documentation
-        - Add 0x prefix on hex values
-        - Remove wrong ioremap hint as found by CI
- -v3:
-        - Use BIN_ATTR_RO
- -v4:
-        - Updated ABI documentation
----
- Documentation/ABI/stable/sysfs-bus-coreboot | 30 +++++++++++
- drivers/firmware/google/coreboot_table.c    | 58 +++++++++++++++++++++
- 2 files changed, 88 insertions(+)
-
-diff --git a/Documentation/ABI/stable/sysfs-bus-coreboot b/Documentation/ABI/stable/sysfs-bus-coreboot
-index 6055906f41f2..328153a1b3f4 100644
---- a/Documentation/ABI/stable/sysfs-bus-coreboot
-+++ b/Documentation/ABI/stable/sysfs-bus-coreboot
-@@ -42,3 +42,33 @@ Description:
- 		buffer.
- 		The file holds a read-only binary representation of the CBMEM
- 		buffer.
-+
-+What:		/sys/bus/coreboot/devices/.../attributes/id
-+Date:		Apr 2020
-+KernelVersion:	5.6
-+Contact:	Patrick Rudolph <patrick.rudolph@9elements.com>
-+Description:
-+		coreboot device directory can contain a file named attributes/id.
-+		The file holds an ASCII representation of the coreboot table ID
-+		in hex (e.g. 0x000000ef). On coreboot enabled platforms the ID is
-+		usually called TAG.
-+
-+What:		/sys/bus/coreboot/devices/.../attributes/size
-+Date:		Apr 2020
-+KernelVersion:	5.6
-+Contact:	Patrick Rudolph <patrick.rudolph@9elements.com>
-+Description:
-+		coreboot device directory can contain a file named
-+		attributes/size.
-+		The file holds an ASCII representation as decimal number of the
-+		coreboot table size (e.g. 64).
-+
-+What:		/sys/bus/coreboot/devices/.../attributes/data
-+Date:		Apr 2020
-+KernelVersion:	5.6
-+Contact:	Patrick Rudolph <patrick.rudolph@9elements.com>
-+Description:
-+		coreboot device directory can contain a file named
-+		attributes/data.
-+		The file holds a read-only binary representation of the coreboot
-+		table.
-diff --git a/drivers/firmware/google/coreboot_table.c b/drivers/firmware/google/coreboot_table.c
-index 0205987a4fd4..d0fc3eb93f4f 100644
---- a/drivers/firmware/google/coreboot_table.c
-+++ b/drivers/firmware/google/coreboot_table.c
-@@ -3,9 +3,11 @@
-  * coreboot_table.c
-  *
-  * Module providing coreboot table access.
-+ * Exports coreboot tables as attributes in sysfs.
-  *
-  * Copyright 2017 Google Inc.
-  * Copyright 2017 Samuel Holland <samuel@sholland.org>
-+ * Copyright 2019 9elements Agency GmbH
-  */
- 
- #include <linux/acpi.h>
-@@ -84,6 +86,60 @@ void coreboot_driver_unregister(struct coreboot_driver *driver)
- }
- EXPORT_SYMBOL(coreboot_driver_unregister);
- 
-+static ssize_t id_show(struct device *dev,
-+		       struct device_attribute *attr, char *buffer)
-+{
-+	struct coreboot_device *device = CB_DEV(dev);
-+
-+	return sprintf(buffer, "0x%08x\n", device->entry.tag);
-+}
-+
-+static ssize_t size_show(struct device *dev,
-+			 struct device_attribute *attr, char *buffer)
-+{
-+	struct coreboot_device *device = CB_DEV(dev);
-+
-+	return sprintf(buffer, "%u\n", device->entry.size);
-+}
-+
-+static DEVICE_ATTR_RO(id);
-+static DEVICE_ATTR_RO(size);
-+
-+static struct attribute *cb_dev_attrs[] = {
-+	&dev_attr_id.attr,
-+	&dev_attr_size.attr,
-+	NULL
-+};
-+
-+static ssize_t data_read(struct file *filp, struct kobject *kobj,
-+			 struct bin_attribute *bin_attr,
-+			 char *buffer, loff_t offset, size_t count)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct coreboot_device *device = CB_DEV(dev);
-+
-+	return memory_read_from_buffer(buffer, count, &offset,
-+				       &device->entry, device->entry.size);
-+}
-+
-+static BIN_ATTR_RO(data, 0);
-+
-+static struct bin_attribute *cb_dev_bin_attrs[] = {
-+	&bin_attr_data,
-+	NULL
-+};
-+
-+static const struct attribute_group cb_dev_attr_group = {
-+	.name = "attributes",
-+	.attrs = cb_dev_attrs,
-+	.bin_attrs = cb_dev_bin_attrs,
-+};
-+
-+static const struct attribute_group *cb_dev_attr_groups[] = {
-+	&cb_dev_attr_group,
-+	NULL
-+};
-+
- static int coreboot_table_populate(struct device *dev, void *ptr)
- {
- 	int i, ret;
-@@ -104,6 +160,8 @@ static int coreboot_table_populate(struct device *dev, void *ptr)
- 		device->dev.parent = dev;
- 		device->dev.bus = &coreboot_bus_type;
- 		device->dev.release = coreboot_device_release;
-+		device->dev.groups = cb_dev_attr_groups;
-+
- 		memcpy(&device->entry, ptr_entry, entry->size);
- 
- 		ret = device_register(&device->dev);
--- 
-2.24.1
+Thanks,
+drew
 
