@@ -2,77 +2,99 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDB0C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCA5C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CAC2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB63B2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:49:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586270980;
+	bh=JJUfI4+Purq9fnRot/dmSDalIBDiorY+tl7ywkgmDBU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iVkkglwvLgxLK/J4kqrie0hHEjaB0Xl+upEV7NrcR88Mie76XqRcrykbtTElt/6MM
+	 eeodudWgO+urUQEth0vlW+pbln0OlnfvYfDhw1MN2yR4gRMHzkJXFmz7X2hgsvYtGL
+	 bcbzERSjrGgQQEcKfoaiVgNMnMOhvhbli4QWAhys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgDGOtd (ORCPT
+        id S1729373AbgDGOti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58514 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 10:49:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbgDGOtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:49:33 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1729110AbgDGOti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:49:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B16A206F7;
-        Tue,  7 Apr 2020 14:49:30 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 10:49:28 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, hch@infradead.org,
-        sean.j.christopherson@intel.com, mingo@redhat.com, bp@alien8.de,
-        hpa@zytor.com, x86@kernel.org, kenny@panix.com, jeyu@kernel.org,
-        rasmus.villemoes@prevas.dk, pbonzini@redhat.com,
-        fenghua.yu@intel.com, xiaoyao.li@intel.com, nadav.amit@gmail.com,
-        thellstrom@vmware.com, tony.luck@intel.com, jannh@google.com,
-        keescook@chromium.org, David.Laight@aculab.com,
-        dcovelli@vmware.com, mhiramat@kernel.org
-Subject: Re: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
-Message-ID: <20200407104928.566db3f8@gandalf.local.home>
-In-Reply-To: <20200407143543.GB876345@kroah.com>
-References: <20200407110236.930134290@infradead.org>
-        <20200407111007.352324393@infradead.org>
-        <20200407143543.GB876345@kroah.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3423C20747;
+        Tue,  7 Apr 2020 14:49:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586270977;
+        bh=JJUfI4+Purq9fnRot/dmSDalIBDiorY+tl7ywkgmDBU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=veO+45Tlg3g3ZSPoWvAEpUp4LiwZZyl7Aez6EAREm2l9JOQzi0fw+WJ4SJF7SUDi9
+         2NvLUS9/6FXlTq+7vKOTKTE1WjqAooPkidBkURLMO0ycD46U/9T6IQI3FrucFneIKI
+         bcQ1rpWfSJaVK2SHN90YWLe/SejgL+UgFienaIB4=
+Date:   Tue, 7 Apr 2020 16:49:33 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.6 00/29] 5.6.3-rc1 review
+Message-ID: <20200407144933.GB889211@kroah.com>
+References: <20200407101452.046058399@linuxfoundation.org>
+ <dd65ddb4-478c-c022-542c-5e0b44ab8962@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd65ddb4-478c-c022-542c-5e0b44ab8962@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Apr 2020 16:35:43 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> > Hypervisors, which have been modified and are known to work correctly,
-> > can add:
-> > 
-> >   MODULE_INFO(sld_safe, "Y");
-> > 
-> > to explicitly tell the module loader they're good.  
+On Tue, Apr 07, 2020 at 01:37:52PM +0100, Jon Hunter wrote:
 > 
-> What's to keep any out-of-tree module from adding this same module info
-> "flag" and just lie about it?  Isn't that what you are trying to catch
-> here, or is it a case of, "if you lie, your code will break" as well?
+> On 07/04/2020 11:21, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.3 release.
+> > There are 29 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 09 Apr 2020 10:13:38 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.3-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.6:
+>     13 builds:	13 pass, 0 fail
+>     24 boots:	24 pass, 0 fail
+>     40 tests:	40 pass, 0 fail
+> 
+> Linux version:	5.6.3-rc1-g14d42f1aa3c3
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
+> 
 
-Keeping with the analogy to module kabi breakage, that would basically be
-the same as an out of tree module fixing the api but not using it properly.
-It will break.
+Thanks for testing these 3 so fast.
 
-All this is doing is to make sure VM modules that haven't been updated to
-handle split lock detection, wont be loaded if split lock detection is
-enabled. Saying you can handle SLD and not handling it is just broken code
-and we can't really protect against that.
-
--- Steve
-
+greg k-h
