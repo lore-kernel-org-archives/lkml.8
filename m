@@ -2,109 +2,155 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D342AC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF13C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9749320730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586285808;
-	bh=4gALGKspDHAZG+6f7jBGEpqBU2eGUDbjKcXJTHGBzlg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=b0Z45WDrNO6GzShVzQfTTWmKgtKYd+lLTDB4kGQ+u6PXl3SEekso9HAAlyZFIP9/X
-	 3a6PMHMKevkdiPM1lD/1hmIfSbTmnjGzz7cxScZS//xQrZrXizju3qCQGKRB/pJM3s
-	 6F9nZwUpz6g/PyFSQffObqtaywUlOJLGR5KNU+Ak=
+	by mail.kernel.org (Postfix) with ESMTP id 306F120730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gr+rckUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgDGS4r (ORCPT
+        id S1726833AbgDGS6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:56:47 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:23206 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgDGS4q (ORCPT
+        Tue, 7 Apr 2020 14:58:19 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40772 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgDGS6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:56:46 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 037IuaFG023491;
-        Wed, 8 Apr 2020 03:56:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 037IuaFG023491
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586285797;
-        bh=eUeHeZrWUB6gijhp12/6DlDlHlP6yyMhichO0vQ85xA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aL93BQD/KZoYD9HQYMg7ehpbjXwS+cfki6me8I5FVNEZRGGTM9sLCtaXI7qzYlbIq
-         a2jH/kwQcEKXndSXqHo80+M1kizQiXxc8FOxZpjm3IVML0JoCspLu2lhIJBHR76Gyz
-         KStsmPcYlTJNfDP3mvJCh9GnarZsh5sZfVm5cV8i7iGSTgb79FVmrlKkvp5D4upv1u
-         QU6B1g+zECGapWkT4UV81MWP4eUC65ioCrgGACoY9AhUcOAMJ5fDXLIYxhGWqabBkV
-         iHUOA7+nBtA0ipBzXlA3jGrSaT1jDnKx5kFAg9RmWzR7m7c/v98qVTubzzGQpDQiFu
-         VfLyfP1FfH5SQ==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id y138so3022154vsy.0;
-        Tue, 07 Apr 2020 11:56:36 -0700 (PDT)
-X-Gm-Message-State: AGi0PuasuOCgbDyXNoc1zR5ad8COIcslnsyfxj5BxTBb1X8wsFeNmnE4
-        yWVrNqG1cNi5/pPTW1c0J2FtoyE9741A5cfo01g=
-X-Google-Smtp-Source: APiQypJROhbMEdYOY1X45l9P1b5U7DIrULDPKTPBpMG81lhpKA4Ng+E/BEBL8G5BZBrEEwId3H1obS8TpI6hhs7I+pM=
-X-Received: by 2002:a67:6542:: with SMTP id z63mr3209413vsb.179.1586285795522;
- Tue, 07 Apr 2020 11:56:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <CA+icZUWnZwaNooj4WLvS7FKhkDgq3R3xUaQ8hFjuDgZTSj0s2Q@mail.gmail.com>
-In-Reply-To: <CA+icZUWnZwaNooj4WLvS7FKhkDgq3R3xUaQ8hFjuDgZTSj0s2Q@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 8 Apr 2020 03:55:59 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATub3fpeTY67miVYJ27MtfwaeETW0HrWHYdM0mmaKCYPA@mail.gmail.com>
-Message-ID: <CAK7LNATub3fpeTY67miVYJ27MtfwaeETW0HrWHYdM0mmaKCYPA@mail.gmail.com>
-Subject: Re: kbuild: do not pass $(KBUILD_CFLAGS) to scripts/mkcompile_h
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Tue, 7 Apr 2020 14:58:19 -0400
+Received: by mail-ot1-f68.google.com with SMTP id q2so1503045otk.7;
+        Tue, 07 Apr 2020 11:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QGY37FNAkjMLaN4OPkvvGVRfJPoF2m0cC0lGKtXcqAo=;
+        b=gr+rckUKI58G49Z44BoYW2p6LI6XQ7dJRWJrQ8Sd55kDDpeLB7+lboJBSJdfZGyJdC
+         wuK5DBxn3IGPtxEzcb8ydKbdLdhed+RrAscug86FQyWxSI97EUlig0rnLh5VqDANRDcN
+         arQxqN+pdjx7imdHu+s+JBYprOyvO0yAc5yu1pm3lixaXVZfAG3lqHuk8AbXtnKh/f8w
+         oxWugx2clNoJn7hvWIfqWRdn73eFz7blMNigUe5FHJYvtghxPJtIN1YAB9HYwSYFo6D8
+         B8O6b3GGlQHMX8omJh8mVtZDY7XoyBKNae4DcMaxcSd2cptIM5/jV/4+lsluvhn2LmcA
+         XAiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QGY37FNAkjMLaN4OPkvvGVRfJPoF2m0cC0lGKtXcqAo=;
+        b=CbhVjXc5dgH8Yq4qgVHNsiJ04dORbxi2Pemkvcv6LuDza5QSEs6Il1aW4Fa9qyYabC
+         ekcOMQjeRYO8W3N73mP3OuQCxIY6ybv38lW6N2vrUOZk/5CZmvZ2VBDPAIRZ/067W5h8
+         vPohMI3dTiB2IMeuOGhIny5AIvkeMInfO5Nhc8Nh26+SWaaq6L5zJ8gDZbLyAa/siN3+
+         YmRhyQSlGfZkSw2R5eX5z+v60dDIkAJKR0Fkbw1luXGwlaUli8ymN6nk5toHt6XhdDLb
+         Kh3o6yusU/8Yu7H2WL9cWwzu47n0Tr8nVSL9QjigY7M5MZ4dv4oRstmhdAE3jpwIdK12
+         I2sw==
+X-Gm-Message-State: AGi0PuabdDl4bM/umtfAqoF0L90qAX4cq2yWcLHdUDjlGAbuYb1wEwg3
+        horn532sP04zOSqwUlffItk=
+X-Google-Smtp-Source: APiQypKv050/wlgr0SPQh2dayH2Ig9WLi5w4zCIC06+rIw0jxXUib3/jR4GEycJh4cac4u8oLrmGgQ==
+X-Received: by 2002:a9d:75d0:: with SMTP id c16mr2826857otl.8.1586285897659;
+        Tue, 07 Apr 2020 11:58:17 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id 90sm5534875otc.29.2020.04.07.11.58.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 11:58:17 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 11:58:15 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        Gerd Hoffmann <kraxel@redhat.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: linux-next: build failure after merge of the vhost tree
+Message-ID: <20200407185815.GA1805@ubuntu-s3-xlarge-x86>
+References: <20200407130542.0e3b5d9d@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407130542.0e3b5d9d@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sedat,
+On Tue, Apr 07, 2020 at 01:05:42PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the vhost tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> drivers/gpu/drm/virtio/virtgpu_kms.c: In function 'virtio_gpu_init':
+> drivers/gpu/drm/virtio/virtgpu_kms.c:153:38: error: 'VIRTIO_RING_F_INDIRECT_DESC' undeclared (first use in this function)
+>   153 |  if (virtio_has_feature(vgdev->vdev, VIRTIO_RING_F_INDIRECT_DESC)) {
+>       |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpu/drm/virtio/virtgpu_kms.c:153:38: note: each undeclared identifier is reported only once for each function it appears in
+> 
+> Caused by commit
+> 
+>   898952f9597e ("virtio: stop using legacy struct vring in kernel")
+> 
+> interacting with commit
+> 
+>   5edbb5608256 ("drm/virtio: fix ring free check")
+> 
+> from Linus' tree (post v5.6).
+> 
+> I have added the following merge fix patch for today.
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Tue, 7 Apr 2020 12:58:26 +1000
+> Subject: [PATCH] drm/virtio: fix up for include file changes
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_kms.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> index 023a030ca7b9..f4ea4cef5e23 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> @@ -25,6 +25,7 @@
+>  
+>  #include <linux/virtio.h>
+>  #include <linux/virtio_config.h>
+> +#include <linux/virtio_ring.h>
+>  
+>  #include <drm/drm_file.h>
+>  
+> -- 
+> 2.25.0
+> 
+> I do have to wonder why all this code has been added to the vhost tree
+> during the second week of the merge window (especially when I see it
+> rebased 4 times in one day :-().  Is it really intended for v5.7?
+> -- 
+> Cheers,
+> Stephen Rothwell
 
-On Mon, Apr 6, 2020 at 7:01 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> [ Please CC me I am not subscribed to this mailing-list ]
->
-> Hi,
->
-> I think with your patch in [1] line #56 can go away, too?
->
-> [ scripts/mkcompile_h ]
->
-> 53 # Generate a temporary compile.h
-> 54
-> 55 { echo /\* This file is auto generated, version $VERSION \*/
-> 56   if [ -n "$CONFIG_FLAGS" ] ; then echo "/* $CONFIG_FLAGS */"; fi
+Linaro's CI also reports an issue with this patch with the remoteproc
+drivers that were freshly merged in Linus' tree for 5.7-rc1 (seen with a
+simple arm allyesconfig build):
 
+drivers/rpmsg/mtk_rpmsg.c:68:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
+drivers/rpmsg/mtk_rpmsg.c:93:9: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
+drivers/rpmsg/mtk_rpmsg.c:170:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
+drivers/rpmsg/mtk_rpmsg.c:204:9: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
+drivers/rpmsg/mtk_rpmsg.c:223:3: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
+drivers/rpmsg/mtk_rpmsg.c:259:9: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
+drivers/rpmsg/mtk_rpmsg.c:376:3: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
+drivers/rpmsg/mtk_rpmsg.c:387:15: error: implicit declaration of function 'kzalloc' [-Werror,-Wimplicit-function-declaration]
+drivers/rpmsg/mtk_rpmsg.c:409:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
+drivers/remoteproc/stm32_rproc.c:152:14: error: implicit declaration of function 'kcalloc' [-Werror,-Wimplicit-function-declaration]
+drivers/remoteproc/stm32_rproc.c:179:2: error: implicit declaration of function 'kfree' [-Werror,-Wimplicit-function-declaration]
 
+It seems like this series shouldn't be in -next until after 5.7-rc1 (or
+rebased on Linus' tree if it is intended for the merge window).
 
-I think the this inserts a comment line
-to make sure compile.h is updated
-when any of CONFIG_SMP, CONFIG_PREEMPT, CONFIG_PREEMPT_RT
-is changed.
-
-So, this is unrelated to my patch at least.
-
-
-> Thanks.
->
-> Regards,
-> - Sedat -
->
-> [1] https://patchwork.kernel.org/patch/11473667/
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Cheers,
+Nathan
