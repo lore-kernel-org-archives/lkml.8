@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107E9C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D32EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD08720768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 583DF20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217792;
-	bh=xCCyQH1bUvTAbMsd/r4PqNmTcZ9TF90HvmyWc/+6wI4=;
+	s=default; t=1586217799;
+	bh=eSKBnDUxZ9V7jiJVKTGVAU7pRMub9uPonVW5GejxE2g=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0OFUlfNfeyaWmZFKkKU1/I5WqqaxeuzLU1M/4CJ/U0a6eyqBKsF92/bw6aYcF337f
-	 ocjWLLJV+85uQ+YG7h4W0/kQAGvO8UgQ4seZvOcYWEUwIQlqOSX0IQGCg4iUxxRCQv
-	 zmTQioPemgWOoQvet4eAWsZ+bg56s8+AYUkcNPqE=
+	b=1WqU8jostVisftgL+jXyQHXGKS+HUNj15e6epOlg8GDe8cYZBmirguDXjt7RA2ws1
+	 sGtQ/6mipKmFL2AZtdXQRb4/fMXqhcx70L9gsNwjUBHZdZKlOa0t6DtJmpQL+2wUos
+	 rOjTH6ggoOmF9mDjX7xxGxw0nt1xjosAA4UTNG2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgDGADL (ORCPT
+        id S1728390AbgDGADR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38310 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:03:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726759AbgDGADH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:03:07 -0400
+        id S1726339AbgDGADP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:03:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01E9720842;
-        Tue,  7 Apr 2020 00:03:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CD9420768;
+        Tue,  7 Apr 2020 00:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217786;
-        bh=xCCyQH1bUvTAbMsd/r4PqNmTcZ9TF90HvmyWc/+6wI4=;
+        s=default; t=1586217794;
+        bh=eSKBnDUxZ9V7jiJVKTGVAU7pRMub9uPonVW5GejxE2g=;
         h=From:To:Cc:Subject:Date:From;
-        b=XOvL/Z/RxOOeE+fZBUzO2ngPuydxlxGyVvOqwz06OZ9gRQMZh75o4VHuugdVVzZzG
-         Ft8pkRkzKYJDa4Y/VXnm6oq5pnFSXa/77WGchuGax9wkTCpzBJh8krtIEHqWmLAJmR
-         5mzhoPpAaKeIP+w8jGjMEmfyxgwrYdS3QfudR4RA=
+        b=b0oQd1+oDnOO3Kuq5g1mdZGh90HBY2le+UdEECuLux8t8Ni0Zm61cVodNt2Qy3U8B
+         sxYdvTcZnI/+2bT4xOtelIiUguKdCUoN6xQUbCNb5E7YuIl/XTiP0/wbUQDzi0QlcS
+         pt5Aq6Jup9hsWLrUz2Ec71hVmHpPYd6usl4ZOfPE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ondrej Jirman <megous@megous.com>, Chen-Yu Tsai <wens@csie.org>,
         Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 1/5] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
-Date:   Mon,  6 Apr 2020 20:03:00 -0400
-Message-Id: <20200407000304.17360-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 1/4] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
+Date:   Mon,  6 Apr 2020 20:03:09 -0400
+Message-Id: <20200407000312.17447-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 X-stable: review
@@ -102,7 +102,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-index 2051d926e3037..4f3d988210b0a 100644
+index 0ffb247b42d65..d45f48de42a0c 100644
 --- a/drivers/bus/sunxi-rsb.c
 +++ b/drivers/bus/sunxi-rsb.c
 @@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
