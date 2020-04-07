@@ -2,87 +2,165 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DDBC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D438C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449E32072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4AAD2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 02:05:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nl548G7A"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Ug+nh1/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgDGCDR (ORCPT
+        id S1726525AbgDGCF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 22:03:17 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40542 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgDGCDR (ORCPT
+        Mon, 6 Apr 2020 22:05:28 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36074 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgDGCF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 22:03:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a81so173934wmf.5;
-        Mon, 06 Apr 2020 19:03:15 -0700 (PDT)
+        Mon, 6 Apr 2020 22:05:28 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m33so1601951qtb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 19:05:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4n/J3MD77MxiLHy8VOoOmdg1HtSTufB5sajCoCYZW70=;
-        b=nl548G7AgQAC8gF8Hu9Icp4hSsVdQopBDujfjcJT8fZoRMkEsUV/BzMadfirav5bHO
-         KDUb9tmeasOKkgmuSlHrtTxXO2eYQrMUMqJ6q9kvIfWxKXJfUkWWumdU2VXhiFU9/1aX
-         lzDRSrHPwgUph+F55DGHmTse5owYCal3LHpamfHVgd1NZ5k43SjJpm8otHT3Sg0Olg9u
-         AL+2cS5qAVCqdtkcElOAv/y9iQrzy8ta9MckwyGAuuuQNmll3Qx3N+RN21LSgchI6wJ8
-         l08LlXK4Ru1hwzdjnxoesY4s1DQDFqkxxVuorGCQKy3tNbnn7VPvfROzQZ/dZ67jRi51
-         1ZRA==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QE9feUnP6i9X/aj/z/7/gJs0TCfrmf+hqNm1oT5H5Wo=;
+        b=Ug+nh1/Djrrr/Q9qUloEDJX7nwoQbukp++5BAg8jRhC6bKO5v2srUpBPJ5CSdxM8+y
+         DZM3V/FCvDfVTAdln6l0g4IpB2p5Q+zSAwEMPnG4Mpn7Id6AxXESijE8ghTVWJ6YUHrQ
+         ldTC1LqkITSR7e14Q2G+OgeqG3MEEF1b1wsaA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4n/J3MD77MxiLHy8VOoOmdg1HtSTufB5sajCoCYZW70=;
-        b=hW2WpY2kzeO1VHXGIACeUeii2otQ6R23LuV6zx+RViNOKtWqDuVP8840JHwLjlOcy4
-         bTPBxck6Bl1FB+gvGG/NJnmyiYXthZWaDUMT4ojWLJoaUYmgSmjRSQDgvDMw0joH0TkZ
-         5+h7/AqjJ7RjTimWdf7IFPIUnHBWiERKeevm+qCeVPtwbkCmiX6RQ6kTb1872F7A0Xp1
-         tISe1vbsLUaGlfmoNNSoo/DHmaqg5bubFB5oK8UlrV+Q4xe1cmzrgcdXrETGK7vLBwjv
-         fYjrzbgLT0Fl33aCU//qyVL6K5KYP6KDXR0+cb+kczQe04TmvDNUGaD9AWbmNnNfmlt5
-         BLqg==
-X-Gm-Message-State: AGi0PubqVZBj7bmsPu65UC7WCRito9eeqoCTFMMOSblU9bqo05OcWScK
-        A6odvX8DLg2MjJZy1hRyvwcQDhxwSYuEP9Em9MVqPY0E
-X-Google-Smtp-Source: APiQypIVvYVwZrEB5vj9VltS3ujWER9Wp29x2h8ZX+yEUk7xkAhvwrmOoj24YEocGp6cZ8CKYYP8rbKDL/+Ls+AE8ao=
-X-Received: by 2002:a05:600c:2297:: with SMTP id 23mr2100496wmf.166.1586224995132;
- Mon, 06 Apr 2020 19:03:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QE9feUnP6i9X/aj/z/7/gJs0TCfrmf+hqNm1oT5H5Wo=;
+        b=EHlHVT0ajTRUX+ZH5dicYQvehLzW4WiHNOGIFDDEl2c0veuCQhykajkrKaa8lqzCLg
+         32EPgBRFWlDISSpKrxWCfqXVZc6YTk+xUtH+ty7mH4woRqjwrHmjNE0RSe6bataRINGg
+         J7u+tJtX5oUxYgx9fywbpw1rSW8DSEtTWrx8a6RKSq+5K+4YmtIzrx6CtavGJpMj59Wp
+         P8sy9P0D00z5KEZ9yVly3jNjq/YWNqQvPG38tqzoPwqqeZO0RSxPYTR/UQaKjz1Ykz6u
+         R+vhp7F/xn23k1wgBxIv0uNRqO1ccDwjP6VtGykxz11DpowmsgkPOjBks8Qio+uT0awU
+         y/Iw==
+X-Gm-Message-State: AGi0PuaXw0SkTghZc5DCiGF6rwVXt6VoKCuZdBTDfDqWQxzqjig86fb9
+        XdVjUlkGuFPX5+8Ytnm9/ZE4yA==
+X-Google-Smtp-Source: APiQypKtWDj3oedlvF3bwvLFauAg3ZIkbXpPPfDmPdit0eD4VUDvGdBp5v89JmUTbXIWhz19qDHGug==
+X-Received: by 2002:aed:37a8:: with SMTP id j37mr213233qtb.272.1586225127531;
+        Mon, 06 Apr 2020 19:05:27 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id n5sm15879583qkn.4.2020.04.06.19.05.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 19:05:26 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 22:05:25 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        RCU <rcu@vger.kernel.org>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [PATCH 1/3] rcu/tree: use more permissive parameters when
+ attaching a head
+Message-ID: <20200407020525.GA113967@google.com>
+References: <20200402123253.10382-1-urezki@gmail.com>
 MIME-Version: 1.0
-References: <20200331104532.12698-1-chunyan.zhang@unisoc.com> <158605608663.158626.7732167785990086489@swboyd.mtv.corp.google.com>
-In-Reply-To: <158605608663.158626.7732167785990086489@swboyd.mtv.corp.google.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Tue, 7 Apr 2020 10:02:38 +0800
-Message-ID: <CAAfSe-u1VNDiY0MXGwrUqsNLBiai8zivxoPiyLnkJMZ7hcX+Eg@mail.gmail.com>
-Subject: Re: [PATCH] clk: sprd: don't gate uart console clock
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200402123253.10382-1-urezki@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 5 Apr 2020 at 11:08, Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Chunyan Zhang (2020-03-31 03:45:32)
-> > Don't gate uart1_eb which provides console clock, gating that clock would
-> > make serial stop working if serial driver didn't enable that explicitly.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
->
-> Do you have a Fixes: tag?
+On Thu, Apr 02, 2020 at 02:32:51PM +0200, Uladzislau Rezki (Sony) wrote:
+> It is documneted that a headless object can be reclaimed from
+> might_sleep() context only. Because of that when a head is
+> dynamically attached it makes sense to drop the lock and do
+> an allocation with much more permissve flags comparing if it
+> is done from atomic context.
+> 
+> That is why use GFP_KERNEL flag plus some extra ones which
+> would make an allocation most likely to be succeed. The big
+> advantage of doing so is a direct reclaim process.
+> 
+> Tested such approach on my local tiny system with 145MB of
+> ram(the minimum amount the KVM system is capable of booting)
+> and 4xCPUs. For stressing the rcuperf module was used. During
+> tests with difference combinations i did not observe any hit
+> of our last emergency case, when synchronize_rcu() is involved.
+> 
+> Please note, the "dynamically attaching" path was enabled only,
+> apart of that all types of objects were considered as headless
+> variant during testing.
+> 
+> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> Suggested-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-I didn't leave a Fixed tag since that commit [1] will be merged into v5.7-rc1
+Beautifully done, thanks Vlad! I agree with this and the other 2 changes and
+I applied it to my rcu/kfree branch for further testing by both of us.
 
-[1] https://www.spinics.net/lists/linux-clk/msg46430.html
+thanks,
+
+ - Joel
+
+> ---
+>  kernel/rcu/tree.c | 23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 6172e6296dd7..24f620a06219 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -3148,13 +3148,10 @@ static inline struct rcu_head *attach_rcu_head_to_object(void *obj)
+>  {
+>  	unsigned long *ptr;
+>  
+> +	/* Try hard to get the memory. */
+>  	ptr = kmalloc(sizeof(unsigned long *) +
+> -			sizeof(struct rcu_head), GFP_NOWAIT | __GFP_NOWARN);
+> -
+> -	if (!ptr)
+> -		ptr = kmalloc(sizeof(unsigned long *) +
+> -				sizeof(struct rcu_head), GFP_ATOMIC | __GFP_NOWARN);
+> -
+> +		sizeof(struct rcu_head), GFP_KERNEL |
+> +			__GFP_ATOMIC | __GFP_HIGH | __GFP_RETRY_MAYFAIL);
+>  	if (!ptr)
+>  		return NULL;
+>  
+> @@ -3222,9 +3219,20 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  	if (!success) {
+>  		/* Is headless object? */
+>  		if (head == NULL) {
+> +			/* Drop the lock. */
+> +			if (krcp->initialized)
+> +				spin_unlock(&krcp->lock);
+> +			local_irq_restore(flags);
+> +
+>  			head = attach_rcu_head_to_object(ptr);
+>  			if (head == NULL)
+> -				goto unlock_return;
+> +				goto inline_return;
+> +
+> +			/* Take it back. */
+> +			local_irq_save(flags);
+> +			krcp = this_cpu_ptr(&krc);
+> +			if (krcp->initialized)
+> +				spin_lock(&krcp->lock);
+>  
+>  			/*
+>  			 * Tag the headless object. Such objects have a back-pointer
+> @@ -3263,6 +3271,7 @@ void kvfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
+>  		spin_unlock(&krcp->lock);
+>  	local_irq_restore(flags);
+>  
+> +inline_return:
+>  	/*
+>  	 * High memory pressure, so inline kvfree() after
+>  	 * synchronize_rcu(). We can do it from might_sleep()
+> -- 
+> 2.20.1
+> 
