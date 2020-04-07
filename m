@@ -2,301 +2,149 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8795C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D29FDC2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F31206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6BD206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:02:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ma3VTOaM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JCYoQl/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgDGRBT (ORCPT
+        id S1726670AbgDGRCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:01:19 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37395 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgDGRBS (ORCPT
+        Tue, 7 Apr 2020 13:02:55 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38743 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbgDGRCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:01:18 -0400
-Received: by mail-pl1-f193.google.com with SMTP id x1so1473526plm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:01:18 -0700 (PDT)
+        Tue, 7 Apr 2020 13:02:55 -0400
+Received: by mail-qt1-f196.google.com with SMTP id 13so1368847qtt.5;
+        Tue, 07 Apr 2020 10:02:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BKA4RM51A82x/5SpJbkyD9gWBCDUmnDILyC/0E/dflg=;
-        b=ma3VTOaM3ccztMgbWUch6c9Nop0cKlddfRdpAgSYy7156lYP1wdkteuId5JaVDSzgv
-         pstITV0JnBjl18ZnTE6upqD3TrTmYjV1BhYYPm/isptuMEyFwY+neCeERdoMYIA7FceE
-         xNVwlvSMjCG83B8EHkpPJnmePjhK+X4KiRdfPjVc0byiuKoVyK5E3bk9YI6Dlvga6ir7
-         cVDQCpvkxG0SJFNfsJ0E5vidb8x267+9UBHEhnGyzZW9eCxi1GQ3ezR3fHYst8oiLvLz
-         IFstetzqRlAla/WuwKTX5ClMVQozR86gOzJMPoKJLbYQRPkqoo62sEBKwhW77lGPmRfM
-         5SKg==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lubV0uwS0PhaWFReAExDn03E2JRmyIjYgI8tq8wZYAQ=;
+        b=JCYoQl/UYv0xHlgxUuvhhP4MOXQA+ieQOLJF3zFXnBOpzmA1+M7u5cEq/4SXoVlKHA
+         vG7Vnff6kUfGNwU8ABUNHSlWWr8xinfhLsY9xN2bEhodwCk+ntG6LWZ2im/W4qpeC/Y2
+         Goqf3F/GVrC29eZKjFNZa4QH40w4+TICPssQUEdH+rah3tVRnVGLdGzQojywsg3Rg4Rp
+         BSEtqINsTmi1269DWkTqWCJh27IH2s3C9EtbSSDbfQ99Uyqcuitw8b/YgkVK78gOfPJm
+         m3bnsqVxqhU3kGpsafXZ8+ntdH/PCCyhX+QAyV1+MIAPspwP6+cjgCLryU9wGt6n3F4F
+         Y7FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BKA4RM51A82x/5SpJbkyD9gWBCDUmnDILyC/0E/dflg=;
-        b=eRJlCJGBMNpI3aur01IU8bA06I4tkXOU9PMiJ4GqnO643M5SIXq9AoMpC0n8e5I0Fa
-         ggfbZfXg05RlabC6OG5qiV1CuCkloUJomzP9UuCm3X6O10oR4rjGuTlFzd9sBnycjz3n
-         1wzdwWCEhf9pmsdyedl5zQK0txYgvi16vFCCviITBYvZ8OZZ3A9m0ln1rMLyuY5k3ukm
-         DaVrdBSl53stGPosNy+Pi3tLEmPOp5+VfthdWJBiKRUlNFToLNngjlsFdDZaAoCDvvY8
-         NLqC6e8piG7xdHMEvk6NleWqt5vKtcg/1HJePsdze627Hf06narimFfqNIspx91WoZr3
-         KINw==
-X-Gm-Message-State: AGi0Pua5apzyVpH90OIxsWcq4FkIhFNlC8NsMhfixpcsiHwnMEmahOoI
-        Gj8aMO3P9k3nkpgouXvkw1gHe3fZc9rKcrJrLiiQfw==
-X-Google-Smtp-Source: APiQypLwGulDH+WJsMgYCIEQ0C1UrzVbHqpMJvqU9FEJJ+53A81wLeMpTOTAACHxZBxyCdDBD0SwVckZrPDO4CnpsWc=
-X-Received: by 2002:a17:90a:8085:: with SMTP id c5mr276765pjn.186.1586278877201;
- Tue, 07 Apr 2020 10:01:17 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lubV0uwS0PhaWFReAExDn03E2JRmyIjYgI8tq8wZYAQ=;
+        b=VAkeZcMtRfzELFxlLh1KWlw58rUBypq06cq6L9AWUd/D9BccvdG894jviWyTrkMdBl
+         zDTCpqso+T23T9t/xTblNCLtHYd7ApxndcZW5WoX9ESkgEs1almfmlIoAXdSMU6vbBnh
+         QUG5ObFxNrPyeiswCCWdlIoFRMsF8/5dIw516LOX79BXppF40+Jc5Ou1hQvZ3B/EUTQS
+         QAfgThz4/RhupoaxfB3HjGclMiLmyHZLlTNCFF051RQA599sn/1/2v6KTU2tIzxXiefQ
+         ndqdjzyjtoMOs+CW/w/2hqKTP/sy27+JjPQ8yTdupOKRIoCMENpCJxaIT1u9whqHbh+J
+         vwog==
+X-Gm-Message-State: AGi0PuZQFYqRufd3E1LpDHfx3yX8yzZs+EV65sFEIxgZ4XPp38n9HsRI
+        YOGJqQbqTmB60QcwlXNEcNuPVoN5ygV1mg==
+X-Google-Smtp-Source: APiQypIjHnuzXuojSCppJsD78fxYKavB67p37aAGYyRBiBhjYwH4oUBe/V7etaIxr/j9xhiuNfUR5w==
+X-Received: by 2002:ac8:23af:: with SMTP id q44mr3292106qtq.54.1586278973911;
+        Tue, 07 Apr 2020 10:02:53 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id r40sm18041660qtc.39.2020.04.07.10.02.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 10:02:53 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2B1C8409A3; Tue,  7 Apr 2020 14:02:51 -0300 (-03)
+Date:   Tue, 7 Apr 2020 14:02:51 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
+ performance monitoring and observability
+Message-ID: <20200407170251.GE12003@kernel.org>
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+ <20200407143014.GD11186@kernel.org>
+ <20200407143551.GF11186@kernel.org>
+ <10cc74ee-8587-8cdb-f85f-5724b370a2ce@linux.intel.com>
+ <20200407163654.GB12003@kernel.org>
+ <85da1e42-2cf2-98ca-1e0c-2cf3469b7d30@linux.intel.com>
 MIME-Version: 1.0
-References: <20200403051709.22407-1-masahiroy@kernel.org> <20200406112220.GB126804@google.com>
- <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com>
-In-Reply-To: <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 7 Apr 2020 10:01:04 -0700
-Message-ID: <CAKwvOdmHxeZ+T1OsOhW25pPygHM4D21OgZqRk141xbjP437-1w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85da1e42-2cf2-98ca-1e0c-2cf3469b7d30@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 9:17 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Mon, Apr 6, 2020 at 8:22 PM 'Matthias Maennich' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
-> >
-> > On Fri, Apr 03, 2020 at 02:17:09PM +0900, Masahiro Yamada wrote:
-> > >As Documentation/kbuild/llvm.rst implies, building the kernel with a
-> > >full set of LLVM tools gets very verbose and unwieldy.
-> > >
-> > >Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
-> > >GCC and Binutils. You can pass LLVM=1 from the command line or as an
-> > >environment variable. Then, Kbuild will use LLVM toolchains in your
-> > >PATH environment.
-> > >
-> > >Please note LLVM=1 does not turn on the LLVM integrated assembler.
-> > >You need to explicitly pass AS=clang to use it. When the upstream
-> > >kernel is ready for the integrated assembler, I think we can make
-> > >it default.
-> > >
-> > >We discussed what we need, and we agreed to go with a simple boolean
-> > >switch (https://lkml.org/lkml/2020/3/28/494).
-> > >
-> > >Some items in the discussion:
-> > >
-> > >- LLVM_DIR
-> > >
-> > >  When multiple versions of LLVM are installed, I just thought supporting
-> > >  LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
-> > >
-> > >  CC      = $(LLVM_DIR)clang
-> > >  LD      = $(LLVM_DIR)ld.lld
-> > >    ...
-> > >
-> > >  However, we can handle this by modifying PATH. So, we decided to not do
-> > >  this.
-> > >
-> > >- LLVM_SUFFIX
-> > >
-> > >  Some distributions (e.g. Debian) package specific versions of LLVM with
-> > >  naming conventions that use the version as a suffix.
-> > >
-> > >  CC      = clang$(LLVM_SUFFIX)
-> > >  LD      = ld.lld(LLVM_SUFFIX)
-> > >    ...
-> > >
-> > >  will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
-> > >  but the suffixed versions in /usr/bin/ are symlinks to binaries in
-> > >  /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
-> > >
-> > >- HOSTCC, HOSTCXX, etc.
-> > >
-> > >  We can switch the host compilers in the same way:
-> > >
-> > >  ifneq ($(LLVM),)
-> > >  HOSTCC       = clang
-> > >  HOSTCXX      = clang++
-> > >  else
-> > >  HOSTCC       = gcc
-> > >  HOSTCXX      = g++
-> > >  endif
-> > >
-> > >  This may the right thing to do, but I could not make up my mind.
-> > >  Because we do not frequently switch the host compiler, a counter
-> > >  solution I had in my mind was to leave it to the default of the
-> > >  system.
-> > >
-> > >  HOSTCC       = cc
-> > >  HOSTCXX      = c++
-> >
-> > What about HOSTLD ? I saw recently, that setting HOSTLD=ld.lld is not
-> > yielding the expected result (some tools, like e.g. fixdep still require
-> > an `ld` to be in PATH to be built). I did not find the time to look into
-> > that yet, but I would like to consistently switch to the llvm toolchain
-> > (including linker and possibly more) also for hostprogs.
->
->
-> HOSTLD=ld.lld worked for me, but HOSTCC=clang did not.
->
->
->
-> HOSTCC=clang without CC=clang fails to build objtool.
->
-> The build system of objtool is meh.  :(
+Em Tue, Apr 07, 2020 at 07:52:56PM +0300, Alexey Budankov escreveu:
+> 
+> On 07.04.2020 19:36, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Apr 07, 2020 at 05:54:27PM +0300, Alexey Budankov escreveu:
+> >> Could makes sense adding cap_ipc_lock to the binary to isolate from this:
 
-Let's tackle that in a follow up, with the goal of build hermiticity
-in mind.  I think there's good feedback in this thread to inform the
-design of a v2:
-1. CLANG_AS=0 to disable integrated as.  Hopefully we won't need this
-much longer, so we don't need to spend too much time on this, Masahiro
-please just choose a name for this.  llvm-as naming conventions
-doesn't follow the rest of binutils.
-2. HOSTCC=clang HOSTLD=ld.lld set by LLVM=1 for helping with build hermiticity.
+> >> kernel/events/core.c: 6101
+> >> 	if ((locked > lock_limit) && perf_is_paranoid() &&
+> >> 		!capable(CAP_IPC_LOCK)) {
+> >> 		ret = -EPERM;
+> >> 		goto unlock;
+> >> 	}
 
->
->
->   HOSTCC  scripts/mod/sumversion.o
->   HOSTLD  scripts/mod/modpost
->   CALL    scripts/checksyscalls.sh
->   CALL    scripts/atomic/check-atomics.sh
->   DESCEND  objtool
-> error: unknown warning option '-Wstrict-aliasing=3'; did you mean
-> '-Wstring-plus-int'? [-Werror,-Wunknown-warning-option]
->   HOSTCC   /home/masahiro/workspace/linux-kbuild/tools/objtool/fixdep.o
->   HOSTLD   /home/masahiro/workspace/linux-kbuild/tools/objtool/fixdep-in.o
->   LINK     /home/masahiro/workspace/linux-kbuild/tools/objtool/fixdep
->   CC       /home/masahiro/workspace/linux-kbuild/tools/objtool/exec-cmd.o
->   CC       /home/masahiro/workspace/linux-kbuild/tools/objtool/help.o
->   CC       /home/masahiro/workspace/linux-kbuild/tools/objtool/pager.o
->
->
->
->
->
->
-> > Cheers,
-> > Matthias
-> >
-> > >
-> > >  Many distributions support update-alternatives to switch the default
-> > >  to GCC, Clang, or whatever, but reviewers were opposed to this
-> > >  approach. So, this commit does not touch the host tools.
-> > >
-> > >Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > >---
-> > >
-> > > Documentation/kbuild/kbuild.rst |  5 +++++
-> > > Documentation/kbuild/llvm.rst   |  5 +++++
-> > > Makefile                        | 20 ++++++++++++++++----
-> > > 3 files changed, 26 insertions(+), 4 deletions(-)
-> > >
-> > >diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
-> > >index 510f38d7e78a..2d1fc03d346e 100644
-> > >--- a/Documentation/kbuild/kbuild.rst
-> > >+++ b/Documentation/kbuild/kbuild.rst
-> > >@@ -262,3 +262,8 @@ KBUILD_BUILD_USER, KBUILD_BUILD_HOST
-> > > These two variables allow to override the user@host string displayed during
-> > > boot and in /proc/version. The default value is the output of the commands
-> > > whoami and host, respectively.
-> > >+
-> > >+LLVM
-> > >+----
-> > >+If this variable is set to 1, Kbuild will use Clang and LLVM utilities instead
-> > >+of GCC and GNU binutils to build the kernel.
-> > >diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-> > >index d6c79eb4e23e..4602369f6a4f 100644
-> > >--- a/Documentation/kbuild/llvm.rst
-> > >+++ b/Documentation/kbuild/llvm.rst
-> > >@@ -55,6 +55,11 @@ additional parameters to `make`.
-> > >         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
-> > >         HOSTLD=ld.lld
-> > >
-> > >+You can use a single switch `LLVM=1` to use LLVM utilities by default (except
-> > >+for building host programs).
-> > >+
-> > >+      make LLVM=1 HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar HOSTLD=ld.lld
-> > >+
-> > > Getting Help
-> > > ------------
-> > >
-> > >diff --git a/Makefile b/Makefile
-> > >index c91342953d9e..6db89ecdd942 100644
-> > >--- a/Makefile
-> > >+++ b/Makefile
-> > >@@ -409,16 +409,28 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
-> > > KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
-> > >
-> > > # Make variables (CC, etc...)
-> > >-LD            = $(CROSS_COMPILE)ld
-> > >-CC            = $(CROSS_COMPILE)gcc
-> > > CPP           = $(CC) -E
-> > >+ifneq ($(LLVM),)
-> > >+CC            = clang
-> > >+LD            = ld.lld
-> > >+AR            = llvm-ar
-> > >+NM            = llvm-nm
-> > >+OBJCOPY               = llvm-objcopy
-> > >+OBJDUMP               = llvm-objdump
-> > >+READELF               = llvm-readelf
-> > >+OBJSIZE               = llvm-size
-> > >+STRIP         = llvm-strip
-> > >+else
-> > >+CC            = $(CROSS_COMPILE)gcc
-> > >+LD            = $(CROSS_COMPILE)ld
-> > > AR            = $(CROSS_COMPILE)ar
-> > > NM            = $(CROSS_COMPILE)nm
-> > >-STRIP         = $(CROSS_COMPILE)strip
-> > > OBJCOPY               = $(CROSS_COMPILE)objcopy
-> > > OBJDUMP               = $(CROSS_COMPILE)objdump
-> > >-OBJSIZE               = $(CROSS_COMPILE)size
-> > > READELF               = $(CROSS_COMPILE)readelf
-> > >+OBJSIZE               = $(CROSS_COMPILE)size
-> > >+STRIP         = $(CROSS_COMPILE)strip
-> > >+endif
-> > > PAHOLE                = pahole
-> > > LEX           = flex
-> > > YACC          = bison
-> > >--
-> > >2.17.1
-> > >
-> > >--
-> > >You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > >To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > >To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200403051709.22407-1-masahiroy%40kernel.org.
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200406112220.GB126804%40google.com.
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA%40mail.gmail.com.
+> > That did the trick, I'll update the documentation and include in my
+> > "Committer testing" section:
+ 
+> Looks like top mode somehow reaches perf mmap limit described here [1].
+> Using -m option solves the issue avoiding cap_ipc_lock on my 8 cores machine:
+> perf top -e cycles -m 1
 
+So this would read better?
 
-
--- 
-Thanks,
-~Nick Desaulniers
+diff --git a/Documentation/admin-guide/perf-security.rst b/Documentation/admin-guide/perf-security.rst
+index ed33682e26b0..d44dd24b0244 100644
+--- a/Documentation/admin-guide/perf-security.rst
++++ b/Documentation/admin-guide/perf-security.rst
+@@ -127,8 +127,8 @@ taken to create such groups of privileged Perf users.
+ 
+ ::
+ 
+-   # setcap "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
+-   # setcap -v "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
++   # setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
++   # setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
+    perf: OK
+    # getcap perf
+    perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
+@@ -140,6 +140,10 @@ i.e.:
+ 
+    # setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
+ 
++Note that you may need to have 'cap_ipc_lock' in the mix for tools such as
++'perf top', alternatively use 'perf top -m N', to reduce the memory that
++it uses for the perf ring buffer, see the memory allocation section below.
++
+ As a result, members of perf_users group are capable of conducting
+ performance monitoring and observability by using functionality of the
+ configured Perf tool executable that, when executes, passes perf_events
