@@ -2,108 +2,203 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEFCC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59F1C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F20720678
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D9820678
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LLSJBwwO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UI7Iksjx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgDGPhx (ORCPT
+        id S1729479AbgDGPh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:37:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27216 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729211AbgDGPhu (ORCPT
+        Tue, 7 Apr 2020 11:37:56 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32961 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729458AbgDGPhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:37:50 -0400
+        Tue, 7 Apr 2020 11:37:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586273869;
+        s=mimecast20190719; t=1586273871;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=x4CHFC9TOF2vCml2TedFLaM/BhVt2666Y7Zsy2uCISM=;
-        b=LLSJBwwOMuMLNBnJGLDw3AZHp1QO2b7k/Um0+97jWjbw1sKFyR8tZI0vgOCueXIoW/yJBH
-        Mj9nk/7bMfBHXd4EOy8cG05NbHS604fooMRpBEgROlWZ/I1Su9MaUQMsPa11Pe0zfXyo2N
-        GYihDnuTSH6pMCNNAHT9YQCPZOacs24=
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=yh9o+3NPEgTaI9xXEwkz3z8Y3AmGExFLZ61QmDFzc9s=;
+        b=UI7IksjxoPh08QJSe0rZOH6Gm+8Y4U5bzHu9Sdj+k1XMYk4Lz8QF4Qzc8yqx5Ya06fldvD
+        NXPT/CrlkD1XikqH7AzSpedyE+J4UtVbXHt+uDnxvd3wzTWOVlQMlMkWyj+Uku3+lrSxPr
+        8eT1ELzbCiTqe/YexZP0pIeqxZWfsHo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-oDhq-eh8PCCpgKiXXtRKIQ-1; Tue, 07 Apr 2020 11:37:40 -0400
-X-MC-Unique: oDhq-eh8PCCpgKiXXtRKIQ-1
+ us-mta-159-2ApU4bQ_PBmi4w5zeRuZMQ-1; Tue, 07 Apr 2020 11:37:49 -0400
+X-MC-Unique: 2ApU4bQ_PBmi4w5zeRuZMQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 489448017CE;
-        Tue,  7 Apr 2020 15:37:39 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8EB81107ACC9;
+        Tue,  7 Apr 2020 15:37:48 +0000 (UTC)
 Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CA6A5272A6;
-        Tue,  7 Apr 2020 15:37:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 72245272A5;
+        Tue,  7 Apr 2020 15:37:44 +0000 (UTC)
 From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
 To:     pbonzini@redhat.com, kvm@vger.kernel.org
 Cc:     drjones@redhat.com, david@redhat.com, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 0/2] selftests: kvm: Introduce the mem_slot_test test
-Date:   Tue,  7 Apr 2020 12:37:29 -0300
-Message-Id: <20200407153731.3236-1-wainersm@redhat.com>
+Subject: [PATCH v3 2/2] selftests: kvm: Add mem_slot_test test
+Date:   Tue,  7 Apr 2020 12:37:31 -0300
+Message-Id: <20200407153731.3236-3-wainersm@redhat.com>
+In-Reply-To: <20200407153731.3236-1-wainersm@redhat.com>
+References: <20200407153731.3236-1-wainersm@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series introduces a new KVM selftest (mem_slot_test) that goal
-is to verify memory slots can be added up to the maximum allowed. An
-extra slot is attempted which should occur on error.
+This patch introduces the mem_slot_test test which checks
+an VM can have added memory slots up to the limit defined in
+KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
+verify it fails as expected.
 
-The patch 01 is needed so that the VM fd can be accessed from the
-test code (for the ioctl call attempting to add an extra slot).
-
-I ran the test successfully on x86_64, aarch64, and s390x.  This
-is why it is enabled to build on those arches.
-
-- Changelog -
-
-v2 -> v3:
- - Keep alphabetical order of .gitignore and Makefile [drjones]
- - Use memory region flags equals to zero [drjones]
- - Changed mmap() assert from 'mem != NULL' to 'mem != MAP_FAILED' [drjones]
- - kvm_region is declared along side other variables and malloc()'ed
-   later [drjones]
- - Combined two asserts into a single 'ret == -1 && errno == EINVAL'
-   [drjones]
-
-v1 -> v2:
- - Rebased to queue
- - vm_get_fd() returns int instead of unsigned int (patch 01) [drjones]
- - Removed MEM_REG_FLAGS and GUEST_VM_MODE defines [drjones]
- - Replaced DEBUG() with pr_info() [drjones]
- - Calculate number of guest pages with vm_calc_num_guest_pages()
-   [drjones]
- - Using memory region of 1 MB sized (matches mininum needed
-   for s390x)
- - Removed the increment of guest_addr after the loop [drjones]
- - Added assert for the errno when adding a slot beyond-the-limit [drjones]
- - Prefer KVM_MEM_READONLY flag but on s390x it switch to KVM_MEM_LOG_DIRTY_PAGES,
-   so ensure the coverage of both flags. Also somewhat tests the KVM_CAP_READONLY_MEM capability check [drjones]
- - Moved the test logic to test_add_max_slots(), this allows to more easily add new cases in the "suite".
-
-v1: https://lore.kernel.org/kvm/20200330204310.21736-1-wainersm@redhat.com
-
-Wainer dos Santos Moschetta (2):
-  selftests: kvm: Add vm_get_fd() in kvm_util
-  selftests: kvm: Add mem_slot_test test
-
- tools/testing/selftests/kvm/.gitignore        |  1 +
- tools/testing/selftests/kvm/Makefile          |  3 +
- .../testing/selftests/kvm/include/kvm_util.h  |  1 +
- tools/testing/selftests/kvm/lib/kvm_util.c    |  5 ++
- tools/testing/selftests/kvm/mem_slot_test.c   | 85 +++++++++++++++++++
- 5 files changed, 95 insertions(+)
+Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
+---
+ tools/testing/selftests/kvm/.gitignore      |  1 +
+ tools/testing/selftests/kvm/Makefile        |  3 +
+ tools/testing/selftests/kvm/mem_slot_test.c | 85 +++++++++++++++++++++
+ 3 files changed, 89 insertions(+)
  create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
 
+diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
+index 16877c3daabf..127d27188427 100644
+--- a/tools/testing/selftests/kvm/.gitignore
++++ b/tools/testing/selftests/kvm/.gitignore
+@@ -21,4 +21,5 @@
+ /demand_paging_test
+ /dirty_log_test
+ /kvm_create_max_vcpus
++/mem_slot_test
+ /steal_time
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 712a2ddd2a27..338b6cdce1a0 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -32,12 +32,14 @@ TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
+ TEST_GEN_PROGS_x86_64 += demand_paging_test
+ TEST_GEN_PROGS_x86_64 += dirty_log_test
+ TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
++TEST_GEN_PROGS_x86_64 += mem_slot_test
+ TEST_GEN_PROGS_x86_64 += steal_time
+ 
+ TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
+ TEST_GEN_PROGS_aarch64 += demand_paging_test
+ TEST_GEN_PROGS_aarch64 += dirty_log_test
+ TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
++TEST_GEN_PROGS_aarch64 += mem_slot_test
+ TEST_GEN_PROGS_aarch64 += steal_time
+ 
+ TEST_GEN_PROGS_s390x = s390x/memop
+@@ -46,6 +48,7 @@ TEST_GEN_PROGS_s390x += s390x/sync_regs_test
+ TEST_GEN_PROGS_s390x += demand_paging_test
+ TEST_GEN_PROGS_s390x += dirty_log_test
+ TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
++TEST_GEN_PROGS_s390x += mem_slot_test
+ 
+ TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
+ LIBKVM += $(LIBKVM_$(UNAME_M))
+diff --git a/tools/testing/selftests/kvm/mem_slot_test.c b/tools/testing/selftests/kvm/mem_slot_test.c
+new file mode 100644
+index 000000000000..0588dc2e8e01
+--- /dev/null
++++ b/tools/testing/selftests/kvm/mem_slot_test.c
+@@ -0,0 +1,85 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * mem_slot_test
++ *
++ * Copyright (C) 2020, Red Hat, Inc.
++ *
++ * Test suite for memory region operations.
++ */
++#define _GNU_SOURCE /* for program_invocation_short_name */
++#include <linux/kvm.h>
++#include <sys/mman.h>
++
++#include "test_util.h"
++#include "kvm_util.h"
++
++/*
++ * Test it can be added memory slots up to KVM_CAP_NR_MEMSLOTS, then any
++ * tentative to add further slots should fail.
++ */
++static void test_add_max_slots(void)
++{
++	int ret;
++	struct kvm_userspace_memory_region *kvm_region;
++	struct kvm_vm *vm;
++	uint32_t max_mem_slots;
++	uint32_t mem_reg_flags;
++	uint32_t slot;
++	uint64_t guest_addr;
++	uint64_t mem_reg_npages;
++	uint64_t mem_reg_size;
++
++	max_mem_slots = kvm_check_cap(KVM_CAP_NR_MEMSLOTS);
++	TEST_ASSERT(max_mem_slots > 0,
++		    "KVM_CAP_NR_MEMSLOTS should be greater than 0");
++	pr_info("Allowed number of memory slots: %i\n", max_mem_slots);
++
++	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
++
++	/*
++	 * Uses 1MB sized/aligned memory region since this is the minimal
++	 * required on s390x.
++	 */
++	mem_reg_size = 0x100000;
++	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT, mem_reg_size);
++	mem_reg_flags = 0;
++
++	guest_addr = 0x0;
++
++	/* Check it can be added memory slots up to the maximum allowed */
++	pr_info("Adding slots 0..%i, each memory region with %ldK size\n",
++		(max_mem_slots - 1), mem_reg_size >> 10);
++	for (slot = 0; slot < max_mem_slots; slot++) {
++		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
++					    guest_addr, slot, mem_reg_npages,
++					    mem_reg_flags);
++		guest_addr += mem_reg_size;
++	}
++
++	/* Check it cannot be added memory slots beyond the limit */
++	void *mem = mmap(NULL, mem_reg_size, PROT_READ | PROT_WRITE,
++			 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
++	TEST_ASSERT(mem != MAP_FAILED, "Failed to mmap() host");
++
++	kvm_region = malloc(sizeof(struct kvm_userspace_memory_region));
++	TEST_ASSERT(kvm_region,
++		    "Failed to malloc() kvm_userspace_memory_region");
++	kvm_region->slot = slot;
++	kvm_region->flags = mem_reg_flags;
++	kvm_region->guest_phys_addr = guest_addr;
++	kvm_region->userspace_addr = (uint64_t) mem;
++
++	ret = ioctl(vm_get_fd(vm), KVM_SET_USER_MEMORY_REGION, kvm_region);
++	TEST_ASSERT(ret == -1 && errno == EINVAL,
++		    "Adding one more memory slot should fail with EINVAL");
++
++	munmap(mem, mem_reg_size);
++	free(kvm_region);
++	kvm_vm_free(vm);
++}
++
++int main(int argc, char *argv[])
++{
++	test_add_max_slots();
++	return 0;
++}
 -- 
 2.17.2
 
