@@ -2,99 +2,94 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B8EC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD70EC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928B32074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF87E2074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 15:24:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ic34yzC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgDGPUB (ORCPT
+        id S1729387AbgDGPYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 11:20:01 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2638 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728917AbgDGPUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 11:20:01 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 5EA12238EC4E6DA72243;
-        Tue,  7 Apr 2020 16:19:59 +0100 (IST)
-Received: from [127.0.0.1] (10.210.168.238) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 7 Apr 2020
- 16:19:57 +0100
-Subject: Re: [PATCH RFC v2 02/24] scsi: allocate separate queue for reserved
- commands
-To:     Hannes Reinecke <hare@suse.de>,
-        Christoph Hellwig <hch@infradead.org>
-CC:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <ming.lei@redhat.com>,
-        <bvanassche@acm.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        <esc.storagedev@microsemi.com>, <chenxiang66@hisilicon.com>,
-        Hannes Reinecke <hare@suse.com>
-References: <1583857550-12049-1-git-send-email-john.garry@huawei.com>
- <1583857550-12049-3-git-send-email-john.garry@huawei.com>
- <20200310183243.GA14549@infradead.org>
- <79cf4341-f2a2-dcc9-be0d-2efc6e83028a@huawei.com>
- <20200311062228.GA13522@infradead.org>
- <b5a63725-722b-8ccd-3867-6db192a248a4@suse.de>
- <9c6ced82-b3f1-9724-b85e-d58827f1a4a4@huawei.com>
- <39bc2d82-2676-e329-5d32-8acb99b0a204@suse.de>
- <20ebe296-9e57-b3e3-21b3-63a09ce86036@huawei.com>
- <dcfba0ea-4ba5-4e4f-150d-24bd4fe11cdd@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <38c1592d-c90a-d6ca-1e7e-e8cc665aaf22@huawei.com>
-Date:   Tue, 7 Apr 2020 16:19:35 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 7 Apr 2020 11:24:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39422 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728994AbgDGPYj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 11:24:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=73/OdYk6towkWtlmLp8roybn6u+Kwi6UysMkYnFTwAw=; b=ic34yzC8jfAK6FHvDGoHtdnFri
+        8RTBeuy9bbhvRpOWS6jk1ZSn3JUv9GpnuowgVT9fV5VfI6YxEhDfo2HJ2YHRm8FGhwNYywwF7280j
+        55RzG2RGEQwK/JEpJ/TTQaOUmZVc7N6umgNZIl9lVjpQDCPMeFn5FcrISPevRthntprv++0iJHOiE
+        hkTpX+EDTg+6Dmdnw9O0aiqXodVDPHCJTbPyprkTo3qj5qUCjodZimw5ClEU9U3GLdMAG/n6SI0dI
+        W5jCFbtgzXcYeX01336Wyob2Yq7uddtJB2HleQwmLJEXPbgXOvRxew4Sgp3Zn1Qj52VnrOiOr8rCq
+        lhn6VVPg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jLq5H-0005Qf-Rb; Tue, 07 Apr 2020 15:24:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A27703007CD;
+        Tue,  7 Apr 2020 17:24:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 854362BA83E28; Tue,  7 Apr 2020 17:24:12 +0200 (CEST)
+Date:   Tue, 7 Apr 2020 17:24:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        hch@infradead.org, sean.j.christopherson@intel.com,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
+        pbonzini@redhat.com, fenghua.yu@intel.com, xiaoyao.li@intel.com,
+        nadav.amit@gmail.com, thellstrom@vmware.com, tony.luck@intel.com,
+        rostedt@goodmis.org, jannh@google.com, keescook@chromium.org,
+        David.Laight@aculab.com, dcovelli@vmware.com, mhiramat@kernel.org
+Subject: Re: [PATCH 3/4] x86,module: Detect VMX vs SLD conflicts
+Message-ID: <20200407152412.GE20730@hirez.programming.kicks-ass.net>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.352324393@infradead.org>
+ <20200407143543.GB876345@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <dcfba0ea-4ba5-4e4f-150d-24bd4fe11cdd@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.168.238]
-X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407143543.GB876345@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>
->>
->> FWIW, the only other driver (gdth) which I see uses this API has 
->> this_id = -1 in the scsi host template.
->>
->>> But alright, I'll give it a go; let's see what I'll end up with.
->>
->> note: If we want a fixed scsi_device per host, calling 
->> scsi_mq_setup_tags() -> scsi_get_host_dev() will fail as shost state 
->> is not running. Maybe we need to juggle some things there to provide a 
->> generic solution.
->>
-> It might even get worse, as during device setup things like 
-> 'slave_alloc' etc is getting called, which has a fair chance of getting 
-> confused for non-existing devices.
-> Cf qla2xxx:qla2xx_slave_alloc() is calling starget_to_rport(), which 
-> will get us a nice oops when accessing a target which is _not_ the child 
-> of a fc remote port.
-
-Yes, something similar happens for libsas [hence my hack], where 
-sas_alloc_target()->sas_find_dev_by_rphy() fails as it cannot handle 
-rphy for scsi host as parent properly.
-
-> And this is why I'm not utterly keen on this approach; auditing all 
-> these callbacks is _not_ fun.
+On Tue, Apr 07, 2020 at 04:35:43PM +0200, Greg KH wrote:
+> On Tue, Apr 07, 2020 at 01:02:39PM +0200, Peter Zijlstra wrote:
+> > It turns out that with Split-Lock-Detect enabled (default) any VMX
+> > hypervisor needs at least a little modification in order to not blindly
+> > inject the #AC into the guest without the guest being ready for it.
+> > 
+> > Since there is no telling which module implements a hypervisor, scan
+> > all out-of-tree modules' text and look for VMX instructions and refuse
+> > to load it when SLD is enabled (default) and the module isn't marked
+> > 'sld_safe'.
+> > 
+> > Hypervisors, which have been modified and are known to work correctly,
+> > can add:
+> > 
+> >   MODULE_INFO(sld_safe, "Y");
+> > 
+> > to explicitly tell the module loader they're good.
 > 
+> What's to keep any out-of-tree module from adding this same module info
+> "flag" and just lie about it?  Isn't that what you are trying to catch
+> here, or is it a case of, "if you lie, your code will break" as well?
 
-Understood. And if you can't test them, then a change like this is too 
-risky for those drivers.
+If they lie they get to keep both pieces.
 
-Cheers,
-John
+The thing I worry about is them lying about "intree", is there anything
+that avoids that?
