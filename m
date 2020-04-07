@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5FCC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF639C2BB54
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D300D2078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7422E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217753;
-	bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2xMtFtwjqDDOEU/q5JFgEbHMJZ6ZkQQND7xC5+Vu+GTMhuXRpNosoGBsI3JwJEMl
-	 zTat9xYAw8SgEMnay16jscj5tqNMfsHPvtTkZlJp3DsVrsLNXNA5ZtxxaMFomOeIB6
-	 5JA+woFk/k6/CovynHoJmDkLzP1V8nWVtSpuL/RE=
+	s=default; t=1586217759;
+	bh=VOfh+h2MtQqoZ+YNlZDh/acRHYS0plv1SE5C2r/svls=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=bsGqpuvyLZ6Y8Wtx/kSDJp9+ZCl5tcmTZvA2wZVEtFs1YjV5heypwJ4e51S0n+1wO
+	 4oh7/ytPk6mgxUyMhvcFmPIlX6amjSVAQGxude/E4kS+TRiy617E1ED4q4c0vVDeU4
+	 Cra0wBuQux0lV5/fMw96Ihsmp3/F+46h999aSUEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgDGACc (ORCPT
+        id S1728151AbgDGACi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728096AbgDGAC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:29 -0400
+        id S1726709AbgDGACh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8776920768;
-        Tue,  7 Apr 2020 00:02:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E661D2078A;
+        Tue,  7 Apr 2020 00:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217749;
-        bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kh0RLZuAFKG8ziOaJ/+XgT7GrMAdAm4xjm2NqxVf/p5t9Yf6MYVHIRRfo0z2D96fg
-         o5ifdmxlFwaO7HyC4TNFnX3YzXUiZbObHJTZ0hSPt8Xz62kmdohNWbbTn8mxdv0dpa
-         hMGOw5VX3Add0fgdYx+o8i6jHZgN2zCalbspEd7Q=
+        s=default; t=1586217756;
+        bh=VOfh+h2MtQqoZ+YNlZDh/acRHYS0plv1SE5C2r/svls=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mftwb1PFM1Tn+abTQFcfDb7yLIxR3icOBJY94ZcgeZ9hK6q8vvUXxyC+6TUM32tZx
+         eDv/NrFNEzy3Pu5izFXu2+dFFNgcITQOEzhg4cHlOmGPcL291xXa0NGThU60Vxtacl
+         JHsfyyi9ZA0LwWPy6C5QWkuhKdL3+RvBZxq1awUk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xu Wang <vulab@iscas.ac.cn>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 30/32] qlcnic: Fix bad kzalloc null test
-Date:   Mon,  6 Apr 2020 20:01:48 -0400
-Message-Id: <20200407000151.16768-30-sashal@kernel.org>
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 01/13] ARM: dts: sun8i-a83t-tbs-a711: HM5065 doesn't like such a high voltage
+Date:   Mon,  6 Apr 2020 20:02:22 -0400
+Message-Id: <20200407000234.17088-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
-References: <20200407000151.16768-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,33 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu Wang <vulab@iscas.ac.cn>
+From: Ondrej Jirman <megous@megous.com>
 
-[ Upstream commit bcaeb886ade124331a6f3a5cef34a3f1484c0a03 ]
+[ Upstream commit a40550952c000667b20082d58077bc647da6c890 ]
 
-In qlcnic_83xx_get_reset_instruction_template, the variable
-of null test is bad, so correct it.
+Lowering the voltage solves the quick image degradation over time
+(minutes), that was probably caused by overheating.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-index 07f9067affc65..cda5b0a9e9489 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
-@@ -1720,7 +1720,7 @@ static int qlcnic_83xx_get_reset_instruction_template(struct qlcnic_adapter *p_d
+diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+index 49547a43cc90a..54cbdaf7ffdcc 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
+@@ -318,8 +318,8 @@
+ };
  
- 	ahw->reset.seq_error = 0;
- 	ahw->reset.buff = kzalloc(QLC_83XX_RESTART_TEMPLATE_SIZE, GFP_KERNEL);
--	if (p_dev->ahw->reset.buff == NULL)
-+	if (ahw->reset.buff == NULL)
- 		return -ENOMEM;
+ &reg_dldo3 {
+-	regulator-min-microvolt = <2800000>;
+-	regulator-max-microvolt = <2800000>;
++	regulator-min-microvolt = <1800000>;
++	regulator-max-microvolt = <1800000>;
+ 	regulator-name = "vdd-csi";
+ };
  
- 	p_buff = p_dev->ahw->reset.buff;
 -- 
 2.20.1
 
