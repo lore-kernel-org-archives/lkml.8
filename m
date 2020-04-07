@@ -2,220 +2,115 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6C5C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89162C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD81E20731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 398B1206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:06:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HWFLQJXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbgDGLDo (ORCPT
+        id S1728331AbgDGLGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:03:44 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:48821 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgDGLDo (ORCPT
+        Tue, 7 Apr 2020 07:06:04 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:39084 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgDGLGD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:03:44 -0400
-X-Originating-IP: 78.193.40.249
-Received: from kb-xps (unknown [78.193.40.249])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D5839FF819;
-        Tue,  7 Apr 2020 11:03:40 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 13:03:39 +0200
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
-Message-ID: <20200407110339.GA1489441@kb-xps>
-References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
- <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
- <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
+        Tue, 7 Apr 2020 07:06:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ELJ99tITBvhqYigpmJYU0Eq7MDv1Ib9ta9OZruxk3Zg=; b=HWFLQJXP/3Dv/I2y6UrSKLOOV
+        c1pMolTgR+++g74RwnASHgtf2QboyHLiTuPO8Dn58QLJGJBVCtQZVlr+I//mlKfli4y5uJDWRTA8s
+        JNRS/HAsiOD5+levYZzDnKj06Y/bRRCenktaIYQBHs9QrfqRPrMLh70/u0OyRskPfjeigjL/8aJw/
+        9W5unwTDSPKfJeAR2G1O33lsBYBfBZNYkzL2W0n2XleWXt4OQPR9hiykqEJj6J1vvZmF0JvrNBkEg
+        jByJqzpI7UFZ0V1Zgl24IrudM3xqjU2C3iHzD8Yy9/Ct1ycxu+5bsf44lnm8f7IyX9BanFEb8hovd
+        cgNmeCeag==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46826)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jLm37-0007Wa-Mh; Tue, 07 Apr 2020 12:05:45 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jLm32-0007aa-Mp; Tue, 07 Apr 2020 12:05:40 +0100
+Date:   Tue, 7 Apr 2020 12:05:40 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+Cc:     "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "david@protonic.nl" <david@protonic.nl>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+ the KSZ9031 PHY
+Message-ID: <20200407110540.GM25745@shell.armlinux.org.uk>
+References: <20200407093654.26095-1-o.rempel@pengutronix.de>
+ <699bf716ce12178655b47ce77227e4e42b85de1b.camel@toradex.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
+In-Reply-To: <699bf716ce12178655b47ce77227e4e42b85de1b.camel@toradex.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 11:41:59AM +0200, Maxime Ripard wrote:
-> Hi Kamel,
->
+On Tue, Apr 07, 2020 at 10:57:07AM +0000, Philippe Schenker wrote:
+> On Tue, 2020-04-07 at 11:36 +0200, Oleksij Rempel wrote:
+> > Add support for following phy-modes: rgmii, rgmii-id, rgmii-txid,
+> > rgmii-rxid.
+> > 
+> > This PHY has an internal RX delay of 1.2ns and no delay for TX.
+> > 
+> > The pad skew registers allow to set the total TX delay to max 1.38ns
+> > and
+> > the total RX delay to max of 2.58ns (configurable 1.38ns + build in
+> > 1.2ns) and a minimal delay of 0ns.
+> > 
+> > According to the RGMII v1.3 specification the delay provided by PCB
+> > traces
+> > should be between 1.5ns and 2.0ns. The RGMII v2.0 allows to provide
+> > this
+> > delay by MAC or PHY. So, we configure this PHY to the best values we
+> > can
+> > get by this HW: TX delay to 1.38ns (max supported value) and RX delay
+> > to
+> > 1.80ns (best calculated delay)
+> > 
+> > The phy-modes can still be fine tuned/overwritten by *-skew-ps
+> > device tree properties described in:
+> > Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+> > 
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> 
+> Make sure you do not exceet 80 chars with your phydev_warn. Besides
+> that:
 
-Hi Maxime,
+There are exceptions to the 80 column rule. From coding-style.rst:
 
-> The prefix for device tree bindings is usually dt-bindings:
-> $framework: $title
->
-> So a title like "dt-bindings: input: Add a counter-based rotary
-> encoder binding" would be better.
->
+Statements longer than 80 columns will be broken into sensible chunks,
+unless exceeding 80 columns significantly increases readability and
+does not hide information. Descendants are always substantially shorter
+than the parent and are placed substantially to the right. The same
+applies to function headers with a long argument list. *However, never
+break user-visible strings such as printk messages, because that breaks
+the ability to grep for them.*
 
-OK, to be fixed then.
-
-> On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
-> > Add dt binding for the counter variant of the rotary encoder driver.
-> >
-> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > ---
-> >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > new file mode 100644
-> > index 000000000000..a59f7c1faf0c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
-> > @@ -0,0 +1,67 @@
-> > +# SPDX-License-Identifier: GPL-2.0
->
-> Bindings are usually used by other OS's, so you should consider
-> putting it under a more permissive license, usually that would be GPL2
-> and the BSD-2-Clause
->
-
-Well to be honest I just looked into an existing binding and I guess
-the wrong one :).
-
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Rotary Encoder Counter
-> > +
-> > +maintainers:
-> > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
-> > +
-> > +description:
-> > +  Registers a Rotary encoder connected through a counter device.
->
-> You shouldn't really describe the action here, but more what the
-> binding is about. The registration will not depend on the presence of
-> the node following that binding, but rather on whether or not the OS
-> that uses it has support for it.
->
-
-Then shall it be better with just :
-"A rotary encoder device using a generic counter interface." ?
-
-> > +properties:
-> > +  compatible:
-> > +    const: rotary-encoder-counter
-> > +
-> > +  counter:
-> > +    description: Phandle for the counter device providing rotary position.
->
-> This should have a type
->
-> > +  linux-axis:
-> > +    description: The input subsystem axis to map to this rotary encoder.
-> > +    type: boolean
-> > +
-> > +  qdec-mode:
-> > +    description: |
-> > +      Quadrature decoder function to set in the counter device.
-> > +      3: x1-PHA
-> > +      4: x1-PHB
-> > +      5: x2-PHA
-> > +      6: x2-PHB
-> > +      7: x4-PHA and PHB
->
-> That range (even though it's a bit odd) should be expressed through an
-> enum so that you can check that the values are actually within that
-> range.
->
-
-Indeed, that make sens to check it from the binding.
-
-Will fix it in v2.
-
-> > +  steps:
-> > +    description: Number of steps in a full turnaround of the encoder.
->
-> Muli-line strings should have either quotes around them, or a | or >
-> like you did for the description. | will keep the \n, > will make that
-> a single string.
->
-> This should also have a type
->
-> > +      Only relevant for absolute axis.
->
-> This should be expressed through a if / then clause, or a dependencies one
->
-> >                                         Defaults to 24 which is a typical
-> > +      value for such devices.
->
-> This should be expressed through a default property.
->
-
-The devil is in the details and yet quite lot of them to fix.
-
-Thanks.
-
-> > +  relative-axis:
-> > +    description: Register a relative axis rather than an absolute one.
-> > +    type: boolean
-> > +
-> > +  rollover:
-> > +    description: Automatic rollover when the rotary value becomes greater
-> > +      than the specified steps or smaller than 0. For absolute axis only.
-> > +    type: boolean
->
-> Same story than steps for the dependency. Also, what is is the
-> behaviour when this property isn't set?
->
-
-OK, if rollover isn't set then the count is unbounded, of course this
-shall be described here.
-
-> > +  poll-interval:
-> > +    description: Poll interval at which the position is read from the counter
-> > +      device (default 500ms).
->
-> It should have a type too, and a default property
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - counter
-> > +  - qdec-mode
-> > +
-> > +examples:
-> > +  - |
-> > +    rotary@0 {
-> > +        compatible = "rotary-encoder-counter";
->
-> A unit-address (the part after @) only makes sense for a node if
-> there's a matching reg property in the node. This will trigger a DTC
-> warning, so you should remove the @0
->
-
-Ok I'll fix it then.
-
-Thanks again.
-
-> Maxime
-
-
-
---
-Kamel Bouhara, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
