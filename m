@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5737C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8005C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA47207FF
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7318D2082D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217709;
-	bh=Cu0bIJ+vz5khx9IVzUJPi8H2/VKCJ3eiUPqW2uMzAk8=;
+	s=default; t=1586217711;
+	bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xMa+8tVR5UWMqYoor3f5rZWNobJRz+zTyOMZJq2F2ifXhSK+crArvT59dUGjynR4E
-	 UTE7ItH/fOaXi10SVJKU1klJlqbPwLFb2rxaDN3Q+t8YT1F9Fs0Wq+6vjUzcTaf6+0
-	 ab90Nmqknx2b7Fs9D5K435MRIPjt14Ovcw67YQqE=
+	b=MGEsMT5KfQRQXPRFvELi7msYPpTnqSWk0rKzuwBrik5f5/LE4fVNRI5rYszx3MRf+
+	 4J93XTmkNULhOiEcJc+9gK5x1m211MM2E11GrsNWSw6N18A7E8DXfzK/NCdbG7h3vX
+	 NEyxFjgNyJ5wAEOZfxBBbZWXqMfToePBRQqu3gE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgDGABs (ORCPT
+        id S1727505AbgDGABq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:01:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:01:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbgDGABn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:43 -0400
+        id S1726965AbgDGABk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2808B208E4;
-        Tue,  7 Apr 2020 00:01:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14862082D;
+        Tue,  7 Apr 2020 00:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217702;
-        bh=Cu0bIJ+vz5khx9IVzUJPi8H2/VKCJ3eiUPqW2uMzAk8=;
+        s=default; t=1586217700;
+        bh=T/a03JFRVwZf26cJQ8+4XA7GcZj1JeU8Ggit0HX5RJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/NUX8p/xVlJgOX5TJ11GGyc5BoCrNq9dxdwZ1UClrUlJtEqrrM+0DOs7RhR6aV8w
-         KZThioS5YFOmLTykLbDOuGyyuy/h5g+rQ/EaMOQrppganuTCBsU0Tn3GPMj2gw1iqM
-         Oei5qpJxE3FYZ2DBIIK4Crm+OxU8hEoqwCPHQE0c=
+        b=N5v7e8Sc4OtOIdSq3r/6kL5UlV7YLVpgjrFbz8ZlYrKA02SWlTIven8+JxA3U98uq
+         wbIgpQ6utsbYCVEY+UwcbpDSoTJ+f6iYXqvw4Q1Hn7Ma26sgr5+hGspXm2s8nX1e1i
+         5miGhaC8GQfC+spiNOz+N8N1S3YD7YA/DaL8R2nw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 35/35] i2c: pca-platform: Use platform_irq_get_optional
-Date:   Mon,  6 Apr 2020 20:00:57 -0400
-Message-Id: <20200407000058.16423-35-sashal@kernel.org>
+Cc:     Xu Wang <vulab@iscas.ac.cn>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 33/35] qlcnic: Fix bad kzalloc null test
+Date:   Mon,  6 Apr 2020 20:00:55 -0400
+Message-Id: <20200407000058.16423-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
 References: <20200407000058.16423-1-sashal@kernel.org>
@@ -59,35 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Xu Wang <vulab@iscas.ac.cn>
 
-[ Upstream commit 14c1fe699cad9cb0acda4559c584f136d18fea50 ]
+[ Upstream commit bcaeb886ade124331a6f3a5cef34a3f1484c0a03 ]
 
-The interrupt is not required so use platform_irq_get_optional() to
-avoid error messages like
+In qlcnic_83xx_get_reset_instruction_template, the variable
+of null test is bad, so correct it.
 
-  i2c-pca-platform 22080000.i2c: IRQ index 0 not found
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-pca-platform.c | 2 +-
+ drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-pca-platform.c b/drivers/i2c/busses/i2c-pca-platform.c
-index a7a81846d5b1d..635dd697ac0bb 100644
---- a/drivers/i2c/busses/i2c-pca-platform.c
-+++ b/drivers/i2c/busses/i2c-pca-platform.c
-@@ -140,7 +140,7 @@ static int i2c_pca_pf_probe(struct platform_device *pdev)
- 	int ret = 0;
- 	int irq;
+diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+index 07f9067affc65..cda5b0a9e9489 100644
+--- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
++++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_83xx_init.c
+@@ -1720,7 +1720,7 @@ static int qlcnic_83xx_get_reset_instruction_template(struct qlcnic_adapter *p_d
  
--	irq = platform_get_irq(pdev, 0);
-+	irq = platform_get_irq_optional(pdev, 0);
- 	/* If irq is 0, we do polling. */
- 	if (irq < 0)
- 		irq = 0;
+ 	ahw->reset.seq_error = 0;
+ 	ahw->reset.buff = kzalloc(QLC_83XX_RESTART_TEMPLATE_SIZE, GFP_KERNEL);
+-	if (p_dev->ahw->reset.buff == NULL)
++	if (ahw->reset.buff == NULL)
+ 		return -ENOMEM;
+ 
+ 	p_buff = p_dev->ahw->reset.buff;
 -- 
 2.20.1
 
