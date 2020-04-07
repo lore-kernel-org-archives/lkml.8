@@ -2,260 +2,329 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9464C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ADDC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A156F2075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03D92075E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="ktzGasxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbgDGTVs (ORCPT
+        id S1726795AbgDGTYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:21:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47692 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726921AbgDGTUe (ORCPT
+        Tue, 7 Apr 2020 15:24:47 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46999 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgDGTYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:20:34 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037J3L9F129785;
-        Tue, 7 Apr 2020 15:20:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3082hyk5w6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 15:20:32 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 037J3N6S129912;
-        Tue, 7 Apr 2020 15:20:32 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3082hyk5vy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 15:20:32 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 037JKC3h013711;
-        Tue, 7 Apr 2020 19:20:31 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04wdc.us.ibm.com with ESMTP id 306hv6afgb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Apr 2020 19:20:31 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037JKUrS41157052
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 19:20:30 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11F6628060;
-        Tue,  7 Apr 2020 19:20:30 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51E8D28068;
-        Tue,  7 Apr 2020 19:20:29 +0000 (GMT)
-Received: from cpe-172-100-173-215.stny.res.rr.com.com (unknown [9.85.207.206])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Apr 2020 19:20:29 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com,
-        Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: [PATCH v7 02/15] s390/vfio-ap: manage link between queue struct and matrix mdev
-Date:   Tue,  7 Apr 2020 15:20:02 -0400
-Message-Id: <20200407192015.19887-3-akrowiak@linux.ibm.com>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        Tue, 7 Apr 2020 15:24:46 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m19so1266796lfq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 12:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=1eDwHIuq864sfvk+gP24RdI6jUztDsucRBJ8sfkpCII=;
+        b=ktzGasxQeSW/PHxPnigEXF3npmaDvApLOzOHzdjFsmue07lh1FmJYORNhcEh3TEzDz
+         jnXIz44sRKL3DcYX9HXHLHcEOmJ2UzBrpYvTbDldu7QQV9XSs+YEXrepKjrUt3TaAaNw
+         5+kBU6KMaUelJSubRfOlEQ+75yD2IbP6lKXxA2aZmHLYx45dCd6C7lC88kGNzADqS2jC
+         0QLX5EneKwWIvX9BzL5F+AaDhTi77jL43abjFp/9sP6a9TSx4m0PUC2/IdGkKGL/BYXG
+         +c/uOcJs5iS9LRbjzy/YMiBCHE425cl5gkGWXnq5nT48wxcp8TvRqm4y97fsCaUGzM75
+         v9qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1eDwHIuq864sfvk+gP24RdI6jUztDsucRBJ8sfkpCII=;
+        b=rz4aZpo39JOaFJmo73fYA32hf8vAyqN3Owb//IKSgo6eWl4w2AlnvLhocnJuTHp/5h
+         eWlUf0hk9qR97IR1lSPqJZ7ZpoYkltEfUx926Q+xKODDLRXJX7vS6PWRl+JZKJFFWCyW
+         XEiK5jupym+mTqgVmL4K60Pt4NcKGSfV80gb3UgF0ybDryMgAOlIXUK16Wb2kjPI9crt
+         hAMyHUys9F/LPrfaNf/dGfOFmk2ONbhLIhGlmD4kwW1UYpgUYZOwQhFMRodCPsa5pikP
+         CSLsXNlqEDlVW/31d0XjmHPaQaSqsmvg337AQMn9MpSVcvQhQtRm89Mc3bQ8OfACsY6k
+         TDvg==
+X-Gm-Message-State: AGi0PuZgG6PBCfXHEuAsx66ikCEkWhSXyIvJEYAy49aAGk/cFqd594qV
+        xGu4es1kNBquB7PkhUQTBu5Uig==
+X-Google-Smtp-Source: APiQypKGo8qvUpgS5S2IV9L70zANZNOeHFLm2uYoQAsWK1C+HW3ZSuQxX4mY70Nru0p74FO+8kdiPw==
+X-Received: by 2002:ac2:4295:: with SMTP id m21mr2453258lfh.132.1586287482458;
+        Tue, 07 Apr 2020 12:24:42 -0700 (PDT)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id w24sm12145002ljh.57.2020.04.07.12.24.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 12:24:41 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 21:24:41 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        hans.verkuil@cisco.com, skhan@linuxfoundation.org,
+        mchehab@kernel.org
+Subject: Re: [PATCH v2 1/3] media: v4l2-common: add helper functions to call
+ s_stream() callbacks
+Message-ID: <20200407192441.GE1716317@oden.dyn.berto.se>
+References: <20200403213312.1863876-1-helen.koike@collabora.com>
+ <20200403213312.1863876-2-helen.koike@collabora.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_08:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 suspectscore=11 mlxlogscore=999
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070151
+In-Reply-To: <20200403213312.1863876-2-helen.koike@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A vfio_ap_queue structure is created for each queue device probed. To
-ensure that the matrix mdev to which a queue's APQN is assigned is linked
-to the queue structure as long as the queue device is bound to the vfio_ap
-device driver, let's go ahead and manage these links when the queue device
-is probed and removed as well as whenever an adapter or domain is assigned
-to or unassigned from the matrix mdev.
+Hi Helen,
 
-Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- drivers/s390/crypto/vfio_ap_ops.c | 75 ++++++++++++++++++++++++++++---
- 1 file changed, 70 insertions(+), 5 deletions(-)
+Thanks for your work.
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 134860934fe7..00699bd72d2b 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -148,7 +148,6 @@ struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
- 		  status.response_code);
- end_free:
- 	vfio_ap_free_aqic_resources(q);
--	q->matrix_mdev = NULL;
- 	return status;
- }
- 
-@@ -250,7 +249,6 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
- 	struct vfio_ap_queue *q;
- 	struct ap_queue_status qstatus = {
- 			       .response_code = AP_RESPONSE_Q_NOT_AVAIL, };
--	struct ap_matrix_mdev *matrix_mdev;
- 
- 	/* If we do not use the AIV facility just go to userland */
- 	if (!(vcpu->arch.sie_block->eca & ECA_AIV))
-@@ -261,14 +259,11 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
- 
- 	if (!vcpu->kvm->arch.crypto.pqap_hook)
- 		goto out_unlock;
--	matrix_mdev = container_of(vcpu->kvm->arch.crypto.pqap_hook,
--				   struct ap_matrix_mdev, pqap_hook);
- 
- 	q = vfio_ap_get_queue(apqn);
- 	if (!q)
- 		goto out_unlock;
- 
--	q->matrix_mdev = matrix_mdev;
- 	status = vcpu->run->s.regs.gprs[1];
- 
- 	/* If IR bit(16) is set we enable the interrupt */
-@@ -536,6 +531,31 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
- 	return 0;
- }
- 
-+/**
-+ * vfio_ap_mdev_qlinks_for_apid
-+ *
-+ * @matrix_mdev: a matrix mediated device
-+ * @apqi:	 the APID of one or more APQNs assigned to @matrix_mdev
-+ *
-+ * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
-+ * device driver with an APQN assigned to @matrix_mdev with the specified @apid.
-+ *
-+ * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
-+ */
-+static void vfio_ap_mdev_qlinks_for_apid(struct ap_matrix_mdev *matrix_mdev,
-+					 unsigned long apid)
-+{
-+	unsigned long apqi;
-+	struct vfio_ap_queue *q;
-+
-+	for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
-+			     matrix_mdev->matrix.aqm_max + 1) {
-+		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
-+		if (q)
-+			q->matrix_mdev = matrix_mdev;
-+	}
-+}
-+
- /**
-  * assign_adapter_store
-  *
-@@ -605,6 +625,7 @@ static ssize_t assign_adapter_store(struct device *dev,
- 	if (ret)
- 		goto share_err;
- 
-+	vfio_ap_mdev_qlinks_for_apid(matrix_mdev, apid);
- 	ret = count;
- 	goto done;
- 
-@@ -656,6 +677,7 @@ static ssize_t unassign_adapter_store(struct device *dev,
- 
- 	mutex_lock(&matrix_dev->lock);
- 	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
-+	vfio_ap_mdev_qlinks_for_apid(NULL, apid);
- 	mutex_unlock(&matrix_dev->lock);
- 
- 	return count;
-@@ -682,6 +704,31 @@ vfio_ap_mdev_verify_queues_reserved_for_apqi(struct ap_matrix_mdev *matrix_mdev,
- 	return 0;
- }
- 
-+/**
-+ * vfio_ap_mdev_qlinks_for_apqi
-+ *
-+ * @matrix_mdev: a matrix mediated device
-+ * @apqi:	 the APQI of one or more APQNs assigned to @matrix_mdev
-+ *
-+ * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
-+ * device driver with an APQN assigned to @matrix_mdev with the specified @apqi.
-+ *
-+ * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
-+ */
-+static void vfio_ap_mdev_qlinks_for_apqi(struct ap_matrix_mdev *matrix_mdev,
-+					 unsigned long apqi)
-+{
-+	unsigned long apid;
-+	struct vfio_ap_queue *q;
-+
-+	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
-+			     matrix_mdev->matrix.apm_max + 1) {
-+		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
-+		if (q)
-+			q->matrix_mdev = matrix_mdev;
-+	}
-+}
-+
- /**
-  * assign_domain_store
-  *
-@@ -746,6 +793,7 @@ static ssize_t assign_domain_store(struct device *dev,
- 	if (ret)
- 		goto share_err;
- 
-+	vfio_ap_mdev_qlinks_for_apqi(matrix_mdev, apqi);
- 	ret = count;
- 	goto done;
- 
-@@ -798,6 +846,7 @@ static ssize_t unassign_domain_store(struct device *dev,
- 
- 	mutex_lock(&matrix_dev->lock);
- 	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
-+	vfio_ap_mdev_qlinks_for_apqi(NULL, apqi);
- 	mutex_unlock(&matrix_dev->lock);
- 
- 	return count;
-@@ -1270,6 +1319,21 @@ void vfio_ap_mdev_unregister(void)
- 	mdev_unregister_device(&matrix_dev->device);
- }
- 
-+static void vfio_ap_mdev_for_queue(struct vfio_ap_queue *q)
-+{
-+	unsigned long apid = AP_QID_CARD(q->apqn);
-+	unsigned long apqi = AP_QID_QUEUE(q->apqn);
-+	struct ap_matrix_mdev *matrix_mdev;
-+
-+	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
-+		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
-+		    test_bit_inv(apqi, matrix_mdev->matrix.aqm)) {
-+			q->matrix_mdev = matrix_mdev;
-+			break;
-+		}
-+	}
-+}
-+
- int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
- {
- 	struct vfio_ap_queue *q;
-@@ -1282,6 +1346,7 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
- 	dev_set_drvdata(&queue->ap_dev.device, q);
- 	q->apqn = queue->qid;
- 	q->saved_isc = VFIO_AP_ISC_INVALID;
-+	vfio_ap_mdev_for_queue(q);
- 	hash_add(matrix_dev->qtable, &q->qnode, q->apqn);
- 	mutex_unlock(&matrix_dev->lock);
- 
+On 2020-04-03 18:33:10 -0300, Helen Koike wrote:
+> Add v4l2_pipeline_stream_{enable,disable} helper functions to iterate
+> through the subdevices in a given stream (i.e following links from sink
+> to source) and call .s_stream() callback.
+> 
+> Add stream_count on the subdevice object for simultaneous streaming from
+> different video devices which shares subdevices.
+> 
+> Prevent calling .s_stream(true) if it was already called previously by
+> another stream.
+> 
+> Prevent calling .s_stream(false) from one stream when there are still
+> others active.
+> 
+> If .s_stream(true) fails, call .s_stream(false) in the reverse order.
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - re-write helpers to not use media walkers
+> 
+>  drivers/media/v4l2-core/v4l2-common.c | 117 ++++++++++++++++++++++++++
+>  include/media/v4l2-common.h           |  28 ++++++
+>  include/media/v4l2-subdev.h           |   2 +
+>  3 files changed, 147 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+> index d0e5ebc736f9f..379d4bf4f8128 100644
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -441,3 +441,120 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
+> +
+> +/*
+> + * v4l2_pipeline_subdevs_get - Assemble a list of subdevices in a pipeline
+> + * @subdevs: the array to be filled
+> + * @size: the array size
+
+Should this be documented as the maximum number of elements that can fit 
+in the subdevs array?
+
+> + *
+> + * Walk from a video node, following link from sink to source and fill the
+> + * array with subdevices in the path.
+> + *
+> + * Note: this function follows the first enabled link in a sink pad found in a
+> + * given entity. Thus it won't work if there are entities with multiple enabled
+> + * links to its sink pads in the topology.
+
+I wonder if it would be more useful to make this function return all 
+subdevs in the pipeline that have an enabled link going from sink to 
+source while walking from the video device?
+
+When reading the commit messages I thought this could be useful for the 
+rcar-vin driver. By not finding all subdevices in the pipeline this 
+would not be possible as there on some platforms are a CSI-2 bus where 
+the CSI-2 transmitter have 4 sink pads and one source pads so the whole 
+pipeline would not be started.
+
+> + *
+> + * Return the number of subdevices filled in the array.
+> + */
+> +static unsigned int v4l2_pipeline_subdevs_get(struct video_device *vdev,
+> +					      struct v4l2_subdev **subdevs,
+> +					      unsigned int size)
+> +{
+> +	struct media_entity *entity = &vdev->entity;
+> +	unsigned int idx = 0;
+> +
+> +	while (1) {
+> +		struct media_pad *src_pad = NULL;
+> +		unsigned int i;
+> +
+> +		/* Find remote source pad */
+> +		for (i = 0; i < entity->num_pads; i++) {
+> +			struct media_pad *sink_pad = &entity->pads[i];
+> +
+> +			if (!(sink_pad->flags & MEDIA_PAD_FL_SINK))
+> +				continue;
+> +
+> +			src_pad = media_entity_remote_pad(sink_pad);
+> +			if (src_pad &&
+> +			    is_media_entity_v4l2_subdev(src_pad->entity))
+> +				break;
+> +		}
+> +		if (i == entity->num_pads)
+> +			break;
+> +
+> +		if (idx >= size) {
+> +			WARN_ON(1);
+> +			return 0;
+
+Would it make sens to have this function return int and a negative error 
+code here? Is this now how other areas of V4L2 deal with when a provided 
+array is too small ? I'm thinking about if this function could be 
+exported for use by drivers in the future.
+
+> +		}
+> +
+> +		entity = src_pad->entity;
+> +		subdevs[idx++] = media_entity_to_v4l2_subdev(entity);
+> +	}
+> +
+> +	return idx;
+> +}
+> +
+> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev)
+> +{
+> +	struct media_device *mdev = vdev->entity.graph_obj.mdev;
+> +	struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
+> +	struct v4l2_subdev *sd;
+> +	unsigned int i, size;
+> +	int ret;
+> +
+> +	mutex_lock(&mdev->graph_mutex);
+> +
+> +	size = v4l2_pipeline_subdevs_get(vdev, subdevs, ARRAY_SIZE(subdevs));
+> +
+> +	for (i = 0; i < size; i++) {
+> +		sd = subdevs[i];
+> +		if (sd->stream_count++)
+> +			continue;
+> +		dev_dbg(mdev->dev,
+> +			"enabling stream for '%s'\n", sd->entity.name);
+
+Small nit, would it make sens to print the sd->stream_count also in this 
+debug statement (and the similar ones bellow) ?
+
+> +		ret = v4l2_subdev_call(sd, video, s_stream, true);
+> +		if (ret && ret != -ENOIOCTLCMD)
+> +			goto err_stream_disable;
+> +	}
+> +
+> +	mutex_unlock(&mdev->graph_mutex);
+> +	return 0;
+> +
+> +err_stream_disable:
+> +	do {
+> +		sd = subdevs[i];
+> +		if (--sd->stream_count)
+> +			continue;
+> +		dev_dbg(mdev->dev,
+> +			"disabling stream for '%s'\n", sd->entity.name);
+> +		v4l2_subdev_call(sd, video, s_stream, false);
+> +	} while (i--);
+> +
+> +	mutex_unlock(&mdev->graph_mutex);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_enable);
+> +
+> +void v4l2_pipeline_stream_disable(struct video_device *vdev)
+> +{
+> +	struct media_device *mdev = vdev->entity.graph_obj.mdev;
+> +	struct v4l2_subdev *subdevs[MEDIA_ENTITY_ENUM_MAX_DEPTH];
+> +	unsigned int size;
+> +
+> +	mutex_lock(&mdev->graph_mutex);
+> +
+> +	size = v4l2_pipeline_subdevs_get(vdev, subdevs, ARRAY_SIZE(subdevs));
+> +
+> +	while (size--) {
+> +		struct v4l2_subdev *sd = subdevs[size];
+> +
+> +		if (--sd->stream_count)
+> +			continue;
+> +		dev_dbg(mdev->dev,
+> +			"disabling stream for '%s'\n", sd->entity.name);
+> +		v4l2_subdev_call(sd, video, s_stream, false);
+> +	}
+> +
+> +	mutex_unlock(&mdev->graph_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_pipeline_stream_disable);
+> diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> index 150ee16ebd811..e833610b0f66d 100644
+> --- a/include/media/v4l2-common.h
+> +++ b/include/media/v4l2-common.h
+> @@ -519,6 +519,34 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
+>  int v4l2_fill_pixfmt_mp(struct v4l2_pix_format_mplane *pixfmt, u32 pixelformat,
+>  			u32 width, u32 height);
+>  
+> +/**
+> + * v4l2_pipeline_stream_enable - Call .s_stream(true) callbacks in the stream
+> + * @vdev: Starting video device
+> + *
+> + * Call .s_stream(true) callback in all the subdevices participating in the
+> + * stream, i.e. following links from sink to source.
+> + *
+> + * Calls to this function can be nested, in which case the same number of
+> + * v4l2_pipeline_stream_disable() calls will be required to stop streaming.
+> + * The  pipeline pointer must be identical for all nested calls to
+> + * v4l2_pipeline_stream_enable().
+> + */
+> +__must_check int v4l2_pipeline_stream_enable(struct video_device *vdev);
+> +
+> +/**
+> + * v4l2_pipeline_stream_disable - Call .s_stream(false) callbacks in the stream
+> + * @vdev: Starting video device
+> + *
+> + * Call .s_stream(true) callback in all the subdevices participating in the
+> + * stream, i.e. following links from sink to source.
+> + *
+> + * Calls to this function can be nested, in which case the same number of
+> + * v4l2_pipeline_stream_disable() calls will be required to stop streaming.
+> + * The  pipeline pointer must be identical for all nested calls to
+> + * v4l2_pipeline_stream_enable().
+> + */
+> +void v4l2_pipeline_stream_disable(struct video_device *vdev);
+> +
+>  static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
+>  {
+>  	/*
+> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> index a4848de598521..20f913a9f70c5 100644
+> --- a/include/media/v4l2-subdev.h
+> +++ b/include/media/v4l2-subdev.h
+> @@ -838,6 +838,7 @@ struct v4l2_subdev_platform_data {
+>   * @subdev_notifier: A sub-device notifier implicitly registered for the sub-
+>   *		     device using v4l2_device_register_sensor_subdev().
+>   * @pdata: common part of subdevice platform data
+> + * @stream_count: Stream count for the subdevice.
+>   *
+>   * Each instance of a subdev driver should create this struct, either
+>   * stand-alone or embedded in a larger struct.
+> @@ -869,6 +870,7 @@ struct v4l2_subdev {
+>  	struct v4l2_async_notifier *notifier;
+>  	struct v4l2_async_notifier *subdev_notifier;
+>  	struct v4l2_subdev_platform_data *pdata;
+> +	unsigned int stream_count;
+>  };
+>  
+>  
+> -- 
+> 2.26.0
+> 
+
 -- 
-2.21.1
-
+Regards,
+Niklas Söderlund
