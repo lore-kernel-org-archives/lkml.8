@@ -2,185 +2,167 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED62C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DDAC2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA042074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586269816;
-	bh=Tx9CueQXpBVTXsQmYUbS+aYZBCgVaoUhPLdZITIsLAA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Jmz/EjhbMk2B4rTkEE2ylRPJudVjea3rwzNIGDVbwWnc9TLOeipbH4NlS3A+kBTG0
-	 z3qPLMpOA6ADxpYU2s16Iv7ehoL4++dakMDOLz5jIm/g4QRFSrXPjArI5b1rn4dP5p
-	 H/k4EPrd7WryOl89TVsd8pff+MAcqnAIKKtFgPQY=
+	by mail.kernel.org (Postfix) with ESMTP id A60F62072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lditmRVv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgDGOaP (ORCPT
+        id S1729204AbgDGOaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:30:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728573AbgDGOaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:30:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 100222072A;
-        Tue,  7 Apr 2020 14:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586269814;
-        bh=Tx9CueQXpBVTXsQmYUbS+aYZBCgVaoUhPLdZITIsLAA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=h74DLMKaidICIDKOCu0tJOcXlVME551nP0fMH7amwcC6aTefy8XacOFS6Zq9ySsKK
-         P1welWyHaE7pxW6f13bqSDZI9v0ytKNjGJragEC/YDE1IxyReH+RBq2OsTN6TNe83m
-         bbQQUJbxJ+9KgD9nUYo5Fh4qOmjYH3csY/QRjZ2c=
-Date:   Tue, 07 Apr 2020 15:30:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mike Willard <mwillard@izotope.com>
-Cc:     alsa-devel@alsa-project.org,
-        Brian Austin <brian.austin@cirrus.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        mwillard@izotope.com, Paul Handrigan <Paul.Handrigan@cirrus.com>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: cs4270: pull reset GPIO low then high" to the asoc tree
-In-Reply-To:  <20200401205454.79792-1-mwillard@izotope.com>
-Message-Id:  <applied-20200401205454.79792-1-mwillard@izotope.com>
-X-Patchwork-Hint: ignore
+        Tue, 7 Apr 2020 10:30:20 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40376 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbgDGOaT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:30:19 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y25so2771046qtv.7;
+        Tue, 07 Apr 2020 07:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wAYrV6F6G+t5gtx1fZuHs6BGJWDWpkiLa+6bzhMBPMw=;
+        b=lditmRVv/LcoROMCq/bKinCSCXK7kSIPrd2WRkQgfMAG5iVrBZ7uZka/PsnKohQP4j
+         5Ig6xbokfQxWbvrqqOP7Fe0/tljFqjZ80Gbua+AN6PMXq9s4R68pYsgeD7r1Fqj3pNs/
+         IsJOdPJ5t4WGOqRjC0s5L83yp/k8PHgJatpA0ED1TX7i2eDBvs0ELJvtm9oE+S+iWZcJ
+         bcp4PUVjR/UGlyu0CDmP1DmVV6MGtCGjLpoDfAMr7gwkoH0eoRQKU/i8LwAwcoASeSjp
+         Ylh8TlsWTOmutTIIZ3KXodzQRUC7kb6ikoJSb/vTaeiBtaot8jodWWYa5xiD4kkggAO8
+         O9Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wAYrV6F6G+t5gtx1fZuHs6BGJWDWpkiLa+6bzhMBPMw=;
+        b=klGKSMdb9pok0vM8+5rEtqTOiArlmHLU+Kve4ocDwdG09FbTaV7Mc27+IeZ9ThwIwX
+         Nvqg6CBbr5FvWTQnJAJjfdq3BHO9i31dfUXKsODLOnWIARszw/rWqCW7xEVAC90C+/OV
+         z5XC40CKpbJZDBKWGkOmSVGzIPIrQHNtpvtelFCtQLofvGzGdY27NEzNTEY2Uf26eJhD
+         XjzFR7dv7MWH/MV/il/gUAU4ObyVS4RE6Ig5+fs3J6GQup3JobAkmZupi0FrZ+F3U1f4
+         99oX+pjSvCJOg8XuVxWJST7fUdtgObX/x1KPdHLEG8p6mElOM107gPlG/CQQ5F8mjWUC
+         HLjQ==
+X-Gm-Message-State: AGi0PuZT3gcd9jkFlExgCvwNttPLoWgCnQuz3z/9ObHy1r1/G6rBhkMM
+        0LDYsa0DQ3YNpp443PnEL8M=
+X-Google-Smtp-Source: APiQypIGrLW0bPlJckdtYiMlXs17H02JiQkfUDEoX+VYMNZN6nQVg3T1qcLOBfWIiE8HKabTPloJSQ==
+X-Received: by 2002:aed:29e1:: with SMTP id o88mr2530139qtd.251.1586269817494;
+        Tue, 07 Apr 2020 07:30:17 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id w30sm17976587qtw.21.2020.04.07.07.30.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 07:30:16 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 67DAA409A3; Tue,  7 Apr 2020 11:30:14 -0300 (-03)
+Date:   Tue, 7 Apr 2020 11:30:14 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        linux-man@vger.kernel.org
+Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
+ performance monitoring and observability
+Message-ID: <20200407143014.GD11186@kernel.org>
+References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Em Thu, Apr 02, 2020 at 11:42:05AM +0300, Alexey Budankov escreveu:
+> This patch set introduces CAP_PERFMON capability designed to secure
+> system performance monitoring and observability operations so that
+> CAP_PERFMON would assist CAP_SYS_ADMIN capability in its governing role
+> for performance monitoring and observability subsystems of the kernel.
 
-   ASoC: cs4270: pull reset GPIO low then high
+So, what am I doing wrong?
 
-has been applied to the asoc tree at
+[perf@five ~]$ type perf
+perf is hashed (/home/perf/bin/perf)
+[perf@five ~]$
+[perf@five ~]$ ls -lahF /home/perf/bin/perf
+-rwxr-x---. 1 root perf_users 24M Apr  7 10:34 /home/perf/bin/perf*
+[perf@five ~]$
+[perf@five ~]$ getcap /home/perf/bin/perf
+[perf@five ~]$ perf top --stdio
+Error:
+You may not have permission to collect system-wide stats.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Consider tweaking /proc/sys/kernel/perf_event_paranoid,
+which controls use of the performance events system by
+unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+The current value is 2:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+  -1: Allow use of (almost) all events by all users
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+>= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN
+      Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN
+>= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN
+>= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+To make this setting permanent, edit /etc/sysctl.conf too, e.g.:
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+	kernel.perf_event_paranoid = -1
 
-Thanks,
-Mark
+[perf@five ~]$
 
-From ccfc531695f3a4aada042f6bdb33ac6be24e1aec Mon Sep 17 00:00:00 2001
-From: Mike Willard <mwillard@izotope.com>
-Date: Wed, 1 Apr 2020 20:54:54 +0000
-Subject: [PATCH] ASoC: cs4270: pull reset GPIO low then high
+Ok, the message says I  need to have CAP_PERFMON, lets do it, using an
+unpatched libcap that doesn't know about it but we can use 38,
+CAP_PERFMON value instead, and I tested this with a patched libcap as
+well, same results:
 
-Pull the RST line low then high when initializing the driver,
-in order to force a reset of the chip.
-Previously, the line was not pulled low, which could result in
-the chip registers not resetting to their default values on boot.
+As root:
 
-Signed-off-by: Mike Willard <mwillard@izotope.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200401205454.79792-1-mwillard@izotope.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/cs4270.c | 40 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 35 insertions(+), 5 deletions(-)
+[root@five bin]# setcap "38,cap_sys_ptrace,cap_syslog=ep" perf
+[root@five bin]#
 
-diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
-index 5f25b9f872bd..8a02791e44ad 100644
---- a/sound/soc/codecs/cs4270.c
-+++ b/sound/soc/codecs/cs4270.c
-@@ -137,6 +137,9 @@ struct cs4270_private {
- 
- 	/* power domain regulators */
- 	struct regulator_bulk_data supplies[ARRAY_SIZE(supply_names)];
-+
-+	/* reset gpio */
-+	struct gpio_desc *reset_gpio;
- };
- 
- static const struct snd_soc_dapm_widget cs4270_dapm_widgets[] = {
-@@ -648,6 +651,22 @@ static const struct regmap_config cs4270_regmap = {
- 	.volatile_reg =		cs4270_reg_is_volatile,
- };
- 
-+/**
-+ * cs4270_i2c_remove - deinitialize the I2C interface of the CS4270
-+ * @i2c_client: the I2C client object
-+ *
-+ * This function puts the chip into low power mode when the i2c device
-+ * is removed.
-+ */
-+static int cs4270_i2c_remove(struct i2c_client *i2c_client)
-+{
-+	struct cs4270_private *cs4270 = i2c_get_clientdata(i2c_client);
-+
-+	gpiod_set_value_cansleep(cs4270->reset_gpio, 0);
-+
-+	return 0;
-+}
-+
- /**
-  * cs4270_i2c_probe - initialize the I2C interface of the CS4270
-  * @i2c_client: the I2C client object
-@@ -660,7 +679,6 @@ static int cs4270_i2c_probe(struct i2c_client *i2c_client,
- 	const struct i2c_device_id *id)
- {
- 	struct cs4270_private *cs4270;
--	struct gpio_desc *reset_gpiod;
- 	unsigned int val;
- 	int ret, i;
- 
-@@ -679,10 +697,21 @@ static int cs4270_i2c_probe(struct i2c_client *i2c_client,
- 	if (ret < 0)
- 		return ret;
- 
--	reset_gpiod = devm_gpiod_get_optional(&i2c_client->dev, "reset",
--					      GPIOD_OUT_HIGH);
--	if (PTR_ERR(reset_gpiod) == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
-+	/* reset the device */
-+	cs4270->reset_gpio = devm_gpiod_get_optional(&i2c_client->dev, "reset",
-+						     GPIOD_OUT_LOW);
-+	if (IS_ERR(cs4270->reset_gpio)) {
-+		dev_dbg(&i2c_client->dev, "Error getting CS4270 reset GPIO\n");
-+		return PTR_ERR(cs4270->reset_gpio);
-+	}
-+
-+	if (cs4270->reset_gpio) {
-+		dev_dbg(&i2c_client->dev, "Found reset GPIO\n");
-+		gpiod_set_value_cansleep(cs4270->reset_gpio, 1);
-+	}
-+
-+	/* Sleep 500ns before i2c communications */
-+	ndelay(500);
- 
- 	cs4270->regmap = devm_regmap_init_i2c(i2c_client, &cs4270_regmap);
- 	if (IS_ERR(cs4270->regmap))
-@@ -735,6 +764,7 @@ static struct i2c_driver cs4270_i2c_driver = {
- 	},
- 	.id_table = cs4270_id,
- 	.probe = cs4270_i2c_probe,
-+	.remove = cs4270_i2c_remove,
- };
- 
- module_i2c_driver(cs4270_i2c_driver);
--- 
-2.20.1
+Back to the 'perf' user in the 'perf_users' group, ok, so now 'perf
+record -a' works for system wide sampling of cycles:u, i.e. only
+userspace samples, but 'perf top' is failing:
 
+[perf@five ~]$ type perf
+perf is hashed (/home/perf/bin/perf)
+[perf@five ~]$ getcap /home/perf/bin/perf
+/home/perf/bin/perf = cap_sys_ptrace,cap_syslog,38+ep
+[perf@five ~]$ groups
+perf perf_users
+[perf@five ~]$ id
+uid=1002(perf) gid=1002(perf) groups=1002(perf),1003(perf_users) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+[perf@five ~]$ perf top --stdio
+Error:
+Failed to mmap with 1 (Operation not permitted)
+[perf@five ~]$ perf record -a
+^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 1.177 MB perf.data (1552 samples) ]
+
+[perf@five ~]$ perf evlist
+cycles:u
+[perf@five ~]$
+
+- Arnaldo
