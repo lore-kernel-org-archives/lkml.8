@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B35C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C50C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568402080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4311320768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217955;
-	bh=MQo4JrUK0tCJzj0nCxLS7KvVp9c85pC9+ZbJrm18i48=;
+	s=default; t=1586217969;
+	bh=zb7CPgpDosGnXvuzcznJMfLK+4GbFLZXEzAV3QlAoH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N78vlOFfdMpChFwR7VDjcOfByZQ9sz8z3bkUexhjRsVTbhzE0RiRrA0iE1KHZL24i
-	 mlS002PZLhVFVLZ5ahoHF/5O66VM2lbbPohkWU8Gkki/qeX2Zu1rQa/M5pqxpRkiRM
-	 E/4jumIEoyyGEphziruml+VYcGjh7FA/djUUUgls=
+	b=L8djilvTzxlhyEBlF0aIM9RUm0yvJAPHF+6DuWjyspg1dsmWEQr/kDNPJDb6N6Jni
+	 xGE5mt4BEeMsKn2XPv+QzXexMdQ5va2pExJVzx9XhLxNQ7cuidrSTvwPnyf/A++6C2
+	 XwiXuYMc6+IFHpe6JjpJcr+7LIet8I6kB8oejKYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgDGAFx (ORCPT
+        id S1726428AbgDGAGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:05:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:06:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgDGACZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:25 -0400
+        id S1727994AbgDGACV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9054C20768;
-        Tue,  7 Apr 2020 00:02:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C89F32078A;
+        Tue,  7 Apr 2020 00:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217744;
-        bh=MQo4JrUK0tCJzj0nCxLS7KvVp9c85pC9+ZbJrm18i48=;
+        s=default; t=1586217740;
+        bh=zb7CPgpDosGnXvuzcznJMfLK+4GbFLZXEzAV3QlAoH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dre4ApjefO9nU33iwFyjLXyCvWQIZXGS/rqZvwzkx9b332X3LVK3k4VLFeKtBNFBi
-         lTKFatZ8bU8sGzN3BIgEHjU+z7HP+7EIZ0pUvX1SOwcvRCoS2xXk9Rx2lPMt04KJcU
-         Z5BuGR1SeEZHtO23jsIop8Ga1LKi1ELhCihVb1O8=
+        b=J5QrcfRKR1SPbWs/i21DIig0zuj2GA8znuKFIgGkK8BQ2iSUoY5JJxSyHTGSPqBhK
+         CtVd1yGL/QKduvKW9RKBn2fHV6Pp06oIvOwcJKC0veGVJXkRNTihg+BqgD5Ow1dklm
+         fmRRcIiahLxqRuy+VNpa8jTtSZcs3qfaPKHbjSwY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Brivio <sbrivio@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 26/32] netfilter: nft_set_rbtree: Detect partial overlaps on insertion
-Date:   Mon,  6 Apr 2020 20:01:44 -0400
-Message-Id: <20200407000151.16768-26-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 23/32] IB/hfi1: Ensure pq is not left on waitlist
+Date:   Mon,  6 Apr 2020 20:01:41 -0400
+Message-Id: <20200407000151.16768-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
 References: <20200407000151.16768-1-sashal@kernel.org>
@@ -61,151 +61,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit 7c84d41416d836ef7e533bd4d64ccbdf40c5ac70 ]
+[ Upstream commit 9a293d1e21a6461a11b4217b155bf445e57f4131 ]
 
-...and return -ENOTEMPTY to the front-end in this case, instead of
-proceeding. Currently, nft takes care of checking for these cases
-and not sending them to the kernel, but if we drop the set_overlap()
-call in nft we can end up in situations like:
+The following warning can occur when a pq is left on the dmawait list and
+the pq is then freed:
 
- # nft add table t
- # nft add set t s '{ type inet_service ; flags interval ; }'
- # nft add element t s '{ 1 - 5 }'
- # nft add element t s '{ 6 - 10 }'
- # nft add element t s '{ 4 - 7 }'
- # nft list set t s
- table ip t {
- 	set s {
- 		type inet_service
- 		flags interval
- 		elements = { 1-3, 4-5, 6-7 }
- 	}
- }
+  WARNING: CPU: 47 PID: 3546 at lib/list_debug.c:29 __list_add+0x65/0xc0
+  list_add corruption. next->prev should be prev (ffff939228da1880), but was ffff939cabb52230. (next=ffff939cabb52230).
+  Modules linked in: mmfs26(OE) mmfslinux(OE) tracedev(OE) 8021q garp mrp ib_isert iscsi_target_mod target_core_mod crc_t10dif crct10dif_generic opa_vnic rpcrdma ib_iser libiscsi scsi_transport_iscsi ib_ipoib(OE) bridge stp llc iTCO_wdt iTCO_vendor_support intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass crct10dif_pclmul crct10dif_common crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd ast ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm pcspkr joydev drm_panel_orientation_quirks i2c_i801 mei_me lpc_ich mei wmi ipmi_si ipmi_devintf ipmi_msghandler nfit libnvdimm acpi_power_meter acpi_pad hfi1(OE) rdmavt(OE) rdma_ucm ib_ucm ib_uverbs ib_umad rdma_cm ib_cm iw_cm ib_core binfmt_misc numatools(OE) xpmem(OE) ip_tables
+  nfsv3 nfs_acl nfs lockd grace sunrpc fscache igb ahci libahci i2c_algo_bit dca libata ptp pps_core crc32c_intel [last unloaded: i2c_algo_bit]
+  CPU: 47 PID: 3546 Comm: wrf.exe Kdump: loaded Tainted: G W OE ------------ 3.10.0-957.41.1.el7.x86_64 #1
+  Hardware name: HPE.COM HPE SGI 8600-XA730i Gen10/X11DPT-SB-SG007, BIOS SBED1229 01/22/2019
+  Call Trace:
+  [<ffffffff91f65ac0>] dump_stack+0x19/0x1b
+  [<ffffffff91898b78>] __warn+0xd8/0x100
+  [<ffffffff91898bff>] warn_slowpath_fmt+0x5f/0x80
+  [<ffffffff91a1dabe>] ? ___slab_alloc+0x24e/0x4f0
+  [<ffffffff91b97025>] __list_add+0x65/0xc0
+  [<ffffffffc03926a5>] defer_packet_queue+0x145/0x1a0 [hfi1]
+  [<ffffffffc0372987>] sdma_check_progress+0x67/0xa0 [hfi1]
+  [<ffffffffc03779d2>] sdma_send_txlist+0x432/0x550 [hfi1]
+  [<ffffffff91a20009>] ? kmem_cache_alloc+0x179/0x1f0
+  [<ffffffffc0392973>] ? user_sdma_send_pkts+0xc3/0x1990 [hfi1]
+  [<ffffffffc0393e3a>] user_sdma_send_pkts+0x158a/0x1990 [hfi1]
+  [<ffffffff918ab65e>] ? try_to_del_timer_sync+0x5e/0x90
+  [<ffffffff91a3fe1a>] ? __check_object_size+0x1ca/0x250
+  [<ffffffffc0395546>] hfi1_user_sdma_process_request+0xd66/0x1280 [hfi1]
+  [<ffffffffc034e0da>] hfi1_aio_write+0xca/0x120 [hfi1]
+  [<ffffffff91a4245b>] do_sync_readv_writev+0x7b/0xd0
+  [<ffffffff91a4409e>] do_readv_writev+0xce/0x260
+  [<ffffffff918df69f>] ? pick_next_task_fair+0x5f/0x1b0
+  [<ffffffff918db535>] ? sched_clock_cpu+0x85/0xc0
+  [<ffffffff91f6b16a>] ? __schedule+0x13a/0x860
+  [<ffffffff91a442c5>] vfs_writev+0x35/0x60
+  [<ffffffff91a4447f>] SyS_writev+0x7f/0x110
+  [<ffffffff91f78ddb>] system_call_fastpath+0x22/0x27
 
-This change has the primary purpose of making the behaviour
-consistent with nft_set_pipapo, but is also functional to avoid
-inconsistent behaviour if userspace sends overlapping elements for
-any reason.
+The issue happens when wait_event_interruptible_timeout() returns a value
+<= 0.
 
-v2: When we meet the same key data in the tree, as start element while
-    inserting an end element, or as end element while inserting a start
-    element, actually check that the existing element is active, before
-    resetting the overlap flag (Pablo Neira Ayuso)
+In that case, the pq is left on the list. The code continues sending
+packets and potentially can complete the current request with the pq still
+on the dmawait list provided no descriptor shortage is seen.
 
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+If the pq is torn down in that state, the sdma interrupt handler could
+find the now freed pq on the list with list corruption or memory
+corruption resulting.
+
+Fix by adding a flush routine to ensure that the pq is never on a list
+after processing a request.
+
+A follow-up patch series will address issues with seqlock surfaced in:
+https://lore.kernel.org/r/20200320003129.GP20941@ziepe.ca
+
+The seqlock use for sdma will then be converted to a spin lock since the
+list_empty() doesn't need the protection afforded by the sequence lock
+currently in use.
+
+Fixes: a0d406934a46 ("staging/rdma/hfi1: Add page lock limit check for SDMA requests")
+Link: https://lore.kernel.org/r/20200320200200.23203.37777.stgit@awfm-01.aw.intel.com
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 70 ++++++++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/hfi1/user_sdma.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index 95fcba34bfd35..996fd9dc6160c 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -213,8 +213,43 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
- 	u8 genmask = nft_genmask_next(net);
- 	struct nft_rbtree_elem *rbe;
- 	struct rb_node *parent, **p;
-+	bool overlap = false;
- 	int d;
+diff --git a/drivers/infiniband/hw/hfi1/user_sdma.c b/drivers/infiniband/hw/hfi1/user_sdma.c
+index c2f0d9ba93de1..13e4203497b33 100644
+--- a/drivers/infiniband/hw/hfi1/user_sdma.c
++++ b/drivers/infiniband/hw/hfi1/user_sdma.c
+@@ -141,6 +141,7 @@ static int defer_packet_queue(
+ 	 */
+ 	xchg(&pq->state, SDMA_PKT_Q_DEFERRED);
+ 	if (list_empty(&pq->busy.list)) {
++		pq->busy.lock = &sde->waitlock;
+ 		iowait_get_priority(&pq->busy);
+ 		iowait_queue(pkts_sent, &pq->busy, &sde->dmawait);
+ 	}
+@@ -155,6 +156,7 @@ static void activate_packet_queue(struct iowait *wait, int reason)
+ {
+ 	struct hfi1_user_sdma_pkt_q *pq =
+ 		container_of(wait, struct hfi1_user_sdma_pkt_q, busy);
++	pq->busy.lock = NULL;
+ 	xchg(&pq->state, SDMA_PKT_Q_ACTIVE);
+ 	wake_up(&wait->wait_dma);
+ };
+@@ -256,6 +258,21 @@ int hfi1_user_sdma_alloc_queues(struct hfi1_ctxtdata *uctxt,
+ 	return ret;
+ }
  
-+	/* Detect overlaps as we descend the tree. Set the flag in these cases:
-+	 *
-+	 * a1. |__ _ _?  >|__ _ _  (insert start after existing start)
-+	 * a2. _ _ __>|  ?_ _ __|  (insert end before existing end)
-+	 * a3. _ _ ___|  ?_ _ _>|  (insert end after existing end)
-+	 * a4. >|__ _ _   _ _ __|  (insert start before existing end)
-+	 *
-+	 * and clear it later on, as we eventually reach the points indicated by
-+	 * '?' above, in the cases described below. We'll always meet these
-+	 * later, locally, due to tree ordering, and overlaps for the intervals
-+	 * that are the closest together are always evaluated last.
-+	 *
-+	 * b1. |__ _ _!  >|__ _ _  (insert start after existing end)
-+	 * b2. _ _ __>|  !_ _ __|  (insert end before existing start)
-+	 * b3. !_____>|            (insert end after existing start)
-+	 *
-+	 * Case a4. resolves to b1.:
-+	 * - if the inserted start element is the leftmost, because the '0'
-+	 *   element in the tree serves as end element
-+	 * - otherwise, if an existing end is found. Note that end elements are
-+	 *   always inserted after corresponding start elements.
-+	 *
-+	 * For a new, rightmost pair of elements, we'll hit cases b1. and b3.,
-+	 * in that order.
-+	 *
-+	 * The flag is also cleared in two special cases:
-+	 *
-+	 * b4. |__ _ _!|<_ _ _   (insert start right before existing end)
-+	 * b5. |__ _ >|!__ _ _   (insert end right after existing start)
-+	 *
-+	 * which always happen as last step and imply that no further
-+	 * overlapping is possible.
-+	 */
++static void flush_pq_iowait(struct hfi1_user_sdma_pkt_q *pq)
++{
++	unsigned long flags;
++	seqlock_t *lock = pq->busy.lock;
 +
- 	parent = NULL;
- 	p = &priv->root.rb_node;
- 	while (*p != NULL) {
-@@ -223,17 +258,42 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
- 		d = memcmp(nft_set_ext_key(&rbe->ext),
- 			   nft_set_ext_key(&new->ext),
- 			   set->klen);
--		if (d < 0)
-+		if (d < 0) {
- 			p = &parent->rb_left;
--		else if (d > 0)
++	if (!lock)
++		return;
++	write_seqlock_irqsave(lock, flags);
++	if (!list_empty(&pq->busy.list)) {
++		list_del_init(&pq->busy.list);
++		pq->busy.lock = NULL;
++	}
++	write_sequnlock_irqrestore(lock, flags);
++}
 +
-+			if (nft_rbtree_interval_start(new)) {
-+				overlap = nft_rbtree_interval_start(rbe) &&
-+					  nft_set_elem_active(&rbe->ext,
-+							      genmask);
-+			} else {
-+				overlap = nft_rbtree_interval_end(rbe) &&
-+					  nft_set_elem_active(&rbe->ext,
-+							      genmask);
-+			}
-+		} else if (d > 0) {
- 			p = &parent->rb_right;
--		else {
-+
-+			if (nft_rbtree_interval_end(new)) {
-+				overlap = nft_rbtree_interval_end(rbe) &&
-+					  nft_set_elem_active(&rbe->ext,
-+							      genmask);
-+			} else if (nft_rbtree_interval_end(rbe) &&
-+				   nft_set_elem_active(&rbe->ext, genmask)) {
-+				overlap = true;
-+			}
-+		} else {
- 			if (nft_rbtree_interval_end(rbe) &&
- 			    nft_rbtree_interval_start(new)) {
- 				p = &parent->rb_left;
-+
-+				if (nft_set_elem_active(&rbe->ext, genmask))
-+					overlap = false;
- 			} else if (nft_rbtree_interval_start(rbe) &&
- 				   nft_rbtree_interval_end(new)) {
- 				p = &parent->rb_right;
-+
-+				if (nft_set_elem_active(&rbe->ext, genmask))
-+					overlap = false;
- 			} else if (nft_set_elem_active(&rbe->ext, genmask)) {
- 				*ext = &rbe->ext;
- 				return -EEXIST;
-@@ -242,6 +302,10 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
- 			}
+ int hfi1_user_sdma_free_queues(struct hfi1_filedata *fd,
+ 			       struct hfi1_ctxtdata *uctxt)
+ {
+@@ -281,6 +298,7 @@ int hfi1_user_sdma_free_queues(struct hfi1_filedata *fd,
+ 		kfree(pq->reqs);
+ 		kfree(pq->req_in_use);
+ 		kmem_cache_destroy(pq->txreq_cache);
++		flush_pq_iowait(pq);
+ 		kfree(pq);
+ 	} else {
+ 		spin_unlock(&fd->pq_rcu_lock);
+@@ -587,11 +605,12 @@ int hfi1_user_sdma_process_request(struct hfi1_filedata *fd,
+ 		if (ret < 0) {
+ 			if (ret != -EBUSY)
+ 				goto free_req;
+-			wait_event_interruptible_timeout(
++			if (wait_event_interruptible_timeout(
+ 				pq->busy.wait_dma,
+-				(pq->state == SDMA_PKT_Q_ACTIVE),
++				pq->state == SDMA_PKT_Q_ACTIVE,
+ 				msecs_to_jiffies(
+-					SDMA_IOWAIT_TIMEOUT));
++					SDMA_IOWAIT_TIMEOUT)) <= 0)
++				flush_pq_iowait(pq);
  		}
  	}
-+
-+	if (overlap)
-+		return -ENOTEMPTY;
-+
- 	rb_link_node_rcu(&new->node, parent, p);
- 	rb_insert_color(&new->node, &priv->root);
- 	return 0;
+ 	*count += idx;
 -- 
 2.20.1
 
