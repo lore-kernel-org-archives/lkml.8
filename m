@@ -2,134 +2,237 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3DCC2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA195C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479C520644
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55992074F
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 09:42:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lrYNqemH"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="T5/Tfczr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D8wY+GD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgDGJj2 (ORCPT
+        id S1728102AbgDGJmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 05:39:28 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37967 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgDGJj2 (ORCPT
+        Tue, 7 Apr 2020 05:42:04 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:42003 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725883AbgDGJmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 05:39:28 -0400
-Received: by mail-wm1-f67.google.com with SMTP id f20so1091782wmh.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 02:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=9dSzOnMI8C9ai8r9cTrwks+NM0hS9maBvGrhJYbcAfI=;
-        b=lrYNqemHTN4TJkymt2xZMdOeiWnTWzQ0l0Py4J1Je9L7R8uEtWPFdHTIjmuLamTcUw
-         g5apNFVILM3+Kj8o7kv2KLAMi1T5zTnrjttttyfCBl6iPxNisbF5oca6flSXgO1fi8nh
-         IvokwzZmaWm7EuqF2EVAvfYsWmt+NN0g2HahBLHIJF0diCqRG4QkUxK1vRZkVIi/y5Hx
-         W5ovuVbosBb2PGKu5q1Gep4D8cU7s4ITCORfBJExJ9ioV7ewDsUKsDqGkWbap/TQrFYd
-         BUvRnQ+m1pPZB9dBUOwGetD+06KE4sonC/HJ5GUpfwc4nAFT2UaXRO6rpFwb36MQqrv8
-         SKVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=9dSzOnMI8C9ai8r9cTrwks+NM0hS9maBvGrhJYbcAfI=;
-        b=G7840VsFWbZAlrxGprAH0naqeAnYyggKwIto9CToy6BfYAWYAQisSkixZBa5M1QKds
-         Sg0q9u9GBHv5CEEO+kCojmMp8+dd/nOsOpI0+a6vh/0dfOlPVED6fvxvPttrIG+6Ifz0
-         MbP1HMTtS/E549ga9TFwhqDaiDaIsMP9ddUwMuisGpjaDBOXYC1PGjDx1Zpzw9Vw6xeC
-         168uSJVDx9qv6CZeWoIRZSW4kmMWQiLLBiUjcfDDnMoDtwFMHsi0AMGlMCbvXy19yl9o
-         qpgbtepqAncxeLrP+hIwyy7DKrbo/2CB91Co7dVbni/Gsq/Ib6/8akT0wglRg6YFPpWI
-         I2kQ==
-X-Gm-Message-State: AGi0PuYHtQjXNU6AM1fStfSrfIIJuvorF+SCAzR1XYkvog3RXsU5NWl/
-        0chc7aUXGcMh3mTH0ZdZTU8YshwTg/k=
-X-Google-Smtp-Source: APiQypI7+sMTDw4kc5AsfJb1or2TBmgWZsoPvrHq7SrQwzlBYJp+pG2ZoMzIgETgyyP/x5BR7Bj7xA==
-X-Received: by 2002:a05:600c:a:: with SMTP id g10mr1491339wmc.153.1586252365569;
-        Tue, 07 Apr 2020 02:39:25 -0700 (PDT)
-Received: from dell ([2.31.167.253])
-        by smtp.gmail.com with ESMTPSA id 106sm20276758wrc.46.2020.04.07.02.39.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 02:39:24 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 10:40:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Backlight for v5.7
-Message-ID: <20200407094021.GG30614@dell>
+        Tue, 7 Apr 2020 05:42:04 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 8F18B580432;
+        Tue,  7 Apr 2020 05:42:02 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 07 Apr 2020 05:42:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=CCbcFFDvgPRSxCF+8kZaaLO/1MA
+        76diBRU97kO0B2Q8=; b=T5/TfczrwzeOgw6HFlUxIdyoSA/V0HhD7PYXgy/9TQ4
+        ikbfway1Ve6eAIDB1YpuKG8qj8p0bt3ImtiS5pVw3wXumJRHeiWAuFM+0UCB+KNf
+        jNkB4xLghBQLbrYfXDxqscKi7+Zd5C0e8otfoRQsR9J83FuaTZ51porehp1vuEIx
+        27FTOX4iAFXHwRRQKZFXxlJhg/FVD0RcXh9vmzfub5Yc/D2TLRdWM92xAgXJWFre
+        g5AooSA85ZbUkd3R0yR/wB16lhCJCscJRIUxoos4gqOUk7PFRjpf7A0VAr3/6Jij
+        Vo/9sYx3ICBSkKgA4qG+jSXhS/rz7mt4yoyei538yIg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=CCbcFF
+        DvgPRSxCF+8kZaaLO/1MA76diBRU97kO0B2Q8=; b=D8wY+GD4/i+PHJodUNJO57
+        8imtIXeZcubk9ZyX7MWTkFSIlwKtdy9pezqcnMwb9f+Q/UWIgV8aqvjJ+kkzEv7V
+        /dvqFuDOa3o5Gd1IoLrBvFUBc87+XSIyZAvpthaTuigqpH/wjPLycMqzY1/PmmPZ
+        mnFMDp4yUSc8Ork+6KdpZr8Cj0kOc+b61fFDKWEbAjltSwPU9J4kder4tAu5bO7Q
+        kuIXCEu23UEVOftL2fYnnHEvuPwT2z33SUQuJEjfJ3oZrfGQ6zJpnjUAwNJXDp4o
+        AjKMMZjRqmnZ9oskDmQlGTyg5fRmjTa9AIqswuJJ4rQ6pPofwl+X4EQqzAeeZOoQ
+        ==
+X-ME-Sender: <xms:6UqMXrEESRaMA6LPL3tIrAKxumyafD9oInxTfyn0UYeMhbuq_F3qpg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrudehgddulecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
+    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrghinh
+    epuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvse
+    gtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:6UqMXjxTEDcTx1vL3tqsGbobBFxRNsbgWN30Nr0OrYnkWl2y1Vrdww>
+    <xmx:6UqMXgps9meExFNY9FK8qVIHjUIRuKsKRFhApBpQRbNRfR8LRDGObA>
+    <xmx:6UqMXtjiYQnYDtdnDJwlxdZOiIOoWsN6Bt76h6ENnjnYbJhLZR--ug>
+    <xmx:6kqMXmjh6iiSCY83qIMll5ueTt-0nO1qmd6Z7Q-wNzHVP6hBGf0vIg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 19790328005A;
+        Tue,  7 Apr 2020 05:42:01 -0400 (EDT)
+Date:   Tue, 7 Apr 2020 11:41:59 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
+Message-ID: <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="japkdjzpcbcq3brx"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good morning Linus,
 
-Enjoy!
+--japkdjzpcbcq3brx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+Hi Kamel,
 
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+The prefix for device tree bindings is usually dt-bindings:
+$framework: $title
 
-are available in the Git repository at:
+So a title like "dt-bindings: input: Add a counter-based rotary
+encoder binding" would be better.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git backlight-next-5.7
+On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
+> Add dt binding for the counter variant of the rotary encoder driver.
+>
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> ---
+>  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> new file mode 100644
+> index 000000000000..a59f7c1faf0c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> @@ -0,0 +1,67 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-for you to fetch changes up to ee0c8e494cc3c135350cd5c4752e82af3feae1ab:
+Bindings are usually used by other OS's, so you should consider
+putting it under a more permissive license, usually that would be GPL2
+and the BSD-2-Clause
 
-  backlight: corgi: Convert to use GPIO descriptors (2020-03-25 09:30:46 +0000)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rotary Encoder Counter
+> +
+> +maintainers:
+> +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+> +
+> +description:
+> +  Registers a Rotary encoder connected through a counter device.
 
-----------------------------------------------------------------
- - Fix-ups
-   - Switch to GPIO descriptor; pwm_bl, corgi_lcd
+You shouldn't really describe the action here, but more what the
+binding is about. The registration will not depend on the presence of
+the node following that binding, but rather on whether or not the OS
+that uses it has support for it.
 
-----------------------------------------------------------------
-Linus Walleij (2):
-      backlight: pwm_bl: Switch to full GPIO descriptor
-      backlight: corgi: Convert to use GPIO descriptors
+> +properties:
+> +  compatible:
+> +    const: rotary-encoder-counter
+> +
+> +  counter:
+> +    description: Phandle for the counter device providing rotary position.
 
- arch/arm/mach-pxa/cm-x300.c               |  1 -
- arch/arm/mach-pxa/colibri-pxa270-income.c |  1 -
- arch/arm/mach-pxa/corgi.c                 | 12 +++++-
- arch/arm/mach-pxa/ezx.c                   |  1 -
- arch/arm/mach-pxa/hx4700.c                |  1 -
- arch/arm/mach-pxa/lpd270.c                |  1 -
- arch/arm/mach-pxa/magician.c              |  1 -
- arch/arm/mach-pxa/mainstone.c             |  1 -
- arch/arm/mach-pxa/mioa701.c               |  1 -
- arch/arm/mach-pxa/palm27x.c               |  1 -
- arch/arm/mach-pxa/palmtc.c                | 11 ++++-
- arch/arm/mach-pxa/palmte2.c               |  1 -
- arch/arm/mach-pxa/pcm990-baseboard.c      |  1 -
- arch/arm/mach-pxa/spitz.c                 | 34 ++++++++++++----
- arch/arm/mach-pxa/tavorevb.c              |  2 -
- arch/arm/mach-pxa/viper.c                 |  1 -
- arch/arm/mach-pxa/z2.c                    |  2 -
- arch/arm/mach-pxa/zylonite.c              |  1 -
- arch/arm/mach-s3c24xx/mach-h1940.c        |  1 -
- arch/arm/mach-s3c24xx/mach-rx1950.c       |  1 -
- arch/arm/mach-s3c64xx/dev-backlight.c     |  3 --
- arch/arm/mach-s3c64xx/mach-crag6410.c     |  1 -
- arch/arm/mach-s3c64xx/mach-hmt.c          |  1 -
- arch/arm/mach-s3c64xx/mach-smartq.c       |  1 -
- arch/arm/mach-s3c64xx/mach-smdk6410.c     |  2 +-
- arch/unicore32/kernel/puv3-nb0916.c       |  1 -
- drivers/video/backlight/corgi_lcd.c       | 68 ++++++++-----------------------
- drivers/video/backlight/pwm_bl.c          | 19 ---------
- include/linux/pwm_backlight.h             |  2 -
- include/linux/spi/corgi_lcd.h             |  3 --
- 30 files changed, 65 insertions(+), 112 deletions(-)
+This should have a type
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> +  linux-axis:
+> +    description: The input subsystem axis to map to this rotary encoder.
+> +    type: boolean
+> +
+> +  qdec-mode:
+> +    description: |
+> +      Quadrature decoder function to set in the counter device.
+> +      3: x1-PHA
+> +      4: x1-PHB
+> +      5: x2-PHA
+> +      6: x2-PHB
+> +      7: x4-PHA and PHB
+
+That range (even though it's a bit odd) should be expressed through an
+enum so that you can check that the values are actually within that
+range.
+
+> +  steps:
+> +    description: Number of steps in a full turnaround of the encoder.
+
+Muli-line strings should have either quotes around them, or a | or >
+like you did for the description. | will keep the \n, > will make that
+a single string.
+
+This should also have a type
+
+> +      Only relevant for absolute axis.
+
+This should be expressed through a if / then clause, or a dependencies one
+
+>                                         Defaults to 24 which is a typical
+> +      value for such devices.
+
+This should be expressed through a default property.
+
+> +  relative-axis:
+> +    description: Register a relative axis rather than an absolute one.
+> +    type: boolean
+> +
+> +  rollover:
+> +    description: Automatic rollover when the rotary value becomes greater
+> +      than the specified steps or smaller than 0. For absolute axis only.
+> +    type: boolean
+
+Same story than steps for the dependency. Also, what is is the
+behaviour when this property isn't set?
+
+> +  poll-interval:
+> +    description: Poll interval at which the position is read from the counter
+> +      device (default 500ms).
+
+It should have a type too, and a default property
+
+> +
+> +required:
+> +  - compatible
+> +  - counter
+> +  - qdec-mode
+> +
+> +examples:
+> +  - |
+> +    rotary@0 {
+> +        compatible = "rotary-encoder-counter";
+
+A unit-address (the part after @) only makes sense for a node if
+there's a matching reg property in the node. This will trigger a DTC
+warning, so you should remove the @0
+
+Maxime
+
+--japkdjzpcbcq3brx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXoxK5wAKCRDj7w1vZxhR
+xV5PAP9oleLNJ1AEhCCnvJCT4zm5frzWFncYL0ZW4bzrBCNAgQD/VfmXTyrdhPL8
+UoL54zIDj9ggENLCwxMqk6jdw/++/wM=
+=QF+N
+-----END PGP SIGNATURE-----
+
+--japkdjzpcbcq3brx--
