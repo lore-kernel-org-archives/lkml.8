@@ -2,112 +2,151 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65976C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6B0C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D052206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC382072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 16:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KHsjYgQU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btq/mjS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgDGQ2r (ORCPT
+        id S1728079AbgDGQ36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 12:28:47 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43322 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726776AbgDGQ2q (ORCPT
+        Tue, 7 Apr 2020 12:29:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38219 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgDGQ36 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 12:28:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586276926;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8fuLk3L8ELTxwTSKiP3T5dmiYkZPR3qzEibGwB0sRWY=;
-        b=KHsjYgQUQQPufUN3cQL/d6YVE4QVr9o6ycNfW7zPEuJwMaAvlxtdtIzMSmAs4BskNA3nCa
-        4YFKfPM8qLerbwTNCsIAfC1i+nbxAR7mA3e34E5LsJZSesskB6On7vcGCmRwbIcjvJ4Qdg
-        DV5X0OtLS1hrS/jITWLVOA8M03P7hHc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-TEwEXIKEN1i_4ybstAbp-w-1; Tue, 07 Apr 2020 12:28:43 -0400
-X-MC-Unique: TEwEXIKEN1i_4ybstAbp-w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35920800D50;
-        Tue,  7 Apr 2020 16:28:42 +0000 (UTC)
-Received: from treble (ovpn-116-24.rdu2.redhat.com [10.10.116.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C549E60BF7;
-        Tue,  7 Apr 2020 16:28:40 +0000 (UTC)
-Date:   Tue, 7 Apr 2020 11:28:38 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, jthierry@redhat.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH V2 9/9] x86/speculation: Remove all
- ANNOTATE_NOSPEC_ALTERNATIVE directives
-Message-ID: <20200407162838.5hlh6oom4oa45ugt@treble>
-References: <20200407073142.20659-1-alexandre.chartre@oracle.com>
- <20200407073142.20659-10-alexandre.chartre@oracle.com>
- <20200407132837.GA20730@hirez.programming.kicks-ass.net>
- <20200407133454.n55u5nx33ruj73gx@treble>
- <89b10eb8-c030-b954-6be3-8830fc6a8daa@oracle.com>
- <3eb36fd2-9827-4c1b-681c-9c1d65c7582f@oracle.com>
+        Tue, 7 Apr 2020 12:29:58 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 31so4624858wre.5;
+        Tue, 07 Apr 2020 09:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Wh+IvUc3DeAnnMIbLtY/uy0lszH3oLkUHUCVMoP6fwk=;
+        b=btq/mjS/OdeudDUsgt4r3Qe4QTx/aK2wYEi/y06q2lEGwpps1LweXIbBJ9w+WCIl3B
+         1BUSsmf0c3Dm1iWL9CjzIZF6jU00xNIG4UMTtnAmfsk/y9RVaJt9h8GFpi+WhHFicBwW
+         JC1GJytC+oKSZMAitPx39BGPCZ552unJrPF9Tvs7toz+2+heYYWByoAi+qPvtQLZFhY+
+         zKuq6UBiZGrjKUvnUwUUt3lmStTLuBNGefj65PG12Nq6fkl7AcLjSHO/+x2GYv+XoL7R
+         ORqEKnSRnyge4MDPVmk2DleLzE5/f+xrt2FWJjqJnHRPUWQPWizFzxCcVwNZfRIL97fF
+         9/Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Wh+IvUc3DeAnnMIbLtY/uy0lszH3oLkUHUCVMoP6fwk=;
+        b=c4wKTH7OPDRf8/rJIEQ+skmjbhBQDIQC36yCjNQ1XfkJVqmFS/7v5yYvILMMtIB+w6
+         0BJNqo8Ca3eEoF5wDKq654zCQ+D9/jnccOkc+vLRMMLGiZxGTZgRolHLskplJ6JFaWWy
+         qidybXYmJVvq+7f+qVQWRsdVhqG7JXQOIIuRyc7rwxA6sQbWAU4A5Q9hNh4EPDT2o9aD
+         F/M3vSPaNJXBnWYF0hMQMOHRvHc58TbxFtPnuULar6bxUoEiEKf4+SKas2vG9Msn5QSy
+         ZzD6wbfFr4IFdDxBi08lBW9FYEJQRPbk5FzWp/wx0O5EMBZtk04AIJ7XmdM1Xb0DXBdC
+         Zkww==
+X-Gm-Message-State: AGi0PuYO8bU7bIfx3o418kIM1i+3mdn/Aq9kCGI1/uRJ0BKUztblhNIL
+        snIQ0Chcuu7zw8TrrGvIr4vh4lyy
+X-Google-Smtp-Source: APiQypJAja1nV/r7nPykalrGELfrqZVJMRh3+qKHRzCZZRNqAebNU+XiPPAJmPa0DEWeAfF5Rwcj1w==
+X-Received: by 2002:adf:dd8f:: with SMTP id x15mr3817160wrl.201.1586276995322;
+        Tue, 07 Apr 2020 09:29:55 -0700 (PDT)
+Received: from [192.168.0.104] (p5B3F6774.dip0.t-ipconnect.de. [91.63.103.116])
+        by smtp.gmail.com with ESMTPSA id 145sm1915427wma.1.2020.04.07.09.29.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 09:29:54 -0700 (PDT)
+Subject: Re: [PATCH v4 1/5] dt-bindings: mfd: add document bindings for mp2629
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, sre@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20200322224626.13160-1-sravanhome@gmail.com>
+ <20200322224626.13160-2-sravanhome@gmail.com> <20200327080013.GG603801@dell>
+ <d449b567-bd5c-168d-83af-5ba38771f75a@gmail.com>
+ <20200330064630.GA30614@dell>
+From:   saravanan sekar <sravanhome@gmail.com>
+Message-ID: <e4412378-1423-a48e-9176-f0d48f6000c4@gmail.com>
+Date:   Tue, 7 Apr 2020 18:29:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3eb36fd2-9827-4c1b-681c-9c1d65c7582f@oracle.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200330064630.GA30614@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 06:18:51PM +0200, Alexandre Chartre wrote:
-> 
-> On 4/7/20 4:32 PM, Alexandre Chartre wrote:
-> > 
-> > On 4/7/20 3:34 PM, Josh Poimboeuf wrote:
-> > > On Tue, Apr 07, 2020 at 03:28:37PM +0200, Peter Zijlstra wrote:
-> > > > Josh, we should probably have objtool verify it doesn't emit ORC entries
-> > > > in alternative ranges.
-> > > 
-> > > Agreed, it might be as simple as checking for insn->alt_group in the
-> > > INSN_STACK check or in update_insn_state().
-> > > 
-> > 
-> > We could do that only for the "objtool orc generate" command. That way
-> > "objtool check" would still check the alternative, but "objtool orc generate"
-> > will just use the first half of the alternative (like it does today with
-> > ANNOTATE_NOSPEC_ALTERNATIVE). We can even keep all ANNOTATE_NOSPEC_ALTERNATIVE
-> > but only use them for "objtool orc generate".
-> > 
-> 
-> I have checked and objtool doesn't emit ORC entries for alternative:
-> decode_instructions() doesn't mark such section with sec->text = true
-> so create_orc_sections() doesn't emit corresponding ORC entries.
-> 
-> So I think we can remove the ANNOTATE_NOSPEC_ALTERNATIVE directives,
-> this will allow objtool to check the instructions but it still won't
-> emit ORC entries (same behavior as today). In the future, if ORC
-> eventually supports alternative we will be ready to have objtool emit
-> ORC entries.
+Hi Lee,
 
-What's the benefit of removing ANNOTATE_NOSPEC_ALTERNATIVE if there's no
-ORC support to go along with it?
+On 30/03/20 8:46 am, Lee Jones wrote:
+> On Fri, 27 Mar 2020, saravanan sekar wrote:
+>> On 27/03/20 9:00 am, Lee Jones wrote:
+>>> On Sun, 22 Mar 2020, Saravanan Sekar wrote:
+>>>
+>>>> Add device tree binding information for mp2629 mfd driver.
+>>>>
+>>>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+>>>> ---
+>>>>    .../devicetree/bindings/mfd/mps,mp2629.yaml   | 60 +++++++++++++++++++
+>>>>    1 file changed, 60 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..314309ea91ac
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
+>>>> @@ -0,0 +1,60 @@
+>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/mfd/mps,mp2629.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> Are these links supposed to work?
+>> Not really, but as far my understanding needed for dt-bindings check
+> Rob, why are these here if they just result in 404s?
+>
+>>>> +examples:
+>>>> +  - |
+>>>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>>>> +    #include <dt-bindings/input/linux-event-codes.h>
+>>>> +    i2c {
+>>> i2c@0x????????
+>> Its a I2C controller node, I don't think address is needed. Mention like
+>> this my previous other driver patches,
+> This doesn't sound right.
+>
+> How do you control/operate the controller?
+>
+> Surely you read/write from/to registers?
 
-Also I want to avoid adding "ORC alternatives".  ORC is nice and simple
-and we should keep it that way as much as possible.
 
-Again, we should warn on stack changes inside alternatives, and then
-look at converting RSB and retpolines to use static branches so they
-have deterministic stacks.
+Indeed, but each SoC will have different address so which address to 
+mention here.
+For me it should be like &i2c {}, anyhow I respect maintainers review (I 
+can give RPi I2c bus address used for testing)
+and wait for Rob's reply
 
--- 
-Josh
-
+>
+>> dt_binding_check is also passed
+>>
+>>>> +        #address-cells = <1>;
+>>>> +        #size-cells = <0>;
+>>>> +
+>>>> +        pmic@4b {
+>>>> +            compatible = "mps,mp2629";
+>>>> +            reg = <0x4b>;
+>>>> +
+>>>> +            interrupt-controller;
+>>>> +            interrupt-parent = <&gpio2>;
+>>>> +            #interrupt-cells = <2>;
+>>>> +            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +        };
+>>>> +    };
