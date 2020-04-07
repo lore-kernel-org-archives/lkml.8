@@ -2,204 +2,187 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E00C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4CCC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7692075E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E1020771
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:53:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="A+y7Wiu9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nAefzkZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgDGRxN (ORCPT
+        id S1726654AbgDGRxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:53:13 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36190 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbgDGRxN (ORCPT
+        Tue, 7 Apr 2020 13:53:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38519 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgDGRxV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:53:13 -0400
-Received: by mail-ed1-f68.google.com with SMTP id i7so5192572edq.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:53:11 -0700 (PDT)
+        Tue, 7 Apr 2020 13:53:21 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c21so1142088pfo.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fReP27+S8EmMViT0XclWb7BSpfuyZbaoShchCIlF6Rg=;
-        b=A+y7Wiu9/0A8vN6mcp7HvaDsjMwJO9AiWFfp037z19Xog8YupjaaQW8koO92zoDEYp
-         IIvfWWPYQvToilZuR266uHofWkFgFHJWE7gBge/mg1MdLy61ROA/rRkjTEZTs/OyOQks
-         LvETkaIYIytm/YeFp9IKbufW09FRI3HnLkGFIvfTszWm6sCKqCpxOuSYGkRG/OvZpNEx
-         CIziu9ZH1ri7BfmrVjIFn2ptCSb5niuwl/HDMTrp7jrlhx9ThbXOib0ikEeqIf/0SpOX
-         H5TR1y52tUGQxOyggfm/7VC6rN0zsSX6nlmQLQkK0KC6I/goIFCY5WWX2d9uKCHzLsZP
-         TE1A==
+        bh=IZsnHknmPnzlDnnD+lsQB+SUZRKz07GU9C9BlgnfmqY=;
+        b=nAefzkZ2JinyQVrK0n8MAikkoMhgx+2j7FIdTNzirnsibGhl1/ylmS9MckoCSPcMb8
+         dRSjnFECwT2RvISJR+xYvmQ/xy6L0148d4mdHPpIsERRxpYZXRO3sKuXnMPRnGhH+gnd
+         2pQMBdjOFQKmY75VSFEhg+4Jf41epd7vMuwTcMRqlF3K/eWMUKqWffaB+6qJGL6qDweb
+         VVIv+/v6NhVSbVfgdDCnmRMXKZDhX8nbYLcdk1cwCaceANNvWGIiT3q7rYhe4zu9w4qy
+         J9x/+QmbdeIGyzQHl8tNcqFzwrUtLYmKickm7OYk9HCN7aYHpQBRZMjyclL278K7la5R
+         ys1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fReP27+S8EmMViT0XclWb7BSpfuyZbaoShchCIlF6Rg=;
-        b=eFFJxLLQdjSUBbWVlb+YdWb234rezZIbT4kPI+Oy67AwMeVoAwhaU3wVnL20MHkg7C
-         7V9U8CUorLAaKKx0Zv9R+k1pV76/lLm+C7wanDCogSz9VpOEpMfTKa9ewKaPICQ4Sxy/
-         S5UMKbOt2gLFSJZgSv7+KS7747l/lwQN0vZu7yiuqfzx0Z0LiYAWLY5I3gb2oIQGZ0Oh
-         ipmspM10y9lRHqCW+5mEygDOBfKCl+yKDImr94J6zIVTalJr0xBBdXCyg+AWM91IpuH6
-         GX8AJaT1c1GsCDvG+mG1DR5GUtuii9g6Cj8/uNlE/fqD4tLOWH80ManukKMM5JqGVYHM
-         eGOg==
-X-Gm-Message-State: AGi0PubzECKJOc3haBTokFh9ti9DjQCdQDH6DDZNWjeq84NrsnN7S30F
-        FUWZobtoM4p1gcJGJqmko/SFYwnl+RMcyWZFaNYFfQ==
-X-Google-Smtp-Source: APiQypJ57XlctB5m5vpEXm+L/8pvYvG+sfnlbPnmuml+0OdDWKFc7GxhEGybYQcVpM/HElMl+IAh2syFW1PO5P0sDow=
-X-Received: by 2002:a17:906:1e42:: with SMTP id i2mr3043907ejj.317.1586281990650;
- Tue, 07 Apr 2020 10:53:10 -0700 (PDT)
+        bh=IZsnHknmPnzlDnnD+lsQB+SUZRKz07GU9C9BlgnfmqY=;
+        b=giBH3Xskz7oKIAmb4AsIzYEbARS7LMU+qmvxsuMaujpjrDxaaUJPDCCGXBsupwfoie
+         nUGuMkDatfRfXI6kZl8KjXeuyvNfoFqwQf76XKj41o2qkSKdbJaTNi3xPxIT6yHXDDZv
+         W3Ilh97t6SNNafciZEZg5x148Reu7aELd8/JcsxY9jJOzVJCgPfxozNV2OCitqumI4kb
+         HpzFG4ZXFW6tepl38TnSjVOjtNezl90e6xcAZ7W+gD619QTP/TpXxRfz0BNZ9XaU5Du2
+         8A3NfdR8yJ/ZTWjeH828syFqY38zyI1MwLROmmO0krLd0ndLtwoODsTUBVka1qTlZCL5
+         ysRQ==
+X-Gm-Message-State: AGi0PuaKpOPJTlYJBaZxNPKzOdr/ez6QU6rYVbwl9dFJG9RMANI9YHRZ
+        7Dsb28zoj3Mzi9YOlH6+PZLBOSpm7Ik8K/VT2n9nNQ==
+X-Google-Smtp-Source: APiQypLB3JMGfjj1f8dB6FLLTXomkxBIMaJn/cb7wImwzv7yIcwXQzsSVve3/b4RHeQVbVDMWtqdmcz5Rs9M4XVTndc=
+X-Received: by 2002:a62:e415:: with SMTP id r21mr3651186pfh.169.1586281999850;
+ Tue, 07 Apr 2020 10:53:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com>
-In-Reply-To: <alpine.LRH.2.02.2004071029270.8662@file01.intranet.prod.int.rdu2.redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 7 Apr 2020 10:52:58 -0700
-Message-ID: <CAPcyv4goJ2jbXNVZbMUKtRUominhuMhuTKrMh=fnhrfvC4jyjw@mail.gmail.com>
-Subject: Re: [PATCH] memcpy_flushcache: use cache flusing for larger lengths
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+References: <20200403051709.22407-1-masahiroy@kernel.org> <20200406112220.GB126804@google.com>
+ <CAK7LNARkFN8jTD8F3CU7r_AL8dbqaKpUuou4MCLZvAYLGs9bYA@mail.gmail.com>
+ <CAKwvOdmHxeZ+T1OsOhW25pPygHM4D21OgZqRk141xbjP437-1w@mail.gmail.com> <CAK7LNARSMvGZ6T4Ct=U4Xe1WQCgkaWE8m8BxRuYiaokKVjA_ig@mail.gmail.com>
+In-Reply-To: <CAK7LNARSMvGZ6T4Ct=U4Xe1WQCgkaWE8m8BxRuYiaokKVjA_ig@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 7 Apr 2020 10:53:08 -0700
+Message-ID: <CAKwvOdkicpNMqQipZ+AMTEz7JVou3bkcKiQ3Cih20qH0hoziDg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: support 'LLVM' to switch the default tools to Clang/LLVM
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        device-mapper development <dm-devel@redhat.com>
+        Jian Cai <jiancai@google.com>,
+        Stephen Hines <srhines@google.com>,
+        Luis Lozano <llozano@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 8:02 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
+On Tue, Apr 7, 2020 at 10:47 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> [ resending this to x86 maintainers ]
+> On Wed, Apr 8, 2020 at 2:01 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >
+> > On Tue, Apr 7, 2020 at 9:17 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > On Mon, Apr 6, 2020 at 8:22 PM 'Matthias Maennich' via Clang Built
+> > > Linux <clang-built-linux@googlegroups.com> wrote:
+> > > >
+> > > > On Fri, Apr 03, 2020 at 02:17:09PM +0900, Masahiro Yamada wrote:
+> > > > >As Documentation/kbuild/llvm.rst implies, building the kernel with a
+> > > > >full set of LLVM tools gets very verbose and unwieldy.
+> > > > >
+> > > > >Provide a single switch 'LLVM' to use Clang and LLVM tools instead of
+> > > > >GCC and Binutils. You can pass LLVM=1 from the command line or as an
+> > > > >environment variable. Then, Kbuild will use LLVM toolchains in your
+> > > > >PATH environment.
+> > > > >
+> > > > >Please note LLVM=1 does not turn on the LLVM integrated assembler.
+> > > > >You need to explicitly pass AS=clang to use it. When the upstream
+> > > > >kernel is ready for the integrated assembler, I think we can make
+> > > > >it default.
+> > > > >
+> > > > >We discussed what we need, and we agreed to go with a simple boolean
+> > > > >switch (https://lkml.org/lkml/2020/3/28/494).
+> > > > >
+> > > > >Some items in the discussion:
+> > > > >
+> > > > >- LLVM_DIR
+> > > > >
+> > > > >  When multiple versions of LLVM are installed, I just thought supporting
+> > > > >  LLVM_DIR=/path/to/my/llvm/bin/ might be useful.
+> > > > >
+> > > > >  CC      = $(LLVM_DIR)clang
+> > > > >  LD      = $(LLVM_DIR)ld.lld
+> > > > >    ...
+> > > > >
+> > > > >  However, we can handle this by modifying PATH. So, we decided to not do
+> > > > >  this.
+> > > > >
+> > > > >- LLVM_SUFFIX
+> > > > >
+> > > > >  Some distributions (e.g. Debian) package specific versions of LLVM with
+> > > > >  naming conventions that use the version as a suffix.
+> > > > >
+> > > > >  CC      = clang$(LLVM_SUFFIX)
+> > > > >  LD      = ld.lld(LLVM_SUFFIX)
+> > > > >    ...
+> > > > >
+> > > > >  will allow a user to pass LLVM_SUFFIX=-11 to use clang-11 etc.,
+> > > > >  but the suffixed versions in /usr/bin/ are symlinks to binaries in
+> > > > >  /usr/lib/llvm-#/bin/, so this can also be handled by PATH.
+> > > > >
+> > > > >- HOSTCC, HOSTCXX, etc.
+> > > > >
+> > > > >  We can switch the host compilers in the same way:
+> > > > >
+> > > > >  ifneq ($(LLVM),)
+> > > > >  HOSTCC       = clang
+> > > > >  HOSTCXX      = clang++
+> > > > >  else
+> > > > >  HOSTCC       = gcc
+> > > > >  HOSTCXX      = g++
+> > > > >  endif
+> > > > >
+> > > > >  This may the right thing to do, but I could not make up my mind.
+> > > > >  Because we do not frequently switch the host compiler, a counter
+> > > > >  solution I had in my mind was to leave it to the default of the
+> > > > >  system.
+> > > > >
+> > > > >  HOSTCC       = cc
+> > > > >  HOSTCXX      = c++
+> > > >
+> > > > What about HOSTLD ? I saw recently, that setting HOSTLD=ld.lld is not
+> > > > yielding the expected result (some tools, like e.g. fixdep still require
+> > > > an `ld` to be in PATH to be built). I did not find the time to look into
+> > > > that yet, but I would like to consistently switch to the llvm toolchain
+> > > > (including linker and possibly more) also for hostprogs.
+> > >
+> > >
+> > > HOSTLD=ld.lld worked for me, but HOSTCC=clang did not.
+> > >
+> > >
+> > >
+> > > HOSTCC=clang without CC=clang fails to build objtool.
+> > >
+> > > The build system of objtool is meh.  :(
+> >
+> > Let's tackle that in a follow up, with the goal of build hermiticity
+> > in mind.  I think there's good feedback in this thread to inform the
+> > design of a v2:
+> > 1. CLANG_AS=0 to disable integrated as.  Hopefully we won't need this
+> > much longer, so we don't need to spend too much time on this, Masahiro
+> > please just choose a name for this.  llvm-as naming conventions
+> > doesn't follow the rest of binutils.
 >
-> Hi
->
-> I tested performance of various methods how to write to optane-based
-> persistent memory, and found out that non-temporal stores achieve
-> throughput 1.3 GB/s. 8 cached stores immediatelly followed by clflushopt
-> or clwb achieve throughput 1.6 GB/s.
->
-> memcpy_flushcache uses non-temporal stores, I modified it to use cached
-> stores + clflushopt and it improved performance of the dm-writecache
-> target significantly:
->
-> dm-writecache throughput:
-> (dd if=/dev/zero of=/dev/mapper/wc bs=64k oflag=direct)
-> writecache block size   512             1024            2048            4096
-> movnti                  496 MB/s        642 MB/s        725 MB/s        744 MB/s
-> clflushopt              373 MB/s        688 MB/s        1.1 GB/s        1.2 GB/s
->
-> For block size 512, movnti works better, for larger block sizes,
-> clflushopt is better.
+> I am not so familiar with the terminology in LLVM,
+> but I feel 'integrated' is a keyword IMHO.
+> I prefer LLVM_IA=1.  (or  LLVM_INTEGRATED_AS=1)
 
-This should use clwb instead of clflushopt, the clwb macri
-automatically converts back to clflushopt if clwb is not supported.
+I'm happy with either, and I trust your judgement.  You choose.
+Hopefully we will fix all our assembler bugs soon and won't need the
+flag much longer.
 
->
-> I was also testing the novafs filesystem, it is not upstream, but it
-> benefitted from similar change in __memcpy_flushcache and
-> __copy_user_nocache:
-> write throughput on big files - movnti: 662 MB/s, clwb: 1323 MB/s
-> write throughput on small files - movnti: 621 MB/s, clwb: 1013 MB/s
->
->
-> I submit this patch for __memcpy_flushcache that improves dm-writecache
-> performance.
->
-> Other ideas - should we introduce memcpy_to_pmem instead of modifying
-> memcpy_flushcache and move this logic there? Or should I modify the
-> dm-writecache target directly to use clflushopt with no change to the
-> architecture-specific code?
-
-This also needs to mention your analysis that showed that this can
-have negative cache pollution effects [1], so I'm not sure how to
-decide when to make the tradeoff. Once we have movdir64b the tradeoff
-equation changes yet again:
-
-[1]: https://lore.kernel.org/linux-nvdimm/alpine.LRH.2.02.2004010941310.23210@file01.intranet.prod.int.rdu2.redhat.com/
-
-
->
-> Mikulas
->
->
->
->
-> From: Mikulas Patocka <mpatocka@redhat.com>
->
-> I tested dm-writecache performance on a machine with Optane nvdimm and it
-> turned out that for larger writes, cached stores + cache flushing perform
-> better than non-temporal stores. This is the throughput of dm-writecache
-> measured with this command:
-> dd if=/dev/zero of=/dev/mapper/wc bs=64 oflag=direct
->
-> block size      512             1024            2048            4096
-> movnti          496 MB/s        642 MB/s        725 MB/s        744 MB/s
-> clflushopt      373 MB/s        688 MB/s        1.1 GB/s        1.2 GB/s
->
-> We can see that for smaller block, movnti performs better, but for larger
-> blocks, clflushopt has better performance.
->
-> This patch changes the function __memcpy_flushcache accordingly, so that
-> with size >= 768 it performs cached stores and cache flushing. Note that
-> we must not use the new branch if the CPU doesn't have clflushopt - in
-> that case, the kernel would use inefficient "clflush" instruction that has
-> very bad performance.
->
-> Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
->
-> ---
->  arch/x86/lib/usercopy_64.c |   36 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->
-> Index: linux-2.6/arch/x86/lib/usercopy_64.c
-> ===================================================================
-> --- linux-2.6.orig/arch/x86/lib/usercopy_64.c   2020-03-24 15:15:36.644945091 -0400
-> +++ linux-2.6/arch/x86/lib/usercopy_64.c        2020-03-30 07:17:51.450290007 -0400
-> @@ -152,6 +152,42 @@ void __memcpy_flushcache(void *_dst, con
->                         return;
->         }
->
-> +       if (static_cpu_has(X86_FEATURE_CLFLUSHOPT) && size >= 768 && likely(boot_cpu_data.x86_clflush_size == 64)) {
-> +               while (!IS_ALIGNED(dest, 64)) {
-> +                       asm("movq    (%0), %%r8\n"
-> +                           "movnti  %%r8,   (%1)\n"
-> +                           :: "r" (source), "r" (dest)
-> +                           : "memory", "r8");
-> +                       dest += 8;
-> +                       source += 8;
-> +                       size -= 8;
-> +               }
-> +               do {
-> +                       asm("movq    (%0), %%r8\n"
-> +                           "movq   8(%0), %%r9\n"
-> +                           "movq  16(%0), %%r10\n"
-> +                           "movq  24(%0), %%r11\n"
-> +                           "movq    %%r8,   (%1)\n"
-> +                           "movq    %%r9,  8(%1)\n"
-> +                           "movq   %%r10, 16(%1)\n"
-> +                           "movq   %%r11, 24(%1)\n"
-> +                           "movq  32(%0), %%r8\n"
-> +                           "movq  40(%0), %%r9\n"
-> +                           "movq  48(%0), %%r10\n"
-> +                           "movq  56(%0), %%r11\n"
-> +                           "movq    %%r8, 32(%1)\n"
-> +                           "movq    %%r9, 40(%1)\n"
-> +                           "movq   %%r10, 48(%1)\n"
-> +                           "movq   %%r11, 56(%1)\n"
-> +                           :: "r" (source), "r" (dest)
-> +                           : "memory", "r8", "r9", "r10", "r11");
-> +                       clflushopt((void *)dest);
-> +                       dest += 64;
-> +                       source += 64;
-> +                       size -= 64;
-> +               } while (size >= 64);
-> +       }
-> +
->         /* 4x8 movnti loop */
->         while (size >= 32) {
->                 asm("movq    (%0), %%r8\n"
->
+-- 
+Thanks,
+~Nick Desaulniers
