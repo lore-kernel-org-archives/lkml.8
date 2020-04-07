@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAF7C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DE3C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2365E2074F
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C37A2080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586255161;
-	bh=5/sL9mCXly5jrq1A3Z9N4VVG6JUPKXdB9TUdv7LPc+4=;
+	s=default; t=1586255163;
+	bh=T/gxYwkr6ionYU18uJNrAb27pxUoEUdBjhg+6cFkrBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fHy6/GIerrJZopLqtC4IDj7w/Hqo7HQDTyf6mqlY5QYv9OhONsuAmxrbKGvqEP7+9
-	 MLBLND4OsNb8clWhFL8NevD9lUH/B/bew/g8laDmb88TtYdWmIpeAkj0L0seJFnUvM
-	 VWbVpsrDS2HuHSQ41azTVwoe7yGyeRFTYLcQn0WA=
+	b=ZEgJJ+iMFjLunvIAeS9ACkN55Y8OA3T38ygxfijQI71+Y1QOynSYeC3seMShL/V1R
+	 +tzjACFkXX4Lo6Q3n5Cpn3oc+AfezipNDyt734Ypvy/1+JGqx9mcHIEL4Q/LbpYXZp
+	 YgOWYj6NpdOjbLdboqMJpxwVJ+CV7kNpfYPoAuuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgDGKZ7 (ORCPT
+        id S1729078AbgDGK0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36724 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 06:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgDGKZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:25:57 -0400
+        id S1729068AbgDGKZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 06:25:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 589492074F;
-        Tue,  7 Apr 2020 10:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC57C2074F;
+        Tue,  7 Apr 2020 10:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586255156;
-        bh=5/sL9mCXly5jrq1A3Z9N4VVG6JUPKXdB9TUdv7LPc+4=;
+        s=default; t=1586255159;
+        bh=T/gxYwkr6ionYU18uJNrAb27pxUoEUdBjhg+6cFkrBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EIdUbJiJPT78BdFcL1S7HXCMq2aHT6E6mRM/jQNup6YOQTW0lBF0+eFq/oqyB2rxf
-         XMBQvH+gfRMj0WExnIWSnuQcI0Kg46FBOYRo85OWSKRRKR5v8A5cOCircp9Bpy/kJi
-         O/MnT+5Gf5Eh0xJ535n1TWlbrzskg6WomhjpsWvo=
+        b=gD1Ka6J3FZEsXxCoy3ry5ZyQNWuTikxihuhpEZXfR9bujCDPGGYLUr4GpZAiRZuXz
+         1IN3Te/Hib8UbVsjF+WAyORCffy0ibvuhq8DZE2UhGiz5bur7suT9Cm/s6VchoZuhf
+         wozjvkHYLzmQhsAUyhinCQXd/lkIi+2+ZCubrrcs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Mordechay Goodstein <mordechay.goodstein@intel.com>,
         Luca Coelho <luciano.coelho@intel.com>
-Subject: [PATCH 5.5 35/46] iwlwifi: consider HE capability when setting LDPC
-Date:   Tue,  7 Apr 2020 12:22:06 +0200
-Message-Id: <20200407101503.219777386@linuxfoundation.org>
+Subject: [PATCH 5.5 36/46] iwlwifi: yoyo: dont add TLV offset when reading FIFOs
+Date:   Tue,  7 Apr 2020 12:22:07 +0200
+Message-Id: <20200407101503.317654678@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200407101459.502593074@linuxfoundation.org>
 References: <20200407101459.502593074@linuxfoundation.org>
@@ -62,38 +62,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mordechay Goodstein <mordechay.goodstein@intel.com>
 
-commit cb377dfda1755b3bc01436755d866c8e5336a762 upstream.
+commit a5688e600e78f9fc68102bf0fe5c797fc2826abe upstream.
 
-The AP may set the LDPC capability only in HE (IEEE80211_HE_PHY_CAP1),
-but we were checking it only in the HT capabilities.
+The TLV offset is only used to read registers, while the offset used for
+the FIFO addresses are hard coded in the driver and not given by the
+TLV.
 
-If we don't use this capability when required, the DSP gets the wrong
-configuration in HE and doesn't work properly.
+If we try to apply the TLV offset when reading the FIFOs, we'll read
+from invalid addresses, causing the driver to hang.
 
 Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Fixes: befebbb30af0 ("iwlwifi: rs: consider LDPC capability in case of HE")
+Fixes: 8d7dea25ada7 ("iwlwifi: dbg_ini: implement Rx fifos dump")
 Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/iwlwifi.20200306151128.492d167c1a25.I1ad1353dbbf6c99ae57814be750f41a1c9f7f4ac@changeid
+Link: https://lore.kernel.org/r/iwlwifi.20200306151129.fbab869c26fa.I4ddac20d02f9bce41855a816aa6855c89bc3874e@changeid
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-@@ -147,7 +147,11 @@ static u16 rs_fw_get_config_flags(struct
- 	     (vht_ena && (vht_cap->cap & IEEE80211_VHT_CAP_RXLDPC))))
- 		flags |= IWL_TLC_MNG_CFG_FLAGS_LDPC_MSK;
+--- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
++++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
+@@ -8,7 +8,7 @@
+  * Copyright(c) 2008 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of version 2 of the GNU General Public License as
+@@ -31,7 +31,7 @@
+  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
+  * Copyright(c) 2013 - 2015 Intel Mobile Communications GmbH
+  * Copyright(c) 2015 - 2017 Intel Deutschland GmbH
+- * Copyright(c) 2018 - 2019 Intel Corporation
++ * Copyright(c) 2018 - 2020 Intel Corporation
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+@@ -1407,11 +1407,7 @@ static int iwl_dump_ini_rxf_iter(struct
+ 		goto out;
+ 	}
  
--	/* consider our LDPC support in case of HE */
-+	/* consider LDPC support in case of HE */
-+	if (he_cap->has_he && (he_cap->he_cap_elem.phy_cap_info[1] &
-+	    IEEE80211_HE_PHY_CAP1_LDPC_CODING_IN_PAYLOAD))
-+		flags |= IWL_TLC_MNG_CFG_FLAGS_LDPC_MSK;
-+
- 	if (sband->iftype_data && sband->iftype_data->he_cap.has_he &&
- 	    !(sband->iftype_data->he_cap.he_cap_elem.phy_cap_info[1] &
- 	     IEEE80211_HE_PHY_CAP1_LDPC_CODING_IN_PAYLOAD))
+-	/*
+-	 * region register have absolute value so apply rxf offset after
+-	 * reading the registers
+-	 */
+-	offs += rxf_data.offset;
++	offs = rxf_data.offset;
+ 
+ 	/* Lock fence */
+ 	iwl_write_prph_no_grab(fwrt->trans, RXF_SET_FENCE_MODE + offs, 0x1);
 
 
