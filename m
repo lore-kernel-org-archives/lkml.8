@@ -2,199 +2,143 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D3EC2BA16
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A98FC2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B69620692
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC8920692
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 06:54:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aN2DVBU4"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Fr9aFOcB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbgDGGxq (ORCPT
+        id S1727582AbgDGGyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 02:53:46 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:10860 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgDGGxp (ORCPT
+        Tue, 7 Apr 2020 02:54:10 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:33010 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgDGGyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 02:53:45 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200407065343epoutp041a6b48f2e365895ba7df509911db122f~DdxRXgvlq1862818628epoutp04A
-        for <linux-kernel@vger.kernel.org>; Tue,  7 Apr 2020 06:53:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200407065343epoutp041a6b48f2e365895ba7df509911db122f~DdxRXgvlq1862818628epoutp04A
+        Tue, 7 Apr 2020 02:54:09 -0400
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200407065407epoutp02e38e8bc7c78198ef5694790e7be4518f~DdxocqDuc1001110011epoutp02B
+        for <linux-kernel@vger.kernel.org>; Tue,  7 Apr 2020 06:54:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200407065407epoutp02e38e8bc7c78198ef5694790e7be4518f~DdxocqDuc1001110011epoutp02B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1586242423;
-        bh=UPNrIh609ZGpZYtzuBZxbEy0b7DewqD3ARtrX5naw8o=;
-        h=From:Subject:To:Cc:Date:References:From;
-        b=aN2DVBU40Oo2Z4K613SUAji0KlqHqKeCtxN75XQghNRTCxKl5RMNbPKkc2FjlXaFs
-         6VfF017+0QnUp8XWNRaNRYMSvQFKc+Gs180fAi61fPuiZ55t4RJlidfynytU2loEtC
-         Nc3/WJxRPSqIzNKl53i3sKBmjE7GtU5ncpKmxebo=
+        s=mail20170921; t=1586242447;
+        bh=FD6u6gfSfkVoafsxdQNzxjDTpNg+DSItmEjTgsOLtxk=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=Fr9aFOcBoX+ijwXyThPrEYedZA1LFeIUQs3ZbJiiAttqRG3amcBE2ZenidORB6kjb
+         Kn0bR0uR8T5bz0kOXu+D1Ai5HcTLYyVKblFzqYQb88Ks5gIKh4IRwk8cC9oVScF87J
+         4o4cI9yZPE4/MSvVdpN6P89i1CuWkLJOP2Tvx2rg=
 Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200407065342epcas1p1850b81d4d79a42181466be7717710a72~DdxRLtG-N1071510715epcas1p1k;
-        Tue,  7 Apr 2020 06:53:42 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.163]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 48xJ5w6dFszMqYkk; Tue,  7 Apr
-        2020 06:53:40 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F8.CD.04744.4732C8E5; Tue,  7 Apr 2020 15:53:40 +0900 (KST)
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20200407065407epcas2p1c6e02e1a1e1cb8d5a91877e733e5f94d~Ddxn9mXvO1808218082epcas2p1x;
+        Tue,  7 Apr 2020 06:54:07 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.40.181]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 48xJ6P4nNWzMqYkk; Tue,  7 Apr
+        2020 06:54:05 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        3B.1D.04647.B832C8E5; Tue,  7 Apr 2020 15:54:03 +0900 (KST)
 Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200407065340epcas1p13e6e5ad6131f0a94d3ed1e8360353a82~DdxOq9kmZ1177111771epcas1p1W;
-        Tue,  7 Apr 2020 06:53:40 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200407065403epcas2p37d0990979790e3e14a25149830f5c913~DdxkNzj_k2389123891epcas2p3-;
+        Tue,  7 Apr 2020 06:54:03 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
         epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200407065340epsmtrp2fd6b44677cbbdd43f51ab5891ce1972a~DdxOqB1UI2992929929epsmtrp2P;
-        Tue,  7 Apr 2020 06:53:40 +0000 (GMT)
-X-AuditID: b6c32a38-26bff70000001288-00-5e8c2374195e
+        20200407065403epsmtrp27601e96f08f9701f497a9742ed6ce228~DdxkK9nvC3043630436epsmtrp2c;
+        Tue,  7 Apr 2020 06:54:03 +0000 (GMT)
+X-AuditID: b6c32a48-8a5ff70000001227-59-5e8c238bbe98
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6C.02.04158.3732C8E5; Tue,  7 Apr 2020 15:53:40 +0900 (KST)
-Received: from [10.253.105.163] (unknown [10.253.105.163]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200407065339epsmtip26053ab6019e61953f3103c48aef31168~DdxOggBwS1741817418epsmtip2Z;
-        Tue,  7 Apr 2020 06:53:39 +0000 (GMT)
-From:   Sunwook Eom <speed.eom@samsung.com>
-Subject: [PATCH] dm verity fec: Don't add data_blocks to block
-To:     agk@redhat.com
-Cc:     snitzer@redhat.com, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org, sunwook5492@gmail.com
-Message-ID: <317e0073-a6f7-4232-3b95-a4bc3ddbcdec@samsung.com>
-Date:   Tue, 7 Apr 2020 15:53:35 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.1
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1A.42.04024.B832C8E5; Tue,  7 Apr 2020 15:54:03 +0900 (KST)
+Received: from KORCO004660 (unknown [12.36.165.196]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200407065402epsmtip21f3515027a661b7686ec8d83ad8aae00~Ddxj6Sdlv2245622456epsmtip2X;
+        Tue,  7 Apr 2020 06:54:02 +0000 (GMT)
+From:   "Hyunki Koo" <hyunki00.koo@samsung.com>
+To:     "'Krzysztof Kozlowski'" <krzk@kernel.org>
+Cc:     <gregkh@linuxfoundation.org>, "'Rob Herring'" <robh+dt@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Jiri Slaby'" <jslaby@suse.com>, <linux-serial@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>
+In-Reply-To: <20200407062655.GC21995@kozik-lap>
+Subject: RE: [PATCH v6 2/2] tty: samsung_tty: 32-bit access for TX/RX hold
+ registers
+Date:   Tue, 7 Apr 2020 15:54:02 +0900
+Message-ID: <000501d60ca9$529b3cc0$f7d1b640$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIJsWRmVeSWpSXmKPExsWy7bCmgW6Jck+cwYQtWhbrTx1jttj7bjar
-        xeVdc9gs2jZ+ZbTo37+BzYHVY+esu+we7/ddZfP4vEkugDkqxyYjNTEltUghNS85PyUzL91W
-        yTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKWSQlliTilQKCCxuFhJ386mKL+0JFUh
-        I7+4xFYptSAlp8DQoECvODG3uDQvXS85P9fK0MDAyBSoMiEnY+6ErSwF5+Qq1r9czd7A2CXV
-        xcjJISFgIvF2zi62LkYuDiGBHYwSXS9fQDmfGCUa/j1khXC+MUps75vEBNNyo2MRVGIvo8SD
-        G3OZIJz3jBL9i/eygFSxCWhKHOo5BmYLC9hJbL3/kRHEFhEQkpg+twfMZhZIkujsegY2lReo
-        5v77l8wgNouAisSPBe/ZQWxRgQiJe0sPMkPUCEqcnPmEBaJXXqJ562xmCFtc4taT+WBHSAis
-        YJN4sxuiQULAReLF9r9QZwtLvDq+hR3ClpL4/G4vG4RdLXHlxEWomhqJ3uu3WCFsY4nengtA
-        cziAFmhKrN+lDxFWlNj5ey7U/XwS7772sIKUSAjwSnS0CUGUKEu8PX6eBcKWlDj9dyrURA+J
-        U0/us4OUCwnESlyYHTmBUWEWksdmIXlsFpLHZiHcsICRZRWjWGpBcW56arFhgQlyZG9iBCdH
-        LYsdjHvO+RxiFOBgVOLhjeDsjhNiTSwrrsw9xCjBwawkwivV2xknxJuSWFmVWpQfX1Sak1p8
-        iNEUGO4TmaVEk/OBiTuvJN7Q1MjY2NjCxMzczNRYSZx36vWcOCGB9MSS1OzU1ILUIpg+Jg5O
-        qQZGV1OngLh/rxXvXN4+70HsrqszTtjc4SioKjuUmJk5/17Nngaliz5BC/hs58rK3u64/jh8
-        VY1VhZX2st3hsyS7L560yZdwkZYO1NC7l93NnOsS27enosexRebeXTtrz6VZHQuUnLSWXDts
-        ueD187Pz5n++fFNi6+RTV9TELbYsVJ+bH+WSmfJEiaU4I9FQi7moOBEAFTczTqQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsWy7bCSvG6Jck+cwcI1LBbrTx1jttj7bjar
-        xeVdc9gs2jZ+ZbTo37+BzYHVY+esu+we7/ddZfP4vEkugDmKyyYlNSezLLVI3y6BK2PuhK0s
-        BefkKta/XM3ewNgl1cXIySEhYCJxo2MRaxcjF4eQwG5GiVfHdrBCJCQl3jRdZuxi5ACyhSUO
-        Hy4GCQsJvGWUmHCQCcRmE9CUONRzjAXEFhawk9h6/yMjiC0iICQxfW4PmM0skCQxZdUJsHpe
-        oJr7718yg9gsAioSPxa8ZwexRQUiJFrv3mKGqBGUODnzCQtEr5nEvM0PmSFseYnmrbOhbHGJ
-        W0/mM01gFJiFpGUWkpZZSFpmIWlZwMiyilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/dxMj
-        OLS1tHYwnjgRf4hRgINRiYeXgb07Tog1say4MvcQowQHs5IIr1RvZ5wQb0piZVVqUX58UWlO
-        avEhRmkOFiVxXvn8Y5FCAumJJanZqakFqUUwWSYOTqkGRpkQ9bDESRF3fFc1mK48w//vWb2L
-        X39L3uGpyrIN/8XdHYRur18kqylnomfzyenx9PI//6MsTrHKzX5eGPqHr6+k24L3/NGahcYR
-        q/jDr91YsVv2sYxQzUcT7lOzbC7H5hTFftn86scuHv3tFkKNkj2P7JZHThIM8biXpplsKHrz
-        fvaVeV4JSizFGYmGWsxFxYkAPeYRlGkCAAA=
-X-CMS-MailID: 20200407065340epcas1p13e6e5ad6131f0a94d3ed1e8360353a82
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKEs4Y1dkf1SYeuuA/6Ie9wROds5QJr8Gf+Ae0ziqcAfW/RYKbpNljg
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm29k5Z1qL07J6GVHjdCENdZttHSujSGVgkGRlWGgHd/LSbu1s
+        doMyTPOSZShdppFlpVhMmaU2cTOzQgoVrOhGRWqUUVmC3ZDa8Rj573m/73m+93ne75VhCg+h
+        lGVZHJzdwppoIljafCdUF16y8Hiq+rtPy1zo6sGZvJoGgqloHJEwJwc+YkxvbyPJeAae4Ey/
+        t4pgzvb6JMzDmlKSyW/vItcGGzz1RYTBf/46aWi6fNjQcOOx1DDqmZ+Ip5hWZ3KskbOrOEu6
+        1ZhlyYihE5LS1qfp9GpNuCaaWUGrLKyZi6FjNySGx2eZAqZoVQ5rcgaOElmepyPXrLZbnQ5O
+        lWnlHTE0ZzOabBqNLYJnzbzTkhGRbjWv1KjVWl2AudOUeeRlB2nzS/edaCwjctE9rBgFyYBa
+        Dn+8r/BiFCxTUK0I+i8VSsXiGwJ37phUYCmoMQTdT/hiJJtQjNZyIqcdQcnRXkIsPiDwuR+R
+        goCgwqG/ZlAi4JAAbnpaSwokjPJJoPNsPi68FERFwthggsCZRW2Fm81tE3wptQg++e/jApZT
+        0dDXVIKJeCZ0nxucMIRRC6DlU9VkBBX8HLqKi73iobJuHImcEKgsKsCEvkDlkdBV7ZWIglho
+        OX+bFPEsGL5/YxIrYfRzOyHiw+ArOEWK4uMIfo4M4eJFFLjeHUNCAIwKhQZvpDiVhdD1fNLb
+        DCi8M06Kx3IoLFCIwiXgHns/6WAeXB/ykmWIdk1J5pqSzDUlget/r2okrUdzOBtvzuB4rW35
+        1L/2oIl9DTO0oo6eDZ2IkiF6unxbUEmqAmdz+P3mTgQyjA6RK0uLUhVyI7v/AGe3ptmdJo7v
+        RLrA4E9hytnp1sD2WxxpGp1Wr1dH6xidXsvQc+Weac92KKgM1sHt5jgbZ/+nk8iClLloY3ze
+        657fy65cS/ma3fYcUb+iF+trL5cbIk+7V+mT7751upvWpvQd/FExMn/mSv+Xir4O3P0nzmvd
+        8iNJq8tXJj/QNvjiirTMvtTEHev21B2afSam1f9m+OJm1falB1vmvtu0t/sYGs52GNvULyru
+        5ZeHbT7UrzEvvXV1+645UQPXRmkpn8lqwjA7z/4FM7y3qcUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7bCSvG63ck+cwZq/zBbzj5xjtWhevJ7N
+        YsqGD0wW/Y9fM1ucP7+B3WLT42usFpd3zWGzmHF+H5PFmcW97Bate4+wO3B5bFrVyeaxf+4a
+        do/NS+o91m+5yuLxeZNcAGsUl01Kak5mWWqRvl0CV0bjnQPsBftZKvo2TGBrYDzG3MXIwSEh
+        YCLxeXlqFyMXh5DAbkaJx5962bsYOYHiMhITXixhhrCFJe63HGGFKHrOKLHt6wuwBJuArsTl
+        xU+YQGwRIHvzjeXsIEXMAseYJG4+/8kC0fGEUeJs10I2kHWcAvoS3554gzQIC4RIrGv+wApi
+        swioSLzdfxzM5hWwlLiwuZsZwhaUODnzCQuIzSygLdH7sJURwpaX2P52DtR1ChI/ny5jhTjC
+        TWL2ir9QNSISszvbmCcwCs9CMmoWklGzkIyahaRlASPLKkbJ1ILi3PTcYsMCw7zUcr3ixNzi
+        0rx0veT83E2M4FjT0tzBeHlJ/CFGAQ5GJR5eBvbuOCHWxLLiytxDjBIczEoivFK9nXFCvCmJ
+        lVWpRfnxRaU5qcWHGKU5WJTEeZ/mHYsUEkhPLEnNTk0tSC2CyTJxcEo1MHLvL7U5v0L8rsQ7
+        U570MwsnrtB5+ptXMttyd9/Vo1y/srufxvezsRdyKWzV+3G4+WBZ6qSEzE256cbzp2/fL1yy
+        63g958dXsuwHNj1e3Bmu3ffn3IaMj4XvgifHr9py9rddI1OItdykJ0eLFSYc8b37/uVX5v4E
+        /qZrc+dWf/fK0lVLeFNnfV+JpTgj0VCLuag4EQDbGOyGsQIAAA==
+X-CMS-MailID: 20200407065403epcas2p37d0990979790e3e14a25149830f5c913
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200407065340epcas1p13e6e5ad6131f0a94d3ed1e8360353a82
-References: <CGME20200407065340epcas1p13e6e5ad6131f0a94d3ed1e8360353a82@epcas1p1.samsung.com>
+X-CMS-RootMailID: 20200406230902epcas2p19a8df6805dac59968d664efb9bc9419b
+References: <20200401082721.19431-1-hyunki00.koo@samsung.com>
+        <CGME20200406230902epcas2p19a8df6805dac59968d664efb9bc9419b@epcas2p1.samsung.com>
+        <20200406230855.13772-1-hyunki00.koo@samsung.com>
+        <20200407062655.GC21995@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even if block type is metadata,
-block in verity_fec_decode() has already the right block number.
-So there is no need to add data_blocks to block.
-
-Signed-off-by: Sunwook Eom <speed.eom@samsung.com>
----
-  drivers/md/dm-verity-fec.c    | 6 +-----
-  drivers/md/dm-verity-fec.h    | 4 +---
-  drivers/md/dm-verity-target.c | 4 +---
-  3 files changed, 3 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/md/dm-verity-fec.c b/drivers/md/dm-verity-fec.c
-index 49147e634046..55f353cae6ec 100644
---- a/drivers/md/dm-verity-fec.c
-+++ b/drivers/md/dm-verity-fec.c
-@@ -417,8 +417,7 @@ static int fec_bv_copy(struct dm_verity *v, struct 
-dm_verity_io *io, u8 *data,
-   * otherwise to a bio_vec starting from iter.
-   */
-  int verity_fec_decode(struct dm_verity *v, struct dm_verity_io *io,
--              enum verity_block_type type, sector_t block, u8 *dest,
--              struct bvec_iter *iter)
-+              sector_t block, u8 *dest, struct bvec_iter *iter)
-  {
-      int r;
-      struct dm_verity_fec_io *fio = fec_io(io);
-@@ -434,9 +433,6 @@ int verity_fec_decode(struct dm_verity *v, struct 
-dm_verity_io *io,
-
-      fio->level++;
-
--    if (type == DM_VERITY_BLOCK_TYPE_METADATA)
--        block += v->data_blocks;
--
-      /*
-       * For RS(M, N), the continuous FEC data is divided into blocks of N
-       * bytes. Since block size may not be divisible by N, the last block
-diff --git a/drivers/md/dm-verity-fec.h b/drivers/md/dm-verity-fec.h
-index 42fbd3a7fc9f..7e2fea0f8cbf 100644
---- a/drivers/md/dm-verity-fec.h
-+++ b/drivers/md/dm-verity-fec.h
-@@ -68,8 +68,7 @@ struct dm_verity_fec_io {
-  extern bool verity_fec_is_enabled(struct dm_verity *v);
-
-  extern int verity_fec_decode(struct dm_verity *v, struct dm_verity_io *io,
--                 enum verity_block_type type, sector_t block,
--                 u8 *dest, struct bvec_iter *iter);
-+                 sector_t block, u8 *dest, struct bvec_iter *iter);
-
-  extern unsigned verity_fec_status_table(struct dm_verity *v, unsigned sz,
-                      char *result, unsigned maxlen);
-@@ -98,7 +97,6 @@ static inline bool verity_fec_is_enabled(struct 
-dm_verity *v)
-
-  static inline int verity_fec_decode(struct dm_verity *v,
-                      struct dm_verity_io *io,
--                    enum verity_block_type type,
-                      sector_t block, u8 *dest,
-                      struct bvec_iter *iter)
-  {
-diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
-index eec9f252e935..a91b4cb2bf54 100644
---- a/drivers/md/dm-verity-target.c
-+++ b/drivers/md/dm-verity-target.c
-@@ -303,7 +303,6 @@ static int verity_verify_level(struct dm_verity *v, 
-struct dm_verity_io *io,
-                    v->digest_size) == 0))
-              aux->hash_verified = 1;
-          else if (verity_fec_decode(v, io,
--                       DM_VERITY_BLOCK_TYPE_METADATA,
-                         hash_block, data, NULL) == 0)
-              aux->hash_verified = 1;
-          else if (verity_handle_err(v,
-@@ -521,8 +520,7 @@ static int verity_verify_io(struct dm_verity_io *io)
-              if (v->validated_blocks)
-                  set_bit(cur_block, v->validated_blocks);
-              continue;
--        }
--        else if (verity_fec_decode(v, io, DM_VERITY_BLOCK_TYPE_DATA,
-+        } else if (verity_fec_decode(v, io,
-                         cur_block, NULL, &start) == 0)
-              continue;
-          else if (verity_handle_err(v, DM_VERITY_BLOCK_TYPE_DATA,
--- 
-2.17.1
+On Tue, Apr 07, 2020 at 3:27 :00PM +0900, Krzysztof Kozlowski wrote:
+> On Tue, Apr 07, 2020 at 08:08:49AM +0900, Hyunki Koo wrote:
+> > Support 32-bit access for the TX/RX hold registers UTXH and URXH.
+> >
+> > This is required for some newer SoCs.
+> >
+> > Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
+> > ---
+> 
+> Why I am adding these for the third time?
+Sorry, I didn't knew that,
+I will keep this next time
+> 
+> Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Best regards,
+> Krzysztof
 
