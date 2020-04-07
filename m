@@ -2,166 +2,90 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6447C2BB54
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082E2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77187206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YeN2wkd6"
+	by mail.kernel.org (Postfix) with ESMTP id CEF8520644
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgDGLNX (ORCPT
+        id S1728360AbgDGLOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:13:23 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:42508 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbgDGLNL (ORCPT
+        Tue, 7 Apr 2020 07:14:19 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36739 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728156AbgDGLOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:13:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=EERUli1mua+BUZZR7dTWluOlG7HZQbwICdu9Og1crjA=; b=YeN2wkd6NQzzXsBrPfnKVWREI/
-        Tyr2nMIWAJ7cEda/jxtMkihEChZ5ebmoORndXl+rAFGO9NhzEYU3fc9ka3hdk+hfxukRHw4ogOT+j
-        vDkspXmo3OyR8+RO6rCH0mSHg1zXRECmqBgBQssyHlxzQZI6uvzscFVfIniXJal/nhN+Mt1CHTi+V
-        /W6wyiQIimI7X4xjY0YePEgAi5lYy65LCYVIuA+3fhOpfNKmyMOf/h207c2POv4tFFpQLz0wNWMUh
-        +NwNPioo38dGm48BHXfzvm2/+GWvCIEys38EL/ALfhhz9OCiPSx/Z+fTew1T09XhZI5HGNJOMjoyv
-        iKPzXE/Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLm9m-0007DO-OF; Tue, 07 Apr 2020 11:12:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 430083010C8;
-        Tue,  7 Apr 2020 13:12:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 1D75F28565C0D; Tue,  7 Apr 2020 13:12:36 +0200 (CEST)
-Message-Id: <20200407111007.198738828@infradead.org>
-User-Agent: quilt/0.65
-Date:   Tue, 07 Apr 2020 13:02:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, linux-kernel@vger.kernel.org
-Cc:     hch@infradead.org, sean.j.christopherson@intel.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kenny@panix.com, peterz@infradead.org, jeyu@kernel.org,
-        rasmus.villemoes@prevas.dk, pbonzini@redhat.com,
-        fenghua.yu@intel.com, xiaoyao.li@intel.com, nadav.amit@gmail.com,
-        thellstrom@vmware.com, tony.luck@intel.com, rostedt@goodmis.org,
-        gregkh@linuxfoundation.org, jannh@google.com,
-        keescook@chromium.org, David.Laight@aculab.com,
-        dcovelli@vmware.com, mhiramat@kernel.org
-Subject: [PATCH 1/4] module: Expose load_info to arch module loader code
-References: <20200407110236.930134290@infradead.org>
+        Tue, 7 Apr 2020 07:14:19 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k18so1129161oib.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 04:14:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6LFIhFPtPPKJ3ndghHuNkRs8YK+fMEM1IjmTl+p5MPs=;
+        b=iYuJbmqJH5abSIKPAw4GCnRAu5+28RRuPDmyExIN43517PnZYuwuzZQVcznQYuH4S9
+         w/sH3PWiCT5U8qZvhPnsyg+MoPMSaODv2i6uWnfPtk0UJjC+BtC6wmFvtokqoIWBYgQL
+         rAn3TGHsV0a+3euIpsi3s/osOOz3d9JdlmLWp4iEI4HLzWzKKB7eDfaNifA1x0g2bFRA
+         277R5KIdUUAhl9Lg2WJiCfSKp53dkkZXZrzf5nFVaQjFkBNmuYMHj+BQ3pJGkN5svyGH
+         pZJZgjNi0ooN3uB1uV4yY4ceIr1JWUmXJyEKOTjaSJ6TPbwj0+HonLGbumSmuim+ZfvW
+         GuPg==
+X-Gm-Message-State: AGi0PuZYAbRh9u/6cB8/2nbBhergwAK/8kqmdz67eBl+7VMMvTrNqKzq
+        USJfJVELf6WzdgsU77s1sWnWYqQgiYqXwpSJRnI=
+X-Google-Smtp-Source: APiQypLaq1/7PvbU+aucJpFvKxhOnhbk0dV8Qd3pppkFhUN10n44mcY0arNBmKRwHIkNZilLzSf/4/95JSUapvY/ftg=
+X-Received: by 2002:aca:4e57:: with SMTP id c84mr1165333oib.148.1586258058642;
+ Tue, 07 Apr 2020 04:14:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20200407103537.4138-1-max.krummenacher@toradex.com> <20200407103537.4138-4-max.krummenacher@toradex.com>
+In-Reply-To: <20200407103537.4138-4-max.krummenacher@toradex.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Apr 2020 13:14:07 +0200
+Message-ID: <CAMuHMdUBMwwBNhBABu-9=oz02hO2=vPkMjUyG=Q43FPTPMxJjg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] arm64: defconfig: ARCH_R8A7795: follow changed config
+ symbol name
+To:     Max Krummenacher <max.oss.09@gmail.com>
+Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Olof Johansson <olof@lixom.net>, Li Yang <leoyang.li@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jessica Yu <jeyu@kernel.org>
+Hi Max,
 
-The x86 module loader wants to check the value of a modinfo flag
-(sld_safe), before proceeding to scan the module text for VMX
-instructions. Unfortunately the arch module code currently does not have
-access to load_info, but we can easily expose that via moduleloader.h,
-which every arch module code must already include.
+On Tue, Apr 7, 2020 at 12:36 PM Max Krummenacher <max.oss.09@gmail.com> wrote:
+> Completes commit b925adfceb52 ("soc: renesas: Add ARCH_R8A7795[01] for
+> existing R-Car H3") and commit 361c5dbb446e ("arm64: dts: renesas:
+> Remove use of ARCH_R8A7795").
+>
+> CONFIG_ARCH_R8A7795 was split in CONFIG_ARCH_R8A77950 and
+> CONFIG_ARCH_R8A77951.
+>
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200406160420.14407-1-jeyu@kernel.org
----
+Thanks, as I was going to send a similar patch after v5.7-rc1:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
- include/linux/moduleloader.h | 20 ++++++++++++++++++++
- kernel/module-internal.h     | 23 -----------------------
- kernel/module_signing.c      |  2 +-
- 3 files changed, 21 insertions(+), 24 deletions(-)
+Gr{oetje,eeting}s,
 
-Index: linux-2.6/include/linux/moduleloader.h
-===================================================================
---- linux-2.6.orig/include/linux/moduleloader.h
-+++ linux-2.6/include/linux/moduleloader.h
-@@ -6,6 +6,26 @@
- #include <linux/module.h>
- #include <linux/elf.h>
- 
-+struct load_info {
-+	const char *name;
-+	/* pointer to module in temporary copy, freed at end of load_module() */
-+	struct module *mod;
-+	Elf_Ehdr *hdr;
-+	unsigned long len;
-+	Elf_Shdr *sechdrs;
-+	char *secstrings, *strtab;
-+	unsigned long symoffs, stroffs, init_typeoffs, core_typeoffs;
-+	struct _ddebug *debug;
-+	unsigned int num_debug;
-+	bool sig_ok;
-+#ifdef CONFIG_KALLSYMS
-+	unsigned long mod_kallsyms_init_off;
-+#endif
-+	struct {
-+		unsigned int sym, str, mod, vers, info, pcpu;
-+	} index;
-+};
-+
- /* These may be implemented by architectures that need to hook into the
-  * module loader code.  Architectures that don't need to do anything special
-  * can just rely on the 'weak' default hooks defined in kernel/module.c.
-Index: linux-2.6/kernel/module-internal.h
-===================================================================
---- linux-2.6.orig/kernel/module-internal.h
-+++ linux-2.6/kernel/module-internal.h
-@@ -5,27 +5,4 @@
-  * Written by David Howells (dhowells@redhat.com)
-  */
- 
--#include <linux/elf.h>
--#include <asm/module.h>
--
--struct load_info {
--	const char *name;
--	/* pointer to module in temporary copy, freed at end of load_module() */
--	struct module *mod;
--	Elf_Ehdr *hdr;
--	unsigned long len;
--	Elf_Shdr *sechdrs;
--	char *secstrings, *strtab;
--	unsigned long symoffs, stroffs, init_typeoffs, core_typeoffs;
--	struct _ddebug *debug;
--	unsigned int num_debug;
--	bool sig_ok;
--#ifdef CONFIG_KALLSYMS
--	unsigned long mod_kallsyms_init_off;
--#endif
--	struct {
--		unsigned int sym, str, mod, vers, info, pcpu;
--	} index;
--};
--
- extern int mod_verify_sig(const void *mod, struct load_info *info);
-Index: linux-2.6/kernel/module_signing.c
-===================================================================
---- linux-2.6.orig/kernel/module_signing.c
-+++ linux-2.6/kernel/module_signing.c
-@@ -8,11 +8,11 @@
- #include <linux/kernel.h>
- #include <linux/errno.h>
- #include <linux/module.h>
-+#include <linux/moduleloader.h>
- #include <linux/module_signature.h>
- #include <linux/string.h>
- #include <linux/verification.h>
- #include <crypto/public_key.h>
--#include "module-internal.h"
- 
- /*
-  * Verify the signature on a module.
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
