@@ -2,110 +2,96 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88989C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3965C2BABC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1B020672
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:33:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/zRB9Wh"
+	by mail.kernel.org (Postfix) with ESMTP id C6AF220748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 03:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgDGDdl (ORCPT
+        id S1726680AbgDGDfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 23:33:41 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35914 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgDGDdl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 23:33:41 -0400
-Received: by mail-pj1-f67.google.com with SMTP id nu11so170448pjb.1;
-        Mon, 06 Apr 2020 20:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i/Z+1EhzPKH/+gfsWTS8RfxVvrjmpU0UXINubSAXsU4=;
-        b=X/zRB9WhYvcfUKxGIE5qtnjlusjCpiEokIO2jk8OX71FC9c0apvw+FTHWDkekRGt01
-         V/okEsXmgjLwNaevfOAqS8dV0Jji+ykoU2gVNgtzHxlEJ7peVucFhOAj0EV53Nd4DvKr
-         7ZL5SScqMLPqUXpIQunZ2YmpU0+/Gy+ukoRbt2zTwCS5a161ygE2cby2/+bT52hQ/xT3
-         xTRCop7JoA0oS22vy1XwAkaQvlKPhko4UxpXIsGTI41L624in70wPAzCLWTThShdr356
-         LnTBsUHZL58BCMW+gUW73jjgf6gsob8OhkJLC2QoVyXvxhBZTrXUBz0mwHF2xH6vylYe
-         q6oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i/Z+1EhzPKH/+gfsWTS8RfxVvrjmpU0UXINubSAXsU4=;
-        b=AlH1c/T0wvl83trtQJvjRgv0R97d6AUUKFhRAalEEDS7T+9+K+9wToadC89852319k
-         DDRt66mdd2oywPjtGfmMjLQXKvnLMZqv+rVLNU2DsKq31fAGSiLD35UOJ/zFL4SF1imP
-         b7dDpU0+JMf5J5h3nLfaW03zTr/uNwyr3NxgAKcpffzEcSnggy3iuDX79p68bQyFzmE+
-         /ivQGB7kpA0IEpPwt1kksVbCry0MVqP7qwEL3bc3aJmuNq9rM7NIXODUCsP4lrWCQMXA
-         EeM1+anwhPpHmBmo+4IYqyF0SOTeDMbS753Znqf1hwTzGWSiSqXtM3b25jYpVZaih1Mx
-         fRoA==
-X-Gm-Message-State: AGi0Pua2JXsOIsfWw8js5kkL3Cq5jb/3x8Wv34xCas6uOOuXfzCc0eDB
-        z0dhcvj8suf++m6O2mLxUJQ=
-X-Google-Smtp-Source: APiQypIrfQvZJT2LwyUWRkkFYRDnJFheak81MJ0TQxqjm4du4jwr6HHNoKxehU7mesYXzZ7gdesZmw==
-X-Received: by 2002:a17:902:9892:: with SMTP id s18mr490734plp.321.1586230419618;
-        Mon, 06 Apr 2020 20:33:39 -0700 (PDT)
-Received: from gmail.com ([2601:600:817f:a132:df3e:521d:99d5:710d])
-        by smtp.gmail.com with ESMTPSA id q71sm12941277pfc.92.2020.04.06.20.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 20:33:38 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 20:33:34 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc:     Dmitry Safonov <dima@arista.com>, Andrei Vagin <avagin@openvz.or>,
-        Adrian Reber <adrian@lisas.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Containers <containers@lists.linux-foundation.org>
-Subject: Re: [PATCH] ns: Fix time_for_children symlink
-Message-ID: <20200407033334.GC494464@gmail.com>
-References: <a2418c48-ed80-3afe-116e-6611cb799557@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <a2418c48-ed80-3afe-116e-6611cb799557@gmail.com>
+        Mon, 6 Apr 2020 23:35:21 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:54254 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726329AbgDGDfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 23:35:20 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz97x9Ite6MAkAA--.35S2;
+        Tue, 07 Apr 2020 11:35:13 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: [PATCH] spi: spidev_test: Remove hidden temporary file when make clean
+Date:   Tue,  7 Apr 2020 11:35:12 +0800
+Message-Id: <1586230512-5507-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxz97x9Ite6MAkAA--.35S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zr18urWruw1rCr4rAF48Crg_yoW8JFyxpa
+        yFv3WkCF4UXryUWr1kW395uFy7Jry7Jr1kJayYgwn5t343Zw1jgFyF9rWjkr4UCasYqasx
+        Xr47Kr1j9F1vya7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkv14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+        1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8
+        GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r
+        1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij
+        64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+        0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+        42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUxb18UUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 03, 2020 at 02:11:39PM +0200, Michael Kerrisk (man-pages) wrote:
-> Dmitry, Andrei,
-> 
-> Looking at the contents of the /proc/PID/ns/time_for_children
-> symlink shows an anomaly:
-> 
-> $ ls -l /proc/self/ns/* |awk '{print $9, $10, $11}'
-> ...
-> /proc/self/ns/pid -> pid:[4026531836]
-> /proc/self/ns/pid_for_children -> pid:[4026531836]
-> /proc/self/ns/time -> time:[4026531834]
-> /proc/self/ns/time_for_children -> time_for_children:[4026531834]
-> /proc/self/ns/user -> user:[4026531837]
-> ...
-> 
-> The reference for 'time_for_children' should be a 'time' namespace,
-> just as the reference for 'pid_for_children' is a 'pid' namespace.
-> In other words, I think the above time_for_children link should read:
-> 
-> /proc/self/ns/time_for_children -> time:[4026531834]
-> 
-> If you agree with this patch, then it should be marked for
-> stable@vger.kernel.org.
->
+In the current code, it only removes *.o and .*.o.d file when make clean,
+there still exists useless .*.o.cmd file, just remove it.
 
-Acked-by: Andrei Vagin <avagin@gmail.com>
+Without this patch:
+
+[yangtiezhu@linux spi]$ make
+[yangtiezhu@linux spi]$ make clean
+[yangtiezhu@linux spi]$ ls -1 .*.o.cmd
+.spidev_fdx-in.o.cmd
+.spidev_fdx.o.cmd
+.spidev_test-in.o.cmd
+.spidev_test.o.cmd
+
+With this patch:
+
+[yangtiezhu@linux spi]$ make
+[yangtiezhu@linux spi]$ make clean
+[yangtiezhu@linux spi]$ ls -1 .*.o.cmd
+ls: cannot access .*.o.cmd: No such file or directory
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/spi/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tools/spi/Makefile b/tools/spi/Makefile
+index 2249a15..ada881a 100644
+--- a/tools/spi/Makefile
++++ b/tools/spi/Makefile
+@@ -52,7 +52,9 @@ $(OUTPUT)spidev_fdx: $(SPIDEV_FDX_IN)
+ clean:
+ 	rm -f $(ALL_PROGRAMS)
+ 	rm -rf $(OUTPUT)include/
+-	find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
++	find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete
++	find $(if $(OUTPUT),$(OUTPUT),.) -name '\.*.o.d' -delete
++	find $(if $(OUTPUT),$(OUTPUT),.) -name '\.*.o.cmd' -delete
  
-> Signed-off-by: Michael Kerrisk <mtk.manpages@gmail.com>
+ install: $(ALL_PROGRAMS)
+ 	install -d -m 755 $(DESTDIR)$(bindir);		\
+-- 
+2.1.0
+
