@@ -2,120 +2,128 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB29BC2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF56C2BB85
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD84D20747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F418208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 14:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbgDGOyf (ORCPT
+        id S1729295AbgDGOzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 10:54:35 -0400
-Received: from mga06.intel.com ([134.134.136.31]:25333 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728855AbgDGOyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 10:54:35 -0400
-IronPort-SDR: vzH2e/ETbj/Ls1bFDYAfNn5Ele1iE+N+3Ma3JrI+SPdUsapHZh3oUD0xO1TfDoiD54Jj6HW3PF
- /HcFSleC2vkQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 07:54:34 -0700
-IronPort-SDR: cOZmMIE0ak5uQfYildm7qw134FQCkEL1T7TEy6C+ICKnfA8A0r6yAgOesc5pOEYZpwGdg1fk17
- thIr/oSRo8dA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,354,1580803200"; 
-   d="scan'208";a="254480922"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2020 07:54:34 -0700
-Received: from [10.249.224.62] (abudanko-mobl.ccr.corp.intel.com [10.249.224.62])
-        by linux.intel.com (Postfix) with ESMTP id D324C5802BC;
-        Tue,  7 Apr 2020 07:54:28 -0700 (PDT)
-Subject: Re: [PATCH v8 00/12] Introduce CAP_PERFMON to secure system
- performance monitoring and observability
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Serge Hallyn <serge@hallyn.com>, Jiri Olsa <jolsa@redhat.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linux-man@vger.kernel.org
-References: <f96f8f8a-e65c-3f36-dc85-fc3f5191e8c5@linux.intel.com>
- <20200407143014.GD11186@kernel.org> <20200407143551.GF11186@kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <10cc74ee-8587-8cdb-f85f-5724b370a2ce@linux.intel.com>
-Date:   Tue, 7 Apr 2020 17:54:27 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 10:55:22 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:42197 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729268AbgDGOzW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 10:55:22 -0400
+Received: from kb-xps (unknown [78.193.40.249])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id DE9D2240009;
+        Tue,  7 Apr 2020 14:55:11 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 16:55:10 +0200
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 2/3] Input: rotary-encoder-counter: add DT bindings
+Message-ID: <20200407145510.GC1489441@kb-xps>
+References: <20200406155806.1295169-1-kamel.bouhara@bootlin.com>
+ <20200406155806.1295169-3-kamel.bouhara@bootlin.com>
+ <20200407094159.xtbhtsxorvs2g22c@gilmour.lan>
+ <20200407110339.GA1489441@kb-xps>
+ <20200407142238.ik67isetbggn2rh3@gilmour.lan>
 MIME-Version: 1.0
-In-Reply-To: <20200407143551.GF11186@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407142238.ik67isetbggn2rh3@gilmour.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.04.2020 17:35, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Apr 07, 2020 at 11:30:14AM -0300, Arnaldo Carvalho de Melo escreveu:
->> [perf@five ~]$ type perf
->> perf is hashed (/home/perf/bin/perf)
->> [perf@five ~]$ getcap /home/perf/bin/perf
->> /home/perf/bin/perf = cap_sys_ptrace,cap_syslog,38+ep
->> [perf@five ~]$ groups
->> perf perf_users
->> [perf@five ~]$ id
->> uid=1002(perf) gid=1002(perf) groups=1002(perf),1003(perf_users) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
->> [perf@five ~]$ perf top --stdio
->> Error:
->> Failed to mmap with 1 (Operation not permitted)
->> [perf@five ~]$ perf record -a
->> ^C[ perf record: Woken up 1 times to write data ]
->> [ perf record: Captured and wrote 1.177 MB perf.data (1552 samples) ]
->>
->> [perf@five ~]$ perf evlist
->> cycles:u
->> [perf@five ~]$
-> 
-> Humm, perf record falls back to cycles:u after initially trying cycles
-> (i.e. kernel and userspace), lemme see trying 'perf top -e cycles:u',
-> lemme test, humm not really:
-> 
-> [perf@five ~]$ perf top --stdio -e cycles:u
-> Error:
-> Failed to mmap with 1 (Operation not permitted)
-> [perf@five ~]$ perf record -e cycles:u -a sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 1.123 MB perf.data (132 samples) ]
-> [perf@five ~]$
-> 
-> Back to debugging this.
+On Tue, Apr 07, 2020 at 04:22:38PM +0200, Maxime Ripard wrote:
+> On Tue, Apr 07, 2020 at 01:03:39PM +0200, Kamel Bouhara wrote:
+> > > On Mon, Apr 06, 2020 at 05:58:05PM +0200, Kamel Bouhara wrote:
+> > > > Add dt binding for the counter variant of the rotary encoder driver.
+> > > >
+> > > > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > > ---
+> > > >  .../input/rotary-encoder-counter.yaml         | 67 +++++++++++++++++++
+> > > >  1 file changed, 67 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..a59f7c1faf0c
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder-counter.yaml
+> > > > @@ -0,0 +1,67 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > >
+> > > Bindings are usually used by other OS's, so you should consider
+> > > putting it under a more permissive license, usually that would be GPL2
+> > > and the BSD-2-Clause
+> >
+> > Well to be honest I just looked into an existing binding and I guess
+> > the wrong one :).
+>
+> Not the wrong ones, but the old ones :)
+>
+> It's painful to change a license on existing files, whereas it's
+> pretty easy to mention it during review.
+>
 
-Could makes sense adding cap_ipc_lock to the binary to isolate from this:
+Alright.
 
-kernel/events/core.c: 6101
-	if ((locked > lock_limit) && perf_is_paranoid() &&
-		!capable(CAP_IPC_LOCK)) {
-		ret = -EPERM;
-		goto unlock;
-	}
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/input/rotary-encoder-counter.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Rotary Encoder Counter
+> > > > +
+> > > > +maintainers:
+> > > > +  - Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > > > +
+> > > > +description:
+> > > > +  Registers a Rotary encoder connected through a counter device.
+> > >
+> > > You shouldn't really describe the action here, but more what the
+> > > binding is about. The registration will not depend on the presence of
+> > > the node following that binding, but rather on whether or not the OS
+> > > that uses it has support for it.
+> > >
+> >
+> > Then shall it be better with just :
+> > "A rotary encoder device using a generic counter interface." ?
+>
+> The generic counter interface is a Linux-only stuff though, some other
+> OS might want to implement something else. Something like "based on a
+> counter"?
+>
 
-~Alexey
+Indeed, that's fair enough.
+
+Thanks.
+
+> Maxime
+
+
+
+--
+Kamel Bouhara, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
