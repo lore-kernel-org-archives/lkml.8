@@ -2,102 +2,220 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E281FC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2197C2BA80
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65EE2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEE120768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:47:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="um7NZxXe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CH0AhQmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgDGAnG (ORCPT
+        id S1726395AbgDGArz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:43:06 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:45324 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGAnG (ORCPT
+        Mon, 6 Apr 2020 20:47:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:41824 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726287AbgDGArz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:43:06 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 71so1426680qtc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 17:43:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SmqCsp5QxJqlhSsYQltOb14Ug2eJJSL1fJBRe6dPxdw=;
-        b=um7NZxXedFQk5SacVy6+a83LWcrVp2HQuSPCovHadsf0PyHz/f+ogGYG1+iaRFL4F6
-         eR7IOFKrzGBp5xk5MV8gQuurcmw1hyfwTefhepBco90BPMkH2dT2b0hs9R9PUbzd3byF
-         L3g5SCXclNDadXjNeLHeVTMzNUIUblwaKm/5ELl/fqJ+3iNlPmz5UEM76J55YPi6a5TG
-         lEN7SnSQD6Af/NKs7FJg/ZSR+FMIjNtGAncfSwPlvREE6sUlOhC7KExBhdbhr+tQu8yp
-         yQarjeBx12yjA7N+rmI109tF62YFdAUOWhMpd1CJUdl7DOEazNf7NtIb43hFlHno/xsE
-         qgfg==
+        Mon, 6 Apr 2020 20:47:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586220472;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4A8YQ5Dh8Pgj3CT+hoT9bdocZnF590ggcBE/fA6MdEE=;
+        b=CH0AhQmYmqiDCNpHgD5g6zDL2aop8qpHwPGl8t+z0/WmJFHwGoY0Ah7qcQ9LyQIU9et+wk
+        MJscZi5OBZ23mCPSR27BfWba87flN16cq0hXid15lf6zEwvSQQAOiQlLnWPgy45G0kfm5t
+        grQViAiJXCvKr+D/QjlWgigWRGOf1fI=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-70n_pFWgO4yYiF_4J-cd9A-1; Mon, 06 Apr 2020 20:47:49 -0400
+X-MC-Unique: 70n_pFWgO4yYiF_4J-cd9A-1
+Received: by mail-qt1-f198.google.com with SMTP id k27so1608459qtf.19
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 17:47:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SmqCsp5QxJqlhSsYQltOb14Ug2eJJSL1fJBRe6dPxdw=;
-        b=LPnXJ6Z3gNbTlUsxnpiOLgr1plqN6Qh5U/rVVqzbboOdYDVChxF3fm2LSnCKxIf7JF
-         U6nTnvNY1Q1zb56ZCDX8yfnrYe3iwgSzZ2ciJmXmGASHG5lzHIKw5p/Hda4QG1Fze+FD
-         qwiRGxNucUo8BrM4ofAJ9RzzG5v9SE+mxeUs24caUHMmypxJScuNldAHSbFFmpL4cbj/
-         iz1h8dpB5Fa2KQYaoI6SC1X1OFAynh113SRjDI4L6yWnt2eUKWN1IpvNltWdAbAjGc6i
-         +yoYNGiMDIXZ9Z+gEV0e2k5PjnaOsqfSoWYZLwl9JPzi9yHxHegmIgeTI5SgV766H3cT
-         FLAQ==
-X-Gm-Message-State: AGi0PuZ6X+Tan77L+1THNb+MckdkNLbwDuGYhueLHvWnOpCY6zCMu9YL
-        L6T/iek8fD8wcKdFSqJ+q8idaFii9v8rW21xjgs=
-X-Google-Smtp-Source: APiQypKFLUlQyC1lpZ+FR4f1LmELwsaGrBqeC81xTHnZcXe1pvBhd2QCNb77gJY7gDkXINi1irADx/SfOkUOgOVRkBM=
-X-Received: by 2002:aed:3346:: with SMTP id u64mr2137234qtd.333.1586220184881;
- Mon, 06 Apr 2020 17:43:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4A8YQ5Dh8Pgj3CT+hoT9bdocZnF590ggcBE/fA6MdEE=;
+        b=tSu/ZsoQUnRhNiExLfMClbZeIldTzeCKmy9NTO0MmQBVLn+8Zv4ph663np6FYjak1S
+         X+mDECBS0SRGBWzaowly16K7bcXbDTSOwZ8UwmID1XA4U/1NQbofOeLyNLF1XT5ZjPHJ
+         iYC5eeeRJtSgNJOBhy8TrILqczWPRi3kzGznD6FWt40Pj017lX+0Xf1UF7kEHMIGqb2N
+         iiiUhQkatVGWeeTaQ+X9lg4aapQnprwTUyCBMsb3HG8ok05DrrG5RdCwnWM44LOPPuc+
+         WtsUDuWbJFReoh4BRJz+QZeRCQKCF7aCLTVs0sAXx4EL4F9SZecWgBxOcsFA4AEJkpCE
+         x3KQ==
+X-Gm-Message-State: AGi0PuaifAQ2jRjLjJudgzuc3KqVXfF5hu9L2IwxDLIOMSNhZY/aWcrg
+        e2UnS+Ou/K/WKkB9k57CnHkAo2B3/AnfZXeJOhCY5EcLB3wSJvbaUC4klQFV5jC9d78Y86GE2mK
+        2RqCP4VY3e3ykoEyiCgtqt9gJ
+X-Received: by 2002:a37:7783:: with SMTP id s125mr23639960qkc.492.1586220468212;
+        Mon, 06 Apr 2020 17:47:48 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJthXq8oS2luLAC4buCmradNon+P1k+eclnAatgEv20AvDoW0IJySAEDm28yeYeY314bvR4bQ==
+X-Received: by 2002:a37:7783:: with SMTP id s125mr23639944qkc.492.1586220467864;
+        Mon, 06 Apr 2020 17:47:47 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::3])
+        by smtp.gmail.com with ESMTPSA id f24sm15097483qkk.127.2020.04.06.17.47.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 17:47:47 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 20:47:45 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     syzbot <syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, bgeffon@google.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
+Subject: Re: BUG: unable to handle kernel paging request in
+ kernel_get_mempolicy
+Message-ID: <20200407004745.GA48345@xz-x1>
+References: <0000000000002b25f105a2a3434d@google.com>
 MIME-Version: 1.0
-References: <1585892447-32059-1-git-send-email-iamjoonsoo.kim@lge.com> <20200406115804.4440-1-hdanton@sina.com>
-In-Reply-To: <20200406115804.4440-1-hdanton@sina.com>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Tue, 7 Apr 2020 09:42:54 +0900
-Message-ID: <CAAmzW4NxHW5boy6OiPcwzamwrJGXnEVNgn27ACtfDCoqQ3F24w@mail.gmail.com>
-Subject: Re: [PATCH v5 05/10] mm/swap: charge the page when adding to the swap cache
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0000000000002b25f105a2a3434d@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 4=EC=9B=94 6=EC=9D=BC (=EC=9B=94) =EC=98=A4=ED=9B=84 8:58, Hi=
-llf Danton <hdanton@sina.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
->
-> On Fri,  3 Apr 2020 14:40:43 +0900 Joonsoo Kim wrote:
-> >
-> > @@ -153,11 +165,16 @@ int add_to_swap_cache(struct page *page, swp_entr=
-y_t entry,
-> >               xas_unlock_irq(&xas);
-> >       } while (xas_nomem(&xas, gfp));
-> >
-> > -     if (!xas_error(&xas))
-> > +     if (!xas_error(&xas)) {
-> > +             mem_cgroup_commit_charge(page, memcg, false, compound);
->
-> Add a tp
->                 trace_mm_add_to_swap_cache(page);
+On Mon, Apr 06, 2020 at 11:16:13AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    bef7b2a7 Merge tag 'devicetree-for-5.7' of git://git.kerne..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13966e8fe00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=91b674b8f0368e69
+> dashboard link: https://syzkaller.appspot.com/bug?extid=693dc11fcb53120b5559
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1738b02be00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d2c76de00000
+> 
+> The bug was bisected to:
+> 
+> commit 4426e945df588f2878affddf88a51259200f7e29
+> Author: Peter Xu <peterx@redhat.com>
+> Date:   Thu Apr 2 04:08:49 2020 +0000
+> 
+>     mm/gup: allow VM_FAULT_RETRY for multiple times
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14ac4a5de00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=16ac4a5de00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12ac4a5de00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com
+> Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
+> 
+> BUG: unable to handle page fault for address: ffffffff00000000
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 987c067 P4D 987c067 PUD 0 
+> Oops: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 7181 Comm: syz-executor616 Not tainted 5.6.0-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:page_to_nid include/linux/mm.h:1245 [inline]
+> RIP: 0010:lookup_node mm/mempolicy.c:906 [inline]
+> RIP: 0010:do_get_mempolicy mm/mempolicy.c:970 [inline]
+> RIP: 0010:kernel_get_mempolicy+0x60e/0xfb0 mm/mempolicy.c:1615
+> Code: 88 00 07 00 00 e8 b2 35 c5 ff 4c 8b 7c 24 78 48 b8 00 00 00 00 00 fc ff df 4c 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 fb 08 00 00 <49> 8b 1f 48 c7 c7 ff ff ff ff 48 89 de e8 10 37 c5 ff 48 83 fb ff
+> RSP: 0018:ffffc900018d7de8 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff81adaaf1
+> RDX: 1fffffffe0000000 RSI: ffffffff81adaafe RDI: 0000000000000005
+> RBP: 0000000000000000 R08: ffff88808de924c0 R09: ffffed1011bd2499
+> R10: ffff88808de924c7 R11: ffffed1011bd2498 R12: 0000000000000000
+> R13: 1ffff9200031afc4 R14: ffffffff89a6df60 R15: ffffffff00000000
+> FS:  00007f848cd4a700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffff00000000 CR3: 00000000a7a8d000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  __do_sys_get_mempolicy mm/mempolicy.c:1633 [inline]
+>  __se_sys_get_mempolicy mm/mempolicy.c:1629 [inline]
+>  __x64_sys_get_mempolicy+0xba/0x150 mm/mempolicy.c:1629
+>  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+>  entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> RIP: 0033:0x446719
+> Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f848cd49db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ef
+> RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000446719
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: 00000000006dbc20 R08: 0000000000000003 R09: 0000000000000000
+> R10: 000000002073b000 R11: 0000000000000246 R12: 00000000006dbc2c
+> R13: 00007ffcfe6ba66f R14: 00007f848cd4a9c0 R15: 20c49ba5e353f7cf
+> Modules linked in:
+> CR2: ffffffff00000000
+> ---[ end trace 0becf554e06291c3 ]---
+> RIP: 0010:page_to_nid include/linux/mm.h:1245 [inline]
+> RIP: 0010:lookup_node mm/mempolicy.c:906 [inline]
+> RIP: 0010:do_get_mempolicy mm/mempolicy.c:970 [inline]
+> RIP: 0010:kernel_get_mempolicy+0x60e/0xfb0 mm/mempolicy.c:1615
+> Code: 88 00 07 00 00 e8 b2 35 c5 ff 4c 8b 7c 24 78 48 b8 00 00 00 00 00 fc ff df 4c 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 fb 08 00 00 <49> 8b 1f 48 c7 c7 ff ff ff ff 48 89 de e8 10 37 c5 ff 48 83 fb ff
+> RSP: 0018:ffffc900018d7de8 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff81adaaf1
+> RDX: 1fffffffe0000000 RSI: ffffffff81adaafe RDI: 0000000000000005
+> RBP: 0000000000000000 R08: ffff88808de924c0 R09: ffffed1011bd2499
+> R10: ffff88808de924c7 R11: ffffed1011bd2498 R12: 0000000000000000
+> R13: 1ffff9200031afc4 R14: ffffffff89a6df60 R15: ffffffff00000000
+> FS:  00007f848cd4a700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffffff00000000 CR3: 00000000a7a8d000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Please let me know the reason of this comment. IMO, adding a tracepoint isn=
-'t
-good idea until it is really necessary since it is considered as
-kernel ABI and it
-cannot be changed easily.
+Hi, Andrew & all,
 
-Thanks.
+I can reproduce this locally right after I run the test program, and
+below patch fixed it for me - the test program can run with quite a
+few minutes without crashing again.
+
+Is there a way I can feed this to the syzbot to re-verify this?
+
+Thanks,
+
+8<---------------------------------------------------------------
+From 23800bff6fa346a4e9b3806dc0cfeb74498df757 Mon Sep 17 00:00:00 2001
+From: Peter Xu <peterx@redhat.com>
+Date: Mon, 6 Apr 2020 20:40:13 -0400
+Subject: [PATCH] mm/mempolicy: Allow lookup_node() to handle fatal signal
+
+lookup_node() uses gup to pin the page and get node information.  It
+checks against ret>=0 assuming the page will be filled in.  However
+it's also possible that gup will return zero, for example, when the
+thread is quickly killed with a fatal signal.  Teach lookup_node() to
+gracefully return an error -EFAULT if it happens.
+
+Reported-by: syzbot+693dc11fcb53120b5559@syzkaller.appspotmail.com
+Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ mm/mempolicy.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 5fb427aed612..1398578db025 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -902,7 +902,10 @@ static int lookup_node(struct mm_struct *mm, unsigned long addr)
+ 
+ 	int locked = 1;
+ 	err = get_user_pages_locked(addr & PAGE_MASK, 1, 0, &p, &locked);
+-	if (err >= 0) {
++	if (err == 0) {
++		/* E.g. GUP interupted by fatal signal */
++		err = -EFAULT;
++	} else if (err > 0) {
+ 		err = page_to_nid(p);
+ 		put_page(p);
+ 	}
+-- 
+2.24.1
+
+
+-- 
+Peter Xu
+
