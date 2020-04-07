@@ -2,199 +2,101 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E037C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C50C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFD920730
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C6B20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RpyBtvuW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMOAgM9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgDGSzO (ORCPT
+        id S1726796AbgDGSz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 14:55:14 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10343 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbgDGSzN (ORCPT
+        Tue, 7 Apr 2020 14:55:29 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42789 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726339AbgDGSz3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 14:55:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e8ccc2a0001>; Tue, 07 Apr 2020 11:53:30 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Apr 2020 11:55:12 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Apr 2020 11:55:12 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr
- 2020 18:55:12 +0000
-Received: from [10.24.37.103] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Apr 2020
- 18:55:07 +0000
-From:   sumitg <sumitg@nvidia.com>
-Subject: Re: [TEGRA194_CPUFREQ Patch v2 2/3] cpufreq: Add Tegra194 cpufreq
- driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <talho@nvidia.com>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <bbasu@nvidia.com>, <mperttunen@nvidia.com>, <sumitg@nvidia.com>
-References: <1586028547-14993-1-git-send-email-sumitg@nvidia.com>
- <1586028547-14993-3-git-send-email-sumitg@nvidia.com>
- <67f9feb1-ba51-f1ac-b6eb-4587924d0748@gmail.com>
-Message-ID: <538ddcf4-b760-a342-eab6-5a61c9bd860a@nvidia.com>
-Date:   Wed, 8 Apr 2020 00:25:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <67f9feb1-ba51-f1ac-b6eb-4587924d0748@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Tue, 7 Apr 2020 14:55:29 -0400
+Received: by mail-il1-f196.google.com with SMTP id f16so4283006ilj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 11:55:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=/tslLXuxoyVjSOLI35ip3I2Cd88F7bzLCM3Xyu1bIgM=;
+        b=WMOAgM9DrLI4UXG0tvW08mYqzl77Gk7Xb0oSU1n8sL1ius69d9XwTvx0OUV8qBYAqL
+         SvUPKPH6SQ6mY9EXYJuX2zhxE9TOJ46+yakaNtEpBkwaxKsape35cHBAeLeS6z68+9mw
+         TcPIsxqO9PEpOkEzb2/Ji/WtxrG93oiM9mpk5mmNxq8AHl0Kn7hQE7npRo8Q4o2zTdAn
+         LHhh0XIZCRmBp2qtirzd99BwrSeFd8ZI9q+ID5u1gvnkjiUumiCIh42HS12eXoE+7NJU
+         CB9hrzTlr1cHWYR2lHSSMIQOYhtoIazsjcDEIaX7/PseveInY1o3oWdd10ZaSakarfuq
+         Hz1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=/tslLXuxoyVjSOLI35ip3I2Cd88F7bzLCM3Xyu1bIgM=;
+        b=f1k8pkNvI/pdatnVZNPmHWxvFXH2UqdlAqR3RMepguNBqZQtyw8K33X2yDbQewE4+Z
+         1P498jYPLXyFGRAnfuhRw0eLwZGkfpwvVf/2y2FY5CZk/l9rt1xo9ZZU7ZmqERY0y/Pd
+         madc3ewqo920EVdsCQskyCRRlthJ0B7l4xLWC5Cl7lQ6IQi8uah4x1TXK5PbMylEeGr7
+         Nc4fzyeN54PLCyJ/YPWPyJk9HW6Kg8o39PIcX57ikfqqV/KL+6iej/OFLguXQAlaKkoS
+         9d61kt6hXA4dlPP5FtC17X9TQD61nSVLbeAbqme8UPivXvy6g0Q5IYeEOac5lWZ8+bOz
+         R/AQ==
+X-Gm-Message-State: AGi0PuaprF7WN79eS2y6gXHrw2+xO6gqKbJEBGT7T3OJopfyYB1Su6AP
+        eGS/EmdhrsCyjNYGRPFW1Nc=
+X-Google-Smtp-Source: APiQypKz3YCF7dQUKJtJtT0hWDaVgRVOTnWtQ71Ph3AWJXhZHfAJWm54lRtwbLGHWugt7DHibd/eVw==
+X-Received: by 2002:a92:1581:: with SMTP id 1mr3983101ilv.144.1586285727755;
+        Tue, 07 Apr 2020 11:55:27 -0700 (PDT)
+Received: from ?IPv6:2601:647:4700:9b2:1d50:a6a4:b3be:b3e4? ([2601:647:4700:9b2:1d50:a6a4:b3be:b3e4])
+        by smtp.gmail.com with ESMTPSA id x10sm7509021ili.88.2020.04.07.11.55.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 Apr 2020 11:55:26 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <20200407111007.429362016@infradead.org>
+Date:   Tue, 7 Apr 2020 11:55:21 -0700
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, hch@infradead.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        mingo <mingo@redhat.com>, bp <bp@alien8.de>, hpa@zytor.com,
+        x86 <x86@kernel.org>, "Kenneth R. Crudup" <kenny@panix.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jannh@google.com, keescook@chromium.org, David.Laight@aculab.com,
+        Doug Covelli <dcovelli@vmware.com>, mhiramat@kernel.org
 Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1586285610; bh=9hwDPF9VnbM85J5PKb1WmMWXNhaY35UANwXzXHCJb2w=;
-        h=X-PGP-Universal:From:Subject:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=RpyBtvuW4zXVIrNxiDX8UX/Xomrv4A7Z1yqgIwYlAcurOdV36H+rD1k/iCneY13Hb
-         BYk5O90k96V1wzaJPZZRJNnfi/xRQZjTWt1o8o2/CxaD84gq0hvbejKpJkcc4+u0Aw
-         eBTOFS12N1UXN6XEBSuhB6mw7X6RLWRF3oNEcb9ZRQmKPka04lrRIBWoYAK/NUvyEK
-         +GtOEw3fTZijPq2+kMcQbb8av8mxL38StLZL6bi22+1zkGxGNu5jMe3SeDKl2seMov
-         rCoaXtZGRBaJaGjFY/nalQmATSCQjKt95+sdsoicBKJ3THhoMW6rliFPHzmo3GYRNI
-         XpJ5uv/kQ8UCw==
+Message-Id: <10ABBCEE-A74D-4100-99D9-05B4C1758FF6@gmail.com>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.429362016@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> On Apr 7, 2020, at 4:02 AM, Peter Zijlstra <peterz@infradead.org> =
+wrote:
+>=20
+> Since we now have infrastructure to analyze module text, disallow
+> modules that write to CRn and DRn registers.
 
+Assuming the kernel is built without CONFIG_PARAVIRT, what is the right =
+way
+for out-of-tree modules to write to CRs? Let=E2=80=99s say CR2?
 
-On 05/04/20 7:35 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->=20
->=20
-> 04.04.2020 22:29, Sumit Gupta =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
->> +static void tegra_read_counters(struct work_struct *work)
->> +{
->> +     struct read_counters_work *read_counters_work;
->> +     struct tegra_cpu_ctr *c;
->> +     u64 val;
->> +
->> +     /*
->> +      * ref_clk_counter(32 bit counter) runs on constant clk,
->> +      * pll_p(408MHz).
->> +      * It will take =3D 2 ^ 32 / 408 MHz to overflow ref clk counter
->> +      *              =3D 10526880 usec =3D 10.527 sec to overflow
->> +      *
->> +      * Like wise core_clk_counter(32 bit counter) runs on core clock.
->> +      * It's synchronized to crab_clk (cpu_crab_clk) which runs at
->> +      * freq of cluster. Assuming max cluster clock ~2000MHz,
->> +      * It will take =3D 2 ^ 32 / 2000 MHz to overflow core clk counter
->> +      *              =3D ~2.147 sec to overflow
->> +      */
->> +     read_counters_work =3D container_of(work, struct read_counters_wor=
-k,
->> +                                       work);
->> +     c =3D &read_counters_work->c;
->> +
->> +     val =3D read_freq_feedback();
->> +     c->last_refclk_cnt =3D lower_32_bits(val);
->> +     c->last_coreclk_cnt =3D upper_32_bits(val);
->> +     udelay(c->delay);
->> +     val =3D read_freq_feedback();
->> +     c->refclk_cnt =3D lower_32_bits(val);
->> +     c->coreclk_cnt =3D upper_32_bits(val);
->> +}
->> +
->> +/*
->> + * Return instantaneous cpu speed
->> + * Instantaneous freq is calculated as -
->> + * -Takes sample on every query of getting the freq.
->> + *   - Read core and ref clock counters;
->> + *   - Delay for X us
->> + *   - Read above cycle counters again
->> + *   - Calculates freq by subtracting current and previous counters
->> + *     divided by the delay time or eqv. of ref_clk_counter in delta ti=
-me
->> + *   - Return Kcycles/second, freq in KHz
->> + *
->> + *   delta time period =3D x sec
->> + *                     =3D delta ref_clk_counter / (408 * 10^6) sec
->> + *   freq in Hz =3D cycles/sec
->> + *              =3D (delta cycles / x sec
->> + *              =3D (delta cycles * 408 * 10^6) / delta ref_clk_counter
->> + *   in KHz     =3D (delta cycles * 408 * 10^3) / delta ref_clk_counter
->> + *
->> + * @cpu - logical cpu whose freq to be updated
->=20
->=20
->> + * Returns freq in KHz on success, 0 if cpu is offline
->=20
-> I don't see any checks in the code about whether CPU is offline.
->=20
-> Googling for "queue_work_on offline cpu" suggests that this function
-> should hang.
->=20
-Tried this and didn't get crash or hang.
-show_cpuinfo_cur_freq() returns "<unknown>" value on reading frequency=20
-from a cluster having both it's cores offline.
-If only one cpu is offline, then frequency of other online cpu which is=20
-managing the policy of that cluster is returned.
-Have still added below check as guard in get|set() freq calls.
-	if (!cpu_online(cpu))
-		return -EINVAL;
-Thankyou for the input.
-
->> + */
->> +static unsigned int tegra194_get_speed_common(u32 cpu, u32 delay)
->> +{
->> +     struct read_counters_work read_counters_work;
->> +     struct tegra_cpu_ctr c;
->> +     u32 delta_refcnt;
->> +     u32 delta_ccnt;
->> +     u32 rate_mhz;
->> +
->> +     read_counters_work.c.cpu =3D cpu;
->> +     read_counters_work.c.delay =3D delay;
->> +     INIT_WORK_ONSTACK(&read_counters_work.work, tegra_read_counters);
->> +     queue_work_on(cpu, read_counters_wq, &read_counters_work.work);
->> +     flush_work(&read_counters_work.work);
->> +     c =3D read_counters_work.c;
->> +
->> +     if (c.coreclk_cnt < c.last_coreclk_cnt)
->> +             delta_ccnt =3D c.coreclk_cnt + (MAX_CNT - c.last_coreclk_c=
-nt);
->> +     else
->> +             delta_ccnt =3D c.coreclk_cnt - c.last_coreclk_cnt;
->> +     if (!delta_ccnt)
->> +             return 0;
->> +
->> +     /* ref clock is 32 bits */
->> +     if (c.refclk_cnt < c.last_refclk_cnt)
->> +             delta_refcnt =3D c.refclk_cnt + (MAX_CNT - c.last_refclk_c=
-nt);
->> +     else
->> +             delta_refcnt =3D c.refclk_cnt - c.last_refclk_cnt;
->> +     if (!delta_refcnt) {
->> +             pr_debug("cpufreq: %d is idle, delta_refcnt: 0\n", cpu);
->> +             return 0;
->> +     }
->> +     rate_mhz =3D ((unsigned long)(delta_ccnt * REF_CLK_MHZ)) / delta_r=
-efcnt;
->> +
->> +     return (rate_mhz * KHZ); /* in KHz */
->> +}
->=20
