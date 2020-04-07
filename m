@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F44C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D6BC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0476C20768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB1D2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586218175;
-	bh=LsGwzhl9mRdO++Z0F9wZmxu6Hs4Hb4HS+22XNh9FSkM=;
+	s=default; t=1586218185;
+	bh=qM8LL6uEKVv7hUeypNV5D5h6B/YiokxF949tvBiBp3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZamjK+OQAE1ORJ+yxy+djUf90R0JdLliBvaAFmN/ov9hJdG9Hct3ZMND0qjJ9wMI
-	 6bwQdryprS4P9kpnFLdttIS8Uk8Bm4G+R4RnFEt0GkPeUtfrgayPdMzjtQRHIjWi41
-	 U7Il6L7iOpLqy3qbDilUYhuKPr0lZTx3QVuDmXwM=
+	b=ltvD/CLmIojQ0SpA8Y9qB83BEOu4E/iq64cYbA+1ghR1JfrylrTX29cya8jENjev4
+	 Esl8moFJaVLpFDwnHzAmF9JBuY95sAMCVxMR4Ox32bX/TJXaZkhEwBhexPMtaYQhWX
+	 r5TTLcvPPDZKQBe5JLXWLzdwth+gcSztzj0ucshA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgDGABK (ORCPT
+        id S1727742AbgDGAJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33566 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbgDGABI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:01:08 -0400
+        id S1726437AbgDGABG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:01:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 446E920801;
-        Tue,  7 Apr 2020 00:01:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C70620768;
+        Tue,  7 Apr 2020 00:01:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217668;
-        bh=LsGwzhl9mRdO++Z0F9wZmxu6Hs4Hb4HS+22XNh9FSkM=;
+        s=default; t=1586217665;
+        bh=qM8LL6uEKVv7hUeypNV5D5h6B/YiokxF949tvBiBp3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lsqP/RvTQBtS6YlzkFUo1LgejTVHCxHUMhP24aYs7p/Ko8w8IN9WD22xCrpH534PO
-         S+W0q5EQicVv0yduBoRk8pSusVwvsc66qlpFR8k2JQkW4eCZ5+i931h6EBI2bBeosW
-         a3cMKuOnQ2hundR4U2Uisqq04tpcLYS4UK/pqv7k=
+        b=eVNx8z+dOuUhqS68n/W7Exh8iOk9kunPNtkft0hmbhq34HovW6t6aZOEPi7CpqtmJ
+         kQ80qb3CWLc2uPKbO3ikalqX+nfEVEEuom5g5ZUquoBTLoA5UK0XogXuMcnfRhUvRu
+         6/MbzqUYEIwUht/N9KcjGg2FmBfXfKo8wpCbKhCU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mordechay Goodstein <mordechay.goodstein@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 07/35] iwlwifi: consider HE capability when setting LDPC
-Date:   Mon,  6 Apr 2020 20:00:29 -0400
-Message-Id: <20200407000058.16423-7-sashal@kernel.org>
+Cc:     Tariq Toukan <tariqt@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 05/35] net/mlx5e: kTLS, Fix wrong value in record tracker enum
+Date:   Mon,  6 Apr 2020 20:00:27 -0400
+Message-Id: <20200407000058.16423-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000058.16423-1-sashal@kernel.org>
 References: <20200407000058.16423-1-sashal@kernel.org>
@@ -60,42 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mordechay Goodstein <mordechay.goodstein@intel.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-[ Upstream commit cb377dfda1755b3bc01436755d866c8e5336a762 ]
+[ Upstream commit f28ca65efa87b3fb8da3d69ca7cb1ebc0448de66 ]
 
-The AP may set the LDPC capability only in HE (IEEE80211_HE_PHY_CAP1),
-but we were checking it only in the HT capabilities.
+Fix to match the HW spec: TRACKING state is 1, SEARCHING is 2.
+No real issue for now, as these values are not currently used.
 
-If we don't use this capability when required, the DSP gets the wrong
-configuration in HE and doesn't work properly.
-
-Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
-Fixes: befebbb30af0 ("iwlwifi: rs: consider LDPC capability in case of HE")
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Link: https://lore.kernel.org/r/iwlwifi.20200306151128.492d167c1a25.I1ad1353dbbf6c99ae57814be750f41a1c9f7f4ac@changeid
+Fixes: d2ead1f360e8 ("net/mlx5e: Add kTLS TX HW offload support")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-index e2cf9e015ef8c..80ef238a84884 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c
-@@ -147,7 +147,11 @@ static u16 rs_fw_get_config_flags(struct iwl_mvm *mvm,
- 	     (vht_ena && (vht_cap->cap & IEEE80211_VHT_CAP_RXLDPC))))
- 		flags |= IWL_TLC_MNG_CFG_FLAGS_LDPC_MSK;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
+index a3efa29a4629d..63116be6b1d60 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ktls.h
+@@ -38,8 +38,8 @@ enum {
  
--	/* consider our LDPC support in case of HE */
-+	/* consider LDPC support in case of HE */
-+	if (he_cap->has_he && (he_cap->he_cap_elem.phy_cap_info[1] &
-+	    IEEE80211_HE_PHY_CAP1_LDPC_CODING_IN_PAYLOAD))
-+		flags |= IWL_TLC_MNG_CFG_FLAGS_LDPC_MSK;
-+
- 	if (sband->iftype_data && sband->iftype_data->he_cap.has_he &&
- 	    !(sband->iftype_data->he_cap.he_cap_elem.phy_cap_info[1] &
- 	     IEEE80211_HE_PHY_CAP1_LDPC_CODING_IN_PAYLOAD))
+ enum {
+ 	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_START     = 0,
+-	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_SEARCHING = 1,
+-	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_TRACKING  = 2,
++	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_TRACKING  = 1,
++	MLX5E_TLS_PROGRESS_PARAMS_RECORD_TRACKER_STATE_SEARCHING = 2,
+ };
+ 
+ struct mlx5e_ktls_offload_context_tx {
 -- 
 2.20.1
 
