@@ -2,111 +2,81 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378AAC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312ECC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F053F20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586289076;
-	bh=X2OQ1g54VhSiq8IbNQprcsUJTj+M2Y+nTIpvCj5JLRk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=b57vl7P3JoU90ax+FqXq5I5MpNwPxB13zpEsh3UB7ySJKTSlvV88VfsxAfIumAi08
-	 x8Exgp4V+u+OwR0jLuvZ349tDcfDEQhfHE19+ejUbeW2HG+tV+kAoBu2nECq0K/TXX
-	 xVet4TSyWdi7W1mbB0KguFtttUqi5xmCWj2Ejjvw=
+	by mail.kernel.org (Postfix) with ESMTP id E81DC20748
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 19:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgDGTvO (ORCPT
+        id S1727696AbgDGTx6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 15:51:14 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40054 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726712AbgDGTvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 15:51:14 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 142so573332ljj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 12:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ilLyS0vne6BzXe6S6ucqrxkT0PaPMwvFpiaeY+Srkws=;
-        b=arMl4qqEfJTIRx8VEWeLINPE4bGVG5CK1wnMXC4ZAyCSKhGf1UktLZtThxRySiWKrc
-         C495qi8z/3TQBoHlyqu6z01DeMHzC4dpq9Z8dFrAprXqY+znH6KeRiBrwSgLiv60L8Ad
-         ELwFC34feUDfkB6yCd6kZDWPEtJvSFA8QD6d0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ilLyS0vne6BzXe6S6ucqrxkT0PaPMwvFpiaeY+Srkws=;
-        b=LBr4ICyQbhiE4V6A6BB8EmYPnihFyIOdMGoN3oVEwv5vSiCIDF8dzp69F7WZ4M7sgp
-         Ss4fykVNKCwtNz61/nlAGUE5RbGZCpX6LBkTVJlsK5T7EfHjYyHA1t3xc77d66/0DH5j
-         NUS/EIzLHys/w0uFbzfNaxtVqhmu2HYUJ+Tch5NS7db9J4ZBCsfkn9dEnMQelTP6FgXn
-         Lr1tfYfExc0YSzdKglVhPPVYHOFFbzfP4txMtbpNPp/otPAwnlYC094h+RrjYrD9rcVc
-         AhuwiAUqH9poYfuP3DNWp10ZHdjOMwXJUyuM/y8V2guHt6eKA6jeNA4m25sqke81i1So
-         H4yQ==
-X-Gm-Message-State: AGi0PuZsjjTqgp3Enlyg9x8kFen/9lgqId4lQatHdmUc8JNLG39KBAYT
-        iJ8AbLiVvLO8qkxeFgGs6n9NoXHhSoA=
-X-Google-Smtp-Source: APiQypKJEiI6uNyk9igXxyQ44rJg0YHEUrpfNcqUYLMzdmWqXIB8iqao9XVuQeD6/q4aSovwsaibhA==
-X-Received: by 2002:a2e:97d6:: with SMTP id m22mr993379ljj.245.1586289070326;
-        Tue, 07 Apr 2020 12:51:10 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id l6sm12222088ljc.80.2020.04.07.12.51.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 12:51:09 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id j17so3337734lfe.7
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 12:51:08 -0700 (PDT)
-X-Received: by 2002:a05:6512:14a:: with SMTP id m10mr2416749lfo.152.1586289068320;
- Tue, 07 Apr 2020 12:51:08 -0700 (PDT)
+        Tue, 7 Apr 2020 15:53:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:18526 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727588AbgDGTx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 15:53:57 -0400
+IronPort-SDR: hbotkgA8sbgQWxEE72MFJFx/PWon/JBJ2lk9VfqsIlZGcM3kSWZQ1tE6dKH1SQz4zAih+p2I9W
+ ColjiJnEszSQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 12:53:57 -0700
+IronPort-SDR: EOQpdJHw8Xv/8Z2IzxVEfz8+bhH1R5V/Zu6RwmkxCBL7Meo/ptCRe+h8PgKIeCeoj2eWbsBF1w
+ klMwDaA+/u/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,356,1580803200"; 
+   d="scan'208";a="397968924"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by orsmga004.jf.intel.com with ESMTP; 07 Apr 2020 12:53:57 -0700
+Received: from orsmsx111.amr.corp.intel.com (10.22.240.12) by
+ ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 7 Apr 2020 12:53:57 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.102]) by
+ ORSMSX111.amr.corp.intel.com ([169.254.12.226]) with mapi id 14.03.0439.000;
+ Tue, 7 Apr 2020 12:53:56 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Yazen Ghannam <Yazen.Ghannam@amd.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/9 v3] New way to track mce notifier chain actions
+Thread-Topic: [PATCH 0/9 v3] New way to track mce notifier chain actions
+Thread-Index: AQHWDPp8vp48dLXhV06F4vOElkh+Z6huEcbg
+Date:   Tue, 7 Apr 2020 19:53:56 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F5D49A9@ORSMSX115.amr.corp.intel.com>
+References: <20200212204652.1489-1-tony.luck@intel.com>
+ <20200407163414.18058-1-bp@alien8.de>
+In-Reply-To: <20200407163414.18058-1-bp@alien8.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <87blobnq02.fsf@x220.int.ebiederm.org> <CAHk-=wgYCUbEmwieOBzVNZbSAM9wCZA8Z0665onpNnEcC-UpDg@mail.gmail.com>
- <AM6PR03MB5170B606F9AC663225EC9609E4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=whM3r7zrm8mSi7HJhuZbYiXx9PFU5VQYeKm6Low=r15eQ@mail.gmail.com>
- <AM6PR03MB517003D5965F48AC5FE7283DE4C60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <CAHk-=wg5LvjumW9PVQiF7jB8yig98K8XTk4tHo9W-sYmxzW+9g@mail.gmail.com>
- <87lfnda3w3.fsf@x220.int.ebiederm.org> <CAHk-=wjxyGCj9675mf31uhoJCyHn74ON_+O6SjSqBSSvqWxC1Q@mail.gmail.com>
- <87blo45keg.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87blo45keg.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 7 Apr 2020 12:50:52 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
-Message-ID: <CAHk-=whES-KCO6Bs93-QBK1tS5CfiWSi+v5D1a7Sc1TD5RFoaA@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull proc and exec work for 5.7-rc1
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Waiman Long <longman@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 3:20 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+> The last patch is something tglx spotted yesterday and fixing that with
+> the MCE flags is pretty easy - was boxing with a wrapper struct around
+> struct mce and that gets really ugly.
 >
-> But fundamentally the only reason we need this information stable
-> before the point of no return is so that we can return a nice error
-> code to the process calling exec.  Instead of terminating the
-> process with SIGSEGV.
+> Tony, I'm open to suggestions how to test it - I probably don't have an
+> access to such box which can trigger read errors on nvdimms or what was
+> the use case?
 
-I'd suggest doing it the other way around instead: let the thread that
-does the security_setprocattr() die, since execve() is terminating
-other threads anyway.
+It passes my smoke tests (uncorrectable error consumed by application and
+uncorrectable error consumed by mcsafe_memcpy()).
 
-And the easy way to do that is to just make the rule be that anybody
-who waits for this thing for write needs to use a killable wait.
+Tested-by: Tony Luck <tony.luck@intel.com>
 
-So if the execve() got started earlier, and already took the cred lock
-(whatever we'll call it) for reading, then zap_other_threads() will
-take care of another thread doing setprocattr().
-
-That sounds like a really simple model, no?
-
-                Linus
+-Tony
