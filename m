@@ -2,138 +2,87 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85859C2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476CFC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64957206F7
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C54A206F7
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgDGLMI (ORCPT
+        id S1728484AbgDGLND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:12:08 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42579 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgDGLMI (ORCPT
+        Tue, 7 Apr 2020 07:13:03 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38708 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728176AbgDGLNC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:12:08 -0400
-X-Originating-IP: 84.210.220.251
-Received: from [192.168.1.123] (cm-84.210.220.251.getinternet.no [84.210.220.251])
-        (Authenticated sender: fredrik@strupe.net)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id F082FFF80D;
-        Tue,  7 Apr 2020 11:12:04 +0000 (UTC)
-Subject: Re: [PATCH] arm64: armv8_deprecated: Fix undef_hook mask for thumb
- setend
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>, catalin.marinas@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        will.deacon@arm.com
-References: <911db2f1-e078-a460-32ee-154a0b4de5d4@strupe.net>
- <20200407092744.GA2665@gaia> <a2b345a4-30a0-3218-8c8d-e84ec2317dc9@arm.com>
-From:   Fredrik Strupe <fredrik@strupe.net>
-Message-ID: <7e0a3318-5b0e-3718-ced6-ae1fc7f5fece@strupe.net>
-Date:   Tue, 7 Apr 2020 13:12:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Apr 2020 07:13:02 -0400
+Received: by mail-ot1-f67.google.com with SMTP id t28so2671157ott.5
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 04:13:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e3iXkpvKQTrS/mZHkPAUFQihvDgmhgnkcQpveYe+iPU=;
+        b=J17uUbbLxJz6rl7dd45Mv8Z54VA7cl1V/mfhoeVpL/0i7TJeT+vOquS7s9IwoGKBNq
+         EnfvtN3VEoJEDfFKHDBEvU0FLEns3roU9ckgSfePP4n4x2hbWbPD1TcCjF6b8HB0eqtC
+         PPB2opFKNPwK2xqGsazl42ABPkpj6ZyhWu0IcjPdZ35h9hLritWOaR2QevlegDDrUoso
+         nNhvJ3IDmgi3e7BVMjkaw6Eu8v5JOd6ahcu32vxRPSKXUYjpKGNjvx8/JYWe559WUkZm
+         hdWGBACgLp8mQk3bxqh8a8ecQ/0TKO2nb5c+mos7WSewx63BGMZdIxi/cxar3ZhNg6ZQ
+         5fMw==
+X-Gm-Message-State: AGi0PuYWRIWaOhqaOmlvW3T0lAOvcDNBsl8W6/lRfJsK5aay7s5W2DZG
+        1sXk921DOzfhiyUk1f0pV2zaIP4zvMEJ4lkgj3U=
+X-Google-Smtp-Source: APiQypIyZ+zMrT0ob34m67/8h1bW9LCddkuTM0bzGelJ4kZB59WKXowcJiddAufEynRIza37fmpf86cW43QFEiMVzAc=
+X-Received: by 2002:a9d:76c7:: with SMTP id p7mr1044046otl.145.1586257980496;
+ Tue, 07 Apr 2020 04:13:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a2b345a4-30a0-3218-8c8d-e84ec2317dc9@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200407103537.4138-1-max.krummenacher@toradex.com> <20200407103537.4138-2-max.krummenacher@toradex.com>
+In-Reply-To: <20200407103537.4138-2-max.krummenacher@toradex.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Apr 2020 13:12:48 +0200
+Message-ID: <CAMuHMdX3EDwrBJQvqpoGkbWjFkEth6wpdk40pZjCydfssJ2T9w@mail.gmail.com>
+Subject: Re: [PATCH 1/4] arm64: defconfig: DRM_DUMB_VGA_DAC: follow changed
+ config symbol name
+To:     Max Krummenacher <max.oss.09@gmail.com>
+Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Olof Johansson <olof@lixom.net>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.04.2020 12:47, Suzuki K Poulose wrote:
-
-> On 04/07/2020 10:27 AM, Catalin Marinas wrote:
->> On Mon, Apr 06, 2020 at 04:16:05PM +0200, Fredrik Strupe wrote:
->>> Use a full 32-bit mask to prevent accidental matchings of thumb32
->>> instructions where the second half-word is equal to the thumb16 setend
->>> encoding.
->>>
->>> This fixes the same problem as the following patch:
->>>
->>>      https://lkml.org/lkml/2020/3/16/341
->>
->> This link is not guaranteed to be stable and the commit should have the
->> full description rather than referring to another email.
->>
->>> but for setend emulation instead.
->>>
->>> Signed-off-by: Fredrik Strupe <fredrik@strupe.net>
->>
->> It also needs Fixes: and Cc: stable tags.
->>
->>> ---
->>>   arch/arm64/kernel/armv8_deprecated.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/kernel/armv8_deprecated.c 
->>> b/arch/arm64/kernel/armv8_deprecated.c
->>> index 9d3442d62..8c06dfee0 100644
->>> --- a/arch/arm64/kernel/armv8_deprecated.c
->>> +++ b/arch/arm64/kernel/armv8_deprecated.c
->>> @@ -609,7 +609,7 @@ static struct undef_hook setend_hooks[] = {
->>>       },
->>>       {
->>>           /* Thumb mode */
->>> -        .instr_mask    = 0x0000fff7,
->>> +        .instr_mask    = 0xfffffff7,
->>>           .instr_val    = 0x0000b650,
->>
->> I can see how this could happen but it would be useful to provide a
->> concrete example in the commit log.
->>
->> The instruction opcode built by call_undef_hook() first reads a u16 as a
->> T16 instruction and the above should be fine. However, if this looks
->> like a T32 opcode, it reads a subsequent u16 which becomes the lowest
->> half-word and the above mask/val may inadvertently match it.
->>
-Thanks for the feedback. I have updated the patch with the requested 
-changes.
-
+On Tue, Apr 7, 2020 at 12:36 PM Max Krummenacher <max.oss.09@gmail.com> wrote:
+> This occurrence wasn't changed in the original rename commit.
 >
-> We also do a check on the pstate_val, along with the instr_val to
-> confirm the mode. So this should be fine as it is ?
+> Fixes commit 0411374bdf2b3 ("drm/bridge: dumb-vga-dac: Rename driver to
+> simple-bridge").
 >
-> Suzuki
+> Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
 
-pstate_val only indicates thumb execution, not whether the current 
-instruction
-is a T16 or T32 instruction.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Fredrik
+Gr{oetje,eeting}s,
 
---- For thumb instructions, call_undef_hook() in traps.c first reads a 
-u16, and if the u16 indicates a T32 instruction (u16 >= 0xe800), a 
-second u16 is read, which then makes up the the lower half-word of a T32 
-instruction. For T16 instructions, the second u16 is not read, which 
-makes the resulting u32 opcode always have the upper half set to 0. 
-However, having the upper half of instr_mask in the undef_hook set to 0 
-masks out the upper half of all thumb instructions - both T16 and T32. 
-This results in trapped T32 instructions with the lower half-word equal 
-to the T16 encoding of setend (b650) being matched, even though the 
-upper half-word is not 0000 and thus indicates a T32 opcode. An example 
-of such a T32 instruction is eaa0b650, which should raise a SIGILL since 
-T32 instructions with an eaa prefix are unallocated as per Arm ARM, but 
-instead works as a SETEND because the second half-word is set to b650. 
-This patch fixes the issue by extending instr_mask to include the upper 
-u32 half, which will still match T16 instructions where the upper half 
-is 0, but not T32 instructions. Signed-off-by: Fredrik Strupe 
-<fredrik@strupe.net> Cc: Catalin Marinas <catalin.marinas@arm.com> Cc: 
-Will Deacon <will.deacon@arm.com> Fixes: 2d888f48e056 ("arm64: Emulate 
-SETEND for AArch32 tasks") --- arch/arm64/kernel/armv8_deprecated.c | 2 
-+- 1 file changed, 1 insertion(+), 1 deletion(-) diff --git 
-a/arch/arm64/kernel/armv8_deprecated.c 
-b/arch/arm64/kernel/armv8_deprecated.c index 9d3442d62..8c06dfee0 100644 
---- a/arch/arm64/kernel/armv8_deprecated.c +++ 
-b/arch/arm64/kernel/armv8_deprecated.c @@ -609,7 +609,7 @@ static struct 
-undef_hook setend_hooks[] = { }, { /* Thumb mode */ - .instr_mask = 
-0x0000fff7, + .instr_mask = 0xfffffff7, .instr_val = 0x0000b650, 
-.pstate_mask = (PSR_AA32_T_BIT | PSR_AA32_MODE_MASK), .pstate_val = 
-(PSR_AA32_T_BIT | PSR_AA32_MODE_USR), -- 2.20.1
+                        Geert
 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
