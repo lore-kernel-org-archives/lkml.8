@@ -2,127 +2,143 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B74C2BB55
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D769CC2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0E52074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA16A2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 10:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hbob5IWs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QQzxlYeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbgDGKIg (ORCPT
+        id S1728287AbgDGKI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 06:08:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35534 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgDGKIf (ORCPT
+        Tue, 7 Apr 2020 06:08:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40337 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728213AbgDGKI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 06:08:35 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r26so1199076wmh.0;
-        Tue, 07 Apr 2020 03:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9FaJuBCa/BT+mcCfha6DjAg3gctMk4+x7nK6u0p3Vvw=;
-        b=hbob5IWsIb9yOV+Jnhn6ZBGOYp5AVNgSywpZoGjEiFZ4T1oc/aKvE723RQO+2g3RKi
-         RY7U5Awqzca+QrpnFJmCNSyOxaI4h/am+clzCax4X6MAYQF8iiJ3oVelhQWvAwlPowNE
-         Tz4KwFc03VvsfszVSKCt7f4y9Us2IGVFDMHfXqyXcOK6JYeQqODxnKisbT3hWdzgyjYV
-         uWV1Eyzop5EK6BtfPuYkvFKBfknHLLoYDzjCjvG9Fqh0XOTBsIS+R6goXdb9Z0xlRth0
-         wPZVB1KHmvx1Rr7LRhPr1WhvSGNp5jMfJvrCjOPtdLIrWkTUvrdnQuz/hBoDeL3M+QvA
-         3oVA==
+        Tue, 7 Apr 2020 06:08:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586254137;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z+d4Qx7H0BkaQ6jx/a91Q5D/w2sYbHgdntEiY9YRCI4=;
+        b=QQzxlYeoIXLIC8aflNX1h/t/R+R3f3xXGUnyX44KKk/YoyhzY55ltr1tUgnJckE6crShQS
+        gPpgeI2x6DwTjfabOJDcPYusPylWjNusHw903JGUujckyoY7JcxNRs/47/p+XJOnhfqXQd
+        /8S9onyxxeHRdrc/XEIhOsrwoSU6usc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-512-DKXKRYGxNo-3BCOAjpZSjg-1; Tue, 07 Apr 2020 06:08:55 -0400
+X-MC-Unique: DKXKRYGxNo-3BCOAjpZSjg-1
+Received: by mail-wm1-f71.google.com with SMTP id s15so516794wmc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 03:08:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9FaJuBCa/BT+mcCfha6DjAg3gctMk4+x7nK6u0p3Vvw=;
-        b=XC5c6SI7oAit1EGYZ1MOb8swTE5WtEHu7nief0LL/cFWePR3kC+OpJJojzz3HMFS9O
-         p/zI3/L1onABhjlcQ8tfaPfNkaGWUFxTD4seS1pS9xsWqF7bBsn2fWhNPbJfxpw/y20Q
-         IoWTPIvYenPTQ9kLrp3bB1AGh4d8OTiYtRF+zsmD+8cZs3qQmbssddCtlt3eUX0VoLZl
-         GBflpMaqCZhy0IItJyNwG2v2ngWwVIgKnG9uCp5I4NhYaBKsn5BFiINgIBXyYtGXh73A
-         Kuj2eJ/43MQ0TS12poi9ZbdAq3+4lxLNY2HuXvfo5nqb0O9PI2OF8YxmD8LCcrpdaxR7
-         HwDA==
-X-Gm-Message-State: AGi0PuZMa9wKzVhnKWpNmrgW25OB970j+uSCuqEbtzQmmDNwFkspkzvm
-        xUUBuq2fqw0800cG0aL0jOM=
-X-Google-Smtp-Source: APiQypLhaC4G+o0dezQfQTWzuc1LY8gxh+bdoi/g5NA0mpkwMMnaYJEm4vbohom0C314D2GoTk17qg==
-X-Received: by 2002:a1c:6a13:: with SMTP id f19mr1663085wmc.105.1586254112064;
-        Tue, 07 Apr 2020 03:08:32 -0700 (PDT)
-Received: from localhost (pD9E51D62.dip0.t-ipconnect.de. [217.229.29.98])
-        by smtp.gmail.com with ESMTPSA id 25sm1634823wmf.13.2020.04.07.03.08.30
+         :mime-version:content-disposition:in-reply-to;
+        bh=Z+d4Qx7H0BkaQ6jx/a91Q5D/w2sYbHgdntEiY9YRCI4=;
+        b=lAr+xQM8x8PadeF5lpU99HGotVIzZuKV3zuObUUV+CUucqDCrX8JwS6Nt+8PEMN6AB
+         ahQk24ViGx1zbnCBQRO9hiY8h3XDGNNMJw3qx6GDjF+DfeuoaTNw9EMyI2XL0WF7p9B9
+         yUbcCCQdOBNfbAEiOT/lZvbyGpxg7bpglURuqaV3bl71LK1booRWGFcVMb884wf/rVe4
+         pfQyK3wz5SEi6CdSPYSoUTkKBYagujBapaTA63uK0ZqsvjhPMqiCQUoKGg4ZNJvWyWdA
+         CbjIbiRTlriitJgXwBlLUKCqFZsdiJqiTNzbtwkoy3PpIEVd9x6H4XrxTXno0kaFKwMA
+         YmKA==
+X-Gm-Message-State: AGi0PuYAUiMbzhSpaxsfKIoRN9ZnNhRSMsJbfa3+TQ5nGIcrRQ+DA5Uk
+        3xUpjOaz7bXf7lULEDWDOtYD3m4snOeG/4L23UxDCGCrHZCqtiJIkoDGmmmMd5QPYuOXk8nI7A3
+        h+qB1aYxl+/+qqlMVtvhgObTH
+X-Received: by 2002:a05:600c:2c47:: with SMTP id r7mr1583535wmg.50.1586254134334;
+        Tue, 07 Apr 2020 03:08:54 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJjB2szx0xQgD9OibxDJRFX1Jm7Z1KhFoXl8BhDzxrbWSAltbqVX49bIubsJYfEtbHFRe8h+g==
+X-Received: by 2002:a05:600c:2c47:: with SMTP id r7mr1583516wmg.50.1586254134095;
+        Tue, 07 Apr 2020 03:08:54 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
+        by smtp.gmail.com with ESMTPSA id n64sm1571755wme.45.2020.04.07.03.08.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 03:08:30 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 12:08:29 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Pedro =?utf-8?Q?=C3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] ARM: tegra_defconfig: Enable options useful for
- Nexus 7 and Acer A500
-Message-ID: <20200407100829.GB1720957@ulmo>
-References: <20200406194110.21283-1-digetx@gmail.com>
- <20200406194110.21283-7-digetx@gmail.com>
+        Tue, 07 Apr 2020 03:08:53 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 06:08:43 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alexander.h.duyck@linux.intel.com, eperezma@redhat.com,
+        jasowang@redhat.com, lingshan.zhu@intel.com, mhocko@kernel.org,
+        namit@vmware.com, rdunlap@infradead.org, rientjes@google.com,
+        tiwei.bie@intel.com, tysand@google.com, wei.w.wang@intel.com,
+        xiao.w.wang@intel.com, yuri.benditovich@daynix.com
+Subject: Re: [GIT PULL v2] vhost: cleanups and fixes
+Message-ID: <20200407060741-mutt-send-email-mst@kernel.org>
+References: <20200407055334-mutt-send-email-mst@kernel.org>
+ <00a7ce5f-8fb4-8c3e-7113-9a422682abdf@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4bRzO86E/ozDv8r1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200406194110.21283-7-digetx@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <00a7ce5f-8fb4-8c3e-7113-9a422682abdf@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 07, 2020 at 11:56:59AM +0200, David Hildenbrand wrote:
+> On 07.04.20 11:53, Michael S. Tsirkin wrote:
+> > Changes from PULL v1:
+> > 	reverted a commit that was also in Andrew Morton's tree,
+> > 	to resolve a merge conflict:
+> > 	this is what Stephen Rothwell was doing to resolve it
+> > 	in linux-next.
+> > 
+> > 
+> > Now that many more architectures build vhost, a couple of these (um, and
+> > arm with deprecated oabi) have reported build failures with randconfig,
+> > however fixes for that need a bit more discussion/testing and will be
+> > merged separately.
+> > 
+> > Not a regression - these previously simply didn't have vhost at all.
+> > Also, there's some DMA API code in the vdpa simulator is hacky - if no
+> > solution surfaces soon we can always disable it before release:
+> > it's not a big deal either way as it's just test code.
+> > 
+> > 
+> > The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
+> > 
+> >   Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
+> > 
+> > are available in the Git repository at:
+> > 
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+> > 
+> > for you to fetch changes up to 835a6a649d0dd1b1f46759eb60fff2f63ed253a7:
+> > 
+> >   virtio-balloon: Revert "virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM" (2020-04-07 05:44:57 -0400)
+> > 
+> > ----------------------------------------------------------------
+> > virtio: fixes, vdpa
+> > 
+> > Some bug fixes.
+> > The new vdpa subsystem with two first drivers.
+> > 
+> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> > 
+> > ----------------------------------------------------------------
+> > David Hildenbrand (1):
+> >       virtio-balloon: Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM
+> 
+> ^ stale leftover in this message only I assume
 
---4bRzO86E/ozDv8r1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No - I did not rebase since I did not want to invalidate all the testing
+people did, just tacked a revert on top.  So this commit is there
+together with its revert.
 
-On Mon, Apr 06, 2020 at 10:41:10PM +0300, Dmitry Osipenko wrote:
-> Enable several drivers for hardware that is found on Nexus 7 and Acer A500
-> tablet devices. Please note that some drivers may require firmware files
-> extracted from original Android image.
->=20
-> Link: https://github.com/digetx/linux-firmware
 
-What's the license for these files? Can they be made available through
-the official linux-firmware repository?
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
 
-Thierry
-
---4bRzO86E/ozDv8r1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl6MUR0ACgkQ3SOs138+
-s6GEow/+PCRBWMRHZqrLzXaBLfVmbh6Jl87RzDZcnbNzyKRyQvcbBcaPWsXf9tLh
-LlXh/OInkWgYIfU+Skqi0BmHHATWq+XfHzLzQfkkujSAa8QafRKVtGTV0e+beQFD
-2BrixFkH0TllbiYxaDdu9iZXxW0+/Bx5s/9AZYQFNerWoQ3NqqqrFhXNcyAbbVUO
-Y46sRJy0uCNObGlyUdKCupug8fbyciPSzbhYIE2ZWmjSIKzJNPCgk/FlJrQRcyRu
-5bcWkS7uwedPwmuzQMQrOW2m0FYOZ+UU01aMur7s7mPNp0cFY4dZlI/hzO3JDh4W
-oTOvtjnlJodHnaQlDQijCQtukKDiTfiOlU4ZfXna6cN1T2fzaYNaCLRPWzhu4K23
-1F3UTp6+UXGF2+H83jeAgcpKHGmkXrNjn4KNIDt6rIMyEnz2RJ8II4wYhJH/Oza1
-Lbf+26X650r2CwOAUhSyDtAgo2Mt58GTDztVMIJStpap3A+UT+clWmoG+eYOZGMR
-mVBL9UWowL1dkvjrjXmlOsqcN0OfWtmazA2rQAurS0NU2Aq1hoffcx73gWCJE5B/
-9z0RHHQUUVMGFNSYQiZxpTIKsBIu+iTHZ99q29RPBK5wye5sIKjFTogylTvzh6wk
-78XF5M1Ndf+6LQaxvgNXHZsGkb1sdjAgbz1f2JMQmDrtSH7RNoc=
-=kOsC
------END PGP SIGNATURE-----
-
---4bRzO86E/ozDv8r1--
