@@ -2,143 +2,123 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38023C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD43C2BB55
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027502063A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 17:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586282365;
-	bh=Y5zA/2MNx1AT4+A3BcVTDRe1NStV24TsTi006Ymf0oM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=erxUZKharCe8dOsBzgIV/fUvw/nbvAK3FV2cTIC1pwKVZhZnzmKX19CsQG8H0rWEi
-	 YozWRBLlkHeo7GgefU0hNzCfGaTbPWPtEjjrAcqE581k6iffulSVRjK15iabPBhkbR
-	 va+XRKwPVLifgTsbL5ZojbYtJSvjvngy8OHZmh6E=
+	by mail.kernel.org (Postfix) with ESMTP id 2DB982063A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 18:00:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mpn+6KPx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgDGR7Y (ORCPT
+        id S1726638AbgDGSAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 13:59:24 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35661 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgDGR7X (ORCPT
+        Tue, 7 Apr 2020 14:00:17 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:54692 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726417AbgDGSAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 13:59:23 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k21so4799860ljh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RdWHnkyUOuIQT5df0SRBbcUjsw9tkuNDCfUJgegsx2Y=;
-        b=GuMJrA5+OPCrFlqiWIQXdF0sRv1DXcntWrvutmyZqOFRpLpgvLws+UiZLwJA7kK6Sd
-         +vwfQHhWYtc8mTZoTJRh3SqPJYbGEQlYNQpReplC+lHRTbAsoBc7dLrK+rxls3EDRoOA
-         QbPRBs61u/GOBlZBjbijLCzyGt3+UWROpo2Ks=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RdWHnkyUOuIQT5df0SRBbcUjsw9tkuNDCfUJgegsx2Y=;
-        b=DCTtbBxx8fMbREY6ZBtflzx60R+ZCDXWfvcOQFS2R2SLqCVPNHo589q/erEWX/AnJE
-         k1DchA/bVsvXhQIk4MD9Wj7zWwASn2f5r9T18GFfRUfWeT9gP4aR0bj41XslEN2hDGXA
-         OZdihDgPE0xo4uehb24H1OsR8DQhur+WVj6Ac23dlR+A8eWscR92BwS4CCavyNfiN1SR
-         caFOpQyAMIYrf+kZmOAEKHchi2NA4TVU3IBeQ+Cw/HpTCh0GkGqkw/zyXpeDKz54NZu+
-         bEb+WbfZhtdm0fMNlh11sJuOoqOkdXHg65B3KOhyBRNh9Uq6M4HnCz1MRpVwmHqtceRV
-         UqhQ==
-X-Gm-Message-State: AGi0Puap7FNxL035m90XcX8KreGfoOel72LHC7IjqY6UuVbnKUyGnRdg
-        bZu3+2MsbbQp+aI3LNTDVEIyFOCLAQA=
-X-Google-Smtp-Source: APiQypIyNEyFSUuMW0psSwo/KOSbUMkyiW0R8nmO38K73AhrrwNEvC/BACpHOjrkQZGHO6UFwX4LNA==
-X-Received: by 2002:a05:651c:92:: with SMTP id 18mr2249209ljq.141.1586282361305;
-        Tue, 07 Apr 2020 10:59:21 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id m12sm12077160lji.50.2020.04.07.10.59.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 10:59:20 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id 131so3067335lfh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 10:59:20 -0700 (PDT)
-X-Received: by 2002:a19:240a:: with SMTP id k10mr2247587lfk.30.1586282359598;
- Tue, 07 Apr 2020 10:59:19 -0700 (PDT)
+        Tue, 7 Apr 2020 14:00:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1586282416; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=dk+x0rTY0DaiUKQYsPBwoDgbCv6jZ7mH7/iIl9UgojQ=; b=mpn+6KPx3kOrqFmSaTGalpbzEooCphuhvGCJlVWg9DVzrK6Noqve/YJIz4BPorfPYJ7+JCp+
+ rKXlqC6b9cwk0B9Vbda7F93QNLB4OEdXdd1AKGLyInb8Hc6D4sUJhLkrKy4xIoUKeG0rws0q
+ /bva+LkE8dFrwnLq71jbocQ+oF4=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e8cbfa2.7f5469d50960-smtp-out-n05;
+ Tue, 07 Apr 2020 18:00:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5F011C44788; Tue,  7 Apr 2020 18:00:02 +0000 (UTC)
+Received: from [192.168.1.10] (cpe-70-95-5-60.san.res.rr.com [70.95.5.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sidgup)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2D70FC433F2;
+        Tue,  7 Apr 2020 18:00:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2D70FC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
+Subject: Re: [PATCH 2/2] remoteproc: core: Prevent sleep when rproc crashes
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, rishabhb@codeaurora.org
+References: <1582164713-6413-1-git-send-email-sidgup@codeaurora.org>
+ <1582164713-6413-3-git-send-email-sidgup@codeaurora.org>
+ <20200224185334.GB9477@xps15>
+From:   Siddharth Gupta <sidgup@codeaurora.org>
+Message-ID: <1a6a8661-d44f-adad-b262-ff42633c7b38@codeaurora.org>
+Date:   Tue, 7 Apr 2020 11:00:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200406110702.GA13469@nautica> <CAHk-=whVEPEsKhU4w9y_sjbg=4yYHKDfgzrpFdy=-f9j+jTO3w@mail.gmail.com>
- <20200406164057.GA18312@nautica> <20200407021626.cd3wwbg7ayiwt4ry@l29ah-x201.l29ah-x201>
-In-Reply-To: <20200407021626.cd3wwbg7ayiwt4ry@l29ah-x201.l29ah-x201>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 7 Apr 2020 10:59:03 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiE6_L2NnSo82erMHxbP8fa=f_b64G+Muu0JnUEBgDwOg@mail.gmail.com>
-Message-ID: <CAHk-=wiE6_L2NnSo82erMHxbP8fa=f_b64G+Muu0JnUEBgDwOg@mail.gmail.com>
-Subject: Re: [GIT PULL] 9p update for 5.7
-To:     L29Ah <l29ah@cock.li>
-Cc:     Dominique Martinet <asmadeus@codewreck.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200224185334.GB9477@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 7:16 PM L29Ah <l29ah@cock.li> wrote:
+Hey Mathieu,
+I will be sending a revised patchset soon. Will try to address your 
+comments there.
+
+Thanks,
+Siddharth
+
+On 2/24/2020 10:53 AM, Mathieu Poirier wrote:
+> On Wed, Feb 19, 2020 at 06:11:53PM -0800, Siddharth Gupta wrote:
+>> Remoteproc recovery should be fast and any delay will have an impact on the
+>> user-experience. Use power management APIs (pm_stay_awake and pm_relax) to
+>> ensure that the system does not go to sleep.
+> When you say "ensure the system does not go to sleep", you're referring to the
+> system going idle from the CPUidle subsystem?
 >
-> In fact i would prefer disabling the full reads unconditionally, but AFAIR some userspace programs might interpret a short read as EOF (and also would need to check the logic that motivated the kernel-side looping).
-
-Oh, it's even worse than "might interpret a short read as EOF".
-
-Lots of ad-hoc small tools will basically do something like
-
-     fd = open(name, O_RDONLY);
-     fstat(fd, &st);
-     buf = malloc(st.st_size);
-     read(fd, buf, st.st_size);
-
-and be done with it. Obviously they may have some error handling (ie
-imagine the above being written with proper tests for buf beign NULL
-and 'fstat()' returning an error), but if they check the return value
-of "read()" at all, it might be just to verify that it matches
-st.st_size.
-
-I've written stuff like that myself.
-
-Sure, the "real" programs I write would have loops with EAGAIN and
-partial reads, and maybe I'd have a helper function called "xread()"
-that does that.  And most major applications will do things like that,
-exactly because they've seen years of development, they're trying to
-be portable, and they might even have hit other network filesystems
-that do partial reads or return EAGAIN - or they might have more
-complex functionality anyway which allows you to pipe things in from a
-buffer etc.
-
-But the above kind of "assume read() gets the whole thing" is not
-unusual for quick hacks.
-
-After all, it's a _valid_ assumption for a proper POSIX filesystem,
-although it obviously _also_ assumes that nobody else is writing to
-that file at the same time.
-
-And some of those quick hacks may end up existing for years in major
-code-bases, who knows..
-
-[ Honesty in advertising: the Linux VFS layer itself says "screw
-POSIX" for some things.
-
-  Particularly, if somebody tries to do a read larger than 2GB in
-size, the VFS layer will just say "POSIX is garbage in this situation,
-we _will_ truncate this read".
-
-  So if you deal with huge files, you _have_ to do the proper "loop
-until EOF" even for regular files, and POSIX be damned.
-
-  The kernel refuses to do crazy things, and no amount of standard
-paperwork matters. ]
-
-But basically honoring full reads for any _reasonable_ situation is
-pretty much required for a lot of reasons. Yes, lots of apps will deal
-gracefully with partial reads - maybe even most. But "lots" is not
-"all".
-
-             Linus
+>> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+>> ---
+>>   drivers/remoteproc/remoteproc_core.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>> index 5ab65a4..52e318c 100644
+>> --- a/drivers/remoteproc/remoteproc_core.c
+>> +++ b/drivers/remoteproc/remoteproc_core.c
+>> @@ -1712,6 +1712,8 @@ static void rproc_crash_handler_work(struct work_struct *work)
+>>   
+>>   	if (!rproc->recovery_disabled)
+>>   		rproc_trigger_recovery(rproc);
+>> +
+>> +	pm_relax(&rproc->dev);
+>>   }
+>>   
+>>   /**
+>> @@ -2242,6 +2244,8 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
+>>   		return;
+>>   	}
+>>   
+>> +	pm_stay_awake(&rproc->dev);
+>> +
+> I fail to understand how this can be useful since there is no HW associted to
+> rproc->dev...  Is it possible for you to elaborate more on the problem you're
+> trying to fix?
+>
+> Thanks,
+> Mathieu
+>
+>>   	dev_err(&rproc->dev, "crash detected in %s: type %s\n",
+>>   		rproc->name, rproc_crash_to_string(type));
+>>   
+>> -- 
+>> Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
