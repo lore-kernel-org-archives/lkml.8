@@ -7,70 +7,68 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96910C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F64C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2542076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9EE920768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 01:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AAFGIbAd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DItxWHo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgDGBQr (ORCPT
+        id S1726671AbgDGBQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 21:16:47 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:48791 "EHLO
+        Mon, 6 Apr 2020 21:16:51 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52374 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726616AbgDGBQp (ORCPT
+        by vger.kernel.org with ESMTP id S1726637AbgDGBQr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 21:16:45 -0400
+        Mon, 6 Apr 2020 21:16:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586222204;
+        s=mimecast20190719; t=1586222206;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=jXqTQsUO9YVhjrcDRdxdoA1nJXOlF582i9eQgnD+YFc=;
-        b=AAFGIbAdyFtc5NBz1yNS8x42i+q+xltbp52RyK5diP9qP5Tvp2EIevJ4F6dLl34mmvOtnk
-        C79/UNG1UOoK/Rt+bYBWYiy5XSVQuB/kVFmUzBKdtCT4R8//PZZfpHmkzocgHvqxYBAhKE
-        3QqDwS1YXfT0J9KYhCoUViETdIB3R18=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-lmYNYhKxNueNC1JhzY-qyQ-1; Mon, 06 Apr 2020 21:16:43 -0400
-X-MC-Unique: lmYNYhKxNueNC1JhzY-qyQ-1
-Received: by mail-wm1-f70.google.com with SMTP id s9so17030wmh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:16:42 -0700 (PDT)
+        bh=5TH7w/JfrvK6PO93eOn/asqSkXlWjc9e7s1Mrzet5kE=;
+        b=DItxWHo1onP01S5Mn6ZFOHKDEYzkrKZVfwBN+q9NU2DPRI3ZNa6ILEpOEQ0WiuC7LDSMLo
+        0CT//Gyx1k/RphJYy1/+ofjMYJzcl7N2ahyY7i0Lvk+eEBQVaP10Ig8COeEghzT3q/J4A2
+        3UVI7KSTJ3uP1I5SZ9sF2eQK+6TN4+w=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-118-DsY_-jZdPSq48Jjq6YgwgA-1; Mon, 06 Apr 2020 21:16:45 -0400
+X-MC-Unique: DsY_-jZdPSq48Jjq6YgwgA-1
+Received: by mail-wr1-f71.google.com with SMTP id i18so848639wrx.17
+        for <linux-kernel@vger.kernel.org>; Mon, 06 Apr 2020 18:16:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=jXqTQsUO9YVhjrcDRdxdoA1nJXOlF582i9eQgnD+YFc=;
-        b=FV6MQSTdZXttGhNOD3y0bPKWf0KNeutU+Ts1WWKINrN+pwB4L7qbKSlI8Fq+mMPRNf
-         Kif4EhFndDB9AwYrPxNBhEeNhl+iBQXeTijVJZEVNKqCG+6SotatNbq4KGyoKcBwsYxg
-         RzWOq8Tylowp60h4nBv6U137dkUu9pbygCmKUfghdHSGNYkYmXj6GUhmFn/TyXmQ7eCW
-         3HBld/tAkiMl4+c3wbHOjGlxe9/BB9nQOhilcHO8BPyxziQ0vw3o8SImhUxPR9EqhgfC
-         D9yGZ7ORVN8vKiLkJFXUp21yWWf7r6nAs+ngpMTJ8RsWw1ITKejjsofsU1FNwB5/kFXh
-         N88Q==
-X-Gm-Message-State: AGi0PuZiWRcWvaf3um/eUFvHHKx+mDMO3k/MowmdhBIGcQ6ttCfHRWjZ
-        APtSE/11ECowyIl/8roBEwdesacnSnQThJvk1t7CFuXdcxOcmyUo0PwjuER3sEwyto52STk/7J7
-        WPYM7yfeFKzJgqA9KvkU0IwBF
-X-Received: by 2002:a5d:474b:: with SMTP id o11mr1961491wrs.4.1586222201914;
-        Mon, 06 Apr 2020 18:16:41 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJprcVQXQkNsVI+/t4E2rAPWsDxMCz/OELvSOO2s+GUzL8V1QEbG4QZrFErn5KfoQsv+MjzXw==
-X-Received: by 2002:a5d:474b:: with SMTP id o11mr1961474wrs.4.1586222201731;
-        Mon, 06 Apr 2020 18:16:41 -0700 (PDT)
+        bh=5TH7w/JfrvK6PO93eOn/asqSkXlWjc9e7s1Mrzet5kE=;
+        b=ia+Ij0d/G7QkaTm7z282xd2ys6Unzb81k6QqATd+cePydgMeFjDZyXVC/PflCG1yl5
+         fGvRLEFpQGCgyFrRr6SXMfTsfW240AtggliUtoWaN+JE70a8ipDZdwCW/fHqUymHwPbT
+         WL+YsFTCI3mn2I1YZ5NlPnO/KSMAHrDOhgRqVhW9wFVRXvJEGxqbEJzJSPNZ2tdpQmKu
+         8cnftbvpRxyiGNSC6uFpaqJxCQ8szt6BIWoQKerlMNGsUFzKMqADF5OH/eQLZnjwC08C
+         2VUKVXO2IxCDYNVfgfz+9VEI31Q+pgYhXjVFYJMeAOxscw5WkgeD75Ptx4+b0kOrD84j
+         qGmA==
+X-Gm-Message-State: AGi0PuYmEc0HCf2keuhT/EefXr1BzbDAhwwe4t04TJMC4yGuFNY7Ogk5
+        Op+QbbOmj89Yf0DHhxKwM/yUohA4tfGpvADBj+0nWBrJmO/K4Q5p1F4bCvqqp+JFVqV7gR4G44t
+        Ll1LDuZBWjPpnzd2HPIUCqpTN
+X-Received: by 2002:adf:f8c1:: with SMTP id f1mr2102831wrq.345.1586222204018;
+        Mon, 06 Apr 2020 18:16:44 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIUKx/E68FBj3d4XOQ00hcyXYBl/67P8FPYE2YoFyXU7fFCF05zzALyhpIqvei+4TT7JQeC9g==
+X-Received: by 2002:adf:f8c1:: with SMTP id f1mr2102818wrq.345.1586222203824;
+        Mon, 06 Apr 2020 18:16:43 -0700 (PDT)
 Received: from redhat.com (bzq-79-176-51-222.red.bezeqint.net. [79.176.51.222])
-        by smtp.gmail.com with ESMTPSA id j10sm11751534wru.85.2020.04.06.18.16.40
+        by smtp.gmail.com with ESMTPSA id o67sm136301wmo.5.2020.04.06.18.16.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Apr 2020 18:16:41 -0700 (PDT)
-Date:   Mon, 6 Apr 2020 21:16:39 -0400
+        Mon, 06 Apr 2020 18:16:43 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 21:16:42 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH v8 06/19] virtio-rng: pull in slab.h
-Message-ID: <20200407011612.478226-7-mst@redhat.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org
+Subject: [PATCH v8 07/19] remoteproc: pull in slab.h
+Message-ID: <20200407011612.478226-8-mst@redhat.com>
 References: <20200407011612.478226-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -88,20 +86,20 @@ this module is using it.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/char/hw_random/virtio-rng.c | 1 +
+ drivers/remoteproc/remoteproc_sysfs.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-index 718d8c087650..79a6e47b5fbc 100644
---- a/drivers/char/hw_random/virtio-rng.c
-+++ b/drivers/char/hw_random/virtio-rng.c
-@@ -11,6 +11,7 @@
- #include <linux/virtio.h>
- #include <linux/virtio_rng.h>
- #include <linux/module.h>
+diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+index 7f8536b73295..52b871327b55 100644
+--- a/drivers/remoteproc/remoteproc_sysfs.c
++++ b/drivers/remoteproc/remoteproc_sysfs.c
+@@ -4,6 +4,7 @@
+  */
+ 
+ #include <linux/remoteproc.h>
 +#include <linux/slab.h>
  
- static DEFINE_IDA(rng_index_ida);
+ #include "remoteproc_internal.h"
  
 -- 
 MST
