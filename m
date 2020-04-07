@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F87C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEF2C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974052078A
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E233207FF
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217870;
-	bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qG+XSjfnxw9OqUZiJx6gIGZx4tVwg1GxpLY3LkJCew39F6WXp2R6wl6poj0FxWJMi
-	 EthQ/69J11mdHMIJagUcgGlEW8kZekATUtuDmgNjs+/y63a+YWWdfGA3Y/pQmv+NHb
-	 ZSMcC8YrZvd8enYmE+dx4vK3SJkUyiTBA1Rn6Ks0=
+	s=default; t=1586217875;
+	bh=eUYWMO0lOftTvx7LH14lERm5G1MalglcjgYGjYMuWzQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qBJB999AueOa3xPUyN6v7H8vurpRv3mYD02dJwU0lF/3o/XJvyisre4ihOZ+wsttw
+	 +unNu4KsKslxoMFDKaxaNUuc0SN+5ZijJVdKXQCQlO35syNEn99HPQGPpKHFsmEJMI
+	 MKoNE2BBzQgX9fWbyxMrEv2finMBI4MePjYqMsYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbgDGAE3 (ORCPT
+        id S1728260AbgDGACs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:04:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37924 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726901AbgDGACz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:55 -0400
+        id S1728193AbgDGACn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8651F2080C;
-        Tue,  7 Apr 2020 00:02:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA1E720842;
+        Tue,  7 Apr 2020 00:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217774;
-        bh=Ew9ijdVo0MZy0U3RGxQUl97TyvgHRME/rCP+4QrqC+4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LWPAoqwjJSfXONl5mpc55y19hzsQEeE2ESu+FdIsYYmvEyAegkv8wuEuQYTw1n2Xd
-         0SmiRWq/YqkCo7UjxRQvblKmYvdoAglLC2l+W9UPebTfaFQtTa4FdjvAqMUW8QA8QH
-         5lakBvgYJX9LQcrHAYvoLd/sIcU7JxODKvJAMSB4=
+        s=default; t=1586217763;
+        bh=eUYWMO0lOftTvx7LH14lERm5G1MalglcjgYGjYMuWzQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nMVd7efWV+MZc9t8IEj5PGZBZ988zFMkUgb9WK4j/Q8eIvsiXfvcq6CWaz7o9ZCGJ
+         FnLV6tgyBCWlIU2990zCVSbfu17nNo1cScIkUR4tIOTO2csL+gUUwuC+o9Ou71GZmu
+         hThChlIFq84p3nIVTHlL7/QIZ18JibxkeBBLAN1Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ondrej Jirman <megous@megous.com>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 1/9] bus: sunxi-rsb: Return correct data when mixing 16-bit and 8-bit reads
-Date:   Mon,  6 Apr 2020 20:02:44 -0400
-Message-Id: <20200407000252.17241-1-sashal@kernel.org>
+Cc:     Luo bin <luobin9@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 07/13] hinic: fix wrong para of wait_for_completion_timeout
+Date:   Mon,  6 Apr 2020 20:02:28 -0400
+Message-Id: <20200407000234.17088-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200407000234.17088-1-sashal@kernel.org>
+References: <20200407000234.17088-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,62 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ondrej Jirman <megous@megous.com>
+From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit a43ab30dcd4a1abcdd0d2461bf1cf7c0817f6cd3 ]
+[ Upstream commit 0da7c322f116210ebfdda59c7da663a6fc5e9cc8 ]
 
-When doing a 16-bit read that returns data in the MSB byte, the
-RSB_DATA register will keep the MSB byte unchanged when doing
-the following 8-bit read. sunxi_rsb_read() will then return
-a result that contains high byte from 16-bit read mixed with
-the 8-bit result.
+the second input parameter of wait_for_completion_timeout should
+be jiffies instead of millisecond
 
-The consequence is that after this happens the PMIC's regmap will
-look like this: (0x33 is the high byte from the 16-bit read)
-
-% cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
-00: 33
-01: 33
-02: 33
-03: 33
-04: 33
-05: 33
-06: 33
-07: 33
-08: 33
-09: 33
-0a: 33
-0b: 33
-0c: 33
-0d: 33
-0e: 33
-[snip]
-
-Fix this by masking the result of the read with the correct mask
-based on the size of the read. There are no 16-bit users in the
-mainline kernel, so this doesn't need to get into the stable tree.
-
-Signed-off-by: Ondrej Jirman <megous@megous.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Luo bin <luobin9@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/sunxi-rsb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c | 3 ++-
+ drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-index 1b76d95859027..2ca2cc56bcef6 100644
---- a/drivers/bus/sunxi-rsb.c
-+++ b/drivers/bus/sunxi-rsb.c
-@@ -345,7 +345,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
- 	if (ret)
- 		goto unlock;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
+index 4d09ea786b35f..ee715bf785adf 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_cmdq.c
+@@ -398,7 +398,8 @@ static int cmdq_sync_cmd_direct_resp(struct hinic_cmdq *cmdq,
  
--	*buf = readl(rsb->regs + RSB_DATA);
-+	*buf = readl(rsb->regs + RSB_DATA) & GENMASK(len * 8 - 1, 0);
+ 	spin_unlock_bh(&cmdq->cmdq_lock);
  
- unlock:
- 	mutex_unlock(&rsb->lock);
+-	if (!wait_for_completion_timeout(&done, CMDQ_TIMEOUT)) {
++	if (!wait_for_completion_timeout(&done,
++					 msecs_to_jiffies(CMDQ_TIMEOUT))) {
+ 		spin_lock_bh(&cmdq->cmdq_lock);
+ 
+ 		if (cmdq->errcode[curr_prod_idx] == &errcode)
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
+index 278dc13f3dae8..9fcf2e5e00039 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_mgmt.c
+@@ -52,7 +52,7 @@
+ 
+ #define MSG_NOT_RESP                    0xFFFF
+ 
+-#define MGMT_MSG_TIMEOUT                1000
++#define MGMT_MSG_TIMEOUT                5000
+ 
+ #define mgmt_to_pfhwdev(pf_mgmt)        \
+ 		container_of(pf_mgmt, struct hinic_pfhwdev, pf_to_mgmt)
+@@ -276,7 +276,8 @@ static int msg_to_mgmt_sync(struct hinic_pf_to_mgmt *pf_to_mgmt,
+ 		goto unlock_sync_msg;
+ 	}
+ 
+-	if (!wait_for_completion_timeout(recv_done, MGMT_MSG_TIMEOUT)) {
++	if (!wait_for_completion_timeout(recv_done,
++					 msecs_to_jiffies(MGMT_MSG_TIMEOUT))) {
+ 		dev_err(&pdev->dev, "MGMT timeout, MSG id = %d\n", msg_id);
+ 		err = -ETIMEDOUT;
+ 		goto unlock_sync_msg;
 -- 
 2.20.1
 
