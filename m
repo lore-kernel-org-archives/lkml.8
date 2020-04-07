@@ -4,99 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C37C2BABC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4E7C2BA16
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4AA220747
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12F1206F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 05:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586238154;
-	bh=QIRrn6My6HdlNXOSqc29iQjUrL4q0bCMmbmpYKRe/EQ=;
+	s=default; t=1586238216;
+	bh=f4zBSzGQroby1C5YQlwI3K2ZZKv+UEnm9JRTLRxnuVc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cAxz9GEwXAEuaTaCUEyErLVmDJO0t6A619t+tnUI7Yzy3eZHTQUzs81gDuV74PLw6
-	 Or8U2VMja7R0S57rtE/ah6ZD+OB9LwCQS3YTIoouN6QTSKQY1qtgb2UuGXDHmU9tPe
-	 GBVIoIHnHRURdeCNWW/nQ9a8TyvVSe6bPywY+VqI=
+	b=sBNruoImvO0n4DBOoWmL5ut5NNvb31kMYv6/OiFUMCKHa93319kFMSXu+I67lbWvW
+	 tWgVxyKdmvc2nWjKbMCCHYjCz8z4xu6mJ7V6By95j01gRi2asnn24299kcL0cfJU1U
+	 YFC/WYy/gG3pLvQyqwnyJlu4GmoCoD8ZUKH6PEz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgDGFmd (ORCPT
+        id S1726821AbgDGFnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 01:42:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
+        Tue, 7 Apr 2020 01:43:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbgDGFmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 01:42:33 -0400
+        id S1725802AbgDGFne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 01:43:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BCAF206F5;
-        Tue,  7 Apr 2020 05:42:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 795B8206F5;
+        Tue,  7 Apr 2020 05:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586238152;
-        bh=QIRrn6My6HdlNXOSqc29iQjUrL4q0bCMmbmpYKRe/EQ=;
+        s=default; t=1586238214;
+        bh=f4zBSzGQroby1C5YQlwI3K2ZZKv+UEnm9JRTLRxnuVc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ATf1NYS0f28qOW/3ECAujxcltmNFLeQUzoAb7JV86tpumTZw33qCq9PsR7QKMUS8n
-         4eKLZDw7ZQJZ03iS6MB/VgnYESZhv6RvxxiMJZvn3PLmXDvA3abgcRRBf0N8M2BnMj
-         XKeHTRcYMM0keBywoGT6aAsIIcFJNovB5TzcwgVg=
-Date:   Tue, 7 Apr 2020 07:42:27 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        b=BhjTUHK6rfgOQOow47upoLydCbz1A1zra8g0JKDFZmkfip45CWso89+wGI7aWuFwN
+         7+vyH0lc0qYskBWeLV41dx6l3kBvTG96hUtyiapXmmYbfvwvAYMbCUnTftC3yiTKvS
+         txa0pmYkGBVLjEQGfSv2m7wdCK81fyl7M9Sk6Z8Y=
+Date:   Tue, 7 Apr 2020 07:43:31 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Maxime Bizon <mbizon@freebox.fr>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 4.9 040/102] net: dsa: Fix duplicate frames flooded by
- learning
-Message-ID: <20200407054227.GA257896@kroah.com>
-References: <20200401161530.451355388@linuxfoundation.org>
- <20200401161540.401786749@linuxfoundation.org>
- <5b036a64-db51-d687-758f-c8b0a5b0c72b@gmail.com>
+Cc:     linux-stable@vger.kernel.org, sashal@kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@savoirfairelinux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH stable-4.9.y]] net: dsa: tag_brcm: Fix
+ skb->fwd_offload_mark location
+Message-ID: <20200407054331.GA258967@kroah.com>
+References: <1586220853-34769-1-git-send-email-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5b036a64-db51-d687-758f-c8b0a5b0c72b@gmail.com>
+In-Reply-To: <1586220853-34769-1-git-send-email-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 06, 2020 at 05:42:16PM -0700, Florian Fainelli wrote:
+On Mon, Apr 06, 2020 at 05:54:12PM -0700, Florian Fainelli wrote:
+> When the backport of upstream commit
+> 0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ("net: dsa: Fix duplicate
+> frames flooded by learning") was done the assignment of
+> skb->fwd_offload_mark would land in brcm_tag_xmit() which is incorrect,
+> it should have been in brcm_tag_rcv().
 > 
-> 
-> On 4/1/2020 9:17 AM, Greg Kroah-Hartman wrote:
-> > From: Florian Fainelli <f.fainelli@gmail.com>
-> > 
-> > [ Upstream commit 0e62f543bed03a64495bd2651d4fe1aa4bcb7fe5 ]
-> > 
-> > When both the switch and the bridge are learning about new addresses,
-> > switch ports attached to the bridge would see duplicate ARP frames
-> > because both entities would attempt to send them.
-> > 
-> > Fixes: 5037d532b83d ("net: dsa: add Broadcom tag RX/TX handler")
-> > Reported-by: Maxime Bizon <mbizon@freebox.fr>
-> > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> > Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-> > Signed-off-by: David S. Miller <davem@davemloft.net>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> >  net/dsa/tag_brcm.c |    2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > --- a/net/dsa/tag_brcm.c
-> > +++ b/net/dsa/tag_brcm.c
-> > @@ -84,6 +84,8 @@ static struct sk_buff *brcm_tag_xmit(str
-> >  		brcm_tag[2] = BRCM_IG_DSTMAP2_MASK;
-> >  	brcm_tag[3] = (1 << p->port) & BRCM_IG_DSTMAP1_MASK;
-> >  
-> > +	skb->offload_fwd_mark = 1;
-> 
-> This is incorrectly placed, the assignment should be in brcm_tag_rcv().
-> It looks like only linux-4.9.y is affected. Sorry for not noticing this
-> earlier. Do you want me to submit a correcting patch?
+> Fixes: 5e845dc62f38 ("net: dsa: Fix duplicate frames flooded by learning")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  net/dsa/tag_brcm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Yes please, that would make it easier for me.
-
-thanks,
+Now queued up, thanks.
 
 greg k-h
