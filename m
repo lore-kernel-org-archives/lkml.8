@@ -2,80 +2,88 @@ Return-Path: <SRS0=z/zp=5X=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44679C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91C9C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127DD20748
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:48:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G5DykvVs"
+	by mail.kernel.org (Postfix) with ESMTP id AE61B20730
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 20:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgDGUsp (ORCPT
+        id S1726521AbgDGUtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 16:48:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33942 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgDGUsp (ORCPT
+        Tue, 7 Apr 2020 16:49:14 -0400
+Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:37636 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgDGUtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 16:48:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=8rULhhQv+p0WTqb/15WNhl9X+GtDbdBlJB2dPAS4ssQ=; b=G5DykvVsj9weI1ijkNnZFk14vc
-        MgS9CreBR9Hj6KGryZjxmduj0xr3m6Q9C742GdlxPpiCwkNb41h7COmr+/GYM0iO1JrqutybdANm2
-        ItatJujji3D5hNY32Dqjzibx2mtQI4ps1fNAMAPp0MFBtSHCRDvKolcrrY75H0yt41L04nQxU5xHb
-        tWQ0nSYqAVzemq8az2pK77oKW3bnl/X1dlDV6/MCtPT7gTlVOv5gmZBbgefJLyHSOORkiQMCw64xR
-        gUhdDaYz3SNfJ9FML13hAeHVf+1uD8gauVQkL7ykK0s90LTAIlcMD53OEizyF33MIpVzdm9n/P5Gy
-        BrMHHvjg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jLv90-0002vB-6a; Tue, 07 Apr 2020 20:48:26 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 02FCA982F1A; Tue,  7 Apr 2020 22:48:23 +0200 (CEST)
-Date:   Tue, 7 Apr 2020 22:48:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        hch@infradead.org, sean.j.christopherson@intel.com,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        kenny@panix.com, jeyu@kernel.org, rasmus.villemoes@prevas.dk,
-        pbonzini@redhat.com, fenghua.yu@intel.com, xiaoyao.li@intel.com,
-        nadav.amit@gmail.com, thellstrom@vmware.com, tony.luck@intel.com,
-        rostedt@goodmis.org, gregkh@linuxfoundation.org, jannh@google.com,
-        keescook@chromium.org, David.Laight@aculab.com,
-        dcovelli@vmware.com, mhiramat@kernel.org
-Subject: Re: [PATCH 0/4] x86/module: Out-of-tree module decode and sanitize
-Message-ID: <20200407204823.GS2452@worktop.programming.kicks-ass.net>
-References: <20200407110236.930134290@infradead.org>
- <a53a01b9-2907-4eb3-a9fd-16e6e8029028@citrix.com>
- <20200407194112.GQ2452@worktop.programming.kicks-ass.net>
- <3245cf5e-b21b-634e-a9d7-a63d55145c33@citrix.com>
+        Tue, 7 Apr 2020 16:49:13 -0400
+Received: from localhost.localdomain ([93.22.37.82])
+        by mwinf5d58 with ME
+        id PwpA220021mLNr903wpAaH; Tue, 07 Apr 2020 22:49:11 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 07 Apr 2020 22:49:11 +0200
+X-ME-IP: 93.22.37.82
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     apw@canonical.com, joe@perches.com
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] checkpatch: check for missing \n at the end of logging message
+Date:   Tue,  7 Apr 2020 22:49:08 +0200
+Message-Id: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3245cf5e-b21b-634e-a9d7-a63d55145c33@citrix.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 07, 2020 at 09:21:31PM +0100, Andrew Cooper wrote:
-> > +	switch (insn->opcode.bytes[1]) {
-> > +	case 0x00:
-> > +		if (modrm_mod != 0x03)
-> > +			break;
-> > +
-> 
-> Apologies - missed this before.  LLDT and LTR can be encoded with a
-> memory operand, so you need to drop the modrm_mod check to spot all
-> instances.
+Strings logged with pr_xxx and dev_xxx often lack a trailing '\n'.
+Introduce new tests to try to catch them early.
 
-I spotted the same, already fixed. Sorry for the mistake, reading opcode
-tables it a pain at the best of times :/
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+This is more a PoC for now.
+
+Regex could be improved, merged, ...
+We could also check for surrounding pr_cont...
+
+This patch is based on idea from [1]. coccinelle spots too many places
+where \n are missing (~ 2800 with the heuristic I've used).
+Fixing them would be painful.
+I instead propose to teach checkpatch.pl about it to try to spot cases
+early and avoid introducing new cases.
+
+[1]: https://marc.info/?l=kernel-janitors&m=158619533629657&w=4
+---
+ scripts/checkpatch.pl | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index c392ab8ea12e..792804bd6ad9 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -5676,6 +5676,16 @@ sub process {
+ 			}
+ 		}
+ 
++# check for missing \n at the end of logging function
++		if ($line =~ /\bpr_(emerg|alert|crit|err|warning|warn|notice|info|debug|dbg)\s*\("([^"]*(?<!\\n))"/) {
++			WARN("MISSING NL",
++			     "Possible missing '\\n' at the end of a log message\n" . $hereprev);
++		}
++		if ($line =~ /\bdev_(emerg|alert|crit|err|warning|warn|notice|info|debug|dbg)\s*\([^,]*,\s*"([^"]*(?<!\\n))"/) {
++			WARN("MISSING NL",
++			     "Possible missing '\\n' at the end of a log message\n" . $hereprev);
++		}
++
+ # check for logging functions with KERN_<LEVEL>
+ 		if ($line !~ /printk(?:_ratelimited|_once)?\s*\(/ &&
+ 		    $line =~ /\b$logFunctions\s*\(.*\b(KERN_[A-Z]+)\b/) {
+-- 
+2.20.1
+
