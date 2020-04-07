@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C50C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B08F1C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4311320768
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7AF20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 00:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586217969;
-	bh=zb7CPgpDosGnXvuzcznJMfLK+4GbFLZXEzAV3QlAoH8=;
+	s=default; t=1586217972;
+	bh=iryEKzf2hO9H4jsbyGgbgdA/v/MMTMlVjJvsGOanEFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L8djilvTzxlhyEBlF0aIM9RUm0yvJAPHF+6DuWjyspg1dsmWEQr/kDNPJDb6N6Jni
-	 xGE5mt4BEeMsKn2XPv+QzXexMdQ5va2pExJVzx9XhLxNQ7cuidrSTvwPnyf/A++6C2
-	 XwiXuYMc6+IFHpe6JjpJcr+7LIet8I6kB8oejKYg=
+	b=CzKOSRqTdD1XQIoOW+LcoqzKhi0f5ojInX/IyaVTE34O0Bm7mon+jBOWzUMBZ5J3e
+	 d2Jc/fWqsr4aC4w0PoRTnbXOyBeVb1hwmQ3bmDdp9L2R6+pyl+bvfLknSP/P97VDW4
+	 v5A6BfoOqgV0kzLlH+Bzmy+V2VTkrC6/icwsnPe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgDGAGH (ORCPT
+        id S1728215AbgDGAGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 6 Apr 2020 20:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36714 "EHLO mail.kernel.org"
+        Mon, 6 Apr 2020 20:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbgDGACV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 6 Apr 2020 20:02:21 -0400
+        id S1728018AbgDGACS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 6 Apr 2020 20:02:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C89F32078A;
-        Tue,  7 Apr 2020 00:02:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51400208E4;
+        Tue,  7 Apr 2020 00:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586217740;
-        bh=zb7CPgpDosGnXvuzcznJMfLK+4GbFLZXEzAV3QlAoH8=;
+        s=default; t=1586217738;
+        bh=iryEKzf2hO9H4jsbyGgbgdA/v/MMTMlVjJvsGOanEFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J5QrcfRKR1SPbWs/i21DIig0zuj2GA8znuKFIgGkK8BQ2iSUoY5JJxSyHTGSPqBhK
-         CtVd1yGL/QKduvKW9RKBn2fHV6Pp06oIvOwcJKC0veGVJXkRNTihg+BqgD5Ow1dklm
-         fmRRcIiahLxqRuy+VNpa8jTtSZcs3qfaPKHbjSwY=
+        b=TpKPTJzckpj6IZBkaldR7BsmGdws1LXufMNNEEq7US9dQRutgVlJmPxHXMRZFI9BQ
+         0PUFZIkuOiU2swhnTo9xOvrp/9FIGTzaz+iG+ZM0XHgqiqiPVFtF4GvrC6zhXmNxCs
+         9jgyoaaPcIw2+nMXtNwgsH6ODgBT1ahRP/iNn0+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 23/32] IB/hfi1: Ensure pq is not left on waitlist
-Date:   Mon,  6 Apr 2020 20:01:41 -0400
-Message-Id: <20200407000151.16768-23-sashal@kernel.org>
+Cc:     Luo bin <luobin9@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 21/32] hinic: fix wrong value of MIN_SKB_LEN
+Date:   Mon,  6 Apr 2020 20:01:39 -0400
+Message-Id: <20200407000151.16768-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200407000151.16768-1-sashal@kernel.org>
 References: <20200407000151.16768-1-sashal@kernel.org>
@@ -61,142 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: Luo bin <luobin9@huawei.com>
 
-[ Upstream commit 9a293d1e21a6461a11b4217b155bf445e57f4131 ]
+[ Upstream commit 7296695fc16dd1761dbba8b68a9181c71cef0633 ]
 
-The following warning can occur when a pq is left on the dmawait list and
-the pq is then freed:
+the minimum value of skb len that hw supports is 32 rather than 17
 
-  WARNING: CPU: 47 PID: 3546 at lib/list_debug.c:29 __list_add+0x65/0xc0
-  list_add corruption. next->prev should be prev (ffff939228da1880), but was ffff939cabb52230. (next=ffff939cabb52230).
-  Modules linked in: mmfs26(OE) mmfslinux(OE) tracedev(OE) 8021q garp mrp ib_isert iscsi_target_mod target_core_mod crc_t10dif crct10dif_generic opa_vnic rpcrdma ib_iser libiscsi scsi_transport_iscsi ib_ipoib(OE) bridge stp llc iTCO_wdt iTCO_vendor_support intel_powerclamp coretemp intel_rapl iosf_mbi kvm_intel kvm irqbypass crct10dif_pclmul crct10dif_common crc32_pclmul ghash_clmulni_intel aesni_intel lrw gf128mul glue_helper ablk_helper cryptd ast ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops drm pcspkr joydev drm_panel_orientation_quirks i2c_i801 mei_me lpc_ich mei wmi ipmi_si ipmi_devintf ipmi_msghandler nfit libnvdimm acpi_power_meter acpi_pad hfi1(OE) rdmavt(OE) rdma_ucm ib_ucm ib_uverbs ib_umad rdma_cm ib_cm iw_cm ib_core binfmt_misc numatools(OE) xpmem(OE) ip_tables
-  nfsv3 nfs_acl nfs lockd grace sunrpc fscache igb ahci libahci i2c_algo_bit dca libata ptp pps_core crc32c_intel [last unloaded: i2c_algo_bit]
-  CPU: 47 PID: 3546 Comm: wrf.exe Kdump: loaded Tainted: G W OE ------------ 3.10.0-957.41.1.el7.x86_64 #1
-  Hardware name: HPE.COM HPE SGI 8600-XA730i Gen10/X11DPT-SB-SG007, BIOS SBED1229 01/22/2019
-  Call Trace:
-  [<ffffffff91f65ac0>] dump_stack+0x19/0x1b
-  [<ffffffff91898b78>] __warn+0xd8/0x100
-  [<ffffffff91898bff>] warn_slowpath_fmt+0x5f/0x80
-  [<ffffffff91a1dabe>] ? ___slab_alloc+0x24e/0x4f0
-  [<ffffffff91b97025>] __list_add+0x65/0xc0
-  [<ffffffffc03926a5>] defer_packet_queue+0x145/0x1a0 [hfi1]
-  [<ffffffffc0372987>] sdma_check_progress+0x67/0xa0 [hfi1]
-  [<ffffffffc03779d2>] sdma_send_txlist+0x432/0x550 [hfi1]
-  [<ffffffff91a20009>] ? kmem_cache_alloc+0x179/0x1f0
-  [<ffffffffc0392973>] ? user_sdma_send_pkts+0xc3/0x1990 [hfi1]
-  [<ffffffffc0393e3a>] user_sdma_send_pkts+0x158a/0x1990 [hfi1]
-  [<ffffffff918ab65e>] ? try_to_del_timer_sync+0x5e/0x90
-  [<ffffffff91a3fe1a>] ? __check_object_size+0x1ca/0x250
-  [<ffffffffc0395546>] hfi1_user_sdma_process_request+0xd66/0x1280 [hfi1]
-  [<ffffffffc034e0da>] hfi1_aio_write+0xca/0x120 [hfi1]
-  [<ffffffff91a4245b>] do_sync_readv_writev+0x7b/0xd0
-  [<ffffffff91a4409e>] do_readv_writev+0xce/0x260
-  [<ffffffff918df69f>] ? pick_next_task_fair+0x5f/0x1b0
-  [<ffffffff918db535>] ? sched_clock_cpu+0x85/0xc0
-  [<ffffffff91f6b16a>] ? __schedule+0x13a/0x860
-  [<ffffffff91a442c5>] vfs_writev+0x35/0x60
-  [<ffffffff91a4447f>] SyS_writev+0x7f/0x110
-  [<ffffffff91f78ddb>] system_call_fastpath+0x22/0x27
-
-The issue happens when wait_event_interruptible_timeout() returns a value
-<= 0.
-
-In that case, the pq is left on the list. The code continues sending
-packets and potentially can complete the current request with the pq still
-on the dmawait list provided no descriptor shortage is seen.
-
-If the pq is torn down in that state, the sdma interrupt handler could
-find the now freed pq on the list with list corruption or memory
-corruption resulting.
-
-Fix by adding a flush routine to ensure that the pq is never on a list
-after processing a request.
-
-A follow-up patch series will address issues with seqlock surfaced in:
-https://lore.kernel.org/r/20200320003129.GP20941@ziepe.ca
-
-The seqlock use for sdma will then be converted to a spin lock since the
-list_empty() doesn't need the protection afforded by the sequence lock
-currently in use.
-
-Fixes: a0d406934a46 ("staging/rdma/hfi1: Add page lock limit check for SDMA requests")
-Link: https://lore.kernel.org/r/20200320200200.23203.37777.stgit@awfm-01.aw.intel.com
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Luo bin <luobin9@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/user_sdma.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/huawei/hinic/hinic_tx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/user_sdma.c b/drivers/infiniband/hw/hfi1/user_sdma.c
-index c2f0d9ba93de1..13e4203497b33 100644
---- a/drivers/infiniband/hw/hfi1/user_sdma.c
-+++ b/drivers/infiniband/hw/hfi1/user_sdma.c
-@@ -141,6 +141,7 @@ static int defer_packet_queue(
- 	 */
- 	xchg(&pq->state, SDMA_PKT_Q_DEFERRED);
- 	if (list_empty(&pq->busy.list)) {
-+		pq->busy.lock = &sde->waitlock;
- 		iowait_get_priority(&pq->busy);
- 		iowait_queue(pkts_sent, &pq->busy, &sde->dmawait);
- 	}
-@@ -155,6 +156,7 @@ static void activate_packet_queue(struct iowait *wait, int reason)
- {
- 	struct hfi1_user_sdma_pkt_q *pq =
- 		container_of(wait, struct hfi1_user_sdma_pkt_q, busy);
-+	pq->busy.lock = NULL;
- 	xchg(&pq->state, SDMA_PKT_Q_ACTIVE);
- 	wake_up(&wait->wait_dma);
- };
-@@ -256,6 +258,21 @@ int hfi1_user_sdma_alloc_queues(struct hfi1_ctxtdata *uctxt,
- 	return ret;
- }
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_tx.c b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+index 375d81d03e866..365016450bdbe 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_tx.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_tx.c
+@@ -45,7 +45,7 @@
  
-+static void flush_pq_iowait(struct hfi1_user_sdma_pkt_q *pq)
-+{
-+	unsigned long flags;
-+	seqlock_t *lock = pq->busy.lock;
-+
-+	if (!lock)
-+		return;
-+	write_seqlock_irqsave(lock, flags);
-+	if (!list_empty(&pq->busy.list)) {
-+		list_del_init(&pq->busy.list);
-+		pq->busy.lock = NULL;
-+	}
-+	write_sequnlock_irqrestore(lock, flags);
-+}
-+
- int hfi1_user_sdma_free_queues(struct hfi1_filedata *fd,
- 			       struct hfi1_ctxtdata *uctxt)
- {
-@@ -281,6 +298,7 @@ int hfi1_user_sdma_free_queues(struct hfi1_filedata *fd,
- 		kfree(pq->reqs);
- 		kfree(pq->req_in_use);
- 		kmem_cache_destroy(pq->txreq_cache);
-+		flush_pq_iowait(pq);
- 		kfree(pq);
- 	} else {
- 		spin_unlock(&fd->pq_rcu_lock);
-@@ -587,11 +605,12 @@ int hfi1_user_sdma_process_request(struct hfi1_filedata *fd,
- 		if (ret < 0) {
- 			if (ret != -EBUSY)
- 				goto free_req;
--			wait_event_interruptible_timeout(
-+			if (wait_event_interruptible_timeout(
- 				pq->busy.wait_dma,
--				(pq->state == SDMA_PKT_Q_ACTIVE),
-+				pq->state == SDMA_PKT_Q_ACTIVE,
- 				msecs_to_jiffies(
--					SDMA_IOWAIT_TIMEOUT));
-+					SDMA_IOWAIT_TIMEOUT)) <= 0)
-+				flush_pq_iowait(pq);
- 		}
- 	}
- 	*count += idx;
+ #define HW_CONS_IDX(sq)                 be16_to_cpu(*(u16 *)((sq)->hw_ci_addr))
+ 
+-#define MIN_SKB_LEN                     17
++#define MIN_SKB_LEN			32
+ 
+ #define	MAX_PAYLOAD_OFFSET	        221
+ #define TRANSPORT_OFFSET(l4_hdr, skb)	((u32)((l4_hdr) - (skb)->data))
 -- 
 2.20.1
 
