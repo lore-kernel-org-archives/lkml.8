@@ -6,35 +6,37 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CEAC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55874C2BB1D
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C3720731
-	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3395820731
+	for <linux-kernel@archiver.kernel.org>; Tue,  7 Apr 2020 11:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgDGLAT (ORCPT
+        id S1728362AbgDGLAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 07:00:19 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:32879 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbgDGLAS (ORCPT
+        Tue, 7 Apr 2020 07:00:39 -0400
+Received: from mail.windriver.com ([147.11.1.11]:38362 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbgDGLAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 07:00:18 -0400
+        Tue, 7 Apr 2020 07:00:38 -0400
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 037AxtZZ011133
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 037B0UiY025449
         (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 7 Apr 2020 03:59:55 -0700 (PDT)
+        Tue, 7 Apr 2020 04:00:30 -0700 (PDT)
 Received: from pek-lpg-core2.corp.ad.wrs.com (128.224.153.41) by
  ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 7 Apr 2020 03:59:54 -0700
+ 14.3.487.0; Tue, 7 Apr 2020 04:00:28 -0700
 From:   <zhe.he@windriver.com>
 To:     <viro@zeniv.linux.org.uk>, <axboe@kernel.dk>, <bcrl@kvack.org>,
         <linux-fsdevel@vger.kernel.org>, <linux-aio@kvack.org>,
         <linux-kernel@vger.kernel.org>, <zhe.he@windriver.com>
-Subject: [PATCH 1/2] eventfd: Make wake counter work for single fd instead of all
-Date:   Tue, 7 Apr 2020 18:59:51 +0800
-Message-ID: <1586257192-58369-1-git-send-email-zhe.he@windriver.com>
+Subject: [PATCH 2/2] aio: Update calling to eventfd_signal_count with righ parameter
+Date:   Tue, 7 Apr 2020 18:59:52 +0800
+Message-ID: <1586257192-58369-2-git-send-email-zhe.he@windriver.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1586257192-58369-1-git-send-email-zhe.he@windriver.com>
+References: <1586257192-58369-1-git-send-email-zhe.he@windriver.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,195 +46,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: He Zhe <zhe.he@windriver.com>
 
-commit b5e683d5cab8 ("eventfd: track eventfd_signal() recursion depth")
-introduces a percpu counter that tracks the percpu recursion depth and
-warn if it greater than one, to avoid potential deadlock and stack
-overflow.
+eventfd_signal_count has been changed to take eventfd context as
+parameter. Update the calling accordingly.
 
-However sometimes different eventfds may be used in parallel.
-Specifically, when high network load goes through kvm and vhost, working
-as below, it would trigger the following call trace.
-
--  100.00%
-   - 66.51%
-        ret_from_fork
-        kthread
-      - vhost_worker
-         - 33.47% handle_tx_kick
-              handle_tx
-              handle_tx_copy
-              vhost_tx_batch.isra.0
-              vhost_add_used_and_signal_n
-              eventfd_signal
-         - 33.05% handle_rx_net
-              handle_rx
-              vhost_add_used_and_signal_n
-              eventfd_signal
-   - 33.49%
-        ioctl
-        entry_SYSCALL_64_after_hwframe
-        do_syscall_64
-        __x64_sys_ioctl
-        ksys_ioctl
-        do_vfs_ioctl
-        kvm_vcpu_ioctl
-        kvm_arch_vcpu_ioctl_run
-        vmx_handle_exit
-        handle_ept_misconfig
-        kvm_io_bus_write
-        __kvm_io_bus_write
-        eventfd_signal
-
-001: WARNING: CPU: 1 PID: 1503 at fs/eventfd.c:73 eventfd_signal+0x85/0xa0
----- snip ----
-001: Call Trace:
-001:  vhost_signal+0x15e/0x1b0 [vhost]
-001:  vhost_add_used_and_signal_n+0x2b/0x40 [vhost]
-001:  handle_rx+0xb9/0x900 [vhost_net]
-001:  handle_rx_net+0x15/0x20 [vhost_net]
-001:  vhost_worker+0xbe/0x120 [vhost]
-001:  kthread+0x106/0x140
-001:  ? log_used.part.0+0x20/0x20 [vhost]
-001:  ? kthread_park+0x90/0x90
-001:  ret_from_fork+0x35/0x40
-001: ---[ end trace 0000000000000003 ]---
-
-This patch moves the percpu counter into eventfd control structure and
-does the clean-ups, so that eventfd can still be protected from deadlock
-while allowing different ones to work in parallel.
-
-As to potential stack overflow, we might want to figure out a better
-solution in the future to warn when the stack is about to overflow so it
-can be better utilized, rather than break the working flow when just the
-second one comes.
-
-Fixes: b5e683d5cab8 ("eventfd: track eventfd_signal() recursion depth")
 Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
-Having searched the lkml, I didn't find the discussion of the aio use case
-commit b5e683d5cab8 was added for, so I didn't validate this patch against
-it.
+ fs/aio.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- fs/eventfd.c            | 31 +++++++++----------------------
- include/linux/eventfd.h | 24 +++++++++++++++++++-----
- 2 files changed, 28 insertions(+), 27 deletions(-)
-
-diff --git a/fs/eventfd.c b/fs/eventfd.c
-index 78e41c7..bb4385a 100644
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -24,26 +24,8 @@
- #include <linux/seq_file.h>
- #include <linux/idr.h>
- 
--DEFINE_PER_CPU(int, eventfd_wake_count);
--
- static DEFINE_IDA(eventfd_ida);
- 
--struct eventfd_ctx {
--	struct kref kref;
--	wait_queue_head_t wqh;
--	/*
--	 * Every time that a write(2) is performed on an eventfd, the
--	 * value of the __u64 being written is added to "count" and a
--	 * wakeup is performed on "wqh". A read(2) will return the "count"
--	 * value to userspace, and will reset "count" to zero. The kernel
--	 * side eventfd_signal() also, adds to the "count" counter and
--	 * issue a wakeup.
--	 */
--	__u64 count;
--	unsigned int flags;
--	int id;
--};
--
- /**
-  * eventfd_signal - Adds @n to the eventfd counter.
-  * @ctx: [in] Pointer to the eventfd context.
-@@ -70,17 +52,17 @@ __u64 eventfd_signal(struct eventfd_ctx *ctx, __u64 n)
- 	 * it returns true, the eventfd_signal() call should be deferred to a
- 	 * safe context.
- 	 */
--	if (WARN_ON_ONCE(this_cpu_read(eventfd_wake_count)))
-+	if (WARN_ON_ONCE(this_cpu_read(*ctx->wake_count)))
- 		return 0;
- 
- 	spin_lock_irqsave(&ctx->wqh.lock, flags);
--	this_cpu_inc(eventfd_wake_count);
-+	this_cpu_inc(*ctx->wake_count);
- 	if (ULLONG_MAX - ctx->count < n)
- 		n = ULLONG_MAX - ctx->count;
- 	ctx->count += n;
- 	if (waitqueue_active(&ctx->wqh))
- 		wake_up_locked_poll(&ctx->wqh, EPOLLIN);
--	this_cpu_dec(eventfd_wake_count);
-+	this_cpu_dec(*ctx->wake_count);
- 	spin_unlock_irqrestore(&ctx->wqh.lock, flags);
- 
- 	return n;
-@@ -406,7 +388,7 @@ EXPORT_SYMBOL_GPL(eventfd_ctx_fileget);
- static int do_eventfd(unsigned int count, int flags)
- {
- 	struct eventfd_ctx *ctx;
--	int fd;
-+	int fd, cpu;
- 
- 	/* Check the EFD_* constants for consistency.  */
- 	BUILD_BUG_ON(EFD_CLOEXEC != O_CLOEXEC);
-@@ -424,6 +406,11 @@ static int do_eventfd(unsigned int count, int flags)
- 	ctx->count = count;
- 	ctx->flags = flags;
- 	ctx->id = ida_simple_get(&eventfd_ida, 0, 0, GFP_KERNEL);
-+	ctx->wake_count = alloc_percpu(typeof(*ctx->wake_count));
-+	if (!ctx->wake_count)
-+		return -ENOMEM;
-+	for_each_possible_cpu(cpu)
-+		*per_cpu_ptr(ctx->wake_count, cpu) = 0;
- 
- 	fd = anon_inode_getfd("[eventfd]", &eventfd_fops, ctx,
- 			      O_RDWR | (flags & EFD_SHARED_FCNTL_FLAGS));
-diff --git a/include/linux/eventfd.h b/include/linux/eventfd.h
-index dc4fd8a..b0d0f44 100644
---- a/include/linux/eventfd.h
-+++ b/include/linux/eventfd.h
-@@ -29,7 +29,23 @@
- #define EFD_SHARED_FCNTL_FLAGS (O_CLOEXEC | O_NONBLOCK)
- #define EFD_FLAGS_SET (EFD_SHARED_FCNTL_FLAGS | EFD_SEMAPHORE)
- 
--struct eventfd_ctx;
-+struct eventfd_ctx {
-+	struct kref kref;
-+	wait_queue_head_t wqh;
-+	/*
-+	 * Every time that a write(2) is performed on an eventfd, the
-+	 * value of the __u64 being written is added to "count" and a
-+	 * wakeup is performed on "wqh". A read(2) will return the "count"
-+	 * value to userspace, and will reset "count" to zero. The kernel
-+	 * side eventfd_signal() also, adds to the "count" counter and
-+	 * issue a wakeup.
-+	 */
-+	__u64 count;
-+	unsigned int flags;
-+	int id;
-+	int __percpu *wake_count;
-+};
-+
- struct file;
- 
- #ifdef CONFIG_EVENTFD
-@@ -42,11 +58,9 @@ __u64 eventfd_signal(struct eventfd_ctx *ctx, __u64 n);
- int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *wait,
- 				  __u64 *cnt);
- 
--DECLARE_PER_CPU(int, eventfd_wake_count);
--
--static inline bool eventfd_signal_count(void)
-+static inline bool eventfd_signal_count(struct eventfd_ctx *ctx)
- {
--	return this_cpu_read(eventfd_wake_count);
-+	return this_cpu_read(*ctx->wake_count);
- }
- 
- #else /* CONFIG_EVENTFD */
+diff --git a/fs/aio.c b/fs/aio.c
+index 5f3d3d8..c03c487 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -1693,7 +1693,8 @@ static int aio_poll_wake(struct wait_queue_entry *wait, unsigned mode, int sync,
+ 		list_del(&iocb->ki_list);
+ 		iocb->ki_res.res = mangle_poll(mask);
+ 		req->done = true;
+-		if (iocb->ki_eventfd && eventfd_signal_count()) {
++		if (iocb->ki_eventfd &&
++		    eventfd_signal_count(iocb->ki_eventfd)) {
+ 			iocb = NULL;
+ 			INIT_WORK(&req->work, aio_poll_put_work);
+ 			schedule_work(&req->work);
 -- 
 2.7.4
 
