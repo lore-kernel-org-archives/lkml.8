@@ -2,90 +2,106 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888C0C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5E3C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67CEE2082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C5220787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:12:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FuXsAshY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbgDHPMc (ORCPT
+        id S1729465AbgDHPMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:12:32 -0400
-Received: from nautica.notk.org ([91.121.71.147]:56749 "EHLO nautica.notk.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728309AbgDHPMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:12:31 -0400
-Received: by nautica.notk.org (Postfix, from userid 1001)
-        id D04B4C009; Wed,  8 Apr 2020 17:12:29 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 17:12:14 +0200
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: [GIT PULL v2] 9p update for 5.7
-Message-ID: <20200408151214.GA30977@nautica>
+        Wed, 8 Apr 2020 11:12:36 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:44274 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728309AbgDHPMd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:12:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Rjv5131jSAiyIu5HYACdcXLWZcmDSy5Ae4NdyG3A0EU=; b=FuXsAshYsSTgOfgG+tafxq311H
+        2DLcoyBxKM/nbGCT2GEvorwEQ03/VOWi5DKAbxhI4DqIPjAGXNNsOWsSOG7aU/Lla3ICxHLRu6SzM
+        /q9DEwOTHGBUUXd+C1gWvP9Pjgc6GcW+Xi/RtUJFOAx/HNAnnerQFGHAfcPScOe5j3ll7FaXVMW5Z
+        Z2xjwSDzwp0YcD5TzxjStK7nQDDKjXVISOx5Itl6OOQeUK3wpMFWDuSjU7Q7E7VC31GOzaWh+PQx5
+        zbPF7UcdVGkG+53Xs4Olbyq1FLyXUWKqf1azA1wf6Pm9lsIEV7Cpflmxs3MnCPe2MFR6K51PRMHF8
+        JF/j+ctA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jMCN3-0004v8-A7; Wed, 08 Apr 2020 15:12:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 64B9E300478;
+        Wed,  8 Apr 2020 17:12:03 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2B71F2BB026A0; Wed,  8 Apr 2020 17:12:03 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 17:12:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
+ zsmalloc
+Message-ID: <20200408151203.GN20730@hirez.programming.kicks-ass.net>
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-11-hch@lst.de>
+ <c0c86feb-b3d8-78f2-127f-71d682ffc51f@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200406110702.GA13469@nautica>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <c0c86feb-b3d8-78f2-127f-71d682ffc51f@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Apr 08, 2020 at 08:01:00AM -0700, Randy Dunlap wrote:
+> Hi,
+> 
+> On 4/8/20 4:59 AM, Christoph Hellwig wrote:
+> > diff --git a/mm/Kconfig b/mm/Kconfig
+> > index 36949a9425b8..614cc786b519 100644
+> > --- a/mm/Kconfig
+> > +++ b/mm/Kconfig
+> > @@ -702,7 +702,7 @@ config ZSMALLOC
+> >  
+> >  config ZSMALLOC_PGTABLE_MAPPING
+> >  	bool "Use page table mapping to access object in zsmalloc"
+> > -	depends on ZSMALLOC
+> > +	depends on ZSMALLOC=y
+> 
+> It's a bool so this shouldn't matter... not needed.
 
-v2 of monday's pull request. The commit date is just now, but that is
-just the documentation patch I applied, there is no code change since
-the last version.
+My mm/Kconfig has:
 
-Thanks,
-Dominique
+config ZSMALLOC
+	tristate "Memory allocator for compressed pages"
+	depends on MMU
 
-The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
-
-  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
-
-are available in the Git repository at:
-
-  https://github.com/martinetd/linux tags/9p-for-5.7-2
-
-for you to fetch changes up to c6f141412d24c8d8a9d98ef45303c0235829044b:
-
-  9p: document short read behaviour with O_NONBLOCK (2020-04-08 17:05:28 +0200)
-
-----------------------------------------------------------------
-9p pull request for inclusion in 5.7 (take 2)
-
-- Change read with O_NONBLOCK to allow incomplete read and return immediately
-(and document it)
-- Rest is just cleanup (indent, unused field in struct, extra semicolon)
-
-----------------------------------------------------------------
-Dominique Martinet (2):
-      net/9p: remove unused p9_req_t aux field
-      9p: document short read behaviour with O_NONBLOCK
-
-Krzysztof Kozlowski (1):
-      9p: Fix Kconfig indentation
-
-Sergey Alirzaev (2):
-      9pnet: allow making incomplete read requests
-      9p: read only once on O_NONBLOCK
-
-zhengbin (1):
-      9p: Remove unneeded semicolon
-
- Documentation/filesystems/9p.txt |  10 +++++++++
- fs/9p/Kconfig                    |  18 ++++++++--------
- fs/9p/vfs_file.c                 |   5 ++++-
- fs/9p/vfs_inode.c                |   2 +-
- include/net/9p/client.h          |   4 ++--
- net/9p/client.c                  | 144  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------------------------
- 6 files changed, 104 insertions(+), 79 deletions(-)
+which I think means it can be modular, no?
