@@ -2,125 +2,216 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BF5C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42746C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68491206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12878206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgDHUWf (ORCPT
+        id S1729342AbgDHUXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:22:35 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:47732 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728275AbgDHUWf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:22:35 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id DA9F780516;
-        Wed,  8 Apr 2020 22:22:32 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 22:22:31 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     David Lu <david.lu@bitland.com.cn>
-Cc:     David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, jungle.chiang@bitland.com.cn,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] drm/panel: boe-tv101wum-n16: extend LCD support list
-Message-ID: <20200408202231.GC612@ravnborg.org>
-References: <20200324075734.1802-1-david.lu@bitland.com.cn>
+        Wed, 8 Apr 2020 16:23:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:1753 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbgDHUXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 16:23:15 -0400
+IronPort-SDR: hddEMPoyI4RZDre3uzselfBdGCNBlEkGOsh3gt+2JCaIj8W/W23l0IQr1+9zD/ravwcTLvLs6I
+ nlAJsp5bOexg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 13:23:14 -0700
+IronPort-SDR: oNiI2qCReI8/8IoJip/SrNSensKgUAJ5s7+49fxle9m3+mYpRXtFv4DbyyKQXP/W01JKAsTXwC
+ g0ZeMbmSMwzQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="254437308"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 08 Apr 2020 13:23:13 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jMHE8-000CP3-JT; Thu, 09 Apr 2020 04:23:12 +0800
+Date:   Thu, 09 Apr 2020 04:22:16 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/urgent] BUILD SUCCESS
+ 9a019db0b6bebc84d6b64636faf73ed6d64cd4bb
+Message-ID: <5e8e3278.QVIQ8DNEFtpxxAKx%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324075734.1802-1-david.lu@bitland.com.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=XpTUx2N9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=iKCrp2iyAAAA:8
-        a=e5mUnYsNAAAA:8 a=he46yxwc6qcuFeRiDoMA:9 a=CjuIK1q_8ugA:10
-        a=6dnM-gFdnRAg0d82BWIM:22 a=Vxmtnl_E_bksehYqCbjh:22
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/urgent
+branch HEAD: 9a019db0b6bebc84d6b64636faf73ed6d64cd4bb  locking/lockdep: Improve 'invalid wait context' splat
 
-On Tue, Mar 24, 2020 at 03:57:34PM +0800, David Lu wrote:
-> Add entries for BOE TV105WUM-NW0 10.5" WUXGA TFT LCD panel.
-> 
-> Signed-off-by: David Lu <david.lu@bitland.com.cn>
-> Change-Id: I5b1cef259de5fb498220dcc47baa035083c41667
-Deleted Change-Id, and updated subject as suggested by Nicholas.
-Applied to drm-misc-next and pushed out.
+elapsed time: 481m
 
-	Sam
+configs tested: 149
+configs skipped: 0
 
-> ---
->  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 31 +++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> index 48a164257d18..f89861c8598a 100644
-> --- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> @@ -696,6 +696,34 @@ static const struct panel_desc auo_b101uan08_3_desc = {
->  	.init_cmds = auo_b101uan08_3_init_cmd,
->  };
->  
-> +static const struct drm_display_mode boe_tv105wum_nw0_default_mode = {
-> +	.clock = 159260,
-> +	.hdisplay = 1200,
-> +	.hsync_start = 1200 + 80,
-> +	.hsync_end = 1200 + 80 + 24,
-> +	.htotal = 1200 + 80 + 24 + 60,
-> +	.vdisplay = 1920,
-> +	.vsync_start = 1920 + 10,
-> +	.vsync_end = 1920 + 10 + 2,
-> +	.vtotal = 1920 + 10 + 2 + 14,
-> +	.vrefresh = 60,
-> +	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +};
-> +
-> +static const struct panel_desc boe_tv105wum_nw0_desc = {
-> +	.modes = &boe_tv105wum_nw0_default_mode,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width_mm = 141,
-> +		.height_mm = 226,
-> +	},
-> +	.lanes = 4,
-> +	.format = MIPI_DSI_FMT_RGB888,
-> +	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-> +		      MIPI_DSI_MODE_LPM,
-> +	.init_cmds = boe_init_cmd,
-> +};
-> +
->  static int boe_panel_get_modes(struct drm_panel *panel,
->  			       struct drm_connector *connector)
->  {
-> @@ -834,6 +862,9 @@ static const struct of_device_id boe_of_match[] = {
->  	{ .compatible = "auo,b101uan08.3",
->  	  .data = &auo_b101uan08_3_desc
->  	},
-> +	{ .compatible = "boe,tv105wum-nw0",
-> +	  .data = &boe_tv105wum_nw0_desc
-> +	},
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, boe_of_match);
-> -- 
-> 2.24.1
-> 
-> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+riscv                               defconfig
+s390                          debug_defconfig
+parisc                generic-32bit_defconfig
+nios2                         3c120_defconfig
+s390                             alldefconfig
+openrisc                    or1ksim_defconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                              debian-10.3
+i386                                defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                             alldefconfig
+nios2                         10m50_defconfig
+c6x                        evmc6678_defconfig
+xtensa                          iss_defconfig
+c6x                              allyesconfig
+xtensa                       common_defconfig
+openrisc                 simple_smp_defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200408
+x86_64               randconfig-a002-20200408
+x86_64               randconfig-a003-20200408
+i386                 randconfig-a001-20200408
+i386                 randconfig-a002-20200408
+i386                 randconfig-a003-20200408
+alpha                randconfig-a001-20200408
+m68k                 randconfig-a001-20200408
+mips                 randconfig-a001-20200408
+nds32                randconfig-a001-20200408
+parisc               randconfig-a001-20200408
+riscv                randconfig-a001-20200408
+c6x                  randconfig-a001-20200408
+h8300                randconfig-a001-20200408
+microblaze           randconfig-a001-20200408
+nios2                randconfig-a001-20200408
+sparc64              randconfig-a001-20200408
+csky                 randconfig-a001-20200408
+openrisc             randconfig-a001-20200408
+s390                 randconfig-a001-20200408
+sh                   randconfig-a001-20200408
+xtensa               randconfig-a001-20200408
+x86_64               randconfig-b001-20200408
+x86_64               randconfig-b002-20200408
+x86_64               randconfig-b003-20200408
+i386                 randconfig-b001-20200408
+i386                 randconfig-b002-20200408
+i386                 randconfig-b003-20200408
+x86_64               randconfig-c001-20200408
+x86_64               randconfig-c002-20200408
+x86_64               randconfig-c003-20200408
+i386                 randconfig-c001-20200408
+i386                 randconfig-c002-20200408
+i386                 randconfig-c003-20200408
+x86_64               randconfig-d001-20200408
+x86_64               randconfig-d002-20200408
+x86_64               randconfig-d003-20200408
+i386                 randconfig-d001-20200408
+i386                 randconfig-d002-20200408
+i386                 randconfig-d003-20200408
+x86_64               randconfig-e001-20200408
+x86_64               randconfig-e002-20200408
+x86_64               randconfig-e003-20200408
+i386                 randconfig-e001-20200408
+i386                 randconfig-e002-20200408
+i386                 randconfig-e003-20200408
+x86_64               randconfig-h001-20200408
+x86_64               randconfig-h002-20200408
+x86_64               randconfig-h003-20200408
+i386                 randconfig-h001-20200408
+i386                 randconfig-h002-20200408
+i386                 randconfig-h003-20200408
+arc                  randconfig-a001-20200408
+arm                  randconfig-a001-20200408
+arm64                randconfig-a001-20200408
+ia64                 randconfig-a001-20200408
+powerpc              randconfig-a001-20200408
+sparc                randconfig-a001-20200408
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
