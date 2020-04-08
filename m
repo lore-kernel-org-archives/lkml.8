@@ -2,122 +2,74 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF13C2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3B0C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0271820730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:37:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VNbrIglN"
+	by mail.kernel.org (Postfix) with ESMTP id 7F18C2075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:37:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgDHPhB (ORCPT
+        id S1729251AbgDHPhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:37:01 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40976 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgDHPhA (ORCPT
+        Wed, 8 Apr 2020 11:37:06 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:34406 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbgDHPhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:37:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=NjrfXWzBHp9dUGtZC6AXf3gVdy3neXUwD6Zi4ikgFI4=; b=VNbrIglNX5XGXIm/NNZLA+p/Kj
-        5sP44g8Gpu4dV5GQq48I/VAqImWTTO7UOVLC/I93y9bsLUoXRrAZrGsO8pqaFrLK3hNNWcPpO7LH9
-        sBbHuvgX3ssA94QgJvW5ecpOgR54ODRZMbvySxIZlw5wFH3PzF9jebAP4ULouyfQQPH9WOOPKUjGE
-        SFEXAfLSq8aoH4PyEC3XZbMmEfljyKBbGbCbm+zAYF4emVk1HnLFKAZfR9+5/zqUGpO6yxi7UX57i
-        QnssTPKyGTMpoTQgpDVnM9fMHQMfG8vEvg/t7TUqcXxvUGoeqIlv7lInyBmt6r7bZNjJr105FtD51
-        eSrtUb/w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMCl9-00069a-K4; Wed, 08 Apr 2020 15:36:59 +0000
-Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
- zsmalloc
-To:     Matthew Wilcox <willy@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-11-hch@lst.de>
- <c0c86feb-b3d8-78f2-127f-71d682ffc51f@infradead.org>
- <20200408151203.GN20730@hirez.programming.kicks-ass.net>
- <20200408151519.GQ21484@bombadil.infradead.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <139a494a-f946-fd4b-4854-6ff625e4c24f@infradead.org>
-Date:   Wed, 8 Apr 2020 08:36:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 8 Apr 2020 11:37:05 -0400
+Received: by mail-io1-f69.google.com with SMTP id n26so321875iop.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:37:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Sk/yJxNuEWZ2R900yOk1engj26s2zBpDSaCTxgbd3iw=;
+        b=N86ySn+PVwJnR870GQf+akWFXPJYjn1A9yOOZNpb2a6SMQVM5Xu6UIFfKHGO8smNky
+         AL5bd5+E2i/ptLYKb9eR/KlxpD1+UcuF2AH36FHySgNN8rDMn4JC9QT6i4goRi22m7e3
+         GHy6vNWCK3Sz915CvqXOqpuvvpNzIK5l8iJB3GI9MX42nY0OXvXTlS5XXUHqW2wt/wMF
+         HH8MV/hYkQwO2TAmDjbm/sfimBgTiq+1mghSuX6SLb+kIHzA8AL20i3iuz+MmXy+aIO1
+         5XCdXWUEwq9r+/55JJwX/WjmRrFji+7nO2AGZMK7s17IzrjJprtkbE4gc+twEws/6XBe
+         oO/A==
+X-Gm-Message-State: AGi0PuZNptE0I0WDqSINh8Qnm1SMYc0Z1z2Sz5M/JWd8lwJdX7IOmB3X
+        XK1pUqIFVLUH7Fb/LNA99ShKPLNUPvPPsyeMoXtWB1/pz1ZC
+X-Google-Smtp-Source: APiQypJdvcrg+aR58S2FEowGROs10MppJcSNDVTGB35UmZY5ZA1bV17WnWZlHjZMwBB+AaHxZWu05S2h25UB/7vDqvwQJi6PzhCP
 MIME-Version: 1.0
-In-Reply-To: <20200408151519.GQ21484@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:dcd1:: with SMTP id b17mr8371614ilr.80.1586360224353;
+ Wed, 08 Apr 2020 08:37:04 -0700 (PDT)
+Date:   Wed, 08 Apr 2020 08:37:04 -0700
+In-Reply-To: <20200408151815.GG66033@xz-x1>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a89b5805a2c9450d@google.com>
+Subject: Re: WARNING in af_alg_make_sg
+From:   syzbot <syzbot+3be1a33f04dc782e9fd5@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, bgeffon@google.com, davem@davemloft.net,
+        hdanton@sina.com, herbert@gondor.apana.org.au,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/20 8:15 AM, Matthew Wilcox wrote:
-> On Wed, Apr 08, 2020 at 05:12:03PM +0200, Peter Zijlstra wrote:
->> On Wed, Apr 08, 2020 at 08:01:00AM -0700, Randy Dunlap wrote:
->>> Hi,
->>>
->>> On 4/8/20 4:59 AM, Christoph Hellwig wrote:
->>>> diff --git a/mm/Kconfig b/mm/Kconfig
->>>> index 36949a9425b8..614cc786b519 100644
->>>> --- a/mm/Kconfig
->>>> +++ b/mm/Kconfig
->>>> @@ -702,7 +702,7 @@ config ZSMALLOC
->>>>  
->>>>  config ZSMALLOC_PGTABLE_MAPPING
->>>>  	bool "Use page table mapping to access object in zsmalloc"
->>>> -	depends on ZSMALLOC
->>>> +	depends on ZSMALLOC=y
->>>
->>> It's a bool so this shouldn't matter... not needed.
->>
->> My mm/Kconfig has:
->>
->> config ZSMALLOC
->> 	tristate "Memory allocator for compressed pages"
->> 	depends on MMU
->>
->> which I think means it can be modular, no?
+Hello,
 
-ack. I misread it.
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-> Randy means that ZSMALLOC_PGTABLE_MAPPING is a bool, so I think hch's patch
-> is wrong ... if ZSMALLOC is 'm' then ZSMALLOC_PGTABLE_MAPPING would become
-> 'n' instead of 'y'.
+Reported-and-tested-by: syzbot+3be1a33f04dc782e9fd5@syzkaller.appspotmail.com
 
-sigh, I wish that I had meant that. :)
+Tested on:
 
-thanks.
+commit:         f5e94d10 Merge tag 'drm-next-2020-04-08' of git://anongit...
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ca75979eeebf06c2
+dashboard link: https://syzkaller.appspot.com/bug?extid=3be1a33f04dc782e9fd5
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1672dcede00000
 
--- 
-~Randy
-
+Note: testing is done by a robot and is best-effort only.
