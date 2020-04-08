@@ -2,115 +2,147 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6845C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F2DC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC96920747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB18220747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pBKw32kg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aL8VsGju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgDHPJ5 (ORCPT
+        id S1729396AbgDHPKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:09:57 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43904 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgDHPJ5 (ORCPT
+        Wed, 8 Apr 2020 11:10:54 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45199 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728844AbgDHPKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:09:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=89Z6RxZbArgSbKPhvwh545xFzap5boKJNxHrWLE5c3c=; b=pBKw32kgXdu8+8BKvU+rZoryaH
-        cxLwy66LF3zStA1uprQ8+vkAf4LfN1dDxufW0oN1Gd7Byp0QZ5vWV1PCIGbw2StameFanawUwPzA5
-        7tTiQukMUs/MjmGABqLVbUUk6qPQPD0YQ8bDH7dFYxKOyXdABPWWXHQqxDH7nR0ZXXYuj14A4aQcR
-        IQIMDuqAT15RzfeOMzLc32U8C6mK086NagAEpsPZl+VbS576oG/jZm1qgDHkHGrLwkZorutTwhdpu
-        wVCQtafnKcHNz7mKZ8StbDannr2HcgTKSwLP7nOS4FW6JnU70V224+1BmasGmq/hNQPndB7QeXytO
-        N/cCVSzQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMCKl-0004s4-4q; Wed, 08 Apr 2020 15:09:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 97519300130;
-        Wed,  8 Apr 2020 17:09:40 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7BF4D201C1CBC; Wed,  8 Apr 2020 17:09:40 +0200 (CEST)
-Date:   Wed, 8 Apr 2020 17:09:40 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     syzbot <syzbot+a95c7753605c9d219466@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, bgeffon@google.com,
-        dvhart@infradead.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterx@redhat.com,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
-Subject: Re: general protection fault in get_futex_key
-Message-ID: <20200408150940.GM20730@hirez.programming.kicks-ass.net>
-References: <0000000000008250f105a2c4ade1@google.com>
- <87mu7mayky.fsf@nanos.tec.linutronix.de>
+        Wed, 8 Apr 2020 11:10:54 -0400
+Received: by mail-oi1-f194.google.com with SMTP id l22so196121oii.12
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:10:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=99bGb9kPLJIKPGAYnWeUQM+upQBOmhTKAuXfLDA02as=;
+        b=aL8VsGjuULtKfOLQ4xJAOYPOZmY0Fm4LmPDtmN2EaK+l6PCc9odZkH+cahGM56TX7V
+         RRRVicea4VeZOdbhSkDKFRCH58KpGUJ7CNOXzRWeuJNXr7aH2Mg1BkRpLSkVcDhAuWap
+         3QS1w5M7oxl5CLQ+/jYNLGia4XietUIz9CYHU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=99bGb9kPLJIKPGAYnWeUQM+upQBOmhTKAuXfLDA02as=;
+        b=gdpS0N7zdXdUDNa9k0ycGkNflb5qF7EH6eM468SunAM9+MR2exP57eIwzCSqP2tTCO
+         kB8aIXTFWYV6mrpZa9y0yDgu1msm3ZoGDZWA6PNVxk/+KMvpICXMo/lLOc9Ts5WuMULd
+         RS+J0rStZ7yBBH38LxoihaEyAEEYnf80i0tyxdYT7ng1ArUOZBfjLfipfPvahx1wY3j8
+         4UFwhU/RnVlZETGMULmnCa86D8AmisdEnDnPvHrsfeblLBmgSMKVRZ/mbfIonM8CtUOg
+         eLYWsWwyhdWOoLWfY+Wcs0O02bgtYQmgFa1MJQZqc+P8b1LefK5OYKHyU8/xkc1IkiTi
+         pNeA==
+X-Gm-Message-State: AGi0PuYziwJ+ChMHsNT+Pw0qlvaUaPHC1/ME6cP6xpNFcSI5tQSIJAd2
+        gIL8yqq2m2rixkhlqSr+zXs3UC3v91eqbA==
+X-Google-Smtp-Source: APiQypLwTROlMgk5kYCTxCFF56//DDLXDI3u7/I38vnrWOWWHtwiZKkjylcUiWynghi29M6bg7W1mQ==
+X-Received: by 2002:a17:90a:178e:: with SMTP id q14mr208304pja.132.1586358273435;
+        Wed, 08 Apr 2020 08:04:33 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id d85sm1468083pfd.157.2020.04.08.08.04.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 08:04:32 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     axboe@kernel.dk, jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     paolo.valente@linaro.org, groeck@chromium.org,
+        Gwendal Grignou <gwendal@chromium.org>,
+        linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>, sqazi@google.com,
+        Douglas Anderson <dianders@chromium.org>,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        John Garry <john.garry@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/4] blk-mq: Add blk_mq_delay_run_hw_queues() API call
+Date:   Wed,  8 Apr 2020 08:04:00 -0700
+Message-Id: <20200408080255.v4.2.I4c665d70212a5b33e103fec4d5019a59b4c05577@changeid>
+X-Mailer: git-send-email 2.26.0.292.g33ef6b2f38-goog
+In-Reply-To: <20200408150402.21208-1-dianders@chromium.org>
+References: <20200408150402.21208-1-dianders@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mu7mayky.fsf@nanos.tec.linutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 03:36:45PM +0200, Thomas Gleixner wrote:
+We have:
+* blk_mq_run_hw_queue()
+* blk_mq_delay_run_hw_queue()
+* blk_mq_run_hw_queues()
 
-> This means that
-> 
->      get_user_pages_fast(address, 1, FOLL_WRITE, &page)
-> 
-> returned 0, which is breaking the interface:
-> 
->  * Returns number of pages pinned. This may be fewer than the number requested.
->  * If nr_pages is 0 or negative, returns 0. If no pages were pinned, returns
->  * -errno.
-> 
-> nr_pages is clearly 1. So if the call fails, the number of pinned pages
-> is 0 and it should return a proper error number. It did before.
-> 
-> From a quick look at the commit in question I assume it's the
-> 
-> +               if (fatal_signal_pending(current))
-> +                       break;
-> 
-> which can cause that to happen.
+...but not blk_mq_delay_run_hw_queues(), presumably because nobody
+needed it before now.  Since we need it for a later patch in this
+series, add it.
 
-Yep, that's broken. It wants the below, just like all the other error
-paths in that loop.
-
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
-Subject: mm/gup: Fix broken fatal_signal_pending() test
 
-Just like all the other error returns in this loop, we need to set
-pages_done to the error value when it is zero.
+Changes in v4: None
+Changes in v3:
+- ("blk-mq: Add blk_mq_delay_run_hw_queues() API call") new for v3
 
-Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
-diff --git a/mm/gup.c b/mm/gup.c
-index afce0bc47e70..14bce270b249 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1326,8 +1326,11 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
- 		 * start trying again otherwise it can loop forever.
- 		 */
+Changes in v2: None
+
+ block/blk-mq.c         | 19 +++++++++++++++++++
+ include/linux/blk-mq.h |  1 +
+ 2 files changed, 20 insertions(+)
+
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 2cd8d2b49ff4..ea0cd970a3ff 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1537,6 +1537,25 @@ void blk_mq_run_hw_queues(struct request_queue *q, bool async)
+ }
+ EXPORT_SYMBOL(blk_mq_run_hw_queues);
  
--		if (fatal_signal_pending(current))
-+		if (fatal_signal_pending(current)) {
-+			if (!pages_done)
-+				pages_done = -ERESTARTSYS;
- 			break;
-+		}
- 
- 		ret = down_read_killable(&mm->mmap_sem);
- 		if (ret) {
++/**
++ * blk_mq_delay_run_hw_queues - Run all hardware queues asynchronously.
++ * @q: Pointer to the request queue to run.
++ * @msecs: Microseconds of delay to wait before running the queues.
++ */
++void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs)
++{
++	struct blk_mq_hw_ctx *hctx;
++	int i;
++
++	queue_for_each_hw_ctx(q, hctx, i) {
++		if (blk_mq_hctx_stopped(hctx))
++			continue;
++
++		blk_mq_delay_run_hw_queue(hctx, msecs);
++	}
++}
++EXPORT_SYMBOL(blk_mq_delay_run_hw_queues);
++
+ /**
+  * blk_mq_queue_stopped() - check whether one or more hctxs have been stopped
+  * @q: request queue.
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 11cfd6470b1a..405f8c196517 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -503,6 +503,7 @@ void blk_mq_unquiesce_queue(struct request_queue *q);
+ void blk_mq_delay_run_hw_queue(struct blk_mq_hw_ctx *hctx, unsigned long msecs);
+ void blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx, bool async);
+ void blk_mq_run_hw_queues(struct request_queue *q, bool async);
++void blk_mq_delay_run_hw_queues(struct request_queue *q, unsigned long msecs);
+ void blk_mq_tagset_busy_iter(struct blk_mq_tag_set *tagset,
+ 		busy_tag_iter_fn *fn, void *priv);
+ void blk_mq_tagset_wait_completed_request(struct blk_mq_tag_set *tagset);
+-- 
+2.26.0.292.g33ef6b2f38-goog
+
