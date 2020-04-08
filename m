@@ -2,248 +2,254 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F111FC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDB2C2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7DD206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78699206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W/29l/zg"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hEmTMlb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgDHFxo (ORCPT
+        id S1726595AbgDHF7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:53:44 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36976 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726508AbgDHFxo (ORCPT
+        Wed, 8 Apr 2020 01:59:03 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:35957 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgDHF7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:53:44 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x1so2141293plm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 22:53:43 -0700 (PDT)
+        Wed, 8 Apr 2020 01:59:03 -0400
+Received: by mail-ua1-f67.google.com with SMTP id m15so2271735uao.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 22:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=KBaLvYC51GzNJW9LkKAyV5Oj2tCZdUDKs+/z311mVWc=;
-        b=W/29l/zgZPf5sWO3XEse6uzMGH1myUYGtAPbfuIAMK2F2N+uaiG3lD7ADcmA7mqP+Z
-         zx/oeZ9T67Vm0K7EZEsJj1vLaPBrM7tVF2m61newmePd2sY6xMwPO0M7WrKHEUomFxJ+
-         9xmtb7AznXcNP2mTws5lD2RAW7yVIwtik0RcrCKvpH480OzygM/rpf6RhrBkpQ6yDGPg
-         ttGqAF2S26I7/SuzNmoFnV5zQTKFKkPHT4yK3s+QchxJRA6b6pYq9ouFc2qz/6akic4c
-         b2yO8M9PMVg7Qgu6bWseVOkuEFWqE/K8xJdNmPQqrsS7a/+wIsL+4kK4K6REv8bUUuQK
-         sKYg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JuRf6yJbWtYxlK9MiLbnHNoPgySrKime7soo03XHwg8=;
+        b=hEmTMlb4G0P+2aogFyGWc7pbqPwOB9J/CxeELOvBgHigymKo71VkQZw/1AwPY8mWut
+         hwlP4KtfBta/VQNebJf0HYnPZQVMVG+j5hXWeIOv+KLCeReFxuiDGM5foKGDa6dufKMS
+         yCVPYX7Cm/1qWuKhZsuJ9KARUZM1CExEo8TFU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=KBaLvYC51GzNJW9LkKAyV5Oj2tCZdUDKs+/z311mVWc=;
-        b=rMj8LucY/1kXwnaGtlJAUYh5Nd2oJhLuBF52mayVpbTizcUfNLGhyyruvxIhEXZhej
-         teOP+OzzGJkATziFFUFZnpIK2674QV+4OKBgO1vbvL5sZWZADLcDZNU96VKZTLfzP7pI
-         HwHW7xR64eN7N/petTk37PXnBoHB5BuEdYqrIs9mwIWXHZy+XlEqVtze74yRe3BoNrIX
-         QmZOsHMNAe/k0TWPhFlXfT8LIshMAIQCxQGNih7kvTb+caWXya6ITqbgf4AH7xP+26YA
-         WYDKIWrVnCQgftAlJ93OjDNSO1aRzo86IIYYrtTur+V9fdhCSNm7THmvzqrtQRBo7Zj4
-         faaw==
-X-Gm-Message-State: AGi0Pube8inQcNXxzmPthujBSa2/VUHnzD+PLfDLAoIMSFXgFGotDRYq
-        2nyj7Kj6diIINCTpkTbUnWf9FA==
-X-Google-Smtp-Source: APiQypL6fM16CDyBMCoY6TWfoR5l7KfVtcHLDKS+jUlYyGWUle0cJ6oMwDofSYV3qgTc7mxLdKrPyQ==
-X-Received: by 2002:a17:902:a5c7:: with SMTP id t7mr5715500plq.330.1586325222484;
-        Tue, 07 Apr 2020 22:53:42 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id e80sm16095487pfh.117.2020.04.07.22.53.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 22:53:41 -0700 (PDT)
-Date:   Tue, 7 Apr 2020 22:53:36 -0700
-From:   Benson Leung <bleung@google.com>
-To:     torvalds@linux-foundation.org
-Cc:     bleung@kernel.org, bleung@chromium.org, bleung@google.com,
-        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] chrome-platform changes for v5.7
-Message-ID: <20200408055336.GA123431@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JuRf6yJbWtYxlK9MiLbnHNoPgySrKime7soo03XHwg8=;
+        b=d0f9tZDY2sL+i7WAM0XUzhOOeYAlv5XINKiZktXQbgUWHbLOb0aVO8nzB6vTNJ0ksS
+         Cdd/BSc6EFy/rfssZwdcHZuFTNTiVjwMOW6PgAwN/3sAKfECzX1qSDw3OpeDB+EKOG4k
+         IuYHBam8DeuEI6sBxvsDbZUWl3Gxtjpn2FDTNhoOl6em9En7P/L4shn/pPPcTFt5ucfO
+         3Av0nAZ66RVHaIUenV8w+XtajtSzpqEKLpb5qPOdHgvbqsjmo9E7xy5yadHzRA7KxMxu
+         JhzMqg9ZDZsA8jdsmcSjx9CujN6XpaUfl39Ly9Yfq754m9YDWpDEK9I+W4bOeYYNGmIN
+         2yvA==
+X-Gm-Message-State: AGi0PuYp9RHSD/5QXdnW+Cy0RQLdtttBDaJzkrZrVBbKgH6GRh5oFewv
+        T0LF0CamGeww967ThaEBFoQBPSrf4k8cULdqlmvGXA==
+X-Google-Smtp-Source: APiQypKMQ51JKxh8oiu6lK7kqI3wqi5K92W9MpE8rI9SPxjpQoT14gqiJBH6/yay/Jqgt97yU6ykLrh500/nJv1Ksio=
+X-Received: by 2002:a9f:3770:: with SMTP id a45mr4294126uae.117.1586325539503;
+ Tue, 07 Apr 2020 22:58:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
-Content-Disposition: inline
+References: <20200107070154.1574-1-roger.lu@mediatek.com> <20200107070154.1574-2-roger.lu@mediatek.com>
+ <20200108203829.GA18987@bogus> <CANMq1KBu-gFy701BgFcjEwyhV9GgCCU2mkT9c8LviOJKBF30UA@mail.gmail.com>
+ <CAL_JsqLnVEhvAh_8DfGWRZa+MdPRpXc9sWEQ6-3HQAeUfvkOSg@mail.gmail.com>
+ <1581406566.14120.46.camel@mtksdaap41> <CANMq1KBVs7ZucNu9pTxXGZ0__E6tyxd1+mm2Zui81G=xQNtShA@mail.gmail.com>
+In-Reply-To: <CANMq1KBVs7ZucNu9pTxXGZ0__E6tyxd1+mm2Zui81G=xQNtShA@mail.gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 8 Apr 2020 13:58:48 +0800
+Message-ID: <CANMq1KBcV_7O-_XQxk+6LTWywVoPW1U5BjYRG=-ojih9DOK-Wg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: soc: add mtk svs dt-bindings
+To:     Roger Lu <roger.lu@mediatek.com>
+Cc:     Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?B?RmFuIENoZW4gKOmZs+WHoSk=?= <fan.chen@mediatek.com>,
+        =?UTF-8?B?SGVucnlDIENoZW4gKOmZs+W7uuixqik=?= 
+        <HenryC.Chen@mediatek.com>,
+        =?UTF-8?B?WVQgTGVlICjmnY7ku7Dlk7Ip?= <yt.lee@mediatek.com>,
+        =?UTF-8?B?WGlhb3FpbmcgTGl1ICjliJjmmZPluoYp?= 
+        <Xiaoqing.Liu@mediatek.com>,
+        =?UTF-8?B?Q2hhcmxlcyBZYW5nICjmpYrkuo7pgLIp?= 
+        <Charles.Yang@mediatek.com>,
+        =?UTF-8?B?QW5ndXMgTGluICjmnpfnkZvosaop?= <Angus.Lin@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 27, 2020 at 11:55 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> Hi Rob,
+>
+> On Tue, Feb 11, 2020 at 3:36 PM Roger Lu <roger.lu@mediatek.com> wrote:
+> >
+> > Hi Rob & Nicolas,
+> >
+> > Sorry for the late reply.
+> >
+> > On Mon, 2020-01-13 at 23:50 +0800, Rob Herring wrote:
+> > > On Mon, Jan 13, 2020 at 12:44 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > > >
+> > > > On Thu, Jan 9, 2020 at 4:38 AM Rob Herring <robh@kernel.org> wrote:
+> > > > >
+> > > > > On Tue, Jan 07, 2020 at 03:01:52PM +0800, Roger Lu wrote:
+> > > > > > Document the binding for enabling mtk svs on MediaTek SoC.
+> > > > > >
+> > > > > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/power/mtk-svs.txt     | 76 +++++++++++++++++++
+> > > > > >  1 file changed, 76 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..9a3e81b9e1d2
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> > > > > > @@ -0,0 +1,76 @@
+> > > > > > +* Mediatek Smart Voltage Scaling (MTK SVS)
+> > > > > > +
+> > > > > > +This describes the device tree binding for the MTK SVS controller (bank)
+> > > > > > +which helps provide the optimized CPU/GPU/CCI voltages. This device also
+> > > > > > +needs thermal data to calculate thermal slope for accurately compensate
+> > > > > > +the voltages when temperature change.
+> > > > > > +
+> > > > > > +Required properties:
+> > > > > > +- compatible:
+> > > > > > +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
+> > > > > > +- reg: Address range of the MTK SVS controller.
+> > > > > > +- interrupts: IRQ for the MTK SVS controller.
+> > > > > > +- clocks, clock-names: Clocks needed for the svs hardware. required
+> > > > > > +                       clocks are:
+> > > > > > +                    "main": Main clock for svs controller to work.
+> > > > > > +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
+> > > > > > +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
+> > > > > > +
+> > > > > > +Subnodes:
+> > > > > > +- svs-cpu-little: SVS bank device node of little CPU
+> > > > > > +  compatible: "mediatek,mt8183-svs-cpu-little"
+> > > > > > +  operating-points-v2: OPP table hooked by SVS little CPU bank.
+> > > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > > +  vcpu-little-supply: PMIC buck of little CPU
+> > > > > > +- svs-cpu-big: SVS bank device node of big CPU
+> > > > > > +  compatible: "mediatek,mt8183-svs-cpu-big"
+> > > > > > +  operating-points-v2: OPP table hooked by SVS big CPU bank.
+> > > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > > +  vcpu-big-supply: PMIC buck of big CPU
+> > > > > > +- svs-cci: SVS bank device node of CCI
+> > > > > > +  compatible: "mediatek,mt8183-svs-cci"
+> > > > > > +  operating-points-v2: OPP table hooked by SVS CCI bank.
+> > > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > > +  vcci-supply: PMIC buck of CCI
+> > > > > > +- svs-gpu: SVS bank device node of GPU
+> > > > > > +  compatible: "mediatek,mt8183-svs-gpu"
+> > > > > > +  operating-points-v2: OPP table hooked by SVS GPU bank.
+> > > > > > +                    SVS will optimze this OPP table voltage part.
+> > > > > > +  vgpu-supply: PMIC buck of GPU
+> > > > > > +
+> > > > > > +Example:
+> > > > > > +
+> > > > > > +     svs: svs@1100b000 {
+> > > > > > +             compatible = "mediatek,mt8183-svs";
+> > > > > > +             reg = <0 0x1100b000 0 0x1000>;
+> > > > > > +             interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
+> > > > > > +             clocks = <&infracfg CLK_INFRA_THERM>;
+> > > > > > +             clock-names = "main_clk";
+> > > > > > +             nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
+> > > > > > +             nvmem-cell-names = "svs-calibration-data", "calibration-data";
+> > > > > > +
+> > > > > > +             svs_cpu_little: svs-cpu-little {
+> > > > > > +                     compatible = "mediatek,mt8183-svs-cpu-little";
+> > > > > > +                     operating-points-v2 = <&cluster0_opp>;
+> > > > > > +                     vcpu-little-supply = <&mt6358_vproc12_reg>;
+> > > > > > +             };
+> > > > >
+> > > > > I don't think this is a good binding. This information already exists
+> > > > > elsewhere in the DT, so your driver should just look in those nodes.
+> > > > > For example the regulator can be in the cpu nodes or the OPP table
+> > > > > itself.
+> > > >
+> > > > Roger, if that helps, without changing any other binding, on 8183,
+> > > > basically you could have:
+> > > >  - svs-cpu-little: Add a handle to &cpu0 and get the regulator/opp
+> > > > table from it.
+> > > >  - svs-cpu-big: Handle to &cpu4
+> > >
+> > > Why do you need those? Use the compatible of the cpus to determine big
+> > > and little cores. Or there's the cpu capacity property that could be
+> > > used instead.
+> > >
+> > > >  - svs-cci: Handle to &cci
+> > >
+> > > Is there more than 1 CCI? Just retrieve the node by the compatible.
+> > > There's no need to have nodes that simply serve as a collection of
+> > > data for some driver.
+> > >
+> > > >  - svs-gpu: Handle to &gpu (BTW, it is expected that SVS would only
+> > > > apply to vgpu/mali regulator, and not vsram regulator?)
+> >
+> > svs-gpu depends on vgpu power on for init (don't care vgpu_sram). After
+> > svs-gpu init is done, it doesn't need vgpu power on anymore. (vgpu can
+> > be turned off)
+> >
+> > Please allows me to introduce more about what svs-gpu device needs.
+> > 1. It needs gpu opp table from "gpu node" and gpu_core2 power-domains
+> > from "gpu_core2 node". When svs-gpu has those resources, it turns on
+> > gpu_core2 power-domain for svs-gpu-hw to have power (for calculating)
+> > and svs-gpu-sw will update gpu opp table voltages' part.
+> > 2. Therefore, if I retrieve gpu-related node from phandle or compatible,
+> > it means svs-gpu device in driver needs to attach two different gpu
+> > nodes for attaining gpu opp table and gpu_core2 power-domains. I think
+> > this architecture of svs-gpu confuses maintainer why it attaches two
+> > different nodes instead of having a device to describe what it needs.
+>
+> > 3. Is it acceptable to have a Linux device attaching two different
+> > nodes? If yes, could you guide us some APIs for one device to attach two
+> > nodes? I don't know how to implement it. Thanks.
+>
+> I'm also trying to understand how that would work. The way the code
+> works now (https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/power/avs/mtk_svs.c#1388):
+>
+> The SVS driver creates a platform device for each sub-node, find the
+> sub-node that matches the compatible (pdev->dev.of_node):
+> for_each_child_of_node(svs->dev->of_node, np) {
+>   if (of_device_is_compatible(np, svsb->of_compatible)) {
+>     pdev->dev.of_node = np;
+>     break;
+>   }
+> }
+>
+> Then, thanks to that, the 2 functions dev_pm_opp_of_add_table and
+> devm_regulator_get_optional "just work", as the get the opp table and
+> regulator from the device tree node.
+>
+> So what you suggest is basically something like this:
+> pdev->dev.of_node = of_find_compatible_node(NULL, NULL, "mediatek,mt8183-cci");
+>
+> I came up with a (very dirty) prototype here:
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2076718
+> ... and it doesn't really work
+> (https://gist.github.com/drinkcat/61e50eedbdc301d418c9cee3ee5b6b06, I
+> think the kernel is probing more than it should, like the DMA mask
+> errors should not happen...)
+>
+> Before I dig further... I have the same concern as Roger, is it ok to
+> have 2 devices bound to the same device tree node/compatible? My
+> understanding was also that it's not.
 
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Rob: It seems like this conversation died here. Do you have any
+suggestions for the above?
 
-Hello Linus,
-
-The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
-
-  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git t=
-ags/tag-chrome-platform-for-v5.7
-
-for you to fetch changes up to a46387712da12b61bf1ce1a3f63b60a17b098960:
-
-  platform/chrome: cros_ec_spi: Wait for USECS, not NSECS (2020-04-07 14:42=
-:08 -0700)
-
-----------------------------------------------------------------
-chrome platform changes for 5.7
-
-* cros-usbpd-notify and cros_ec_typec
-- Add a new notification driver that handles and dispatches USB PD
- related events to other drivers.
-- Add a Type C connector class driver for cros_ec
-
-* CrOS EC
-- Introduce a new cros_ec_cmd_xfer_status helper
-
-* Sensors/iio:
-- A series from Gwendal that adds Cros EC sensor hub FIFO support
-
-* Wilco EC
-- Fix a build warning.
-- Platform data shouldn't include kernel.h
-
-* Misc
-- i2c api conversion complete, with i2c_new_client_device instead of
- i2c_new_device in chromeos_laptop.
-- Replace zero-length array with flexible-array member in cros_ec_chardev
- and wilco_ec
-- Update new structure for SPI transfer delays in cros_ec_spi
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      platform/chrome: wilco_ec: Platform data shouldn't include kernel.h
-
-Benson Leung (1):
-      platform/chrome: cros_ec_spi: Wait for USECS, not NSECS
-
-Enric Balletbo i Serra (8):
-      Merge branch 'chrome-platform-5.6-fixes' into for-next
-      platform/chrome: cros_ec_proto: Report command not supported
-      platform/chrome: cros_ec_vbc: Use cros_ec_cmd_xfer_status helper
-      platform/chrome: cros_ec_chardev: Use cros_ec_cmd_xfer_status helper
-      platform/chrome: cros_ec_sysfs: Use cros_ec_cmd_xfer_status helper
-      platform/chrome: cros_ec_lightbar: Use cros_ec_cmd_xfer_status helper
-      platform/chrome: cros_ec: Use cros_ec_cmd_xfer_status helper
-      platform/chrome: Kconfig: Remove CONFIG_ prefix from MFD_CROS_EC sect=
-ion
-
-Gustavo A. R. Silva (2):
-      platform/chrome: cros_ec_chardev: Replace zero-length array with flex=
-ible-array member
-      platform/chrome: wilco_ec: event: Replace zero-length array with flex=
-ible-array member
-
-Gwendal Grignou (12):
-      platform/chrome: cros_usbpd_notify: Fix cros-usbpd-notify notifier
-      platform/chrome: cros_ec_sensorhub: Add the number of sensors in sens=
-orhub
-      platform/chrome: cros_ec_sensorhub: Add FIFO support
-      platform/chrome: cros_ec_sensorhub: Add code to spread timestmap
-      platform/chrome: cros_ec_sensorhub: Add median filter
-      iio: cros_ec: Move function description to .c file
-      iio: expose iio_device_set_clock
-      iio: cros_ec: Register to cros_ec_sensorhub when EC supports FIFO
-      iio: cros_ec: Remove pm function
-      iio: cros_ec: Expose hwfifo_timeout
-      iio: cros_ec: Report hwfifo_watermark_max
-      iio: cros_ec: Use Hertz as unit for sampling frequency
-
-Jon Flatley (2):
-      platform: chrome: Add cros-usbpd-notify driver
-      power: supply: cros-ec-usbpd-charger: Fix host events
-
-Pi-Hsun Shih (1):
-      platform/chrome: cros_ec_rpmsg: Fix race with host event
-
-Prashant Malani (5):
-      platform/chrome: cros_usbpd_notify: Add driver data struct
-      platform/chrome: cros_usbpd_notify: Amend ACPI driver to plat
-      platform/chrome: cros_usbpd_notify: Pull PD_HOST_EVENT status
-      platform/chrome: Add Type C connector class driver
-      platform/chrome: cros_ec_typec: Update port info from EC
-
-Sergiu Cuciurean (1):
-      platform/chrome: cros_ec_spi: Use new structure for SPI transfer dela=
-ys
-
-Stephen Boyd (1):
-      platform/chrome: wilco_ec: Include asm/unaligned instead of linux/ pa=
-th
-
-Wolfram Sang (1):
-      platform/chrome: chromeos_laptop: make I2C API conversion complete
-
-Yicheng Li (1):
-      platform/chrome: cros_ec: Query EC protocol version if EC transitions=
- between RO/RW
-
- drivers/iio/accel/cros_ec_accel_legacy.c           |    8 +-
- .../iio/common/cros_ec_sensors/cros_ec_lid_angle.c |    3 +-
- .../iio/common/cros_ec_sensors/cros_ec_sensors.c   |   13 +-
- .../common/cros_ec_sensors/cros_ec_sensors_core.c  |  375 +++++--
- drivers/iio/industrialio-core.c                    |    8 +-
- drivers/iio/light/cros_ec_light_prox.c             |   15 +-
- drivers/iio/pressure/cros_ec_baro.c                |   14 +-
- drivers/platform/chrome/Kconfig                    |   27 +-
- drivers/platform/chrome/Makefile                   |    5 +-
- drivers/platform/chrome/chromeos_laptop.c          |    2 +-
- drivers/platform/chrome/cros_ec.c                  |   32 +-
- drivers/platform/chrome/cros_ec_chardev.c          |    4 +-
- drivers/platform/chrome/cros_ec_lightbar.c         |   50 +-
- drivers/platform/chrome/cros_ec_proto.c            |    9 +-
- drivers/platform/chrome/cros_ec_rpmsg.c            |   16 +-
- drivers/platform/chrome/cros_ec_sensorhub.c        |  111 ++-
- drivers/platform/chrome/cros_ec_sensorhub_ring.c   | 1046 ++++++++++++++++=
-++++
- drivers/platform/chrome/cros_ec_spi.c              |    6 +-
- drivers/platform/chrome/cros_ec_sysfs.c            |   36 +-
- drivers/platform/chrome/cros_ec_typec.c            |  357 +++++++
- drivers/platform/chrome/cros_ec_vbc.c              |    4 +-
- drivers/platform/chrome/cros_usbpd_notify.c        |  306 ++++++
- drivers/platform/chrome/wilco_ec/event.c           |    4 +-
- drivers/platform/chrome/wilco_ec/properties.c      |    5 +-
- drivers/platform/chrome/wilco_ec/sysfs.c           |    4 +
- drivers/power/supply/Kconfig                       |    2 +-
- drivers/power/supply/cros_usbpd-charger.c          |   50 +-
- include/linux/iio/common/cros_ec_sensors_core.h    |  104 +-
- include/linux/iio/iio.h                            |    2 +
- include/linux/platform_data/cros_ec_proto.h        |    4 +
- include/linux/platform_data/cros_ec_sensorhub.h    |  163 +++
- include/linux/platform_data/cros_usbpd_notify.h    |   17 +
- include/linux/platform_data/wilco-ec.h             |    8 +-
- 33 files changed, 2467 insertions(+), 343 deletions(-)
- create mode 100644 drivers/platform/chrome/cros_ec_sensorhub_ring.c
- create mode 100644 drivers/platform/chrome/cros_ec_typec.c
- create mode 100644 drivers/platform/chrome/cros_usbpd_notify.c
- create mode 100644 include/linux/platform_data/cros_usbpd_notify.h
-
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXo1m4AAKCRBzbaomhzOw
-wrlQAQCtd59nMS/RQNZtKkkNVNl+3McVSDk45I2rJevcenqXrgEA00gN7akPEs1l
-rX5UaJoZnUsPltHvsO+Aow8sSylSKgg=
-=X54N
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
+Thanks,
