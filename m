@@ -2,174 +2,179 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20920C2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8CCC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC5A20768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F4F20753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KA4+i1+d"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="j67QxUSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgDHK2R (ORCPT
+        id S1728180AbgDHK3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:28:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37664 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728099AbgDHK2R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:28:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586341695;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EC/D1f86N5vzsKE44T+7aeogRJCUDLjHigmziVHut9I=;
-        b=KA4+i1+dkewsQ02CHXNDydg0TiWld8bvHdvUady9wgqykpwR9w7MfelLAHoc+Xe6Ggz7zb
-        mTdU4a5IYOd5S2Fydwzzm7qZ4XrrMFgpsPmOzbK9677ci3/owMcdlDs9VJXiyS6SP7Hquz
-        zQtfAacBmFMaMtuOISZiayG4JyL/nqE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-KVkFh0gbOm2Hxe1TEk_Ytw-1; Wed, 08 Apr 2020 06:28:13 -0400
-X-MC-Unique: KVkFh0gbOm2Hxe1TEk_Ytw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1ECA7801E5E;
-        Wed,  8 Apr 2020 10:28:11 +0000 (UTC)
-Received: from [10.36.115.53] (ovpn-115-53.ams2.redhat.com [10.36.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7591C5D9CD;
-        Wed,  8 Apr 2020 10:28:00 +0000 (UTC)
-Subject: Re: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
- <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
- <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
- <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
- <20200403082305.GA1269501@myrica>
- <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <acf8c809-8d29-92d6-2445-3a94fc8b82fd@redhat.com>
-Date:   Wed, 8 Apr 2020 12:27:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 8 Apr 2020 06:29:24 -0400
+Received: from mail-eopbgr1410134.outbound.protection.outlook.com ([40.107.141.134]:3584
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726846AbgDHK3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 06:29:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iJ2sNAYv03BDmOClbzhksPkGWTbmHGsGev7R2WRctMK4cX66Hdyq8U1je8A9FTgqgdUHWCK1iZZibL1c59WJrioxpdNB1lV/9fnwBXDNunLC3XLoFdZQaYJvkQkbkvWmfYAEPutUiCoj3d+PEE+gTkjmu4fXrq+5L8u2BZhw9lnVMnMucGbmTKY/+FHbYG8QX/yQkY87Fe8SqA5lrcj2+Lawo6pZunWrg7DkqdZUTdp1VzaVlTJXjMR6iQikvlaNfH480o97xdINS5hFxLu7MwubfYSoszsVQs0NJJBiz0MRwr4DB+GCHesW/KX0bwnbwMkQpgSdLI40w1Il1+CP1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pw18AfjmIHG/6pjUcqblLv4PRbYJAnF/RYGjCb6WFJU=;
+ b=Q3nqKOoIk+XLaRp4od2WtXCyVC2dMuigyPlARlG9UDwNv0XSh/H6NjbuJhjHHuOKNSJSQJsqxJ+tnqTyWJiPd0bzZpQVs86X7N4zx84W/K1FzfKdqOc2+Z67ZMQOeoc+6tuhchI2DGsDtK6XpXerRp1R2HZu80RUJNw24Rzrdl+etE0G5pfklLyuhDsPSfv/NRwWe+YRCoIKO1buM84LlEcWlZwzjYDC0lKqma6YrHniMlQGm//0WJK0ygLmBK3EmKOIMwo7WZCmFcjJ+rpHh0zMPTdobKprkU3egkoipJXOg4SVoNjxddSf3xTG3lA9dXWlSZc/KvpeQtQ4Fzfkpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pw18AfjmIHG/6pjUcqblLv4PRbYJAnF/RYGjCb6WFJU=;
+ b=j67QxUSD8fBC/CjS6hpCxjbiXoRO7ULJ2S2i+V/9UkyKWFuMgHqhvI7oJyx/jBPmkBDM5FVAH6PmyRUTRiN6wOd5b0kKBiRQ78MsnnKv48DDKmvUMcMZ3jFp7DZBNAWZDN0ID8tTpewFlO37IOZrSPaDb48y713dMCxu+4Se7E8=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB2735.jpnprd01.prod.outlook.com (20.177.101.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.20; Wed, 8 Apr 2020 10:29:20 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::ed7f:1268:55a9:fc06%4]) with mapi id 15.20.2900.015; Wed, 8 Apr 2020
+ 10:29:20 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        netdev <netdev@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: RE: [RFC][PATCH v2 2/2] driver core: Ensure wait_for_device_probe()
+ waits until the deferred_probe_timeout fires
+Thread-Topic: [RFC][PATCH v2 2/2] driver core: Ensure wait_for_device_probe()
+ waits until the deferred_probe_timeout fires
+Thread-Index: AQHWDXcYaRasF4w8J0WGvexXGfCK66hvBRAg
+Date:   Wed, 8 Apr 2020 10:29:20 +0000
+Message-ID: <TYAPR01MB45443540F0A3729AD2B98A96D8C00@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <20200408072650.1731-1-john.stultz@linaro.org>
+ <20200408072650.1731-2-john.stultz@linaro.org>
+In-Reply-To: <20200408072650.1731-2-john.stultz@linaro.org>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [124.210.22.195]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 09470796-8ad4-4b05-6111-08d7dba7b30c
+x-ms-traffictypediagnostic: TYAPR01MB2735:
+x-microsoft-antispam-prvs: <TYAPR01MB27359C92C2554E093FF67057D8C00@TYAPR01MB2735.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0367A50BB1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(366004)(110136005)(52536014)(54906003)(316002)(26005)(8936002)(9686003)(5660300002)(55016002)(81166007)(86362001)(186003)(55236004)(7696005)(66446008)(6506007)(66946007)(4326008)(66556008)(8676002)(64756008)(66476007)(33656002)(7416002)(478600001)(2906002)(71200400001)(76116006)(81156014);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: H8bR3nAJpSZLlB/zKB1Tcx5M4lIZTZR62GynDjt0NR7D425TIG+MCAihPYRHvqU4a0Y7jfRyWAbB5aKfuGh9yKTSGsDOhQk8k+G0CBqaZSbXiJVbgnNoK95ycs3r7ghFU4rzgS40hnqCSW2/Q820qjCNHLR6BtGWK0n1W0VvARbSZwIwjl7h57TjFAGpya2gxM3wZPcNzlOKDA1k5qxlCsP5PrjoTjkuil25GK7BWcqTds4BmsihflvfycejmuqKQIn/mLmhAhrEiJ4J4di/7Oadhu/cHVrwMDY5DRhqjnA47jG1vfpVLWO5mE6NJsFG8pq8XcNztF2ugk9kj1w6TjhrN9O+VPKpwZlq0UGRQ5wBB2Q1XIZSGAk6OadQd5Juibn8CbjIOYLyYyaFjwBIXUjLMw4fJom1vPCDuCHZGhiOD6gwkMNoIYDFCKlYBYVb
+x-ms-exchange-antispam-messagedata: DpQENT/GPCeXeH5bImRgsGT4IIGBKe3X5bObCEO/Q2sUpOKhW9romjv/Tqo7s6fq4Q3bV2XCTI49Rl+Ry3XWay9M0tffYqeDoixMZLfTGxZ2TG5N9qjfgq8S9EBvd56r5u16BhTomBZT+OLg/xskgw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09470796-8ad4-4b05-6111-08d7dba7b30c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 10:29:20.4989
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lCALL4+8Ftz43rBN1wRRTbslE5lrMS9pfOIcchNdYAAAIKlAIuVBEr02KaR4bO9uJj/irJQ+y22bhPzLEystF56xlPLmZAgQQtKRK8LNJY4OYWweWWDCNAMdpzVWkaq7
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yi,
+Hi John,
 
-On 4/7/20 11:43 AM, Liu, Yi L wrote:
-> Hi Jean,
-> 
->> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
->> Sent: Friday, April 3, 2020 4:23 PM
->> To: Auger Eric <eric.auger@redhat.com>
->> userspace
->>
->> On Wed, Apr 01, 2020 at 03:01:12PM +0200, Auger Eric wrote:
->>>>>>  	header = vfio_info_cap_add(caps, sizeof(*nesting_cap),
->>>>>>  				   VFIO_IOMMU_TYPE1_INFO_CAP_NESTING, 1);
->> @@ -2254,6 +2309,7
->>>>>> @@ static int vfio_iommu_info_add_nesting_cap(struct
->>>>> vfio_iommu *iommu,
->>>>>>  		/* nesting iommu type supports PASID requests (alloc/free) */
->>>>>>  		nesting_cap->nesting_capabilities |= VFIO_IOMMU_PASID_REQS;
->>>>> What is the meaning for ARM?
->>>>
->>>> I think it's just a software capability exposed to userspace, on
->>>> userspace side, it has a choice to use it or not. :-) The reason
->>>> define it and report it in cap nesting is that I'd like to make the
->>>> pasid alloc/free be available just for IOMMU with type
->>>> VFIO_IOMMU_TYPE1_NESTING. Please feel free tell me if it is not good
->>>> for ARM. We can find a proper way to report the availability.
->>>
->>> Well it is more a question for jean-Philippe. Do we have a system wide
->>> PASID allocation on ARM?
->>
->> We don't, the PASID spaces are per-VM on Arm, so this function should consult the
->> IOMMU driver before setting flags. As you said on patch 3, nested doesn't
->> necessarily imply PASID support. The SMMUv2 does not support PASID but does
->> support nesting stages 1 and 2 for the IOVA space.
->> SMMUv3 support of PASID depends on HW capabilities. So I think this needs to be
->> finer grained:
->>
->> Does the container support:
->> * VFIO_IOMMU_PASID_REQUEST?
->>   -> Yes for VT-d 3
->>   -> No for Arm SMMU
->> * VFIO_IOMMU_{,UN}BIND_GUEST_PGTBL?
->>   -> Yes for VT-d 3
->>   -> Sometimes for SMMUv2
->>   -> No for SMMUv3 (if we go with BIND_PASID_TABLE, which is simpler due to
->>      PASID tables being in GPA space.)
->> * VFIO_IOMMU_BIND_PASID_TABLE?
->>   -> No for VT-d
->>   -> Sometimes for SMMUv3
->>
->> Any bind support implies VFIO_IOMMU_CACHE_INVALIDATE support.
-> 
-> good summary. do you expect to see any 
-> 
->>
->>>>>> +	nesting_cap->stage1_formats = formats;
->>>>> as spotted by Kevin, since a single format is supported, rename
->>>>
->>>> ok, I was believing it may be possible on ARM or so. :-) will rename
->>>> it.
->>
->> Yes I don't think an u32 is going to cut it for Arm :( We need to describe all sorts of
->> capabilities for page and PASID tables (granules, GPA size, ASID/PASID size, HW
->> access/dirty, etc etc.) Just saying "Arm stage-1 format" wouldn't mean much. I
->> guess we could have a secondary vendor capability for these?
-> 
-> Actually, I'm wondering if we can define some formats to stands for a set of
-> capabilities. e.g. VTD_STAGE1_FORMAT_V1 which may indicates the 1st level
-> page table related caps (aw, a/d, SRE, EA and etc.). And vIOMMU can parse
-> the capabilities.
+> From: John Stultz, Sent: Wednesday, April 8, 2020 4:27 PM
+>=20
+> In commit c8c43cee29f6 ("driver core: Fix
+> driver_deferred_probe_check_state() logic"), we set the default
+> driver_deferred_probe_timeout value to 30 seconds to allow for
+> drivers that are missing dependencies to have some time so that
+> the dependency may be loaded from userland after initcalls_done
+> is set.
+>=20
+> However, Yoshihiro Shimoda reported that on his device that
+> expects to have unmet dependencies (due to "optional links" in
+> its devicetree), was failing to mount the NFS root.
+>=20
+> In digging further, it seemed the problem was that while the
+> device properly probes after waiting 30 seconds for any missing
+> modules to load, the ip_auto_config() had already failed,
+> resulting in NFS to fail. This was due to ip_auto_config()
+> calling wait_for_device_probe() which doesn't wait for the
+> driver_deferred_probe_timeout to fire.
+>=20
+> This patch tries to fix the issue by creating a waitqueue
+> for the driver_deferred_probe_timeout, and calling wait_event()
+> to make sure driver_deferred_probe_timeout is zero in
+> wait_for_device_probe() to make sure all the probing is
+> finished.
+>=20
+> The downside to this solution is that kernel functionality that
+> uses wait_for_device_probe(), will block until the
+> driver_deferred_probe_timeout fires, regardless of if there is
+> any missing dependencies.
+>=20
+> However, the previous patch reverts the default timeout value to
+> zero, so this side-effect will only affect users who specify a
+> driver_deferred_probe_timeout=3D value as a boot argument, where
+> the additional delay would be beneficial to allow modules to
+> load later during boot.
+>=20
+> Thanks to Geert for chasing down that ip_auto_config was why NFS
+> was failing in this case!
+>=20
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+> Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: netdev <netdev@vger.kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state(=
+) logic")
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+> * v2: Split patch, and apply it as a follow-on to setting
+>       the driver_deferred_probe_timeout defalt back to zero
+> ---
 
-But eventually do we really need all those capability getters? I mean
-can't we simply rely on the actual call to VFIO_IOMMU_BIND_GUEST_PGTBL()
-to detect any mismatch? Definitively the error handling may be heavier
-on userspace but can't we manage. My fear is we end up with an overly
-complex series. This capability getter may be interesting if we can
-switch to a fallback implementation but here I guess we don't have any
-fallback. With smmuv3 nested stage we don't have any fallback solution
-either. For the versions, it is different because the userspace shall be
-able to adapt (or not) to the max version supported by the kernel.
+Thank you for the patch! This patch doesn't cause any side
+effect on my environment (the value of driver_deferred_probe_timeout is 0).
+So,
 
-Thanks
+Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Eric
-> 
-> Regards,
-> Yi Liu
-> 
+Best regards,
+Yoshihiro Shimoda
 
