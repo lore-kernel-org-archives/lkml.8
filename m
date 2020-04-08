@@ -2,258 +2,467 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83542C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E57C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536D9206BE
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EBA20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgDHC2i convert rfc822-to-8bit (ORCPT
+        id S1726483AbgDHCbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 22:28:38 -0400
-Received: from mga06.intel.com ([134.134.136.31]:8916 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726416AbgDHC2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 22:28:38 -0400
-IronPort-SDR: 7fQrNsa/yMIku211rrOq35vgTlBEMXetaNCX6whJ0y8sHK7e/3NJlcQ7nD2wIObeMOJhClG/kx
- u6kgvEsDQPVw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 19:28:37 -0700
-IronPort-SDR: 7bdsC+YycV3wrifP6a1WNE+0FMX+KTHUuOcw78XugcU/wpGfL7e20M/BsmzpfcpwCwkK3eaukR
- AJZGHQf3svMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
-   d="scan'208";a="330400813"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga001.jf.intel.com with ESMTP; 07 Apr 2020 19:28:36 -0700
-Received: from fmsmsx163.amr.corp.intel.com (10.18.125.72) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Apr 2020 19:28:36 -0700
-Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
- fmsmsx163.amr.corp.intel.com (10.18.125.72) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Apr 2020 19:28:36 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX107.ccr.corp.intel.com ([169.254.9.191]) with mapi id 14.03.0439.000;
- Wed, 8 Apr 2020 10:28:32 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>
-CC:     "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-Thread-Topic: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
-Thread-Index: AQHWAEUdcc1u01skwUmp6uBHREsZ66hl0sQAgACrzQCAAJWLAIAHa6Ag
-Date:   Wed, 8 Apr 2020 02:28:32 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A225C45@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
-        <1584880325-10561-8-git-send-email-yi.l.liu@intel.com>
-        <20200402142428.2901432e@w520.home>
-        <AADFC41AFE54684AB9EE6CBC0274A5D19D807C4A@SHSMSX104.ccr.corp.intel.com>
- <20200403093436.094b1928@w520.home>
-In-Reply-To: <20200403093436.094b1928@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 7 Apr 2020 22:31:00 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37568 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726416AbgDHCbA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 22:31:00 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n17so4498487qtv.4;
+        Tue, 07 Apr 2020 19:30:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vSDIe0yGqnnuCseQAolKe8lAxSdW3xG19nGIinTp4ok=;
+        b=n6mk48QKt+9LDjdvqZbHuCTO4WezyKuO4esjquBaCGbrz5aVxzms96rh3Ygs5MAofm
+         Q1rJsDiJLlRxEw6U80us4QBjDQNdQyys846weFF/9zwxItmyOl+Z0R52C5YL/n8+vaS6
+         TyGL8PfORrorpjfALWxXha1H0L99C0UDyEY/s22Qw8yuFCj1YsDViMXDv8Dg29pSPD6c
+         +3J6W7rkoohtLp396orevrTGJ19fLO1TVJx9dlFwvyCXwwVCJa3osKXAF2FsaH+AXrpv
+         TXj3QlND4UGWwmhglPKZPKmwc7wtRsdz5xNjJsHyEl+lqBhEhiu8tGUNB1KC+QLpBrD8
+         rIQQ==
+X-Gm-Message-State: AGi0PuYz+MrbBUUi55Fn9IHVKArO+50tpFCwdTdOpQgrYierYuq4qD6k
+        1Ya+0fbZ/bb/wVkwoIvhZnY=
+X-Google-Smtp-Source: APiQypK4OlCiXS6iF8edJ1x2x1AZo8J6HTtqhGwp1LBET8EX6hmxD0V0F4cePQTd0zsO6KuXppwzMw==
+X-Received: by 2002:ac8:1403:: with SMTP id k3mr5465307qtj.377.1586313058101;
+        Tue, 07 Apr 2020 19:30:58 -0700 (PDT)
+Received: from ?IPv6:2804:431:e7cc:377d:dcf4:aab0:a7bd:9880? ([2804:431:e7cc:377d:dcf4:aab0:a7bd:9880])
+        by smtp.gmail.com with ESMTPSA id t23sm19429457qtj.63.2020.04.07.19.30.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 19:30:57 -0700 (PDT)
+Subject: Re: [Lkcamp] [PATCH v3] media: vimc: get pixformat info from
+ v4l2_format_info
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        "Carlos E. C. Barbosa" <climacobarbosacee@gmail.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+References: <20200122175727.62664-1-carlosecb@tutanota.com>
+ <c175b8fd-481c-5429-1f8c-4d8a8127584f@xs4all.nl>
+From:   Helen Koike <helen@koikeco.de>
+Message-ID: <5489808d-7cf8-ea70-a6bf-370f9e30d1e4@koikeco.de>
+Date:   Tue, 7 Apr 2020 23:30:53 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <c175b8fd-481c-5429-1f8c-4d8a8127584f@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Hi Carlos,
 
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Friday, April 3, 2020 11:35 PM
-> Subject: Re: [PATCH v1 7/8] vfio/type1: Add VFIO_IOMMU_CACHE_INVALIDATE
+On 2/25/20 9:26 AM, Hans Verkuil wrote:
+> On 1/22/20 6:57 PM, Carlos E. C. Barbosa wrote:
+>> From: "Carlos E.C. Barbosa" <carlosecb@tutanota.com>
+>>
+>> There is overlapping code over two distinct lists. This repurposes vimc_pix_map
+>> for mapping formats and remaps the calls to the matching v4l2_format_info.
+>>
+>> ---
+>> Changes in v2:
+>> As advised by Helen Koike and Hans Verkuil, the const qualifiers are not
+>> removed, the bayer flag is kept and the unnecessary changes are not
+>> made.
+>>
+>> Changes in v3:
+>> Change declaration order of variables and some minor style changes.
+>>
+>> v4l2-compliance message:
+>> https://pastebin.com/UkmfjuLa
+>>
+>> Signed-off-by: Carlos E. C. Barbosa <carlosecb@tutanota.com>
 > 
-> On Fri, 3 Apr 2020 06:39:22 +0000
-> "Tian, Kevin" <kevin.tian@intel.com> wrote:
+> This Sob needs to be above the --- line!
 > 
-> > > From: Alex Williamson <alex.williamson@redhat.com>
-> > > Sent: Friday, April 3, 2020 4:24 AM
-> > >
-> > > On Sun, 22 Mar 2020 05:32:04 -0700
-> > > "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> > >
-> > > > From: Liu Yi L <yi.l.liu@linux.intel.com>
-> > > >
-[...]
+> I get sparse warnings:
 > 
-> > >
-> > > > +
-> > > > +		if (copy_from_user(&cache_inv, (void __user *)arg, minsz))
-> > > > +			return -EFAULT;
-> > > > +
-> > > > +		if (cache_inv.argsz < minsz || cache_inv.flags)
-> > > > +			return -EINVAL;
-> > > > +
-> > > > +		/* Get the version of struct iommu_cache_invalidate_info */
-> > > > +		if (copy_from_user(&version,
-> > > > +			(void __user *) (arg + minsz), sizeof(version)))
-> > > > +			return -EFAULT;
-> > > > +
-> > > > +		info_size = iommu_uapi_get_data_size(
-> > > > +					IOMMU_UAPI_CACHE_INVAL,
-> > > version);
-> > > > +
-> > > > +		cache_info = kzalloc(info_size, GFP_KERNEL);
-> > > > +		if (!cache_info)
-> > > > +			return -ENOMEM;
-> > > > +
-> > > > +		if (copy_from_user(cache_info,
-> > > > +			(void __user *) (arg + minsz), info_size)) {
-> > > > +			kfree(cache_info);
-> > > > +			return -EFAULT;
-> > > > +		}
-> > > > +
-> > > > +		mutex_lock(&iommu->lock);
-> > > > +		ret = vfio_iommu_for_each_dev(iommu, vfio_cache_inv_fn,
-> > > > +					    cache_info);
-> > >
-> > > How does a user respond when their cache invalidate fails?  Isn't this
-> > > also another case where our for_each_dev can fail at an arbitrary point
-> > > leaving us with no idea whether each device even had the opportunity to
-> > > perform the invalidation request.  I don't see how we have any chance
-> > > to maintain coherency after this faults.
-> >
-> > Then can we make it simple to support singleton group only?
-> 
-> Are you suggesting a single group per container or a single device per
-> group? Unless we have both, aren't we always going to have this issue.
+> drivers/media/platform/vimc/vimc-scaler.c:128:33: warning: variable 'vinfo' set but not used [-Wunused-but-set-variable]
+> drivers/media/platform/vimc/vimc-scaler.c:181:33: warning: variable 'vinfo' set but not used [-Wunused-but-set-variable]
 
-Agreed. we need both to avoid the potential for_each_dev() loop issue.
-I suppose this is also the most typical and desired config for vSVA
-support. I think it makes sense with below items:
-
-a) one group per container
-PASID and nested translation gives user-space a chance to attach their
-page table (e.g. guest process page table) to host IOMMU, this is vSVA.
-If adding multiple groups to a vSVA-capable container, then a SVA bind
-on this container means bind it with all groups (devices are included)
-within the container. This doesn't make sense with three reasons: for
-one the passthru devices are not necessary to be manipulated by same
-guest application; for two passthru devices are not surely added in a
-single guest group; for three not all passthru devices (either from
-different group or same group) are sva capable.
-As above, enforce one group per container makes sense to me.
-
-b) one device per group
-SVA support is limited to singleton group so far in bare-metal bind
-per Jean's series. I think it's be good to follow it in passthru case.
-https://patchwork.kernel.org/patch/10213877/
-https://lkml.org/lkml/2019/4/10/663
-As mentioned in a), group may have both SVA-capable device and non-SVA
--capable device, it would be a problem for VFIO to figure a way to isolate
-them.
-
-> OTOH, why should a cache invalidate fail?
-
-there are sanity check done by vendor iommu driver against the invalidate
-request from userspace. so it may fail if sanity check failed. But I guess
-it may be better to something like abort instead of fail the request. isn't?
-
-> 
-> > > > +		mutex_unlock(&iommu->lock);
-> > > > +		kfree(cache_info);
-> > > > +		return ret;
-> > > >  	}
-> > > >
-> > > >  	return -ENOTTY;
-> > > > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > > > index 2235bc6..62ca791 100644
-> > > > --- a/include/uapi/linux/vfio.h
-> > > > +++ b/include/uapi/linux/vfio.h
-> > > > @@ -899,6 +899,28 @@ struct vfio_iommu_type1_bind {
-> > > >   */
-> > > >  #define VFIO_IOMMU_BIND		_IO(VFIO_TYPE, VFIO_BASE + 23)
-> > > >
-> > > > +/**
-> > > > + * VFIO_IOMMU_CACHE_INVALIDATE - _IOW(VFIO_TYPE, VFIO_BASE + 24,
-> > > > + *			struct vfio_iommu_type1_cache_invalidate)
-> > > > + *
-> > > > + * Propagate guest IOMMU cache invalidation to the host. The cache
-> > > > + * invalidation information is conveyed by @cache_info, the content
-> > > > + * format would be structures defined in uapi/linux/iommu.h. User
-> > > > + * should be aware of that the struct  iommu_cache_invalidate_info
-> > > > + * has a @version field, vfio needs to parse this field before getting
-> > > > + * data from userspace.
-> > > > + *
-> > > > + * Availability of this IOCTL is after VFIO_SET_IOMMU.
-> > >
-> > > Is this a necessary qualifier?  A user can try to call this ioctl at
-> > > any point, it only makes sense in certain configurations, but it should
-> > > always "do the right thing" relative to the container iommu config.
-> > >
-> > > Also, I don't see anything in these last few patches testing the
-> > > operating IOMMU model, what happens when a user calls them when not
-> > > using the nesting IOMMU?
-> > >
-> > > Is this ioctl and the previous BIND ioctl only valid when configured
-> > > for the nesting IOMMU type?
-> >
-> > I think so. We should add the nesting check in those new ioctls.
-> >
-> > >
-> > > > + *
-> > > > + * returns: 0 on success, -errno on failure.
-> > > > + */
-> > > > +struct vfio_iommu_type1_cache_invalidate {
-> > > > +	__u32   argsz;
-> > > > +	__u32   flags;
-> > > > +	struct	iommu_cache_invalidate_info cache_info;
-> > > > +};
-> > > > +#define VFIO_IOMMU_CACHE_INVALIDATE      _IO(VFIO_TYPE, VFIO_BASE
-> > > + 24)
-> > >
-> > > The future extension capabilities of this ioctl worry me, I wonder if
-> > > we should do another data[] with flag defining that data as CACHE_INFO.
-> >
-> > Can you elaborate? Does it mean with this way we don't rely on iommu
-> > driver to provide version_to_size conversion and instead we just pass
-> > data[] to iommu driver for further audit?
-> 
-> No, my concern is that this ioctl has a single function, strictly tied
-> to the iommu uapi.  If we replace cache_info with data[] then we can
-> define a flag to specify that data[] is struct
-> iommu_cache_invalidate_info, and if we need to, a different flag to
-> identify data[] as something else.  For example if we get stuck
-> expanding cache_info to meet new demands and develop a new uapi to
-> solve that, how would we expand this ioctl to support it rather than
-> also create a new ioctl?  There's also a trade-off in making the ioctl
-> usage more difficult for the user.  I'd still expect the vfio layer to
-> check the flag and interpret data[] as indicated by the flag rather
-> than just passing a blob of opaque data to the iommu layer though.
-
-Ok, I think data[] is acceptable. BTW. Do you have any decision on the
-uapi version open iin Jacob's thread? I'd like to re-work my patch based
-on your decision.
-
-https://lkml.org/lkml/2020/4/2/876
-
-thanks again for your help. :-)
+Just for information about how to reproduce this, please check https://www.kernel.org/doc/html/latest/dev-tools/sparse.html
 
 Regards,
-Yi Liu
+Helen
+
+> 
+> It does seem that it is indeed unused.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+>> ---
+>>  drivers/media/platform/vimc/vimc-capture.c | 14 ++++++++-----
+>>  drivers/media/platform/vimc/vimc-common.c  | 23 ----------------------
+>>  drivers/media/platform/vimc/vimc-common.h  |  2 --
+>>  drivers/media/platform/vimc/vimc-debayer.c |  7 +++++--
+>>  drivers/media/platform/vimc/vimc-scaler.c  | 12 +++++++++--
+>>  drivers/media/platform/vimc/vimc-sensor.c  |  9 +++++++--
+>>  6 files changed, 31 insertions(+), 36 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
+>> index 76c015898cfd..686456aad29c 100644
+>> --- a/drivers/media/platform/vimc/vimc-capture.c
+>> +++ b/drivers/media/platform/vimc/vimc-capture.c
+>> @@ -85,6 +85,7 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
+>>  				    struct v4l2_format *f)
+>>  {
+>>  	struct v4l2_pix_format *format = &f->fmt.pix;
+>> +	const struct v4l2_format_info *vinfo;
+>>  	const struct vimc_pix_map *vpix;
+>>  
+>>  	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
+>> @@ -94,12 +95,13 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
+>>  
+>>  	/* Don't accept a pixelformat that is not on the table */
+>>  	vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+>> -	if (!vpix) {
+>> +	if (!vpix)
+>>  		format->pixelformat = fmt_default.pixelformat;
+>> -		vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
+>> -	}
+>> +
+>> +	vinfo = v4l2_format_info(format->pixelformat);
+>> +
+>>  	/* TODO: Add support for custom bytesperline values */
+>> -	format->bytesperline = format->width * vpix->bpp;
+>> +	format->bytesperline = format->width * vinfo->bpp[0];
+>>  	format->sizeimage = format->bytesperline * format->height;
+>>  
+>>  	if (format->field == V4L2_FIELD_ANY)
+>> @@ -386,6 +388,7 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
+>>  				     const char *vcfg_name)
+>>  {
+>>  	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
+>> +	const struct v4l2_format_info *vinfo;
+>>  	const struct vimc_pix_map *vpix;
+>>  	struct vimc_cap_device *vcap;
+>>  	struct video_device *vdev;
+>> @@ -435,7 +438,8 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
+>>  	/* Set default frame format */
+>>  	vcap->format = fmt_default;
+>>  	vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
+>> -	vcap->format.bytesperline = vcap->format.width * vpix->bpp;
+>> +	vinfo = v4l2_format_info(vpix->pixelformat);
+>> +	vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
+>>  	vcap->format.sizeimage = vcap->format.bytesperline *
+>>  				 vcap->format.height;
+>>  
+>> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
+>> index 16ce9f3b7c75..8327ada1b461 100644
+>> --- a/drivers/media/platform/vimc/vimc-common.c
+>> +++ b/drivers/media/platform/vimc/vimc-common.c
+>> @@ -21,19 +21,16 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_BGR888_1X24,
+>>  		.pixelformat = V4L2_PIX_FMT_BGR24,
+>> -		.bpp = 3,
+>>  		.bayer = false,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_RGB888_1X24,
+>>  		.pixelformat = V4L2_PIX_FMT_RGB24,
+>> -		.bpp = 3,
+>>  		.bayer = false,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
+>>  		.pixelformat = V4L2_PIX_FMT_ARGB32,
+>> -		.bpp = 4,
+>>  		.bayer = false,
+>>  	},
+>>  
+>> @@ -41,49 +38,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SBGGR8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SGBRG8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SGRBG8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SRGGB8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
+>>  		.pixelformat = V4L2_PIX_FMT_SBGGR10,
+>> -		.bpp = 2,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
+>>  		.pixelformat = V4L2_PIX_FMT_SGBRG10,
+>> -		.bpp = 2,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
+>>  		.pixelformat = V4L2_PIX_FMT_SGRBG10,
+>> -		.bpp = 2,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
+>>  		.pixelformat = V4L2_PIX_FMT_SRGGB10,
+>> -		.bpp = 2,
+>>  		.bayer = true,
+>>  	},
+>>  
+>> @@ -91,25 +80,21 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  
+>> @@ -117,49 +102,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
+>>  		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
+>> -		.bpp = 1,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
+>>  		.pixelformat = V4L2_PIX_FMT_SBGGR12,
+>> -		.bpp = 2,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
+>>  		.pixelformat = V4L2_PIX_FMT_SGBRG12,
+>> -		.bpp = 2,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
+>>  		.pixelformat = V4L2_PIX_FMT_SGRBG12,
+>> -		.bpp = 2,
+>>  		.bayer = true,
+>>  	},
+>>  	{
+>>  		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
+>>  		.pixelformat = V4L2_PIX_FMT_SRGGB12,
+>> -		.bpp = 2,
+>>  		.bayer = true,
+>>  	},
+>>  };
+>> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+>> index 87eb8259c2a8..dd1c45334705 100644
+>> --- a/drivers/media/platform/vimc/vimc-common.h
+>> +++ b/drivers/media/platform/vimc/vimc-common.h
+>> @@ -62,7 +62,6 @@ do {									\
+>>   * struct vimc_pix_map - maps media bus code with v4l2 pixel format
+>>   *
+>>   * @code:		media bus format code defined by MEDIA_BUS_FMT_* macros
+>> - * @bbp:		number of bytes each pixel occupies
+>>   * @pixelformat:	pixel format devined by V4L2_PIX_FMT_* macros
+>>   *
+>>   * Struct which matches the MEDIA_BUS_FMT_* codes with the corresponding
+>> @@ -70,7 +69,6 @@ do {									\
+>>   */
+>>  struct vimc_pix_map {
+>>  	unsigned int code;
+>> -	unsigned int bpp;
+>>  	u32 pixelformat;
+>>  	bool bayer;
+>>  };
+>> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+>> index 5d1b67d684bb..10d53ca129fd 100644
+>> --- a/drivers/media/platform/vimc/vimc-debayer.c
+>> +++ b/drivers/media/platform/vimc/vimc-debayer.c
+>> @@ -303,6 +303,7 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+>>  	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
+>>  
+>>  	if (enable) {
+>> +		const struct v4l2_format_info *vinfo;
+>>  		const struct vimc_pix_map *vpix;
+>>  		unsigned int frame_size;
+>>  
+>> @@ -311,12 +312,14 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+>>  
+>>  		/* Calculate the frame size of the source pad */
+>>  		vpix = vimc_pix_map_by_code(vdeb->src_code);
+>> +		vinfo = v4l2_format_info(vpix->pixelformat);
+>>  		frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
+>> -				vpix->bpp;
+>> +				vinfo->bpp[0];
+>>  
+>>  		/* Save the bytes per pixel of the sink */
+>>  		vpix = vimc_pix_map_by_code(vdeb->sink_fmt.code);
+>> -		vdeb->sink_bpp = vpix->bpp;
+>> +		vinfo = v4l2_format_info(vpix->pixelformat);
+>> +		vdeb->sink_bpp = vinfo->bpp[0];
+>>  
+>>  		/* Get the corresponding pixel map from the table */
+>>  		vdeb->sink_pix_map =
+>> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
+>> index e2e551bc3ded..55be69ddf918 100644
+>> --- a/drivers/media/platform/vimc/vimc-scaler.c
+>> +++ b/drivers/media/platform/vimc/vimc-scaler.c
+>> @@ -125,6 +125,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
+>>  				    struct v4l2_subdev_pad_config *cfg,
+>>  				    struct v4l2_subdev_frame_size_enum *fse)
+>>  {
+>> +	const struct v4l2_format_info *vinfo;
+>>  	const struct vimc_pix_map *vpix;
+>>  
+>>  	if (fse->index)
+>> @@ -135,6 +136,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
+>>  	if (!vpix || vpix->bayer)
+>>  		return -EINVAL;
+>>  
+>> +	vinfo = v4l2_format_info(vpix->pixelformat);
+>>  	fse->min_width = VIMC_FRAME_MIN_WIDTH;
+>>  	fse->min_height = VIMC_FRAME_MIN_HEIGHT;
+>>  
+>> @@ -176,12 +178,16 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
+>>  
+>>  static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
+>>  {
+>> +	const struct v4l2_format_info *vinfo;
+>>  	const struct vimc_pix_map *vpix;
+>>  
+>>  	/* Only accept code in the pix map table in non bayer format */
+>>  	vpix = vimc_pix_map_by_code(fmt->code);
+>> -	if (!vpix || vpix->bayer)
+>> +	if (!vpix || vpix->bayer) {
+>>  		fmt->code = sink_fmt_default.code;
+>> +		vpix = vimc_pix_map_by_code(fmt->code);
+>> +	}
+>> +	vinfo = v4l2_format_info(vpix->pixelformat);
+>>  
+>>  	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
+>>  			     VIMC_FRAME_MAX_WIDTH) & ~1;
+>> @@ -331,6 +337,7 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+>>  	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
+>>  
+>>  	if (enable) {
+>> +		const struct v4l2_format_info *vinfo;
+>>  		const struct vimc_pix_map *vpix;
+>>  		unsigned int frame_size;
+>>  
+>> @@ -339,7 +346,8 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
+>>  
+>>  		/* Save the bytes per pixel of the sink */
+>>  		vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
+>> -		vsca->bpp = vpix->bpp;
+>> +		vinfo = v4l2_format_info(vpix->pixelformat);
+>> +		vsca->bpp = vinfo->bpp[0];
+>>  
+>>  		/* Calculate the width in bytes of the src frame */
+>>  		vsca->src_line_size = vsca->crop_rect.width *
+>> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
+>> index 32380f504591..941529ddf639 100644
+>> --- a/drivers/media/platform/vimc/vimc-sensor.c
+>> +++ b/drivers/media/platform/vimc/vimc-sensor.c
+>> @@ -102,10 +102,13 @@ static void vimc_sen_tpg_s_format(struct vimc_sen_device *vsen)
+>>  {
+>>  	const struct vimc_pix_map *vpix =
+>>  				vimc_pix_map_by_code(vsen->mbus_format.code);
+>> +	const struct v4l2_format_info *vinfo =
+>> +				v4l2_format_info(vpix->pixelformat);
+>>  
+>>  	tpg_reset_source(&vsen->tpg, vsen->mbus_format.width,
+>>  			 vsen->mbus_format.height, vsen->mbus_format.field);
+>> -	tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vpix->bpp);
+>> +	tpg_s_bytesperline(&vsen->tpg, 0,
+>> +			   vsen->mbus_format.width * vinfo->bpp[0]);
+>>  	tpg_s_buf_height(&vsen->tpg, vsen->mbus_format.height);
+>>  	tpg_s_fourcc(&vsen->tpg, vpix->pixelformat);
+>>  	/* TODO: add support for V4L2_FIELD_ALTERNATE */
+>> @@ -198,12 +201,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+>>  				container_of(sd, struct vimc_sen_device, sd);
+>>  
+>>  	if (enable) {
+>> +		const struct v4l2_format_info *vinfo;
+>>  		const struct vimc_pix_map *vpix;
+>>  		unsigned int frame_size;
+>>  
+>>  		/* Calculate the frame size */
+>>  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+>> -		frame_size = vsen->mbus_format.width * vpix->bpp *
+>> +		vinfo = v4l2_format_info(vpix->pixelformat);
+>> +		frame_size = vsen->mbus_format.width * vinfo->bpp[0] *
+>>  			     vsen->mbus_format.height;
+>>  
+>>  		/*
+>>
+> 
+> 
+> _______________________________________________
+> Lkcamp mailing list
+> Lkcamp@lists.libreplanetbr.org
+> https://lists.libreplanetbr.org/mailman/listinfo/lkcamp
+> 
