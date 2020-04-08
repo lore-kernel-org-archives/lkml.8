@@ -2,226 +2,160 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68B7C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BCCC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 947372051A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C3102074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 14:04:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgDHOE2 (ORCPT
+        id S1728093AbgDHOEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 10:04:28 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53758 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbgDHOE2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 10:04:28 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 9024929117E
-Message-ID: <f2a044b2c9a0d2920ce3cc327b331a790cd128bb.camel@collabora.com>
-Subject: Re: [PATCH v8 4/5] media: rkvdec: Add the rkvdec driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc:     DVB_Linux_Media <linux-media@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Date:   Wed, 08 Apr 2020 11:04:10 -0300
-In-Reply-To: <abe902f2ebdfa41bd4d99b7beb3b6c7ec91d2a8f.camel@ndufresne.ca>
-References: <20200403221345.16702-1-ezequiel@collabora.com>
-                 <20200403221345.16702-5-ezequiel@collabora.com>
-                 <CAKQmDh_pCX_s2Ze7b1YBqgvEZHNrgzDUfcjPos8_GZq8x6=5Ng@mail.gmail.com>
-                 <5c417620e1baeed7ec4ac750ab481366df2aa590.camel@collabora.com>
-         <abe902f2ebdfa41bd4d99b7beb3b6c7ec91d2a8f.camel@ndufresne.ca>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0-1 
+        Wed, 8 Apr 2020 10:04:39 -0400
+Received: from mga12.intel.com ([192.55.52.136]:63159 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727226AbgDHOEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 10:04:39 -0400
+IronPort-SDR: ecllaeKuKeJ5Wf5oNQbl+rUibCNEJTI3Hcc1hY7kyeDqs94SHx1TMry0AmAAsfPhkAAoGx/P87
+ rRLq0OBS9IdQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 07:04:38 -0700
+IronPort-SDR: F5PeZg8HmvVGsgLU55iJsKW/mN7EmYTPufY+rj4qeCcpWRhxqG+2eO0o5VKnDLfDWPG82JUlVD
+ Yy/UOTi1h4sQ==
+X-IronPort-AV: E=Sophos;i="5.72,358,1580803200"; 
+   d="scan'208";a="425144596"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.174.149]) ([10.249.174.149])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 07:04:36 -0700
+Subject: Re: [PATCH v2] KVM: x86/pmu: Reduce counter period change overhead
+ and delay the effective time
+From:   Like Xu <like.xu@linux.intel.com>
+To:     pbonzini@redhat.com
+Cc:     ehankland@google.com, jmattson@google.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wanpengli@tencent.com
+References: <20200317075315.70933-1-like.xu@linux.intel.com>
+ <20200317081458.88714-1-like.xu@linux.intel.com>
+ <1528e1b4-3dee-161b-9463-57471263b5a8@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <6a57b701-99a2-3917-3879-bc8141dca9d4@linux.intel.com>
+Date:   Wed, 8 Apr 2020 22:04:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <1528e1b4-3dee-161b-9463-57471263b5a8@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-04-07 at 15:36 -0400, Nicolas Dufresne wrote:
-> Le mardi 07 avril 2020 à 11:35 -0300, Ezequiel Garcia a écrit :
-> > On Mon, 2020-04-06 at 16:27 -0400, Nicolas Dufresne wrote:
-> > > Le ven. 3 avr. 2020 à 18:14, Ezequiel Garcia <ezequiel@collabora.com> a écrit :
-> > > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > 
-> > > > The rockchip vdec block is a stateless decoder that's able to decode
-> > > > H264, HEVC and VP9 content. This commit adds the core infrastructure
-> > > > and the H264 backend. Support for VP9 and HEVS will be added later on.
-> > > > 
-> > > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > 
-> > > Sorry for the late feedback (got a comment lower) ...
-> > > 
-> > > Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-> > > 
-> > 
-> > Nice, thank you.
-> > 
-> > > > --
-> > > > v8:
-> > > > * Fix kfree and style changes, as suggested by Andriy.
-> > > > v7:
-> > > > * hverkuil-cisco@xs4all.nl: replaced VFL_TYPE_GRABBER by _VIDEO
-> > > > * Use macros and ARRAY_SIZE instead of magic numbers,
-> > > >   as suggested by Mauro.
-> > > > * Renamed M_N macro, suggested by Mauro.
-> > > > * Use v4l2_m2m_buf_done_and_job_finish.
-> > > > * Set buffers' zeroth plane payload in .buf_prepare
-> > > > * Refactor try/s_fmt for spec compliance.
-> > > > ---
-> > > >  MAINTAINERS                                |    7 +
-> > > >  drivers/staging/media/Kconfig              |    2 +
-> > > >  drivers/staging/media/Makefile             |    1 +
-> > > >  drivers/staging/media/rkvdec/Kconfig       |   15 +
-> > > >  drivers/staging/media/rkvdec/Makefile      |    3 +
-> > > >  drivers/staging/media/rkvdec/TODO          |   11 +
-> > > >  drivers/staging/media/rkvdec/rkvdec-h264.c | 1156 ++++++++++++++++++++
-> > > >  drivers/staging/media/rkvdec/rkvdec-regs.h |  223 ++++
-> > > >  drivers/staging/media/rkvdec/rkvdec.c      | 1103 +++++++++++++++++++
-> > > >  drivers/staging/media/rkvdec/rkvdec.h      |  121 ++
-> > > >  10 files changed, 2642 insertions(+)
-> > > >  create mode 100644 drivers/staging/media/rkvdec/Kconfig
-> > > >  create mode 100644 drivers/staging/media/rkvdec/Makefile
-> > > >  create mode 100644 drivers/staging/media/rkvdec/TODO
-> > > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264.c
-> > > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec-regs.h
-> > > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec.c
-> > > >  create mode 100644 drivers/staging/media/rkvdec/rkvdec.h
-> > > > 
-> > [..]
-> > > > +
-> > > > +static void set_ps_field(u32 *buf, struct rkvdec_ps_field field, u32 value)
-> > > > +{
-> > > > +       u8 bit = field.offset % 32, word = field.offset / 32;
-> > > > +       u64 mask = GENMASK_ULL(bit + field.len - 1, bit);
-> > > > +       u64 val = ((u64)value << bit) & mask;
-> > > > +
-> > > > +       buf[word] &= ~mask;
-> > > > +       buf[word] |= val;
-> > > > +       if (bit + field.len > 32) {
-> > > > +               buf[word + 1] &= ~(mask >> 32);
-> > > > +               buf[word + 1] |= val >> 32;
-> > > > +       }
-> > > > +}
-> > > > +
-> > > > +static void assemble_hw_pps(struct rkvdec_ctx *ctx,
-> > > > +                           struct rkvdec_h264_run *run)
-> > > > +{
-> > > > +       struct rkvdec_h264_ctx *h264_ctx = ctx->priv;
-> > > > +       const struct v4l2_ctrl_h264_sps *sps = run->sps;
-> > > > +       const struct v4l2_ctrl_h264_pps *pps = run->pps;
-> > > > +       const struct v4l2_ctrl_h264_decode_params *dec_params = run->decode_params;
-> > > > +       const struct v4l2_h264_dpb_entry *dpb = dec_params->dpb;
-> > > > +       struct rkvdec_h264_priv_tbl *priv_tbl = h264_ctx->priv_tbl.cpu;
-> > > > +       struct rkvdec_sps_pps_packet *hw_ps;
-> > > > +       dma_addr_t scaling_list_address;
-> > > > +       u32 scaling_distance;
-> > > > +       u32 i;
-> > > > +
-> > > > +       /*
-> > > > +        * HW read the SPS/PPS information from PPS packet index by PPS id.
-> > > > +        * offset from the base can be calculated by PPS_id * 32 (size per PPS
-> > > > +        * packet unit). so the driver copy SPS/PPS information to the exact PPS
-> > > > +        * packet unit for HW accessing.
-> > > > +        */
-> > > > +       hw_ps = &priv_tbl->param_set[pps->pic_parameter_set_id];
-> > > > +       memset(hw_ps, 0, sizeof(*hw_ps));
-> > > > +
-> > > > +#define WRITE_PPS(value, field) set_ps_field(hw_ps->info, field, value)
-> > > > +       /* write sps */
-> > > > +       WRITE_PPS(0xf, SEQ_PARAMETER_SET_ID);
-> > > > +       WRITE_PPS(0xff, PROFILE_IDC);
-> > > > +       WRITE_PPS(1, CONSTRAINT_SET3_FLAG);
-> > > 
-> > > At first I found that part rather interesting, but I see this
-> > > hardcoding matches what Rockchip do.
-> > > 
-> > > https://github.com/rockchip-linux/mpp/blob/release/mpp/hal/rkdec/h264d/hal_h264d_rkv_reg.c#L266
-> > > 
-> > > > +       WRITE_PPS(sps->chroma_format_idc, CHROMA_FORMAT_IDC);
-> > > 
-> > > But here's it's not so great. This driver does not implement any kind
-> > > of validation. In fact, if I pass 3
-> > > here  (YCbCr 4:4:4) it will accept it, and kind of decode some frames,
-> > > but eventually with crash and
-> > > reboot is needed. We should (as defined in the Statelss CODEC spec)
-> > > validate the SPS and refuse if
-> > > an unsupported profile idc, chroma idc, luma/chroma depth or coded
-> > > size is requested.
-> > 
-> > Perhaps we could validate that at request_validate time,
-> > or maybe ops.try_ctrl is better.
-> > 
-> > </thinking_out_loud>
-> > 
-> > > Validating the
-> > > S_FMT is not sufficient as one can trick the driver in allocating
-> > > buffers that are too small.
-> > > 
-> > 
-> > I am not sure I follow you: how do you think the driver
-> > can be tricked like this?
+Hi Paolo,
+
+Could you please take a look at this patch?
+If there is anything needs to be improved, please let me know.
+
+Thanks,
+Like Xu
+
+On 2020/3/26 20:47, Like Xu wrote:
+> Anyone to help review this change?
 > 
-> What I see is that there is no cross validation between the SPS
-> register configuration and the frame allocations done through S_FMT. So
-> if I cheat in S_FMT, and then pass an SPS that is larger then
-> announced, the HW could potentially overrun buffers. That entirely
-> depends on how much robustness there is in the HW implementation iself
-> (and if we have a register to pass the buffer size).
+> Thanks,
+> Like Xu
 > 
-> This is of course a gut feeling, I haven't found time to test this yet,
-> but it came to my mind after I notice that passing a 4:4:4 choma_idc
-> stream causes driver failure (no visible memory corruption or overrun
-> though, the driver just stops working). So the resulting issues might
-> not be that bad, but you endup loosing the decoder.
+> On 2020/3/17 16:14, Like Xu wrote:
+>> The cost of perf_event_period() is unstable, and when the guest samples
+>> multiple events, the overhead increases dramatically (5378 ns on E5-2699).
+>>
+>> For a non-running counter, the effective time of the new period is when
+>> its corresponding enable bit is enabled. Calling perf_event_period()
+>> in advance is superfluous. For a running counter, it's safe to delay the
+>> effective time until the KVM_REQ_PMU event is handled. If there are
+>> multiple perf_event_period() calls before handling KVM_REQ_PMU,
+>> it helps to reduce the total cost.
+>>
+>> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+>> ---
+>>   arch/x86/kvm/pmu.c           | 11 -----------
+>>   arch/x86/kvm/pmu.h           | 11 +++++++++++
+>>   arch/x86/kvm/vmx/pmu_intel.c | 10 ++++------
+>>   3 files changed, 15 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+>> index d1f8ca57d354..527a8bb85080 100644
+>> --- a/arch/x86/kvm/pmu.c
+>> +++ b/arch/x86/kvm/pmu.c
+>> @@ -437,17 +437,6 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
+>>       kvm_pmu_refresh(vcpu);
+>>   }
+>> -static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+>> -{
+>> -    struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+>> -
+>> -    if (pmc_is_fixed(pmc))
+>> -        return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+>> -            pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+>> -
+>> -    return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+>> -}
+>> -
+>>   /* Release perf_events for vPMCs that have been unused for a full time 
+>> slice.  */
+>>   void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
+>>   {
+>> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+>> index d7da2b9e0755..cd112e825d2c 100644
+>> --- a/arch/x86/kvm/pmu.h
+>> +++ b/arch/x86/kvm/pmu.h
+>> @@ -138,6 +138,17 @@ static inline u64 get_sample_period(struct kvm_pmc 
+>> *pmc, u64 counter_value)
+>>       return sample_period;
+>>   }
+>> +static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+>> +{
+>> +    struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+>> +
+>> +    if (pmc_is_fixed(pmc))
+>> +        return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+>> +            pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+>> +
+>> +    return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+>> +}
+>> +
+>>   void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
+>>   void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
+>>   void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
+>> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+>> index 7c857737b438..20f654a0c09b 100644
+>> --- a/arch/x86/kvm/vmx/pmu_intel.c
+>> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+>> @@ -263,15 +263,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, 
+>> struct msr_data *msr_info)
+>>               if (!msr_info->host_initiated)
+>>                   data = (s64)(s32)data;
+>>               pmc->counter += data - pmc_read_counter(pmc);
+>> -            if (pmc->perf_event)
+>> -                perf_event_period(pmc->perf_event,
+>> -                          get_sample_period(pmc, data));
+>> +            if (pmc_speculative_in_use(pmc))
+>> +                kvm_make_request(KVM_REQ_PMU, vcpu);
+>>               return 0;
+>>           } else if ((pmc = get_fixed_pmc(pmu, msr))) {
+>>               pmc->counter += data - pmc_read_counter(pmc);
+>> -            if (pmc->perf_event)
+>> -                perf_event_period(pmc->perf_event,
+>> -                          get_sample_period(pmc, data));
+>> +            if (pmc_speculative_in_use(pmc))
+>> +                kvm_make_request(KVM_REQ_PMU, vcpu);
+>>               return 0;
+>>           } else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+>>               if (data == pmc->eventsel)
+>>
 > 
-
-Note that this driver (as well as Hantro) programs the hardware
-using the negotiated resolution, and ignores what the SPS says
-about it.
-
-It shouldn't be possible to trick the driver this way.
-
-OTOH, both drivers should have additional checks for other SPS
-fields such as chroma_format_idc and luma_bit_depth, as you
-pointed out.
-
-I'll add this to my TODO list. I think it's doable as follow-up
-patches.
-
-Thank,
-Ezequiel
-
-> > > What I suspect is that we need to be careful with this HW, as it seems
-> > > to be a bit half backed, which
-> > > means it might be supporting more features then supported by the TRM
-> > > or reference code, and we
-> > > must disable this with software.
-> > > 
-> > > (p.s. I can provide a stream to reproduce the 4:4:4 driver failure)
-> > > 
-> > 
-> > Thanks,
-> > Ezequiel
-> > 
-> 
-> 
-
 
