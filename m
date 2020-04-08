@@ -2,549 +2,415 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF97EC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F29C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1852072F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:35:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="p28kSLVL"
+	by mail.kernel.org (Postfix) with ESMTP id 03DD82072F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 18:36:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgDHSfH (ORCPT
+        id S1729418AbgDHSgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 14:35:07 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:52592 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728781AbgDHSfH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 14:35:07 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586370906; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=CN1zH6hMiXeyFl9DvmIeXVd36c+RMSi9O40QxvXC1/0=;
- b=p28kSLVLmWhLOhJPP6qoApOeP4mx5BHZ1XKJKvA0suAd3H/c2rPx+DJEeMupqDkcy3VXRz6Z
- cc4r5Hemhz17Nz/5zOGMeA6TaKT34pO7A0PtG+0Vc4C+1NQYyHrAr/7A5+wHxQybZ7xvPIVc
- rPJ9mR4/N1wHAmL++2ojvzS6zAE=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8e194a.7fe343f2cab0-smtp-out-n02;
- Wed, 08 Apr 2020 18:34:50 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 800E7C433F2; Wed,  8 Apr 2020 18:34:50 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rishabhb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E3F13C433D2;
-        Wed,  8 Apr 2020 18:34:48 +0000 (UTC)
+        Wed, 8 Apr 2020 14:36:31 -0400
+Received: from mga05.intel.com ([192.55.52.43]:6163 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726860AbgDHSga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 14:36:30 -0400
+IronPort-SDR: 2rIbwi+zxbaXPYHK9KlpQ7558VO2+9Zvxg9X15PnBLWZV0X5kSZKoYjRgKgXVv1isozYBgaMXH
+ UEGCrcMSx67g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 11:36:29 -0700
+IronPort-SDR: qam+RlaVYNm5R9009PX3tqio/NXNrkS3KdknY+h/6B87106pSObCMmNvziSc3durSFEUaakrVV
+ poE8avCo3xrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
+   d="scan'208";a="361919298"
+Received: from pratuszn-mobl.ger.corp.intel.com (HELO localhost) ([10.252.40.202])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Apr 2020 11:36:19 -0700
+Date:   Wed, 8 Apr 2020 21:36:18 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com
+Cc:     Eyal.Cohen@nuvoton.com, oshrialkoby85@gmail.com,
+        alexander.steffen@infineon.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Eddie James <eajames@linux.ibm.com>
+Subject: Re: [PATCH v6 7/7] tpm: tpm_tis: add tpm_tis_i2c driver
+Message-ID: <20200408183618.GC33486@linux.intel.com>
+References: <20200407162044.168890-1-amirmizi6@gmail.com>
+ <20200407162044.168890-8-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Date:   Wed, 08 Apr 2020 11:34:48 -0700
-From:   rishabhb@codeaurora.org
-To:     =?UTF-8?Q?Cl=C3=A9ment_Leger?= <cleger@kalrayinc.com>
-Cc:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        psodagud <psodagud@codeaurora.org>, tsoni <tsoni@codeaurora.org>,
-        sidgup <sidgup@codeaurora.org>,
-        linux-remoteproc-owner@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] remoteproc: Add character device interface
-In-Reply-To: <1331212923.14096350.1586188737626.JavaMail.zimbra@kalray.eu>
-References: <1585699438-14394-1-git-send-email-rishabhb@codeaurora.org>
- <5b1c8287-0077-87e7-9364-b1f5a104c9e3@st.com>
- <6261646b2e0c4d9c8a30900b2f475890@codeaurora.org>
- <730c75c9-15e2-19c5-d97a-190bf1e6ffaa@st.com>
- <634144036.14036712.1586174761552.JavaMail.zimbra@kalray.eu>
- <8379238a-a9e0-da4e-330a-18dffba5f841@st.com>
- <1331212923.14096350.1586188737626.JavaMail.zimbra@kalray.eu>
-Message-ID: <877ed3c91c8f140a08a743f03cafc633@codeaurora.org>
-X-Sender: rishabhb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <20200407162044.168890-8-amirmizi6@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-04-06 08:58, Clément Leger wrote:
-> Hi Arnaud,
+On Tue, Apr 07, 2020 at 07:20:44PM +0300, amirmizi6@gmail.com wrote:
+> From: Amir Mizinski <amirmizi6@gmail.com>
 > 
-> ----- On 6 Apr, 2020, at 16:17, Arnaud Pouliquen 
-> arnaud.pouliquen@st.com wrote:
+> Implements the functionality needed to communicate with an I2C TPM
+> according to the TCG TPM I2C Interface Specification.
 > 
->> Hi Clément,
->> 
->> On 4/6/20 2:06 PM, Clément Leger wrote:
->>> Hi Arnaud,
->>> 
->>> ----- On 6 Apr, 2020, at 11:01, Arnaud Pouliquen 
->>> arnaud.pouliquen@st.com wrote:
->>> 
->>>> On 4/3/20 9:13 PM, rishabhb@codeaurora.org wrote:
->>>>> On 2020-04-02 10:28, Arnaud POULIQUEN wrote:
->>>>>> Hi
->>>>>> 
->>>>>> On 4/1/20 2:03 AM, Rishabh Bhatnagar wrote:
->>>>>>> Add the character device interface for userspace applications.
->>>>>>> This interface can be used in order to boot up and shutdown
->>>>>>> remote subsystems. Currently there is only a sysfs interface
->>>>>>> which the userspace clients can use. If a usersapce application
->>>>>>> crashes after booting the remote processor does not get any
->>>>>>> indication about the crash. It might still assume that the
->>>>>>> application is running. For example modem uses remotefs service
->>>>>>> to fetch data from disk/flash memory. If the remotefs service
->>>>>>> crashes, modem keeps on requesting data which might lead to a
->>>>>>> crash. Adding a character device interface makes the remote
->>>>>>> processor tightly coupled with the user space application.
->>>>>>> A crash of the application leads to a close on the file 
->>>>>>> descriptors
->>>>>>> therefore shutting down the remoteproc.
->>>>>> 
->>>>>> Sorry I'm late in the discussion, I hope I've gone through the 
->>>>>> whole
->>>>>> discussion so I don't reopen a closed point...
->>>>>> 
->>>>>> Something here is not crystal clear to me so I'd rather share 
->>>>>> it...
->>>>>> 
->>>>>> I suppose that you the automatic restart of the application is not 
->>>>>> possible to
->>>>>> stop and restart the remote processor...
->>>>> Yes correct, while we wait for the application to restart we might 
->>>>> observe a
->>>>> fatal crash.
->>>>>> 
->>>>>> Why this use case can not be solved by a process monitor or a 
->>>>>> service
->>>>>> in userland that detects the application crash and stop the remote
->>>>>> firmware using
->>>>>> the sysfs interface?
->>>>>> 
->>>>> What happens in the case where the process monitor itself crashes? 
->>>>> This is
->>>>> actually the approach we follow in our downstream code. We have a 
->>>>> central entity
->>>>> in userspace that controls bootup/shutdown of some remote 
->>>>> processors based on
->>>>> the
->>>>> votes from userspace clients. We have observed cases where this 
->>>>> entity
->>>>> itself crashes and remote processors are left hanging.
->>>> 
->>>> Your description makes me feel like this patch is only a workaround 
->>>> of something
->>>> that
->>>> should be fixed in the userland, even if i understand that hanging 
->>>> is one of the
->>>> most
->>>> critical problem and have to be fixed.
->>>> For instance, how to handle several applications that interact with 
->>>> the remote
->>>> processor
->>>> ( e.g. rpmsg service applications) how to stop and restart 
->>>> everything. Using the
->>>> char
->>>> device would probaly resolve only a part of the issue...
->>>> 
->>>> I'm not aware about your environment and i'm not a userland expert. 
->>>> But what i
->>>> still not
->>>> understand why a parent process can not do the job...
->>>> I just test a simple script on my side that treat the kill -9 of an 
->>>> application
->>>> ("cat" in my case).
->>> 
->>> This is not entirely true, if the parent process is killed with a 
->>> SIGKILL, then
->>> the process will not be able to handle anything and the remoteproc 
->>> will still
->>> be running.
->>> 
->>> What I understood from Rishabh patch is a way to allow a single 
->>> process handling
->>> the rproc state. We have the same kind of need and currently, if the
->>> user application crashes, then the rproc is still running (which 
->>> happens).
->>> 
->>>> 
->>>> #start the remote firmware
->>>> cp  $1 /lib/firmware/
->>>> echo $1> /sys/class/remoteproc/remoteproc0/firmware
->>>> echo start >/sys/class/remoteproc/remoteproc0/state
->>>> #your binary
->>>> cat /dev/kmsg
->>>> # stop the remote firmware in case of crash (and potentially some 
->>>> other apps)
->>>> echo stop >/sys/class/remoteproc/remoteproc0/state
->>>> 
->>> 
->>> This is not really "production proof" and what happens if the 
->>> application is
->>> responsible of setting the firmware which might be jitted ?
->>> And if the script receives the SIGKILL, then we are back to the same 
->>> problem.
->> Yes this is just a basic example, not an implementation which would 
->> depend on
->> the
->> environment. i'm just trying here to  put forward a multi-process 
->> solution...and
->> that I'm not an userland expert :).
->> 
->>> 
->>> I really think, this is a step forward an easier and reliable use of 
->>> the
->>> remoteproc
->>> on userland to guarantee a coherent rproc state even if host 
->>> application
->>> crashes.
-Yes what we want is simple mechanism where a single userspace process 
-can boot/
-shutdown the remote processor in all scenarios. Adding more processes to 
-monitor
-the already existing process might have 2 issues. One is there might be 
-a delay
-between the application crash and process monitor getting to know about 
-it and taking
-action. This might prove to be fatal in our case. Second, possibly the 
-monitor can hang
-or get killed and is not deterministic.
->> 
->> I can see 3 ways of handling an application crash:
->> - just shutdown the firmware
->> => can be done through char device
->> - stop some other related processes and/or generate a remote proc 
->> crash dump for
->> debug
->> => /sysfs and/or debugfs
->> - do nothing as you want a silence application reboot and re-attach to 
->> the
->> running firmware
->> => use sysfs
->> 
->> I'm challenging the solution because splitting the API seems to me not 
->> a good
->> solution.
+> Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> Tested-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  drivers/char/tpm/Kconfig       |  12 ++
+>  drivers/char/tpm/Makefile      |   1 +
+>  drivers/char/tpm/tpm_tis_i2c.c | 292 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 305 insertions(+)
+>  create mode 100644 drivers/char/tpm/tpm_tis_i2c.c
 > 
-> Completely ok with that, we have to fully understand the targeted 
-> usecase to
-> avoid implemented a flawed interface.
+> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> index aacdeed..b166ad3 100644
+> --- a/drivers/char/tpm/Kconfig
+> +++ b/drivers/char/tpm/Kconfig
+> @@ -74,6 +74,18 @@ config TCG_TIS_SPI_CR50
+>  	  If you have a H1 secure module running Cr50 firmware on SPI bus,
+>  	  say Yes and it will be accessible from within Linux.
+>  
+> +config TCG_TIS_I2C
+> +	tristate "TPM I2C Interface Specification"
+> +	depends on I2C
+> +	depends on CRC_CCITT
+> +	select TCG_TIS_CORE
+> +	---help---
+> +	  If you have a TPM security chip which is connected to a regular
+> +	  I2C master (i.e. most embedded platforms) that is compliant with the
+> +	  TCG TPM I2C Interface Specification say Yes and it will be accessible from
+> +	  within Linux. To compile this driver as a module, choose  M here;
+> +	  the module will be called tpm_tis_i2c.
+> +
+>  config TCG_TIS_I2C_ATMEL
+>  	tristate "TPM Interface Specification 1.2 Interface (I2C - Atmel)"
+>  	depends on I2C
+> diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> index 9567e51..97999cf 100644
+> --- a/drivers/char/tpm/Makefile
+> +++ b/drivers/char/tpm/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_TCG_TIS_SPI) += tpm_tis_spi.o
+>  tpm_tis_spi-y := tpm_tis_spi_main.o
+>  tpm_tis_spi-$(CONFIG_TCG_TIS_SPI_CR50) += tpm_tis_spi_cr50.o
+>  
+> +obj-$(CONFIG_TCG_TIS_I2C) += tpm_tis_i2c.o
+>  obj-$(CONFIG_TCG_TIS_I2C_ATMEL) += tpm_i2c_atmel.o
+>  obj-$(CONFIG_TCG_TIS_I2C_INFINEON) += tpm_i2c_infineon.o
+>  obj-$(CONFIG_TCG_TIS_I2C_NUVOTON) += tpm_i2c_nuvoton.o
+> diff --git a/drivers/char/tpm/tpm_tis_i2c.c b/drivers/char/tpm/tpm_tis_i2c.c
+> new file mode 100644
+> index 0000000..83c0b3a
+> --- /dev/null
+> +++ b/drivers/char/tpm/tpm_tis_i2c.c
+> @@ -0,0 +1,292 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2014-2019 Nuvoton Technology corporation
+> + *
+> + * TPM TIS I2C
+> + *
+> + * TPM TIS I2C Device Driver Interface for devices that implement the TPM I2C
+> + * Interface defined by TCG PC Client Platform TPM Profile (PTP) Specification
+> + * Revision 01.03 v22 at www.trustedcomputinggroup.org
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/slab.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/wait.h>
+> +#include <linux/acpi.h>
+> +#include <linux/freezer.h>
+> +#include <linux/crc-ccitt.h>
+> +
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/gpio.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/tpm.h>
+> +#include "tpm.h"
+> +#include "tpm_tis_core.h"
+> +
+> +#define TPM_LOC_SEL                    0x04
+> +#define TPM_I2C_INTERFACE_CAPABILITY   0x30
+> +#define TPM_I2C_DEVICE_ADDRESS         0x38
+> +#define TPM_DATA_CSUM_ENABLE           0x40
+> +#define TPM_DATA_CSUM                  0x44
+> +#define TPM_I2C_DID_VID                        0x48
+> +#define TPM_I2C_RID                    0x4C
+> +
+> +//#define I2C_IS_TPM2 1
+> +
+> +struct tpm_tis_i2c_phy {
+> +	struct tpm_tis_data priv;
+> +	struct i2c_client *i2c_client;
+> +	bool data_csum;
+> +	u8 *iobuf;
+> +};
+> +
+> +static inline struct tpm_tis_i2c_phy *to_tpm_tis_i2c_phy(struct tpm_tis_data *data)
+> +{
+> +	return container_of(data, struct tpm_tis_i2c_phy, priv);
+> +}
+> +
+> +static u8 address_to_register(u32 addr)
+> +{
+> +	addr &= 0xFFF;
+> +
+> +	switch (addr) {
+> +		// adapt register addresses that have changed compared to
+> +		// older TIS versions
+> +	case TPM_ACCESS(0):
+> +		return 0x04;
+> +	case TPM_LOC_SEL:
+> +		return 0x00;
+> +	case TPM_DID_VID(0):
+> +		return 0x48;
+> +	case TPM_RID(0):
+> +		return 0x4C;
+> +	default:
+> +		return addr;
+> +	}
+> +}
+> +
+> +static int tpm_tis_i2c_read_bytes(struct tpm_tis_data *data, u32 addr,
+> +				  u16 len, u8 *result)
+> +{
+> +	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
+> +	int ret = 0;
+> +	int i = 0;
+> +	u8 reg = address_to_register(addr);
+> +	struct i2c_msg msgs[] = {
+> +		{
+> +			.addr = phy->i2c_client->addr,
+> +			.len = sizeof(reg),
+> +			.buf = &reg,
+> +		},
+> +		{
+> +			.addr = phy->i2c_client->addr,
+> +			.len = len,
+> +			.buf = result,
+> +			.flags = I2C_M_RD,
+> +		},
+> +	};
+> +
+> +	do {
+> +		ret = i2c_transfer(phy->i2c_client->adapter, msgs,
+> +				   ARRAY_SIZE(msgs));
+> +		usleep_range(250, 300); // wait default GUARD_TIME of 250�s
+> +
+> +	} while (ret < 0 && i++ < TPM_RETRY);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +
+> +	return 0;
+> +}
+> +
+> +static int tpm_tis_i2c_write_bytes(struct tpm_tis_data *data, u32 addr,
+> +				   u16 len, const u8 *value)
+> +{
+> +	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
+> +	int ret = 0;
+> +	int i = 0;
+> +
+> +	if (phy->iobuf) {
+> +		if (len > TPM_BUFSIZE - 1)
+> +			return -EIO;
+> +
+> +		phy->iobuf[0] = address_to_register(addr);
+> +		memcpy(phy->iobuf + 1, value, len);
+> +
+> +		{
+> +			struct i2c_msg msgs[] = {
+> +				{
+> +					.addr = phy->i2c_client->addr,
+> +					.len = len + 1,
+> +					.buf = phy->iobuf,
+> +				},
+> +			};
+> +
+> +			do {
+> +				ret = i2c_transfer(phy->i2c_client->adapter,
+> +						   msgs, ARRAY_SIZE(msgs));
+> +				// wait default GUARD_TIME of 250�s
+> +				usleep_range(250, 300);
+> +			} while (ret < 0 && i++ < TPM_RETRY);
+> +		}
+> +	} else {
+> +		u8 reg = address_to_register(addr);
+> +
+> +		struct i2c_msg msgs[] = {
+> +			{
+> +				.addr = phy->i2c_client->addr,
+> +				.len = sizeof(reg),
+> +				.buf = &reg,
+> +			},
+> +			{
+> +				.addr = phy->i2c_client->addr,
+> +				.len = len,
+> +				.buf = (u8 *)value,
+> +				.flags = I2C_M_NOSTART,
+> +			},
+> +		};
+> +		do {
+> +			ret = i2c_transfer(phy->i2c_client->adapter, msgs,
+> +					   ARRAY_SIZE(msgs));
+> +			// wait default GUARD_TIME of 250�s
+> +			usleep_range(250, 300);
+> +		} while (ret < 0 && i++ < TPM_RETRY);
+> +	}
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +
+> +	return 0;
+> +}
+> +
+> +static bool tpm_tis_i2c_check_data(struct tpm_tis_data *data,
+> +				   const u8 *buf, size_t len)
+> +{
+> +	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
+> +	u16 crc, crc_tpm;
+> +	int rc;
+> +
+> +	if (phy->data_csum) {
+> +		crc = crc_ccitt(0x0000, buf, len);
+> +		rc = tpm_tis_read16(data, TPM_DATA_CSUM, &crc_tpm);
+> +		if (rc < 0)
+> +			return false;
+> +
+> +		crc_tpm = be16_to_cpu(crc_tpm);
+> +		return crc == crc_tpm;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
+> +
+> +static int csum_state_store(struct tpm_tis_data *data, u8 new_state)
+> +{
+> +	struct tpm_tis_i2c_phy *phy = to_tpm_tis_i2c_phy(data);
+> +	u8 cur_state;
+> +	int rc;
+> +
+> +	rc = tpm_tis_i2c_write_bytes(&phy->priv, TPM_DATA_CSUM_ENABLE,
+> +				     1, &new_state);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	rc = tpm_tis_i2c_read_bytes(&phy->priv, TPM_DATA_CSUM_ENABLE,
+> +				    1, &cur_state);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	if (new_state == cur_state)
+> +		phy->data_csum = (bool)new_state;
+> +
+> +	return rc;
+> +}
+> +
+> +static const struct tpm_tis_phy_ops tpm_i2c_phy_ops = {
+> +	.read_bytes = tpm_tis_i2c_read_bytes,
+> +	.write_bytes = tpm_tis_i2c_write_bytes,
+> +	.check_data = tpm_tis_i2c_check_data,
+> +};
+> +
+> +static int tpm_tis_i2c_probe(struct i2c_client *dev,
+> +			     const struct i2c_device_id *id)
+> +{
+> +	struct tpm_tis_i2c_phy *phy;
+> +	int rc;
+> +	int CRC_Checksum = 0;
+> +	const u8 loc_init = 0;
+> +	struct device_node *np;
+> +
+> +	phy = devm_kzalloc(&dev->dev, sizeof(struct tpm_tis_i2c_phy),
+> +			   GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+> +
+> +	phy->i2c_client = dev;
+> +
+> +	if (!i2c_check_functionality(dev->adapter, I2C_FUNC_NOSTART)) {
+> +		phy->iobuf = devm_kmalloc(&dev->dev, TPM_BUFSIZE, GFP_KERNEL);
+> +		if (!phy->iobuf)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	// select locality 0 (the driver will access only via locality 0)
+> +	rc = tpm_tis_i2c_write_bytes(&phy->priv, TPM_LOC_SEL, 1, &loc_init);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	// set CRC checksum calculation enable
+> +	np = dev->dev.of_node;
+> +	if (of_property_read_bool(np, "crc-checksum"))
+> +		CRC_Checksum = 1;
+> +
+> +	rc = csum_state_store(&phy->priv, CRC_Checksum);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	return tpm_tis_core_init(&dev->dev, &phy->priv, -1, &tpm_i2c_phy_ops,
+> +					NULL);
+> +}
+> +
+> +static const struct i2c_device_id tpm_tis_i2c_id[] = {
+> +	{"tpm_tis_i2c", 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, tpm_tis_i2c_id);
+> +
+> +static const struct of_device_id of_tis_i2c_match[] = {
+> +	{ .compatible = "tcg,tpm-tis-i2c", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, of_tis_i2c_match);
+> +
+> +static const struct acpi_device_id acpi_tis_i2c_match[] = {
+> +	{"SMO0768", 0},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(acpi, acpi_tis_i2c_match);
+> +
+> +static struct i2c_driver tpm_tis_i2c_driver = {
+> +	.driver = {
+> +		.owner = THIS_MODULE,
+> +		.name = "tpm_tis_i2c",
+> +		.pm = &tpm_tis_pm,
+> +		.of_match_table = of_match_ptr(of_tis_i2c_match),
+> +		.acpi_match_table = ACPI_PTR(acpi_tis_i2c_match),
+> +	},
+> +	.probe = tpm_tis_i2c_probe,
+> +	.id_table = tpm_tis_i2c_id,
+> +};
+> +
+> +module_i2c_driver(tpm_tis_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("TPM Driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.7.4
 > 
->> Now i wonder how it works for the other applications that are relying 
->> on some
->> other
->> kernel frameworks...
-> 
-> For some other device, there is a chardev. The watchdog for intance 
-> uses a
-> /dev/watchdog. Regarding the gpio, it seems they are also using a 
-> chardev
-> and the sysfs interface is deprecated.
-> 
->> Perhaps the answer is that these frameworks don't use sysfs but char 
->> device.
->> That would means that the sysfs solution is not the more adapted 
->> solution and
->> perhaps we should migrate to a char device.
->> But in this case, i think that it should implement the whole API and 
->> be
->> exclusive with
->> the syfs legacy API (so no sysfs or sysfs in read-only).
-> 
-> I agree with that, if another interface must be defined, then it should
-> implement everything that is supported right now with the sysfs.
-> 
-The other fields that sysfs exposes right now are firmware_name, 
-name(rproc name),
-state. The targeted usecase was that these are configuration parameters 
-specific
-to the remoteproc and should stay in the sysfs interface. Whereas char 
-device
-should provide direct access to remoteproc device.
-It would make sense to use this interface in conjunction with sysfs
-interface, where you use /dev/remoteproc0 to boot/shutdown the remote 
-processor
-sysfs entries to fine tune the parameters.
-Adding ioctls to implement all sysfs functionality seems like overkill 
-to me. Let
-me know what you guys think.
-> 
-> Clément
-> 
->> 
->> Regards,
->> Arnaud
->> 
->>> 
->>> Regards,
->>> 
->>> Clément
->>> 
->>>> Anyway, it's just my feeling, let other people give their feedback.
->>>> 
->>>>>> I just want to be sure that there is no alternative to this, 
->>>>>> because
->>>>>> having two ways
->>>>>> for application to shutdown the firmware seems to me confusing...
->>>>> Does making this interface optional/configurable helps?
->>>>>> 
->>>>>> What about the opposite service, mean inform the application that 
->>>>>> the remote
->>>>>> processor is crashed?
->>>>>> Do you identify such need? or the "auto" crash recovery is 
->>>>>> sufficient?
->>>>> Auto recovery works perfectly for us. Although there is a mechanism 
->>>>> in
->>>>> place using QMI(Qualcomm MSM interface) that can notify clients 
->>>>> about remote
->>>>> processor crash.
->>>> 
->>>> Thanks for the information.
->>>> 
->>>> Regards
->>>> Arnaud
->>>> 
->>>>>> 
->>>>>> Thanks,
->>>>>> Arnaud
->>>>>>> 
->>>>>>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
->>>>>>> ---
->>>>>>>  drivers/remoteproc/Kconfig               |   9 +++
->>>>>>>  drivers/remoteproc/Makefile              |   1 +
->>>>>>>  drivers/remoteproc/remoteproc_cdev.c     | 100 
->>>>>>> +++++++++++++++++++++++++++++++
->>>>>>>  drivers/remoteproc/remoteproc_internal.h |  22 +++++++
->>>>>>>  include/linux/remoteproc.h               |   2 +
->>>>>>>  5 files changed, 134 insertions(+)
->>>>>>>  create mode 100644 drivers/remoteproc/remoteproc_cdev.c
->>>>>>> 
->>>>>>> diff --git a/drivers/remoteproc/Kconfig 
->>>>>>> b/drivers/remoteproc/Kconfig
->>>>>>> index de3862c..6374b79 100644
->>>>>>> --- a/drivers/remoteproc/Kconfig
->>>>>>> +++ b/drivers/remoteproc/Kconfig
->>>>>>> @@ -14,6 +14,15 @@ config REMOTEPROC
->>>>>>> 
->>>>>>>  if REMOTEPROC
->>>>>>> 
->>>>>>> +config REMOTEPROC_CDEV
->>>>>>> +    bool "Remoteproc character device interface"
->>>>>>> +    help
->>>>>>> +      Say y here to have a character device interface for 
->>>>>>> Remoteproc
->>>>>>> +      framework. Userspace can boot/shutdown remote processors 
->>>>>>> through
->>>>>>> +      this interface.
->>>>>>> +
->>>>>>> +      It's safe to say N if you don't want to use this 
->>>>>>> interface.
->>>>>>> +
->>>>>>>  config IMX_REMOTEPROC
->>>>>>>      tristate "IMX6/7 remoteproc support"
->>>>>>>      depends on ARCH_MXC
->>>>>>> diff --git a/drivers/remoteproc/Makefile 
->>>>>>> b/drivers/remoteproc/Makefile
->>>>>>> index e30a1b1..b7d4f77 100644
->>>>>>> --- a/drivers/remoteproc/Makefile
->>>>>>> +++ b/drivers/remoteproc/Makefile
->>>>>>> @@ -9,6 +9,7 @@ remoteproc-y                += 
->>>>>>> remoteproc_debugfs.o
->>>>>>>  remoteproc-y                += remoteproc_sysfs.o
->>>>>>>  remoteproc-y                += remoteproc_virtio.o
->>>>>>>  remoteproc-y                += remoteproc_elf_loader.o
->>>>>>> +obj-$(CONFIG_REMOTEPROC_CDEV)        += remoteproc_cdev.o
->>>>>>>  obj-$(CONFIG_IMX_REMOTEPROC)        += imx_rproc.o
->>>>>>>  obj-$(CONFIG_MTK_SCP)            += mtk_scp.o mtk_scp_ipi.o
->>>>>>>  obj-$(CONFIG_OMAP_REMOTEPROC)        += omap_remoteproc.o
->>>>>>> diff --git a/drivers/remoteproc/remoteproc_cdev.c
->>>>>>> b/drivers/remoteproc/remoteproc_cdev.c
->>>>>>> new file mode 100644
->>>>>>> index 0000000..8182bd1
->>>>>>> --- /dev/null
->>>>>>> +++ b/drivers/remoteproc/remoteproc_cdev.c
->>>>>>> @@ -0,0 +1,100 @@
->>>>>>> +// SPDX-License-Identifier: GPL-2.0-only
->>>>>>> +/*
->>>>>>> + * Character device interface driver for Remoteproc framework.
->>>>>>> + *
->>>>>>> + * Copyright (c) 2020, The Linux Foundation. All rights 
->>>>>>> reserved.
->>>>>>> + */
->>>>>>> +
->>>>>>> +#include <linux/cdev.h>
->>>>>>> +#include <linux/fs.h>
->>>>>>> +#include <linux/module.h>
->>>>>>> +#include <linux/mutex.h>
->>>>>>> +#include <linux/remoteproc.h>
->>>>>>> +
->>>>>>> +#include "remoteproc_internal.h"
->>>>>>> +
->>>>>>> +#define NUM_RPROC_DEVICES    64
->>>>>>> +static dev_t rproc_cdev;
->>>>>>> +static DEFINE_IDA(cdev_minor_ida);
->>>>>>> +
->>>>>>> +static int rproc_cdev_open(struct inode *inode, struct file 
->>>>>>> *file)
->>>>>>> +{
->>>>>>> +    struct rproc *rproc;
->>>>>>> +
->>>>>>> +    rproc = container_of(inode->i_cdev, struct rproc, char_dev);
->>>>>>> +
->>>>>>> +    if (!rproc)
->>>>>>> +        return -EINVAL;
->>>>>>> +
->>>>>>> +    if (rproc->state == RPROC_RUNNING)
->>>>>>> +        return -EBUSY;
->>>>>>> +
->>>>>>> +    return rproc_boot(rproc);
->>>>>>> +}
->>>>>>> +
->>>>>>> +static int rproc_cdev_release(struct inode *inode, struct file 
->>>>>>> *file)
->>>>>>> +{
->>>>>>> +    struct rproc *rproc;
->>>>>>> +
->>>>>>> +    rproc = container_of(inode->i_cdev, struct rproc, char_dev);
->>>>>>> +
->>>>>>> +    if (!rproc || rproc->state != RPROC_RUNNING)
->>>>>>> +        return -EINVAL;
->>>>>>> +
->>>>>>> +    rproc_shutdown(rproc);
->>>>>>> +
->>>>>>> +    return 0;
->>>>>>> +}
->>>>>>> +
->>>>>>> +static const struct file_operations rproc_fops = {
->>>>>>> +    .open = rproc_cdev_open,
->>>>>>> +    .release = rproc_cdev_release,
->>>>>>> +};
->>>>>>> +
->>>>>>> +int rproc_char_device_add(struct rproc *rproc)
->>>>>>> +{
->>>>>>> +    int ret, minor;
->>>>>>> +    dev_t cdevt;
->>>>>>> +
->>>>>>> +    minor = ida_simple_get(&cdev_minor_ida, 0, 
->>>>>>> NUM_RPROC_DEVICES,
->>>>>>> +                   GFP_KERNEL);
->>>>>>> +    if (minor < 0) {
->>>>>>> +        dev_err(&rproc->dev, "%s: No more minor numbers left! 
->>>>>>> rc:%d\n",
->>>>>>> +            __func__, minor);
->>>>>>> +        return -ENODEV;
->>>>>>> +    }
->>>>>>> +
->>>>>>> +    cdev_init(&rproc->char_dev, &rproc_fops);
->>>>>>> +    rproc->char_dev.owner = THIS_MODULE;
->>>>>>> +
->>>>>>> +    cdevt = MKDEV(MAJOR(rproc_cdev), minor);
->>>>>>> +    ret = cdev_add(&rproc->char_dev, cdevt, 1);
->>>>>>> +    if (ret < 0)
->>>>>>> +        ida_simple_remove(&cdev_minor_ida, minor);
->>>>>>> +
->>>>>>> +    rproc->dev.devt = cdevt;
->>>>>>> +    return ret;
->>>>>>> +}
->>>>>>> +
->>>>>>> +void rproc_char_device_remove(struct rproc *rproc)
->>>>>>> +{
->>>>>>> +    __unregister_chrdev(MAJOR(rproc->dev.devt), 
->>>>>>> MINOR(rproc->dev.devt), 1,
->>>>>>> +                "rproc");
->>>>>>> +    ida_simple_remove(&cdev_minor_ida, MINOR(rproc->dev.devt));
->>>>>>> +}
->>>>>>> +
->>>>>>> +void __init rproc_init_cdev(void)
->>>>>>> +{
->>>>>>> +    int ret;
->>>>>>> +
->>>>>>> +    ret = alloc_chrdev_region(&rproc_cdev, 0, NUM_RPROC_DEVICES, 
->>>>>>> "rproc");
->>>>>>> +    if (ret < 0) {
->>>>>>> +        pr_err("Failed to alloc rproc_cdev region, err %d\n", 
->>>>>>> ret);
->>>>>>> +        return;
->>>>>>> +    }
->>>>>>> +}
->>>>>>> +
->>>>>>> +void __exit rproc_exit_cdev(void)
->>>>>>> +{
->>>>>>> +    __unregister_chrdev(MAJOR(rproc_cdev), 0, NUM_RPROC_DEVICES, 
->>>>>>> "rproc");
->>>>>>> +}
->>>>>>> diff --git a/drivers/remoteproc/remoteproc_internal.h
->>>>>>> b/drivers/remoteproc/remoteproc_internal.h
->>>>>>> index 493ef92..28d61a1 100644
->>>>>>> --- a/drivers/remoteproc/remoteproc_internal.h
->>>>>>> +++ b/drivers/remoteproc/remoteproc_internal.h
->>>>>>> @@ -47,6 +47,27 @@ struct dentry *rproc_create_trace_file(const 
->>>>>>> char *name,
->>>>>>> struct rproc *rproc,
->>>>>>>  int rproc_init_sysfs(void);
->>>>>>>  void rproc_exit_sysfs(void);
->>>>>>> 
->>>>>>> +#ifdef CONFIG_REMOTEPROC_CDEV
->>>>>>> +void rproc_init_cdev(void);
->>>>>>> +void rproc_exit_cdev(void);
->>>>>>> +int rproc_char_device_add(struct rproc *rproc);
->>>>>>> +void rproc_char_device_remove(struct rproc *rproc);
->>>>>>> +#else
->>>>>>> +static inline void rproc_init_cdev(void)
->>>>>>> +{
->>>>>>> +}
->>>>>>> +static inline void rproc_exit_cdev(void)
->>>>>>> +{
->>>>>>> +}
->>>>>>> +static inline int rproc_char_device_add(struct rproc *rproc)
->>>>>>> +{
->>>>>>> +    return 0;
->>>>>>> +}
->>>>>>> +static inline void  rproc_char_device_remove(struct rproc 
->>>>>>> *rproc)
->>>>>>> +{
->>>>>>> +}
->>>>>>> +#endif
->>>>>>> +
->>>>>>>  void rproc_free_vring(struct rproc_vring *rvring);
->>>>>>>  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
->>>>>>> 
->>>>>>> @@ -63,6 +84,7 @@ struct resource_table 
->>>>>>> *rproc_elf_find_loaded_rsc_table(struct
->>>>>>> rproc *rproc,
->>>>>>>  struct rproc_mem_entry *
->>>>>>>  rproc_find_carveout_by_name(struct rproc *rproc, const char 
->>>>>>> *name, ...);
->>>>>>> 
->>>>>>> +
->>>>>>>  static inline
->>>>>>>  int rproc_fw_sanity_check(struct rproc *rproc, const struct 
->>>>>>> firmware *fw)
->>>>>>>  {
->>>>>>> diff --git a/include/linux/remoteproc.h 
->>>>>>> b/include/linux/remoteproc.h
->>>>>>> index 16ad666..c4ca796 100644
->>>>>>> --- a/include/linux/remoteproc.h
->>>>>>> +++ b/include/linux/remoteproc.h
->>>>>>> @@ -37,6 +37,7 @@
->>>>>>> 
->>>>>>>  #include <linux/types.h>
->>>>>>>  #include <linux/mutex.h>
->>>>>>> +#include <linux/cdev.h>
->>>>>>>  #include <linux/virtio.h>
->>>>>>>  #include <linux/completion.h>
->>>>>>>  #include <linux/idr.h>
->>>>>>> @@ -514,6 +515,7 @@ struct rproc {
->>>>>>>      bool auto_boot;
->>>>>>>      struct list_head dump_segments;
->>>>>>>      int nb_vdev;
->>>>>>> +    struct cdev char_dev;
->>>>>>>  };
->>>>>>> 
->> >>>>>  /**
+
+This patch is in corrupted state essentially. No reason to review it.
+Not even checkpatch errors have been fixed.
