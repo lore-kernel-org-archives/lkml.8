@@ -2,131 +2,88 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A022C2BB54
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836F6C2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7775C2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED122075E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 19:52:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbgDHTv7 (ORCPT
+        id S1730287AbgDHTwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 15:51:59 -0400
-Received: from smtprelay0138.hostedemail.com ([216.40.44.138]:49414 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730187AbgDHTv7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 15:51:59 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id C5D1F838437F;
-        Wed,  8 Apr 2020 19:51:57 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: point91_4b1a2c45aca56
-X-Filterd-Recvd-Size: 3830
-Received: from XPS-9350 (unknown [172.58.19.195])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  8 Apr 2020 19:51:55 +0000 (UTC)
-Message-ID: <2de69a35463317f5eca2ce665b0ee8b90b8c717b.camel@perches.com>
-Subject: Re: [PATCH] scsi: core: Rate limit "rejecting I/O" messages
-From:   Joe Perches <joe@perches.com>
-To:     "Ewan D. Milne" <emilne@redhat.com>,
-        Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Date:   Wed, 08 Apr 2020 12:49:52 -0700
-In-Reply-To: <120ce7f4cd1fd070e1f7c353223c21b8e4f29337.camel@redhat.com>
-References: <20200408171012.76890-1-dwagner@suse.de>
-         <120ce7f4cd1fd070e1f7c353223c21b8e4f29337.camel@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 8 Apr 2020 15:52:35 -0400
+Received: from sauhun.de ([88.99.104.3]:47128 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726709AbgDHTwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 15:52:35 -0400
+Received: from localhost (p54B334FE.dip0.t-ipconnect.de [84.179.52.254])
+        by pokefinder.org (Postfix) with ESMTPSA id 4B0EE2C1F39;
+        Wed,  8 Apr 2020 21:52:33 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 21:52:32 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Dejin Zheng <zhengdejin5@gmail.com>
+Cc:     thor.thayer@linux.intel.com, krzysztof.adamski@nokia.com,
+        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, nsekhar@ti.com,
+        bgolaszewski@baylibre.com, baruch@tkos.co.il,
+        wsa+renesas@sang-engineering.com, kgene@kernel.org,
+        krzk@kernel.org, paul@crapouillou.net, vz@mleia.com,
+        khilman@baylibre.com, gregory.clement@bootlin.com,
+        rrichter@marvell.com, afaerber@suse.de,
+        manivannan.sadhasivam@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, heiko@sntech.de, baohua@kernel.org,
+        linus.walleij@linaro.org, mripard@kernel.org, wens@csie.org,
+        ardb@kernel.org, gcherian@marvell.com, jun.nie@linaro.org,
+        shawnguo@kernel.org, tglx@linutronix.de, zhouyanjie@wanyeetech.com,
+        martin.blumenstingl@googlemail.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/24] convert to devm_platform_ioremap_resource
+Message-ID: <20200408195232.GB22619@ninjato>
+References: <20200408182311.26869-1-zhengdejin5@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
+Content-Disposition: inline
+In-Reply-To: <20200408182311.26869-1-zhengdejin5@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-04-08 at 15:16 -0400, Ewan D. Milne wrote:
-> On Wed, 2020-04-08 at 19:10 +0200, Daniel Wagner wrote:
-> > Prevent excessive logging by rate limiting the "rejecting I/O"
-> > messages. For example in setups where remote syslog is used the link
-> > is saturated by those messages when a storage controller/disk
-> > misbehaves.
-> > 
-> > Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> > Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> > Signed-off-by: Daniel Wagner <dwagner@suse.de>
-> > ---
-> >  drivers/scsi/scsi_lib.c    |  4 ++--
-> >  include/scsi/scsi_device.h | 10 ++++++++++
-> >  2 files changed, 12 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> > index 47835c4b4ee0..01c35c58c6f3 100644
-> > --- a/drivers/scsi/scsi_lib.c
-> > +++ b/drivers/scsi/scsi_lib.c
-> > @@ -1217,7 +1217,7 @@ scsi_prep_state_check(struct scsi_device *sdev,
-> > struct request *req)
-> >  		 */
-> >  		if (!sdev->offline_already) {
-> >  			sdev->offline_already = true;
-> > -			sdev_printk(KERN_ERR, sdev,
-> > +			sdev_printk_ratelimited(KERN_ERR, sdev,
-> >  				    "rejecting I/O to offline
-> > device\n");
-> 
-> I would really prefer we not do it this way if at all possible.
-> It loses information we may need to debug SAN outage problems.
-> 
-> The reason I didn't use ratelimit is that the ratelimit structure is
-> per-instance of the ratelimit call here, not per-device.  So this
-> doesn't work right -- it will drop messages for other devices.
 
-Could add a ratelimit_state to struct scsi_device.
-
-Something like:
----
- drivers/scsi/scsi_scan.c   | 2 ++
- include/scsi/scsi_device.h | 2 ++
- 2 files changed, 4 insertions(+)
-
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index f2437a..938c83f 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -279,6 +279,8 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
- 	scsi_change_queue_depth(sdev, sdev->host->cmd_per_lun ?
- 					sdev->host->cmd_per_lun : 1);
- 
-+	ratelimit_state_init(&sdev->rs, DEFAULT_RATELIMIT_INTERVAL,
-+			     DEFAULT_RATELIMIT_BURST);
- 	scsi_sysfs_device_initialize(sdev);
- 
- 	if (shost->hostt->slave_alloc) {
-diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
-index c3cba2..2600de7 100644
---- a/include/scsi/scsi_device.h
-+++ b/include/scsi/scsi_device.h
-@@ -8,6 +8,7 @@
- #include <linux/blkdev.h>
- #include <scsi/scsi.h>
- #include <linux/atomic.h>
-+#include <linux/ratelimit.h>
- 
- struct device;
- struct request_queue;
-@@ -233,6 +234,7 @@ struct scsi_device {
- 	struct mutex		state_mutex;
- 	enum scsi_device_state sdev_state;
- 	struct task_struct	*quiesced_by;
-+	struct ratelimit_state	rs;
- 	unsigned long		sdev_data[];
- } __attribute__((aligned(sizeof(unsigned long))));
- 
+--cmJC7u66zC7hs+87
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
+> v1 -> v2:
+> 	- delete 4 patches of can not be sent by gmail server.
+
+I asked you to squash all these patches into one when resending.
+
+
+--cmJC7u66zC7hs+87
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl6OK30ACgkQFA3kzBSg
+KbbJrg//YB1abNWBUtHOjd6WYwEHpk0pyCEvijRy9NhmP23blGcNWDCoShvyBjtL
+m3Y9ko5Elpbk4Sc8T773RsTEBj6X2KsbP4s54EQ3d08RfgWWHycP2jGr03T1AyGe
+FXn34LZiHg0Ljvl/YBwNTwbmEcapYhGFDYQn9pWtpx6x/EONfmCBc2Ct9e4O6GLV
+5L4hBx/M0XeplEasOvyizNsg/q9WSqUvHJTN6TTZlqj2Lj7n1V0wLpU/fuHiq6zl
+7JOdDpsGCQJgJzrMKt+Ik3W5zZ0N1q+WaRy1Xmi5O7PyA4EAv6dldRMMfGeJKoiu
++aso1daNqTZ7zgr+nOZhaKDJ7aKxGWazlsUXgtTvUGQtCK7+hEchqAKpkckaw2rC
+otptvek1FPBt8TjJ1A/2bc5HsPeHi3dVNfnUztYEh5K/UkA+J4vFVY0YK70tdfoJ
+zN4Sct9EnwKDJGYcn/OY8/8/mzhBGkXnCwwfyNgtFPke+K+wucALuD+PKczw+pFe
+yZlueeRDrPzuTo/6sg2PmR7N+ZZw0MVFHf619+RpJmjBUZtDHFpTQMLYLEybXADo
+eWClPXL5rmxHiM/Nuja7/oZSMh770G11mlcocq2WVeHYvEOHIYXrCsEt/HUAh/nJ
+FZx1CH2iTMHklxDIwYr6PfKVSjvHmiGImgcX0sCXwHIruwMysVg=
+=4Sxq
+-----END PGP SIGNATURE-----
+
+--cmJC7u66zC7hs+87--
