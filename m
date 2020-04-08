@@ -2,101 +2,90 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0BEC2BA16
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9EEC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04F22063A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F332063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:18:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="iLIfvVjX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RRg5/WYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgDHFO2 (ORCPT
+        id S1726578AbgDHFSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:14:28 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:42899 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbgDHFO1 (ORCPT
+        Wed, 8 Apr 2020 01:18:48 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38444 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgDHFSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:14:27 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3471580237;
-        Wed,  8 Apr 2020 17:14:23 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1586322863;
-        bh=YkXvA/8SLVreNAYgan070U1NrymtwAPnJ2gFe0lYFwU=;
-        h=From:To:CC:Subject:Date;
-        b=iLIfvVjXyMiurQkbhtrj+nP2eHl0vJDaMQFOGG5FJk5jISCcl8QHwH6cZcSgWGXzm
-         MrdU9HWY6EjCJ5Mt3twae5mNIAM4OaTFgdSJPmiQ+djtXK/df6zV3wplCtDDaUqWtm
-         FkTJTAQPJ1pWpL1DoNlmIZ2WQO/02cbhTVZ29P+dk1vA8vt7rksqHZ5UCgCRg5wjsl
-         8j0ny5y56prjsBgu7EHITYfVClUGwyPoAITJ1sZeVh4dzffVwlExMeko6myII+zYiQ
-         nSVxNA7eDRdGrPcXaFOLDFP4Vq6zhlyOaTzQp9tg0q6CDRVJzx6v+VWUoZ4ACKBu1t
-         nKLCktG3ruteA==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e8d5db00000>; Wed, 08 Apr 2020 17:14:24 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 8 Apr 2020 17:14:23 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 8 Apr 2020 17:14:22 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hamish Martin" <Hamish.Martin@alliedtelesis.co.nz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Dealing with holes in CPU address space
-Thread-Topic: Dealing with holes in CPU address space
-Thread-Index: AQHWDWSQGXFxFOrcR0ujeloVxC+pHA==
-Date:   Wed, 8 Apr 2020 05:14:22 +0000
-Message-ID: <fcb8f2655452f60a7c734e2ce54ac4d47eec7e92.camel@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.14.96]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <87A62D6F9DDB66408682E8C27463080B@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 8 Apr 2020 01:18:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=StKPm373OSdksMMVXI6SQKnBhmEVN9dQRT4B9G7vKnE=; b=RRg5/WYKllwAuh+d8Y2KqazRaP
+        dbwf5MWSki1XVIYQND6PNzwAJUfuoS4rSC7RdvGsm4U77BchhcYhuDxM5qi4w79nS5wDLlYUP6tkR
+        viC+9yQVXkCXj8gC3BPF/s679GCu1s4ybb8w/6oVPt037rJvAiCxRsOApKNYC+Eq4cZvZ7s8QLfmr
+        RbIJkZGbTcxocv7HjOzn8xFRL44EbrkyldxouLPiLVQwQf4k2AlQSbUtkgUnmga+En8gdUm+Hh3Po
+        EXm2sdA6CGEdb18HlXFtsj5ZUhYdcwQqSI8XUQJ1ZANZre9aaZXLvR09mkPMYT0LOhu1LqRjrrl7F
+        HcdH+4EA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM36m-0002OQ-WD; Wed, 08 Apr 2020 05:18:41 +0000
+Date:   Tue, 7 Apr 2020 22:18:40 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Nadav Amit <nadav.amit@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, hch@infradead.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        mingo <mingo@redhat.com>, bp <bp@alien8.de>, hpa@zytor.com,
+        x86 <x86@kernel.org>, "Kenneth R. Crudup" <kenny@panix.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jannh@google.com, keescook@chromium.org, David.Laight@aculab.com,
+        Doug Covelli <dcovelli@vmware.com>, mhiramat@kernel.org
+Subject: Re: [PATCH 4/4] x86,module: Detect CRn and DRn manipulation
+Message-ID: <20200408051840.GA8561@infradead.org>
+References: <20200407110236.930134290@infradead.org>
+ <20200407111007.429362016@infradead.org>
+ <10ABBCEE-A74D-4100-99D9-05B4C1758FF6@gmail.com>
+ <20200407193853.GP2452@worktop.programming.kicks-ass.net>
+ <90B32DAE-0BB5-4455-8F73-C43037695E7C@gmail.com>
+ <20200407205042.GT2452@worktop.programming.kicks-ass.net>
+ <96C2F23A-D6F4-4A04-82B6-284788C5D2CC@gmail.com>
+ <20200407212754.GU2452@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407212754.GU2452@worktop.programming.kicks-ass.net>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxsLA0KDQpJJ20gdHJ5aW5nIHRvIHBvcnQgYW4gb2xkIEJyb2FkY29tIE1JUFMgQ1BVIChC
-Q001MzAwMykgdG8gYSBzaGlueSBuZXcNCmtlcm5lbC4gSSBoYXZlIHNvbWUgb2xkIGhpc3Rvcmlj
-IHNvdXJjZSBmcm9tIGEgbG9uZyBmb3Jnb3R0ZW4gQnJvYWRjb20NCkxESyBidXQgSSdkIHByZWZl
-ciB0byBkbyB0aGluZ3MgdGhlIG1vZGVybiB3YXkgd2l0aCBkZXZpY2UtdHJlZXMuDQoNClRoZSBw
-cm9ibGVtIEkndmUgYmVlbiBncmFwcGxpbmcgd2l0aCBpcyB0cnlpbmcgdG8gb3BlbiB1cCBhY2Nl
-c3MgdG8gYWxsDQpvZiB0aGUgUkFNIG9uIHRoZSBib2FyZC4gSXQgaGFzIDUxMk1CIG9mIEREUjIu
-IFRoZSBDUFUgaGFzIHR3byBhcmVhcw0Kd2hlcmUgdGhpcyBhcHBlYXJzLiBUaGUgZmlyc3QgMTI4
-TUIgaXMgZnJvbSAwIHRvIDB4MDdmZmZmZmYgdGhlIHNlY29uZA0KYXJlYSBpcyBmcm9tIDB4ODgw
-MDAwMDAgdG8gMHg5ZmZmZmZmZi4NCg0KU29DIHBlcmlwaGVyYWxzIGFyZSBhdCAweDE4MDAwMDAw
-IGFuZCB0aGVyZSBpcyBhbiBJTyB3aW5kb3cgZm9yIGZsYXNoDQphdCAweDIwMDAwMDAwLg0KDQpU
-aGUgb2xkIGNvZGUgaGFzIHNvbWUgY3VzdG9tIHRsYiBpbml0aWFsaXNhdGlvbiB0byBkZWFsIHdp
-dGggdGhpcyBidXQgSQ0KZmlndXJlZCBpdCBzaG91bGQgYmUgcG9zc2libGUgd2l0aCB0aGUgZm9s
-bG93aW5nIGR0cyBzbmlwcGV0Lg0KDQogICAgICAgIG1lbW9yeUAwIHsNCiAgICAgICAgICAgICAg
-ICBkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOw0KICAgICAgICAgICAgICAgIHJlZyA9IDwweDAwMDAw
-MDAwIDB4MDgwMDAwMDANCiAgICAgICAgICAgICAgICAgICAgICAgMHg4ODAwMDAwMCAweDE4MDAw
-MDAwPjsNCiAgICAgICAgfTsNCg0KSSBlbmQgdXAgd2l0aCBvbmx5IDEyOE1CIGF2YWlsYWJsZS4g
-VGhpcyBhcHBlYXJzIHRvIGJlDQpiZWNhdXNlIHRoZSBkZWZhdWx0IEhJR0hNRU1fU1RBUlQgb2Yg
-MHgyMDAwMDAwMCBzdG9wcyB0aGUgcmVzdCBmcm9tDQpiZWluZyBtYWRlIGF2YWlsYWJsZS4gSWYg
-SSBhZGQgYW4gb3ZlcnJpZGUgb2YgSElHSE1FTV9TVEFSVCB0bw0KMHhmZmZmZmZmZiBJIHNlZW0g
-dG8gaGF2ZSB0aGUgZnVsbCA1MTJNQiBhdmFpYWJsZSBidXQgdGhlbiBJIGdldCBhDQprZXJuZWwg
-cGFuaWMNCg0KICBDUFUgMCBVbmFibGUgdG8gaGFuZGxlIGtlcm5lbCBwYWdpbmcgcmVxdWVzdCBh
-dCB2aXJ0dWFsIGFkZHJlc3MgMWZjMDAwMDAsIGVwYyA9PSA4MDAxNjdiOCwgcmEgPT0gODAwZTI4
-NjANCg0KMHgxZmMwMDAwMCBpcyBpbiB0aGUgcmFuZ2Ugd2hlcmUgdGhlIFNvQyBwZXJpcGhlcmFs
-cyBhcmUgc28gSSdtDQp0aGlua2luZyB0aGF0IGlzIHRoZSBwcm9ibGVtLiBCdXQgdGhlbiBhZ2Fp
-biB0aGF0IGlzIGEgdmlydHVhbCBhZGRyZXNzDQpzbyBtYXliZSBpdCdzIGp1c3QgYSBjby1pbmNp
-ZGVuY2UuDQoNCkFueXdheSBJJ2QgcmVhbGx5IGFwcHJlY2lhdGUgYW55IGd1aWRhbmNlIHRoYXQg
-YW55b25lIGNvdWxkIHByb3ZpZGUgb24NCnRoaXMuIEV2ZW4gaWYgaXQncyBqdXN0ICJnbyBsb29r
-IGF0IHRoaXMgU29DIi4NCg0KVGhhbmtzLA0KQ2hyaXMNCg0KDQo=
+On Tue, Apr 07, 2020 at 11:27:54PM +0200, Peter Zijlstra wrote:
+> On Tue, Apr 07, 2020 at 02:22:11PM -0700, Nadav Amit wrote:
+> > Anyhow, I do not think it is the only use-case which is not covered by your
+> > patches (even considering CRs/DRs alone). For example, there is no kernel
+> > function to turn on CR4.VMXE, which is required to run hypervisors on x86.
+> 
+> That needs an exported function; there is no way we'll allow random
+> writes to CR4, there's too much dodgy stuff in there.
+
+And this clearly shows while trying to cater to anyone doing hardware
+virt out of tree is just a disaster and we need to stick to our
+traditional line that out of tree modules don't matter, if you care
+about your module bring it upstream.  Especially as we have a perfectly
+fine upstream module for just about every variant of hardware
+virtualization that can be extended for the needs of other hypervisors.
