@@ -2,197 +2,158 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B37C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C809EC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4F520730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3C7206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbgDHPiQ (ORCPT
+        id S1729464AbgDHPiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:38:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12202 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726709AbgDHPiQ (ORCPT
+        Wed, 8 Apr 2020 11:38:20 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:10234 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726709AbgDHPiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:38:16 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038FYEIb028304;
-        Wed, 8 Apr 2020 11:38:12 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3091ya76y5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 11:38:12 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 038FYDLM028248;
-        Wed, 8 Apr 2020 11:38:11 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3091ya76xj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 11:38:11 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 038FaJYT010384;
-        Wed, 8 Apr 2020 15:38:10 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01dal.us.ibm.com with ESMTP id 3091mdymqp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 15:38:10 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038Fc8tr53346708
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Apr 2020 15:38:08 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 695D1AE05C;
-        Wed,  8 Apr 2020 15:38:08 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 961BFAE062;
-        Wed,  8 Apr 2020 15:38:07 +0000 (GMT)
-Received: from cpe-172-100-173-215.stny.res.rr.com (unknown [9.85.151.56])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Apr 2020 15:38:07 +0000 (GMT)
-Subject: Re: [PATCH v7 01/15] s390/vfio-ap: store queue struct in hash table
- for quick access
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-2-akrowiak@linux.ibm.com>
- <20200408124801.2d61bc5b.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <e0d56b61-749a-3646-18e7-47bb5c8ca862@linux.ibm.com>
-Date:   Wed, 8 Apr 2020 11:38:07 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200408124801.2d61bc5b.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- mlxscore=0 malwarescore=0 priorityscore=1501 clxscore=1015 adultscore=0
- mlxlogscore=999 suspectscore=3 spamscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080122
+        Wed, 8 Apr 2020 11:38:18 -0400
+X-IronPort-AV: E=Sophos;i="5.72,359,1580742000"; 
+   d="scan'208";a="43920549"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 09 Apr 2020 00:38:16 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A8BCB4004BDB;
+        Thu,  9 Apr 2020 00:38:11 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        linux-rockchip@lists.infradead.org,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v7 0/8] Add support for PCIe controller to work in endpoint mode on R-Car/RZ/G2x SoCs
+Date:   Wed,  8 Apr 2020 16:37:52 +0100
+Message-Id: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi All,
+
+This patch series adds support for PCIe controller on R-Car/RZ-G2x to work in
+endpoint mode, this also extends the epf framework to handle base region
+for mapping PCI address locally.
+
+Note:
+The cadence/rockchip/designware endpoint drivers are build tested only.
+
+Changes for v7 (Respun this version quickly to ML as the changes requested
+were quite small and it has been reviewed substantially):
+* Fixed review comments pointed by Shimoda-san
+  1] Made DT bindings dual licensed, added Shimoda-san as maintainer and fixed
+     the example as its built with #{address,size}-cells = <1>. I have still
+     restored the Ack from Rob and Shimoda-san with these changes.
+  2] Split up the patches so that they can be picked up by respective subsystem
+     patches 1/4-9/11 are now part of this series.
+  3] Dropped altering a comment in pci-epc.h
+  4] Used a local variable align_size in pci_epc_mem_alloc_addr() so that size
+     variable doesn't get overwritten in the loop.
+  5] Replaced i-=1 with i--
+  6] Replaced rcar with R-Car in patch subject and description.
+  7] Set MACCTLR in init() callback
+
+Changes for v6:
+1] Rebased patches on endpoint branch of https://git.kernel.org/pub/
+   scm/linux/kernel/git/lpieralisi/pci.git/
+2] Fixed review comments from Shimoda-san
+   a] Made sure defconfig changes were in separate patch
+   b] Created rcar_pcie_host/rcar_pcie_ep structures
+   c] Added pci-id for R8A774C0
+   d] Added entry in MAINTAINERS for dt-binding
+   e] Dropped unnecessary braces
+3] Added support for msi.
+
+Changes for v5:
+1] Rebased patches on next branch of https://git.kernel.org/pub/scm/
+   linux/kernel/git/helgaas/pci.git
+2] Fixed review comments reported by Kishon while fetching the matching
+   window in function pci_epc_get_matching_window()
+3] Fixed review comments reported by Bjorn
+   a] Split patch up first patch so that its easier to review and incremental
+   b] Fixed typos
+4] Included Reviewed tag from Rob for the dt-binding patch
+5] Fixed issue reported by Nathan for assigning variable to itself
+
+Changes for v4:
+1] Fixed dtb_check error reported by Rob
+2] Fixed review comments reported by Kishon
+   a] Dropped pci_epc_find_best_fit_window()
+   b] Fixed initializing mem ptr in __pci_epc_mem_init()
+   c] Dropped map_size from pci_epc_mem_window structure
+
+Changes for v3:
+1] Fixed review comments from Bjorn and Kishon.
+3] Converted to DT schema
+
+Changes for v2:
+1] Fixed review comments from Biju for dt-bindings to include an example
+   for a tested platform.
+2] Fixed review comments from Kishon to extend the features of outbound
+   regions in epf framework.
+3] Added support to parse outbound-ranges in OF.
 
 
-On 4/8/20 6:48 AM, Cornelia Huck wrote:
-> On Tue,  7 Apr 2020 15:20:01 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->
->> Rather than looping over potentially 65535 objects, let's store the
->> structures for caching information about queue devices bound to the
->> vfio_ap device driver in a hash table keyed by APQN.
-> This also looks like a nice code simplification.
->
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_drv.c     | 28 +++------
->>   drivers/s390/crypto/vfio_ap_ops.c     | 90 ++++++++++++++-------------
->>   drivers/s390/crypto/vfio_ap_private.h | 10 ++-
->>   3 files changed, 60 insertions(+), 68 deletions(-)
->>
-> (...)
->
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
->> index 5c0f53c6dde7..134860934fe7 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -26,45 +26,16 @@
->>   
->>   static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
->>   
->> -static int match_apqn(struct device *dev, const void *data)
->> -{
->> -	struct vfio_ap_queue *q = dev_get_drvdata(dev);
->> -
->> -	return (q->apqn == *(int *)(data)) ? 1 : 0;
->> -}
->> -
->> -/**
->> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
->> - * @matrix_mdev: the associated mediated matrix
->> - * @apqn: The queue APQN
->> - *
->> - * Retrieve a queue with a specific APQN from the list of the
->> - * devices of the vfio_ap_drv.
->> - * Verify that the APID and the APQI are set in the matrix.
->> - *
->> - * Returns the pointer to the associated vfio_ap_queue
-> Any reason you're killing this comment, instead of adapting it? The
-> function is even no longer static...
+Lad Prabhakar (8):
+  PCI: rcar: Rename pcie-rcar.c to pcie-rcar-host.c
+  PCI: rcar: Move shareable code to a common file
+  PCI: rcar: Fix calculating mask for PCIEPAMR register
+  PCI: endpoint: Add support to handle multiple base for mapping
+    outbound memory
+  dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
+    controller
+  PCI: rcar: Add support for R-Car PCIe controller in endpoint mode
+  PCI: Add Renesas R8A774C0 device ID
+  MAINTAINERS: Add file patterns for rcar PCI device tree bindings
 
-I can update and restore the comment and the function should be static.
+ .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   77 ++
+ MAINTAINERS                                   |    1 +
+ drivers/pci/controller/Kconfig                |   18 +
+ drivers/pci/controller/Makefile               |    3 +-
+ .../pci/controller/cadence/pcie-cadence-ep.c  |    3 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   |   16 +-
+ drivers/pci/controller/pcie-rcar-ep.c         |  555 ++++++++
+ drivers/pci/controller/pcie-rcar-host.c       | 1065 +++++++++++++++
+ drivers/pci/controller/pcie-rcar.c            | 1206 +----------------
+ drivers/pci/controller/pcie-rcar.h            |  140 ++
+ drivers/pci/controller/pcie-rockchip-ep.c     |    2 +-
+ drivers/pci/endpoint/pci-epc-mem.c            |  196 ++-
+ include/linux/pci-epc.h                       |   37 +-
+ include/linux/pci_ids.h                       |    1 +
+ 14 files changed, 2071 insertions(+), 1249 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
+ create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+ create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+ create mode 100644 drivers/pci/controller/pcie-rcar.h
 
->
->> - */
->> -static struct vfio_ap_queue *vfio_ap_get_queue(
->> -					struct ap_matrix_mdev *matrix_mdev,
->> -					int apqn)
->> +struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
->>   {
->>   	struct vfio_ap_queue *q;
->> -	struct device *dev;
->> -
->> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
->> -		return NULL;
->> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
->> -		return NULL;
-> These were just optimizations and therefore can be dropped now?
-
-The purpose of this function has changed from its previous incarnation.
-This function was originally called from the handle_pqap() function and
-served two purposes: It retrieved the struct vfio_ap_queue as driver data
-and linked the matrix_mdev to the  vfio_ap_queue. The linking of the
-matrix_mdev and the vfio_ap_queue are now done when queue devices
-are probed and when adapters and domains are assigned; so now, the
-handle_pqap() function calls this function to retrieve both the
-vfio_ap_queue as well as the matrix_mdev to which it is linked. 
-Consequently,
-the above code is no longer needed.
-
->
->> -
->> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
->> -				 &apqn, match_apqn);
->> -	if (!dev)
->> -		return NULL;
->> -	q = dev_get_drvdata(dev);
->> -	q->matrix_mdev = matrix_mdev;
->> -	put_device(dev);
->>   
->> -	return q;
->> +	hash_for_each_possible(matrix_dev->qtable, q, qnode, apqn) {
->> +		if (q && (apqn == q->apqn))
->> +			return q;
->> +	}
-> Do we need any serialization here? Previously, the driver core made
-> sure we could get a reference only if the device was still registered;
-> not sure if we need any further guarantees now.
-
-The vfio_ap_queue structs are created when the queue device is
-probed and removed when the queue device is removed.
-
->
->> +
->> +	return NULL;
->>   }
->>   
->>   /**
-> (...)
->
+-- 
+2.20.1
 
