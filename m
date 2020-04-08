@@ -2,199 +2,94 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A54C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BC3C2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72533206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3925F206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XlKAp1NV"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="TkbTZ3im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgDHP0y (ORCPT
+        id S1728767AbgDHP1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:26:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34613 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbgDHP0x (ORCPT
+        Wed, 8 Apr 2020 11:27:22 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40858 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgDHP1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:26:53 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v23so3198833pfm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:26:52 -0700 (PDT)
+        Wed, 8 Apr 2020 11:27:21 -0400
+Received: by mail-pl1-f195.google.com with SMTP id h11so2615725plk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 08:27:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C+U4w7Kh7KCMD+z9p1HTWcc8jDFoEplyMmeswZk5us8=;
-        b=XlKAp1NV11bZzmeb9n6YHnS50wiKbAsskBgxl0X1k2F7n0Apxy2V0azLgcml9V/Q5O
-         c45ssUdPZtWmkZceleTn36Q0QtR0zNa8y6Mxwjxs59TfF/k1smTvIhH4OIpLdVjuZINQ
-         MPW515s3ZH2gcv0iMmawtH22dTnhxt9XH86p/yxf46b/aZB+pQYiGc4Sit9/lUdvSzQt
-         1rgc4QRoCxvfLJmT68++mlbQFP35Ra6UAWe9ruNRXr636P381snSetEHP9Z5x3ZtE3wN
-         R2q1ogUNGweNbk/iESCYHbDvIx+Kn3fWJ4MRi7zlwLNIvU3lWk78FvHBBzb+ENV2Gr5k
-         7BSw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=O7WfNhI8f1lb6PW5kXHujbQHVLkGUotMPukmCgQtvWY=;
+        b=TkbTZ3imLDeHFL3w/n+tfMNRMwjwa9tuBACNwAjcNUWZMbOLPIyh7bEByUqixcSOXC
+         xkZpVv5LVlFb7bI8auY0NpFtQ82qWf6Y5Zm19IQMAk22dNFw09zwOGJS7J03vbbTIP3E
+         FYsi8YR2gA18/wCGK34SabV2govLlWbwYmf1xK0NpZ4Jaai3nYmumE5PeCeWs6knoE5y
+         n45xkh2LgxK4toUsFztNtAqfmApl04H5V8U2dKOHI/GdL1BQ9jM8dle4UgVBvHSBRn5u
+         wdYZKqIBhSLrS5POZknxoFrhC5/oCI5l2NrCEKnbmI2JyEgLvCdqv+RNIrysz+9W15bo
+         MNVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C+U4w7Kh7KCMD+z9p1HTWcc8jDFoEplyMmeswZk5us8=;
-        b=Tm5rp8JQPAjgn+9eVue45m48UVBEA4+mSbMR5i+6tvlGEOpIrT4p30YQIO2nfWu9Ps
-         eRtEE0SD8Wbrzykk8uuyV+m6J3CeV+yHeemCBV2x4KAj5sYjhC4gQJaXGQduQb2/DBXq
-         avyYP04NleUV/A/wm0De2GSM5m3fp7M++sgOrZ3oWOScJeFEERHQk2LozkbV12o9ZjFT
-         PzcY/ELamtwi9y8aCQ8mRzcT+VemdMr2pvi27pVBm8luO4cr5GLMA9CXecm0kqXnWnTm
-         CDjk1f6eZXWoZrGr1dr1CESzAvR0VKro61NFtYvO9lwaiqOFY+VhBmWx7/cQ+GZZAncB
-         Yl4g==
-X-Gm-Message-State: AGi0PubI4bslGXym4mw3GlrTH5yJ2Q4DFfxHrFslwI5J6whnzJWmx1El
-        TcMUmVk5Kaug4+T+6EA5XoPGsnHl2HwlymR28ylsjQ==
-X-Google-Smtp-Source: APiQypILdP7Hu8vMThcI+d0Jayttt4zdObp70IDn3Mxc7LvaF6HHnCor6CqS2K2BP4OfteL4d8WCpvEm1ojD8n3dAxk=
-X-Received: by 2002:a63:8342:: with SMTP id h63mr7611867pge.141.1586359611329;
- Wed, 08 Apr 2020 08:26:51 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=O7WfNhI8f1lb6PW5kXHujbQHVLkGUotMPukmCgQtvWY=;
+        b=ADaj+J4jP2cx+AOpKBN2NGOuyZ8Q3U5FOF+CWhOXfkb8o7edmIM2k2kS7qfQ9RENu+
+         F/f4UCVX8amraqJZzr1nGSpks8kDU83tL1eLZAT/1B/oLdb1Xw197kG8Y+Ep+OYkX+Hf
+         TotN9YGdBbWvnyXuNjRAQkPBZ849HrmLJyD2w5bJGnvQym/Ibi5hfIibmk4ZCKr6Qecf
+         5SsjIeP3eRspbCtTJ4HDsLDFgcT+bQD6jllArFGTCq2brF+RuAKxGmRIAaf9r/6wWhzb
+         TsL2z4WPSiYrzJ5j4L060IDnbuLcJtg7bMcyjGcXfxBaodw8GLBJgDPf6zBkeAAoeMA+
+         qc1Q==
+X-Gm-Message-State: AGi0Pubra0n6fV8y5fq+eUK47ZpCy2smLZR6ow05j6+ZuBNHrIpS1ynP
+        uX7E6GqiPaqTSLKhGbWagznbSdngR4Thqw==
+X-Google-Smtp-Source: APiQypJUFFNkq129tV80J9L/1WuNm/ssIiTfXEAk1yXAaUS/SUq8LNfYq7xWZ4+kPLlPTgl+51rlFw==
+X-Received: by 2002:a17:90b:3656:: with SMTP id nh22mr6013366pjb.71.1586359638209;
+        Wed, 08 Apr 2020 08:27:18 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:4466:6b33:f85b:7770? ([2605:e000:100e:8c61:4466:6b33:f85b:7770])
+        by smtp.gmail.com with ESMTPSA id b68sm1314338pfb.134.2020.04.08.08.27.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Apr 2020 08:27:17 -0700 (PDT)
+Subject: Re: [PATCH 0/4] clean early submission path
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1586325467.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0dffba9d-d320-0412-f17d-cc6a19f39772@kernel.dk>
+Date:   Wed, 8 Apr 2020 08:27:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <000000000000fdc98405a2b44a8c@google.com> <CAAeHK+wV_cpN9GbJDq4qprAFcL8-svb_8xgXxzFz8gtdykN=sA@mail.gmail.com>
-In-Reply-To: <CAAeHK+wV_cpN9GbJDq4qprAFcL8-svb_8xgXxzFz8gtdykN=sA@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 8 Apr 2020 17:26:40 +0200
-Message-ID: <CAAeHK+xhvCYFmJVLN=pVLgc5Jt_5c91kor5Zhd=xH3nNncbcmA@mail.gmail.com>
-Subject: Re: WARNING in add_taint/usb_submit_urb
-To:     syzbot <syzbot+f44561cfce4cc0e75b89@syzkaller.appspotmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Vladis Dronov <vdronov@redhat.com>,
-        Johan Hovold <johan@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ingrassia@epigenesys.com, LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cover.1586325467.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 7, 2020 at 4:38 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> On Tue, Apr 7, 2020 at 4:35 PM syzbot
-> <syzbot+f44561cfce4cc0e75b89@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    0fa84af8 Merge tag 'usb-serial-5.7-rc1' of https://git.ker..
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=11cce12be00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=6b9c154b0c23aecf
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f44561cfce4cc0e75b89
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a8312be00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e35d8fe00000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+f44561cfce4cc0e75b89@syzkaller.appspotmail.com
-> >
-> > ------------[ cut here ]------------
-> > usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-> > WARNING: CPU: 1 PID: 384 at drivers/usb/core/urb.c:478 usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 1 PID: 384 Comm: systemd-udevd Not tainted 5.6.0-rc7-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0xef/0x16e lib/dump_stack.c:118
-> >  usb_submit_urb+0x10b0/0x1460 drivers/usb/core/urb.c:363
-> >  panic+0x2aa/0x6e1 kernel/panic.c:221
-> >  add_taint.cold+0x16/0x16 kernel/panic.c:434
-> >  set_bit include/asm-generic/bitops/instrumented-atomic.h:28 [inline]
-> >  set_ti_thread_flag include/linux/thread_info.h:55 [inline]
-> >  set_fs arch/x86/include/asm/uaccess.h:33 [inline]
-> >  __probe_kernel_read+0x188/0x1d0 mm/maccess.c:67
-> >  __warn.cold+0x14/0x30 kernel/panic.c:581
-> >  __warn+0xd5/0x1c8 kernel/panic.c:574
-> >  usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
-> >  __warn.cold+0x2f/0x30 kernel/panic.c:582
-> >  usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
-> >  report_bug+0x27b/0x2f0 lib/bug.c:195
-> >  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> >  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-> >  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:267
-> >  usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
-> >  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
-> >  usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
-> >  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-> > RIP: 0010:usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
-> > Code: 4d 85 e
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > syzbot can test patches for this bug, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
->
-> +GTCO maintainers.
->
-> Proper report:
->
-> input: GTCO_CalComp as
-> /devices/platform/dummy_hcd.0/usb1/1-1/1-1:0.219/input/input4
-> ------------[ cut here ]------------
-> usb 1-1: BOGUS urb xfer, pipe 1 != type 3
-> WARNING: CPU: 0 PID: 892 at drivers/usb/core/urb.c:478
-> usb_submit_urb+0x1189/0x1460
-> Modules linked in:
-> CPU: 0 PID: 892 Comm: systemd-udevd Not tainted 5.6.0+ #167
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
-> RIP: 0010:usb_submit_urb+0x1189/0x1460 drivers/usb/core/urb.c:478
-> Code: 4d 85 ed 74 46 e8 d7 b5 d7 fd 4c 89 f7 e8 0f b4 16 ff 41 89 d8
-> 44 89 e1 4c 89 ea 48 89 c6 48 c7 c7d
-> RSP: 0018:ffff888062f4f7f8 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff8129eb6d RDI: ffffed100c5e9ef1
-> RBP: ffff8880689aeb80 R08: ffff888069670000 R09: ffffed100d9443c9
-> R10: ffff88806ca21e43 R11: ffffed100d9443c8 R12: 0000000000000001
-> R13: ffff888065fa9f00 R14: ffff888068d390a0 R15: ffff88806bf67d00
-> FS:  00007f4b1048b8c0(0000) GS:ffff88806ca00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000055ad85210280 CR3: 000000005fccc000 CR4: 00000000000006f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  gtco_input_open+0xd5/0x130 drivers/input/tablet/gtco.c:560
->  input_open_device+0x171/0x2d0 drivers/input/input.c:624
->  evdev_open_device drivers/input/evdev.c:414
->  evdev_open+0x3eb/0x4f0 drivers/input/evdev.c:496
->  chrdev_open+0x219/0x5c0 fs/char_dev.c:414
->  do_dentry_open+0x4ac/0x1180 fs/open.c:797
->  do_open fs/namei.c:3229
->  path_openat+0x19dd/0x26f0 fs/namei.c:3346
->  do_filp_open+0x203/0x260 fs/namei.c:3375
->  do_sys_openat2+0x598/0x790 fs/open.c:1148
->  do_sys_open+0xc3/0x140 fs/open.c:1164
->  do_syscall_64+0xb6/0x5a0 arch/x86/entry/common.c:295
->  entry_SYSCALL_64_after_hwframe+0x49/0xb3 arch/x86/entry/entry_64.S:175
-> RIP: 0033:0x7f4b0f5d2840
-> Code: 73 01 c3 48 8b 0d 68 77 20 00 f7 d8 64 89 01 48 83 c8 ff c3 66
-> 0f 1f 44 00 00 83 3d 89 bb 20 00 004
-> RSP: 002b:00007ffce57653c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-> RAX: ffffffffffffffda RBX: 000055ad852c88e0 RCX: 00007f4b0f5d2840
-> RDX: 0000000000000000 RSI: 0000000000080000 RDI: 000055ad852d12a0
-> RBP: 000055ad852d12a0 R08: 000055ad83f4afe3 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000020
-> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-> irq event stamp: 6960
-> hardirqs last  enabled at (6959): [<ffffffff81299621>]
-> console_unlock+0x911/0xca0
-> hardirqs last disabled at (6960): [<ffffffff81004721>]
-> trace_hardirqs_off_thunk+0x1a/0x1c
-> softirqs last  enabled at (6290): [<ffffffff85c00678>] __do_softirq+0x678/0x9a5
-> softirqs last disabled at (6281): [<ffffffff8115a258>] irq_exit+0x178/0x1a0
-> ---[ end trace 066086d0cefb4362 ]---
+On 4/7/20 10:58 PM, Pavel Begunkov wrote:
+> This is mainly in preparation for future changes, but looks nice
+> by itself. The last patch fixes a mild vulnerability.
+> 
+> Pavel Begunkov (4):
+>   io_uring: simplify io_get_sqring
+>   io_uring: alloc req only after getting sqe
+>   io_uring: remove req init from io_get_req()
+>   io_uring: don't read user-shared sqe flags twice
+> 
+>  fs/io_uring.c | 113 ++++++++++++++++++++++++--------------------------
+>  1 file changed, 54 insertions(+), 59 deletions(-)
 
-#syz dup: WARNING in gtco_input_open/usb_submit_urb (2)
+Looks good to me, applied. Thanks!
+
+-- 
+Jens Axboe
+
