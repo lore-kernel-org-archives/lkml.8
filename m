@@ -2,121 +2,90 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DEFC2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1815AC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75E51206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3BB620730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586307905;
+	bh=c4ks+Nq7SBCCzI+OHs87BCC1SHkcSFFdCDnf+LkgP6o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ERoZOyofO7GNgTBP+GeZQ+15uIWyHSitnlJSLcOJY0oo8sSZt0lJrfS0yhdj2vDAY
+	 uRmCEEXA+WKjKSyTptK52zm2YhKaQtKcXpSeZoIAo4W1AHdMEEJHfXlPy7KP24ypDR
+	 eKUZUHRE7PhtNfBAsc/V01RrMAELfC14EZwuwgvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgDHBC4 convert rfc822-to-8bit (ORCPT
+        id S1726525AbgDHBFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:02:56 -0400
-Received: from mga04.intel.com ([192.55.52.120]:1582 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgDHBC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:02:56 -0400
-IronPort-SDR: 4dbzYw+tIZR/z0qjm62dvyIFzo08GoWVyPozslIWbuSK0vmX5Gub0GLDyiMsoOsX8NvNl1rTRI
- L5cCGUrJK7zg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 18:02:55 -0700
-IronPort-SDR: aoIgWarb9rwY1gMIByAFYJfIksZEwy6R2tUCK1nWiJ/zDgSSL5U3c++igIgFK/DpicWLudRxgt
- tMxJ4x9k/FfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
-   d="scan'208";a="424955822"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga005.jf.intel.com with ESMTP; 07 Apr 2020 18:02:55 -0700
-Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Apr 2020 18:02:55 -0700
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 7 Apr 2020 18:02:54 -0700
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.225]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.7]) with mapi id 14.03.0439.000;
- Wed, 8 Apr 2020 09:02:52 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Auger Eric <eric.auger@redhat.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Hao" <hao.wu@intel.com>
-Subject: RE: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-Thread-Topic: [PATCH v1 5/8] vfio/type1: Report 1st-level/stage-1 format to
- userspace
-Thread-Index: AQHWAEUcqZEEdiOKbEGofjWp2Yic+6hjfq+AgAC/vLD//4YrAIAC1vWAgAbjh1CAAQJ/8A==
-Date:   Wed, 8 Apr 2020 01:02:51 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A225A72@SHSMSX104.ccr.corp.intel.com>
-References: <1584880325-10561-1-git-send-email-yi.l.liu@intel.com>
- <1584880325-10561-6-git-send-email-yi.l.liu@intel.com>
- <cb68e9ab-77b0-7e97-a661-4836962041d9@redhat.com>
- <A2975661238FB949B60364EF0F2C25743A21DB4E@SHSMSX104.ccr.corp.intel.com>
- <b47891b1-ece6-c263-9c07-07c09c7d3752@redhat.com>
- <20200403082305.GA1269501@myrica>
- <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
-In-Reply-To: <A2975661238FB949B60364EF0F2C25743A2249DF@SHSMSX104.ccr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 7 Apr 2020 21:05:04 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:22140 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgDHBFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 21:05:04 -0400
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 03814ssS012762
+        for <linux-kernel@vger.kernel.org>; Wed, 8 Apr 2020 10:04:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 03814ssS012762
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586307895;
+        bh=K1ahK7KKPAWpnyfo6tKLdqUOzGSQ4ynuiO6mTIEgKQ0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xfM4WxDdbE+mdW0CaIS+gd2ZbYmFucAapXTC13fDsLiVDpbUCFVKjfwpdp25VrZA2
+         BphtrzKpvCJfQoxECqKSWDN7GbqS1NAf7gdGnX7pdN2pqnCr/BYwjfERwPKyZ4FlCa
+         3LCofOzn1TjknXKrajv/hE9LPwdQcmLYBJEEUX1ZejDIz7/aI9XQBve3YMemlSxplW
+         V0Obk3hknfEUSNB1BwOpAQFmMEMqY0xmfhaHe7jfeNmdKjX8x2m70UK6Ub8XPJxB9E
+         y/dNntd9VVakbkUpqw+ANc8clGEf2u9iiLmAP3JyFowxxLuXa1Db+K+8xA19U4Howh
+         wYVSN/LwPjn/w==
+X-Nifty-SrcIP: [209.85.222.45]
+Received: by mail-ua1-f45.google.com with SMTP id m15so2105986uao.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:04:55 -0700 (PDT)
+X-Gm-Message-State: AGi0Pub/toztBdP7e7EB8jhKUl/TiGrt4sPvt5ukvEURamkfsn1YmnAw
+        XOwoJkEJQ9rQvlj2yWY2n0o3I+75lmNIzc/kirc=
+X-Google-Smtp-Source: APiQypJ/1Y52JCT2NNiYaNpdMWLocsKv2dqcgX0fH+uxTsLbl542WtCzjMOZgzxidv3Bb1sRcVnzKS3X0VN/6cZl96I=
+X-Received: by 2002:ab0:20d6:: with SMTP id z22mr3944313ual.121.1586307894272;
+ Tue, 07 Apr 2020 18:04:54 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200407161933.10874-1-Eugeniy.Paltsev@synopsys.com> <CY4PR1201MB01366A09C22161ED4B30CE17DEC30@CY4PR1201MB0136.namprd12.prod.outlook.com>
+In-Reply-To: <CY4PR1201MB01366A09C22161ED4B30CE17DEC30@CY4PR1201MB0136.namprd12.prod.outlook.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 8 Apr 2020 10:04:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAROwYx0tTR+euFcHCihbmEht6angCW_J0EZgSFvop5Fxw@mail.gmail.com>
+Message-ID: <CAK7LNAROwYx0tTR+euFcHCihbmEht6angCW_J0EZgSFvop5Fxw@mail.gmail.com>
+Subject: Re: [PATCH] ARC: [plat-hsdk]: fix USB regression
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Liu, Yi L
-> Sent: Tuesday, April 7, 2020 5:43 PM
+On Wed, Apr 8, 2020 at 1:22 AM Eugeniy Paltsev
+<Eugeniy.Paltsev@synopsys.com> wrote:
 >
-> > We don't, the PASID spaces are per-VM on Arm, so this function should
-> > consult the IOMMU driver before setting flags. As you said on patch 3,
-> > nested doesn't necessarily imply PASID support. The SMMUv2 does not
-> > support PASID but does support nesting stages 1 and 2 for the IOVA space.
-> > SMMUv3 support of PASID depends on HW capabilities. So I think this
-> > needs to be finer grained:
-> >
-> > Does the container support:
-> > * VFIO_IOMMU_PASID_REQUEST?
-> >   -> Yes for VT-d 3
-> >   -> No for Arm SMMU
-> > * VFIO_IOMMU_{,UN}BIND_GUEST_PGTBL?
-> >   -> Yes for VT-d 3
-> >   -> Sometimes for SMMUv2
-> >   -> No for SMMUv3 (if we go with BIND_PASID_TABLE, which is simpler due to
-> >      PASID tables being in GPA space.)
-> > * VFIO_IOMMU_BIND_PASID_TABLE?
-> >   -> No for VT-d
-> >   -> Sometimes for SMMUv3
-> >
-> > Any bind support implies VFIO_IOMMU_CACHE_INVALIDATE support.
-> 
-> good summary. do you expect to see any
-please ignore this message. I planned to ask if possible to report
-VFIO_IOMMU_CACHE_INVALIDATE  only (no bind support). But I stopped
-typing it when I came to believe it's unnecessary to report it if
-there is no bind support.
+> Hi Masahiro,
+>
+> I'm wondering what is proper way to deal with such type of regressions?
+> Is is responsibility of person who change kconfig to check (and possibly adjust) affected defconfigs?
 
-Regards,
-Yi Liu
+
+I think the patch submitter should take care of
+affected defconfigs when (s)he drops select/imply.
+Also, this kind of mistake should be caught
+in the review process.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
