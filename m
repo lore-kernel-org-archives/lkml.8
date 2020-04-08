@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 855AAC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C07C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5114F2075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514D120820
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360936;
-	bh=pkQRKk4Q3BJwEsZPq9Rvl8GhUQxw4EhOBSPeWUeyTXI=;
+	s=default; t=1586360939;
+	bh=kEy4QClsDKqYpuy6jSsVkkfgbzM9x8NxA08DUYZUD4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fG1q0LiPWhq+WZcf621NBDc+HSSXvcNH7+7BJ9iJ13y0LcyhDlk9nd12X27UDFWjq
-	 ua+vbhV7DmAmjJuAoEfvd/zYagCUHVcwm8SBIi3+zFI+jCWLkVfCutAtdaM5ZbaC+x
-	 up9BzN47C6TbdfLFeCwv2D2vxxj8BWj+Q0bXEUTk=
+	b=hGzdGtnKIoNfS8vS0sdTJaWYtENXpOMkG5U+LoGlo/2WCRigf6CNVmmRnnd3xF2G1
+	 cPkYljCsDoVHntILcb2J8VJKIZbcuRcu5t23Ev4MDp4mlctewgme8HyJBClAbu/fn1
+	 QTx4/srX/BfNWgdX9Qc45B3X+0/5anel9Oyl/Pck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729866AbgDHPsy (ORCPT
+        id S1730040AbgDHPs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 11:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729660AbgDHPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729620AbgDHPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Apr 2020 11:46:32 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D8AD215A4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F34B212CC;
         Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586360791;
-        bh=pkQRKk4Q3BJwEsZPq9Rvl8GhUQxw4EhOBSPeWUeyTXI=;
+        bh=kEy4QClsDKqYpuy6jSsVkkfgbzM9x8NxA08DUYZUD4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVsYDw/hg1IPkOLfiOqWetfXQhzaJ8qZ7bJQHbLy6BAC9Fa6hVGzFYBXLTOU5Jnhd
-         VrLtZCyT8j0ovJNGbnwkz78SjqV/8DtXAdXC15UTBDy8OrQxx8JrIe9KMr0+uXmC5J
-         Q/wLE6rbh+xTqCCqrIZ/ZQFSSqO0K/HLYN+W+w+E=
+        b=FLF4PpVLKQgEDnLiFuvvYM5lBC5QFyyZMVUMwonVPgxMLClLz4EpGaIJ3J85vqcKB
+         UXZ96AaqI2utO+Qg8nwHHIOV+uZkusgZycq2y25KeRpptuyhzkytPQIuHnlkB0hNeC
+         yTOCYnzfaSVEy3btF5hkKOcCocZP+3opjC2TAWTI=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jMCuL-000cBI-IH; Wed, 08 Apr 2020 17:46:29 +0200
+        id 1jMCuL-000cB1-ES; Wed, 08 Apr 2020 17:46:29 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org
-Subject: [PATCH 13/35] ata: libata-core: fix a doc warning
-Date:   Wed,  8 Apr 2020 17:46:05 +0200
-Message-Id: <5fd12ef049c330fe62eb0c23b61e8bea2812e445.1586359676.git.mchehab+huawei@kernel.org>
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        linux1394-devel@lists.sourceforge.net
+Subject: [PATCH 10/35] firewire: firewire-cdev.hL get rid of a docs warning
+Date:   Wed,  8 Apr 2020 17:46:02 +0200
+Message-Id: <9953f9ef2982babd4c6128af4566a8bb3e416fba.1586359676.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
 References: <cover.1586359676.git.mchehab+huawei@kernel.org>
@@ -60,37 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The docs toolchain doesn't recognise this pattern:
+This warning:
 
-	@link->[hw_]sata_spd_limit
+	./include/uapi/linux/firewire-cdev.h:312: WARNING: Inline literal start-string without end-string.
 
-As it can't really process it. So, instead, let's mark it with
-a literal block markup:
+is because %FOO doesn't work if there's a parenthesis at the
+string (as a parenthesis may indicate a function). So, mark
+the literal block using the alternate ``FOO`` syntax.
 
-	``link->[hw_]sata_spd_limit``
-
-in order to get rid of the following warning:
-
-	./drivers/ata/libata-core.c:5974: WARNING: Unknown target name: "hw".
-
+Acked-by: Stefan Richter <stefanr@s5r6.in-berlin.de>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/ata/libata-core.c | 2 +-
+ include/uapi/linux/firewire-cdev.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index beca5f91bb4c..69361ec43db5 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -5209,7 +5209,7 @@ void ata_link_init(struct ata_port *ap, struct ata_link *link, int pmp)
-  *	sata_link_init_spd - Initialize link->sata_spd_limit
-  *	@link: Link to configure sata_spd_limit for
-  *
-- *	Initialize @link->[hw_]sata_spd_limit to the currently
-+ *	Initialize ``link->[hw_]sata_spd_limit`` to the currently
-  *	configured value.
-  *
-  *	LOCKING:
+diff --git a/include/uapi/linux/firewire-cdev.h b/include/uapi/linux/firewire-cdev.h
+index 1acd2b179aef..7e5b5c10a49c 100644
+--- a/include/uapi/linux/firewire-cdev.h
++++ b/include/uapi/linux/firewire-cdev.h
+@@ -308,7 +308,7 @@ struct fw_cdev_event_iso_interrupt_mc {
+ /**
+  * struct fw_cdev_event_iso_resource - Iso resources were allocated or freed
+  * @closure:	See &fw_cdev_event_common;
+- *		set by %FW_CDEV_IOC_(DE)ALLOCATE_ISO_RESOURCE(_ONCE) ioctl
++ *		set by``FW_CDEV_IOC_(DE)ALLOCATE_ISO_RESOURCE(_ONCE)`` ioctl
+  * @type:	%FW_CDEV_EVENT_ISO_RESOURCE_ALLOCATED or
+  *		%FW_CDEV_EVENT_ISO_RESOURCE_DEALLOCATED
+  * @handle:	Reference by which an allocated resource can be deallocated
 -- 
 2.25.2
 
