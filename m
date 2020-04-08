@@ -2,216 +2,112 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42746C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426DFC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12878206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E64A206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgDHUXQ (ORCPT
+        id S1730207AbgDHUXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:23:16 -0400
-Received: from mga18.intel.com ([134.134.136.126]:1753 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgDHUXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:23:15 -0400
-IronPort-SDR: hddEMPoyI4RZDre3uzselfBdGCNBlEkGOsh3gt+2JCaIj8W/W23l0IQr1+9zD/ravwcTLvLs6I
- nlAJsp5bOexg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 13:23:14 -0700
-IronPort-SDR: oNiI2qCReI8/8IoJip/SrNSensKgUAJ5s7+49fxle9m3+mYpRXtFv4DbyyKQXP/W01JKAsTXwC
- g0ZeMbmSMwzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
-   d="scan'208";a="254437308"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 08 Apr 2020 13:23:13 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jMHE8-000CP3-JT; Thu, 09 Apr 2020 04:23:12 +0800
-Date:   Thu, 09 Apr 2020 04:22:16 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/urgent] BUILD SUCCESS
- 9a019db0b6bebc84d6b64636faf73ed6d64cd4bb
-Message-ID: <5e8e3278.QVIQ8DNEFtpxxAKx%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 8 Apr 2020 16:23:36 -0400
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:27137 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729507AbgDHUXf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 16:23:35 -0400
+Received: from [192.168.42.210] ([93.22.134.86])
+        by mwinf5d68 with ME
+        id QLPY2200S1s0W2503LPZiJ; Wed, 08 Apr 2020 22:23:33 +0200
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Wed, 08 Apr 2020 22:23:33 +0200
+X-ME-IP: 93.22.134.86
+Subject: Re: [PATCH] checkpatch: check for missing \n at the end of logging
+ message
+To:     Joe Perches <joe@perches.com>, apw@canonical.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20200407204908.10420-1-christophe.jaillet@wanadoo.fr>
+ <8617a6b94c0644bce1fd4ca77309d67a612e6300.camel@perches.com>
+From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <4b7e1cf3-6fa7-60af-a1d3-2457339dbe8a@wanadoo.fr>
+Date:   Wed, 8 Apr 2020 22:23:32 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <8617a6b94c0644bce1fd4ca77309d67a612e6300.camel@perches.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/urgent
-branch HEAD: 9a019db0b6bebc84d6b64636faf73ed6d64cd4bb  locking/lockdep: Improve 'invalid wait context' splat
 
-elapsed time: 481m
+Le 08/04/2020 à 04:14, Joe Perches a écrit :
+> This works rather better:
+>
+> Perhaps you could test?
+> ---
+>
+> v2:
+>
+> o Avoid pr_cont
+> o Use only last format line if split across multiple lines
+>
+>   scripts/checkpatch.pl | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
+>
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index d64c67..f00a6c8 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -5673,6 +5673,28 @@ sub process {
+>   			}
+>   		}
+>   
+> +# check for possible missing newlines at the end of common logging functions
+> +		if (defined($stat) &&
+> +		    $stat =~ /^\+\s*($logFunctions)\s*\((?:\s*$FuncArg\s*,\s*){0,3}\s*$String/ &&
+> +		    $1 !~ /_cont$/ && $1 =~ /^(?:pr|dev|netdev|netif|wiphy)_/) {
+> +			my $cnt = statement_rawlines($stat);
+> +			my $extracted_string = "";
+> +			for (my $i = 0; $i < $cnt; $i++) {
+> +				next if ($lines[$linenr + $i - 1] !~ /$String\s*[,\)]/);
+> +				$extracted_string = get_quoted_string($lines[$linenr + $i - 1],
+> +								      $rawlines[$linenr + $i - 1]);
+> +				last if ($extracted_string ne "");
+> +			}
+> +			if ($extracted_string ne "" && $extracted_string !~ /\\n"$/) {
+> +				my $herectx = $here . "\n";
+> +				for (my $n = 0; $n < $cnt; $n++) {
+> +					$herectx .=  raw_line($linenr, $n) . "\n";
+> +				}
+> +				WARN("MISSING_FORMAT_NEWLINE",
+> +				     "Possible missing '\\n' at the end of a logging message format string\n" . $herectx);
+> +			}
+> +		}
+> +
+>   # check for logging functions with KERN_<LEVEL>
+>   		if ($line !~ /printk(?:_ratelimited|_once)?\s*\(/ &&
+>   		    $line =~ /\b$logFunctions\s*\(.*\b(KERN_[A-Z]+)\b/) {
+>
+For what I wanted to check and according to the few tests I've made, it 
+looks fine.
 
-configs tested: 149
-configs skipped: 0
+Thank you very much for sharing this much more robust (and working) 
+alternative.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+For what it worth: (i.e. much more tests should be done)
+Tested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-riscv                               defconfig
-s390                          debug_defconfig
-parisc                generic-32bit_defconfig
-nios2                         3c120_defconfig
-s390                             alldefconfig
-openrisc                    or1ksim_defconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                              debian-10.3
-i386                                defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
-c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200408
-x86_64               randconfig-a002-20200408
-x86_64               randconfig-a003-20200408
-i386                 randconfig-a001-20200408
-i386                 randconfig-a002-20200408
-i386                 randconfig-a003-20200408
-alpha                randconfig-a001-20200408
-m68k                 randconfig-a001-20200408
-mips                 randconfig-a001-20200408
-nds32                randconfig-a001-20200408
-parisc               randconfig-a001-20200408
-riscv                randconfig-a001-20200408
-c6x                  randconfig-a001-20200408
-h8300                randconfig-a001-20200408
-microblaze           randconfig-a001-20200408
-nios2                randconfig-a001-20200408
-sparc64              randconfig-a001-20200408
-csky                 randconfig-a001-20200408
-openrisc             randconfig-a001-20200408
-s390                 randconfig-a001-20200408
-sh                   randconfig-a001-20200408
-xtensa               randconfig-a001-20200408
-x86_64               randconfig-b001-20200408
-x86_64               randconfig-b002-20200408
-x86_64               randconfig-b003-20200408
-i386                 randconfig-b001-20200408
-i386                 randconfig-b002-20200408
-i386                 randconfig-b003-20200408
-x86_64               randconfig-c001-20200408
-x86_64               randconfig-c002-20200408
-x86_64               randconfig-c003-20200408
-i386                 randconfig-c001-20200408
-i386                 randconfig-c002-20200408
-i386                 randconfig-c003-20200408
-x86_64               randconfig-d001-20200408
-x86_64               randconfig-d002-20200408
-x86_64               randconfig-d003-20200408
-i386                 randconfig-d001-20200408
-i386                 randconfig-d002-20200408
-i386                 randconfig-d003-20200408
-x86_64               randconfig-e001-20200408
-x86_64               randconfig-e002-20200408
-x86_64               randconfig-e003-20200408
-i386                 randconfig-e001-20200408
-i386                 randconfig-e002-20200408
-i386                 randconfig-e003-20200408
-x86_64               randconfig-h001-20200408
-x86_64               randconfig-h002-20200408
-x86_64               randconfig-h003-20200408
-i386                 randconfig-h001-20200408
-i386                 randconfig-h002-20200408
-i386                 randconfig-h003-20200408
-arc                  randconfig-a001-20200408
-arm                  randconfig-a001-20200408
-arm64                randconfig-a001-20200408
-ia64                 randconfig-a001-20200408
-powerpc              randconfig-a001-20200408
-sparc                randconfig-a001-20200408
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+Maybe, at least a Suggested-By: would be appreciated.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+CJ
+
