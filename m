@@ -2,299 +2,270 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BC6C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E48EC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16FA820768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF792074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:45:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mr2B7TOH"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JcHa2qdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgDHJmQ (ORCPT
+        id S1727915AbgDHJpb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:42:16 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:64930 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726687AbgDHJmP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:42:15 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0389c0Bc030892;
-        Wed, 8 Apr 2020 11:42:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=9mYHIeI/frmT1czD7W9hpT73buuyC0mPIuk8KhgH0WY=;
- b=mr2B7TOH05TOanWgJFfFB113OKxBb08ZL3MNy2TjdeqKzCjohv5lhB+Di4lTooAuFpvQ
- jQN9ner01ubsyz91ornA/XhjwhatkKfCOLC6doAkhKpNb/Doo2sYhkoSi1SON9R6sRgQ
- WT27MdPzNLe+ZLrnVe6vMPfJjgfLroo7/hQO54S6UHE0LduK57DK6jra9S+PgGx+bum+
- fiWMhR04G8sp8l2AkX7HCGfxZ2SJzw16xbHjphiRen8ichrtW0WfmshAmGwV8wUH41pv
- Az1RaWPxT1p4NRjiXrqKooX6nwq3FZ9zAlGVShsVor1eiSSRQDcZOrc3OMEGSSnRn/Ty PA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3091k6u49c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 11:42:09 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C3DA510002A;
-        Wed,  8 Apr 2020 11:42:08 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B295E2A4D61;
-        Wed,  8 Apr 2020 11:42:08 +0200 (CEST)
-Received: from lmecxl0889.tpe.st.com (10.75.127.48) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Apr
- 2020 11:42:07 +0200
-Subject: Re: [PATCH v2 1/2] remoteproc: fall back to using parent memory pool
- if no dedicated available
-To:     Suman Anna <s-anna@ti.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200319162321.20632-1-s-anna@ti.com>
- <20200319162321.20632-2-s-anna@ti.com> <20200325203812.GA9384@xps15>
- <207036a8-b34e-6311-5ad6-3289eb9f7a06@ti.com>
- <CANLsYkzU79LDVWO=wtoOY-=iW0a4EUf5sruwWicyj+2EAFZ4rg@mail.gmail.com>
- <592f2ed1-7833-d4f1-2894-d2300b9cc9dc@st.com>
- <6287a462-6261-8b79-ae30-762c30487bb5@ti.com>
-From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Message-ID: <b8d0b19f-b5d9-e614-f5a7-56337144ed3e@st.com>
-Date:   Wed, 8 Apr 2020 11:42:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 8 Apr 2020 05:45:31 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37520 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726345AbgDHJpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 05:45:31 -0400
+Received: from zn.tnic (p200300EC2F0A9300FDE94558DB0629D0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:9300:fde9:4558:db06:29d0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 020E81EC0C89;
+        Wed,  8 Apr 2020 11:45:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1586339130;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:references;
+        bh=NZoFPElFRpFdYyVeMbyRXXC+sgo8u8TwoA+gn+mRgIk=;
+        b=JcHa2qdcDyD7o1xqkUqSykn8d/yFHAT2qyXV5Ac1iWKzhuis4RnljDiCGXqzd0tMzIYFUN
+        3Lrp5wN/J3sauwJdnD/E1LUnXl594hKWYeNdGOSPyDy0I5Cg8ia14dutgQFiinD9pifULb
+        wIIReKxn0PyY1a1/7mgvhKuoEl6nDHw=
+Date:   Wed, 8 Apr 2020 11:45:26 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>
+Subject: Export fw_get_builtin_firmware()?
+Message-ID: <20200408094526.GC24663@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <6287a462-6261-8b79-ae30-762c30487bb5@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suman,
+Hi guys,
 
-On 4/7/20 9:47 PM, Suman Anna wrote:
-> Hi Arnaud,
-> 
-> On 3/30/20 7:29 AM, Arnaud POULIQUEN wrote:
->>
->>
->> On 3/27/20 10:09 PM, Mathieu Poirier wrote:
->>> On Wed, 25 Mar 2020 at 17:39, Suman Anna <s-anna@ti.com> wrote:
->>>>
->>>> Hi Mathieu,
->>>>
->>>> On 3/25/20 3:38 PM, Mathieu Poirier wrote:
->>>>> On Thu, Mar 19, 2020 at 11:23:20AM -0500, Suman Anna wrote:
->>>>>> From: Tero Kristo <t-kristo@ti.com>
->>>>>>
->>>>>> In some cases, like with OMAP remoteproc, we are not creating dedicated
->>>>>> memory pool for the virtio device. Instead, we use the same memory pool
->>>>>> for all shared memories. The current virtio memory pool handling forces
->>>>>> a split between these two, as a separate device is created for it,
->>>>>> causing memory to be allocated from bad location if the dedicated pool
->>>>>> is not available. Fix this by falling back to using the parent device
->>>>>> memory pool if dedicated is not available.
->>>>>>
->>>>>> Fixes: 086d08725d34 ("remoteproc: create vdev subdevice with specific dma memory pool")
->>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>>>> ---
->>>>>> v2:
->>>>>>  - Address Arnaud's concerns about hard-coded memory-region index 0
->>>>>>  - Update the comment around the new code addition
->>>>>> v1: https://patchwork.kernel.org/patch/11422721/
->>>>>>
->>>>>>  drivers/remoteproc/remoteproc_virtio.c | 15 +++++++++++++++
->>>>>>  include/linux/remoteproc.h             |  2 ++
->>>>>>  2 files changed, 17 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
->>>>>> index eb817132bc5f..b687715cdf4b 100644
->>>>>> --- a/drivers/remoteproc/remoteproc_virtio.c
->>>>>> +++ b/drivers/remoteproc/remoteproc_virtio.c
->>>>>> @@ -369,6 +369,21 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
->>>>>>                              goto out;
->>>>>>                      }
->>>>>>              }
->>>>>> +    } else {
->>>>>> +            struct device_node *np = rproc->dev.parent->of_node;
->>>>>> +
->>>>>> +            /*
->>>>>> +             * If we don't have dedicated buffer, just attempt to re-assign
->>>>>> +             * the reserved memory from our parent. A default memory-region
->>>>>> +             * at index 0 from the parent's memory-regions is assigned for
->>>>>> +             * the rvdev dev to allocate from, and this can be customized
->>>>>> +             * by updating the vdevbuf_mem_id in platform drivers if
->>>>>> +             * desired. Failure is non-critical and the allocations will
->>>>>> +             * fall back to global pools, so don't check return value
->>>>>> +             * either.
->>>>>
->>>>> I'm perplex...  In the changelog it is indicated that if a memory pool is
->>>>> not dedicated allocation happens from a bad location but here failure of
->>>>> getting a hold of a dedicated memory pool is not critical.
->>>>
->>>> So, the comment here is a generic one while the bad location part in the
->>>> commit description is actually from OMAP remoteproc usage perspective
->>>> (if you remember the dev_warn messages we added to the memory-region
->>>> parse logic in the driver).
->>>
->>> I can't tell... Are you referring to the comment lines after
->>> of_reserved_mem_device_init() in omap_rproc_probe()?
->>>
->>>>
->>>> Before the fixed-memory carveout support, all the DMA allocations in
->>>> remoteproc core were made from the rproc platform device's DMA pool (
->>>> which can be NULL). That is lost after the fixed-memory support, and
->>>> they were always allocated from global DMA pools if no dedicated pools
->>>> are used. After this patch, that continues to be case for drivers that
->>>> still do not use any dedicated pools, while it does restore the usage of
->>>> the platform device's DMA pool if a driver uses one (OMAP remoteproc
->>>> falls into the latter).
->>>>
->>>>>
->>>>>> +             */
->>>>>> +            of_reserved_mem_device_init_by_idx(dev, np,
->>>>>> +                                               rproc->vdevbuf_mem_id);
->>>>>
->>>>> I wonder if using an index setup by platform code is really the best way
->>>>> forward when we already have the carveout mechanic available to us.  I see the
->>>>> platform code adding a carveout that would have the same name as rproc->name.
->>>>> From there in rproc_add_virtio_dev() we could have something like:
->>>>>
->>>>>         mem = rproc_find_carveout_by_name(rproc, "%s", rproc->name);
->>>>>
->>>>>
->>>>> That would be very flexible, the location of the reserved memory withing the
->>>>> memory-region could change without fear of breaking things and no need to add to
->>>>> struct rproc.
->>>>>
->>>>> Let me know what you think.
->>>>
->>>> I think that can work as well but I feel it is lot more cumbersome. It
->>>> does require every platform driver to add code adding/registering that
->>>> carveout, and parse the reserved memory region etc. End of the day, we
->>>> rely on DMA API and we just have to assign the region to the newly
->>>> created device. The DMA pool assignment for devices using
->>>> reserved-memory nodes has simply been the of_reserved_mem_device_init()
->>>> function.
->>>
->>> Given all the things happening in the platform drivers adding and
->>> registering a single carveout doesn't seem that onerous to me.   I
->>> also expect setting rproc->vdevbuf_mem_id would involve some form of
->>> parsing.  Lastly if a couple of platforms end up doing the same thing
->>> might as well bring the code in the core, hence choosing a generic
->>> name such as rproc->name for the memory region.
->>>
->>> At the very least I would use of_reserved_mem_device_init_by_idx(dev,
->>> np, 0).  I agree it is not flexible but I'll take that over adding a
->>> new field to structure rproc.
->>
->> I wonder whether this would not introduce side effect for some legacy
->> drivers. Some rproc platforms can have a memory region defined but not
->> used for the virtio buffers which is allocated in the Linux default
->> memory pool.
-> 
-> I am actually trying to restore the behavior before the separate vdev
-> device creation. All allocations were coming from the rproc platform
-> device's DMA pool (if assigned, otherwise will fall back to global pool).
+so I've come across this recently where the microcode loader
+has a trivial helper get_builtin_firmware() which scans through
+the builtin firmware to find microcode in there. Looking at
+fw_get_builtin_firmware(), that one does practically the same so how
+about I export it and have the microcode loader use it instead of
+homegrowing the same thing?
 
-Yes deprecated dma_declare_coherent_memory was used to declare the rproc
-platform pool for vdev if i well remember).
+IOW, something like this below?
 
-> 
-> You have a valid point though, but are there any drivers relying on this
-> today? All the usage I saw were only using of_reserved_mem_device_init()
-> which is 0-indexed region by default. If this is really an issue, we can
-> use -1 as a means to conditionally follow this path.
+If you agree with the approach, I'll split it properly into patches,
+etc, of course.
 
-Up-streamed driver seems using nothing but address 0 for time being. 
-I don't know for non-up-streamed drivers...
-But if you have a look to the stm32 platform driver, we also define the
-memory regions for the code. 
-Even if we are also interesting by the possibility of having a default pool,
-it is no simple to implement for our driver using index 0.
-We will have to declare it first in DT. But we would also have to determine
-if the first memory pool declaration is a default pool or not vs the other
-memory region declarations.
+Thx.
 
-> 
->> If the aim is to minimize impact in the core part, the solution i proposed
->> in V1 using rproc_of_resm_mem_entry_init seems a good default candidate too.
->> The constraint would be that the platform driver has to pre-register
->> vdev<X>buffer reserved memory associated for a max number of vdev.
->> This max would limit the number of vdev that a remote firmware can request.
->> Also not very flexible more that the index 0, as managed at platform level.
->>
->> Having a default name or a default index seems to me a good compromise...
->> One advantage of the default name (in this case not rproc->name) is the 
->> ability to define the memory region in a resource table carveout, instead
->> of a static definition in DT.
-> 
-> Hmm, regarding the default name, vdev rings and vdev buffers are already
-> looking for specific names, right? So, what resource type are you
-> envisioning for this - RSC_CARVEOUT? Wouldn't that become a separate
-> allocation by itself?
+---
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 1edf788d301c..4a1918963564 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1295,7 +1295,7 @@ config MICROCODE
+ 	bool "CPU microcode loading support"
+ 	default y
+ 	depends on CPU_SUP_AMD || CPU_SUP_INTEL
+-	select FW_LOADER
++	depends on FW_LOADER=y
+ 	---help---
+ 	  If you say Y here, you will be able to update the microcode on
+ 	  Intel and AMD processors. The Intel support is for the IA32 family,
+@@ -1317,7 +1317,6 @@ config MICROCODE_INTEL
+ 	bool "Intel microcode loading support"
+ 	depends on MICROCODE
+ 	default MICROCODE
+-	select FW_LOADER
+ 	---help---
+ 	  This options enables microcode patch loading support for Intel
+ 	  processors.
+@@ -1329,7 +1328,6 @@ config MICROCODE_INTEL
+ config MICROCODE_AMD
+ 	bool "AMD microcode loading support"
+ 	depends on MICROCODE
+-	select FW_LOADER
+ 	---help---
+ 	  If you select this option, microcode patch loading support for AMD
+ 	  processors will be enabled.
+diff --git a/arch/x86/include/asm/microcode.h b/arch/x86/include/asm/microcode.h
+index 2b7cc5397f80..4f10089f30de 100644
+--- a/arch/x86/include/asm/microcode.h
++++ b/arch/x86/include/asm/microcode.h
+@@ -131,15 +131,12 @@ int __init microcode_init(void);
+ extern void __init load_ucode_bsp(void);
+ extern void load_ucode_ap(void);
+ void reload_early_microcode(void);
+-extern bool get_builtin_firmware(struct cpio_data *cd, const char *name);
+ extern bool initrd_gone;
+ #else
+ static inline int __init microcode_init(void)			{ return 0; };
+ static inline void __init load_ucode_bsp(void)			{ }
+ static inline void load_ucode_ap(void)				{ }
+ static inline void reload_early_microcode(void)			{ }
+-static inline bool
+-get_builtin_firmware(struct cpio_data *cd, const char *name)	{ return false; }
+ #endif
+ 
+ #endif /* _ASM_X86_MICROCODE_H */
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 3f6b137ef4e6..498781162364 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -457,17 +457,23 @@ apply_microcode_early_amd(u32 cpuid_1_eax, void *ucode, size_t size, bool save_p
+ 
+ static bool get_builtin_microcode(struct cpio_data *cp, unsigned int family)
+ {
+-#ifdef CONFIG_X86_64
+ 	char fw_name[36] = "amd-ucode/microcode_amd.bin";
++	struct firmware fw;
++
++	if (IS_ENABLED(CONFIG_X86_32))
++		return false;
+ 
+ 	if (family >= 0x15)
+ 		snprintf(fw_name, sizeof(fw_name),
+ 			 "amd-ucode/microcode_amd_fam%.2xh.bin", family);
+ 
+-	return get_builtin_firmware(cp, fw_name);
+-#else
++	if (fw_get_builtin_firmware(&fw, fw_name, NULL, 0)) {
++		cp->size = fw.size;
++		cp->data = (void *)fw.data;
++		return true;
++	}
++
+ 	return false;
+-#endif
+ }
+ 
+ static void __load_ucode_amd(unsigned int cpuid_1_eax, struct cpio_data *ret)
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index 7019d4b2df0c..d1c46d2aec12 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -140,25 +140,6 @@ static bool __init check_loader_disabled_bsp(void)
+ 	return *res;
+ }
+ 
+-extern struct builtin_fw __start_builtin_fw[];
+-extern struct builtin_fw __end_builtin_fw[];
+-
+-bool get_builtin_firmware(struct cpio_data *cd, const char *name)
+-{
+-#ifdef CONFIG_FW_LOADER
+-	struct builtin_fw *b_fw;
+-
+-	for (b_fw = __start_builtin_fw; b_fw != __end_builtin_fw; b_fw++) {
+-		if (!strcmp(name, b_fw->name)) {
+-			cd->size = b_fw->size;
+-			cd->data = b_fw->data;
+-			return true;
+-		}
+-	}
+-#endif
+-	return false;
+-}
+-
+ void __init load_ucode_bsp(void)
+ {
+ 	unsigned int cpuid_1_eax;
+diff --git a/arch/x86/kernel/cpu/microcode/intel.c b/arch/x86/kernel/cpu/microcode/intel.c
+index 6a99535d7f37..360a1ff142dc 100644
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -499,6 +499,7 @@ static void save_mc_for_early(u8 *mc, unsigned int size)
+ static bool load_builtin_intel_microcode(struct cpio_data *cp)
+ {
+ 	unsigned int eax = 1, ebx, ecx = 0, edx;
++	struct firmware fw;
+ 	char name[30];
+ 
+ 	if (IS_ENABLED(CONFIG_X86_32))
+@@ -509,7 +510,13 @@ static bool load_builtin_intel_microcode(struct cpio_data *cp)
+ 	sprintf(name, "intel-ucode/%02x-%02x-%02x",
+ 		      x86_family(eax), x86_model(eax), x86_stepping(eax));
+ 
+-	return get_builtin_firmware(cp, name);
++	if (fw_get_builtin_firmware(&fw, name, NULL, 0)) {
++		cp->size = fw.size;
++		cp->data = (void *)fw.data;
++		return true;
++	}
++
++	return false;
+ }
+ 
+ /*
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index 76f79913916d..d0ad1ff0ce6d 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -106,8 +106,8 @@ static void fw_copy_to_prealloc_buf(struct firmware *fw,
+ 	memcpy(buf, fw->data, fw->size);
+ }
+ 
+-static bool fw_get_builtin_firmware(struct firmware *fw, const char *name,
+-				    void *buf, size_t size)
++bool fw_get_builtin_firmware(struct firmware *fw, const char *name, void *buf,
++			     size_t size)
+ {
+ 	struct builtin_fw *b_fw;
+ 
+@@ -137,13 +137,6 @@ static bool fw_is_builtin_firmware(const struct firmware *fw)
+ 
+ #else /* Module case - no builtin firmware support */
+ 
+-static inline bool fw_get_builtin_firmware(struct firmware *fw,
+-					   const char *name, void *buf,
+-					   size_t size)
+-{
+-	return false;
+-}
+-
+ static inline bool fw_is_builtin_firmware(const struct firmware *fw)
+ {
+ 	return false;
+diff --git a/include/linux/firmware.h b/include/linux/firmware.h
+index 4bbd0afd91b7..6f6dc52a9e60 100644
+--- a/include/linux/firmware.h
++++ b/include/linux/firmware.h
+@@ -56,6 +56,8 @@ int request_firmware_into_buf(const struct firmware **firmware_p,
+ 	const char *name, struct device *device, void *buf, size_t size);
+ 
+ void release_firmware(const struct firmware *fw);
++bool fw_get_builtin_firmware(struct firmware *fw, const char *name,
++			     void *buf, size_t size);
+ #else
+ static inline int request_firmware(const struct firmware **fw,
+ 				   const char *name,
+@@ -103,6 +105,13 @@ static inline int request_firmware_into_buf(const struct firmware **firmware_p,
+ 	return -EINVAL;
+ }
+ 
++static inline bool fw_get_builtin_firmware(struct firmware *fw,
++					   const char *name, void *buf,
++					   size_t size)
++{
++	return false;
++}
++
+ #endif
+ 
+ int firmware_request_cache(struct device *device, const char *name);
 
-After checking, I think my point on the carveout is not valid. As we should no
-longer use dma_declare_coherent_memory which seems obsolete since the
-introduction of the devicetree. Thus, even if a carveout is defined, we will
-have to declare an associated memory region in DT.
+-- 
+Regards/Gruss,
+    Boris.
 
-Anyway as a name is used today for other memory regions, i would be in flavor
-of using the same method to declare a default memory pool in remote proc.
-relying on the rproc_of_resm_mem_entry_init function.
-
-If an index is preferred in core, platform drivers that declare more that
-one memory region will probably have to implement code based on a default
-memory region name to retrieve the associated index.
-
-Regards,
-Arnaud 
-
-
-> 
-> regards
-> Suman
-> 
->>>>>
->>>>>>      }
->>>>>>
->>>>>>      /* Allocate virtio device */
->>>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->>>>>> index ed127b2d35ca..07bd73a6d72a 100644
->>>>>> --- a/include/linux/remoteproc.h
->>>>>> +++ b/include/linux/remoteproc.h
->>>>>> @@ -481,6 +481,7 @@ struct rproc_dump_segment {
->>>>>>   * @auto_boot: flag to indicate if remote processor should be auto-started
->>>>>>   * @dump_segments: list of segments in the firmware
->>>>>>   * @nb_vdev: number of vdev currently handled by rproc
->>>>>> + * @vdevbuf_mem_id: default memory-region index for allocating vdev buffers
->>>>>>   */
->>>>>>  struct rproc {
->>>>>>      struct list_head node;
->>>>>> @@ -514,6 +515,7 @@ struct rproc {
->>>>>>      bool auto_boot;
->>>>>>      struct list_head dump_segments;
->>>>>>      int nb_vdev;
->>>>>> +    u8 vdevbuf_mem_id;
->>>>>>      u8 elf_class;
->>>>>>  };
->>>>>>
->>>>>> --
->>>>>> 2.23.0
->>>>>>
->>>>
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
