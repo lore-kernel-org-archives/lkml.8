@@ -2,121 +2,94 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF27CC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17ACEC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879092082D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3AAC2074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbgDHVJ5 (ORCPT
+        id S1729944AbgDHVLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:09:57 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:53967 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728797AbgDHVJ5 (ORCPT
+        Wed, 8 Apr 2020 17:11:33 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57264 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729703AbgDHVLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:09:57 -0400
-Received: from dread.disaster.area (pa49-180-125-11.pa.nsw.optusnet.com.au [49.180.125.11])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7E8CB7EBB0D;
-        Thu,  9 Apr 2020 07:09:51 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jMHxG-0004nC-66; Thu, 09 Apr 2020 07:09:50 +1000
-Date:   Thu, 9 Apr 2020 07:09:50 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     ira.weiny@intel.com, linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 7/8] fs/xfs: Change xfs_ioctl_setattr_dax_invalidate()
- to xfs_ioctl_dax_check()
-Message-ID: <20200408210950.GL24067@dread.disaster.area>
-References: <20200407182958.568475-1-ira.weiny@intel.com>
- <20200407182958.568475-8-ira.weiny@intel.com>
- <20200408022318.GJ24067@dread.disaster.area>
- <20200408095803.GB30172@quack2.suse.cz>
+        Wed, 8 Apr 2020 17:11:32 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 923C229746A
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     laurent.pinchart@ideasonboard.com,
+        Collabora Kernel ML <kernel@collabora.com>,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH 0/7] Convert mtk-dsi to drm_bridge API and get EDID for ps8640 bridge
+Date:   Wed,  8 Apr 2020 23:11:13 +0200
+Message-Id: <20200408211120.1407512-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408095803.GB30172@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=2h+yFbpuifLtD1c++IMymA==:117 a=2h+yFbpuifLtD1c++IMymA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=cl8xLZFz6L8A:10
-        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=yYyG1RkBxaf--jwLynEA:9
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 11:58:03AM +0200, Jan Kara wrote:
-> On Wed 08-04-20 12:23:18, Dave Chinner wrote:
-> > On Tue, Apr 07, 2020 at 11:29:57AM -0700, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > We only support changing FS_XFLAG_DAX on directories.  Files get their
-> > > flag from the parent directory on creation only.  So no data
-> > > invalidation needs to happen.
-> > 
-> > Which leads me to ask: how are users and/or admins supposed to
-> > remove the flag from regular files once it is set in the filesystem?
-> > 
-> > Only being able to override the flag via the "dax=never" mount
-> > option means that once the flag is set, nobody can ever remove it
-> > and they can only globally turn off dax if it gets set incorrectly.
-> > It also means a global interrupt because all apps on the filesystem
-> > need to be stopped so the filesystem can be unmounted and mounted
-> > again with dax=never. This is highly unfriendly to admins and users.
-> > 
-> > IOWs, we _must_ be able to clear this inode flag on regular inodes
-> > in some way. I don't care if it doesn't change the current in-memory
-> > state, but we must be able to clear the flags so that the next time
-> > the inodes are instantiated DAX is not enabled for those files...
-> 
-> Well, there's one way to clear the flag: delete the file. If you still care
-> about the data, you can copy the data first. It isn't very convenient, I
-> agree, and effectively means restarting whatever application that is using
-> the file.
+The PS8640 dsi-to-eDP bridge driver is using the panel bridge API,
+however, not all the components in the chain have been ported to the
+drm_bridge API. Actually, when a panel is attached the default panel's mode
+is used, but in some cases we can't get display up if mode getting from
+eDP control EDID is not chosen.
 
-Restarting the application is fine. Having to backup/restore or copy
-the entire data set just to turn off an inode flag? That's not a
-viable management strategy. We could be talking about terabytes of
-data here.
+This series address that problem, first implements the .get_edid()
+callback in the PS8640 driver (which is not used until the conversion is
+done) and then, converts the Mediatek DSI driver to use the drm_bridge
+API.
 
-I explained how we can safely remove the flag in the other branch of
-this thread...
+As far as I know, we're the only users of the mediatek dsi driver in
+mainline, so should be safe to switch to the new chain of drm_bridge API
+unconditionally.
 
-> But it seems like more understandable API than letting user clear
-> the on-disk flag but the inode will still use DAX until kernel decides to
-> evict the inode
+The patches has been tested on a Acer Chromebook R13 (Elm) running a
+Chrome OS userspace and checking that the valid EDID mode reported by
+the bridge is selected.
 
-Certainly doesn't seem that way to me. "stop app, clear flags, drop
-caches, restart app" is a pretty simple, easy thing to do for an
-admin.
+[1] https://lore.kernel.org/lkml/20200210063523.133333-1-hsinyi@chromium.org/
 
-Especially compared to process that is effectively "stop app, backup
-data set, delete data set, clear flags, restore data set, restart
-app"
 
-> - because that often means you need to restart the
-> application using the file anyway for the flag change to have any effect.
+Enric Balletbo i Serra (7):
+  drm/bridge: ps8640: Get the EDID from eDP control
+  drm/bridge_connector: Set default status connected for eDP connectors
+  drm/mediatek: mtk_dsi: Rename bridge to next_bridge
+  drm/mediatek: mtk_dsi: Convert to bridge driver
+  drm/mediatek: mtk_dsi: Use simple encoder
+  drm/mediatek: mtk_dsi: Use the drm_panel_bridge API
+  drm/mediatek: mtk_dsi: Create connector for bridges
 
-That's a trivial requirement compared to the downtime and resource
-cost of a data set backup/restore just to clear inode flags....
+ drivers/gpu/drm/bridge/parade-ps8640.c |  12 ++
+ drivers/gpu/drm/drm_bridge_connector.c |   1 +
+ drivers/gpu/drm/mediatek/mtk_dsi.c     | 281 ++++++++-----------------
+ 3 files changed, 102 insertions(+), 192 deletions(-)
 
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+2.25.1
+
