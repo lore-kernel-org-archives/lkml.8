@@ -2,207 +2,179 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD16BC2BA1B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACB8C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF3120768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6055720768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:02:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rutlUbue"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WejJV9De"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgDHJCw (ORCPT
+        id S1727756AbgDHJC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:02:52 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:26804 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbgDHJCv (ORCPT
+        Wed, 8 Apr 2020 05:02:58 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39486 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbgDHJC5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:02:51 -0400
+        Wed, 8 Apr 2020 05:02:57 -0400
+Received: by mail-lf1-f66.google.com with SMTP id m2so4553281lfo.6
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 02:02:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1586336572; x=1617872572;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=w49rWDMGI638ZJLO3IGaQNtI2SFDquSkQvdPry+bnDA=;
-  b=rutlUbueNq9bB6g/S3QFBGVEIPSdG+ELzv5WR5ABdBGCI1+SeqH75Y+h
-   Q0spJl5Ez/MJYJnFRQoYJ26BN4HKtm7AZLs1wnLhJjM33rY7klhO2ATaz
-   b8wi9SMsl0tawZjfsP+34WUU8RnikW8Ij66xUNFE85wrJMVlgXQifOuSE
-   4=;
-IronPort-SDR: zEsmko6yPQbfTAE5JbvqbjOzHl5ixzszwuk1G1FP/KgwOm8B/8iIESKuKD4Y9ZWNd1nJFB/Ixd
- 1HHkY95m9g0w==
-X-IronPort-AV: E=Sophos;i="5.72,357,1580774400"; 
-   d="scan'208";a="37342066"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-397e131e.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 08 Apr 2020 09:02:50 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-397e131e.us-west-2.amazon.com (Postfix) with ESMTPS id 844FCA071F;
-        Wed,  8 Apr 2020 09:02:48 +0000 (UTC)
-Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 8 Apr 2020 09:02:48 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 8 Apr 2020 09:02:47 +0000
-Received: from localhost (10.85.0.235) by mail-relay.amazon.com
- (10.43.161.249) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 8 Apr 2020 09:02:47 +0000
-From:   Balbir Singh <sblbir@amazon.com>
-To:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
-CC:     <jpoimboe@redhat.com>, <tony.luck@intel.com>,
-        <keescook@chromium.org>, <benh@kernel.crashing.org>,
-        <x86@kernel.org>, <dave.hansen@intel.com>,
-        "Balbir Singh" <sblbir@amazon.com>
-Subject: [PATCH v3 2/5] arch/x86: Refactor tlbflush and l1d flush
-Date:   Wed, 8 Apr 2020 19:02:26 +1000
-Message-ID: <20200408090229.16467-3-sblbir@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200408090229.16467-1-sblbir@amazon.com>
-References: <20200408090229.16467-1-sblbir@amazon.com>
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=d6iX3xifVyFAZZxzZ+ZUkySaGBi3Nfi1aejj2DoGEWg=;
+        b=WejJV9De5yYmpbQSHuE9A8+FEboLDetyBsC280HOBYFm0tXAwFiV6NO8Bbsaml1Mja
+         OJHvW6bkAVOtPXZaljfwk9BmXRaj+hIY1dFnq9R2ODlz3UkdkaPXxm3jKZNZxx/wF6Iz
+         mxwXAZmIftqS7urAPwoiVZ3nPcT6gVpojnq3d9xGX3fdcCOmzC50Kgsg89CCQmnQWm69
+         pKebctLISCKWVMfQickOO2o4llpAcIKsIniwxa3zrNpaWw3RrXHo+jw6OXKCKSj7+IcI
+         HnZEBFf6bCLh5+r0DF6yOBr396gndna1dQBSctYp15nf8EewSHGvR2vjGL2+r5c+qFqq
+         lliQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=d6iX3xifVyFAZZxzZ+ZUkySaGBi3Nfi1aejj2DoGEWg=;
+        b=JbXfsJyNzs4qbEcqQKEhGsk1d+o3JCblGkO8Rz+U/+1mu/b/83B5yHLkNbRY03JSQG
+         diPQQ90Mc8rwmJIdm+PRwNzJ2qjMX0xsisa2insSOMKym6GfsFbqq9HeJfXs0cDPhoNC
+         3V0cijxoH203KNu959J47J1yYJcjWtIDPEejyRZZkxpyFLANtrH70nWjlXgpDkj9Fx31
+         4osjLnUmSJDfcE15ojehD+goOFBJ22vJkR5AyG56oUrGOjg909+YvF9JSoTA2bW4kxCo
+         OgLuFHYHLMbsB/IIYQIKH4FPiGg/gi/Jpm7HQIs+Hy2mdEKKOHcn/V7waKRMORGPoFzq
+         yekw==
+X-Gm-Message-State: AGi0Pub9dlPTRbHEqYqK0GPBDcHEgrVC3bGZwC1sPAZ6fAxVzktJ2FBS
+        UbqCFlRzW7OkTUT6rDwzD3cBqTjoCsjNdoYDyKZagw==
+X-Google-Smtp-Source: APiQypKtuXbC/0SaIYR34BcjSWaVVCQ4GdK68V++lxooJonwaDdpORlnb2LYnLa3elwbSjB5oasLBsbhUqy+C2Lae8Y=
+X-Received: by 2002:a19:5e46:: with SMTP id z6mr3709533lfi.74.1586336575176;
+ Wed, 08 Apr 2020 02:02:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200407154800.629167305@linuxfoundation.org>
+In-Reply-To: <20200407154800.629167305@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 8 Apr 2020 14:32:43 +0530
+Message-ID: <CA+G9fYtuotK1_BvxXED+em-dnZqkCvACpR86q59DqpBBx9rPfQ@mail.gmail.com>
+Subject: Re: [PATCH 5.5 00/48] 5.5.16-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor the existing assembly bits into smaller helper functions
-and also abstract L1D_FLUSH into a helper function. Use these
-functions in kvm for L1D flushing.
+On Tue, 7 Apr 2020 at 22:09, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.5.16 release.
+> There are 48 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 09 Apr 2020 15:46:32 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.5.16-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.5.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Signed-off-by: Balbir Singh <sblbir@amazon.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/include/asm/cacheflush.h |  3 ++
- arch/x86/kernel/l1d_flush.c       | 49 +++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/vmx.c            | 31 ++++---------------
- 3 files changed, 57 insertions(+), 26 deletions(-)
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-diff --git a/arch/x86/include/asm/cacheflush.h b/arch/x86/include/asm/cacheflush.h
-index 6419a4cef0e8..66a46db7aadd 100644
---- a/arch/x86/include/asm/cacheflush.h
-+++ b/arch/x86/include/asm/cacheflush.h
-@@ -10,5 +10,8 @@
- void clflush_cache_range(void *addr, unsigned int size);
- void *alloc_l1d_flush_pages(void);
- void cleanup_l1d_flush_pages(void *l1d_flush_pages);
-+void populate_tlb_with_flush_pages(void *l1d_flush_pages);
-+void flush_l1d_cache_sw(void *l1d_flush_pages);
-+int flush_l1d_cache_hw(void);
- 
- #endif /* _ASM_X86_CACHEFLUSH_H */
-diff --git a/arch/x86/kernel/l1d_flush.c b/arch/x86/kernel/l1d_flush.c
-index 05f375c33423..0842369bac26 100644
---- a/arch/x86/kernel/l1d_flush.c
-+++ b/arch/x86/kernel/l1d_flush.c
-@@ -34,3 +34,52 @@ void cleanup_l1d_flush_pages(void *l1d_flush_pages)
- 	free_pages((unsigned long)l1d_flush_pages, L1D_CACHE_ORDER);
- }
- EXPORT_SYMBOL_GPL(cleanup_l1d_flush_pages);
-+
-+void populate_tlb_with_flush_pages(void *l1d_flush_pages)
-+{
-+	int size = PAGE_SIZE << L1D_CACHE_ORDER;
-+
-+	asm volatile(
-+		/* First ensure the pages are in the TLB */
-+		"xorl	%%eax, %%eax\n"
-+		".Lpopulate_tlb:\n\t"
-+		"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
-+		"addl	$4096, %%eax\n\t"
-+		"cmpl	%%eax, %[size]\n\t"
-+		"jne	.Lpopulate_tlb\n\t"
-+		"xorl	%%eax, %%eax\n\t"
-+		"cpuid\n\t"
-+		:: [flush_pages] "r" (l1d_flush_pages),
-+		    [size] "r" (size)
-+		: "eax", "ebx", "ecx", "edx");
-+}
-+EXPORT_SYMBOL_GPL(populate_tlb_with_flush_pages);
-+
-+int flush_l1d_cache_hw(void)
-+{
-+	if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
-+		wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
-+		return 0;
-+	}
-+	return -ENOTSUPP;
-+}
-+EXPORT_SYMBOL_GPL(flush_l1d_cache_hw);
-+
-+void flush_l1d_cache_sw(void *l1d_flush_pages)
-+{
-+	int size = PAGE_SIZE << L1D_CACHE_ORDER;
-+
-+	asm volatile(
-+			/* Fill the cache */
-+			"xorl	%%eax, %%eax\n"
-+			".Lfill_cache:\n"
-+			"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
-+			"addl	$64, %%eax\n\t"
-+			"cmpl	%%eax, %[size]\n\t"
-+			"jne	.Lfill_cache\n\t"
-+			"lfence\n"
-+			:: [flush_pages] "r" (l1d_flush_pages),
-+			[size] "r" (size)
-+			: "eax", "ecx");
-+}
-+EXPORT_SYMBOL_GPL(flush_l1d_cache_sw);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index f40c30f9b4d8..2bb91bfb8f53 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5956,8 +5956,6 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu,
-  */
- static void vmx_l1d_flush(struct kvm_vcpu *vcpu)
- {
--	int size = PAGE_SIZE << L1D_CACHE_ORDER;
--
- 	/*
- 	 * This code is only executed when the the flush mode is 'cond' or
- 	 * 'always'
-@@ -5986,32 +5984,13 @@ static void vmx_l1d_flush(struct kvm_vcpu *vcpu)
- 
- 	vcpu->stat.l1d_flush++;
- 
--	if (static_cpu_has(X86_FEATURE_FLUSH_L1D)) {
--		wrmsrl(MSR_IA32_FLUSH_CMD, L1D_FLUSH);
-+	if (flush_l1d_cache_hw() == 0)
- 		return;
--	}
- 
--	asm volatile(
--		/* First ensure the pages are in the TLB */
--		"xorl	%%eax, %%eax\n"
--		".Lpopulate_tlb:\n\t"
--		"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
--		"addl	$4096, %%eax\n\t"
--		"cmpl	%%eax, %[size]\n\t"
--		"jne	.Lpopulate_tlb\n\t"
--		"xorl	%%eax, %%eax\n\t"
--		"cpuid\n\t"
--		/* Now fill the cache */
--		"xorl	%%eax, %%eax\n"
--		".Lfill_cache:\n"
--		"movzbl	(%[flush_pages], %%" _ASM_AX "), %%ecx\n\t"
--		"addl	$64, %%eax\n\t"
--		"cmpl	%%eax, %[size]\n\t"
--		"jne	.Lfill_cache\n\t"
--		"lfence\n"
--		:: [flush_pages] "r" (vmx_l1d_flush_pages),
--		    [size] "r" (size)
--		: "eax", "ebx", "ecx", "edx");
-+	preempt_disable();
-+	populate_tlb_with_flush_pages(vmx_l1d_flush_pages);
-+	flush_l1d_cache_sw(vmx_l1d_flush_pages);
-+	preempt_enable();
- }
- 
- static void update_cr8_intercept(struct kvm_vcpu *vcpu, int tpr, int irr)
--- 
-2.17.1
+Summary
+------------------------------------------------------------------------
 
+kernel: 5.5.16-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.5.y
+git commit: f921e13beada3f84cf4323f3ba7f6bdf70bedc8a
+git describe: v5.5.15-49-gf921e13beada
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
+ld/v5.5.15-49-gf921e13beada
+
+No regressions (compared to build v5.5.15)
+
+No fixes (compared to build v5.5.15)
+
+Ran 22716 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* perf
+* v4l2-compliance
+* ltp-commands-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-open-posix-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* spectre-meltdown-checker-test
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
