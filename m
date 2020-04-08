@@ -2,168 +2,114 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DBDC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C40BC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1848206A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED24206A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 01:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QBZ2JqO1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eShkpyC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgDHBUB (ORCPT
+        id S1726552AbgDHBUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 21:20:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56623 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726417AbgDHBUB (ORCPT
+        Tue, 7 Apr 2020 21:20:31 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46667 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgDHBUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 21:20:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586308799;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yynh6enpaQOt1XUlAWveegHSiUBm2+b0w4JqLXxNInA=;
-        b=QBZ2JqO1rE73UdK5+lZKBShYWCU+ms8I6Vs5tt+hQh13Otgm420kQ+gWRCEwyo4rLMUwC1
-        eM4KgDHr24RlPo+Ek2kWeGOHVAfyhvfaarlj72A71m30eYcvcsO42IEDLm12owzBnsd17l
-        iprqPDNepAhAiJaky4FxeXBtWf+H9Do=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-fOaWOFhZOByPhUr63tCrwA-1; Tue, 07 Apr 2020 21:19:57 -0400
-X-MC-Unique: fOaWOFhZOByPhUr63tCrwA-1
-Received: by mail-wr1-f69.google.com with SMTP id h95so3128081wrh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:19:57 -0700 (PDT)
+        Tue, 7 Apr 2020 21:20:31 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 111so3841768oth.13
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 18:20:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w74IQpWH+YeWMBE49oRHFdAV4Qtub4fERsktwyE3yMU=;
+        b=eShkpyC2j7BgC9dKflFtWT3BanRLRI4FR5r+l2HfDAnmrCnH5wdmKlUqR5xw0nn1vt
+         zJeiNrFQtsSsD4YbvTaBJ9FHsXfdLuJ3Vgy5twrY+84lgek6k1UOSIwKi16yf2Fu5qon
+         P4dELGkn4E2CENN87UdXHtkLnxTl5sEdAzKgaexWGfeXcggMGF1qeH1cF6en+AaK0XuK
+         6nI5sPWSOE9Luyu+0SoK4HXVjxOfon5XfmdN/UFHUZsXS3m4T3B404Ocsp7gRykWeook
+         DqOxk1d9SRrrhDf1BlitGdiPVVDqOtSQ3nkl0eU+6JU9JVjm83mE6nDhHI1khrXPRyyY
+         vhqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=Yynh6enpaQOt1XUlAWveegHSiUBm2+b0w4JqLXxNInA=;
-        b=a1eIzfEjwfUKqMDl74QpR9pyVqyxwPrRtkAItfu6BdtGW321xR5uQ2kM3UEjSjYpJl
-         9RxWbmC79FjWEy+yBIa4u6xqSi5B0Ssi1s9DANT7glllJfMPrvUUnOYyTz8Ifb3LXI7/
-         4HXKowj1BulLTPmKNS7RtMhwG4XPBRb5LAVwFB3h+XK6RedOZcg1rX3eY3AbFC2gWuBh
-         Z5V6/QsPBPOg6WFpiDK2I9vjZ2tdvaQF2gXveTCD565pPv06m+uJhRngnH5+qDTcVkZi
-         /yRPbl9dVzYgyPfHyOIoVxTBhJxLzpkYNg/URhOU9+mZk4pHlrGpY3X+HFb/xhGKo/BG
-         FZfw==
-X-Gm-Message-State: AGi0PubwvV61UUvM/91hy/5bjlWkJCdwgbVfFTKjTb5UGjb0PQg55vFu
-        ueAXPBewxc8aQmP7/svt6YhsONmVOmYuLZ+eKNm7GQq1khRbUmibUCxZVlu140Fy3pjZw6acbB7
-        acaSr4PEUD9B8VH7n3Z03aY6y
-X-Received: by 2002:a1c:ac8a:: with SMTP id v132mr1914449wme.62.1586308795918;
-        Tue, 07 Apr 2020 18:19:55 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLaQ8jm+WBVI/QXXC3y/wecnYYtN4bnsLufT0M1q3rnm9XPOgt4HbcYJI5WGFbrJD6qA1XOcQ==
-X-Received: by 2002:a1c:ac8a:: with SMTP id v132mr1914429wme.62.1586308795574;
-        Tue, 07 Apr 2020 18:19:55 -0700 (PDT)
-Received: from turbo.teknoraver.net (net-93-148-149-154.cust.vodafonedsl.it. [93.148.149.154])
-        by smtp.gmail.com with ESMTPSA id u7sm5080682wmg.41.2020.04.07.18.19.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 18:19:55 -0700 (PDT)
-Date:   Wed, 8 Apr 2020 03:19:52 +0200
-From:   Matteo Croce <mcroce@redhat.com>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     davem@davemloft.net, andrew@lunn.ch, josua@solid-run.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v3 0/2] net: mvmdio: avoid error message for optional
- IRQ
-Message-ID: <20200408031952.1d8dd01b@turbo.teknoraver.net>
-In-Reply-To: <20200316074907.21879-1-chris.packham@alliedtelesis.co.nz>
-References: <20200316074907.21879-1-chris.packham@alliedtelesis.co.nz>
-Organization: Red Hat
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w74IQpWH+YeWMBE49oRHFdAV4Qtub4fERsktwyE3yMU=;
+        b=duz6PIJDvBAooAzPAFhAELdxx8amkZxBTSsKS3wwME4qIelEp5R8ODZGiUmKPytmZr
+         gIf5DiuJ/G6yoNsgFTrYuwkH90LrYow3I9btkabMo61VWjc4VC0MR/4nQS13yvOF6ssE
+         SbtqPlSSynH7CA6ZqbF7vGOq9CJUe/rpvoVaJU03cnaynR8AvwAFQJBpRLoNWUDS2zUa
+         R2SVYjIX/ubJvPoQIpTn4vQoXnxUpY2897SbMF/YOYIr0Pnt+5B0ux7RGPAndRFz+fe9
+         A86dAFMBbziOZuTj9NvaKjPKGZCAr97VZ1YKi1ESAmb57hkTOiSyMvwZyg8VL2kVrxAR
+         XGWw==
+X-Gm-Message-State: AGi0PuZU6L3JrSRhCN4E6jXZoDwCOeufHflARAHsnokV/uw9LmxymNuI
+        /rgrmHk3du4+DjqZ3WyXobKcHdEE
+X-Google-Smtp-Source: APiQypLG2wKpFDLR8uMgZ5n9JRt0QDVqxhTip1KKep9inHP7v17jRMPb6Wb+tLc+sKxMOXkklAAGpw==
+X-Received: by 2002:a4a:a226:: with SMTP id m38mr4189121ool.94.1586308830034;
+        Tue, 07 Apr 2020 18:20:30 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::3])
+        by smtp.gmail.com with ESMTPSA id g72sm5927092otg.79.2020.04.07.18.20.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Apr 2020 18:20:29 -0700 (PDT)
+Date:   Tue, 7 Apr 2020 18:20:28 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Subject: Re: [PATCH] ARC: [plat-hsdk]: fix USB regression
+Message-ID: <20200408012028.GA40613@ubuntu-s3-xlarge-x86>
+References: <20200407161933.10874-1-Eugeniy.Paltsev@synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200407161933.10874-1-Eugeniy.Paltsev@synopsys.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Mar 2020 20:49:05 +1300
-Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
-
-> I've gone ahead an sent a revert. This is the same as the original v1
-> except I've added Andrew's review to the commit message.
+On Tue, Apr 07, 2020 at 07:19:33PM +0300, Eugeniy Paltsev wrote:
+> As of today the CONFIG_USB isn't explicitly present in HSDK defconfig
+> as it is implicitly forcibly enabled by UDL driver which selects CONFIG_USB
+> in its kconfig.
+> The commit 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+> reverse the dependencies between UDL and USB so UDL now depends on
+> CONFIG_USB and not selects it. This introduces regression for ARC HSDK
+> board as HSDK defconfig wasn't adjusted and now it misses USB support
+> due to lack of CONFIG_USB enabled.
 > 
-> Chris Packham (2):
->   Revert "net: mvmdio: avoid error message for optional IRQ"
->   net: mvmdio: avoid error message for optional IRQ
+> Fix that.
 > 
->  drivers/net/ethernet/marvell/mvmdio.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Fixes: 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> ---
+>  arch/arc/configs/hsdk_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
+> diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
+> index 0974226fab55..f79c15892704 100644
+> --- a/arch/arc/configs/hsdk_defconfig
+> +++ b/arch/arc/configs/hsdk_defconfig
+> @@ -65,6 +65,7 @@ CONFIG_DRM_UDL=y
+>  CONFIG_DRM_ETNAVIV=y
+>  CONFIG_FB=y
+>  CONFIG_FRAMEBUFFER_CONSOLE=y
+> +CONFIG_USB
 
-Hi all,
+Shouldn't this be CONFIG_USB=y?
 
-I have a Macchiatobin board and the 10G port stopped working in net-next.
-I suspect that these two patches could be involved.
-The phy is correctly detected now (I mean no errors and the device is
-registered) but no traffic can be sent or received:
+As it stands, this patch does nothing.
 
-root@macchiatobin:~# dmesg |grep -i -e phy -e mvpp2
-[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd081]
-[    0.000000] arch_timer: cp15 timer(s) running at 25.00MHz (phys).
-[    0.062798] libphy: Fixed MDIO Bus: probed
-[    1.132552] armada8k-pcie f2600000.pcie: Phy link never came up
-[    2.553464] libphy: orion_mdio_bus: probed
-[    2.558045] libphy: orion_mdio_bus: probed
-[    2.564037] mvpp2 f2000000.ethernet: using 8 per-cpu buffers
-[    2.588754] mvpp2 f2000000.ethernet eth0: Using random mac address 1e:a6:ce:39:8d:22
-[    2.599980] mvpp2 f4000000.ethernet: using 8 per-cpu buffers
-[    2.623293] mvpp2 f4000000.ethernet eth1: Using random mac address aa:ad:b5:91:8c:1e
-[    2.626535] mvpp2 f4000000.ethernet eth2: Using random mac address 6e:39:fb:74:09:6e
-[    2.629600] mvpp2 f4000000.ethernet eth3: Using random mac address 16:ec:bf:9e:11:0f
-[    2.952063] mvpp2 f4000000.ethernet eth2: PHY [f212a200.mdio-mii:00] driver [Marvell 88E1510] (irq=POLL)
-[    2.953251] mvpp2 f4000000.ethernet eth2: configuring for phy/sgmii link mode
-[    7.122899] mvpp2 f4000000.ethernet eth2: Link is Up - 1Gbps/Full - flow control rx/tx
-[   25.727756] mvpp2 f2000000.ethernet eth0: PHY [f212a600.mdio-mii:00] driver [mv88x3310] (irq=POLL)
-[   25.746711] mvpp2 f2000000.ethernet eth0: configuring for phy/10gbase-r link mode
-[   27.842712] mvpp2 f2000000.ethernet eth0: Link is Up - 10Gbps/Full - flow control off
-
-
-The only way to have it working is to unplug the power, boot an old
-kernel, e.g. 5.3.0:
-
-root@macchiatobin:~# dmesg |grep -i -e phy -e mvpp2
-[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd081]
-[    0.000000] arch_timer: cp15 timer(s) running at 25.00MHz (phys).
-[    0.083647] libphy: Fixed MDIO Bus: probed
-[    0.152788] armada8k-pcie f2600000.pcie: Failed to initialize PHY(s) (-22)
-[    1.429643] libphy: orion_mdio_bus: probed
-[    1.439109] libphy: orion_mdio_bus: probed
-[    1.450989] mvpp2 f2000000.ethernet eth0: Using random mac address 5a:09:5f:97:aa:cc
-[    1.476692] mvpp2 f4000000.ethernet eth1: Using random mac address f2:e2:c1:77:fa:23
-[    1.479688] mvpp2 f4000000.ethernet eth2: Using random mac address b2:33:c0:2f:da:ba
-[    1.482296] mvpp2 f4000000.ethernet eth3: Using random mac address 6a:38:79:2e:96:8c
-[    1.814163] mvpp2 f4000000.ethernet eth2: PHY [f212a200.mdio-mii:00] driver [Marvell 88E1510]
-[    1.814170] mvpp2 f4000000.ethernet eth2: phy: setting supported 00,00000000,000066ef advertising 00,00000000,000066ef
-[    1.826025] mvpp2 f4000000.ethernet eth2: configuring for phy/sgmii link mode
-[    1.826030] mvpp2 f4000000.ethernet eth2: phylink_mac_config: mode=phy/sgmii/Unknown/Unknown adv=00,00000000,000066ef pause=10 link=0 an=1
-[    1.827683] mvpp2 f4000000.ethernet eth2: phy link down sgmii/1Gbps/Half
-[    6.002304] mvpp2 f4000000.ethernet eth2: phy link up sgmii/1Gbps/Full
-[    6.002313] mvpp2 f4000000.ethernet eth2: phylink_mac_config: mode=phy/sgmii/1Gbps/Full adv=00,00000000,00000000 pause=0f link=1 an=0
-[    6.002332] mvpp2 f4000000.ethernet eth2: Link is Up - 1Gbps/Full - flow control rx/tx
-[   33.186689] mvpp2 f2000000.ethernet eth0: PHY [f212a600.mdio-mii:00] driver [mv88x3310]
-[   33.194739] mvpp2 f2000000.ethernet eth0: phy: setting supported 00,00008000,0000706f advertising 00,00008000,0000706f
-[   33.218029] mvpp2 f2000000.ethernet eth0: configuring for phy/10gbase-kr link mode
-[   33.225637] mvpp2 f2000000.ethernet eth0: phylink_mac_config: mode=phy/10gbase-kr/Unknown/Unknown adv=00,00008000,0000706f pause=10 link=0 an=1
-[   33.241341] mvpp2 f2000000.ethernet eth0: phy link down 10gbase-kr/Unknown/Unknown
-[   35.362160] mvpp2 f2000000.ethernet eth0: phy link up 10gbase-kr/10Gbps/Full
-[   35.369243] mvpp2 f2000000.ethernet eth0: phylink_mac_config: mode=phy/10gbase-kr/10Gbps/Full adv=00,00000000,00000000 pause=00 link=1 an=0
-[   35.381836] mvpp2 f2000000.ethernet eth0: Link is Up - 10Gbps/Full - flow control off
-
-
-And then do a soft reboot to net-next which works.
-By rebooting the board multiple times it works, until I unplug the power.
-
-Any hint?
-Bye,
-
--- 
-Matteo Croce
-per aspera ad upstream
-
+Cheers,
+Nathan
