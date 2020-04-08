@@ -2,296 +2,152 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC337C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E5AC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90D820747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703D720787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 11:39:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="OLVRyIHI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgDHLha convert rfc822-to-8bit (ORCPT
+        id S1728564AbgDHLjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 07:37:30 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49105 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727934AbgDHLh3 (ORCPT
+        Wed, 8 Apr 2020 07:39:44 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17845 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728495AbgDHLjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 07:37:29 -0400
-X-Originating-IP: 93.29.109.196
-Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 40B3F40006;
-        Wed,  8 Apr 2020 11:37:25 +0000 (UTC)
-Date:   Wed, 8 Apr 2020 13:37:25 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Wed, 8 Apr 2020 07:39:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1586345849; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=rOB4eIqHBzvfjx1r/DJQtcmeMIlpQOlMIV88Vb8er5WNnj5myzwMeVcXVVOovP3XndRAn4agq72yUOjsuDn+3urEXlBCvweRu/LEssLGGchCigJ49m6Tmw+rcJGpCb8yDSry3/3HR8sMi1AmchkNH7uxZ1aCKhcdl3n6mg6vouk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1586345849; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=xfRiY7sN5wTn7Esit9RnU+5Uk6h1t0zgJThoq+Q/xtE=; 
+        b=bw9Gmk7NZUcOc4oX5bPsh37NoQWg0Fq7CNWbeQQWNm8KyC2xHoKVZWVDPDrXqfGgYymzYVawf63vhf8m2aoxphRhquyzYnglQ1Dc7uCTo3MwudZPh3V5I41TmOTyEJqQDIbsQCcpwwzyAm+jYECjvR7Gqr5M5wsDUHM072uqCo4=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1586345849;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=xfRiY7sN5wTn7Esit9RnU+5Uk6h1t0zgJThoq+Q/xtE=;
+        b=OLVRyIHIWLpCVYdms33TIvNnPkbg7Qq8jKfrCeRAVHEalhQggh5YlnE+oY7EwTHe
+        Ey1HCvqH8d8tBZ22SaYFOZIVtnjFFQGYu1sD4fgu9sY5S50EIvFdlEl9UZUFgSW7d4a
+        BYb6WdD+tQ7Lw9fjJ/5GiU46vvHFPQ6GT4I/lR9Y=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 158634584664433.36732062087788; Wed, 8 Apr 2020 19:37:26 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Robert Richter <rric@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] media: cedrus: Implement runtime PM
-Message-ID: <20200408113725.GA1439687@collins>
-References: <20200408010232.48432-1-samuel@sholland.org>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Zhou Yanjie <zhouyanjie@zoho.com>,
+        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>, YunQiang Su <syq@debian.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Peter Xu <peterx@redhat.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, oprofile-list@lists.sf.net
+Message-ID: <20200408113505.2528103-2-jiaxun.yang@flygoat.com>
+Subject: [PATCH 01/12] MIPS: setup: Drop prefill_possible_map
+Date:   Wed,  8 Apr 2020 19:34:11 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
+References: <20200408113505.2528103-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200408010232.48432-1-samuel@sholland.org>
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+All the plat_smp_setup are setting up possible cpus in their
+platform code. So prefill_possible_map is actually overwriting
+platform's setup, which seems unreasonable.
 
-On Tue 07 Apr 20, 20:02, Samuel Holland wrote:
-> This allows the VE clocks and PLL_VE to be disabled most of the time.
-> 
-> Since the device is stateless, each frame gets a separate runtime PM
-> reference. Enable autosuspend so the PM callbacks are not run before and
-> after every frame.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ arch/mips/kernel/setup.c | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
-Looks good, thanks for the contribution :)
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 10bef8f78e7c..8a418783a6bb 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -761,25 +761,6 @@ static void __init resource_init(void)
+ =09}
+ }
+=20
+-#ifdef CONFIG_SMP
+-static void __init prefill_possible_map(void)
+-{
+-=09int i, possible =3D num_possible_cpus();
+-
+-=09if (possible > nr_cpu_ids)
+-=09=09possible =3D nr_cpu_ids;
+-
+-=09for (i =3D 0; i < possible; i++)
+-=09=09set_cpu_possible(i, true);
+-=09for (; i < NR_CPUS; i++)
+-=09=09set_cpu_possible(i, false);
+-
+-=09nr_cpu_ids =3D possible;
+-}
+-#else
+-static inline void prefill_possible_map(void) {}
+-#endif
+-
+ void __init setup_arch(char **cmdline_p)
+ {
+ =09cpu_probe();
+@@ -804,7 +785,6 @@ void __init setup_arch(char **cmdline_p)
+=20
+ =09resource_init();
+ =09plat_smp_setup();
+-=09prefill_possible_map();
+=20
+ =09cpu_cache_init();
+ =09paging_init();
+--=20
+2.26.0.rc2
 
-Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-Cheers,
-
-Paul
-
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
-> 
-> I tested this with v4l2-request-test. I don't have the setup to do
-> anything more complicated at the moment.
-> 
-> ---
->  drivers/staging/media/sunxi/cedrus/cedrus.c   |   7 ++
->  .../staging/media/sunxi/cedrus/cedrus_hw.c    | 115 ++++++++++++------
->  .../staging/media/sunxi/cedrus/cedrus_hw.h    |   3 +
->  3 files changed, 88 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> index 3fad5edccd17..9aa1fc8a6c26 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-> @@ -16,6 +16,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/pm.h>
->  
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-ioctl.h>
-> @@ -474,6 +475,11 @@ static int cedrus_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct dev_pm_ops cedrus_dev_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(cedrus_hw_suspend,
-> +			   cedrus_hw_resume, NULL)
-> +};
-> +
->  static const struct cedrus_variant sun4i_a10_cedrus_variant = {
->  	.mod_rate	= 320000000,
->  };
-> @@ -559,6 +565,7 @@ static struct platform_driver cedrus_driver = {
->  	.driver		= {
->  		.name		= CEDRUS_NAME,
->  		.of_match_table	= of_match_ptr(cedrus_dt_match),
-> +		.pm		= &cedrus_dev_pm_ops,
->  	},
->  };
->  module_platform_driver(cedrus_driver);
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> index daf5f244f93b..b84814d5afe4 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> @@ -19,6 +19,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/interrupt.h>
->  #include <linux/clk.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/regmap.h>
->  #include <linux/reset.h>
->  #include <linux/soc/sunxi/sunxi_sram.h>
-> @@ -63,6 +64,8 @@ int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec codec)
->  	if (ctx->src_fmt.width > 2048)
->  		reg |= VE_MODE_PIC_WIDTH_MORE_2048;
->  
-> +	pm_runtime_get_sync(ctx->dev->dev);
-> +
->  	cedrus_write(ctx->dev, VE_MODE, reg);
->  
->  	return 0;
-> @@ -71,6 +74,9 @@ int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec codec)
->  void cedrus_engine_disable(struct cedrus_dev *dev)
->  {
->  	cedrus_write(dev, VE_MODE, VE_MODE_DISABLED);
-> +
-> +	pm_runtime_mark_last_busy(dev->dev);
-> +	pm_runtime_put_autosuspend(dev->dev);
->  }
->  
->  void cedrus_dst_format_set(struct cedrus_dev *dev,
-> @@ -134,12 +140,72 @@ static irqreturn_t cedrus_irq(int irq, void *data)
->  	else
->  		state = VB2_BUF_STATE_DONE;
->  
-> +	cedrus_engine_disable(dev);
-> +
->  	v4l2_m2m_buf_done_and_job_finish(ctx->dev->m2m_dev, ctx->fh.m2m_ctx,
->  					 state);
->  
->  	return IRQ_HANDLED;
->  }
->  
-> +int cedrus_hw_resume(struct device *d)
-> +{
-> +	struct cedrus_dev *dev = dev_get_drvdata(d);
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(dev->ahb_clk);
-> +	if (ret) {
-> +		dev_err(dev->dev, "Failed to enable AHB clock\n");
-> +
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(dev->mod_clk);
-> +	if (ret) {
-> +		dev_err(dev->dev, "Failed to enable MOD clock\n");
-> +
-> +		goto err_ahb_clk;
-> +	}
-> +
-> +	ret = clk_prepare_enable(dev->ram_clk);
-> +	if (ret) {
-> +		dev_err(dev->dev, "Failed to enable RAM clock\n");
-> +
-> +		goto err_mod_clk;
-> +	}
-> +
-> +	ret = reset_control_reset(dev->rstc);
-> +	if (ret) {
-> +		dev_err(dev->dev, "Failed to apply reset\n");
-> +
-> +		goto err_ram_clk;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_ram_clk:
-> +	clk_disable_unprepare(dev->ram_clk);
-> +err_mod_clk:
-> +	clk_disable_unprepare(dev->mod_clk);
-> +err_ahb_clk:
-> +	clk_disable_unprepare(dev->ahb_clk);
-> +
-> +	return ret;
-> +}
-> +
-> +int cedrus_hw_suspend(struct device *d)
-> +{
-> +	struct cedrus_dev *dev = dev_get_drvdata(d);
-> +
-> +	reset_control_assert(dev->rstc);
-> +
-> +	clk_disable_unprepare(dev->ram_clk);
-> +	clk_disable_unprepare(dev->mod_clk);
-> +	clk_disable_unprepare(dev->ahb_clk);
-> +
-> +	return 0;
-> +}
-> +
->  int cedrus_hw_probe(struct cedrus_dev *dev)
->  {
->  	const struct cedrus_variant *variant;
-> @@ -236,42 +302,19 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
->  		goto err_sram;
->  	}
->  
-> -	ret = clk_prepare_enable(dev->ahb_clk);
-> -	if (ret) {
-> -		dev_err(dev->dev, "Failed to enable AHB clock\n");
-> -
-> -		goto err_sram;
-> -	}
-> -
-> -	ret = clk_prepare_enable(dev->mod_clk);
-> -	if (ret) {
-> -		dev_err(dev->dev, "Failed to enable MOD clock\n");
-> -
-> -		goto err_ahb_clk;
-> -	}
-> -
-> -	ret = clk_prepare_enable(dev->ram_clk);
-> -	if (ret) {
-> -		dev_err(dev->dev, "Failed to enable RAM clock\n");
-> -
-> -		goto err_mod_clk;
-> -	}
-> -
-> -	ret = reset_control_reset(dev->rstc);
-> -	if (ret) {
-> -		dev_err(dev->dev, "Failed to apply reset\n");
-> -
-> -		goto err_ram_clk;
-> +	pm_runtime_set_autosuspend_delay(dev->dev, 1000);
-> +	pm_runtime_use_autosuspend(dev->dev);
-> +	pm_runtime_enable(dev->dev);
-> +	if (!pm_runtime_enabled(dev->dev)) {
-> +		ret = cedrus_hw_resume(dev->dev);
-> +		if (ret)
-> +			goto err_pm;
->  	}
->  
->  	return 0;
->  
-> -err_ram_clk:
-> -	clk_disable_unprepare(dev->ram_clk);
-> -err_mod_clk:
-> -	clk_disable_unprepare(dev->mod_clk);
-> -err_ahb_clk:
-> -	clk_disable_unprepare(dev->ahb_clk);
-> +err_pm:
-> +	pm_runtime_disable(dev->dev);
->  err_sram:
->  	sunxi_sram_release(dev->dev);
->  err_mem:
-> @@ -282,11 +325,9 @@ int cedrus_hw_probe(struct cedrus_dev *dev)
->  
->  void cedrus_hw_remove(struct cedrus_dev *dev)
->  {
-> -	reset_control_assert(dev->rstc);
-> -
-> -	clk_disable_unprepare(dev->ram_clk);
-> -	clk_disable_unprepare(dev->mod_clk);
-> -	clk_disable_unprepare(dev->ahb_clk);
-> +	pm_runtime_disable(dev->dev);
-> +	if (!pm_runtime_status_suspended(dev->dev))
-> +		cedrus_hw_suspend(dev->dev);
->  
->  	sunxi_sram_release(dev->dev);
->  
-> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> index 604ff932fbf5..17822b470a1e 100644
-> --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> @@ -22,6 +22,9 @@ void cedrus_engine_disable(struct cedrus_dev *dev);
->  void cedrus_dst_format_set(struct cedrus_dev *dev,
->  			   struct v4l2_pix_format *fmt);
->  
-> +int cedrus_hw_resume(struct device *dev);
-> +int cedrus_hw_suspend(struct device *dev);
-> +
->  int cedrus_hw_probe(struct cedrus_dev *dev);
->  void cedrus_hw_remove(struct cedrus_dev *dev);
->  
-> -- 
-> 2.24.1
-> 
