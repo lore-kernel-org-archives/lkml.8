@@ -2,162 +2,151 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5F6C2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 918C1C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29432074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:58:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bw7lpThJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6F71A206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 13:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgDHM6j (ORCPT
+        id S1728873AbgDHNCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:58:39 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37222 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728832AbgDHM6j (ORCPT
+        Wed, 8 Apr 2020 09:02:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49787 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727896AbgDHNCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:58:39 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1586350718; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=rDotgWx7+QnovFlw+0TZ4RXvaXTL+HaoABydwwavrc0=; b=bw7lpThJWfu8eEufupBgjVNASFSNl9rly7nxF0pfopJpBdBgPZa6SeT6fpxhZC+OTci1SmH1
- z272PHsdArvvzzIliwOgKHg/cuPhv7aPzRHUbYFHnWlEz3M6sRkMDW2JXynTwMVLPQEBEHM5
- rPNsYhN9ja+53QLXfDYJrRGqub8=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e8dca72.7f930f153c38-smtp-out-n03;
- Wed, 08 Apr 2020 12:58:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 52DF5C44788; Wed,  8 Apr 2020 12:58:25 +0000 (UTC)
-Received: from pragalla (unknown [203.109.108.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ppvk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 28783C433D2;
-        Wed,  8 Apr 2020 12:58:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 28783C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ppvk@codeaurora.org
-From:   <ppvk@codeaurora.org>
-To:     "'Doug Anderson'" <dianders@chromium.org>
-Cc:     "'Adrian Hunter'" <adrian.hunter@intel.com>,
-        "'Georgi Djakov'" <georgi.djakov@linaro.org>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
-        "'Asutosh Das'" <asutoshd@codeaurora.org>,
-        "'Veerabhadrarao Badiganti'" <vbadigan@codeaurora.org>,
-        "'Sahitya Tummala'" <stummala@codeaurora.org>,
-        "'Sayali Lokhande'" <sayalil@codeaurora.org>,
-        "'Ram Prakash Gupta'" <rampraka@codeaurora.org>,
-        "'Stephen Boyd'" <sboyd@kernel.org>,
-        "'Linux MMC List'" <linux-mmc@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'linux-arm-msm'" <linux-arm-msm@vger.kernel.org>,
-        "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
-        <devicetree@vger.kernel.org>, "'Andy Gross'" <agross@kernel.org>,
-        <linux-mmc-owner@vger.kernel.org>,
-        "'Subhash Jadavani'" <subhashj@codeaurora.org>,
-        <sbhanu@codeaurora.org>
-References: <1573220319-4287-1-git-send-email-ppvk@codeaurora.org> <1573220319-4287-3-git-send-email-ppvk@codeaurora.org> <CAD=FV=WGUasS=UZxFeSS0Cg=9WxHPMWVFyYae7CFmOxV2_yhJw@mail.gmail.com>
-In-Reply-To: <CAD=FV=WGUasS=UZxFeSS0Cg=9WxHPMWVFyYae7CFmOxV2_yhJw@mail.gmail.com>
-Subject: RE: [RFC-v2 2/2] mmc: sdhci-msm: Add support for bus bandwidth voting
-Date:   Wed, 8 Apr 2020 18:28:05 +0530
-Message-ID: <001601d60da5$630168d0$29043a70$@codeaurora.org>
+        Wed, 8 Apr 2020 09:02:05 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jMALA-0006b0-1S; Wed, 08 Apr 2020 15:02:00 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 077EB10069D; Wed,  8 Apr 2020 15:01:58 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Vivek Goyal <vgoyal@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/kvm: Disable KVM_ASYNC_PF_SEND_ALWAYS
+In-Reply-To: <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com>
+References: <20200407172140.GB64635@redhat.com> <772A564B-3268-49F4-9AEA-CDA648F6131F@amacapital.net> <87eeszjbe6.fsf@nanos.tec.linutronix.de> <ce81c95f-8674-4012-f307-8f32d0e386c2@redhat.com> <874ktukhku.fsf@nanos.tec.linutronix.de> <274f3d14-08ac-e5cc-0b23-e6e0274796c8@redhat.com>
+Date:   Wed, 08 Apr 2020 15:01:58 +0200
+Message-ID: <87pncib06x.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHo/qvz39tvwFARdq04gcBr6mq1JgIkxMVEAUfxRSCoLeR7IA==
-Content-Language: en-us
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
-
-You no longer seeing this warning stack with the latest patch set.
-https://lkml.org/lkml/2020/3/23/407
-
-The latest patch set is based on OPP framework and no workqueue's used =
-to queue the work.
-Can you give a try with the latest patch and check if this helps ?
-
-Thanks and Regards,
-Pradeep
-
------Original Message-----
-From: Doug Anderson <dianders@chromium.org>=20
-Sent: Friday, April 3, 2020 10:34 PM
-To: Pradeep P V K <ppvk@codeaurora.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>; Georgi Djakov =
-<georgi.djakov@linaro.org>; Rob Herring <robh+dt@kernel.org>; Ulf =
-Hansson <ulf.hansson@linaro.org>; Asutosh Das <asutoshd@codeaurora.org>; =
-Veerabhadrarao Badiganti <vbadigan@codeaurora.org>; Sahitya Tummala =
-<stummala@codeaurora.org>; Sayali Lokhande <sayalil@codeaurora.org>; Ram =
-Prakash Gupta <rampraka@codeaurora.org>; Stephen Boyd =
-<sboyd@kernel.org>; Linux MMC List <linux-mmc@vger.kernel.org>; LKML =
-<linux-kernel@vger.kernel.org>; linux-arm-msm =
-<linux-arm-msm@vger.kernel.org>; open list:OPEN FIRMWARE AND FLATTENED =
-DEVICE TREE BINDINGS <devicetree@vger.kernel.org>; Andy Gross =
-<agross@kernel.org>; linux-mmc-owner@vger.kernel.org; Subhash Jadavani =
-<subhashj@codeaurora.org>
-Subject: Re: [RFC-v2 2/2] mmc: sdhci-msm: Add support for bus bandwidth =
-voting
-
-Hi,
-
-On Fri, Nov 8, 2019 at 5:45 AM Pradeep P V K <ppvk@codeaurora.org> =
-wrote:
+Paolo Bonzini <pbonzini@redhat.com> writes:
+> On 08/04/20 01:21, Thomas Gleixner wrote:
+>>>> No. Async PF is not a real exception. It has interrupt semantics and it
+>>>> can only be injected when the guest has interrupts enabled. It's bad
+>>>> design.
+>>>
+>>> Page-ready async PF has interrupt semantics.
+>>>
+>>> Page-not-present async PF however does not have interrupt semantics, it
+>>> has to be injected immediately or not at all (falling back to host page
+>>> fault in the latter case).
+>> 
+>> If interrupts are disabled in the guest then it is NOT injected and the
+>> guest is suspended. So it HAS interrupt semantics. Conditional ones,
+>> i.e. if interrupts are disabled, bail, if not then inject it.
 >
-> +       if (msm_host->bus_vote_data->curr_vote !=3D VOTE_ZERO)
-> +               queue_delayed_work(system_wq,
-> +                                  &msm_host->bus_vote_work,
-> +                                 =20
-> +msecs_to_jiffies(MSM_MMC_BUS_VOTING_DELAY));
-> +}
+> Interrupts can be delayed by TPR or STI/MOV SS interrupt window, async
+> page faults cannot (again, not the page-ready kind).
 
-Drive-by feedback here without any full review of your patch...
-Someone had your patch applied and sent me a stack trace with a warning =
-on it.  That warning showed:
+Can we pretty please stop using the term async page fault? It's just
+wrong and causes more confusion than anything else.
 
-workqueue: WQ_MEM_RECLAIM kblockd:blk_mq_run_work_fn is flushing =
-!WQ_MEM_RECLAIM events:sdhci_msm_bus_work
+What this does is really what I called Opportunistic Make Guest Do Other
+Stuff. And it has neither true exception nor true interrupt semantics.
 
-The trace shown was:
+It's a software event which is injected into the guest to let the guest
+do something else than waiting for the actual #PF cause to be
+resolved. It's part of a software protocol between host and guest.
 
-    check_flush_dependency+0x108/0x110
-    __flush_work+0xa8/0x1e8
-    __cancel_work_timer+0x130/0x1c4
-    cancel_delayed_work_sync+0x20/0x30
-    sdhci_msm_bus_cancel_work_and_set_vote+0x3c/0x8c
-    sdhci_msm_bus_voting+0x40/0x7c
-    sdhci_msm_runtime_resume+0xdc/0xf4
-    pm_generic_runtime_resume+0x34/0x48
-    __rpm_callback+0x70/0xfc
-    rpm_callback+0x5c/0x8c
-    rpm_resume+0x3fc/0x534
-    __pm_runtime_resume+0x7c/0xa0
-    __mmc_claim_host+0x1f4/0x230
-    mmc_get_card+0x34/0x40
-    mmc_mq_queue_rq+0x18c/0x244
-    blk_mq_dispatch_rq_list+0x27c/0x560
-    blk_mq_do_dispatch_sched+0xe0/0x140
-    blk_mq_sched_dispatch_requests+0x138/0x1b8
-    __blk_mq_run_hw_queue+0xc0/0x118
-    blk_mq_run_work_fn+0x24/0x30
+And it comes with restrictions:
 
-I believe the way to interpret this is that you need to be running your =
-work on a workqueue marked for memory reclaim.  That means you can't use =
-the system_wq to queue your work.  Without being an expert, a quick =
-guess would be that you should be queueing your work on the =
-"kblockd_workqueue" using one of the functions for this.
+    The Do Other Stuff event can only be delivered when guest IF=1.
 
--Doug
+    If guest IF=0 then the host has to suspend the guest until the
+    situation is resolved.
+
+    The 'Situation resolved' event must also wait for a guest IF=1 slot.
+
+> Page-not-present async page faults are almost a perfect match for the
+> hardware use of #VE (and it might even be possible to let the
+> processor deliver the exceptions).  There are other advantages:
+>
+> - the only real problem with using #PF (with or without
+> KVM_ASYNC_PF_SEND_ALWAYS) seems to be the NMI reentrancy issue, which
+> would not be there for #VE.
+>
+> - #VE are combined the right way with other exceptions (the
+> benign/contributory/pagefault stuff)
+>
+> - adjusting KVM and Linux to use #VE instead of #PF would be less than
+> 100 lines of code.
+
+If you just want to solve Viveks problem, then its good enough. I.e. the
+file truncation turns the EPT entries into #VE convertible entries and
+the guest #VE handler can figure it out. This one can be injected
+directly by the hardware, i.e. you don't need a VMEXIT.
+
+If you want the opportunistic do other stuff mechanism, then #VE has
+exactly the same problems as the existing async "PF". It's not magicaly
+making that go away.
+
+One possible solution might be to make all recoverable EPT entries
+convertible and let the HW inject #VE for those.
+
+So the #VE handler in the guest would have to do:
+
+       if (!recoverable()) {
+       		if (user_mode)
+                	send_signal();
+                else if (!fixup_exception())
+                	die_hard();
+                goto done;  
+       }                 
+
+       store_ve_info_in_pv_page();
+
+       if (!user_mode(regs) || !preemptible()) {
+       		hypercall_resolve_ept(can_continue = false);
+       } else {
+                init_completion();
+       		hypercall_resolve_ept(can_continue = true);
+                wait_for_completion();
+       }
+
+or something like that.
+
+The hypercall to resolve the EPT fail on the host acts on the
+can_continue argument.
+
+If false, it suspends the guest vCPU and only returns when done.
+
+If true it kicks the resolve process and returns to the guest which
+suspends the task and tries to do something else.
+
+The wakeup side needs to be a regular interrupt and cannot go through
+#VE.
+
+Thanks,
+
+        tglx
