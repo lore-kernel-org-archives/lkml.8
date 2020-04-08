@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6D6C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A958C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A82532075E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2DDD20784
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:47:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360870;
-	bh=a3JpEtgqMbhSCDXAHAnASAtVj+ma3vbopyY6WyqAmxc=;
+	s=default; t=1586360873;
+	bh=dzEvyUMT+6iAL0bVATxxLcY08y7xtxW1DkpC2XHSTsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zs61wUzLMjWoKVzvHR7kdg1JCLQ9MwTeclqt3ld85lYqicYDPf/X5y1kkhLCj8za5
-	 H2G1bEN28YVf2VehDeaFoUyuI80RhpJub3EAzlQM7Mtti139/ij0npuM6ap8R4gein
-	 PWEhcXga2xMc/AXHBtCQB483tdlP1xfXaje8OrZ8=
+	b=068nvorV0taMTwe6NuPT4SYYLayGRY9YxouUJG/ILVFBRwakR2lHEYZVnOrOIPyq+
+	 /jJyB0Pd7fkJwA4KdWoaAbQ4yDNC99cRg3bBDQyVI26L9x6D+R7QznmsztDZjdgrRV
+	 Q/oys6Thsg2BrC6rm7keao+JMbCXi1wOS8lvMws4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbgDHPrt (ORCPT
+        id S1729916AbgDHPrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:47:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49158 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 11:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729704AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729678AbgDHPqd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Apr 2020 11:46:33 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A9B822206;
-        Wed,  8 Apr 2020 15:46:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06372078E;
+        Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586360792;
-        bh=a3JpEtgqMbhSCDXAHAnASAtVj+ma3vbopyY6WyqAmxc=;
+        s=default; t=1586360791;
+        bh=dzEvyUMT+6iAL0bVATxxLcY08y7xtxW1DkpC2XHSTsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M5JOF+z+I7+cY7nGfSrBvIrUf+7/BBGl7IM61FprqM6C30cGMKO/Db8Om9e/96TSX
-         xq7h22xkayEKBe0Q8Ag7MJIGHuBH8HjvcHrFErQ/GCgg/6jNdOmissA/OeWGpdUmSr
-         td/5w4OHBGG9MDnp7ozlMTdfgMX7PnKttFmGd6VE=
+        b=gSAqqCvgTqXa/uXKmv6EtznA69C4V8DH+7tAiOQNLcwtHbDUgP+TAlPo8teTWKDnM
+         dC8jqt6R8V70H20R2xBLozYWzJEo+P1t5Z0t4qINbz+1i1Q9o/HBEt19GSNv210olW
+         4Dzs/4ExuoIJYGl5mAM8SIJF6Fw0DUiAD8BAIus8=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jMCuM-000cD4-By; Wed, 08 Apr 2020 17:46:30 +0200
+        id 1jMCuL-000cBm-QI; Wed, 08 Apr 2020 17:46:29 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 35/35] docs: update recommended Sphinx version to 2.4.4
-Date:   Wed,  8 Apr 2020 17:46:27 +0200
-Message-Id: <2de15bd64b2c0bf7320c96ec2f8c7fba923e0962.1586359676.git.mchehab+huawei@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Subject: [PATCH 19/35] docs: infiniband: verbs.c: fix some documentation warnings
+Date:   Wed,  8 Apr 2020 17:46:11 +0200
+Message-Id: <9f9212db13dc19e5d80e3fc94ad26f3b9798d154.1586359676.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
 References: <cover.1586359676.git.mchehab+huawei@kernel.org>
@@ -59,44 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some docs that have nested tables. While this was
-always part of the spec, only Sphinx version 2.4.x can
-translate it to LaTeX.
+Parsing this file with kernel-doc produce some warnings:
 
-In other words, if someone is using a Sphinx version < 2.4,
-the LaTeX and PDF output won't work for some of the docs.
+	./drivers/infiniband/core/verbs.c:2579: WARNING: Unexpected indentation.
+	./drivers/infiniband/core/verbs.c:2581: WARNING: Block quote ends without a blank line; unexpected unindent.
+	./drivers/infiniband/core/verbs.c:2613: WARNING: Unexpected indentation.
+	./drivers/infiniband/core/verbs.c:2579: WARNING: Unexpected indentation.
+	./drivers/infiniband/core/verbs.c:2581: WARNING: Block quote ends without a blank line; unexpected unindent.
+	./drivers/infiniband/core/verbs.c:2613: WARNING: Unexpected indentation.
 
-So, it seems that it is time to raise the bar again
-for the recommented version.
-
-The Sphinx check script is already smart enough to keep
-working, with older versions, warning the users that
-an upgrade is recommended (and explaining how):
-
-	Sphinx version 1.7.9
-	Warning: It is recommended at least Sphinx version 2.4.4.
-	Detected OS: Fedora release 31 (Thirty One).
-
-	To upgrade Sphinx, use:
-
-		/usr/bin/virtualenv sphinx_2.4.4
-		. sphinx_2.4.4/bin/activate
-		pip install -r ./Documentation/sphinx/requirements.txt
+Address them by adding an extra blank line and converting the
+parameters on one of the arguments to a table.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/sphinx/requirements.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/verbs.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/sphinx/requirements.txt b/Documentation/sphinx/requirements.txt
-index 14e29a0ae480..489f6626de67 100644
---- a/Documentation/sphinx/requirements.txt
-+++ b/Documentation/sphinx/requirements.txt
-@@ -1,3 +1,3 @@
- docutils
--Sphinx==1.7.9
-+Sphinx==2.4.4
- sphinx_rtd_theme
+diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
+index 56a71337112c..3bfadd8effcc 100644
+--- a/drivers/infiniband/core/verbs.c
++++ b/drivers/infiniband/core/verbs.c
+@@ -2574,6 +2574,7 @@ EXPORT_SYMBOL(ib_map_mr_sg_pi);
+  * @page_size:     page vector desired page size
+  *
+  * Constraints:
++ *
+  * - The first sg element is allowed to have an offset.
+  * - Each sg element must either be aligned to page_size or virtually
+  *   contiguous to the previous element. In case an sg element has a
+@@ -2607,10 +2608,12 @@ EXPORT_SYMBOL(ib_map_mr_sg);
+  * @mr:            memory region
+  * @sgl:           dma mapped scatterlist
+  * @sg_nents:      number of entries in sg
+- * @sg_offset_p:   IN:  start offset in bytes into sg
+- *                 OUT: offset in bytes for element n of the sg of the first
++ * @sg_offset_p:   ==== =======================================================
++ *                 IN   start offset in bytes into sg
++ *                 OUT  offset in bytes for element n of the sg of the first
+  *                      byte that has not been processed where n is the return
+  *                      value of this function.
++ *                 ==== =======================================================
+  * @set_page:      driver page assignment function pointer
+  *
+  * Core service helper for drivers to convert the largest
 -- 
 2.25.2
 
