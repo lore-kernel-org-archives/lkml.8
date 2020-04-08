@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CADCC2BB86
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7414C2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 454C320730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0776206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgDHPiy (ORCPT
+        id S1729687AbgDHPi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:38:54 -0400
+        Wed, 8 Apr 2020 11:38:59 -0400
 Received: from relmlor2.renesas.com ([210.160.252.172]:22084 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729552AbgDHPix (ORCPT
+        by vger.kernel.org with ESMTP id S1729674AbgDHPi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 11:38:53 -0400
+        Wed, 8 Apr 2020 11:38:58 -0400
 X-IronPort-AV: E=Sophos;i="5.72,359,1580742000"; 
-   d="scan'208";a="43920582"
+   d="scan'208";a="43920588"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 09 Apr 2020 00:38:52 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 09 Apr 2020 00:38:57 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C2326400942C;
-        Thu,  9 Apr 2020 00:38:47 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DF4114004BDB;
+        Thu,  9 Apr 2020 00:38:52 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -48,9 +48,9 @@ Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         linux-rockchip@lists.infradead.org,
         Lad Prabhakar <prabhakar.csengg@gmail.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v7 7/8] PCI: Add Renesas R8A774C0 device ID
-Date:   Wed,  8 Apr 2020 16:37:59 +0100
-Message-Id: <1586360280-10956-8-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v7 8/8] MAINTAINERS: Add file patterns for rcar PCI device tree bindings
+Date:   Wed,  8 Apr 2020 16:38:00 +0100
+Message-Id: <1586360280-10956-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <1586360280-10956-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -59,27 +59,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add R8A774C0 device ID so that this can be used by
-pci_endpoint_test driver.
+Add file pattern entry for rcar PCI devicetree binding, so that when
+people run ./scripts/get_maintainer.pl the rcar PCI maintainers could also
+be listed.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- include/linux/pci_ids.h | 1 +
+ MAINTAINERS | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 1dfc4e1dcb94..9e957c18abeb 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -2460,6 +2460,7 @@
- #define PCI_DEVICE_ID_RENESAS_SH7763	0x0004
- #define PCI_DEVICE_ID_RENESAS_SH7785	0x0007
- #define PCI_DEVICE_ID_RENESAS_SH7786	0x0010
-+#define PCI_DEVICE_ID_RENESAS_R8A774C0	0x002d
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3f0f2ee2af32..87df2d31a54b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12933,6 +12933,7 @@ L:	linux-pci@vger.kernel.org
+ L:	linux-renesas-soc@vger.kernel.org
+ S:	Maintained
+ F:	drivers/pci/controller/*rcar*
++F:	Documentation/devicetree/bindings/pci/*rcar*
  
- #define PCI_VENDOR_ID_SOLARFLARE	0x1924
- #define PCI_DEVICE_ID_SOLARFLARE_SFC4000A_0	0x0703
+ PCI DRIVER FOR SAMSUNG EXYNOS
+ M:	Jingoo Han <jingoohan1@gmail.com>
 -- 
 2.20.1
 
