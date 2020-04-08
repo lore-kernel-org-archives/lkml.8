@@ -2,194 +2,123 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C2CC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEAFC2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5FD32078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:08:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RAfN6eIm"
+	by mail.kernel.org (Postfix) with ESMTP id 5398B2078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgDHWIs (ORCPT
+        id S1726555AbgDHWLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 18:08:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58441 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726467AbgDHWIn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 18:08:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586383722;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=8UNHkInVgf+jLgtV1TWWmBeRTEdVdzCdwdVmjjBMaOw=;
-        b=RAfN6eImZsvYQSV87g0nMVikz/iv5bkEdJ1dyHb2wFVbHyJMOav+Ty1BM5dXEfxGneFnYq
-        chcJh/hfPBREH5rcq0wMZ4qvWw1wnbD4NnPL49LGdKM7b0aLDnb37VqIi+eM/W7MfSEGOF
-        eKCdDSB9umVs5yRETHJSoVD1wDGR4/g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-222-2vvx3nPrMGay6sIIhy3Qjw-1; Wed, 08 Apr 2020 18:08:40 -0400
-X-MC-Unique: 2vvx3nPrMGay6sIIhy3Qjw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 399DB18AB2C2;
-        Wed,  8 Apr 2020 22:08:39 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-15.gru2.redhat.com [10.97.116.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B38E119593;
-        Wed,  8 Apr 2020 22:08:33 +0000 (UTC)
-From:   Wainer dos Santos Moschetta <wainersm@redhat.com>
-To:     pbonzini@redhat.com, kvm@vger.kernel.org
-Cc:     drjones@redhat.com, david@redhat.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH v4 2/2] selftests: kvm: Add mem_slot_test test
-Date:   Wed,  8 Apr 2020 19:08:18 -0300
-Message-Id: <20200408220818.4306-3-wainersm@redhat.com>
-In-Reply-To: <20200408220818.4306-1-wainersm@redhat.com>
-References: <20200408220818.4306-1-wainersm@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Wed, 8 Apr 2020 18:11:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:56607 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbgDHWLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 18:11:01 -0400
+IronPort-SDR: t51Rzghmik65uG5BBbNzrZzKjaMC1mM9moLJJfe7Gb4KIuA1YdeHdhkyGGMRzAaLzFrmYuvWse
+ vFepmLU0jsSg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 15:11:00 -0700
+IronPort-SDR: HpDApRLuGuakuVVDxGql4LJ8QoRNSswYqXGAto8C6w6PP4UXAKsVCFtO1m6A+8WFPqoMNN7r51
+ KYew19Pz4IhA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,360,1580803200"; 
+   d="scan'208";a="330665433"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga001.jf.intel.com with ESMTP; 08 Apr 2020 15:10:59 -0700
+Date:   Wed, 8 Apr 2020 15:10:59 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
+ xfs_diflags_to_iflags()
+Message-ID: <20200408221059.GB664132@iweiny-DESK2.sc.intel.com>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-7-ira.weiny@intel.com>
+ <20200408020827.GI24067@dread.disaster.area>
+ <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
+ <20200408210236.GK24067@dread.disaster.area>
+ <CAPcyv4gLvMSA9BypvWbYtv3xsK8o4+db3kvxBozUGAjr_sDDFQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4gLvMSA9BypvWbYtv3xsK8o4+db3kvxBozUGAjr_sDDFQ@mail.gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces the mem_slot_test test which checks
-an VM can have added memory slots up to the limit defined in
-KVM_CAP_NR_MEMSLOTS. Then attempt to add one more slot to
-verify it fails as expected.
+On Wed, Apr 08, 2020 at 02:28:30PM -0700, Dan Williams wrote:
+> On Wed, Apr 8, 2020 at 2:02 PM Dave Chinner <david@fromorbit.com> wrote:
+> >
 
-Signed-off-by: Wainer dos Santos Moschetta <wainersm@redhat.com>
----
- tools/testing/selftests/kvm/.gitignore      |  1 +
- tools/testing/selftests/kvm/Makefile        |  3 +
- tools/testing/selftests/kvm/mem_slot_test.c | 76 +++++++++++++++++++++
- 3 files changed, 80 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/mem_slot_test.c
+[snip]
 
-diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
-index 16877c3daabf..127d27188427 100644
---- a/tools/testing/selftests/kvm/.gitignore
-+++ b/tools/testing/selftests/kvm/.gitignore
-@@ -21,4 +21,5 @@
- /demand_paging_test
- /dirty_log_test
- /kvm_create_max_vcpus
-+/mem_slot_test
- /steal_time
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 712a2ddd2a27..338b6cdce1a0 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -32,12 +32,14 @@ TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
- TEST_GEN_PROGS_x86_64 += demand_paging_test
- TEST_GEN_PROGS_x86_64 += dirty_log_test
- TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
-+TEST_GEN_PROGS_x86_64 += mem_slot_test
- TEST_GEN_PROGS_x86_64 += steal_time
- 
- TEST_GEN_PROGS_aarch64 += clear_dirty_log_test
- TEST_GEN_PROGS_aarch64 += demand_paging_test
- TEST_GEN_PROGS_aarch64 += dirty_log_test
- TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
-+TEST_GEN_PROGS_aarch64 += mem_slot_test
- TEST_GEN_PROGS_aarch64 += steal_time
- 
- TEST_GEN_PROGS_s390x = s390x/memop
-@@ -46,6 +48,7 @@ TEST_GEN_PROGS_s390x += s390x/sync_regs_test
- TEST_GEN_PROGS_s390x += demand_paging_test
- TEST_GEN_PROGS_s390x += dirty_log_test
- TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
-+TEST_GEN_PROGS_s390x += mem_slot_test
- 
- TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
- LIBKVM += $(LIBKVM_$(UNAME_M))
-diff --git a/tools/testing/selftests/kvm/mem_slot_test.c b/tools/testing/selftests/kvm/mem_slot_test.c
-new file mode 100644
-index 000000000000..7c1009f0bc07
---- /dev/null
-+++ b/tools/testing/selftests/kvm/mem_slot_test.c
-@@ -0,0 +1,76 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * mem_slot_test
-+ *
-+ * Copyright (C) 2020, Red Hat, Inc.
-+ *
-+ * Test suite for memory region operations.
-+ */
-+#define _GNU_SOURCE /* for program_invocation_short_name */
-+#include <linux/kvm.h>
-+#include <sys/mman.h>
-+
-+#include "test_util.h"
-+#include "kvm_util.h"
-+
-+/*
-+ * Test it can be added memory slots up to KVM_CAP_NR_MEMSLOTS, then any
-+ * tentative to add further slots should fail.
-+ */
-+static void test_add_max_slots(void)
-+{
-+	int ret;
-+	struct kvm_vm *vm;
-+	uint32_t max_mem_slots;
-+	uint32_t slot;
-+	uint64_t guest_addr;
-+	uint64_t mem_reg_npages;
-+	uint64_t mem_reg_size;
-+	void *mem;
-+
-+	max_mem_slots = kvm_check_cap(KVM_CAP_NR_MEMSLOTS);
-+	TEST_ASSERT(max_mem_slots > 0,
-+		    "KVM_CAP_NR_MEMSLOTS should be greater than 0");
-+	pr_info("Allowed number of memory slots: %i\n", max_mem_slots);
-+
-+	vm = vm_create(VM_MODE_DEFAULT, 0, O_RDWR);
-+
-+	/*
-+	 * Uses 1MB sized/aligned memory region since this is the minimal
-+	 * required on s390x.
-+	 */
-+	mem_reg_size = 0x100000;
-+	mem_reg_npages = vm_calc_num_guest_pages(VM_MODE_DEFAULT, mem_reg_size);
-+
-+	guest_addr = 0x0;
-+
-+	/* Check it can be added memory slots up to the maximum allowed */
-+	pr_info("Adding slots 0..%i, each memory region with %ldK size\n",
-+		(max_mem_slots - 1), mem_reg_size >> 10);
-+	for (slot = 0; slot < max_mem_slots; slot++) {
-+		vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
-+					    guest_addr, slot, mem_reg_npages,
-+					    0);
-+		guest_addr += mem_reg_size;
-+	}
-+
-+	/* Check it cannot be added memory slots beyond the limit */
-+	mem = mmap(NULL, mem_reg_size, PROT_READ | PROT_WRITE,
-+		   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-+	TEST_ASSERT(mem != MAP_FAILED, "Failed to mmap() host");
-+
-+	ret = ioctl(vm_get_fd(vm), KVM_SET_USER_MEMORY_REGION,
-+		    &(struct kvm_userspace_memory_region) {slot, 0, guest_addr,
-+		    mem_reg_size, (uint64_t) mem});
-+	TEST_ASSERT(ret == -1 && errno == EINVAL,
-+		    "Adding one more memory slot should fail with EINVAL");
-+
-+	munmap(mem, mem_reg_size);
-+	kvm_vm_free(vm);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	test_add_max_slots();
-+	return 0;
-+}
--- 
-2.17.2
+> > >
+> > > void
+> > > xfs_diflags_to_iflags(
+> > >         struct xfs_inode        *ip,
+> > >         bool init)
+> > > {
+> > >         struct inode            *inode = VFS_I(ip);
+> > >         unsigned int            xflags = xfs_ip2xflags(ip);
+> > >         unsigned int            flags = 0;
+> > >
+> > >         inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME |
+> > >                             S_DAX);
+> >
+> > We don't want to clear the dax flag here, ever, if it is already
+> > set. That is an externally visible change and opens us up (again) to
+> > races where IS_DAX() changes half way through a fault path. IOWs, avoiding
+> > clearing the DAX flag was something I did explicitly in the above
+> > code fragment.
+> >
+> > And it makes the logic clearer by pre-calculating the new flags,
+> > then clearing and setting the inode flags together, rather than
+> > having the spearated at the top and bottom of the function.
+> >
+> > THis leads to an obvious conclusion: if we never clear the in memory
+> > S_DAX flag, we can actually clear the on-disk flag safely, so that
+> > next time the inode cycles into memory it won't be using DAX. IOWs,
+> > admins can stop the applications, clear the DAX flag and drop
+> > caches. This should result in the inode being recycled and when the
+> > app is restarted it will run without DAX. No ned for deleting files,
+> > copying large data sets, etc just to turn off an inode flag.
+> 
+> Makes sense, but is that sufficient? I recall you saying there might
+> be a multitude of other reasons that the inode is not evicted, not the
+> least of which is races [1]. Does this need another flag, lets call it
+> "dax toggle" to track the "I requested the inode to clear the flag,
+> but on cache-flush + restart the inode never got evicted" case. S_DAX
+> almost plays this role, but it loses the ability to audit which files
+> are pending an inode eviction event. So the dax-toggle flag indicates
+> to the kernel to xor the toggle value with the inode flag on inode
+> instantiation and the dax inode flag is never directly manipulated by
+> the ioctl path.
+> 
+> [1]: http://lore.kernel.org/r/20191025003603.GE4614@dread.disaster.area
+
+FWIW I think we should continue down this simplified interface and get this
+done for 5.8.  If we can come up with a way for delayed mode change I'm all for
+looking into that.  But there has been too much controversy/difficulty about
+changing the bit on a file.
+
+So let's table this idea until >= 5.9
+
+Ira
 
