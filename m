@@ -5,43 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118B3C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CEDC2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D338A2076D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34AF4206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 12:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgDHMUj (ORCPT
+        id S1728485AbgDHMUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 08:20:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:49648 "EHLO
+        Wed, 8 Apr 2020 08:20:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49664 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbgDHMUc (ORCPT
+        with ESMTP id S1728417AbgDHMUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 08:20:32 -0400
+        Wed, 8 Apr 2020 08:20:36 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jM9gt-00062n-Fp; Wed, 08 Apr 2020 14:20:23 +0200
+        id 1jM9gv-000650-QU; Wed, 08 Apr 2020 14:20:25 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E2D0F1C04D7;
-        Wed,  8 Apr 2020 14:20:22 +0200 (CEST)
-Date:   Wed, 08 Apr 2020 12:20:22 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7A12C1C047B;
+        Wed,  8 Apr 2020 14:20:25 +0200 (CEST)
+Date:   Wed, 08 Apr 2020 12:20:25 -0000
+From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/core: Fix event cgroup tracking
-Cc:     <stable@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
+Subject: [tip: sched/urgent] workqueue: Remove the warning in wq_worker_sleeping()
+Cc:     kernel test robot <lkp@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200318193337.GB20760@hirez.programming.kicks-ass.net>
-References: <20200318193337.GB20760@hirez.programming.kicks-ass.net>
+        Ingo Molnar <mingo@kernel.org>, Tejun Heo <tj@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200327074308.GY11705@shao2-debian>
+References: <20200327074308.GY11705@shao2-debian>
 MIME-Version: 1.0
-Message-ID: <158634842257.28353.14335300348077819307.tip-bot2@tip-bot2>
+Message-ID: <158634842513.28353.14029698174140162537.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,215 +56,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     33238c50451596be86db1505ab65fee5172844d0
-Gitweb:        https://git.kernel.org/tip/33238c50451596be86db1505ab65fee5172844d0
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 18 Mar 2020 20:33:37 +01:00
+Commit-ID:     62849a9612924a655c67cf6962920544aa5c20db
+Gitweb:        https://git.kernel.org/tip/62849a9612924a655c67cf6962920544aa5c20db
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Sat, 28 Mar 2020 00:29:59 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 08 Apr 2020 11:33:44 +02:00
+CommitterDate: Wed, 08 Apr 2020 11:35:20 +02:00
 
-perf/core: Fix event cgroup tracking
+workqueue: Remove the warning in wq_worker_sleeping()
 
-Song reports that installing cgroup events is broken since:
+The kernel test robot triggered a warning with the following race:
+   task-ctx A                            interrupt-ctx B
+ worker
+  -> process_one_work()
+    -> work_item()
+      -> schedule();
+         -> sched_submit_work()
+           -> wq_worker_sleeping()
+             -> ->sleeping = 1
+               atomic_dec_and_test(nr_running)
+         __schedule();                *interrupt*
+                                       async_page_fault()
+                                       -> local_irq_enable();
+                                       -> schedule();
+                                          -> sched_submit_work()
+                                            -> wq_worker_sleeping()
+                                               -> if (WARN_ON(->sleeping)) return
+                                          -> __schedule()
+                                            ->  sched_update_worker()
+                                              -> wq_worker_running()
+                                                 -> atomic_inc(nr_running);
+                                                 -> ->sleeping = 0;
 
-  db0503e4f675 ("perf/core: Optimize perf_install_in_event()")
+      ->  sched_update_worker()
+        -> wq_worker_running()
+          if (!->sleeping) return
 
-The problem being that cgroup events try to track cpuctx->cgrp even
-for disabled events, which is pointless and actively harmful since the
-above commit. Rework the code to have explicit enable/disable hooks
-for cgroup events, such that we can limit cgroup tracking to active
-events.
+In this context the warning is pointless everything is fine.
+An interrupt before wq_worker_sleeping() will perform the ->sleeping
+assignment (0 -> 1 > 0) twice.
+An interrupt after wq_worker_sleeping() will trigger the warning and
+nr_running will be decremented (by A) and incremented once (only by B, A
+will skip it). This is the case until the ->sleeping is zeroed again in
+wq_worker_running().
 
-More specifically, since the above commit disabled events are no
-longer added to their context from the 'right' CPU, and we can't
-access things like the current cgroup for a remote CPU.
+Remove the WARN statement because this condition may happen. Document
+that preemption around wq_worker_sleeping() needs to be disabled to
+protect ->sleeping and not just as an optimisation.
 
-Cc: <stable@vger.kernel.org> # v5.5+
-Fixes: db0503e4f675 ("perf/core: Optimize perf_install_in_event()")
-Reported-by: Song Liu <songliubraving@fb.com>
-Tested-by: Song Liu <songliubraving@fb.com>
-Reviewed-by: Song Liu <songliubraving@fb.com>
+Fixes: 6d25be5782e48 ("sched/core, workqueues: Distangle worker accounting from rq lock")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lkml.kernel.org/r/20200318193337.GB20760@hirez.programming.kicks-ass.net
+Cc: Tejun Heo <tj@kernel.org>
+Link: https://lkml.kernel.org/r/20200327074308.GY11705@shao2-debian
 ---
- kernel/events/core.c | 70 ++++++++++++++++++++++++++-----------------
- 1 file changed, 43 insertions(+), 27 deletions(-)
+ kernel/sched/core.c | 3 ++-
+ kernel/workqueue.c  | 6 ++++--
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 55e4441..7afd0b5 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -983,16 +983,10 @@ perf_cgroup_set_shadow_time(struct perf_event *event, u64 now)
- 	event->shadow_ctx_time = now - t->timestamp;
- }
- 
--/*
-- * Update cpuctx->cgrp so that it is set when first cgroup event is added and
-- * cleared when last cgroup event is removed.
-- */
- static inline void
--list_update_cgroup_event(struct perf_event *event,
--			 struct perf_event_context *ctx, bool add)
-+perf_cgroup_event_enable(struct perf_event *event, struct perf_event_context *ctx)
- {
- 	struct perf_cpu_context *cpuctx;
--	struct list_head *cpuctx_entry;
- 
- 	if (!is_cgroup_event(event))
- 		return;
-@@ -1009,28 +1003,41 @@ list_update_cgroup_event(struct perf_event *event,
- 	 * because if the first would mismatch, the second would not try again
- 	 * and we would leave cpuctx->cgrp unset.
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index f6b329b..c3d12e3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4120,7 +4120,8 @@ static inline void sched_submit_work(struct task_struct *tsk)
+ 	 * it wants to wake up a task to maintain concurrency.
+ 	 * As this function is called inside the schedule() context,
+ 	 * we disable preemption to avoid it calling schedule() again
+-	 * in the possible wakeup of a kworker.
++	 * in the possible wakeup of a kworker and because wq_worker_sleeping()
++	 * requires it.
  	 */
--	if (add && !cpuctx->cgrp) {
-+	if (ctx->is_active && !cpuctx->cgrp) {
- 		struct perf_cgroup *cgrp = perf_cgroup_from_task(current, ctx);
- 
- 		if (cgroup_is_descendant(cgrp->css.cgroup, event->cgrp->css.cgroup))
- 			cpuctx->cgrp = cgrp;
- 	}
- 
--	if (add && ctx->nr_cgroups++)
-+	if (ctx->nr_cgroups++)
- 		return;
--	else if (!add && --ctx->nr_cgroups)
-+
-+	list_add(&cpuctx->cgrp_cpuctx_entry,
-+			per_cpu_ptr(&cgrp_cpuctx_list, event->cpu));
-+}
-+
-+static inline void
-+perf_cgroup_event_disable(struct perf_event *event, struct perf_event_context *ctx)
-+{
-+	struct perf_cpu_context *cpuctx;
-+
-+	if (!is_cgroup_event(event))
- 		return;
- 
--	/* no cgroup running */
--	if (!add)
-+	/*
-+	 * Because cgroup events are always per-cpu events,
-+	 * @ctx == &cpuctx->ctx.
-+	 */
-+	cpuctx = container_of(ctx, struct perf_cpu_context, ctx);
-+
-+	if (--ctx->nr_cgroups)
-+		return;
-+
-+	if (ctx->is_active && cpuctx->cgrp)
- 		cpuctx->cgrp = NULL;
- 
--	cpuctx_entry = &cpuctx->cgrp_cpuctx_entry;
--	if (add)
--		list_add(cpuctx_entry,
--			 per_cpu_ptr(&cgrp_cpuctx_list, event->cpu));
--	else
--		list_del(cpuctx_entry);
-+	list_del(&cpuctx->cgrp_cpuctx_entry);
- }
- 
- #else /* !CONFIG_CGROUP_PERF */
-@@ -1096,11 +1103,14 @@ static inline u64 perf_cgroup_event_time(struct perf_event *event)
- }
- 
- static inline void
--list_update_cgroup_event(struct perf_event *event,
--			 struct perf_event_context *ctx, bool add)
-+perf_cgroup_event_enable(struct perf_event *event, struct perf_event_context *ctx)
+ 	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
+ 		preempt_disable();
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 3816a18..891ccad 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -858,7 +858,8 @@ void wq_worker_running(struct task_struct *task)
+  * @task: task going to sleep
+  *
+  * This function is called from schedule() when a busy worker is
+- * going to sleep.
++ * going to sleep. Preemption needs to be disabled to protect ->sleeping
++ * assignment.
+  */
+ void wq_worker_sleeping(struct task_struct *task)
  {
- }
+@@ -875,7 +876,8 @@ void wq_worker_sleeping(struct task_struct *task)
  
-+static inline void
-+perf_cgroup_event_disable(struct perf_event *event, struct perf_event_context *ctx)
-+{
-+}
- #endif
+ 	pool = worker->pool;
  
- /*
-@@ -1791,13 +1801,14 @@ list_add_event(struct perf_event *event, struct perf_event_context *ctx)
- 		add_event_to_groups(event, ctx);
- 	}
- 
--	list_update_cgroup_event(event, ctx, true);
--
- 	list_add_rcu(&event->event_entry, &ctx->event_list);
- 	ctx->nr_events++;
- 	if (event->attr.inherit_stat)
- 		ctx->nr_stat++;
- 
-+	if (event->state > PERF_EVENT_STATE_OFF)
-+		perf_cgroup_event_enable(event, ctx);
-+
- 	ctx->generation++;
- }
- 
-@@ -1976,8 +1987,6 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
- 
- 	event->attach_state &= ~PERF_ATTACH_CONTEXT;
- 
--	list_update_cgroup_event(event, ctx, false);
--
- 	ctx->nr_events--;
- 	if (event->attr.inherit_stat)
- 		ctx->nr_stat--;
-@@ -1994,8 +2003,10 @@ list_del_event(struct perf_event *event, struct perf_event_context *ctx)
- 	 * of error state is by explicit re-enabling
- 	 * of the event
- 	 */
--	if (event->state > PERF_EVENT_STATE_OFF)
-+	if (event->state > PERF_EVENT_STATE_OFF) {
-+		perf_cgroup_event_disable(event, ctx);
- 		perf_event_set_state(event, PERF_EVENT_STATE_OFF);
-+	}
- 
- 	ctx->generation++;
- }
-@@ -2226,6 +2237,7 @@ event_sched_out(struct perf_event *event,
- 
- 	if (READ_ONCE(event->pending_disable) >= 0) {
- 		WRITE_ONCE(event->pending_disable, -1);
-+		perf_cgroup_event_disable(event, ctx);
- 		state = PERF_EVENT_STATE_OFF;
- 	}
- 	perf_event_set_state(event, state);
-@@ -2363,6 +2375,7 @@ static void __perf_event_disable(struct perf_event *event,
- 		event_sched_out(event, cpuctx, ctx);
- 
- 	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
-+	perf_cgroup_event_disable(event, ctx);
- }
- 
- /*
-@@ -2746,7 +2759,7 @@ static int  __perf_install_in_context(void *info)
- 	}
- 
- #ifdef CONFIG_CGROUP_PERF
--	if (is_cgroup_event(event)) {
-+	if (event->state > PERF_EVENT_STATE_OFF && is_cgroup_event(event)) {
- 		/*
- 		 * If the current cgroup doesn't match the event's
- 		 * cgroup, we should not try to schedule it.
-@@ -2906,6 +2919,7 @@ static void __perf_event_enable(struct perf_event *event,
- 		ctx_sched_out(ctx, cpuctx, EVENT_TIME);
- 
- 	perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
-+	perf_cgroup_event_enable(event, ctx);
- 
- 	if (!ctx->is_active)
+-	if (WARN_ON_ONCE(worker->sleeping))
++	/* Return if preempted before wq_worker_running() was reached */
++	if (worker->sleeping)
  		return;
-@@ -3616,8 +3630,10 @@ static int merge_sched_in(struct perf_event *event, void *data)
- 	}
  
- 	if (event->state == PERF_EVENT_STATE_INACTIVE) {
--		if (event->attr.pinned)
-+		if (event->attr.pinned) {
-+			perf_cgroup_event_disable(event, ctx);
- 			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-+		}
- 
- 		*can_add_hw = 0;
- 		ctx->rotate_necessary = 1;
+ 	worker->sleeping = 1;
