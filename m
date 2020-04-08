@@ -2,121 +2,149 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E0AC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD4FC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD01420771
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105E220787
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgDHKE1 (ORCPT
+        id S1728128AbgDHKFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:04:27 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49870 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgDHKE0 (ORCPT
+        Wed, 8 Apr 2020 06:05:02 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:36300 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbgDHKFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:04:26 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Wed, 8 Apr 2020 06:05:02 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4960528E176;
-        Wed,  8 Apr 2020 11:04:24 +0100 (BST)
-Date:   Wed, 8 Apr 2020 12:04:18 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     <bbrezillon@kernel.org>, <vitor.soares@synopsys.com>,
-        mparab@cadence.com, pgaj@cadence.com,
-        linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] I3C mastership handover support
-Message-ID: <20200408120418.0d5235a6@collabora.com>
-In-Reply-To: <1586211645-8065-1-git-send-email-pthombar@cadence.com>
-References: <1586211645-8065-1-git-send-email-pthombar@cadence.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 4D9AB20027;
+        Wed,  8 Apr 2020 12:04:58 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 12:04:52 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] drm/panel: NT39016: Add support for multiple modes
+Message-ID: <20200408100452.GA20795@ravnborg.org>
+References: <20200408095830.8131-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408095830.8131-1-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
+        a=7gkXJVJtAAAA:8 a=8HLTJq3glsJ7WriVs_kA:9 a=-XbYOmXvRGsTpmsN:21
+        a=WDTzHPRIsYOqDQh2:21 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Parshuram,
+Hi Paul.
 
-On Tue, 7 Apr 2020 00:20:45 +0200
-Parshuram Thombare <pthombar@cadence.com> wrote:
+On Wed, Apr 08, 2020 at 11:58:29AM +0200, Paul Cercueil wrote:
+> Add support for multiple drm_display_mode entries. This will allow to
+> add a 50 Hz mode later.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Patch looks good.
 
-> Hi,
-> 
-> This patch series is to enable mastership handover feature in I3C
-> master subsystem and Cadence's I3C controller driver.
+Could we please use lower case in the $subject?
 
-It's definitely not the first version (as implied in the subject), and
-I'd like a proper changelog detailing what has changed since the last
-version (the one sent by Przemek).
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-Thanks,
+I asume you will apply yourself.
 
-Boris
+	Sam
 
+> ---
+>  drivers/gpu/drm/panel/panel-novatek-nt39016.c | 33 +++++++++++++------
+>  1 file changed, 23 insertions(+), 10 deletions(-)
 > 
-> 
-> [PATCH 1/3]
-> i3c: master: split bus_init callback into bus_init and master_set_info
-> There are 2 reasons for this split
-> Currently bus_init callback is involved in
-> a. Controller specific settings such as clock prescalar, enabling
->    different functionalities and finally enabling the controller.
-> b. Allocating address to the main master and calling 
->    i3c_master_set_info, which basically create a I3C device for master
->    and add it to system. This is fine for main master, but for
->    secondary master this should be deferred until controller actually
->    owns the bus/mastership.
->    
-> Another reason is, to support secondary master initialization without
-> board info, controller specific bus mode setting need to be done twice
-> First with pure bus mode and second time when actual bus mode is known
-> based on data received through DEFSLVS, whereas master set info is
-> supposed to be done only once.
-> 	      
-> [PATCH 2/3]
-> i3c: add mastership handover support to i3c master subsystem
-> This patch add mastership handover support as per MIPI I3C
-> spec v1.0. Main master and secondary masters starts in pure
-> bus mode to allow enumeration (DAA) to happen in same bus mode.
-> Secondary masters are not required to have information about
-> other devices connected on the bus through board info, this
-> information is derived from DEFSLVS received from main
-> master. While acquiring mastership, requesting master always
-> make sure that it has active dynamic address, and received
-> DEFSLVS at least once. Mastership request state machine
-> make sure that any pending DEFSLVS is processed, so that
-> when device become master it always have correct view
-> of the bus.
-> 
-> [PATCH 3/3]
-> i3c: master: add mastership handover support to cdns i3c master driver
-> This patch adds mastership handover support to the Cadence
-> I3C controller driver. Basically, this include necessary
-> callbacks for mastership request.
-> 
-> Regards,
-> Parshuram Thombare
-> 
-> Parshuram Thombare (3):
->   i3c: master: split bus_init callback into bus_init and master_set_info
->   i3c: add mastership handover support to i3c master subsystem
->   i3c: master: add mastership handover support to cdns i3c master driver
-> 
->  drivers/i3c/master.c                 | 490 ++++++++++++++++++++++++---
->  drivers/i3c/master/dw-i3c-master.c   |  29 +-
->  drivers/i3c/master/i3c-master-cdns.c | 385 ++++++++++++++++++---
->  include/linux/i3c/master.h           |  47 ++-
->  4 files changed, 854 insertions(+), 97 deletions(-)
-> 
-
+> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt39016.c b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+> index a470810f7dbe..f1286cf6528b 100644
+> --- a/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+> +++ b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+> @@ -49,7 +49,8 @@ enum nt39016_regs {
+>  #define NT39016_SYSTEM_STANDBY	BIT(1)
+>  
+>  struct nt39016_panel_info {
+> -	struct drm_display_mode display_mode;
+> +	const struct drm_display_mode *display_modes;
+> +	unsigned int num_modes;
+>  	u16 width_mm, height_mm;
+>  	u32 bus_format, bus_flags;
+>  };
+> @@ -212,15 +213,22 @@ static int nt39016_get_modes(struct drm_panel *drm_panel,
+>  	struct nt39016 *panel = to_nt39016(drm_panel);
+>  	const struct nt39016_panel_info *panel_info = panel->panel_info;
+>  	struct drm_display_mode *mode;
+> +	unsigned int i;
+>  
+> -	mode = drm_mode_duplicate(connector->dev, &panel_info->display_mode);
+> -	if (!mode)
+> -		return -ENOMEM;
+> +	for (i = 0; i < panel_info->num_modes; i++) {
+> +		mode = drm_mode_duplicate(connector->dev,
+> +					  &panel_info->display_modes[i]);
+> +		if (!mode)
+> +			return -ENOMEM;
+> +
+> +		drm_mode_set_name(mode);
+>  
+> -	drm_mode_set_name(mode);
+> +		mode->type = DRM_MODE_TYPE_DRIVER;
+> +		if (panel_info->num_modes == 1)
+> +			mode->type |= DRM_MODE_TYPE_PREFERRED;
+>  
+> -	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> -	drm_mode_probed_add(connector, mode);
+> +		drm_mode_probed_add(connector, mode);
+> +	}
+>  
+>  	connector->display_info.bpc = 8;
+>  	connector->display_info.width_mm = panel_info->width_mm;
+> @@ -230,7 +238,7 @@ static int nt39016_get_modes(struct drm_panel *drm_panel,
+>  					 &panel_info->bus_format, 1);
+>  	connector->display_info.bus_flags = panel_info->bus_flags;
+>  
+> -	return 1;
+> +	return panel_info->num_modes;
+>  }
+>  
+>  static const struct drm_panel_funcs nt39016_funcs = {
+> @@ -316,8 +324,8 @@ static int nt39016_remove(struct spi_device *spi)
+>  	return 0;
+>  }
+>  
+> -static const struct nt39016_panel_info kd035g6_info = {
+> -	.display_mode = {
+> +static const struct drm_display_mode kd035g6_display_modes[] = {
+> +	{
+>  		.clock = 6000,
+>  		.hdisplay = 320,
+>  		.hsync_start = 320 + 10,
+> @@ -330,6 +338,11 @@ static const struct nt39016_panel_info kd035g6_info = {
+>  		.vrefresh = 60,
+>  		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+>  	},
+> +};
+> +
+> +static const struct nt39016_panel_info kd035g6_info = {
+> +	.display_modes = kd035g6_display_modes,
+> +	.num_modes = ARRAY_SIZE(kd035g6_display_modes),
+>  	.width_mm = 71,
+>  	.height_mm = 53,
+>  	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> -- 
+> 2.25.1
