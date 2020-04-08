@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608DBC2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE07C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CD220768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1ED206F7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:41:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adDCDCEi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpwFnppq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgDHUlL (ORCPT
+        id S1729304AbgDHUlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:41:11 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:36464 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728958AbgDHUlK (ORCPT
+        Wed, 8 Apr 2020 16:41:13 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42569 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728970AbgDHUlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Apr 2020 16:41:10 -0400
-Received: by mail-lj1-f175.google.com with SMTP id b1so9185154ljp.3;
-        Wed, 08 Apr 2020 13:41:08 -0700 (PDT)
+Received: by mail-lj1-f194.google.com with SMTP id q19so9109033ljp.9;
+        Wed, 08 Apr 2020 13:41:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OQduJrIJ0M6lVkhdvPA5KPzWn/6ZJ/mPlQwccUPG7sc=;
-        b=adDCDCEiXZExjvCyStHBQbZ1qFvJehQYRn43WnH3XrG+S4JdGm77jlgVlbSfbbOtAh
-         hmdXLcXyNHcrFceAD6IOKZiKRc+l+MdIYdfwjmeUg/D/fP9wAtDG9ahKpNG7lISRAyzV
-         U3TVitcO1rfahXKEYVw8amKARXTwI7WMt+FRvqWkEyyB3Ycmf72BtqfQnDhnZFWgAHb2
-         k7lXLJr2kUgFDXMZMLlsB1I+MbXlKuOWv6msAXXEt+jZ0DWl1OStvOmhhSk+gBGl5xnp
-         5Agl5x10jY9EEbqVyVlXUZ/SxRkvUTvBR1XnoaysUjrIkcLQfRgMyNDHvhoB6HqsUSm3
-         mE2w==
+        bh=aMH1Nn5N++bI82vIh9Zeuiq3h9nQ3Tmnp6S+rKl7EQQ=;
+        b=BpwFnppqcLZOPMRxvow1AbvcXuw+LGJXXW3YesZitK0ee3meIpNyhFQSaN6lKc2E3e
+         QdqeRZbSO1mhtl1vNx8CDU0cePi/UMCD82sMpGvEJoy+gUY9DSbDgxRtm8u721XZykxN
+         Vc/7OcSl52+VKP8OI2V89pLXOU231Ua3zn3wpElhj9476Bw5xpE+6GoOQiG8Lrg9yBR4
+         FIykuxoZlnbg0E3L9X7Oouc4GwTVvJiSotpWaMjXC1h4kbL5Os0M5YuyV24j0b5NOvfA
+         tyFmGVVqDsjFXuhiBQ+bJjzCqB2ywzYv0PutfO5UDbom9CAFrsC1qgdRVdU3vsSrLYQW
+         0S8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OQduJrIJ0M6lVkhdvPA5KPzWn/6ZJ/mPlQwccUPG7sc=;
-        b=mSkqsEayoymx6XSa/+jxhlgYlMX/tM42JdEL8mwzP5fw6JMDLzKUz+68XOWbAxJaAp
-         Uj4xkHcct2Vsj2f3SGsdLmQZn05v0s0sm2zKnSBNDJJdwOlq90it4du8b6CWjAxNkFjr
-         fjPYGGykqYpYxoAX23tYxnfY/B0J69skhuR0Oa4LDGxNgWdIhoLXUBTJooGJclbJG0oa
-         w85+C5xoKTLt3sY10cSyY9AthH/bfmuj4upEJcKlYXpipq95KFzzD1BA3lD8OCYG02OY
-         XmM8w5mQHEVOQnqa90QneHVPy+kEDvXOmawzCmALTOujK1fbi3GAxu2Umn7QL85SKFql
-         Li4Q==
-X-Gm-Message-State: AGi0PuYFgc9o7HBw1CD9VDb5oT9bQpqHmc9kCQm3W4M6Zalc/gQHOURm
-        iz66LL7JSV2tQpM634mc1nk=
-X-Google-Smtp-Source: APiQypIHnl1BHhQMnWYNHWtb9wOB24IvIoFqmVA8IndNwohXac8EE9O1Nbyzzaqz3g76SgIWn16vGQ==
-X-Received: by 2002:a2e:a16d:: with SMTP id u13mr5965845ljl.140.1586378467430;
-        Wed, 08 Apr 2020 13:41:07 -0700 (PDT)
+        bh=aMH1Nn5N++bI82vIh9Zeuiq3h9nQ3Tmnp6S+rKl7EQQ=;
+        b=UJ4Ngw3sAGZu9LnpYsD8EoIuGeGfKeDW7tKyLd72mdYJGfVBp3a3Wp+HUF+eLWgVnQ
+         JkXWC10bcNjdDgJzmg/EIY17S0uSVZeEwbR0kGRsXkOMuTd7ve9wzPBdluTUkaPiCu7e
+         TRvzdpXPOuYIsxTgjF1jCh0aowaIwHf0u5/VkZYhbzCQYMJLiyXQADuAcrTgwHaICdNo
+         fEmeuxTRk09PBa+V6/SD/ljxUYdgalhnldJURyGHIsGvTzBHKbqAMoE7ShxZMBa/m+YG
+         LnPqYyKeoW/+yWHh80w6LySMB4jEAsVIAG5uLoYRpKMWyrejpTsOChwzE2rFX2SDSlvV
+         /KSg==
+X-Gm-Message-State: AGi0Pua21mxtCStAeEZDKrrX4psHsk8p1gZ5fL81IAM2xNTWHvRgVk61
+        JPDmFF6vtwEG/NVDsir3D1o=
+X-Google-Smtp-Source: APiQypKf0vBdDq3CrSKg/wNsyqgATcaa9BpFhUQ8ohV3RW3Xy+aaXR9CF0tG3AcI7mKPUjvKhOMCNQ==
+X-Received: by 2002:a2e:5844:: with SMTP id x4mr5899665ljd.40.1586378468632;
+        Wed, 08 Apr 2020 13:41:08 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id p14sm13189727lfe.87.2020.04.08.13.41.06
+        by smtp.gmail.com with ESMTPSA id p14sm13189727lfe.87.2020.04.08.13.41.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 13:41:06 -0700 (PDT)
+        Wed, 08 Apr 2020 13:41:08 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -70,9 +70,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Matt Merhar <mattmerhar@protonmail.com>
 Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/6] dt-bindings: Add vendor prefix for Acer Inc.
-Date:   Wed,  8 Apr 2020 23:39:42 +0300
-Message-Id: <20200408203945.10329-4-digetx@gmail.com>
+Subject: [PATCH v3 4/6] dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
+Date:   Wed,  8 Apr 2020 23:39:43 +0300
+Message-Id: <20200408203945.10329-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200408203945.10329-1-digetx@gmail.com>
 References: <20200408203945.10329-1-digetx@gmail.com>
@@ -83,29 +83,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acer is a hardware and electronics corporation, specializing in advanced
-electronics technology. Acer's products include desktop PCs, laptop PCs,
-tablets, servers, displays, storage devices, virtual reality devices,
-smartphones and peripherals. Their web site is http://www.acer.com/.
+Add a binding for the Tegra20-based Acer Iconia Tab A500 tablet device.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/tegra.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index bf95079a82da..90c178abfa9e 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -27,6 +27,8 @@ patternProperties:
-     description: Abilis Systems
-   "^abracon,.*":
-     description: Abracon Corporation
-+  "^acer,.*":
-+    description: Acer Inc.
-   "^acme,.*":
-     description: Acme Systems srl
-   "^actions,.*":
+diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
+index 60b38eb5c61a..7fd0b66c69b2 100644
+--- a/Documentation/devicetree/bindings/arm/tegra.yaml
++++ b/Documentation/devicetree/bindings/arm/tegra.yaml
+@@ -34,6 +34,9 @@ properties:
+               - toradex,colibri_t20-iris
+           - const: toradex,colibri_t20
+           - const: nvidia,tegra20
++      - items:
++          - const: acer,picasso
++          - const: nvidia,tegra20
+       - items:
+           - enum:
+               - nvidia,beaver
 -- 
 2.25.1
 
