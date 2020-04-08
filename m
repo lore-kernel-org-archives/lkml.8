@@ -2,150 +2,141 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75DCC2BA80
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D0CC2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E95B206C0
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g2AO+xIk"
+	by mail.kernel.org (Postfix) with ESMTP id 388FA20753
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbgDHWT2 (ORCPT
+        id S1726552AbgDHW0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 18:19:28 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35139 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgDHWT2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 18:19:28 -0400
-Received: by mail-il1-f195.google.com with SMTP id t10so3197085iln.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 15:19:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qniumfFvLliMhVFnxnrnB7Q2WNhjy7ZRmIrlX3T4sxk=;
-        b=g2AO+xIkAkescIVWRA2GPbu6jSL6GUSozW16kCmcsLWRJYzFSv2OkLIX9SMR0nz6B9
-         FiO5toadCf87F3YSjodNMUwO1DRG8iBbBQYFOPf1rGwzK14fKlPGqhA5JFonTHjdjjbR
-         p3GvJT4dQKxEzlSzshcRqzcqaTyvCqZ1jDfkh+DO0hH7osrAYDUj7br8bFRy9nod6I4Y
-         9jIEEXq5pQljiu/OH0vDK86GcEp249O6WuFiyBUqPts8oiktmGC2C6rMnzq9/uk2Arc6
-         niRlCsxH/FSjqRhNieNzimE2XSN3kMykP9ZGodOQ6tBsSP8i8UYCzoC0BeRz8QBjOtOB
-         JzsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qniumfFvLliMhVFnxnrnB7Q2WNhjy7ZRmIrlX3T4sxk=;
-        b=k39+Kl2ev3NpVqBL7hHknn76aC7vRhCiLNBZNuwNYXeK86/bpalWt46pX/R1Mb/cnr
-         yoUpiwwx5gcoXh0ojOAPXKduK00w/gtDWY9gTYTJhZvozEndWS9Em9Dm9nMve9vOmITx
-         2pkfM4zJ2nP2TEPo28waiLA1fLqwpkEBJN5ZSSpBupi7POoTgHxkxOQjTKjcc70ZIlOi
-         DDnQ9YFV4Tjxi69n2VBM95cjgnTE91yW/sHkUUX4ZdNPJ61SW0+HD7C367cQE08IwPf9
-         7zIaVTW+FEhnH/uxC1xQrAv/dvnx2dmJQDVAHgqm1gANMyCEC4BkaacMbzULLN7I2Nc+
-         92YQ==
-X-Gm-Message-State: AGi0PuY/Nir/7c8iHpJZS320I62Ib3K4iufjGWlszTGfGgvZBIRZAcAR
-        LVo7/kPUOz8bI0qwYUcROsVq+qyqD5jCCw==
-X-Google-Smtp-Source: APiQypJlQ4pCg3c6kRw4kbM5us3jsIhB7uNITvlnj8wNX6hNeoZOozNjSRwRazJUGvIwcGLTHcYMjw==
-X-Received: by 2002:a92:9edc:: with SMTP id s89mr10655671ilk.229.1586384366878;
-        Wed, 08 Apr 2020 15:19:26 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id w7sm5153940ior.51.2020.04.08.15.19.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2020 15:19:26 -0700 (PDT)
-Subject: Re: [PATCH 1/3] remoteproc: fix a bug in rproc_alloc()
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Andy Gross <agross@kernel.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200403175005.17130-1-elder@linaro.org>
- <20200403175005.17130-2-elder@linaro.org>
- <CANLsYkx4pSs+j83ewJpOkQmY7=q=k71xg7N9A=sDWrDZKzzQTA@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <9695b13b-77e1-6a5f-9cff-e4c15c46f311@linaro.org>
-Date:   Wed, 8 Apr 2020 17:18:47 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 8 Apr 2020 18:26:39 -0400
+Received: from mga07.intel.com ([134.134.136.100]:54798 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726469AbgDHW0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 18:26:39 -0400
+IronPort-SDR: 6pq+mChRpqA0WZFWT5H3wsSm4AAYwnhYuM2DQYwha+bofPAcWqj3NHJUCLRkY3+/zvz4g5nL99
+ 1FZFTvi+Qe5Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 15:26:37 -0700
+IronPort-SDR: S7w5tzhSIUMK1s0Evt+AKVNgzUL9c21YMfReFPfYHTUsV68lgWkEkFlNelu5tYpfqWc5BiUCib
+ ekmJgdujvqMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,360,1580803200"; 
+   d="scan'208";a="275594942"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Apr 2020 15:26:37 -0700
+Date:   Wed, 8 Apr 2020 15:26:36 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V6 7/8] fs/xfs: Change xfs_ioctl_setattr_dax_invalidate()
+ to xfs_ioctl_dax_check()
+Message-ID: <20200408222636.GC664132@iweiny-DESK2.sc.intel.com>
+References: <20200407182958.568475-1-ira.weiny@intel.com>
+ <20200407182958.568475-8-ira.weiny@intel.com>
+ <20200408022318.GJ24067@dread.disaster.area>
+ <20200408095803.GB30172@quack2.suse.cz>
+ <20200408210950.GL24067@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <CANLsYkx4pSs+j83ewJpOkQmY7=q=k71xg7N9A=sDWrDZKzzQTA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408210950.GL24067@dread.disaster.area>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/8/20 5:16 PM, Mathieu Poirier wrote:
-> Hi Alex,
+On Thu, Apr 09, 2020 at 07:09:50AM +1000, Dave Chinner wrote:
+> On Wed, Apr 08, 2020 at 11:58:03AM +0200, Jan Kara wrote:
+> > On Wed 08-04-20 12:23:18, Dave Chinner wrote:
+> > > On Tue, Apr 07, 2020 at 11:29:57AM -0700, ira.weiny@intel.com wrote:
+> > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > 
+> > > > We only support changing FS_XFLAG_DAX on directories.  Files get their
+> > > > flag from the parent directory on creation only.  So no data
+> > > > invalidation needs to happen.
+> > > 
+> > > Which leads me to ask: how are users and/or admins supposed to
+> > > remove the flag from regular files once it is set in the filesystem?
+> > > 
+> > > Only being able to override the flag via the "dax=never" mount
+> > > option means that once the flag is set, nobody can ever remove it
+> > > and they can only globally turn off dax if it gets set incorrectly.
+> > > It also means a global interrupt because all apps on the filesystem
+> > > need to be stopped so the filesystem can be unmounted and mounted
+> > > again with dax=never. This is highly unfriendly to admins and users.
+> > > 
+> > > IOWs, we _must_ be able to clear this inode flag on regular inodes
+> > > in some way. I don't care if it doesn't change the current in-memory
+> > > state, but we must be able to clear the flags so that the next time
+> > > the inodes are instantiated DAX is not enabled for those files...
+> > 
+> > Well, there's one way to clear the flag: delete the file. If you still care
+> > about the data, you can copy the data first. It isn't very convenient, I
+> > agree, and effectively means restarting whatever application that is using
+> > the file.
 > 
-> On Fri, 3 Apr 2020 at 11:50, Alex Elder <elder@linaro.org> wrote:
->>
->> If ida_simple_get() returns an error when called in rproc_alloc(),
->> put_device() is called to clean things up.  By this time the rproc
->> device type has been assigned, with rproc_type_release() as the
->> release function.
->>
->> The first thing rproc_type_release() does is call:
->>     idr_destroy(&rproc->notifyids);
->>
->> But at the time the ida_simple_get() call is made, the notifyids
->> field in the remoteproc structure has not been initialized.
->>
->> I'm not actually sure this case causes an observable problem, but
->> it's incorrect.  Fix this by initializing the notifyids field before
->> calling ida_simple_get() in rproc_alloc().
->>
+> Restarting the application is fine. Having to backup/restore or copy
+> the entire data set just to turn off an inode flag? That's not a
+> viable management strategy. We could be talking about terabytes of
+> data here.
 > 
-> Both Suman and I are meddling in function rproc_alloc() for our
-> respective work [1][2].  I will add this patch to a set that refactors
-> rproc_alloc() as soon as v5.7-rc1 comes out.  That way we can all base
-> our work on the same foundation and Bjorn doesn't have to fix 3
-> different merge conflicts.
+> I explained how we can safely remove the flag in the other branch of
+> this thread...
 > 
-> Thanks,
-> Mathieu
+> > But it seems like more understandable API than letting user clear
+> > the on-disk flag but the inode will still use DAX until kernel decides to
+> > evict the inode
+> 
+> Certainly doesn't seem that way to me. "stop app, clear flags, drop
+> caches, restart app" is a pretty simple, easy thing to do for an
+> admin.
 
-Fine with me.  Thanks a lot.	-Alex
+I want to be clear here: I think this is reasonable.  However, I don't see
+consensus for that interface.
 
-> [1]. https://patchwork.kernel.org/patch/11456385/
-> [2]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=261069
+Christoph in particular said that a 'lazy change' is: "... straight from
+the playbook for arcane and confusing API designs."
+
+	"But returning an error and doing a lazy change anyway is straight from
+	the playbook for arcane and confusing API designs."
+
+	-- https://lore.kernel.org/lkml/20200403072731.GA24176@lst.de/
+
+Did I somehow misunderstand this?
+
+Again for this patch set, 5.8, lets leave that alone for now.  I think if we
+disable setting this on files right now we can still allow it in the future as
+another step forward.
+
 > 
->> Signed-off-by: Alex Elder <elder@linaro.org>
->> ---
->>  drivers/remoteproc/remoteproc_core.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->> index e12a54e67588..59b6eb22f01c 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -2054,6 +2054,8 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->>         rproc->dev.class = &rproc_class;
->>         rproc->dev.driver_data = rproc;
->>
->> +       idr_init(&rproc->notifyids);
->> +
->>         /* Assign a unique device index and name */
->>         rproc->index = ida_simple_get(&rproc_dev_index, 0, 0, GFP_KERNEL);
->>         if (rproc->index < 0) {
->> @@ -2078,8 +2080,6 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
->>
->>         mutex_init(&rproc->lock);
->>
->> -       idr_init(&rproc->notifyids);
->> -
->>         INIT_LIST_HEAD(&rproc->carveouts);
->>         INIT_LIST_HEAD(&rproc->mappings);
->>         INIT_LIST_HEAD(&rproc->traces);
->> --
->> 2.20.1
->>
+> Especially compared to process that is effectively "stop app, backup
+> data set, delete data set, clear flags, restore data set, restart
+> app"
+> 
+> > - because that often means you need to restart the
+> > application using the file anyway for the flag change to have any effect.
+> 
+> That's a trivial requirement compared to the downtime and resource
+> cost of a data set backup/restore just to clear inode flags....
+> 
+
+I agree but others do not.  This still provides a baby step forward and some
+granularity for those who plan out the creation of their files.
+
+Ira
 
