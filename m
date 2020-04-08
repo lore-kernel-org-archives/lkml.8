@@ -2,111 +2,108 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD5AC2BB1D
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BB6C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0262054F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC2A20747
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 00:14:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mrCcAyRv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgDHANe (ORCPT
+        id S1726510AbgDHAOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 20:13:34 -0400
-Received: from mga01.intel.com ([192.55.52.88]:14879 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgDHANd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 20:13:33 -0400
-IronPort-SDR: F39ue/fKrtY/EimQVXXVJcTJPLk4URNj1B2VRa1/c7k3/OROszMgYlmzx1L/SjHAp2PAtcPepE
- mz8XbX6U9JrA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2020 17:13:33 -0700
-IronPort-SDR: meCSMCCsHwJL76gliCNHsz/xIRX6N0gXA0H4qHmwyncRdARH0D4hQj9BdM4PIyZOmj6XPOEX4V
- Icft9yISo17A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,357,1580803200"; 
-   d="scan'208";a="286383509"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Apr 2020 17:13:33 -0700
-Date:   Tue, 7 Apr 2020 17:13:33 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 5/8] fs/xfs: Create function xfs_inode_enable_dax()
-Message-ID: <20200408001332.GB569068@iweiny-DESK2.sc.intel.com>
-References: <20200407182958.568475-1-ira.weiny@intel.com>
- <20200407182958.568475-6-ira.weiny@intel.com>
- <20200408000533.GG24067@dread.disaster.area>
+        Tue, 7 Apr 2020 20:14:11 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:15390 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726406AbgDHAOL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 20:14:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1586304850; x=1617840850;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=HldeFSSVUi4kbdiD8texuja1d//0E3JziItUIw9NKbU=;
+  b=mrCcAyRvqeaT0FWIwpzEdeoFspcrYhzeF9eYe/AsK7QlmVGoCiSBuSWq
+   xmJjk4eVnNYWN+xaIGIVZWzDBXmuvsIMRvN/IdZihdHwYta5xGinBhRFV
+   Hdg7iSQ0CVkx+ugm0mIVrMjOQhEpJOv7zPkrkwqyz4j3lqGqbFkEaNCnX
+   Y=;
+IronPort-SDR: 07C6nRvRXabtPud/3zjaww/pOxYGPeR6gV0ZMU/NLunb3OqBFfqMpP3v9lID2H9euqX/VORd9/
+ 2OhhcO883Fzg==
+X-IronPort-AV: E=Sophos;i="5.72,357,1580774400"; 
+   d="scan'208";a="37263382"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 08 Apr 2020 00:14:08 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id 5A68AA1F1A;
+        Wed,  8 Apr 2020 00:14:08 +0000 (UTC)
+Received: from EX13D01UWB004.ant.amazon.com (10.43.161.157) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 8 Apr 2020 00:14:04 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13d01UWB004.ant.amazon.com (10.43.161.157) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 8 Apr 2020 00:14:04 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
+ Wed, 8 Apr 2020 00:14:04 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "keescook@chromium.org" <keescook@chromium.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "dave.hansen@intel.com" <dave.hansen@intel.com>
+Subject: Re: [PATCH v2 3/4] arch/x86: Optionally flush L1D on context switch
+Thread-Topic: [PATCH v2 3/4] arch/x86: Optionally flush L1D on context switch
+Thread-Index: AQHWDTqcWcoKwxiYQkqA/bhLw4lsnQ==
+Date:   Wed, 8 Apr 2020 00:14:04 +0000
+Message-ID: <a20d9668aeb48e385fa6e6daf18d356bd087f11b.camel@amazon.com>
+References: <20200406031946.11815-1-sblbir@amazon.com>
+         <20200406031946.11815-4-sblbir@amazon.com>
+         <87v9maj1kx.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87v9maj1kx.fsf@nanos.tec.linutronix.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.155]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A71A75E4CEEC7E4FAE373FCC81411526@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408000533.GG24067@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 10:05:33AM +1000, Dave Chinner wrote:
-> On Tue, Apr 07, 2020 at 11:29:55AM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > xfs_inode_supports_dax() should reflect if the inode can support DAX not
-> > that it is enabled for DAX.
-> > 
-> > Change the use of xfs_inode_supports_dax() to reflect only if the inode
-> > and underlying storage support dax.
-> > 
-> > Add a new function xfs_inode_enable_dax() which reflects if the inode
-> > should be enabled for DAX.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ....
-> >  
-> > +STATIC bool
-> > +xfs_inode_enable_dax(
-> > +	struct xfs_inode *ip)
-> > +{
-> > +	u32 dax_mode = xfs_mount_dax_mode(ip->i_mount);
-> > +
-> > +	if (dax_mode == XFS_DAX_NEVER || !xfs_inode_supports_dax(ip))
-> > +		return false;
-> > +	if (dax_mode == XFS_DAX_ALWAYS || ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
-> > +		return true;
-> 
-> These compound || statements are better written as single conditions
-> as they are all sequential logic checks and we can't skip over
-> checks.
-> 
-> 	if (mp->m_flags & XFS_MOUNT_DAX_NEVER)
-> 		return false;
-> 	if (!xfs_inode_supports_dax(ip))
-> 		return false;
-> 	if (mp->m_flags & XFS_MOUNT_DAX_ALWAYS)
-> 		return true;
-> 	if (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
-> 		return true;
-> 	return false;
-
-Updated for V7
-
-Thanks,
-Ira
-
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+T24gV2VkLCAyMDIwLTA0LTA4IGF0IDAxOjUyICswMjAwLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6
+DQo+IA0KPiBCYWxiaXIsDQo+IA0KPiBCYWxiaXIgU2luZ2ggPHNibGJpckBhbWF6b24uY29tPiB3
+cml0ZXM6DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3RsYmZsdXNoLmgN
+Cj4gPiBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL3RsYmZsdXNoLmgNCj4gPiBpbmRleCA2ZjY2ZDg0
+MTI2MmQuLjY5ZTZlYTIwNjc5YyAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2Fz
+bS90bGJmbHVzaC5oDQo+ID4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vdGxiZmx1c2guaA0K
+PiA+IEBAIC0xNzIsNyArMTcyLDcgQEAgc3RydWN0IHRsYl9zdGF0ZSB7DQo+ID4gICAgICAgLyog
+TGFzdCB1c2VyIG1tIGZvciBvcHRpbWl6aW5nIElCUEIgKi8NCj4gPiAgICAgICB1bmlvbiB7DQo+
+ID4gICAgICAgICAgICAgICBzdHJ1Y3QgbW1fc3RydWN0ICAgICAgICAqbGFzdF91c2VyX21tOw0K
+PiA+IC0gICAgICAgICAgICAgdW5zaWduZWQgbG9uZyAgICAgICAgICAgbGFzdF91c2VyX21tX2li
+cGI7DQo+ID4gKyAgICAgICAgICAgICB1bnNpZ25lZCBsb25nICAgICAgICAgICBsYXN0X3VzZXJf
+bW1fc3BlYzsNCj4gPiAtc3RhdGljIGlubGluZSB1bnNpZ25lZCBsb25nIG1tX21hbmdsZV90aWZf
+c3BlY19pYihzdHJ1Y3QgdGFza19zdHJ1Y3QNCj4gPiAqbmV4dCkNCj4gPiArc3RhdGljIGlubGlu
+ZSB1bnNpZ25lZCBsb25nIG1tX21hbmdsZV90aWZfc3BlY19iaXRzKHN0cnVjdCB0YXNrX3N0cnVj
+dA0KPiA+ICpuZXh0KQ0KPiA+IC1zdGF0aWMgdm9pZCBjb25kX2licGIoc3RydWN0IHRhc2tfc3Ry
+dWN0ICpuZXh0KQ0KPiA+ICtzdGF0aWMgdm9pZCBjb25kX21pdGlnYXRpb24oc3RydWN0IHRhc2tf
+c3RydWN0ICpuZXh0KQ0KPiA+ICB7DQo+ID4gKyAgICAgdW5zaWduZWQgbG9uZyBwcmV2X21tLCBu
+ZXh0X21tOw0KPiA+ICsNCj4gPiAgICAgICBpZiAoIW5leHQgfHwgIW5leHQtPm1tKQ0KPiA+ICAg
+ICAgICAgICAgICAgcmV0dXJuOw0KPiANCj4gY2FuIHlvdSBwbGVhc2Ugc3BsaXQgb3V0IHRoZXNl
+IHByZXBhcmF0b3J5IGNoYW5nZXMgaW50byBhIHNlcGFyYXRlDQo+IHBhdGNoPw0KPiANCg0KV2ls
+bCBkbyBhbmQgcmVwb3N0IGEgbmV3IGl0ZXJhdGlvbg0KDQpCYWxiaXIgU2luZ2gNCg0K
