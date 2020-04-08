@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2052CC2BBC7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4A1C2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDAD62082F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AA020769
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 05:06:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cymcX7cs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AlnOo69N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbgDHFGB (ORCPT
+        id S1726627AbgDHFFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 01:06:01 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38728 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgDHFFt (ORCPT
+        Wed, 8 Apr 2020 01:05:32 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38012 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgDHFFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 01:05:49 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03853ldR191183;
-        Wed, 8 Apr 2020 05:05:06 GMT
+        Wed, 8 Apr 2020 01:05:30 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03853MYL179629;
+        Wed, 8 Apr 2020 05:05:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2020-01-29;
- bh=9tI0JiEef8to344a69A5BaCsrTLQkt/TJVKmTnFs63o=;
- b=cymcX7cssNqc00recnMFSS2WRHjmFb+WkYX/rdlb2DTEEo/1m5i0n7hDKVgpoqne9dgn
- qV1fq5CSllni2nW8Do8aEIZhVjZ8agzgViY1rUV1JF5H+iB6BJ3DhfFb/tj85Neao/JM
- UbaVGFXzb3MRcA0skHvewC8LLUGflolD4ki3Io32ZblIdAcM/dOjL0uK+npq1AsJQpiv
- PSoqZvsLMGnuFEHxqgAokUGAbjWncy15IVg27Xwes+Gn1YoKQe/F9sRwPfea2sYw8xQa
- 0v3LPO37oQizGXncjiBA6XzhmWHHck7+6W6fBNpbaWygDfMk5OaOnmcap0yxwdwkaxkI RA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3091m0s0ru-1
+ bh=ZGw+hgAAF68C57Q7ZOripu6KHJbA5oEpyXh43CXBxZY=;
+ b=AlnOo69NHgytLqrqPenbwiO51OpjhQm6qCRzV044f8RNfXL639+j9+y4lJ1hDyZW/UmJ
+ hLXcRRBSui97Qw4QuVYDUMVEjBk9jFHguLdJw8P21Nln8iACE1ScZwMoS6ya9yIShqab
+ vsVwbFuUeu9oodd3WT/WD4bTepdiwomDvs9WcyTN3mi6JVaGJz3Tc967HJV+Uo1ZJhxJ
+ 2TyMGCpZCeQJR4Uix5ZSjbPjc1n0ucB2dUw3TQm3oHWvqv9lxrSy8o365UX+m4GJUcK6
+ c6qFYtvnLzekrWD7m5COhXYsddWMeclqCbgOKYV4cyGs+WZI9yDH0o1gNJSPg839s7p9 pA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 3091mnh148-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:06 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03852XvD062260;
-        Wed, 8 Apr 2020 05:05:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 3091mh1kc5-1
+        Wed, 08 Apr 2020 05:05:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03853KZ9158671;
+        Wed, 8 Apr 2020 05:05:13 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 3091m01fuy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 08 Apr 2020 05:05:05 +0000
+        Wed, 08 Apr 2020 05:05:13 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 038554hD007324;
-        Wed, 8 Apr 2020 05:05:04 GMT
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 03855AVI015225;
+        Wed, 8 Apr 2020 05:05:10 GMT
 Received: from monad.ca.oracle.com (/10.156.75.81)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 07 Apr 2020 22:05:04 -0700
+        with ESMTP ; Tue, 07 Apr 2020 22:05:09 -0700
 From:   Ankur Arora <ankur.a.arora@oracle.com>
 To:     linux-kernel@vger.kernel.org, x86@kernel.org
 Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
@@ -61,217 +61,240 @@ Cc:     peterz@infradead.org, hpa@zytor.com, jpoimboe@redhat.com,
         kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
         virtualization@lists.linux-foundation.org,
         Ankur Arora <ankur.a.arora@oracle.com>
-Subject: [RFC PATCH 05/26] x86/alternatives: Rename alternatives_smp*, smp_alt_module
-Date:   Tue,  7 Apr 2020 22:03:02 -0700
-Message-Id: <20200408050323.4237-6-ankur.a.arora@oracle.com>
+Subject: [RFC PATCH 09/26] x86/paravirt: Add runtime_patch()
+Date:   Tue,  7 Apr 2020 22:03:06 -0700
+Message-Id: <20200408050323.4237-10-ankur.a.arora@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200408050323.4237-1-ankur.a.arora@oracle.com>
 References: <20200408050323.4237-1-ankur.a.arora@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 bulkscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004080037
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 bulkscore=0 adultscore=0
+ impostorscore=0 phishscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
  definitions=main-2004080037
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9584 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 phishscore=0 suspectscore=2 bulkscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename alternatives_smp_module_*(), smp_alt_module to reflect
-their new purpose.
+runtime_patch() generates insn sequences for patching supported pv_ops.
+It does this by calling paravirt_patch_default() or native_patch()
+dpending on if the target is a paravirt or native pv-op.
+
+In addition, runtime_patch() also whitelists pv-ops that are safe to
+patch at runtime.
+
+The static conditions that need to be satisfied to patch safely:
+ - Insn sequences under replacement need to execute without preemption.
+   This is meant to avoid scenarios where a call-site (ex.
+   lock.vcpu_is_preempted) switches between the following sequences:
+
+  lock.vcpu_is_preempted = __raw_callee_save___kvm_vcpu_is_preempted
+    0: e8 31 e6 ff ff		callq  0xffffffffffffe636
+    4: 66 90			xchg   %ax,%ax      # NOP2
+
+  lock.vcpu_is_preempted = __raw_callee_save___native_vcpu_is_preempted
+    0: 31 c0			xor   %rax, %rax
+    2: 0f 1f 44 00 00		nopl   0x0(%rax)    # NOP5
+
+   If kvm_vcpu_is_preempted() were preemptible, then, post patching
+   we would return to address 4 above, which is in the middle of an
+   instruction for native_vcpu_is_preempted().
+
+   Even if this were to be made safe (ex. by changing the NOP2 to be a
+   prefix instead of a suffix), it would still not be enough -- since
+   we do not want any code from the switched out pv-op to be executing
+   after the pv-op has been switched out.
+
+ - Entered only at the beginning: this allows us to use text_poke()
+   which uses INT3 as a barrier.
+
+We don't store the address inside any call-sites so the second can be
+assumed.
+
+Guaranteeing the first condition boils down to stating that any pv-op
+being patched cannot be present/referenced from any call-stack in the
+system. pv-ops that are not obviously non-preemptible need to be
+enclosed in preempt_disable_runtime_patch()/preempt_enable_runtime_patch().
+
+This should be sufficient because runtime_patch() itself is called from
+a stop_machine() context which would would be enough to flush out any
+non-preemptible sequences.
+
+Note that preemption in the host is okay: stop_machine() would unwind
+any pv-ops sleeping in the host.
 
 Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 ---
- arch/x86/include/asm/alternative.h | 10 +++---
- arch/x86/kernel/alternative.c      | 54 +++++++++++++++---------------
- arch/x86/kernel/module.c           |  8 ++---
- 3 files changed, 36 insertions(+), 36 deletions(-)
+ arch/x86/include/asm/paravirt_types.h |  8 +++++
+ arch/x86/kernel/paravirt.c            |  6 +---
+ arch/x86/kernel/paravirt_patch.c      | 49 +++++++++++++++++++++++++++
+ include/linux/preempt.h               | 17 ++++++++++
+ 4 files changed, 75 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index 8235bbb746d9..db91a7731d87 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -75,11 +75,11 @@ extern void apply_alternatives(struct alt_instr *start, struct alt_instr *end);
+diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+index bc935eec7ec6..3b9f6c105397 100644
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -350,6 +350,12 @@ extern struct paravirt_patch_template native_pv_ops;
+ #define PARAVIRT_PATCH(x)					\
+ 	(offsetof(struct paravirt_patch_template, x) / sizeof(void *))
  
- struct module;
- 
--extern void alternatives_smp_module_add(struct module *mod, char *name,
--					void *locks, void *locks_end,
--					void *text, void *text_end);
--extern void alternatives_smp_module_del(struct module *mod);
--extern int alternatives_text_reserved(void *start, void *end);
-+void alternatives_module_add(struct module *mod, char *name,
-+			     void *locks, void *locks_end,
-+			     void *text, void *text_end);
-+void alternatives_module_del(struct module *mod);
-+int alternatives_text_reserved(void *start, void *end);
- #ifdef CONFIG_SMP
- extern void alternatives_enable_smp(void);
- #else
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 32aa1ddf441d..4157f848b537 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -477,7 +477,7 @@ static inline void alternatives_smp_unlock(const s32 *start, const s32 *end,
- 					   u8 *text, u8 *text_end) { }
- #endif	/* CONFIG_SMP */
- 
--struct smp_alt_module {
-+struct alt_module {
- 	/* what is this ??? */
- 	struct module	*mod;
- 	char		*name;
-@@ -492,14 +492,14 @@ struct smp_alt_module {
- 
- 	struct list_head next;
- };
--static LIST_HEAD(smp_alt_modules);
- 
--void __init_or_module alternatives_smp_module_add(struct module *mod,
--						  char *name,
--						  void *locks, void *locks_end,
--						  void *text,  void *text_end)
-+static LIST_HEAD(alt_modules);
++/*
++ * Neat trick to map patch type back to the call within the
++ * corresponding structure.
++ */
++#define PARAVIRT_PATCH_OP(ops, type) (*(long *)(&((long **)&(ops))[type]))
 +
-+void __init_or_module alternatives_module_add(struct module *mod, char *name,
-+					      void *locks, void *locks_end,
-+					      void *text,  void *text_end)
+ #define paravirt_type(op)				\
+ 	[paravirt_typenum] "i" (PARAVIRT_PATCH(op)),	\
+ 	[paravirt_opptr] "i" (&(pv_ops.op))
+@@ -383,6 +389,8 @@ unsigned paravirt_patch_default(u8 type, void *insn_buff, unsigned long addr, un
+ unsigned paravirt_patch_insns(void *insn_buff, unsigned len, const char *start, const char *end);
+ 
+ unsigned native_patch(u8 type, void *insn_buff, unsigned long addr, unsigned len);
++int runtime_patch(u8 type, void *insn_buff, void *op, unsigned long addr,
++		  unsigned int len);
+ 
+ int paravirt_disable_iospace(void);
+ 
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index 8c511cc4d4f4..c4128436b05a 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -117,11 +117,7 @@ void __init native_pv_lock_init(void)
+ unsigned paravirt_patch_default(u8 type, void *insn_buff,
+ 				unsigned long addr, unsigned len)
  {
--	struct smp_alt_module *smp;
-+	struct alt_module *alt;
+-	/*
+-	 * Neat trick to map patch type back to the call within the
+-	 * corresponding structure.
+-	 */
+-	void *opfunc = *((void **)&pv_ops + type);
++	void *opfunc = (void *)PARAVIRT_PATCH_OP(pv_ops, type);
+ 	unsigned ret;
  
- #ifdef CONFIG_SMP
- 	/* Patch to UP if other cpus not imminent. */
-@@ -511,36 +511,36 @@ void __init_or_module alternatives_smp_module_add(struct module *mod,
+ 	if (opfunc == NULL)
+diff --git a/arch/x86/kernel/paravirt_patch.c b/arch/x86/kernel/paravirt_patch.c
+index 3eff63c090d2..3eb8c0e720b4 100644
+--- a/arch/x86/kernel/paravirt_patch.c
++++ b/arch/x86/kernel/paravirt_patch.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/stringify.h>
++#include <linux/errno.h>
  
- 	mutex_lock(&text_mutex);
+ #include <asm/paravirt.h>
+ #include <asm/asm-offsets.h>
+@@ -124,3 +125,51 @@ unsigned int native_patch(u8 type, void *insn_buff, unsigned long addr,
  
--	smp = kzalloc(sizeof(*smp), GFP_KERNEL | __GFP_NOFAIL);
-+	alt = kzalloc(sizeof(*alt), GFP_KERNEL | __GFP_NOFAIL);
- 
--	smp->mod	= mod;
--	smp->name	= name;
-+	alt->mod	= mod;
-+	alt->name	= name;
- 
- 	if (num_possible_cpus() != 1 || uniproc_patched) {
- 		/* Remember only if we'll need to undo it. */
--		smp->locks	= locks;
--		smp->locks_end	= locks_end;
-+		alt->locks	= locks;
-+		alt->locks_end	= locks_end;
- 	}
- 
--	smp->text	= text;
--	smp->text_end	= text_end;
-+	alt->text	= text;
-+	alt->text_end	= text_end;
- 	DPRINTK("locks %p -> %p, text %p -> %p, name %s\n",
--		smp->locks, smp->locks_end,
--		smp->text, smp->text_end, smp->name);
-+		alt->locks, alt->locks_end,
-+		alt->text, alt->text_end, alt->name);
- 
--	list_add_tail(&smp->next, &smp_alt_modules);
-+	list_add_tail(&alt->next, &alt_modules);
- 
- 	if (uniproc_patched)
- 		alternatives_smp_unlock(locks, locks_end, text, text_end);
- 	mutex_unlock(&text_mutex);
+ 	return paravirt_patch_default(type, insn_buff, addr, len);
  }
++
++#ifdef CONFIG_PARAVIRT_RUNTIME
++/**
++ * runtime_patch - Generate patching code for a native/paravirt op
++ * @type: op type to generate code for
++ * @insn_buff: destination buffer
++ * @op: op target
++ * @addr: call site address
++ * @len: length of insn_buff
++ *
++ * Note that pv-ops are only suitable for runtime patching if they are
++ * non-preemptible. This is necessary for two reasons: we don't want to
++ * be overwriting insn sequences which might be referenced from call-stacks
++ * (and thus would be returned to), and we want patching to act as a barrier
++ * so no code from now stale paravirt ops should execute after an op has
++ * changed.
++ *
++ * Return: size of insn sequence on success, -EINVAL on error.
++ */
++int runtime_patch(u8 type, void *insn_buff, void *op,
++		  unsigned long addr, unsigned int len)
++{
++	void *native_op;
++	int used = 0;
++
++	/* Nothing whitelisted for now. */
++	switch (type) {
++	default:
++		pr_warn("type=%d unsuitable for runtime-patching\n", type);
++		return -EINVAL;
++	}
++
++	if (PARAVIRT_PATCH_OP(pv_ops, type) != (long)op)
++		PARAVIRT_PATCH_OP(pv_ops, type) = (long)op;
++
++	native_op = (void *)PARAVIRT_PATCH_OP(native_pv_ops, type);
++
++	/*
++	 * Use native_patch() to get the right insns if we are switching
++	 * back to a native_op.
++	 */
++	if (op == native_op)
++		used = native_patch(type, insn_buff, addr, len);
++	else
++		used = paravirt_patch_default(type, insn_buff, addr, len);
++	return used;
++}
++#endif /* CONFIG_PARAVIRT_RUNTIME */
+diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+index bc3f1aecaa19..c569d077aab2 100644
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -203,6 +203,13 @@ do { \
+ 		__preempt_schedule(); \
+ } while (0)
  
--void __init_or_module alternatives_smp_module_del(struct module *mod)
-+void __init_or_module alternatives_module_del(struct module *mod)
- {
--	struct smp_alt_module *item;
-+	struct alt_module *item;
++/*
++ * preempt_enable_no_resched() so we don't add any preemption points until
++ * after the caller has returned.
++ */
++#define preempt_enable_runtime_patch()	preempt_enable_no_resched()
++#define preempt_disable_runtime_patch()	preempt_disable()
++
+ #else /* !CONFIG_PREEMPTION */
+ #define preempt_enable() \
+ do { \
+@@ -217,6 +224,12 @@ do { \
+ } while (0)
  
- 	mutex_lock(&text_mutex);
--	list_for_each_entry(item, &smp_alt_modules, next) {
-+	list_for_each_entry(item, &alt_modules, next) {
- 		if (mod != item->mod)
- 			continue;
- 		list_del(&item->next);
-@@ -553,7 +553,7 @@ void __init_or_module alternatives_smp_module_del(struct module *mod)
- #ifdef CONFIG_SMP
- void alternatives_enable_smp(void)
- {
--	struct smp_alt_module *mod;
-+	struct alt_module *mod;
+ #define preempt_check_resched() do { } while (0)
++
++/*
++ * NOP, if there's no preemption.
++ */
++#define preempt_disable_runtime_patch()	do { } while (0)
++#define preempt_enable_runtime_patch()	do { } while (0)
+ #endif /* CONFIG_PREEMPTION */
  
- 	/* Why bother if there are no other CPUs? */
- 	BUG_ON(num_possible_cpus() == 1);
-@@ -565,7 +565,7 @@ void alternatives_enable_smp(void)
- 		BUG_ON(num_online_cpus() != 1);
- 		clear_cpu_cap(&boot_cpu_data, X86_FEATURE_UP);
- 		clear_cpu_cap(&cpu_data(0), X86_FEATURE_UP);
--		list_for_each_entry(mod, &smp_alt_modules, next)
-+		list_for_each_entry(mod, &alt_modules, next)
- 			alternatives_smp_lock(mod->locks, mod->locks_end,
- 					      mod->text, mod->text_end);
- 		uniproc_patched = false;
-@@ -580,14 +580,14 @@ void alternatives_enable_smp(void)
-  */
- int alternatives_text_reserved(void *start, void *end)
- {
--	struct smp_alt_module *mod;
-+	struct alt_module *mod;
- 	const s32 *poff;
- 	u8 *text_start = start;
- 	u8 *text_end = end;
+ #define preempt_disable_notrace() \
+@@ -250,6 +263,8 @@ do { \
+ #define preempt_enable_notrace()		barrier()
+ #define preemptible()				0
  
- 	lockdep_assert_held(&text_mutex);
++#define preempt_disable_runtime_patch()	do { } while (0)
++#define preempt_enable_runtime_patch()	do { } while (0)
+ #endif /* CONFIG_PREEMPT_COUNT */
  
--	list_for_each_entry(mod, &smp_alt_modules, next) {
-+	list_for_each_entry(mod, &alt_modules, next) {
- 		if (mod->text > text_end || mod->text_end < text_start)
- 			continue;
- 		for (poff = mod->locks; poff < mod->locks_end; poff++) {
-@@ -734,9 +734,9 @@ void __init alternative_instructions(void)
+ #ifdef MODULE
+@@ -260,6 +275,8 @@ do { \
+ #undef preempt_enable_no_resched
+ #undef preempt_enable_no_resched_notrace
+ #undef preempt_check_resched
++#undef preempt_disable_runtime_patch
++#undef preempt_enable_runtime_patch
+ #endif
  
- 	apply_alternatives(__alt_instructions, __alt_instructions_end);
- 
--	alternatives_smp_module_add(NULL, "core kernel",
--				    __smp_locks, __smp_locks_end,
--				    _text, _etext);
-+	alternatives_module_add(NULL, "core kernel",
-+				__smp_locks, __smp_locks_end,
-+				_text, _etext);
- 
- 	if (!uniproc_patched || num_possible_cpus() == 1) {
- 		free_init_pages("SMP alternatives",
-diff --git a/arch/x86/kernel/module.c b/arch/x86/kernel/module.c
-index 658ea60ce324..fc3d35198b09 100644
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -251,9 +251,9 @@ int module_finalize(const Elf_Ehdr *hdr,
- 	if (locks && text) {
- 		void *lseg = (void *)locks->sh_addr;
- 		void *tseg = (void *)text->sh_addr;
--		alternatives_smp_module_add(me, me->name,
--					    lseg, lseg + locks->sh_size,
--					    tseg, tseg + text->sh_size);
-+		alternatives_module_add(me, me->name,
-+					lseg, lseg + locks->sh_size,
-+					tseg, tseg + text->sh_size);
- 	}
- 
- 	if (para) {
-@@ -278,5 +278,5 @@ int module_finalize(const Elf_Ehdr *hdr,
- 
- void module_arch_cleanup(struct module *mod)
- {
--	alternatives_smp_module_del(mod);
-+	alternatives_module_del(mod);
- }
+ #define preempt_set_need_resched() \
 -- 
 2.20.1
 
