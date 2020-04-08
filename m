@@ -2,134 +2,96 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B835C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8109BC2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECAB2074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pqgruber.com header.i=@pqgruber.com header.b="k/0qDYpo"
+	by mail.kernel.org (Postfix) with ESMTP id 551CC206BE
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgDHVpa (ORCPT
+        id S1726620AbgDHVt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:45:30 -0400
-Received: from mail.pqgruber.com ([52.59.78.55]:44858 "EHLO mail.pqgruber.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbgDHVpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:45:30 -0400
-Received: from workstation.tuxnet (213-47-165-233.cable.dynamic.surfer.at [213.47.165.233])
-        by mail.pqgruber.com (Postfix) with ESMTPSA id D4D19C72B3E;
-        Wed,  8 Apr 2020 23:45:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pqgruber.com;
-        s=mail; t=1586382328;
-        bh=/Xfxr6bQ0YUHTVcrSQ5u+QRzIamIw5VqJzOKJ0VgNNU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=k/0qDYpotiovTl+xpRajQ9esKeqgReP0BjkNmbwAasfOY0GzIsXwv2wMkoEvZcZIa
-         fZYXBZIE8zZ3x/IXsPy8WBeXz/dCz4QwPnP25vbnvde5ETHg3UbR0YdlVXhdSZP8qJ
-         nqkHJu02YexlKmteRSlFpgB0nnWW8YFhuMcQ0q5I=
-From:   Clemens Gruber <clemens.gruber@pqgruber.com>
-To:     netdev@vger.kernel.org
-Cc:     Russell King <linux@armlinux.org.uk>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org,
-        Clemens Gruber <clemens.gruber@pqgruber.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] net: phy: marvell: Fix pause frame negotiation
-Date:   Wed,  8 Apr 2020 23:43:26 +0200
-Message-Id: <20200408214326.934440-1-clemens.gruber@pqgruber.com>
-X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Apr 2020 17:49:29 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:44429 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726582AbgDHVt3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 17:49:29 -0400
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Apr 2020 14:49:28 -0700
+Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 08 Apr 2020 14:49:27 -0700
+Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
+        id E7B0C209D0; Wed,  8 Apr 2020 14:49:27 -0700 (PDT)
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     cang@codeaurora.org, martin.petersen@oracle.com,
+        Avri.Altman@wdc.com, linux-scsi@vger.kernel.org
+Cc:     Asutosh Das <asutoshd@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 2/3] ufs-qcom: scsi: configure write booster type
+Date:   Wed,  8 Apr 2020 14:48:40 -0700
+Message-Id: <70ac879265780c0f68a18c4539c7bc9a838d93f6.1586382357.git.asutoshd@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1586374414.git.asutoshd@codeaurora.org>
+References: <cover.1586374414.git.asutoshd@codeaurora.org>
+In-Reply-To: <3c186284280c37c76cf77bf482dde725359b8a8a.1586382357.git.asutoshd@codeaurora.org>
+References: <3c186284280c37c76cf77bf482dde725359b8a8a.1586382357.git.asutoshd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The negotiation of flow control / pause frame modes was broken since
-commit fcf1f59afc67 ("net: phy: marvell: rearrange to use
-genphy_read_lpa()") moved the setting of phydev->duplex below the
-phy_resolve_aneg_pause call. Due to a check of DUPLEX_FULL in that
-function, phydev->pause was no longer set.
+Configure the WriteBooster type to preserve user-space mode.
+This would ensure that no user-space capacity is reduced
+when write booster is enabled.
+Enable WB for Qualcomm platform.
 
-Fix it by moving the parsing of the status variable before the blocks
-dealing with the pause frames.
-
-Fixes: fcf1f59afc67 ("net: phy: marvell: rearrange to use genphy_read_lpa()")
-Cc: stable@vger.kernel.org # v5.6+
-Signed-off-by: Clemens Gruber <clemens.gruber@pqgruber.com>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
 ---
- drivers/net/phy/marvell.c | 44 +++++++++++++++++++--------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ drivers/scsi/ufs/ufs-qcom.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index 4714ca0e0d4b..02cde4c0668c 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -1263,6 +1263,28 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
- 	int lpa;
- 	int err;
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index 19aa5c4..def1e09 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -1071,6 +1071,7 @@ static void ufs_qcom_set_caps(struct ufs_hba *hba)
+ 	hba->caps |= UFSHCD_CAP_CLK_GATING | UFSHCD_CAP_HIBERN8_WITH_CLK_GATING;
+ 	hba->caps |= UFSHCD_CAP_CLK_SCALING;
+ 	hba->caps |= UFSHCD_CAP_AUTO_BKOPS_SUSPEND;
++	hba->caps |= UFSHCD_CAP_WB_EN;
  
-+	if (!(status & MII_M1011_PHY_STATUS_RESOLVED))
-+		return 0;
-+
-+	if (status & MII_M1011_PHY_STATUS_FULLDUPLEX)
-+		phydev->duplex = DUPLEX_FULL;
-+	else
-+		phydev->duplex = DUPLEX_HALF;
-+
-+	switch (status & MII_M1011_PHY_STATUS_SPD_MASK) {
-+	case MII_M1011_PHY_STATUS_1000:
-+		phydev->speed = SPEED_1000;
-+		break;
-+
-+	case MII_M1011_PHY_STATUS_100:
-+		phydev->speed = SPEED_100;
-+		break;
-+
-+	default:
-+		phydev->speed = SPEED_10;
-+		break;
-+	}
-+
- 	if (!fiber) {
- 		err = genphy_read_lpa(phydev);
- 		if (err < 0)
-@@ -1291,28 +1313,6 @@ static int marvell_read_status_page_an(struct phy_device *phydev,
- 		}
- 	}
- 
--	if (!(status & MII_M1011_PHY_STATUS_RESOLVED))
--		return 0;
--
--	if (status & MII_M1011_PHY_STATUS_FULLDUPLEX)
--		phydev->duplex = DUPLEX_FULL;
--	else
--		phydev->duplex = DUPLEX_HALF;
--
--	switch (status & MII_M1011_PHY_STATUS_SPD_MASK) {
--	case MII_M1011_PHY_STATUS_1000:
--		phydev->speed = SPEED_1000;
--		break;
--
--	case MII_M1011_PHY_STATUS_100:
--		phydev->speed = SPEED_100;
--		break;
--
--	default:
--		phydev->speed = SPEED_10;
--		break;
--	}
--
- 	return 0;
+ 	if (host->hw_ver.major >= 0x2) {
+ 		host->caps = UFS_QCOM_CAP_QUNIPRO |
+@@ -1713,6 +1714,12 @@ static void ufs_qcom_config_scaling_param(struct ufs_hba *hba,
  }
+ #endif
  
++static u32 ufs_qcom_wb_get_user_cap_mode(struct ufs_hba *hba)
++{
++	/* QCom prefers no user-space reduction mode */
++	return UFS_WB_BUFF_PRESERVE_USER_SPACE;
++}
++
+ /**
+  * struct ufs_hba_qcom_vops - UFS QCOM specific variant operations
+  *
+@@ -1735,6 +1742,7 @@ static const struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
+ 	.dbg_register_dump	= ufs_qcom_dump_dbg_regs,
+ 	.device_reset		= ufs_qcom_device_reset,
+ 	.config_scaling_param = ufs_qcom_config_scaling_param,
++	.wb_get_user_cap_mode	= ufs_qcom_wb_get_user_cap_mode,
+ };
+ 
+ /**
 -- 
-2.26.0
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
