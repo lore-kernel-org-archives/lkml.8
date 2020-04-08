@@ -2,140 +2,112 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A0DC2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C57C2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA1E206F7
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE9320768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 20:38:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="U8ETg0PM";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="BpSnWiZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgDHUgb (ORCPT
+        id S1728799AbgDHUij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 16:36:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57288 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726891AbgDHUga (ORCPT
+        Wed, 8 Apr 2020 16:38:39 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:56288 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgDHUii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 16:36:30 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038KXpKi050590;
-        Wed, 8 Apr 2020 16:36:27 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3092098vwh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 16:36:26 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 038KUfd6004457;
-        Wed, 8 Apr 2020 20:36:25 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03wdc.us.ibm.com with ESMTP id 3091mdyus2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Apr 2020 20:36:25 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038KaPBd52101450
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Apr 2020 20:36:25 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70BF628059;
-        Wed,  8 Apr 2020 20:36:25 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7D7E28058;
-        Wed,  8 Apr 2020 20:36:24 +0000 (GMT)
-Received: from ghost4.ibm.com (unknown [9.211.136.102])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Apr 2020 20:36:24 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, joel@jms.id.au,
-        Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH] clk: ast2600: Fix AHB clock divider for A1
-Date:   Wed,  8 Apr 2020 15:36:16 -0500
-Message-Id: <20200408203616.4031-1-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 8 Apr 2020 16:38:38 -0400
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 64119B233D;
+        Wed,  8 Apr 2020 16:38:36 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=FXs96PD9q6AihpPiIw66bQCCq08=; b=U8ETg0
+        PMUzCxd1Etp4NTyjwzMVnSGylSOEkCEBXTKQYzm7o3Acpusy+ZC2z7Ra8sWzvHP9
+        pnt3xOIbUpkedWag6NuNCVdmiLjRH674iDjF8gcmVmbVPGZCZuNTyiYLda7vq6lL
+        RYQd+jNEdW+/AJGlaJ8XO2ozC2x4gdHJmqJFw=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id 5B0C5B233C;
+        Wed,  8 Apr 2020 16:38:36 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=qLgNDpEXsnrm/8QYj83jowhEfOt5/wA6l8IQuAQGxlY=; b=BpSnWiZOUdexci0KAuec0G+2jfPVozIKdqH97mGEA108YctqFuRxRffnGzGrPwh2foY4yVjd0fKDiPFWkJWkdmQthCj9TJyaqJ7SNxaaysIuRmFzGAdaXTKY7K1rT6cxW0LYK3KBQUU/n1fyLp+kXrbsfctkypwMeTILo06PQv4=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id D8611B2338;
+        Wed,  8 Apr 2020 16:38:31 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id F39562DA0D3A;
+        Wed,  8 Apr 2020 16:38:29 -0400 (EDT)
+Date:   Wed, 8 Apr 2020 16:38:29 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
+In-Reply-To: <20200408202711.1198966-1-arnd@arndb.de>
+Message-ID: <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
+References: <20200408202711.1198966-1-arnd@arndb.de>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-08_08:2020-04-07,2020-04-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 mlxscore=0 suspectscore=1 clxscore=1011 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080143
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: E91C3C66-79D8-11EA-84B4-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The latest specs for the AST2600 A1 chip include some different bit
-definitions for calculating the AHB clock divider. Implement these in
-order to get the correct AHB clock value in Linux.
+On Wed, 8 Apr 2020, Arnd Bergmann wrote:
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- drivers/clk/clk-ast2600.c | 31 +++++++++++++++++++++++++------
- 1 file changed, 25 insertions(+), 6 deletions(-)
+> Hi everyone,
+> 
+> I've just restarted doing randconfig builds on top of mainline Linux and
+> found a couple of regressions with missing dependency from the recent
+> change in the "imply" keyword in Kconfig, presumably these two patches:
+> 
+> 3a9dd3ecb207 kconfig: make 'imply' obey the direct dependency
+> def2fbffe62c kconfig: allow symbols implied by y to become m
+> 
+> I have created workarounds for the Kconfig files, which now stop using
+> imply and do something else in each case. I don't know whether there was
+> a bug in the kconfig changes that has led to allowing configurations that
+> were not meant to be legal even with the new semantics, or if the Kconfig
+> files have simply become incorrect now and the tool works as expected.
 
-diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
-index 392d01705b97..99afc949925f 100644
---- a/drivers/clk/clk-ast2600.c
-+++ b/drivers/clk/clk-ast2600.c
-@@ -642,14 +642,22 @@ static const u32 ast2600_a0_axi_ahb_div_table[] = {
- 	2, 2, 3, 5,
- };
- 
--static const u32 ast2600_a1_axi_ahb_div_table[] = {
--	4, 6, 2, 4,
-+static const u32 ast2600_a1_axi_ahb_div0_tbl[] = {
-+	3, 2, 3, 4,
-+};
-+
-+static const u32 ast2600_a1_axi_ahb_div1_tbl[] = {
-+	3, 4, 6, 8,
-+};
-+
-+static const u32 ast2600_a1_axi_ahb200_tbl[] = {
-+	3, 4, 3, 4, 2, 2, 2, 2,
- };
- 
- static void __init aspeed_g6_cc(struct regmap *map)
- {
- 	struct clk_hw *hw;
--	u32 val, div, chip_id, axi_div, ahb_div;
-+	u32 val, div, divbits, chip_id, axi_div, ahb_div;
- 
- 	clk_hw_register_fixed_rate(NULL, "clkin", NULL, 0, 25000000);
- 
-@@ -679,11 +687,22 @@ static void __init aspeed_g6_cc(struct regmap *map)
- 	else
- 		axi_div = 2;
- 
-+	divbits = (val >> 11) & 0x3;
- 	regmap_read(map, ASPEED_G6_SILICON_REV, &chip_id);
--	if (chip_id & BIT(16))
--		ahb_div = ast2600_a1_axi_ahb_div_table[(val >> 11) & 0x3];
--	else
-+	if (chip_id & BIT(16)) {
-+		if (!divbits) {
-+			ahb_div = ast2600_a1_axi_ahb200_tbl[(val >> 8) & 0x3];
-+			if (val & BIT(16))
-+				ahb_div *= 2;
-+		} else {
-+			if (val & BIT(16))
-+				ahb_div = ast2600_a1_axi_ahb_div1_tbl[divbits];
-+			else
-+				ahb_div = ast2600_a1_axi_ahb_div0_tbl[divbits];
-+		}
-+	} else {
- 		ahb_div = ast2600_a0_axi_ahb_div_table[(val >> 11) & 0x3];
-+	}
- 
- 	hw = clk_hw_register_fixed_factor(NULL, "ahb", "hpll", 0, 1, axi_div * ahb_div);
- 	aspeed_g6_clk_data->hws[ASPEED_CLK_AHB] = hw;
--- 
-2.24.0
+In most cases it is the code that has to be fixed. It typically does:
 
+	if (IS_ENABLED(CONFIG_FOO))
+		foo_init();
+
+Where it should rather do:
+
+	if (IS_REACHABLE(CONFIG_FOO))
+		foo_init();
+
+A couple of such patches have been produced and queued in their 
+respective trees already.
+
+
+Nicolas
