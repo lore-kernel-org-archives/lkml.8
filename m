@@ -2,210 +2,208 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33245C2BA16
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78960C2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05A8020753
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F80D20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 21:55:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhypR5SC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgDHVtd (ORCPT
+        id S1726723AbgDHVzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 17:49:33 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:44429 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726654AbgDHVtb (ORCPT
+        Wed, 8 Apr 2020 17:55:52 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44578 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbgDHVzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 17:49:31 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Apr 2020 14:49:30 -0700
-Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 08 Apr 2020 14:49:30 -0700
-Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
-        id 5DF66209D0; Wed,  8 Apr 2020 14:49:30 -0700 (PDT)
-From:   Asutosh Das <asutoshd@codeaurora.org>
-To:     cang@codeaurora.org, martin.petersen@oracle.com,
-        Avri.Altman@wdc.com, linux-scsi@vger.kernel.org
-Cc:     Asutosh Das <asutoshd@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Nitin Rawat <nitirawa@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v1 3/3] ufs: sysfs: add sysfs entries for write booster
-Date:   Wed,  8 Apr 2020 14:48:41 -0700
-Message-Id: <7d99b5db043072c1b4484d97484b04caae696dab.1586382357.git.asutoshd@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1586374414.git.asutoshd@codeaurora.org>
-References: <cover.1586374414.git.asutoshd@codeaurora.org>
-In-Reply-To: <3c186284280c37c76cf77bf482dde725359b8a8a.1586382357.git.asutoshd@codeaurora.org>
-References: <3c186284280c37c76cf77bf482dde725359b8a8a.1586382357.git.asutoshd@codeaurora.org>
+        Wed, 8 Apr 2020 17:55:50 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b72so3063694pfb.11;
+        Wed, 08 Apr 2020 14:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=No3EXzQafB2mZCZQxcUWOWHvvBrJjsw3bl24XleBbJM=;
+        b=bhypR5SCt7shRP8pQqBPHQ+NkMI8L8m5qcWJsBneycxxLy+iOshIbm/Iy7cnqhM2ce
+         rZbogKAT8X5Tya+/Re99vI8F6Te7ih3X+TcsS9spFfBONZaZjYW6Nnd/zsYw8MOH7H69
+         O28Pz3Vy7MHMKMab3MbmluZmRe9+eL6SIcV19bqoDqB/nUDMxmDUDjvruaeNvwpi0YWG
+         033glTaabk9t8kZfjP0IwbbhjtdMZiJ2DYjVSVo6yEZE8odH2RY4AYiwMPEZD2JfDFLO
+         zuJpiLgxfuehnOKAGo+wHBPIeHty9pyDYQQ7Ua6rU4Ase5TzkI9bymBIhiCexB1qf2Ye
+         MgsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=No3EXzQafB2mZCZQxcUWOWHvvBrJjsw3bl24XleBbJM=;
+        b=sjxfjpCYkSrbWFPllXVzD6vsHBp1sM4PrqMQCUuvzu9/7odZw0cizZg5cDjblSd393
+         OBuWYvRQ88uHBwnbd8d+Pry+mO8OA1o7DCTg5+qgy73EYXhQ78mkgp6dacSYVWyWjIv8
+         TPu6EmLf0MZ7ZG2Phd70Yhuqq5j0lPHlFCXRqDbDpvC6+/dpwOBfbDYXIKJbHc68yqO9
+         qPeVaC3koe4YaX7N3eLY10ZIB59R3TCIKT+QTFXeeqaHOcEvM3pOJ7E+ZSMdgYwHGrvE
+         OUwG/iWnzzqIVYE67TUW2f+8ZRSW3LUgxEzKwGSqbyfYKYDC8+rO08cD5TKUqGMdJMb1
+         s+MA==
+X-Gm-Message-State: AGi0PuZlZWA8Ug9fXQsPjfZDJEIJL5Wui2HNhJqyYez2L55+VbJeAzjN
+        QOSiatX4XAFoueuf+SnPeSsaiJsjVa/V2w==
+X-Google-Smtp-Source: APiQypI3pH5YEqKmxdmFmeqbdZgoRSidYZAvDZyqzz64ER90a9/3UyLhKs0ef9ZVzx49E/rwqKJ50g==
+X-Received: by 2002:aa7:8082:: with SMTP id v2mr10254615pff.18.1586382948805;
+        Wed, 08 Apr 2020 14:55:48 -0700 (PDT)
+Received: from nickserv.localdomain (c-73-222-55-223.hsd1.ca.comcast.net. [73.222.55.223])
+        by smtp.gmail.com with ESMTPSA id ci13sm459604pjb.16.2020.04.08.14.55.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2020 14:55:48 -0700 (PDT)
+From:   Nick Terrell <nickrterrell@gmail.com>
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: [GIT PULL][PATCH v5 0/8] Add support for ZSTD-compressed kernel and initramfs
+Date:   Wed,  8 Apr 2020 14:57:03 -0700
+Message-Id: <20200408215711.137639-1-nickrterrell@gmail.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds unit, device, geometry descriptor sysfs entries.
-Adds flags sysfs entries for write booster.
+From: Nick Terrell <terrelln@fb.com>
 
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
----
- drivers/scsi/ufs/ufs-sysfs.c | 39 ++++++++++++++++++++++++++++++++++++++-
- drivers/scsi/ufs/ufs.h       |  6 ++++++
- 2 files changed, 44 insertions(+), 1 deletion(-)
+Please pull from
 
-diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
-index 92a63ee..176a216 100644
---- a/drivers/scsi/ufs/ufs-sysfs.c
-+++ b/drivers/scsi/ufs/ufs-sysfs.c
-@@ -276,6 +276,10 @@ UFS_DEVICE_DESC_PARAM(device_version, _DEV_VER, 2);
- UFS_DEVICE_DESC_PARAM(number_of_secure_wpa, _NUM_SEC_WPA, 1);
- UFS_DEVICE_DESC_PARAM(psa_max_data_size, _PSA_MAX_DATA, 4);
- UFS_DEVICE_DESC_PARAM(psa_state_timeout, _PSA_TMT, 1);
-+UFS_DEVICE_DESC_PARAM(ext_feature_sup, _EXT_UFS_FEATURE_SUP, 4);
-+UFS_DEVICE_DESC_PARAM(wb_presv_us_en, _WB_US_RED_EN, 1);
-+UFS_DEVICE_DESC_PARAM(wb_type, _WB_TYPE, 1);
-+UFS_DEVICE_DESC_PARAM(wb_shared_alloc_units, _WB_SHARED_ALLOC_UNITS, 4);
- 
- static struct attribute *ufs_sysfs_device_descriptor[] = {
- 	&dev_attr_device_type.attr,
-@@ -304,6 +308,10 @@ static struct attribute *ufs_sysfs_device_descriptor[] = {
- 	&dev_attr_number_of_secure_wpa.attr,
- 	&dev_attr_psa_max_data_size.attr,
- 	&dev_attr_psa_state_timeout.attr,
-+	&dev_attr_ext_feature_sup.attr,
-+	&dev_attr_wb_presv_us_en.attr,
-+	&dev_attr_wb_type.attr,
-+	&dev_attr_wb_shared_alloc_units.attr,
- 	NULL,
- };
- 
-@@ -373,6 +381,12 @@ UFS_GEOMETRY_DESC_PARAM(enh4_memory_max_alloc_units,
- 	_ENM4_MAX_NUM_UNITS, 4);
- UFS_GEOMETRY_DESC_PARAM(enh4_memory_capacity_adjustment_factor,
- 	_ENM4_CAP_ADJ_FCTR, 2);
-+UFS_GEOMETRY_DESC_PARAM(wb_max_alloc_units, _WB_MAX_ALLOC_UNITS, 4);
-+UFS_GEOMETRY_DESC_PARAM(wb_max_wb_luns, _WB_MAX_WB_LUNS, 1);
-+UFS_GEOMETRY_DESC_PARAM(wb_buff_cap_adj, _WB_BUFF_CAP_ADJ, 1);
-+UFS_GEOMETRY_DESC_PARAM(wb_sup_red_type, _WB_SUP_RED_TYPE, 1);
-+UFS_GEOMETRY_DESC_PARAM(wb_sup_wb_type, _WB_SUP_WB_TYPE, 1);
-+
- 
- static struct attribute *ufs_sysfs_geometry_descriptor[] = {
- 	&dev_attr_raw_device_capacity.attr,
-@@ -404,6 +418,11 @@ static struct attribute *ufs_sysfs_geometry_descriptor[] = {
- 	&dev_attr_enh3_memory_capacity_adjustment_factor.attr,
- 	&dev_attr_enh4_memory_max_alloc_units.attr,
- 	&dev_attr_enh4_memory_capacity_adjustment_factor.attr,
-+	&dev_attr_wb_max_alloc_units.attr,
-+	&dev_attr_wb_max_wb_luns.attr,
-+	&dev_attr_wb_buff_cap_adj.attr,
-+	&dev_attr_wb_sup_red_type.attr,
-+	&dev_attr_wb_sup_wb_type.attr,
- 	NULL,
- };
- 
-@@ -616,7 +635,7 @@ static ssize_t _name##_show(struct device *dev,				\
- 	pm_runtime_put_sync(hba->dev);					\
- 	if (ret)							\
- 		return -EINVAL;						\
--	return sprintf(buf, "%s\n", flag ? "true" : "false");		\
-+	return sprintf(buf, "%s\n", flag ? "true" : "false"); \
- }									\
- static DEVICE_ATTR_RO(_name)
- 
-@@ -628,6 +647,9 @@ UFS_FLAG(life_span_mode_enable, _LIFE_SPAN_MODE_ENABLE);
- UFS_FLAG(phy_resource_removal, _FPHYRESOURCEREMOVAL);
- UFS_FLAG(busy_rtc, _BUSY_RTC);
- UFS_FLAG(disable_fw_update, _PERMANENTLY_DISABLE_FW_UPDATE);
-+UFS_FLAG(wb_enable, _WB_EN);
-+UFS_FLAG(wb_flush_en, _WB_BUFF_FLUSH_EN);
-+UFS_FLAG(wb_flush_during_h8, _WB_BUFF_FLUSH_DURING_HIBERN8);
- 
- static struct attribute *ufs_sysfs_device_flags[] = {
- 	&dev_attr_device_init.attr,
-@@ -638,6 +660,9 @@ static struct attribute *ufs_sysfs_device_flags[] = {
- 	&dev_attr_phy_resource_removal.attr,
- 	&dev_attr_busy_rtc.attr,
- 	&dev_attr_disable_fw_update.attr,
-+	&dev_attr_wb_enable.attr,
-+	&dev_attr_wb_flush_en.attr,
-+	&dev_attr_wb_flush_during_h8.attr,
- 	NULL,
- };
- 
-@@ -679,6 +704,11 @@ UFS_ATTRIBUTE(exception_event_status, _EE_STATUS);
- UFS_ATTRIBUTE(ffu_status, _FFU_STATUS);
- UFS_ATTRIBUTE(psa_state, _PSA_STATE);
- UFS_ATTRIBUTE(psa_data_size, _PSA_DATA_SIZE);
-+UFS_ATTRIBUTE(wb_flush_status, _WB_FLUSH_STATUS);
-+UFS_ATTRIBUTE(wb_avail_buf, _AVAIL_WB_BUFF_SIZE);
-+UFS_ATTRIBUTE(wb_life_time_est, _WB_BUFF_LIFE_TIME_EST);
-+UFS_ATTRIBUTE(wb_cur_buf, _CURR_WB_BUFF_SIZE);
-+
- 
- static struct attribute *ufs_sysfs_attributes[] = {
- 	&dev_attr_boot_lun_enabled.attr,
-@@ -697,6 +727,10 @@ static struct attribute *ufs_sysfs_attributes[] = {
- 	&dev_attr_ffu_status.attr,
- 	&dev_attr_psa_state.attr,
- 	&dev_attr_psa_data_size.attr,
-+	&dev_attr_wb_flush_status.attr,
-+	&dev_attr_wb_avail_buf.attr,
-+	&dev_attr_wb_life_time_est.attr,
-+	&dev_attr_wb_cur_buf.attr,
- 	NULL,
- };
- 
-@@ -748,6 +782,8 @@ UFS_UNIT_DESC_PARAM(provisioning_type, _PROVISIONING_TYPE, 1);
- UFS_UNIT_DESC_PARAM(physical_memory_resourse_count, _PHY_MEM_RSRC_CNT, 8);
- UFS_UNIT_DESC_PARAM(context_capabilities, _CTX_CAPABILITIES, 2);
- UFS_UNIT_DESC_PARAM(large_unit_granularity, _LARGE_UNIT_SIZE_M1, 1);
-+UFS_UNIT_DESC_PARAM(wb_buf_alloc_units, _WB_BUF_ALLOC_UNITS, 4);
-+
- 
- static struct attribute *ufs_sysfs_unit_descriptor[] = {
- 	&dev_attr_boot_lun_id.attr,
-@@ -763,6 +799,7 @@ static struct attribute *ufs_sysfs_unit_descriptor[] = {
- 	&dev_attr_physical_memory_resourse_count.attr,
- 	&dev_attr_context_capabilities.attr,
- 	&dev_attr_large_unit_granularity.attr,
-+	&dev_attr_wb_buf_alloc_units.attr,
- 	NULL,
- };
- 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index 2c77b3e..5c26659 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -267,6 +267,7 @@ enum device_desc_param {
- 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
- 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
- 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
-+	DEVICE_DESC_PARAM_WB_US_RED_EN		= 0x53,
- 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
- 	DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS = 0x55,
- };
-@@ -313,6 +314,11 @@ enum geometry_desc_param {
- 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
- 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
- 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-+	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
-+	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
-+	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
-+	GEOMETRY_DESC_PARAM_WB_SUP_RED_TYPE	= 0x55,
-+	GEOMETRY_DESC_PARAM_WB_SUP_WB_TYPE	= 0x56,
- };
- 
- /* Health descriptor parameters offsets in bytes*/
+  git@github.com:terrelln/linux.git tags/v5-zstd
+
+to get these changes. Alternatively the patchset is included.
+
+Hi all,
+
+This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+are supported on all architectures. The ZSTD-compressed kernel is only
+hooked up to x86 in this patch set.
+
+Zstandard requires slightly more memory during the kernel decompression
+on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+window size.
+
+Zstandard requires memory proprortional to the window size used during
+compression for decompressing the ramdisk image, since streaming mode is
+used. Newer versions of zstd (1.3.2+) list the window size of a file
+with `zstd -lv <file>'. The absolute maximum amount of memory required
+is just over 8 MB, but it can be controlled at compression time.
+
+This patch set has been boot tested with buildroot and QEMU based off
+of linux-5.6-rc6.
+
+On i386 and x86_64 I have tested the following configurations:
+* zstd compressed kernel and a separate zstd compressed initramfs
+* zstd compressed kernel and a built-in zstd compressed initramfs
+* gzip compressed kernel and a separate gzip compressed initramfs
+* gzip compressed kernel and a built-in gzip compressed initramfs
+
+On arm and aarch64 I tested the same configurations, except that the kernel is
+always gzip compressed.
+
+Facebook has been using v1 of these patches on x86_64 devices for more than 6
+months. When we switched from a xz compressed initramfs to a zstd compressed
+initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+seconds of boot time.
+
+Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+decompression time shrunk from 27 seconds to 8 seconds.
+
+The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+than the xz or lzma compressed kernels, and it decompresses faster than
+everything except lz4. See the table below for the measurement of an x86_64
+kernel ordered by compressed size:
+
+algo	size
+xz  	 6,509,792
+lzma	 6,856,576
+zstd	 7,399,157
+gzip	 8,522,527
+bzip	 8,629,603
+lzo 	 9,808,035
+lz4 	10,705,570
+none	32,565,672
+
+v1 -> v2:
+- Rebase
+  - usr/Makefile and init/Kconfig were changed so the patches were updated
+- No functional changes except to rebase
+- Split the patches up into smaller chunks
+
+v2 -> v3:
+- Add *.zst to the .gitignore in patch 8
+- Style nits in patch 3
+- Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+  1 through 3
+
+v3 -> v4:
+- Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
+  With this change I switch from malloc() to large_malloc() for the
+  buffers.
+- Increase the maximum allowed window size from 8 MB to 128 MB, which is
+  the max that zstd in the kernel supports.
+
+v4 -> v5:
+- Update commit message for patch 6 in response to comments
+- Rebase onto next-20200408
+
+Best,
+Nick Terrell
+
+Adam Borowski (1):
+  .gitignore: add ZSTD-compressed files
+
+Nick Terrell (7):
+  lib: prepare zstd for preboot environment
+  lib: prepare xxhash for preboot environment
+  lib: add zstd support to decompress
+  init: add support for zstd compressed kernel
+  usr: add support for zstd compressed initramfs
+  x86: bump ZO_z_extra_bytes margin for zstd
+  x86: Add support for ZSTD compressed kernel
+
+ .gitignore                        |   1 +
+ Documentation/x86/boot.rst        |   6 +-
+ arch/x86/Kconfig                  |   1 +
+ arch/x86/boot/compressed/Makefile |   5 +-
+ arch/x86/boot/compressed/misc.c   |   4 +
+ arch/x86/boot/header.S            |   8 +-
+ arch/x86/include/asm/boot.h       |   6 +-
+ include/linux/decompress/unzstd.h |  11 +
+ init/Kconfig                      |  15 +-
+ lib/Kconfig                       |   4 +
+ lib/Makefile                      |   1 +
+ lib/decompress.c                  |   5 +
+ lib/decompress_unzstd.c           | 342 ++++++++++++++++++++++++++++++
+ lib/xxhash.c                      |  21 +-
+ lib/zstd/decompress.c             |   2 +
+ lib/zstd/fse_decompress.c         |   9 +-
+ lib/zstd/zstd_internal.h          |  14 +-
+ scripts/Makefile.lib              |  15 ++
+ usr/Kconfig                       |  20 ++
+ usr/Makefile                      |   1 +
+ 20 files changed, 464 insertions(+), 27 deletions(-)
+ create mode 100644 include/linux/decompress/unzstd.h
+ create mode 100644 lib/decompress_unzstd.c
+
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.26.0
 
