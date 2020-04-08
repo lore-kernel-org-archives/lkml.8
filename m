@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C07C2BA1A
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A86C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514D120820
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A183420730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 15:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1586360939;
-	bh=kEy4QClsDKqYpuy6jSsVkkfgbzM9x8NxA08DUYZUD4M=;
+	s=default; t=1586360946;
+	bh=flQ66rWLqLJ9tP/xDtQuASEFxj/jeRx5dEzURVCNupI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGzdGtnKIoNfS8vS0sdTJaWYtENXpOMkG5U+LoGlo/2WCRigf6CNVmmRnnd3xF2G1
-	 cPkYljCsDoVHntILcb2J8VJKIZbcuRcu5t23Ev4MDp4mlctewgme8HyJBClAbu/fn1
-	 QTx4/srX/BfNWgdX9Qc45B3X+0/5anel9Oyl/Pck=
+	b=qM7p5PzMia2Et1vKUolPg8KJdmL8uUg3D8mFirHluOlMouGLvtAzN5ogHSDRfirGf
+	 nOkrlch/Id2VlZuAAIMW7GrOF4fCVtfim9OBQv8jf9IU6NgTrVoAXTRFAghnRijAlg
+	 Sdn1ENlk+HgWZ05D0a7wfLzfcOXUuhstWZh7lOt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730040AbgDHPs5 (ORCPT
+        id S1730043AbgDHPtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 11:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49214 "EHLO mail.kernel.org"
+        Wed, 8 Apr 2020 11:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729620AbgDHPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729613AbgDHPqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 8 Apr 2020 11:46:32 -0400
 Received: from mail.kernel.org (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F34B212CC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BEAB20CC7;
         Wed,  8 Apr 2020 15:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1586360791;
-        bh=kEy4QClsDKqYpuy6jSsVkkfgbzM9x8NxA08DUYZUD4M=;
+        bh=flQ66rWLqLJ9tP/xDtQuASEFxj/jeRx5dEzURVCNupI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FLF4PpVLKQgEDnLiFuvvYM5lBC5QFyyZMVUMwonVPgxMLClLz4EpGaIJ3J85vqcKB
-         UXZ96AaqI2utO+Qg8nwHHIOV+uZkusgZycq2y25KeRpptuyhzkytPQIuHnlkB0hNeC
-         yTOCYnzfaSVEy3btF5hkKOcCocZP+3opjC2TAWTI=
+        b=oylMwXQehr6LhXuN7aSCVnMUbaptl4gcCyVf+NipEOdJtnPhjzTZfXWDwu1xhNG3w
+         7hRjV3p1+sz5vrH+0J+mzqyGqcc44yn2vIhte4WJSG0ZWIsrpHBt8OjmsRId7LhfJb
+         mBH4eqmulUYXG1kH8dGRgHiiDqTa4EWhnlErkPBw=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jMCuL-000cB1-ES; Wed, 08 Apr 2020 17:46:29 +0200
+        id 1jMCuL-000cAv-DN; Wed, 08 Apr 2020 17:46:29 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        linux1394-devel@lists.sourceforge.net
-Subject: [PATCH 10/35] firewire: firewire-cdev.hL get rid of a docs warning
-Date:   Wed,  8 Apr 2020 17:46:02 +0200
-Message-Id: <9953f9ef2982babd4c6128af4566a8bb3e416fba.1586359676.git.mchehab+huawei@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+Subject: [PATCH 09/35] futex: get rid of a kernel-docs build warning
+Date:   Wed,  8 Apr 2020 17:46:01 +0200
+Message-Id: <ad0a38ef26455ef71e9d1267eda7afa629686c6e.1586359676.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <cover.1586359676.git.mchehab+huawei@kernel.org>
 References: <cover.1586359676.git.mchehab+huawei@kernel.org>
@@ -61,33 +63,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This warning:
+Adjust whitespaces and blank lines in order to get rid of this:
 
-	./include/uapi/linux/firewire-cdev.h:312: WARNING: Inline literal start-string without end-string.
+	./kernel/futex.c:491: WARNING: Definition list ends without a blank line; unexpected unindent.
 
-is because %FOO doesn't work if there's a parenthesis at the
-string (as a parenthesis may indicate a function). So, mark
-the literal block using the alternate ``FOO`` syntax.
-
-Acked-by: Stefan Richter <stefanr@s5r6.in-berlin.de>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- include/uapi/linux/firewire-cdev.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/futex.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/uapi/linux/firewire-cdev.h b/include/uapi/linux/firewire-cdev.h
-index 1acd2b179aef..7e5b5c10a49c 100644
---- a/include/uapi/linux/firewire-cdev.h
-+++ b/include/uapi/linux/firewire-cdev.h
-@@ -308,7 +308,7 @@ struct fw_cdev_event_iso_interrupt_mc {
- /**
-  * struct fw_cdev_event_iso_resource - Iso resources were allocated or freed
-  * @closure:	See &fw_cdev_event_common;
-- *		set by %FW_CDEV_IOC_(DE)ALLOCATE_ISO_RESOURCE(_ONCE) ioctl
-+ *		set by``FW_CDEV_IOC_(DE)ALLOCATE_ISO_RESOURCE(_ONCE)`` ioctl
-  * @type:	%FW_CDEV_EVENT_ISO_RESOURCE_ALLOCATED or
-  *		%FW_CDEV_EVENT_ISO_RESOURCE_DEALLOCATED
-  * @handle:	Reference by which an allocated resource can be deallocated
+diff --git a/kernel/futex.c b/kernel/futex.c
+index b59532862bc0..b4b9f960b610 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -486,10 +486,13 @@ static u64 get_inode_sequence_number(struct inode *inode)
+  * The key words are stored in @key on success.
+  *
+  * For shared mappings (when @fshared), the key is:
++ *
+  *   ( inode->i_sequence, page->index, offset_within_page )
++ *
+  * [ also see get_inode_sequence_number() ]
+  *
+  * For private mappings (or when !@fshared), the key is:
++ *
+  *   ( current->mm, address, 0 )
+  *
+  * This allows (cross process, where applicable) identification of the futex
 -- 
 2.25.2
 
