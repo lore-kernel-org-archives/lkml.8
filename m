@@ -2,138 +2,110 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025EAC2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97701C2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18AB20747
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66618206C0
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1586332169;
+	bh=LFSPRKgmR8auwK03bWcZlzXa6g+J6cxGqFZeIyDLWBs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MhyJfM1/838wkVYqVLqzc+lAQBLOcxZA2GyIk7z0f3rp3gGIhTgA3+hgyM5w6PK7o
+	 ccrUSSEk2vx3D8Jy5yceEzH6c2rdEtBLCzNjJMqxdE0ZOeQ/8//zl2+JMCo2vf7ez2
+	 iZOk9t6HfLFICcm40W1J9N8r8oha0OmgCwPR3LXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgDHHsO (ORCPT
+        id S1727069AbgDHHt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:48:14 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:42057 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbgDHHsO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:48:14 -0400
-Received: by mail-il1-f197.google.com with SMTP id f68so5873988ilg.9
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 00:48:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=CGxHHWD1n3LkBxz2Gb3ke3O4d2pEApLZAEdHel6vwXM=;
-        b=F9PPy/HslyX5cXUmIn10NRME9Sa/8eOgrpEYJdvgN5dd7+qpL5shu3Qtn8hwKVf+aT
-         w2ac8pGHbWyOJQaItA2SMMon3zsR8P4eUfgTRrXOZAbXPKkuP5b4i71SIVYjJ/S0jpiU
-         aKYHUNfg1nn4q1nOvcFbugagSOixQQVXBSHZJ++4YJyEkr3b3cphM41KIRvr7nNszyX8
-         VCqZQcN3qAayBjed1LdAPffFlc0YkbX9ruhhFYnlpXE34TXwM6kUEgh5Ib3Tw+9RNIBU
-         tAXQdkc+UictOaaCajLGiiLqR8QH9ogZlCGZYKB/CTmqeROCc1QrwATtobqU80kx6W+a
-         l8bA==
-X-Gm-Message-State: AGi0PuZQyPYOzfiHJM9k8oKxuor1dhppk89M3BqKUnd84vyy8Lenj+Ow
-        0dQ6ZrousgX5Wox/aSrEiddpMfrLcHNok0OmPOuiLIE+xy6D
-X-Google-Smtp-Source: APiQypISrfHjq2lbhi3NLHt0P0DqizOwunS4hKOYik7JU3Ql3OMr0otRPsi0xCqyk4eUr3SWdZZ/fsxw8iR71gIqgVZ1yZr+clMW
+        Wed, 8 Apr 2020 03:49:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726366AbgDHHt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 03:49:27 -0400
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 300B720857;
+        Wed,  8 Apr 2020 07:49:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1586332167;
+        bh=LFSPRKgmR8auwK03bWcZlzXa6g+J6cxGqFZeIyDLWBs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M4A3XfdLzGoCqjFphZs46oHKHPvNRNyaxBpA9xZOfsoCACHV49gh3cMPEQj0HjuuH
+         K5KQp0P7ZX1Za5RsThorpN36rb8kGaUgiaq32dYWGNm/PIEGD7Xe4ymWpTMGYbdsuu
+         gSRBrZ2r52eMPpBPRm9gCBQCDV5PL1qvhKb/3sxc=
+Received: by mail-io1-f54.google.com with SMTP id b12so6153064ion.8;
+        Wed, 08 Apr 2020 00:49:27 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZtXrHE6BJHRoT5TAyDCbab9LHXjcCi6fR3Oyja3IP1Pcug2yr4
+        jZpkLKZnZ/b6PHrWjviDRaWZR8QSdflqXaKQBb4=
+X-Google-Smtp-Source: APiQypJAwEiSBhRkO0KExJ3QXtqZu8DVb4U6xjsYMWHvwGiy5FHwkV4VytajI+cifcoP5E+rtFqkmv24wXCBpeMiAEI=
+X-Received: by 2002:a6b:f413:: with SMTP id i19mr5867611iog.203.1586332166519;
+ Wed, 08 Apr 2020 00:49:26 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:87c6:: with SMTP id q6mr5717612ios.163.1586332093822;
- Wed, 08 Apr 2020 00:48:13 -0700 (PDT)
-Date:   Wed, 08 Apr 2020 00:48:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f2bc9505a2c2b808@google.com>
-Subject: WARNING in af_alg_make_sg
-From:   syzbot <syzbot+3be1a33f04dc782e9fd5@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, bgeffon@google.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peterx@redhat.com,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org
+References: <CAMj1kXEUkJ1XJ9OTsijeq8tNNYC00bXqEV44OMtX5ugo9WoLKA@mail.gmail.com>
+ <20200406180614.429454-1-nivedita@alum.mit.edu> <20200408074334.GA21886@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20200408074334.GA21886@dhcp-128-65.nay.redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 8 Apr 2020 09:49:15 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
+Message-ID: <CAMj1kXGPOZ6zWtgGScLy0ECrTtf1yhngDTNE1chW-MQw3XQp9Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] efi/x86: Move efi stub globals from .bss to .data
+To:     Dave Young <dyoung@redhat.com>, pjones@redhat.com,
+        daniel.kiper@oracle.com, Leif Lindholm <leif@nuviainc.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>, Sergey Shatunov <me@prok.pw>,
+        hpa@zytor.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, linux-efi <linux-efi@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Donovan Tremura <neurognostic@protonmail.ch>,
+        Harald Hoyer <harald@hoyer.xyz>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+(add Peter, Leif and Daniel)
 
-syzbot found the following crash on:
+On Wed, 8 Apr 2020 at 09:43, Dave Young <dyoung@redhat.com> wrote:
+>
+> On 04/06/20 at 02:06pm, Arvind Sankar wrote:
+> > Commit
+> >
+> >   3ee372ccce4d ("x86/boot/compressed/64: Remove .bss/.pgtable from
+> >   bzImage")
+> >
+> > removed the .bss section from the bzImage.
+> >
+> > However, while a PE loader is required to zero-initialize the .bss
+> > section before calling the PE entry point, the EFI handover protocol
+> > does not currently document any requirement that .bss be initialized by
+> > the bootloader prior to calling the handover entry.
+> >
+> > When systemd-boot is used to boot a unified kernel image [1], the image
+> > is constructed by embedding the bzImage as a .linux section in a PE
+> > executable that contains a small stub loader from systemd together with
+> > additional sections and potentially an initrd. As the .bss section
+> > within the bzImage is no longer explicitly present as part of the file,
+> > it is not initialized before calling the EFI handover entry.
+> > Furthermore, as the size of the embedded .linux section is only the size
+> > of the bzImage file itself, the .bss section's memory may not even have
+> > been allocated.
+>
+> I did not follow up the old report, maybe I missed something. But not
+> sure why only systemd-boot is mentioned here.  I also have similar issue
+> with early efi failure.  With these two patches applied, it works well
+> then.
+>
+> BTW, I use Fedora 31 + Grub2
+>
 
-HEAD commit:    763dede1 Merge tag 'for-linus-5.7-rc1' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12b919c7e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=12205d036cec317f
-dashboard link: https://syzkaller.appspot.com/bug?extid=3be1a33f04dc782e9fd5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142f3b8fe00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159bd23fe00000
-
-The bug was bisected to:
-
-commit 4426e945df588f2878affddf88a51259200f7e29
-Author: Peter Xu <peterx@redhat.com>
-Date:   Thu Apr 2 04:08:49 2020 +0000
-
-    mm/gup: allow VM_FAULT_RETRY for multiple times
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1408ea9fe00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1608ea9fe00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1208ea9fe00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3be1a33f04dc782e9fd5@syzkaller.appspotmail.com
-Fixes: 4426e945df58 ("mm/gup: allow VM_FAULT_RETRY for multiple times")
-
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 7094 at crypto/af_alg.c:404 af_alg_make_sg+0x399/0x400 crypto/af_alg.c:404
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 7094 Comm: syz-executor037 Not tainted 5.6.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:175 [inline]
- fixup_bug arch/x86/kernel/traps.c:170 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:af_alg_make_sg+0x399/0x400 crypto/af_alg.c:404
-Code: 5c 24 2b 31 ff 89 de e8 c5 b9 f8 fd 84 db 74 0e e8 8c b8 f8 fd 48 8b 04 24 48 89 44 24 70 e8 7e b8 f8 fd 0f 0b e8 77 b8 f8 fd <0f> 0b c7 44 24 4c ea ff ff ff e9 4b ff ff ff 48 89 df e8 40 6e 36
-RSP: 0018:ffffc900018779a0 EFLAGS: 00010293
-RAX: ffff8880a16b65c0 RBX: ffff8880a4141220 RCX: ffffffff837a763d
-RDX: 0000000000000000 RSI: ffffffff837a78f9 RDI: 0000000000000005
-RBP: 000000001fef2254 R08: ffff8880a16b65c0 R09: ffffed10142d6cb9
-R10: ffff8880a16b65c7 R11: ffffed10142d6cb8 R12: 0000000000000000
-R13: dffffc0000000000 R14: 0000000000000000 R15: dffffc0000000000
- hash_sendmsg+0x45c/0xad0 crypto/algif_hash.c:94
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x446999
-Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f1427fb4d98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 0000000000446999
-RDX: 0000000000000000 RSI: 00000000200002c0 RDI: 0000000000000005
-RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000068736168
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+OK, so I take it this means that GRUB's PE/COFF loader does not
+zero-initialize BSS either? Does it honor the image size in memory if
+it exceeds the file size?
