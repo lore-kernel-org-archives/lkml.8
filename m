@@ -2,149 +2,176 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CCCC2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1CDC2BA1A
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3721120768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="pZ8XIefn"
+	by mail.kernel.org (Postfix) with ESMTP id 23C2420768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 10:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbgDHK1i (ORCPT
+        id S1728097AbgDHK17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 06:27:38 -0400
-Received: from www.linux-watchdog.org ([185.87.125.42]:33188 "EHLO
-        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgDHK1h (ORCPT
+        Wed, 8 Apr 2020 06:27:59 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:38448 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgDHK16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 06:27:37 -0400
-X-Greylist: delayed 467 seconds by postgrey-1.27 at vger.kernel.org; Wed, 08 Apr 2020 06:27:36 EDT
-Received: by www.linux-watchdog.org (Postfix, from userid 500)
-        id 2F644409E5; Wed,  8 Apr 2020 11:27:03 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 2F644409E5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
-        s=odk20180602; t=1586338023;
-        bh=VOzQum+z/bArM7BjUmo6thZ+xFwIvAwR6O4velNsQqo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=pZ8XIefn1emLE9xMV+JoG+3kGpmswKdMySQYzKX43ZwEHJY6FlCOdBiXY8OZM+O7L
-         S7L8wVVmUrwILUz0aOYbrFcEKs80A6hqgvx/dms+XfGQXmwWBPHQ06xMQZUrhRGuMB
-         UMzG3bw7kJZyDm11MWrJ0R5AUS2m690cwpXt+hQ8=
-Date:   Wed, 8 Apr 2020 11:27:03 +0200
-From:   Wim Van Sebroeck <wim@linux-watchdog.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Dmitry Safonov <dima@arista.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: [GIT PULL REQUEST] watchdog - v5.7 Merge window
-Message-ID: <20200408092702.GA27984@www.linux-watchdog.org>
+        Wed, 8 Apr 2020 06:27:58 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 11FDE20029;
+        Wed,  8 Apr 2020 12:27:55 +0200 (CEST)
+Date:   Wed, 8 Apr 2020 12:27:53 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] drm/panel: NT39016: Add support for multiple modes
+Message-ID: <20200408102753.GA25805@ravnborg.org>
+References: <20200408095830.8131-1-paul@crapouillou.net>
+ <20200408100452.GA20795@ravnborg.org>
+ <QCSG8Q.N40UK3F20OVT2@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-User-Agent: Mutt/1.5.20 (2009-12-10)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <QCSG8Q.N40UK3F20OVT2@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=7gkXJVJtAAAA:8
+        a=ER_8r6IbAAAA:8 a=AWKs0v43Jo1guAmdQeEA:9 a=0BdVxHvGnDqK8inQ:21
+        a=cT1zXbrBXqGS2BQb:21 a=wPNLvfGTeEIA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=9LHmKk7ezEChjTCyhBa9:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Apr 08, 2020 at 12:12:26PM +0200, Paul Cercueil wrote:
+> Hi Sam,
+> 
+> 
+> Le mer. 8 avril 2020 à 12:04, Sam Ravnborg <sam@ravnborg.org> a écrit :
+> > Hi Paul.
+> > 
+> > On Wed, Apr 08, 2020 at 11:58:29AM +0200, Paul Cercueil wrote:
+> > >  Add support for multiple drm_display_mode entries. This will allow
+> > > to
+> > >  add a 50 Hz mode later.
+> > > 
+> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > Patch looks good.
+> > 
+> > Could we please use lower case in the $subject?
+> 
+> You mean 's/Add/add/' or the panel name as well?
 
-Please pull the watchdog changes for the v5.7 release cycle.
+The panel name. We are not consistent if we start sentences in $subject
+with lower or upper case - so Add and add are both fine.
+But the panel name is (almost) always with lower case.
 
-This series contains:
-* Add TI K3 RTI watchdog
-* Add stop_on_reboot parameter to control reboot policy
-* wm831x_wdt: Remove GPIO handling
-* Several small fixes, improvements and clean-ups
-
-The output from git request-pull:
-----------------------------------------------------------------
-The following changes since commit fb33c6510d5595144d585aa194d377cf74d31911:
-
-  Linux 5.6-rc6 (2020-03-15 15:01:23 -0700)
-
-are available in the git repository at:
-
-  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.7-rc1
-
-for you to fetch changes up to 2d63908bdbfbce0d98195b22236ad5105dc6eba2:
-
-  watchdog: Add K3 RTI watchdog support (2020-04-01 11:35:23 +0200)
-
-----------------------------------------------------------------
-linux-watchdog 5.7-rc1 tag
-
-----------------------------------------------------------------
-Anson Huang (3):
-      watchdog: imx_sc_wdt: Remove unused includes
-      watchdog: imx7ulp: Remove unused include of init.h
-      watchdog: imx2_wdt: Drop .remove callback
-
-Ansuel Smith (1):
-      watchdog: qcom-wdt: disable pretimeout on timer platform
-
-Chris Packham (1):
-      watchdog: orion: use 0 for unset heartbeat
-
-Dmitry Safonov (1):
-      watchdog: Add stop_on_reboot parameter to control reboot policy
-
-Linus Walleij (1):
-      watchdog: wm831x_wdt: Remove GPIO handling
-
-Loic Poulain (1):
-      watchdog: pm8916_wdt: Add system sleep callbacks
-
-Lucas Stach (1):
-      watchdog: ziirave_wdt: change name to be more specific
-
-Stephen Boyd (1):
-      watchdog: qcom: Use irq flags from firmware
-
-Tero Kristo (3):
-      watchdog: reset last_hw_keepalive time at start
-      dt-bindings: watchdog: Add support for TI K3 RTI watchdog
-      watchdog: Add K3 RTI watchdog support
-
-Tomer Maimon (1):
-      watchdog: npcm: remove whitespaces
-
- .../devicetree/bindings/watchdog/ti,rti-wdt.yaml   |  65 ++++++
- drivers/watchdog/Kconfig                           |   8 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/imx2_wdt.c                        |  37 +--
- drivers/watchdog/imx7ulp_wdt.c                     |   1 -
- drivers/watchdog/imx_sc_wdt.c                      |   2 -
- drivers/watchdog/npcm_wdt.c                        |  19 +-
- drivers/watchdog/orion_wdt.c                       |   2 +-
- drivers/watchdog/pm8916_wdt.c                      |  25 ++
- drivers/watchdog/qcom-wdt.c                        |  34 ++-
- drivers/watchdog/rti_wdt.c                         | 255 +++++++++++++++++++++
- drivers/watchdog/watchdog_core.c                   |  12 +
- drivers/watchdog/watchdog_dev.c                    |   1 +
- drivers/watchdog/wm831x_wdt.c                      |  27 ---
- drivers/watchdog/ziirave_wdt.c                     |   2 +-
- include/linux/mfd/wm831x/pdata.h                   |   1 -
- 16 files changed, 412 insertions(+), 80 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
- create mode 100644 drivers/watchdog/rti_wdt.c
-----------------------------------------------------------------
-
-Kind regards,
-Wim.
-
+	Sam
+> 
+> -Paul
+> 
+> > Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> > 
+> > I asume you will apply yourself.
+> > 
+> > 	Sam
+> > 
+> > >  ---
+> > >   drivers/gpu/drm/panel/panel-novatek-nt39016.c | 33
+> > > +++++++++++++------
+> > >   1 file changed, 23 insertions(+), 10 deletions(-)
+> > > 
+> > >  diff --git a/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+> > > b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+> > >  index a470810f7dbe..f1286cf6528b 100644
+> > >  --- a/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+> > >  +++ b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+> > >  @@ -49,7 +49,8 @@ enum nt39016_regs {
+> > >   #define NT39016_SYSTEM_STANDBY	BIT(1)
+> > > 
+> > >   struct nt39016_panel_info {
+> > >  -	struct drm_display_mode display_mode;
+> > >  +	const struct drm_display_mode *display_modes;
+> > >  +	unsigned int num_modes;
+> > >   	u16 width_mm, height_mm;
+> > >   	u32 bus_format, bus_flags;
+> > >   };
+> > >  @@ -212,15 +213,22 @@ static int nt39016_get_modes(struct drm_panel
+> > > *drm_panel,
+> > >   	struct nt39016 *panel = to_nt39016(drm_panel);
+> > >   	const struct nt39016_panel_info *panel_info = panel->panel_info;
+> > >   	struct drm_display_mode *mode;
+> > >  +	unsigned int i;
+> > > 
+> > >  -	mode = drm_mode_duplicate(connector->dev,
+> > > &panel_info->display_mode);
+> > >  -	if (!mode)
+> > >  -		return -ENOMEM;
+> > >  +	for (i = 0; i < panel_info->num_modes; i++) {
+> > >  +		mode = drm_mode_duplicate(connector->dev,
+> > >  +					  &panel_info->display_modes[i]);
+> > >  +		if (!mode)
+> > >  +			return -ENOMEM;
+> > >  +
+> > >  +		drm_mode_set_name(mode);
+> > > 
+> > >  -	drm_mode_set_name(mode);
+> > >  +		mode->type = DRM_MODE_TYPE_DRIVER;
+> > >  +		if (panel_info->num_modes == 1)
+> > >  +			mode->type |= DRM_MODE_TYPE_PREFERRED;
+> > > 
+> > >  -	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> > >  -	drm_mode_probed_add(connector, mode);
+> > >  +		drm_mode_probed_add(connector, mode);
+> > >  +	}
+> > > 
+> > >   	connector->display_info.bpc = 8;
+> > >   	connector->display_info.width_mm = panel_info->width_mm;
+> > >  @@ -230,7 +238,7 @@ static int nt39016_get_modes(struct drm_panel
+> > > *drm_panel,
+> > >   					 &panel_info->bus_format, 1);
+> > >   	connector->display_info.bus_flags = panel_info->bus_flags;
+> > > 
+> > >  -	return 1;
+> > >  +	return panel_info->num_modes;
+> > >   }
+> > > 
+> > >   static const struct drm_panel_funcs nt39016_funcs = {
+> > >  @@ -316,8 +324,8 @@ static int nt39016_remove(struct spi_device
+> > > *spi)
+> > >   	return 0;
+> > >   }
+> > > 
+> > >  -static const struct nt39016_panel_info kd035g6_info = {
+> > >  -	.display_mode = {
+> > >  +static const struct drm_display_mode kd035g6_display_modes[] = {
+> > >  +	{
+> > >   		.clock = 6000,
+> > >   		.hdisplay = 320,
+> > >   		.hsync_start = 320 + 10,
+> > >  @@ -330,6 +338,11 @@ static const struct nt39016_panel_info
+> > > kd035g6_info = {
+> > >   		.vrefresh = 60,
+> > >   		.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+> > >   	},
+> > >  +};
+> > >  +
+> > >  +static const struct nt39016_panel_info kd035g6_info = {
+> > >  +	.display_modes = kd035g6_display_modes,
+> > >  +	.num_modes = ARRAY_SIZE(kd035g6_display_modes),
+> > >   	.width_mm = 71,
+> > >   	.height_mm = 53,
+> > >   	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+> > >  --
+> > >  2.25.1
+> 
