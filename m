@@ -2,138 +2,428 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF48C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23373C2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB5220730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:42:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QNvwhanR"
+	by mail.kernel.org (Postfix) with ESMTP id E063D20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 22:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgDHWm1 (ORCPT
+        id S1726579AbgDHWn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 18:42:27 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36500 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbgDHWm0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 18:42:26 -0400
-Received: by mail-qk1-f194.google.com with SMTP id l25so2125277qkk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 15:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Gx7CIn2jLm5j4xdRTQllP3gtsV1GD1rqAZK1dgPXufs=;
-        b=QNvwhanRxS4Sp2j2LHSLQcsnvtI8nKLKCO4iJmFGW1B92LmBwTjRXgMu6hoA+3nu6a
-         +AncNDjcl0kSubqIIKDmhQ/B4P0DWLjY944vQvPzXqfIZ/sCSq0fDEsgem3Gc5iICbyv
-         0Y39n5KQM6xKjbVgPorJhsaiN2AuYU7Q0/dWwDhxN1r5mtViSRqRNidGJ/zth/jmXnAd
-         Fj7J66gfSRWdqqRboP1FK189wHiA2ZAzhPdo2Mp8SJP9vg7U1rEBSGTCCasAVssBxBTy
-         zYpfsDYyG5+n/7srZdc6jeXEQR+u64TxJV40NMVebs8Xh6UEw6KOAP5b0PcZX96oRtnX
-         4fIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gx7CIn2jLm5j4xdRTQllP3gtsV1GD1rqAZK1dgPXufs=;
-        b=oINQfnwCtansffd7n4cRrPntuKRqiJXayrvDqggLgkevHC7ikBl+30Cga2I+Gi7gsU
-         toDVHnJjvhxEzC/gt8HXr/7jiqjRZDBSrZt3fDXWxcRf5MHOnAktZ+TqJVH+V8wC8PNX
-         kyGouWYgnMfDe/G6QRw3Cxido3tg08n7ymI44nXYqB10Zu0HbX9zt2ztWGZ5Q6D1Cm/t
-         I59Deilj+oNdGoF+S8Al4ecnNbBvvFI6mJNkSU+ZXjqwBji9NvzNewFW4PeB69mJyNDs
-         JVqJCuH7laBH+TufYRMc4I1hJ2VKTHrX6WXf7gmg8rAHdpM3k/B1s5rA89+IJrQGcupa
-         /hXw==
-X-Gm-Message-State: AGi0PubSImH9L6eVnLhenCPVCNx4eZtEPDq/gduHmADBOsOZPrfn6zAp
-        qWDb7nvGrqL7hcxpnGrut+o46Q==
-X-Google-Smtp-Source: APiQypK2bX+tqIpGntcBk1/CwwpnTCfzPu8OVIuVdpAy/314r42K0ZVFzsGT+xEEVrPrBkQ7VCf5XA==
-X-Received: by 2002:a05:620a:4f2:: with SMTP id b18mr9768314qkh.433.1586385745928;
-        Wed, 08 Apr 2020 15:42:25 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id x17sm19797204qkb.87.2020.04.08.15.42.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 08 Apr 2020 15:42:25 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jMJOq-0006Fv-Ln; Wed, 08 Apr 2020 19:42:24 -0300
-Date:   Wed, 8 Apr 2020 19:42:24 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nicolas Pitre <nico@fluxnic.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>
-Subject: Re: [RFC 0/6] Regressions for "imply" behavior change
-Message-ID: <20200408224224.GD11886@ziepe.ca>
-References: <20200408202711.1198966-1-arnd@arndb.de>
- <nycvar.YSQ.7.76.2004081633260.2671@knanqh.ubzr>
- <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
+        Wed, 8 Apr 2020 18:43:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:43850 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726483AbgDHWn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 18:43:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59CFA30E;
+        Wed,  8 Apr 2020 15:43:56 -0700 (PDT)
+Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0878B3F52E;
+        Wed,  8 Apr 2020 15:43:54 -0700 (PDT)
+Date:   Wed, 8 Apr 2020 23:43:47 +0100
+From:   Suzuki K Poulose <Suzuki.Poulose@arm.com>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     mike.leach@linaro.org, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
+        swboyd@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        suzuki.poulose@arm.com
+Subject: Re: [RFC PATCH] coresight: dynamic-replicator: Fix handling of
+ multiple connections
+Message-ID: <20200408224347.GA388414@ewhatever.cambridge.arm.com>
+References: <20200405102819.28460-1-saiprakash.ranjan@codeaurora.org>
+ <CAJ9a7VgQzK1XSCvLwuqODwkWfvo=6Wwps7Db+pL5xYDeCuktrg@mail.gmail.com>
+ <6c0f45488f8a44bf860759e00fcabd09@codeaurora.org>
+ <906d374d-a4d6-f2f2-6845-88b97a5ff7d9@arm.com>
+ <39a2b3fff165a108fa59d72b630b5f14@codeaurora.org>
+ <bb209f80-ac02-6321-dac4-ebf9ee6fa9a0@arm.com>
+ <bd05b31c2391edfff5044f22f2f83edf@codeaurora.org>
+ <e9c299c4-caeb-9eb8-f019-b311bfce756a@arm.com>
+ <a7074f44ebbde720b5e0189801eab7c9@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a2frDf4BzEpEF0uwPTV2dv6Jve+6N97z1sSuSBUAPJquA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a7074f44ebbde720b5e0189801eab7c9@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 10:49:48PM +0200, Arnd Bergmann wrote:
-> On Wed, Apr 8, 2020 at 10:38 PM Nicolas Pitre <nico@fluxnic.net> wrote:
-> > On Wed, 8 Apr 2020, Arnd Bergmann wrote:
-> > > I have created workarounds for the Kconfig files, which now stop using
-> > > imply and do something else in each case. I don't know whether there was
-> > > a bug in the kconfig changes that has led to allowing configurations that
-> > > were not meant to be legal even with the new semantics, or if the Kconfig
-> > > files have simply become incorrect now and the tool works as expected.
-> >
-> > In most cases it is the code that has to be fixed. It typically does:
-> >
-> >         if (IS_ENABLED(CONFIG_FOO))
-> >                 foo_init();
-> >
-> > Where it should rather do:
-> >
-> >         if (IS_REACHABLE(CONFIG_FOO))
-> >                 foo_init();
-> >
-> > A couple of such patches have been produced and queued in their
-> > respective trees already.
+On Tue, Apr 07, 2020 at 08:48:54PM +0530, Sai Prakash Ranjan wrote:
+> Hi Suzuki,
 > 
-> I try to use IS_REACHABLE() only as a last resort, as it tends to
-> confuse users when a subsystem is built as a module and already
-> loaded but something relying on that subsystem does not use it.
+> On 2020-04-07 20:23, Suzuki K Poulose wrote:
+> > On 04/07/2020 02:56 PM, Sai Prakash Ranjan wrote:
+> > > Hi Suzuki,
+> > > 
+> > > On 2020-04-07 18:38, Suzuki K Poulose wrote:
+> > > > On 04/07/2020 12:29 PM, Sai Prakash Ranjan wrote:
+> > > > > Hi Suzuki,
+> > > > > 
+> > > > > Thanks for looking into this issue.
+> > > > > 
+> > > > > On 2020-04-07 15:54, Suzuki K Poulose wrote:
+> > > > > > On 04/07/2020 10:46 AM, Sai Prakash Ranjan wrote:
+> > > > > > 
+> > > > > > There seems to be two replicators back to back here.
+> > > > > > What is connected
+> > > > > > to the other output of both of them ? Are there any
+> > > > > > TPIUs ? What happens
+> > > > > > if you choose a sink on the other end of "swao_replicator" (ETB ?)
+> > > > > > 
+> > > > > 
+> > > > > The other outport of swao replicator is connected to EUD which is a
+> > > > > QCOM specific HW which can be used as a sink like USB.
+> > > > > And the other outport of other replicator(replicator_out) is
+> > > > > connected to
+> > > > > TPIU.
+> > > > > 
+> > > > > > After boot, what do the idfilter registers read for both
+> > > > > > the replicators ?
+> > > > > > 
+> > > > > 
+> > > > > Added some prints in replicator_probe.
+> > > > > 
+> > > > >   replicator probe ret=-517 devname=6046000.replicator
+> > > > > idfilter0=0x0 idfilter1=0x0
+> > > > >   replicator probe ret=0 devname=6b06000.replicator
+> > > > > idfilter0=0xff idfilter1=0xff
+> > > > >   replicator probe ret=0 devname=6046000.replicator
+> > > > > idfilter0=0xff idfilter1=0xff
+> > > > 
+> > > > Curious to see how the idfilterX is set to 0:
+> > > >      if that is never used.
+> > > >         Or
+> > > >      if the user doesn't reset it back to 0xff.
+> > > > 
+> > > 
+> > > For both replicators, the default value seems to be 0x0.
+> > > 
+> > >   replicator probe in res ret=0 devname=6046000.replicator
+> > > idfilter0=0x0 idfilter1=0x0
+> > >   replicator probe ret=-517 devname=6046000.replicator idfilter0=0x0
+> > > idfilter1=0x0
+> > >   replicator probe in res ret=0 devname=6b06000.replicator
+> > > idfilter0=0x0 idfilter1=0x0
+> > >   replicator probe ret=0 devname=6b06000.replicator idfilter0=0xff
+> > > idfilter1=0xff
+> > >   replicator probe in res ret=0 devname=6046000.replicator
+> > > idfilter0=0x0 idfilter1=0x0
+> > >   replicator probe ret=0 devname=6046000.replicator idfilter0=0xff
+> > > idfilter1=0xff
+> > 
+> > I am not sure how you have added the debugs, but it looks like the
+> > drivers set 0xff for both the port filters on a successful probe.
+> > 
 > 
-> In the six patches I made, I had to use IS_REACHABLE() once,
-> for the others I tended to use a Kconfig dependency like
+> Yes, thats done by replicator_reset in probe right? Below is the diff:
 > 
-> 'depends on FOO || FOO=n'
+> @@ -242,6 +244,9 @@ static int replicator_probe(struct device *dev, struct
+> resource *res)
+>                 }
+>                 drvdata->base = base;
+>                 desc.groups = replicator_groups;
+> +               pr_info("replicator probe in res ret=%d devname=%s
+> idfilter0=%#lx idfilter1=%#lx\n",
+> +                       ret, dev_name(dev), (readl_relaxed(base +
+> REPLICATOR_IDFILTER0)),
+> +                       (readl_relaxed(base + REPLICATOR_IDFILTER1)));
+>         }
+> 
+>         dev_set_drvdata(dev, drvdata);
+> @@ -272,6 +277,12 @@ static int replicator_probe(struct device *dev, struct
+> resource *res)
+>  out_disable_clk:
+>         if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
+>                 clk_disable_unprepare(drvdata->atclk);
+> +
+> +       if (res)
+> +               pr_info("replicator probe ret=%d devname=%s idfilter0=%#lx
+> idfilter1=%#lx\n",
+> +                       ret, dev_name(dev), (readl_relaxed(base +
+> REPLICATOR_IDFILTER0)),
+> +                       (readl_relaxed(base + REPLICATOR_IDFILTER1)));
+> +
+>         return ret;
+>  }
+> 
+> > > 
+> > > > Does your test ever touch EUD (enable the port for EUD at
+> > > > swao-replicator) ? What are the values before you run your test ?
+> > > > 
+> > > > 
+> > > 
+> > > No, we do not use EUD, downstream it is used as dummy sink.
+> > > And I just try to select the ETR as the sink and enable ETM0 as the
+> > > trace source.
+> > > 
+> > > echo 1 > /sys/bus/coresight/devices/tmc_etr0/enable_sink
+> > > echo 1 > /sys/bus/coresight/devices/etm0/enable_source
+> > > 
+> > > Also I see the KASAN warning but that seems like some other issue.
+> > > 
+> > 
+> > Does your funnel have sparse input described ? I think we have an
+> > issue with the "refcnt" tracking for funnels (especially). When we
+> > have a sparse input ports described (ie. if only input ports 0, 3,
+> > 5 are described to protect the secure side connections), we could
+> > end up accessing beyond the memory allocated for csdev->refcnts.
+> > i.e, csdev->pdata->nr_inport = 3, and we could access csdev->refcnts[5],
+> > while sizeof(csdev->refcnts) = sizeof(atomic_t) * 3.
+> > 
+> > I will send a patch.
+> > 
+> 
+> Thanks, I can test it out.
 
-It is unfortunate kconfig doesn't have a language feature for this
-idiom, as the above is confounding without a lot of kconfig knowledge
+Please find the untested patch below.
 
-> I did come up with the IS_REACHABLE() macro originally, but that
-> doesn't mean I think it's a good idea to use it liberally ;-)
+---8>---
 
-It would be nice to have some uniform policy here
+[untested] coresight: Fix support for sparse port numbers
 
-I also don't like the IS_REACHABLE solution, it makes this more
-complicated, not less..
+On some systems the firmware may not describe all the ports
+connected to a component (e.g, for security reasons). This
+could be especially problematic for "funnels" where we could
+end up in modifying memory beyond the allocated space for
+refcounts.
 
-Jason
+e.g, for a funnel with input ports listed 0, 3, 5, nr_inport = 3.
+However the we could access refcnts[5] while checking for
+references.
+
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ .../hwtracing/coresight/coresight-platform.c  | 74 ++++++++++++-------
+ drivers/hwtracing/coresight/coresight.c       |  8 +-
+ 2 files changed, 56 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+index 3c5bee429105..1c610d6e944b 100644
+--- a/drivers/hwtracing/coresight/coresight-platform.c
++++ b/drivers/hwtracing/coresight/coresight-platform.c
+@@ -67,6 +67,7 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
+ 					  int *nr_inport, int *nr_outport)
+ {
+ 	struct device_node *ep = NULL;
++	struct of_endpoint endpoint;
+ 	int in = 0, out = 0;
+ 
+ 	do {
+@@ -74,10 +75,16 @@ static void of_coresight_get_ports_legacy(const struct device_node *node,
+ 		if (!ep)
+ 			break;
+ 
+-		if (of_coresight_legacy_ep_is_input(ep))
+-			in++;
+-		else
+-			out++;
++		if (of_graph_parse_endpoint(ep, &endpoint))
++			continue;
++
++		if (of_coresight_legacy_ep_is_input(ep)) {
++			in = (endpoint.port + 1 > in) ?
++				endpoint.port + 1 : in;
++		} else {
++			out = (endpoint.port + 1) > out ?
++				endpoint.port + 1 : out;
++		}
+ 
+ 	} while (ep);
+ 
+@@ -117,9 +124,16 @@ of_coresight_count_ports(struct device_node *port_parent)
+ {
+ 	int i = 0;
+ 	struct device_node *ep = NULL;
++	struct of_endpoint endpoint;
++
++	while ((ep = of_graph_get_next_endpoint(port_parent, ep))) {
++		/* Defer error handling to parsing */
++		if (of_graph_parse_endpoint(ep, &endpoint))
++			continue;
++		if (endpoint.port + 1 > i)
++			i = endpoint.port + 1;
++	}
+ 
+-	while ((ep = of_graph_get_next_endpoint(port_parent, ep)))
+-		i++;
+ 	return i;
+ }
+ 
+@@ -171,14 +185,12 @@ static int of_coresight_get_cpu(struct device *dev)
+  * Parses the local port, remote device name and the remote port.
+  *
+  * Returns :
+- *	 1	- If the parsing is successful and a connection record
+- *		  was created for an output connection.
+  *	 0	- If the parsing completed without any fatal errors.
+  *	-Errno	- Fatal error, abort the scanning.
+  */
+ static int of_coresight_parse_endpoint(struct device *dev,
+ 				       struct device_node *ep,
+-				       struct coresight_connection *conn)
++				       struct coresight_platform_data *pdata)
+ {
+ 	int ret = 0;
+ 	struct of_endpoint endpoint, rendpoint;
+@@ -186,6 +198,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
+ 	struct device_node *rep = NULL;
+ 	struct device *rdev = NULL;
+ 	struct fwnode_handle *rdev_fwnode;
++	struct coresight_connection *conn;
+ 
+ 	do {
+ 		/* Parse the local port details */
+@@ -212,6 +225,12 @@ static int of_coresight_parse_endpoint(struct device *dev,
+ 			break;
+ 		}
+ 
++		conn = &pdata->conns[endpoint.port];
++		if (conn->child_fwnode) {
++			dev_warn(dev, "Duplicate output port %d\n", endpoint.port);
++			ret = -EINVAL;
++			break;
++		}
+ 		conn->outport = endpoint.port;
+ 		/*
+ 		 * Hold the refcount to the target device. This could be
+@@ -224,7 +243,6 @@ static int of_coresight_parse_endpoint(struct device *dev,
+ 		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
+ 		conn->child_port = rendpoint.port;
+ 		/* Connection record updated */
+-		ret = 1;
+ 	} while (0);
+ 
+ 	of_node_put(rparent);
+@@ -238,7 +256,6 @@ static int of_get_coresight_platform_data(struct device *dev,
+ 					  struct coresight_platform_data *pdata)
+ {
+ 	int ret = 0;
+-	struct coresight_connection *conn;
+ 	struct device_node *ep = NULL;
+ 	const struct device_node *parent = NULL;
+ 	bool legacy_binding = false;
+@@ -267,8 +284,6 @@ static int of_get_coresight_platform_data(struct device *dev,
+ 		dev_warn_once(dev, "Uses obsolete Coresight DT bindings\n");
+ 	}
+ 
+-	conn = pdata->conns;
+-
+ 	/* Iterate through each output port to discover topology */
+ 	while ((ep = of_graph_get_next_endpoint(parent, ep))) {
+ 		/*
+@@ -280,15 +295,9 @@ static int of_get_coresight_platform_data(struct device *dev,
+ 		if (legacy_binding && of_coresight_legacy_ep_is_input(ep))
+ 			continue;
+ 
+-		ret = of_coresight_parse_endpoint(dev, ep, conn);
+-		switch (ret) {
+-		case 1:
+-			conn++;		/* Fall through */
+-		case 0:
+-			break;
+-		default:
++		ret = of_coresight_parse_endpoint(dev, ep, pdata);
++		if (ret)
+ 			return ret;
+-		}
+ 	}
+ 
+ 	return 0;
+@@ -627,6 +636,11 @@ static int acpi_coresight_parse_link(struct acpi_device *adev,
+ 		 *    coresight_remove_match().
+ 		 */
+ 		conn->child_fwnode = fwnode_handle_get(&r_adev->fwnode);
++	} else if (dir == ACPI_CORESIGHT_LINK_SLAVE) {
++		conn->child_port = fields[0].integer.value;
++	} else {
++		/* Invalid direction */
++		return -EINVAL;
+ 	}
+ 
+ 	return dir;
+@@ -672,10 +686,14 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
+ 			return dir;
+ 
+ 		if (dir == ACPI_CORESIGHT_LINK_MASTER) {
+-			pdata->nr_outport++;
++			if (ptr->outport > pdata->nr_outport)
++				pdata->nr_outport = ptr->outport;
+ 			ptr++;
+ 		} else {
+-			pdata->nr_inport++;
++			WARN_ON(pdata->nr_inport == ptr->child_port);
++			/* Do not move the ptr for input connections */
++			if (ptr->child_port > pdata->nr_inport)
++				pdata->nr_inport = ptr->child_port;
+ 		}
+ 	}
+ 
+@@ -684,8 +702,13 @@ static int acpi_coresight_parse_graph(struct acpi_device *adev,
+ 		return rc;
+ 
+ 	/* Copy the connection information to the final location */
+-	for (i = 0; i < pdata->nr_outport; i++)
+-		pdata->conns[i] = conns[i];
++	for (i = 0; conns + i < ptr; i++) {
++		int port = conns[i].outport;
++
++		/* Duplicate output port */
++		WARN_ON(pdata->conns[port].child_fwnode);
++		pdata->conns[port] = conns[i];
++	}
+ 
+ 	devm_kfree(&adev->dev, conns);
+ 	return 0;
+@@ -787,6 +810,7 @@ coresight_get_platform_data(struct device *dev)
+ 		goto error;
+ 
+ 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	pdata->nr_outport = pdata->nr_inport = -1;
+ 	if (!pdata) {
+ 		ret = -ENOMEM;
+ 		goto error;
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index ef20f74c85fa..f07bc0a7ab88 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -990,6 +990,9 @@ static int coresight_orphan_match(struct device *dev, void *data)
+ 	for (i = 0; i < i_csdev->pdata->nr_outport; i++) {
+ 		conn = &i_csdev->pdata->conns[i];
+ 
++		/* Skip the port if FW doesn't describe it */
++		if (!conn->child_fwnode)
++			continue;
+ 		/* We have found at least one orphan connection */
+ 		if (conn->child_dev == NULL) {
+ 			/* Does it match this newly added device? */
+@@ -1029,6 +1032,9 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
+ 		struct coresight_connection *conn = &csdev->pdata->conns[i];
+ 		struct device *dev = NULL;
+ 
++		if (!conn->child_fwnode)
++			continue;
++
+ 		dev = bus_find_device_by_fwnode(&coresight_bustype, conn->child_fwnode);
+ 		if (dev) {
+ 			conn->child_dev = to_coresight_device(dev);
+@@ -1061,7 +1067,7 @@ static int coresight_remove_match(struct device *dev, void *data)
+ 	for (i = 0; i < iterator->pdata->nr_outport; i++) {
+ 		conn = &iterator->pdata->conns[i];
+ 
+-		if (conn->child_dev == NULL)
++		if (conn->child_dev == NULL || conn->child_fwnode == NULL)
+ 			continue;
+ 
+ 		if (csdev->dev.fwnode == conn->child_fwnode) {
+-- 
+2.24.1
+
+
+
