@@ -2,245 +2,97 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B536C2D0F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFE7C2D0F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0134220768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA13D20768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 17:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbgDHRJY (ORCPT
+        id S1730519AbgDHRKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 13:09:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:50387 "EHLO mga17.intel.com"
+        Wed, 8 Apr 2020 13:10:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51446 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbgDHRJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 13:09:24 -0400
-IronPort-SDR: U5mznCRFcfPbM/uKWSi0ZLOzktDhS9K8jNQyxmSk1o3q9eQJDMdC5CdPUGr29bA5GbLcrhXt1z
- /Vr+yMkNxuNw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2020 10:09:24 -0700
-IronPort-SDR: YzStcBYNyg4rM2NCqyMoWrdbPIx41Hz7AvtD2FHxf/oLSnxNIkoE7Lh+X2uMhDlywMDPL9gAGi
- LVNM72pCv2xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,359,1580803200"; 
-   d="scan'208";a="297289595"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by FMSMGA003.fm.intel.com with ESMTP; 08 Apr 2020 10:09:24 -0700
-Date:   Wed, 8 Apr 2020 10:09:23 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH V6 6/8] fs/xfs: Combine xfs_diflags_to_linux() and
- xfs_diflags_to_iflags()
-Message-ID: <20200408170923.GC569068@iweiny-DESK2.sc.intel.com>
-References: <20200407182958.568475-1-ira.weiny@intel.com>
- <20200407182958.568475-7-ira.weiny@intel.com>
- <20200408020827.GI24067@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200408020827.GI24067@dread.disaster.area>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        id S1726663AbgDHRKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 13:10:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id A1977ABF5;
+        Wed,  8 Apr 2020 17:10:14 +0000 (UTC)
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Daniel Wagner <dwagner@suse.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH] scsi: core: Rate limit "rejecting I/O" messages
+Date:   Wed,  8 Apr 2020 19:10:12 +0200
+Message-Id: <20200408171012.76890-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 12:08:27PM +1000, Dave Chinner wrote:
-> On Tue, Apr 07, 2020 at 11:29:56AM -0700, ira.weiny@intel.com wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
+Prevent excessive logging by rate limiting the "rejecting I/O"
+messages. For example in setups where remote syslog is used the link
+is saturated by those messages when a storage controller/disk
+misbehaves.
 
-[snip]
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ drivers/scsi/scsi_lib.c    |  4 ++--
+ include/scsi/scsi_device.h | 10 ++++++++++
+ 2 files changed, 12 insertions(+), 2 deletions(-)
 
-> >  
-> > -STATIC void
-> > -xfs_diflags_to_linux(
-> > -	struct xfs_inode	*ip)
-> > -{
-> > -	struct inode		*inode = VFS_I(ip);
-> > -	unsigned int		xflags = xfs_ip2xflags(ip);
-> > -
-> > -	if (xflags & FS_XFLAG_IMMUTABLE)
-> > -		inode->i_flags |= S_IMMUTABLE;
-> > -	else
-> > -		inode->i_flags &= ~S_IMMUTABLE;
-> > -	if (xflags & FS_XFLAG_APPEND)
-> > -		inode->i_flags |= S_APPEND;
-> > -	else
-> > -		inode->i_flags &= ~S_APPEND;
-> > -	if (xflags & FS_XFLAG_SYNC)
-> > -		inode->i_flags |= S_SYNC;
-> > -	else
-> > -		inode->i_flags &= ~S_SYNC;
-> > -	if (xflags & FS_XFLAG_NOATIME)
-> > -		inode->i_flags |= S_NOATIME;
-> > -	else
-> > -		inode->i_flags &= ~S_NOATIME;
-> > -#if 0	/* disabled until the flag switching races are sorted out */
-> > -	if (xflags & FS_XFLAG_DAX)
-> > -		inode->i_flags |= S_DAX;
-> > -	else
-> > -		inode->i_flags &= ~S_DAX;
-> > -#endif
-> 
-> So this variant will set the flag in the inode if the disk inode
-> flag is set, otherwise it will clear it.  It does it with if/else
-> branches.
-> 
-> 
-> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> > index e07f7b641226..a4ac8568c8c7 100644
-> > --- a/fs/xfs/xfs_iops.c
-> > +++ b/fs/xfs/xfs_iops.c
-> > @@ -1259,7 +1259,7 @@ xfs_inode_supports_dax(
-> >  	return xfs_inode_buftarg(ip)->bt_daxdev != NULL;
-> >  }
-> >  
-> > -STATIC bool
-> > +static bool
-> >  xfs_inode_enable_dax(
-> >  	struct xfs_inode *ip)
-> >  {
-> 
-> This belongs in the previous patch.
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 47835c4b4ee0..01c35c58c6f3 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1217,7 +1217,7 @@ scsi_prep_state_check(struct scsi_device *sdev, struct request *req)
+ 		 */
+ 		if (!sdev->offline_already) {
+ 			sdev->offline_already = true;
+-			sdev_printk(KERN_ERR, sdev,
++			sdev_printk_ratelimited(KERN_ERR, sdev,
+ 				    "rejecting I/O to offline device\n");
+ 		}
+ 		return BLK_STS_IOERR;
+@@ -1226,7 +1226,7 @@ scsi_prep_state_check(struct scsi_device *sdev, struct request *req)
+ 		 * If the device is fully deleted, we refuse to
+ 		 * process any commands as well.
+ 		 */
+-		sdev_printk(KERN_ERR, sdev,
++		sdev_printk_ratelimited(KERN_ERR, sdev,
+ 			    "rejecting I/O to dead device\n");
+ 		return BLK_STS_IOERR;
+ 	case SDEV_BLOCK:
+diff --git a/include/scsi/scsi_device.h b/include/scsi/scsi_device.h
+index c3cba2aaf934..8be40b0e1b8f 100644
+--- a/include/scsi/scsi_device.h
++++ b/include/scsi/scsi_device.h
+@@ -257,6 +257,16 @@ sdev_prefix_printk(const char *, const struct scsi_device *, const char *,
+ #define sdev_printk(l, sdev, fmt, a...)				\
+ 	sdev_prefix_printk(l, sdev, NULL, fmt, ##a)
+ 
++#define sdev_printk_ratelimited(l, sdev, fmt, a...)			\
++({									\
++	static DEFINE_RATELIMIT_STATE(_rs,				\
++				      DEFAULT_RATELIMIT_INTERVAL,	\
++				      DEFAULT_RATELIMIT_BURST);		\
++									\
++	if (__ratelimit(&_rs))						\
++		sdev_prefix_printk(l, sdev, NULL, fmt, ##a);		\
++})
++
+ __printf(3, 4) void
+ scmd_printk(const char *, const struct scsi_cmnd *, const char *, ...);
+ 
+-- 
+2.16.4
 
-Ah yea...  Sorry.
-
-Fixed in V7
-
-> 
-> > @@ -1272,26 +1272,38 @@ xfs_inode_enable_dax(
-> >  	return false;
-> >  }
-> >  
-> > -STATIC void
-> > +void
-> >  xfs_diflags_to_iflags(
-> > -	struct inode		*inode,
-> > -	struct xfs_inode	*ip)
-> > +	struct xfs_inode	*ip,
-> > +	bool init)
-> >  {
-> > -	uint16_t		flags = ip->i_d.di_flags;
-> > -
-> > -	inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC |
-> > -			    S_NOATIME | S_DAX);
-> 
-> And this code cleared all the flags in the inode first, then
-> set them if the disk inode flag is set. This does not require
-> branches, resulting in more readable code and better code
-> generation.
-> 
-> > +	struct inode		*inode = VFS_I(ip);
-> > +	uint			diflags = xfs_ip2xflags(ip);
-> >  
-> > -	if (flags & XFS_DIFLAG_IMMUTABLE)
-> > +	if (diflags & FS_XFLAG_IMMUTABLE)
-> >  		inode->i_flags |= S_IMMUTABLE;
-> > -	if (flags & XFS_DIFLAG_APPEND)
-> > +	else
-> > +		inode->i_flags &= ~S_IMMUTABLE;
-> 
-> > +	if (diflags & FS_XFLAG_APPEND)
-> >  		inode->i_flags |= S_APPEND;
-> > -	if (flags & XFS_DIFLAG_SYNC)
-> > +	else
-> > +		inode->i_flags &= ~S_APPEND;
-> > +	if (diflags & FS_XFLAG_SYNC)
-> >  		inode->i_flags |= S_SYNC;
-> > -	if (flags & XFS_DIFLAG_NOATIME)
-> > +	else
-> > +		inode->i_flags &= ~S_SYNC;
-> > +	if (diflags & FS_XFLAG_NOATIME)
-> >  		inode->i_flags |= S_NOATIME;
-> > -	if (xfs_inode_enable_dax(ip))
-> > -		inode->i_flags |= S_DAX;
-> > +	else
-> > +		inode->i_flags &= ~S_NOATIME;
-> > +
-> > +	/* Only toggle the dax flag when initializing */
-> > +	if (init) {
-> > +		if (xfs_inode_enable_dax(ip))
-> > +			inode->i_flags |= S_DAX;
-> > +		else
-> > +			inode->i_flags &= ~S_DAX;
-> > +	}
-> >  }
-> 
-> IOWs, this:
-> 
->         struct inode            *inode = VFS_I(ip);
->         unsigned int            xflags = xfs_ip2xflags(ip);
->         unsigned int            flags = 0;
-> 
->         if (xflags & FS_XFLAG_IMMUTABLE)
->                 flags |= S_IMMUTABLE;
->         if (xflags & FS_XFLAG_APPEND)
->                 flags |= S_APPEND;
->         if (xflags & FS_XFLAG_SYNC)
->                 flags |= S_SYNC;
->         if (xflags & FS_XFLAG_NOATIME)
->                 flags |= S_NOATIME;
-> 	if ((xflags & FS_XFLAG_DAX) && init)
-> 		flags |= S_DAX;
-> 
->         inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME);
->         inode->i_flags |= flags;
-> 
-> ends up being much easier to read and results in better code
-> generation. And we don't need to clear the S_DAX flag when "init" is
-> set, because we are starting from an inode that has no flags set
-> (because init!)...
-
-This sounds good but I think we need a slight modification to make the function equivalent in functionality.
-
-void
-xfs_diflags_to_iflags(
-        struct xfs_inode        *ip,
-        bool init)
-{
-        struct inode            *inode = VFS_I(ip);
-        unsigned int            xflags = xfs_ip2xflags(ip);
-        unsigned int            flags = 0;
-
-        inode->i_flags &= ~(S_IMMUTABLE | S_APPEND | S_SYNC | S_NOATIME |
-                            S_DAX);
-
-        if (xflags & FS_XFLAG_IMMUTABLE)
-                flags |= S_IMMUTABLE;
-        if (xflags & FS_XFLAG_APPEND)
-                flags |= S_APPEND;
-        if (xflags & FS_XFLAG_SYNC)
-                flags |= S_SYNC;
-        if (xflags & FS_XFLAG_NOATIME)
-                flags |= S_NOATIME;
-        if (init && xfs_inode_enable_dax(ip))
-                flags |= S_DAX;
-
-        inode->i_flags |= flags;
-}
-
-I've queued this for v7.
-
-Thanks,
-Ira
-
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
