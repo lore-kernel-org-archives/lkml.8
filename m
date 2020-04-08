@@ -2,179 +2,127 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACB8C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F1AC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6055720768
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAD920768
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WejJV9De"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jSI+qRSt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbgDHJC6 (ORCPT
+        id S1727794AbgDHJDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:02:58 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39486 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbgDHJC5 (ORCPT
+        Wed, 8 Apr 2020 05:03:01 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:17563 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbgDHJC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:02:57 -0400
-Received: by mail-lf1-f66.google.com with SMTP id m2so4553281lfo.6
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 02:02:56 -0700 (PDT)
+        Wed, 8 Apr 2020 05:02:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=d6iX3xifVyFAZZxzZ+ZUkySaGBi3Nfi1aejj2DoGEWg=;
-        b=WejJV9De5yYmpbQSHuE9A8+FEboLDetyBsC280HOBYFm0tXAwFiV6NO8Bbsaml1Mja
-         OJHvW6bkAVOtPXZaljfwk9BmXRaj+hIY1dFnq9R2ODlz3UkdkaPXxm3jKZNZxx/wF6Iz
-         mxwXAZmIftqS7urAPwoiVZ3nPcT6gVpojnq3d9xGX3fdcCOmzC50Kgsg89CCQmnQWm69
-         pKebctLISCKWVMfQickOO2o4llpAcIKsIniwxa3zrNpaWw3RrXHo+jw6OXKCKSj7+IcI
-         HnZEBFf6bCLh5+r0DF6yOBr396gndna1dQBSctYp15nf8EewSHGvR2vjGL2+r5c+qFqq
-         lliQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=d6iX3xifVyFAZZxzZ+ZUkySaGBi3Nfi1aejj2DoGEWg=;
-        b=JbXfsJyNzs4qbEcqQKEhGsk1d+o3JCblGkO8Rz+U/+1mu/b/83B5yHLkNbRY03JSQG
-         diPQQ90Mc8rwmJIdm+PRwNzJ2qjMX0xsisa2insSOMKym6GfsFbqq9HeJfXs0cDPhoNC
-         3V0cijxoH203KNu959J47J1yYJcjWtIDPEejyRZZkxpyFLANtrH70nWjlXgpDkj9Fx31
-         4osjLnUmSJDfcE15ojehD+goOFBJ22vJkR5AyG56oUrGOjg909+YvF9JSoTA2bW4kxCo
-         OgLuFHYHLMbsB/IIYQIKH4FPiGg/gi/Jpm7HQIs+Hy2mdEKKOHcn/V7waKRMORGPoFzq
-         yekw==
-X-Gm-Message-State: AGi0Pub9dlPTRbHEqYqK0GPBDcHEgrVC3bGZwC1sPAZ6fAxVzktJ2FBS
-        UbqCFlRzW7OkTUT6rDwzD3cBqTjoCsjNdoYDyKZagw==
-X-Google-Smtp-Source: APiQypKtuXbC/0SaIYR34BcjSWaVVCQ4GdK68V++lxooJonwaDdpORlnb2LYnLa3elwbSjB5oasLBsbhUqy+C2Lae8Y=
-X-Received: by 2002:a19:5e46:: with SMTP id z6mr3709533lfi.74.1586336575176;
- Wed, 08 Apr 2020 02:02:55 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1586336579; x=1617872579;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=Yctj+snLI3+lFrXtyXQAbeRqej9FGBlgOHRzr0ajYGA=;
+  b=jSI+qRStTw/ViqXdIj7sWIcltyzmb803m6dJd/aECLIqdgLJH1Sk+Ezu
+   txWa7//NPLh58p8kN7HNgedAeSlzIHdZgnKP+bndOAKMqWyYwHkr/aTLX
+   s+SUvnWThsAQsMBhvpJWLsBruAGAZvi+UQ3+AvKUSc6DaFNbIGskkFkog
+   A=;
+IronPort-SDR: JwBgGlbZOxEGaB8yZfchS6SiFkoJLUzdB6CZBympaPQ+gRaWcybrHiVDVxGoHKlUXfVYnfrL0M
+ n/tnC4GN8h4g==
+X-IronPort-AV: E=Sophos;i="5.72,357,1580774400"; 
+   d="scan'208";a="24735022"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 08 Apr 2020 09:02:46 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 653C1A0288;
+        Wed,  8 Apr 2020 09:02:44 +0000 (UTC)
+Received: from EX13D01UWB003.ant.amazon.com (10.43.161.94) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 8 Apr 2020 09:02:42 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13d01UWB003.ant.amazon.com (10.43.161.94) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 8 Apr 2020 09:02:41 +0000
+Received: from localhost (10.85.0.235) by mail-relay.amazon.com (10.43.61.243)
+ with Microsoft SMTP Server id 15.0.1497.2 via Frontend Transport; Wed, 8 Apr
+ 2020 09:02:40 +0000
+From:   Balbir Singh <sblbir@amazon.com>
+To:     <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
+CC:     <jpoimboe@redhat.com>, <tony.luck@intel.com>,
+        <keescook@chromium.org>, <benh@kernel.crashing.org>,
+        <x86@kernel.org>, <dave.hansen@intel.com>,
+        "Balbir Singh" <sblbir@amazon.com>
+Subject: [PATCH v3 0/5] Optionally flush L1D on context switch
+Date:   Wed, 8 Apr 2020 19:02:24 +1000
+Message-ID: <20200408090229.16467-1-sblbir@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200407154800.629167305@linuxfoundation.org>
-In-Reply-To: <20200407154800.629167305@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 8 Apr 2020 14:32:43 +0530
-Message-ID: <CA+G9fYtuotK1_BvxXED+em-dnZqkCvACpR86q59DqpBBx9rPfQ@mail.gmail.com>
-Subject: Re: [PATCH 5.5 00/48] 5.5.16-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Apr 2020 at 22:09, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.5.16 release.
-> There are 48 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 09 Apr 2020 15:46:32 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.5.16-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.5.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Provide a mechanism to flush the L1D cache on context switch.  The goal
+is to allow tasks that are paranoid due to the recent snoop assisted data
+sampling vulnerabilites, to flush their L1D on being switched out.
+This protects their data from being snooped or leaked via side channels
+after the task has context switched out.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+The core of the patches is patch 3, the rest largely refactor the code
+so that common bits can be reused.
 
-Summary
-------------------------------------------------------------------------
+Changelog v3:
+ - Refactor the return value of what flush_l1d_cache_hw() returns
+ - Refactor the code, so that the generic setup bits come first
+   (patch 3 from previous posting is now patches 3 and 4)
+ - Move from arch_prctl() to the prctl() interface as recommend
+   in the reviews.
+Changelog v2:
+ - Fix a miss of mutex_unlock (caught by Borislav Petkov <bp@alien8.de>)
+ - Add documentation about the changes (Josh Poimboeuf
+   <jpoimboe@redhat.com>)
 
-kernel: 5.5.16-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.5.y
-git commit: f921e13beada3f84cf4323f3ba7f6bdf70bedc8a
-git describe: v5.5.15-49-gf921e13beada
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
-ld/v5.5.15-49-gf921e13beada
+Changelog:
+ - Refactor the code and reuse cond_ibpb() - code bits provided by tglx
+ - Merge mm state tracking for ibpb and l1d flush
+ - Rename TIF_L1D_FLUSH to TIF_SPEC_FLUSH_L1D
 
-No regressions (compared to build v5.5.15)
+Changelog RFC:
+ - Reuse existing code for allocation and flush
+ - Simplify the goto logic in the actual l1d_flush function
+ - Optimize the code path with jump labels/static functions
 
-No fixes (compared to build v5.5.15)
+The previous version of this patch posted at:
 
-Ran 22716 total tests in the following environments and test suites.
+https://lore.kernel.org/lkml/20200406031946.11815-1-sblbir@amazon.com/
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
+Balbir Singh (5):
+  arch/x86/kvm: Refactor l1d flush lifecycle management
+  arch/x86: Refactor tlbflush and l1d flush
+  arch/x86/mm: Refactor cond_ibpb() to support other use cases
+  arch/x86: Optionally flush L1D on context switch
+  arch/x86: Add L1D flushing Documentation
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* perf
-* v4l2-compliance
-* ltp-commands-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-open-posix-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* spectre-meltdown-checker-test
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
+ Documentation/admin-guide/hw-vuln/index.rst   |   1 +
+ .../admin-guide/hw-vuln/l1d_flush.rst         |  40 +++++++
+ arch/x86/include/asm/cacheflush.h             |   6 +
+ arch/x86/include/asm/thread_info.h            |   6 +-
+ arch/x86/include/asm/tlbflush.h               |   2 +-
+ arch/x86/kernel/Makefile                      |   1 +
+ arch/x86/kernel/l1d_flush.c                   |  85 ++++++++++++++
+ arch/x86/kvm/vmx/vmx.c                        |  56 ++-------
+ arch/x86/mm/tlb.c                             | 109 ++++++++++++++----
+ include/uapi/linux/prctl.h                    |   4 +
+ kernel/sys.c                                  |  20 ++++
+ 11 files changed, 259 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/admin-guide/hw-vuln/l1d_flush.rst
+ create mode 100644 arch/x86/kernel/l1d_flush.c
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+2.17.1
+
