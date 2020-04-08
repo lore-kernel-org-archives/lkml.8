@@ -2,87 +2,118 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78200C2BA2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188BDC2BA1B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422102074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:10:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3BA520CC7
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cgizoBWp"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="H/wN0dz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgDHIK0 (ORCPT
+        id S1726930AbgDHIM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 04:10:26 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55588 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726525AbgDHIKZ (ORCPT
+        Wed, 8 Apr 2020 04:12:59 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63866 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726642AbgDHIM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 04:10:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586333424;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ku+EAOPg4vOvWbFqhNdMl4JM7x36akNpLyA8tGgpuD8=;
-        b=cgizoBWpFXq7W5BaecTgHiSdYNcu0TVdhK8ec/+4YnVMk6bDvyUBYLm6EcQh9Bh+4xONEx
-        mtyYt54opvHlw0DhILXIcaaN81WZTWBUKotMwf/Oi4HKMWH0+47YFKtELcNcTK9NpUWKPo
-        ObyFQMVLmXufCFcvGkGaP+xGvN1k2F4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-raFHZzh3O6iyC_Fqr9rXIQ-1; Wed, 08 Apr 2020 04:10:20 -0400
-X-MC-Unique: raFHZzh3O6iyC_Fqr9rXIQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 817BADB69;
-        Wed,  8 Apr 2020 08:10:19 +0000 (UTC)
-Received: from gondolin (ovpn-113-103.ams2.redhat.com [10.36.113.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 870E55E010;
-        Wed,  8 Apr 2020 08:10:07 +0000 (UTC)
-Date:   Wed, 8 Apr 2020 10:10:04 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
-Subject: Re: [PATCH 0/2] KVM: Fix out-of-bounds memslot access
-Message-ID: <20200408101004.09b1f56d.cohuck@redhat.com>
-In-Reply-To: <526247ac-4201-8b3d-0f15-d93b12a530b8@de.ibm.com>
-References: <20200408064059.8957-1-sean.j.christopherson@intel.com>
-        <526247ac-4201-8b3d-0f15-d93b12a530b8@de.ibm.com>
-Organization: Red Hat GmbH
+        Wed, 8 Apr 2020 04:12:58 -0400
+X-UUID: 49c8344e8e514be39abfa3c965f19bb2-20200408
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=fGKVeJMpPPedNFBW5Z89bG65lS398KakOP6xziYFSsc=;
+        b=H/wN0dz1gaqTobfimzYR8IcVbDrcAEc+451udtbn5nGthbYmyHpLBNWt3qwMELR5o4EEPa8qBPxBBSsBHG9eV7lX0FMrMlX0grVeap7U+CFrbUVL1l4UykufPFu+Sd9+/keuGgzBd5wRfQx0QFTrkmYvzVd/4n8na8gTunRcALI=;
+X-UUID: 49c8344e8e514be39abfa3c965f19bb2-20200408
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1789487845; Wed, 08 Apr 2020 16:12:53 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 8 Apr 2020 16:12:49 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 8 Apr 2020 16:12:49 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Josef Friedl <josef.friedl@speed.at>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Ran Bi <ran.bi@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH v12 2/6] mfd: mt6397: Trim probe function to support different chips more cleanly
+Date:   Wed, 8 Apr 2020 16:12:07 +0800
+Message-ID: <1586333531-21641-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
+In-Reply-To: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <1586333531-21641-1-git-send-email-hsin-hsiung.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain
+X-TM-SNTS-SMTP: FEDB43AB2ACB42064A2DB5C5D7CC07444166C3514C64B30D112F886F1894AF732000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Apr 2020 09:24:27 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-
-> On 08.04.20 08:40, Sean Christopherson wrote:
-> > Two fixes for what are effectively the same bug.  The binary search used
-> > for memslot lookup doesn't check the resolved index and can access memory
-> > beyond the end of the memslot array.
-> > 
-> > I split the s390 specific change to a separate patch because it's subtly
-> > different, and to simplify backporting.  The KVM wide fix can be applied
-> > to stable trees as is, but AFAICT the s390 change would need to be paired
-> > with the !used_slots check from commit 774a964ef56 ("KVM: Fix out of range  
-> 
-> I cannot find the commit id 774a964ef56
-> 
-
-It's 0774a964ef561b7170d8d1b1bfe6f88002b6d219 in my tree.
+QWRkIG5ldyBzdHJ1Y3QgbWVtYmVycyBmb3IgbWZkLWNlbGxzIGFuZCBpcnEgaW5pdGlhbCBmdW5j
+dGlvbiwgc28gd2UgY2FuDQpjYWxsIGRldm1fbWZkX2FkZF9kZXZpY2VzKCkgb25seSBvbmNlLg0K
+DQpTaWduZWQtb2ZmLWJ5OiBIc2luLUhzaXVuZyBXYW5nIDxoc2luLWhzaXVuZy53YW5nQG1lZGlh
+dGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvbWZkL210NjM5Ny1jb3JlLmMgfCAzNSArKysrKysrKysr
+KysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25z
+KCspLCAyMSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL210NjM5Ny1j
+b3JlLmMgYi9kcml2ZXJzL21mZC9tdDYzOTctY29yZS5jDQppbmRleCBkMmU3MGQ4Li5hMzEzYTcy
+IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tZmQvbXQ2Mzk3LWNvcmUuYw0KKysrIGIvZHJpdmVycy9t
+ZmQvbXQ2Mzk3LWNvcmUuYw0KQEAgLTEwMywyMiArMTAzLDMxIEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgbWZkX2NlbGwgbXQ2Mzk3X2RldnNbXSA9IHsNCiBzdHJ1Y3QgY2hpcF9kYXRhIHsNCiAJdTMy
+IGNpZF9hZGRyOw0KIAl1MzIgY2lkX3NoaWZ0Ow0KKwljb25zdCBzdHJ1Y3QgbWZkX2NlbGwgKmNl
+bGxzOw0KKwlpbnQgY2VsbF9zaXplOw0KKwlpbnQgKCppcnFfaW5pdCkoc3RydWN0IG10NjM5N19j
+aGlwICpjaGlwKTsNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgY2hpcF9kYXRhIG10NjMy
+M19jb3JlID0gew0KIAkuY2lkX2FkZHIgPSBNVDYzMjNfQ0lELA0KIAkuY2lkX3NoaWZ0ID0gMCwN
+CisJLmNlbGxzID0gbXQ2MzIzX2RldnMsDQorCS5jZWxsX3NpemUgPSBBUlJBWV9TSVpFKG10NjMy
+M19kZXZzKSwNCisJLmlycV9pbml0ID0gbXQ2Mzk3X2lycV9pbml0LA0KIH07DQogDQogc3RhdGlj
+IGNvbnN0IHN0cnVjdCBjaGlwX2RhdGEgbXQ2Mzk3X2NvcmUgPSB7DQogCS5jaWRfYWRkciA9IE1U
+NjM5N19DSUQsDQogCS5jaWRfc2hpZnQgPSAwLA0KKwkuY2VsbHMgPSBtdDYzOTdfZGV2cywNCisJ
+LmNlbGxfc2l6ZSA9IEFSUkFZX1NJWkUobXQ2Mzk3X2RldnMpLA0KKwkuaXJxX2luaXQgPSBtdDYz
+OTdfaXJxX2luaXQsDQogfTsNCiANCiBzdGF0aWMgaW50IG10NjM5N19wcm9iZShzdHJ1Y3QgcGxh
+dGZvcm1fZGV2aWNlICpwZGV2KQ0KIHsNCiAJaW50IHJldDsNCi0JdW5zaWduZWQgaW50IGlkOw0K
+Kwl1bnNpZ25lZCBpbnQgaWQgPSAwOw0KIAlzdHJ1Y3QgbXQ2Mzk3X2NoaXAgKnBtaWM7DQogCWNv
+bnN0IHN0cnVjdCBjaGlwX2RhdGEgKnBtaWNfY29yZTsNCiANCkBAIC0xNTQsMjkgKzE2MywxMyBA
+QCBzdGF0aWMgaW50IG10NjM5N19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0K
+IAlpZiAocG1pYy0+aXJxIDw9IDApDQogCQlyZXR1cm4gcG1pYy0+aXJxOw0KIA0KLQlyZXQgPSBt
+dDYzOTdfaXJxX2luaXQocG1pYyk7DQorCXJldCA9IHBtaWNfY29yZS0+aXJxX2luaXQocG1pYyk7
+DQogCWlmIChyZXQpDQogCQlyZXR1cm4gcmV0Ow0KIA0KLQlzd2l0Y2ggKHBtaWMtPmNoaXBfaWQp
+IHsNCi0JY2FzZSBNVDYzMjNfQ0hJUF9JRDoNCi0JCXJldCA9IGRldm1fbWZkX2FkZF9kZXZpY2Vz
+KCZwZGV2LT5kZXYsIFBMQVRGT1JNX0RFVklEX05PTkUsDQotCQkJCQkgICBtdDYzMjNfZGV2cywg
+QVJSQVlfU0laRShtdDYzMjNfZGV2cyksDQotCQkJCQkgICBOVUxMLCAwLCBwbWljLT5pcnFfZG9t
+YWluKTsNCi0JCWJyZWFrOw0KLQ0KLQljYXNlIE1UNjM5MV9DSElQX0lEOg0KLQljYXNlIE1UNjM5
+N19DSElQX0lEOg0KLQkJcmV0ID0gZGV2bV9tZmRfYWRkX2RldmljZXMoJnBkZXYtPmRldiwgUExB
+VEZPUk1fREVWSURfTk9ORSwNCi0JCQkJCSAgIG10NjM5N19kZXZzLCBBUlJBWV9TSVpFKG10NjM5
+N19kZXZzKSwNCi0JCQkJCSAgIE5VTEwsIDAsIHBtaWMtPmlycV9kb21haW4pOw0KLQkJYnJlYWs7
+DQotDQotCWRlZmF1bHQ6DQotCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJ1bnN1cHBvcnRlZCBjaGlw
+OiAlZFxuIiwgcG1pYy0+Y2hpcF9pZCk7DQotCQlyZXR1cm4gLUVOT0RFVjsNCi0JfQ0KLQ0KKwly
+ZXQgPSBkZXZtX21mZF9hZGRfZGV2aWNlcygmcGRldi0+ZGV2LCBQTEFURk9STV9ERVZJRF9OT05F
+LA0KKwkJCQkgICBwbWljX2NvcmUtPmNlbGxzLCBwbWljX2NvcmUtPmNlbGxfc2l6ZSwNCisJCQkJ
+ICAgTlVMTCwgMCwgcG1pYy0+aXJxX2RvbWFpbik7DQogCWlmIChyZXQpIHsNCiAJCWlycV9kb21h
+aW5fcmVtb3ZlKHBtaWMtPmlycV9kb21haW4pOw0KIAkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFp
+bGVkIHRvIGFkZCBjaGlsZCBkZXZpY2VzOiAlZFxuIiwgcmV0KTsNCi0tIA0KMi42LjQNCg==
 
