@@ -2,172 +2,85 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A8BC2BA16
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B881C2D0EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE08020730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:27:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z+eW7VdI"
+	by mail.kernel.org (Postfix) with ESMTP id 05BA22074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 07:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgDHH1E (ORCPT
+        id S1726952AbgDHH1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 03:27:04 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37065 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgDHH1A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 03:27:00 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x1so2218539plm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 00:26:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MmpEQ8SQC6Xl5tR7Jjj5y8uD8BC/8L8xLziXkQ0TWVI=;
-        b=Z+eW7VdIANVP+y7K6bQ7lohbpmARsE8zZhuKT6N6QZUHELquqVNPm9CQ7F1SLG7RYS
-         QIdpR3lDKGieyLPJ0t7fBN9hqU017Ekfn1idJP58ax8+d6CR4DdzOSkuV9dAs/B0PhgF
-         DSZFB10RTROOOWvuV4752//VE1+P9z1sNXB83AHPCBQT51jB8SkiisAOqvfedZ58/p8d
-         YwGW5wlHsBud4pZ0OLcZ6LYZESBsqCRrVY2oC/ziYwL9X1n2QCZYKLe71lpMS6FC8adA
-         +uhz6cm1LtsjPcCIGOdBcTHcmEqpXVzn7LY68DsRxuCjOCLb2zkaEKfO3HL6LxETGtG7
-         Hsug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=MmpEQ8SQC6Xl5tR7Jjj5y8uD8BC/8L8xLziXkQ0TWVI=;
-        b=cX+SuAG2VYyTAXo0Xxv5p31x1OZekl1LdxH7clRKOPYCYTBieIQl57OpefWE3qaD4j
-         QS2pzsAF9bZShOQCT1AZdZfqB++O1nKIFpSe8HtBJPkOAz5ScMw4fKDdHV8lhyFAY7rU
-         raHEcAGWDPlyyQNz6cvuv8xgBmu5Af+/Fwzqmg6S1BRPu3z7d+j3/BSb6Fqli78g3412
-         hIvfgtxG2O+QLavjYNSpj+USCM8M1keOhziwepbff1Mp6hbq5+SzS2XrrNJf4J2isrbT
-         WeN6e8Lx8cr3m2kGyKFgfLL2bqVZEhTYIIpcl6AJ7+uTF9PnL9I73eXUZC9DEowr15x4
-         esig==
-X-Gm-Message-State: AGi0PuaLr7G5UbbpytU6Ve+qC3+zim9LG8Eo5qVvDMz+NNBJYKZ8121G
-        F+jc2zQX3p3AFSwS3tm0z3i6ESGMYxg=
-X-Google-Smtp-Source: APiQypJY5jt1Z+kCEh8DOZw5UuW9RxeqX3HfnqdnLIu6JVDPye1OyCCRnTHl4q5Efv/HapSv97ToSg==
-X-Received: by 2002:a17:902:d303:: with SMTP id b3mr5933935plc.63.1586330818286;
-        Wed, 08 Apr 2020 00:26:58 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id e187sm15356066pfe.143.2020.04.08.00.26.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2020 00:26:57 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        netdev <netdev@vger.kernel.org>, linux-pm@vger.kernel.org
-Subject: [RFC][PATCH v2 2/2] driver core: Ensure wait_for_device_probe() waits until the deferred_probe_timeout fires
-Date:   Wed,  8 Apr 2020 07:26:50 +0000
-Message-Id: <20200408072650.1731-2-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200408072650.1731-1-john.stultz@linaro.org>
-References: <20200408072650.1731-1-john.stultz@linaro.org>
+        Wed, 8 Apr 2020 03:27:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12695 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726840AbgDHH1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 03:27:38 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7CF5A5AEDFCA8666080F;
+        Wed,  8 Apr 2020 15:27:35 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 8 Apr 2020 15:27:27 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@redhat.com>
+CC:     YueHaibing <yuehaibing@huawei.com>, <dm-devel@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] dm integrity: remove set but not used variables
+Date:   Wed, 8 Apr 2020 07:29:48 +0000
+Message-ID: <20200408072948.156175-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit c8c43cee29f6 ("driver core: Fix
-driver_deferred_probe_check_state() logic"), we set the default
-driver_deferred_probe_timeout value to 30 seconds to allow for
-drivers that are missing dependencies to have some time so that
-the dependency may be loaded from userland after initcalls_done
-is set.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-However, Yoshihiro Shimoda reported that on his device that
-expects to have unmet dependencies (due to "optional links" in
-its devicetree), was failing to mount the NFS root.
+drivers/md/dm-integrity.c: In function 'integrity_metadata':
+drivers/md/dm-integrity.c:1557:12: warning:
+ variable 'save_metadata_offset' set but not used [-Wunused-but-set-variable]
+drivers/md/dm-integrity.c:1556:12: warning:
+ variable 'save_metadata_block' set but not used [-Wunused-but-set-variable]
 
-In digging further, it seemed the problem was that while the
-device properly probes after waiting 30 seconds for any missing
-modules to load, the ip_auto_config() had already failed,
-resulting in NFS to fail. This was due to ip_auto_config()
-calling wait_for_device_probe() which doesn't wait for the
-driver_deferred_probe_timeout to fire.
+They are never used, so remove it.
 
-This patch tries to fix the issue by creating a waitqueue
-for the driver_deferred_probe_timeout, and calling wait_event()
-to make sure driver_deferred_probe_timeout is zero in
-wait_for_device_probe() to make sure all the probing is
-finished.
-
-The downside to this solution is that kernel functionality that
-uses wait_for_device_probe(), will block until the
-driver_deferred_probe_timeout fires, regardless of if there is
-any missing dependencies.
-
-However, the previous patch reverts the default timeout value to
-zero, so this side-effect will only affect users who specify a
-driver_deferred_probe_timeout= value as a boot argument, where
-the additional delay would be beneficial to allow modules to
-load later during boot.
-
-Thanks to Geert for chasing down that ip_auto_config was why NFS
-was failing in this case!
-
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
-Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: netdev <netdev@vger.kernel.org>
-Cc: linux-pm@vger.kernel.org
-Reported-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Fixes: c8c43cee29f6 ("driver core: Fix driver_deferred_probe_check_state() logic")
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-* v2: Split patch, and apply it as a follow-on to setting
-      the driver_deferred_probe_timeout defalt back to zero
----
- drivers/base/dd.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/md/dm-integrity.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 908ae4d7805e..5e6c00176969 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -226,6 +226,7 @@ DEFINE_SHOW_ATTRIBUTE(deferred_devs);
+diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
+index b989d109d55d..94fb584854b8 100644
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -1553,8 +1553,6 @@ static void integrity_metadata(struct work_struct *w)
+ 		char checksums_onstack[max((size_t)HASH_MAX_DIGESTSIZE, MAX_TAG_SIZE)];
+ 		sector_t sector;
+ 		unsigned sectors_to_process;
+-		sector_t save_metadata_block;
+-		unsigned save_metadata_offset;
  
- int driver_deferred_probe_timeout;
- EXPORT_SYMBOL_GPL(driver_deferred_probe_timeout);
-+static DECLARE_WAIT_QUEUE_HEAD(probe_timeout_waitqueue);
+ 		if (unlikely(ic->mode == 'R'))
+ 			goto skip_io;
+@@ -1605,8 +1603,6 @@ static void integrity_metadata(struct work_struct *w)
+ 			goto skip_io;
+ 		}
  
- static int __init deferred_probe_timeout_setup(char *str)
- {
-@@ -275,6 +276,7 @@ static void deferred_probe_timeout_work_func(struct work_struct *work)
- 
- 	list_for_each_entry_safe(private, p, &deferred_probe_pending_list, deferred_probe)
- 		dev_info(private->device, "deferred probe pending");
-+	wake_up(&probe_timeout_waitqueue);
- }
- static DECLARE_DELAYED_WORK(deferred_probe_timeout_work, deferred_probe_timeout_work_func);
- 
-@@ -649,6 +651,9 @@ int driver_probe_done(void)
-  */
- void wait_for_device_probe(void)
- {
-+	/* wait for probe timeout */
-+	wait_event(probe_timeout_waitqueue, !driver_deferred_probe_timeout);
-+
- 	/* wait for the deferred probe workqueue to finish */
- 	flush_work(&deferred_probe_work);
- 
--- 
-2.17.1
+-		save_metadata_block = dio->metadata_block;
+-		save_metadata_offset = dio->metadata_offset;
+ 		sector = dio->range.logical_sector;
+ 		sectors_to_process = dio->range.n_sectors;
+
+
 
