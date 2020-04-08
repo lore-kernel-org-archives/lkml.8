@@ -2,131 +2,301 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9322C2BA16
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 04:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B1FC2BA16
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 04:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFAC120730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 04:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B906D20730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 04:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mitsubishielectricgroup.onmicrosoft.com header.i=@mitsubishielectricgroup.onmicrosoft.com header.b="N54RVh26"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DAf1pyAC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgDHEBR (ORCPT
+        id S1726483AbgDHELp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 00:01:17 -0400
-Received: from mx04.melco.co.jp ([192.218.140.144]:53674 "EHLO
-        mx04.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgDHEBR (ORCPT
+        Wed, 8 Apr 2020 00:11:45 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:43875 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgDHELp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 00:01:17 -0400
-Received: from mr04.melco.co.jp (mr04 [133.141.98.166])
-        by mx04.melco.co.jp (Postfix) with ESMTP id EA6183A3F22;
-        Wed,  8 Apr 2020 13:01:14 +0900 (JST)
-Received: from mr04.melco.co.jp (unknown [127.0.0.1])
-        by mr04.imss (Postfix) with ESMTP id 48xrDV6GckzRk8X;
-        Wed,  8 Apr 2020 13:01:14 +0900 (JST)
-Received: from mf04_second.melco.co.jp (unknown [192.168.20.184])
-        by mr04.melco.co.jp (Postfix) with ESMTP id 48xrDV5ySczRjnK;
-        Wed,  8 Apr 2020 13:01:14 +0900 (JST)
-Received: from mf04.melco.co.jp (unknown [133.141.98.184])
-        by mf04_second.melco.co.jp (Postfix) with ESMTP id 48xrDV5wWRzRk9n;
-        Wed,  8 Apr 2020 13:01:14 +0900 (JST)
-Received: from JPN01-TY1-obe.outbound.protection.outlook.com (unknown [104.47.93.54])
-        by mf04.melco.co.jp (Postfix) with ESMTP id 48xrDV5kXczRk5B;
-        Wed,  8 Apr 2020 13:01:14 +0900 (JST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CQt5YYyG7NTdHmXyLqhr13wI+9wjbXRczUjulArvafQiedDi56PU2R85KyBtLZS9N3S2GddU0jsubk1OSo+XrTVKyp1oyrFWjyaY77cewXPqYyPUHEmxveHURx6IaVQEYfkJfjJqx/n6gA+3lnwDo/CZeIN7qzVh3+3yeqE7FnI31vfhHWug2P88xfhv/tvZN06fY637nAXADDHHF/PZpEu7ED0SJmWwKkgOcFfMZQuOZw5XbAq6LTucgG5QaBTz8CGu1CExWsOjhD1bl6VKX5R91HctWvaEmqyN6mKaPGa/G9gPv011loLjJR2cCH1m1u9aFgYiRw3CVuUeLjHpiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/YQcHkqTkj5HoqtPWEnuxKX4jz5Ytg39Nn507xmaFBA=;
- b=Jlx/paScw/HpBjQV4e/Tw5p5AmJXQ90G7WKV/L9LgnW8629XhhKVg38KY9Hza2urPFf7KI6sCpxUItL15tb3HMm+0OuB4piJIHlom9hjIK+lZ1I++zo03n67/lAG0wC9wtSXWKl9ylj45pJ/P215IebyTZtpEQJhPiCk9nh4HFJ+A6P7hQQjXoxS14CaIwglm/Ski6vu/zX/+7aRKQ/CP/n9ec3GQwgXLUMBMSyKCfZsFgj5g0cSgn5JOPk9ZRhNyx6Nnwl7cLkWBuKjxU8rMAta+l6HY1271ySty3Xob+jY/5SzG2dNhLs/r/z6TnSdzPuEN4L/QPtXnQXC1qUkzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dc.mitsubishielectric.co.jp; dmarc=pass action=none
- header.from=dc.mitsubishielectric.co.jp; dkim=pass
- header.d=dc.mitsubishielectric.co.jp; arc=none
+        Wed, 8 Apr 2020 00:11:45 -0400
+Received: by mail-vs1-f68.google.com with SMTP id u11so1788081vsu.10
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 21:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mitsubishielectricgroup.onmicrosoft.com;
- s=selector2-mitsubishielectricgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/YQcHkqTkj5HoqtPWEnuxKX4jz5Ytg39Nn507xmaFBA=;
- b=N54RVh26QJroifmhgVuR+nXLmMuaQLtOME0qC+fRgpHzwj7HQ8jWLbMMio5up//lGNKAv3ZQQYJwKdEkSa5kSTBQUbAocgcr7CEkpr5A66u7igc6j+7+Nsxzdb4dTbx15KvCgEDQWzc+7DISu8bIZvgOS+jnH1Tz8vpBxK03Z1w=
-Received: from TY1PR01MB1578.jpnprd01.prod.outlook.com (52.133.161.22) by
- TY1PR01MB1594.jpnprd01.prod.outlook.com (52.133.161.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.16; Wed, 8 Apr 2020 04:01:14 +0000
-Received: from TY1PR01MB1578.jpnprd01.prod.outlook.com
- ([fe80::c5d6:a88e:62c6:4b96]) by TY1PR01MB1578.jpnprd01.prod.outlook.com
- ([fe80::c5d6:a88e:62c6:4b96%3]) with mapi id 15.20.2878.022; Wed, 8 Apr 2020
- 04:01:14 +0000
-From:   "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
-        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     "'pali@kernel.org'" <pali@kernel.org>
-CC:     "'linux-fsdevel@vger.kernel.org'" <linux-fsdevel@vger.kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'namjae.jeon@samsung.com'" <namjae.jeon@samsung.com>,
-        "'sj1557.seo@samsung.com'" <sj1557.seo@samsung.com>,
-        "'viro@zeniv.linux.org.uk'" <viro@zeniv.linux.org.uk>
-Subject: RE: [PATCH 1/4] exfat: Simplify exfat_utf8_d_hash() for code points
- above U+FFFF
-Thread-Topic: [PATCH 1/4] exfat: Simplify exfat_utf8_d_hash() for code points
- above U+FFFF
-Thread-Index: AQHWCfgm33iC4HYp6U6hpobeaScABqhrVdFggAIevgCAARtD4A==
-Date:   Wed, 8 Apr 2020 03:59:06 +0000
-Deferred-Delivery: Wed, 8 Apr 2020 04:01:00 +0000
-Message-ID: <TY1PR01MB1578892F886C62868F87663B90C00@TY1PR01MB1578.jpnprd01.prod.outlook.com>
-References: <TY1PR01MB15782019FA3094015950830590C70@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <20200403204037.hs4ae6cl3osogrso@pali>
- <TY1PR01MB1578D63C6F303DE805D75DAA90C20@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <20200407100648.phkvxbmv2kootyt7@pali>
-In-Reply-To: <20200407100648.phkvxbmv2kootyt7@pali>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-melpop: 1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp; 
-x-originating-ip: [121.80.0.163]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 16449eaa-8bb6-46cf-e1be-08d7db717b30
-x-ms-traffictypediagnostic: TY1PR01MB1594:
-x-microsoft-antispam-prvs: <TY1PR01MB159470A326D76195848EC20F90C00@TY1PR01MB1594.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0367A50BB1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1578.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(39860400002)(396003)(346002)(136003)(376002)(366004)(64756008)(76116006)(66946007)(6666004)(55016002)(186003)(478600001)(66476007)(66556008)(26005)(9686003)(81156014)(33656002)(52536014)(8936002)(54906003)(4744005)(86362001)(7696005)(5660300002)(316002)(66446008)(8676002)(6506007)(71200400001)(2906002)(4326008)(6916009)(81166007)(491001);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: dc.MitsubishiElectric.co.jp does
- not designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jUqY/4ml88tkiaMZ8qMFm3bfCuZgtx1u2y6p+ODyesNmjKLeUy7aN1btLqvEAavhqnqXqORn7ed2kYwzuMOPB9RdeuJ1qk4PkZMCAoXF2hldTe45gdBWe85MznfDjI9D6fbUXqhHwWFT0oRYbaklFB94K2xRFn5Igz4hC1coWI229AwsJjYwD4xQx34vgwoJXwMzGXHeZNmDQMrihGTwYOEbrCaFKyq4Ec0oQ+8ntTlMKgj8Je+h5z9tlJHj9aEsiC5jTFATiWW3cgHQCRcU6zAWtw0DFYW6oUC9KhXG2JIZ4TPO3gASJRdhB8myG1bWt+TlPMXIJ76HdppzYvbr4v7WNDMvHX8y1SYXuY/g0GkS51CmLSFu8JHiik23C6UdCT9E8IAHqUzL+FIyVr81htRxaQWiGaRddnzJf+nUeVo/FB9Ss/7/Jb5MHdcN3pB2r1Ss7EfaTeaJqHTOFE3dhdfkxeGFtyB77uTS66MVy0Q=
-x-ms-exchange-antispam-messagedata: PdneWJLrMTA8AXBdYcZ9GFLVt+4DmO8ELCbuBHLjCeJg4gkzBODmAX/R+FPm3xcAMM9ypGvkM7NKwGIdCHrdw3fUi4LfC+8pdSpBrFuws4w+ilwuJW2fefZ6Nz62LWR2O3sPTAcIJk1NtG3MfpGINw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=29RESvw14n3QpfFzCuKFjHgcSWrNtIXHAxmZ77r+Fng=;
+        b=DAf1pyACJDlNGd5wltvkCLb8cJP7sqJtdNTxJSU3iYq3ShjQhmCstm/IEX7gZuRciW
+         YiK0a5LnOxqVjkFES7eoMnlr5j/CylspI8sDORtxgaA5U3bK99kH31Ukn5/Kr2PGUwzl
+         8cvA/kIAiYiB+5gV9sjVYMlKW7Ja/V7T2AQ38=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=29RESvw14n3QpfFzCuKFjHgcSWrNtIXHAxmZ77r+Fng=;
+        b=km77+YumQCJ3HFmIRjUOQ/AR2lN8XELkSYrJM0TjWQ0V2fHtijYj4OCIGEzqwHdEBc
+         m4+yMrGtv2s2Sv8B/pMdTbkCrOnCz+oXc4WMnP5UCLqFsXDuKNbk7Enrd8BrQtmnP5FW
+         Tfbw3VvjTY8T5XojCeghZPuIT3FVne1LFZj9Pag2ly7yT9W/koivfFmiu6S6TqTFLhIl
+         HjSLff3vYglKyniWPrmcDCvC+hrma3hTweujGG+55l5TBGXO+CJf9srFFEcfd1LaAN/u
+         sCSFUPzJAH4ZvwpWHTbqkQjCcKCoXDnwcgnQ0U8svuhzZZSZLQPT4QZYPBxAnmyNvMMe
+         6BWg==
+X-Gm-Message-State: AGi0PuYFg16uMi02z/7U1E5za4nsoaFH3acU1+1T3pRYAvX/ggXY2Hra
+        x12AQEcpa5vOBflp2tzcfjJNTilylSk=
+X-Google-Smtp-Source: APiQypLeONBEcn24qY1tfT6XVYzu5T1yxVirEv8Gq2P9tq1eYhQ2D8fc4Q2cCbsO16761FA2gB9p7A==
+X-Received: by 2002:a05:6102:50b:: with SMTP id l11mr2456811vsa.199.1586319102259;
+        Tue, 07 Apr 2020 21:11:42 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id u84sm5778178vsc.15.2020.04.07.21.11.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 21:11:41 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id o3so3911128vsd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 07 Apr 2020 21:11:41 -0700 (PDT)
+X-Received: by 2002:a05:6102:3204:: with SMTP id r4mr4521784vsf.109.1586319100640;
+ Tue, 07 Apr 2020 21:11:40 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: dc.MitsubishiElectric.co.jp
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16449eaa-8bb6-46cf-e1be-08d7db717b30
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2020 04:01:13.9813
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c5a75b62-4bff-4c96-a720-6621ce9978e5
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: L5ZWcUP8GCvdvUycg6qBP+sB96iHjhgl3ZfxVJArKGnW+k8gho2LG/BpmxeurEb7ew7DeXdTy9v8zowO8uHwjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1594
+References: <20200407220005.119540-1-dianders@chromium.org>
+ <20200407145906.v3.3.I28278ef8ea27afc0ec7e597752a6d4e58c16176f@changeid>
+ <20200408020936.GB337494@localhost.localdomain> <CAD=FV=WY8sTZQq3NtNe4Ux-C0Q0JOR4V1Z+cjVvj791rFDL+=Q@mail.gmail.com>
+ <20200408030625.GC337494@localhost.localdomain>
+In-Reply-To: <20200408030625.GC337494@localhost.localdomain>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 7 Apr 2020 21:11:28 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VUAyuMnvVwz7OGoe03o4ty1S=44sjkGsFaDR5OJbeCPg@mail.gmail.com>
+Message-ID: <CAD=FV=VUAyuMnvVwz7OGoe03o4ty1S=44sjkGsFaDR5OJbeCPg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] blk-mq: Rerun dispatching in the case of budget contention
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, Salman Qazi <sqazi@google.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTbyBwYXJ0aWFsX25hbWVfaGFzaCgpIGxpa2UgSSB1c2VkIGl0IGluIHRoaXMgcGF0Y2ggc2Vy
-aWVzIGlzIGVub3VnaD8NCg0KSSB0aGluayBwYXJ0aWFsX25hbWVfaGFzaCgpIGlzIGVub3VnaCBm
-b3IgOC8xNi8yMWJpdCBjaGFyYWN0ZXJzLg0KDQpBbm90aGVyIHBvaW50IGFib3V0IHRoZSBkaXNj
-cmltaW5hdGlvbiBvZiAyMWJpdCBjaGFyYWN0ZXJzOg0KSSB0aGluayB0aGF0IGNoZWNraW5nIGlu
-IGV4ZmF0X3RvdXBwZXIgKCkgY2FuIGJlIG1vcmUgc2ltcGxpZmllZC4NCg0KIGV4OiByZXR1cm4g
-YSA8IFBMQU5FX1NJWkUgJiYgc2JpLT52b2xfdXRibFthXSA/IHNiaS0+dm9sX3V0YmxbYV0gOiBh
-Ow0KDQotLS0NCktvaGFkYSBUZXRzdWhpcm8gPEtvaGFkYS5UZXRzdWhpcm9AZGMuTWl0c3ViaXNo
-aUVsZWN0cmljLmNvLmpwPg0KDQo=
+Hi,
+
+On Tue, Apr 7, 2020 at 8:06 PM Ming Lei <ming.lei@redhat.com> wrote:
+>
+> On Tue, Apr 07, 2020 at 07:17:49PM -0700, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Tue, Apr 7, 2020 at 7:09 PM Ming Lei <ming.lei@redhat.com> wrote:
+> > >
+> > > On Tue, Apr 07, 2020 at 03:00:04PM -0700, Douglas Anderson wrote:
+> > > > If ever a thread running blk-mq code tries to get budget and fails it
+> > > > immediately stops doing work and assumes that whenever budget is freed
+> > > > up that queues will be kicked and whatever work the thread was trying
+> > > > to do will be tried again.
+> > > >
+> > > > One path where budget is freed and queues are kicked in the normal
+> > > > case can be seen in scsi_finish_command().  Specifically:
+> > > > - scsi_finish_command()
+> > > >   - scsi_device_unbusy()
+> > > >     - # Decrement "device_busy", AKA release budget
+> > > >   - scsi_io_completion()
+> > > >     - scsi_end_request()
+> > > >       - blk_mq_run_hw_queues()
+> > > >
+> > > > The above is all well and good.  The problem comes up when a thread
+> > > > claims the budget but then releases it without actually dispatching
+> > > > any work.  Since we didn't schedule any work we'll never run the path
+> > > > of finishing work / kicking the queues.
+> > > >
+> > > > This isn't often actually a problem which is why this issue has
+> > > > existed for a while and nobody noticed.  Specifically we only get into
+> > > > this situation when we unexpectedly found that we weren't going to do
+> > > > any work.  Code that later receives new work kicks the queues.  All
+> > > > good, right?
+> > > >
+> > > > The problem shows up, however, if timing is just wrong and we hit a
+> > > > race.  To see this race let's think about the case where we only have
+> > > > a budget of 1 (only one thread can hold budget).  Now imagine that a
+> > > > thread got budget and then decided not to dispatch work.  It's about
+> > > > to call put_budget() but then the thread gets context switched out for
+> > > > a long, long time.  While in this state, any and all kicks of the
+> > > > queue (like the when we received new work) will be no-ops because
+> > > > nobody can get budget.  Finally the thread holding budget gets to run
+> > > > again and returns.  All the normal kicks will have been no-ops and we
+> > > > have an I/O stall.
+> > > >
+> > > > As you can see from the above, you need just the right timing to see
+> > > > the race.  To start with, the only case it happens if we thought we
+> > > > had work, actually managed to get the budget, but then actually didn't
+> > > > have work.  That's pretty rare to start with.  Even then, there's
+> > > > usually a very small amount of time between realizing that there's no
+> > > > work and putting the budget.  During this small amount of time new
+> > > > work has to come in and the queue kick has to make it all the way to
+> > > > trying to get the budget and fail.  It's pretty unlikely.
+> > > >
+> > > > One case where this could have failed is illustrated by an example of
+> > > > threads running blk_mq_do_dispatch_sched():
+> > > >
+> > > > * Threads A and B both run has_work() at the same time with the same
+> > > >   "hctx".  Imagine has_work() is exact.  There's no lock, so it's OK
+> > > >   if Thread A and B both get back true.
+> > > > * Thread B gets interrupted for a long time right after it decides
+> > > >   that there is work.  Maybe its CPU gets an interrupt and the
+> > > >   interrupt handler is slow.
+> > > > * Thread A runs, get budget, dispatches work.
+> > > > * Thread A's work finishes and budget is released.
+> > > > * Thread B finally runs again and gets budget.
+> > > > * Since Thread A already took care of the work and no new work has
+> > > >   come in, Thread B will get NULL from dispatch_request().  I believe
+> > > >   this is specifically why dispatch_request() is allowed to return
+> > > >   NULL in the first place if has_work() must be exact.
+> > > > * Thread B will now be holding the budget and is about to call
+> > > >   put_budget(), but hasn't called it yet.
+> > > > * Thread B gets interrupted for a long time (again).  Dang interrupts.
+> > > > * Now Thread C (maybe with a different "hctx" but the same queue)
+> > > >   comes along and runs blk_mq_do_dispatch_sched().
+> > > > * Thread C won't do anything because it can't get budget.
+> > >
+> > > Thread C will re-run queue in this case:
+> > >
+> > > Just thought scsi_mq_get_budget() does handle the case via re-run queue:
+> > >
+> > >         if (atomic_read(&sdev->device_busy) == 0 && !scsi_device_blocked(sdev))
+> > >                 blk_mq_delay_run_hw_queue(hctx, SCSI_QUEUE_DELAY);
+> > >
+> > > So looks no such race.
+> >
+> > Thread B is holding budget and hasn't released it yet, right?  In the
+> > context of scsi, that means "device_busy >= 1", right?  So how can the
+> > code you point at help us?  When Thread C reads "device_busy" it will
+> > be 1 and that code won't run.  What did I miss?
+>
+> Oh, this is my fault, sorry for the noise.
+>
+> >
+> >
+> > > > * Finally Thread B will run again and put the budget without kicking
+> > > >   any queues.
+> > > >
+> > > > Even though the example above is with blk_mq_do_dispatch_sched() I
+> > > > believe the race is possible any time someone is holding budget but
+> > > > doesn't do work.
+> > > >
+> > > > Unfortunately, the unlikely has become more likely if you happen to be
+> > > > using the BFQ I/O scheduler.  BFQ, by design, sometimes returns "true"
+> > > > for has_work() but then NULL for dispatch_request() and stays in this
+> > > > state for a while (currently up to 9 ms).  Suddenly you only need one
+> > > > race to hit, not two races in a row.  With my current setup this is
+> > > > easy to reproduce in reboot tests and traces have actually shown that
+> > > > we hit a race similar to the one describe above.
+> > > >
+> > > > In theory we could choose to just fix blk_mq_do_dispatch_sched() to
+> > > > kick the queues when it puts budget.  That would fix the BFQ case and
+> > > > one could argue that all the other cases are just theoretical.  While
+> > > > that is true, for all the other cases it should be very uncommon to
+> > > > run into the case where we need put_budget().  Having an extra queue
+> > > > kick for safety there shouldn't affect much and keeps the race at bay.
+> > > >
+> > > > One last note is that (at least in the SCSI case) budget is shared by
+> > > > all "hctx"s that have the same queue.  Thus we need to make sure to
+> > > > kick the whole queue, not just re-run dispatching on a single "hctx".
+> > > >
+> > > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > > ---
+> > > >
+> > > > Changes in v3:
+> > > > - Always kick when putting the budget.
+> > > > - Delay blk_mq_do_dispatch_sched() kick by 3 ms for inexact has_work().
+> > > > - Totally rewrote commit message.
+> > > >
+> > > > Changes in v2:
+> > > > - Replace ("scsi: core: Fix stall...") w/ ("blk-mq: Rerun dispatch...")
+> > > >
+> > > >  block/blk-mq.h | 14 +++++++++++++-
+> > > >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/block/blk-mq.h b/block/blk-mq.h
+> > > > index 10bfdfb494fa..1270505367ab 100644
+> > > > --- a/block/blk-mq.h
+> > > > +++ b/block/blk-mq.h
+> > > > @@ -180,12 +180,24 @@ unsigned int blk_mq_in_flight(struct request_queue *q, struct hd_struct *part);
+> > > >  void blk_mq_in_flight_rw(struct request_queue *q, struct hd_struct *part,
+> > > >                        unsigned int inflight[2]);
+> > > >
+> > > > +#define BLK_MQ_BUDGET_DELAY  3               /* ms units */
+> > > > +
+> > > >  static inline void blk_mq_put_dispatch_budget(struct blk_mq_hw_ctx *hctx)
+> > > >  {
+> > > >       struct request_queue *q = hctx->queue;
+> > > >
+> > > > -     if (q->mq_ops->put_budget)
+> > > > +     if (q->mq_ops->put_budget) {
+> > > >               q->mq_ops->put_budget(hctx);
+> > > > +
+> > > > +             /*
+> > > > +              * The only time we call blk_mq_put_dispatch_budget() is if
+> > > > +              * we released the budget without dispatching.  Holding the
+> > > > +              * budget could have blocked any "hctx"s with the same queue
+> > > > +              * and if we didn't dispatch then there's no guarantee anyone
+> > > > +              * will kick the queue.  Kick it ourselves.
+> > > > +              */
+> > > > +             blk_mq_delay_run_hw_queues(q, BLK_MQ_BUDGET_DELAY);
+> > >
+> > > No, please don't do that un-conditionally we just need to re-run queue
+> > > when there has work to do.
+> >
+> > ...what function would you like me to call to check?  The code you
+>
+> At least we only need to call it in blk_mq_do_dispatch_sched() and
+> blk_mq_do_dispatch_ctx(), in which no request is dequeued yet. Other
+> callers can handle the run queue cause request has been there.
+
+Sure, I can move it so it's only in blk_mq_do_dispatch_sched() and
+blk_mq_do_dispatch_ctx().  That would definitely make it so that I
+can't reproduce problems anymore, at least.
+
+The one thing that worries me is that I couldn't come up with a
+convincing argument about why the race wasn't possible when we put the
+budget in blk_mq_dispatch_rq_list() and __blk_mq_try_issue_directly().
+Perhaps you can explain.  In blk_mq_dispatch_rq_list() I can see that
+we will call blk_mq_run_hw_queue() or blk_mq_delay_run_hw_queue(), but
+I guess I'm at least slightly worried that we'd also need to kick the
+other "hctx"s on the same queue.  In theory holding budget could have
+block those as well.  Do we care?  Maybe we should always assume that
+the scheduler has a global queue across all "hctx"s?
+
+
+> > wrote in response to v2 only checked work for the given "hctx".  What
+> > about other "hctx" that are part of the same "queue".  Are we
+> > guaranteed that has_work() returns the same value for all "hctx"s on
+> > the same "queue"?
+>
+> In theory has_work() should return ture when there is work associated with
+> this hctx. However, some schedulers put all requests in global scheduler
+> queue instead of per-hctx, then this scheduler's
+> has_work() returns true when there is any request in scheduler queue.
+
+Assuming we care about supporting schedulers that don't have a global
+scheduler queue, it seems important to kick all the queues.  However,
+if you tell me that all the code is already assuming a global
+scheduler code then I can change my code to assume that too.
+
+
+> > If so, why doesn't has_work() take the "queue" as a
+> > parameter?
+>
+> In theory has_work() needs to be checked before run queue, however this
+> code path should be called very unusually, so it is fine to just run all
+> hctxs.
+
+OK, thanks for confirming.  If you tell me that we should assume that
+all IO schedulers have a global scheduler queue then I'll add the
+has_work() check back in.  Otherwise I'll leave it as-is.
+
+-Doug
