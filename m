@@ -2,145 +2,114 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B091C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFEBC2BA2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E8B2074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F422074F
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 09:08:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5U7THsU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZJoHCDJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgDHJHf (ORCPT
+        id S1727486AbgDHJIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 05:07:35 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33427 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgDHJHf (ORCPT
+        Wed, 8 Apr 2020 05:08:53 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:60034 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726980AbgDHJIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 05:07:35 -0400
-Received: by mail-wr1-f66.google.com with SMTP id a25so6950952wrd.0;
-        Wed, 08 Apr 2020 02:07:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=tDqXfOMMU1aiMxNa6ojUxPMtJdc9yDWPtU8wKO19sy8=;
-        b=T5U7THsUxJ6ZuuPi9pDRbPPmm+vSXjD+chynu68DULjkmf4Ijl5WDG930A+jfwScyE
-         cHK2YIEFshNZ8XVTShn/l0OchkLGExiKP/+utKuQchKCt1ZUaRiaqko0M7gHpBqKMp78
-         ALncTk314XAIoZ0yr2R4e9wO7bIJNlthy0pavCQ3hwIx552OaMmaYTZ8XfZH0IYs+I5y
-         tK8gVAOjCb7tjoJltjkXunryR+5DuxODi7VSMsI34v2iYktll2wPrP6ilwva+ec0yD62
-         VKpWKhPRayB6yIBt9HhpCWEZJplzPFqX1iOXLxZ6zdONtLphGdO24xF9lb1U1vTE9vOq
-         oLvQ==
+        Wed, 8 Apr 2020 05:08:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586336931;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rUQ0HsWwrnHe34YtREcTfNzNUJOF3IAdDb38I5AaKxE=;
+        b=ZJoHCDJgaFjuuv2te7kWdxqbeRup+jqTDMJhk1W1sRW30OiOw/pPZR/940JaIHkzO02RUP
+        LRmpfDC7iXSwqfAb2seI3pfYvcGDoOJsKX0kpi6QhPyfNiis/FM3C/hf4TDbCNawIJIdG0
+        XsCy4M/lcd9BCYijg0v5s8fDBXoQ1y0=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-107-19dmcRemN-KwUGFqiFR8Eg-1; Wed, 08 Apr 2020 05:08:49 -0400
+X-MC-Unique: 19dmcRemN-KwUGFqiFR8Eg-1
+Received: by mail-wm1-f69.google.com with SMTP id s22so2080852wmh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 08 Apr 2020 02:08:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=tDqXfOMMU1aiMxNa6ojUxPMtJdc9yDWPtU8wKO19sy8=;
-        b=hmL7bZNg4fXN/RLUcHcbFxeBWqJnnPR211PdlBP1LrhmyQhnLRnIM1bJTUim42U661
-         qRSc5j7ZuqIh8tjebf0K+ijJr8yt6lB/rbdlMjaYW4IJIreg2LCCVmKCaF1IvSKhuyU3
-         65f1E2/YPZEJvdvJsjpe+lBpBItuhALdySXycn38gkZbMnUkT0GHH2isMKVY2BwQ59sV
-         mdvPsKcYZf7KyL1uBfsXkEOSXYsyR6nKM0Sdj3Tl2nSnKOT/n2eF6StyIezli3XvZzR3
-         K1+SWYhkmyuP3hzJivm8biEGLsVatnHKnMBcqYUM7Gt1gB5Wswd0bfdXBuP67h5FmPOZ
-         wVrw==
-X-Gm-Message-State: AGi0PubAxq1xEqa7mBLBupHlJkmXA0gRU56jZCVEGOPBJFkOnN3nc7jP
-        Uor1zOcmwM3e5cPiQ1vZdM55adv4SO0xH028Q/o=
-X-Google-Smtp-Source: APiQypI2jffggddQs3H73E0fGZHKav2Zl9+DI3ND4AUGi8hLuvcj2nJAqi9tNj7kjAduovm2mQMyvi+oEVtnN1YlUkE=
-X-Received: by 2002:a05:6000:4c:: with SMTP id k12mr964994wrx.179.1586336850824;
- Wed, 08 Apr 2020 02:07:30 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rUQ0HsWwrnHe34YtREcTfNzNUJOF3IAdDb38I5AaKxE=;
+        b=ZsAOLFlpIpGzULwdFyJlqpJfLtwl0jAX7lR2tMJuquZoEzzaXnw8w9Q/7JiPRr0G3G
+         BBkPIJss6Imi4yEg+U6yuDbBSlZpPfs1bBtZJv5NSFquEmDk0gGkCIodO6Pr/c7pGc0c
+         bxZwzjcFpkBmBHRmbkzSEE668Hknc3j3UAxFfNlA6YIakrra6XF+oaNmTU5yec2RiW8Q
+         33QZ/2UoqQLSZJ8PjIpABctq7uASR0KSa5jyFGV5KbPsOQRldux4jaFsm4QhhjJjkl89
+         w9Vnk4CiuN6YNfZCGyQ2NaZocl2fONMg6BXQk6cESZspVecE5GtxSsKw6a23FGQvAXac
+         84PA==
+X-Gm-Message-State: AGi0PubSQITKyvx/6H2k4ZJoCSy+Gh0raU1nKVW5N43yCr83zZKDKifR
+        cjjitH5Fmh4gjJ+3cFHPMnzRIBFoiRq7LjIf54BqnnB3NMwG25dEni6noGr0MpT6ZWahZ/tDYz9
+        LJkV8Q0lQ6win5Z8PNBn+AAsb
+X-Received: by 2002:a7b:cd89:: with SMTP id y9mr3752572wmj.102.1586336928251;
+        Wed, 08 Apr 2020 02:08:48 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLe1s1nvra2eXvOVyXKoy+DeFW86EqO9pdanw+EMwQcEuocAwsAGqIDuWH/3Mfnb2xLGbG1mA==
+X-Received: by 2002:a7b:cd89:: with SMTP id y9mr3752550wmj.102.1586336928006;
+        Wed, 08 Apr 2020 02:08:48 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:bd61:914:5c2f:2580? ([2001:b07:6468:f312:bd61:914:5c2f:2580])
+        by smtp.gmail.com with ESMTPSA id s6sm5804360wmh.17.2020.04.08.02.08.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Apr 2020 02:08:47 -0700 (PDT)
+Subject: Re: [PATCH 2/2] KVM: s390: Return last valid slot if approx index is
+ out-of-bounds
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+d889b59b2bb87d4047a2@syzkaller.appspotmail.com
+References: <20200408064059.8957-1-sean.j.christopherson@intel.com>
+ <20200408064059.8957-3-sean.j.christopherson@intel.com>
+ <20200408091024.14a0d096.cohuck@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <2701fd49-4cf8-2b2d-daa8-96945ea4f233@redhat.com>
+Date:   Wed, 8 Apr 2020 11:08:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200402050219.4842-1-chris@rorvick.com> <20200406141058.29895C43637@smtp.codeaurora.org>
- <CA+icZUUOQ0KTJM6w7yfj=g3BprQqJtTQjCjiXRb9dTTeoQL8KA@mail.gmail.com>
-In-Reply-To: <CA+icZUUOQ0KTJM6w7yfj=g3BprQqJtTQjCjiXRb9dTTeoQL8KA@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 8 Apr 2020 11:07:19 +0200
-Message-ID: <CA+icZUUiY5tjxgY58383mtXGGiwsRU+t6SX+CtVUN_0cjcLJTQ@mail.gmail.com>
-Subject: Re: [PATCH] iwlwifi: actually check allocated conf_tlv pointer
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Chris Rorvick <chris@rorvick.com>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200408091024.14a0d096.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 6, 2020 at 9:53 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Mon, Apr 6, 2020 at 4:11 PM Kalle Valo <kvalo@codeaurora.org> wrote:
-> >
-> > Chris Rorvick <chris@rorvick.com> wrote:
-> >
-> > > Commit 71bc0334a637 ("iwlwifi: check allocated pointer when allocating
-> > > conf_tlvs") attempted to fix a typoe introduced by commit 17b809c9b22e
-> > > ("iwlwifi: dbg: move debug data to a struct") but does not implement the
-> > > check correctly.
-> > >
-> > > This can happen in OOM situations and, when it does, we will potentially try to
-> > > dereference a NULL pointer.
-> > >
-> > > Tweeted-by: @grsecurity
-> > > Signed-off-by: Chris Rorvick <chris@rorvick.com>
-> >
-> > Fails to build, please rebase on top of wireless-drivers.
-> >
-> > drivers/net/wireless/intel/iwlwifi/iwl-drv.c: In function 'iwl_req_fw_callback':
-> > drivers/net/wireless/intel/iwlwifi/iwl-drv.c:1470:16: error: 'struct iwl_fw' has no member named 'dbg_conf_tlv'
-> >     if (!drv->fw.dbg_conf_tlv[i])
-> >                 ^
-> > make[5]: *** [drivers/net/wireless/intel/iwlwifi/iwl-drv.o] Error 1
-> > make[5]: *** Waiting for unfinished jobs....
-> > make[4]: *** [drivers/net/wireless/intel/iwlwifi] Error 2
-> > make[3]: *** [drivers/net/wireless/intel] Error 2
-> > make[2]: *** [drivers/net/wireless] Error 2
-> > make[1]: *** [drivers/net] Error 2
-> > make[1]: *** Waiting for unfinished jobs....
-> > make: *** [drivers] Error 2
-> >
->
-> Should be:
->
-> $ git diff
-> diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-> b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-> index 0481796f75bc..c24350222133 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/iwl-drv.c
-> @@ -1467,7 +1467,7 @@ static void iwl_req_fw_callback(const struct
-> firmware *ucode_raw, void *context)
->                                 kmemdup(pieces->dbg_conf_tlv[i],
->                                         pieces->dbg_conf_tlv_len[i],
->                                         GFP_KERNEL);
+On 08/04/20 09:10, Cornelia Huck wrote:
+> On Tue,  7 Apr 2020 23:40:59 -0700
+> Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> 
+>> Return the index of the last valid slot from gfn_to_memslot_approx() if
+>> its binary search loop yielded an out-of-bounds index.  The index can
+>> be out-of-bounds if the specified gfn is less than the base of the
+>> lowest memslot (which is also the last valid memslot).
+>>
+>> Note, the sole caller, kvm_s390_get_cmma(), ensures used_slots is
+>> non-zero.
+>>
+> This also should be cc:stable, with the dependency expressed as
+> mentioned by Christian.
+> 
 
-Maybe this diff is clearer:
+So,
 
-$ diff iwlwifi-actually-check-allocated-conf_tlv-pointer.patch
-iwlwifi-actually-check-allocated-conf_tlv-pointer-v2-dileks.patch
-95a96
-> Fixes: 71bc0334a637 ("iwlwifi: check allocated pointer when allocating conf_tlvs")
-99c100,104
-< In this wasn't picked up?
----
->
-> [ v1->v2:
->   - Fix typo s/fw.dbg_conf_tlv/fw.dbg.conf_tlv
->   - Add Fixes tag as suggested by Kalle
-> -dileks ]
-115c120
-< +                     if (!drv->fw.dbg_conf_tlv[i])
----
-> +                     if (!drv->fw.dbg.conf_tlv[i])
+Cc: stable@vger.kernel.org # 4.19.x: 0774a964ef56: KVM: Fix out of range accesses to memslots
+Cc: stable@vger.kernel.org # 4.19.x
 
-Tested on top of Linux v5.6.3.
+Paolo
 
-- Sedat -
