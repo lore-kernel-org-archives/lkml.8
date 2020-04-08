@@ -2,86 +2,186 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E55F0C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4026FC2BA80
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55B42074F
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D6F20801
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 08:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="R/HsOLhi"
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="ci40BPEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727600AbgDHItc (ORCPT
+        id S1727648AbgDHIug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 Apr 2020 04:49:32 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:23286 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726873AbgDHItc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 Apr 2020 04:49:32 -0400
-X-UUID: 9d3098026fa84606b94ff72d918351d7-20200408
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=pcxXWb5iQG4wOxAvyRLVWbYi/fyvTtoB5AgaZ19wR60=;
-        b=R/HsOLhiSc64RJr6ITsvdUUniNyyb8dc7e4MQkAyQYCNb/GVHrAjYyR5nSJ8UzIa9x/I4nzFO3xFX3BrzPEs4c3LgoFJeavvZL1HEcRRGoH1OjhLCZeqLSpTcnlWvdOWx6k7ADl1Spx41kglKFNZTWdYgBcEbXFOAhf/x3h2Yhk=;
-X-UUID: 9d3098026fa84606b94ff72d918351d7-20200408
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2120634440; Wed, 08 Apr 2020 16:49:28 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 8 Apr 2020 16:49:24 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 8 Apr 2020 16:49:24 +0800
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Subject: [PATCH] stacktrace: cleanup inconsistent variable type
-Date:   Wed, 8 Apr 2020 16:49:03 +0800
-Message-ID: <20200408084903.4261-1-walter-zh.wu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Wed, 8 Apr 2020 04:50:36 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:45587 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgDHIuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 Apr 2020 04:50:35 -0400
+Received: from [192.168.1.4] (212-5-158-69.ip.btc-net.bg [212.5.158.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 4BBD8CFC0;
+        Wed,  8 Apr 2020 11:50:33 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1586335833; bh=VUmYcFEO7NNN/MSIoiBKEvvOXuA+7rJ5pDAjZuR1kLA=;
+        h=From:Subject:To:Cc:Date:From;
+        b=ci40BPENwwbDsTVXirwhkCoHnfcqaECTX+P+T2Zo7BlWq3QtcDsyMpea8HgDqug3B
+         0Oh02x0lgO2Km97tBsuHUFMc2CgKhjUys9jBhFbGciyt18Vcj0nb13W8qU13Pl+gW0
+         KoGFEl+SZyR10R3YE5UzMjU3KYaQ9wrei75E2kPT+iPnvjKwPE+kcxf8jhFh7qnsWn
+         lotLrB1xPkCVTOegQ8aQvIq047VckOLlxl9v37SLMS21K6oz5ckqZBjiRhi+DfsK8j
+         uajRDM3gnncYuwjTxN06uP6ObcrFtR8RM+lcS2rbSe/O7XYKSZTFDIhZfiHrrOdiU0
+         lIlUGza6Flyqw==
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v2 01/10] PCIe: qcom: add missing ipq806x clocks in PCIe
+ driver
+To:     Ansuel Smith <ansuelsmth@gmail.com>, Andy Gross <agross@kernel.org>
+Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200402121148.1767-1-ansuelsmth@gmail.com>
+ <20200402121148.1767-2-ansuelsmth@gmail.com>
+Message-ID: <b09627a8-d928-cf5d-c765-406959138a29@mm-sol.com>
+Date:   Wed, 8 Apr 2020 11:50:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200402121148.1767-2-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIHNraXAgaW4gc3RydWN0IHN0YWNrX3RyYWNlIGhhcyBpbmNvbnNpc3RlbnQgdHlwZSB3aXRo
-IHN0cnVjdA0Kc3RhY2tfdHJhY2VfZGF0YSwgaXQgbWFrZXMgYSBiaXQgY29uZnVzaW9uIGluIHRo
-ZSByZWxhdGlvbnNoaXANCmJldHdlZW4gc3RydWN0IHN0YWNrX3RyYWNlIGFuZCBzdGFja190cmFj
-ZV9kYXRhLiBJbiB0aGVvcnksDQp0aGUgc2tpcCB2YXJpYWJsZSB0eXBlIHNob3VsZCBiZSB1bnNp
-Z25lZCBpbnQuDQoNClNpZ25lZC1vZmYtYnk6IFdhbHRlciBXdSA8d2FsdGVyLXpoLnd1QG1lZGlh
-dGVrLmNvbT4NCkNjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4NCkNjOiBQ
-ZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+DQpDYzogSW5nbyBNb2xuYXIgPG1p
-bmdvQGtlcm5lbC5vcmc+DQpDYzogSm9zaCBQb2ltYm9ldWYgPGpwb2ltYm9lQHJlZGhhdC5jb20+
-DQpDYzogQmFydCBWYW4gQXNzY2hlIDxidmFuYXNzY2hlQGFjbS5vcmc+DQpDYzogQW5kcmV3IE1v
-cnRvbiA8YWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZz4NCi0tLQ0KIGluY2x1ZGUvbGludXgvc3Rh
-Y2t0cmFjZS5oIHwgMiArLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
-dGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zdGFja3RyYWNlLmggYi9pbmNs
-dWRlL2xpbnV4L3N0YWNrdHJhY2UuaA0KaW5kZXggODNiZDhjYjQ3NWQ3Li5iN2FmOGNjMTNlZGEg
-MTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L3N0YWNrdHJhY2UuaA0KKysrIGIvaW5jbHVkZS9s
-aW51eC9zdGFja3RyYWNlLmgNCkBAIC02NCw3ICs2NCw3IEBAIHZvaWQgYXJjaF9zdGFja193YWxr
-X3VzZXIoc3RhY2tfdHJhY2VfY29uc3VtZV9mbiBjb25zdW1lX2VudHJ5LCB2b2lkICpjb29raWUs
-DQogc3RydWN0IHN0YWNrX3RyYWNlIHsNCiAJdW5zaWduZWQgaW50IG5yX2VudHJpZXMsIG1heF9l
-bnRyaWVzOw0KIAl1bnNpZ25lZCBsb25nICplbnRyaWVzOw0KLQlpbnQgc2tpcDsJLyogaW5wdXQg
-YXJndW1lbnQ6IEhvdyBtYW55IGVudHJpZXMgdG8gc2tpcCAqLw0KKwl1bnNpZ25lZCBpbnQgc2tp
-cDsJLyogaW5wdXQgYXJndW1lbnQ6IEhvdyBtYW55IGVudHJpZXMgdG8gc2tpcCAqLw0KIH07DQog
-DQogZXh0ZXJuIHZvaWQgc2F2ZV9zdGFja190cmFjZShzdHJ1Y3Qgc3RhY2tfdHJhY2UgKnRyYWNl
-KTsNCi0tIA0KMi4xOC4wDQo=
+Ansuel,
 
+On 4/2/20 3:11 PM, Ansuel Smith wrote:
+> Aux and Ref clk are missing in pcie qcom driver.
+> Add support in the driver to fix pcie inizialization in ipq806x.
+> 
+> Fixes: 82a82383 PCI: qcom: Add Qualcomm PCIe controller driver
+
+this should be:
+
+Fixes: 82a823833f4e PCI: qcom: Add Qualcomm PCIe controller driver
+
+and add:
+
+Cc: stable@vger.kernel.org # v4.5+
+
+But, I wonder, as apq8064 shares the same ops_2_1_0 how it worked until
+now. Something more I cannot find such clocks for apq8064, which means
+that this patch will break it.
+
+One option is to use those new clocks only for ipq806x.
+
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
+>  1 file changed, 33 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 5ea527a6bd9f..f958c535de6e 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -88,6 +88,8 @@ struct qcom_pcie_resources_2_1_0 {
+>  	struct clk *iface_clk;
+>  	struct clk *core_clk;
+>  	struct clk *phy_clk;
+> +	struct clk *aux_clk;
+> +	struct clk *ref_clk;
+>  	struct reset_control *pci_reset;
+>  	struct reset_control *axi_reset;
+>  	struct reset_control *ahb_reset;
+> @@ -246,6 +248,14 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+>  	if (IS_ERR(res->phy_clk))
+>  		return PTR_ERR(res->phy_clk);
+>  
+> +	res->aux_clk = devm_clk_get(dev, "aux");
+> +	if (IS_ERR(res->aux_clk))
+> +		return PTR_ERR(res->aux_clk);
+> +
+> +	res->ref_clk = devm_clk_get(dev, "ref");
+> +	if (IS_ERR(res->ref_clk))
+> +		return PTR_ERR(res->ref_clk);
+> +
+>  	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
+>  	if (IS_ERR(res->pci_reset))
+>  		return PTR_ERR(res->pci_reset);
+> @@ -278,6 +288,8 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+>  	clk_disable_unprepare(res->iface_clk);
+>  	clk_disable_unprepare(res->core_clk);
+>  	clk_disable_unprepare(res->phy_clk);
+> +	clk_disable_unprepare(res->aux_clk);
+> +	clk_disable_unprepare(res->ref_clk);
+>  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+>  }
+>  
+> @@ -307,16 +319,28 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  		goto err_assert_ahb;
+>  	}
+>  
+> +	ret = clk_prepare_enable(res->core_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable core clock\n");
+> +		goto err_clk_core;
+> +	}
+> +
+>  	ret = clk_prepare_enable(res->phy_clk);
+>  	if (ret) {
+>  		dev_err(dev, "cannot prepare/enable phy clock\n");
+>  		goto err_clk_phy;
+>  	}
+>  
+> -	ret = clk_prepare_enable(res->core_clk);
+> +	ret = clk_prepare_enable(res->aux_clk);
+>  	if (ret) {
+> -		dev_err(dev, "cannot prepare/enable core clock\n");
+> -		goto err_clk_core;
+> +		dev_err(dev, "cannot prepare/enable aux clock\n");
+> +		goto err_clk_aux;
+> +	}
+> +
+> +	ret = clk_prepare_enable(res->ref_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable ref clock\n");
+> +		goto err_clk_ref;
+>  	}
+>  
+>  	ret = reset_control_deassert(res->ahb_reset);
+> @@ -372,10 +396,14 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  	return 0;
+>  
+>  err_deassert_ahb:
+> -	clk_disable_unprepare(res->core_clk);
+> -err_clk_core:
+> +	clk_disable_unprepare(res->ref_clk);
+> +err_clk_ref:
+> +	clk_disable_unprepare(res->aux_clk);
+> +err_clk_aux:
+>  	clk_disable_unprepare(res->phy_clk);
+>  err_clk_phy:
+> +	clk_disable_unprepare(res->core_clk);
+> +err_clk_core:
+>  	clk_disable_unprepare(res->iface_clk);
+>  err_assert_ahb:
+>  	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+> 
+
+-- 
+regards,
+Stan
