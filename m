@@ -2,467 +2,461 @@ Return-Path: <SRS0=8dav=5Y=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E57C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0581C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89EBA20730
-	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5A4020730
+	for <linux-kernel@archiver.kernel.org>; Wed,  8 Apr 2020 02:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="MOcXxE5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgDHCbA (ORCPT
+        id S1726504AbgDHCd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 7 Apr 2020 22:31:00 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:37568 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbgDHCbA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 7 Apr 2020 22:31:00 -0400
-Received: by mail-qt1-f196.google.com with SMTP id n17so4498487qtv.4;
-        Tue, 07 Apr 2020 19:30:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vSDIe0yGqnnuCseQAolKe8lAxSdW3xG19nGIinTp4ok=;
-        b=n6mk48QKt+9LDjdvqZbHuCTO4WezyKuO4esjquBaCGbrz5aVxzms96rh3Ygs5MAofm
-         Q1rJsDiJLlRxEw6U80us4QBjDQNdQyys846weFF/9zwxItmyOl+Z0R52C5YL/n8+vaS6
-         TyGL8PfORrorpjfALWxXha1H0L99C0UDyEY/s22Qw8yuFCj1YsDViMXDv8Dg29pSPD6c
-         +3J6W7rkoohtLp396orevrTGJ19fLO1TVJx9dlFwvyCXwwVCJa3osKXAF2FsaH+AXrpv
-         TXj3QlND4UGWwmhglPKZPKmwc7wtRsdz5xNjJsHyEl+lqBhEhiu8tGUNB1KC+QLpBrD8
-         rIQQ==
-X-Gm-Message-State: AGi0PuYz+MrbBUUi55Fn9IHVKArO+50tpFCwdTdOpQgrYierYuq4qD6k
-        1Ya+0fbZ/bb/wVkwoIvhZnY=
-X-Google-Smtp-Source: APiQypK4OlCiXS6iF8edJ1x2x1AZo8J6HTtqhGwp1LBET8EX6hmxD0V0F4cePQTd0zsO6KuXppwzMw==
-X-Received: by 2002:ac8:1403:: with SMTP id k3mr5465307qtj.377.1586313058101;
-        Tue, 07 Apr 2020 19:30:58 -0700 (PDT)
-Received: from ?IPv6:2804:431:e7cc:377d:dcf4:aab0:a7bd:9880? ([2804:431:e7cc:377d:dcf4:aab0:a7bd:9880])
-        by smtp.gmail.com with ESMTPSA id t23sm19429457qtj.63.2020.04.07.19.30.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 19:30:57 -0700 (PDT)
-Subject: Re: [Lkcamp] [PATCH v3] media: vimc: get pixformat info from
- v4l2_format_info
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        "Carlos E. C. Barbosa" <climacobarbosacee@gmail.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanetbr.org
-References: <20200122175727.62664-1-carlosecb@tutanota.com>
- <c175b8fd-481c-5429-1f8c-4d8a8127584f@xs4all.nl>
-From:   Helen Koike <helen@koikeco.de>
-Message-ID: <5489808d-7cf8-ea70-a6bf-370f9e30d1e4@koikeco.de>
-Date:   Tue, 7 Apr 2020 23:30:53 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <c175b8fd-481c-5429-1f8c-4d8a8127584f@xs4all.nl>
+        Tue, 7 Apr 2020 22:33:58 -0400
+Received: from mail-eopbgr760049.outbound.protection.outlook.com ([40.107.76.49]:41934
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726428AbgDHCd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 7 Apr 2020 22:33:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AbGRU2vVANkMttX9e/WHlGbfiCXhpVEbunv2vaEDhFkIXx7fM3dCF8+inDtOJWVPg2TXn04tvTaHSN3WW9nXtWL4wfGetptLVlz2kZ2/0COUymyfp7GbolpzCh5IaP3auGfX6mzQMqYeoHJtcM7RBfMToD+PmQHgoRO9QEjIbzvzmHq8IZ9m4isyU1AZf+icWIFAprFA7cv0y+H2xO5mq8oGBTrhe3dMAj1iKGH2Cf3UrbdF7XWMicK3Pmx/KkfM791Ph3Z4mqIrZbFj8SdKW+hIWSjLTZLqXAJRAMPagZO062YkfPGi0gkJ9NNIcTP6dMh/EeiHw+BKxnxz0Vu7Ww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6UCqVgs9abZFTJCG60T9QhpKTs8AIu5WbgwKTNYlx5Q=;
+ b=oZAS6Q8tsLGfankZzWl+guFhMdcafkB5L9SdMXExZR0UNIlvv6ODSpr3XqHbdoiQN5TtFZzy637dwjRy3IgGP06bLslaSR1If53tuStvHFWCuKj1NEKJisdM1SFNNSBbCJgsBY3iAQsEh/HlcAMo3+hnfLk3nFLnWnZPJgVNSUEsuXrxmIIJvi9sUFQsgUNyksj4dUTj4qXsw6aHZNKiHNmms25i5Hsh8JOQubdEyeAAt1WOXMRg/kv7Wll5rI1naoiZxAxtLv4R5cGHoUThyYxLBd1J1B3597Nrp5EacQnxQwf71x54Ku91npCzIMQi9uWSg4bKpAPTIcJg6NvQKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6UCqVgs9abZFTJCG60T9QhpKTs8AIu5WbgwKTNYlx5Q=;
+ b=MOcXxE5SqFOMnm/Ey1e2AChNpD/1G+HlSLz0PCiP8dN5w1C9llCTSHwgP7WyyDxfkVHAb32alEON+KoKje9WfHflv1I2tg0N2sc51nodITbmJJVsogbLnSvmwxfLsDD5FRvzItTZ3HVxninnXHZXB7uMbUxQD3dbTJrx3s/He9Y=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=brijesh.singh@amd.com; 
+Received: from SA0PR12MB4400.namprd12.prod.outlook.com (2603:10b6:806:95::13)
+ by SA0PR12MB4415.namprd12.prod.outlook.com (2603:10b6:806:70::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Wed, 8 Apr
+ 2020 02:33:54 +0000
+Received: from SA0PR12MB4400.namprd12.prod.outlook.com
+ ([fe80::60d9:da58:71b4:35f3]) by SA0PR12MB4400.namprd12.prod.outlook.com
+ ([fe80::60d9:da58:71b4:35f3%7]) with mapi id 15.20.2878.018; Wed, 8 Apr 2020
+ 02:33:54 +0000
+Cc:     brijesh.singh@amd.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v6 08/14] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS
+ hypercall
+To:     Steve Rutherford <srutherford@google.com>,
+        Ashish Kalra <ashish.kalra@amd.com>
+References: <cover.1585548051.git.ashish.kalra@amd.com>
+ <265ef8a0ab75f01bc673cce6ddcf7988c7623943.1585548051.git.ashish.kalra@amd.com>
+ <CABayD+ekEYAS4z=L2r1q+8xaEzqKmJuzuYQhsWX3X=htgTvL5w@mail.gmail.com>
+ <20200407052740.GA31821@ashkalra_ubuntu_server>
+ <CABayD+cNdEJxoSHee3s0toy6-nO6Bm4-OsrbBdS8mCWoMBSqLQ@mail.gmail.com>
+ <d67a104e-6a01-a766-63b2-3f8b6026ca4c@amd.com>
+ <CABayD+ehZZabp2tA8K-ViB0BXPyjpz-XpXPXoD7MUH0OLz_Z-g@mail.gmail.com>
+ <20200408011726.GA3684@ashkalra_ubuntu_server>
+ <CABayD+et6p8UAr1jTFMK2SbYvihveLH6kp=RRqzBxvaU-HPy2Q@mail.gmail.com>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <42597534-b8c6-4c73-9b12-ddbde079fc7c@amd.com>
+Date:   Tue, 7 Apr 2020 21:34:15 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
+In-Reply-To: <CABayD+et6p8UAr1jTFMK2SbYvihveLH6kp=RRqzBxvaU-HPy2Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN1PR12CA0103.namprd12.prod.outlook.com
+ (2603:10b6:802:21::38) To SA0PR12MB4400.namprd12.prod.outlook.com
+ (2603:10b6:806:95::13)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Brijeshs-MacBook-Pro.local (70.112.153.56) by SN1PR12CA0103.namprd12.prod.outlook.com (2603:10b6:802:21::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend Transport; Wed, 8 Apr 2020 02:33:52 +0000
+X-Originating-IP: [70.112.153.56]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 825fcef4-8063-4a6d-cfd9-08d7db65478c
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4415:|SA0PR12MB4415:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4415F54DFAC0198F7441DB08E5C00@SA0PR12MB4415.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0367A50BB1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4400.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(376002)(396003)(346002)(36756003)(44832011)(2616005)(31686004)(966005)(316002)(956004)(66476007)(6636002)(66946007)(2906002)(5660300002)(66556008)(16526019)(186003)(7416002)(26005)(478600001)(52116002)(86362001)(6666004)(110136005)(30864003)(54906003)(6486002)(6506007)(31696002)(81166006)(6512007)(4326008)(81156014)(66574012)(8936002)(53546011)(8676002);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SSzJ65CZ0kG+JcjOyOV1X/grsMdjM59CoV83x6fa0QO5chJOxO67In5qYosXLMGR/p7UILQKsR1V9tlyA9VmOr/AFNUxrDWl4DfHv2hxLF69F3nB16EKp0BM60s/buruesiCuZefn+tWKlU77EYw/WEFeOJfR3PfXJzMDbne+wF/Oo4hX4wW66Fi3cGHRCXjBlrqx7aGR4+XeLq2NY5eTMsl4dHDu31SaAuPoXArCLERrBvE/19yILIGWYTkv8H6CRPkQJakxHxMliFB7CpXIYA5l0mnXs8odoGG9uS3EdSZR9ufWSZOAjjfjpDObC4mEZgDucqqWtE+Oa5plYI2YshE0M+PIn1zPjsC5PHtkV8XjTXRfudfbKvfXxyZg2nNT1usSU5B7+8IY2oepfl3ISRNPVi870KUjXpDzmkqWc6c8MPogR+8GSr4keXH7JFu7aJi/zVijB688Nx4uFTZ1hQbIdtWWrfhtE4ihde0ataaItJ2Kh1ySetvD+5GG6/XsWMGCOsTlwWMPeoqhnzA8A==
+X-MS-Exchange-AntiSpam-MessageData: OHaCs98hViYpqrQ5aQX1Vn+CeP2kFUDiYCED8YduaoHAMWecvSf/6o43VIEAto0DkQZOTByNcwKJQMX5fGWpG8ohFGkso0KqvjZ3ONmusYfB5uwqFv6Db351e7rfpZcGfQYpYhpZcJDlRPN07ua80g==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 825fcef4-8063-4a6d-cfd9-08d7db65478c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2020 02:33:53.9215
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XNyEmLv+RD55XqlIXeAdwClz9rLGuPvcVlu8wRI0eSXHsS/VQO1AO2KtE5ZJFqTKQM+Bsz7axWvlapHMzYB7sg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4415
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Carlos,
 
-On 2/25/20 9:26 AM, Hans Verkuil wrote:
-> On 1/22/20 6:57 PM, Carlos E. C. Barbosa wrote:
->> From: "Carlos E.C. Barbosa" <carlosecb@tutanota.com>
+On 4/7/20 8:38 PM, Steve Rutherford wrote:
+> On Tue, Apr 7, 2020 at 6:17 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
+>> Hello Steve, Brijesh,
 >>
->> There is overlapping code over two distinct lists. This repurposes vimc_pix_map
->> for mapping formats and remaps the calls to the matching v4l2_format_info.
->>
->> ---
->> Changes in v2:
->> As advised by Helen Koike and Hans Verkuil, the const qualifiers are not
->> removed, the bayer flag is kept and the unnecessary changes are not
->> made.
->>
->> Changes in v3:
->> Change declaration order of variables and some minor style changes.
->>
->> v4l2-compliance message:
->> https://pastebin.com/UkmfjuLa
->>
->> Signed-off-by: Carlos E. C. Barbosa <carlosecb@tutanota.com>
-> 
-> This Sob needs to be above the --- line!
-> 
-> I get sparse warnings:
-> 
-> drivers/media/platform/vimc/vimc-scaler.c:128:33: warning: variable 'vinfo' set but not used [-Wunused-but-set-variable]
-> drivers/media/platform/vimc/vimc-scaler.c:181:33: warning: variable 'vinfo' set but not used [-Wunused-but-set-variable]
+>> On Tue, Apr 07, 2020 at 05:35:57PM -0700, Steve Rutherford wrote:
+>>> On Tue, Apr 7, 2020 at 5:29 PM Brijesh Singh <brijesh.singh@amd.com> wrote:
+>>>>
+>>>> On 4/7/20 7:01 PM, Steve Rutherford wrote:
+>>>>> On Mon, Apr 6, 2020 at 10:27 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
+>>>>>> Hello Steve,
+>>>>>>
+>>>>>> On Mon, Apr 06, 2020 at 07:17:37PM -0700, Steve Rutherford wrote:
+>>>>>>> On Sun, Mar 29, 2020 at 11:22 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+>>>>>>>> From: Brijesh Singh <Brijesh.Singh@amd.com>
+>>>>>>>>
+>>>>>>>> This hypercall is used by the SEV guest to notify a change in the page
+>>>>>>>> encryption status to the hypervisor. The hypercall should be invoked
+>>>>>>>> only when the encryption attribute is changed from encrypted -> decrypted
+>>>>>>>> and vice versa. By default all guest pages are considered encrypted.
+>>>>>>>>
+>>>>>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>>>>>>> Cc: Ingo Molnar <mingo@redhat.com>
+>>>>>>>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>>>>>>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>>>>>>>> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+>>>>>>>> Cc: Joerg Roedel <joro@8bytes.org>
+>>>>>>>> Cc: Borislav Petkov <bp@suse.de>
+>>>>>>>> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+>>>>>>>> Cc: x86@kernel.org
+>>>>>>>> Cc: kvm@vger.kernel.org
+>>>>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>>>>> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+>>>>>>>> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+>>>>>>>> ---
+>>>>>>>>  Documentation/virt/kvm/hypercalls.rst | 15 +++++
+>>>>>>>>  arch/x86/include/asm/kvm_host.h       |  2 +
+>>>>>>>>  arch/x86/kvm/svm.c                    | 95 +++++++++++++++++++++++++++
+>>>>>>>>  arch/x86/kvm/vmx/vmx.c                |  1 +
+>>>>>>>>  arch/x86/kvm/x86.c                    |  6 ++
+>>>>>>>>  include/uapi/linux/kvm_para.h         |  1 +
+>>>>>>>>  6 files changed, 120 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/virt/kvm/hypercalls.rst b/Documentation/virt/kvm/hypercalls.rst
+>>>>>>>> index dbaf207e560d..ff5287e68e81 100644
+>>>>>>>> --- a/Documentation/virt/kvm/hypercalls.rst
+>>>>>>>> +++ b/Documentation/virt/kvm/hypercalls.rst
+>>>>>>>> @@ -169,3 +169,18 @@ a0: destination APIC ID
+>>>>>>>>
+>>>>>>>>  :Usage example: When sending a call-function IPI-many to vCPUs, yield if
+>>>>>>>>                 any of the IPI target vCPUs was preempted.
+>>>>>>>> +
+>>>>>>>> +
+>>>>>>>> +8. KVM_HC_PAGE_ENC_STATUS
+>>>>>>>> +-------------------------
+>>>>>>>> +:Architecture: x86
+>>>>>>>> +:Status: active
+>>>>>>>> +:Purpose: Notify the encryption status changes in guest page table (SEV guest)
+>>>>>>>> +
+>>>>>>>> +a0: the guest physical address of the start page
+>>>>>>>> +a1: the number of pages
+>>>>>>>> +a2: encryption attribute
+>>>>>>>> +
+>>>>>>>> +   Where:
+>>>>>>>> +       * 1: Encryption attribute is set
+>>>>>>>> +       * 0: Encryption attribute is cleared
+>>>>>>>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>>>>>>>> index 98959e8cd448..90718fa3db47 100644
+>>>>>>>> --- a/arch/x86/include/asm/kvm_host.h
+>>>>>>>> +++ b/arch/x86/include/asm/kvm_host.h
+>>>>>>>> @@ -1267,6 +1267,8 @@ struct kvm_x86_ops {
+>>>>>>>>
+>>>>>>>>         bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
+>>>>>>>>         int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
+>>>>>>>> +       int (*page_enc_status_hc)(struct kvm *kvm, unsigned long gpa,
+>>>>>>>> +                                 unsigned long sz, unsigned long mode);
+>>>>>>> Nit: spell out size instead of sz.
+>>>>>>>>  };
+>>>>>>>>
+>>>>>>>>  struct kvm_arch_async_pf {
+>>>>>>>> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+>>>>>>>> index 7c2721e18b06..1d8beaf1bceb 100644
+>>>>>>>> --- a/arch/x86/kvm/svm.c
+>>>>>>>> +++ b/arch/x86/kvm/svm.c
+>>>>>>>> @@ -136,6 +136,8 @@ struct kvm_sev_info {
+>>>>>>>>         int fd;                 /* SEV device fd */
+>>>>>>>>         unsigned long pages_locked; /* Number of pages locked */
+>>>>>>>>         struct list_head regions_list;  /* List of registered regions */
+>>>>>>>> +       unsigned long *page_enc_bmap;
+>>>>>>>> +       unsigned long page_enc_bmap_size;
+>>>>>>>>  };
+>>>>>>>>
+>>>>>>>>  struct kvm_svm {
+>>>>>>>> @@ -1991,6 +1993,9 @@ static void sev_vm_destroy(struct kvm *kvm)
+>>>>>>>>
+>>>>>>>>         sev_unbind_asid(kvm, sev->handle);
+>>>>>>>>         sev_asid_free(sev->asid);
+>>>>>>>> +
+>>>>>>>> +       kvfree(sev->page_enc_bmap);
+>>>>>>>> +       sev->page_enc_bmap = NULL;
+>>>>>>>>  }
+>>>>>>>>
+>>>>>>>>  static void avic_vm_destroy(struct kvm *kvm)
+>>>>>>>> @@ -7593,6 +7598,94 @@ static int sev_receive_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>>>>>>>>         return ret;
+>>>>>>>>  }
+>>>>>>>>
+>>>>>>>> +static int sev_resize_page_enc_bitmap(struct kvm *kvm, unsigned long new_size)
+>>>>>>>> +{
+>>>>>>>> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+>>>>>>>> +       unsigned long *map;
+>>>>>>>> +       unsigned long sz;
+>>>>>>>> +
+>>>>>>>> +       if (sev->page_enc_bmap_size >= new_size)
+>>>>>>>> +               return 0;
+>>>>>>>> +
+>>>>>>>> +       sz = ALIGN(new_size, BITS_PER_LONG) / 8;
+>>>>>>>> +
+>>>>>>>> +       map = vmalloc(sz);
+>>>>>>>> +       if (!map) {
+>>>>>>>> +               pr_err_once("Failed to allocate encrypted bitmap size %lx\n",
+>>>>>>>> +                               sz);
+>>>>>>>> +               return -ENOMEM;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       /* mark the page encrypted (by default) */
+>>>>>>>> +       memset(map, 0xff, sz);
+>>>>>>>> +
+>>>>>>>> +       bitmap_copy(map, sev->page_enc_bmap, sev->page_enc_bmap_size);
+>>>>>>>> +       kvfree(sev->page_enc_bmap);
+>>>>>>>> +
+>>>>>>>> +       sev->page_enc_bmap = map;
+>>>>>>>> +       sev->page_enc_bmap_size = new_size;
+>>>>>>>> +
+>>>>>>>> +       return 0;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
+>>>>>>>> +                                 unsigned long npages, unsigned long enc)
+>>>>>>>> +{
+>>>>>>>> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+>>>>>>>> +       kvm_pfn_t pfn_start, pfn_end;
+>>>>>>>> +       gfn_t gfn_start, gfn_end;
+>>>>>>>> +       int ret;
+>>>>>>>> +
+>>>>>>>> +       if (!sev_guest(kvm))
+>>>>>>>> +               return -EINVAL;
+>>>>>>>> +
+>>>>>>>> +       if (!npages)
+>>>>>>>> +               return 0;
+>>>>>>>> +
+>>>>>>>> +       gfn_start = gpa_to_gfn(gpa);
+>>>>>>>> +       gfn_end = gfn_start + npages;
+>>>>>>>> +
+>>>>>>>> +       /* out of bound access error check */
+>>>>>>>> +       if (gfn_end <= gfn_start)
+>>>>>>>> +               return -EINVAL;
+>>>>>>>> +
+>>>>>>>> +       /* lets make sure that gpa exist in our memslot */
+>>>>>>>> +       pfn_start = gfn_to_pfn(kvm, gfn_start);
+>>>>>>>> +       pfn_end = gfn_to_pfn(kvm, gfn_end);
+>>>>>>>> +
+>>>>>>>> +       if (is_error_noslot_pfn(pfn_start) && !is_noslot_pfn(pfn_start)) {
+>>>>>>>> +               /*
+>>>>>>>> +                * Allow guest MMIO range(s) to be added
+>>>>>>>> +                * to the page encryption bitmap.
+>>>>>>>> +                */
+>>>>>>>> +               return -EINVAL;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       if (is_error_noslot_pfn(pfn_end) && !is_noslot_pfn(pfn_end)) {
+>>>>>>>> +               /*
+>>>>>>>> +                * Allow guest MMIO range(s) to be added
+>>>>>>>> +                * to the page encryption bitmap.
+>>>>>>>> +                */
+>>>>>>>> +               return -EINVAL;
+>>>>>>>> +       }
+>>>>>>>> +
+>>>>>>>> +       mutex_lock(&kvm->lock);
+>>>>>>>> +       ret = sev_resize_page_enc_bitmap(kvm, gfn_end);
+>>>>>>>> +       if (ret)
+>>>>>>>> +               goto unlock;
+>>>>>>>> +
+>>>>>>>> +       if (enc)
+>>>>>>>> +               __bitmap_set(sev->page_enc_bmap, gfn_start,
+>>>>>>>> +                               gfn_end - gfn_start);
+>>>>>>>> +       else
+>>>>>>>> +               __bitmap_clear(sev->page_enc_bmap, gfn_start,
+>>>>>>>> +                               gfn_end - gfn_start);
+>>>>>>>> +
+>>>>>>>> +unlock:
+>>>>>>>> +       mutex_unlock(&kvm->lock);
+>>>>>>>> +       return ret;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>>>>>>>>  {
+>>>>>>>>         struct kvm_sev_cmd sev_cmd;
+>>>>>>>> @@ -7995,6 +8088,8 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>>>>>>>>         .need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
+>>>>>>>>
+>>>>>>>>         .apic_init_signal_blocked = svm_apic_init_signal_blocked,
+>>>>>>>> +
+>>>>>>>> +       .page_enc_status_hc = svm_page_enc_status_hc,
+>>>>>>>>  };
+>>>>>>>>
+>>>>>>>>  static int __init svm_init(void)
+>>>>>>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>>>>>>> index 079d9fbf278e..f68e76ee7f9c 100644
+>>>>>>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>>>>>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>>>>>>> @@ -8001,6 +8001,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+>>>>>>>>         .nested_get_evmcs_version = NULL,
+>>>>>>>>         .need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
+>>>>>>>>         .apic_init_signal_blocked = vmx_apic_init_signal_blocked,
+>>>>>>>> +       .page_enc_status_hc = NULL,
+>>>>>>>>  };
+>>>>>>>>
+>>>>>>>>  static void vmx_cleanup_l1d_flush(void)
+>>>>>>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>>>>>>>> index cf95c36cb4f4..68428eef2dde 100644
+>>>>>>>> --- a/arch/x86/kvm/x86.c
+>>>>>>>> +++ b/arch/x86/kvm/x86.c
+>>>>>>>> @@ -7564,6 +7564,12 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
+>>>>>>>>                 kvm_sched_yield(vcpu->kvm, a0);
+>>>>>>>>                 ret = 0;
+>>>>>>>>                 break;
+>>>>>>>> +       case KVM_HC_PAGE_ENC_STATUS:
+>>>>>>>> +               ret = -KVM_ENOSYS;
+>>>>>>>> +               if (kvm_x86_ops->page_enc_status_hc)
+>>>>>>>> +                       ret = kvm_x86_ops->page_enc_status_hc(vcpu->kvm,
+>>>>>>>> +                                       a0, a1, a2);
+>>>>>>>> +               break;
+>>>>>>>>         default:
+>>>>>>>>                 ret = -KVM_ENOSYS;
+>>>>>>>>                 break;
+>>>>>>>> diff --git a/include/uapi/linux/kvm_para.h b/include/uapi/linux/kvm_para.h
+>>>>>>>> index 8b86609849b9..847b83b75dc8 100644
+>>>>>>>> --- a/include/uapi/linux/kvm_para.h
+>>>>>>>> +++ b/include/uapi/linux/kvm_para.h
+>>>>>>>> @@ -29,6 +29,7 @@
+>>>>>>>>  #define KVM_HC_CLOCK_PAIRING           9
+>>>>>>>>  #define KVM_HC_SEND_IPI                10
+>>>>>>>>  #define KVM_HC_SCHED_YIELD             11
+>>>>>>>> +#define KVM_HC_PAGE_ENC_STATUS         12
+>>>>>>>>
+>>>>>>>>  /*
+>>>>>>>>   * hypercalls use architecture specific
+>>>>>>>> --
+>>>>>>>> 2.17.1
+>>>>>>>>
+>>>>>>> I'm still not excited by the dynamic resizing. I believe the guest
+>>>>>>> hypercall can be called in atomic contexts, which makes me
+>>>>>>> particularly unexcited to see a potentially large vmalloc on the host
+>>>>>>> followed by filling the buffer. Particularly when the buffer might be
+>>>>>>> non-trivial in size (~1MB per 32GB, per some back of the envelope
+>>>>>>> math).
+>>>>>>>
+>>>>>> I think looking at more practical situations, most hypercalls will
+>>>>>> happen during the boot stage, when device specific initializations are
+>>>>>> happening, so typically the maximum page encryption bitmap size would
+>>>>>> be allocated early enough.
+>>>>>>
+>>>>>> In fact, initial hypercalls made by OVMF will probably allocate the
+>>>>>> maximum page bitmap size even before the kernel comes up, especially
+>>>>>> as they will be setting up page enc/dec status for MMIO, ROM, ACPI
+>>>>>> regions, PCI device memory, etc., and most importantly for
+>>>>>> "non-existent" high memory range (which will probably be the
+>>>>>> maximum size page encryption bitmap allocated/resized).
+>>>>>>
+>>>>>> Let me know if you have different thoughts on this ?
+>>>>> Hi Ashish,
+>>>>>
+>>>>> If this is not an issue in practice, we can just move past this. If we
+>>>>> are basically guaranteed that OVMF will trigger hypercalls that expand
+>>>>> the bitmap beyond the top of memory, then, yes, that should work. That
+>>>>> leaves me slightly nervous that OVMF might regress since it's not
+>>>>> obvious that calling a hypercall beyond the top of memory would be
+>>>>> "required" for avoiding a somewhat indirectly related issue in guest
+>>>>> kernels.
+>>>>
+>>>> If possible then we should try to avoid growing/shrinking the bitmap .
+>>>> Today OVMF may not be accessing beyond memory but a malicious guest
+>>>> could send a hypercall down which can trigger a huge memory allocation
+>>>> on the host side and may eventually cause denial of service for other.
+>>> Nice catch! Was just writing up an email about this.
+>>>> I am in favor if we can find some solution to handle this case. How
+>>>> about Steve's suggestion about VMM making a call down to the kernel to
+>>>> tell how big the bitmap should be? Initially it should be equal to the
+>>>> guest RAM and if VMM ever did the memory expansion then it can send down
+>>>> another notification to increase the bitmap ?
+>>>>
+>>>> Optionally, instead of adding a new ioctl, I was wondering if we can
+>>>> extend the kvm_arch_prepare_memory_region() to make svm specific x86_ops
+>>>> which can take read the userspace provided memory region and calculate
+>>>> the amount of guest RAM managed by the KVM and grow/shrink the bitmap
+>>>> based on that information. I have not looked deep enough to see if its
+>>>> doable but if it can work then we can avoid adding yet another ioctl.
+>>> We also have the set bitmap ioctl in a later patch in this series. We
+>>> could also use the set ioctl for initialization (it's a little
+>>> excessive for initialization since there will be an additional
+>>> ephemeral allocation and a few additional buffer copies, but that's
+>>> probably fine). An enable_cap has the added benefit of probably being
+>>> necessary anyway so usermode can disable the migration feature flag.
+>>>
+>>> In general, userspace is going to have to be in direct control of the
+>>> buffer and its size.
+>> My only practical concern about setting a static bitmap size based on guest
+>> memory is about the hypercalls being made initially by OVMF to set page
+>> enc/dec status for ROM, ACPI regions and especially the non-existent
+>> high memory range. The new ioctl will statically setup bitmap size to
+>> whatever guest RAM is specified, say 4G, 8G, etc., but the OVMF
+>> hypercall for non-existent memory will try to do a hypercall for guest
+>> physical memory range like ~6G->64G (for 4G guest RAM setup), this
+>> hypercall will basically have to just return doing nothing, because
+>> the allocated bitmap won't have this guest physical range available ?
 
-Just for information about how to reproduce this, please check https://www.kernel.org/doc/html/latest/dev-tools/sparse.html
 
-Regards,
-Helen
+IMO, Ovmf issuing a hypercall beyond the guest RAM is simple wrong, it
+should *not* do that.  There was a feature request I submitted sometime
+back to Tianocore https://bugzilla.tianocore.org/show_bug.cgi?id=623 as
+I saw this coming in future. I tried highlighting the problem in the
+MdeModulePkg that it does not provide a notifier to tell OVMF when core
+creates the MMIO holes etc. It was not a big problem with the SEV
+initially because we were never getting down to hypervisor to do
+something about those non-existent regions. But with the migration its
+now important that we should restart the discussion with UEFI folks and
+see what can be done. In the kernel patches we should do what is right
+for the kernel and not workaround the Ovmf limitation.
 
-> 
-> It does seem that it is indeed unused.
-> 
-> Regards,
-> 
-> 	Hans
-> 
->> ---
->>  drivers/media/platform/vimc/vimc-capture.c | 14 ++++++++-----
->>  drivers/media/platform/vimc/vimc-common.c  | 23 ----------------------
->>  drivers/media/platform/vimc/vimc-common.h  |  2 --
->>  drivers/media/platform/vimc/vimc-debayer.c |  7 +++++--
->>  drivers/media/platform/vimc/vimc-scaler.c  | 12 +++++++++--
->>  drivers/media/platform/vimc/vimc-sensor.c  |  9 +++++++--
->>  6 files changed, 31 insertions(+), 36 deletions(-)
+
+>> Also, hypercalls for ROM, ACPI, device regions and any memory holes within
+>> the static bitmap setup as per guest RAM config will work, but what
+>> about hypercalls for any device regions beyond the guest RAM config ?
 >>
->> diff --git a/drivers/media/platform/vimc/vimc-capture.c b/drivers/media/platform/vimc/vimc-capture.c
->> index 76c015898cfd..686456aad29c 100644
->> --- a/drivers/media/platform/vimc/vimc-capture.c
->> +++ b/drivers/media/platform/vimc/vimc-capture.c
->> @@ -85,6 +85,7 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
->>  				    struct v4l2_format *f)
->>  {
->>  	struct v4l2_pix_format *format = &f->fmt.pix;
->> +	const struct v4l2_format_info *vinfo;
->>  	const struct vimc_pix_map *vpix;
->>  
->>  	format->width = clamp_t(u32, format->width, VIMC_FRAME_MIN_WIDTH,
->> @@ -94,12 +95,13 @@ static int vimc_cap_try_fmt_vid_cap(struct file *file, void *priv,
->>  
->>  	/* Don't accept a pixelformat that is not on the table */
->>  	vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
->> -	if (!vpix) {
->> +	if (!vpix)
->>  		format->pixelformat = fmt_default.pixelformat;
->> -		vpix = vimc_pix_map_by_pixelformat(format->pixelformat);
->> -	}
->> +
->> +	vinfo = v4l2_format_info(format->pixelformat);
->> +
->>  	/* TODO: Add support for custom bytesperline values */
->> -	format->bytesperline = format->width * vpix->bpp;
->> +	format->bytesperline = format->width * vinfo->bpp[0];
->>  	format->sizeimage = format->bytesperline * format->height;
->>  
->>  	if (format->field == V4L2_FIELD_ANY)
->> @@ -386,6 +388,7 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
->>  				     const char *vcfg_name)
->>  {
->>  	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
->> +	const struct v4l2_format_info *vinfo;
->>  	const struct vimc_pix_map *vpix;
->>  	struct vimc_cap_device *vcap;
->>  	struct video_device *vdev;
->> @@ -435,7 +438,8 @@ struct vimc_ent_device *vimc_cap_add(struct vimc_device *vimc,
->>  	/* Set default frame format */
->>  	vcap->format = fmt_default;
->>  	vpix = vimc_pix_map_by_pixelformat(vcap->format.pixelformat);
->> -	vcap->format.bytesperline = vcap->format.width * vpix->bpp;
->> +	vinfo = v4l2_format_info(vpix->pixelformat);
->> +	vcap->format.bytesperline = vcap->format.width * vinfo->bpp[0];
->>  	vcap->format.sizeimage = vcap->format.bytesperline *
->>  				 vcap->format.height;
->>  
->> diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
->> index 16ce9f3b7c75..8327ada1b461 100644
->> --- a/drivers/media/platform/vimc/vimc-common.c
->> +++ b/drivers/media/platform/vimc/vimc-common.c
->> @@ -21,19 +21,16 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->>  	{
->>  		.code = MEDIA_BUS_FMT_BGR888_1X24,
->>  		.pixelformat = V4L2_PIX_FMT_BGR24,
->> -		.bpp = 3,
->>  		.bayer = false,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_RGB888_1X24,
->>  		.pixelformat = V4L2_PIX_FMT_RGB24,
->> -		.bpp = 3,
->>  		.bayer = false,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_ARGB8888_1X32,
->>  		.pixelformat = V4L2_PIX_FMT_ARGB32,
->> -		.bpp = 4,
->>  		.bayer = false,
->>  	},
->>  
->> @@ -41,49 +38,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->>  	{
->>  		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SBGGR8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SGBRG8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SGRBG8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SRGGB8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
->>  		.pixelformat = V4L2_PIX_FMT_SBGGR10,
->> -		.bpp = 2,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
->>  		.pixelformat = V4L2_PIX_FMT_SGBRG10,
->> -		.bpp = 2,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
->>  		.pixelformat = V4L2_PIX_FMT_SGRBG10,
->> -		.bpp = 2,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
->>  		.pixelformat = V4L2_PIX_FMT_SRGGB10,
->> -		.bpp = 2,
->>  		.bayer = true,
->>  	},
->>  
->> @@ -91,25 +80,21 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->>  	{
->>  		.code = MEDIA_BUS_FMT_SBGGR10_ALAW8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SBGGR10ALAW8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGBRG10_ALAW8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SGBRG10ALAW8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGRBG10_ALAW8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SGRBG10ALAW8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SRGGB10_ALAW8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SRGGB10ALAW8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  
->> @@ -117,49 +102,41 @@ static const struct vimc_pix_map vimc_pix_map_list[] = {
->>  	{
->>  		.code = MEDIA_BUS_FMT_SBGGR10_DPCM8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SBGGR10DPCM8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGBRG10_DPCM8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SGBRG10DPCM8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGRBG10_DPCM8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SGRBG10DPCM8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SRGGB10_DPCM8_1X8,
->>  		.pixelformat = V4L2_PIX_FMT_SRGGB10DPCM8,
->> -		.bpp = 1,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
->>  		.pixelformat = V4L2_PIX_FMT_SBGGR12,
->> -		.bpp = 2,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
->>  		.pixelformat = V4L2_PIX_FMT_SGBRG12,
->> -		.bpp = 2,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
->>  		.pixelformat = V4L2_PIX_FMT_SGRBG12,
->> -		.bpp = 2,
->>  		.bayer = true,
->>  	},
->>  	{
->>  		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
->>  		.pixelformat = V4L2_PIX_FMT_SRGGB12,
->> -		.bpp = 2,
->>  		.bayer = true,
->>  	},
->>  };
->> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
->> index 87eb8259c2a8..dd1c45334705 100644
->> --- a/drivers/media/platform/vimc/vimc-common.h
->> +++ b/drivers/media/platform/vimc/vimc-common.h
->> @@ -62,7 +62,6 @@ do {									\
->>   * struct vimc_pix_map - maps media bus code with v4l2 pixel format
->>   *
->>   * @code:		media bus format code defined by MEDIA_BUS_FMT_* macros
->> - * @bbp:		number of bytes each pixel occupies
->>   * @pixelformat:	pixel format devined by V4L2_PIX_FMT_* macros
->>   *
->>   * Struct which matches the MEDIA_BUS_FMT_* codes with the corresponding
->> @@ -70,7 +69,6 @@ do {									\
->>   */
->>  struct vimc_pix_map {
->>  	unsigned int code;
->> -	unsigned int bpp;
->>  	u32 pixelformat;
->>  	bool bayer;
->>  };
->> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
->> index 5d1b67d684bb..10d53ca129fd 100644
->> --- a/drivers/media/platform/vimc/vimc-debayer.c
->> +++ b/drivers/media/platform/vimc/vimc-debayer.c
->> @@ -303,6 +303,7 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
->>  	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
->>  
->>  	if (enable) {
->> +		const struct v4l2_format_info *vinfo;
->>  		const struct vimc_pix_map *vpix;
->>  		unsigned int frame_size;
->>  
->> @@ -311,12 +312,14 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
->>  
->>  		/* Calculate the frame size of the source pad */
->>  		vpix = vimc_pix_map_by_code(vdeb->src_code);
->> +		vinfo = v4l2_format_info(vpix->pixelformat);
->>  		frame_size = vdeb->sink_fmt.width * vdeb->sink_fmt.height *
->> -				vpix->bpp;
->> +				vinfo->bpp[0];
->>  
->>  		/* Save the bytes per pixel of the sink */
->>  		vpix = vimc_pix_map_by_code(vdeb->sink_fmt.code);
->> -		vdeb->sink_bpp = vpix->bpp;
->> +		vinfo = v4l2_format_info(vpix->pixelformat);
->> +		vdeb->sink_bpp = vinfo->bpp[0];
->>  
->>  		/* Get the corresponding pixel map from the table */
->>  		vdeb->sink_pix_map =
->> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
->> index e2e551bc3ded..55be69ddf918 100644
->> --- a/drivers/media/platform/vimc/vimc-scaler.c
->> +++ b/drivers/media/platform/vimc/vimc-scaler.c
->> @@ -125,6 +125,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
->>  				    struct v4l2_subdev_pad_config *cfg,
->>  				    struct v4l2_subdev_frame_size_enum *fse)
->>  {
->> +	const struct v4l2_format_info *vinfo;
->>  	const struct vimc_pix_map *vpix;
->>  
->>  	if (fse->index)
->> @@ -135,6 +136,7 @@ static int vimc_sca_enum_frame_size(struct v4l2_subdev *sd,
->>  	if (!vpix || vpix->bayer)
->>  		return -EINVAL;
->>  
->> +	vinfo = v4l2_format_info(vpix->pixelformat);
->>  	fse->min_width = VIMC_FRAME_MIN_WIDTH;
->>  	fse->min_height = VIMC_FRAME_MIN_HEIGHT;
->>  
->> @@ -176,12 +178,16 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
->>  
->>  static void vimc_sca_adjust_sink_fmt(struct v4l2_mbus_framefmt *fmt)
->>  {
->> +	const struct v4l2_format_info *vinfo;
->>  	const struct vimc_pix_map *vpix;
->>  
->>  	/* Only accept code in the pix map table in non bayer format */
->>  	vpix = vimc_pix_map_by_code(fmt->code);
->> -	if (!vpix || vpix->bayer)
->> +	if (!vpix || vpix->bayer) {
->>  		fmt->code = sink_fmt_default.code;
->> +		vpix = vimc_pix_map_by_code(fmt->code);
->> +	}
->> +	vinfo = v4l2_format_info(vpix->pixelformat);
->>  
->>  	fmt->width = clamp_t(u32, fmt->width, VIMC_FRAME_MIN_WIDTH,
->>  			     VIMC_FRAME_MAX_WIDTH) & ~1;
->> @@ -331,6 +337,7 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
->>  	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
->>  
->>  	if (enable) {
->> +		const struct v4l2_format_info *vinfo;
->>  		const struct vimc_pix_map *vpix;
->>  		unsigned int frame_size;
->>  
->> @@ -339,7 +346,8 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
->>  
->>  		/* Save the bytes per pixel of the sink */
->>  		vpix = vimc_pix_map_by_code(vsca->sink_fmt.code);
->> -		vsca->bpp = vpix->bpp;
->> +		vinfo = v4l2_format_info(vpix->pixelformat);
->> +		vsca->bpp = vinfo->bpp[0];
->>  
->>  		/* Calculate the width in bytes of the src frame */
->>  		vsca->src_line_size = vsca->crop_rect.width *
->> diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
->> index 32380f504591..941529ddf639 100644
->> --- a/drivers/media/platform/vimc/vimc-sensor.c
->> +++ b/drivers/media/platform/vimc/vimc-sensor.c
->> @@ -102,10 +102,13 @@ static void vimc_sen_tpg_s_format(struct vimc_sen_device *vsen)
->>  {
->>  	const struct vimc_pix_map *vpix =
->>  				vimc_pix_map_by_code(vsen->mbus_format.code);
->> +	const struct v4l2_format_info *vinfo =
->> +				v4l2_format_info(vpix->pixelformat);
->>  
->>  	tpg_reset_source(&vsen->tpg, vsen->mbus_format.width,
->>  			 vsen->mbus_format.height, vsen->mbus_format.field);
->> -	tpg_s_bytesperline(&vsen->tpg, 0, vsen->mbus_format.width * vpix->bpp);
->> +	tpg_s_bytesperline(&vsen->tpg, 0,
->> +			   vsen->mbus_format.width * vinfo->bpp[0]);
->>  	tpg_s_buf_height(&vsen->tpg, vsen->mbus_format.height);
->>  	tpg_s_fourcc(&vsen->tpg, vpix->pixelformat);
->>  	/* TODO: add support for V4L2_FIELD_ALTERNATE */
->> @@ -198,12 +201,14 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
->>  				container_of(sd, struct vimc_sen_device, sd);
->>  
->>  	if (enable) {
->> +		const struct v4l2_format_info *vinfo;
->>  		const struct vimc_pix_map *vpix;
->>  		unsigned int frame_size;
->>  
->>  		/* Calculate the frame size */
->>  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
->> -		frame_size = vsen->mbus_format.width * vpix->bpp *
->> +		vinfo = v4l2_format_info(vpix->pixelformat);
->> +		frame_size = vsen->mbus_format.width * vinfo->bpp[0] *
->>  			     vsen->mbus_format.height;
->>  
->>  		/*
->>
-> 
-> 
-> _______________________________________________
-> Lkcamp mailing list
-> Lkcamp@lists.libreplanetbr.org
-> https://lists.libreplanetbr.org/mailman/listinfo/lkcamp
-> 
+>> Thanks,
+>> Ashish
+> I'm not super familiar with what the address beyond the top of ram is
+> used for. If the memory is not backed by RAM, will it even matter for
+> migration? Sounds like the encryption for SEV won't even apply to it.
+> If we don't need to know what the c-bit state of an address is, we
+> don't need to track it. It doesn't hurt to track it (which is why I'm
+> not super concerned about tracking the memory holes).
